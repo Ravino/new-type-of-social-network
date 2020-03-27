@@ -10,3 +10,16 @@ Homestead.json
 Homestead.yaml
 npm-debug.log
 yarn-error.log
+
+/dist
+
+# Editor directories and files
+.idea
+
+# windows thumbnail cache
+Thumbs.db
+
+#targa local settings
+index.html
+/src/libs/
+/public/js/*.LICENSE.txt
