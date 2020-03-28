@@ -1,6 +1,6 @@
 <template>
-    <div id="pliziMobile" class="card">
-        <div class="card-body w-50">
+    <div id="pliziMobile" class="--card d-flex --flex-row justify-content-between align-items-start bg-light">
+        <div class="mx-auto pl-3 mt-3">
             <h5 class="w-75"><b>Plizi для мобильных устройств</b></h5>
             <div class="d-flex justify-content-start mt-3">
                 <div class="mx-3">
@@ -15,7 +15,7 @@
                 </div>
             </div>
         </div>
-        <div class="bg-wrapper"></div>
+        <div class="bg-wrapper w-50 h-100 mx-auto">&nbsp;</div>
     </div>
 </template>
 
@@ -36,10 +36,11 @@ methods: {
 
 <style scoped>
 #pliziMobile .bg-wrapper {
-    background-color: white;
+    /*background-color: yellow;*/
     background-image: url("/src/images/plizi-mobile-bg.png");
     background-position: left bottom;
     background-repeat: no-repeat;
-    background-size: 100px;
+    /*background-size: 100px;*/
+    min-height: 200px;
 }
 </style>

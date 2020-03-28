@@ -3,13 +3,13 @@
         <div class="card-body">
             <form novalidate="novalidate">
                 <div class="form-group">
-                    <label for="userName" class="d-none">Email address</label>
+                    <label for="userName" class="d-none">Ваше имя</label>
                     <input type="text" class="form-control" id="userName" placeholder="Ваше имя" />
                     <small id="userNameError" class="form-text text-danger">Какие-то ошибки валидации</small>
                 </div>
 
                 <div class="form-group">
-                    <label for="userEmail" class="d-none">Email address</label>
+                    <label for="userEmail" class="d-none">Ваш E-mail</label>
                     <input type="email" class="form-control" id="userEmail" placeholder="Ваш E-mail" />
                     <small id="userEmailError" class="form-text text-danger">Какие-то ошибки валидации</small>
                 </div>
@@ -58,8 +58,8 @@ methods: {
 </script>
 
 
-<style>
-    #btnRegistration {
+<style lang="scss">
+    .btnRegistration {
         margin-top: 10px;
     }
 </style>
