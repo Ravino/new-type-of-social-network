@@ -45,7 +45,7 @@
                 <div class="col-3"></div>
             </div>
 
-            <div class="form-group row mb-0 border-bottom">
+            <div class="form-group row mb-0 --border-bottom">
                 <label class="col-4 col-form-label text-secondary">Кто может видеть мой список друзей</label>
                 <div class="col-5">
                     <span class="form-control-plaintext d-inline-block w-auto">Мои друзья</span><i class="fas fa-chevron-down ml-2"></i>
@@ -53,12 +53,12 @@
                 <div class="col-3"></div>
             </div>
 
-
-            <div class="form-group row mt-3 mb-0">
-                <div class="col-4">
-                    <button class="btn btn-primary btn-block rounded-pill w-75" id="btnSubmit">Сохранить</button>
-                </div>
-            </div>
+<!--            убрано по созласованию-->
+<!--            <div class="form-group row mt-3 mb-0">-->
+<!--                <div class="col-4">-->
+<!--                    <button class="btn btn-primary btn-block rounded-pill w-75" id="btnSubmit">Сохранить</button>-->
+<!--                </div>-->
+<!--            </div>-->
         </form>
     </div>
 </template>

@@ -51,7 +51,7 @@
                 </div>
             </div>
 
-            <div class="form-group row mb-0 border-bottom">
+            <div class="form-group row mb-0 --border-bottom">
                 <label for="location" class="col-4 col-form-label text-secondary">Месторасположение</label>
                 <div class="col-5">
                     <i class="fas fa-map-marker-alt d-inline-block mr-2"></i> <input type="text" readonly class="form-control-plaintext d-inline-block w-50" id="location" value="Киев, Украина" />
@@ -61,11 +61,12 @@
                 </div>
             </div>
 
-            <div class="form-group row mt-3 mb-0">
-                <div class="col-4">
-                    <button class="btn btn-primary btn-block rounded-pill w-75" id="btnSubmit">Сохранить</button>
-                </div>
-            </div>
+<!--            убрано по согласованию-->
+<!--            <div class="form-group row mt-3 mb-0">-->
+<!--                <div class="col-4">-->
+<!--                    <button class="btn btn-primary btn-block rounded-pill w-75" id="btnSubmit">Сохранить</button>-->
+<!--                </div>-->
+<!--            </div>-->
         </form>
     </div>
 </template>
