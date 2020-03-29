@@ -5,7 +5,10 @@ import VueRouter from 'vue-router';
 Vue.config.productionTip = false;
 Vue.use(VueRouter);
 
-// import moment from 'moment';
+import moment from 'moment';
+
+moment.locale('ru');
+
 // import Vuelidate from 'vuelidate';
 // Vue.use(Vuelidate);
 

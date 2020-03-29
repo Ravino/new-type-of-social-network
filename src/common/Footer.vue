@@ -8,7 +8,7 @@
                         <router-link to="/rules" tag="li" class="nav-item"><a class="nav-link text-white">Правила</a></router-link>
                         <router-link to="/advertisement" tag="li" class="nav-item"><a class="nav-link text-white">Реклама</a></router-link>
                         <router-link to="/for-developers" tag="li" class="nav-item"><a class="nav-link text-white">Для разработчиков</a></router-link>
-                        <router-link to="/switch-language" tag="li" class="nav-item"><a class="nav-link text-white">Русский</a></router-link>
+                        <router-link to="/switch-language" tag="li" class="nav-item"><a class="nav-link text-white">Русский <i class="fas fa-chevron-down ml-1"></i></a></router-link>
                     </ul>
                 </div>
             </div>
