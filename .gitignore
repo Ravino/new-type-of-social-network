@@ -20,6 +20,6 @@ yarn-error.log
 Thumbs.db
 
 #targa local settings
-index.html
+#index.html
 /src/libs/
 /public/js/*.LICENSE.txt
