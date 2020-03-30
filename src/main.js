@@ -34,8 +34,8 @@ Vue.filter('lastMessageTime', (messageDT) => {
 });
 
 
-// import Vuelidate from 'vuelidate';
-// Vue.use(Vuelidate);
+import Vuelidate from 'vuelidate';
+Vue.use(Vuelidate);
 
 import router from './router/router.js';
 
