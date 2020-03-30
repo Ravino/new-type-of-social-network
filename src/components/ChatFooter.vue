@@ -54,7 +54,7 @@ data(){
 
 methods: {
     onMessageKeyDown(ev){
-        if ( 13=== ev.keyCode  &&  this.newMessage.trim()!=='') {
+        if (13 === ev.keyCode  &&  this.newMessage.trim()!=='') {
             let now = moment();
             let nowS = now.format('YYYY-MM-DD HH:mm:ss');
             let newMsg = {

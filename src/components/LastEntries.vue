@@ -3,7 +3,7 @@
         <h6 class="card-title w-100 text-center py-2"><b>Вы недавно входили в аккаунт с этого компьютера</b></h6>
 
         <div class="--card-body d-flex justify-content-start">
-            <LastEntryItem v-for="(leItem) in lastEntriesList" v-bind:entry-item="leItem" />
+            <LastEntryItem v-for="(leItem, leKey) in lastEntriesList" v-bind:entry-item="leItem" v-bind:key="leKey"></LastEntryItem>
         </div>
     </div>
 </template>

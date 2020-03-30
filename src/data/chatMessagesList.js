@@ -1,14 +1,14 @@
 export default [
     {
         message: `с аутсорсом закончим`,
-        dtLabel : `2020-03-29 14:32:00`,
+        dtLabel : `2020-03-23 14:32:00`,
         isMine: false,
         isRead: false,
         isEdited: false
     },
     {
         message: `а я ща по социалке допилю некоторые интерфейсы и тоже пришлю`,
-        dtLabel : `2020-03-29 14:32:00`,
+        dtLabel : `2020-03-21 14:32:00`,
         isMine: true,
         isRead: true,
         isEdited: false
