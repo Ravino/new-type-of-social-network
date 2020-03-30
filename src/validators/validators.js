@@ -12,6 +12,14 @@ export function isFirstNameAndLastName(value) {
         return true;
 
     value = value.replace(/\s\s+/g, ' ');
+    let parts = value.split(' ');
 
-    return (value.split(' ').length === 2);
+    return (parts.length===2  &&  parts[0].trim()!==''  &&  parts[1].trim()!=='');
+}
+
+
+export function isValidDMY(dateVal){
+    if ((dateVal+'') === '')
+        return true;
+    return moment(dateVal, 'DD.MM.YYYY', true).isValid();
 }

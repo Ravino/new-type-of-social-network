@@ -11,7 +11,7 @@
 
                     <div v-show="$v.model.name.$error" class="invalid-feedback">
                         <p v-if="!$v.model.name.required" class="text-danger">Укажите как Вас зовут</p>
-                        <p v-if="!$v.model.name.minLength" class="text-danger">Врядли у Вас такое короткое имя</p>
+                        <p v-if="!$v.model.name.minLength" class="text-danger">Врядли у Вас такое короткое имя?</p>
                         <p v-if="!$v.model.name.maxLength" class="text-danger">Слишком длинное имя</p>
                         <p v-if="!$v.model.name.isCorrectFullName" class="text-danger">Только буквы в имени фамилии</p>
                         <p v-if="!$v.model.name.isFirstNameAndLastName" class="text-danger">Укажите и имя и фамилию!</p>
@@ -27,15 +27,16 @@
 
                     <div v-show="$v.model.email.$error" class="invalid-feedback">
                         <p v-if="!$v.model.email.required" class="text-danger">Укажите свой е-мейл</p>
+                        <p v-if="!$v.model.email.email" class="text-danger">Укажите корректный е-мейл</p>
                     </div>
                 </div>
 
                 <div class="form-group">
                     <button id="btnLogin" type="button"
                             @click="startLogin()" :disabled="$v.$invalid"
-                            class="btn btn-primary btn-block w-75 m-auto rounded-pill">Войти</button>
+                            class="btn-login btn btn-primary btn-block w-75 m-auto rounded-pill">Войти</button>
                     <br />
-                    <button id="btnRegistration" type="button" class="btn btn-outline-primary btn-block w-75 m-auto rounded-pill" @click="openRegistrationModal()">Регистрация</button>
+                    <button id="btnRegistration" type="button" class="btn-registration btn btn-outline-primary btn-block w-75 m-auto rounded-pill" @click="openRegistrationModal()">Регистрация</button>
                 </div>
 
                 <div class="form-group text-center">
@@ -121,8 +122,12 @@ methods: {
 </script>
 
 
-<style lang="scss">
-    .btnRegistration {
-        margin-top: 10px;
-    }
+<style>
+.btn-primary.btn-registration {
+    margin-top: 10px;
+}
+
+.btn-primary.disabled, .btn-primary:disabled {
+    cursor: not-allowed;
+}
 </style>
