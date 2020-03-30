@@ -40,7 +40,8 @@ data() {
 
 methods: {
     getNext(currIndex) {
-        return (currIndex>=0  ||  currIndex < this.messages.length) ? this.messages[currIndex+1] : null;
+        let ret = (currIndex < this.messages.length) ? this.messages[currIndex+1] : null;
+        return (typeof ret === 'undefined') ? null : ret;
     }
 },
 
