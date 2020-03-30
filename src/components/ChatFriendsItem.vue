@@ -17,7 +17,7 @@
                 </small>
 
                 <time :datetime="friend.lastMessageDT" class="d-block align-self-end text-dark w-auto" style="line-height: 20px;">
-                    {{displayLastMessageTime(friend.lastMessageDT)}}
+                    {{friend.lastMessageDT | lastMessageTime}}
                 </time>
             </div>
             <div class="d-flex flex-row">
@@ -45,26 +45,6 @@ data () {
 },
 
 methods : {
-    //TODO: перевести потом в фильтры
-    displayLastMessageTime(lastMessageDT){
-        let now = moment();
-        let yesterday = moment().subtract(1, 'days');
-        let lmt = moment(lastMessageDT);
-
-        // если сообщение было сегодня или вчера
-        if (now.format('YYYY-MM-DD')===lmt.format('YYYY-MM-DD')  ||  yesterday.format('YYYY-MM-DD')===lmt.format('YYYY-MM-DD')) {
-            return lmt.format('HH:mm');
-        }
-
-        // сообщение было в течение последних 7 дней
-        let lastWeek = moment().subtract(7, 'days');
-        if ( +lmt.format('X') >= +lastWeek.format('X')) {
-            let dow = lmt.format('dd');
-            return dow.charAt(0).toUpperCase() + dow.slice(1);
-        }
-
-        return lmt.format('DD.MM.YY');
-    },
 },
 mounted() {
 

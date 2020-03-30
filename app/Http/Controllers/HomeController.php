@@ -13,7 +13,11 @@ class HomeController extends Controller
      */
     public function __construct()
     {
-        $this->middleware('auth');
+        /**
+         * @tga 2020-03-30 временно отключил требование авторизации
+         */
+        //TODO: включить авторизацию когда нужно будет
+//        $this->middleware('auth');
     }
 
     /**
