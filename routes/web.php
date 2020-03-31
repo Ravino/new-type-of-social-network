@@ -14,7 +14,10 @@ use Illuminate\Support\Facades\Route;
 */
 
 Route::get('/', 'HomeController@index');
-Route::post('/auth/verify', 'Auth\RegisterController@verify')->name('verify_registration');
-Auth::routes();
+
+
+
+Route::get('/email-confirm/{code}', 'Auth\RegisterController@confirm')->name('auth.confirm');
+Route::get('/password/reset/{code}', 'Auth\ForgotPasswordController@showLinkRequestForm')->name('password.reset.token');
 
 Route::get('/home', 'HomeController@index')->name('home');

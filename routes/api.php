@@ -14,6 +14,13 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::middleware('auth:api')->get('/user', function (Request $request) {
-    return $request->user();
-});
+//Route::post('/auth/verify', 'Auth\RegisterController@verify')->name('verify_registration');
+Auth::routes();
+
+
+//Route::group(['middleware' => ['auth.jwt']], function () {
+//    //
+//
+//    Route::resource('user', 'Api\ProfileController', ['only' => ['index', 'update']]);
+//
+//});

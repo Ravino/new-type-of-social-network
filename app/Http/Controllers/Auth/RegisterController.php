@@ -2,16 +2,22 @@
 
 namespace App\Http\Controllers\Auth;
 
+use App\Events\RegisteredConfirm;
 use App\Http\Controllers\Controller;
 use App\Providers\RouteServiceProvider;
 use App\Models\User;
+use Carbon\Carbon;
 use Illuminate\Foundation\Auth\RegistersUsers;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
-use Illuminate\Auth\Events\Registered;
+use App\Events\Registered;
+use Illuminate\Validation\Rule;
 use Mail;
 use Illuminate\Http\Request;
 use Auth;
+
+use JWTAuth;
+
 class RegisterController extends Controller
 {
     /*
@@ -34,6 +40,7 @@ class RegisterController extends Controller
      */
     protected $redirectTo = RouteServiceProvider::HOME;
 
+    private $rawPassword;
 
     /**
      * Create a new controller instance.
@@ -48,83 +55,89 @@ class RegisterController extends Controller
     }
 
     /**
-    * Handle a registration request for the application.
-    *
-    * @param  \Illuminate\Http\Request  $request
-    * @return \Illuminate\Http\Response
-    */
-   public function register(Request $request)
-   {
-       $this->validator($request->all())->validate();
+     * Handle a registration request for the application.
+     *
+     * @param  \Illuminate\Http\Request $request
+     * @return \Illuminate\Http\Response
+     */
+    public function register(Request $request)
+    {
+        $this->validator($request->all())->validate();
 
-       event(new Registered($user = $this->create($request->all())));
+        $user = $this->create($request->all());
 
-       return $user;
-   }
+        event(new Registered($user, $this->rawPassword));
+
+        return response()->json([
+            'message' => 'Please confirm email',
+            'email' => $user->email
+        ], 201);
+
+    }
 
     /**
      * Get a validator for an incoming registration request.
      *
-     * @param  array  $data
+     * @param  array $data
      * @return \Illuminate\Contracts\Validation\Validator
      */
     protected function validator(array $data)
     {
         return Validator::make($data, [
-            'firstname' => ['required', 'string', 'max:255'],
-            'lastname' => ['required', 'string', 'max:255'],
-            'email' => ['required', 'string', 'email', 'max:255', 'unique:users'],
+            'email' => 'required|string|email|max:255|unique:users',
+            'firstname' => 'required|string|min:1|max:255',
+            'lastname' => 'required|string|min:1|max:255',
+            'birthday' => 'date_format:Y-m-d',
         ]);
     }
 
     /**
      * Create a new user instance after a valid registration.
      *
-     * @param  array  $data
+     * @param  array $data
      * @return \App\Models\User
      */
     protected function create(array $data)
     {
-        $code = mt_rand(100000, 999999);
-        // Mail::send('emails.register', ['code' => $code], function ($message) use($data) {
-        //     $message->from('us@example.com', 'Registration Confirmation');
-        //     $message->to($data['email']);
-        // });
-        return User::create([
-            'firstname' => $data['firstname'],
-            'lastname' => $data['lastname'],
-            'email' => $data['email'],
-            'confirm_code' => $code
-        ]);
+        $this->rawPassword = uniqid();
+
+        $data['token'] = $token = bcrypt($this->rawPassword);
+
+        $user = User::create($data);
+        $user->password = $token; // password is not filable
+        $user->save();
+
+        $user->profile()->create($data);
+
+        return $user;
     }
 
-    protected function verify(Request $request)
-    {   $data = $request->all();
 
-        if($user = User::where('confirm_code', $data['confirm_code'] . 'dfsdf')->first()){
-            if($data['password'] === $data['password_confirm']){
-                dd($user);
-                $loginData = [
-                    'email' => $user->email,
-                    'password' => $data['password']
-                ];
-                $data['password'] = Hash::make($data['password']);
-                //$data['birthday'] = date('Y-m-d H:i:s', strtotime($data['birthday']));
-                unset($data['password_confirm']);
-                unset($data['_token']);
-                unset($data['birthday']);
-                $user->update($data);
+    /**
+     * confirm email
+     *
+     * @param $code
+     * @return \Illuminate\Http\JsonResponse|\Illuminate\Http\RedirectResponse|\Illuminate\Routing\Redirector
+     */
+    public function confirm($code)
+    {
 
-                if (Auth::attempt($loginData)) {
-                    echo 'SUCCESS!';
-                } else {
-                    return Redirect::to('login');
-                }
-            }
-        }else{
-            return Redirect::back()->with('error', 'Confirmation code is not valid!');
+        $user = User::where('token', $code)->first();
+
+        if (!$user) {
+            return response()->json(['message' => 'user not found'], 404);
+
+        } elseif ($user->email_verified_at) {
+
+            return response()->json(['message' => 'already confirmed'], 301);
         }
 
-        //$this->guard()->login($user);
+        $user->email_verified_at = Carbon::now();
+        $user->save();
+
+        $this->guard()->login($user);
+
+        return redirect($this->redirectTo);
+
     }
 }
