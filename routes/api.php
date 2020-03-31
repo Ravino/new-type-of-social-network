@@ -20,6 +20,7 @@ Auth::routes();
 
 Route::group(['middleware' => ['auth.jwt']], function () {
 
+    Route::patch('user', 'Api\ProfileController@patch');
     Route::resource('user', 'Api\ProfileController', ['only' => ['index']]);
 
 });
