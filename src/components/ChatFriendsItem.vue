@@ -9,7 +9,7 @@
         <div class="media-body mb-0">
             <div class="d-flex --flex-row align-items-center">
                 <h6 class="w-75 align-self-start mt-0 pb-0 mb-0 pull-left text-body" style="line-height: 20px;">
-                    <a href="#" class="btn btn-link text-body" @click="switchToChat()">{{friend.name}}</a>
+                    <span class="btn btn-link text-body" @click="switchToChat()">{{friend.name}}</span>
                 </h6>
 
                 <small v-if="friend.isRead" class="d-block align-self-end mr-1 mt-0 w-auto" style="line-height: 20px;">

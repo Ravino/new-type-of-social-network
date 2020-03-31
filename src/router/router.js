@@ -16,7 +16,7 @@ let routes = [
 ];
 
 let router = new VueRouter({
-    mode: 'history',
+    // mode: 'history', // @tga - временно
     base: process.env.BASE_URL,
     routes: routes
 });
