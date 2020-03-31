@@ -13,6 +13,10 @@ Vue.filter('toHM', (dateValue) => {
     return moment(dateValue).format('HH:mm');
 });
 
+Vue.filter('toLongDate', (dateValue) => {
+    return moment(dateValue).format('DD MMMM YYYY г.');
+});
+
 Vue.filter('lastMessageTime', (messageDT) => {
     let now = moment();
     let yesterday = moment().subtract(1, 'days');

@@ -5,7 +5,7 @@
         </div>
 
         <div class="col-8">
-            <AccountSettingsMain></AccountSettingsMain>
+            <AccountSettingsMain v-bind:user="userData" v-bind:isReady="dataReady"></AccountSettingsMain>
             <AccountSettingsPrivacy></AccountSettingsPrivacy>
             <AccountSettingsSecurity></AccountSettingsSecurity>
         </div>
@@ -30,17 +30,79 @@ import AccountSettingsSecurity from '../components/AccountSettingsSecurity.vue';
 import AccountToolbarRight from '../components/AccountToolbarRight.vue';
 import AccountSettingsSideMenu from '../components/AccountSettingsSideMenu.vue';
 
-export default {
-    name: 'AccountPage',
-    components: { AccountToolbarLeft,
-        AccountSettingsMain, AccountSettingsPrivacy, AccountSettingsSecurity,
-        AccountSettingsSideMenu,
-        AccountToolbarRight
-    },
-    data() {
-        return {
+import router from '../router/router.js';
+import {HTTPer} from '../httper/httper.js';
 
-        }
+export default {
+name: 'AccountPage',
+components: { AccountToolbarLeft,
+    AccountSettingsMain, AccountSettingsPrivacy, AccountSettingsSecurity,
+    AccountSettingsSideMenu,
+    AccountToolbarRight
+},
+data() {
+    return {
+        userData: {
+            user_id: -1,
+            firstname: ``,
+            lastname: ``,
+            sex: ``,
+            birthday: ``,
+            city: ``,
+            created_at: ``,
+            updated_at: ``,
+        },
+        dataReady: false,
+        gwToken: ``
     }
+},
+
+methods: {
+    getUserData(){
+        let config = {
+            headers: {
+                Authorization: `Bearer ${this.gwToken}`
+            },
+        };
+
+        HTTPer.get('api/user', config)
+            .then( (response) => {
+                window.localStorage.setItem('pliziUser', JSON.stringify(response.data.data));
+                this.userData = response.data.data;
+                this.dataReady = true;
+            })
+            .catch((error) => window.console.log(error.response));
+    },
+
+    checkUserData() {
+        let user = window.localStorage.getItem('pliziUser');
+
+        if (typeof user === 'undefined'  ||  ''===user  || null===user  || {}===user)
+            return false;
+
+        user = JSON.parse(user);
+        this.userData = user;
+        this.dataReady = true;
+
+        return true;
+    }
+},
+
+async mounted() {
+    if (!this.checkUserData()) {
+        await this.getUserData();
+    }
+},
+
+beforeMount() {
+    let gwt = window.localStorage.getItem('pliziJWToken');
+    if (typeof gwt === 'undefined'  ||  ''===gwt  || null===gwt) {
+        router.push({ path: '/login' });
+        return;
+    }
+
+    this.gwToken = gwt;
+}
+
 }
 </script>

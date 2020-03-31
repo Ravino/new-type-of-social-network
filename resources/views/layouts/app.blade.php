@@ -19,6 +19,9 @@
     <link href="{{ asset('css/app.css') }}" rel="stylesheet" />
 
     <title>{{ config('app.name', 'Laravel') }}</title>
+    <script>
+        var apiURL = '{{ config('app.url') }}';
+    </script>
 </head>
 <body>
 <div id="app"></div>
