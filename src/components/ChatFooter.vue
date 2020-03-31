@@ -22,13 +22,13 @@
             <div class="col-2">
                 <div class="btn-group">
                     <button class="btn btn-link mx-0 px-1" type="button">
-                        <img src="src/images/chat-staple-icon.png" width="24" height="24" alt="" />
+                        <img src="/images/chat-staple-icon.png" width="24" height="24" alt="" />
                     </button>
                     <button class="btn btn-link mx-0 px-1" type="button">
-                        <img src="src/images/chat-camera-icon.png" width="24" height="24" alt="" />
+                        <img src="/images/chat-camera-icon.png" width="24" height="24" alt="" />
                     </button>
                     <button class="btn btn-link mx-0 px-1" type="button">
-                        <img src="src/images/chat-smile-icon.png" width="24" height="24" alt="" />
+                        <img src="/images/chat-smile-icon.png" width="24" height="24" alt="" />
                     </button>
                 </div>
             </div>

@@ -4,10 +4,20 @@ namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
 use App\Providers\RouteServiceProvider;
+use Carbon\Carbon;
 use Illuminate\Foundation\Auth\AuthenticatesUsers;
+use Illuminate\Http\Request;
+use Illuminate\Http\Response;
+
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Validation\ValidationException;
+use JWTAuth;
+use Tymon\JWTAuth\Exceptions\JWTException;
 
 class LoginController extends Controller
 {
+    private $expireDays = 3;
+
     /*
     |--------------------------------------------------------------------------
     | Login Controller
@@ -35,6 +45,33 @@ class LoginController extends Controller
      */
     public function __construct()
     {
+        $this->guard = \Auth::guard('api');
+
         $this->middleware('guest')->except('logout');
     }
+
+
+    /**
+     * api login aand get the token
+     *
+     * @param Request $request
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function login(Request $request)
+    {
+        $credentials = $request->only('email', 'password');
+
+        try {
+            if (!$token = $this->guard->attempt($credentials,
+                ['exp' => Carbon::now()->addDays($this->expireDays)->timestamp]
+            )) {
+                return response()->json(['error' => 'invalid credentials'], 400);
+            }
+        } catch (JWTException $e) {
+            return response()->json(['error' => 'could_not_create_token'], 500);
+        }
+
+        return response()->json(compact('token'));
+    }
+
 }

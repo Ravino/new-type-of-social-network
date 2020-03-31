@@ -32,7 +32,7 @@ data() {
         companion: this.prepareCompanion(),
         selfPerson: {
             name: `Александра`,
-            userPic : `/src/images/chat/alexandra.png`,
+            userPic : `/images/chat/alexandra.png`,
         },
     }
 },
@@ -50,6 +50,19 @@ methods:{
 mounted() {
     this.$root.$on('addNewChatMessage', (evData) => {
         this.messagesList.push(evData);
+    });
+
+    this.$root.$on('switchToChat', (evData) => {
+        this.friendsList = this.friendsList.map((friend, friendIndex) => {
+            if (friend.isSelected)
+                friend.isSelected = false;
+
+            if (friendIndex === evData.friendID) {
+                friend.isSelected = true;
+            }
+
+            return friend;
+        })
     });
 }
 
