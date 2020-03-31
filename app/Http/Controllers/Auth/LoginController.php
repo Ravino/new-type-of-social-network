@@ -65,10 +65,10 @@ class LoginController extends Controller
             if (!$token = $this->guard->attempt($credentials,
                 ['exp' => Carbon::now()->addDays($this->expireDays)->timestamp]
             )) {
-                return response()->json(['error' => 'invalid credentials'], 400);
+                return response()->json(['message' => 'invalid credentials'], 400);
             }
         } catch (JWTException $e) {
-            return response()->json(['error' => 'could_not_create_token'], 500);
+            return response()->json(['message' => 'could not create token'], 500);
         }
 
         return response()->json(compact('token'));
