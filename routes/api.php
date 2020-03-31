@@ -18,9 +18,8 @@ use Illuminate\Support\Facades\Route;
 Auth::routes();
 
 
-//Route::group(['middleware' => ['auth.jwt']], function () {
-//    //
-//
-//    Route::resource('user', 'Api\ProfileController', ['only' => ['index', 'update']]);
-//
-//});
+Route::group(['middleware' => ['auth.jwt']], function () {
+
+    Route::resource('user', 'Api\ProfileController', ['only' => ['index']]);
+
+});

@@ -24,14 +24,6 @@ class ProfileController extends Controller
         return new \App\Http\Resources\User(Auth::user()->profile);
     }
 
-    public function update(Request $request){
 
-        return Validator::make($data, [
-//            'firstname' => ['required', 'string', 'max:255'],
-//            'lastname' => ['required', 'string', 'max:255'],
-            'email' => ['required', 'string', 'email', 'max:255', 'unique:users'],
-        ]);
-
-    }
 
 }
