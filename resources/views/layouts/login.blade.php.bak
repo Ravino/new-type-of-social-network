@@ -22,16 +22,15 @@
     </div>
     <div class="modal overlay"></div>
 
-
-
-
-
     <!-- Fonts -->
     <link rel="stylesheet" type="text/css" href="{{ asset('css/style.css') }}">
 	<link rel="stylesheet" type="text/css" href="{{ asset('css/fonts.css') }}">
 	<link rel="stylesheet" type="text/css" href="{{ asset('css/sliderlogin.css') }}">
 	<link rel="stylesheet" type="text/css" href="{{ asset('css/adaptive.css') }}">
 	<link rel="stylesheet" type="text/css" href="{{ asset('fonts/font-awesome/css/font-awesome.min.css') }}">
+
+{{--    tga added--}}
+    <link rel="stylesheet" type="text/css" href="{{ asset('css/bootstrap-4.3.1.min.css') }}">
 
     <!-- Scripts -->
     <script src="{{ asset('js/app.js') }}" defer></script>

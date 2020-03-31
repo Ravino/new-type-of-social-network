@@ -3,13 +3,13 @@
         <img class="chat-list-user-pic" v-bind:src="friend.userPic" v-bind:alt="friend.name" />
 
         <div v-if="friend.isOnline" class="chat-list-user-isonline">
-            <img class="" src="/src/images/companion-is-online.png" alt="онлайн" />
+            <img class="" src="/images/companion-is-online.png" alt="онлайн" />
         </div>
 
         <div class="media-body mb-0">
             <div class="d-flex --flex-row align-items-center">
                 <h6 class="w-75 align-self-start mt-0 pb-0 mb-0 pull-left text-body" style="line-height: 20px;">
-                    <b>{{friend.name}}</b>
+                    <a href="#" class="btn btn-link text-body" @click="switchToChat()">{{friend.name}}</a>
                 </h6>
 
                 <small v-if="friend.isRead" class="d-block align-self-end mr-1 mt-0 w-auto" style="line-height: 20px;">
@@ -17,7 +17,7 @@
                 </small>
 
                 <time :datetime="friend.lastMessageDT" class="d-block align-self-end text-dark w-auto" style="line-height: 20px;">
-                    {{displayLastMessageTime(friend.lastMessageDT)}}
+                    {{friend.lastMessageDT | lastMessageTime}}
                 </time>
             </div>
             <div class="d-flex flex-row">
@@ -37,6 +37,7 @@ export default {
 name: 'ChatFriendsItem',
 props: {
     friend : Object,
+    friendID: Number
 },
 data () {
     return {
@@ -45,26 +46,9 @@ data () {
 },
 
 methods : {
-    //TODO: перевести потом в фильтры
-    displayLastMessageTime(lastMessageDT){
-        let now = moment();
-        let yesterday = moment().subtract(1, 'days');
-        let lmt = moment(lastMessageDT);
-
-        // если сообщение было сегодня или вчера
-        if (now.format('YYYY-MM-DD')===lmt.format('YYYY-MM-DD')  ||  yesterday.format('YYYY-MM-DD')===lmt.format('YYYY-MM-DD')) {
-            return lmt.format('HH:mm');
-        }
-
-        // сообщение было в течение последних 7 дней
-        let lastWeek = moment().subtract(7, 'days');
-        if ( +lmt.format('X') >= +lastWeek.format('X')) {
-            let dow = lmt.format('dd');
-            return dow.charAt(0).toUpperCase() + dow.slice(1);
-        }
-
-        return lmt.format('DD.MM.YY');
-    },
+    switchToChat(){
+        this.$root.$emit('switchToChat', { friendID : this.friendID });
+    }
 },
 mounted() {
 
@@ -73,7 +57,7 @@ mounted() {
 }
 </script>
 
-<style scoped>
+<style>
 :root {
     --user-pic-size: 32px;
     --isonline-pic-size: 10px;
@@ -96,7 +80,7 @@ mounted() {
     /*border: 1px solid red;*/
 }
 
-.chat-list-user.media .chat-list-user-isonline {
+.chat-list-user .chat-list-user-isonline {
     display: block;
     position: absolute;
     left: calc(var(--user-pic-size) + 8px);

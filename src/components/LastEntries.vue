@@ -3,7 +3,7 @@
         <h6 class="card-title w-100 text-center py-2"><b>Вы недавно входили в аккаунт с этого компьютера</b></h6>
 
         <div class="--card-body d-flex justify-content-start">
-            <LastEntryItem v-for="(leItem) in lastEntriesList" v-bind:entry-item="leItem" />
+            <LastEntryItem v-for="(leItem, leKey) in lastEntriesList" v-bind:entry-item="leItem" v-bind:key="leKey"></LastEntryItem>
         </div>
     </div>
 </template>
@@ -17,9 +17,9 @@ components: {LastEntryItem},
 data () {
     return {
         lastEntriesList: [
-            { src: '/src/images/vladislav.png', fullName: 'Владислав Браташ', isUser: true },
-            { src: '/src/images/alex.png', fullName: 'Alexey Bashmakow', isUser: true },
-            { src: '/src/images/add-account.png', fullName: 'Добавить аккаунт', isUser: false },
+            { src: '/images/last-entries/vladislav.png', fullName: 'Владислав Браташ', isUser: true },
+            { src: '/images/last-entries/alex.png', fullName: 'Alexey Bashmakow', isUser: true },
+            { src: '/images/icons/add-account.png', fullName: 'Добавить аккаунт', isUser: false },
         ],
     }
 },

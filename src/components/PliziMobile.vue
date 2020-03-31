@@ -37,7 +37,7 @@ methods: {
 <style scoped>
 #pliziMobile .bg-wrapper {
     /*background-color: yellow;*/
-    background-image: url("/src/images/plizi-mobile-bg.png");
+    background-image: url("/images/plizi-mobile-bg.png");
     background-position: left bottom;
     background-repeat: no-repeat;
     /*background-size: 100px;*/
