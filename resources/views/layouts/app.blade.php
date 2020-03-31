@@ -76,5 +76,6 @@
             @yield('content')
         </main>
     </div>
+    <script src="js/autobahn.min.js"></script>
 </body>
 </html>
