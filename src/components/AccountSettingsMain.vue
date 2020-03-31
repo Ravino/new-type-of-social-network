@@ -8,7 +8,7 @@
             <div class="form-group row mb-0 border-bottom">
                 <label for="firstName" class="col-4 col-form-label text-secondary">Имя</label>
                 <div class="col-5">
-                    <input type="text" readonly class="form-control-plaintext" id="firstName" value="Дмитрий" />
+                    <input v-model="user.firstname" type="text" :readonly="true" class="form-control-plaintext" id="firstName" ref="firstName" />
                 </div>
                 <div class="col-3">
                     <button type="button" class="btn btn-link text-body">Изменить</button>
@@ -18,7 +18,7 @@
             <div class="form-group row mb-0 border-bottom">
                 <label for="lastName" class="col-4 col-form-label text-secondary">Фамилия</label>
                 <div class="col-5">
-                    <input type="text" readonly class="form-control-plaintext" id="lastName" value="-" />
+                    <input v-model="user.lastname" type="text" readonly class="form-control-plaintext" id="lastName" ref="lastName"  />
                 </div>
                 <div class="col-3">
                     <button type="button" class="btn btn-link text-body">Сохранить</button>
@@ -28,7 +28,10 @@
             <div class="form-group row mb-0 border-bottom">
                 <label class="col-4 col-form-label text-secondary">Пол</label>
                 <div class="col-5">
-                    <span class="form-control-plaintext d-inline-block w-auto">Мужской</span><i class="fas fa-chevron-down ml-2"></i>
+                    <span v-if="this.user.sex==='m'" class="form-control-plaintext d-inline-block w-auto">Мужской</span>
+                    <span v-if="this.user.sex==='f'" class="form-control-plaintext d-inline-block w-auto">Женский</span>
+                    <span v-if="this.user.sex==='n'" class="form-control-plaintext d-inline-block w-auto">Не указано</span>
+                    <i class="fas fa-chevron-down ml-2"></i>
                 </div>
                 <div class="col-3"></div>
             </div>
@@ -44,7 +47,7 @@
             <div class="form-group row mb-0 border-bottom">
                 <label for="birthDate" class="col-4 col-form-label text-secondary">Дата рождения</label>
                 <div class="col-5">
-                    <input type="text" readonly class="form-control-plaintext" id="birthDate" value="14 сентября 1990 г." />
+                    <input type="text" readonly class="form-control-plaintext" id="birthDate" ref="birthDate" :value="user.birthday | toLongDate" />
                 </div>
                 <div class="col-3">
                     <button type="button" class="btn btn-link text-body">Изменить</button>
@@ -54,19 +57,13 @@
             <div class="form-group row mb-0 --border-bottom">
                 <label for="location" class="col-4 col-form-label text-secondary">Месторасположение</label>
                 <div class="col-5">
-                    <i class="fas fa-map-marker-alt d-inline-block mr-2"></i> <input type="text" readonly class="form-control-plaintext d-inline-block w-50" id="location" value="Киев, Украина" />
+                    <i class="fas fa-map-marker-alt d-inline-block mr-2"></i>
+                    <input v-model="user.city" type="text" readonly class="form-control-plaintext d-inline-block w-50" id="location" ref="location" />
                 </div>
                 <div class="col-3">
                     <button type="button" class="btn btn-link text-body">Изменить</button>
                 </div>
             </div>
-
-<!--            убрано по согласованию-->
-<!--            <div class="form-group row mt-3 mb-0">-->
-<!--                <div class="col-4">-->
-<!--                    <button class="btn btn-primary btn-block rounded-pill w-75" id="btnSubmit">Сохранить</button>-->
-<!--                </div>-->
-<!--            </div>-->
         </form>
     </div>
 </template>
@@ -74,12 +71,21 @@
 <script>
 export default {
 name: 'AccountSettingsMain',
+props: {
+    user: Object,
+    isReady: Boolean
+},
 data () {
     return {
     }
 },
 
+
 methods: {
+},
+
+beforeUpdate() {
+
 }
 
 }

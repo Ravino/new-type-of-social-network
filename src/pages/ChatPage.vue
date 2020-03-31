@@ -16,8 +16,7 @@ import ChatMainComponent from '../components/ChatMainComponent.vue';
 
 import chatFriendsListData from '../data/chatFriendsList.js';
 import chatMessagesListData from '../data/chatMessagesList.js';
-
-// #3d51de - цвет фона для своих мессаджей
+import router from "../router/router";
 
 export default {
 name: 'ChatPage',
@@ -64,7 +63,15 @@ mounted() {
             return friend;
         })
     });
+},
+
+beforeMount() {
+    let gwt = window.localStorage.getItem('pliziJWToken');
+    if (typeof gwt === 'undefined'  ||  ''===gwt  || null===gwt) {
+        router.push({ path: '/login' });
+    }
 }
+
 
 }
 </script>

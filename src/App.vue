@@ -1,6 +1,6 @@
 <template>
     <div class="container-fluid">
-        <NavBar></NavBar>
+        <NavBar v-bind:is-auth="isAuth"></NavBar>
 
         <main id="contentContainer" role="main" class="container-fluid">
             <router-view></router-view>
@@ -15,17 +15,25 @@ import NavBar from './common/NavBar.vue';
 import Footer from './common/Footer.vue';
 
 export default {
-    name: 'App',
-    components: {NavBar, Footer},
-    data () {
-        return {
-
-        }
+name: 'App',
+components: {NavBar, Footer},
+data () {
+    return {
+        isAuth: false
     }
-}
+},
 
-// $pliziWaveBlue: #3D51DE;
-// $pliziWaveWhite: #F7F8FC;
+mounted() {
+    this.$root.$on('afterSuccessLogin', () => {
+        this.isAuth = true;
+    });
+    this.$root.$on('afterSuccessLogout', () => {
+        this.isAuth = false;
+        window.localStorage.removeItem('pliziJWToken');
+        window.localStorage.removeItem('pliziUser');
+    });
+}
+}
 </script>
 
 <style>
