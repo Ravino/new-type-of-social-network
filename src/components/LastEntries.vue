@@ -17,9 +17,9 @@ components: {LastEntryItem},
 data () {
     return {
         lastEntriesList: [
-            { src: '/src/images/vladislav.png', fullName: 'Владислав Браташ', isUser: true },
-            { src: '/src/images/alex.png', fullName: 'Alexey Bashmakow', isUser: true },
-            { src: '/src/images/add-account.png', fullName: 'Добавить аккаунт', isUser: false },
+            { src: '/images/last-entries/vladislav.png', fullName: 'Владислав Браташ', isUser: true },
+            { src: '/images/last-entries/alex.png', fullName: 'Alexey Bashmakow', isUser: true },
+            { src: '/images/icons/add-account.png', fullName: 'Добавить аккаунт', isUser: false },
         ],
     }
 },

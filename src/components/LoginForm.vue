@@ -39,7 +39,7 @@
 
                 <div class="form-group text-center">
                     <h6 class=""><b>Импорт аккаунта</b></h6>
-                    <div class="mb-2">Импортируйте свой аккаунт из списка следюущих социальных сетей</div>
+                    <div class="mb-2">Импортируйте свой аккаунт из списка следующих социальных сетей</div>
                     <div class="d-flex justify-content-center">
                         <div class="mx-3"><a href="#twitter" title="Twitter" class="border bordered-50">
                             <i class="fab fa-twitter"></i></a>

@@ -1,6 +1,6 @@
 <template>
     <nav class="navbar navbar-expand-lg fixed-top navbar-dark bg-dark">
-        <router-link to="/login" tag="a" class="navbar-brand mr-auto mr-lg-0">Plizi</router-link>
+        <router-link to="/" tag="a" class="navbar-brand mr-auto mr-lg-0">Plizi</router-link>
 
         <div class="collapse navbar-collapse" id="nav-content">
             <ul class="navbar-nav">
