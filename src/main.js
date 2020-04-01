@@ -1,11 +1,16 @@
 import Vue from 'vue';
-window.Vue = Vue;
-
 import VueRouter from 'vue-router';
-Vue.config.productionTip = false;
-Vue.use(VueRouter);
+import Vuelidate from 'vuelidate';
 
 import moment from 'moment';
+
+import router from './router/router.js';
+import { store } from './store/store.js'
+
+window.Vue = Vue;
+
+Vue.config.productionTip = false;
+Vue.use(VueRouter);
 
 moment.locale('ru');
 
@@ -38,19 +43,12 @@ Vue.filter('lastMessageTime', (messageDT) => {
 });
 
 
-import Vuelidate from 'vuelidate';
 Vue.use(Vuelidate);
-
-import router from './router/router.js';
 
 import App from './App.vue';
 
-// new Vue({
-//     el: '#app',
-//     render: h => h(App)
-// });
-
 window.app = new Vue({
-    router: router,
+    router,
+    store,
     render: h => h(App),
 }).$mount('#app');

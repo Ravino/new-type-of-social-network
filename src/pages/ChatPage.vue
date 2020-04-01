@@ -16,7 +16,6 @@ import ChatMainComponent from '../components/ChatMainComponent.vue';
 
 import chatFriendsListData from '../data/chatFriendsList.js';
 import chatMessagesListData from '../data/chatMessagesList.js';
-import router from "../router/router";
 
 export default {
 name: 'ChatPage',
@@ -68,7 +67,7 @@ mounted() {
 beforeMount() {
     let gwt = window.localStorage.getItem('pliziJWToken');
     if (typeof gwt === 'undefined'  ||  ''===gwt  || null===gwt) {
-        router.push({ path: '/login' });
+        this.router.push({ path: '/login' });
     }
 }
 

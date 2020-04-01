@@ -66,7 +66,6 @@
 </template>
 
 <script>
-import router from '../router/router.js';
 import {HTTPer} from '../httper/httper.js';
 import { required, minLength, maxLength, email } from 'vuelidate/lib/validators';
 
@@ -116,9 +115,7 @@ methods: {
         HTTPer.post('api/login', loginData)
             .then((response) => {
                 if (response.status === 200  &&  response.statusText.toUpperCase()==='OK'  &&  response.data  &&  response.data.token  &&  response.data.token!=='') {
-                    window.localStorage.setItem('pliziJWToken', response.data.token);
-                    this.$root.$emit('afterSuccessLogin', {});
-                    router.push({ path: '/account' });
+                    this.$root.$emit('afterSuccessLogin', { 'token': response.data.token });
                 }
             })
             .catch((error) => {
@@ -141,7 +138,7 @@ methods: {
 
     openRegistrationModal() {
         // window.console.warn('openRegistrationModal');
-        router.push({ path: '/registration' });
+        this.$router.push({ path: '/registration' });
     },
 },
 

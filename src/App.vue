@@ -19,18 +19,58 @@ name: 'App',
 components: {NavBar, Footer},
 data () {
     return {
-        isAuth: false
+        isAuth: false,
+        userData: null,
     }
 },
 
+methods: {
+    async checkUser() {
+        window.console.log(`checkUser`);
+        let user = this.$store.getters.userData;
+        window.console.log(user, '.getters.userData');
+
+        if (user &&  user.firstname) {
+            this.isAuth = true;
+            return true;
+        }
+
+        user = await this.$store.dispatch('GET_USER', {});
+        if (user  &&  user.firstname) {
+            this.isAuth = true;
+            return true;
+        }
+
+        return false;
+    }
+},
+
+async beforeMount() {
+    await this.checkUser();
+},
+
 mounted() {
-    this.$root.$on('afterSuccessLogin', () => {
-        this.isAuth = true;
+    this.$root.$on('afterSuccessLogin', (evData) => {
+        if (evData.token !== ``) {
+            this.isAuth = true;
+
+            this.$store.dispatch('SET_GWT', evData.token);
+            this.$store.dispatch('SET_AUTH', true);
+
+            this.$router.push({ path: '/account' });
+        }
     });
+
     this.$root.$on('afterSuccessLogout', () => {
         this.isAuth = false;
+
+        this.$store.dispatch('SET_GWT', ``);
+        this.$store.dispatch('SET_AUTH', false);
+
         window.localStorage.removeItem('pliziJWToken');
         window.localStorage.removeItem('pliziUser');
+
+        this.$router.push({ path: '/login' });
     });
 }
 }

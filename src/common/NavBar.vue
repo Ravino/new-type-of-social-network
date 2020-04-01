@@ -34,7 +34,7 @@ data () {
         authItems : [
             { path : '/account', title : 'Аккаунт', routes : ['account'] },
             { path : '/chat', title : 'Чат', routes : ['chat'] },
-            { path : '/login', title : 'Логаут', routes : ['login'] },
+            { path : '/logout', title : 'Выход', routes : ['logout'] },
         ],
     }
 },

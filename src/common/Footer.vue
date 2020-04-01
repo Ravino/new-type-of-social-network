@@ -1,5 +1,5 @@
 <template>
-    <footer class="navbar fixed-bottom navbar-expand-sm --navbar-dark bg-dark">
+    <footer class="navbar --fixed-bottom navbar-expand-sm --navbar-dark bg-dark mt-3">
         <div class="container">
             <div class="pull-left">
                 <div class="collapse navbar-collapse">
