@@ -21,13 +21,14 @@
 </template>
 
 <script>
-import AccountToolbarLeft from '../components/AccountToolbarLeft.vue';
+import AccountToolbarLeft from '../common/AccountToolbarLeft.vue';
+import AccountToolbarRight from '../common/AccountToolbarRight.vue';
 
 import AccountSettingsMain from '../components/AccountSettingsMain.vue';
 import AccountSettingsPrivacy from '../components/AccountSettingsPrivacy.vue';
 import AccountSettingsSecurity from '../components/AccountSettingsSecurity.vue';
 
-import AccountToolbarRight from '../components/AccountToolbarRight.vue';
+
 import AccountSettingsSideMenu from '../components/AccountSettingsSideMenu.vue';
 
 import router from '../router/router.js';

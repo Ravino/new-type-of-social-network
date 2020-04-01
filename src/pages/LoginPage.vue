@@ -1,5 +1,5 @@
 <template>
-    <div class="row">
+    <div class="row pt-5">
         <div class="col-4 offset-1">
             <LoginForm></LoginForm>
         </div>

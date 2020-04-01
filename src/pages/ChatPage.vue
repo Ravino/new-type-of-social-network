@@ -11,7 +11,8 @@
 </template>
 
 <script>
-import AccountToolbarLeft from '../components/AccountToolbarLeft.vue';
+import AccountToolbarLeft from '../common/AccountToolbarLeft.vue';
+
 import ChatMainComponent from '../components/ChatMainComponent.vue';
 
 import chatFriendsListData from '../data/chatFriendsList.js';

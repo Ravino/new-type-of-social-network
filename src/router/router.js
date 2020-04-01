@@ -2,10 +2,10 @@ import VueRouter from 'vue-router';
 
 import HomePage from '../pages/HomePage.vue';
 import LoginPage from '../pages/LoginPage.vue';
-import LogoutPage from '../pages/LogoutPage.vue';
-import AccountPage from '../pages/AccountPage.vue';
 import RegistrationPage from '../pages/RegistrationPage.vue';
+import AccountPage from '../pages/AccountPage.vue';
 import ChatPage from '../pages/ChatPage.vue';
+import LogoutPage from '../pages/LogoutPage.vue';
 
 const routes = [
     // { path: '/', redirect: '/login' },
@@ -26,6 +26,8 @@ const router = new VueRouter({
 router.beforeEach((to, from, next) => {
     document.title = to.meta.title;
     next();
+
+    document.body.className = to.name;
 });
 
 export default router;

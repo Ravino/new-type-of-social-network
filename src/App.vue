@@ -1,6 +1,7 @@
 <template>
-    <div class="container-fluid">
-        <NavBar v-bind:is-auth="isAuth"></NavBar>
+    <div class="container-fluid px-0 my-0">
+        <GuestNavBar v-if="!isAuth"></GuestNavBar>
+        <AuthNavBar v-if="isAuth" v-bind:is-auth="isAuth"></AuthNavBar>
 
         <main id="contentContainer" role="main" class="container-fluid">
             <router-view></router-view>
@@ -11,12 +12,14 @@
 </template>
 
 <script>
-import NavBar from './common/NavBar.vue';
+// import NavBar from './common/NavBar.vue';
+import GuestNavBar from './common/GuestNavBar.vue';
+import AuthNavBar from './common/AuthNavBar.vue';
 import Footer from './common/Footer.vue';
 
 export default {
 name: 'App',
-components: {NavBar, Footer},
+components: {GuestNavBar, AuthNavBar, Footer},
 data () {
     return {
         isAuth: false,
@@ -26,9 +29,7 @@ data () {
 
 methods: {
     async checkUser() {
-        window.console.log(`checkUser`);
         let user = this.$store.getters.userData;
-        window.console.log(user, '.getters.userData');
 
         if (user &&  user.firstname) {
             this.isAuth = true;
@@ -79,16 +80,34 @@ mounted() {
 <style>
 body {
     background-color: #F7F8FC;
+}
 
-    /*background-image: url("/src/images/plizi-bg-exp.svg");*/
-    /*background-size: auto auto;*/
-    /*background-repeat: no-repeat;*/
-    /*background-position: right 40px;*/
-    /*background-attachment: scroll;*/
+body.LoginPage {
+    background-image: url("/src/images/plizi-bg-exp.svg");
+    background-size: auto auto;
+    background-repeat: no-repeat;
+    background-position: right 40px;
+    background-attachment: scroll;
 }
 
 #contentContainer {
     margin-top: 70px;
     min-height: 200px;
+}
+
+.icon-40 {
+    display: block;
+    float: right;
+    width: 40px;
+    max-width: 40px;
+    height: 40px;
+    max-height: 40px;
+    margin: 0px 10px 0px 0px;
+}
+
+.icon-40 > img {
+    width: auto;
+    max-width: 100%;
+    max-height: 100%;
 }
 </style>

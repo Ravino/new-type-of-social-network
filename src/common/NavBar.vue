@@ -39,7 +39,11 @@ data () {
     }
 },
 
-methods: {
+mounted() {
+    window.console.log(`NavBar`);
+},
+
+    methods: {
     isActiveMenu(routNames) {
         return !!routNames.find((rItem) => {
             return this.$router.currentRoute.name === rItem;
