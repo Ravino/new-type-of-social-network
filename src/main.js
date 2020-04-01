@@ -2,6 +2,10 @@ import Vue from 'vue';
 import VueRouter from 'vue-router';
 import Vuelidate from 'vuelidate';
 
+import { VueResponsiveComponents } from 'vue-responsive-components';
+
+Vue.use(VueResponsiveComponents);
+
 import moment from 'moment';
 
 import router from './router/router.js';

@@ -1,5 +1,5 @@
 <template>
-    <div id="accountSettingsSecurity" class="card bg-light container-fluid">
+    <div id="accountSettingsSecurity" class="card bg-light container-fluid d-sm-none d-md-none">
         <form>
             <div class="form-group row mb-0 mt-2 border-bottom">
                 <div class="col-12"><h6><b>Безопасность</b></h6></div>

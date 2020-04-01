@@ -1,5 +1,5 @@
 <template>
-    <div id="accountSettingsMain" class="card --bg-secondary --text-white --h-100 py-2">
+    <div id="rightToolbar" class="card --bg-secondary --text-white --h-100 py-2">
         <div class="d-block w-50 mb-1 mt-2 mx-auto text-center m">
             <i class="fas fa-chevron-left"></i>
         </div>

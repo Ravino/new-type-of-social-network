@@ -33,10 +33,6 @@ data () {
     }
 },
 
-mounted() {
-    window.console.log(`GuestNavBar`);
-},
-
 methods: {
     isActiveMenu(routNames) {
         return !!routNames.find((rItem) => {

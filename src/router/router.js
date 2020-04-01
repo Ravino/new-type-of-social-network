@@ -4,7 +4,8 @@ import HomePage from '../pages/HomePage.vue';
 import LoginPage from '../pages/LoginPage.vue';
 import RegistrationPage from '../pages/RegistrationPage.vue';
 import AccountPage from '../pages/AccountPage.vue';
-import ChatPage from '../pages/ChatPage.vue';
+import ChatsListPage from '../pages/ChatsListPage.vue';
+import ChatMessagesPage from '../pages/ChatMessagesPage.vue';
 import LogoutPage from '../pages/LogoutPage.vue';
 
 const routes = [
@@ -14,7 +15,8 @@ const routes = [
     { path: '/logout', component: LogoutPage, name: 'LogoutPage', meta: {title: 'Plizi: Выход'} },
     { path: '/registration', component: RegistrationPage, name: 'RegistrationPage', meta: {title: 'Plizi: Регистрация'}, props: true },
     { path: '/account', component: AccountPage, name: 'AccountPage', meta: {title: 'Plizi: Настройки аккаунта'}, props: true },
-    { path: '/chat', component: ChatPage, name: 'ChatPage', meta: {title: 'Plizi: Чат'}, props: true },
+    { path: '/chats-list', component: ChatsListPage, name: 'ChatsListPage', meta: {title: 'Plizi: Чаты'}, props: true },
+    { path: '/chat-messages', component: ChatMessagesPage, name: 'ChatMessagesPage', meta: {title: 'Plizi: Чат'}, props: true },
 ];
 
 const router = new VueRouter({

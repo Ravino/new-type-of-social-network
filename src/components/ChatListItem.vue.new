@@ -1,0 +1,80 @@
+<template>
+    <li class="chat-list-user media m-0 px-3 py-2"
+        v-responsive="{ isWideList: calcWidthClass }" :class="{ 'chat-user-selected': friend.isSelected }">
+
+        <img class="chat-list-user-pic" v-bind:src="friend.userPic" v-bind:alt="friend.name" />
+
+        {{friend.name}}
+    </li>
+</template>
+
+<script>
+import { ResponsiveDirective } from 'vue-responsive-components';
+
+export default {
+name: 'ChatListItem',
+props: {
+    friend : Object,
+    friendID: Number
+},
+directives: {
+    responsive: ResponsiveDirective
+},
+data () {
+    return {
+        isNarrow : false,
+    }
+},
+
+methods : {
+    switchToChat(){
+        this.$root.$emit('switchToChat', { friendID : this.friendID });
+    },
+
+    calcWidthClass(el){
+        return (el.width >= 992);
+    }
+},
+mounted() {
+
+}
+
+}
+</script>
+
+<style>
+:root {
+    --user-pic-size: 32px;
+    --isonline-pic-size: 10px;
+}
+
+.chat-list-user.media {
+    position: relative;
+    background-color: white;
+}
+
+.chat-list-user.media.isWideList.chat-user-selected{
+    background-color: #f8f9fa;
+}
+
+.chat-list-user.media .chat-list-user-pic {
+    width: var(--user-pic-size);
+    min-width: var(--user-pic-size);
+    max-width: var(--user-pic-size);
+    height: var(--user-pic-size);
+    min-height: var(--user-pic-size);
+    max-height: var(--user-pic-size);
+    border-radius: var(--user-pic-size);
+    margin-right: 10px;
+    /*background-color: yellow;*/
+    /*border: 1px solid red;*/
+}
+
+.chat-list-user .chat-list-user-isonline {
+    display: block;
+    position: absolute;
+    left: calc(var(--user-pic-size) + 8px);
+    top: calc(var(--user-pic-size) );
+    z-index: 100;
+}
+</style>
