@@ -100,6 +100,11 @@ validations() {
     };
 },
 
+mounted() {
+    setTimeout(()=>{
+        this.$refs.email.focus();
+    }, 100);
+},
 
 methods: {
     startLogin() {
@@ -122,7 +127,7 @@ methods: {
                 if (400 === error.response.status) {
                     this.isServerError = true;
                     this.serverErrorText = error.response.data.error;
-                    window.console.warn(error.response.status+': '+error.response.statusText+': ' +error.response.data.error);
+                    window.console.warn(error.response.status+': '+error.response.statusText+': ' +error.response.data.message);
                     this.$refs.password.focus();
                 }
                 else {

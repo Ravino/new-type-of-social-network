@@ -6,19 +6,33 @@
             </div>
 
             <form id="registrationForm" novalidate="novalidate">
-                <div class="form-group" :class="{ 'has-error': $v.model.name.$error, 'has-success': !$v.model.name.$invalid }">
-                    <label for="userName" class="d-none">Ваше имя</label>
-                    <input v-model="model.name"
-                           :class="{ 'is-invalid': $v.model.name.$error, 'is-valid': !$v.model.name.$invalid }"
-                           @blur="$v.model.name.$touch()" @keydown="registrationKeyDownCheck($event)"
-                           type="text" class="form-control" id="userName" placeholder="Ваше имя" />
+                <div class="form-group" :class="{ 'has-error': $v.model.firstName.$error, 'has-success': !$v.model.firstName.$invalid }">
+                    <label for="firstName" class="d-none">Ваше имя</label>
+                    <input v-model="model.firstName"
+                           :class="{ 'is-invalid': $v.model.firstName.$error, 'is-valid': !$v.model.firstName.$invalid }"
+                           @blur="$v.model.firstName.$touch()" @keydown="registrationKeyDownCheck($event)"
+                           type="text" class="form-control" id="firstName" ref="firstName" placeholder="Ваше имя" />
 
-                    <div v-show="$v.model.name.$error" class="invalid-feedback">
-                        <p v-if="!$v.model.name.required" class="text-danger">Укажите как Вас зовут</p>
-                        <p v-if="!$v.model.name.minLength" class="text-danger">Врядли у Вас такое короткое имя?</p>
-                        <p v-if="!$v.model.name.maxLength" class="text-danger">Слишком длинное имя</p>
-                        <p v-if="!$v.model.name.isCorrectFullName" class="text-danger">Только буквы в имени фамилии</p>
-                        <p v-if="!$v.model.name.isFirstNameAndLastName" class="text-danger">Укажите и имя и фамилию!</p>
+                    <div v-show="$v.model.firstName.$error" class="invalid-feedback">
+                        <p v-if="!$v.model.firstName.required" class="text-danger">Укажите как Вас зовут</p>
+                        <p v-if="!$v.model.firstName.minLength" class="text-danger">Врядли у Вас такое короткое имя?</p>
+                        <p v-if="!$v.model.firstName.maxLength" class="text-danger">Слишком длинное имя</p>
+                        <p v-if="!$v.model.firstName.isCorrectHumanName" class="text-danger">Только буквы в имени</p>
+                    </div>
+                </div>
+
+                <div class="form-group" :class="{ 'has-error': $v.model.lastName.$error, 'has-success': !$v.model.lastName.$invalid }">
+                    <label for="lastName" class="d-none">Ваше имя</label>
+                    <input v-model="model.lastName"
+                           :class="{ 'is-invalid': $v.model.lastName.$error, 'is-valid': !$v.model.lastName.$invalid }"
+                           @blur="$v.model.lastName.$touch()" @keydown="registrationKeyDownCheck($event)"
+                           type="text" class="form-control" id="lastName" ref="lastName" placeholder="Ваше имя" />
+
+                    <div v-show="$v.model.lastName.$error" class="invalid-feedback">
+                        <p v-if="!$v.model.lastName.required" class="text-danger">Укажите свою фамилию</p>
+                        <p v-if="!$v.model.lastName.minLength" class="text-danger">Врядли у Вас такая короткая фамилия</p>
+                        <p v-if="!$v.model.lastName.maxLength" class="text-danger">Слишком длинная фамилия</p>
+                        <p v-if="!$v.model.lastName.isCorrectHumanName" class="text-danger">Только буквы в фамилии</p>
                     </div>
                 </div>
 
@@ -44,7 +58,6 @@
                            placeholder="Дата рождения" />
 
                     <div v-show="$v.model.birthDate.$error" class="invalid-feedback">
-                        <p v-if="!$v.model.birthDate.required" class="text-danger">Укажите дату своего рождения</p>
                         <p v-if="!$v.model.birthDate.isValidDMY" class="text-danger">Укажите дату в формате ДД.MM.ГГГГ</p>
                     </div>
                 </div>
@@ -58,54 +71,99 @@
 </template>
 
 <script>
-import { isCorrectFullName, isFirstNameAndLastName, isValidDMY } from '../validators/validators.js';
+import moment from 'moment';
+import {HTTPer} from '../httper/httper.js';
+
 import { required, minLength, maxLength, email } from 'vuelidate/lib/validators';
+import { isCorrectHumanName, isValidRegistrationBirthDay } from '../validators/validators.js';
 
 export default {
 name: 'RegistrationForm',
 data () {
     return {
         model : {
-            name: ``,
+            firstName: ``,
+            lastName: ``,
             email: ``,
             birthDate: ``
-        }
+        },
+
+        isServerError: false,
+        serverErrorText: ''
     }
 },
 
 validations() {
     return {
         model : {
-            name: {
+            firstName: {
                 required,
-                minLength: minLength(4),
-                maxLength: maxLength(250),
-                isCorrectFullName,
-                isFirstNameAndLastName
+                minLength: minLength(2),
+                maxLength: maxLength(100),
+                isCorrectHumanName
+            },
+            lastName: {
+                required,
+                minLength: minLength(2),
+                maxLength: maxLength(100),
+                isCorrectHumanName
             },
             email: {
                 required,
                 email
             },
             birthDate: {
-                required,
-                isValidDMY
+                isValidRegistrationBirthDay
             },
         }
     };
+},
+
+mounted() {
+    setTimeout(()=>{
+        this.$refs.firstName.focus();
+    }, 100);
 },
 
 methods: {
     startRegistration() {
         this.$v.$touch();
 
-        window.console.info('Форма отправлена');
-        let tmp = {
-            name: this.model.name.trim(),
+        let bDay = this.model.birthDate.trim();
+        bDay = (``===bDay) ? '0000-00-00' : moment(bDay, 'DD.MM.YYYY').format('YYYY-MM-DD');
+
+        let regData = {
             email: this.model.email.trim(),
-            birthDate: this.model.birthDate.trim()
+            firstname: this.model.firstName.trim(),
+            lastname: this.model.lastName.trim(),
+            birthday: bDay
         };
-        window.console.dir(tmp);
+        window.console.info('Форма отправлена');
+        window.console.dirxml(regData);
+
+        this.isServerError = false;
+
+        HTTPer.post('api/register', regData)
+            .then((response) => {
+                window.console.log(response);
+                if (response.status === 201) {
+                    this.$root.$emit('afterSuccessRegistration', response.data);
+                }
+            })
+            .catch((error) => {
+                if (400 === error.response.status) {
+                    window.console.clear();
+                    window.console.log(error.response.data);
+
+                    this.isServerError = true;
+                    this.serverErrorText = error.response.data.error;
+                    window.console.warn(error.response.status+': '+error.response.statusText+': ' +error.response.data.message);
+                    this.$refs.email.focus();
+                }
+                else {
+                    window.console.warn( error.toString() );
+                }
+            });
     },
 
     registrationKeyDownCheck(ev) {

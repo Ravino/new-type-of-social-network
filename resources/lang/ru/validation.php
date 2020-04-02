@@ -138,8 +138,8 @@ return [
     */
 
     'custom' => [
-        'attribute-name' => [
-            'rule-name' => 'custom-message',
+        'attribute-firstName' => [
+            'rule-firstName' => 'custom-message',
         ],
     ],
 
@@ -161,7 +161,7 @@ return [
     */
 
     'attributes' => [
-        'name'                  => 'Имя',
+        'firstName'                  => 'Имя',
         'username'              => 'Никнейм',
         'email'                 => 'E-Mail адрес',
         'first_name'            => 'Имя',
