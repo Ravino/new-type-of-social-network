@@ -1,5 +1,5 @@
 <template>
-    <div id="pliziMobile" class="--card d-flex --flex-row justify-content-between align-items-start bg-light">
+    <div id="pliziMobile" class="bg-white-br20 d-flex justify-content-between align-items-start">
         <div class="mx-auto pl-3 mt-3">
             <h5 class="w-75"><b>Plizi для мобильных устройств</b></h5>
             <div class="d-flex justify-content-start mt-3">

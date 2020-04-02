@@ -2,7 +2,7 @@ import VueRouter from 'vue-router';
 
 import HomePage from '../pages/HomePage.vue';
 import LoginPage from '../pages/LoginPage.vue';
-import RegistrationPage from '../pages/RegistrationPage.vue';
+// import RegistrationPage from '../pages/RegistrationPage.vue';
 import AccountPage from '../pages/AccountPage.vue';
 import ChatsListPage from '../pages/ChatsListPage.vue';
 import ChatMessagesPage from '../pages/ChatMessagesPage.vue';

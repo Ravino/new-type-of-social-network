@@ -83,16 +83,24 @@ body {
 }
 
 body.LoginPage {
-    background-image: url("/src/images/plizi-bg-exp.svg");
-    background-size: auto auto;
+    background-image: url("/images/plizi-bg-exp.svg");
+    background-size: 100% auto;
     background-repeat: no-repeat;
-    background-position: right 40px;
+    background-position: center 40px;
     background-attachment: scroll;
+}
+
+body.LoginPage > .container-fluid {
+    max-width: 1008px;
 }
 
 #contentContainer {
     margin-top: 70px;
     min-height: 200px;
+}
+
+.btn.disabled, .btn:disabled {
+    opacity: 1.0;
 }
 
 .icon-40 {
@@ -110,4 +118,57 @@ body.LoginPage {
     max-width: 100%;
     max-height: 100%;
 }
+
+.bg-white-br20 {
+    background-color: white;
+    border-radius: 20px;
+}
+
+.form-control.lr-input {
+    border-radius: 0px;
+    width: 278px;
+    max-width: 278px;
+    margin-left: auto;
+    margin-right: auto;
+    border-width: 0px 0px 1px 0px;
+    border-color: black;
+    background-color: transparent;
+}
+
+.form-control.lr-input:focus {
+    /*box-shadow: 0 1px 1px rgba(0, 0, 0, 0.075) inset, 0 0 8px rgba(126, 239, 104, 0.6);*/
+    box-shadow: none;
+    outline: 0 none;
+}
+
+.btn.plz-btn {
+    display: block;
+    margin: 0px auto;
+
+    width: 278px;
+    max-width: 278px;
+    min-width: 278px;
+    height: 40px;
+    min-height: 40px;
+    max-height: 40px;
+    line-height: 40px;
+    border-radius: 20px;
+    padding: 0px;
+    text-align: center;
+
+    box-shadow: none;
+    outline: 0 none;
+    transition: none;
+}
+
+.btn.plz-btn-primary {
+    background-color: #3D51DE;
+    color: white;
+}
+
+.btn.plz-btn-outline {
+    color: #3D51DE;
+    background-color: white;
+}
+
 </style>

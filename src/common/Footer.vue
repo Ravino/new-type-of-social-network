@@ -1,14 +1,14 @@
 <template>
-    <footer class="navbar fixed-bottom navbar-expand-sm --navbar-dark bg-dark mt-5 w-100 mx-0 d-sm-none d-md-none d-lg-block d-xl-block">
+    <footer class="navbar --fixed-bottom --navbar-expand-sm --navbar-dark --bg-dark mt-5 w-100 mx-0 d-sm-none d-md-none d-lg-block d-xl-block">
         <div class="container">
             <div class="pull-left">
                 <div class="collapse navbar-collapse">
                     <ul class="navbar-nav">
-                        <router-link to="/about" tag="li" class="nav-item"><a class="nav-link text-white">О проекте</a></router-link>
-                        <router-link to="/rules" tag="li" class="nav-item"><a class="nav-link text-white">Правила</a></router-link>
-                        <router-link to="/advertisement" tag="li" class="nav-item"><a class="nav-link text-white">Реклама</a></router-link>
-                        <router-link to="/for-developers" tag="li" class="nav-item"><a class="nav-link text-white">Для разработчиков</a></router-link>
-                        <router-link to="/switch-language" tag="li" class="nav-item"><a class="nav-link text-white">Русский <i class="fas fa-chevron-down ml-1"></i></a></router-link>
+                        <router-link to="/about" tag="li" class="nav-item"><a class="nav-link">О проекте</a></router-link>
+                        <router-link to="/rules" tag="li" class="nav-item"><a class="nav-link">Правила</a></router-link>
+                        <router-link to="/advertisement" tag="li" class="nav-item"><a class="nav-link">Реклама</a></router-link>
+                        <router-link to="/for-developers" tag="li" class="nav-item"><a class="nav-link">Для разработчиков</a></router-link>
+                        <router-link to="/switch-language" tag="li" class="nav-item"><a class="nav-link">Русский <i class="fas fa-chevron-down ml-1"></i></a></router-link>
                     </ul>
                 </div>
             </div>
@@ -28,3 +28,6 @@ export default {
 }
 </script>
 
+<style>
+
+</style>

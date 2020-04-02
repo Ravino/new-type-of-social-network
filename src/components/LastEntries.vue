@@ -1,5 +1,5 @@
 <template>
-    <div id="latestEntries" class="card bg-light mb-3 px-3 py-3">
+    <div id="latestEntries" class="bg-white-br20 mb-3 px-3 py-3">
         <h6 class="card-title w-100 text-center py-2"><b>Вы недавно входили в аккаунт с этого компьютера</b></h6>
 
         <div class="--card-body d-flex justify-content-start">
@@ -29,4 +29,3 @@ methods: {
 
 }
 </script>
-

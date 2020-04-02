@@ -1,10 +1,10 @@
 <template>
-    <div class="row pt-5">
-        <div class="col-4 offset-1">
+    <div class="row">
+        <div class="col-5 px-0">
             <LoginForm></LoginForm>
         </div>
 
-        <div class="col-6">
+        <div class="col-7 pr-0" style="padding-left: 24px;">
             <LastEntries></LastEntries>
             <PliziMobile></PliziMobile>
         </div>
