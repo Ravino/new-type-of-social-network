@@ -7,6 +7,7 @@ export default [
         isRead: false,
         isLastFromMe: false,
         isOnline: false,
+        iFavorite: true,
         isSelected: false
     },
     {
@@ -17,6 +18,7 @@ export default [
         isRead: false,
         isLastFromMe: false,
         isOnline: true,
+        iFavorite: true,
         isSelected: false
     },
     {
@@ -27,6 +29,7 @@ export default [
         isRead: true,
         isLastFromMe: false,
         isOnline: false,
+        iFavorite: false,
         isSelected: false
     },
     {
@@ -37,6 +40,7 @@ export default [
         isRead: true,
         isLastFromMe: true,
         isOnline: false,
+        iFavorite: false,
         isSelected: true
     },
     {
@@ -47,6 +51,7 @@ export default [
         isRead: false,
         isLastFromMe: false,
         isOnline: true,
+        iFavorite: true,
         isSelected: false
     },
     {
@@ -57,6 +62,7 @@ export default [
         isRead: true,
         isLastFromMe: true,
         isOnline: false,
+        iFavorite: true,
         isSelected: false
     },
     {
@@ -67,6 +73,7 @@ export default [
         isRead: false,
         isLastFromMe: false,
         isOnline: true,
+        iFavorite: true,
         isSelected: false
     },
     {
@@ -77,6 +84,7 @@ export default [
         isRead: false,
         isLastFromMe: false,
         isOnline: true,
+        iFavorite: false,
         isSelected: false
     },
     {
@@ -87,6 +95,7 @@ export default [
         isRead: false,
         isLastFromMe: false,
         isOnline: false,
+        iFavorite: false,
         isSelected: false
     },
     {
@@ -97,6 +106,7 @@ export default [
         isRead: false,
         isLastFromMe: false,
         isOnline: true,
+        iFavorite: false,
         isSelected: false
     },
     {
@@ -107,6 +117,7 @@ export default [
         isRead: false,
         isLastFromMe: false,
         isOnline: false,
+        iFavorite: true,
         isSelected: false
     },
     {
@@ -117,6 +128,7 @@ export default [
         isRead: true,
         isLastFromMe: true,
         isOnline: false,
+        iFavorite: true,
         isSelected: false
     },
     {
@@ -127,6 +139,7 @@ export default [
         isRead: true,
         isLastFromMe: false,
         isOnline: true,
+        iFavorite: true,
         isSelected: false
     },
     {
@@ -137,6 +150,7 @@ export default [
         isRead: false,
         isLastFromMe: false,
         isOnline: false,
+        iFavorite: false,
         isSelected: false
     },
     {
@@ -147,6 +161,7 @@ export default [
         isRead: false,
         isLastFromMe: false,
         isOnline: true,
+        iFavorite: true,
         isSelected: false
     },
     {
@@ -157,6 +172,7 @@ export default [
         isRead: true,
         isLastFromMe: false,
         isOnline: true,
+        iFavorite: true,
         isSelected: false
     },
     {
@@ -167,6 +183,7 @@ export default [
         isRead: true,
         isLastFromMe: true,
         isOnline: true,
+        iFavorite: false,
         isSelected: false
     }
 ];

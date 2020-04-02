@@ -1,10 +1,11 @@
 <template>
     <div id="loginForm" class="card bg-light h-100">
         <div class="card-body">
+
             <form novalidate="novalidate">
-                <div class="form-group" :class="{ 'has-error': $v.model.email.$error, 'has-success': !$v.model.email.$invalid }">
+                <div class="form-group" :class="{ 'has-error': $v.model.email.$error, 'has-success': !$v.model.email.$invalid, 'has-error': isServerError }">
                     <label for="userEmail" class="d-none">Ваш E-mail</label>
-                    <input v-model="model.email"
+                    <input v-model="model.email" ref="email"
                            :class="{ 'is-invalid': $v.model.email.$error, 'is-valid': !$v.model.email.$invalid }"
                            @blur="$v.model.email.$touch()" @keydown="loginKeyDownCheck($event)"
                            type="text" class="form-control" id="userEmail" placeholder="Ваш E-mail" />
@@ -17,7 +18,7 @@
 
                 <div class="form-group" :class="{ 'has-error': $v.model.password.$error, 'has-success': !$v.model.password.$invalid }">
                     <label for="password" class="d-none">Пароль</label>
-                    <input v-model="model.password"
+                    <input v-model="model.password" ref="password"
                            :class="{ 'is-invalid': $v.model.password.$error, 'is-valid': !$v.model.password.$invalid }"
                            @blur="$v.model.password.$touch()" @keydown="loginKeyDownCheck($event)"
                            type="password" class="form-control" id="password" placeholder="Пароль" />
@@ -27,6 +28,10 @@
                         <p v-if="!$v.model.password.minLength" class="text-danger">Пароль не может быть короче <b>четырех</b> символов</p>
                         <p v-if="!$v.model.password.maxLength" class="text-danger">Слишком длинный пароль</p>
                     </div>
+                </div>
+
+                <div v-if="isServerError" class="form-group has-error">
+                    <p class="text-danger text-center">Неверный пароль или имя пользоваля</p>
                 </div>
 
                 <div class="form-group">
@@ -61,6 +66,7 @@
 </template>
 
 <script>
+import {HTTPer} from '../httper/httper.js';
 import { required, minLength, maxLength, email } from 'vuelidate/lib/validators';
 
 export default {
@@ -70,7 +76,10 @@ data() {
         model : {
             email: ``,
             password: ``
-        }
+        },
+
+        isServerError: false,
+        serverErrorText: ''
     }
 },
 
@@ -91,17 +100,40 @@ validations() {
     };
 },
 
+mounted() {
+    setTimeout(()=>{
+        this.$refs.email.focus();
+    }, 100);
+},
 
 methods: {
     startLogin() {
         this.$v.$touch();
 
-        window.console.info('Форма отправлена');
-        let tmp = {
+        let loginData = {
             email: this.model.email.trim(),
             password: this.model.password.trim()
         };
-        window.console.dir(tmp);
+
+        this.isServerError = false;
+
+        HTTPer.post('api/login', loginData)
+            .then((response) => {
+                if (response.status === 200  &&  response.statusText.toUpperCase()==='OK'  &&  response.data  &&  response.data.token  &&  response.data.token!=='') {
+                    this.$root.$emit('afterSuccessLogin', { 'token': response.data.token });
+                }
+            })
+            .catch((error) => {
+                if (400 === error.response.status) {
+                    this.isServerError = true;
+                    this.serverErrorText = error.response.data.error;
+                    window.console.warn(error.response.status+': '+error.response.statusText+': ' +error.response.data.message);
+                    this.$refs.password.focus();
+                }
+                else {
+                    window.console.warn( error.toString() );
+                }
+            });
     },
 
     loginKeyDownCheck(ev) {
@@ -110,9 +142,10 @@ methods: {
     },
 
     openRegistrationModal() {
-        window.console.warn('openRegistrationModal');
+        // window.console.warn('openRegistrationModal');
+        this.$router.push({ path: '/registration' });
     },
-}
+},
 
 }
 </script>

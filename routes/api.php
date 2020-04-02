@@ -14,12 +14,13 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-//Route::post('/auth/verify', 'Auth\RegisterController@verify')->name('verify_registration');
+//Route::post('/auth/verify', 'Auth\RegisterController@verify')->firstName('verify_registration');
 Auth::routes();
 
 
 Route::group(['middleware' => ['auth.jwt']], function () {
 
+    Route::patch('user', 'Api\ProfileController@patch');
     Route::resource('user', 'Api\ProfileController', ['only' => ['index']]);
 
 });

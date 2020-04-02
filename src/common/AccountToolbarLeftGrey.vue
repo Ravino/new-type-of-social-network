@@ -1,5 +1,5 @@
 <template>
-    <div id="accountToolbarLeftGrey" class="pt-2 mb-5">
+    <div id="toolbarLeftGrey" class="pt-2 mb-5">
 
         <a class="w-100 d-block text-center mx-auto mb-2" href="#">
             <img class="" width="32" height="32" src="/images/left-grey-icons/icon-blue-flame.png" alt="" />

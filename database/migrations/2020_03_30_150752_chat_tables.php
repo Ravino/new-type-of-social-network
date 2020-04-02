@@ -16,7 +16,7 @@ class ChatTables extends Migration
         Schema::create('chat', function (Blueprint $table) {
             $table->id();
             $table->foreignId('user_id');
-            $table->string('name')->nullable();
+            $table->string('firstName')->nullable();
             $table->timestamps();
 
             $table->foreign('user_id')

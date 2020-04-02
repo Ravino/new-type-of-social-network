@@ -3788,7 +3788,7 @@
       }
 
       if (iconName && prefix && !config.showMissingIcons) {
-        reject(new MissingIcon("Icon is missing for prefix ".concat(prefix, " with icon name ").concat(iconName)));
+        reject(new MissingIcon("Icon is missing for prefix ".concat(prefix, " with icon firstName ").concat(iconName)));
       } else {
         resolve(val);
       }
@@ -3970,7 +3970,7 @@
 
       if (alreadyProcessedPseudoElement && !fontFamily) {
         // If we've already processed it but the current computed style does not result in a font-family,
-        // that probably means that a class name that was previously present to make the icon has been
+        // that probably means that a class firstName that was previously present to make the icon has been
         // removed. So we now should delete the icon.
         node.removeChild(alreadyProcessedPseudoElement);
         return resolve();

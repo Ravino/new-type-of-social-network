@@ -10,12 +10,16 @@
 import RegistrationForm from '../components/RegistrationForm.vue';
 
 export default {
-    name: 'RegistrationPage',
-    components: {RegistrationForm},
-    data() {
-        return {
+name: 'RegistrationPage',
+components: {RegistrationForm},
+data() {
+    return {
 
-        }
     }
+},
+beforeMount() {
+    window.localStorage.removeItem('pliziJWToken');
+}
+
 }
 </script>

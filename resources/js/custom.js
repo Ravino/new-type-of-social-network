@@ -1,5 +1,5 @@
 $(document).ready(function(){
-var pattern = /^[.a-z0-9_-]+@[a-z0-9-]+\.([a-z]{1,6}\.)?[a-z]{2,6}$/i; //name-_09@mail09-.ru
+var pattern = /^[.a-z0-9_-]+@[a-z0-9-]+\.([a-z]{1,6}\.)?[a-z]{2,6}$/i; //firstName-_09@mail09-.ru
 var mail = $('#mail');
 mail.blur(function(){
  if(mail.val() != ''){

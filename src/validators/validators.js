@@ -7,6 +7,13 @@ export function isCorrectFullName(value) {
     return /^[0-8a-zа-яёїіи+\-\s]{2,100}$/i.test(value);
 }
 
+export function isCorrectHumanName(value) {
+    if ((value+'') === '')
+        return true;
+
+    return /^[0-8a-zа-яёїіи+\-\s]{1,100}$/i.test(value);
+}
+
 export function isFirstNameAndLastName(value) {
     if ((value+'') === '')
         return true;
@@ -18,7 +25,7 @@ export function isFirstNameAndLastName(value) {
 }
 
 
-export function isValidDMY(dateVal){
+export function isValidRegistrationBirthDay(dateVal){
     if ((dateVal+'') === '')
         return true;
     return moment(dateVal, 'DD.MM.YYYY', true).isValid();

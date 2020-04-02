@@ -4,9 +4,16 @@
 
         <div class="collapse navbar-collapse" id="nav-content">
             <ul class="navbar-nav">
-                <router-link tag="li" v-bind:to="menuItem.path" v-for="(menuItem, menuIndex) in menuItems" v-bind:key="menuIndex" class="nav-item" :class="{'active' : isActiveMenu(menuItem.routes)}">
-                    <a class="nav-link">{{menuItem.title}}</a>
-                </router-link>
+                <template v-if="isAuth">
+                    <router-link tag="li" v-bind:to="menuItem.path" v-for="(menuItem, menuIndex) in authItems" v-bind:key="menuIndex" class="nav-item" :class="{'active' : isActiveMenu(menuItem.routes)}">
+                        <a class="nav-link">{{menuItem.title}}</a>
+                    </router-link>
+                </template>
+                <template v-else>
+                    <router-link tag="li" v-bind:to="menuItem.path" v-for="(menuItem, menuIndex) in guestItems" v-bind:key="menuIndex" class="nav-item" :class="{'active' : isActiveMenu(menuItem.routes)}">
+                        <a class="nav-link">{{menuItem.title}}</a>
+                    </router-link>
+                </template>
             </ul>
         </div>
     </nav>
@@ -15,13 +22,19 @@
 <script>
 export default {
 name: 'NavBar',
+props: {
+    isAuth: Boolean
+},
 data () {
     return {
-        menuItems : [
+        guestItems : [
             { path : '/login', title : 'Логин', routes : ['login'] },
             { path : '/registration', title : 'Регистрация', routes : ['registration'] },
+        ],
+        authItems : [
             { path : '/account', title : 'Аккаунт', routes : ['account'] },
             { path : '/chat', title : 'Чат', routes : ['chat'] },
+            { path : '/logout', title : 'Выход', routes : ['logout'] },
         ],
     }
 },

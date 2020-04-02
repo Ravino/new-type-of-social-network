@@ -1,5 +1,5 @@
 <template>
-    <div id="accountSettingsPrivacy" class="card bg-light container-fluid mb-5">
+    <div id="accountSettingsPrivacy" class="card bg-light container-fluid mb-5 d-sm-none d-md-none d-lg-block d-xl-block">
         <form>
             <div class="form-group row mb-0 mt-2 border-bottom">
                 <div class="col-12"><h6><b>Приватность</b></h6></div>

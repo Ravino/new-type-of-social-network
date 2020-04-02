@@ -20,7 +20,7 @@
     <!-- Styles -->
     <link href="{{ asset('css/app.css') }}" rel="stylesheet" />
 
-    <title>{{ config('app.name', 'Laravel') }}</title>
+    <title>{{ config('app.firstName', 'Laravel') }}</title>
 </head>
 <body>
     <div id="app"></div>

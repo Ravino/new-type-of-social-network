@@ -1,28 +1,40 @@
 <template>
     <div class="row">
-        <div class="col-1">
+        <div class="col-sm-1 col-md-1 col-lg-1 col-xl-1 pr-md-0">
             <AccountToolbarLeft></AccountToolbarLeft>
         </div>
 
-        <div class="col-11">
-            <ChatMainComponent v-bind:friends="friendsList" v-bind:messages="messagesList" v-bind:companion="companion" v-bind:self-person="selfPerson"></ChatMainComponent>
+        <div class="col-sm-10 col-md-9 col-lg-11 col-xl-11">
+            <div id="chatMessangesWrapperSM" class="bg-light w-75 d-flex flex-column d-md-none d-sm-none">
+                <ChatHeader v-bind:companion="companion"></ChatHeader>
+                <ChatMessages v-bind:messages="messagesList" v-bind:companion="companion" v-bind:self-person="selfPerson"></ChatMessages>
+                <ChatFooter v-bind:companion="companion" v-bind:self-person="selfPerson"></ChatFooter>
+            </div>
+        </div>
+
+        <div class="col-sm-2 col-md-2 d-lg-none d-xl-none">
+            <AccountToolbarRight></AccountToolbarRight>
         </div>
     </div>
 </template>
 
 <script>
-import AccountToolbarLeft from '../components/AccountToolbarLeft.vue';
-import ChatMainComponent from '../components/ChatMainComponent.vue';
+import AccountToolbarLeft from '../common/AccountToolbarLeft.vue';
+import AccountToolbarRight from '../common/AccountToolbarRight.vue';
+
+import ChatHeader from '../components/ChatHeader.vue';
+import ChatMessages from '../components/ChatMessages.vue';
+import ChatFooter from '../components/ChatFooter.vue';
 
 import chatFriendsListData from '../data/chatFriendsList.js';
 import chatMessagesListData from '../data/chatMessagesList.js';
 
-// #3d51de - цвет фона для своих мессаджей
 
 export default {
-name: 'ChatPage',
+name: 'ChatsListPage',
     components: {
-        AccountToolbarLeft, ChatMainComponent
+        AccountToolbarLeft, AccountToolbarRight,
+        ChatHeader, ChatMessages, ChatFooter
     },
 
 data() {
@@ -64,7 +76,15 @@ mounted() {
             return friend;
         })
     });
+},
+
+beforeMount() {
+    let gwt = window.localStorage.getItem('pliziJWToken');
+    if (typeof gwt === 'undefined'  ||  ''===gwt  || null===gwt) {
+        this.router.push({ path: '/login' });
+    }
 }
+
 
 }
 </script>

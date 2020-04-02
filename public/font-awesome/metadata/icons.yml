@@ -7271,7 +7271,7 @@ file-signature:
       - John Hancock
       - contract
       - document
-      - name
+      - firstName
   styles:
     - solid
   unicode: f573
@@ -16418,7 +16418,7 @@ signature:
     terms:
       - John Hancock
       - cursive
-      - name
+      - firstName
       - writing
   styles:
     - solid
