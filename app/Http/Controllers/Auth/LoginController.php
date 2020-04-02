@@ -4,15 +4,18 @@ namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
 use App\Providers\RouteServiceProvider;
+use App\Services\SocialAccountsService;
 use Carbon\Carbon;
 use Domain\Pusher\WampServer;
 use Illuminate\Foundation\Auth\AuthenticatesUsers;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
+use Exception;
 
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Validation\ValidationException;
 use JWTAuth;
+use Laravel\Socialite\Facades\Socialite;
 use Tymon\JWTAuth\Exceptions\JWTException;
 
 class LoginController extends Controller
@@ -73,6 +76,37 @@ class LoginController extends Controller
         }
         $channel = WampServer::channelForUser($this->guard->user()->id);
         return response()->json(compact('token', 'channel'));
+    }
+
+    /**
+     * @param Request $request
+     * @param $provider
+     * @return \Illuminate\Http\JsonResponse|null
+     */
+    public function socialLogin(Request $request, $provider)
+    {
+        $providerUser = null;
+
+        try {
+            $providerUser = Socialite::driver($provider)->userFromToken($request['token']);
+        } catch (Exception $exception) {
+            \Log::debug($exception);
+        }
+
+        if ($providerUser) {
+            $user = (new SocialAccountsService())->findOrCreate($providerUser, $provider);
+            try {
+                if (!$token = JWTAuth::fromUser($user)) {
+                    return response()->json(['message' => 'invalid credentials'], 400);
+                }
+            } catch (JWTException $e) {
+                return response()->json(['message' => 'could not create token'], 500);
+            }
+
+            return response()->json(compact('token'));
+        }
+
+        return null;
     }
 
 }

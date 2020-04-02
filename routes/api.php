@@ -17,7 +17,6 @@ use Illuminate\Support\Facades\Route;
 //Route::post('/auth/verify', 'Auth\RegisterController@verify')->firstName('verify_registration');
 Auth::routes();
 
-
 Route::group(['middleware' => ['auth.jwt']], function () {
 
     Route::patch('user', 'Api\ProfileController@patch');
@@ -29,3 +28,5 @@ Route::prefix('chat')->group(function(){
     Route::get('messages/{chat_id}', 'Api\ChatController@messages');
     Route::post('send', 'Api\ChatController@send');
 });
+
+Route::post('sociallogin/{provider}', 'Auth\LoginController@socialLogin');
