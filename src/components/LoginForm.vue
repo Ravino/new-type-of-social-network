@@ -1,7 +1,6 @@
 <template>
     <div id="loginForm" class="card bg-light h-100">
         <div class="card-body">
-
             <form novalidate="novalidate">
                 <div class="form-group" :class="{ 'has-error': $v.model.email.$error, 'has-success': !$v.model.email.$invalid, 'has-error': isServerError }">
                     <label for="userEmail" class="d-none">Ваш E-mail</label>
@@ -62,15 +61,22 @@
                 </div>
             </form>
         </div>
+
+        <RegistrationModal v-if="isRegistrationModalShow" v-bind:reg-modal-visible="isRegistrationModalShow"></RegistrationModal>
     </div>
 </template>
 
 <script>
+import RegistrationModal from './RegistrationModal.vue';
+
 import {HTTPer} from '../httper/httper.js';
 import { required, minLength, maxLength, email } from 'vuelidate/lib/validators';
 
 export default {
 name: 'LoginForm',
+components: {
+    RegistrationModal
+},
 data() {
     return {
         model : {
@@ -78,6 +84,7 @@ data() {
             password: ``
         },
 
+        isRegistrationModalShow: false,
         isServerError: false,
         serverErrorText: ''
     }
@@ -94,8 +101,7 @@ validations() {
                 required,
                 minLength: minLength(4),
                 maxLength: maxLength(50)
-            },
-
+            }
         }
     };
 },
@@ -104,6 +110,10 @@ mounted() {
     setTimeout(()=>{
         this.$refs.email.focus();
     }, 100);
+
+    this.$root.$on('hideRegistrationModal', (evData) => {
+        this.isRegistrationModalShow = false;
+    });
 },
 
 methods: {
@@ -142,8 +152,8 @@ methods: {
     },
 
     openRegistrationModal() {
-        // window.console.warn('openRegistrationModal');
-        this.$router.push({ path: '/registration' });
+        // this.$router.push({ path: '/registration' });
+        this.isRegistrationModalShow = true;
     },
 },
 

@@ -1,5 +1,5 @@
 <template>
-    <div id="loginForm" class="card bg-light h-100">
+    <div id="loginForm" class="card --bg-light --h-100">
         <div class="card-body">
             <div class="card-title text-center">
                 <h5>Быстрая регистрация</h5>
@@ -22,11 +22,11 @@
                 </div>
 
                 <div class="form-group" :class="{ 'has-error': $v.model.lastName.$error, 'has-success': !$v.model.lastName.$invalid }">
-                    <label for="lastName" class="d-none">Ваше имя</label>
+                    <label for="lastName" class="d-none">Ваша фамилия</label>
                     <input v-model="model.lastName"
                            :class="{ 'is-invalid': $v.model.lastName.$error, 'is-valid': !$v.model.lastName.$invalid }"
                            @blur="$v.model.lastName.$touch()" @keydown="registrationKeyDownCheck($event)"
-                           type="text" class="form-control" id="lastName" ref="lastName" placeholder="Ваше имя" />
+                           type="text" class="form-control" id="lastName" ref="lastName" placeholder="Ваша фамилия" />
 
                     <div v-show="$v.model.lastName.$error" class="invalid-feedback">
                         <p v-if="!$v.model.lastName.required" class="text-danger">Укажите свою фамилию</p>
@@ -145,6 +145,9 @@ methods: {
 
         HTTPer.post('api/register', regData)
             .then((response) => {
+                // TODO: @tga довести до ума обработку положительного ответа
+                // this.$root.$emit('hideRegistrationModal', {});
+
                 window.console.log(response);
                 if (response.status === 201) {
                     this.$root.$emit('afterSuccessRegistration', response.data);
@@ -152,6 +155,9 @@ methods: {
             })
             .catch((error) => {
                 if (400 === error.response.status) {
+                    // TODO: @tga довести до ума обработку ошибок
+                    // this.$root.$emit('hideRegistrationModal', {});
+
                     window.console.clear();
                     window.console.log(error.response.data);
 
@@ -183,9 +189,3 @@ methods: {
 }
 </script>
 
-
-<style>
-#registrationForm {
-    margin-top: 80px;
-}
-</style>
