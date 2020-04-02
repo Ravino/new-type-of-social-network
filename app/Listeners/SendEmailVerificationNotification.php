@@ -34,7 +34,7 @@ class SendEmailVerificationNotification
         ];
 
         Mail::send('emails.register', $data, function ($message) use ($user) {
-            $message->from(config('from.address', 'info@example.com'), config('from.firstName', 'Laravel'));
+            $message->from(config('from.address', 'info@example.com'), config('from.name', 'Laravel'));
             $message->subject('Registration Confirmation ' . config('app.firstName', 'Laravel'));
             $message->to($user->email);
         });
