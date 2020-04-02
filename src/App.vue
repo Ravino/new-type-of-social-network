@@ -102,7 +102,7 @@ body.LoginPage {
     max-width: 40px;
     height: 40px;
     max-height: 40px;
-    margin: 0px 10px 0px 0px;
+    margin: 0.8rem 10px 0px 0px;
 }
 
 .icon-40 > img {

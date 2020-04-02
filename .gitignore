@@ -25,3 +25,5 @@ Thumbs.db
 /src/libs/
 /public/js/*.LICENSE.txt
 /images
+
+/*/*.bak

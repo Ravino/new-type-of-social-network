@@ -10,7 +10,7 @@
             <AccountSettingsSecurity></AccountSettingsSecurity>
         </div>
 
-        <div class="d-sm-none d-md-none col-sm-2 col-md-2 col-lg-2 col-xl-2">
+        <div class="d-sm-none d-md-none d-lg-block d-xl-block col-sm-2 col-md-2 col-lg-2 col-xl-2">
             <AccountSettingsSideMenu></AccountSettingsSideMenu>
         </div>
 
