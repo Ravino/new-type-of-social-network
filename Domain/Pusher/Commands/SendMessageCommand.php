@@ -9,13 +9,13 @@ use Illuminate\Console\Command;
 
 class SendMessageCommand extends Command
 {
-    protected $signature = 'ws:send {message}';
+    protected $signature = 'ws:send {message} {user_id}';
 
     protected $description = "Sent message to ws сервер";
 
 
     public function handle()
     {
-        Pusher::sentDataToServer(['data' => $this->argument('message'), 'topic_id' => 'onNewData']);
+        Pusher::sentDataToServer(['data' => $this->argument('message'), 'topic_id' => Pusher::channelForUser($this->argument('user_id'))]);
     }
 }

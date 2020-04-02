@@ -22,6 +22,16 @@ class WampServer implements WampServerInterface
         $socket->send($data);
     }
 
+    /**
+     * Генерирует уникальный канал для пользователя.
+     * @param $user_id
+     * @return string
+     */
+    public static function channelForUser($user_id)
+    {
+        return base64_encode(json_encode(['user_id' => $user_id, 'topic_id' => 'onNewMessage']));
+    }
+
     public function broadcast($jsonData)
     {
         $aDataToSend = json_decode($jsonData, true);
@@ -45,11 +55,13 @@ class WampServer implements WampServerInterface
         $this->subscribedTopics[$topic->getId()] = $topic;
     }
 
-    public function onPublish(ConnectionInterface $conn, $topic, $event, array $exclude, array $eligible) {
+    public function onPublish(ConnectionInterface $conn, $topic, $event, array $exclude, array $eligible)
+    {
         $topic->broadcast($event);
     }
 
-    public function onCall(ConnectionInterface $conn, $id, $topic, array $params) {
+    public function onCall(ConnectionInterface $conn, $id, $topic, array $params)
+    {
         $conn->callError($id, $topic, 'RPC not supported on this project');
     }
 

@@ -5,24 +5,43 @@ namespace Domain\Pusher\Events;
 
 class NewMessageEvent
 {
-    protected $message;
+    /**
+     * Тело сообщения
+     * @var string
+     */
+    protected $body;
+
+    /**
+     * Список индентификаторов получателей
+     * @var array
+     */
+    protected $usersListIds = [];
 
     /**
      * Create a new event instance.
-     * @param string $message
+     * @param string $body
+     * @param array $ids
      * @return void
      */
-    public function __construct(string $message)
+    public function __construct(string $body, array $ids)
     {
-        $this->message = $message;
+        $this->body = $body;
+        $this->usersListIds = $ids;
     }
 
     /**
      * @return mixed
      */
-    public function getMessage()
+    public function getBody()
     {
-        return $this->message;
+        return $this->body;
     }
 
+    /**
+     * @return array
+     */
+    public function getUsersListIds(): array
+    {
+        return $this->usersListIds;
+    }
 }

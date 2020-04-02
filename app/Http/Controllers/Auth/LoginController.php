@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Auth;
 use App\Http\Controllers\Controller;
 use App\Providers\RouteServiceProvider;
 use Carbon\Carbon;
+use Domain\Pusher\WampServer;
 use Illuminate\Foundation\Auth\AuthenticatesUsers;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
@@ -70,8 +71,8 @@ class LoginController extends Controller
         } catch (JWTException $e) {
             return response()->json(['error' => 'could_not_create_token'], 500);
         }
-
-        return response()->json(compact('token'));
+        $channel = WampServer::channelForUser($this->guard->user()->id);
+        return response()->json(compact('token', 'channel'));
     }
 
 }
