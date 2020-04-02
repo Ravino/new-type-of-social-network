@@ -22,7 +22,8 @@ Thumbs.db
 
 #targa local settings
 #index.html
-/src/libs/
 /public/js/*.LICENSE.txt
 
 /*/*.bak
+
+/design
