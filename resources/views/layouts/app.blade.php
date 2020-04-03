@@ -6,8 +6,7 @@
 
     <meta http-equiv="content-type" content="text/html; charset=utf-8" />
     <meta name="viewport" content="width=device-width, height=device-height, initial-scale=1.0, user-scalable=0" />
-    <meta name="keywords" content="Ключевые слова" />
-    <meta name="description" content="Описание сайта" />
+    <meta name="description" content="PLIZI: Социальная сеть" />
     <link rel="shortcut icon" href="storage/images/favicon.ico" />
 
 
