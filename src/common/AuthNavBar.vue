@@ -9,14 +9,14 @@
                 </div>
 
                 <div class="col-sm-4 col-md-6 col-lg-5 col-xl-5 d-sm-none d-md-block d-lg-block d-xl-block">
-                    <form class="form-inline mt-2 mt-md-2">
+                    <form class="form-inline mt-3 mt-md-3">
                         <input class="form-control rounded-pill w-100" type="text" placeholder="Поиск" aria-label="Поиск" />
                         <button class="d-none btn btn-outline-success" type="submit">Search</button>
                     </form>
                 </div>
 
                 <div id="playerWrapper" class="col-lg-3 col-xl-3 d-sm-none d-md-none d-lg-block d-xl-block text-center">
-                    <div class="btn-block d-inline-block mt-2 ">
+                    <div class="btn-block d-inline-block mt-3 ">
                         <a class="btn btn-link text-black-50 btn-sm" href="#prev" title="предыдущий трэк">
                             <i class="fas fa-step-backward"></i>
                         </a>
@@ -33,7 +33,7 @@
                 </div>
 
                 <div class="col-sm-4 col-md-4 col-lg-2 col-xl-2 text-center">
-                    <div class="--btn-block mt-2 d-inline-block">
+                    <div class="--btn-block mt-3 d-inline-block">
                         <a class="btn btn-link my-auto text-body btn-sm" href="#likes" title="Оценки">
                             <i class="far fa-bell fa-2x"></i>
                         </a>

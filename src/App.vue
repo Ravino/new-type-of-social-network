@@ -22,7 +22,7 @@ name: 'App',
 components: {GuestNavBar, AuthNavBar, Footer},
 data () {
     return {
-        isAuth: false,
+        isAuth: true,
         userData: null,
     }
 },
