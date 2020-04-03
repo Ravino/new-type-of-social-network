@@ -11,8 +11,8 @@ body.LoginPage, body.HomePage {
     background-attachment: fixed;
 }
 
-body.LoginPage > .container-fluid {
-    /*max-width: 1008px;*/
+body.LoginPage > .container-fluid, body.HomePage > .container-fluid {
+    max-width: 1008px;
 }
 
 #contentContainer {
