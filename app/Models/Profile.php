@@ -29,8 +29,11 @@ class Profile extends Model
         self::SEX_UNDEFINED => 'undefined'
     ];
 
+    const RELATIONSHIP_MARRIED = 1;
+    const RELATIONSHIP_NOT_MARRIED = 2;
+
     protected $fillable = [
-        'firstname', 'lastname', 'birthday', 'city', 'sex'
+        'firstname', 'lastname', 'birthday', 'city', 'sex', 'relationship',
     ];
 
     public static function rules($keys = [])
@@ -41,6 +44,7 @@ class Profile extends Model
             'birthday' => 'date_format:Y-m-d|nullable',
             'sex' => Rule::in(array_keys(Profile::SEX_VARIANTS)),
             'city' => 'string|min:1|max:255',
+            'relationship' => Rule::in([self::RELATIONSHIP_MARRIED, self::RELATIONSHIP_NOT_MARRIED]),
         ];
 
         if (count($keys)) {
