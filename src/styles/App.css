@@ -92,6 +92,10 @@ body.LoginPage .modal-body {
     border-radius: 20px;
 }
 
+.plz-br20 {
+    border-radius: 20px;
+}
+
 .form-control.lr-input {
     border-radius: 0px;
     width: 278px;
@@ -155,3 +159,4 @@ body.LoginPage .modal-body {
     height: 20px;
     cursor: pointer;
 }
+
