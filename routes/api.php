@@ -29,4 +29,7 @@ Route::prefix('chat')->group(function(){
     Route::post('send', 'Api\ChatController@send');
 });
 
+Route::get('login/{provider}', 'Auth\LoginController@redirectToProvider');
+Route::get('login/{provider}/callback', 'Auth\LoginController@handleProviderCallback');
+
 Route::post('sociallogin/{provider}', 'Auth\LoginController@socialLogin');

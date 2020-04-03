@@ -52,7 +52,7 @@
                         <div class="mx-3"><a href="#vk" title="VKontakte" class="border bordered-50">
                             <i class="fab fa-vk"></i></a>
                         </div>
-                        <div class="mx-3"><a href="#fb" title="Facebook" class="border bordered-50">
+                        <div class="mx-3"><a @click="socialAuthenticator('facebook')" title="Facebook" class="border bordered-50">
                             <i class="fab fa-facebook-f"></i></a>
                         </div>
                         <div class="mx-3"><a href="#instagram" title="Instagram" class="border bordered-50">
@@ -156,6 +156,10 @@ methods: {
         // this.$router.push({ path: '/registration' });
         this.isRegistrationModalShow = true;
     },
+    async socialAuthenticator(provider) {
+        let response = await HTTPer.get('/api/login/' + provider);
+        console.log(response);
+    }
 },
 
 }

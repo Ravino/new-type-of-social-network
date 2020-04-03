@@ -4,10 +4,10 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "7ee17975549ed65d43cd221a11d09c3d",
+    "content-hash": "c63a00c17dd82810b9ec945b78c62404",
     "packages": [
         {
-            "firstName": "asm89/stack-cors",
+            "name": "asm89/stack-cors",
             "version": "1.3.0",
             "source": {
                 "type": "git",
@@ -46,7 +46,7 @@
             ],
             "authors": [
                 {
-                    "firstName": "Alexander",
+                    "name": "Alexander",
                     "email": "iam.asm89@gmail.com"
                 }
             ],
@@ -59,7 +59,7 @@
             "time": "2019-12-24T22:41:47+00:00"
         },
         {
-            "firstName": "brick/math",
+            "name": "brick/math",
             "version": "0.8.14",
             "source": {
                 "type": "git",
@@ -104,7 +104,7 @@
             "time": "2020-02-17T13:57:43+00:00"
         },
         {
-            "firstName": "cboden/ratchet",
+            "name": "cboden/ratchet",
             "version": "v0.4.2",
             "source": {
                 "type": "git",
@@ -140,7 +140,7 @@
             ],
             "authors": [
                 {
-                    "firstName": "Chris Boden",
+                    "name": "Chris Boden",
                     "email": "cboden@gmail.com",
                     "role": "Developer"
                 }
@@ -157,7 +157,126 @@
             "time": "2020-01-27T23:08:40+00:00"
         },
         {
-            "firstName": "dnoegel/php-xdg-base-dir",
+            "name": "coderello/laravel-passport-social-grant",
+            "version": "2.1.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/coderello/laravel-passport-social-grant.git",
+                "reference": "eeecb0ff5ab91cfbd65a6912711f9c25e771bc90"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/coderello/laravel-passport-social-grant/zipball/eeecb0ff5ab91cfbd65a6912711f9c25e771bc90",
+                "reference": "eeecb0ff5ab91cfbd65a6912711f9c25e771bc90",
+                "shasum": ""
+            },
+            "require": {
+                "laravel/passport": "^6.0|^7.0|^8.0",
+                "php": ">=7.1"
+            },
+            "require-dev": {
+                "mockery/mockery": "^1.1",
+                "orchestra/testbench": "~3.0"
+            },
+            "type": "library",
+            "extra": {
+                "laravel": {
+                    "providers": [
+                        "Coderello\\SocialGrant\\Providers\\SocialGrantServiceProvider"
+                    ]
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "Coderello\\SocialGrant\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Ilya Sakovich",
+                    "email": "me@hivokas.com"
+                }
+            ],
+            "description": "Social Grant for Laravel Passport",
+            "keywords": [
+                "grant",
+                "laravel",
+                "network",
+                "oauth",
+                "passport",
+                "social"
+            ],
+            "time": "2019-11-04T06:10:55+00:00"
+        },
+        {
+            "name": "defuse/php-encryption",
+            "version": "v2.2.1",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/defuse/php-encryption.git",
+                "reference": "0f407c43b953d571421e0020ba92082ed5fb7620"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/defuse/php-encryption/zipball/0f407c43b953d571421e0020ba92082ed5fb7620",
+                "reference": "0f407c43b953d571421e0020ba92082ed5fb7620",
+                "shasum": ""
+            },
+            "require": {
+                "ext-openssl": "*",
+                "paragonie/random_compat": ">= 2",
+                "php": ">=5.4.0"
+            },
+            "require-dev": {
+                "nikic/php-parser": "^2.0|^3.0|^4.0",
+                "phpunit/phpunit": "^4|^5"
+            },
+            "bin": [
+                "bin/generate-defuse-key"
+            ],
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "Defuse\\Crypto\\": "src"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Taylor Hornby",
+                    "email": "taylor@defuse.ca",
+                    "homepage": "https://defuse.ca/"
+                },
+                {
+                    "name": "Scott Arciszewski",
+                    "email": "info@paragonie.com",
+                    "homepage": "https://paragonie.com"
+                }
+            ],
+            "description": "Secure PHP Encryption Library",
+            "keywords": [
+                "aes",
+                "authenticated encryption",
+                "cipher",
+                "crypto",
+                "cryptography",
+                "encrypt",
+                "encryption",
+                "openssl",
+                "security",
+                "symmetric key cryptography"
+            ],
+            "time": "2018-07-24T23:27:56+00:00"
+        },
+        {
+            "name": "dnoegel/php-xdg-base-dir",
             "version": "v0.1.1",
             "source": {
                 "type": "git",
@@ -190,7 +309,7 @@
             "time": "2019-12-04T15:06:13+00:00"
         },
         {
-            "firstName": "doctrine/cache",
+            "name": "doctrine/cache",
             "version": "1.10.0",
             "source": {
                 "type": "git",
@@ -236,23 +355,23 @@
             ],
             "authors": [
                 {
-                    "firstName": "Guilherme Blanco",
+                    "name": "Guilherme Blanco",
                     "email": "guilhermeblanco@gmail.com"
                 },
                 {
-                    "firstName": "Roman Borschel",
+                    "name": "Roman Borschel",
                     "email": "roman@code-factory.org"
                 },
                 {
-                    "firstName": "Benjamin Eberlei",
+                    "name": "Benjamin Eberlei",
                     "email": "kontakt@beberlei.de"
                 },
                 {
-                    "firstName": "Jonathan Wage",
+                    "name": "Jonathan Wage",
                     "email": "jonwage@gmail.com"
                 },
                 {
-                    "firstName": "Johannes Schmitt",
+                    "name": "Johannes Schmitt",
                     "email": "schmittjoh@gmail.com"
                 }
             ],
@@ -272,7 +391,7 @@
             "time": "2019-11-29T15:36:20+00:00"
         },
         {
-            "firstName": "doctrine/dbal",
+            "name": "doctrine/dbal",
             "version": "v2.10.1",
             "source": {
                 "type": "git",
@@ -322,19 +441,19 @@
             ],
             "authors": [
                 {
-                    "firstName": "Guilherme Blanco",
+                    "name": "Guilherme Blanco",
                     "email": "guilhermeblanco@gmail.com"
                 },
                 {
-                    "firstName": "Roman Borschel",
+                    "name": "Roman Borschel",
                     "email": "roman@code-factory.org"
                 },
                 {
-                    "firstName": "Benjamin Eberlei",
+                    "name": "Benjamin Eberlei",
                     "email": "kontakt@beberlei.de"
                 },
                 {
-                    "firstName": "Jonathan Wage",
+                    "name": "Jonathan Wage",
                     "email": "jonwage@gmail.com"
                 }
             ],
@@ -364,7 +483,7 @@
             "time": "2020-01-04T12:56:21+00:00"
         },
         {
-            "firstName": "doctrine/event-manager",
+            "name": "doctrine/event-manager",
             "version": "1.1.0",
             "source": {
                 "type": "git",
@@ -404,27 +523,27 @@
             ],
             "authors": [
                 {
-                    "firstName": "Guilherme Blanco",
+                    "name": "Guilherme Blanco",
                     "email": "guilhermeblanco@gmail.com"
                 },
                 {
-                    "firstName": "Roman Borschel",
+                    "name": "Roman Borschel",
                     "email": "roman@code-factory.org"
                 },
                 {
-                    "firstName": "Benjamin Eberlei",
+                    "name": "Benjamin Eberlei",
                     "email": "kontakt@beberlei.de"
                 },
                 {
-                    "firstName": "Jonathan Wage",
+                    "name": "Jonathan Wage",
                     "email": "jonwage@gmail.com"
                 },
                 {
-                    "firstName": "Johannes Schmitt",
+                    "name": "Johannes Schmitt",
                     "email": "schmittjoh@gmail.com"
                 },
                 {
-                    "firstName": "Marco Pivetta",
+                    "name": "Marco Pivetta",
                     "email": "ocramius@gmail.com"
                 }
             ],
@@ -440,7 +559,7 @@
             "time": "2019-11-10T09:48:07+00:00"
         },
         {
-            "firstName": "doctrine/inflector",
+            "name": "doctrine/inflector",
             "version": "1.3.1",
             "source": {
                 "type": "git",
@@ -476,23 +595,23 @@
             ],
             "authors": [
                 {
-                    "firstName": "Guilherme Blanco",
+                    "name": "Guilherme Blanco",
                     "email": "guilhermeblanco@gmail.com"
                 },
                 {
-                    "firstName": "Roman Borschel",
+                    "name": "Roman Borschel",
                     "email": "roman@code-factory.org"
                 },
                 {
-                    "firstName": "Benjamin Eberlei",
+                    "name": "Benjamin Eberlei",
                     "email": "kontakt@beberlei.de"
                 },
                 {
-                    "firstName": "Jonathan Wage",
+                    "name": "Jonathan Wage",
                     "email": "jonwage@gmail.com"
                 },
                 {
-                    "firstName": "Johannes Schmitt",
+                    "name": "Johannes Schmitt",
                     "email": "schmittjoh@gmail.com"
                 }
             ],
@@ -507,7 +626,7 @@
             "time": "2019-10-30T19:59:35+00:00"
         },
         {
-            "firstName": "doctrine/lexer",
+            "name": "doctrine/lexer",
             "version": "1.2.0",
             "source": {
                 "type": "git",
@@ -545,15 +664,15 @@
             ],
             "authors": [
                 {
-                    "firstName": "Guilherme Blanco",
+                    "name": "Guilherme Blanco",
                     "email": "guilhermeblanco@gmail.com"
                 },
                 {
-                    "firstName": "Roman Borschel",
+                    "name": "Roman Borschel",
                     "email": "roman@code-factory.org"
                 },
                 {
-                    "firstName": "Johannes Schmitt",
+                    "name": "Johannes Schmitt",
                     "email": "schmittjoh@gmail.com"
                 }
             ],
@@ -569,7 +688,7 @@
             "time": "2019-10-30T14:39:59+00:00"
         },
         {
-            "firstName": "dragonmantank/cron-expression",
+            "name": "dragonmantank/cron-expression",
             "version": "v2.3.0",
             "source": {
                 "type": "git",
@@ -605,12 +724,12 @@
             ],
             "authors": [
                 {
-                    "firstName": "Michael Dowling",
+                    "name": "Michael Dowling",
                     "email": "mtdowling@gmail.com",
                     "homepage": "https://github.com/mtdowling"
                 },
                 {
-                    "firstName": "Chris Tankersley",
+                    "name": "Chris Tankersley",
                     "email": "chris@ctankersley.com",
                     "homepage": "https://github.com/dragonmantank"
                 }
@@ -623,7 +742,7 @@
             "time": "2019-03-31T00:38:28+00:00"
         },
         {
-            "firstName": "egulias/email-validator",
+            "name": "egulias/email-validator",
             "version": "2.1.17",
             "source": {
                 "type": "git",
@@ -666,7 +785,7 @@
             ],
             "authors": [
                 {
-                    "firstName": "Eduardo Gulias Davis"
+                    "name": "Eduardo Gulias Davis"
                 }
             ],
             "description": "A library for validating emails against several RFCs",
@@ -681,7 +800,7 @@
             "time": "2020-02-13T22:36:52+00:00"
         },
         {
-            "firstName": "evenement/evenement",
+            "name": "evenement/evenement",
             "version": "v3.0.1",
             "source": {
                 "type": "git",
@@ -712,7 +831,7 @@
             ],
             "authors": [
                 {
-                    "firstName": "Igor Wiedler",
+                    "name": "Igor Wiedler",
                     "email": "igor@wiedler.ch"
                 }
             ],
@@ -724,7 +843,7 @@
             "time": "2017-07-23T21:35:13+00:00"
         },
         {
-            "firstName": "fideloper/proxy",
+            "name": "fideloper/proxy",
             "version": "4.3.0",
             "source": {
                 "type": "git",
@@ -765,7 +884,7 @@
             ],
             "authors": [
                 {
-                    "firstName": "Chris Fidao",
+                    "name": "Chris Fidao",
                     "email": "fideloper@gmail.com"
                 }
             ],
@@ -778,7 +897,57 @@
             "time": "2020-02-22T01:51:47+00:00"
         },
         {
-            "firstName": "fruitcake/laravel-cors",
+            "name": "firebase/php-jwt",
+            "version": "v5.2.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/firebase/php-jwt.git",
+                "reference": "feb0e820b8436873675fd3aca04f3728eb2185cb"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/firebase/php-jwt/zipball/feb0e820b8436873675fd3aca04f3728eb2185cb",
+                "reference": "feb0e820b8436873675fd3aca04f3728eb2185cb",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=5.3.0"
+            },
+            "require-dev": {
+                "phpunit/phpunit": ">=4.8 <=9"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "Firebase\\JWT\\": "src"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "BSD-3-Clause"
+            ],
+            "authors": [
+                {
+                    "name": "Neuman Vong",
+                    "email": "neuman+pear@twilio.com",
+                    "role": "Developer"
+                },
+                {
+                    "name": "Anant Narayanan",
+                    "email": "anant@php.net",
+                    "role": "Developer"
+                }
+            ],
+            "description": "A simple library to encode and decode JSON Web Tokens (JWT) in PHP. Should conform to the current spec.",
+            "homepage": "https://github.com/firebase/php-jwt",
+            "keywords": [
+                "jwt",
+                "php"
+            ],
+            "time": "2020-03-25T18:49:23+00:00"
+        },
+        {
+            "name": "fruitcake/laravel-cors",
             "version": "v1.0.5",
             "source": {
                 "type": "git",
@@ -828,11 +997,11 @@
             ],
             "authors": [
                 {
-                    "firstName": "Fruitcake",
+                    "name": "Fruitcake",
                     "homepage": "https://fruitcake.nl"
                 },
                 {
-                    "firstName": "Barry vd. Heuvel",
+                    "name": "Barry vd. Heuvel",
                     "email": "barryvdh@gmail.com"
                 }
             ],
@@ -843,10 +1012,16 @@
                 "crossdomain",
                 "laravel"
             ],
+            "funding": [
+                {
+                    "url": "https://github.com/barryvdh",
+                    "type": "github"
+                }
+            ],
             "time": "2020-03-11T21:05:07+00:00"
         },
         {
-            "firstName": "guzzlehttp/guzzle",
+            "name": "guzzlehttp/guzzle",
             "version": "6.5.2",
             "source": {
                 "type": "git",
@@ -894,7 +1069,7 @@
             ],
             "authors": [
                 {
-                    "firstName": "Michael Dowling",
+                    "name": "Michael Dowling",
                     "email": "mtdowling@gmail.com",
                     "homepage": "https://github.com/mtdowling"
                 }
@@ -913,7 +1088,7 @@
             "time": "2019-12-23T11:57:10+00:00"
         },
         {
-            "firstName": "guzzlehttp/promises",
+            "name": "guzzlehttp/promises",
             "version": "v1.3.1",
             "source": {
                 "type": "git",
@@ -952,7 +1127,7 @@
             ],
             "authors": [
                 {
-                    "firstName": "Michael Dowling",
+                    "name": "Michael Dowling",
                     "email": "mtdowling@gmail.com",
                     "homepage": "https://github.com/mtdowling"
                 }
@@ -964,7 +1139,7 @@
             "time": "2016-12-20T10:07:11+00:00"
         },
         {
-            "firstName": "guzzlehttp/psr7",
+            "name": "guzzlehttp/psr7",
             "version": "1.6.1",
             "source": {
                 "type": "git",
@@ -1012,12 +1187,12 @@
             ],
             "authors": [
                 {
-                    "firstName": "Michael Dowling",
+                    "name": "Michael Dowling",
                     "email": "mtdowling@gmail.com",
                     "homepage": "https://github.com/mtdowling"
                 },
                 {
-                    "firstName": "Tobias Schultze",
+                    "name": "Tobias Schultze",
                     "homepage": "https://github.com/Tobion"
                 }
             ],
@@ -1035,7 +1210,7 @@
             "time": "2019-07-01T23:21:34+00:00"
         },
         {
-            "firstName": "jakub-onderka/php-console-color",
+            "name": "jakub-onderka/php-console-color",
             "version": "v0.2",
             "source": {
                 "type": "git",
@@ -1070,14 +1245,14 @@
             ],
             "authors": [
                 {
-                    "firstName": "Jakub Onderka",
+                    "name": "Jakub Onderka",
                     "email": "jakub.onderka@gmail.com"
                 }
             ],
             "time": "2018-09-29T17:23:10+00:00"
         },
         {
-            "firstName": "jakub-onderka/php-console-highlighter",
+            "name": "jakub-onderka/php-console-highlighter",
             "version": "v0.4",
             "source": {
                 "type": "git",
@@ -1114,7 +1289,7 @@
             ],
             "authors": [
                 {
-                    "firstName": "Jakub Onderka",
+                    "name": "Jakub Onderka",
                     "email": "acci@acci.cz",
                     "homepage": "http://www.acci.cz/"
                 }
@@ -1123,17 +1298,153 @@
             "time": "2018-09-29T18:48:56+00:00"
         },
         {
-            "firstName": "laravel/framework",
-            "version": "v7.3.0",
+            "name": "laminas/laminas-diactoros",
+            "version": "2.2.3",
             "source": {
                 "type": "git",
-                "url": "https://github.com/laravel/framework.git",
-                "reference": "36d8958b5b8058ef0641806e490f91102fdea70d"
+                "url": "https://github.com/laminas/laminas-diactoros.git",
+                "reference": "b596c7141f5093aefec94cb5e8745212299e290f"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/laravel/framework/zipball/36d8958b5b8058ef0641806e490f91102fdea70d",
-                "reference": "36d8958b5b8058ef0641806e490f91102fdea70d",
+                "url": "https://api.github.com/repos/laminas/laminas-diactoros/zipball/b596c7141f5093aefec94cb5e8745212299e290f",
+                "reference": "b596c7141f5093aefec94cb5e8745212299e290f",
+                "shasum": ""
+            },
+            "require": {
+                "laminas/laminas-zendframework-bridge": "^1.0",
+                "php": "^7.1",
+                "psr/http-factory": "^1.0",
+                "psr/http-message": "^1.0"
+            },
+            "conflict": {
+                "phpspec/prophecy": "<1.9.0"
+            },
+            "provide": {
+                "psr/http-factory-implementation": "1.0",
+                "psr/http-message-implementation": "1.0"
+            },
+            "replace": {
+                "zendframework/zend-diactoros": "^2.2.1"
+            },
+            "require-dev": {
+                "ext-curl": "*",
+                "ext-dom": "*",
+                "ext-libxml": "*",
+                "http-interop/http-factory-tests": "^0.5.0",
+                "laminas/laminas-coding-standard": "~1.0.0",
+                "php-http/psr7-integration-tests": "^1.0",
+                "phpunit/phpunit": "^7.5.18"
+            },
+            "type": "library",
+            "extra": {
+                "branch-alias": {
+                    "dev-master": "2.1.x-dev",
+                    "dev-develop": "2.2.x-dev",
+                    "dev-release-1.8": "1.8.x-dev"
+                }
+            },
+            "autoload": {
+                "files": [
+                    "src/functions/create_uploaded_file.php",
+                    "src/functions/marshal_headers_from_sapi.php",
+                    "src/functions/marshal_method_from_sapi.php",
+                    "src/functions/marshal_protocol_version_from_sapi.php",
+                    "src/functions/marshal_uri_from_sapi.php",
+                    "src/functions/normalize_server.php",
+                    "src/functions/normalize_uploaded_files.php",
+                    "src/functions/parse_cookie_header.php",
+                    "src/functions/create_uploaded_file.legacy.php",
+                    "src/functions/marshal_headers_from_sapi.legacy.php",
+                    "src/functions/marshal_method_from_sapi.legacy.php",
+                    "src/functions/marshal_protocol_version_from_sapi.legacy.php",
+                    "src/functions/marshal_uri_from_sapi.legacy.php",
+                    "src/functions/normalize_server.legacy.php",
+                    "src/functions/normalize_uploaded_files.legacy.php",
+                    "src/functions/parse_cookie_header.legacy.php"
+                ],
+                "psr-4": {
+                    "Laminas\\Diactoros\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "BSD-3-Clause"
+            ],
+            "description": "PSR HTTP Message implementations",
+            "homepage": "https://laminas.dev",
+            "keywords": [
+                "http",
+                "laminas",
+                "psr",
+                "psr-7"
+            ],
+            "time": "2020-03-29T12:30:54+00:00"
+        },
+        {
+            "name": "laminas/laminas-zendframework-bridge",
+            "version": "1.0.2",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/laminas/laminas-zendframework-bridge.git",
+                "reference": "faf68f6109ceeff24241226033ab59640c7eb63b"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/laminas/laminas-zendframework-bridge/zipball/faf68f6109ceeff24241226033ab59640c7eb63b",
+                "reference": "faf68f6109ceeff24241226033ab59640c7eb63b",
+                "shasum": ""
+            },
+            "require": {
+                "php": "^5.6 || ^7.0"
+            },
+            "require-dev": {
+                "phpunit/phpunit": "^5.7 || ^6.5 || ^7.5 || ^8.1",
+                "squizlabs/php_codesniffer": "^3.5"
+            },
+            "type": "library",
+            "extra": {
+                "branch-alias": {
+                    "dev-master": "1.0.x-dev",
+                    "dev-develop": "1.1.x-dev"
+                },
+                "laminas": {
+                    "module": "Laminas\\ZendFrameworkBridge"
+                }
+            },
+            "autoload": {
+                "files": [
+                    "src/autoload.php"
+                ],
+                "psr-4": {
+                    "Laminas\\ZendFrameworkBridge\\": "src//"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "BSD-3-Clause"
+            ],
+            "description": "Alias legacy ZF class names to Laminas Project equivalents.",
+            "keywords": [
+                "ZendFramework",
+                "autoloading",
+                "laminas",
+                "zf"
+            ],
+            "time": "2020-03-26T16:07:12+00:00"
+        },
+        {
+            "name": "laravel/framework",
+            "version": "v7.4.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/laravel/framework.git",
+                "reference": "dafdd1e19f86add02e48fa9f6cac9be2c5329772"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/laravel/framework/zipball/dafdd1e19f86add02e48fa9f6cac9be2c5329772",
+                "reference": "dafdd1e19f86add02e48fa9f6cac9be2c5329772",
                 "shasum": ""
             },
             "require": {
@@ -1261,7 +1572,7 @@
             ],
             "authors": [
                 {
-                    "firstName": "Taylor Otwell",
+                    "name": "Taylor Otwell",
                     "email": "taylor@laravel.com"
                 }
             ],
@@ -1271,10 +1582,147 @@
                 "framework",
                 "laravel"
             ],
-            "time": "2020-03-24T15:17:51+00:00"
+            "time": "2020-03-31T15:01:12+00:00"
         },
         {
-            "firstName": "laravel/tinker",
+            "name": "laravel/passport",
+            "version": "v8.4.3",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/laravel/passport.git",
+                "reference": "edb9ccb9993ca98c7347da2fae20e1b8b4895f31"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/laravel/passport/zipball/edb9ccb9993ca98c7347da2fae20e1b8b4895f31",
+                "reference": "edb9ccb9993ca98c7347da2fae20e1b8b4895f31",
+                "shasum": ""
+            },
+            "require": {
+                "ext-json": "*",
+                "firebase/php-jwt": "^3.0|^4.0|^5.0",
+                "guzzlehttp/guzzle": "^6.0",
+                "illuminate/auth": "^6.0|^7.0",
+                "illuminate/console": "^6.0|^7.0",
+                "illuminate/container": "^6.0|^7.0",
+                "illuminate/contracts": "^6.0|^7.0",
+                "illuminate/cookie": "^6.0|^7.0",
+                "illuminate/database": "^6.0|^7.0",
+                "illuminate/encryption": "^6.0|^7.0",
+                "illuminate/http": "^6.0|^7.0",
+                "illuminate/support": "^6.0|^7.0",
+                "laminas/laminas-diactoros": "^2.2",
+                "league/oauth2-server": "^8.0",
+                "nyholm/psr7": "^1.0",
+                "php": "^7.2",
+                "phpseclib/phpseclib": "^2.0",
+                "symfony/psr-http-message-bridge": "^2.0"
+            },
+            "require-dev": {
+                "mockery/mockery": "^1.0",
+                "orchestra/testbench": "^4.4|^5.0",
+                "phpunit/phpunit": "^8.0"
+            },
+            "type": "library",
+            "extra": {
+                "branch-alias": {
+                    "dev-master": "8.x-dev"
+                },
+                "laravel": {
+                    "providers": [
+                        "Laravel\\Passport\\PassportServiceProvider"
+                    ]
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "Laravel\\Passport\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Taylor Otwell",
+                    "email": "taylor@laravel.com"
+                }
+            ],
+            "description": "Laravel Passport provides OAuth2 server support to Laravel.",
+            "keywords": [
+                "laravel",
+                "oauth",
+                "passport"
+            ],
+            "time": "2020-03-31T15:48:43+00:00"
+        },
+        {
+            "name": "laravel/socialite",
+            "version": "v4.3.2",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/laravel/socialite.git",
+                "reference": "4bd66ee416fea04398dee5b8c32d65719a075db4"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/laravel/socialite/zipball/4bd66ee416fea04398dee5b8c32d65719a075db4",
+                "reference": "4bd66ee416fea04398dee5b8c32d65719a075db4",
+                "shasum": ""
+            },
+            "require": {
+                "ext-json": "*",
+                "guzzlehttp/guzzle": "~6.0",
+                "illuminate/http": "~5.7.0|~5.8.0|^6.0|^7.0",
+                "illuminate/support": "~5.7.0|~5.8.0|^6.0|^7.0",
+                "league/oauth1-client": "~1.0",
+                "php": "^7.1.3"
+            },
+            "require-dev": {
+                "illuminate/contracts": "~5.7.0|~5.8.0|^6.0|^7.0",
+                "mockery/mockery": "^1.0",
+                "phpunit/phpunit": "^7.0|^8.0"
+            },
+            "type": "library",
+            "extra": {
+                "branch-alias": {
+                    "dev-master": "4.x-dev"
+                },
+                "laravel": {
+                    "providers": [
+                        "Laravel\\Socialite\\SocialiteServiceProvider"
+                    ],
+                    "aliases": {
+                        "Socialite": "Laravel\\Socialite\\Facades\\Socialite"
+                    }
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "Laravel\\Socialite\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Taylor Otwell",
+                    "email": "taylor@laravel.com"
+                }
+            ],
+            "description": "Laravel wrapper around OAuth 1 & OAuth 2 libraries.",
+            "homepage": "https://laravel.com",
+            "keywords": [
+                "laravel",
+                "oauth"
+            ],
+            "time": "2020-02-04T15:30:01+00:00"
+        },
+        {
+            "name": "laravel/tinker",
             "version": "v2.3.0",
             "source": {
                 "type": "git",
@@ -1324,7 +1772,7 @@
             ],
             "authors": [
                 {
-                    "firstName": "Taylor Otwell",
+                    "name": "Taylor Otwell",
                     "email": "taylor@laravel.com"
                 }
             ],
@@ -1338,7 +1786,7 @@
             "time": "2020-03-17T15:34:59+00:00"
         },
         {
-            "firstName": "laravel/ui",
+            "name": "laravel/ui",
             "version": "v2.0.1",
             "source": {
                 "type": "git",
@@ -1381,7 +1829,7 @@
             ],
             "authors": [
                 {
-                    "firstName": "Taylor Otwell",
+                    "name": "Taylor Otwell",
                     "email": "taylor@laravel.com"
                 }
             ],
@@ -1393,7 +1841,7 @@
             "time": "2020-03-03T20:16:46+00:00"
         },
         {
-            "firstName": "lcobucci/jwt",
+            "name": "lcobucci/jwt",
             "version": "3.3.1",
             "source": {
                 "type": "git",
@@ -1435,7 +1883,7 @@
             ],
             "authors": [
                 {
-                    "firstName": "Luís Otávio Cobucci Oblonczyk",
+                    "name": "Luís Otávio Cobucci Oblonczyk",
                     "email": "lcobucci@gmail.com",
                     "role": "Developer"
                 }
@@ -1448,7 +1896,7 @@
             "time": "2019-05-24T18:30:49+00:00"
         },
         {
-            "firstName": "league/commonmark",
+            "name": "league/commonmark",
             "version": "1.3.2",
             "source": {
                 "type": "git",
@@ -1501,7 +1949,7 @@
             ],
             "authors": [
                 {
-                    "firstName": "Colin O'Dell",
+                    "name": "Colin O'Dell",
                     "email": "colinodell@gmail.com",
                     "homepage": "https://www.colinodell.com",
                     "role": "Lead Developer"
@@ -1519,10 +1967,74 @@
                 "md",
                 "parser"
             ],
+            "funding": [
+                {
+                    "url": "https://github.com/colinodell",
+                    "type": "github"
+                },
+                {
+                    "url": "https://www.patreon.com/colinodell",
+                    "type": "patreon"
+                },
+                {
+                    "url": "https://tidelift.com/funding/github/packagist/league%2fcommonmark",
+                    "type": "tidelift"
+                }
+            ],
             "time": "2020-03-25T19:55:28+00:00"
         },
         {
-            "firstName": "league/flysystem",
+            "name": "league/event",
+            "version": "2.2.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/thephpleague/event.git",
+                "reference": "d2cc124cf9a3fab2bb4ff963307f60361ce4d119"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/thephpleague/event/zipball/d2cc124cf9a3fab2bb4ff963307f60361ce4d119",
+                "reference": "d2cc124cf9a3fab2bb4ff963307f60361ce4d119",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=5.4.0"
+            },
+            "require-dev": {
+                "henrikbjorn/phpspec-code-coverage": "~1.0.1",
+                "phpspec/phpspec": "^2.2"
+            },
+            "type": "library",
+            "extra": {
+                "branch-alias": {
+                    "dev-master": "2.2-dev"
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "League\\Event\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Frank de Jonge",
+                    "email": "info@frenky.net"
+                }
+            ],
+            "description": "Event package",
+            "keywords": [
+                "emitter",
+                "event",
+                "listener"
+            ],
+            "time": "2018-11-26T11:52:41+00:00"
+        },
+        {
+            "name": "league/flysystem",
             "version": "1.0.66",
             "source": {
                 "type": "git",
@@ -1579,7 +2091,7 @@
             ],
             "authors": [
                 {
-                    "firstName": "Frank de Jonge",
+                    "name": "Frank de Jonge",
                     "email": "info@frenky.net"
                 }
             ],
@@ -1603,10 +2115,156 @@
                 "sftp",
                 "storage"
             ],
+            "funding": [
+                {
+                    "url": "https://offset.earth/frankdejonge",
+                    "type": "other"
+                }
+            ],
             "time": "2020-03-17T18:58:12+00:00"
         },
         {
-            "firstName": "monolog/monolog",
+            "name": "league/oauth1-client",
+            "version": "1.7.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/thephpleague/oauth1-client.git",
+                "reference": "fca5f160650cb74d23fc11aa570dd61f86dcf647"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/thephpleague/oauth1-client/zipball/fca5f160650cb74d23fc11aa570dd61f86dcf647",
+                "reference": "fca5f160650cb74d23fc11aa570dd61f86dcf647",
+                "shasum": ""
+            },
+            "require": {
+                "guzzlehttp/guzzle": "^6.0",
+                "php": ">=5.5.0"
+            },
+            "require-dev": {
+                "mockery/mockery": "^0.9",
+                "phpunit/phpunit": "^4.0",
+                "squizlabs/php_codesniffer": "^2.0"
+            },
+            "type": "library",
+            "extra": {
+                "branch-alias": {
+                    "dev-master": "1.0-dev"
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "League\\OAuth1\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Ben Corlett",
+                    "email": "bencorlett@me.com",
+                    "homepage": "http://www.webcomm.com.au",
+                    "role": "Developer"
+                }
+            ],
+            "description": "OAuth 1.0 Client Library",
+            "keywords": [
+                "Authentication",
+                "SSO",
+                "authorization",
+                "bitbucket",
+                "identity",
+                "idp",
+                "oauth",
+                "oauth1",
+                "single sign on",
+                "trello",
+                "tumblr",
+                "twitter"
+            ],
+            "time": "2016-08-17T00:36:58+00:00"
+        },
+        {
+            "name": "league/oauth2-server",
+            "version": "8.0.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/thephpleague/oauth2-server.git",
+                "reference": "e1dc4d708c56fcfa205be4bb1862b6d525b4baac"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/thephpleague/oauth2-server/zipball/e1dc4d708c56fcfa205be4bb1862b6d525b4baac",
+                "reference": "e1dc4d708c56fcfa205be4bb1862b6d525b4baac",
+                "shasum": ""
+            },
+            "require": {
+                "defuse/php-encryption": "^2.2.1",
+                "ext-json": "*",
+                "ext-openssl": "*",
+                "lcobucci/jwt": "^3.3.1",
+                "league/event": "^2.2",
+                "php": ">=7.1.0",
+                "psr/http-message": "^1.0.1"
+            },
+            "replace": {
+                "league/oauth2server": "*",
+                "lncd/oauth2": "*"
+            },
+            "require-dev": {
+                "phpstan/phpstan": "^0.11.8",
+                "phpstan/phpstan-phpunit": "^0.11.2",
+                "phpunit/phpunit": "^7.5.13 || ^8.2.3",
+                "roave/security-advisories": "dev-master",
+                "zendframework/zend-diactoros": "^2.1.2"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "League\\OAuth2\\Server\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Alex Bilbie",
+                    "email": "hello@alexbilbie.com",
+                    "homepage": "http://www.alexbilbie.com",
+                    "role": "Developer"
+                },
+                {
+                    "name": "Andy Millington",
+                    "email": "andrew@noexceptions.io",
+                    "homepage": "https://www.noexceptions.io",
+                    "role": "Developer"
+                }
+            ],
+            "description": "A lightweight and powerful OAuth 2.0 authorization and resource server library with support for all the core specification grants. This library will allow you to secure your API with OAuth and allow your applications users to approve apps that want to access their data from your API.",
+            "homepage": "https://oauth2.thephpleague.com/",
+            "keywords": [
+                "Authentication",
+                "api",
+                "auth",
+                "authorisation",
+                "authorization",
+                "oauth",
+                "oauth 2",
+                "oauth 2.0",
+                "oauth2",
+                "protect",
+                "resource",
+                "secure",
+                "server"
+            ],
+            "time": "2019-07-13T18:58:26+00:00"
+        },
+        {
+            "name": "monolog/monolog",
             "version": "2.0.2",
             "source": {
                 "type": "git",
@@ -1672,7 +2330,7 @@
             ],
             "authors": [
                 {
-                    "firstName": "Jordi Boggiano",
+                    "name": "Jordi Boggiano",
                     "email": "j.boggiano@seld.be",
                     "homepage": "http://seld.be"
                 }
@@ -1687,7 +2345,7 @@
             "time": "2019-12-20T14:22:59+00:00"
         },
         {
-            "firstName": "namshi/jose",
+            "name": "namshi/jose",
             "version": "7.2.3",
             "source": {
                 "type": "git",
@@ -1730,11 +2388,11 @@
             ],
             "authors": [
                 {
-                    "firstName": "Alessandro Nadalin",
+                    "name": "Alessandro Nadalin",
                     "email": "alessandro.nadalin@gmail.com"
                 },
                 {
-                    "firstName": "Alessandro Cinelli (cirpo)",
+                    "name": "Alessandro Cinelli (cirpo)",
                     "email": "alessandro.cinelli@gmail.com"
                 }
             ],
@@ -1750,7 +2408,7 @@
             "time": "2016-12-05T07:27:31+00:00"
         },
         {
-            "firstName": "nesbot/carbon",
+            "name": "nesbot/carbon",
             "version": "2.32.2",
             "source": {
                 "type": "git",
@@ -1802,12 +2460,12 @@
             ],
             "authors": [
                 {
-                    "firstName": "Brian Nesbitt",
+                    "name": "Brian Nesbitt",
                     "email": "brian@nesbot.com",
                     "homepage": "http://nesbot.com"
                 },
                 {
-                    "firstName": "kylekatarnls",
+                    "name": "kylekatarnls",
                     "homepage": "http://github.com/kylekatarnls"
                 }
             ],
@@ -1831,7 +2489,7 @@
             "time": "2020-03-31T13:43:19+00:00"
         },
         {
-            "firstName": "nikic/php-parser",
+            "name": "nikic/php-parser",
             "version": "v4.3.0",
             "source": {
                 "type": "git",
@@ -1872,7 +2530,7 @@
             ],
             "authors": [
                 {
-                    "firstName": "Nikita Popov"
+                    "name": "Nikita Popov"
                 }
             ],
             "description": "A PHP parser written in PHP",
@@ -1883,7 +2541,69 @@
             "time": "2019-11-08T13:50:10+00:00"
         },
         {
-            "firstName": "opis/closure",
+            "name": "nyholm/psr7",
+            "version": "1.2.1",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/Nyholm/psr7.git",
+                "reference": "55ff6b76573f5b242554c9775792bd59fb52e11c"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/Nyholm/psr7/zipball/55ff6b76573f5b242554c9775792bd59fb52e11c",
+                "reference": "55ff6b76573f5b242554c9775792bd59fb52e11c",
+                "shasum": ""
+            },
+            "require": {
+                "php": "^7.1",
+                "php-http/message-factory": "^1.0",
+                "psr/http-factory": "^1.0",
+                "psr/http-message": "^1.0"
+            },
+            "provide": {
+                "psr/http-factory-implementation": "1.0",
+                "psr/http-message-implementation": "1.0"
+            },
+            "require-dev": {
+                "http-interop/http-factory-tests": "dev-master",
+                "php-http/psr7-integration-tests": "dev-master",
+                "phpunit/phpunit": "^7.5"
+            },
+            "type": "library",
+            "extra": {
+                "branch-alias": {
+                    "dev-master": "1.0-dev"
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "Nyholm\\Psr7\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Tobias Nyholm",
+                    "email": "tobias.nyholm@gmail.com"
+                },
+                {
+                    "name": "Martijn van der Ven",
+                    "email": "martijn@vanderven.se"
+                }
+            ],
+            "description": "A fast PHP7 implementation of PSR-7",
+            "homepage": "http://tnyholm.se",
+            "keywords": [
+                "psr-17",
+                "psr-7"
+            ],
+            "time": "2019-09-05T13:24:16+00:00"
+        },
+        {
+            "name": "opis/closure",
             "version": "3.5.1",
             "source": {
                 "type": "git",
@@ -1923,11 +2643,11 @@
             ],
             "authors": [
                 {
-                    "firstName": "Marius Sarca",
+                    "name": "Marius Sarca",
                     "email": "marius.sarca@gmail.com"
                 },
                 {
-                    "firstName": "Sorin Sarca",
+                    "name": "Sorin Sarca",
                     "email": "sarca_sorin@hotmail.com"
                 }
             ],
@@ -1944,7 +2664,102 @@
             "time": "2019-11-29T22:36:02+00:00"
         },
         {
-            "firstName": "phpoption/phpoption",
+            "name": "paragonie/random_compat",
+            "version": "v9.99.99",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/paragonie/random_compat.git",
+                "reference": "84b4dfb120c6f9b4ff7b3685f9b8f1aa365a0c95"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/paragonie/random_compat/zipball/84b4dfb120c6f9b4ff7b3685f9b8f1aa365a0c95",
+                "reference": "84b4dfb120c6f9b4ff7b3685f9b8f1aa365a0c95",
+                "shasum": ""
+            },
+            "require": {
+                "php": "^7"
+            },
+            "require-dev": {
+                "phpunit/phpunit": "4.*|5.*",
+                "vimeo/psalm": "^1"
+            },
+            "suggest": {
+                "ext-libsodium": "Provides a modern crypto API that can be used to generate random bytes."
+            },
+            "type": "library",
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Paragon Initiative Enterprises",
+                    "email": "security@paragonie.com",
+                    "homepage": "https://paragonie.com"
+                }
+            ],
+            "description": "PHP 5.x polyfill for random_bytes() and random_int() from PHP 7",
+            "keywords": [
+                "csprng",
+                "polyfill",
+                "pseudorandom",
+                "random"
+            ],
+            "time": "2018-07-02T15:55:56+00:00"
+        },
+        {
+            "name": "php-http/message-factory",
+            "version": "v1.0.2",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/php-http/message-factory.git",
+                "reference": "a478cb11f66a6ac48d8954216cfed9aa06a501a1"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/php-http/message-factory/zipball/a478cb11f66a6ac48d8954216cfed9aa06a501a1",
+                "reference": "a478cb11f66a6ac48d8954216cfed9aa06a501a1",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=5.4",
+                "psr/http-message": "^1.0"
+            },
+            "type": "library",
+            "extra": {
+                "branch-alias": {
+                    "dev-master": "1.0-dev"
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "Http\\Message\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Márk Sági-Kazár",
+                    "email": "mark.sagikazar@gmail.com"
+                }
+            ],
+            "description": "Factory interfaces for PSR-7 HTTP Message",
+            "homepage": "http://php-http.org",
+            "keywords": [
+                "factory",
+                "http",
+                "message",
+                "stream",
+                "uri"
+            ],
+            "time": "2015-12-19T14:08:53+00:00"
+        },
+        {
+            "name": "phpoption/phpoption",
             "version": "1.7.3",
             "source": {
                 "type": "git",
@@ -1981,11 +2796,11 @@
             ],
             "authors": [
                 {
-                    "firstName": "Johannes M. Schmitt",
+                    "name": "Johannes M. Schmitt",
                     "email": "schmittjoh@gmail.com"
                 },
                 {
-                    "firstName": "Graham Campbell",
+                    "name": "Graham Campbell",
                     "email": "graham@alt-three.com"
                 }
             ],
@@ -1999,7 +2814,113 @@
             "time": "2020-03-21T18:07:53+00:00"
         },
         {
-            "firstName": "psr/container",
+            "name": "phpseclib/phpseclib",
+            "version": "2.0.26",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/phpseclib/phpseclib.git",
+                "reference": "09655fcc1f8bab65727be036b28f6f20311c126c"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/phpseclib/phpseclib/zipball/09655fcc1f8bab65727be036b28f6f20311c126c",
+                "reference": "09655fcc1f8bab65727be036b28f6f20311c126c",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=5.3.3"
+            },
+            "require-dev": {
+                "phing/phing": "~2.7",
+                "phpunit/phpunit": "^4.8.35|^5.7|^6.0",
+                "sami/sami": "~2.0",
+                "squizlabs/php_codesniffer": "~2.0"
+            },
+            "suggest": {
+                "ext-gmp": "Install the GMP (GNU Multiple Precision) extension in order to speed up arbitrary precision integer arithmetic operations.",
+                "ext-libsodium": "SSH2/SFTP can make use of some algorithms provided by the libsodium-php extension.",
+                "ext-mcrypt": "Install the Mcrypt extension in order to speed up a few other cryptographic operations.",
+                "ext-openssl": "Install the OpenSSL extension in order to speed up a wide variety of cryptographic operations."
+            },
+            "type": "library",
+            "autoload": {
+                "files": [
+                    "phpseclib/bootstrap.php"
+                ],
+                "psr-4": {
+                    "phpseclib\\": "phpseclib/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Jim Wigginton",
+                    "email": "terrafrost@php.net",
+                    "role": "Lead Developer"
+                },
+                {
+                    "name": "Patrick Monnerat",
+                    "email": "pm@datasphere.ch",
+                    "role": "Developer"
+                },
+                {
+                    "name": "Andreas Fischer",
+                    "email": "bantu@phpbb.com",
+                    "role": "Developer"
+                },
+                {
+                    "name": "Hans-Jürgen Petrich",
+                    "email": "petrich@tronic-media.com",
+                    "role": "Developer"
+                },
+                {
+                    "name": "Graham Campbell",
+                    "email": "graham@alt-three.com",
+                    "role": "Developer"
+                }
+            ],
+            "description": "PHP Secure Communications Library - Pure-PHP implementations of RSA, AES, SSH2, SFTP, X.509 etc.",
+            "homepage": "http://phpseclib.sourceforge.net",
+            "keywords": [
+                "BigInteger",
+                "aes",
+                "asn.1",
+                "asn1",
+                "blowfish",
+                "crypto",
+                "cryptography",
+                "encryption",
+                "rsa",
+                "security",
+                "sftp",
+                "signature",
+                "signing",
+                "ssh",
+                "twofish",
+                "x.509",
+                "x509"
+            ],
+            "funding": [
+                {
+                    "url": "https://github.com/terrafrost",
+                    "type": "github"
+                },
+                {
+                    "url": "https://www.patreon.com/phpseclib",
+                    "type": "patreon"
+                },
+                {
+                    "url": "https://tidelift.com/funding/github/packagist/phpseclib/phpseclib",
+                    "type": "tidelift"
+                }
+            ],
+            "time": "2020-03-13T04:15:39+00:00"
+        },
+        {
+            "name": "psr/container",
             "version": "1.0.0",
             "source": {
                 "type": "git",
@@ -2032,7 +2953,7 @@
             ],
             "authors": [
                 {
-                    "firstName": "PHP-FIG",
+                    "name": "PHP-FIG",
                     "homepage": "http://www.php-fig.org/"
                 }
             ],
@@ -2048,7 +2969,7 @@
             "time": "2017-02-14T16:28:37+00:00"
         },
         {
-            "firstName": "psr/event-dispatcher",
+            "name": "psr/event-dispatcher",
             "version": "1.0.0",
             "source": {
                 "type": "git",
@@ -2081,7 +3002,7 @@
             ],
             "authors": [
                 {
-                    "firstName": "PHP-FIG",
+                    "name": "PHP-FIG",
                     "homepage": "http://www.php-fig.org/"
                 }
             ],
@@ -2094,7 +3015,59 @@
             "time": "2019-01-08T18:20:26+00:00"
         },
         {
-            "firstName": "psr/http-message",
+            "name": "psr/http-factory",
+            "version": "1.0.1",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/php-fig/http-factory.git",
+                "reference": "12ac7fcd07e5b077433f5f2bee95b3a771bf61be"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/php-fig/http-factory/zipball/12ac7fcd07e5b077433f5f2bee95b3a771bf61be",
+                "reference": "12ac7fcd07e5b077433f5f2bee95b3a771bf61be",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=7.0.0",
+                "psr/http-message": "^1.0"
+            },
+            "type": "library",
+            "extra": {
+                "branch-alias": {
+                    "dev-master": "1.0.x-dev"
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "Psr\\Http\\Message\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "PHP-FIG",
+                    "homepage": "http://www.php-fig.org/"
+                }
+            ],
+            "description": "Common interfaces for PSR-7 HTTP message factories",
+            "keywords": [
+                "factory",
+                "http",
+                "message",
+                "psr",
+                "psr-17",
+                "psr-7",
+                "request",
+                "response"
+            ],
+            "time": "2019-04-30T12:38:16+00:00"
+        },
+        {
+            "name": "psr/http-message",
             "version": "1.0.1",
             "source": {
                 "type": "git",
@@ -2127,7 +3100,7 @@
             ],
             "authors": [
                 {
-                    "firstName": "PHP-FIG",
+                    "name": "PHP-FIG",
                     "homepage": "http://www.php-fig.org/"
                 }
             ],
@@ -2144,7 +3117,7 @@
             "time": "2016-08-06T14:39:51+00:00"
         },
         {
-            "firstName": "psr/log",
+            "name": "psr/log",
             "version": "1.1.3",
             "source": {
                 "type": "git",
@@ -2177,7 +3150,7 @@
             ],
             "authors": [
                 {
-                    "firstName": "PHP-FIG",
+                    "name": "PHP-FIG",
                     "homepage": "http://www.php-fig.org/"
                 }
             ],
@@ -2191,7 +3164,7 @@
             "time": "2020-03-23T09:12:05+00:00"
         },
         {
-            "firstName": "psr/simple-cache",
+            "name": "psr/simple-cache",
             "version": "1.0.1",
             "source": {
                 "type": "git",
@@ -2224,7 +3197,7 @@
             ],
             "authors": [
                 {
-                    "firstName": "PHP-FIG",
+                    "name": "PHP-FIG",
                     "homepage": "http://www.php-fig.org/"
                 }
             ],
@@ -2239,7 +3212,7 @@
             "time": "2017-10-23T01:57:42+00:00"
         },
         {
-            "firstName": "psy/psysh",
+            "name": "psy/psysh",
             "version": "v0.10.2",
             "source": {
                 "type": "git",
@@ -2296,7 +3269,7 @@
             ],
             "authors": [
                 {
-                    "firstName": "Justin Hileman",
+                    "name": "Justin Hileman",
                     "email": "justin@justinhileman.info",
                     "homepage": "http://justinhileman.com"
                 }
@@ -2312,7 +3285,7 @@
             "time": "2020-03-21T06:55:27+00:00"
         },
         {
-            "firstName": "ralouphie/getallheaders",
+            "name": "ralouphie/getallheaders",
             "version": "3.0.3",
             "source": {
                 "type": "git",
@@ -2344,7 +3317,7 @@
             ],
             "authors": [
                 {
-                    "firstName": "Ralph Khattar",
+                    "name": "Ralph Khattar",
                     "email": "ralph.khattar@gmail.com"
                 }
             ],
@@ -2352,7 +3325,7 @@
             "time": "2019-03-08T08:55:37+00:00"
         },
         {
-            "firstName": "ramsey/collection",
+            "name": "ramsey/collection",
             "version": "1.0.1",
             "source": {
                 "type": "git",
@@ -2395,7 +3368,7 @@
             ],
             "authors": [
                 {
-                    "firstName": "Ben Ramsey",
+                    "name": "Ben Ramsey",
                     "email": "ben@benramsey.com",
                     "homepage": "https://benramsey.com"
                 }
@@ -2413,7 +3386,7 @@
             "time": "2020-01-05T00:22:59+00:00"
         },
         {
-            "firstName": "ramsey/uuid",
+            "name": "ramsey/uuid",
             "version": "4.0.1",
             "source": {
                 "type": "git",
@@ -2491,10 +3464,16 @@
                 "identifier",
                 "uuid"
             ],
+            "funding": [
+                {
+                    "url": "https://github.com/ramsey",
+                    "type": "github"
+                }
+            ],
             "time": "2020-03-29T20:13:32+00:00"
         },
         {
-            "firstName": "ratchet/rfc6455",
+            "name": "ratchet/rfc6455",
             "version": "v0.2.6",
             "source": {
                 "type": "git",
@@ -2527,7 +3506,7 @@
             ],
             "authors": [
                 {
-                    "firstName": "Chris Boden",
+                    "name": "Chris Boden",
                     "email": "cboden@gmail.com",
                     "role": "Developer"
                 }
@@ -2542,7 +3521,7 @@
             "time": "2019-12-15T10:18:18+00:00"
         },
         {
-            "firstName": "react/cache",
+            "name": "react/cache",
             "version": "v1.0.0",
             "source": {
                 "type": "git",
@@ -2582,7 +3561,7 @@
             "time": "2019-07-11T13:45:28+00:00"
         },
         {
-            "firstName": "react/dns",
+            "name": "react/dns",
             "version": "v1.2.0",
             "source": {
                 "type": "git",
@@ -2626,7 +3605,7 @@
             "time": "2019-08-15T09:06:31+00:00"
         },
         {
-            "firstName": "react/event-loop",
+            "name": "react/event-loop",
             "version": "v1.1.1",
             "source": {
                 "type": "git",
@@ -2668,7 +3647,7 @@
             "time": "2020-01-01T18:39:52+00:00"
         },
         {
-            "firstName": "react/promise",
+            "name": "react/promise",
             "version": "v2.7.1",
             "source": {
                 "type": "git",
@@ -2702,7 +3681,7 @@
             ],
             "authors": [
                 {
-                    "firstName": "Jan Sorgalla",
+                    "name": "Jan Sorgalla",
                     "email": "jsorgalla@gmail.com"
                 }
             ],
@@ -2714,7 +3693,7 @@
             "time": "2019-01-07T21:25:54+00:00"
         },
         {
-            "firstName": "react/promise-timer",
+            "name": "react/promise-timer",
             "version": "v1.5.1",
             "source": {
                 "type": "git",
@@ -2750,7 +3729,7 @@
             ],
             "authors": [
                 {
-                    "firstName": "Christian Lück",
+                    "name": "Christian Lück",
                     "email": "christian@lueck.tv"
                 }
             ],
@@ -2767,7 +3746,7 @@
             "time": "2019-03-27T18:10:32+00:00"
         },
         {
-            "firstName": "react/socket",
+            "name": "react/socket",
             "version": "v1.4.0",
             "source": {
                 "type": "git",
@@ -2815,7 +3794,7 @@
             "time": "2020-03-12T12:15:14+00:00"
         },
         {
-            "firstName": "react/stream",
+            "name": "react/stream",
             "version": "v1.1.0",
             "source": {
                 "type": "git",
@@ -2861,7 +3840,7 @@
             "time": "2019-01-01T16:15:09+00:00"
         },
         {
-            "firstName": "react/zmq",
+            "name": "react/zmq",
             "version": "v0.4.0",
             "source": {
                 "type": "git",
@@ -2902,7 +3881,101 @@
             "time": "2018-05-18T15:27:55+00:00"
         },
         {
-            "firstName": "swiftmailer/swiftmailer",
+            "name": "socialiteproviders/manager",
+            "version": "v3.5",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/SocialiteProviders/Manager.git",
+                "reference": "7a5872d9e4b22bb26ecd0c69ea9ddbaad8c0f570"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/SocialiteProviders/Manager/zipball/7a5872d9e4b22bb26ecd0c69ea9ddbaad8c0f570",
+                "reference": "7a5872d9e4b22bb26ecd0c69ea9ddbaad8c0f570",
+                "shasum": ""
+            },
+            "require": {
+                "illuminate/support": "~5.4|~5.7.0|~5.8.0|^6.0|^7.0",
+                "laravel/socialite": "~3.0|~4.0",
+                "php": "^5.6 || ^7.0"
+            },
+            "require-dev": {
+                "mockery/mockery": "^0.9.4",
+                "phpunit/phpunit": "^5.0"
+            },
+            "type": "library",
+            "extra": {
+                "laravel": {
+                    "providers": [
+                        "SocialiteProviders\\Manager\\ServiceProvider"
+                    ]
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "SocialiteProviders\\Manager\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Andy Wendt",
+                    "email": "andy@awendt.com"
+                },
+                {
+                    "name": "Anton Komarev",
+                    "email": "a.komarev@cybercog.su"
+                },
+                {
+                    "name": "Miguel Piedrafita",
+                    "email": "soy@miguelpiedrafita.com"
+                }
+            ],
+            "description": "Easily add new or override built-in providers in Laravel Socialite.",
+            "time": "2020-03-08T16:54:44+00:00"
+        },
+        {
+            "name": "socialiteproviders/vkontakte",
+            "version": "v4.0.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/SocialiteProviders/VKontakte.git",
+                "reference": "cc738ae8b1e72fae0f0b24d3eed26baf8e76a3ef"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/SocialiteProviders/VKontakte/zipball/cc738ae8b1e72fae0f0b24d3eed26baf8e76a3ef",
+                "reference": "cc738ae8b1e72fae0f0b24d3eed26baf8e76a3ef",
+                "shasum": ""
+            },
+            "require": {
+                "php": "^5.6 || ^7.0",
+                "socialiteproviders/manager": "~2.0 || ~3.0"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "SocialiteProviders\\VKontakte\\": ""
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Brian Faust",
+                    "email": "hello@brianfaust.de"
+                }
+            ],
+            "description": "VKontakte OAuth2 Provider for Laravel Socialite",
+            "time": "2018-05-29T17:05:01+00:00"
+        },
+        {
+            "name": "swiftmailer/swiftmailer",
             "version": "v6.2.3",
             "source": {
                 "type": "git",
@@ -2947,10 +4020,10 @@
             ],
             "authors": [
                 {
-                    "firstName": "Chris Corbyn"
+                    "name": "Chris Corbyn"
                 },
                 {
-                    "firstName": "Fabien Potencier",
+                    "name": "Fabien Potencier",
                     "email": "fabien@symfony.com"
                 }
             ],
@@ -2964,7 +4037,7 @@
             "time": "2019-11-12T09:31:26+00:00"
         },
         {
-            "firstName": "symfony/console",
+            "name": "symfony/console",
             "version": "v5.0.7",
             "source": {
                 "type": "git",
@@ -3027,20 +4100,34 @@
             ],
             "authors": [
                 {
-                    "firstName": "Fabien Potencier",
+                    "name": "Fabien Potencier",
                     "email": "fabien@symfony.com"
                 },
                 {
-                    "firstName": "Symfony Community",
+                    "name": "Symfony Community",
                     "homepage": "https://symfony.com/contributors"
                 }
             ],
             "description": "Symfony Console Component",
             "homepage": "https://symfony.com",
+            "funding": [
+                {
+                    "url": "https://symfony.com/sponsor",
+                    "type": "custom"
+                },
+                {
+                    "url": "https://github.com/fabpot",
+                    "type": "github"
+                },
+                {
+                    "url": "https://tidelift.com/funding/github/packagist/symfony/symfony",
+                    "type": "tidelift"
+                }
+            ],
             "time": "2020-03-30T11:42:42+00:00"
         },
         {
-            "firstName": "symfony/css-selector",
+            "name": "symfony/css-selector",
             "version": "v5.0.7",
             "source": {
                 "type": "git",
@@ -3076,24 +4163,38 @@
             ],
             "authors": [
                 {
-                    "firstName": "Fabien Potencier",
+                    "name": "Fabien Potencier",
                     "email": "fabien@symfony.com"
                 },
                 {
-                    "firstName": "Jean-François Simon",
+                    "name": "Jean-François Simon",
                     "email": "jeanfrancois.simon@sensiolabs.com"
                 },
                 {
-                    "firstName": "Symfony Community",
+                    "name": "Symfony Community",
                     "homepage": "https://symfony.com/contributors"
                 }
             ],
             "description": "Symfony CssSelector Component",
             "homepage": "https://symfony.com",
+            "funding": [
+                {
+                    "url": "https://symfony.com/sponsor",
+                    "type": "custom"
+                },
+                {
+                    "url": "https://github.com/fabpot",
+                    "type": "github"
+                },
+                {
+                    "url": "https://tidelift.com/funding/github/packagist/symfony/symfony",
+                    "type": "tidelift"
+                }
+            ],
             "time": "2020-03-27T16:56:45+00:00"
         },
         {
-            "firstName": "symfony/error-handler",
+            "name": "symfony/error-handler",
             "version": "v5.0.7",
             "source": {
                 "type": "git",
@@ -3135,20 +4236,34 @@
             ],
             "authors": [
                 {
-                    "firstName": "Fabien Potencier",
+                    "name": "Fabien Potencier",
                     "email": "fabien@symfony.com"
                 },
                 {
-                    "firstName": "Symfony Community",
+                    "name": "Symfony Community",
                     "homepage": "https://symfony.com/contributors"
                 }
             ],
             "description": "Symfony ErrorHandler Component",
             "homepage": "https://symfony.com",
+            "funding": [
+                {
+                    "url": "https://symfony.com/sponsor",
+                    "type": "custom"
+                },
+                {
+                    "url": "https://github.com/fabpot",
+                    "type": "github"
+                },
+                {
+                    "url": "https://tidelift.com/funding/github/packagist/symfony/symfony",
+                    "type": "tidelift"
+                }
+            ],
             "time": "2020-03-30T14:14:32+00:00"
         },
         {
-            "firstName": "symfony/event-dispatcher",
+            "name": "symfony/event-dispatcher",
             "version": "v5.0.7",
             "source": {
                 "type": "git",
@@ -3205,20 +4320,34 @@
             ],
             "authors": [
                 {
-                    "firstName": "Fabien Potencier",
+                    "name": "Fabien Potencier",
                     "email": "fabien@symfony.com"
                 },
                 {
-                    "firstName": "Symfony Community",
+                    "name": "Symfony Community",
                     "homepage": "https://symfony.com/contributors"
                 }
             ],
             "description": "Symfony EventDispatcher Component",
             "homepage": "https://symfony.com",
+            "funding": [
+                {
+                    "url": "https://symfony.com/sponsor",
+                    "type": "custom"
+                },
+                {
+                    "url": "https://github.com/fabpot",
+                    "type": "github"
+                },
+                {
+                    "url": "https://tidelift.com/funding/github/packagist/symfony/symfony",
+                    "type": "tidelift"
+                }
+            ],
             "time": "2020-03-27T16:56:45+00:00"
         },
         {
-            "firstName": "symfony/event-dispatcher-contracts",
+            "name": "symfony/event-dispatcher-contracts",
             "version": "v2.0.1",
             "source": {
                 "type": "git",
@@ -3255,11 +4384,11 @@
             ],
             "authors": [
                 {
-                    "firstName": "Nicolas Grekas",
+                    "name": "Nicolas Grekas",
                     "email": "p@tchwork.com"
                 },
                 {
-                    "firstName": "Symfony Community",
+                    "name": "Symfony Community",
                     "homepage": "https://symfony.com/contributors"
                 }
             ],
@@ -3276,7 +4405,7 @@
             "time": "2019-11-18T17:27:11+00:00"
         },
         {
-            "firstName": "symfony/finder",
+            "name": "symfony/finder",
             "version": "v5.0.7",
             "source": {
                 "type": "git",
@@ -3312,20 +4441,34 @@
             ],
             "authors": [
                 {
-                    "firstName": "Fabien Potencier",
+                    "name": "Fabien Potencier",
                     "email": "fabien@symfony.com"
                 },
                 {
-                    "firstName": "Symfony Community",
+                    "name": "Symfony Community",
                     "homepage": "https://symfony.com/contributors"
                 }
             ],
             "description": "Symfony Finder Component",
             "homepage": "https://symfony.com",
+            "funding": [
+                {
+                    "url": "https://symfony.com/sponsor",
+                    "type": "custom"
+                },
+                {
+                    "url": "https://github.com/fabpot",
+                    "type": "github"
+                },
+                {
+                    "url": "https://tidelift.com/funding/github/packagist/symfony/symfony",
+                    "type": "tidelift"
+                }
+            ],
             "time": "2020-03-27T16:56:45+00:00"
         },
         {
-            "firstName": "symfony/http-foundation",
+            "name": "symfony/http-foundation",
             "version": "v5.0.7",
             "source": {
                 "type": "git",
@@ -3367,20 +4510,34 @@
             ],
             "authors": [
                 {
-                    "firstName": "Fabien Potencier",
+                    "name": "Fabien Potencier",
                     "email": "fabien@symfony.com"
                 },
                 {
-                    "firstName": "Symfony Community",
+                    "name": "Symfony Community",
                     "homepage": "https://symfony.com/contributors"
                 }
             ],
             "description": "Symfony HttpFoundation Component",
             "homepage": "https://symfony.com",
+            "funding": [
+                {
+                    "url": "https://symfony.com/sponsor",
+                    "type": "custom"
+                },
+                {
+                    "url": "https://github.com/fabpot",
+                    "type": "github"
+                },
+                {
+                    "url": "https://tidelift.com/funding/github/packagist/symfony/symfony",
+                    "type": "tidelift"
+                }
+            ],
             "time": "2020-03-30T14:14:32+00:00"
         },
         {
-            "firstName": "symfony/http-kernel",
+            "name": "symfony/http-kernel",
             "version": "v5.0.7",
             "source": {
                 "type": "git",
@@ -3463,20 +4620,34 @@
             ],
             "authors": [
                 {
-                    "firstName": "Fabien Potencier",
+                    "name": "Fabien Potencier",
                     "email": "fabien@symfony.com"
                 },
                 {
-                    "firstName": "Symfony Community",
+                    "name": "Symfony Community",
                     "homepage": "https://symfony.com/contributors"
                 }
             ],
             "description": "Symfony HttpKernel Component",
             "homepage": "https://symfony.com",
+            "funding": [
+                {
+                    "url": "https://symfony.com/sponsor",
+                    "type": "custom"
+                },
+                {
+                    "url": "https://github.com/fabpot",
+                    "type": "github"
+                },
+                {
+                    "url": "https://tidelift.com/funding/github/packagist/symfony/symfony",
+                    "type": "tidelift"
+                }
+            ],
             "time": "2020-03-30T15:04:59+00:00"
         },
         {
-            "firstName": "symfony/mime",
+            "name": "symfony/mime",
             "version": "v5.0.7",
             "source": {
                 "type": "git",
@@ -3521,11 +4692,11 @@
             ],
             "authors": [
                 {
-                    "firstName": "Fabien Potencier",
+                    "name": "Fabien Potencier",
                     "email": "fabien@symfony.com"
                 },
                 {
-                    "firstName": "Symfony Community",
+                    "name": "Symfony Community",
                     "homepage": "https://symfony.com/contributors"
                 }
             ],
@@ -3535,10 +4706,24 @@
                 "mime",
                 "mime-type"
             ],
+            "funding": [
+                {
+                    "url": "https://symfony.com/sponsor",
+                    "type": "custom"
+                },
+                {
+                    "url": "https://github.com/fabpot",
+                    "type": "github"
+                },
+                {
+                    "url": "https://tidelift.com/funding/github/packagist/symfony/symfony",
+                    "type": "tidelift"
+                }
+            ],
             "time": "2020-03-27T16:56:45+00:00"
         },
         {
-            "firstName": "symfony/polyfill-ctype",
+            "name": "symfony/polyfill-ctype",
             "version": "v1.15.0",
             "source": {
                 "type": "git",
@@ -3577,11 +4762,11 @@
             ],
             "authors": [
                 {
-                    "firstName": "Gert de Pagter",
+                    "name": "Gert de Pagter",
                     "email": "BackEndTea@gmail.com"
                 },
                 {
-                    "firstName": "Symfony Community",
+                    "name": "Symfony Community",
                     "homepage": "https://symfony.com/contributors"
                 }
             ],
@@ -3593,10 +4778,24 @@
                 "polyfill",
                 "portable"
             ],
+            "funding": [
+                {
+                    "url": "https://symfony.com/sponsor",
+                    "type": "custom"
+                },
+                {
+                    "url": "https://github.com/fabpot",
+                    "type": "github"
+                },
+                {
+                    "url": "https://tidelift.com/funding/github/packagist/symfony/symfony",
+                    "type": "tidelift"
+                }
+            ],
             "time": "2020-02-27T09:26:54+00:00"
         },
         {
-            "firstName": "symfony/polyfill-iconv",
+            "name": "symfony/polyfill-iconv",
             "version": "v1.15.0",
             "source": {
                 "type": "git",
@@ -3635,11 +4834,11 @@
             ],
             "authors": [
                 {
-                    "firstName": "Nicolas Grekas",
+                    "name": "Nicolas Grekas",
                     "email": "p@tchwork.com"
                 },
                 {
-                    "firstName": "Symfony Community",
+                    "name": "Symfony Community",
                     "homepage": "https://symfony.com/contributors"
                 }
             ],
@@ -3652,10 +4851,24 @@
                 "portable",
                 "shim"
             ],
+            "funding": [
+                {
+                    "url": "https://symfony.com/sponsor",
+                    "type": "custom"
+                },
+                {
+                    "url": "https://github.com/fabpot",
+                    "type": "github"
+                },
+                {
+                    "url": "https://tidelift.com/funding/github/packagist/symfony/symfony",
+                    "type": "tidelift"
+                }
+            ],
             "time": "2020-03-09T19:04:49+00:00"
         },
         {
-            "firstName": "symfony/polyfill-intl-idn",
+            "name": "symfony/polyfill-intl-idn",
             "version": "v1.15.0",
             "source": {
                 "type": "git",
@@ -3696,11 +4909,11 @@
             ],
             "authors": [
                 {
-                    "firstName": "Laurent Bassin",
+                    "name": "Laurent Bassin",
                     "email": "laurent@bassin.info"
                 },
                 {
-                    "firstName": "Symfony Community",
+                    "name": "Symfony Community",
                     "homepage": "https://symfony.com/contributors"
                 }
             ],
@@ -3714,10 +4927,24 @@
                 "portable",
                 "shim"
             ],
+            "funding": [
+                {
+                    "url": "https://symfony.com/sponsor",
+                    "type": "custom"
+                },
+                {
+                    "url": "https://github.com/fabpot",
+                    "type": "github"
+                },
+                {
+                    "url": "https://tidelift.com/funding/github/packagist/symfony/symfony",
+                    "type": "tidelift"
+                }
+            ],
             "time": "2020-03-09T19:04:49+00:00"
         },
         {
-            "firstName": "symfony/polyfill-mbstring",
+            "name": "symfony/polyfill-mbstring",
             "version": "v1.15.0",
             "source": {
                 "type": "git",
@@ -3756,11 +4983,11 @@
             ],
             "authors": [
                 {
-                    "firstName": "Nicolas Grekas",
+                    "name": "Nicolas Grekas",
                     "email": "p@tchwork.com"
                 },
                 {
-                    "firstName": "Symfony Community",
+                    "name": "Symfony Community",
                     "homepage": "https://symfony.com/contributors"
                 }
             ],
@@ -3773,10 +5000,24 @@
                 "portable",
                 "shim"
             ],
+            "funding": [
+                {
+                    "url": "https://symfony.com/sponsor",
+                    "type": "custom"
+                },
+                {
+                    "url": "https://github.com/fabpot",
+                    "type": "github"
+                },
+                {
+                    "url": "https://tidelift.com/funding/github/packagist/symfony/symfony",
+                    "type": "tidelift"
+                }
+            ],
             "time": "2020-03-09T19:04:49+00:00"
         },
         {
-            "firstName": "symfony/polyfill-php56",
+            "name": "symfony/polyfill-php56",
             "version": "v1.15.0",
             "source": {
                 "type": "git",
@@ -3813,11 +5054,11 @@
             ],
             "authors": [
                 {
-                    "firstName": "Nicolas Grekas",
+                    "name": "Nicolas Grekas",
                     "email": "p@tchwork.com"
                 },
                 {
-                    "firstName": "Symfony Community",
+                    "name": "Symfony Community",
                     "homepage": "https://symfony.com/contributors"
                 }
             ],
@@ -3829,10 +5070,24 @@
                 "portable",
                 "shim"
             ],
+            "funding": [
+                {
+                    "url": "https://symfony.com/sponsor",
+                    "type": "custom"
+                },
+                {
+                    "url": "https://github.com/fabpot",
+                    "type": "github"
+                },
+                {
+                    "url": "https://tidelift.com/funding/github/packagist/symfony/symfony",
+                    "type": "tidelift"
+                }
+            ],
             "time": "2020-03-09T19:04:49+00:00"
         },
         {
-            "firstName": "symfony/polyfill-php72",
+            "name": "symfony/polyfill-php72",
             "version": "v1.15.0",
             "source": {
                 "type": "git",
@@ -3868,11 +5123,11 @@
             ],
             "authors": [
                 {
-                    "firstName": "Nicolas Grekas",
+                    "name": "Nicolas Grekas",
                     "email": "p@tchwork.com"
                 },
                 {
-                    "firstName": "Symfony Community",
+                    "name": "Symfony Community",
                     "homepage": "https://symfony.com/contributors"
                 }
             ],
@@ -3884,10 +5139,24 @@
                 "portable",
                 "shim"
             ],
+            "funding": [
+                {
+                    "url": "https://symfony.com/sponsor",
+                    "type": "custom"
+                },
+                {
+                    "url": "https://github.com/fabpot",
+                    "type": "github"
+                },
+                {
+                    "url": "https://tidelift.com/funding/github/packagist/symfony/symfony",
+                    "type": "tidelift"
+                }
+            ],
             "time": "2020-02-27T09:26:54+00:00"
         },
         {
-            "firstName": "symfony/polyfill-php73",
+            "name": "symfony/polyfill-php73",
             "version": "v1.15.0",
             "source": {
                 "type": "git",
@@ -3926,11 +5195,11 @@
             ],
             "authors": [
                 {
-                    "firstName": "Nicolas Grekas",
+                    "name": "Nicolas Grekas",
                     "email": "p@tchwork.com"
                 },
                 {
-                    "firstName": "Symfony Community",
+                    "name": "Symfony Community",
                     "homepage": "https://symfony.com/contributors"
                 }
             ],
@@ -3942,10 +5211,24 @@
                 "portable",
                 "shim"
             ],
+            "funding": [
+                {
+                    "url": "https://symfony.com/sponsor",
+                    "type": "custom"
+                },
+                {
+                    "url": "https://github.com/fabpot",
+                    "type": "github"
+                },
+                {
+                    "url": "https://tidelift.com/funding/github/packagist/symfony/symfony",
+                    "type": "tidelift"
+                }
+            ],
             "time": "2020-02-27T09:26:54+00:00"
         },
         {
-            "firstName": "symfony/polyfill-util",
+            "name": "symfony/polyfill-util",
             "version": "v1.15.0",
             "source": {
                 "type": "git",
@@ -3978,11 +5261,11 @@
             ],
             "authors": [
                 {
-                    "firstName": "Nicolas Grekas",
+                    "name": "Nicolas Grekas",
                     "email": "p@tchwork.com"
                 },
                 {
-                    "firstName": "Symfony Community",
+                    "name": "Symfony Community",
                     "homepage": "https://symfony.com/contributors"
                 }
             ],
@@ -3994,10 +5277,24 @@
                 "polyfill",
                 "shim"
             ],
+            "funding": [
+                {
+                    "url": "https://symfony.com/sponsor",
+                    "type": "custom"
+                },
+                {
+                    "url": "https://github.com/fabpot",
+                    "type": "github"
+                },
+                {
+                    "url": "https://tidelift.com/funding/github/packagist/symfony/symfony",
+                    "type": "tidelift"
+                }
+            ],
             "time": "2020-03-02T11:55:35+00:00"
         },
         {
-            "firstName": "symfony/process",
+            "name": "symfony/process",
             "version": "v5.0.7",
             "source": {
                 "type": "git",
@@ -4033,20 +5330,98 @@
             ],
             "authors": [
                 {
-                    "firstName": "Fabien Potencier",
+                    "name": "Fabien Potencier",
                     "email": "fabien@symfony.com"
                 },
                 {
-                    "firstName": "Symfony Community",
+                    "name": "Symfony Community",
                     "homepage": "https://symfony.com/contributors"
                 }
             ],
             "description": "Symfony Process Component",
             "homepage": "https://symfony.com",
+            "funding": [
+                {
+                    "url": "https://symfony.com/sponsor",
+                    "type": "custom"
+                },
+                {
+                    "url": "https://github.com/fabpot",
+                    "type": "github"
+                },
+                {
+                    "url": "https://tidelift.com/funding/github/packagist/symfony/symfony",
+                    "type": "tidelift"
+                }
+            ],
             "time": "2020-03-27T16:56:45+00:00"
         },
         {
-            "firstName": "symfony/routing",
+            "name": "symfony/psr-http-message-bridge",
+            "version": "v2.0.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/symfony/psr-http-message-bridge.git",
+                "reference": "ce709cd9c90872c08c2427b45739d5f3c781ab4f"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/symfony/psr-http-message-bridge/zipball/ce709cd9c90872c08c2427b45739d5f3c781ab4f",
+                "reference": "ce709cd9c90872c08c2427b45739d5f3c781ab4f",
+                "shasum": ""
+            },
+            "require": {
+                "php": "^7.1",
+                "psr/http-message": "^1.0",
+                "symfony/http-foundation": "^4.4 || ^5.0"
+            },
+            "require-dev": {
+                "nyholm/psr7": "^1.1",
+                "symfony/phpunit-bridge": "^4.4 || ^5.0"
+            },
+            "suggest": {
+                "nyholm/psr7": "For a super lightweight PSR-7/17 implementation"
+            },
+            "type": "symfony-bridge",
+            "extra": {
+                "branch-alias": {
+                    "dev-master": "2.0-dev"
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "Symfony\\Bridge\\PsrHttpMessage\\": ""
+                },
+                "exclude-from-classmap": [
+                    "/Tests/"
+                ]
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Fabien Potencier",
+                    "email": "fabien@symfony.com"
+                },
+                {
+                    "name": "Symfony Community",
+                    "homepage": "http://symfony.com/contributors"
+                }
+            ],
+            "description": "PSR HTTP message bridge",
+            "homepage": "http://symfony.com",
+            "keywords": [
+                "http",
+                "http-message",
+                "psr-17",
+                "psr-7"
+            ],
+            "time": "2020-01-02T08:07:11+00:00"
+        },
+        {
+            "name": "symfony/routing",
             "version": "v5.0.7",
             "source": {
                 "type": "git",
@@ -4103,11 +5478,11 @@
             ],
             "authors": [
                 {
-                    "firstName": "Fabien Potencier",
+                    "name": "Fabien Potencier",
                     "email": "fabien@symfony.com"
                 },
                 {
-                    "firstName": "Symfony Community",
+                    "name": "Symfony Community",
                     "homepage": "https://symfony.com/contributors"
                 }
             ],
@@ -4119,10 +5494,24 @@
                 "uri",
                 "url"
             ],
+            "funding": [
+                {
+                    "url": "https://symfony.com/sponsor",
+                    "type": "custom"
+                },
+                {
+                    "url": "https://github.com/fabpot",
+                    "type": "github"
+                },
+                {
+                    "url": "https://tidelift.com/funding/github/packagist/symfony/symfony",
+                    "type": "tidelift"
+                }
+            ],
             "time": "2020-03-30T11:42:42+00:00"
         },
         {
-            "firstName": "symfony/service-contracts",
+            "name": "symfony/service-contracts",
             "version": "v2.0.1",
             "source": {
                 "type": "git",
@@ -4159,11 +5548,11 @@
             ],
             "authors": [
                 {
-                    "firstName": "Nicolas Grekas",
+                    "name": "Nicolas Grekas",
                     "email": "p@tchwork.com"
                 },
                 {
-                    "firstName": "Symfony Community",
+                    "name": "Symfony Community",
                     "homepage": "https://symfony.com/contributors"
                 }
             ],
@@ -4180,7 +5569,7 @@
             "time": "2019-11-18T17:27:11+00:00"
         },
         {
-            "firstName": "symfony/translation",
+            "name": "symfony/translation",
             "version": "v5.0.7",
             "source": {
                 "type": "git",
@@ -4244,20 +5633,34 @@
             ],
             "authors": [
                 {
-                    "firstName": "Fabien Potencier",
+                    "name": "Fabien Potencier",
                     "email": "fabien@symfony.com"
                 },
                 {
-                    "firstName": "Symfony Community",
+                    "name": "Symfony Community",
                     "homepage": "https://symfony.com/contributors"
                 }
             ],
             "description": "Symfony Translation Component",
             "homepage": "https://symfony.com",
+            "funding": [
+                {
+                    "url": "https://symfony.com/sponsor",
+                    "type": "custom"
+                },
+                {
+                    "url": "https://github.com/fabpot",
+                    "type": "github"
+                },
+                {
+                    "url": "https://tidelift.com/funding/github/packagist/symfony/symfony",
+                    "type": "tidelift"
+                }
+            ],
             "time": "2020-03-27T16:56:45+00:00"
         },
         {
-            "firstName": "symfony/translation-contracts",
+            "name": "symfony/translation-contracts",
             "version": "v2.0.1",
             "source": {
                 "type": "git",
@@ -4293,11 +5696,11 @@
             ],
             "authors": [
                 {
-                    "firstName": "Nicolas Grekas",
+                    "name": "Nicolas Grekas",
                     "email": "p@tchwork.com"
                 },
                 {
-                    "firstName": "Symfony Community",
+                    "name": "Symfony Community",
                     "homepage": "https://symfony.com/contributors"
                 }
             ],
@@ -4314,7 +5717,7 @@
             "time": "2019-11-18T17:27:11+00:00"
         },
         {
-            "firstName": "symfony/var-dumper",
+            "name": "symfony/var-dumper",
             "version": "v5.0.7",
             "source": {
                 "type": "git",
@@ -4372,11 +5775,11 @@
             ],
             "authors": [
                 {
-                    "firstName": "Nicolas Grekas",
+                    "name": "Nicolas Grekas",
                     "email": "p@tchwork.com"
                 },
                 {
-                    "firstName": "Symfony Community",
+                    "name": "Symfony Community",
                     "homepage": "https://symfony.com/contributors"
                 }
             ],
@@ -4386,10 +5789,24 @@
                 "debug",
                 "dump"
             ],
+            "funding": [
+                {
+                    "url": "https://symfony.com/sponsor",
+                    "type": "custom"
+                },
+                {
+                    "url": "https://github.com/fabpot",
+                    "type": "github"
+                },
+                {
+                    "url": "https://tidelift.com/funding/github/packagist/symfony/symfony",
+                    "type": "tidelift"
+                }
+            ],
             "time": "2020-03-27T16:56:45+00:00"
         },
         {
-            "firstName": "tijsverkoyen/css-to-inline-styles",
+            "name": "tijsverkoyen/css-to-inline-styles",
             "version": "2.2.2",
             "source": {
                 "type": "git",
@@ -4428,7 +5845,7 @@
             ],
             "authors": [
                 {
-                    "firstName": "Tijs Verkoyen",
+                    "name": "Tijs Verkoyen",
                     "email": "css_to_inline_styles@verkoyen.eu",
                     "role": "Developer"
                 }
@@ -4438,7 +5855,7 @@
             "time": "2019-10-24T08:53:34+00:00"
         },
         {
-            "firstName": "tymon/jwt-auth",
+            "name": "tymon/jwt-auth",
             "version": "1.0.0",
             "source": {
                 "type": "git",
@@ -4494,7 +5911,7 @@
             ],
             "authors": [
                 {
-                    "firstName": "Sean Tymon",
+                    "name": "Sean Tymon",
                     "email": "tymon148@gmail.com",
                     "homepage": "https://tymon.xyz",
                     "role": "Developer"
@@ -4509,10 +5926,16 @@
                 "jwt",
                 "laravel"
             ],
+            "funding": [
+                {
+                    "url": "https://www.patreon.com/seantymon",
+                    "type": "patreon"
+                }
+            ],
             "time": "2020-03-04T11:21:28+00:00"
         },
         {
-            "firstName": "vlucas/phpdotenv",
+            "name": "vlucas/phpdotenv",
             "version": "v4.1.3",
             "source": {
                 "type": "git",
@@ -4557,12 +5980,12 @@
             ],
             "authors": [
                 {
-                    "firstName": "Graham Campbell",
+                    "name": "Graham Campbell",
                     "email": "graham@alt-three.com",
                     "homepage": "https://gjcampbell.co.uk/"
                 },
                 {
-                    "firstName": "Vance Lucas",
+                    "name": "Vance Lucas",
                     "email": "vance@vancelucas.com",
                     "homepage": "https://vancelucas.com/"
                 }
@@ -4573,10 +5996,16 @@
                 "env",
                 "environment"
             ],
+            "funding": [
+                {
+                    "url": "https://tidelift.com/funding/github/packagist/vlucas/phpdotenv",
+                    "type": "tidelift"
+                }
+            ],
             "time": "2020-03-27T23:37:15+00:00"
         },
         {
-            "firstName": "voku/portable-ascii",
+            "name": "voku/portable-ascii",
             "version": "1.4.10",
             "source": {
                 "type": "git",
@@ -4611,7 +6040,7 @@
             ],
             "authors": [
                 {
-                    "firstName": "Lars Moelleken",
+                    "name": "Lars Moelleken",
                     "homepage": "http://www.moelleken.org/"
                 }
             ],
@@ -4622,12 +6051,30 @@
                 "clean",
                 "php"
             ],
+            "funding": [
+                {
+                    "url": "https://www.paypal.me/moelleken",
+                    "type": "custom"
+                },
+                {
+                    "url": "https://github.com/voku",
+                    "type": "github"
+                },
+                {
+                    "url": "https://www.patreon.com/voku",
+                    "type": "patreon"
+                },
+                {
+                    "url": "https://tidelift.com/funding/github/packagist/voku/portable-ascii",
+                    "type": "tidelift"
+                }
+            ],
             "time": "2020-03-13T01:23:26+00:00"
         }
     ],
     "packages-dev": [
         {
-            "firstName": "barryvdh/laravel-ide-helper",
+            "name": "barryvdh/laravel-ide-helper",
             "version": "v2.6.7",
             "source": {
                 "type": "git",
@@ -4679,7 +6126,7 @@
             ],
             "authors": [
                 {
-                    "firstName": "Barry vd. Heuvel",
+                    "name": "Barry vd. Heuvel",
                     "email": "barryvdh@gmail.com"
                 }
             ],
@@ -4698,7 +6145,7 @@
             "time": "2020-02-25T20:41:32+00:00"
         },
         {
-            "firstName": "barryvdh/reflection-docblock",
+            "name": "barryvdh/reflection-docblock",
             "version": "v2.0.6",
             "source": {
                 "type": "git",
@@ -4740,14 +6187,14 @@
             ],
             "authors": [
                 {
-                    "firstName": "Mike van Riel",
+                    "name": "Mike van Riel",
                     "email": "mike.vanriel@naenius.com"
                 }
             ],
             "time": "2018-12-13T10:34:14+00:00"
         },
         {
-            "firstName": "composer/ca-bundle",
+            "name": "composer/ca-bundle",
             "version": "1.2.6",
             "source": {
                 "type": "git",
@@ -4787,7 +6234,7 @@
             ],
             "authors": [
                 {
-                    "firstName": "Jordi Boggiano",
+                    "name": "Jordi Boggiano",
                     "email": "j.boggiano@seld.be",
                     "homepage": "http://seld.be"
                 }
@@ -4803,7 +6250,7 @@
             "time": "2020-01-13T10:02:55+00:00"
         },
         {
-            "firstName": "composer/composer",
+            "name": "composer/composer",
             "version": "1.10.1",
             "source": {
                 "type": "git",
@@ -4863,12 +6310,12 @@
             ],
             "authors": [
                 {
-                    "firstName": "Nils Adermann",
+                    "name": "Nils Adermann",
                     "email": "naderman@naderman.de",
                     "homepage": "http://www.naderman.de"
                 },
                 {
-                    "firstName": "Jordi Boggiano",
+                    "name": "Jordi Boggiano",
                     "email": "j.boggiano@seld.be",
                     "homepage": "http://seld.be"
                 }
@@ -4880,10 +6327,20 @@
                 "dependency",
                 "package"
             ],
+            "funding": [
+                {
+                    "url": "https://packagist.com",
+                    "type": "custom"
+                },
+                {
+                    "url": "https://tidelift.com/funding/github/packagist/composer/composer",
+                    "type": "tidelift"
+                }
+            ],
             "time": "2020-03-13T19:34:27+00:00"
         },
         {
-            "firstName": "composer/semver",
+            "name": "composer/semver",
             "version": "1.5.1",
             "source": {
                 "type": "git",
@@ -4919,17 +6376,17 @@
             ],
             "authors": [
                 {
-                    "firstName": "Nils Adermann",
+                    "name": "Nils Adermann",
                     "email": "naderman@naderman.de",
                     "homepage": "http://www.naderman.de"
                 },
                 {
-                    "firstName": "Jordi Boggiano",
+                    "name": "Jordi Boggiano",
                     "email": "j.boggiano@seld.be",
                     "homepage": "http://seld.be"
                 },
                 {
-                    "firstName": "Rob Bast",
+                    "name": "Rob Bast",
                     "email": "rob.bast@gmail.com",
                     "homepage": "http://robbast.nl"
                 }
@@ -4944,7 +6401,7 @@
             "time": "2020-01-13T12:06:48+00:00"
         },
         {
-            "firstName": "composer/spdx-licenses",
+            "name": "composer/spdx-licenses",
             "version": "1.5.3",
             "source": {
                 "type": "git",
@@ -4980,17 +6437,17 @@
             ],
             "authors": [
                 {
-                    "firstName": "Nils Adermann",
+                    "name": "Nils Adermann",
                     "email": "naderman@naderman.de",
                     "homepage": "http://www.naderman.de"
                 },
                 {
-                    "firstName": "Jordi Boggiano",
+                    "name": "Jordi Boggiano",
                     "email": "j.boggiano@seld.be",
                     "homepage": "http://seld.be"
                 },
                 {
-                    "firstName": "Rob Bast",
+                    "name": "Rob Bast",
                     "email": "rob.bast@gmail.com",
                     "homepage": "http://robbast.nl"
                 }
@@ -5004,7 +6461,7 @@
             "time": "2020-02-14T07:44:31+00:00"
         },
         {
-            "firstName": "composer/xdebug-handler",
+            "name": "composer/xdebug-handler",
             "version": "1.4.1",
             "source": {
                 "type": "git",
@@ -5036,7 +6493,7 @@
             ],
             "authors": [
                 {
-                    "firstName": "John Stevenson",
+                    "name": "John Stevenson",
                     "email": "john-stevenson@blueyonder.co.uk"
                 }
             ],
@@ -5045,10 +6502,16 @@
                 "Xdebug",
                 "performance"
             ],
+            "funding": [
+                {
+                    "url": "https://packagist.com",
+                    "type": "custom"
+                }
+            ],
             "time": "2020-03-01T12:26:26+00:00"
         },
         {
-            "firstName": "doctrine/instantiator",
+            "name": "doctrine/instantiator",
             "version": "1.3.0",
             "source": {
                 "type": "git",
@@ -5090,7 +6553,7 @@
             ],
             "authors": [
                 {
-                    "firstName": "Marco Pivetta",
+                    "name": "Marco Pivetta",
                     "email": "ocramius@gmail.com",
                     "homepage": "http://ocramius.github.com/"
                 }
@@ -5104,7 +6567,7 @@
             "time": "2019-10-21T16:45:58+00:00"
         },
         {
-            "firstName": "facade/flare-client-php",
+            "name": "facade/flare-client-php",
             "version": "1.3.2",
             "source": {
                 "type": "git",
@@ -5155,10 +6618,16 @@
                 "flare",
                 "reporting"
             ],
+            "funding": [
+                {
+                    "url": "https://www.patreon.com/spatie",
+                    "type": "patreon"
+                }
+            ],
             "time": "2020-03-02T15:52:04+00:00"
         },
         {
-            "firstName": "facade/ignition",
+            "name": "facade/ignition",
             "version": "2.0.2",
             "source": {
                 "type": "git",
@@ -5229,7 +6698,7 @@
             "time": "2020-03-18T19:20:44+00:00"
         },
         {
-            "firstName": "facade/ignition-contracts",
+            "name": "facade/ignition-contracts",
             "version": "1.0.0",
             "source": {
                 "type": "git",
@@ -5257,7 +6726,7 @@
             ],
             "authors": [
                 {
-                    "firstName": "Freek Van der Herten",
+                    "name": "Freek Van der Herten",
                     "email": "freek@spatie.be",
                     "homepage": "https://flareapp.io",
                     "role": "Developer"
@@ -5273,7 +6742,7 @@
             "time": "2019-08-30T14:06:08+00:00"
         },
         {
-            "firstName": "filp/whoops",
+            "name": "filp/whoops",
             "version": "2.7.1",
             "source": {
                 "type": "git",
@@ -5316,7 +6785,7 @@
             ],
             "authors": [
                 {
-                    "firstName": "Filipe Dobreira",
+                    "name": "Filipe Dobreira",
                     "homepage": "https://github.com/filp",
                     "role": "Developer"
                 }
@@ -5334,7 +6803,7 @@
             "time": "2020-01-15T10:00:00+00:00"
         },
         {
-            "firstName": "fzaninotto/faker",
+            "name": "fzaninotto/faker",
             "version": "v1.9.1",
             "source": {
                 "type": "git",
@@ -5372,7 +6841,7 @@
             ],
             "authors": [
                 {
-                    "firstName": "François Zaninotto"
+                    "name": "François Zaninotto"
                 }
             ],
             "description": "Faker is a PHP library that generates fake data for you.",
@@ -5384,7 +6853,7 @@
             "time": "2019-12-12T13:22:17+00:00"
         },
         {
-            "firstName": "hamcrest/hamcrest-php",
+            "name": "hamcrest/hamcrest-php",
             "version": "v2.0.0",
             "source": {
                 "type": "git",
@@ -5432,7 +6901,7 @@
             "time": "2016-01-20T08:20:44+00:00"
         },
         {
-            "firstName": "justinrainbow/json-schema",
+            "name": "justinrainbow/json-schema",
             "version": "5.2.9",
             "source": {
                 "type": "git",
@@ -5473,19 +6942,19 @@
             ],
             "authors": [
                 {
-                    "firstName": "Bruno Prieto Reis",
+                    "name": "Bruno Prieto Reis",
                     "email": "bruno.p.reis@gmail.com"
                 },
                 {
-                    "firstName": "Justin Rainbow",
+                    "name": "Justin Rainbow",
                     "email": "justin.rainbow@gmail.com"
                 },
                 {
-                    "firstName": "Igor Wiedler",
+                    "name": "Igor Wiedler",
                     "email": "igor@wiedler.ch"
                 },
                 {
-                    "firstName": "Robert Schönthal",
+                    "name": "Robert Schönthal",
                     "email": "seroscho@googlemail.com"
                 }
             ],
@@ -5498,7 +6967,7 @@
             "time": "2019-09-25T14:49:45+00:00"
         },
         {
-            "firstName": "mockery/mockery",
+            "name": "mockery/mockery",
             "version": "1.3.1",
             "source": {
                 "type": "git",
@@ -5536,12 +7005,12 @@
             ],
             "authors": [
                 {
-                    "firstName": "Pádraic Brady",
+                    "name": "Pádraic Brady",
                     "email": "padraic.brady@gmail.com",
                     "homepage": "http://blog.astrumfutura.com"
                 },
                 {
-                    "firstName": "Dave Marshall",
+                    "name": "Dave Marshall",
                     "email": "dave.marshall@atstsolutions.co.uk",
                     "homepage": "http://davedevelopment.co.uk"
                 }
@@ -5563,7 +7032,7 @@
             "time": "2019-12-26T09:49:15+00:00"
         },
         {
-            "firstName": "myclabs/deep-copy",
+            "name": "myclabs/deep-copy",
             "version": "1.9.5",
             "source": {
                 "type": "git",
@@ -5611,7 +7080,7 @@
             "time": "2020-01-17T21:11:47+00:00"
         },
         {
-            "firstName": "nunomaduro/collision",
+            "name": "nunomaduro/collision",
             "version": "v4.1.3",
             "source": {
                 "type": "git",
@@ -5661,7 +7130,7 @@
             ],
             "authors": [
                 {
-                    "firstName": "Nuno Maduro",
+                    "name": "Nuno Maduro",
                     "email": "enunomaduro@gmail.com"
                 }
             ],
@@ -5678,10 +7147,24 @@
                 "php",
                 "symfony"
             ],
+            "funding": [
+                {
+                    "url": "https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=66BYDWAT92N6L",
+                    "type": "custom"
+                },
+                {
+                    "url": "https://github.com/nunomaduro",
+                    "type": "github"
+                },
+                {
+                    "url": "https://www.patreon.com/nunomaduro",
+                    "type": "patreon"
+                }
+            ],
             "time": "2020-03-07T12:46:00+00:00"
         },
         {
-            "firstName": "phar-io/manifest",
+            "name": "phar-io/manifest",
             "version": "1.0.3",
             "source": {
                 "type": "git",
@@ -5717,17 +7200,17 @@
             ],
             "authors": [
                 {
-                    "firstName": "Arne Blankerts",
+                    "name": "Arne Blankerts",
                     "email": "arne@blankerts.de",
                     "role": "Developer"
                 },
                 {
-                    "firstName": "Sebastian Heuer",
+                    "name": "Sebastian Heuer",
                     "email": "sebastian@phpeople.de",
                     "role": "Developer"
                 },
                 {
-                    "firstName": "Sebastian Bergmann",
+                    "name": "Sebastian Bergmann",
                     "email": "sebastian@phpunit.de",
                     "role": "Developer"
                 }
@@ -5736,7 +7219,7 @@
             "time": "2018-07-08T19:23:20+00:00"
         },
         {
-            "firstName": "phar-io/version",
+            "name": "phar-io/version",
             "version": "2.0.1",
             "source": {
                 "type": "git",
@@ -5764,17 +7247,17 @@
             ],
             "authors": [
                 {
-                    "firstName": "Arne Blankerts",
+                    "name": "Arne Blankerts",
                     "email": "arne@blankerts.de",
                     "role": "Developer"
                 },
                 {
-                    "firstName": "Sebastian Heuer",
+                    "name": "Sebastian Heuer",
                     "email": "sebastian@phpeople.de",
                     "role": "Developer"
                 },
                 {
-                    "firstName": "Sebastian Bergmann",
+                    "name": "Sebastian Bergmann",
                     "email": "sebastian@phpunit.de",
                     "role": "Developer"
                 }
@@ -5783,7 +7266,7 @@
             "time": "2018-07-08T19:19:57+00:00"
         },
         {
-            "firstName": "phpdocumentor/reflection-common",
+            "name": "phpdocumentor/reflection-common",
             "version": "2.0.0",
             "source": {
                 "type": "git",
@@ -5819,7 +7302,7 @@
             ],
             "authors": [
                 {
-                    "firstName": "Jaap van Otterdijk",
+                    "name": "Jaap van Otterdijk",
                     "email": "opensource@ijaap.nl"
                 }
             ],
@@ -5835,7 +7318,7 @@
             "time": "2018-08-07T13:53:10+00:00"
         },
         {
-            "firstName": "phpdocumentor/reflection-docblock",
+            "name": "phpdocumentor/reflection-docblock",
             "version": "5.1.0",
             "source": {
                 "type": "git",
@@ -5876,11 +7359,11 @@
             ],
             "authors": [
                 {
-                    "firstName": "Mike van Riel",
+                    "name": "Mike van Riel",
                     "email": "me@mikevanriel.com"
                 },
                 {
-                    "firstName": "Jaap van Otterdijk",
+                    "name": "Jaap van Otterdijk",
                     "email": "account@ijaap.nl"
                 }
             ],
@@ -5888,7 +7371,7 @@
             "time": "2020-02-22T12:28:44+00:00"
         },
         {
-            "firstName": "phpdocumentor/type-resolver",
+            "name": "phpdocumentor/type-resolver",
             "version": "1.1.0",
             "source": {
                 "type": "git",
@@ -5926,7 +7409,7 @@
             ],
             "authors": [
                 {
-                    "firstName": "Mike van Riel",
+                    "name": "Mike van Riel",
                     "email": "me@mikevanriel.com"
                 }
             ],
@@ -5934,7 +7417,7 @@
             "time": "2020-02-18T18:59:58+00:00"
         },
         {
-            "firstName": "phpspec/prophecy",
+            "name": "phpspec/prophecy",
             "version": "v1.10.3",
             "source": {
                 "type": "git",
@@ -5975,12 +7458,12 @@
             ],
             "authors": [
                 {
-                    "firstName": "Konstantin Kudryashov",
+                    "name": "Konstantin Kudryashov",
                     "email": "ever.zet@gmail.com",
                     "homepage": "http://everzet.com"
                 },
                 {
-                    "firstName": "Marcello Duarte",
+                    "name": "Marcello Duarte",
                     "email": "marcello.duarte@gmail.com"
                 }
             ],
@@ -5997,7 +7480,7 @@
             "time": "2020-03-05T15:02:03+00:00"
         },
         {
-            "firstName": "phpunit/php-code-coverage",
+            "name": "phpunit/php-code-coverage",
             "version": "7.0.10",
             "source": {
                 "type": "git",
@@ -6045,7 +7528,7 @@
             ],
             "authors": [
                 {
-                    "firstName": "Sebastian Bergmann",
+                    "name": "Sebastian Bergmann",
                     "email": "sebastian@phpunit.de",
                     "role": "lead"
                 }
@@ -6060,7 +7543,7 @@
             "time": "2019-11-20T13:55:58+00:00"
         },
         {
-            "firstName": "phpunit/php-file-iterator",
+            "name": "phpunit/php-file-iterator",
             "version": "2.0.2",
             "source": {
                 "type": "git",
@@ -6096,7 +7579,7 @@
             ],
             "authors": [
                 {
-                    "firstName": "Sebastian Bergmann",
+                    "name": "Sebastian Bergmann",
                     "email": "sebastian@phpunit.de",
                     "role": "lead"
                 }
@@ -6110,7 +7593,7 @@
             "time": "2018-09-13T20:33:42+00:00"
         },
         {
-            "firstName": "phpunit/php-text-template",
+            "name": "phpunit/php-text-template",
             "version": "1.2.1",
             "source": {
                 "type": "git",
@@ -6138,7 +7621,7 @@
             ],
             "authors": [
                 {
-                    "firstName": "Sebastian Bergmann",
+                    "name": "Sebastian Bergmann",
                     "email": "sebastian@phpunit.de",
                     "role": "lead"
                 }
@@ -6151,7 +7634,7 @@
             "time": "2015-06-21T13:50:34+00:00"
         },
         {
-            "firstName": "phpunit/php-timer",
+            "name": "phpunit/php-timer",
             "version": "2.1.2",
             "source": {
                 "type": "git",
@@ -6187,7 +7670,7 @@
             ],
             "authors": [
                 {
-                    "firstName": "Sebastian Bergmann",
+                    "name": "Sebastian Bergmann",
                     "email": "sebastian@phpunit.de",
                     "role": "lead"
                 }
@@ -6200,7 +7683,7 @@
             "time": "2019-06-07T04:22:29+00:00"
         },
         {
-            "firstName": "phpunit/php-token-stream",
+            "name": "phpunit/php-token-stream",
             "version": "3.1.1",
             "source": {
                 "type": "git",
@@ -6237,7 +7720,7 @@
             ],
             "authors": [
                 {
-                    "firstName": "Sebastian Bergmann",
+                    "name": "Sebastian Bergmann",
                     "email": "sebastian@phpunit.de"
                 }
             ],
@@ -6249,7 +7732,7 @@
             "time": "2019-09-17T06:23:10+00:00"
         },
         {
-            "firstName": "phpunit/phpunit",
+            "name": "phpunit/phpunit",
             "version": "8.5.3",
             "source": {
                 "type": "git",
@@ -6317,7 +7800,7 @@
             ],
             "authors": [
                 {
-                    "firstName": "Sebastian Bergmann",
+                    "name": "Sebastian Bergmann",
                     "email": "sebastian@phpunit.de",
                     "role": "lead"
                 }
@@ -6329,10 +7812,20 @@
                 "testing",
                 "xunit"
             ],
+            "funding": [
+                {
+                    "url": "https://phpunit.de/donate.html",
+                    "type": "custom"
+                },
+                {
+                    "url": "https://github.com/sebastianbergmann",
+                    "type": "github"
+                }
+            ],
             "time": "2020-03-31T08:52:04+00:00"
         },
         {
-            "firstName": "scrivo/highlight.php",
+            "name": "scrivo/highlight.php",
             "version": "v9.18.1.1",
             "source": {
                 "type": "git",
@@ -6375,17 +7868,17 @@
             ],
             "authors": [
                 {
-                    "firstName": "Geert Bergman",
+                    "name": "Geert Bergman",
                     "homepage": "http://www.scrivo.org/",
                     "role": "Project Author"
                 },
                 {
-                    "firstName": "Vladimir Jimenez",
+                    "name": "Vladimir Jimenez",
                     "homepage": "https://allejo.io",
                     "role": "Maintainer"
                 },
                 {
-                    "firstName": "Martin Folkers",
+                    "name": "Martin Folkers",
                     "homepage": "https://twobrain.io",
                     "role": "Contributor"
                 }
@@ -6398,10 +7891,16 @@
                 "highlight.php",
                 "syntax"
             ],
+            "funding": [
+                {
+                    "url": "https://github.com/allejo",
+                    "type": "github"
+                }
+            ],
             "time": "2020-03-02T05:59:21+00:00"
         },
         {
-            "firstName": "sebastian/code-unit-reverse-lookup",
+            "name": "sebastian/code-unit-reverse-lookup",
             "version": "1.0.1",
             "source": {
                 "type": "git",
@@ -6437,7 +7936,7 @@
             ],
             "authors": [
                 {
-                    "firstName": "Sebastian Bergmann",
+                    "name": "Sebastian Bergmann",
                     "email": "sebastian@phpunit.de"
                 }
             ],
@@ -6446,7 +7945,7 @@
             "time": "2017-03-04T06:30:41+00:00"
         },
         {
-            "firstName": "sebastian/comparator",
+            "name": "sebastian/comparator",
             "version": "3.0.2",
             "source": {
                 "type": "git",
@@ -6484,19 +7983,19 @@
             ],
             "authors": [
                 {
-                    "firstName": "Jeff Welch",
+                    "name": "Jeff Welch",
                     "email": "whatthejeff@gmail.com"
                 },
                 {
-                    "firstName": "Volker Dusch",
+                    "name": "Volker Dusch",
                     "email": "github@wallbash.com"
                 },
                 {
-                    "firstName": "Bernhard Schussek",
+                    "name": "Bernhard Schussek",
                     "email": "bschussek@2bepublished.at"
                 },
                 {
-                    "firstName": "Sebastian Bergmann",
+                    "name": "Sebastian Bergmann",
                     "email": "sebastian@phpunit.de"
                 }
             ],
@@ -6510,7 +8009,7 @@
             "time": "2018-07-12T15:12:46+00:00"
         },
         {
-            "firstName": "sebastian/diff",
+            "name": "sebastian/diff",
             "version": "3.0.2",
             "source": {
                 "type": "git",
@@ -6547,11 +8046,11 @@
             ],
             "authors": [
                 {
-                    "firstName": "Kore Nordmann",
+                    "name": "Kore Nordmann",
                     "email": "mail@kore-nordmann.de"
                 },
                 {
-                    "firstName": "Sebastian Bergmann",
+                    "name": "Sebastian Bergmann",
                     "email": "sebastian@phpunit.de"
                 }
             ],
@@ -6566,7 +8065,7 @@
             "time": "2019-02-04T06:01:07+00:00"
         },
         {
-            "firstName": "sebastian/environment",
+            "name": "sebastian/environment",
             "version": "4.2.3",
             "source": {
                 "type": "git",
@@ -6605,7 +8104,7 @@
             ],
             "authors": [
                 {
-                    "firstName": "Sebastian Bergmann",
+                    "name": "Sebastian Bergmann",
                     "email": "sebastian@phpunit.de"
                 }
             ],
@@ -6619,7 +8118,7 @@
             "time": "2019-11-20T08:46:58+00:00"
         },
         {
-            "firstName": "sebastian/exporter",
+            "name": "sebastian/exporter",
             "version": "3.1.2",
             "source": {
                 "type": "git",
@@ -6657,23 +8156,23 @@
             ],
             "authors": [
                 {
-                    "firstName": "Sebastian Bergmann",
+                    "name": "Sebastian Bergmann",
                     "email": "sebastian@phpunit.de"
                 },
                 {
-                    "firstName": "Jeff Welch",
+                    "name": "Jeff Welch",
                     "email": "whatthejeff@gmail.com"
                 },
                 {
-                    "firstName": "Volker Dusch",
+                    "name": "Volker Dusch",
                     "email": "github@wallbash.com"
                 },
                 {
-                    "firstName": "Adam Harvey",
+                    "name": "Adam Harvey",
                     "email": "aharvey@php.net"
                 },
                 {
-                    "firstName": "Bernhard Schussek",
+                    "name": "Bernhard Schussek",
                     "email": "bschussek@gmail.com"
                 }
             ],
@@ -6686,7 +8185,7 @@
             "time": "2019-09-14T09:02:43+00:00"
         },
         {
-            "firstName": "sebastian/global-state",
+            "name": "sebastian/global-state",
             "version": "3.0.0",
             "source": {
                 "type": "git",
@@ -6728,7 +8227,7 @@
             ],
             "authors": [
                 {
-                    "firstName": "Sebastian Bergmann",
+                    "name": "Sebastian Bergmann",
                     "email": "sebastian@phpunit.de"
                 }
             ],
@@ -6740,7 +8239,7 @@
             "time": "2019-02-01T05:30:01+00:00"
         },
         {
-            "firstName": "sebastian/object-enumerator",
+            "name": "sebastian/object-enumerator",
             "version": "3.0.3",
             "source": {
                 "type": "git",
@@ -6778,7 +8277,7 @@
             ],
             "authors": [
                 {
-                    "firstName": "Sebastian Bergmann",
+                    "name": "Sebastian Bergmann",
                     "email": "sebastian@phpunit.de"
                 }
             ],
@@ -6787,7 +8286,7 @@
             "time": "2017-08-03T12:35:26+00:00"
         },
         {
-            "firstName": "sebastian/object-reflector",
+            "name": "sebastian/object-reflector",
             "version": "1.1.1",
             "source": {
                 "type": "git",
@@ -6823,7 +8322,7 @@
             ],
             "authors": [
                 {
-                    "firstName": "Sebastian Bergmann",
+                    "name": "Sebastian Bergmann",
                     "email": "sebastian@phpunit.de"
                 }
             ],
@@ -6832,7 +8331,7 @@
             "time": "2017-03-29T09:07:27+00:00"
         },
         {
-            "firstName": "sebastian/recursion-context",
+            "name": "sebastian/recursion-context",
             "version": "3.0.0",
             "source": {
                 "type": "git",
@@ -6868,15 +8367,15 @@
             ],
             "authors": [
                 {
-                    "firstName": "Jeff Welch",
+                    "name": "Jeff Welch",
                     "email": "whatthejeff@gmail.com"
                 },
                 {
-                    "firstName": "Sebastian Bergmann",
+                    "name": "Sebastian Bergmann",
                     "email": "sebastian@phpunit.de"
                 },
                 {
-                    "firstName": "Adam Harvey",
+                    "name": "Adam Harvey",
                     "email": "aharvey@php.net"
                 }
             ],
@@ -6885,7 +8384,7 @@
             "time": "2017-03-03T06:23:57+00:00"
         },
         {
-            "firstName": "sebastian/resource-operations",
+            "name": "sebastian/resource-operations",
             "version": "2.0.1",
             "source": {
                 "type": "git",
@@ -6918,7 +8417,7 @@
             ],
             "authors": [
                 {
-                    "firstName": "Sebastian Bergmann",
+                    "name": "Sebastian Bergmann",
                     "email": "sebastian@phpunit.de"
                 }
             ],
@@ -6927,7 +8426,7 @@
             "time": "2018-10-04T04:07:39+00:00"
         },
         {
-            "firstName": "sebastian/type",
+            "name": "sebastian/type",
             "version": "1.1.3",
             "source": {
                 "type": "git",
@@ -6963,7 +8462,7 @@
             ],
             "authors": [
                 {
-                    "firstName": "Sebastian Bergmann",
+                    "name": "Sebastian Bergmann",
                     "email": "sebastian@phpunit.de",
                     "role": "lead"
                 }
@@ -6973,7 +8472,7 @@
             "time": "2019-07-02T08:10:15+00:00"
         },
         {
-            "firstName": "sebastian/version",
+            "name": "sebastian/version",
             "version": "2.0.1",
             "source": {
                 "type": "git",
@@ -7006,7 +8505,7 @@
             ],
             "authors": [
                 {
-                    "firstName": "Sebastian Bergmann",
+                    "name": "Sebastian Bergmann",
                     "email": "sebastian@phpunit.de",
                     "role": "lead"
                 }
@@ -7016,7 +8515,7 @@
             "time": "2016-10-03T07:35:21+00:00"
         },
         {
-            "firstName": "seld/jsonlint",
+            "name": "seld/jsonlint",
             "version": "1.7.2",
             "source": {
                 "type": "git",
@@ -7050,7 +8549,7 @@
             ],
             "authors": [
                 {
-                    "firstName": "Jordi Boggiano",
+                    "name": "Jordi Boggiano",
                     "email": "j.boggiano@seld.be",
                     "homepage": "http://seld.be"
                 }
@@ -7065,7 +8564,7 @@
             "time": "2019-10-24T14:27:39+00:00"
         },
         {
-            "firstName": "seld/phar-utils",
+            "name": "seld/phar-utils",
             "version": "1.1.0",
             "source": {
                 "type": "git",
@@ -7098,7 +8597,7 @@
             ],
             "authors": [
                 {
-                    "firstName": "Jordi Boggiano",
+                    "name": "Jordi Boggiano",
                     "email": "j.boggiano@seld.be"
                 }
             ],
@@ -7109,7 +8608,7 @@
             "time": "2020-02-14T15:25:33+00:00"
         },
         {
-            "firstName": "symfony/filesystem",
+            "name": "symfony/filesystem",
             "version": "v5.0.7",
             "source": {
                 "type": "git",
@@ -7146,20 +8645,34 @@
             ],
             "authors": [
                 {
-                    "firstName": "Fabien Potencier",
+                    "name": "Fabien Potencier",
                     "email": "fabien@symfony.com"
                 },
                 {
-                    "firstName": "Symfony Community",
+                    "name": "Symfony Community",
                     "homepage": "https://symfony.com/contributors"
                 }
             ],
             "description": "Symfony Filesystem Component",
             "homepage": "https://symfony.com",
+            "funding": [
+                {
+                    "url": "https://symfony.com/sponsor",
+                    "type": "custom"
+                },
+                {
+                    "url": "https://github.com/fabpot",
+                    "type": "github"
+                },
+                {
+                    "url": "https://tidelift.com/funding/github/packagist/symfony/symfony",
+                    "type": "tidelift"
+                }
+            ],
             "time": "2020-03-27T16:56:45+00:00"
         },
         {
-            "firstName": "theseer/tokenizer",
+            "name": "theseer/tokenizer",
             "version": "1.1.3",
             "source": {
                 "type": "git",
@@ -7190,7 +8703,7 @@
             ],
             "authors": [
                 {
-                    "firstName": "Arne Blankerts",
+                    "name": "Arne Blankerts",
                     "email": "arne@blankerts.de",
                     "role": "Developer"
                 }
@@ -7199,7 +8712,7 @@
             "time": "2019-06-13T22:48:21+00:00"
         },
         {
-            "firstName": "webmozart/assert",
+            "name": "webmozart/assert",
             "version": "1.7.0",
             "source": {
                 "type": "git",
@@ -7234,7 +8747,7 @@
             ],
             "authors": [
                 {
-                    "firstName": "Bernhard Schussek",
+                    "name": "Bernhard Schussek",
                     "email": "bschussek@gmail.com"
                 }
             ],
@@ -7254,8 +8767,8 @@
     "prefer-lowest": false,
     "platform": {
         "php": "^7.2.5",
-        "ext-zmq": "*",
-        "ext-json": "*"
+        "ext-json": "*",
+        "ext-zmq": "*"
     },
     "platform-dev": [],
     "plugin-api-version": "1.1.0"
