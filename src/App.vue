@@ -56,6 +56,7 @@ mounted() {
             this.isAuth = true;
 
             this.$store.dispatch('SET_GWT', evData.token);
+            this.$store.dispatch('SET_CHAT_CHANNEL', evData.chatChannel);
             this.$store.dispatch('SET_AUTH', true);
 
             this.$router.push({ path: '/account' });

@@ -16,6 +16,8 @@ class SendMessageCommand extends Command
 
     public function handle()
     {
-        Pusher::sentDataToServer(['data' => $this->argument('message'), 'topic_id' => Pusher::channelForUser($this->argument('user_id'))]);
+        $channel = Pusher::channelForUser($this->argument('user_id'));
+        Pusher::sentDataToServer(['data' => $this->argument('message'), 'topic_id' => $channel]);
+        $this->info("Message sent to channel: $channel");
     }
 }

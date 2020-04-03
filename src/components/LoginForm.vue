@@ -131,7 +131,7 @@ methods: {
         HTTPer.post('api/login', loginData)
             .then((response) => {
                 if (response.status === 200  &&  response.statusText.toUpperCase()==='OK'  &&  response.data  &&  response.data.token  &&  response.data.token!=='') {
-                    this.$root.$emit('afterSuccessLogin', { 'token': response.data.token });
+                    this.$root.$emit('afterSuccessLogin', { 'token': response.data.token, 'chatChannel':response.data.channel });
                 }
             })
             .catch((error) => {

@@ -17,6 +17,7 @@ export const store = new Vuex.Store({
             updated_at: ``,
         },
         gwToken : ``,
+        chatChannel : ``,
         isAuth: false
     },
 
@@ -37,6 +38,12 @@ export const store = new Vuex.Store({
 
             return state.gwToken;
         },
+        chatChannel:state => {
+            if(!state.chatChannel){
+                state.chatChannel = window.sessionStorage.getItem('pliziChatChannel')
+            }
+            return state.chatChannel;
+        },
         isAuth : state => {
             return state.isAuth;
         },
@@ -51,6 +58,10 @@ export const store = new Vuex.Store({
             window.localStorage.setItem('pliziJWToken', payload+'');
             state.gwToken = payload;
         },
+        SET_CHAT_CHANNEL: (state, payload) => {
+            window.sessionStorage.setItem('pliziChatChannel', payload);
+            state.chatChannel = payload;
+        },
         SET_AUTH : (state, payload) => {
             state.isAuth = payload;
         },
@@ -60,7 +71,9 @@ export const store = new Vuex.Store({
         SET_GWT : (context, payload) => {
             context.commit('SET_GWT', payload);
         },
-
+        SET_CHAT_CHANNEL : (context, payload) => {
+            context.commit('SET_CHAT_CHANNEL', payload);
+        },
         SET_AUTH : (context, payload) => {
             context.commit('SET_AUTH', payload);
         },
@@ -96,6 +109,7 @@ export const store = new Vuex.Store({
             if (200 === response.status) {
                 window.localStorage.setItem('pliziUser', JSON.stringify(response.data.data));
                 context.commit('SET_USER', response.data.data);
+                context.commit('SET_CHAT_CHANNEL', response.data.channel);
                 return response.data.data;
             }
 

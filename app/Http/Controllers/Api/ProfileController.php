@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Api;
 
 use App\Models\Profile;
 use App\Models\User;
+use Domain\Pusher\WampServer;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
@@ -22,8 +23,8 @@ class ProfileController extends Controller
 
     public function index()
     {
-
-        return new \App\Http\Resources\User(Auth::user()->profile);
+        $channel = $channel = WampServer::channelForUser(Auth::user()->id);
+        return ['data' => new \App\Http\Resources\User(Auth::user()->profile), 'channel' => $channel];
     }
 
 

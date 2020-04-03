@@ -23,21 +23,29 @@ import ChatMessages from './ChatMessages.vue';
 import ChatFooter from './ChatFooter.vue';
 
 export default {
-name: 'ChatMainComponent',
-props: {
-    friends : Array,
-    messages : Array,
-    companion: Object,
-    selfPerson: Object
-},
-components: { ChatList, ChatListItem, ChatHeader, ChatMessages, ChatFooter },
-data () {
-    return {
-    }
-},
+    name: 'ChatMainComponent',
+    props: {
+        friends: Array,
+        messages: Array,
+        companion: Object,
+        selfPerson: Object
+    },
+    components: {ChatList, ChatListItem, ChatHeader, ChatMessages, ChatFooter},
+    data() {
+        return {}
+    },
 
-methods: {
-}
+    methods: {},
 
+    mounted() {
+        console.log(this.$store.getters.chatChannel);
+        var conn = new ab.connect('ws://192.168.10.10:8080/pubsub', s => {
+            s.subscribe(this.$store.getters.chatChannel, function(topic, data){
+                console.log(data.data);
+            })
+        }, function(code, reason, detail){
+
+        }, {maxRetries:10,retryDelay:4000,skipSubprotocolCheck:true});
+    },
 }
 </script>

@@ -61,10 +61,12 @@ methods:{
 
 mounted() {
     this.$root.$on('addNewChatMessage', (evData) => {
+        console.log('Message');
         this.messagesList.push(evData);
     });
 
     this.$root.$on('switchToChat', (evData) => {
+        console.log('switchToChat')
         this.friendsList = this.friendsList.map((friend, friendIndex) => {
             if (friend.isSelected)
                 friend.isSelected = false;
