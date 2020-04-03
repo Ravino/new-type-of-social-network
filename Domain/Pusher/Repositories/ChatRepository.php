@@ -4,6 +4,7 @@
 namespace Domain\Pusher\Repositories;
 
 
+use DB;
 use Domain\Pusher\Models\Dialog;
 
 class ChatRepository
@@ -14,8 +15,9 @@ class ChatRepository
      * @param int $user_id
      * @return Dialog[]
      */
-    public function getChatsByUserId(int $user_id) : array
+    public function getChatsByUserId(int $user_id): array
     {
+        DB::beginTransaction();
         $items = \DB::table('chat')
             ->join('users', 'users.id', '=', 'chat.user_id')
             ->join('profiles', 'profiles.user_id', '=', 'users.id')
@@ -32,6 +34,18 @@ class ChatRepository
 
         $collection = [];
         foreach ($items as $item) {
+
+            $attendees = \DB::table('chat_party')
+                ->join('profiles', 'chat_party.user_id', '=', 'profiles.user_id')
+                ->where('chat_party.chat_id', '=', $item->id)
+                ->where('chat_party.user_id', '<>', $user_id)
+                ->get([
+                    'profiles.firstname',
+                    'profiles.lastname',
+                    'profiles.birthday',
+                    'profiles.city',
+                ])->toArray();
+
             $dialog = new Dialog();
             $dialog->id = $item->id;
             $dialog->name = $item->firstname;
@@ -42,10 +56,11 @@ class ChatRepository
             $dialog->isRead = (bool)$item->last_is_read;
             $dialog->isLastFromMe = ($user_id == $item->last_user_id);
             $dialog->isOnline = ($user_id == $item->last_user_id);
+            $dialog->attendees = $attendees;
             $collection[] = $dialog;
         }
+        DB::commit();
         return $collection;
-
     }
 
     /**
@@ -58,13 +73,13 @@ class ChatRepository
      * @param int $exclude_id исключаемый пользователь
      * @return array список ID пользователей участников
      */
-    public function getUsersIdListFromChat(int $chat_id, int $exclude_id = null) : array
+    public function getUsersIdListFromChat(int $chat_id, int $exclude_id = null): array
     {
         $query = \DB::table('chat_party')
             ->join('profiles', 'profiles.user_id', '=', 'chat_party.user_id')
             ->where('chat_party.chat_id', '=', $chat_id);
 
-        if($exclude_id){
+        if ($exclude_id) {
             $query->where('chat_party.user_id', '<>', $exclude_id);
         }
 

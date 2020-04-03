@@ -21,4 +21,6 @@ class Dialog
     public $isLastFromMe = false;
 
     public $isOnline = false;
+
+    public $attendees = [];
 }

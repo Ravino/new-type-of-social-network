@@ -55,12 +55,11 @@
         },
 
         async mounted() {
-            new ab.connect('ws://127.0.0.1:7070', s => {
+            new ab.connect(wsUrl, s => {
                 s.subscribe(this.$store.getters.chatChannel, (topic, data) => {
                     if (this.currentDialogID === data.data.chatId) {
                         this.messagesList.push(data.data)
                     }
-                    console.log('data ', data);
                 })
             }, function(code, reason, detail) {
                 console.log(reason);
@@ -70,21 +69,21 @@
                 await HTTPer.post('api/chat/send', {
                     body: evData.body,
                     chat_id: this.currentDialogID
-                })
+                });
                 this.messagesList.push(evData);
             });
 
-            let response = await HTTPer.get('api/chat/dialogs')
-            this.dialogsList = response.data
+            let response = await HTTPer.get('api/chat/dialogs');
+            this.dialogsList = response.data;
 
-            let messageResponse = await HTTPer.get('api/chat/messages/' + this.dialogsList[0].id)
-            this.messagesList = messageResponse.data
-            this.currentDialogID = this.dialogsList[0].id
+            let messageResponse = await HTTPer.get('api/chat/messages/' + this.dialogsList[0].id);
+            this.messagesList = messageResponse.data;
+            this.currentDialogID = this.dialogsList[0].id;
 
             this.$root.$on('switchToChat', async (evData) => {
-                let messageResponse = await HTTPer.get('api/chat/messages/' + evData.dialogID)
-                this.messagesList = messageResponse.data
-                this.currentDialogID = evData.dialogID
+                let messageResponse = await HTTPer.get('api/chat/messages/' + evData.dialogID);
+                this.messagesList = messageResponse.data;
+                this.currentDialogID = evData.dialogID;
             });
         },
 
