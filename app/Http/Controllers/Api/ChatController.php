@@ -5,7 +5,11 @@ namespace App\Http\Controllers\Api;
 use App\Http\Controllers\Controller;
 use Domain\Pusher\Http\Requests\SendMessageRequest;
 use Domain\Pusher\Repositories\ChatRepository;
+use Domain\Pusher\Repositories\MessageRepository;
+use Domain\Pusher\Services\ChatService;
+use Auth;
 use Illuminate\Http\Request;
+use Laravel\Passport\Bridge\UserRepository;
 
 class ChatController extends Controller
 {
@@ -15,12 +19,24 @@ class ChatController extends Controller
     protected $repository;
 
     /**
+     * @var MessageRepository
+     */
+    protected $messageRepository;
+
+    /**
+     * @var ChatService
+     */
+    protected $chatService;
+
+    /**
      * ChatController constructor.
      * @param ChatRepository $repository
      */
-    public function __construct(ChatRepository $repository)
+    public function __construct(ChatRepository $repository, MessageRepository $messageRepository, ChatService $chatService)
     {
         $this->repository = $repository;
+        $this->messageRepository = $messageRepository;
+        $this->chatService = $chatService;
         parent::__construct();
     }
 
@@ -31,7 +47,7 @@ class ChatController extends Controller
      */
     public function dialogs()
     {
-        $dialogs = $this->repository->getAllChatsByUserId(1);
+        $dialogs = $this->repository->getChatsByUserId(Auth::user()->id);
         return response()->json($dialogs);
     }
 
@@ -41,7 +57,7 @@ class ChatController extends Controller
      */
     public function messages(int $chat_id)
     {
-        $messages = $this->repository->getMessagesOfChatById($chat_id, 1);
+        $messages = $this->messageRepository->getAllOfChatById($chat_id, Auth::user()->id);
         return response()->json($messages);
     }
 
@@ -52,14 +68,7 @@ class ChatController extends Controller
      */
     public function send(SendMessageRequest $request)
     {
-        /**
-         * Всё это должно быть вынесено в сервис. Что бы этот код мог быть
-         * выполнен откуда угодно. API, HTTP, CLI
-         * 1. Найти диалог или создать его
-         * 2. Положить в БД сообщение
-         * 3. Вернуть ID диалога сообщить об успехе
-         * 4. Бросить уведомление об отправке соообщения
-         */
-        return response()->json(['status' => 'OK', 'data' => $request->all()]);
+        $this->chatService->send($request->get('body'), $request->get('chat_id'), Auth::user()->id);
+        return response()->json(['status' => 'OK']);
     }
 }

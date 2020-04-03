@@ -3,13 +3,15 @@
 namespace Domain\Pusher\Events;
 
 
+use Domain\Pusher\Models\Message;
+
 class NewMessageEvent
 {
     /**
      * Тело сообщения
      * @var string
      */
-    protected $body;
+    protected $message;
 
     /**
      * Список индентификаторов получателей
@@ -23,18 +25,18 @@ class NewMessageEvent
      * @param array $ids
      * @return void
      */
-    public function __construct(string $body, array $ids)
+    public function __construct(Message $message, array $ids)
     {
-        $this->body = $body;
+        $this->message = $message;
         $this->usersListIds = $ids;
     }
 
     /**
      * @return mixed
      */
-    public function getBody()
+    public function getMessage()
     {
-        return $this->body;
+        return $this->message;
     }
 
     /**

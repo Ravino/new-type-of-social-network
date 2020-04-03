@@ -5,7 +5,8 @@
         </div>
 
         <div class="col-sm-12 col-md-9 col-lg-9 col-xl-10">
-            <ChatMainComponent v-bind:friends="friendsList" v-bind:messages="messagesList" v-bind:companion="companion" v-bind:self-person="selfPerson"></ChatMainComponent>
+            <ChatMainComponent v-bind:dialogs="dialogsList" v-bind:messages="messagesList" v-bind:companion="companion"
+                               v-bind:self-person="selfPerson"></ChatMainComponent>
         </div>
 
         <div class="col-sm-1 col-md-2 col-lg-2 col-xl-1">
@@ -15,70 +16,85 @@
 </template>
 
 <script>
-import AccountToolbarLeft from '../common/AccountToolbarLeft.vue';
-import AccountToolbarRight from '../common/AccountToolbarRight.vue';
+    import AccountToolbarLeft from '../common/AccountToolbarLeft.vue';
+    import AccountToolbarRight from '../common/AccountToolbarRight.vue';
 
-import ChatMainComponent from '../components/ChatMainComponent.vue';
+    import ChatMainComponent from '../components/ChatMainComponent.vue';
 
-import chatFriendsListData from '../data/chatFriendsList.js';
-import chatMessagesListData from '../data/chatMessagesList.js';
+    import chatFriendsListData from '../data/chatFriendsList.js';
+    import chatMessagesListData from '../data/chatMessagesList.js';
+    import {HTTPer} from "../httper/httper";
 
-export default {
-name: 'ChatsListPage',
-    components: {
-        AccountToolbarLeft, AccountToolbarRight, ChatMainComponent
-    },
-
-data() {
-    return {
-        friendsList: chatFriendsListData,
-        messagesList: chatMessagesListData,
-        companion: this.prepareCompanion(),
-        selfPerson: {
-            name: `Александра`,
-            userPic : `/images/chat/alexandra.png`,
+    export default {
+        name: 'ChatsListPage',
+        components: {
+            AccountToolbarLeft, AccountToolbarRight, ChatMainComponent
         },
-    }
-},
 
-methods:{
-    prepareCompanion(){
-        let comp = chatFriendsListData[0];
-        comp.isType = false;
-        comp.lastActivityDT = `2020-03-29 16:11:00`;
-
-        return comp;
-    }
-},
-
-mounted() {
-    this.$root.$on('addNewChatMessage', (evData) => {
-        this.messagesList.push(evData);
-    });
-
-    this.$root.$on('switchToChat', (evData) => {
-        this.friendsList = this.friendsList.map((friend, friendIndex) => {
-            if (friend.isSelected)
-                friend.isSelected = false;
-
-            if (friendIndex === evData.friendID) {
-                friend.isSelected = true;
+        data() {
+            return {
+                dialogsList: [],
+                currentDialogID: 0,
+                messagesList: [],
+                companion: this.prepareCompanion(),
+                selfPerson: {
+                    name: `Александра`,
+                    userPic: `/images/chat/alexandra.png`,
+                },
             }
+        },
 
-            return friend;
-        })
-    });
-},
+        methods: {
+            prepareCompanion() {
+                let comp = chatFriendsListData[0];
+                comp.isType = false;
+                comp.lastActivityDT = `2020-03-29 16:11:00`;
 
-beforeMount() {
-    let gwt = window.localStorage.getItem('pliziJWToken');
-    if (typeof gwt === 'undefined'  ||  ''===gwt  || null===gwt) {
-        this.router.push({ path: '/login' });
+                return comp;
+            }
+        },
+
+        async mounted() {
+            new ab.connect('ws://127.0.0.1:7070', s => {
+                s.subscribe(this.$store.getters.chatChannel, (topic, data) => {
+                    if (this.currentDialogID === data.data.chatId) {
+                        this.messagesList.push(data.data)
+                    }
+                    console.log('data ', data);
+                })
+            }, function(code, reason, detail) {
+                console.log(reason);
+            }, { maxRetries:10, retryDelay:4000, skipSubprotocolCheck:true });
+
+            this.$root.$on('addNewChatMessage', async (evData) => {
+                await HTTPer.post('api/chat/send', {
+                    body: evData.body,
+                    chat_id: this.currentDialogID
+                })
+                this.messagesList.push(evData);
+            });
+
+            let response = await HTTPer.get('api/chat/dialogs')
+            this.dialogsList = response.data
+
+            let messageResponse = await HTTPer.get('api/chat/messages/' + this.dialogsList[0].id)
+            this.messagesList = messageResponse.data
+            this.currentDialogID = this.dialogsList[0].id
+
+            this.$root.$on('switchToChat', async (evData) => {
+                let messageResponse = await HTTPer.get('api/chat/messages/' + evData.dialogID)
+                this.messagesList = messageResponse.data
+                this.currentDialogID = evData.dialogID
+            });
+        },
+
+        beforeMount() {
+            let gwt = window.localStorage.getItem('pliziJWToken');
+            if (typeof gwt === 'undefined' || '' === gwt || null === gwt) {
+                this.router.push({path: '/login'});
+            }
+        }
     }
-}
-
-
-}
 </script>
 
 <style>
@@ -95,7 +111,7 @@ beforeMount() {
     }
 
     .message-item.my-message.compact-message, .message-item.companion-message.compact-message {
-        margin-top: calc(var(--chat-message-margin)/4);
+        margin-top: calc(var(--chat-message-margin) / 4);
         margin-bottom: 0px;
     }
 

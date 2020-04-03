@@ -19,14 +19,15 @@ Auth::routes();
 
 Route::group(['middleware' => ['auth.jwt']], function () {
 
+    Route::prefix('chat')->group(function(){
+        Route::get('dialogs', 'Api\ChatController@dialogs');
+        Route::get('messages/{chat_id}', 'Api\ChatController@messages');
+        Route::post('send', 'Api\ChatController@send');
+    });
+
     Route::patch('user', 'Api\ProfileController@patch');
     Route::resource('user', 'Api\ProfileController', ['only' => ['index']]);
 
-});
-Route::prefix('chat')->group(function(){
-    Route::get('dialogs', 'Api\ChatController@dialogs');
-    Route::get('messages/{chat_id}', 'Api\ChatController@messages');
-    Route::post('send', 'Api\ChatController@send');
 });
 
 Route::post('sociallogin/{provider}', 'Auth\LoginController@socialLogin');

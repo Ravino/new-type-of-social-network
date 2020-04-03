@@ -7,46 +7,48 @@
                              v-bind:key="messageIndex">
             </ChatMessageItem>
             <div v-if="companion.isType">
-                <ChatMessageItem v-bind:message="typingMessage" v-bind:companion="companion" v-bind:next="null" v-bind:self-person="selfPerson"></ChatMessageItem>
+                <ChatMessageItem v-bind:message="typingMessage" v-bind:companion="companion" v-bind:next="null"
+                                 v-bind:self-person="selfPerson"></ChatMessageItem>
             </div>
         </div>
     </div>
 </template>
 
 <script>
-import moment from 'moment';
-import ChatMessageItem from './ChatMessageItem.vue';
+    import moment from 'moment';
+    import {HTTPer} from '../httper/httper.js';
+    import ChatMessageItem from './ChatMessageItem.vue';
 
-export default {
-name: 'ChatMessages',
-props: {
-    messages : Array,
-    companion: Object,
-    selfPerson: Object
-},
-components: {ChatMessageItem},
-data() {
-    return {
-        typingMessage : {
-            message: 'Печатает...',
-            dtLabel : moment().format(`YYYY-MM-DD HH:mm:ss`)+'',
-            isMine: false,
-            isRead: false,
-            isEdited: false
+    export default {
+        name: 'ChatMessages',
+        props: {
+            messages: Array,
+            companion: Object,
+            selfPerson: Object
         },
-        previousMsg : null
+        components: {ChatMessageItem},
+        data() {
+            return {
+                typingMessage: {
+                    message: 'Печатает...',
+                    dtLabel: moment().format(`YYYY-MM-DD HH:mm:ss`) + '',
+                    isMine: false,
+                    isRead: false,
+                    isEdited: false
+                },
+                previousMsg: null
+            }
+        },
+
+        methods: {
+            getNext(currIndex) {
+                let ret = (currIndex < this.messages.length) ? this.messages[currIndex + 1] : null;
+                return (typeof ret === 'undefined') ? null : ret;
+            }
+        },
+
+        mounted() {
+        },
+
     }
-},
-
-methods: {
-    getNext(currIndex) {
-        let ret = (currIndex < this.messages.length) ? this.messages[currIndex+1] : null;
-        return (typeof ret === 'undefined') ? null : ret;
-    }
-},
-
-mounted() {
-},
-
-}
 </script>

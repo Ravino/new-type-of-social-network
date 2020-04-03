@@ -29,7 +29,7 @@ class WampServer implements WampServerInterface
      */
     public static function channelForUser(int $user_id)
     {
-        return base64_encode(json_encode(['user_id' => $user_id, 'topic_id' => 'onNewMessage']));
+        return sha1(json_encode(['user_id' => $user_id, 'topic_id' => 'onNewMessage']));
     }
 
     public function broadcast($jsonData)

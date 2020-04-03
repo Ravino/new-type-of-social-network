@@ -50,9 +50,18 @@ class Message
      */
     public $isRead = false;
 
-
     /**
      * @var bool $isMine
      */
     public $isMine = false;
+
+    /**
+     * @var string
+     */
+    public $userPic;
+
+    /**
+     * @var int $chatId
+     */
+    public $chatId;
 }

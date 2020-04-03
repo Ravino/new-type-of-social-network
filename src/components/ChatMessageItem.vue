@@ -1,16 +1,14 @@
 <template>
     <div class="w-100">
         <div class="message-item" :class="{ 'my-message': message.isMine, 'companion-message': !message.isMine, 'compact-message': isNextIsSamePerson() }">
-            <div v-if="message.isMine" class="message-user-pic">
-                <img :src="selfPerson.userPic" alt="" />
-            </div>
-            <div v-else class="message-user-pic">
-                <img :src="companion.userPic" alt="" />
+            <div class="message-user-pic">
+                <!-- // TODO: Please change this to message.userPic when mock will be done -->
+                <img src="/images/chat/alexandra.png" alt="" />
             </div>
             <div class="message-body">
-                <div class="message-text">{{message.message}}</div>
-                <time v-if="!isNextIsSamePerson()" class="message-time" :datetime="message.dtLabel">
-                    {{message.dtLabel | lastMessageTime}}
+                <div class="message-text">{{message.body}}</div>
+                <time v-if="!isNextIsSamePerson()" class="message-time" :datetime="message.createdAt">
+                    {{message.createdAt | lastMessageTime}}
                 </time>
             </div>
         </div>

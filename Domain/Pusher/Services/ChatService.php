@@ -33,8 +33,9 @@ class ChatService extends BaseService
     public function send(string $body, int $chat_id, int $author_id)
     {
         $chatRepo = new ChatRepository();
-        $this->repository->saveInChatById($chat_id, $body, $author_id);
+        $message_id = $this->repository->saveInChatById($chat_id, $body, $author_id);
+        $message = $this->repository->getMessageById($message_id);
         $users_list = $chatRepo->getUsersIdListFromChat($chat_id, $author_id);
-        $this->dispatcher->dispatch(new NewMessageEvent($body, $users_list));
+        $this->dispatcher->dispatch(new NewMessageEvent($message, $users_list));
     }
 }

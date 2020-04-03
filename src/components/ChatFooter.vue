@@ -58,8 +58,8 @@ methods: {
             let now = moment();
             let nowS = now.format('YYYY-MM-DD HH:mm:ss');
             let newMsg = {
-                    message: this.newMessage.trim(),
-                    dtLabel : nowS,
+                    body: this.newMessage.trim(),
+                    createdAt : nowS,
                     isMine: true,
                     isRead: false,
                     isEdited: false

@@ -4,7 +4,6 @@
 namespace Domain\Pusher\Repositories;
 
 
-
 use Domain\Pusher\Models\Dialog;
 
 class ChatRepository
@@ -17,10 +16,10 @@ class ChatRepository
      */
     public function getChatsByUserId(int $user_id) : array
     {
-        $items =  \DB::table('chat')
+        $items = \DB::table('chat')
             ->join('users', 'users.id', '=', 'chat.user_id')
             ->join('profiles', 'profiles.user_id', '=', 'users.id')
-            ->whereRaw("chat.id IN (SELECT chat_id FROM chat_messages WHERE profiles.user_id = $user_id GROUP BY chat_id)")
+            ->whereRaw("chat.id IN (SELECT chat_id FROM chat_party WHERE user_id = $user_id GROUP BY chat_id)")
             ->orderBy('chat.id', 'desc')
             ->get([
                 'chat.id',
@@ -32,7 +31,7 @@ class ChatRepository
             ])->toArray();
 
         $collection = [];
-        foreach ($items as $item){
+        foreach ($items as $item) {
             $dialog = new Dialog();
             $dialog->id = $item->id;
             $dialog->name = $item->firstname;
