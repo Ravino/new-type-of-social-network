@@ -35,7 +35,6 @@
             return {
                 dialogsList: [],
                 currentDialogID: 0,
-                currentDialog: this.currentDialog(),
                 messagesList: [],
                 companion: this.prepareCompanion(),
                 selfPerson: {
