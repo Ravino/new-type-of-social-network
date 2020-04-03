@@ -38,8 +38,7 @@ export default {
 
     methods: {},
 
-    async mounted() {
-        console.log(this.$store.getters.chatChannel);
+    mounted() {
     },
 }
 </script>

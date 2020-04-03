@@ -21,6 +21,7 @@
     <title>{{ config('app.firstName', 'Laravel') }}</title>
     <script>
         var apiURL = '{{ config('app.url') }}';
+        var wsUrl = '{{ config('app.wsUrl') }}';
     </script>
 </head>
 <body>

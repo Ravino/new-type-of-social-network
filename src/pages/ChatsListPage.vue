@@ -23,7 +23,7 @@
 
     import chatFriendsListData from '../data/chatFriendsList.js';
     import chatMessagesListData from '../data/chatMessagesList.js';
-    import {HTTPer} from "../httper/httper";
+    import { HTTPer } from '../httper/httper';
 
     export default {
         name: 'ChatsListPage',
@@ -35,6 +35,7 @@
             return {
                 dialogsList: [],
                 currentDialogID: 0,
+                currentDialog: this.currentDialog(),
                 messagesList: [],
                 companion: this.prepareCompanion(),
                 selfPerson: {

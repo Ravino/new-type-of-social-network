@@ -54,6 +54,8 @@ return [
 
     'url' => env('APP_URL', 'http://localhost'),
 
+    'wsUrl' => env('WEBSOCKET_URI', '127.0.0.1:7070'),
+
     'asset_url' => env('ASSET_URL', null),
 
     /*
