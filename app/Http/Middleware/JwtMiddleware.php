@@ -21,12 +21,12 @@ class JwtMiddleware
         try {
             JWTAuth::parseToken()->authenticate();
         } catch (\Exception $e) {
-            if ($e instanceof TokenInvalidException){
+            if ($e instanceof TokenInvalidException) {
                 return response()->json(['message' => 'Token is Invalid'], 401);
-            }else if ($e instanceof TokenExpiredException){
+            } elseif ($e instanceof TokenExpiredException){
                 return response()->json(['message' => 'Token is Expired'], 401);
-            }else{
-                return response()->json(['message' => 'Authorization Token not found'], 401);
+            } else {
+                return response()->json(['message' => $e->getMessage()], 401);
             }
         }
         return $next($request);

@@ -44,7 +44,7 @@ class Profile extends Model
             'birthday' => 'date_format:Y-m-d|nullable',
             'sex' => Rule::in(array_keys(Profile::SEX_VARIANTS)),
             'city' => 'string|min:1|max:255',
-            'relationship' => Rule::in([self::RELATIONSHIP_MARRIED, self::RELATIONSHIP_NOT_MARRIED]),
+            'relationship' => Rule::in([self::RELATIONSHIP_MARRIED, self::RELATIONSHIP_NOT_MARRIED]) . '|nullable',
         ];
 
         if (count($keys)) {
