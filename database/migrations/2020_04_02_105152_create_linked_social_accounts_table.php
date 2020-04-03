@@ -17,10 +17,10 @@ class CreateLinkedSocialAccountsTable extends Migration
             $table->increments('id');
             $table->string('provider_id');
             $table->string('provider_name');
-            $table->unsignedInteger('user_id');
+            $table->foreignId('user_id');
             $table->timestamps();
 
-            $table->foreign('user_id')->references('id')->on('users');
+            $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
         });
     }
 

@@ -130,7 +130,7 @@ methods: {
         this.$v.$touch();
 
         let bDay = this.model.birthDate.trim();
-        bDay = (``===bDay) ? '0000-00-00' : moment(bDay, 'DD.MM.YYYY').format('YYYY-MM-DD');
+        bDay = (``===bDay) ? null : moment(bDay, 'DD.MM.YYYY').format('YYYY-MM-DD');
 
         let regData = {
             email: this.model.email.trim(),

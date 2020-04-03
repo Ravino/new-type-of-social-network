@@ -38,7 +38,7 @@ class Profile extends Model
         $rules = [
             'firstname' => 'required|string|min:1|max:255',
             'lastname' => 'required|string|min:1|max:255',
-            'birthday' => 'date_format:Y-m-d',
+            'birthday' => 'date_format:Y-m-d|nullable',
             'sex' => Rule::in(array_keys(Profile::SEX_VARIANTS)),
             'city' => 'string|min:1|max:255',
         ];
