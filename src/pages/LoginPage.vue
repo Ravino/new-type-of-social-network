@@ -4,7 +4,7 @@
             <LoginForm></LoginForm>
         </div>
 
-        <div class="col-7 pr-0" style="padding-left: 24px;">
+        <div class="col-7 pr-0 pb-0" style="padding-left: 24px;">
             <LastEntries></LastEntries>
             <PliziMobile></PliziMobile>
         </div>

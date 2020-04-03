@@ -79,97 +79,102 @@ mounted() {
 </script>
 
 <style>
-body {
-    background-color: #F7F8FC;
-}
+    body {
+        background-color: #F7F8FC;
+    }
 
-body.LoginPage {
-    background-image: url("/images/plizi-bg-exp.svg");
-    background-size: 100% auto;
-    background-repeat: no-repeat;
-    background-position: center 40px;
-    background-attachment: scroll;
-}
+    body.LoginPage, body.HomePage {
+        background-image: url("/images/plizi-bg-exp.svg");
+        /*background-image: url("/images/blue-wave.png");*/
+        background-size: cover;
+        background-repeat: no-repeat;
+        background-position: center top;
+        background-attachment: fixed;
+    }
 
-body.LoginPage > .container-fluid {
-    max-width: 1008px;
-}
+    body.LoginPage > .container-fluid, body.HomePage > .container-fluid {
+        max-width: 1008px;
+    }
 
-#contentContainer {
-    margin-top: 70px;
-    min-height: 200px;
-}
+    #contentContainer {
+        margin-top: 70px;
+        min-height: 200px;
+    }
 
-.btn.disabled, .btn:disabled {
-    opacity: 1.0;
-}
+    .btn.disabled, .btn:disabled {
+        opacity: 1.0;
+    }
 
-.icon-40 {
-    display: block;
-    float: right;
-    width: 40px;
-    max-width: 40px;
-    height: 40px;
-    max-height: 40px;
-    margin: 0.8rem 10px 0px 0px;
-}
+    .icon-40 {
+        display: block;
+        float: right;
+        width: 40px;
+        max-width: 40px;
+        height: 40px;
+        max-height: 40px;
+        margin: 0.8rem 10px 0px 0px;
+    }
 
-.icon-40 > img {
-    width: auto;
-    max-width: 100%;
-    max-height: 100%;
-}
+    .icon-40 > img {
+        width: auto;
+        max-width: 100%;
+        max-height: 100%;
+    }
 
-.bg-white-br20 {
-    background-color: white;
-    border-radius: 20px;
-}
+    .bg-white-br20 {
+        background-color: white;
+        border-radius: 20px;
+    }
 
-.form-control.lr-input {
-    border-radius: 0px;
-    width: 278px;
-    max-width: 278px;
-    margin-left: auto;
-    margin-right: auto;
-    border-width: 0px 0px 1px 0px;
-    border-color: black;
-    background-color: transparent;
-}
+    .form-control.lr-input {
+        border-radius: 0px;
+        width: 278px;
+        max-width: 278px;
+        margin-left: auto;
+        margin-right: auto;
+        border-width: 0px 0px 1px 0px;
+        border-color: black;
+        background-color: transparent;
+    }
 
-.form-control.lr-input:focus {
-    /*box-shadow: 0 1px 1px rgba(0, 0, 0, 0.075) inset, 0 0 8px rgba(126, 239, 104, 0.6);*/
-    box-shadow: none;
-    outline: 0 none;
-}
+    .form-control.lr-input:focus {
+        /*box-shadow: 0 1px 1px rgba(0, 0, 0, 0.075) inset, 0 0 8px rgba(126, 239, 104, 0.6);*/
+        box-shadow: none;
+        outline: 0 none;
+    }
 
-.btn.plz-btn {
-    display: block;
-    margin: 0px auto;
+    .btn.plz-btn {
+        display: block;
+        margin: 0px auto;
+        padding: 0px;
 
-    width: 278px;
-    max-width: 278px;
-    min-width: 278px;
-    height: 40px;
-    min-height: 40px;
-    max-height: 40px;
-    line-height: 40px;
-    border-radius: 20px;
-    padding: 0px;
-    text-align: center;
+        width: 278px;
+        max-width: 278px;
+        min-width: 278px;
+        height: 40px;
+        min-height: 40px;
+        max-height: 40px;
+        line-height: 34px;
+        border-radius: 20px;
+        text-align: center;
 
-    box-shadow: none;
-    outline: 0 none;
-    transition: none;
-}
+        box-shadow: none;
+        outline: 0 none;
+        transition: none;
+        text-transform: uppercase;
+        font-weight: bold;
+    }
 
-.btn.plz-btn-primary {
-    background-color: #3D51DE;
-    color: white;
-}
+    .btn.plz-btn-primary {
+        background-color: #3D51DE;
+        color: white;
+    }
 
-.btn.plz-btn-outline {
-    color: #3D51DE;
-    background-color: white;
-}
+    .btn.plz-btn-outline {
+        color: #3D51DE;
+        background-color: white;
+        border-width: 2px;
+        border-color: #3D51DE;
+    }
 
 </style>
