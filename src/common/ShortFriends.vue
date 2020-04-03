@@ -1,7 +1,7 @@
 <template>
     <div id="shortFriends" class="plz-short-friends">
 
-        <div class="d-flex flex-row justify-content-start pb-3 border-bottom pt-3">
+        <div class="d-flex flex-row justify-content-start pb-3 pt-5">
             <h6 class="plz-ff-title w-auto mt-2 ml-3">Друзья <span>{{user.friendsNumber}}</span></h6>
 
             <a href="#" class="w-auto ml-auto --align-self-end mr-3 mt-2 text-body" title="свернуть">
@@ -12,27 +12,28 @@
         <div class="plz-short-friends-list">
             <div v-for="(friend, friendIndex) in shortFriends" v-bind:key="friendIndex" class="plz-short-friends-item d-flex flex-row my-2 px-2">
 
-                <a class="plz-short-friend-userpic d-flex  align-self-start" href="#">
+                <a class="plz-short-friend-userpic d-flex align-self-start" href="#">
                     <img class="plz-short-userpic" width="48" height="48" :src="friend.userPic" :alt="friend.firstName" />
 
                     <img v-if="friend.isOnline" class="plz-short-isonline" src="/images/companion-is-online.png" alt="в сети" />
                 </a>
 
                 <div class="plz-short-friend-title mr-auto  align-self-start">
-                    <a class="plz-short-friend-name" href="#">
+                    <a class="plz-short-friend-name text-body" href="#">
                         <div>{{friend.firstName}}</div>
                     </a>
 
-                    <div class="plz-short-friend-status">
+                    <div class="plz-short-friend-status text-black-50">
                         общих друзей {{friend.commonFriendsNumber}}
                     </div>
                 </div>
-                <div class="plz-short-friend-title">
-                    <span v-if="(friend.messagesNumber > 0)" class="bg-danger rounded-pill text-white py-0 px-1 mt-1 mr-2">{{friend.messagesNumber}}</span>
+                <div class="plz-short-friend-is-active">
+                    <span v-if="friend.isActive" class="">
+                        <img src="/images/chat-search-loupe.png" alt="" />
+                    </span>
                 </div>
             </div>
         </div>
-
 
     </div>
 </template>
