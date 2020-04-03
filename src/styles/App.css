@@ -15,6 +15,15 @@ body.LoginPage > .container-fluid, body.HomePage > .container-fluid {
     max-width: 1008px;
 }
 
+body.LoginPage .modal-dialog-centered {
+    width: 100%;
+    max-width: 404px;
+}
+
+body.LoginPage .modal-body {
+    padding: 35px 60px 50px;
+}
+
 #contentContainer {
     margin-top: 70px;
     min-height: 200px;
@@ -38,6 +47,44 @@ body.LoginPage > .container-fluid, body.HomePage > .container-fluid {
     width: auto;
     max-width: 100%;
     max-height: 100%;
+}
+
+.icon-registration {
+    display: inline-block;
+    vertical-align: middle;
+    background: url("/images/icons/icon-registration.png") 50% 50% no-repeat;
+    width: 127px;
+    height: 111px;
+}
+
+.icon-user {
+    display: inline-block;
+    vertical-align: middle;
+    background: url("/images/icons/icon-user.png") 50% 50% no-repeat;
+    width: 16px;
+    height: 16px;
+}
+
+.icon-letter {
+    display: inline-block;
+    vertical-align: middle;
+    background: url("/images/icons/icon-letter.png") 50% 50% no-repeat;
+    width: 17px;
+    height: 12px;
+}
+.icon-calendar {
+    display: inline-block;
+    vertical-align: middle;
+    background: url("/images/icons/icon-calendar.png") 50% 50% no-repeat;
+    width: 17px;
+    height: 18px;
+}
+.icon-modal-close {
+    display: inline-block;
+    vertical-align: middle;
+    background: url("/images/icons/icon-modal-close.png") 50% 50% no-repeat;
+    width: 20px;
+    height: 20px;
 }
 
 .bg-white-br20 {
@@ -94,4 +141,17 @@ body.LoginPage > .container-fluid, body.HomePage > .container-fluid {
     background-color: white;
     border-width: 2px;
     border-color: #3D51DE;
+}
+
+.modal:before {
+    content: '';
+    position: absolute;
+    top: 50px;
+    right: 96px;
+    display: inline-block;
+    vertical-align: middle;
+    background: url("/images/icons/icon-modal-close.png") 50% 50% no-repeat;
+    width: 20px;
+    height: 20px;
+    cursor: pointer;
 }

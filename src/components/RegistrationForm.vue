@@ -2,10 +2,14 @@
     <div id="loginForm" class="">
         <div class="text-center">
             <h5>Быстрая регистрация</h5>
+            <div class="text-center">
+                <i class="icon icon-registration"></i>
+            </div>
         </div>
 
         <form id="registrationForm" novalidate="novalidate">
             <div class="form-group" :class="{ '--has-error': $v.model.firstName.$error, '--has-success': !$v.model.firstName.$invalid }">
+                <i class="icon icon-user"></i>
                 <label for="firstName" class="d-none">Ваше имя</label>
                 <input v-model="model.firstName"
                        :class="{ '--is-invalid': $v.model.firstName.$error, '--is-valid': !$v.model.firstName.$invalid }"
@@ -21,6 +25,7 @@
             </div>
 
             <div class="form-group" :class="{ '--has-error': $v.model.lastName.$error, '--has-success': !$v.model.lastName.$invalid }">
+                <i class="icon icon-user"></i>
                 <label for="lastName" class="d-none">Ваша фамилия</label>
                 <input v-model="model.lastName"
                        :class="{ '--is-invalid': $v.model.lastName.$error, '--is-valid': !$v.model.lastName.$invalid }"
@@ -36,6 +41,7 @@
             </div>
 
             <div class="form-group" :class="{ '--has-error': $v.model.email.$error, '--has-success': !$v.model.email.$invalid }">
+                <i class="icon icon-letter"></i>
                 <label for="userEmail" class="d-none">Ваш E-mail</label>
                 <input v-model="model.email"
                        :class="{ '--is-invalid': $v.model.email.$error, '--is-valid': !$v.model.email.$invalid }"
@@ -49,6 +55,7 @@
             </div>
 
             <div class="form-group" :class="{ '--has-error': $v.model.birthDate.$error, '--has-success': !$v.model.birthDate.$invalid }">
+                <i class="icon icon-calendar"></i>
                 <label for="userBirth" class="d-none">Дата рождения</label>
                 <input v-model="model.birthDate"
                     type="text" class="lr-input form-control" id="userBirth" pattern="(0[1-9]|1[0-9]|2[0-9]|3[01]).(0[1-9]|1[012]).[0-9]{4}"
@@ -189,5 +196,36 @@ methods: {
 </script>
 
 <style>
-
+    #loginForm h5 {
+        font-family: OpenSans-Semibold, sans-serif;
+        font-size: 24px;;
+        margin-bottom: .6em;
+    }
+    #loginForm .icon-registration {
+        margin-bottom: 30px;
+    }
+    #registrationForm .form-group {
+        position: relative;
+        margin-bottom: 0;
+    }
+    #registrationForm .lr-input {
+        display: block;
+        width: 100%;
+        max-width: 100%;
+        height: 40px;
+        padding-left: 50px;
+        margin: 0;
+    }
+    #registrationForm .icon {
+        position: absolute;
+        left: 10px;
+        top: 50%;
+        transform: translateY(-50%);
+    }
+    #registrationForm .plz-btn {
+        margin-top: 26px;
+        box-shadow: 0 5px 18px rgba(61, 81, 222, .4);
+        font-family: OpenSans-Bold, sans-serif;
+        font-size: 11px;
+    }
 </style>
