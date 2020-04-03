@@ -30,7 +30,6 @@ import AccountSettingsSecurity from '../components/AccountSettingsSecurity.vue';
 
 import AccountSettingsSideMenu from '../components/AccountSettingsSideMenu.vue';
 
-import router from '../router/router.js';
 import {HTTPer} from '../httper/httper.js';
 
 export default {
@@ -42,18 +41,33 @@ components: { AccountToolbarLeft,
 },
 data() {
     return {
+        // userData: {
+        //     user_id: -1,
+        //     firstname: ``,
+        //     lastname: ``,
+        //     sex: ``,
+        //     birthday: ``,
+        //     city: ``,
+        //     created_at: ``,
+        //     updated_at: ``,
+        // },
+        // TODO: временно! удалить после вёрстки
+
         userData: {
             user_id: -1,
-            firstname: ``,
-            lastname: ``,
-            sex: ``,
-            birthday: ``,
-            city: ``,
+            firstname: `Владислав`,
+            lastname: `Браташ`,
+            sex: `m`,
+            birthday: `2001-05-09`,
+            city: `Москва`,
             created_at: ``,
             updated_at: ``,
         },
-        dataReady: false,
-        gwToken: ``
+        // TODO: временно! удалить после вёрстки
+        // dataReady: false,
+        // gwToken: ``
+        dataReady: true,
+        gwToken: `tmp`
     }
 },
 
@@ -88,21 +102,27 @@ methods: {
     }
 },
 
-async mounted() {
-    if (!this.checkUserData()) {
-        await this.getUserData();
-    }
+// TODO: временно! удалить после вёрстки
+mounted() {
+    this.$root.$emit('afterSuccessLogin', { 'token': `tmp` });
 },
 
-beforeMount() {
-    let gwt = window.localStorage.getItem('pliziJWToken');
-    if (typeof gwt === 'undefined'  ||  ''===gwt  || null===gwt) {
-        router.push({ path: '/login' });
-        return;
-    }
-
-    this.gwToken = gwt;
-}
+// TODO: временно! раскомментить после вёрстки
+// async mounted() {
+//     if (!this.checkUserData()) {
+//         await this.getUserData();
+//     }
+// },
+//
+// beforeMount() {
+//     let gwt = window.localStorage.getItem('pliziJWToken');
+//     if (typeof gwt === 'undefined'  ||  ''===gwt  || null===gwt) {
+//         this.$router.push({ path: '/login' });
+//         return;
+//     }
+//
+//     this.gwToken = gwt;
+// }
 
 }
 </script>
