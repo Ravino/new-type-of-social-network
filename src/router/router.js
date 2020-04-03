@@ -10,8 +10,8 @@ import ChatMessagesPage from '../pages/ChatMessagesPage.vue';
 import LogoutPage from '../pages/LogoutPage.vue';
 
 const routes = [
-    // { path: '/', redirect: '/login' },
-    { path: '/', component: HomePage, name: 'HomePage', meta: {title: 'Plizi: Стартовая'} },
+    { path: '/', redirect: '/login' },
+    // { path: '/', component: HomePage, name: 'HomePage', meta: {title: 'Plizi: Стартовая'} },
     { path: '/login', component: LoginPage, name: 'LoginPage', meta: {title: 'Plizi: Авторизация'} },
     { path: '/logout', component: LogoutPage, name: 'LogoutPage', meta: {title: 'Plizi: Выход'} },
     // { path: '/registration', component: RegistrationPage, name: 'RegistrationPage', meta: {title: 'Plizi: Регистрация'}, props: true },

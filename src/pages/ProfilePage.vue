@@ -70,6 +70,7 @@ data() {
             { path: '/images/user-photos/user-photo-03.png', },
             { path: '/images/user-photos/user-photo-04.png', },
             { path: '/images/user-photos/user-photo-01.png', },
+            { path: '/images/user-photos/user-photo-03.png', },
         ],
 
         userData: {
