@@ -52,6 +52,7 @@ data() {
         //     updated_at: ``,
         // },
         // TODO: временно! удалить после вёрстки
+
         userData: {
             user_id: -1,
             firstname: `Владислав`,
