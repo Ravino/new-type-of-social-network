@@ -17,7 +17,6 @@ class ChatRepository
      */
     public function getChatsByUserId(int $user_id): array
     {
-        DB::beginTransaction();
         $items = \DB::table('chat')
             ->join('users', 'users.id', '=', 'chat.user_id')
             ->join('profiles', 'profiles.user_id', '=', 'users.id')
@@ -59,7 +58,6 @@ class ChatRepository
             $dialog->attendees = $attendees;
             $collection[] = $dialog;
         }
-        DB::commit();
         return $collection;
     }
 

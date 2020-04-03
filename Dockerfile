@@ -12,7 +12,7 @@ RUN npm build
 
 COPY . /home/frontend-builder
 
-FROM php:7.1-apache
+FROM php:7.4-apache
 
 RUN apt-get update && apt-get install -y libmcrypt-dev \
     libfreetype6-dev \
