@@ -1,6 +1,5 @@
 #!/bin/sh
-if [ "$@" = '/usr/local/bin/apache2-foreground' ] \
-|| [ "$@" = '/var/www/html/vendor/bin/phpunit'  ]; then
+if [ "$@" = '/var/www/html/vendor/bin/phpunit'  ]; then
     /usr/local/bin/dockerize -timeout 60s -wait tcp://${DB_HOST}:3306
     set -e
     echo 'running migrations'

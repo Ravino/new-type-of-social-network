@@ -1,6 +1,6 @@
 <template>
     <li class="chat-list-user media m-0 px-3 py-2"
-        :class="{ 'bg-light': dialog.isSelected, 'bg-white': !dialog.isSelected  }">
+        :class="{ 'bg-light':  dialog.id === currentDialog.id, 'bg-white': dialog.id !== currentDialog.id  }">
         <img class="chat-list-user-pic" v-bind:src="dialog.userPic" v-bind:alt="dialog.name"/>
 
         <div v-if="dialog.isOnline" class="chat-list-user-isonline">
@@ -10,7 +10,7 @@
         <div class="media-body mb-0">
             <div class="d-flex --flex-row align-items-center">
                 <h6 class="w-75 align-self-start mt-0 pb-0 mb-0 pull-left text-body" style="line-height: 20px;">
-                    <span class="btn btn-link text-body" @click="switchToChat()">{{dialog.name}}</span>
+                    <span class="btn btn-link text-body" @click="switchToChat()">{{ dialog.attendees[0].firstname }}</span>
                 </h6>
 
                 <small v-if="dialog.isRead" class="d-block align-self-end mr-1 mt-0 w-auto" style="line-height: 20px;">
@@ -19,7 +19,7 @@
 
                 <time :datetime="dialog.lastMessageDT" class="d-block align-self-end text-dark w-auto"
                       style="line-height: 20px;">
-                    {{dialog.lastMessageDT | lastMessageTime}}
+                    {{ dialog.lastMessageDT | lastMessageTime }}
                 </time>
             </div>
             <div class="d-flex flex-row">
@@ -37,6 +37,7 @@
         name: 'ChatListItem',
         props: {
             dialog: Object,
+            currentDialog: Object,
             dialogID: Number
         },
         data() {
@@ -48,9 +49,7 @@
                 this.$root.$emit('switchToChat', {dialogID: this.dialog.id});
             }
         },
-        mounted() {
-
-        }
+        mounted() {}
 
     }
 </script>

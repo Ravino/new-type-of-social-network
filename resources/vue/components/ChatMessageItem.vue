@@ -21,8 +21,6 @@ name: 'ChatMessageItem',
 props: {
     message : Object,
     next : Object | null,
-    companion: Object,
-    selfPerson: Object
 },
 data() {
     return {
