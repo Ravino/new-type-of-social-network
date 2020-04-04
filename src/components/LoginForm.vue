@@ -81,7 +81,7 @@
                     email: ``,
                     password: ``
                 },
-                isRegistrationModalShow: false,
+                isRegistrationModalShow: true,
                 isServerError: false,
                 serverErrorText: ''
             }
