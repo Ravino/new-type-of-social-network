@@ -2,7 +2,7 @@
     <div class="plz-last-entry-item">
         <img v-bind:src="entryItem.src" class="plz-last-entry-user-pic" :alt="entryItem.fullName" />
         <div class="d-inline-block text-center mx-auto px-4 my-0">
-            <a href="#" :class="{ 'text-black-50' : !entryItem.isUser, 'text-body': entryItem.isUser }" class="">{{entryItem.fullName}}</a>
+            <a href="#/profile" :class="{ 'text-black-50' : !entryItem.isUser, 'text-body': entryItem.isUser }" class="">{{entryItem.fullName}}</a>
         </div>
     </div>
 </template>

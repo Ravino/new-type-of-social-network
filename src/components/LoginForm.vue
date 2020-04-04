@@ -81,7 +81,7 @@
                     email: ``,
                     password: ``
                 },
-                isRegistrationModalShow: true,
+                isRegistrationModalShow: false,
                 isServerError: false,
                 serverErrorText: ''
             }
@@ -169,6 +169,15 @@
 
 .btn.plz-btn.btn-login {
     margin-top: 27px;
+    box-shadow: 0 5px 18px rgba(61, 81, 222, .4);
+}
+
+.btn {
+    cursor: pointer;
+}
+
+.btn.plz-btn.btn-login:hover {
+    box-shadow: 0;
 }
 
 .btn.plz-btn.btn-registration {
@@ -200,7 +209,7 @@
 
 }
 
-.plz-import-socnet .plz-import-socnet-btns .plz-socnet-btn {
+.plz-socnet-btn {
     display: block;
     width: 48px;
     min-width: 48px;
@@ -211,10 +220,21 @@
     text-align: center;
     border: 1px solid #989898;
     border-radius: 48px;
+    transition: .4s;
 }
 
-.plz-import-socnet .plz-import-socnet-btns .plz-socnet-btn > i.fab {
+.plz-socnet-btn .fab {
     color: #989898;
+    transition: .4s;
+}
+.plz-socnet-btn:focus,
+.plz-socnet-btn:hover {
+    border: 1px solid #000;
+}
+
+.plz-socnet-btn:focus .fab,
+.plz-socnet-btn:hover .fab {
+    color: #000;
 }
 
 </style>

@@ -8,25 +8,25 @@
                     </router-link>
                 </div>
 
-                <div class="col-sm-4 col-md-6 col-lg-5 col-xl-5 d-sm-none d-md-block d-lg-block d-xl-block">
+                <div class="col-sm-4 col-md-6 col-lg-4 d-sm-none d-md-block d-lg-block d-xl-block">
                     <form class="form-inline mt-3 mt-md-3">
-                        <input class="form-control rounded-pill w-100" type="text" placeholder="Поиск" aria-label="Поиск" />
+                        <input id="topSearch" ref="topSearch"  class="top-search form-control form-control rounded-pill w-100" type="text" placeholder="Поиск" aria-label="Поиск" />
                         <button class="d-none btn btn-outline-success" type="submit">Search</button>
                     </form>
                 </div>
 
-                <div id="playerWrapper" class="col-lg-3 col-xl-3 d-sm-none d-md-none d-lg-block d-xl-block text-center">
+                <div id="playerWrapper" class="col-lg-3 col-xl-3 d-sm-none d-md-none d-lg-block d-xl-block text-center mt-1">
                     <div class="btn-block d-inline-block mt-3 ">
-                        <a class="btn btn-link text-black-50 btn-sm" href="#prev" title="предыдущий трэк">
+                        <a class="btn btn-link btn-sm" href="#prev" title="предыдущий трэк">
                             <i class="fas fa-step-backward"></i>
                         </a>
-                        <a class="btn btn-link text-black-50 btn-sm" href="#play" title="начать воспроизведение">
+                        <a class="btn btn-link  btn-sm" href="#play" title="начать воспроизведение">
                             <i class="far fa-play-circle fa-2x"></i>
                         </a>
-                        <a class="btn btn-link text-black-50 btn-sm" href="#next" title="начать воспроизведение">
+                        <a class="btn btn-link btn-sm" href="#next" title="начать воспроизведение">
                             <i class="fas fa-step-forward"></i>
                         </a>
-                        <a class="btn btn-link text-black-50 btn-sm" href="#track" title="MASE - Psychoi">
+                        <a class="btn btn-link btn-song btn-sm" href="#track" title="MASE - Psychoi">
                             <span class="singer">MASE</span> - <span class="song">Psychoi</span>
                         </a>
                     </div>
@@ -46,10 +46,12 @@
                     </div>
                 </div>
 
-                <div class="col-sm-2 col-md-1 col-lg-1 col-xl-1 px-0">
-                    <router-link to="/account" tag="a" class="icon-40">
+                <div class="col-sm-2 col-md-1 col-lg-2 px-0 profile-menu">
+                    <router-link to="/account" tag="a" class="profile-menu--link">
+                        <span>Александр</span>
                         <img src="images/last-entries/vladislav.png" alt="Plizi" />
                     </router-link>
+                    <i class="fa fas fa-chevron-right" aria-hidden="true"></i>
                 </div>
             </div>
         </div>
@@ -79,7 +81,59 @@ methods: {
 </script>
 
 <style>
-.auth-navbar.navbar.fixed-top {
-    background-color: #F7F8FC;
-}
+    .auth-navbar.navbar.fixed-top {
+        background-color: #F7F8FC;
+    }
+    #playerWrapper .btn {
+        font-size: 10px;
+        color: #A5A9C4;
+    }
+    #playerWrapper .btn-song {
+        font-size: 13px;
+    }
+
+    .fa-bell,
+    .fa-comment,
+    .fa-user-friends {
+        font-size: 24px;
+        color: #bfc0c3;
+        transition: .4s;
+    }
+
+    .fa-bell:hover,
+    .fa-comment:hover,
+    .fa-user-friends:hover {
+        color: #576df6;
+    }
+
+    .profile-menu {
+        position: relative;
+        display: flex;
+        align-items: center;
+        justify-content: flex-end;
+        color: #a6a7a9;
+    }
+    .profile-menu .fa-chevron-right{
+        transform: rotate(90deg);
+        font-size: 10px;
+        cursor: pointer;
+    }
+
+    .profile-menu--link span {
+        display: inline-block;
+        vertical-align: middle;
+        color: #a6a7a9;
+        margin-right: 15px;
+    }
+    .profile-menu--link img {
+        display: inline-block;
+        vertical-align: top;
+        width: 40px;
+        height: 40px;
+        margin-right: 12px;
+        -webkit-border-radius: 40px;
+        -moz-border-radius: 40px;
+        border-radius: 40px;
+    }
+
 </style>

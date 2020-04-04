@@ -54,26 +54,7 @@ methods: {
     padding: 0px;
 }
 
-.navbar.plz-navbar .top-search.form-control {
-    color: #A3A8B9;
 
-    /*width: 100%; !* 534px *!*/
-    width: 534px;
-    height: 40px;
-    min-height: 40px;
-    max-height: 40px;
-    background-color: #EEEFF4;
-
-    border-radius: 20px;
-    margin-left: auto;
-    margin-right: auto;
-    border-width: 0px;
-    padding: 0px 30px;
-
-    background-image: url("/images/top-search-icon.png");
-    background-repeat: no-repeat;
-    background-position: 490px center;
-}
 
 .navbar.plz-navbar .to-english.btn.btn-link {
     display: block;
