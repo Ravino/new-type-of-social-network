@@ -121,7 +121,7 @@ methods: {
 
     .profile-menu--link span {
         display: inline-block;
-        vertical-align: middle;
+        line-height: 40px;
         color: #a6a7a9;
         margin-right: 15px;
     }
