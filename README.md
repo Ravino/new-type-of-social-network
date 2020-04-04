@@ -33,3 +33,84 @@ var conn = new ab.connect('ws://192.168.10.10:8080/pubsub', function(s){
 }, {maxRetries:10,retryDelay:4000,skipSubprotocolCheck:true});
 
 ```
+
+
+# Install for Windows
+
+- Установить VirtualBox
+- Установить Vagrant
+- Установить git bash https://git-scm.com/downloads
+- Открыть git bash и выполнить команду `ssh-keygen.exe`
+- Выполнить `vagrant box add laravel/homestead`
+- Выполнить `git clone https://github.com/laravel/homestead.git ~/Homestead`
+- Выполнить `cd ~/Homestead`
+- Выполнить `./init.sh`
+- Отредактировать Homestead.yml как в примере ниже. Где E:/Projects/plizi.loc путь к проекту.
+```yaml
+---
+ip: "192.168.10.10"
+memory: 2048
+cpus: 2
+provider: virtualbox
+
+authorize: ~/.ssh/id_rsa.pub
+
+keys:
+    - ~/.ssh/id_rsa
+
+folders:
+    - map: E:/Projects/plizi.loc
+      to: /home/vagrant/plizi.loc
+
+sites:
+    - map: plizi.loc
+      to: /home/vagrant/plizi.loc/public
+
+databases:
+    - plizi
+
+features:
+    - mariadb: false
+    - ohmyzsh: false
+    - webdriver: false
+```
+- Прописать C:/Windows/System32/drivers/etc/hosts
+
+```
+192.168.10.10 plizi.loc
+```
+
+- Выполнить `cd ~/Homestead`
+- Выполнить `vagrant up`
+- Выполнить `vagrant ssh`
+- Выполнить `cd plizi.loc`
+- Выполнить `sudo apt install php-zmq`
+- Выполнить `composer install` 
+
+> Должна быть включена виртуализация в BIOS.
+
+> npm install и npm run dev | build выполнять на хосте, а не внутри виртуальной машины.
+
+
+
+# Установка и запуск Vue-приложения для разработки
+После импорта репозитория сначала нужно установить все нужные для проекта модули:
+
+**`npm install`** - установка модулей
+
+После установки в консоли запускаем:
+
+**`npm run prod`** - запуск сборки для работы в Laravel'ном окружении
+
+**`npm run hot`** - запуска DEV-сервера, который сам обновляет содержимое в браузере при изменении исходников (открывать по адресу http://localhost:8080/app.html)
+
+_app.html_ - нужен потому, что в той же папки лежит Laravel'ный index.php  и если назвать файл index.html, то **они между собой конфликтуют**!
+
+Если нужно прописать свои пути к локальному API сайта или к API чата, то сохраните app.html как **apl.html**
+
+Сделайте все нужные изменения в apl.html и обращайтесь при работе под DEV-сервером к нему:
+ 
+`npm run hot` 
+
+`http://localhost:8080/apl.html`
+
