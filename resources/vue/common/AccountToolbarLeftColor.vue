@@ -80,8 +80,8 @@ methods: {
     }
     #toolbarLeftColor .btn-close{
         position: absolute;
-        top: 0;
-        right: 0;
+        top: -5px;
+        left: 50%;
         width: 16px;
         height: 16px;
         display: inline-block;
@@ -93,7 +93,7 @@ methods: {
         -webkit-border-radius: 100%;
         -moz-border-radius: 100%;
         border-radius: 100%;
-        transform: translate(-150%, 0%) rotate(45deg);
+        transform: translate(40%, 0%) rotate(45deg);
         transition: .4s;
         z-index: 1;
         opacity: 0;
