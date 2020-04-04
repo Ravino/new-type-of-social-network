@@ -84,6 +84,8 @@ features:
 - Выполнить `vagrant up`
 - Выполнить `vagrant ssh`
 - Выполнить `cd plizi.loc`
+- Выполнить `sudo apt install php-zmq`
+- Выполнить `composer install` 
 
 > Должна быть включена виртуализация в BIOS.
 
