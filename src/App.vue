@@ -1,13 +1,17 @@
 <template>
-    <div class="container-fluid px-0 my-0 pt-3">
-        <GuestNavBar v-if="!isAuth"></GuestNavBar>
-        <AuthNavBar v-if="isAuth" v-bind:is-auth="isAuth"></AuthNavBar>
+    <div class="loginPage-wrap d-lg-flex align-items-lg-center justify-content-lg-center " ><!--    // need to fix for inner pages-->
+        <div class="flex-lg-column align-items-lg-center justify-content-lg-center">
+            <div class="container-fluid px-0 my-0 pt-3">
+                <GuestNavBar v-if="!isAuth"></GuestNavBar>
+                <AuthNavBar v-if="isAuth" v-bind:is-auth="isAuth"></AuthNavBar>
 
-        <main id="contentContainer" role="main" class="container-fluid pb-sm-5 pb-md-5">
-            <router-view></router-view>
-        </main>
+                <main id="contentContainer" role="main" class="container-fluid pb-sm-5 pb-md-5">
+                    <router-view></router-view>
+                </main>
 
-        <Footer></Footer>
+                <Footer></Footer>
+            </div>
+        </div>
     </div>
 </template>
 

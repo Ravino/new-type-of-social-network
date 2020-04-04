@@ -52,7 +52,6 @@ methods: {
     min-height: 56px;
     max-height: 56px;
     padding: 0px;
-    margin: 154px 0px 0px 0px;
 }
 
 .navbar.plz-navbar .top-search.form-control {

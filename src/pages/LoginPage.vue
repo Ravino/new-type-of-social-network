@@ -31,3 +31,10 @@ mounted() {
 
 }
 </script>
+
+<style>
+    .loginPage-wrap {
+        height: 100%;
+        min-height: 800px;
+    }
+</style>
