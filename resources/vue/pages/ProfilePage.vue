@@ -75,6 +75,7 @@ data() {
 
         userData: {
             user_id: -1,
+            isOnline: false,
             userPic: `/images/user-main-photo.png`,
             firstname: `Владислав`,
             lastname: `Браташ`,
