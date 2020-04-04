@@ -3,14 +3,14 @@
         <div class="col-sm-12 col-md-12 col-lg-4 col-xl-4 col-auto pl-lg-0 pl-xl-0 px-sm-0 px-md-0">
             <!--        <ChatList v-bind:friends="friends"></ChatList>-->
             <ul id="chatFriends" class="list-unstyled mb-0">
-                <ChatListItem v-for="(dialog, dialogIndex) in dialogs" v-bind:dialog="dialog" v-bind:key="dialogIndex" v-bind:dialogID="dialogIndex"></ChatListItem>
+                <ChatListItem v-for="(dialog, dialogIndex) in dialogs" v-bind:currentDialog="currentDialog" v-bind:dialog="dialog" v-bind:key="dialogIndex" v-bind:dialogID="dialogIndex"></ChatListItem>
             </ul>
         </div>
 
         <div id="chatMessangesWrapper" class="col-8 col-lg-8 col-xl-8 bg-light d-none d-lg-block d-xl-block h-100">
-            <ChatHeader v-bind:companion="companion"></ChatHeader>
-            <ChatMessages v-bind:messages="messages" v-bind:companion="companion" v-bind:self-person="selfPerson"></ChatMessages>
-            <ChatFooter v-bind:companion="companion" v-bind:self-person="selfPerson"></ChatFooter>
+            <ChatHeader v-bind:currentDialog="currentDialog"></ChatHeader>
+            <ChatMessages v-bind:messages="messages"></ChatMessages>
+            <ChatFooter></ChatFooter>
         </div>
     </div>
 </template>
@@ -28,8 +28,7 @@ export default {
     props: {
         dialogs: Array,
         messages: Array,
-        companion: Object,
-        selfPerson: Object
+        currentDialog: Object
     },
     components: {ChatList, ChatListItem, ChatHeader, ChatMessages, ChatFooter},
     data() {
@@ -40,5 +39,8 @@ export default {
 
     mounted() {
     },
+
+    updated() {
+    }
 }
 </script>

@@ -4,6 +4,7 @@
 namespace Domain\Pusher\Repositories;
 
 
+use Carbon\Carbon;
 use DB;
 use Domain\Pusher\Models\Dialog;
 
@@ -17,6 +18,7 @@ class ChatRepository
      */
     public function getChatsByUserId(int $user_id): array
     {
+        DB::beginTransaction();
         $items = \DB::table('chat')
             ->join('users', 'users.id', '=', 'chat.user_id')
             ->join('profiles', 'profiles.user_id', '=', 'users.id')
@@ -45,6 +47,12 @@ class ChatRepository
                     'profiles.city',
                 ])->toArray();
 
+            // TODO: Change this to real data when implemented
+            foreach( $attendees as &$attendee) {
+                $attendee->lastActivityDT = Carbon::now();
+                $attendee->userPic = 'https://habrastorage.org/storage2/b92/bcf/532/b92bcf532c0a2889272ffd72ffb1f2b5.png';
+            }
+
             $dialog = new Dialog();
             $dialog->id = $item->id;
             $dialog->name = $item->firstname;
@@ -58,6 +66,7 @@ class ChatRepository
             $dialog->attendees = $attendees;
             $collection[] = $dialog;
         }
+        DB::commit();
         return $collection;
     }
 
