@@ -41,89 +41,46 @@ components: { AccountToolbarLeft,
 },
 data() {
     return {
-        // userData: {
-        //     user_id: -1,
-        //     firstname: ``,
-        //     lastname: ``,
-        //     sex: ``,
-        //     birthday: ``,
-        //     city: ``,
-        //     created_at: ``,
-        //     updated_at: ``,
-        // },
-        // TODO: временно! удалить после вёрстки
-
         userData: {
             user_id: -1,
-            firstname: `Владислав`,
-            lastname: `Браташ`,
-            sex: `m`,
-            birthday: `2001-05-09`,
-            city: `Москва`,
+            firstname: ``,
+            lastname: ``,
+            sex: ``,
+            birthday: ``,
+            city: ``,
             created_at: ``,
             updated_at: ``,
         },
-        // TODO: временно! удалить после вёрстки
-        // dataReady: false,
-        // gwToken: ``
-        dataReady: true,
-        gwToken: `tmp`
+        dataReady: false,
+        gwToken: ``
     }
 },
 
 methods: {
-    getUserData(){
-        let config = {
-            headers: {
-                Authorization: `Bearer ${this.gwToken}`
-            },
-        };
 
-        HTTPer.get('api/user', config)
-            .then( (response) => {
-                window.localStorage.setItem('pliziUser', JSON.stringify(response.data.data));
-                this.userData = response.data.data;
-                this.dataReady = true;
-            })
-            .catch((error) => window.console.log(error.response));
-    },
+    loadRealData() {
+        //TODO: заменить потом на простой вызов строкой ниже
+        // this.userData = this.$store.dispatch('GET_USER');
 
-    checkUserData() {
-        let user = window.localStorage.getItem('pliziUser');
+        let no = Object.keys( JSON.parse( JSON.stringify(this.userData) ) );
 
-        if (typeof user === 'undefined'  ||  ''===user  || null===user  || {}===user)
-            return false;
+        let realData = JSON.parse(JSON.stringify( this.$store.getters.userData ));
 
-        user = JSON.parse(user);
-        this.userData = user;
-        this.dataReady = true;
-
-        return true;
+        no.map(oKey => {
+            if (realData[oKey]) {
+                this.userData[oKey] = realData[oKey];
+            }
+        })
     }
+
 },
 
-// TODO: временно! удалить после вёрстки
 mounted() {
-    this.$root.$emit('afterSuccessLogin', { 'token': `tmp`, redirect: false });
-    this.dataReady = true;
+    this.loadRealData();
 },
 
-// TODO: временно! раскомментить после вёрстки
-// async mounted() {
-//     if (!this.checkUserData()) {
-//         await this.getUserData();
-//     }
-// },
-//
-// beforeMount() {
-//     let gwt = window.localStorage.getItem('pliziJWToken');
-//     if (typeof gwt === 'undefined'  ||  ''===gwt  || null===gwt) {
-//         this.$router.push({ path: '/login' });
-//         return;
-//     }
-//
-//     this.gwToken = gwt;
-// }
 
 }
 </script>
+
+<style lang="scss" src="../styles/AccountPage.scss"></style>

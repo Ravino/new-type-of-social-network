@@ -3,13 +3,13 @@
         <div class="row">
             <div class="col-6">
                 <div class="media">
-                    <img class="chat-companion-user-pic my-3 mx-3" width="32" height="32" v-bind:src="currentDialog.attendees[0].userPic" v-bind:alt="currentDialog.attendees[0].firstname" />
+                    <img class="chat-companion-user-pic my-3 mx-3" width="32" height="32" v-bind:src="companionUserPic" v-bind:alt="companionName" />
                     <div class="media-body">
                         <h6 class="w-75 align-self-start mt-2 pb-0 mb-0 pull-left text-body" style="line-height: 20px;">
-                            <b>{{currentDialog.attendees[0].firstname}}</b>
+                            <b>{{companionName}}</b>
                         </h6>
                         <div class="text-black-50 p-0 mb-0 mt-1 w-100 d-block">
-                            {{ currentDialog.attendees[0].lastActivityDT  | toFullDateTime }}
+                            {{ companionLastActivity  | lastMessageTime }}
                         </div>
                     </div>
                 </div>
@@ -24,7 +24,7 @@
                         </div>
                         <div class="col-auto">
                             <button type="submit" class="btn btn-link text-body px-3 py-0 my-auto">
-                                <img class="" src="/src/images/chat-options-icon.png" alt="" />
+                                <img class="" src="../images/chat-options-icon.png" alt="" />
                             </button>
                         </div>
                     </div>
@@ -40,15 +40,43 @@ name: 'ChatHeader',
 props: {
     currentDialog: Object
 },
-data () {
+
+data() {
     return {
+    }
+},
+
+computed: {
+    companionUserPic: function() {
+        // if (this.currentDialog  &&  this.currentDialog.attendees[0]  &&  this.currentDialog.attendees[0].userPic) {
+        //     return this.currentDialog.attendees[0].userPic;
+        // }
+
+        return ``;
+    },
+
+    companionName: () => {
+        // if (this.currentDialog  &&  this.currentDialog.attendees[0]  &&  this.currentDialog.attendees[0].firstname) {
+        //     return this.currentDialog.attendees[0].firstname;
+        // }
+
+        return `---`;
+    },
+
+    companionLastActivity: () => {
+        // if (this.currentDialog  &&  this.currentDialog.attendees[0]  &&  this.currentDialog.attendees[0].lastActivityDT) {
+        //     return this.currentDialog.attendees[0].lastActivityDT;
+        // }
+
+        return `1970-01-01 00:00:00`;
     }
 },
 
 methods: {
 },
-mounted() {
 
+mounted() {
+    // window.console.log(this.currentDialog, 'ChatHeader this.currentDialog');
 }
 
 }

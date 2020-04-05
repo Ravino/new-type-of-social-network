@@ -1,5 +1,5 @@
 <template>
-    <div id="accountSettingsPrivacy" class="card bg-light container-fluid mb-5 d-sm-none d-md-none d-lg-block d-xl-block">
+    <div id="accountSettingsPrivacy" class="plz-account-settings-privacy bg-white-br20 plz-mb20 container-fluid d-sm-none d-md-none d-lg-block d-xl-block">
         <form>
             <div class="form-group row mb-0 mt-2 border-bottom">
                 <div class="col-12"><h6><b>Приватность</b></h6></div>
@@ -52,13 +52,6 @@
                 </div>
                 <div class="col-3"></div>
             </div>
-
-<!--            убрано по созласованию-->
-<!--            <div class="form-group row mt-3 mb-0">-->
-<!--                <div class="col-4">-->
-<!--                    <button class="btn btn-primary btn-block rounded-pill w-75" id="btnSubmit">Сохранить</button>-->
-<!--                </div>-->
-<!--            </div>-->
         </form>
     </div>
 </template>

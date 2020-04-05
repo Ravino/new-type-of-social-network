@@ -1,5 +1,7 @@
+@import './plizi-variables.scss';
+
 body {
-    background-color: #F7F8FC;
+    background-color: $plzBodyBG;
 }
 
 body.LoginPage, body.HomePage {
@@ -88,15 +90,19 @@ body.LoginPage .modal-body {
 
 .bg-white-br20 {
     background-color: white;
-    border-radius: 20px;
+    border-radius: $plzRoundRadius;
 }
 
 .plz-br20 {
-    border-radius: 20px;
+    border-radius: $plzRoundRadius;
 }
 
 .plz-br20-top {
-    border-radius: 20px 20px 0px 0px;
+    border-radius: $plzRoundRadius $plzRoundRadius 0px 0px;
+}
+
+.plz-mb20 {
+    margin-bottom: $plzBlockMarginBottom;
 }
 
 .form-control.lr-input {
@@ -106,16 +112,15 @@ body.LoginPage .modal-body {
     margin-left: auto;
     margin-right: auto;
     border-width: 0px 0px 1px 0px;
-    border-color: #d7d7d7;
+    border-color: #D7D7D7;
     background-color: transparent;
 }
 
 .form-control.lr-input:focus,
 .form-control.lr-input:active {
-    /*box-shadow: 0 1px 1px rgba(0, 0, 0, 0.075) inset, 0 0 8px rgba(126, 239, 104, 0.6);*/
     box-shadow: none;
     outline: 0 none;
-    border-color: #000;
+    border-color: #000000;
 }
 
 .btn.plz-btn {
@@ -199,7 +204,7 @@ body.LoginPage .modal-body {
         vertical-align: top;
         width: 4px;
         height: 4px;
-        background-color: #0b2e13;
+        background-color: #0B2E13;
         margin: 1px;
         border-radius: 100%;
         animation: dots 1s infinite ease-in-out;

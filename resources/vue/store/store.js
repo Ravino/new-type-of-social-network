@@ -27,15 +27,16 @@ export const store = new Vuex.Store({
             return state.userData;
         },
         gwToken : state => {
-            // let gwt = state.gwToken;
-            // if (!gwt  ||  ``===gwt) {
-            //     gwt = window.localStorage.getItem('pliziJWToken');
-            // }
-            //
-            // if (!(!gwt || `` === gwt)) {
-            //     store.dispatch('SET_GWT', gwt);
-            //     return gwt;
-            // }
+            let gwt = state.gwToken;
+
+            if (!gwt  ||  ``===gwt) {
+                gwt = window.localStorage.getItem('pliziJWToken');
+            }
+
+            if (gwt !== ``) {
+                store.dispatch('SET_GWT', gwt);
+                return gwt;
+            }
 
             return state.gwToken;
         },
@@ -47,6 +48,20 @@ export const store = new Vuex.Store({
         },
         isAuth : state => {
             return state.isAuth;
+        },
+        getHTTPConfig : state => {
+            const gwt = state.gwToken;
+
+            if (!gwt ||  ``===gwt) {
+                window.console.warn('store->getHTTPConfig: gwToken null or empty!');
+                return null;
+            }
+
+            return {
+                headers : {
+                    Authorization: `Bearer ${gwt}`
+                }
+            };
         },
     },
 
@@ -80,24 +95,14 @@ export const store = new Vuex.Store({
         },
 
         SET_USER : (context, payload) => {
+            window.localStorage.setItem('pliziUser', JSON.stringify(payload));
             context.commit('SET_USER', payload);
         },
 
         GET_USER : async (context, payload) => {
-            // let lsUser = window.localStorage.getItem('pliziUser');
-            //
-            // if (!(typeof lsUser === 'undefined'  ||  ''===lsUser  ||  !lsUser  || {}===lsUser)) {
-            //     lsUser = JSON.parse(lsUser);
-            //     context.commit('SET_USER', lsUser);
-            //     return lsUser;
-            // }
-            //
-            // const gwt = store.getters.gwToken+'';
-            // if (!gwt  ||  ``===gwt)
-            //     return null;
+            const gwt = store.getters.gwToken+'';
 
-            const gwt = window.localStorage.getItem('pliziJWToken');
-            if (!gwt  ||  ``===gwt)
+            if (!gwt || ``===gwt)
                 return null;
 
             const config = {
@@ -108,8 +113,6 @@ export const store = new Vuex.Store({
 
             let response = await HTTPer.get('api/user', config);
             if (200 === response.status) {
-                console.log(response.data.data)
-                window.localStorage.setItem('pliziUser', JSON.stringify(response.data.data));
                 context.commit('SET_USER', response.data.data);
                 context.commit('SET_CHAT_CHANNEL', response.data.channel);
                 return response.data.data;

@@ -32,16 +32,12 @@
 import AccountToolbarLeft from '../common/AccountToolbarLeft.vue';
 import FavoritFriends from '../common/FavoritFriends.vue';
 import ShortFriends from '../common/ShortFriends.vue';
-// import AccountToolbarRight from '../common/AccountToolbarRight.vue';
 
 import ProfileHeader from '../components/ProfileHeader.vue';
 import ProfilePhotos from '../components/ProfilePhotos.vue';
 import ProfileWhatsNew from '../components/ProfileWhatsNew.vue';
 import ProfileFilter from '../components/ProfileFilter.vue';
 import ProfilePost from '../components/ProfilePost.vue';
-
-import {HTTPer} from '../httper/httper.js';
-import userProfilePosts from '../data/userProfilePosts.js';
 
 export default {
 name: 'AccountPage',
@@ -74,7 +70,7 @@ data() {
         ],
 
         userData: {
-            user_id: -1,
+            id: -1,
             isOnline: false,
             userPic: `/images/user-main-photo.png`,
             firstname: `Владислав`,
@@ -99,53 +95,25 @@ data() {
 },
 
 methods: {
-    getUserData(){
-        let config = {
-            headers: {
-                Authorization: `Bearer ${this.gwToken}`
-            },
-        };
+    loadRealData() {
+        //TODO: заменить потом на простой вызов строкой ниже
+        // this.userData = this.$store.dispatch('GET_USER');
 
-        HTTPer.get('api/user', config)
-            .then( (response) => {
-                window.localStorage.setItem('pliziUser', JSON.stringify(response.data.data));
-                this.userData = response.data.data;
-                this.dataReady = true;
-            })
-            .catch((error) => window.console.log(error.response));
-    },
+        let no = Object.keys( JSON.parse( JSON.stringify(this.userData) ) );
 
-    checkUserData() {
-        let user = window.localStorage.getItem('pliziUser');
+        let realData = JSON.parse(JSON.stringify( this.$store.getters.userData ));
 
-        if (typeof user === 'undefined'  ||  ''===user  || null===user  || {}===user)
-            return false;
-
-        user = JSON.parse(user);
-        this.userData = user;
-        this.dataReady = true;
-
-        return true;
+        no.map(oKey => {
+            if (realData[oKey]) {
+                this.userData[oKey] = realData[oKey];
+            }
+        })
     }
 },
 
 mounted() {
-    window.console.info('Mounted');
-    window.console.log(userProfilePosts);
-    // if (!this.checkUserData()) {
-    //     await this.getUserData();
-    // }
+    this.loadRealData();
 },
-
-beforeMount() {
-    // let gwt = window.localStorage.getItem('pliziJWToken');
-    // if (typeof gwt === 'undefined'  ||  ''===gwt  || null===gwt) {
-    //     this.$router.push({ path: '/login' });
-    //     return;
-    // }
-    //
-    // this.gwToken = gwt;
-}
 
 }
 </script>

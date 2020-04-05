@@ -5,7 +5,7 @@
             <div class="plz-profile-userpic-wrapper bg-white-br20">
                 <img :src="user.userPic" :alt="user.firstname +` `+ user.lastname" class="plz-br20-top" />
                 <div class="plz-profile-userpic-footer">
-                    <button class="plz-profile-userpic-edit">РЕдактировать</button>
+                    <button class="plz-profile-userpic-edit">Редактировать</button>
                 </div>
             </div>
         </div>
@@ -13,22 +13,21 @@
             <div class="w-100 bg-white-br20 px-4 pb-3">
                 <div class="d-flex justify-content-between align-items-center">
                     <h2 class="plz-user-name">{{user.firstname}} {{user.lastname}}</h2>
-                   <span  class="online">В сети</span> <!--  v-if="user.isOnline"-->
-
+                    <span class="online">В сети</span> <!--  v-if="user.isOnline"-->
                 </div>
 
                 <table class="plz-user-profile-details table table-borderless mt-2">
                     <tbody>
                     <tr>
-                        <td scope="row" class="">Дата рождения:</td>
+                        <td class="">Дата рождения:</td>
                         <td class="">{{user.birthday}}</td>
                     </tr>
                     <tr>
-                        <td scope="row" class="">Город:</td>
+                        <td class="">Город:</td>
                         <td class=""><i class="fas fa-map-marker-alt"></i> {{user.country}}, {{user.city}}</td>
                     </tr>
                     <tr>
-                        <td scope="row" class="">Семейное положение:</td>
+                        <td class="">Семейное положение:</td>
                         <td class="">{{user.family}}</td>
                     </tr>
                     </tbody>

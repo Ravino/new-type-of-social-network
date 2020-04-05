@@ -1,4 +1,4 @@
-# install
+# Начальная установка Laravel
 
 ```
 $ composer install
@@ -24,18 +24,23 @@ $ php artisan jwt:secret
 ### Пример клиентского кода
 
 ```
-var conn = new ab.connect('ws://192.168.10.10:8080/pubsub', function(s){
-  s.subscribe('onNewData', function(topic, data){
-     console.log(data.data);
-  })
-}, function(code, reason, detail){
-
-}, {maxRetries:10,retryDelay:4000,skipSubprotocolCheck:true});
+const conn = new ab.connect('ws://192.168.10.10:8080/pubsub',
+    (s) => {
+        s.subscribe('onNewData', (topic, data) => {
+        console.log(data.data);
+    })},
+    (code, reason, detail)=> {},
+    {
+        maxRetries: 10,
+        retryDelay: 4000,
+        skipSubprotocolCheck: true
+    }
+);
 
 ```
 
 
-# Install for Windows
+# Установка для Windows
 
 - Установить VirtualBox
 - Установить Vagrant
@@ -102,7 +107,9 @@ features:
 
 **`npm run prod`** - запуск сборки для работы в Laravel'ном окружении
 
-**`npm run hot`** - запуска DEV-сервера, который сам обновляет содержимое в браузере при изменении исходников (открывать по адресу http://localhost:8080/app.html)
+**`npm run hot`** - запуска DEV-сервера, который сам обновляет содержимое в браузере при изменении исходников (открывать по адресу http://localhost:9080/app.html)
+
+_(порт 9080 чтобы не конфликтовать с сервером сообщений для чата)_
 
 _app.html_ - нужен потому, что в той же папки лежит Laravel'ный index.php  и если назвать файл index.html, то **они между собой конфликтуют**!
 

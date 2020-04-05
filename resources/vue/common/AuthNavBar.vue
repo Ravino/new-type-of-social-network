@@ -15,12 +15,12 @@
                     </form>
                 </div>
 
-                <div id="playerWrapper" class="col-lg-3 col-xl-3 d-sm-none d-md-none d-lg-block d-xl-block text-center mt-1">
+                <div id="playerWrapper" class="plz-top-player col-lg-3 col-xl-3 d-sm-none d-md-none d-lg-block d-xl-block text-center mt-1">
                     <div class="btn-block d-inline-block mt-3 ">
                         <a class="btn btn-link btn-sm" href="#prev" title="предыдущий трэк">
                             <i class="fas fa-step-backward"></i>
                         </a>
-                        <a class="btn btn-link  btn-sm" href="#play" title="начать воспроизведение">
+                        <a class="btn btn-link btn-sm" href="#play" title="начать воспроизведение">
                             <i class="far fa-play-circle fa-2x"></i>
                         </a>
                         <a class="btn btn-link btn-sm" href="#next" title="начать воспроизведение">
@@ -32,26 +32,31 @@
                     </div>
                 </div>
 
-                <div class="col-sm-4 col-md-4 col-lg-2 col-xl-2 text-center">
+                <div id="watcherWrapper" class="plz-top-watcher col-sm-4 col-md-4 col-lg-2 col-xl-2 text-center">
                     <div class="--btn-block mt-3 d-inline-block">
                         <a class="btn btn-link my-auto text-body btn-sm" href="#likes" title="Оценки">
                             <i class="far fa-bell fa-2x"></i>
                         </a>
+
                         <router-link to="/chats-list" tag="a" class="btn btn-link my-auto text-body btn-sm">
                             <i class="far fa-comment fa-flip-horizontal fa-2x"></i>
                         </router-link>
-                        <a class="btn btn-link my-auto text-body btn-sm" href="#friends-list" title="Друзья">
+
+                        <router-link to="/friends-list" tag="a" class="btn btn-link my-auto text-body btn-sm">
                             <i class="fas fa-user-friends fa-2x"></i>
-                        </a>
+                        </router-link>
                     </div>
                 </div>
 
                 <div class="col-sm-2 col-md-1 col-lg-2 px-0 profile-menu">
-                    <router-link to="/account" tag="a" class="profile-menu--link">
-                        <span>Александр</span>
-                        <img src="images/last-entries/vladislav.png" alt="Plizi" />
+                    <router-link to="/account" tag="a" class="profile-menu-link">
+                        <span>{{userName}}</span>
                     </router-link>
-                    <i class="fa fas fa-chevron-right" aria-hidden="true"></i>
+
+                    <router-link to="/profile" tag="a" class="profile-menu-link">
+                        <img :src="userPic" :alt="userName" :class="{ 'default-avatar': isDefaultAvatar }" />
+                    </router-link>
+                    <i class="profile-menu-opener fa fas fa-chevron-down" aria-hidden="true"></i>
                 </div>
             </div>
         </div>
@@ -66,74 +71,48 @@ props: {
 },
 data () {
     return {
+        tmpUserName : `---`,
+        tmpUserPicture : `images/noavatar-256.png`,
+        userData : null,
+        isDefaultAvatar: true,
     }
 },
 
 methods: {
-    isActiveMenu(routNames) {
-        return !!routNames.find((rItem) => {
-            return this.$router.currentRoute.name === rItem;
-        });
+    onUserLoad(evData) {
+        this.userData = evData.user;
     },
-}
+
+},
+
+computed : {
+    userName() {
+        let retName = this.tmpUserName;
+
+        if (this.userData  &&  this.userData.firstname) {
+            retName = this.userData.firstname;
+        }
+
+        return retName;
+    },
+
+    userPic() {
+        let retPath = this.tmpUserPicture;
+
+        if (this.userData  &&  this.userData.user_pic) {
+            retPath = this.userData.user_pic;
+            this.isDefaultAvatar = false;
+        }
+
+        return retPath;
+    }
+},
+
+beforeMount() {
+    this.$root.$on('afterUserLoad',  this.onUserLoad);
+},
 
 }
 </script>
 
-<style>
-    .auth-navbar.navbar.fixed-top {
-        background-color: #F7F8FC;
-    }
-    #playerWrapper .btn {
-        font-size: 10px;
-        color: #A5A9C4;
-    }
-    #playerWrapper .btn-song {
-        font-size: 13px;
-    }
-
-    .fa-bell,
-    .fa-comment,
-    .fa-user-friends {
-        font-size: 24px;
-        color: #bfc0c3;
-        transition: .4s;
-    }
-
-    .fa-bell:hover,
-    .fa-comment:hover,
-    .fa-user-friends:hover {
-        color: #576df6;
-    }
-
-    .profile-menu {
-        position: relative;
-        display: flex;
-        align-items: center;
-        justify-content: flex-end;
-        color: #a6a7a9;
-    }
-    .profile-menu .fa-chevron-right{
-        transform: rotate(90deg);
-        font-size: 10px;
-        cursor: pointer;
-    }
-
-    .profile-menu--link span {
-        display: inline-block;
-        line-height: 40px;
-        color: #a6a7a9;
-        margin-right: 15px;
-    }
-    .profile-menu--link img {
-        display: inline-block;
-        vertical-align: top;
-        width: 40px;
-        height: 40px;
-        margin-right: 12px;
-        -webkit-border-radius: 40px;
-        -moz-border-radius: 40px;
-        border-radius: 40px;
-    }
-
-</style>
+<style lang="scss" src="../styles/AuthNavBar.scss"></style>

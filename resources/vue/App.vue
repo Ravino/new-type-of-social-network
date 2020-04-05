@@ -30,23 +30,6 @@ data () {
 },
 
 methods: {
-    async checkUser() {
-        let user = this.$store.getters.userData;
-
-        if (user &&  user.firstname) {
-            this.isAuth = true;
-            return true;
-        }
-
-        user = await this.$store.dispatch('GET_USER', {});
-        if (user  &&  user.firstname) {
-            this.isAuth = true;
-            return true;
-        }
-
-        return false;
-    },
-
     afterSuccessLogin(evData) {
         if (evData.token !== ``) {
             this.isAuth = true;
@@ -66,17 +49,20 @@ methods: {
 
         this.$store.dispatch('SET_GWT', ``);
         this.$store.dispatch('SET_AUTH', false);
+        this.$store.dispatch('SET_CHAT_CHANNEL', ``);
+        this.$store.dispatch('SET_USER', null);
 
+        //TODO: @tga что корректно работает в Vuex и убрать отсюда
         window.localStorage.removeItem('pliziJWToken');
         window.localStorage.removeItem('pliziUser');
+        window.localStorage.removeItem('pliziChatChannel');
 
-        this.$router.push({ path: '/login' });
+        if (evData.redirect) {
+            this.$router.push({path: '/login'});
+        }
     }
 },
 
-async beforeMount() {
-    await this.checkUser();
-},
 
 mounted() {
     this.$root.$on('afterSuccessLogin',  this.afterSuccessLogin);

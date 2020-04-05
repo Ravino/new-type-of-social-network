@@ -1,0 +1,62 @@
+[
+    {
+        "id": 3,
+        "name": "Caleb",
+        "userPic": "https://habrastorage.org/storage2/b92/bcf/532/b92bcf532c0a2889272ffd72ffb1f2b5.png",
+        "lastMessageText": "Как настроение?",
+        "lastMessageDT": 1586102644,
+        "isRead": false,
+        "isLastFromMe": false,
+        "isOnline": false,
+        "attendees": [
+            {
+                "firstname": "Caleb",
+                "lastname": "Batz",
+                "birthday": "1970-01-01",
+                "city": "Windlerland",
+                "lastActivityDT": "2020-04-05T16:17:29.478328Z",
+                "userPic": "https://habrastorage.org/storage2/b92/bcf/532/b92bcf532c0a2889272ffd72ffb1f2b5.png"
+            }
+        ]
+    },
+    {
+        "id": 2,
+        "name": "Caleb",
+        "userPic": "https://habrastorage.org/storage2/b92/bcf/532/b92bcf532c0a2889272ffd72ffb1f2b5.png",
+        "lastMessageText": "Хорошо, спасибо.",
+        "lastMessageDT": 1586102644,
+        "isRead": false,
+        "isLastFromMe": false,
+        "isOnline": false,
+        "attendees": [
+            {
+                "firstname": "Caleb",
+                "lastname": "Batz",
+                "birthday": "1970-01-01",
+                "city": "Windlerland",
+                "lastActivityDT": "2020-04-05T16:17:29.479328Z",
+                "userPic": "https://habrastorage.org/storage2/b92/bcf/532/b92bcf532c0a2889272ffd72ffb1f2b5.png"
+            }
+        ]
+    },
+    {
+        "id": 1,
+        "name": "Гарри",
+        "userPic": "https://habrastorage.org/storage2/b92/bcf/532/b92bcf532c0a2889272ffd72ffb1f2b5.png",
+        "lastMessageText": "Как работа?",
+        "lastMessageDT": 1586102644,
+        "isRead": false,
+        "isLastFromMe": true,
+        "isOnline": true,
+        "attendees": [
+            {
+                "firstname": "Алиса",
+                "lastname": "Молчанов",
+                "birthday": "1970-01-01",
+                "city": "Шатура",
+                "lastActivityDT": "2020-04-05T16:17:29.480328Z",
+                "userPic": "https://habrastorage.org/storage2/b92/bcf/532/b92bcf532c0a2889272ffd72ffb1f2b5.png"
+            }
+        ]
+    }
+]

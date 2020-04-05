@@ -109,6 +109,7 @@
                 this.isRegistrationModalShow = false;
             });
         },
+
         methods: {
             startLogin() {
                 this.$v.$touch();
@@ -117,10 +118,15 @@
                     password: this.model.password.trim()
                 };
                 this.isServerError = false;
+
                 HTTPer.post('api/login', loginData)
                     .then((response) => {
                         if (response.status === 200  &&  response.statusText.toUpperCase()==='OK'  &&  response.data  &&  response.data.token  &&  response.data.token!=='') {
-                            this.$root.$emit('afterSuccessLogin', { 'token': response.data.token, 'chatChannel':response.data.channel });
+                            this.$root.$emit('afterSuccessLogin', {
+                                token       : response.data.token,
+                                chatChannel : response.data.channel,
+                                redirect    : true
+                            });
                         }
                     })
                     .catch((error) => {
@@ -140,7 +146,6 @@
                     return this.startLogin();
             },
             openRegistrationModal() {
-                // this.$router.push({ path: '/registration' });
                 this.isRegistrationModalShow = true;
             },
         },
