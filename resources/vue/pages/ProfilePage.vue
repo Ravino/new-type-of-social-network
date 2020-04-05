@@ -6,7 +6,7 @@
 
         <div class="col-sm-10 col-md-9 col-lg-8 col-xl-8 --bg-danger">
 
-            <div class="container-fluid">
+            <div class="container">
                 <ProfileHeader v-bind:user="userData"></ProfileHeader>
 
                 <ProfilePhotos v-bind:user="userData" v-bind:photos="userPhotos"></ProfilePhotos>
@@ -87,7 +87,7 @@ data() {
             created_at: `2020-03-31 13:16:41`,
             updated_at: `2020-03-31 13:16:41`,
             subscribersNumber: 122000,
-            friendsNumber: 459,
+            friendsNumber: '1 222',
             photosNumber: '1 784',
             videosNumber: 62,
             audiosNumber: 3221,

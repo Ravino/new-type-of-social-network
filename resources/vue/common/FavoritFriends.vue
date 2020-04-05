@@ -9,38 +9,44 @@
             </a>
         </div>
 
-        <div class="plz-favorit-friends-list">
-            <div v-for="(friend, friendIndex) in favoritFriends" v-bind:key="friendIndex" class="plz-favorit-friends-item d-flex flex-row my-2 px-2">
+        <div class="plz-favorit-friends-list ml-4 pr-4 pb-2">
+            <div v-for="(friend, friendIndex) in favoritFriends" v-bind:key="friendIndex"
+                 class="plz-favorit-friends-item d-flex align-items-center my-3">
 
-                <a class="plz-favorit-friend-userpic d-flex  align-self-start" href="#">
-                    <img class="plz-favorit-userpic" width="48" height="48" :src="friend.userPic" :alt="friend.firstName" />
+                <a class="plz-favorit-friend-userpic " href="#">
+                    <img class="plz-favorit-userpic rounded-circle" :src="friend.userPic" :alt="friend.firstName" />
 
-                    <img v-if="friend.isOnline" class="plz-favorit-isonline" src="/images/companion-is-online.png" alt="в сети" />
+                    <span v-if="friend.isOnline" class="plz-favorit-isonline"  title="в сети" ></span>
+                    <span v-else class="plz-favorit-isoffline"  :title="getSexTitle(friend)" ></span>
                 </a>
 
-                <div class="plz-favorit-friend-title mr-auto  align-self-start">
-                    <a class="plz-favorit-friend-name" href="#">
-                        <div>{{friend.firstName}}</div>
-                    </a>
+                <div class="plz-favorit-friend-title flex align-items-center mr-auto ">
+                    <a class="plz-favorit-friend-name" href="#">{{friend.firstName}}</a>
 
                     <div class="plz-favorit-friend-status">
-                        <div v-if="friend.isType">
-                            ... Печатает
-                        </div>
-                        <div v-else-if="friend.isOnline">
+                        <p v-if="friend.isType" >
+                            <span class="loading">
+                                <span></span>
+                                <span></span>
+                                <span></span>
+                            </span>
+                            Печатает
+                        </p>
+                        <p v-else-if="friend.isOnline">
                             В сети
-                        </div>
-                        <div v-else>
+                        </p>
+                        <p v-else>
                             {{ getSexTitle(friend) }}
-                        </div>
+                        </p>
                     </div>
                 </div>
-                <div class="plz-favorit-friend-title">
-                    <span v-if="(friend.messagesNumber > 0)" class="bg-danger rounded-pill text-white py-0 px-1 mt-1 mr-2">{{friend.messagesNumber}}</span>
+                <div class="plz-ff-messages-count">
+                    <span v-if="(friend.messagesNumber > 0)"
+                          class="py-0 px-1  mr-2">
+                        {{friend.messagesNumber}}</span>
                 </div>
             </div>
         </div>
-
 
     </div>
 </template>
@@ -76,6 +82,24 @@ data () {
                 isType : false,
                 isOnline : true,
                 lastVisit: `2020-04-03 15:04:00`,
+                messagesNumber: 0
+            },
+            {
+                firstName : `Анастасия`,
+                sex: `f`,
+                userPic: `images/chat/anna.png`,
+                isType : false,
+                isOnline : false,
+                lastVisit: `2020-04-03 12:04:00`,
+                messagesNumber: 0
+            },
+            {
+                firstName : `Анастасия`,
+                sex: `f`,
+                userPic: `images/chat/anna.png`,
+                isType : false,
+                isOnline : false,
+                lastVisit: `2020-04-03 12:04:00`,
                 messagesNumber: 0
             },
             {
@@ -135,39 +159,83 @@ methods: {
 
 <style>
 .plz-favorit-friends {
-
+    box-shadow: 0px 2px 5px 0px rgba(0, 0, 0, 0.05);
 }
-
-.plz-favorit-friends .plz-ff-title {
-
+.plz-favorit-friends .fa-chevron-right{
+    font-size: 10px;
+    color: #acacac;
+    line-height: 27px;
 }
-
+.plz-favorit-friends .border-bottom{
+    border-color: #e9ecf6;
+}
+.plz-favorit-friends-list {
+    overflow: auto;
+    max-height: 430px;
+}
+.plz-ff-title {
+   font-family: OpenSans, sans-serif;
+    font-size: 16px;
+    color: #50535e
+}
 .plz-favorit-friend-userpic {
-    display: block;
     position: relative;
+    display: inline-block;
+    vertical-align: top;
     width: 48px;
     min-width: 48px;
-    max-width: 48px;
     height: 48px;
-    min-height: 48px;
-    max-height: 48px;
-    margin-right: 10px;
+    margin-right: 20px;
 }
-
-.plz-favorit-friend-userpic .plz-favorit-userpic {
-
+.plz-favorit-friend-userpic img {
+    width: 48px;
+    height: 48px;
 }
-
-.plz-favorit-friend-userpic .plz-favorit-isonline {
+ .plz-favorit-isonline {
     display: block;
     position: absolute;
     width: 10px;
     height: 10px;
     right: 0px;
     bottom: 0px;
+     background-color: #9fcd48;
+     border: 1px solid #fff;
+     border-radius: 100%;
 }
-
-.plz-favorit-friend-title .plz-favorit-friend-status {
+ .plz-favorit-isoffline {
+    display: block;
+    position: absolute;
+    width: 10px;
+    height: 10px;
+    right: 0px;
+    bottom: 0px;
+     background-color: #cacac9;
+     border: 1px solid #fff;
+     border-radius: 100%;
+}
+.plz-favorit-friend-name {
+    font-size: 13px;
+    color: #50535e;
+}
+.plz-favorit-friend-status {
+    display: flex;
+    align-items: center;
 
 }
+.plz-favorit-friend-status p {
+    color: #acaeb7;
+    font-size: 13px;
+    margin-bottom: 0;
+}
+    .plz-ff-messages-count span {
+        display: inline-block;
+        vertical-align: top;
+        padding: 0 4px;
+        height: 16px;
+        background-color: #ef482c;
+        font-size: 11px;
+        font-family: OpenSans-Semibold, sans-serif;
+        color: #fff;
+        border-radius: 16px
+    }
 </style>

@@ -2,7 +2,7 @@
 
     <div class="container-fluid px-0 my-0 pt-3">
         <GuestNavBar v-if="!isAuth"></GuestNavBar>
-        <AuthNavBar v-if="isAuth" v-bind:is-auth="isAuth"></AuthNavBar>
+        <AuthNavBar v-else ></AuthNavBar>
 
         <main id="contentContainer" role="main" class="container-fluid pb-sm-5 pb-md-5">
             <router-view></router-view>

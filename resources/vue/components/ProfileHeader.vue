@@ -1,17 +1,15 @@
 <template>
     <!--    h280-->
     <div id="profileHeader" class="row plz-profile-header">
-        <div class="col-4">
+        <div class="col-md-3 pl-0">
             <div class="plz-profile-userpic-wrapper bg-white-br20">
                 <img :src="user.userPic" :alt="user.firstname +` `+ user.lastname" class="plz-br20-top" />
                 <div class="plz-profile-userpic-footer">
-                    <div class="plz-profile-userpic-edit">
-                        <span>РЕдактировать</span>
-                    </div>
+                    <button class="plz-profile-userpic-edit">РЕдактировать</button>
                 </div>
             </div>
         </div>
-        <div class="col-8 px-0 py-4 plz-profile-userdetails">
+        <div class="col-md-9 px-1 py-4 plz-profile-userdetails">
             <div class="w-100 bg-white-br20 px-4 pb-3">
                 <div class="d-flex justify-content-between align-items-center">
                     <h2 class="plz-user-name">{{user.firstname}} {{user.lastname}}</h2>
@@ -81,34 +79,42 @@
 
 <style>
     .plz-profile-userpic-wrapper {
-        width: 245px;
+        width: 100%;
         max-width: 245px;
-        min-width: 245px;
         border-radius: 20px;
         overflow: hidden;
         box-shadow: 0px 2px 5px 0px rgba(0, 0, 0, 0.05);
         background-color: white;
     }
 
+    .plz-profile-userpic-footer {
+        padding: 20px;
+    }
     .plz-profile-userpic-edit {
         display: block;
         height: 34px;
-        margin: 16px;
         line-height: 32px;
         padding: 0;
         border: 2px solid #f0f0f0;
         border-radius: 20px;
+        background-color: transparent;
+        width: 100%;
         text-align: center;
+        cursor: pointer;
+        transition: .4s;
     }
-    .plz-profile-userpic-edit span {
+    .plz-profile-userpic-edit:hover {
+        background-color: #a6a7a9;
+        color: #fff;
+    }
+    .plz-profile-userpic-edit  {
         text-transform: uppercase;
         color: #6f7487;
+        font-size: 11px;
         text-align: center;
         font-family: OpenSans-Bold, sans-serif;
     }
-    .plz-user-profile-details td {
-        color: #515151;
-    }
+
     .plz-profile-userdetails {
         border-radius: 20px;
         overflow: hidden;
@@ -141,6 +147,9 @@
         font-weight: bold;
     }
 
+    .plz-user-profile-details {
+        max-width: 600px;
+    }
     .plz-user-profile-details td {
         font-weight: normal;
         text-align: left;

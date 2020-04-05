@@ -185,3 +185,37 @@ body.LoginPage .modal-body {
     cursor: pointer;
 }
 
+.fade:not(.show) {
+    display: none;
+}
+
+
+.loading {
+    display: inline-block;
+    font-size: 6px;
+    margin-right: 10px;
+    span {
+        display: inline-block;
+        vertical-align: top;
+        width: 4px;
+        height: 4px;
+        background-color: #0b2e13;
+        margin: 1px;
+        border-radius: 100%;
+        animation: dots 1s infinite ease-in-out;
+
+        &:nth-child(2) {
+            animation-delay: .2s;
+        }
+        &:nth-child(3) {
+            animation-delay: .4s;
+        }
+    }
+}
+
+@keyframes dots {
+    50% {
+        opacity: 0;
+        transform: scale(.7) translateX(4px);
+    }
+}
