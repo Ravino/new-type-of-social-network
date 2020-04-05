@@ -153,6 +153,7 @@
     }
     .plz-profile-userdetails .bg-white-br20 {
         border-bottom: 2px solid #f0f0f0;
+        border-radius: 0;
     }
     .plz-profile-userdetails-numbers {
         display: inline-block;
