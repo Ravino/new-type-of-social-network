@@ -15,6 +15,7 @@ export const store = new Vuex.Store({
             city: ``,
             created_at: ``,
             updated_at: ``,
+            user_pic: `https://habrastorage.org/storage2/b92/bcf/532/b92bcf532c0a2889272ffd72ffb1f2b5.png`,
         },
         gwToken : ``,
         chatChannel : ``,
@@ -107,6 +108,7 @@ export const store = new Vuex.Store({
 
             let response = await HTTPer.get('api/user', config);
             if (200 === response.status) {
+                console.log(response.data.data)
                 window.localStorage.setItem('pliziUser', JSON.stringify(response.data.data));
                 context.commit('SET_USER', response.data.data);
                 context.commit('SET_CHAT_CHANNEL', response.data.channel);

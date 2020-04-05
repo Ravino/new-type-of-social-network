@@ -3,13 +3,12 @@
         <div class="d-flex flex-column --align-items-start">
             <ChatMessageItem v-for="(message, messageIndex) in messages"
                              v-bind:message="message" v-bind:next="getNext(messageIndex)"
-                             v-bind:companion="companion" v-bind:self-person="selfPerson"
                              v-bind:key="messageIndex">
             </ChatMessageItem>
-            <div v-if="companion.isType">
-                <ChatMessageItem v-bind:message="typingMessage" v-bind:companion="companion" v-bind:next="null"
-                                 v-bind:self-person="selfPerson"></ChatMessageItem>
-            </div>
+<!--            <div v-if="companion.isType">-->
+<!--                <ChatMessageItem v-bind:message="typingMessage" v-bind:companion="companion" v-bind:next="null"-->
+<!--                                 v-bind:self-person="selfPerson"></ChatMessageItem>-->
+<!--            </div>-->
         </div>
     </div>
 </template>
@@ -23,8 +22,6 @@
         name: 'ChatMessages',
         props: {
             messages: Array,
-            companion: Object,
-            selfPerson: Object
         },
         components: {ChatMessageItem},
         data() {

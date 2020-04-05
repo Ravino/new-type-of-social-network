@@ -75,6 +75,7 @@ data() {
 
         userData: {
             user_id: -1,
+            isOnline: false,
             userPic: `/images/user-main-photo.png`,
             firstname: `Владислав`,
             lastname: `Браташ`,
@@ -87,7 +88,7 @@ data() {
             updated_at: `2020-03-31 13:16:41`,
             subscribersNumber: 122000,
             friendsNumber: 459,
-            photosNumber: 1784,
+            photosNumber: '1 784',
             videosNumber: 62,
             audiosNumber: 3221,
         },

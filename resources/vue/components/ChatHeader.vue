@@ -3,13 +3,13 @@
         <div class="row">
             <div class="col-6">
                 <div class="media">
-                    <img class="chat-companion-user-pic my-3 mx-3" width="32" height="32" v-bind:src="companion.userPic" v-bind:alt="companion.name" />
+                    <img class="chat-companion-user-pic my-3 mx-3" width="32" height="32" v-bind:src="currentDialog.attendees[0].userPic" v-bind:alt="currentDialog.attendees[0].firstname" />
                     <div class="media-body">
                         <h6 class="w-75 align-self-start mt-2 pb-0 mb-0 pull-left text-body" style="line-height: 20px;">
-                            <b>{{companion.name}}</b>
+                            <b>{{currentDialog.attendees[0].firstname}}</b>
                         </h6>
                         <div class="text-black-50 p-0 mb-0 mt-1 w-100 d-block">
-                            {{companion.lastActivityDT}}
+                            {{ currentDialog.attendees[0].lastActivityDT  | toFullDateTime }}
                         </div>
                     </div>
                 </div>
@@ -38,7 +38,7 @@
 export default {
 name: 'ChatHeader',
 props: {
-    companion: Object
+    currentDialog: Object
 },
 data () {
     return {

@@ -5,8 +5,7 @@
         </div>
 
         <div class="col-sm-12 col-md-9 col-lg-9 col-xl-10">
-            <ChatMainComponent v-bind:dialogs="dialogsList" v-bind:messages="messagesList" v-bind:companion="companion"
-                               v-bind:self-person="selfPerson"></ChatMainComponent>
+            <ChatMainComponent v-bind:dialogs="dialogsList" v-bind:messages="messagesList" v-bind:currentDialog="currentDialog"></ChatMainComponent>
         </div>
 
         <div class="col-sm-1 col-md-2 col-lg-2 col-xl-1">
@@ -34,30 +33,25 @@
         data() {
             return {
                 dialogsList: [],
-                currentDialogID: 0,
+                currentDialog: {},
                 messagesList: [],
-                companion: this.prepareCompanion(),
-                selfPerson: {
-                    name: `Александра`,
-                    userPic: `/images/chat/alexandra.png`,
-                },
             }
         },
 
         methods: {
-            prepareCompanion() {
-                let comp = chatFriendsListData[0];
-                comp.isType = false;
-                comp.lastActivityDT = `2020-03-29 16:11:00`;
-
-                return comp;
-            }
         },
 
         async mounted() {
+            const gwt = window.localStorage.getItem('pliziJWToken');
+            const config = {
+                headers : {
+                    Authorization: `Bearer ${gwt}`
+                }
+            };
+
             new ab.connect(wsUrl, s => {
                 s.subscribe(this.$store.getters.chatChannel, (topic, data) => {
-                    if (this.currentDialogID === data.data.chatId) {
+                    if (this.currentDialog.id === data.data.chatId) {
                         this.messagesList.push(data.data)
                     }
                 })
@@ -68,22 +62,22 @@
             this.$root.$on('addNewChatMessage', async (evData) => {
                 await HTTPer.post('api/chat/send', {
                     body: evData.body,
-                    chat_id: this.currentDialogID
-                });
+                    chat_id: this.currentDialog.id
+                }, config);
                 this.messagesList.push(evData);
             });
 
-            let response = await HTTPer.get('api/chat/dialogs');
+            let response = await HTTPer.get('api/chat/dialogs', config);
             this.dialogsList = response.data;
+            this.currentDialog = this.dialogsList[0];
 
-            let messageResponse = await HTTPer.get('api/chat/messages/' + this.dialogsList[0].id);
+            let messageResponse = await HTTPer.get('api/chat/messages/' + this.dialogsList[0].id, config);
             this.messagesList = messageResponse.data;
-            this.currentDialogID = this.dialogsList[0].id;
 
             this.$root.$on('switchToChat', async (evData) => {
-                let messageResponse = await HTTPer.get('api/chat/messages/' + evData.dialogID);
+                let messageResponse = await HTTPer.get('api/chat/messages/' + evData.dialogID, config);
                 this.messagesList = messageResponse.data;
-                this.currentDialogID = evData.dialogID;
+                this.currentDialog = this.dialogsList.find((dialog) => dialog.id === evData.dialogID);
             });
         },
 

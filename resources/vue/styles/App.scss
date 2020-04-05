@@ -86,13 +86,17 @@ body.LoginPage .modal-body {
     height: 20px;
 }
 
-.bg-white-br20 {
-    background-color: white;
-    border-radius: 20px;
-}
+//.bg-white-br20 {
+//    background-color: white;
+//    border-radius: 20px;
+//}
 
 .plz-br20 {
     border-radius: 20px;
+}
+
+.plz-br20-top {
+    border-radius: 20px 20px 0px 0px;
 }
 
 .form-control.lr-input {
