@@ -30,8 +30,6 @@ import AccountSettingsSecurity from '../components/AccountSettingsSecurity.vue';
 
 import AccountSettingsSideMenu from '../components/AccountSettingsSideMenu.vue';
 
-import {HTTPer} from '../httper/httper.js';
-
 export default {
 name: 'AccountPage',
 components: { AccountToolbarLeft,

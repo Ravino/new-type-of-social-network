@@ -53,8 +53,6 @@ router.beforeEach(async (to, from, next) => {
         window.console.warn('Auth Required!');
 
         const gwt = store.getters.gwToken;
-        window.console.log(gwt, 'gwt');
-
         const isGWT = !(null === gwt  ||  gwt===``);
         window.console.log(isGWT, 'isGWT');
 

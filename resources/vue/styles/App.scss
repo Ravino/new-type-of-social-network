@@ -1,28 +1,12 @@
 @import './plizi-variables.scss';
 
+/* TODO: @TGA - прописать более детально */
+h1, h2, h3, h4, h5, h6 {
+    font-family: OpenSans-Semibold, sans-serif;
+}
+
 body {
     background-color: $plzBodyBG;
-}
-
-body.LoginPage, body.HomePage {
-    background-image: url("../images/plizi-bg-exp.svg");
-    background-size: cover;
-    background-repeat: no-repeat;
-    background-position: center top;
-    background-attachment: fixed;
-}
-
-body.LoginPage > .container-fluid, body.HomePage > .container-fluid {
-    max-width: 1008px;
-}
-
-body.LoginPage .modal-dialog-centered {
-    width: 100%;
-    max-width: 404px;
-}
-
-body.LoginPage .modal-body {
-    padding: 35px 60px 50px;
 }
 
 #contentContainer {
@@ -32,6 +16,7 @@ body.LoginPage .modal-body {
 
 .btn.disabled, .btn:disabled {
     opacity: 1.0;
+    cursor: not-allowed;
 }
 
 .icon-40 {
@@ -50,36 +35,6 @@ body.LoginPage .modal-body {
     max-height: 100%;
 }
 
-.icon-registration {
-    display: inline-block;
-    vertical-align: middle;
-    background: url("../images/icons/icon-registration.png") 50% 50% no-repeat;
-    width: 127px;
-    height: 111px;
-}
-
-.icon-user {
-    display: inline-block;
-    vertical-align: middle;
-    background: url("../images/icons/icon-user.png") 50% 50% no-repeat;
-    width: 16px;
-    height: 16px;
-}
-
-.icon-letter {
-    display: inline-block;
-    vertical-align: middle;
-    background: url("../images/icons/icon-letter.png") 50% 50% no-repeat;
-    width: 17px;
-    height: 12px;
-}
-.icon-calendar {
-    display: inline-block;
-    vertical-align: middle;
-    background: url("../images/icons/icon-calendar.png") 50% 50% no-repeat;
-    width: 17px;
-    height: 18px;
-}
 .icon-modal-close {
     display: inline-block;
     vertical-align: middle;
@@ -103,58 +58,6 @@ body.LoginPage .modal-body {
 
 .plz-mb20 {
     margin-bottom: $plzBlockMarginBottom;
-}
-
-.form-control.lr-input {
-    border-radius: 0px;
-    width: 278px;
-    max-width: 278px;
-    margin-left: auto;
-    margin-right: auto;
-    border-width: 0px 0px 1px 0px;
-    border-color: #D7D7D7;
-    background-color: transparent;
-}
-
-.form-control.lr-input:focus,
-.form-control.lr-input:active {
-    box-shadow: none;
-    outline: 0 none;
-    border-color: #000000;
-}
-
-.btn.plz-btn {
-    display: block;
-    margin: 0px auto;
-    padding: 0px;
-
-    width: 278px;
-    max-width: 278px;
-    min-width: 278px;
-    height: 40px;
-    min-height: 40px;
-    max-height: 40px;
-    line-height: 34px;
-    border-radius: 20px;
-    text-align: center;
-
-    box-shadow: none;
-    outline: 0 none;
-    transition: none;
-    text-transform: uppercase;
-    font-weight: bold;
-}
-
-.btn.plz-btn-primary {
-    background-color: #3D51DE;
-    color: white;
-}
-
-.btn.plz-btn-outline {
-    color: #3D51DE;
-    background-color: white;
-    border-width: 2px;
-    border-color: #3D51DE;
 }
 
 .top-search.form-control {
@@ -199,6 +102,7 @@ body.LoginPage .modal-body {
     display: inline-block;
     font-size: 6px;
     margin-right: 10px;
+
     span {
         display: inline-block;
         vertical-align: top;

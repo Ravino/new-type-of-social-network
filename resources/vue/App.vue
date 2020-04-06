@@ -1,6 +1,6 @@
 <template>
 
-    <div class="container-fluid px-0 my-0 pt-3">
+    <div class="--container-fluid px-0 my-0 pt-3" :class="{ 'container-fluid' : isAuth, 'container': !isAuth }">
         <GuestNavBar v-if="!isAuth"></GuestNavBar>
         <AuthNavBar v-else ></AuthNavBar>
 
@@ -45,6 +45,7 @@ methods: {
     },
 
     afterSuccessLogout(evData) {
+        window.console.log(`afterSuccessLogout`);
         this.isAuth = false;
 
         this.$store.dispatch('SET_GWT', ``);

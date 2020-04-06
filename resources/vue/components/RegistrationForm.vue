@@ -1,11 +1,9 @@
 <template>
-    <div id="loginForm" class="">
+    <div id="" class="plz-registration-form-wrapper">
         <div class="text-center">
             <h5>Быстрая регистрация</h5>
-            <div class="text-center">
-                <i class="icon icon-registration"></i>
-            </div>
         </div>
+        <div class="symbol-registration"></div>
 
         <form id="registrationForm" novalidate="novalidate">
             <div class="form-group" :class="{ '--has-error': $v.model.firstName.$error, '--has-success': !$v.model.firstName.$invalid }">
@@ -195,37 +193,4 @@ methods: {
 }
 </script>
 
-<style>
-    #loginForm h5 {
-        font-family: OpenSans-Semibold, sans-serif;
-        font-size: 24px;;
-        margin-bottom: .6em;
-    }
-    #loginForm .icon-registration {
-        margin-bottom: 30px;
-    }
-    #registrationForm .form-group {
-        position: relative;
-        margin-bottom: 0;
-    }
-    #registrationForm .lr-input {
-        display: block;
-        width: 100%;
-        max-width: 100%;
-        height: 40px;
-        padding-left: 50px;
-        margin: 0;
-    }
-    #registrationForm .icon {
-        position: absolute;
-        left: 10px;
-        top: 50%;
-        transform: translateY(-50%);
-    }
-    #registrationForm .plz-btn {
-        margin-top: 26px;
-        box-shadow: 0 5px 18px rgba(61, 81, 222, .4);
-        font-family: OpenSans-Bold, sans-serif;
-        font-size: 11px;
-    }
-</style>
+<style lang="scss" src="../styles/RegistrationForm.scss"></style>

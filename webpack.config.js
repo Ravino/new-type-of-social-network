@@ -1,6 +1,8 @@
 // const path = require('path');
 const VueLoaderPlugin = require('vue-loader/lib/plugin');
 
+window.console.log('webpack config!');
+
 module.exports = {
     module: {
         rules: [
@@ -25,6 +27,8 @@ module.exports = {
             }
         ]
     },
+    // mode: 'development',
+    devtool: 'inline-source-map',
     plugins: [
         new VueLoaderPlugin()
     ]
