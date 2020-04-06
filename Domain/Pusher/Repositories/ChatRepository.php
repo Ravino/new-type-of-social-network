@@ -33,6 +33,8 @@ class ChatRepository
                 'chat.last_message_time'
             ])->toArray();
 
+
+
         $collection = [];
         foreach ($items as $item) {
 
