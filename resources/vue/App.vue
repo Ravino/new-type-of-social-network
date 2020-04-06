@@ -14,7 +14,6 @@
 </template>
 
 <script>
-// import NavBar from './common/NavBar.vue';
 import GuestNavBar from './common/GuestNavBar.vue';
 import AuthNavBar from './common/AuthNavBar.vue';
 import Footer from './common/Footer.vue';
@@ -24,7 +23,7 @@ name: 'App',
 components: {GuestNavBar, AuthNavBar, Footer},
 data () {
     return {
-        isAuth: true,
+        isAuth: false,
         userData: null,
     }
 },
@@ -45,7 +44,6 @@ methods: {
     },
 
     afterSuccessLogout(evData) {
-        window.console.log(`afterSuccessLogout`);
         this.isAuth = false;
 
         this.$store.dispatch('SET_GWT', ``);
@@ -53,7 +51,7 @@ methods: {
         this.$store.dispatch('SET_CHAT_CHANNEL', ``);
         this.$store.dispatch('SET_USER', null);
 
-        //TODO: @tga что корректно работает в Vuex и убрать отсюда
+        //TODO: @tga уюедиться, что корректно работает в Vuex и убрать отсюда
         window.localStorage.removeItem('pliziJWToken');
         window.localStorage.removeItem('pliziUser');
         window.localStorage.removeItem('pliziChatChannel');

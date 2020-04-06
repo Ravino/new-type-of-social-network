@@ -1,5 +1,5 @@
 <template>
-    <nav class="navbar plz-navbar">
+    <nav class="navbar plz-guest-navbar">
         <div class="container-fluid px-0 py-0 --w-100 my-0">
             <div class="row w-100 px-0 mx-auto">
                 <div class="col-2">
@@ -46,22 +46,24 @@ methods: {
 }
 </script>
 
-<style>
-.navbar.plz-navbar {
-    height: 56px;
-    min-height: 56px;
-    max-height: 56px;
+<style lang="scss">
+$plzGuestNavbarH: 56px;
+
+.navbar.plz-guest-navbar {
+    height: $plzGuestNavbarH;
+    min-height: $plzGuestNavbarH;
+    max-height: $plzGuestNavbarH;
     padding: 0px;
+    margin-top: 153px;
+
+    .to-english.btn.btn-link {
+        display: block;
+        color: #AFB4C5;
+        float: right;
+        line-height: $plzGuestNavbarH;
+        height: $plzGuestNavbarH;
+    }
 }
 
-
-
-.navbar.plz-navbar .to-english.btn.btn-link {
-    display: block;
-    color: #AFB4C5;
-    float: right;
-    line-height: 56px;
-    height: 56px;
-}
 
 </style>

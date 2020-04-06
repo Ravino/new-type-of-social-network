@@ -1,14 +1,19 @@
-@import './plizi-variables.scss';
+@import './ui-kit/fonts.scss';
+@import './ui-kit/plizi-variables.scss';
 
-/* TODO: @TGA - прописать более детально */
-h1, h2, h3, h4, h5, h6 {
-    font-family: OpenSans-Semibold, sans-serif;
+html,
+body {
+    font-family: 'Open Sans', sans-serif;
+    font-size: 15px;
 }
-
 body {
     background-color: $plzBodyBG;
 }
 
+/* TODO: @TGA - прописать более детально */
+h1, h2, h3, h4, h5, h6 {
+    font-weight: 600;
+}
 #contentContainer {
     margin-top: 70px;
     min-height: 200px;
@@ -26,7 +31,7 @@ body {
     max-width: 40px;
     height: 40px;
     max-height: 40px;
-    margin: 15px 10px 0px 0px;
+    margin: 15px 10px 0 0;
 }
 
 .icon-40 > img {
@@ -53,7 +58,7 @@ body {
 }
 
 .plz-br20-top {
-    border-radius: $plzRoundRadius $plzRoundRadius 0px 0px;
+    border-radius: $plzRoundRadius $plzRoundRadius 0 0;
 }
 
 .plz-mb20 {
@@ -72,8 +77,8 @@ body {
     border-radius: 20px;
     margin-left: auto;
     margin-right: auto;
-    border-width: 0px;
-    padding: 0px 30px;
+    border-width: 0;
+    padding: 0 30px;
 
     background-image: url("../images/top-search-icon.png");
     background-repeat: no-repeat;
