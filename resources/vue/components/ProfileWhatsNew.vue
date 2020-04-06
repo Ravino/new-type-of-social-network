@@ -1,13 +1,21 @@
 <template>
     <div id="profilePhotos" class="row plz-profile-photos mt-4 ">
-        <div class="col-1 pt-1">
-            <div class="profilePhotos-userpic ">
-            <img src="../images/chat/maria.png" alt="">
-        </div>
-        </div>
-        <div class="col-11 bg-white-br20 pt-1 pb-2">
-            <textarea class="profileWhatsNew-textarea" name="profileWhatsNew-textarea" id=""  cols="1" rows="1" placeholder="Что у Вас нового?"></textarea>
-        </div>
+
+            <div class="col-1 pt-1">
+                <div class="profilePhotos-userpic ">
+                    <img src="../images/chat/maria.png" alt="">
+                </div>
+            </div>
+            <div class="col-9 bg-white-br20 pt-1 pb-2">
+                <textarea class="profileWhatsNew-textarea" name="profileWhatsNew-textarea" id=""  cols="1" rows="1" placeholder="Что у Вас нового?"></textarea>
+            </div>
+            <div class="col-2 bg-white-br20 ml-auto pt-1 pb-2 d-flex align-items-center justify-content-end" >
+                <i class="fa fa-paperclip ml-3" aria-hidden="true"></i>
+                <i class="fa fa-camera ml-3" aria-hidden="true"></i>
+                <i class="fa fa-smile ml-3" aria-hidden="true"></i>
+            </div>
+
+
     </div>
 </template>
 

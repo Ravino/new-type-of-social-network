@@ -1,6 +1,6 @@
 <template>
     <div id="profile-filter" class="row plz-profile-photos mt-4">
-        <div class="col-12 bg-white-br20 ">
+        <div class="col-12 bg-white-br20 d-flex align-items-center justify-content-between">
             <nav class="nav profile-filter" role="tablist">
                 <a class="nav-link active"
                    href="#all-posts"
@@ -24,6 +24,8 @@
                    aria-controls="archive-posts"
                    aria-selected="false">Архив</a>
             </nav>
+
+            <i class="fa fa-search" aria-hidden="true"></i>
         </div>
     </div>
 </template>
@@ -43,27 +45,5 @@ methods: {
 </script>
 
 <style>
-    #profile-filter {
-        color: #9b9998;
-        font-size: 13px;
-        box-shadow: 0px 2px 5px 0px rgba(0, 0, 0, 0.05);
-        background-color: white;
-        border-radius: 20px;
-        padding: 0 20px;
-    }
-    .profile-filter a{
-        font-size: 13px;
-        font-family: OpenSans, sans-serif;
-        color: #939292;
-        padding-right: 0;
-        padding-left: 0;
-        margin-right: 2rem;
-        line-height: 50px;
-    }
-    .profile-filter .active {
-        font-family: OpenSans-Bold, sans-serif;
-        border-bottom: 2px solid #576df6;
-        font-weight: bold;
-        color: #2f2f2f;
-    }
+
 </style>

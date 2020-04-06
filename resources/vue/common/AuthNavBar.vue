@@ -1,5 +1,5 @@
 <template>
-    <nav class="auth-navbar navbar navbar-expand-lg fixed-top">
+    <nav class="auth-navbar navbar navbar-expand-lg fixed-top container container-wide mx-auto">
         <div class="container-fluid pr-0">
             <div class="row w-100">
                 <div class="col-sm-1 col-md-1 col-lg-1 col-xl-1 py-lg-0 p-xl-0">
@@ -10,7 +10,10 @@
 
                 <div class="col-sm-4 col-md-6 col-lg-4 d-sm-none d-md-block d-lg-block d-xl-block">
                     <form class="form-inline mt-3 mt-md-3">
-                        <input id="topSearch" ref="topSearch"  class="top-search form-control form-control rounded-pill w-100" type="text" placeholder="Поиск" aria-label="Поиск" />
+                        <input id="topSearch" ref="topSearch"  class="top-search form-control form-control rounded-pill w-100"
+                               type="text"
+                               placeholder="Поиск"
+                               aria-label="Поиск" />
                         <button class="d-none btn btn-outline-success" type="submit">Search</button>
                     </form>
                 </div>
@@ -32,7 +35,7 @@
                     </div>
                 </div>
 
-                <div id="watcherWrapper" class="plz-top-watcher col-sm-4 col-md-4 col-lg-2 col-xl-2 text-center">
+                <div id="watcherWrapper" class="plz-top-watcher col-sm-4 col-md-4 col-lg-2 w-auto ml-auto text-center">
                     <div class="--btn-block mt-3 d-inline-block">
                         <a class="btn btn-link my-auto text-body btn-sm" href="#likes" title="Оценки">
                             <i class="far fa-bell fa-2x"></i>

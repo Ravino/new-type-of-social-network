@@ -28,7 +28,7 @@
 
 <script>
 export default {
-    name: 'Footer',
+    name: 'GuestFooter',
     data () {
         return {
 

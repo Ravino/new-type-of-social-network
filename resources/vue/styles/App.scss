@@ -1,9 +1,13 @@
 @import './ui-kit/fonts.scss';
 @import './ui-kit/plizi-variables.scss';
 
+@media (min-width:1200px){
+    .container-wide{max-width:1410px}
+}
+
 html,
 body {
-    font-family: 'Open Sans', sans-serif;
+    font-family: 'Open Sans', Arial, sans-serif;
     font-size: 15px;
 }
 body {

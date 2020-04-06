@@ -1,6 +1,9 @@
 <template>
 
-    <div class="--container-fluid px-0 my-0 pt-3" :class="{ 'container-fluid' : isAuth, 'container': !isAuth }">
+    <div class="--container-fluid container px-0 my-0 pt-3"
+         :class="{ 'container-wide  mx-auto mt-4' : isAuth }">
+        <!--   :class="{ 'container-fluid' : isAuth, 'container': !isAuth }" add class CONTAINER-->
+
         <GuestNavBar v-if="!isAuth"></GuestNavBar>
         <AuthNavBar v-else ></AuthNavBar>
 
@@ -8,7 +11,9 @@
             <router-view></router-view>
         </main>
 
-        <Footer></Footer>
+        <GuestFooter v-if="!isAuth"></GuestFooter>
+        <AuthFooter v-else ></AuthFooter>
+
     </div>
 
 </template>
@@ -16,11 +21,12 @@
 <script>
 import GuestNavBar from './common/GuestNavBar.vue';
 import AuthNavBar from './common/AuthNavBar.vue';
-import Footer from './common/Footer.vue';
+import AuthFooter from './common/AuthFooter.vue';
+import GuestFooter from './common/GuestFooter.vue';
 
 export default {
 name: 'App',
-components: {GuestNavBar, AuthNavBar, Footer},
+components: {GuestNavBar, AuthNavBar, AuthFooter, GuestFooter},
 data () {
     return {
         isAuth: false,
