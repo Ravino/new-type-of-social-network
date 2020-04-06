@@ -21,6 +21,9 @@ use Carbon\Carbon;
 class ProfileController extends Controller
 {
 
+    /**
+     * @return array
+     */
     public function index()
     {
         $channel = $channel = WampServer::channelForUser(Auth::user()->id);
@@ -28,6 +31,15 @@ class ProfileController extends Controller
     }
 
 
+    /**
+     * Patch user account api method.
+     * @queryParam email required The email of the user.<br />
+     * @queryParam password required The password of the user.<br />
+     * @param Request $request
+     * @return \Illuminate\Http\JsonResponse
+     * @authenticated
+     * @throws \Illuminate\Validation\ValidationException
+     */
     public function patch(Request $request)
     {
         $this->validate($request, Profile::rules($request->keys()));

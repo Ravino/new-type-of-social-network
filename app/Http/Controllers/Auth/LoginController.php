@@ -56,8 +56,9 @@ class LoginController extends Controller
 
 
     /**
-     * api login aand get the token
-     *
+     * Api user login and get the token.
+     * @bodyParam email string required The email of the user.
+     * @bodyParam password string required The password of the user.
      * @param Request $request
      * @return \Illuminate\Http\JsonResponse
      */
