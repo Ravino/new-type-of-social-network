@@ -1,5 +1,5 @@
 <template>
-    <div id="shortFriends" class="plz-short-friends">
+    <div id="shortFriends" class="plz-short-friends overflow-hidden">
 
         <div class="d-flex flex-row justify-content-start pb-3 pt-5">
             <h6 class="plz-ff-title w-auto mt-2 ml-3">Друзья
@@ -11,9 +11,9 @@
             </a>
         </div>
 
-        <div class="plz-favorit-friends-list  ml-4 pr-4 pb-2" >
+        <div class="plz-favorit-friends-list pb-2" >
             <div v-for="(friend, friendIndex) in shortFriends" v-bind:key="friendIndex"
-                 class="plz-favorit-friends-item d-flex align-items-center my-3 ">
+                 class="plz-favorit-friends-item d-flex align-items-center py-1 px-3 ">
 
                 <a class="plz-favorit-friend-userpic" href="#">
                     <img class="plz-favorit-userpic rounded-circle" :src="friend.userPic" :alt="friend.firstName" />
@@ -26,12 +26,12 @@
                     <a class="plz-favorit-friend-name" href="#">{{friend.firstName}}</a>
 
                     <div class="plz-favorit-friend-status">
-                        <p>общих друзей {{friend.commonFriendsNumber}}</p>
+                        <p>{{friend.commonFriendsNumber}} общих друга </p>
                     </div>
                 </div>
-                <div class="plz-short-friend-is-active">
-                    <i class="far fa-comment fa-flip-horizontal fa-2x"></i>
-                </div>
+                <a href="#" class="plz-short-friend-is-active">
+                    <i class="far fa-comment fa-flip-horizontal"></i>
+                </a>
             </div>
         </div>
 
@@ -94,24 +94,6 @@ data () {
                 isOnline : true,
             },
             {
-                firstName : `Анна`,
-                lastName : `Ахматова`,
-                sex : `f`,
-                userPic: `images/chat/anna.png`,
-                commonFriendsNumber: 7,
-                isActive : false,
-                isOnline : false,
-            },
-            {
-                firstName : `Ким`,
-                lastName : `Шухаян`,
-                sex : `f`,
-                userPic: `images/chat/anna2.png`,
-                commonFriendsNumber: 4,
-                isActive : false,
-                isOnline : true,
-            },
-            {
                 firstName : `Алина`,
                 lastName : `Сулимская`,
                 sex : `f`,
@@ -141,15 +123,6 @@ methods: {
 </script>
 
 <style>
-.plz-short-friend-is-active {
-    cursor: pointer;
-}
-.plz-ff-title .plz-ff-subtitle {
-    display: inline-block;
-}
-.plz-ff-subtitle {
-    color: #9a9a9a;
-    font-size: 12px;
-}
+
 
 </style>

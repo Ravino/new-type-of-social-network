@@ -17,7 +17,7 @@ use Illuminate\Support\Facades\Route;
 //Route::post('/auth/verify', 'Auth\RegisterController@verify')->firstName('verify_registration');
 Auth::routes();
 
-Route::group(['middleware' => ['auth.jwt']], function () {
+Route::group(['middleware' => ['auth.jwt', 'track.activity']], function () {
 
     Route::prefix('chat')->group(function(){
         Route::get('dialogs', 'Api\ChatController@dialogs');
@@ -30,4 +30,8 @@ Route::group(['middleware' => ['auth.jwt']], function () {
 
 });
 
+Route::get('login/{provider}', 'Auth\LoginController@redirectToProvider');
+Route::get('login/{provider}/callback', 'Auth\LoginController@handleProviderCallback');
+
 Route::post('sociallogin/{provider}', 'Auth\LoginController@socialLogin');
+

@@ -9,7 +9,9 @@
                 </div>
                 <div class="col-7">
                     <form class="form-inline my-0 h-100">
-                        <input id="topSearch" ref="topSearch" class="top-search form-control" type="search" placeholder="Поиск" aria-label="Поиск" />
+                        <input id="topSearch" ref="topSearch" class="top-search form-control"
+                               type="text"
+                               placeholder="Поиск" aria-label="Поиск" />
                         <button class="d-none btn btn-outline-success" type="submit">Search</button>
                     </form>
                 </div>

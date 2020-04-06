@@ -87,7 +87,6 @@ class LoginController extends Controller
     public function socialLogin(Request $request, $provider)
     {
         $providerUser = null;
-
         try {
             $providerUser = Socialite::driver($provider)->userFromToken($request['token']);
         } catch (Exception $exception) {
@@ -108,6 +107,30 @@ class LoginController extends Controller
         }
 
         return null;
+    }
+
+    /**
+     * @param $provider
+     * @return \Symfony\Component\HttpFoundation\RedirectResponse
+     */
+    public function redirectToProvider($provider)
+    {
+        try {
+            return Socialite::driver('vkontakte')->stateless()->redirect();
+        } catch (Exception $e) {
+            \Log::debug($e);
+        }
+        return 'smth';
+    }
+
+    /**
+     *
+     */
+    public function handleProviderCallback()
+    {
+        $user = Socialite::driver('github')->user();
+
+        \Log::debug($user);
     }
 
 }

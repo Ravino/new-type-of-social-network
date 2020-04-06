@@ -1,5 +1,5 @@
 <template>
-    <div id="favoritFriends" class="plz-favorit-friends bg-white-br20">
+    <div id="favoritFriends" class="plz-favorit-friends bg-white-br20 overflow-hidden">
 
         <div class="d-flex flex-row justify-content-start pb-3 border-bottom pt-3">
             <h6 class="plz-ff-title w-auto mt-2 ml-3">Избранные</h6>
@@ -9,9 +9,9 @@
             </a>
         </div>
 
-        <div class="plz-favorit-friends-list ml-4 pr-4 pb-2">
+        <div class="plz-favorit-friends-list pb-2">
             <div v-for="(friend, friendIndex) in favoritFriends" v-bind:key="friendIndex"
-                 class="plz-favorit-friends-item d-flex align-items-center my-3">
+                 class="plz-favorit-friends-item d-flex align-items-center align-items-center py-1 px-3 ">
 
                 <a class="plz-favorit-friend-userpic " href="#">
                     <img class="plz-favorit-userpic rounded-circle" :src="friend.userPic" :alt="friend.firstName" />
@@ -40,11 +40,11 @@
                         </p>
                     </div>
                 </div>
-                <div class="plz-ff-messages-count">
+                <a href="#" class="plz-ff-messages-count">
                     <span v-if="(friend.messagesNumber > 0)"
-                          class="py-0 px-1  mr-2">
+                          class="py-0 mr-2">
                         {{friend.messagesNumber}}</span>
-                </div>
+                </a>
             </div>
         </div>
 
@@ -156,86 +156,3 @@ methods: {
 
 }
 </script>
-
-<style>
-.plz-favorit-friends {
-    box-shadow: 0px 2px 5px 0px rgba(0, 0, 0, 0.05);
-}
-.plz-favorit-friends .fa-chevron-right{
-    font-size: 10px;
-    color: #acacac;
-    line-height: 27px;
-}
-.plz-favorit-friends .border-bottom{
-    border-color: #e9ecf6;
-}
-.plz-favorit-friends-list {
-    overflow: auto;
-    max-height: 430px;
-}
-.plz-ff-title {
-   font-family: OpenSans, sans-serif;
-    font-size: 16px;
-    color: #50535e
-}
-.plz-favorit-friend-userpic {
-    position: relative;
-    display: inline-block;
-    vertical-align: top;
-    width: 48px;
-    min-width: 48px;
-    height: 48px;
-    margin-right: 20px;
-}
-.plz-favorit-friend-userpic img {
-    width: 48px;
-    height: 48px;
-}
- .plz-favorit-isonline {
-    display: block;
-    position: absolute;
-    width: 10px;
-    height: 10px;
-    right: 0px;
-    bottom: 0px;
-     background-color: #9fcd48;
-     border: 1px solid #fff;
-     border-radius: 100%;
-}
- .plz-favorit-isoffline {
-    display: block;
-    position: absolute;
-    width: 10px;
-    height: 10px;
-    right: 0px;
-    bottom: 0px;
-     background-color: #cacac9;
-     border: 1px solid #fff;
-     border-radius: 100%;
-}
-.plz-favorit-friend-name {
-    font-size: 13px;
-    color: #50535e;
-}
-.plz-favorit-friend-status {
-    display: flex;
-    align-items: center;
-
-}
-.plz-favorit-friend-status p {
-    color: #acaeb7;
-    font-size: 13px;
-    margin-bottom: 0;
-}
-    .plz-ff-messages-count span {
-        display: inline-block;
-        vertical-align: top;
-        padding: 0 4px;
-        height: 16px;
-        background-color: #ef482c;
-        font-size: 11px;
-        font-family: OpenSans-Semibold, sans-serif;
-        color: #fff;
-        border-radius: 16px
-    }
-</style>

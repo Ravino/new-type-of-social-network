@@ -4,7 +4,7 @@
 <!--old layout            {{post.postText}}-->
 <!--old layout        </div>-->
 <!--old layout    </div>-->
-    <div class="row plz-profile-user mt-5" style="height: 300px;"><!-- added height for remove content jumping -->
+    <div class="row plz-profile-user mt-4" style="height: 300px;"><!-- added height for remove content jumping -->
         <div class="col-12 bg-white-br20 py-3">
             <div class="tab-pane fade show active" id="all-posts" role="tabpanel" aria-labelledby="all-posts">
                 <p>Я не могу сказать, что я отношусь к категории гордых людей, я скорее всего с категории взаимных.
