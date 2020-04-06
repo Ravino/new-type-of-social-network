@@ -11,7 +11,7 @@ class LoginTest extends TestApi
      *
      * @return void
      */
-    public function testUpdateProfile()
+    public function testUserLogin()
     {
         $response = $this->getAuthToken(true);
         $response->assertStatus(200);

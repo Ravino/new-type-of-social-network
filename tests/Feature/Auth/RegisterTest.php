@@ -11,7 +11,7 @@ class RegisterTest extends TestApi
      *
      * @return void
      */
-    public function testUpdateProfile()
+    public function testUserRegister()
     {
         $email = 'wenfownfowefn' . rand() . '@gmail.com';
         //$token = $this->getAuthToken();
