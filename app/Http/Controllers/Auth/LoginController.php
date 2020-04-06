@@ -87,7 +87,6 @@ class LoginController extends Controller
     public function socialLogin(Request $request, $provider)
     {
         $providerUser = null;
-
         try {
             $providerUser = Socialite::driver($provider)->userFromToken($request['token']);
         } catch (Exception $exception) {
@@ -116,7 +115,7 @@ class LoginController extends Controller
      */
     public function redirectToProvider($provider)
     {
-        try{
+        try {
             return Socialite::driver('vkontakte')->stateless()->redirect();
         } catch (Exception $e) {
             \Log::debug($e);
