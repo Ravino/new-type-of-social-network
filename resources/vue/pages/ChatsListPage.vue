@@ -4,7 +4,7 @@
             <AccountToolbarLeft></AccountToolbarLeft>
         </div>
 
-        <div class="col-sm-12 col-md-9 col-lg-9 col-xl-10">
+        <div class="col-sm-12 col-md-9 col-lg-9 col-xl-10 px-0">
             <ChatMainComponent
                 v-bind:dialogs="dialogsList"
                 v-bind:messages="messagesList"
