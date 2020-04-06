@@ -84,6 +84,7 @@ methods: {
         this.currentDialog = null;
         if (Array.isArray(this.dialogsList) && this.dialogsList) {
             this.currentDialog = this.dialogsList[0];
+            // window.console.log( JSON.parse(JSON.stringify(this.currentDialog)) , 'this.currentDialog');
         }
 
         return true;
@@ -109,6 +110,8 @@ async mounted() {
 
     this.$root.$on('addNewChatMessage', this.addNewChatMessage);
     this.$root.$on('switchToChat', this.switchToChat);
+
+    this.connectToChatChannel();
 },
 
 }

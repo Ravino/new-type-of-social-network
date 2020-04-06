@@ -48,25 +48,25 @@ data() {
 
 computed: {
     companionUserPic: function() {
-        // if (this.currentDialog  &&  this.currentDialog.attendees[0]  &&  this.currentDialog.attendees[0].userPic) {
-        //     return this.currentDialog.attendees[0].userPic;
-        // }
+        if (this.currentDialog  &&  this.currentDialog.attendees[0]  &&  this.currentDialog.attendees[0].userPic) {
+            return this.currentDialog.attendees[0].userPic;
+        }
 
         return ``;
     },
 
-    companionName: () => {
-        // if (this.currentDialog  &&  this.currentDialog.attendees[0]  &&  this.currentDialog.attendees[0].firstname) {
-        //     return this.currentDialog.attendees[0].firstname;
-        // }
+    companionName: function(){
+        if (this.currentDialog  &&  this.currentDialog.attendees[0]  &&  this.currentDialog.attendees[0].firstname) {
+            return this.currentDialog.attendees[0].firstname;
+        }
 
-        return `---`;
+        return `!---`;
     },
 
-    companionLastActivity: () => {
-        // if (this.currentDialog  &&  this.currentDialog.attendees[0]  &&  this.currentDialog.attendees[0].lastActivityDT) {
-        //     return this.currentDialog.attendees[0].lastActivityDT;
-        // }
+    companionLastActivity: function(){
+        if (this.currentDialog  &&  this.currentDialog.attendees[0]  &&  this.currentDialog.attendees[0].lastActivityDT) {
+            return this.currentDialog.attendees[0].lastActivityDT;
+        }
 
         return `1970-01-01 00:00:00`;
     }
@@ -76,7 +76,7 @@ methods: {
 },
 
 mounted() {
-    // window.console.log(this.currentDialog, 'ChatHeader this.currentDialog');
+    window.console.log(JSON.parse(JSON.stringify(this.currentDialog)), 'ChatHeader this.currentDialog');
 }
 
 }

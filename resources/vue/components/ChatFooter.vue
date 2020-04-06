@@ -4,7 +4,7 @@
             <div class="col-1">
                 <div class="media mx-auto">
                     <img class="chat-companion-user-pic my-0 mx-auto" width="32" height="32"
-                         v-bind:src="user.user_pic" v-bind:alt="user.name"/>
+                         v-bind:src="currentDialog.userPic" v-bind:alt="currentDialog.firstname"/>
                 </div>
             </div>
             <div class="col-9 pl-0">
@@ -38,42 +38,39 @@
 </template>
 
 <script>
-    import moment from 'moment';
+import moment from 'moment';
 
-    export default {
-        name: 'ChatFooter',
-        props: {},
+export default {
+name: 'ChatFooter',
+props: {
+    currentDialog: Object
+},
 
-        data() {
-            return {
-                newMessage: ``,
-                user: {}
-            }
-        },
-
-        methods: {
-            onMessageKeyDown(ev) {
-                if (13 === ev.keyCode && this.newMessage.trim() !== '') {
-                    let nowS = moment().format('YYYY-MM-DD HH:mm:ss');
-
-                    let newMsg = {
-                        body: this.newMessage.trim(),
-                        createdAt: nowS,
-                        isMine: true,
-                        isRead: false,
-                        isEdited: false
-                    };
-
-                    this.$root.$emit('addNewChatMessage', newMsg);
-
-                    this.newMessage = ``;
-                }
-            }
-        },
-
-        mounted() {
-            this.user = this.$store.getters.userData;
-        }
-
+data() {
+    return {
+        newMessage: ``,
     }
+},
+
+methods: {
+    onMessageKeyDown(ev) {
+        if (13 === ev.keyCode && this.newMessage.trim() !== '') {
+            let nowS = moment().format('YYYY-MM-DD HH:mm:ss');
+
+            let newMsg = {
+                body: this.newMessage.trim(),
+                createdAt: nowS,
+                isMine: true,
+                isRead: false,
+                isEdited: false
+            };
+
+            this.$root.$emit('addNewChatMessage', newMsg);
+
+            this.newMessage = ``;
+        }
+    }
+},
+
+}
 </script>
