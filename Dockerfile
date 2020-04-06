@@ -46,6 +46,8 @@ COPY . /var/www
 COPY ./entrypoint.sh /usr/local/bin/docker-php-entrypoint
 RUN chmod u+x /usr/local/bin/docker-php-entrypoint
 
+RUN chown www-data -R storage
+
 # Expose port 9000 and start php-fpm server
 EXPOSE 9000
 CMD ["php-fpm"]
