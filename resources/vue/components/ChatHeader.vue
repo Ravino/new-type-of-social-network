@@ -3,7 +3,11 @@
         <div class="row">
             <div class="col-6">
                 <div class="media">
-                    <img class="chat-companion-user-pic my-3 mx-3" width="32" height="32" v-bind:src="companionUserPic" v-bind:alt="companionName" />
+                    <div class="media-pic border rounded-circle">
+                        <img class="chat-companion-user-pic my-3 mx-3" width="32" height="32"
+                             v-bind:src="companionUserPic" v-bind:alt="companionName" />
+                    </div>
+
                     <div class="media-body">
                         <h6 class="w-75 align-self-start mt-2 pb-0 mb-0 pull-left text-body" style="line-height: 20px;">
                             <b>{{companionName}}</b>

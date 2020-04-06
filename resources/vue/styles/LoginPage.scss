@@ -1,4 +1,4 @@
-@import './plizi-variables.scss';
+@import './ui-kit/plizi-variables.scss';
 
 $plzLoginBtnBlueColor: #3D51DE;
 
@@ -52,12 +52,12 @@ body.LoginPage .modal-body {
 }
 
 .form-control.lr-input {
-    border-radius: 0px;
+    border-radius: 0;
     width: 278px;
     max-width: 278px;
     margin-left: auto;
     margin-right: auto;
-    border-width: 0px 0px 1px 0px;
+    border-width: 0 0 1px 0;
     border-color: #D7D7D7;
     background-color: transparent;
 }
@@ -71,8 +71,8 @@ body.LoginPage .modal-body {
 
 .btn.plz-btn {
     display: block;
-    margin: 0px auto;
-    padding: 0px;
+    margin: 0 auto;
+    padding: 0;
 
     width: 278px;
     max-width: 278px;
