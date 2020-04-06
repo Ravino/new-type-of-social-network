@@ -4,7 +4,26 @@
     --chat-message-padding: 12px;
 }
 
-.message-item.my-message, .message-item.companion-message {
+#chatMain {
+    box-shadow: 0px 2px 54px 0px rgba(0, 0, 0, 0.07);
+}
+
+.media-pic {
+    display: inline-block;
+    vertical-align: top;
+    position: relative;
+    width: 42px;
+    height: 42px;
+    overflow: hidden;
+    img {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+    }
+}
+.message-item.my-message,
+.message-item.companion-message {
     display: block;
     max-width: 80%;
     margin: var(--chat-message-margin);
@@ -84,4 +103,68 @@
     float: left;
     padding-right: 10px;
     color: #DEE2FD;
+}
+
+//left side
+
+.user-friend {
+    &-pic {
+        display: inline-block;
+        position: relative;
+        img {
+            display: inline-block;
+            width: 42px;
+            height: 42px;
+        }
+    }
+
+    &-isonline {
+        display: block;
+        position: absolute;
+        width: 10px;
+        height: 10px;
+        right: 0px;
+        bottom: 0px;
+        background-color: #9fcd48;
+        border: 1px solid #fff;
+        border-radius: 100%;
+    }
+    &-isoffline {
+        display: block;
+        position: absolute;
+        width: 10px;
+        height: 10px;
+        right: 0px;
+        bottom: 0px;
+        background-color: #cacac9;
+        border: 1px solid #fff;
+        border-radius: 100%;
+    }
+
+    &-body {
+        &-top {
+            time {
+                font-size: 11px;
+                color: #9a9a9a;// add color to var
+            }
+        }
+    }
+
+    &-name {
+        font-size: 13px;
+        font-weight: 600;
+        color: #363636;
+        line-height: 20px
+    }
+
+    &-desc {
+        font-size: 12px;
+        color: #9a9a9a
+    }
+
+    &-details {
+        font-size: 12px;
+        color: #363636;
+    }
+
 }
