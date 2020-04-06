@@ -1,7 +1,7 @@
 <template>
-    <div id="chatMain" class="row bg-light border">
-        <div class="col-sm-12 col-md-12 col-lg-4 col-xl-4 col-auto pl-lg-0 pl-xl-0 px-sm-0 px-md-0">
-            <ul id="chatFriends" class="list-unstyled mb-0">
+    <div id="chatMain" class="row bg-white-br20 overflow-hidden  mt-5">
+        <div class="col-sm-12 col-md-12 border-right col-lg-4 col-xl-4 col-auto pl-lg-0 pl-xl-0 px-sm-0 px-md-0">
+            <ul id="chatFriends" class="list-unstyled m-0">
                 <ChatListItem v-for="(dialog, dialogIndex) in dialogs" v-bind:currentDialog="currentDialog" v-bind:dialog="dialog" v-bind:key="dialogIndex" v-bind:dialogID="dialogIndex"></ChatListItem>
             </ul>
         </div>

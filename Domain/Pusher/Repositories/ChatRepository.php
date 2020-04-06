@@ -6,6 +6,7 @@ namespace Domain\Pusher\Repositories;
 
 use Carbon\Carbon;
 use DB;
+use Domain\Pusher\Helpers\ArrayUtils;
 use Domain\Pusher\Models\Dialog;
 
 class ChatRepository
@@ -18,10 +19,8 @@ class ChatRepository
      */
     public function getChatsByUserId(int $user_id): array
     {
-        DB::beginTransaction();
-        $items = \DB::table('chat')
-            ->join('users', 'users.id', '=', 'chat.user_id')
-            ->join('profiles', 'profiles.user_id', '=', 'users.id')
+        $items = DB::table('chat')
+            ->join('profiles', 'profiles.user_id', '=', 'chat.user_id')
             ->whereRaw("chat.id IN (SELECT chat_id FROM chat_party WHERE user_id = $user_id GROUP BY chat_id)")
             ->orderBy('chat.id', 'desc')
             ->get([
@@ -33,26 +32,28 @@ class ChatRepository
                 'chat.last_message_time'
             ])->toArray();
 
+
+        $attendees = DB::table('chat_party')
+            ->join('profiles', 'chat_party.user_id', '=', 'profiles.user_id')
+            ->whereIn('chat_party.chat_id',  array_column($items, 'id'))
+            ->where('chat_party.user_id', '<>', $user_id)
+            ->get([
+                'chat_party.chat_id',
+                'profiles.user_id',
+                'profiles.firstname',
+                'profiles.lastname',
+                'profiles.birthday',
+                'profiles.city',
+            ])->toArray();
+
+        // TODO: Change this to real data when implemented
+        foreach( $attendees as &$attendee) {
+            $attendee->lastActivityDT = Carbon::now()->timestamp;
+            $attendee->userPic = 'https://habrastorage.org/storage2/b92/bcf/532/b92bcf532c0a2889272ffd72ffb1f2b5.png';
+        }
+
         $collection = [];
         foreach ($items as $item) {
-
-            $attendees = \DB::table('chat_party')
-                ->join('profiles', 'chat_party.user_id', '=', 'profiles.user_id')
-                ->where('chat_party.chat_id', '=', $item->id)
-                ->where('chat_party.user_id', '<>', $user_id)
-                ->get([
-                    'profiles.firstname',
-                    'profiles.lastname',
-                    'profiles.birthday',
-                    'profiles.city',
-                ])->toArray();
-
-            // TODO: Change this to real data when implemented
-            foreach( $attendees as &$attendee) {
-                $attendee->lastActivityDT = Carbon::now();
-                $attendee->userPic = 'https://habrastorage.org/storage2/b92/bcf/532/b92bcf532c0a2889272ffd72ffb1f2b5.png';
-            }
-
             $dialog = new Dialog();
             $dialog->id = $item->id;
             $dialog->name = $item->firstname;
@@ -63,10 +64,9 @@ class ChatRepository
             $dialog->isRead = (bool)$item->last_is_read;
             $dialog->isLastFromMe = ($user_id == $item->last_user_id);
             $dialog->isOnline = ($user_id == $item->last_user_id);
-            $dialog->attendees = $attendees;
+            $dialog->attendees = ArrayUtils::objArraySearch($attendees, 'chat_id', $item->id);;
             $collection[] = $dialog;
         }
-        DB::commit();
         return $collection;
     }
 
