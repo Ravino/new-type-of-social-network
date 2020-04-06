@@ -35,10 +35,12 @@ class ChatRepository
 
         $attendees = DB::table('chat_party')
             ->join('profiles', 'chat_party.user_id', '=', 'profiles.user_id')
+            ->join('users', 'chat_party.user_id', '=', 'users.id')
             ->whereIn('chat_party.chat_id',  array_column($items, 'id'))
             ->where('chat_party.user_id', '<>', $user_id)
             ->get([
                 'chat_party.chat_id',
+                'users.last_activity_dt',
                 'profiles.user_id',
                 'profiles.firstname',
                 'profiles.lastname',
@@ -48,7 +50,7 @@ class ChatRepository
 
         // TODO: Change this to real data when implemented
         foreach( $attendees as &$attendee) {
-            $attendee->lastActivityDT = Carbon::now()->timestamp;
+            $attendee->lastActivityDT = Carbon::create($attendee->last_activity_dt)->timestamp;
             $attendee->userPic = 'https://habrastorage.org/storage2/b92/bcf/532/b92bcf532c0a2889272ffd72ffb1f2b5.png';
         }
 

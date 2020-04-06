@@ -9,6 +9,8 @@
     "license": "MIT",
     "require": {
         "php": "^7.2.5",
+        "ext-json": "*",
+        "ext-zmq": "*",
         "cboden/ratchet": "^0.4.2",
         "coderello/laravel-passport-social-grant": "^2.1",
         "doctrine/dbal": "^2.10",
@@ -20,10 +22,9 @@
         "laravel/socialite": "^4.3",
         "laravel/tinker": "^2.0",
         "laravel/ui": "^2.0",
-        "tymon/jwt-auth": "^1.0",
         "react/zmq": "^0.4.0",
-        "ext-zmq": "*",
-        "ext-json": "*"
+        "socialiteproviders/vkontakte": "^4.0",
+        "tymon/jwt-auth": "^1.0"
     },
     "require-dev": {
         "barryvdh/laravel-ide-helper": "^2.6",
