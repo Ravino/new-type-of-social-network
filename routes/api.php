@@ -30,4 +30,7 @@ Route::group(['middleware' => ['auth.jwt']], function () {
 
 });
 
+Route::get('login/{provider}', 'Auth\LoginController@redirectToProvider');
+Route::get('login/{provider}/callback', 'Auth\LoginController@handleProviderCallback');
+
 Route::post('sociallogin/{provider}', 'Auth\LoginController@socialLogin');
