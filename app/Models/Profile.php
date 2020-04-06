@@ -32,6 +32,11 @@ class Profile extends Model
     const RELATIONSHIP_MARRIED = 1;
     const RELATIONSHIP_NOT_MARRIED = 2;
 
+    const RELATIONSHIP_VARIANTS = [
+        self::RELATIONSHIP_MARRIED => 'Married',
+        self::RELATIONSHIP_NOT_MARRIED => 'Not married',
+    ];
+
     protected $fillable = [
         'firstname', 'lastname', 'birthday', 'city', 'sex', 'relationship',
     ];
@@ -42,9 +47,9 @@ class Profile extends Model
             'firstname' => 'required|string|min:1|max:255',
             'lastname' => 'required|string|min:1|max:255',
             'birthday' => 'date_format:Y-m-d|nullable',
-            'sex' => Rule::in(array_keys(Profile::SEX_VARIANTS)),
+            'sex' => Rule::in(array_keys(self::SEX_VARIANTS)),
             'city' => 'string|min:1|max:255',
-            'relationship' => Rule::in([self::RELATIONSHIP_MARRIED, self::RELATIONSHIP_NOT_MARRIED]) . '|nullable',
+            'relationship' => Rule::in(array_keys(self::RELATIONSHIP_VARIANTS)) . '|nullable',
         ];
 
         if (count($keys)) {
