@@ -24,6 +24,8 @@ import AuthNavBar from './common/AuthNavBar.vue';
 import AuthFooter from './common/AuthFooter.vue';
 import GuestFooter from './common/GuestFooter.vue';
 
+import {HTTPer} from './httper/httper';
+
 export default {
 name: 'App',
 components: {GuestNavBar, AuthNavBar, AuthFooter, GuestFooter},
@@ -65,7 +67,31 @@ methods: {
         if (evData.redirect) {
             this.$router.push({path: '/login'});
         }
-    }
+    },
+
+    sentNewChatMessageToAPI(evData) {
+        const sendData = {
+            body: evData.message.body,
+            chat_id: evData.chatId
+        };
+
+        HTTPer.post('api/chat/send', sendData, this.$store.getters.getHTTPConfig)
+            .then((response) => {
+                if (response.status === 200) {
+                    window.console.log('success');
+
+                    this.$root.$emit('addNewChatMessageToList', evData.message);
+                }
+            })
+            .catch((error) => {
+                if (400 === error.response.status) {
+                    window.console.warn(error.response.status+': '+error.response.statusText+': ' +error.response.data.message);
+                }
+                else {
+                    window.console.warn( error.toString() );
+                }
+            });
+    },
 },
 
 
@@ -73,6 +99,8 @@ mounted() {
     this.$root.$on('afterSuccessLogin',  this.afterSuccessLogin);
 
     this.$root.$on('afterSuccessLogout', this.afterSuccessLogout);
+
+    this.$root.$on('sentNewChatMessageToAPI', this.sentNewChatMessageToAPI);
 }
 }
 </script>

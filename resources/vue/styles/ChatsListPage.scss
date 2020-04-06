@@ -1,8 +1,16 @@
-:root {
-    --chat-message-radius: 20px;
-    --chat-message-margin: 12px;
-    --chat-message-padding: 12px;
-}
+$chatMessageRadius: 20px;
+$chatMessageMargin: 12px;
+$chatMessagePadding: 12px;
+$chatMessageUserPicSize: 32px;
+$chatMessageUserPicMarginX: 10px;
+
+$chatMessageMyMsgBG: #3D51DE;
+$chatMessageMyMsgTextColor: white;
+$chatMessageMyMsgTimeColor: #DEE2FD;
+
+$chatMessageCompanionMsgBG: white;
+$chatMessageCompanionMsgTextColor: #363636;
+$chatMessageCompanionMsgTimeColor: #C1BFBF;
 
 #chatMain {
     box-shadow: 0px 2px 54px 0px rgba(0, 0, 0, 0.07);
@@ -15,6 +23,7 @@
     width: 42px;
     height: 42px;
     overflow: hidden;
+
     img {
         position: absolute;
         top: 50%;
@@ -22,91 +31,172 @@
         transform: translate(-50%, -50%);
     }
 }
-.message-item.my-message,
-.message-item.companion-message {
-    display: block;
-    max-width: 80%;
-    margin: var(--chat-message-margin);
+
+.message-item {
+    &.my-message, &.companion-message {
+        display: block;
+        max-width: 80%;
+
+        &.compact-message{
+            margin-top: $chatMessageMargin/4;
+            margin-bottom: 0px;
+        }
+    }
+
+    &.my-message {
+        float: right;
+
+        .message-body {
+            background-color: $chatMessageMyMsgBG;
+            border-radius: $chatMessageRadius $chatMessageRadius 0px $chatMessageRadius;
+            padding: $chatMessagePadding;
+
+            display: block;
+            float: right;
+        }
+
+        .message-user-pic {
+            margin-left: $chatMessageUserPicMarginX;
+            float: right;
+        }
+
+        .message-text {
+            display: block;
+            float: right;
+            color: $chatMessageMyMsgTextColor;
+        }
+
+        .message-time {
+            display: block;
+            float: left;
+            padding-right: 10px;
+            color: $chatMessageMyMsgTimeColor;
+        }
+    }
+
+    &.companion-message {
+        float: left;
+
+        .message-body {
+            background-color: white;
+            border: 1px solid grey;
+            border-radius: $chatMessageRadius $chatMessageRadius $chatMessageRadius 0px;
+            padding: $chatMessagePadding;
+
+            display: block;
+            float: left;
+        }
+
+        .message-user-pic {
+            margin-right: $chatMessageUserPicMarginX;
+            float: left;
+        }
+
+        .message-text {
+            display: block;
+            float: left;
+            color: $chatMessageCompanionMsgTextColor;
+        }
+
+        .message-time {
+            display: block;
+            float: right;
+            padding-left: 10px;
+            color: $chatMessageCompanionMsgTimeColor;
+        }
+    }
+
+    .message-user-pic {
+        width: $chatMessageUserPicSize;
+        min-width: $chatMessageUserPicSize;
+        max-width: $chatMessageUserPicSize;
+        height: $chatMessageUserPicSize;
+        min-height: $chatMessageUserPicSize;
+        max-height: $chatMessageUserPicSize;
+        display: block;
+        overflow: hidden;
+
+        .message-user-img {
+            width: 100%;
+            height: 100%;
+            border-radius: $chatMessageUserPicSize/2;
+        }
+    }
 }
 
-.message-item.my-message.compact-message, .message-item.companion-message.compact-message {
-    margin-top: calc(var(--chat-message-margin) / 4);
-    margin-bottom: 0px;
-}
+//.message-item.my-message,
+//.message-item.companion-message {
+//    display: block;
+//    max-width: 80%;
+//    margin: $chatMessageMargin;
+//    background-color: red;
+//}
+//.message-item.my-message.compact-message, .message-item.companion-message.compact-message {
+//    margin-top: $chatMessageMargin/4;
+//    margin-bottom: 0px;
+//}
+//.message-item.my-message {
+//    display: block;
+//    float: right;
+//}
+//.message-item.my-message .message-body {
+//    background-color: #3d51de;
+//    border-radius: $chatMessageRadius $chatMessageRadius 0px $chatMessageRadius;
+//    padding: $chatMessagePadding;
+//
+//    display: block;
+//    float: right;
+//}
+//.message-item.companion-message {
+//    display: block;
+//    float: left;
+//}
+//.message-item.companion-message .message-body {
+//    background-color: white;
+//    border: 1px solid grey;
+//    border-radius: $chatMessageRadius $chatMessageRadius $chatMessageRadius 0px;
+//    padding: $chatMessagePadding;
+//
+//    display: block;
+//    float: left;
+//}
+//.message-item .message-user-pic {
+//    width: 32px;
+//    height: 32px;
+//    display: block;
+//}
+//.message-item.companion-message .message-user-pic {
+//    margin-right: $chatMessageUserPicMarginX;
+//    float: left;
+//}
+//.message-item.my-message .message-user-pic {
+//    margin-left: $chatMessageUserPicMarginX;
+//    float: right;
+//}
+//.message-item.companion-message .message-text {
+//    display: block;
+//    float: left;
+//    color: $chatMessageCompanionMsgTextColor;
+//}
+//.message-item.my-message .message-text {
+//    display: block;
+//    float: right;
+//    color: $chatMessageMyMsgTextColor;
+//}
+//.message-item.companion-message .message-time {
+//    display: block;
+//    float: right;
+//    padding-left: 10px;
+//    color: $chatMessageCompanionMsgTimeColor;
+//}
+//.message-item.my-message .message-time {
+//    display: block;
+//    float: left;
+//    padding-right: 10px;
+//    color: $chatMessageMyMsgTimeColor;
+//}
 
-.message-item.my-message {
-    display: block;
-    float: right;
-}
-
-.message-item.my-message .message-body {
-    background-color: #3d51de;
-    border-radius: var(--chat-message-radius) var(--chat-message-radius) 0px var(--chat-message-radius);
-    padding: var(--chat-message-padding);
-
-    display: block;
-    float: right;
-}
-
-.message-item.companion-message {
-    display: block;
-    float: left;
-}
-
-.message-item.companion-message .message-body {
-    background-color: white;
-    border: 1px solid grey;
-    border-radius: var(--chat-message-radius) var(--chat-message-radius) var(--chat-message-radius) 0px;
-    padding: var(--chat-message-padding);
-
-    display: block;
-    float: left;
-}
-
-.message-item .message-user-pic {
-    width: 32px;
-    height: 32px;
-    display: block;
-}
-
-.message-item.companion-message .message-user-pic {
-    margin-right: 10px;
-    float: left;
-}
-
-.message-item.my-message .message-user-pic {
-    margin-left: 10px;
-    float: right;
-}
-
-.message-item.companion-message .message-text {
-    display: block;
-    float: left;
-    color: #363636;
-}
-
-.message-item.my-message .message-text {
-    display: block;
-    float: right;
-    color: white;
-}
-
-.message-item.companion-message .message-time {
-    display: block;
-    float: right;
-    padding-left: 10px;
-    color: #C1BFBF;
-}
-
-.message-item.my-message .message-time {
-    display: block;
-    float: left;
-    padding-right: 10px;
-    color: #DEE2FD;
-}
-
-//left side
-
+/** Dialogs list **/
 .user-friend {
     &-pic {
         display: inline-block;
@@ -154,12 +244,18 @@
         font-size: 13px;
         font-weight: 600;
         color: #363636;
-        line-height: 20px
+        line-height: 20px;
+        cursor: pointer;
+
+        &:hover{
+            text-decoration: underline;
+            color: #9a9a9a;
+        }
     }
 
     &-desc {
         font-size: 12px;
-        color: #9a9a9a
+        color: #9a9a9a;
     }
 
     &-details {

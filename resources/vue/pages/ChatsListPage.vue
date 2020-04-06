@@ -4,11 +4,20 @@
             <AccountToolbarLeft></AccountToolbarLeft>
         </div>
 
-        <div class="col-sm-12 col-md-9 col-lg-9 col-xl-10 px-0">
-            <ChatMainComponent
-                v-bind:dialogs="dialogsList"
-                v-bind:messages="messagesList"
-                v-bind:currentDialog="currentDialog"></ChatMainComponent>
+        <div class="col-sm-12 col-md-9 col-lg-9 col-xl-10">
+            <div id="chatMain" class="row bg-light border">
+                <div class="col-sm-12 col-md-12 col-lg-4 col-xl-4 col-auto pl-lg-0 pl-xl-0 px-sm-0 px-md-0">
+                    <ul id="chatFriends" class="list-unstyled mb-0">
+                        <ChatListItem v-for="(dialog, dialogIndex) in dialogsList" v-bind:currentDialog="currentDialog" v-bind:dialog="dialog" v-bind:key="dialogIndex" v-bind:dialogID="dialogIndex"></ChatListItem>
+                    </ul>
+                </div>
+
+                <div id="chatMessangesWrapper" class="col-8 col-lg-8 col-xl-8 bg-light d-none d-lg-block d-xl-block h-100">
+                    <ChatHeader v-bind:currentDialog="currentDialog"></ChatHeader>
+                    <ChatMessages v-bind:messages="messagesList" v-bind:currentDialog="currentDialog"></ChatMessages>
+                    <ChatFooter v-bind:currentDialog="currentDialog"></ChatFooter>
+                </div>
+            </div>
         </div>
 
         <div class="col-sm-1 col-md-2 col-lg-2 col-xl-1">
@@ -21,14 +30,21 @@
 import AccountToolbarLeft from '../common/AccountToolbarLeft.vue';
 import AccountToolbarRight from '../common/AccountToolbarRight.vue';
 
-import ChatMainComponent from '../components/ChatMainComponent.vue';
+// import ChatMainComponent from '../components/ChatMainComponent.vue';
+
+import ChatListItem from '../components/ChatListItem.vue';
+
+import ChatHeader from '../components/ChatHeader.vue';
+import ChatMessages from '../components/ChatMessages.vue';
+import ChatFooter from '../components/ChatFooter.vue';
 
 import { HTTPer } from '../httper/httper';
 
 export default {
 name: 'ChatsListPage',
 components: {
-    AccountToolbarLeft, AccountToolbarRight, ChatMainComponent
+    AccountToolbarLeft, AccountToolbarRight,
+    ChatListItem, ChatHeader, ChatMessages, ChatFooter
 },
 
 data() {
@@ -61,18 +77,19 @@ methods: {
     },
 
 
-    async switchToChat(evData) {
-        let messageResponse = await HTTPer.get('api/chat/messages/' + evData.dialogID, this.$store.getters.getHTTPConfig);
-        this.messagesList = messageResponse.data;
-        this.currentDialog = this.dialogsList.find((dialog) => dialog.id === evData.dialogID);
+    switchToChat(evData) {
+        HTTPer.get('api/chat/messages/' + evData.dialogID, this.$store.getters.getHTTPConfig)
+            .then((response) => {
+                this.messagesList = response.data;
+                this.currentDialog = this.dialogsList.find((dialog) => dialog.id === evData.dialogID);
+            })
+            .catch((error) => {
+                window.console.warn(error.response.status+': '+error.response.statusText+': ' +error.response.data.message);
+            });
     },
 
-    async addNewChatMessage(evData) {
-        await HTTPer.post('api/chat/send', {
-            body: evData.body,
-            chat_id: this.currentDialog.id
-        }, this.$store.getters.getHTTPConfig);
 
+    addMessageToMessageList(evData){
         this.messagesList.push(evData);
     },
 
@@ -108,8 +125,8 @@ async mounted() {
         }
     }
 
-    this.$root.$on('addNewChatMessage', this.addNewChatMessage);
     this.$root.$on('switchToChat', this.switchToChat);
+    this.$root.$on('addNewChatMessageToList', this.addMessageToMessageList);
 
     this.connectToChatChannel();
 },

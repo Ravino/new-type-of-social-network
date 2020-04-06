@@ -4,14 +4,12 @@
             <div class="col-6">
                 <div class="media">
                     <div class="media-pic border rounded-circle my-3 mx-3">
-                        <img src="../images/last-entries/vladislav.png"
-                             v-bind:alt="companionName" />
+                        <img :src="companionUserPic" v-bind:alt="companionName" />
                     </div>
 
                     <div class="media-body">
                         <h6 class="w-75 align-self-start mt-2 pb-0 mb-0 pull-left text-body" style="line-height: 20px;">
-                            <b>Malunder</b>
-<!--                            <b>{{companionName}}</b>-->
+                            <b>{{companionName}}</b>
                         </h6>
                         <div class="text-black-50 p-0 mb-0 mt-1 w-100 d-block">
                             {{ companionLastActivity  | lastMessageTime }}
@@ -53,7 +51,7 @@ data() {
 
 computed: {
     companionUserPic: function() {
-        if (this.currentDialog  &&  this.currentDialog.attendees[0]  &&  this.currentDialog.attendees[0].userPic) {
+        if (this.currentDialog  &&  this.currentDialog.attendees  &&  this.currentDialog.attendees[0]  &&  this.currentDialog.attendees[0].userPic) {
             return this.currentDialog.attendees[0].userPic;
         }
 
@@ -61,7 +59,7 @@ computed: {
     },
 
     companionName: function(){
-        if (this.currentDialog  &&  this.currentDialog.attendees[0]  &&  this.currentDialog.attendees[0].firstname) {
+        if (this.currentDialog  &&  this.currentDialog.attendees  &&  this.currentDialog.attendees[0]  &&  this.currentDialog.attendees[0].firstname) {
             return this.currentDialog.attendees[0].firstname;
         }
 
@@ -69,7 +67,7 @@ computed: {
     },
 
     companionLastActivity: function(){
-        if (this.currentDialog  &&  this.currentDialog.attendees[0]  &&  this.currentDialog.attendees[0].lastActivityDT) {
+        if (this.currentDialog  &&  this.currentDialog.attendees  &&  this.currentDialog.attendees[0]  &&  this.currentDialog.attendees[0].lastActivityDT) {
             return this.currentDialog.attendees[0].lastActivityDT;
         }
 
@@ -79,10 +77,6 @@ computed: {
 
 methods: {
 },
-
-mounted() {
-    window.console.log(JSON.parse(JSON.stringify(this.currentDialog)), 'ChatHeader this.currentDialog');
-}
 
 }
 </script>

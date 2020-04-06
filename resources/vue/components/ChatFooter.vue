@@ -4,7 +4,7 @@
             <div class="col-1">
                 <div class="media mx-auto">
                     <img class="chat-companion-user-pic my-0 mx-auto" width="32" height="32"
-                         v-bind:src="currentDialog.userPic" v-bind:alt="currentDialog.firstname"/>
+                         v-bind:src="currentDialog.userPic" v-bind:alt="currentDialog.firstname" />
                 </div>
             </div>
             <div class="col-9 pl-0">
@@ -15,7 +15,7 @@
                             <input type="search"
                                    v-model="newMessage"
                                    @keydown="onMessageKeyDown($event)"
-                                   class="form-control px-2 w-100" id="txtMessage" placeholder="Написать сообщение"/>
+                                   class="form-control px-2 w-100" id="txtMessage" ref="txtMessage" placeholder="Написать сообщение" />
                         </div>
                     </div>
                 </div>
@@ -54,18 +54,21 @@ data() {
 
 methods: {
     onMessageKeyDown(ev) {
-        if (13 === ev.keyCode && this.newMessage.trim() !== '') {
-            let nowS = moment().format('YYYY-MM-DD HH:mm:ss');
-
-            let newMsg = {
+        if (13===ev.keyCode  &&  this.newMessage.trim()!=='') {
+            const newMsg = {
                 body: this.newMessage.trim(),
-                createdAt: nowS,
+                createdAt: moment().format('YYYY-MM-DD HH:mm:ss'),
                 isMine: true,
                 isRead: false,
                 isEdited: false
             };
 
-            this.$root.$emit('addNewChatMessage', newMsg);
+            const evData = {
+                message : newMsg,
+                chatId : this.currentDialog.id
+            };
+
+            this.$root.$emit('sentNewChatMessageToAPI', evData);
 
             this.newMessage = ``;
         }

@@ -29,3 +29,6 @@ Thumbs.db
 /design
 
 /public/apl.html
+
+*.js.map
+*.css.map
