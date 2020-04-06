@@ -6,6 +6,13 @@ COPY composer.lock composer.json /var/www/
 # Set working directory
 WORKDIR /var/www
 
+ENV DOCKERIZE_VERSION v0.6.1
+RUN curl --silent --location \
+    --url https://github.com/jwilder/dockerize/releases/download/$DOCKERIZE_VERSION/dockerize-linux-amd64-$DOCKERIZE_VERSION.tar.gz \
+    --output /tmp/dockerize-linux-amd64-$DOCKERIZE_VERSION.tar.gz \
+    && tar -C /usr/local/bin -xzvf /tmp/dockerize-linux-amd64-$DOCKERIZE_VERSION.tar.gz \
+    && rm /tmp/dockerize-linux-amd64-$DOCKERIZE_VERSION.tar.gz
+
 # Install dependencies
 RUN apt-get update && apt-get install -y \
     build-essential \
@@ -33,12 +40,14 @@ RUN docker-php-ext-install gd
 
 # Install composer
 RUN curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer
-RUN npm install npm@latest -g
-RUN npm install
 
 # Copy existing application directory contents
 COPY . /var/www
-ENTRYPOINT ["sh", "./entrypoint.sh"]
+COPY ./entrypoint.sh /usr/local/bin/docker-php-entrypoint
+RUN chmod u+x /usr/local/bin/docker-php-entrypoint
+
+RUN chown www-data -R storage
+
 # Expose port 9000 and start php-fpm server
 EXPOSE 9000
 CMD ["php-fpm"]

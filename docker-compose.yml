@@ -8,17 +8,25 @@ services:
       dockerfile: Dockerfile
     image: digitalocean.com/php
     container_name: app
-    restart: unless-stopped
-    tty: true
     environment:
+      DB_HOST: db
+      DB_PORT: 3306
+      DB_DATABASE: plizi
+      DB_USERNAME: plizi
+      DB_PASSWORD: password
       SERVICE_NAME: app
       SERVICE_TAGS: dev
+      ZMQ_DSN: "tcp://php-ws:5555"
+      WEBSOCKET_URI: "php-ws:7070"
     working_dir: /var/www
+    entrypoint: bash -c "/usr/local/bin/docker-php-entrypoint"
     volumes:
       - ./:/var/www
       - ./php/local.ini:/usr/local/etc/php/conf.d/local.ini
     networks:
       - app-network
+    depends_on:
+      - db
 
   #Nginx Service
   webserver:
@@ -35,22 +43,35 @@ services:
     networks:
       - app-network
 
+  php-ws:
+    restart: always
+    image: digitalocean.com/php
+    working_dir: /var/www
+    command: php /var/www/artisan ws:serve
+    environment:
+      CONTAINER_ROLE: "php-ws"
+    volumes:
+      - ./:/var/www
+    ports:
+      - "7070:7070"
+    depends_on:
+      - db
+    networks:
+      - app-network
+
   #MySQL Service
   db:
-    image: mysql:5.7.22
-    container_name: db
+    image: mysql:5.6
     restart: unless-stopped
-    tty: true
     ports:
       - "3307:3306"
     environment:
       MYSQL_DATABASE: plizi
-      MYSQL_ROOT_PASSWORD: password
-      SERVICE_TAGS: dev
-      SERVICE_NAME: mysql
+      MYSQL_USER: plizi
+      MYSQL_PASSWORD: password
+      MYSQL_RANDOM_ROOT_PASSWORD: "yes"
     volumes:
       - dbdata:/var/lib/mysql/
-      - ./mysql/my.cnf:/etc/mysql/my.cnf
     networks:
       - app-network
 

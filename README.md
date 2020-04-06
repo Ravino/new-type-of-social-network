@@ -140,3 +140,25 @@ CREATE DATABASE plizi_test;
 
 Запуск тестов
 `php artisan test`
+
+# Docker / Docker-compose
+
+Инструкция для установки на Ubuntu - https://docs.docker.com/install/linux/docker-ce/ubuntu/
+Инструкция для установки на Windows - https://docs.docker.com/docker-for-windows/
+Инструкция для установки на Ubuntu - https://docs.docker.com/docker-for-mac/install/
+
+**`/nginx`** - Конфигурация nginx для контейнера
+**`/php`** - Конфигурация php для контейнера
+
+Для запуска контейнеров используйте
+
+`docker-compose up --build`
+
+Для запуска контейнеров в detach mode используйте
+
+`docker-compose up --build -d`
+
+Приложение будет доступно по адресу
+`http://localhost:9080`
+
+Если необходимо поменяйте порт для сервиса nginx в файле **`docker-compose.yml`**
