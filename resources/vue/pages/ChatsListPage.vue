@@ -48,7 +48,7 @@ methods: {
             skipSubprotocolCheck: true
         };
 
-        this.chatCarrier = new ab.connect(window.wsUrl, s => {
+        this.chatCarrier = new ab.connect(window.wsUrl, (s) => {
             s.subscribe(this.$store.getters.chatChannel, (topic, data) => {
                 if (this.currentDialog.id === data.data.chatId) {
                     this.messagesList.push(data.data)
@@ -109,8 +109,6 @@ async mounted() {
 
     this.$root.$on('addNewChatMessage', this.addNewChatMessage);
     this.$root.$on('switchToChat', this.switchToChat);
-
-    this.connectToChatChannel();
 },
 
 }

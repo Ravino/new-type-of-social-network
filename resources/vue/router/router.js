@@ -48,15 +48,29 @@ async function getUserData(token){
 }
 
 
+function routerForcedLogout(next){
+    // не работает :(
+    // window.app.$root.$emit('afterSuccessLogout', { redirect: true });
+
+    store.dispatch('SET_GWT', ``);
+    store.dispatch('SET_AUTH', false);
+    store.dispatch('SET_CHAT_CHANNEL', ``);
+    store.dispatch('SET_USER', null);
+
+    document.body.className = 'LoginPage';
+
+    // router.push({ path: '/login' });
+    // router.replace({ path: '/login' });
+
+    next({ path: '/login', component: LoginPage, name: 'LoginPage' });
+}
+
+
 router.beforeEach(async (to, from, next) => {
     if (! to.meta.isGuest) {
-        window.console.warn('Auth Required!');
-
         const gwt = store.getters.gwToken;
-        const isGWT = !(null === gwt  ||  gwt===``);
-        window.console.log(isGWT, 'isGWT');
 
-        if (isGWT) {
+        if ((gwt+'')!=='null'  &&  gwt!=='') {
             let tryToLoadUser = await getUserData(store.getters.gwToken);
 
             if (tryToLoadUser) {
@@ -69,13 +83,11 @@ router.beforeEach(async (to, from, next) => {
                 });
             }
             else {
-                window.console.log('Go to login 1');
-                window.app.$root.$emit('afterSuccessLogout', { redirect: true });
+                routerForcedLogout(next);
             }
         }
         else {
-            window.console.log('Go to login 2');
-            window.app.$root.$emit('afterSuccessLogout', { redirect: true });
+            routerForcedLogout(next);
         }
     }
 

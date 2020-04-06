@@ -12,7 +12,7 @@ data() {
 },
 
 mounted() {
-    this.$root.$emit('afterSuccessLogout', {});
+    this.$root.$emit('afterSuccessLogout', {redirect: true});
 }
 
 }
