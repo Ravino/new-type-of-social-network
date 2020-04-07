@@ -32,7 +32,7 @@ class ImageUploadController extends Controller
      */
     public function upload(StoreImage $request)
     {
-        $path = Storage::disk('s3')->put('images/originals', $request->image);
+        $path = Storage::disk('s3')->put('images/originals', $request->image, 'public');
         $request->merge([
             'size' => $request->image->getSize(),
             'original_name' => $request->image->getClientOriginalName(),
