@@ -54,6 +54,9 @@ class ChatSeeder extends Seeder
                 'email' => $email,
                 'password' => bcrypt('secret'),
                 'token' => bcrypt('secret'),
+                'last_activity_dt' => time(),
+                'created_at' => time(),
+                'updated_at' => time()
             ]);
 
             $user->profile()->create(factory(Profile::class)->make()->toArray());
@@ -71,6 +74,9 @@ class ChatSeeder extends Seeder
                 'email' => $email,
                 'password' => bcrypt('secret'),
                 'token' => bcrypt('secret'),
+                'last_activity_dt' => time(),
+                'created_at' => time(),
+                'updated_at' => time()
             ]);
 
             $user->profile()->create(factory(Profile::class)->make()->toArray());
@@ -88,6 +94,9 @@ class ChatSeeder extends Seeder
                 'email' => $email,
                 'password' => bcrypt('secret'),
                 'token' => bcrypt('secret'),
+                'last_activity_dt' => time(),
+                'created_at' => time(),
+                'updated_at' => time()
             ]);
 
             $user->profile()->create(factory(Profile::class)->make()->toArray());
