@@ -1,57 +1,63 @@
 <template>
-<!--old layout    <div class="row plz-profile-user mt-5">-->
-<!--old layout        <div class="col-12 bg-white-br20 py-3">-->
-<!--old layout            {{post.postText}}-->
-<!--old layout        </div>-->
-<!--old layout    </div>-->
-    <div class="row plz-profile-user mt-4" style="height: 300px;"><!-- added height for remove content jumping -->
-        <div class="col-12 bg-white-br20 py-3">
-            <div class="tab-pane fade show active" id="all-posts" role="tabpanel" aria-labelledby="all-posts">
-                <p>Я не могу сказать, что я отношусь к категории гордых людей, я скорее всего с категории взаимных.
-                Для меня важно чувствовать необходимость, тёплое отношение и заботу.</p>
-            </div>
-            <div class="tab-pane fade" id="my-posts" role="tabpanel" aria-labelledby="my-posts">
-                <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit.
-                    At blanditiis cum deserunt dicta eius excepturi, exercitationem
-                    fuga mollitia nam necessitatibus nisi officiis qui sapiente soluta,
-                    sunt, vel voluptas! Ab at commodi culpa eos ipsum iusto maxime, modi
-                    molestias non odio possimus quae quod saepe sapiente soluta, ullam velit.</p>
-                <p>Ab ad aperiam aspernatur beatae consectetur cupiditate, dolorum eius eum
-                    excepturi, fugit labore maiores molestias necessitatibus optio possimus quaerat
-                    quam quis quod quos rem sapiente sequi similique sint suscipit tempora tempore
-                    temporibus tenetur totam veniam voluptatibus. Beatae, dignissimos dolorum ducimus
-                    explicabo illum incidunt laboriosam nostrum obcaecati, perferendis quas, quasi quidem totam voluptate!</p>
-            </div>
-            <div class="tab-pane fade" id="archive-posts" role="tabpanel" aria-labelledby="archive-posts">
-                <img src="../images/last-entries/vladislav.png" alt="">
-                <img src="../images/last-entries/vladislav.png" alt="">
-                <img src="../images/last-entries/vladislav.png" alt="">
-                <img src="../images/last-entries/vladislav.png" alt="">
-            </div>
+    <div class="row plz-post-item mt-4 bg-white-br20 py-3">
+        <div class="col-12">
+            <div class="d-flex flex-row align-content-lg-start border-bottom pb-3">
+                <div class="post-poster-pic mr-3">
+                    <img :src="posterPic" :alt="post.posterName" />
+                </div>
 
+                <div class="post-poster-name">
+                    <h6><b>{{post.posterName}}</b></h6>
+                    <time :datetime="post.dtLabel" class="">
+                        {{ post.dtLabel | lastMessageTime }}
+                    </time>
+                </div>
+
+                <div class="post-poster-actions align-self-end ml-auto">
+                    <button class="btn btn-link text-black-50" type="button"><i class="fas fa-ellipsis-v fa-2x"></i></button>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-12 py-3">
+            <div class="post-main-text text-body" v-html="this.$options.filters.toBR(post.postText)"></div>
+        </div>
+
+
+        <div class="col-12">
+            <div class="post-picture-main mt-3">
+                <img :src="post.images[0].path" alt="" />
+            </div>
         </div>
     </div>
 
 </template>
 
 <script>
-export default {
-name: 'ProfilePost',
-props: {
-    post: Object
-},
-data () {
-    return {
+    export default {
+        name: 'ProfilePost',
+        props: {
+            user: Object,
+            post: Object
+        },
+        data() {
+            return {
+            }
+        },
+
+        methods: {
+        },
+
+        computed : {
+            posterPic: function(){
+                return (this.post  &&  this.post.posterPic!=='') ? this.post.posterPic : this.$defaultAvatarPath;
+            }
+        }
+
     }
-},
-
-methods: {
-}
-
-}
 </script>
 
-<style>
+<style lang="scss">
     .plz-profile-user {
         box-shadow: 0px 2px 5px 0px rgba(0, 0, 0, 0.05);
         background-color: white;
@@ -60,5 +66,37 @@ methods: {
         color: #363636;
         font-family: OpenSans-Light, sans-serif;
         font-size: 13px;
+    }
+
+    $postPosterPicSize: 48px;
+
+    .plz-post-item {
+        .post-poster-pic {
+            width: $postPosterPicSize;
+            min-width: $postPosterPicSize;
+            max-width: $postPosterPicSize;
+            height: $postPosterPicSize;
+            min-height: $postPosterPicSize;
+            max-height: $postPosterPicSize;
+            text-align: center;
+            vertical-align: middle;
+
+            > img {
+                width: 100%;
+                height: auto;
+                border-radius: $postPosterPicSize/2;
+            }
+        }
+
+        .post-picture-main {
+            width: 100%;
+            min-width: 100%;
+            max-width: 100%;
+
+            > img {
+                width: 100%;
+                height: auto;
+            }
+        }
     }
 </style>

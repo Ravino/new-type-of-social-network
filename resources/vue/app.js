@@ -51,6 +51,19 @@ Vue.filter('lastMessageTime', (messageDT) => {
     return lmt.format('DD.MM.YY');
 });
 
+Vue.filter('statsBeauty', (sValue) => {
+    if (sValue >= 2000) {
+        const res = Math.floor(sValue / 1000);
+        return `${res}&nbsp;К`;
+    }
+
+    return sValue;
+});
+
+Vue.filter('toBR', (text) => {
+    return text.replace(/\n/g, '<br />');
+});
+
 window.fbAsyncInit = function() {
     FB.init({
         // Facebook client id.

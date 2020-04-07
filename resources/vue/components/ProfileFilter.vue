@@ -1,28 +1,10 @@
 <template>
-    <div id="profile-filter" class="row plz-profile-photos mt-4">
+    <div id="profileFilter" class="row plz-profile-filter mt-4">
         <div class="col-12 bg-white-br20 d-flex align-items-center justify-content-between">
-            <nav class="nav profile-filter" role="tablist">
-                <a class="nav-link active"
-                   href="#all-posts"
-                   id="all-posts-tab"
-                   data-toggle="tab"
-                   role="tab"
-                   aria-controls="all-posts"
-                   aria-selected="true">Все записи</a>
-                <a class="nav-link"
-                   id="my-posts-tab"
-                   href="#my-posts"
-                   data-toggle="tab"
-                   role="tab"
-                   aria-controls="my-posts"
-                   aria-selected="false">Мои записи</a>
-                <a class="nav-link"
-                   href="#archive-posts"
-                   id="archive-posts-tab"
-                   data-toggle="tab"
-                   role="tab"
-                   aria-controls="archive-posts"
-                   aria-selected="false">Архив</a>
+            <nav class="nav profile-filter-links" role="tablist">
+                <a class="nav-link" :class="{ 'active': wMode==='all' }" id="tabAllPosts" role="tab" @click.stop="wallPostsSelect(`all`)">Все записи</a>
+                <a class="nav-link" :class="{ 'active': wMode==='my' }" id="tabMyPosts" role="tab" @click.stop="wallPostsSelect(`my`)">Мои записи</a>
+                <a class="nav-link" :class="{ 'active': wMode==='archive' }" id="tabArchivePosts" role="tab" @click.stop="wallPostsSelect(`archive`)">Архив</a>
             </nav>
 
             <i class="fa fa-search" aria-hidden="true"></i>
@@ -31,19 +13,23 @@
 </template>
 
 <script>
-export default {
-name: 'ProfileFilter',
-data () {
-    return {
+    export default {
+        name: 'ProfileFilter',
+
+        data () {
+            return {
+                wMode: `all`
+            }
+        },
+
+        methods: {
+
+            /** TODO: @TGA перевести потом на отправку события только родителю **/
+            wallPostsSelect(wMode){
+                this.wMode = wMode;
+                this.$root.$emit('wallPostsSelect', {wMode: wMode});
+            },
+        }
+
     }
-},
-
-methods: {
-}
-
-}
 </script>
-
-<style>
-
-</style>

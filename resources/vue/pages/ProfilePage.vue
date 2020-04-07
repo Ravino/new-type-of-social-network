@@ -15,7 +15,8 @@
 
                 <ProfileFilter></ProfileFilter>
 
-                <ProfilePost v-for="(postData, postIndex) in userPosts" v-bind:key="postIndex" v-bind:post="postData" v-bind:user="userData">
+                <ProfilePost v-for="(postData, postIndex) in userPosts"
+                             v-bind:key="postIndex" v-bind:post="postData" v-bind:user="userData">
                 </ProfilePost>
             </div>
 
@@ -39,6 +40,8 @@ import ProfileWhatsNew from '../components/ProfileWhatsNew.vue';
 import ProfileFilter from '../components/ProfileFilter.vue';
 import ProfilePost from '../components/ProfilePost.vue';
 
+import userProfilePosts from '../data/userProfilePosts.js';
+
 export default {
 name: 'AccountPage',
 components: { AccountToolbarLeft, FavoritFriends, ShortFriends,
@@ -46,19 +49,7 @@ components: { AccountToolbarLeft, FavoritFriends, ShortFriends,
 },
 data() {
     return {
-        userPosts: [
-            {
-                postText: `Я не могу сказать, что я отношусь к категории гордых людей, я скорее всего с категории взаимных. Для меня важно чувствовать необходимость, теплое отношение и заботу.`,
-                dtLabel : `2019-07-23 18:32:00`,
-                isMine: false,
-                visitsNumber: 3483,
-                commentsNumber: 12,
-                sharesNumber: 8,
-                likesNumber: 74,
-                dislikesNumber: 26,
-                images : []
-            },
-        ],
+        userPosts: userProfilePosts,
 
         userPhotos: [
             { path: '/images/user-photos/user-photo-01.png', },
@@ -82,15 +73,13 @@ data() {
             country: `Россия`,
             created_at: `2020-03-31 13:16:41`,
             updated_at: `2020-03-31 13:16:41`,
-            subscribersNumber: 122000,
-            friendsNumber: 1222,
-            photosNumber: 1784,
-            videosNumber: 62,
-            audiosNumber: 3221,
-        },
-        dataReady: true,
-        gwToken: `test`,
 
+            subscribersNumber: Math.floor(Math.random() * 10000),
+            friendsNumber: Math.floor(Math.random() * 3000),
+            photosNumber: Math.floor(Math.random() * 10000),
+            videosNumber: Math.floor(Math.random() * 100),
+            audiosNumber: Math.floor(Math.random() * 5000),
+        },
     }
 },
 
@@ -108,11 +97,19 @@ methods : {
                 this.userData[oKey] = realData[oKey];
             }
         });
+    },
+
+    wallPostsSelectHandler(evData){
+        window.console.log(evData.wMode, `wallPostsSelectHandler`);
     }
 },
 
 beforeMount() {
     this.loadRealData();
+},
+
+mounted() {
+    this.$root.$on('wallPostsSelect', this.wallPostsSelectHandler);
 }
 
 }

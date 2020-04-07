@@ -2,6 +2,7 @@
     <li class="chat-list-user media m-0 px-4 py-2"
         :class="{ 'bg-light':  dialog.id === currentDialog.id, 'bg-white': dialog.id !== currentDialog.id  }">
 
+        <!--        TODO: @tga добавить .stop для @click после стилизации  -->
         <div class="user-friend d-flex col-12" @click="switchToChat()">
             <div class="user-friend-pic mr-3 ">
                 <img class="user-friend-img rounded-circle overflow-hidden" v-bind:src="companionPic" v-bind:alt="dialog.name" />
