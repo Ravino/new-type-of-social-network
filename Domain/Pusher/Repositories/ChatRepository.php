@@ -49,7 +49,7 @@ class ChatRepository
             ])->toArray();
 
         foreach( $attendees as $attendee) {
-            $attendee->lastActivityDT = Carbon::create($attendee->last_activity_dt)->timestamp;
+            $attendee->lastActivityDT = $attendee->last_activity_dt;
             $attendee->userPic = $attendee->user_pic;
             unset($attendee->user_pic);
             unset($attendee->last_activity_dt);
@@ -61,7 +61,7 @@ class ChatRepository
             $dialog->id = $item->id;
             $dialog->name = $item->firstname;
             $dialog->lastMessageText = $item->last_message_body;
-            $dialog->lastMessageDT = Carbon::createFromTimestamp($item->last_message_time)->toDateTimeString();
+            $dialog->lastMessageDT = $item->last_message_time;
             $dialog->isRead = (bool)$item->last_is_read;
             $dialog->isLastFromMe = ($user_id == $item->last_user_id);
             $dialog->isOnline = ($user_id == $item->last_user_id);

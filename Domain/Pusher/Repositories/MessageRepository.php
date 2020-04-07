@@ -60,8 +60,8 @@ class MessageRepository
             $message->isMine = ($item->user_id == $user_id);
             $message->isRead = $item->is_read;
             $message->isEdited = false;
-            $message->createdAt = Carbon::createFromTimestamp($item->created_at)->toDateTimeString();
-            $message->updatedAt = Carbon::createFromTimestamp($item->updated_at)->toDateTimeString();
+            $message->createdAt = $item->created_at;
+            $message->updatedAt = $item->updated_at;
             $collection[] = $message;
         }
 
