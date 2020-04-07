@@ -10,7 +10,9 @@ AdminSection::registerModel(\App\Models\User::class, function (\SleepingOwl\Admi
         $display = AdminDisplay::table()->setColumns([
             AdminColumn::link('id')->setLabel('ID')->setWidth('400px'),
             AdminColumn::text('email')->setLabel('Email'),
-            AdminColumn::text('is_admin')->setLabel('Admin')
+            AdminColumn::custom('is_admin', function(\Illuminate\Database\Eloquent\Model $model) {
+                return (int) $model->is_admin === 1 ? 'Да' : 'Нет';
+            })->setLabel('Admin')
         ]);
         $display->paginate(15);
         return $display;
@@ -18,9 +20,8 @@ AdminSection::registerModel(\App\Models\User::class, function (\SleepingOwl\Admi
     // Create And Edit
     $model->onCreateAndEdit(function() {
         $form = AdminForm::panel()->addBody(
-            AdminFormElement::text('id', 'ID')->required()->unique(),
-            AdminFormElement::textarea('email', 'Email')->setRows(2),
-            AdminFormElement::checkbox('is_admin', 'Admin')/*->setRows(2)*/
+            AdminFormElement::text('email', 'Email'),
+            AdminFormElement::checkbox('is_admin', 'Admin')
         );
         return $form;
     });
