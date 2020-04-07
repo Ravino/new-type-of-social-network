@@ -2,7 +2,7 @@
     <div class="w-100">
         <div class="message-item" :class="{ 'my-message': message.isMine, 'companion-message': !message.isMine, 'compact-message': isNextIsSamePerson() }">
             <div class="message-user-pic">
-                <img v-if="message.isMine"  src="/images/noavatar-256.png" :alt="currentDialog.firstname" class="message-user-img" />
+                <img v-if="message.isMine" :src="ownerPic" :alt="currentDialog.firstname" class="message-user-img" />
                 <img v-else :src="companionPic" :alt="companionName" class="message-user-img" />
             </div>
             <div class="message-body">
@@ -56,6 +56,10 @@ methods: {
 },
 
 computed: {
+    ownerPic: function(){
+        return (this.currentDialog  &&  this.currentDialog.userPic) ? this.currentDialog.userPic : this.$defaultAvatarPath;
+    },
+
     companionName: function(){
         let com = null;
         try {
@@ -72,10 +76,10 @@ computed: {
         try {
             com = this.getCompanion();
         } catch (e) {
-            if (console !== undefined && console.error) console.error(e);
+            if (window.console !== undefined && window.console.error) window.console.warn(e.toString());
         }
 
-        return (com  &&  com.userPic) ? com.userPic : '/images/noavatar-256.png';
+        return (com  &&  com.userPic) ? com.userPic : this.$defaultAvatarPath;
     },
 },
 

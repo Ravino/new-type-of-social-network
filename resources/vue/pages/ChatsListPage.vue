@@ -74,11 +74,7 @@ methods: {
 
 
     channelSubscribe(s){
-        let cid = this.$store.getters.chatChannel;
-
-        s.subscribe(cid, (topicID, data) => {
-            // window.console.log(JSON.parse(JSON.stringify(data.data)), `data.data`);
-
+        s.subscribe(this.$store.getters.chatChannel, (topicID, data) => {
             if (this.currentDialog.id === data.data.chatId) {
                 this.addMessageToMessageList(data.data)
             }
@@ -87,8 +83,6 @@ methods: {
 
 
     switchToChat(evData) {
-        window.console.warn('Switch to chat: '+evData.dialogID);
-
         HTTPer.get('api/chat/messages/' + evData.dialogID, this.$store.getters.getHTTPConfig)
             .then((response) => {
                 this.$store.dispatch('SET_ACTIVE_DIALOG', evData.dialogID);

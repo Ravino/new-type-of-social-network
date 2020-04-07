@@ -55,7 +55,7 @@ computed: {
             return this.currentDialog.attendees[0].userPic;
         }
 
-        return ``;
+        return this.$defaultAvatarPath;
     },
 
     companionName: function(){
