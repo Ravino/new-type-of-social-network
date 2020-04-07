@@ -120,24 +120,7 @@ data () {
                 lastVisit: `2020-04-02 18:04:00`,
                 messagesNumber: 0
             },
-            {
-                firstName : `Антон`,
-                sex: `m`,
-                userPic: `images/chat/malunder.png`,
-                isType : false,
-                isOnline : false,
-                lastVisit: `2020-03-02 18:04:00`,
-                messagesNumber: 0
-            },
-            {
-                firstName : `Виктория`,
-                sex: `f`,
-                userPic: `images/chat/maria.png`,
-                isType : false,
-                isOnline : false,
-                lastVisit: `2020-03-16 16:04:00`,
-                messagesNumber: 0
-            },
+
         ]
     }
 },
