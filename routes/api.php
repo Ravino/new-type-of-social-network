@@ -28,6 +28,7 @@ Route::group(['middleware' => ['auth.jwt', 'track.activity']], function () {
     Route::patch('user', 'Api\ProfileController@patch');
     Route::resource('user', 'Api\ProfileController', ['only' => ['index']]);
 
+    Route::post('user/profile/image', 'Api\ImageUploadController@upload');
 });
 
 Route::get('login/{provider}', 'Auth\LoginController@redirectToProvider');

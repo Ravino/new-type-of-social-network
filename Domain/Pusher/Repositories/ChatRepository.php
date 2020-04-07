@@ -41,17 +41,18 @@ class ChatRepository
             ->get([
                 'chat_party.chat_id',
                 'users.last_activity_dt',
-                'profiles.user_id',
                 'profiles.firstname',
                 'profiles.lastname',
                 'profiles.birthday',
                 'profiles.city',
+                'profiles.user_pic'
             ])->toArray();
 
-        // TODO: Change this to real data when implemented
-        foreach( $attendees as &$attendee) {
+        foreach( $attendees as $attendee) {
             $attendee->lastActivityDT = Carbon::create($attendee->last_activity_dt)->timestamp;
-            $attendee->userPic = 'https://habrastorage.org/storage2/b92/bcf/532/b92bcf532c0a2889272ffd72ffb1f2b5.png';
+            $attendee->userPic = $attendee->user_pic;
+            unset($attendee->user_pic);
+            unset($attendee->last_activity_dt);
         }
 
         $collection = [];
@@ -59,14 +60,12 @@ class ChatRepository
             $dialog = new Dialog();
             $dialog->id = $item->id;
             $dialog->name = $item->firstname;
-            //todo: поменять после реализации механизма загрузки аватарок
-            $dialog->userPic = 'https://habrastorage.org/storage2/b92/bcf/532/b92bcf532c0a2889272ffd72ffb1f2b5.png';
             $dialog->lastMessageText = $item->last_message_body;
-            $dialog->lastMessageDT = $item->last_message_time;
+            $dialog->lastMessageDT = Carbon::createFromTimestamp($item->last_message_time)->toDateTimeString();
             $dialog->isRead = (bool)$item->last_is_read;
             $dialog->isLastFromMe = ($user_id == $item->last_user_id);
             $dialog->isOnline = ($user_id == $item->last_user_id);
-            $dialog->attendees = ArrayUtils::objArraySearch($attendees, 'chat_id', $item->id);;
+            $dialog->attendees = ArrayUtils::objArraySearch($attendees, 'chat_id', $item->id);
             $collection[] = $dialog;
         }
         return $collection;

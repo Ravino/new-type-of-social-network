@@ -41,6 +41,7 @@ class Profile extends Model
         'firstname', 'lastname', 'birthday', 'city', 'sex', 'relationship',
     ];
 
+    //TODO: Please move this to request handler
     public static function rules($keys = [])
     {
         $rules = [
