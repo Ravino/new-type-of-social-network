@@ -8,7 +8,10 @@
             <div id="chatMain" class="row bg-light border">
                 <div class="col-sm-12 col-md-12 col-lg-4 col-xl-4 col-auto pl-lg-0 pl-xl-0 px-sm-0 px-md-0">
                     <ul id="chatFriends" class="list-unstyled mb-0">
-                        <ChatListItem v-for="(dialog, dialogIndex) in dialogsList" v-bind:currentDialog="currentDialog" v-bind:dialog="dialog" v-bind:key="dialogIndex" v-bind:dialogID="dialogIndex"></ChatListItem>
+                        <ChatListItem v-for="(dialog, dialogIndex) in dialogsList"
+                                      v-bind:currentDialog="currentDialog" v-bind:dialog="dialog"
+                                      v-bind:key="dialogIndex" v-bind:dialogID="dialogIndex">
+                        </ChatListItem>
                     </ul>
                 </div>
 
@@ -62,16 +65,23 @@ methods: {
             skipSubprotocolCheck: true
         };
 
-        this.chatCarrier = new ab.connect(window.wsUrl, (s) => {
-            s.subscribe(this.$store.getters.chatChannel, (topic, data) => {
-                if (this.currentDialog.id === data.data.chatId) {
-                    this.messagesList.push(data.data)
-                }
-            })
-        },
+        window.console.log(this.$store.getters.chatChannel, 'this.$store.getters.chatChannel');
+
+        this.chatCarrier = new ab.connect(window.wsUrl, this.channelSubscribe,
             (code, reason, detail) => { window.console.log(reason); },
             channelOptions
         );
+    },
+
+
+    channelSubscribe(s){
+        window.console.log(`channelSubscribe`);
+
+        s.subscribe(this.$store.getters.chatChannel, (topic, data) => {
+            if (this.currentDialog.id === data.data.chatId) {
+                this.messagesList.push(data.data)
+            }
+        })
     },
 
 

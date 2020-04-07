@@ -49,13 +49,14 @@ async function getUserData(token){
 
 
 function routerForcedLogout(next){
-    // не работает :(
-    // window.app.$root.$emit('afterSuccessLogout', { redirect: true });
-
     store.dispatch('SET_GWT', ``);
     store.dispatch('SET_AUTH', false);
     store.dispatch('SET_CHAT_CHANNEL', ``);
     store.dispatch('SET_USER', null);
+
+    window.localStorage.removeItem('pliziJWToken');
+    window.localStorage.removeItem('pliziUser');
+    window.localStorage.removeItem('pliziChatChannel');
 
     document.body.className = 'LoginPage';
 
@@ -71,15 +72,13 @@ router.beforeEach(async (to, from, next) => {
         const gwt = store.getters.gwToken;
 
         if ((gwt+'')!=='null'  &&  gwt!=='') {
-            let tryToLoadUser = await getUserData(store.getters.gwToken);
+            const tryToLoadUser = await getUserData(gwt);
 
             if (tryToLoadUser) {
-                store.dispatch('SET_USER', tryToLoadUser);
-                store.dispatch('SET_AUTH', true);
-
                 window.app.$root.$emit('afterUserLoad', {
-                    user    : JSON.parse(JSON.stringify(tryToLoadUser)),
-                    gwToken : store.getters.gwToken
+                    user  : JSON.parse(JSON.stringify(tryToLoadUser)),
+                    token : gwt,
+                    save  : true
                 });
             }
             else {

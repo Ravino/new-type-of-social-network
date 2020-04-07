@@ -5,7 +5,7 @@
         </div>
 
         <div class="col-sm-10 col-md-9 col-lg-8 col-xl-8">
-            <AccountSettingsMain v-bind:user="userData" v-bind:isReady="dataReady"></AccountSettingsMain>
+            <AccountSettingsMain v-bind:user="userData"></AccountSettingsMain>
             <AccountSettingsPrivacy></AccountSettingsPrivacy>
             <AccountSettingsSecurity></AccountSettingsSecurity>
         </div>
@@ -54,28 +54,25 @@ data() {
     }
 },
 
-methods: {
-
+methods : {
     loadRealData() {
         //TODO: заменить потом на простой вызов строкой ниже
         // this.userData = this.$store.dispatch('GET_USER');
 
         let no = Object.keys( JSON.parse( JSON.stringify(this.userData) ) );
-
         let realData = JSON.parse(JSON.stringify( this.$store.getters.userData ));
 
         no.map(oKey => {
             if (realData[oKey]) {
                 this.userData[oKey] = realData[oKey];
             }
-        })
+        });
     }
-
 },
 
-mounted() {
+beforeMount() {
     this.loadRealData();
-},
+}
 
 
 }
