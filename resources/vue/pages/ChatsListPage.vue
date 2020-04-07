@@ -8,7 +8,10 @@
             <div id="chatMain" class="row bg-light border">
                 <div class="col-sm-12 col-md-12 col-lg-4 col-xl-4 col-auto pl-lg-0 pl-xl-0 px-sm-0 px-md-0">
                     <ul id="chatFriends" class="list-unstyled mb-0">
-                        <ChatListItem v-for="(dialog, dialogIndex) in dialogsList" v-bind:currentDialog="currentDialog" v-bind:dialog="dialog" v-bind:key="dialogIndex" v-bind:dialogID="dialogIndex"></ChatListItem>
+                        <ChatListItem v-for="(dialog, dialogIndex) in dialogsList"
+                                      v-bind:currentDialog="currentDialog" v-bind:dialog="dialog"
+                                      v-bind:key="dialogIndex" v-bind:dialogID="dialogIndex">
+                        </ChatListItem>
                     </ul>
                 </div>
 
@@ -62,22 +65,34 @@ methods: {
             skipSubprotocolCheck: true
         };
 
-        this.chatCarrier = new ab.connect(window.wsUrl, (s) => {
-            s.subscribe(this.$store.getters.chatChannel, (topic, data) => {
-                if (this.currentDialog.id === data.data.chatId) {
-                    this.messagesList.push(data.data)
-                }
-            })
-        },
-            (code, reason, detail) => { window.console.log(reason); },
+        this.chatCarrier = new ab.connect('ws://'+window.wsUrl+'/pubsub',
+            this.channelSubscribe,
+            (code, reason, detail) => { window.console.warn(reason); },
             channelOptions
         );
     },
 
 
+    channelSubscribe(s){
+        let cid = this.$store.getters.chatChannel;
+
+        s.subscribe(cid, (topicID, data) => {
+            // window.console.log(JSON.parse(JSON.stringify(data.data)), `data.data`);
+
+            if (this.currentDialog.id === data.data.chatId) {
+                this.addMessageToMessageList(data.data)
+            }
+        });
+    },
+
+
     switchToChat(evData) {
+        window.console.warn('Switch to chat: '+evData.dialogID);
+
         HTTPer.get('api/chat/messages/' + evData.dialogID, this.$store.getters.getHTTPConfig)
             .then((response) => {
+                this.$store.dispatch('SET_ACTIVE_DIALOG', evData.dialogID);
+
                 this.messagesList = response.data;
                 this.currentDialog = this.dialogsList.find((dialog) => dialog.id === evData.dialogID);
             })
@@ -96,9 +111,21 @@ methods: {
         const response = await HTTPer.get('api/chat/dialogs', this.$store.getters.getHTTPConfig);
         this.dialogsList = response.data;
 
+        const lastDialog = +this.$store.getters.activeDialog;
+
         this.currentDialog = null;
-        if (Array.isArray(this.dialogsList) && this.dialogsList) {
+
+        if (Array.isArray(this.dialogsList)  &&  this.dialogsList  &&  this.dialogsList.length>0) {
+            this.dialogsList.map((dItem)=>{
+                if (+dItem.id === lastDialog){
+                    this.currentDialog = JSON.parse(JSON.stringify(dItem));
+                }
+            });
+        }
+
+        if (this.currentDialog === null) {
             this.currentDialog = this.dialogsList[0];
+            this.$store.dispatch('SET_ACTIVE_DIALOG', this.currentDialog.id);
         }
 
         return true;
