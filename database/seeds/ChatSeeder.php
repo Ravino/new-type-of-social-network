@@ -113,15 +113,13 @@ class ChatSeeder extends Seeder
             $id = DB::table('chat')->insertGetId(
                 ['user_id' => $user_id, 'name' => $name, 'created_at' => time(), 'updated_at' => time()]
             );
+            DB::table('chat_party')->insert([
+                ['chat_id' => $id, 'user_id' => $user_id, 'created_at' => time()],
+                ['chat_id' => $id, 'user_id' => $recipient_id, 'created_at' => time()]
+            ]);
         }else{
             $id = $chat->id;
         }
-
-        DB::table('chat_party')->insert([
-            ['chat_id' => $id, 'user_id' => $user_id, 'created_at' => time()],
-            ['chat_id' => $id, 'user_id' => $recipient_id, 'created_at' => time()]
-        ]);
-
         return $id;
     }
 
