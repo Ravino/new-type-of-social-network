@@ -36,8 +36,7 @@ class User extends Authenticatable implements JWTSubject
      * @var array
      */
     protected $casts = [
-        'email_verified_at' => 'datetime',
-        'last_activity_dt' => 'datetime',
+        'email_verified_at' => 'datetime'
     ];
 
     public function getJWTIdentifier()
@@ -61,5 +60,10 @@ class User extends Authenticatable implements JWTSubject
     public function linkedSocialAccounts()
     {
         return $this->hasMany(LinkedSocialAccount::class);
+    }
+
+    public function getDateFormat()
+    {
+        return 'U';
     }
 }

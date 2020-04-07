@@ -3,6 +3,7 @@
 namespace App\Http\Middleware;
 
 use Auth;
+use Carbon\Carbon;
 use DB;
 use Closure;
 
@@ -13,10 +14,10 @@ class LastActivityDt
         if (auth()->guest()) {
             return $next($request);
         }
-        if (auth()->user()->last_activity_dt->diffInMinutes(now()) !== config('app.user_activity_margin')) {
+        if (Carbon::create(auth()->user()->last_activity_dt)->diffInMinutes(now()) !== config('app.user_activity_margin')) {
             DB::table("users")
                 ->where("id", auth()->user()->id)
-                ->update(["last_activity_dt" => now()]);
+                ->update(["last_activity_dt" => time()]);
         }
         return $next($request);
     }

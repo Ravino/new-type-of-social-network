@@ -62,4 +62,9 @@ class Profile extends Model
 
         return $rules;
     }
+
+    public function getDateFormat()
+    {
+        return 'U';
+    }
 }

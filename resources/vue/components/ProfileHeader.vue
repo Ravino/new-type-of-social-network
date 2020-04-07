@@ -71,19 +71,19 @@
 </template>
 
 <script>
-    export default {
-        name: 'ProfileHeader',
-        props: {
-            user: Object
-        },
-        data () {
-            return {
-            }
-        },
-
-        methods: {
-        }
-
+export default {
+name: 'ProfileHeader',
+props: {
+    user: Object
+},
+data () {
+    return {
     }
+},
+
+methods: {
+}
+
+}
 </script>
 

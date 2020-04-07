@@ -1,0 +1,67 @@
+.user-friend {
+    &-pic {
+        display: inline-block;
+        position: relative;
+        img {
+            display: inline-block;
+            width: 42px;
+            height: 42px;
+        }
+    }
+
+    &-isonline {
+        display: block;
+        position: absolute;
+        width: 10px;
+        height: 10px;
+        right: 0px;
+        bottom: 0px;
+        background-color: #9fcd48;
+        border: 1px solid #fff;
+        border-radius: 100%;
+    }
+    &-isoffline {
+        display: block;
+        position: absolute;
+        width: 10px;
+        height: 10px;
+        right: 0px;
+        bottom: 0px;
+        background-color: #cacac9;
+        border: 1px solid #fff;
+        border-radius: 100%;
+    }
+
+    &-body {
+        &-top {
+            time {
+                font-size: 11px;
+                color: #9a9a9a;// add color to var
+            }
+        }
+    }
+
+    &-name {
+        font-size: 13px;
+        font-weight: 600;
+        color: #363636;
+        line-height: 20px;
+        cursor: pointer;
+
+        &:hover{
+            text-decoration: underline;
+            color: #9a9a9a;
+        }
+    }
+
+    &-desc {
+        font-size: 12px;
+        color: #9a9a9a;
+    }
+
+    &-details {
+        font-size: 12px;
+        color: #363636;
+    }
+
+}

@@ -48,9 +48,8 @@ class ChatRepository
                 'profiles.user_pic'
             ])->toArray();
 
-        // TODO: Change this to real data when implemented
         foreach( $attendees as $attendee) {
-            $attendee->lastActivityDT = Carbon::create($attendee->last_activity_dt)->timestamp;
+            $attendee->lastActivityDT = $attendee->last_activity_dt;
             $attendee->userPic = $attendee->user_pic;
             unset($attendee->user_pic);
             unset($attendee->last_activity_dt);
@@ -61,8 +60,6 @@ class ChatRepository
             $dialog = new Dialog();
             $dialog->id = $item->id;
             $dialog->name = $item->firstname;
-            //todo: поменять после реализации механизма загрузки аватарок
-            $dialog->userPic = 'https://habrastorage.org/storage2/b92/bcf/532/b92bcf532c0a2889272ffd72ffb1f2b5.png';
             $dialog->lastMessageText = $item->last_message_body;
             $dialog->lastMessageDT = $item->last_message_time;
             $dialog->isRead = (bool)$item->last_is_read;

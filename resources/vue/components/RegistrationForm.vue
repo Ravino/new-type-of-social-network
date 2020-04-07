@@ -192,5 +192,3 @@ methods: {
 
 }
 </script>
-
-<style lang="scss" src="../styles/RegistrationForm.scss"></style>

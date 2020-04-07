@@ -4,6 +4,7 @@
 namespace Domain\Pusher\Repositories;
 
 
+use Carbon\Carbon;
 use Domain\Pusher\Models\Message;
 
 class MessageRepository
@@ -41,6 +42,7 @@ class MessageRepository
                 'chat_messages.user_id',
                 'profiles.firstname',
                 'profiles.lastname',
+                'profiles.user_pic',
                 'chat_messages.body',
                 'chat_message_status.is_read',
                 'chat_messages.created_at',
@@ -53,7 +55,7 @@ class MessageRepository
             $message->id = $item->id;
             $message->firstName = $item->firstname;
             $message->lastName = $item->lastname;
-            $message->userPic = 'https://habrastorage.org/storage2/b92/bcf/532/b92bcf532c0a2889272ffd72ffb1f2b5.png';
+            $message->userPic = $item->user_pic;
             $message->body = $item->body;
             $message->isMine = ($item->user_id == $user_id);
             $message->isRead = $item->is_read;

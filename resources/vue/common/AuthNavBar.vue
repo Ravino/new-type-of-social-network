@@ -70,21 +70,19 @@
 export default {
 name: 'AuthNavBar',
 props: {
-    isAuth: Boolean
+    isAuth: Boolean,
+    userData : Object,
 },
 data () {
     return {
         tmpUserName : `---`,
         tmpUserPicture : `images/noavatar-256.png`,
-        userData : null,
+        // userData : null,
         isDefaultAvatar: true,
     }
 },
 
 methods: {
-    onUserLoad(evData) {
-        this.userData = evData.user;
-    },
 
 },
 
@@ -111,11 +109,5 @@ computed : {
     }
 },
 
-beforeMount() {
-    this.$root.$on('afterUserLoad',  this.onUserLoad);
-},
-
 }
 </script>
-
-<style lang="scss" src="../styles/AuthNavBar.scss"></style>

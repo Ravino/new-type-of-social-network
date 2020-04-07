@@ -94,7 +94,6 @@ export default {
 name: 'AccountSettingsMain',
 props: {
     user: Object,
-    isReady: Boolean
 },
 data () {
     return {
@@ -104,10 +103,6 @@ data () {
 
 methods: {
 },
-
-beforeUpdate() {
-
-}
 
 }
 </script>

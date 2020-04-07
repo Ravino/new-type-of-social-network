@@ -151,6 +151,3 @@
         },
     }
 </script>
-
-
-<style lang="scss" src="../styles/LoginForm.scss"></style>

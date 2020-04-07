@@ -23,9 +23,10 @@ export const store = new Vuex.Store({
     },
 
     getters : {
-        userData : state => {
-            return state.userData;
+        isAuth : state => {
+            return state.isAuth;
         },
+
         gwToken : state => {
             let gwt = state.gwToken;
 
@@ -34,20 +35,22 @@ export const store = new Vuex.Store({
             }
 
             if (gwt !== ``) {
-                store.dispatch('SET_GWT', gwt);
+                state.gwToken = gwt;
                 return gwt;
             }
 
             return state.gwToken;
         },
+
+        userData : state => {
+            return state.userData;
+        },
+
         chatChannel:state => {
             if(!state.chatChannel){
                 state.chatChannel = window.sessionStorage.getItem('pliziChatChannel')
             }
             return state.chatChannel;
-        },
-        isAuth : state => {
-            return state.isAuth;
         },
         getHTTPConfig : state => {
             const gwt = state.gwToken;
@@ -67,36 +70,43 @@ export const store = new Vuex.Store({
 
     // setters
     mutations: {
-        SET_USER : (state, payload) => {
-            state.userData = payload;
-        },
-        SET_GWT : (state, payload) => {
-            window.localStorage.setItem('pliziJWToken', payload+'');
-            state.gwToken = payload;
-        },
-        SET_CHAT_CHANNEL: (state, payload) => {
-            window.sessionStorage.setItem('pliziChatChannel', payload);
-            state.chatChannel = payload;
-        },
         SET_AUTH : (state, payload) => {
             state.isAuth = payload;
+        },
+
+        SET_GWT : (state, payload) => {
+            state.gwToken = payload;
+            window.localStorage.setItem('pliziJWToken', payload);
+        },
+
+        SET_USER : (state, payload) => {
+            if (payload !== null) {
+                state.userData = payload;
+                window.localStorage.setItem('pliziUser', JSON.stringify(payload));
+            }
+        },
+
+        SET_CHAT_CHANNEL: (state, payload) => {
+            state.chatChannel = payload;
+            window.localStorage.setItem('pliziChatChannel', payload);
         },
     },
 
     actions: {
-        SET_GWT : (context, payload) => {
-            context.commit('SET_GWT', payload);
-        },
-        SET_CHAT_CHANNEL : (context, payload) => {
-            context.commit('SET_CHAT_CHANNEL', payload);
-        },
         SET_AUTH : (context, payload) => {
             context.commit('SET_AUTH', payload);
         },
 
+        SET_GWT : (context, payload) => {
+            context.commit('SET_GWT', payload);
+        },
+
         SET_USER : (context, payload) => {
-            window.localStorage.setItem('pliziUser', JSON.stringify(payload));
             context.commit('SET_USER', payload);
+        },
+
+        SET_CHAT_CHANNEL : (context, payload) => {
+            context.commit('SET_CHAT_CHANNEL', payload);
         },
 
         GET_USER : async (context, payload) => {
