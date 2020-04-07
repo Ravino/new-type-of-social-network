@@ -51,6 +51,40 @@ Vue.filter('lastMessageTime', (messageDT) => {
     return lmt.format('DD.MM.YY');
 });
 
+Vue.filter('statsBeauty', (sValue) => {
+    if (sValue >= 2000) {
+        const res = Math.floor(sValue / 1000);
+        return `${res}&nbsp;К`;
+    }
+
+    return sValue;
+});
+
+Vue.filter('toBR', (text) => {
+    return text.replace(/\n/g, '<br />');
+});
+
+window.fbAsyncInit = function() {
+    FB.init({
+        // Facebook client id.
+        appId      : '531305747577438',
+        cookie     : true,
+        xfbml      : true,
+        version    : 'v6.0'
+    });
+
+    FB.AppEvents.logPageView();
+
+};
+
+(function(d, s, id){
+    var js, fjs = d.getElementsByTagName(s)[0];
+    if (d.getElementById(id)) {return;}
+    js = d.createElement(s); js.id = id;
+    js.src = "https://connect.facebook.net/en_US/sdk.js";
+    fjs.parentNode.insertBefore(js, fjs);
+}(document, 'script', 'facebook-jssdk'));
+
 Vue.use(Vuelidate);
 
 import App from './App.vue';
