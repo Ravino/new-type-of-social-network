@@ -2,7 +2,7 @@
     <li class="chat-list-user media m-0 px-3 py-2"
         :class="{ 'bg-light':  dialog.id === currentDialog.id, 'bg-white': dialog.id !== currentDialog.id  }">
 
-        <div class="user-friend d-flex  my-2 w-100">
+        <div class="user-friend d-flex w-100">
             <div class="user-friend-pic mr-3 ">
                 <img class="user-friend-img rounded-circle overflow-hidden" v-bind:src="dialog.userPic" v-bind:alt="dialog.name" />
                 <span v-if="dialog.isOnline" class="user-friend-isonline" title="онлайн"></span>
@@ -10,7 +10,7 @@
             </div>
 
             <div class="media-body user-friend-body m-0">
-                <div class="user-friend-body-top d-flex justify-content-between">
+                <div class="user-friend-body-top d-flex align-items-end justify-content-between">
                     <h6 class="user-friend-name my-0 "
                         @click="switchToChat()">
                         {{ dialog.attendees[0].firstname }}

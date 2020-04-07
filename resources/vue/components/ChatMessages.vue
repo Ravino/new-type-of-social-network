@@ -3,7 +3,8 @@
         <div class="d-flex flex-column --align-items-start">
             <ChatMessageItem v-for="(message, messageIndex) in messages"
                              v-bind:currentDialog="currentDialog"
-                             v-bind:message="message" v-bind:next="getNext(messageIndex)"
+                             v-bind:message="message"
+                             v-bind:next="getNext(messageIndex)"
                              v-bind:key="messageIndex">
             </ChatMessageItem>
         </div>

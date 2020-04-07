@@ -7,7 +7,8 @@
         <GuestNavBar v-if="!isAuth"></GuestNavBar>
         <AuthNavBar v-else ></AuthNavBar>
 
-        <main id="contentContainer" role="main" class="container-fluid pb-sm-5 pb-md-5">
+        <main id="contentContainer" role="main"
+              class="container-fluid pb-sm-5 pb-md-5 pr-4">
             <router-view></router-view>
         </main>
 

@@ -1,11 +1,23 @@
+
+$userPicSize: 32px;
+
+.chat-list-user {
+    transition: .4s;
+    &:hover {
+        background-color: #f7f8fc;
+    }
+}
+
 .user-friend {
     &-pic {
         display: inline-block;
         position: relative;
+        height: $userPicSize;
+        width: $userPicSize;
         img {
             display: inline-block;
-            width: 42px;
-            height: 42px;
+            width: $userPicSize;
+            height: $userPicSize;
         }
     }
 
