@@ -83,8 +83,8 @@ data() {
             created_at: `2020-03-31 13:16:41`,
             updated_at: `2020-03-31 13:16:41`,
             subscribersNumber: 122000,
-            friendsNumber: '1 222',
-            photosNumber: '1 784',
+            friendsNumber: 1222,
+            photosNumber: 1784,
             videosNumber: 62,
             audiosNumber: 3221,
         },
@@ -94,26 +94,26 @@ data() {
     }
 },
 
-methods: {
+
+methods : {
     loadRealData() {
         //TODO: заменить потом на простой вызов строкой ниже
         // this.userData = this.$store.dispatch('GET_USER');
 
         let no = Object.keys( JSON.parse( JSON.stringify(this.userData) ) );
-
         let realData = JSON.parse(JSON.stringify( this.$store.getters.userData ));
 
         no.map(oKey => {
             if (realData[oKey]) {
                 this.userData[oKey] = realData[oKey];
             }
-        })
+        });
     }
 },
 
-mounted() {
+beforeMount() {
     this.loadRealData();
-},
+}
 
 }
 </script>

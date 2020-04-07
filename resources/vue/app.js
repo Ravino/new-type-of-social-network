@@ -32,7 +32,7 @@ Vue.filter('toFullDateTime', (dateValue) => {
 Vue.filter('lastMessageTime', (messageDT) => {
     let now = moment();
     let yesterday = moment().subtract(1, 'days');
-    let lmt = moment(messageDT);
+    let lmt = moment.unix(messageDT);
 
     // если сообщение было сегодня или вчера
     if (now.format('YYYY-MM-DD')===lmt.format('YYYY-MM-DD')  ||  yesterday.format('YYYY-MM-DD')===lmt.format('YYYY-MM-DD')) {

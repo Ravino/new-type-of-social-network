@@ -22,4 +22,9 @@ class LinkedSocialAccount extends Model
     {
         return $this->belongsTo(User::class);
     }
+
+    public function getDateFormat()
+    {
+        return 'U';
+    }
 }

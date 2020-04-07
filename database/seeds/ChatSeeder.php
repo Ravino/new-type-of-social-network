@@ -54,6 +54,9 @@ class ChatSeeder extends Seeder
                 'email' => $email,
                 'password' => bcrypt('secret'),
                 'token' => bcrypt('secret'),
+                'last_activity_dt' => time(),
+                'created_at' => time(),
+                'updated_at' => time()
             ]);
 
             $user->profile()->create(factory(Profile::class)->make()->toArray());
@@ -71,6 +74,9 @@ class ChatSeeder extends Seeder
                 'email' => $email,
                 'password' => bcrypt('secret'),
                 'token' => bcrypt('secret'),
+                'last_activity_dt' => time(),
+                'created_at' => time(),
+                'updated_at' => time()
             ]);
 
             $user->profile()->create(factory(Profile::class)->make()->toArray());
@@ -88,6 +94,9 @@ class ChatSeeder extends Seeder
                 'email' => $email,
                 'password' => bcrypt('secret'),
                 'token' => bcrypt('secret'),
+                'last_activity_dt' => time(),
+                'created_at' => time(),
+                'updated_at' => time()
             ]);
 
             $user->profile()->create(factory(Profile::class)->make()->toArray());
@@ -113,15 +122,13 @@ class ChatSeeder extends Seeder
             $id = DB::table('chat')->insertGetId(
                 ['user_id' => $user_id, 'name' => $name, 'created_at' => time(), 'updated_at' => time()]
             );
+            DB::table('chat_party')->insert([
+                ['chat_id' => $id, 'user_id' => $user_id, 'created_at' => time()],
+                ['chat_id' => $id, 'user_id' => $recipient_id, 'created_at' => time()]
+            ]);
         }else{
             $id = $chat->id;
         }
-
-        DB::table('chat_party')->insert([
-            ['chat_id' => $id, 'user_id' => $user_id, 'created_at' => time()],
-            ['chat_id' => $id, 'user_id' => $recipient_id, 'created_at' => time()]
-        ]);
-
         return $id;
     }
 

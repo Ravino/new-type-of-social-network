@@ -57,7 +57,7 @@ methods: {
         if (13===ev.keyCode  &&  this.newMessage.trim()!=='') {
             const newMsg = {
                 body: this.newMessage.trim(),
-                createdAt: moment().format('YYYY-MM-DD HH:mm:ss'),
+                createdAt: moment().unix(),
                 isMine: true,
                 isRead: false,
                 isEdited: false

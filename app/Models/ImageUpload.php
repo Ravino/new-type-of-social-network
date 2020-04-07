@@ -38,4 +38,9 @@ class ImageUpload extends Model
             $image->url = $image->s3Url;
         });
     }
+
+    public function getDateFormat()
+    {
+        return 'U';
+    }
 }

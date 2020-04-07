@@ -1,24 +1,18 @@
 <template>
-    <div class="row w-100">
-        <div class="col-sm-1 col-md-1 col-lg-1 ">
+    <div class="row">
+        <div class="col-sm-1 col-md-1 col-lg-1 col-xl-1">
             <AccountToolbarLeft></AccountToolbarLeft>
         </div>
 
-        <div class="col-sm-12 col-md-9 col-lg-11 pr-0">
-            <div id="chatMain" class="row bg-white-br20 overflow-hidden">
-
-                <div class="col-sm-12 col-lg-4 col-auto pl-lg-0 px-sm-0 py-4">
+        <div class="col-sm-12 col-md-9 col-lg-9 col-xl-10">
+            <div id="chatMain" class="row bg-light border">
+                <div class="col-sm-12 col-md-12 col-lg-4 col-xl-4 col-auto pl-lg-0 pl-xl-0 px-sm-0 px-md-0">
                     <ul id="chatFriends" class="list-unstyled mb-0">
-                        <ChatListItem v-for="(dialog, dialogIndex) in dialogsList"
-                                      v-bind:currentDialog="currentDialog"
-                                      v-bind:dialog="dialog"
-                                      v-bind:key="dialogIndex"
-                                      v-bind:dialogID="dialogIndex"></ChatListItem>
+                        <ChatListItem v-for="(dialog, dialogIndex) in dialogsList" v-bind:currentDialog="currentDialog" v-bind:dialog="dialog" v-bind:key="dialogIndex" v-bind:dialogID="dialogIndex"></ChatListItem>
                     </ul>
                 </div>
 
-                <div id="chatMessangesWrapper"
-                     class="col-8 col-lg-8 col-xl-8 bg-light d-none d-lg-block d-xl-block h-100 px-0">
+                <div id="chatMessangesWrapper" class="col-8 col-lg-8 col-xl-8 bg-light d-none d-lg-block d-xl-block h-100">
                     <ChatHeader v-bind:currentDialog="currentDialog"></ChatHeader>
                     <ChatMessages v-bind:messages="messagesList" v-bind:currentDialog="currentDialog"></ChatMessages>
                     <ChatFooter v-bind:currentDialog="currentDialog"></ChatFooter>
@@ -26,6 +20,9 @@
             </div>
         </div>
 
+        <div class="col-sm-1 col-md-2 col-lg-2 col-xl-1">
+            <AccountToolbarRight></AccountToolbarRight>
+        </div>
     </div>
 </template>
 

@@ -5,7 +5,7 @@
         <!--   :class="{ 'container-fluid' : isAuth, 'container': !isAuth }" add class CONTAINER-->
 
         <GuestNavBar v-if="!isAuth"></GuestNavBar>
-        <AuthNavBar v-else ></AuthNavBar>
+        <AuthNavBar v-else v-bind:is-auth="isAuth" v-bind:user-data="userData"></AuthNavBar>
 
         <main id="contentContainer" role="main"
               class="container-fluid pb-sm-5 pb-md-5 pr-4">
@@ -60,7 +60,6 @@ methods: {
         this.$store.dispatch('SET_CHAT_CHANNEL', ``);
         this.$store.dispatch('SET_USER', null);
 
-        //TODO: @tga уюедиться, что корректно работает в Vuex и убрать отсюда
         window.localStorage.removeItem('pliziJWToken');
         window.localStorage.removeItem('pliziUser');
         window.localStorage.removeItem('pliziChatChannel');
@@ -69,6 +68,7 @@ methods: {
             this.$router.push({path: '/login'});
         }
     },
+
 
     sentNewChatMessageToAPI(evData) {
         const sendData = {
@@ -93,16 +93,38 @@ methods: {
                 }
             });
     },
+
+
+    afterUserLoad(evData) {
+        if (evData.token !== ``  &&  evData.user) {
+            this.isAuth = true;
+            this.userData = evData.user;
+
+            this.$store.dispatch('SET_AUTH', true);
+
+            if (evData.save) {
+                this.$store.dispatch('SET_GWT', evData.token);
+                this.$store.dispatch('SET_USER', evData.user);
+            }
+        }
+    },
 },
 
 
 mounted() {
+
+},
+
+beforeMount(){
     this.$root.$on('afterSuccessLogin',  this.afterSuccessLogin);
 
     this.$root.$on('afterSuccessLogout', this.afterSuccessLogout);
 
     this.$root.$on('sentNewChatMessageToAPI', this.sentNewChatMessageToAPI);
+
+    this.$root.$on('afterUserLoad', this.afterUserLoad);
 }
+
 }
 </script>
 
