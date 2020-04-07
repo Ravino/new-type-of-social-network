@@ -26,7 +26,7 @@ Route::group(['middleware' => ['auth.jwt', 'track.activity']], function () {
     });
 
     Route::patch('user', 'Api\ProfileController@patch');
-    Route::resource('user', 'Api\ProfileController', ['only' => ['index']]);
+    Route::resource('user', 'Api\ProfileController', ['only' => ['index', 'show']]);
 
     Route::post('user/profile/image', 'Api\ImageUploadController@upload');
 });

@@ -2,21 +2,14 @@
 
 namespace App\Http\Controllers\Api;
 
+use App\Http\Controllers\Controller;
 use App\Models\Profile;
 use App\Models\User;
 use Domain\Pusher\WampServer;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Hash;
-use Illuminate\Support\Facades\Mail;
-use Illuminate\Support\Facades\Validator;
-use Illuminate\Validation\Rule;
-use JWTAuth;
-use Tymon\JWTAuth\Exceptions\JWTException;
-use Tymon\JWTAuth\Exceptions\TokenExpiredException;
-
-use App\Http\Controllers\Controller;
-use Carbon\Carbon;
+use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
+use App\Http\Resources\User as UserResource;
 
 class ProfileController extends Controller
 {
@@ -30,6 +23,14 @@ class ProfileController extends Controller
         return ['data' => new \App\Http\Resources\User(Auth::user()->profile), 'channel' => $channel];
     }
 
+    public function show($user)
+    {
+        $user = User::with('profile')->find($user);
+        if(!$user){
+            throw new NotFoundHttpException();
+        }
+        return new UserResource($user);
+    }
 
     /**
      * Patch user account api method.

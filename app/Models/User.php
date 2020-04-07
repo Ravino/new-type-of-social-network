@@ -2,10 +2,8 @@
 
 namespace App\Models;
 
-use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
-
 use Tymon\JWTAuth\Contracts\JWTSubject;
 
 class User extends Authenticatable implements JWTSubject
@@ -36,7 +34,9 @@ class User extends Authenticatable implements JWTSubject
      * @var array
      */
     protected $casts = [
-        'email_verified_at' => 'datetime'
+        'email_verified_at' => 'datetime',
+        'created_at' => 'timestamp',
+        'updated_at' => 'timestamp',
     ];
 
     public function getJWTIdentifier()
@@ -65,5 +65,22 @@ class User extends Authenticatable implements JWTSubject
     public function getDateFormat()
     {
         return 'U';
+    }
+
+    public function isAdmin()
+    {
+        return (int) $this->is_admin === 1;
+    }
+
+    public function isSuperAdmin()
+    {
+        return (int) $this->is_admin === 1;
+    }
+
+
+    public function isOnline() : bool
+    {
+        $period = config('user_activity_margin');
+        return $this->last_activity_dt > strtotime("-$period minutes");
     }
 }

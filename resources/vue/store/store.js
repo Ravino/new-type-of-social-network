@@ -19,12 +19,29 @@ export const store = new Vuex.Store({
         },
         gwToken : ``,
         chatChannel : ``,
+        activeDialog: -1,
         isAuth: false
     },
 
     getters : {
         isAuth : state => {
             return state.isAuth;
+        },
+
+        activeDialog : state => {
+            let acId = state.activeDialog;
+
+            if (!acId  ||  acId<=0) {
+                acId = window.localStorage.getItem('pliziActiveDialog')+'';
+                acId = acId >>> 0;
+            }
+
+            if (acId >= 0) {
+                state.activeDialog = acId;
+                return acId;
+            }
+
+            return state.activeDialog;
         },
 
         gwToken : state => {
@@ -46,12 +63,20 @@ export const store = new Vuex.Store({
             return state.userData;
         },
 
-        chatChannel:state => {
-            if(!state.chatChannel){
-                state.chatChannel = window.sessionStorage.getItem('pliziChatChannel')
+        chatChannel : state => {
+            let pc = state.chatChannel;
+
+            if (pc===null  ||  pc===``){
+                pc = window.localStorage.getItem('pliziChatChannel');
+
+                if (pc!==null  &&  pc!==``){
+                    return pc;
+                }
             }
+
             return state.chatChannel;
         },
+
         getHTTPConfig : state => {
             const gwt = state.gwToken;
 
@@ -90,6 +115,11 @@ export const store = new Vuex.Store({
             state.chatChannel = payload;
             window.localStorage.setItem('pliziChatChannel', payload);
         },
+
+        SET_ACTIVE_DIALOG: (state, payload) => {
+            state.activeDialog = payload;
+            window.localStorage.setItem('pliziActiveDialog', payload);
+        },
     },
 
     actions: {
@@ -107,6 +137,10 @@ export const store = new Vuex.Store({
 
         SET_CHAT_CHANNEL : (context, payload) => {
             context.commit('SET_CHAT_CHANNEL', payload);
+        },
+
+        SET_ACTIVE_DIALOG : (context, payload) => {
+            context.commit('SET_ACTIVE_DIALOG', payload);
         },
 
         GET_USER : async (context, payload) => {
