@@ -1,0 +1,51 @@
+#toolbarLeftColor {
+    text-align: center;
+    color: #a6a7a9;
+
+     a {
+        position: relative;
+     }
+
+     img{
+        position: relative;
+        width: 48px;
+        height: 48px;
+        border-radius: 100%;
+        overflow: hidden;
+     }
+
+     .btn-close{
+        position: absolute;
+        top: -5px;
+        left: 50%;
+        width: 16px;
+        height: 16px;
+        display: inline-block;
+        padding: 3px;
+        border: 0;
+        background-color: #EF482C;
+        font-size: 10px;
+        color: #FFFFFF;
+        border-radius: 100%;
+        transform: translate(40%, 0%) rotate(45deg);
+        transition: .4s;
+        z-index: 1;
+        opacity: 0;
+
+        &:hover  .btn-close{
+            opacity: 1;
+        }
+    }
+     .add-new{
+        position: relative;
+        display: inline-block;
+        background-color: #e3e4ec;
+        width: 48px;
+        height: 48px;
+        border-radius: 100%;
+    }
+}
+.add-new .fa {
+    line-height: 48px;
+    color: #b3b6d0;
+}

@@ -1,5 +1,9 @@
-@import './ui-kit/fonts.scss';
-@import './ui-kit/plizi-variables.scss';
+@import './ui-kit/index.scss';
+
+@import './common/index.scss';
+@import './components/index.scss';
+
+
 
 @media (min-width:1200px){
     .container-wide{max-width:1410px}

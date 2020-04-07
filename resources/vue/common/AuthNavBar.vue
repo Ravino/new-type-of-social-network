@@ -117,5 +117,3 @@ beforeMount() {
 
 }
 </script>
-
-<style lang="scss" src="../styles/AuthNavBar.scss"></style>

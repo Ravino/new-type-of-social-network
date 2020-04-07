@@ -81,4 +81,3 @@ mounted() {
 }
 </script>
 
-<style lang="scss" src="../styles/AccountPage.scss"></style>

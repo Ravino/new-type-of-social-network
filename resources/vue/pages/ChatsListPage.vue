@@ -130,5 +130,3 @@ async mounted() {
 
 }
 </script>
-
-<style lang="scss" src="../styles/ChatsListPage.scss"></style>
