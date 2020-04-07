@@ -144,10 +144,13 @@ CREATE DATABASE plizi_test;
 # Docker / Docker-compose
 
 Инструкция для установки на Ubuntu - https://docs.docker.com/install/linux/docker-ce/ubuntu/
+
 Инструкция для установки на Windows - https://docs.docker.com/docker-for-windows/
+
 Инструкция для установки на Mac - https://docs.docker.com/docker-for-mac/install/
 
 **`/nginx`** - Конфигурация nginx для контейнера
+
 **`/php`** - Конфигурация php для контейнера
 
 Для запуска контейнеров используйте
