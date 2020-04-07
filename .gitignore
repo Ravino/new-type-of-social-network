@@ -29,6 +29,10 @@ Thumbs.db
 /design
 
 /public/apl.html
+/public/js/app.js
+/public/css/app.css
 
 *.js.map
 *.css.map
+
+/resources/vue/libs

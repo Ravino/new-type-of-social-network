@@ -17,7 +17,7 @@
     <!-- Styles -->
     <link href="{{ asset('css/app.css') }}" rel="stylesheet" />
 
-    <title>{{ config('app.firstName', 'Laravel') }}</title>
+    <title>{{ config('app.name', 'Laravel') }}</title>
     <script>
         var apiURL = '{{ config('app.url') }}';
         var wsUrl = "ws://{{ config('app.wsUrl') }}";
@@ -30,7 +30,7 @@
 <script src="{{ asset('js/jquery-3.3.1.min.js') }}"></script>
 <script src="{{ asset('js/bootstrap-4.3.1.min.js') }}"></script>
 
-<script src="{{ asset('js/app.js') }}" defer></script>
-<script src="js/autobahn.min.js"></script>
+<script src="{{ asset('js/autobahn.min.js') }}"></script>
+<script src="{{ asset('js/app.js') }}"></script>
 </body>
 </html>

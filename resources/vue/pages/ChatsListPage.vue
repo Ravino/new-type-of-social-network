@@ -30,8 +30,6 @@
 import AccountToolbarLeft from '../common/AccountToolbarLeft.vue';
 import AccountToolbarRight from '../common/AccountToolbarRight.vue';
 
-// import ChatMainComponent from '../components/ChatMainComponent.vue';
-
 import ChatListItem from '../components/ChatListItem.vue';
 
 import ChatHeader from '../components/ChatHeader.vue';
@@ -101,7 +99,6 @@ methods: {
         this.currentDialog = null;
         if (Array.isArray(this.dialogsList) && this.dialogsList) {
             this.currentDialog = this.dialogsList[0];
-            // window.console.log( JSON.parse(JSON.stringify(this.currentDialog)) , 'this.currentDialog');
         }
 
         return true;
