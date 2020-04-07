@@ -2,17 +2,16 @@
     <li class="chat-list-user media m-0 px-3 py-2"
         :class="{ 'bg-light':  dialog.id === currentDialog.id, 'bg-white': dialog.id !== currentDialog.id  }">
 
-        <div class="user-friend d-flex  my-2 w-100">
+        <div class="user-friend d-flex w-100" @click="switchToChat()">
             <div class="user-friend-pic mr-3 ">
-                <img class="user-friend-img rounded-circle overflow-hidden" v-bind:src="dialog.userPic" v-bind:alt="dialog.name" />
+                <img class="user-friend-img rounded-circle overflow-hidden" v-bind:src="companionPic" v-bind:alt="dialog.name" />
                 <span v-if="dialog.isOnline" class="user-friend-isonline" title="онлайн"></span>
                 <span v-else class="user-friend-isoffline"></span>
             </div>
 
             <div class="media-body user-friend-body m-0">
-                <div class="user-friend-body-top d-flex justify-content-between">
-                    <h6 class="user-friend-name my-0 "
-                        @click="switchToChat()">
+                <div class="user-friend-body-top d-flex align-items-end justify-content-between">
+                    <h6 class="user-friend-name my-0">
                         {{ dialog.attendees[0].firstname }}
                     </h6>
                     <small v-if="dialog.isRead" class="mr-1 ml-auto">
@@ -36,25 +35,30 @@
 </template>
 
 <script>
-    export default {
-        name: 'ChatListItem',
-        props: {
-            dialog: Object,
-            currentDialog: Object,
-            dialogID: Number
-        },
-        data() {
-            return {}
-        },
+export default {
+name: 'ChatListItem',
+props: {
+    dialog: Object,
+    currentDialog: Object,
+    dialogID: Number
+},
+data() {
+    return {}
+},
 
-        methods: {
-            switchToChat() {
-                this.$root.$emit('switchToChat', {dialogID: this.dialog.id});
-            }
-        },
-        mounted() {}
-
+methods: {
+    switchToChat() {
+        this.$root.$emit('switchToChat', {dialogID: this.dialog.id});
     }
+},
+
+computed : {
+    companionPic: function(){
+        return (this.dialog  &&  this.dialog.userPic) ? this.dialog.userPic : this.$defaultAvatarPath;
+    }
+}
+
+}
 </script>
 
 

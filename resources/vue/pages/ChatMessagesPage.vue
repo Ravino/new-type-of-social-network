@@ -5,7 +5,8 @@
         </div>
 
         <div class="col-sm-10 col-md-9 col-lg-11 col-xl-11">
-            <div id="chatMessangesWrapperSM" class="bg-light w-75 d-flex flex-column d-md-none d-sm-none">
+            <div id="chatMessangesWrapperSM"
+                 class="bg-light w-75 d-flex flex-column d-md-none d-sm-none">
                 <ChatHeader v-bind:companion="companion"></ChatHeader>
                 <ChatMessages v-bind:messages="messagesList" v-bind:companion="companion" v-bind:self-person="selfPerson"></ChatMessages>
                 <ChatFooter v-bind:companion="companion" v-bind:self-person="selfPerson"></ChatFooter>

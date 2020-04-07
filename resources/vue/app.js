@@ -2,6 +2,8 @@ import Vue from 'vue';
 import VueRouter from 'vue-router';
 import Vuelidate from 'vuelidate';
 
+Vue.prototype.$defaultAvatarPath = `/images/noavatar-256.png`;
+
 import { VueResponsiveComponents } from 'vue-responsive-components';
 Vue.use(VueResponsiveComponents);
 

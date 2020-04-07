@@ -1,10 +1,10 @@
 <template>
     <div class="row">
-        <div class="col-sm-1 col-md-1 col-lg-1 col-xl-1 pr-md-0">
+        <div class="col-sm-1 col-md-1 col-lg-1 col-xl-1">
             <AccountToolbarLeft></AccountToolbarLeft>
         </div>
 
-        <div class="col-sm-10 col-md-9 col-lg-8 col-xl-8 --bg-danger">
+        <div class="col-sm-10 col-md-9 col-lg-8 col-xl-8 pl-0 --bg-danger">
 
             <div class="container">
                 <ProfileHeader v-bind:user="userData"></ProfileHeader>

@@ -65,29 +65,28 @@ methods: {
             skipSubprotocolCheck: true
         };
 
-        window.console.log(this.$store.getters.chatChannel, 'this.$store.getters.chatChannel');
-
-        this.chatCarrier = new ab.connect(window.wsUrl, this.channelSubscribe,
-            (code, reason, detail) => { window.console.log(reason); },
+        this.chatCarrier = new ab.connect('ws://'+window.wsUrl+'/pubsub',
+            this.channelSubscribe,
+            (code, reason, detail) => { window.console.warn(reason); },
             channelOptions
         );
     },
 
 
     channelSubscribe(s){
-        window.console.log(`channelSubscribe`);
-
-        s.subscribe(this.$store.getters.chatChannel, (topic, data) => {
+        s.subscribe(this.$store.getters.chatChannel, (topicID, data) => {
             if (this.currentDialog.id === data.data.chatId) {
-                this.messagesList.push(data.data)
+                this.addMessageToMessageList(data.data)
             }
-        })
+        });
     },
 
 
     switchToChat(evData) {
         HTTPer.get('api/chat/messages/' + evData.dialogID, this.$store.getters.getHTTPConfig)
             .then((response) => {
+                this.$store.dispatch('SET_ACTIVE_DIALOG', evData.dialogID);
+
                 this.messagesList = response.data;
                 this.currentDialog = this.dialogsList.find((dialog) => dialog.id === evData.dialogID);
             })
@@ -106,9 +105,21 @@ methods: {
         const response = await HTTPer.get('api/chat/dialogs', this.$store.getters.getHTTPConfig);
         this.dialogsList = response.data;
 
+        const lastDialog = +this.$store.getters.activeDialog;
+
         this.currentDialog = null;
-        if (Array.isArray(this.dialogsList) && this.dialogsList) {
+
+        if (Array.isArray(this.dialogsList)  &&  this.dialogsList  &&  this.dialogsList.length>0) {
+            this.dialogsList.map((dItem)=>{
+                if (+dItem.id === lastDialog){
+                    this.currentDialog = JSON.parse(JSON.stringify(dItem));
+                }
+            });
+        }
+
+        if (this.currentDialog === null) {
             this.currentDialog = this.dialogsList[0];
+            this.$store.dispatch('SET_ACTIVE_DIALOG', this.currentDialog.id);
         }
 
         return true;

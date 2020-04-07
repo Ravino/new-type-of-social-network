@@ -3,8 +3,8 @@
         <div class="row align-items-center">
             <div class="col-1">
                 <div class="media mx-auto">
-                    <img class="chat-companion-user-pic my-0 mx-auto" width="32" height="32"
-                         v-bind:src="currentDialog.userPic" v-bind:alt="currentDialog.firstname" />
+                    <img class="chat-companion-user-pic rounded-circle my-0 mx-auto" width="32" height="32"
+                         v-bind:src="userPic" v-bind:alt="currentDialog.firstname" />
                 </div>
             </div>
             <div class="col-9 pl-0">
@@ -23,13 +23,13 @@
             <div class="col-2">
                 <div class="btn-group">
                     <button class="btn btn-link mx-0 px-1" type="button">
-                        <img src="../images/chat-staple-icon.png" width="24" height="24" alt=""/>
+                        <img src="../images/chat-staple-icon.png" width="24" height="24" alt="загрузить файл" />
                     </button>
                     <button class="btn btn-link mx-0 px-1" type="button">
-                        <img src="../images/chat-camera-icon.png" width="24" height="24" alt=""/>
+                        <img src="../images/chat-camera-icon.png" width="24" height="24" alt="загрузить картинку" />
                     </button>
                     <button class="btn btn-link mx-0 px-1" type="button">
-                        <img src="../images/chat-smile-icon.png" width="24" height="24" alt=""/>
+                        <img src="../images/chat-smile-icon.png" width="24" height="24" alt="добавить смайлик" />
                     </button>
                 </div>
             </div>
@@ -74,6 +74,16 @@ methods: {
         }
     }
 },
+
+computed : {
+    userPic : function () {
+        return (this.currentDialog  &&  this.currentDialog.userPic) ? this.currentDialog.userPic : this.$defaultAvatarPath;
+    }
+},
+
+mounted() {
+    window.console.log(JSON.parse(JSON.stringify(this.currentDialog)), 'currentDialog' );
+}
 
 }
 </script>
