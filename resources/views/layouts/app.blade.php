@@ -19,8 +19,8 @@
 
     <title>{{ config('app.name', 'Laravel') }}</title>
     <script>
-        var apiURL = '{{ config('app.url') }}';
-        var wsUrl = "ws://{{ config('app.wsUrl') }}";
+        var apiURL = '{{ config('app.api_url') }}';
+        var wsUrl = "ws://{{ config('app.ws_url') }}";
     </script>
 </head>
 <body>
