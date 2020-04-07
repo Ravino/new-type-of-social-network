@@ -21,7 +21,7 @@
 
         </div>
 
-        <div class="col-sm-3 col-md-3 col-lg-3 col-xl-3">
+        <div class="col-sm-3 col-md-3 col-lg-3 col-xl-3 pr-0">
             <FavoritFriends></FavoritFriends>
             <ShortFriends v-bind:user="userData"></ShortFriends>
         </div>

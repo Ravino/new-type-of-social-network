@@ -73,6 +73,50 @@ h1, h2, h3, h4, h5, h6 {
     border-radius: $plzRoundRadius;
 }
 
+.btn-add-file {
+    &:hover {
+        svg {
+            fill: $iconHoverColor;
+        }
+    }
+    svg {
+        display: inline-block;
+        vertical-align: top;
+        width: 18px;
+        height: 18px;
+        fill: $iconDefaultColor;
+    }
+}
+.btn-add-camera {
+    &:hover {
+        svg {
+            fill: $iconHoverColor;
+        }
+    }
+    svg {
+        display: inline-block;
+        vertical-align: top;
+        width: 18px;
+        height: 18px;
+        fill: $iconDefaultColor;
+    }
+}
+.btn-add-smile {
+    &:hover {
+        svg {
+            fill: $iconHoverColor;
+        }
+    }
+    svg {
+        display: inline-block;
+        vertical-align: top;
+        width: 18px;
+        height: 18px;
+        fill: $iconDefaultColor;
+    }
+}
+
+
 .plz-br20 {
     border-radius: $plzRoundRadius;
 }

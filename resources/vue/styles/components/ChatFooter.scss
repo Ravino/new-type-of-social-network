@@ -1,0 +1,13 @@
+
+#chatFooter {
+    #txtMessage {
+        border: 0;
+
+        &::placeholder {
+            font-size: 13px;
+            color: #9a9a9a;
+        }
+    }
+
+}
+

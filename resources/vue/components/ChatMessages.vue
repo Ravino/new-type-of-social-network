@@ -1,5 +1,5 @@
 <template>
-    <div class="w-100 align-self-stretch my-auto --bg-info">
+    <div class="w-100 align-self-stretch py-4 px-5 --bg-info">
         <div class="d-flex flex-column --align-items-start">
             <ChatMessageItem v-for="(message, messageIndex) in messages"
                              v-bind:currentDialog="currentDialog"

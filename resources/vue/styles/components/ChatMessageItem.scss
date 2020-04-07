@@ -1,9 +1,11 @@
 $chatMessageRadius: 20px;
 $chatMessageMargin: 12px;
 $chatMessagePadding: 12px;
+$chatTimePadding: 50px;
 $chatMessageUserPicSize: 32px;
 $chatMessageUserPicMarginX: 10px;
 $userMessageUserPicSize: 42px;
+$chatMessageFS: 13px;
 
 $chatMessageMyMsgBG: #3D51DE;
 $chatMessageMyMsgTextColor: white;
@@ -34,77 +36,75 @@ $chatMessageCompanionMsgTimeColor: #C1BFBF;
     }
 }
 
-
 .message-item {
-    &.my-message, &.companion-message {
+    margin: 3px 0 5px;
+
+    &.my-message,
+    &.companion-message {
         display: block;
         max-width: 80%;
 
         &.compact-message{
             margin-top: $chatMessageMargin/4;
-            margin-bottom: 0px;
         }
     }
 
     &.my-message {
-        float: right;
 
         .message-body {
+            position: relative;
             background-color: $chatMessageMyMsgBG;
             border-radius: $chatMessageRadius $chatMessageRadius 0px $chatMessageRadius;
             padding: $chatMessagePadding;
-
-            display: block;
-            float: right;
+            padding-left: $chatTimePadding;
+            box-shadow: 0 2px 20px 0 rgba(0, 0, 0, 0.2);
         }
 
         .message-user-pic {
             margin-left: $chatMessageUserPicMarginX;
-            float: right;
         }
 
         .message-text {
             display: block;
-            float: right;
             color: $chatMessageMyMsgTextColor;
+            font-size: $chatMessageFS;
         }
 
         .message-time {
-            display: block;
-            float: left;
-            padding-right: 10px;
+            position: absolute;
+            top: $chatMessageFS + 1;
+            left: 10px;
+            font-size: 11px;
             color: $chatMessageMyMsgTimeColor;
         }
     }
 
     &.companion-message {
-        float: left;
 
         .message-body {
+            position: relative;
             background-color: white;
-            border: 1px solid grey;
             border-radius: $chatMessageRadius $chatMessageRadius $chatMessageRadius 0px;
             padding: $chatMessagePadding;
-
-            display: block;
-            float: left;
+            padding-right: $chatTimePadding;
+            box-shadow: 0 2px 20px 0 rgba(0, 0, 0, 0.07);
         }
 
         .message-user-pic {
             margin-right: $chatMessageUserPicMarginX;
-            float: left;
         }
 
         .message-text {
             display: block;
-            float: left;
+            font-size: $chatMessageFS;
             color: $chatMessageCompanionMsgTextColor;
         }
 
         .message-time {
-            display: block;
-            float: right;
-            padding-left: 10px;
+            position: absolute;
+            top: $chatMessageFS + 1;
+            right: 10px;
+            font-size: 11px;
             color: $chatMessageCompanionMsgTimeColor;
         }
     }

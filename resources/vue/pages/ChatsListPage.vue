@@ -4,7 +4,7 @@
             <AccountToolbarLeft></AccountToolbarLeft>
         </div>
 
-        <div class="col-sm-12 col-md-9 col-lg-11">
+        <div class="col-sm-12 col-md-9 col-lg-11 pr-3">
             <div id="chatMain" class="row bg-white-br20 overflow-hidden">
                 <div class="col-sm-12 col-md-12 col-lg-4 col-xl-4 col-auto px-sm-0 px-md-0 py-4 border-right">
                     <ul id="chatFriends" class="list-unstyled mb-0">
@@ -15,7 +15,8 @@
                     </ul>
                 </div>
 
-                <div id="chatMessangesWrapper" class="col-8 col-lg-8 col-xl-8 bg-light d-none d-lg-block d-xl-block h-100 p-0">
+                <div id="chatMessangesWrapper"
+                     class="col-8 col-lg-8 col-xl-8 bg-light d-none d-lg-block d-xl-block h-100 pr-0">
                     <ChatHeader v-bind:currentDialog="currentDialog"></ChatHeader>
                     <ChatMessages v-bind:messages="messagesList" v-bind:currentDialog="currentDialog"></ChatMessages>
                     <ChatFooter v-bind:currentDialog="currentDialog"></ChatFooter>

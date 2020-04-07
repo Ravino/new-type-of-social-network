@@ -11,7 +11,7 @@
                     </router-link>
                 </div>
 
-                <div class="col-sm-4 col-md-6 col-lg-4 d-sm-none d-md-block d-lg-block d-xl-block">
+                <div class="col-sm-4 col-md-6 col-lg-4 d-sm-none d-md-block d-lg-block d-xl-block pl-0">
                     <form class="form-inline mt-3 mt-md-3">
                         <input id="topSearch" ref="topSearch"  class="top-search form-control form-control rounded-pill w-100"
                                type="text"

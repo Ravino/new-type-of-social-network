@@ -1,7 +1,10 @@
 <template>
-    <div class="w-100">
-        <div class="message-item" :class="{ 'my-message': message.isMine, 'companion-message': !message.isMine, 'compact-message': isNextIsSamePerson() }">
-            <div class="message-user-pic">
+    <div class="w-100 d-flex">
+        <div class="message-item d-flex w-100 justify-content-start"
+             :class="{ 'my-message ml-auto flex-row-reverse': message.isMine,
+                        'companion-message ': !message.isMine,
+                        'compact-message': isNextIsSamePerson() }">
+            <div class="message-user-pic mt-auto">
                 <img v-if="message.isMine" :src="ownerPic" :alt="currentDialog.firstname" class="message-user-img" />
                 <img v-else :src="companionPic" :alt="companionName" class="message-user-img" />
             </div>

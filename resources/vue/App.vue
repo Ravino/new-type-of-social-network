@@ -8,7 +8,7 @@
         <AuthNavBar v-else v-bind:is-auth="isAuth" v-bind:user-data="userData"></AuthNavBar>
 
         <main id="contentContainer" role="main"
-              class="container-fluid pb-sm-5 pb-md-5 pr-4">
+              class="container-fluid pb-sm-5 pb-md-5">
             <router-view></router-view>
         </main>
 

@@ -1,0 +1,29 @@
+#chatHeader {
+
+    .chat-search-input {
+        color: #A3A8B9;
+        height: 40px;
+        min-height: 40px;
+        max-height: 40px;
+        background-color: #EEEFF4;
+        border-radius: 20px;
+        border-width: 0;
+        padding: 0 30px;
+        background-image: url('../images/chat-search-loupe.png');
+        background-repeat: no-repeat;
+        background-position: 90% center;
+
+        &::placeholder {
+            font-size: 13px;
+            color: #a3a8b9;
+        }
+    }
+}
+.chatHeader-title {
+    font-size: 13px;
+    font-weight: 700;
+}
+.chatHeader-subtitle {
+    font-size: 13px;
+    color: #9a9a9a;
+}
