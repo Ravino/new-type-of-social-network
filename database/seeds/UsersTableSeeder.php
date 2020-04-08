@@ -22,6 +22,17 @@ class UsersTableSeeder extends Seeder
         $count_of_users = $this->command->ask('How many users you want to generate', 10);
 
         $user1 = User::create([
+            'email' => 'test@gmail.com',
+            'password' => bcrypt('secret'),
+            'token' => bcrypt('secret'),
+            'last_activity_dt' => time(),
+            'created_at' => time(),
+            'updated_at' => time()
+        ]);
+        $user1->profile()->create($this->generateProfile());
+        $this->command->line("Generate user with email {$email1}");
+
+        $user1 = User::create([
             'email' => $email1,
             'password' => bcrypt('secret'),
             'token' => bcrypt('secret'),
