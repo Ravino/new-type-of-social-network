@@ -9,7 +9,7 @@
                 <div class="post-poster-name">
                     <h6><b>{{post.posterName}}</b></h6>
                     <time :datetime="post.dtLabel" class="">
-                        {{ post.dtLabel | lastMessageTime }}
+                        {{ post.dtLabel | toDMYHM }}
                     </time>
                 </div>
 

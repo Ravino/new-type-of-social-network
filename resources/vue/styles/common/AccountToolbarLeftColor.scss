@@ -45,7 +45,13 @@
         border-radius: 100%;
     }
 }
-.add-new .fa {
-    line-height: 48px;
-    color: #b3b6d0;
+.add-new {
+    .fa {
+        line-height: 48px;
+        color: #b3b6d0;
+        transition: .4s;
+    }
+    &:hover .fa{
+        color: $iconHoverColor;
+    }
 }

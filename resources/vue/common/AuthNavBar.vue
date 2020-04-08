@@ -101,8 +101,8 @@ computed : {
     userName() {
         let retName = this.tmpUserName;
 
-        if (this.userData  &&  this.userData.firstname) {
-            retName = this.userData.firstname;
+        if (this.userData  &&  this.userData.profile  &&  this.userData.profile  &&  this.userData.profile.firstName) {
+            retName = this.userData.profile.firstName;
         }
 
         return retName;
