@@ -16,7 +16,7 @@
                 </div>
 
                 <div id="chatMessangesWrapper"
-                     class="col-8 col-lg-8 col-xl-8 bg-light d-none d-lg-block d-xl-block h-100 pr-0">
+                     class="col-8 col-lg-8 col-xl-8 bg-light d-none d-lg-flex flex-column p-0">
                     <ChatHeader v-bind:currentDialog="currentDialog"></ChatHeader>
                     <ChatMessages v-bind:messages="messagesList" v-bind:currentDialog="currentDialog"></ChatMessages>
                     <ChatFooter v-bind:currentDialog="currentDialog"></ChatFooter>
