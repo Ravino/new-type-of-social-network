@@ -55,7 +55,11 @@ methods: {
 
 computed : {
     companionPic: function(){
-        return (this.dialog  &&  this.dialog.userPic) ? this.dialog.userPic : this.$defaultAvatarPath;
+        if (this.dialog  &&  this.dialog.attendees  &&  this.dialog.attendees[0]  &&  this.dialog.attendees[0].userPic) {
+            return this.dialog.attendees[0].userPic;
+        }
+
+        return this.$defaultAvatarPath;
     }
 }
 

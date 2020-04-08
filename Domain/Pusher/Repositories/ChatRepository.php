@@ -22,10 +22,10 @@ class ChatRepository
         $items = DB::table('chat')
             ->join('profiles', 'profiles.user_id', '=', 'chat.user_id')
             ->whereRaw("chat.id IN (SELECT chat_id FROM chat_party WHERE user_id = $user_id GROUP BY chat_id)")
-            ->orderBy('chat.id', 'desc')
+            ->orderBy('chat.last_message_time', 'desc')
             ->get([
                 'chat.id',
-                'profiles.firstname',
+                'chat.name',
                 'chat.last_message_body',
                 'chat.last_is_read',
                 'chat.last_user_id',
@@ -59,7 +59,7 @@ class ChatRepository
         foreach ($items as $item) {
             $dialog = new Dialog();
             $dialog->id = $item->id;
-            $dialog->name = $item->firstname;
+            $dialog->name = $item->name;
             $dialog->lastMessageText = $item->last_message_body;
             $dialog->lastMessageDT = $item->last_message_time;
             $dialog->isRead = (bool)$item->last_is_read;
