@@ -85,6 +85,24 @@ data () {
                 messagesNumber: 0
             },
             {
+                firstName : `Максим`,
+                sex: `m`,
+                userPic: `images/chat/malunder.png`,
+                isType : false,
+                isOnline : true,
+                lastVisit: `2020-04-03 15:04:00`,
+                messagesNumber: 4
+            },
+            {
+                firstName : `Лера`,
+                sex: `f`,
+                userPic: `images/chat/alina.png`,
+                isType : false,
+                isOnline : true,
+                lastVisit: `2020-04-03 15:04:00`,
+                messagesNumber: 0
+            },
+            {
                 firstName : `Анастасия`,
                 sex: `f`,
                 userPic: `images/chat/anna.png`,
