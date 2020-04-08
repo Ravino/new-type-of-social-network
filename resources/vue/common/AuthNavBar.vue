@@ -1,5 +1,6 @@
 <template>
-    <nav class="auth-navbar navbar navbar-expand-lg fixed-top container container-wide mx-auto">
+    <header id="authHeader" class="fixed-top">
+        <nav class="auth-navbar navbar navbar-expand-lg container container-wide mx-auto">
         <div class="w-100 ">
             <div class="row w-100 px-0 mr-0">
                 <div class="d-flex align-items-center col-sm-1 col-md-1 col-lg-1 col-xl-1 py-lg-0 p-xl-0">
@@ -67,6 +68,7 @@
             </div>
         </div>
     </nav>
+    </header>
 </template>
 
 <script>

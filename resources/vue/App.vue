@@ -1,20 +1,28 @@
 <template>
+    <div  id="pageWrapper">
+        <div v-if="!isAuth" id="guestPageWrapper">
+            <div class="--container-fluid container px-0 my-0 pt-3">
 
-    <div class="--container-fluid container px-0 my-0 pt-3"
-         :class="{ 'container-wide  mx-auto mt-4' : isAuth }">
-        <!--   :class="{ 'container-fluid' : isAuth, 'container': !isAuth }" add class CONTAINER-->
+                <GuestNavBar></GuestNavBar>
+                <main id="contentContainer" role="main"
+                      class="container-fluid pb-sm-5 pb-md-5">
+                    <router-view></router-view>
+                </main>
+                <GuestFooter></GuestFooter>
+            </div>
+        </div>
 
-        <GuestNavBar v-if="!isAuth"></GuestNavBar>
-        <AuthNavBar v-else v-bind:is-auth="isAuth" v-bind:user-data="userData"></AuthNavBar>
+        <div v-else id="authPageWrapper">
+            <AuthNavBar  v-bind:is-auth="isAuth" v-bind:user-data="userData"></AuthNavBar>
 
-        <main id="contentContainer" role="main"
-              class="container-fluid pb-sm-5 pb-md-5">
-            <router-view></router-view>
-        </main>
-
-        <GuestFooter v-if="!isAuth"></GuestFooter>
-        <AuthFooter v-else ></AuthFooter>
-
+            <div class="--container-fluid container px-0 my-0 pt-3 container-wide  mx-auto mt-4">
+                <main id="contentContainer" role="main"
+                      class="container-fluid pb-sm-5 pb-md-5">
+                    <router-view></router-view>
+                </main>
+                <AuthFooter ></AuthFooter>
+            </div>
+        </div>
     </div>
 
 </template>

@@ -14,8 +14,21 @@
                 <div class="plz-bottom-link">
                     <router-link to="/for-developers" tag="div" class="nav-item"><a class="nav-link">Для разработчиков</a></router-link>
                 </div>
-                <div class="plz-bottom-link">
-                    <router-link to="/switch-language" tag="div" class="nav-item"><a class="nav-link">Русский <i class="fas fa-chevron-down ml-1"></i></a></router-link>
+
+                <div class="plz-bottom-link dropup">
+                    <p class="nav-link" type="button" id="dropdownMenuButton"
+                            data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                        Русский
+                        <i class="fas fa-chevron-down ml-1"></i>
+                    </p>
+                    <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                        <router-link to="/switch-language" tag="div" class="nav-item">
+                            <a class="dropdown-item" href="#">English</a>
+                        </router-link>
+                        <router-link to="/switch-language" tag="div" class="nav-item">
+                            <a class="dropdown-item" href="#">German</a>
+                        </router-link>
+                    </div>
                 </div>
 
                 <div class="plz-bottom-link align-self-end ml-auto mr-0">
@@ -37,23 +50,3 @@ export default {
 }
 </script>
 
-<style>
-.navbar.plz-footer {
-    background-color: transparent;
-    margin-top: 46px;
-}
-
-.navbar.plz-footer .nav-link.plz-copy {
-    color: #B6BEFD;
-}
-
-.navbar.plz-footer .nav-link {
-    color: #F7F8FC;
-}
-
-.navbar.plz-footer .plz-bottom-link {
-    height: 40px;
-    line-height: 40px;
-}
-
-</style>
