@@ -17,15 +17,32 @@ $plzNavBarProfileColor: #A6A7A9;
 }
 
 .plz-top-watcher {
-    .btn.btn-link > i {
-        font-size: 24px;
-        color: #BFC0C3;
+    .icon {
+        display: inline-block;
+        vertical-align: top;
+        height: 20px;
+        width: 24px;
+        fill: #BFC0C3;
         transition: .4s;
+
+        &:hover {
+            fill: #576DF6;
+        }
     }
 
-    .btn.btn-link > i:hover {
-        color: #576DF6;
+    .icon-bell {
+        width: 26px;
+        height: 26px;
     }
+    .icon-message {
+        width: 23px;
+        height: 23px;
+    }
+    .icon-friend {
+        height: 20px;
+        width: 24px;
+    }
+
 }
 
 .profile-menu {
