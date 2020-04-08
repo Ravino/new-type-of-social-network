@@ -6,11 +6,6 @@ use Illuminate\Database\Seeder;
 
 class ChatSeeder extends Seeder
 {
-    private $user_id;
-
-    private $admin_id;
-
-    private $tester_id;
 
     /**
      * Run the database seeds.
@@ -19,91 +14,28 @@ class ChatSeeder extends Seeder
      */
     public function run()
     {
-        $this->createUsers();
-        $id = $this->createChat('userWithAdmin', $this->user_id, $this->admin_id);
-        $this->createMessagesForChat($id, $this->user_id, $this->admin_id, [
-            'Привет, как дела?',
-            'Спасибо, хорошо. Как сам?',
-            'Как работа?'
-        ]);
-
-        $id = $this->createChat('testerWithAdmin', $this->tester_id, $this->user_id);
-        $this->createMessagesForChat($id, $this->tester_id, $this->user_id, [
-            'Привет, у нас всё еще не работает сообщества. Так и должно быть?',
-            'Да, так и должно быть.',
-            'Хорошо, спасибо.'
-        ]);
-
-        $id = $this->createChat('testerWithUser', $this->tester_id, $this->user_id);
-        $this->createMessagesForChat($id, $this->tester_id, $this->user_id, [
-            'Привет, как тебе приложение?',
-            'Хорошо, спасибо.',
-            'Как настроение?'
-        ]);
-    }
-
-    private function createUsers()
-    {
-        $email = 'user@mail.com';
-
-        $user = User::where('email', $email)->first();
-
-        if(!$user) {
-
-            $user = User::create([
-                'email' => $email,
-                'password' => bcrypt('secret'),
-                'token' => bcrypt('secret'),
-                'last_activity_dt' => time(),
-                'created_at' => time(),
-                'updated_at' => time()
-            ]);
-
-            $user->profile()->create(factory(Profile::class)->make()->toArray());
+        $count_of_messages = $this->command->ask('How many messages are you want to generate?', 10);
+        $users = User::all();
+        $faker = Faker\Factory::create('ru_RU');
+        $pairs = [];
+        $messages = [];
+        for ($j = 0; $j <= $count_of_messages; $j++) {
+            $messages[] = $faker->realText(70);
         }
-
-        $this->user_id = $user->id;
-
-        $email = 'admin@mail.com';
-
-        $user = User::where('email', $email)->first();
-
-        if(!$user) {
-
-            $user = User::create([
-                'email' => $email,
-                'password' => bcrypt('secret'),
-                'token' => bcrypt('secret'),
-                'last_activity_dt' => time(),
-                'created_at' => time(),
-                'updated_at' => time()
-            ]);
-
-            $user->profile()->create(factory(Profile::class)->make()->toArray());
+        for ($i = 0; $i <= count($users); $i++) {
+            for ($j = $i + 1; $j <= count($users); $j++) {
+                if ($j < count($users)) {
+                    $pairs[] = [
+                        'first_user_id' => $users[$i]->id,
+                        'second_user_id' => $users[$j]->id
+                    ];
+                }
+            }
         }
-        $this->admin_id = $user->id;
-
-
-        $email = 'test@gmail.com';
-
-        $user = User::where('email', $email)->first();
-
-        if(!$user) {
-
-            $user = User::create([
-                'email' => $email,
-                'password' => bcrypt('secret'),
-                'token' => bcrypt('secret'),
-                'last_activity_dt' => time(),
-                'created_at' => time(),
-                'updated_at' => time()
-            ]);
-
-            $user->profile()->create(factory(Profile::class)->make()->toArray());
-
+        foreach ($pairs as $pair) {
+            $id = $this->createChat($faker->name, $pair['first_user_id'], $pair['second_user_id']);
+            $this->createMessagesForChat($id, $pair['first_user_id'], $pair['second_user_id'], $messages);
         }
-
-        $this->tester_id = $user->id;
     }
 
     /**
@@ -114,48 +46,32 @@ class ChatSeeder extends Seeder
      */
     private function createChat(string $name, int $user_id, int $recipient_id): int
     {
-        $chat = DB::table('chat')
-            ->join('chat_party', 'chat.id', '=', 'chat_party.chat_id')
-            ->where('chat.name', '=', $name)
-            ->get('id')->first();
-        if(!$chat){
-            $id = DB::table('chat')->insertGetId(
-                ['user_id' => $user_id, 'name' => $name, 'created_at' => time(), 'updated_at' => time()]
-            );
-            DB::table('chat_party')->insert([
-                ['chat_id' => $id, 'user_id' => $user_id, 'created_at' => time()],
-                ['chat_id' => $id, 'user_id' => $recipient_id, 'created_at' => time()]
-            ]);
-        }else{
-            $id = $chat->id;
-        }
+        $id = DB::table('chat')->insertGetId(
+            ['user_id' => $user_id, 'name' => $name, 'created_at' => time(), 'updated_at' => time()]
+        );
+        DB::table('chat_party')->insert([
+            ['chat_id' => $id, 'user_id' => $user_id, 'created_at' => time()],
+            ['chat_id' => $id, 'user_id' => $recipient_id, 'created_at' => time()]
+        ]);
         return $id;
     }
 
     /**
      * @param int $id
      * @param int $user_id
-     * @param int $recipient_id собеседник
+     * @param int $second_user_id
      * @param array $messages
      */
-    private function createMessagesForChat(int $id, int $user_id, int $recipient_id, array  $messages)
+    private function createMessagesForChat(int $id, int $user_id, int $second_user_id, array $messages)
     {
-        if(count($messages) !== 3){
-            throw new InvalidArgumentException("Count messages should be 3");
+        $faker = Faker\Factory::create('ru_RU');
+        foreach ($messages as $message) {
+            $message_id = DB::table('chat_messages')->insertGetId(
+                ['chat_id' => $id, 'user_id' => rand($user_id, $second_user_id), 'body' => $message, 'created_at' => time(), 'updated_at' => time()]
+            );
+            DB::table('chat_message_status')->insert([
+                ['message_id' => $message_id, 'user_id' => $user_id, 'is_read' => $faker->boolean],
+            ]);
         }
-        $m1 = DB::table('chat_messages')->insertGetId(
-            ['chat_id' => $id, 'user_id' => $user_id, 'body' => $messages[0], 'created_at' => time(), 'updated_at' => time()]
-        );
-        $m2 = DB::table('chat_messages')->insertGetId(
-            ['chat_id' => $id, 'user_id' => $recipient_id, 'body' => $messages[1], 'created_at' => time(), 'updated_at' => time()]
-        );
-        $m3 = DB::table('chat_messages')->insertGetId(
-            ['chat_id' => $id, 'user_id' => $user_id, 'body' => $messages[2], 'created_at' => time(), 'updated_at' => time()]
-        );
-        DB::table('chat_message_status')->insert([
-            ['message_id' => $m1, 'user_id' => $recipient_id, 'is_read' => true],
-            ['message_id' => $m2, 'user_id' => $user_id, 'is_read' => true],
-            ['message_id' => $m3, 'user_id' => $recipient_id, 'is_read' => false]
-        ]);
     }
 }
