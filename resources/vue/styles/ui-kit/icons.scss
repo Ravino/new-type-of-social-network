@@ -1,0 +1,51 @@
+
+.icon {
+    display: inline-block;
+    vertical-align: top;
+    fill: #BFC0C3;
+    transition: .4s;
+
+    &:hover {
+        fill: #576DF6;
+    }
+}
+
+.icon-bell {
+    width: 26px;
+    height: 26px;
+}
+.icon-message {
+    width: 23px;
+    height: 23px;
+}
+.icon-friend {
+    height: 20px;
+    width: 24px;
+}
+
+.icon-fire {
+    width: 21px;
+    height: 26px;
+}
+.icon-atom {
+    width: 22px;
+    height: 22px;
+}
+.icon-play {
+    width: 22px;
+    height: 22px;
+}
+
+.icon-paper {
+    width: 22px;
+    height: 24px;
+}
+.icon-video {
+    width: 22px;
+    height: 21px;
+}
+
+.icon-star {
+    width: 24px;
+    height: 23px;
+}
