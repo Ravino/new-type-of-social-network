@@ -64,8 +64,8 @@ data() {
             id: -1,
             isOnline: false,
             userPic: `/images/user-main-photo.png`,
-            firstname: `Владислав`,
-            lastname: `Браташ`,
+            firstname: `Ксения`,
+            lastname: `Евгеньевна`,
             sex: `m`,
             family: `В активном поиске`,
             birthday: `1990-05-09`,
@@ -73,6 +73,7 @@ data() {
             country: `Россия`,
             created_at: `2020-03-31 13:16:41`,
             updated_at: `2020-03-31 13:16:41`,
+            profile: null,
 
             subscribersNumber: Math.floor(Math.random() * 10000),
             friendsNumber: Math.floor(Math.random() * 3000),

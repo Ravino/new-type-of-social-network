@@ -99,7 +99,8 @@
 <script>
     import RegistrationModal from './RegistrationModal.vue';
     import {HTTPer} from '../httper/httper.js';
-    import {required, minLength, maxLength, email} from 'vuelidate/lib/validators';
+    import {email, maxLength, minLength, required} from 'vuelidate/lib/validators';
+    import client_ids from '../libs/social_networks_client_ids';
 
     export default {
         name: 'LoginForm',
@@ -140,7 +141,17 @@
                 this.isRegistrationModalShow = false;
             });
 
-            this.getInstagramToken();
+            let params = new URLSearchParams(document.location.search.substring(1));
+            let state = params.get('state');
+
+            switch (state) {
+                case 'instagram':
+                    this.getInstagramToken(params);
+                    break;
+                case 'vk':
+                    this.getVKToken(params);
+                    break;
+            }
         },
 
         methods: {
@@ -188,6 +199,9 @@
                     case 'instagram':
                         this.socialInstagram(provider);
                         break;
+                    case 'vkontakte':
+                        this.socialVK(provider);
+                        break
                 }
             },
             socialFacebook(provider) {
@@ -206,9 +220,26 @@
                 });
             },
             socialInstagram(provider) {
-                let url = 'https://api.instagram.com/oauth/authorize?client_id=147643463355245' +
-                    '&redirect_uri=https://localhost:44300/&scope=user_profile&response_type=code';
-                window.location.href = url;
+                let url = {
+                    domain: "https://api.instagram.com/oauth/authorize",
+                    client_id: `client_id=${client_ids.instagram}`,
+                    scope: "scope=user_profile",
+                    response_type: "response_type=code",
+                    state: 'state=instagram',
+                };
+
+                window.location.href = `${url.domain}?${url.client_id}&redirect_uri=${client_ids.redirect_uri}&${url.scope}&${url.response_type}&${url.state}`;
+            },
+            socialVK(provider) {
+                let url = {
+                    domain: "https://oauth.vk.com/authorize",
+                    client_id: `client_id=${client_ids.vk}`,
+                    display: "display=page",
+                    response_type: "response_type=token",
+                    state: "state=vk",
+                };
+
+                window.location.href = `${url.domain}?${url.client_id}&redirect_uri=${client_ids.redirect_uri}&${url.display}&${url.response_type}&${url.state}`;
             },
             saveToken(provider, token) {
                 HTTPer.post(`/api/sociallogin/${provider}`, {
@@ -217,12 +248,18 @@
                     console.log(response);
                 });
             },
-            getInstagramToken() {
-                let params = new URLSearchParams(document.location.search.substring(1));
+            getInstagramToken(params) {
                 let code = params.get("code");
 
                 if (code) {
                     this.saveToken('instagram', code);
+                }
+            },
+            getVKToken(params) {
+                let access_token = params.get("access_token");
+
+                if (access_token) {
+                    this.saveToken('vkontakte', access_token);
                 }
             },
         },

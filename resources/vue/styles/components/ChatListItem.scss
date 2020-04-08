@@ -15,6 +15,9 @@ $userPicSize: 32px;
 }
 
 .user-friend {
+
+    cursor: pointer;
+
     &-pic {
         display: inline-block;
         position: relative;

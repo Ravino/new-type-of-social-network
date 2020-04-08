@@ -20,7 +20,22 @@ class UsersTableSeeder extends Seeder
         $email2 = $this->command->ask('Enter email of admin user', 'admin@mail.com');
         $count_of_users = $this->command->ask('How many users you want to generate', 10);
 
-        $user1 = User::where('email', $email1)->first();
+        $test_user = User::where('email', 'test@gmail.com')->first();
+        if (!$test_user) {
+            $user1 = User::create([
+                'email' => 'test@gmail.com',
+                'password' => bcrypt('secret'),
+                'token' => bcrypt('secret'),
+                'last_activity_dt' => time(),
+                'created_at' => time(),
+                'updated_at' => time()
+            ]);
+            $user1->profile()->create($this->generateProfile());
+            $this->command->line("Generate user with email test@gmail.com");
+        } else {
+            $this->command->line("User with email test@gmail.com already exists");
+        }
+
         if (!$user1) {
             $user1 = User::create([
                 'email' => $email1,
@@ -35,7 +50,6 @@ class UsersTableSeeder extends Seeder
         } else {
             $this->command->line("User with email {$email1} already exists");
         }
-
         $user2 = User::where('email', $email2)->first();
         if (!$user2) {
             $user2 = User::create([

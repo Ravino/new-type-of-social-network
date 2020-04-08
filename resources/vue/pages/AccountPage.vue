@@ -47,7 +47,8 @@ data() {
             birthday: ``,
             city: ``,
             created_at: ``,
-            updated_at: ``,
+            profile: ``,
+            updated_at: ``
         },
         dataReady: false,
         gwToken: ``

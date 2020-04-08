@@ -9,7 +9,7 @@
             <div class="form-group row mb-0 border-bottom">
                 <label for="firstName" class="col-sm-6 col-md-6 col-lg-4 col-xl-4 col-form-label text-secondary">Имя</label>
                 <div class="col-sm-6 col-md-6 col-lg-6 col-xl-6">
-                    <input v-model="user.firstname" type="text" :readonly="true" class="form-control-plaintext" id="firstName" ref="firstName" />
+                    <input v-model="user.profile.firstName" type="text" :readonly="true" class="form-control-plaintext" id="firstName" ref="firstName" />
                 </div>
                 <div class="col-2 d-sm-none d-md-none d-lg-flex d-xl-flex">
                     <button type="button" class="btn btn-link text-body">Изменить</button>
@@ -19,7 +19,7 @@
             <div class="form-group row mb-0 border-bottom">
                 <label for="lastName" class="col-sm-6 col-md-6 col-lg-4 col-xl-4 col-form-label text-secondary">Фамилия</label>
                 <div class="col-sm-6 col-md-6 col-lg-6 col-xl-6">
-                    <input v-model="user.lastname" type="text" readonly class="form-control-plaintext" id="lastName" ref="lastName"  />
+                    <input v-model="user.profile.lastName" type="text" readonly class="form-control-plaintext" id="lastName" ref="lastName"  />
                 </div>
                 <div class="col-2 d-sm-none d-md-none d-lg-flex d-xl-flex">
                     <button type="button" class="btn btn-link text-body">Сохранить</button>
@@ -29,9 +29,9 @@
             <div class="form-group row mb-0 border-bottom">
                 <label class="col-sm-6 col-md-6 col-lg-4 col-xl-4 col-form-label text-secondary">Пол</label>
                 <div class="col-sm-6 col-md-6 col-lg-6 col-xl-6">
-                    <span v-if="this.user.sex==='m'" class="form-control-plaintext d-inline-block w-auto">Мужской</span>
-                    <span v-if="this.user.sex==='f'" class="form-control-plaintext d-inline-block w-auto">Женский</span>
-                    <span v-if="this.user.sex==='n'" class="form-control-plaintext d-inline-block w-auto">Не указано</span>
+                    <span v-if="this.user.profile.sex==='m'" class="form-control-plaintext d-inline-block w-auto">Мужской</span>
+                    <span v-if="this.user.profile.sex==='f'" class="form-control-plaintext d-inline-block w-auto">Женский</span>
+                    <span v-if="this.user.profile.sex==='n'" class="form-control-plaintext d-inline-block w-auto">Не указано</span>
                     <i class="fas fa-chevron-down ml-2 d-sm-none d-md-none d-lg-inline d-xl-inline"></i>
                 </div>
                 <div class="col-3"></div>
@@ -48,7 +48,7 @@
             <div class="form-group row mb-0 border-bottom">
                 <label for="birthDate" class="col-sm-6 col-md-6 col-lg-4 col-xl-4 col-form-label text-secondary">Дата рождения</label>
                 <div class="col-sm-6 col-md-6 col-lg-6 col-xl-6">
-                    <input type="text" readonly class="form-control-plaintext" id="birthDate" ref="birthDate" :value="user.birthday | toLongDate" />
+                    <input type="text" readonly class="form-control-plaintext" id="birthDate" ref="birthDate" :value="user.profile.birthday | toLongDate" />
                 </div>
                 <div class="col-2 d-sm-none d-md-none d-lg-flex d-xl-flex">
                     <button type="button" class="btn btn-link text-body">Изменить</button>
@@ -59,7 +59,7 @@
                 <label for="location" class="col-sm-6 col-md-6 col-lg-4 col-xl-4 col-form-label text-secondary">Месторасположение</label>
                 <div class="col-sm-6 col-md-6 col-lg-6 col-xl-6">
                     <i class="fas fa-map-marker-alt"></i>
-                    <input v-model="user.city" type="text" readonly class="form-control-plaintext d-inline-block w-75 ml-1" id="location" ref="location" />
+                    <input v-model="user.profile.city" type="text" readonly class="form-control-plaintext d-inline-block w-75 ml-1" id="location" ref="location" />
                 </div>
                 <div class="col-2 d-sm-none d-md-none d-lg-flex d-xl-flex">
                     <button type="button" class="btn btn-link text-body">Изменить</button>
@@ -103,6 +103,10 @@ data () {
 
 methods: {
 },
+
+mounted() {
+
+}
 
 }
 </script>
