@@ -35,5 +35,4 @@ Thumbs.db
 *.js.map
 *.css.map
 
-/resources/vue/libs
 /public/mix-manifest.json
