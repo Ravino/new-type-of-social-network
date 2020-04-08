@@ -76,11 +76,4 @@ class User extends Authenticatable implements JWTSubject
     {
         return (int) $this->is_admin === 1;
     }
-
-
-    public function isOnline() : bool
-    {
-        $period = config('user_activity_margin');
-        return $this->last_activity_dt > strtotime("-$period minutes");
-    }
 }

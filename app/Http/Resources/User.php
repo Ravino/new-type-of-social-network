@@ -21,6 +21,12 @@ class User extends JsonResource
             'profile' => new Profile($this->profile)
         ];
     }
+
+    public function isOnline() : bool
+    {
+        $period = config('user_activity_margin');
+        return $this->last_activity_dt > strtotime("-$period minutes");
+    }
 }
 
 
