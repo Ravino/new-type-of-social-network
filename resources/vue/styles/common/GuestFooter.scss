@@ -38,6 +38,19 @@
             line-height: 1.3rem;
         }
     }
-
 }
 
+
+#guestPageWrapper {
+    .nav-link.plz-copy {
+        color: #B6BEFD;
+    }
+    .nav-link {
+        font-size: 13px;
+        color: #F7F8FC;
+        transition: .4s;
+        &:hover {
+            color: $linkHoverColor;
+        }
+    }
+}

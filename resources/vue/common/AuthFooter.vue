@@ -1,6 +1,6 @@
 <template>
     <div class="row">
-        <footer class="navbar plz-footer col-8 w-100  offset-lg-1 d-sm-none d-md-none d-lg-block d-xl-block">
+        <footer class="navbar plz-footer col-11 w-100  offset-lg-1 d-sm-none d-md-none d-lg-block d-xl-block">
             <div class="container-fluid px-0 m-0">
                 <div class="plz-bottom-links w-100 d-flex flex-row justify-content-start align-items-center">
                     <div class="plz-bottom-link">
