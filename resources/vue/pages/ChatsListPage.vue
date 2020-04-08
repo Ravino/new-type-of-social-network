@@ -71,12 +71,39 @@ methods: {
     },
 
 
-    channelSubscribe(s){
+    channelSubscribe(s) {
         s.subscribe(this.$store.getters.chatChannel, (topicID, data) => {
             if (this.currentDialog.id === data.data.chatId) {
-                this.addMessageToMessageList(data.data)
+                this.addMessageToMessageList(data.data);
+                this.updateDialogsList(data.data, 'other')
             }
         });
+    },
+
+
+    addMessageToMessageList(evData){
+        this.messagesList.push(evData);
+    },
+
+
+    updateDialogsList(evData, wMode){
+        // @TGA .find не срабатывает :(
+        // let luDialog = this.dialogsList.find( (dItem) => { dItem.id === this.currentDialog.id } );
+
+        let luDialog = null;
+
+        this.dialogsList.map( (dItem) => {
+            if (+dItem.id === this.currentDialog.id) {
+                luDialog = dItem;
+            }
+        });
+
+        if ( luDialog ) {
+            luDialog.lastMessageDT = evData.createdAt;
+            luDialog.lastMessageText = evData.body;
+            luDialog.isLastFromMe = (`mine` === wMode);
+            luDialog.isRead = (`mine` === wMode);
+        }
     },
 
 
@@ -94,34 +121,25 @@ methods: {
     },
 
 
-    addMessageToMessageList(evData){
-        this.messagesList.push(evData);
-    },
-
-
     async loadDialogsList() {
         const response = await HTTPer.get('api/chat/dialogs', this.$store.getters.getHTTPConfig);
         this.dialogsList = response.data;
 
-        const lastDialog = +this.$store.getters.activeDialog;
-
-        this.currentDialog = null;
+        const lastDialogID = +this.$store.getters.activeDialog;
+        this.currentDialog = undefined;
 
         if (Array.isArray(this.dialogsList)  &&  this.dialogsList  &&  this.dialogsList.length>0) {
-            this.dialogsList.map((dItem)=>{
-                if (+dItem.id === lastDialog){
-                    this.currentDialog = JSON.parse(JSON.stringify(dItem));
-                }
-            });
+            this.currentDialog = this.dialogsList.find((dItem) => +dItem.id === lastDialogID);
         }
 
-        if (this.currentDialog === null) {
+        if (typeof this.currentDialog==='undefined') {
             this.currentDialog = this.dialogsList[0];
             this.$store.dispatch('SET_ACTIVE_DIALOG', this.currentDialog.id);
         }
 
         return true;
     },
+
 
     async loadMessagesList(dialogID) {
         let messageResponse = await HTTPer.get('api/chat/messages/' + dialogID, this.$store.getters.getHTTPConfig);
@@ -142,7 +160,10 @@ async mounted() {
     }
 
     this.$root.$on('switchToChat', this.switchToChat);
-    this.$root.$on('addNewChatMessageToList', this.addMessageToMessageList);
+    this.$root.$on('addNewChatMessageToList', (evData)=>{
+        this.addMessageToMessageList(evData);
+        this.updateDialogsList(evData, 'mine');
+    });
 
     this.connectToChatChannel();
 },
