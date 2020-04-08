@@ -73,6 +73,7 @@ data() {
             country: `Россия`,
             created_at: `2020-03-31 13:16:41`,
             updated_at: `2020-03-31 13:16:41`,
+            profile: null,
 
             subscribersNumber: Math.floor(Math.random() * 10000),
             friendsNumber: Math.floor(Math.random() * 3000),
