@@ -17,7 +17,7 @@ export default {
     data () {
         return {
             lastEntriesList: [
-                { src: '/images/last-entries/vladislav.png', fullName: 'Владислав Браташ', isUser: true },
+                { src: '/images/last-entries/vladislav.png', fullName: 'Ксения Евгеньевна', isUser: true },
                 // { src: '/images/last-entries/alex.png', fullName: 'Alexey Bashmakow', isUser: true },
                 { src: '/images/icons/add-account.png', fullName: 'Добавить аккаунт', isUser: false },
             ],
