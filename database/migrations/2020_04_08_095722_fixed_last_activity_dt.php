@@ -13,10 +13,10 @@ class FixedLastActivityDt extends Migration
      */
     public function up()
     {
-        Schema::table('image_uploads', function (Blueprint $table) {
+        Schema::table('users', function (Blueprint $table) {
             $table->dropColumn('last_activity_dt');
         });
-        Schema::table('image_uploads', function (Blueprint $table) {
+        Schema::table('users', function (Blueprint $table) {
             $table->integer('last_activity_dt')->nullable();
         });
     }
@@ -28,10 +28,10 @@ class FixedLastActivityDt extends Migration
      */
     public function down()
     {
-        Schema::table('image_uploads', function (Blueprint $table) {
+        Schema::table('users', function (Blueprint $table) {
             $table->dropColumn('last_activity_dt');
         });
-        Schema::table('image_uploads', function (Blueprint $table) {
+        Schema::table('users', function (Blueprint $table) {
             $table->integer('last_activity_dt');
         });
     }
