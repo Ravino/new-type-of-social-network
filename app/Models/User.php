@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Models\User\PrivacySettings;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Tymon\JWTAuth\Contracts\JWTSubject;
@@ -52,6 +53,11 @@ class User extends Authenticatable implements JWTSubject
     public function profile()
     {
         return $this->hasOne(Profile::class);
+    }
+
+    public function privacySettings()
+    {
+        return $this->hasOne(PrivacySettings::class);
     }
 
     /**
