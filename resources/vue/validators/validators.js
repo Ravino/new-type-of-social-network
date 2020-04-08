@@ -28,5 +28,6 @@ export function isFirstNameAndLastName(value) {
 export function isValidRegistrationBirthDay(dateVal){
     if ((dateVal+'') === '')
         return true;
-    return moment(dateVal, 'DD.MM.YYYY', true).isValid();
+    // return moment(dateVal, 'DD.MM.YYYY', true).isValid();
+    return moment(dateVal, 'YYYY-MM-DD', true).isValid();
 }
