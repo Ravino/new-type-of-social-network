@@ -36,3 +36,5 @@ Thumbs.db
 *.css.map
 
 /public/mix-manifest.json
+
+/public/docs
