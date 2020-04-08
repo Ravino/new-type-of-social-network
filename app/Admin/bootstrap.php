@@ -27,7 +27,11 @@ AdminSection::registerModel(\App\Models\User::class, function (\SleepingOwl\Admi
     });
 })
     ->addMenuPage(\App\Models\User::class, 0)
-    ->setIcon('fa fa-user');
+    ->setIcon('fa fa-user')
+    ->setAccessLogic(function() {
+        $user = auth()->user();
+        return $user instanceof \App\Models\User && $user->isAdmin();
+    });
 
 AdminSection::registerModel(\App\Models\Profile\Relationship::class, function (\SleepingOwl\Admin\Model\ModelConfiguration $model) {
     $model->setTitle('Relationships');
@@ -49,4 +53,8 @@ AdminSection::registerModel(\App\Models\Profile\Relationship::class, function (\
     });
 })
     ->addMenuPage(\App\Models\Profile\Relationship::class, 0)
-    ->setIcon('fa fa-user');
+    ->setIcon('fa fa-user')
+    ->setAccessLogic(function() {
+        $user = auth()->user();
+        return $user instanceof \App\Models\User && $user->isAdmin();
+    });
