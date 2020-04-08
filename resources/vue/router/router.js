@@ -41,7 +41,8 @@ async function getUserData(token){
 
     const response = await HTTPer.get('api/user', config);
     if (200 === response.status) {
-        return response.data.data;
+        // window.console.log( JSON.stringify(response.data), 'response.data' );
+        return response.data;
     }
 
     return null;
@@ -50,9 +51,7 @@ async function getUserData(token){
 
 function routerForcedLogout(next){
     store.dispatch('SET_GWT', ``);
-    store.dispatch('SET_AUTH', false);
     store.dispatch('SET_CHAT_CHANNEL', ``);
-    store.dispatch('SET_USER', null);
 
     window.localStorage.removeItem('pliziJWToken');
     window.localStorage.removeItem('pliziUser');

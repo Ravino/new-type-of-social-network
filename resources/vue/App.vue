@@ -1,6 +1,6 @@
 <template>
     <div  id="pageWrapper">
-        <div v-if="!isAuth" id="guestPageWrapper">
+        <div v-if="!isAuthorized()" id="guestPageWrapper">
             <div class="--container-fluid container px-0 my-0 pt-3">
 
                 <GuestNavBar></GuestNavBar>
@@ -13,14 +13,14 @@
         </div>
 
         <div v-else id="authPageWrapper">
-            <AuthNavBar  v-bind:is-auth="isAuth" v-bind:user-data="userData"></AuthNavBar>
+            <AuthNavBar v-bind:isAuth="isAuthorized()" v-bind:user-data="userData"></AuthNavBar>
 
             <div class="--container-fluid container px-0 my-0 pt-3 container-wide  mx-auto mt-4">
                 <main :id="containerID" role="main"
                       class="container-fluid pb-sm-5 pb-md-5">
                     <router-view></router-view>
                 </main>
-                <AuthFooter ></AuthFooter>
+                <AuthFooter></AuthFooter>
             </div>
         </div>
     </div>
@@ -34,26 +34,24 @@ import AuthFooter from './common/AuthFooter.vue';
 import GuestFooter from './common/GuestFooter.vue';
 
 import {HTTPer} from './httper/httper';
+import PliziUzer from './classes/PliziUser.js';
 
 export default {
 name: 'App',
 components: {GuestNavBar, AuthNavBar, AuthFooter, GuestFooter},
 data () {
     return {
-        isAuth: false,
-        userData: null,
-        containerID: `contentContainer`
+        containerID: `contentContainer` /** @TGA - просто хак чтобы phpStorm не ругался на одинаковый ID у элемента */
     }
 },
 
 methods: {
     afterSuccessLogin(evData) {
         if (evData.token !== ``) {
-            this.isAuth = true;
+            this.$root.$isAuth = true;
 
             this.$store.dispatch('SET_GWT', evData.token);
             this.$store.dispatch('SET_CHAT_CHANNEL', evData.chatChannel);
-            this.$store.dispatch('SET_AUTH', true);
 
             if (evData.redirect) {
                 this.$router.push({ path: '/profile' });
@@ -62,12 +60,10 @@ methods: {
     },
 
     afterSuccessLogout(evData) {
-        this.isAuth = false;
+        this.$root.$isAuth = false;
 
         this.$store.dispatch('SET_GWT', ``);
-        this.$store.dispatch('SET_AUTH', false);
         this.$store.dispatch('SET_CHAT_CHANNEL', ``);
-        this.$store.dispatch('SET_USER', null);
 
         window.localStorage.removeItem('pliziJWToken');
         window.localStorage.removeItem('pliziUser');
@@ -104,22 +100,36 @@ methods: {
 
     afterUserLoad(evData) {
         if (evData.token !== ``  &&  evData.user) {
-            this.isAuth = true;
-            this.userData = evData.user;
-
-            this.$store.dispatch('SET_AUTH', true);
+            this.$root.$isAuth = true;
 
             if (evData.save) {
+                this.$root.$user.saveUserData( evData.user, evData.token );
+
                 this.$store.dispatch('SET_GWT', evData.token);
-                this.$store.dispatch('SET_USER', evData.user);
             }
         }
     },
+
+    isAuthorized(){
+        return this.$root.$isAuth;
+    }
 },
 
+computed: {
+    isAuth: function () {
+        return this.$root.$isAuth;
+    },
+    userData: function () {
+        return this.$root.$user;
+    },
+},
 
 mounted() {
 
+},
+
+created(){
+    this.$root.$user = new PliziUzer({});
 },
 
 beforeMount(){

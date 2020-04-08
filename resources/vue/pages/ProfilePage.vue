@@ -59,54 +59,19 @@ data() {
             { path: '/images/user-photos/user-photo-01.png', },
             { path: '/images/user-photos/user-photo-03.png', },
         ],
-
-        userData: {
-            id: -1,
-            isOnline: false,
-            userPic: `/images/user-main-photo.png`,
-            firstname: `Ксения`,
-            lastname: `Евгеньевна`,
-            sex: `m`,
-            family: `В активном поиске`,
-            birthday: `1990-05-09`,
-            city: `Москва`,
-            country: `Россия`,
-            created_at: `2020-03-31 13:16:41`,
-            updated_at: `2020-03-31 13:16:41`,
-            profile: null,
-
-            subscribersNumber: Math.floor(Math.random() * 10000),
-            friendsNumber: Math.floor(Math.random() * 3000),
-            photosNumber: Math.floor(Math.random() * 10000),
-            videosNumber: Math.floor(Math.random() * 100),
-            audiosNumber: Math.floor(Math.random() * 5000),
-        },
     }
 },
 
+computed: {
+    userData: function () {
+        return this.$root.$user;
+    },
+},
 
 methods : {
-    loadRealData() {
-        //TODO: заменить потом на простой вызов строкой ниже
-        // this.userData = this.$store.dispatch('GET_USER');
-
-        let no = Object.keys( JSON.parse( JSON.stringify(this.userData) ) );
-        let realData = JSON.parse(JSON.stringify( this.$store.getters.userData ));
-
-        no.map(oKey => {
-            if (realData[oKey]) {
-                this.userData[oKey] = realData[oKey];
-            }
-        });
-    },
-
     wallPostsSelectHandler(evData){
         window.console.log(evData.wMode, `wallPostsSelectHandler`);
     }
-},
-
-beforeMount() {
-    this.loadRealData();
 },
 
 mounted() {

@@ -39,43 +39,14 @@ components: { AccountToolbarLeft,
 },
 data() {
     return {
-        userData: {
-            user_id: -1,
-            firstname: ``,
-            lastname: ``,
-            sex: ``,
-            birthday: ``,
-            city: ``,
-            created_at: ``,
-            profile: ``,
-            updated_at: ``
-        },
-        dataReady: false,
-        gwToken: ``
     }
 },
 
-methods : {
-    loadRealData() {
-        //TODO: заменить потом на простой вызов строкой ниже
-        // this.userData = this.$store.dispatch('GET_USER');
-
-        let no = Object.keys( JSON.parse( JSON.stringify(this.userData) ) );
-        let realData = JSON.parse(JSON.stringify( this.$store.getters.userData ));
-
-        no.map(oKey => {
-            if (realData[oKey]) {
-                this.userData[oKey] = realData[oKey];
-            }
-        });
-    }
-},
-
-beforeMount() {
-    this.loadRealData();
+computed: {
+    userData: function () {
+        return this.$root.$user;
+    },
 }
-
 
 }
 </script>
-

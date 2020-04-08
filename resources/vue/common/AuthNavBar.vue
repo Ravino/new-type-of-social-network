@@ -61,11 +61,11 @@
 
                 <div class="col-sm-2 col-md-1 col-lg-2 px-0 profile-menu">
                     <router-link to="/account" tag="a" class="profile-menu-link">
-                        <span>{{userName}}</span>
+                        <span>{{userData.firstName}}</span>
                     </router-link>
 
                     <router-link to="/profile" tag="a" class="profile-menu-link">
-                        <img :src="userPic" :alt="userName" :class="{ 'default-avatar': isDefaultAvatar }" />
+                        <img :src="userData.userPic" :alt="userData.firstName" />
                     </router-link>
                     <i class="profile-menu-opener fa fas fa-chevron-down" aria-hidden="true" @click.stop="goLogout()"></i>
                 </div>
@@ -84,10 +84,6 @@ props: {
 },
 data () {
     return {
-        tmpUserName : `---`,
-        tmpUserPicture : `images/noavatar-256.png`,
-        // userData : null,
-        isDefaultAvatar: true,
     }
 },
 
@@ -97,28 +93,6 @@ methods: {
     }
 },
 
-computed : {
-    userName() {
-        let retName = this.tmpUserName;
-
-        if (this.userData  &&  this.userData.profile  &&  this.userData.profile  &&  this.userData.profile.firstName) {
-            retName = this.userData.profile.firstName;
-        }
-
-        return retName;
-    },
-
-    userPic() {
-        let retPath = this.tmpUserPicture;
-
-        if (this.userData  &&  this.userData.user_pic) {
-            retPath = this.userData.user_pic;
-            this.isDefaultAvatar = false;
-        }
-
-        return retPath;
-    }
-},
 
 }
 </script>
