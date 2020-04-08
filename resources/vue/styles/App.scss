@@ -166,6 +166,31 @@ h1, h2, h3, h4, h5, h6 {
     display: none;
 }
 
+$dotsWidth: 4px;
+.dots-vertical {
+    position: relative;
+    display: inline-block;
+    vertical-align: middle;
+    width: $dotsWidth;
+    height: $dotsWidth;
+    border-radius: 100%;
+    background-color: #b0b0b0;
+
+    &:before,
+    &:after {
+        content: '';
+        position: absolute;
+        top: -$dotsWidth * 2;
+        left: 0;
+        width: $dotsWidth;
+        height: $dotsWidth;
+        border-radius: 100%;
+        background-color: #b0b0b0;
+    }
+    &:after {
+        top: $dotsWidth * 2;
+    }
+}
 
 .loading {
     display: inline-block;
