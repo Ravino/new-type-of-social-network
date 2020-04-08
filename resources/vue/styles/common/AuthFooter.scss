@@ -1,18 +1,22 @@
-.navbar.plz-footer {
-    background-color: transparent;
-    margin-top: 46px;
+#authPageWrapper {
+    .plz-footer {
+        background-color: transparent;
+        margin-top: 46px;
 
-    .nav-link.plz-copy {
-        color: #a1a1a2;
-    }
-    .nav-link {
-        color: #484849;
-        &:hover{
-            color: $linkHoverColor;
+        .nav-link.plz-copy {
+            color: #a1a1a2;
+        }
+        .nav-link {
+            color: #484849;
+            &:hover{
+                color: $linkHoverColor;
+            }
+        }
+        .plz-bottom-link {
+            height: 40px;
+            line-height: 40px;
         }
     }
-    .plz-bottom-link {
-        height: 40px;
-        line-height: 40px;
-    }
 }
+
+
