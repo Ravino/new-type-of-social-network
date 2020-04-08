@@ -102,7 +102,6 @@ computed : {
 },
 
 mounted() {
-    window.console.log(JSON.parse(JSON.stringify(this.currentDialog)), 'currentDialog' );
 }
 
 }

@@ -61,19 +61,13 @@ methods : {
         // this.userData = this.$store.dispatch('GET_USER');
 
         let no = Object.keys( JSON.parse( JSON.stringify(this.userData) ) );
-        // window.console.log(JSON.parse(JSON.stringify(this.userData)), 'this.userData');
-
         let realData = JSON.parse(JSON.stringify( this.$store.getters.userData ));
-
-        // window.console.log(JSON.parse(JSON.stringify(this.$store.getters.userData)), `this.$store.getters.userData`  );
 
         no.map(oKey => {
             if (realData[oKey]) {
                 this.userData[oKey] = realData[oKey];
             }
         });
-
-        window.console.log(JSON.parse(JSON.stringify(this.userData)), 'AccountPage:userData 2');
     }
 },
 
