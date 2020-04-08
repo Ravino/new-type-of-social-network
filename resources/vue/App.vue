@@ -4,7 +4,7 @@
             <div class="--container-fluid container px-0 my-0 pt-3">
 
                 <GuestNavBar></GuestNavBar>
-                <main id="contentContainer" role="main"
+                <main :id="containerID" role="main"
                       class="container-fluid pb-sm-5 pb-md-5">
                     <router-view></router-view>
                 </main>
@@ -16,7 +16,7 @@
             <AuthNavBar  v-bind:is-auth="isAuth" v-bind:user-data="userData"></AuthNavBar>
 
             <div class="--container-fluid container px-0 my-0 pt-3 container-wide  mx-auto mt-4">
-                <main id="contentContainer" role="main"
+                <main :id="containerID" role="main"
                       class="container-fluid pb-sm-5 pb-md-5">
                     <router-view></router-view>
                 </main>
@@ -42,6 +42,7 @@ data () {
     return {
         isAuth: false,
         userData: null,
+        containerID: `contentContainer`
     }
 },
 
@@ -87,8 +88,6 @@ methods: {
         HTTPer.post('api/chat/send', sendData, this.$store.getters.getHTTPConfig)
             .then((response) => {
                 if (response.status === 200) {
-                    window.console.log('success');
-
                     this.$root.$emit('addNewChatMessageToList', evData.message);
                 }
             })
