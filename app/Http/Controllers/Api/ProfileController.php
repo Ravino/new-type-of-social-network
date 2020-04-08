@@ -20,7 +20,7 @@ class ProfileController extends Controller
     public function index()
     {
         $channel = $channel = WampServer::channelForUser(Auth::user()->id);
-        return ['data' => new \App\Http\Resources\User(Auth::user()->profile), 'channel' => $channel];
+        return ['data' => new \App\Http\Resources\User(Auth::user()), 'channel' => $channel];
     }
 
     public function show($user)
