@@ -1,13 +1,13 @@
 <template>
     <div id="chatFooter" class="bg-white w-100 border-top">
         <div class="row d-flex align-items-center mx-0 py-4">
-            <div class="col-1">
+            <div class="col-1 col-md-2">
                 <div class="">
-                    <img class="chat-companion-user-pic rounded-circle my-0 mx-auto" width="32" height="32"
+                    <img class="chat-companion-user-pic rounded-circle my-0 mx-auto"
                          v-bind:src="userPic" v-bind:alt="currentDialog.firstname" />
                 </div>
             </div>
-            <div class="col-9 pl-0">
+            <div class="col-9 col-md-8 pl-0">
                 <div class="form">
                     <div class="form-row align-items-center ">
                         <div class="col-12  p-0">
@@ -23,7 +23,7 @@
                     </div>
                 </div>
             </div>
-            <div class="col-2">
+            <div class="col-2 ">
                 <div class="btn-group">
                     <button class="btn btn-link mx-0 px-1 btn-add-file" type="button">
                         <svg width="18" height="18" viewBox="0 0 501 450" xmlns="http://www.w3.org/2000/svg">

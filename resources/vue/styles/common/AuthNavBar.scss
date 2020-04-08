@@ -2,7 +2,7 @@
 $plzNavBarAvatarSize: 40px;
 $plzNavBarProfileColor: #A6A7A9;
 
-.auth-navbar.navbar.fixed-top {
+#authHeader.fixed-top {
     background-color: $plzBodyBG;
 }
 
@@ -13,18 +13,6 @@ $plzNavBarProfileColor: #A6A7A9;
     }
     .btn-song {
         font-size: 13px;
-    }
-}
-
-.plz-top-watcher {
-    .btn.btn-link > i {
-        font-size: 24px;
-        color: #BFC0C3;
-        transition: .4s;
-    }
-
-    .btn.btn-link > i:hover {
-        color: #576DF6;
     }
 }
 

@@ -11,6 +11,7 @@ import moment from 'moment';
 
 import router from './router/router.js';
 import { store } from './store/store.js'
+import './libs/facebook';
 
 window.Vue = Vue;
 
@@ -29,6 +30,10 @@ Vue.filter('toLongDate', (dateValue) => {
 
 Vue.filter('toFullDateTime', (dateValue) => {
     return moment(dateValue).format('YYYY-MM-DD HH:mm:ss');
+});
+
+Vue.filter('toDMYHM', (dateValue) => {
+    return moment(dateValue).format('DD.MM.YYYY HH:mm');
 });
 
 Vue.filter('lastMessageTime', (messageDT) => {
@@ -63,27 +68,6 @@ Vue.filter('statsBeauty', (sValue) => {
 Vue.filter('toBR', (text) => {
     return text.replace(/\n/g, '<br />');
 });
-
-window.fbAsyncInit = function() {
-    FB.init({
-        // Facebook client id.
-        appId      : '531305747577438',
-        cookie     : true,
-        xfbml      : true,
-        version    : 'v6.0'
-    });
-
-    FB.AppEvents.logPageView();
-
-};
-
-(function(d, s, id){
-    var js, fjs = d.getElementsByTagName(s)[0];
-    if (d.getElementById(id)) {return;}
-    js = d.createElement(s); js.id = id;
-    js.src = "https://connect.facebook.net/en_US/sdk.js";
-    fjs.parentNode.insertBefore(js, fjs);
-}(document, 'script', 'facebook-jssdk'));
 
 Vue.use(Vuelidate);
 

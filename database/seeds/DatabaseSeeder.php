@@ -23,14 +23,21 @@ class DatabaseSeeder extends Seeder
     }
 
     /**
-     * @param $seed_name
+     * @param $seedName
      */
-    private function doSeed($seed_name)
+    private function doSeed($seedName)
     {
-        $exists = DB::table('seeds')->where('seed_name', $seed_name)->exists();
+        $this->command->line("Trying to execute seed " . $seedName);
+        $exists = DB::table('seeds')->where('seed_name', $seedName)->exists();
         if (!$exists) {
-            $this->call($seed_name);
-            DB::table('seeds')->insert(array('seed_name' => $seed_name));
+            try {
+                $this->call($seedName);
+            } catch (\Exception $e) {
+                $this->command->line("Error: " . $e->getMessage());
+            }
+            DB::table('seeds')->insertOrIgnore(array('seed_name' => $seedName));
+        } else {
+            $this->command->line("Seed with name '" . $seedName . "' was executed earlier ");
         }
     }
 }

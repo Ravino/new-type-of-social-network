@@ -17,6 +17,7 @@ $chatMessageCompanionMsgTimeColor: #C1BFBF;
 
 #chatMain {
     box-shadow: 0 2px 54px 0 rgba(0, 0, 0, 0.07);
+    min-height: calc(100vh - 105px);
 }
 
 .media-pic {

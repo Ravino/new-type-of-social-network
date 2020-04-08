@@ -139,6 +139,8 @@
             this.$root.$on('hideRegistrationModal', (evData) => {
                 this.isRegistrationModalShow = false;
             });
+
+            this.getInstagramToken();
         },
 
         methods: {
@@ -189,28 +191,39 @@
                 }
             },
             socialFacebook(provider) {
+                let self = this;
+
                 FB.getLoginStatus(function (response) {
-                    if (response.status !== "connected") {
+                    if (!response.authResponse) {
                         FB.login(function (response) {
-                            this.saveToken(response.authResponse.accessToken);
+                            if (response.authResponse) {
+                                self.saveToken(provider, response.authResponse.accessToken);
+                            }
                         });
                     } else {
-                        console.log(response);
+                        self.saveToken(provider, response.authResponse.accessToken);
                     }
                 });
             },
             socialInstagram(provider) {
-                HTTPer.get('https://api.instagram.com/oauth/authorize/?client_id=147643463355245&redirect_uri=https://631b8460.ngrok.io/&response_type=token')
-                    .then(response => {
-                        console.log(response);
-                    });
+                let url = 'https://api.instagram.com/oauth/authorize?client_id=147643463355245' +
+                    '&redirect_uri=https://localhost:44300/&scope=user_profile&response_type=code';
+                window.location.href = url;
             },
             saveToken(provider, token) {
-                HTTPer.post(`api/sociallogin/${provider}`, {
+                HTTPer.post(`/api/sociallogin/${provider}`, {
                     token: token,
                 }).then(response => {
                     console.log(response);
                 });
+            },
+            getInstagramToken() {
+                let params = new URLSearchParams(document.location.search.substring(1));
+                let code = params.get("code");
+
+                if (code) {
+                    this.saveToken('instagram', code);
+                }
             },
         },
     }
