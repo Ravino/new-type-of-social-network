@@ -106,7 +106,6 @@ class RegisterController extends Controller
 
         $user = User::create($data);
         $user->password = $token; // password is not filable
-        $user->last_activity_dt = time();
         $user->save();
 
         $user->profile()->create($data);
