@@ -33,8 +33,7 @@
         },
         mounted() {
             this.$root.$emit('afterSuccessLogout', {redirect: false});
-        }
-
+        },
     }
 </script>
 

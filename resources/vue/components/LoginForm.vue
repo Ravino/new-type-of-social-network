@@ -92,7 +92,8 @@
         </div>
 
         <RegistrationModal v-if="isRegistrationModalShow"
-                           v-bind:reg-modal-visible="isRegistrationModalShow"></RegistrationModal>
+                           v-bind:reg-modal-visible="isRegistrationModalShow"
+                           @successRegistration="successRegistration"></RegistrationModal>
     </div>
 </template>
 
@@ -153,7 +154,6 @@
                     break;
             }
         },
-
         methods: {
             startLogin() {
                 this.$v.$touch();
@@ -261,6 +261,12 @@
                 if (access_token) {
                     this.saveToken('vkontakte', access_token);
                 }
+            },
+            successRegistration(user) {
+                let password_input = document.querySelector('#password');
+
+                this.model.email = user.email;
+                password_input.focus();
             },
         },
     }

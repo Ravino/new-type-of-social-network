@@ -79,9 +79,8 @@
                         type="button"
                         :disabled="$v.$invalid"
                         @click="startRegistration()"
-                        class="btn plz-btn plz-btn-primary"
-                        :class="[isSuccessRegistration ? 'plz-btn-success' : 'plz-btn-primary']">
-                    {{ isSuccessRegistration ? 'Успешно' : 'Регистрация' }}
+                        class="btn plz-btn plz-btn-primary">
+                    Регистрация
                 </button>
             </div>
         </form>
@@ -108,10 +107,8 @@
 
                 isServerError: false,
                 serverErrorText: '',
-                isSuccessRegistration: false,
             }
         },
-
         validations() {
             return {
                 model: {
@@ -137,13 +134,6 @@
                 }
             };
         },
-
-        mounted() {
-            setTimeout(() => {
-                this.$refs.firstName.focus();
-            }, 100);
-        },
-
         methods: {
             startRegistration() {
                 this.$v.$touch();
@@ -164,17 +154,8 @@
 
                 HTTPer.post('api/register', regData)
                     .then((response) => {
-                        // TODO: @tga довести до ума обработку положительного ответа
-                        // this.$root.$emit('hideRegistrationModal', {});
-
-                        window.console.log(response);
                         if (response.status === 201) {
-                            // this.$root.$emit('afterSuccessRegistration', response.data);
-                            this.isSuccessRegistration = true;
-
-                            setTimeout(() => {
-                                this.$root.$emit('hideRegistrationModal', response.data);
-                            }, 2000);
+                            this.$emit('successRegistration', this.model);
                         }
                     })
                     .catch((error) => {
@@ -207,7 +188,11 @@
 
                 this.registrationKeyDownCheck(ev);
             }
-        }
-
+        },
+        mounted() {
+            setTimeout(() => {
+                this.$refs.firstName.focus();
+            }, 100);
+        },
     }
 </script>
