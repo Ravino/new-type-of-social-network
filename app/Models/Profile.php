@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Models\Profile\Relationship;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Validation\Rule;
 
@@ -29,16 +30,8 @@ class Profile extends Model
         self::SEX_UNDEFINED => 'undefined'
     ];
 
-    const RELATIONSHIP_MARRIED = 1;
-    const RELATIONSHIP_NOT_MARRIED = 2;
-
-    const RELATIONSHIP_VARIANTS = [
-        self::RELATIONSHIP_MARRIED => 'Married',
-        self::RELATIONSHIP_NOT_MARRIED => 'Not married',
-    ];
-
     protected $fillable = [
-        'firstname', 'lastname', 'birthday', 'city', 'sex', 'relationship',
+        'firstname', 'lastname', 'birthday', 'city', 'sex', 'relationship', 'relationship_user_id',
     ];
 
     //TODO: Please move this to request handler
@@ -50,7 +43,8 @@ class Profile extends Model
             'birthday' => 'date_format:Y-m-d|nullable',
             'sex' => Rule::in(array_keys(self::SEX_VARIANTS)),
             'city' => 'string|min:1|max:255',
-            'relationship' => Rule::in(array_keys(self::RELATIONSHIP_VARIANTS)) . '|nullable',
+            'relationship' => Rule::exists('profile_relationships', 'id') . 'nullable',
+            'relationship_user_id' => 'nullable',
         ];
 
         if (count($keys)) {
@@ -66,5 +60,10 @@ class Profile extends Model
     public function getDateFormat()
     {
         return 'U';
+    }
+
+    public function relationship()
+    {
+        return $this->hasOne(Relationship::class, 'id', 'relationship');
     }
 }
