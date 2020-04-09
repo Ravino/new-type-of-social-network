@@ -1,0 +1,127 @@
+.plz-profile-userpic-container {
+    width: 100%;
+    max-width: 245px;
+    box-shadow: 0px 2px 5px 0px rgba(0, 0, 0, 0.05);
+}
+.plz-profile-userpic-wrapper {
+    position: relative;
+
+    img {
+/**
+* TODO: @tga заремлено мной т.к. работает не корректно с большими аватарками
+        position: relative;
+        top: 0;
+        left: 50%;
+        transform: translateX(-50%);
+*/
+        max-width: 100%;
+    }
+}
+
+.plz-profile-userpic-footer {
+    padding: 9px;
+}
+.plz-profile-userpic-edit {
+    display: block;
+    height: 34px;
+    line-height: 32px;
+    padding: 0;
+    border: 2px solid #f0f0f0;
+    border-radius: 20px;
+    background-color: transparent;
+    width: 100%;
+    text-align: center;
+    cursor: pointer;
+    transition: .4s;
+}
+.plz-profile-userpic-edit  {
+    text-transform: uppercase;
+    color: #6f7487;
+    font-size: 11px;
+    text-align: center;
+    font-weight: 600;
+
+    span {
+        line-height: 32px
+    }
+    .ps-dot {
+        display: inline-block;
+        width: 2px;
+        height: 2px;
+        border-radius: 2px;
+        background-color: #6f7487;
+        margin: 0 3px;
+    }
+}
+.plz-profile-userpic-edit:hover {
+    background-color: #a6a7a9;
+    color: #fff;
+}
+
+.plz-profile-userdetails {
+    border-radius: 20px;
+    overflow: hidden;
+    box-shadow: 0 2px 5px 0 rgba(0, 0, 0, 0.05);
+    background-color: white;
+}
+.plz-profile-userdetails .online{
+    position: relative;
+    margin: 0;
+    color: #acacac
+}
+.plz-profile-userdetails .online:after {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: -20px;
+    display: inline-block;
+    vertical-align: top;
+    width: 10px;
+    height: 10px;
+    border-radius: 100%;
+    background-color: #9fcd48;
+    transform: translateY(-60%);
+}
+.plz-user-name {
+    font-size: 16px;
+    color: #4e4e4d;
+    font-weight: 600;
+}
+
+.plz-user-profile-details {
+    max-width: 600px;
+}
+.plz-user-profile-details td {
+    width: auto;
+    padding: 3px 0;
+    text-align: left;
+    font-size: 13px;
+    font-weight: normal;
+    color: #9A9A9A;
+}
+.plz-user-profile-details td:first-child {
+    width: 190px;
+}
+.plz-user-profile-details td:last-child {
+    color: #515151;
+}
+.plz-profile-userdetails .bg-white-br20 {
+    border-bottom: 2px solid #f0f0f0;
+    border-radius: 0;
+}
+.plz-profile-userdetails-numbers {
+    display: inline-block;
+    text-align: center;
+}
+
+.numbers-top {
+    display: block;
+    font-size: 24px;
+    color: #363636;
+    font-weight: 600;
+}
+.numbers-bottom {
+    display: block;
+    font-size: 13px;
+    color: #9a9a9a;
+}

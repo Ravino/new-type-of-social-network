@@ -1,0 +1,35 @@
+.plz-favorit-friends-item {
+    transition: .4s;
+}
+.plz-favorit-friends-item:hover {
+    background-color: #dae4ee;
+}
+
+.plz-short-friend-is-active {
+    cursor: pointer;
+}
+.plz-ff-title .plz-ff-subtitle {
+    display: inline-block;
+}
+.plz-ff-subtitle {
+    color: #9a9a9a;
+    font-size: 12px;
+}
+
+.plz-short-friend-is-active {
+    font-size: 14px;
+    color: #c5c8d1;
+    transition: .4s;
+
+    &:hover {
+        color: #576df6;
+    }
+}
+
+.plz-short-friend-is-active {
+    .icon-message {
+        width: 17px;
+        height: 17px;
+    }
+}
+

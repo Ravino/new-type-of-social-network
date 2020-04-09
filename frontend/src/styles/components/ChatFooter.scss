@@ -1,0 +1,20 @@
+$chatMessageUserPicSize: 32px;
+
+#chatFooter {
+    #txtMessage {
+        border: 0;
+
+        &::placeholder {
+            font-size: 13px;
+            color: #9a9a9a;
+        }
+    }
+
+    .chat-companion-user-pic {
+        width: $chatMessageUserPicSize;
+        height: $chatMessageUserPicSize;
+        min-width: $chatMessageUserPicSize;
+    }
+
+}
+
