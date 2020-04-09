@@ -4,7 +4,7 @@
             <div class="w-100 d-flex flex-row justify-content-between align-items-center pb-4">
                 <div class="">
                     <h6 class="profilePhotos-title my-0">Фотографии
-                        <span class="profilePhotos-desc">{{user.photosNumber}}</span>
+                        <span class="profilePhotos-desc">{{userData.photosNumber}}</span>
                     </h6>
                 </div>
 
@@ -29,7 +29,6 @@
 export default {
 name: 'ProfilePhotos',
 props: {
-    user: Object,
     photos: Array
 },
 data () {
@@ -37,7 +36,10 @@ data () {
     }
 },
 
-methods: {
+computed : {
+    userData() {
+        return this.$root.$user;
+    },
 }
 
 }

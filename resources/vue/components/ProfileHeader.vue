@@ -3,7 +3,7 @@
         <div class="col-md-3 pl-0">
             <div class="plz-profile-userpic-container h-100 bg-white-br20 overflow-hidden">
                 <div class="plz-profile-userpic-wrapper">
-                    <img :src="user.userPic" :alt="user.fullName" class="plz-br20-top" />
+                    <img ref="userAvatar" :src="userData.userPic" :alt="userData.fullName" class="plz-br20-top" />
                     <div class="plz-profile-userpic-footer">
                         <label for="userAvatarFile" class="plz-profile-userpic-edit d-flex align-items-center justify-content-between">
                             <span class="align-items-center justify-content-center d-flex w-75 border-right">Редактировать</span>
@@ -26,46 +26,46 @@
         <div class="col-md-9 px-0 py-4 plz-profile-userdetails">
             <div class="w-100 bg-white-br20 px-5 pb-3">
                 <div class="d-flex justify-content-between align-items-center mb-2">
-                    <h2 class="plz-user-name">{{user.fullName}}</h2>
-                    <span v-if="user.isOnline" class="online">В сети</span>
+                    <h2 class="plz-user-name">{{userData.fullName}}</h2>
+                    <span v-if="userData.isOnline" class="online">В сети</span>
                 </div>
 
                 <table class="plz-user-profile-details table table-borderless mt-2">
                     <tbody>
                     <tr>
                         <td class="">Дата рождения:</td>
-                        <td class="">{{user.birthday | toLongDate}}</td>
+                        <td class="">{{userData.birthday | toLongDate}}</td>
                     </tr>
                     <tr>
                         <td class="">Город:</td>
-                        <td class=""><i class="fas fa-map-marker-alt"></i> {{user.country}}, {{user.city}}</td>
+                        <td class=""><i class="fas fa-map-marker-alt"></i> {{userData.country}}, {{userData.city}}</td>
                     </tr>
                     <tr>
                         <td class="">Семейное положение:</td>
-                        <td class="">{{user.family}}</td>
+                        <td class="">{{userData.family}}</td>
                     </tr>
                     </tbody>
                 </table>
             </div>
             <div class="plz-profile-userdetails-footer d-flex justify-content-around px-4">
                 <div class="plz-profile-userdetails-numbers text-center pt-4 px-4">
-                    <span class="numbers-top" v-html="sBeaty(user.subscribersNumber)"></span>
+                    <span class="numbers-top" v-html="sBeaty(userData.subscribersNumber)"></span>
                     <span class="numbers-bottom">Подписчиков</span>
                 </div>
                 <div class="plz-profile-userdetails-numbers text-center pt-4 px-4">
-                    <span class="numbers-top" v-html="sBeaty(user.friendsNumber)"></span>
+                    <span class="numbers-top" v-html="sBeaty(userData.friendsNumber)"></span>
                     <span class="numbers-bottom">Друзей</span>
                 </div>
                 <div class="plz-profile-userdetails-numbers text-center pt-4 px-4">
-                    <span class="numbers-top" v-html="sBeaty(user.photosNumber)"></span>
+                    <span class="numbers-top" v-html="sBeaty(userData.photosNumber)"></span>
                     <span class="numbers-bottom">Фотографий</span>
                 </div>
                 <div class="plz-profile-userdetails-numbers text-center pt-4 px-4">
-                    <span class="numbers-top" v-html="sBeaty(user.videosNumber)"></span>
+                    <span class="numbers-top" v-html="sBeaty(userData.videosNumber)"></span>
                     <span class="numbers-bottom">Видео</span>
                 </div>
                 <div class="plz-profile-userdetails-numbers text-center pt-4 px-4">
-                    <span class="numbers-top" v-html="sBeaty(user.audiosNumber)"></span>
+                    <span class="numbers-top" v-html="sBeaty(userData.audiosNumber)"></span>
                     <span class="numbers-bottom">Аудио</span>
                 </div>
             </div>
@@ -74,12 +74,12 @@
 </template>
 
 <script>
-import {HTTPer} from "../httper/httper";
+import {HTTPer} from '../httper/httper.js';
 
 export default {
 name: 'ProfileHeader',
 props: {
-    user: Object
+
 },
 data() {
     return {
@@ -120,6 +120,10 @@ methods: {
             .then((response) => {
                 if (response.status === 200) {
                     this.$root.$user.userPic = response.data.path;
+
+                    this.$refs.userAvatar.src = this.$root.$user.userPic;
+
+                    this.$root.$emit('updateUserAvatar', {userPic: this.$root.$user.userPic});
                 }
             })
             .catch((error) => {
@@ -136,10 +140,16 @@ methods: {
 
 },
 
+computed : {
+    userData() {
+        return this.$root.$user;
+    },
+}
+
 }
 </script>
 
-<style scoped>
+<style scoped lang="scss">
 input[type="file"] {
     display: none;
 }
