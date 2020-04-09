@@ -2,6 +2,7 @@
 
 namespace App\Http\Resources;
 
+
 use Illuminate\Http\Resources\Json\JsonResource;
 
 class User extends JsonResource
@@ -18,7 +19,8 @@ class User extends JsonResource
             'id' => $this->id,
             'email' => $this->email,
             'isOnline' => $this->isOnline(),
-            'profile' => new Profile($this->profile)
+            'profile' => new Profile($this->profile),
+            'privacySettings' => new PrivacySettings($this->privacySettings)
         ];
     }
 
