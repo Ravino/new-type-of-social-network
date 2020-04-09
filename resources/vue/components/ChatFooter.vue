@@ -95,8 +95,9 @@ methods: {
 },
 
 computed : {
-    userPic : function () {
-        return (this.currentDialog  &&  this.currentDialog.userPic) ? this.currentDialog.userPic : this.$defaultAvatarPath;
+    userPic() {
+        // return (this.currentDialog  &&  this.currentDialog.userPic) ? this.currentDialog.userPic : this.$defaultAvatarPath;
+        return this.$root.$user.userPic;
     }
 },
 
