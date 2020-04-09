@@ -365,6 +365,14 @@ class PliziUser {
     }
 
     /**
+     * устанавливает юзерский аватар
+     * @param {string} picPath
+     */
+    set userPic(picPath) {
+        this._userPic = picPath;
+    }
+
+    /**
      *
      * @returns {Date}
      */

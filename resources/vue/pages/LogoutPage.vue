@@ -4,16 +4,26 @@
 
 <script>
 export default {
-name: 'LoginPage',
+name: 'LogoutPage',
 data() {
     return {
 
     }
 },
 
-mounted() {
-    this.$root.$emit('afterSuccessLogout', {redirect: true});
-}
+beforeMount() {
+    this.$root.$isAuth = false;
+
+    this.$store.dispatch('SET_GWT', ``);
+    this.$store.dispatch('SET_CHAT_CHANNEL', ``);
+
+    window.localStorage.removeItem('pliziJWToken');
+    window.localStorage.removeItem('pliziUser');
+    window.localStorage.removeItem('pliziChatChannel');
+
+    this.$router.push({path: '/login'});
+},
+
 
 }
 </script>

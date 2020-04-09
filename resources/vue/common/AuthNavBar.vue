@@ -89,7 +89,7 @@ data () {
 
 methods: {
     goLogout(){
-        this.$router.push({path: '/login'});
+        this.$router.push({path: '/logout'});
     }
 },
 
