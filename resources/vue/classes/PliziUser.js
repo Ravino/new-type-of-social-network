@@ -470,6 +470,23 @@ class PliziUser {
         };
     }
 
+    updateData(fieldName, newValue) {
+        switch(fieldName){
+            case `firstName`:
+                this._firstName = (newValue+'').trim();
+                window.console.log( this._firstName, 'firstName new');
+                break;
+
+            case `lastName`:
+                this._lastName = (newValue+'').trim();
+                window.console.log( this._lastName, 'lastName new');
+                break;
+
+            default:
+                window.console.warn(`PliziUser::updateData: unknown field ${fieldName}!`);
+        }
+    }
+
 }
 
 export { PliziUser as default}

@@ -9,27 +9,43 @@
             <div class="form-group row mb-0 border-bottom">
                 <label for="firstName" class="col-sm-6 col-md-6 col-lg-4 col-xl-4 col-form-label text-secondary">Имя</label>
                 <div class="col-sm-6 col-md-6 col-lg-6 col-xl-6">
-                    <input v-model="user.firstName" type="text" :readonly="true" class="form-control-plaintext" id="firstName" ref="firstName" />
+                    <input v-show="isEdit.firstName" v-model="model.firstName" type="text"
+                           @keydown="accountKeyDownCheck($event, `firstName`)"
+                           @blur="accountFieldBlur($event, `firstName`)"
+                           class="form-control" id="firstName" ref="firstName" />
+                    <input v-show="!isEdit.firstName" v-model="userData.firstName" type="text" readonly class="form-control-plaintext" ref="firstNameDisplay" />
                 </div>
                 <div class="col-2 d-sm-none d-md-none d-lg-flex d-xl-flex">
-                    <button type="button" class="btn btn-link text-body">Изменить</button>
+                    <button v-show="isEdit.firstName" type="button" class="btn btn-link text-primary" @click.stop.prevent="finishFieldEdit(`firstName`)">
+                        Сохранить
+                    </button>
+                    <button v-show="!isEdit.firstName" type="button" class="btn btn-link text-body" @click.stop.prevent="startFieldEdit(`firstName`)">
+                        Изменить
+                    </button>
                 </div>
             </div>
 
             <div class="form-group row mb-0 border-bottom">
                 <label for="lastName" class="col-sm-6 col-md-6 col-lg-4 col-xl-4 col-form-label text-secondary">Фамилия</label>
                 <div class="col-sm-6 col-md-6 col-lg-6 col-xl-6">
-                    <input v-model="user.lastName" type="text" readonly class="form-control-plaintext" id="lastName" ref="lastName"  />
+                    <input v-show="isEdit.lastName" v-model="model.lastName" type="text"
+                           @keydown="accountKeyDownCheck($event, `lastName`)"
+                           @blur="accountFieldBlur($event, `lastName`)"
+                           class="form-control" id="lastName" ref="lastName"  />
+                    <input v-show="!isEdit.lastName" v-model="userData.lastName" type="text" readonly class="form-control-plaintext" ref="lastNameDisplay"  />
                 </div>
                 <div class="col-2 d-sm-none d-md-none d-lg-flex d-xl-flex">
-                    <button type="button" class="btn btn-link text-body">Сохранить</button>
+                    <button type="button" class="btn btn-link text-body" @click.stop.prevent="startFieldEdit(`lastName`)">
+                        <span v-if="isEdit.lastName">Сохранить</span>
+                        <span v-else>Изменить</span>
+                    </button>
                 </div>
             </div>
 
             <div class="form-group row mb-0 border-bottom">
                 <label class="col-sm-6 col-md-6 col-lg-4 col-xl-4 col-form-label text-secondary">Пол</label>
                 <div class="col-sm-6 col-md-6 col-lg-6 col-xl-6">
-                    <span class="form-control-plaintext d-inline-block w-auto">{{user.sex}}</span>
+                    <span class="form-control-plaintext d-inline-block w-auto">{{userData.sex}}</span>
                     <i class="fas fa-chevron-down ml-2 d-sm-none d-md-none d-lg-inline d-xl-inline"></i>
                 </div>
                 <div class="col-3"></div>
@@ -46,7 +62,7 @@
             <div class="form-group row mb-0 border-bottom">
                 <label for="birthDate" class="col-sm-6 col-md-6 col-lg-4 col-xl-4 col-form-label text-secondary">Дата рождения</label>
                 <div class="col-sm-6 col-md-6 col-lg-6 col-xl-6">
-                    <input type="text" readonly class="form-control-plaintext" id="birthDate" ref="birthDate" :value="user.birthday | toLongDate" />
+                    <input type="text" readonly class="form-control-plaintext" id="birthDate" ref="birthDate" :value="userData.birthday | toLongDate" />
                 </div>
                 <div class="col-2 d-sm-none d-md-none d-lg-flex d-xl-flex">
                     <button type="button" class="btn btn-link text-body">Изменить</button>
@@ -57,7 +73,7 @@
                 <label for="location" class="col-sm-6 col-md-6 col-lg-4 col-xl-4 col-form-label text-secondary">Месторасположение</label>
                 <div class="col-sm-6 col-md-6 col-lg-6 col-xl-6">
                     <i class="fas fa-map-marker-alt"></i>
-                    <input v-model="user.city" type="text" readonly class="form-control-plaintext d-inline-block w-75 ml-1" id="location" ref="location" />
+                    <input v-model="userData.city" type="text" readonly class="form-control-plaintext d-inline-block w-75 ml-1" id="location" ref="location" />
                 </div>
                 <div class="col-2 d-sm-none d-md-none d-lg-flex d-xl-flex">
                     <button type="button" class="btn btn-link text-body">Изменить</button>
@@ -79,7 +95,7 @@
             <div class="form-group row mb-0 --border-bottom d-lg-none d-xl-none">
                 <label for="city" class="col-4 col-sm-6 col-md-6 col-form-label text-secondary">Город</label>
                 <div class="col-sm-6 col-md-6 col-lg-6 col-xl-6">
-                    <input v-model="user.city" type="text" readonly class="form-control-plaintext d-inline-block w-50" id="city" ref="city" />
+                    <input v-model="userData.city" type="text" readonly class="form-control-plaintext d-inline-block w-50" id="city" ref="city" />
                 </div>
             </div>
 
@@ -88,15 +104,126 @@
 </template>
 
 <script>
+import {HTTPer} from "../httper/httper";
+
 export default {
 name: 'AccountSettingsMain',
-props: {
-    user: Object,
-},
-data () {
+
+data() {
     return {
+        model : {
+            firstName : ``,
+            lastName : ``,
+        },
+
+        isEdit: {
+            firstName: false,
+            lastName: false,
+        }
     }
 },
+
+methods : {
+    startFieldEdit(fieldName){
+        this.isEdit[fieldName] = true;
+
+        const inpRef = this.getRef(fieldName);
+        if (inpRef) {
+            this.model[fieldName] = this.$root.$user[fieldName];
+            setTimeout( () => {inpRef.focus();}, 100 );
+        }
+        else {
+            window.console.warn(`Ошибка редактирования поля`);
+        }
+    },
+
+    finishFieldEdit(fieldName) {
+        this.isEdit[fieldName] = false;
+
+        const inpRef = this.getRef(fieldName);
+        if (inpRef) {
+            this.accountStartSaveData(inpRef.value.trim(), fieldName);
+        }
+        else {
+            window.console.warn(`Ошибка редактирования поля`);
+        }
+    },
+
+    // TODO: перенести потом в глобал
+    getRef(refKey) {
+        for (let [key, value] of Object.entries(this.$refs)) {
+            if (refKey === key)
+                return value;
+        }
+
+        return null;
+    },
+
+    accountKeyDownCheck(ev, fieldName) {
+        if (13 === ev.keyCode) {
+            this.isEdit[fieldName] = false;
+            this.accountStartSaveData(ev.target.value.trim(), fieldName)
+        }
+    },
+
+    accountFieldBlur(ev, fieldName){
+        this.finishFieldEdit(fieldName);
+    },
+
+    accountStartSaveData(newValue, fieldName){
+        this.isEdit[fieldName] = false;
+
+        const gwt = this.$store.getters.gwToken;
+        const headers = {
+            headers : {
+                'Authorization': `Bearer ${gwt}`,
+                'Content-Type' : 'application/x-www-form-urlencoded'
+            }
+        };
+
+        const formData = {};
+        // TODO: @TGA тот самый момент когда понимаешь важность единообразия именования полей
+        // TODO: @TGA этот костыль, когда бэкендеры разберутся с именованием полей и сделают сохранение по одному полю
+        if (`firstName` === fieldName) {
+            formData.firstname = newValue;
+            formData.lastname = this.$root.$user.lastName;
+        }
+        else { // lastName
+            formData.firstname = this.$root.$user.firstName;
+            formData.lastname = newValue;
+        }
+
+        HTTPer.patch('/api/user', formData, headers)
+            .then((response) => {
+                if (response.status === 201) {
+                    this.$root.$user.updateData(fieldName, newValue);
+
+                    if (fieldName===`firstName`  ||   fieldName===`lastName`){
+                        this.$root.$emit('updateUserName', {
+                            firstName: this.$root.$user.firstName,
+                            lastName: this.$root.$user.lastName
+                        });
+                    }
+                }
+            })
+            .catch((error) => {
+                if (error.response.status >= 400) {
+                    window.console.log(error.response.data);
+                    window.console.warn(error.response.status + ': ' + error.response.statusText + ': ' + error.response.data.message);
+                }
+                else {
+                    window.console.warn(error.toString());
+                }
+            });
+    }
+
+},
+
+computed: {
+    userData: function () {
+        return this.$root.$user;
+    },
+}
 
 }
 </script>

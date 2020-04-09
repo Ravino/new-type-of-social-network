@@ -5,7 +5,7 @@
         </div>
 
         <div class="col-sm-10 col-md-9 col-lg-8 col-xl-8">
-            <AccountSettingsMain v-bind:user="userData"></AccountSettingsMain>
+            <AccountSettingsMain></AccountSettingsMain>
             <AccountSettingsPrivacy></AccountSettingsPrivacy>
             <AccountSettingsSecurity></AccountSettingsSecurity>
         </div>
@@ -40,12 +40,6 @@ components: { AccountToolbarLeft,
 data() {
     return {
     }
-},
-
-computed: {
-    userData: function () {
-        return this.$root.$user;
-    },
 }
 
 }

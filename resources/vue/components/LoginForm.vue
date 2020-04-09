@@ -263,10 +263,8 @@
                 }
             },
             successRegistration(user) {
-                let password_input = document.querySelector('#password');
-
                 this.model.email = user.email;
-                password_input.focus();
+                this.$refs.password.focus();
             },
         },
     }

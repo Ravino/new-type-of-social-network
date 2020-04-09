@@ -1,8 +1,6 @@
 <template>
     <div id="" class="plz-registration-form-wrapper">
-        <div class="text-center">
-            <h5>Быстрая регистрация</h5>
-        </div>
+        <div class="text-center"><h5>Быстрая регистрация</h5></div>
         <div class="symbol-registration"></div>
 
         <form id="registrationForm" novalidate="novalidate">
@@ -67,7 +65,7 @@
                        :class="{ 'is-invalid': $v.model.birthDate.$error, '&#45;&#45;is-valid': !$v.model.birthDate.$invalid }"
                        pattern="(0[1-9]|1[0-9]|2[0-9]|3[01]).(0[1-9]|1[012]).[0-9]{4}"
                        @blur="$v.model.birthDate.$touch()"
-                       @keydown="birthDateKeyDown($event)"
+                       @keydown="registrationKeyDownCheck($event)"
                        placeholder="Дата рождения" />
 
                 <div v-show="$v.model.birthDate.$error" class="invalid-feedback">
@@ -88,7 +86,6 @@
 </template>
 
 <script>
-    import moment from 'moment';
     import {HTTPer} from '../httper/httper.js';
 
     import {required, minLength, maxLength, email} from 'vuelidate/lib/validators';
@@ -138,18 +135,12 @@
             startRegistration() {
                 this.$v.$touch();
 
-                // let bDay = this.model.birthDate.trim();
-                // bDay = (`` === bDay) ? null : moment(bDay, 'DD.MM.YYYY').format('YYYY-MM-DD');
-
                 let regData = {
                     email: this.model.email.trim(),
                     firstname: this.model.firstName.trim(),
                     lastname: this.model.lastName.trim(),
                     birthday: this.model.birthDate.trim()
                 };
-                window.console.info('Форма отправлена');
-                window.console.dirxml(regData);
-
                 this.isServerError = false;
 
                 HTTPer.post('api/register', regData)
@@ -161,8 +152,6 @@
                     .catch((error) => {
                         if (400 === error.response.status) {
                             // TODO: @tga довести до ума обработку ошибок
-                            // this.$root.$emit('hideRegistrationModal', {});
-
                             window.console.clear();
                             window.console.log(error.response.data);
 
@@ -170,7 +159,8 @@
                             this.serverErrorText = error.response.data.error;
                             window.console.warn(error.response.status + ': ' + error.response.statusText + ': ' + error.response.data.message);
                             this.$refs.email.focus();
-                        } else {
+                        }
+                        else {
                             window.console.warn(error.toString());
                         }
                     });
@@ -180,15 +170,8 @@
                 if (13 === ev.keyCode)
                     return this.startRegistration();
             },
-
-            birthDateKeyDown(ev) {
-                // let value = this.model.birthDate;
-                // value = value.replace(/[,-\/\\]/g, '.');
-                // this.model.birthDate = value;
-
-                this.registrationKeyDownCheck(ev);
-            }
         },
+
         mounted() {
             setTimeout(() => {
                 this.$refs.firstName.focus();

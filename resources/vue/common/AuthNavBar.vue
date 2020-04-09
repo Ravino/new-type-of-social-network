@@ -61,11 +61,11 @@
 
                 <div class="col-sm-2 col-md-1 col-lg-2 px-0 profile-menu">
                     <router-link to="/account" tag="a" class="profile-menu-link">
-                        <span>{{userData.firstName}}</span>
+                        <span v-if="isShowName" ref="navbarUserName">{{userData.firstName}}</span>
                     </router-link>
 
                     <router-link to="/profile" tag="a" class="profile-menu-link">
-                        <img ref="navbarAvatar" :src="userData.userPic" :alt="userData.firstName" />
+                        <img v-if="isShowAvatar" ref="navbarAvatar" :src="userData.userPic" :alt="userData.firstName" />
                     </router-link>
                     <i class="profile-menu-opener fa fas fa-chevron-down" aria-hidden="true" @click.stop="goLogout()"></i>
                 </div>
@@ -79,24 +79,40 @@
 export default {
 name: 'AuthNavBar',
 props: {
-    isAuth: Boolean,
-    userData : Object,
 },
 data () {
     return {
+        isShowName: true,
+        isShowAvatar: true
     }
 },
 
 methods: {
     goLogout(){
         this.$router.push({path: '/logout'});
+    },
+
+    updateUserName(evData){
+        this.isShowName = false;
+        setTimeout(()=>{ this.isShowName = true; }, 10);
+    },
+
+    updateAvatar(evData){
+        this.isShowAvatar = false;
+        setTimeout(()=>{ this.isShowAvatar = true; }, 10);
     }
 },
 
+computed: {
+    userData: function () {
+        return this.$root.$user;
+    },
+},
+
+
 mounted() {
-    this.$root.$on('updateUserAvatar', (evData) => {
-        this.$refs.navbarAvatar.src = this.$root.$user.userPic;
-    });
+    this.$root.$on('updateUserAvatar', this.updateAvatar);
+    this.$root.$on('updateUserName', this.updateUserName);
 }
 
 

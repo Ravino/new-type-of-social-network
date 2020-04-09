@@ -32,17 +32,14 @@ const router = new VueRouter({
 });
 
 
-async function getUserData(token){
-    const config = {
-        headers : {
-            Authorization: `Bearer ${token}`
+async function getUserData(){
+    try {
+        const response = await HTTPer.get('api/user', store.getters.getHTTPConfig).catch((err) => { console.log(err); });
+        if (200 === response.status) {
+            return response.data;
         }
-    };
-
-    const response = await HTTPer.get('api/user', config);
-    if (200 === response.status) {
-        // window.console.log( JSON.stringify(response.data), 'response.data' );
-        return response.data;
+    } catch(err) {
+        window.console.warn(err);
     }
 
     return null;

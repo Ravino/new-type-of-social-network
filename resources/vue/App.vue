@@ -13,7 +13,7 @@
         </div>
 
         <div v-else id="authPageWrapper">
-            <AuthNavBar v-bind:isAuth="isAuthorized()" v-bind:user-data="userData"></AuthNavBar>
+            <AuthNavBar></AuthNavBar>
 
             <div class="--container-fluid container px-0 my-0 pt-3 container-wide  mx-auto mt-4">
                 <main :id="containerID" role="main"
@@ -116,12 +116,9 @@ methods: {
 },
 
 computed: {
-    isAuth: function () {
-        return this.$root.$isAuth;
-    },
-    userData: function () {
-        return this.$root.$user;
-    },
+    // isAuth: function () {
+    //     return this.$root.$isAuth;
+    // },
 },
 
 mounted() {
