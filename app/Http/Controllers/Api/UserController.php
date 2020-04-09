@@ -24,7 +24,7 @@ class UserController extends Controller
         $search = $request->get('search', '');
         if (!empty($search)) {
             $users = \DB::table('users')
-                ->select('id', \DB::raw('CONCAT(lastname, " ", firstname) AS fullname'))
+                ->select('id', 'lastname', 'firstname')
                 ->join('profiles', 'users.id', '=', 'profiles.user_id')
                 ->where('users.email', 'LIKE', '%' . $search . '%')
                 ->orWhere('profiles.firstname', 'LIKE', '%' . $search . '%')
