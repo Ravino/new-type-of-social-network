@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\CommunityMember;
 use App\Models\User\PrivacySettings;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
@@ -68,6 +69,12 @@ class User extends Authenticatable implements JWTSubject
                 'sms_confirm' => PrivacySettings::SMS_CONFIRM_DEFAULT,
             ]
         );
+    }
+
+    public function communities()
+    {
+        return $this->belongsToMany(Community::class, 'community_members')
+            ->using(CommunityMember::class)->withPivot('role');
     }
 
     /**

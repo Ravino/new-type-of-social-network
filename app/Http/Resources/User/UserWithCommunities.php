@@ -1,11 +1,11 @@
 <?php
 
-namespace App\Http\Resources;
+namespace App\Http\Resources\User;
 
-
+use App\Http\Resources\Community\CommunityCollection;
 use Illuminate\Http\Resources\Json\JsonResource;
 
-class User extends JsonResource
+class UserWithCommunities extends JsonResource
 {
     /**
      * Transform the resource into an array.
@@ -19,8 +19,8 @@ class User extends JsonResource
             'id' => $this->id,
             'email' => $this->email,
             'isOnline' => $this->isOnline(),
-            'profile' => new Profile($this->profile),
-            'privacySettings' => new PrivacySettings($this->privacySettings)
+            'communities' => new CommunityCollection($this->communities),
+            'profile' => new Profile($this->profile)
         ];
     }
 

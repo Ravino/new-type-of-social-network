@@ -13,15 +13,6 @@ use Illuminate\Contracts\Validation\Validator;
 class StoreImage extends Request
 {
 
-    protected function failedValidation(Validator $validator) {
-        throw new HttpResponseException(
-            response()->json([
-                'message' => 'Неверный формат данных',
-                'errors' => $validator->errors()
-            ], 422)
-        );
-    }
-
     /**
      * Determine if the user is authorized to make this request.
      *

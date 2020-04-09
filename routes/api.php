@@ -25,15 +25,29 @@ Route::group(['middleware' => ['auth.jwt', 'track.activity']], function () {
         Route::post('send', 'Api\ChatController@send');
     });
 
+    /**
+     * User Resource
+     */
+    Route::get('user/communities', 'Api\ProfileController@communities');
     Route::patch('user', 'Api\ProfileController@patch');
     Route::resource('user', 'Api\ProfileController', ['only' => ['index', 'show']]);
-
     Route::post('user/profile/image', 'Api\ImageUploadController@upload');
-
     Route::patch('user/privacy', 'Api\UserPrivacySettingController@patch');
     Route::post('user/search', 'Api\UserController@search');
     Route::post('user/blacklist', 'Api\UserBlacklistController@post');
     Route::delete('user/blacklist', 'Api\UserBlacklistController@delete');
+
+    /**
+     * Communities Resource
+     */
+    Route::prefix('communities')->group(function(){
+        Route::patch('{id}', 'Api\CommunityController@update');
+        Route::post('', 'Api\CommunityController@store');
+        Route::get('', 'Api\CommunityController@index');
+        Route::get('{id}', 'Api\CommunityController@get');
+        Route::get('{id}/subscribe', 'Api\CommunityController@subscribe');
+        Route::get('{id}/unsubscribe', 'Api\CommunityController@unsubscribe');
+    });
 });
 
 Route::get('login/{provider}', 'Auth\LoginController@redirectToProvider');
