@@ -16,7 +16,7 @@
                 <ProfileFilter></ProfileFilter>
 
                 <ProfilePost v-for="(postData, postIndex) in userPosts"
-                             v-bind:key="postIndex" v-bind:post="postData" v-bind:user="userData">
+                             v-bind:key="postIndex" v-bind:post="postData">
                 </ProfilePost>
             </div>
 

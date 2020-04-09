@@ -1,10 +1,10 @@
 export default [
     {
         id: 1, /** в смысле Id поста */
-        posterName: `Маргарите Соболева`,
+        posterName: `Маргарита Соболева`,
         posterPic: ``,
         postText: `Я не могу сказать, что я отношусь к категории гордых людей, я скорее всего с категории взаимных. Для меня важно чувствовать необходимость, теплое отношение и заботу.`,
-        dtLabel : `2019-07-23 18:32:00`,
+        dtLabel : `2020-04-07 18:32:00`,
         isMine: true,
         isLiked: false,
         isDisliked: false,
@@ -87,7 +87,7 @@ export default [
             },
         ]
     },
-    /////
+    //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     {
         id: 2, /** в смысле Id поста */
         posterName: `Юрий Никулин`,
@@ -151,8 +151,109 @@ export default [
                 dislikesNumber: Math.floor(Math.random() * 50),
             },
             {
-                id: 13,
+                id: 14,
                 path: 'https://steamuserimages-a.akamaihd.net/ugc/788626362664385211/749E88DD53576028652019D92FFCEBCE049A96E5/',
+                name : ``,
+                w: 1600,
+                h: 900,
+                viewsNumber: Math.floor(Math.random() * 1000),
+                commentsNumber: Math.floor(Math.random() * 50),
+                sharesNumber: Math.floor(Math.random() * 100),
+                likesNumber: Math.floor(Math.random() * 100),
+                dislikesNumber: Math.floor(Math.random() * 50),
+            },
+        ],
+
+        comments : []
+    },
+
+
+    //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    {
+        id: 3, /** в смысле Id поста */
+        posterName: `Иван Куличенко`,
+        posterPic: ``,
+        postText: `Первоначальный проект архитектора Клода Геруа был утверждён в 1786 году.
+
+Планировалось, что своими размерами 150x45 метров Спасо-Преображенский собор будет больше, чем собор Святого Павла в Риме.
+Князь Потёмкин лично указал увеличить высоту здания на один аршин, чтобы это собор был выше собора Святого Павла.
+
+Во время «таврического» вояжа императрицы Екатерины II в 1787 году, при основании Екатеринослава, в фундамент собора был заложен первый камень. При этом также присутствовал австрийский император Иосиф II, он заложил второй камень в фундамент собора.
+
+Повторная закладка собора произошла в 1830 году. На этот раз собор уменьшился в размере в шесть раз.
+Строительство Спасо-Преображенского собора было завершено в 1835 году.
+
+Построен собор был в стиле классицизма, по проекту Андреяна Захарова, который разработал проект в 1805-1806.
+
+Спасо-Преображенский собор стал вторым каменным зданием в Екатеринославе (первым был Потёмкинский дворец).
+До революции 1917 года был самым большим собором в Екатеринославе.
+
+В 1930 году собор был закрыт, в здании был организован Музей атеизма.
+Во время Великой Отечественной войны собор пострадал. После реконструкции, которая завершилась в 1976 году, в здании собора был открыт Музей истории религии и атеизма.
+
+В 1992 году здание собора было возвращено церкви.`,
+
+        dtLabel : `2020-04-09 07:47:00`,
+        isMine: true,
+        isLiked: true,
+        isDisliked: false,
+        viewsNumber: Math.floor(Math.random() * 1000),
+        commentsNumber: Math.floor(Math.random() * 100),
+        sharesNumber: Math.floor(Math.random() * 100),
+        likesNumber: Math.floor(Math.random() * 200),
+        dislikesNumber: Math.floor(Math.random() * 500),
+        images : [
+            {
+                id: 21, /** в смысле Id фотки */
+                path: 'https://steamuserimages-a.akamaihd.net/ugc/788624386988845492/2ADAA7F510D2B80DB4029E12C67018951A841099/',
+                name : ``,
+                w: 1600,
+                h: 900,
+                viewsNumber: Math.floor(Math.random() * 1000),
+                commentsNumber: Math.floor(Math.random() * 50),
+                sharesNumber: Math.floor(Math.random() * 100),
+                likesNumber: Math.floor(Math.random() * 100),
+                dislikesNumber: Math.floor(Math.random() * 50),
+            },
+            {
+                id: 22,
+                path: 'https://steamuserimages-a.akamaihd.net/ugc/788624386988845629/81F4F29355BF8108C97E9F255897B21DE0ABCB65/',
+                name : ``,
+                w: 1600,
+                h: 900,
+                viewsNumber: Math.floor(Math.random() * 1000),
+                commentsNumber: Math.floor(Math.random() * 50),
+                sharesNumber: Math.floor(Math.random() * 100),
+                likesNumber: Math.floor(Math.random() * 100),
+                dislikesNumber: Math.floor(Math.random() * 50),
+            },
+            {
+                id: 23,
+                path: 'https://steamuserimages-a.akamaihd.net/ugc/788624386988845748/19E68500B369CA8445F958E0FFF1934BDB1AC9FF/',
+                name : ``,
+                w: 1600,
+                h: 900,
+                viewsNumber: Math.floor(Math.random() * 1000),
+                commentsNumber: Math.floor(Math.random() * 50),
+                sharesNumber: Math.floor(Math.random() * 100),
+                likesNumber: Math.floor(Math.random() * 100),
+                dislikesNumber: Math.floor(Math.random() * 50),
+            },
+            {
+                id: 24,
+                path: 'https://steamuserimages-a.akamaihd.net/ugc/788624386988845764/BA53CCEF5B36917E23F53F63210C476B15A7D980/',
+                name : ``,
+                w: 1600,
+                h: 900,
+                viewsNumber: Math.floor(Math.random() * 1000),
+                commentsNumber: Math.floor(Math.random() * 50),
+                sharesNumber: Math.floor(Math.random() * 100),
+                likesNumber: Math.floor(Math.random() * 100),
+                dislikesNumber: Math.floor(Math.random() * 50),
+            },
+            {
+                id: 24,
+                path: 'https://steamuserimages-a.akamaihd.net/ugc/788624386988848178/704A146A2496C590FCC7066A1211587CFECF16B3/',
                 name : ``,
                 w: 1600,
                 h: 900,
