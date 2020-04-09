@@ -7,6 +7,39 @@ use Illuminate\Database\Eloquent\Model;
 class PrivacySettings extends Model
 {
 
+    const PAGE_TYPE_DEFAULT = 1;
+    const PAGE_TYPE_OPEN = 1;
+    const PAGE_TYPE_FRIENDS_ONLY = 2;
+    const PAGE_TYPE_CLOSED = 3;
+
+    const MESSAGES_PERMISSIONS_DEFAULT = 1;
+    const MESSAGES_PERMISSIONS_ALL = 1;
+    const MESSAGES_PERMISSIONS_FRIENDS_ONLY = 2;
+
+    const POST_WALL_PERMISSIONS_FRIENDS_DEFAULT = 1;
+    const POST_WALL_PERMISSIONS_FRIENDS_ONLY = 1;
+    const POST_WALL_PERMISSIONS_ME_ONLY = 2;
+    const POST_WALL_PERMISSIONS_ALL = 3;
+    const POST_WALL_PERMISSIONS_SELECTED_FRIENDS = 3;
+
+    const VIEW_WALL_PERMISSIONS_DEFAULT = 1;
+    const VIEW_WALL_PERMISSIONS_ALL = 1;
+    const VIEW_WALL_PERMISSIONS_FRIENDS_ONLY = 2;
+    const VIEW_WALL_PERMISSIONS_SELECTED_FRIENDS = 3;
+
+    const VIEW_FRIENDS_PERMISSIONS_DEFAULT = 1;
+    const VIEW_FRIENDS_PERMISSIONS_ALL = 1;
+    const VIEW_FRIENDS_PERMISSIONS_FRIENDS_ONLY = 2;
+    const VIEW_FRIENDS_PERMISSIONS_FRIENDS = 3;
+
+    const TWO_FACTOR_AUTH_ENABLED_DEFAULT = 0;
+    const TWO_FACTOR_AUTH_ENABLED_FALSE = 0;
+    const TWO_FACTOR_AUTH_ENABLED_TRUE = 0;
+
+    const SMS_CONFIRM_DEFAULT = 0;
+    const SMS_CONFIRM_DISABLED = 0;
+    const SMS_CONFIRM_ENABLED = 0;
+
     protected $table = 'users_privacy_settings';
 
     protected $casts = [
@@ -50,5 +83,12 @@ class PrivacySettings extends Model
     public function getDateFormat()
     {
         return 'U';
+    }
+
+    public function getPageTypes()
+    {
+        return [
+
+        ];
     }
 }

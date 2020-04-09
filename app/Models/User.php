@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\CommunityMember;
 use App\Models\User\PrivacySettings;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
@@ -57,7 +58,23 @@ class User extends Authenticatable implements JWTSubject
 
     public function privacySettings()
     {
-        return $this->hasOne(PrivacySettings::class);
+        return $this->hasOne(PrivacySettings::class)->withDefault(
+            [
+                'page_type' => PrivacySettings::PAGE_TYPE_DEFAULT,
+                'write_messages_permissions' => PrivacySettings::MESSAGES_PERMISSIONS_DEFAULT,
+                'post_wall_permissions' => PrivacySettings::POST_WALL_PERMISSIONS_FRIENDS_DEFAULT,
+                'view_wall_permissions' => PrivacySettings::VIEW_WALL_PERMISSIONS_DEFAULT,
+                'view_friends_permissions' => PrivacySettings::VIEW_FRIENDS_PERMISSIONS_DEFAULT,
+                'two_factor_auth_enabled' => PrivacySettings::TWO_FACTOR_AUTH_ENABLED_DEFAULT,
+                'sms_confirm' => PrivacySettings::SMS_CONFIRM_DEFAULT,
+            ]
+        );
+    }
+
+    public function communities()
+    {
+        return $this->belongsToMany(Community::class, 'community_members')
+            ->using(CommunityMember::class)->withPivot('role');
     }
 
     /**
