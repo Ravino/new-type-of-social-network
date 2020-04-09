@@ -3,6 +3,7 @@
 namespace App\Http\Resources\User;
 
 
+use App\Http\Resources\PrivacySettings;
 use Illuminate\Http\Resources\Json\JsonResource;
 
 class User extends JsonResource
