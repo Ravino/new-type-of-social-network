@@ -13,7 +13,7 @@
 
                 <ProfileWhatsNew></ProfileWhatsNew>
 
-                <ProfileFilter></ProfileFilter>
+                <ProfileFilter @wallPostsSelect="wallPostsSelectHandler"></ProfileFilter>
 
                 <ProfilePost v-for="(postData, postIndex) in userPosts"
                              v-bind:key="postIndex" v-bind:post="postData">
@@ -30,54 +30,77 @@
 </template>
 
 <script>
-import AccountToolbarLeft from '../common/AccountToolbarLeft.vue';
-import FavoritFriends from '../common/FavoritFriends.vue';
-import ShortFriends from '../common/ShortFriends.vue';
+    import AccountToolbarLeft from '../common/AccountToolbarLeft.vue';
+    import FavoritFriends from '../common/FavoritFriends.vue';
+    import ShortFriends from '../common/ShortFriends.vue';
 
-import ProfileHeader from '../components/ProfileHeader.vue';
-import ProfilePhotos from '../components/ProfilePhotos.vue';
-import ProfileWhatsNew from '../components/ProfileWhatsNew.vue';
-import ProfileFilter from '../components/ProfileFilter.vue';
-import ProfilePost from '../components/ProfilePost.vue';
+    import ProfileHeader from '../components/ProfileHeader.vue';
+    import ProfilePhotos from '../components/ProfilePhotos.vue';
+    import ProfileWhatsNew from '../components/ProfileWhatsNew.vue';
+    import ProfileFilter from '../components/ProfileFilter.vue';
+    import ProfilePost from '../components/ProfilePost.vue';
 
-import userProfilePosts from '../data/userProfilePosts.js';
+    import userProfilePosts from '../data/userProfilePosts.js';
 
-export default {
-name: 'AccountPage',
-components: { AccountToolbarLeft, FavoritFriends, ShortFriends,
-    ProfileHeader, ProfilePhotos, ProfileWhatsNew, ProfileFilter, ProfilePost
-},
-data() {
-    return {
-        userPosts: userProfilePosts,
+    export default {
+        name: 'AccountPage',
+        components: {
+            AccountToolbarLeft, FavoritFriends, ShortFriends,
+            ProfileHeader, ProfilePhotos, ProfileWhatsNew, ProfileFilter, ProfilePost
+        },
+        data() {
+            return {
+                userPosts: userProfilePosts,
 
-        userPhotos: [
-            { path: '/images/user-photos/user-photo-01.png', },
-            { path: '/images/user-photos/user-photo-02.png', },
-            { path: '/images/user-photos/user-photo-03.png', },
-            { path: '/images/user-photos/user-photo-04.png', },
-            { path: '/images/user-photos/user-photo-01.png', },
-            { path: '/images/user-photos/user-photo-03.png', },
-        ],
+                userPhotos: [
+                    {path: '/images/user-photos/user-photo-01.png',},
+                    {path: '/images/user-photos/user-photo-02.png',},
+                    {path: '/images/user-photos/user-photo-03.png',},
+                    {path: '/images/user-photos/user-photo-04.png',},
+                    {path: '/images/user-photos/user-photo-01.png',},
+                    {path: '/images/user-photos/user-photo-03.png',},
+                ],
+            }
+        },
+        computed: {
+            userData: function () {
+                return this.$root.$user;
+            },
+        },
+        methods: {
+            wallPostsSelectHandler(evData) {
+                window.console.log(evData.wMode, `wallPostsSelectHandler`);
+
+                this.getFilteredPosts(evData.wMode);
+            },
+            getFilteredPosts(wMode) {
+                let type;
+
+                switch (wMode) {
+                    case 'my':
+                        type = 'isMine';
+                        break;
+
+                    case 'archive':
+                        type = 'isArchived';
+                        break;
+
+                    default:
+                        type = 'all';
+                        break;
+                }
+
+                if (type === 'all') {
+                    this.userPosts = userProfilePosts;
+                } else {
+                    this.userPosts = userProfilePosts.filter(post => post[type]);
+                }
+            },
+        },
+        mounted() {
+            this.$root.$on('wallPostsSelect', this.wallPostsSelectHandler);
+        }
+
     }
-},
-
-computed: {
-    userData: function () {
-        return this.$root.$user;
-    },
-},
-
-methods : {
-    wallPostsSelectHandler(evData){
-        window.console.log(evData.wMode, `wallPostsSelectHandler`);
-    }
-},
-
-mounted() {
-    this.$root.$on('wallPostsSelect', this.wallPostsSelectHandler);
-}
-
-}
 </script>
 

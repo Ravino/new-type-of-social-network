@@ -5,7 +5,7 @@ export default [
         posterPic: ``,
         postText: `Я не могу сказать, что я отношусь к категории гордых людей, я скорее всего с категории взаимных. Для меня важно чувствовать необходимость, теплое отношение и заботу.`,
         dtLabel : `2020-04-07 18:32:00`,
-        isMine: true,
+        isMine: false,
         isLiked: false,
         isDisliked: false,
         viewsNumber: Math.floor(Math.random() * 1000),
@@ -105,7 +105,7 @@ export default [
 В разное время на его арене выступали Игорь Кио, Юрий Куклачёв, Юрий Никулин, Олег Попов, Вальтер Запашный, Владимир Шевченко, Людмила Шевченко, представители династии Дуровых и другие известные артисты.`,
 
         dtLabel : `2019-07-23 18:32:00`,
-        isMine: false,
+        isMine: true,
         isLiked: false,
         isDisliked: false,
         viewsNumber: Math.floor(Math.random() * 1000),
@@ -194,7 +194,7 @@ export default [
 В 1992 году здание собора было возвращено церкви.`,
 
         dtLabel : `2020-04-09 07:47:00`,
-        isMine: true,
+        isMine: false,
         isLiked: true,
         isDisliked: false,
         viewsNumber: Math.floor(Math.random() * 1000),
@@ -251,9 +251,66 @@ export default [
                 likesNumber: Math.floor(Math.random() * 100),
                 dislikesNumber: Math.floor(Math.random() * 50),
             },
+            // {
+            //     id: 24,
+            //     path: 'https://steamuserimages-a.akamaihd.net/ugc/788624386988848178/704A146A2496C590FCC7066A1211587CFECF16B3/',
+            //     name : ``,
+            //     w: 1600,
+            //     h: 900,
+            //     viewsNumber: Math.floor(Math.random() * 1000),
+            //     commentsNumber: Math.floor(Math.random() * 50),
+            //     sharesNumber: Math.floor(Math.random() * 100),
+            //     likesNumber: Math.floor(Math.random() * 100),
+            //     dislikesNumber: Math.floor(Math.random() * 50),
+            // },
+        ],
+
+        comments : []
+    },
+
+    {
+        id: 4, /** в смысле Id поста */
+        posterName: `Маргарита Соболева`,
+        posterPic: ``,
+        postText: `Я не могу сказать, что я отношусь к категории гордых людей, я скорее всего с категории взаимных. Для меня важно чувствовать необходимость, теплое отношение и заботу.`,
+        dtLabel : `2020-04-07 18:32:00`,
+        isMine: true,
+        isLiked: false,
+        isDisliked: false,
+        isArchived: true,
+        viewsNumber: Math.floor(Math.random() * 1000),
+        commentsNumber: Math.floor(Math.random() * 100),
+        sharesNumber: Math.floor(Math.random() * 100),
+        likesNumber: Math.floor(Math.random() * 200),
+        dislikesNumber: Math.floor(Math.random() * 500),
+        images : [
             {
-                id: 24,
-                path: 'https://steamuserimages-a.akamaihd.net/ugc/788624386988848178/704A146A2496C590FCC7066A1211587CFECF16B3/',
+                id: 1, /** в смысле Id фотки */
+                path: 'https://steamuserimages-a.akamaihd.net/ugc/792010418808130635/0C2E84419B15539C2E27F43B45F9DBB277F2683B/',
+                name : ``,
+                w: 1600,
+                h: 900,
+                viewsNumber: Math.floor(Math.random() * 1000),
+                commentsNumber: Math.floor(Math.random() * 50),
+                sharesNumber: Math.floor(Math.random() * 100),
+                likesNumber: Math.floor(Math.random() * 100),
+                dislikesNumber: Math.floor(Math.random() * 50),
+            },
+            {
+                id: 2,
+                path: 'https://steamuserimages-a.akamaihd.net/ugc/792010418808130585/980E17AA6CF29E06865DA40F9067B9164AB54BCD/',
+                name : ``,
+                w: 1600,
+                h: 900,
+                viewsNumber: Math.floor(Math.random() * 1000),
+                commentsNumber: Math.floor(Math.random() * 50),
+                sharesNumber: Math.floor(Math.random() * 100),
+                likesNumber: Math.floor(Math.random() * 100),
+                dislikesNumber: Math.floor(Math.random() * 50),
+            },
+            {
+                id: 3,
+                path: 'https://steamuserimages-a.akamaihd.net/ugc/792010418808130635/0C2E84419B15539C2E27F43B45F9DBB277F2683B/',
                 name : ``,
                 w: 1600,
                 h: 900,
@@ -264,7 +321,40 @@ export default [
                 dislikesNumber: Math.floor(Math.random() * 50),
             },
         ],
-
-        comments : []
+        comments : [
+            {
+                id: 111, /** id камента **/
+                dtLabel : `2020-04-04 18:34:00`,
+                commentorName : `Максим`,
+                commentorPic : ``,
+                commentText: `Пришествие дьявола сопровождается ростом аномальных происшествий и падением скота?`,
+                isLiked: false,
+                isDisliked: false,
+                likesNumber: Math.floor(Math.random() * 200),
+                dislikesNumber: Math.floor(Math.random() * 500),
+            },
+            {
+                id: 112, /** id камента **/
+                dtLabel : `2020-04-04 19:32:00`,
+                commentorName : `Алина`,
+                commentorPic : ``,
+                commentText: `Максим, как так можно-то?`,
+                isLiked: true,
+                isDisliked: false,
+                likesNumber: Math.floor(Math.random() * 200),
+                dislikesNumber: Math.floor(Math.random() * 500),
+            },
+            {
+                id: 112, /** id камента **/
+                dtLabel : `2020-04-07 19:45:00`,
+                commentorName : `Рустам`,
+                commentorPic : ``,
+                commentText: `Алина, Хороший подлоКОТник`,
+                isLiked: false,
+                isDisliked: true,
+                likesNumber: Math.floor(Math.random() * 200),
+                dislikesNumber: Math.floor(Math.random() * 500),
+            },
+        ]
     },
 ];
