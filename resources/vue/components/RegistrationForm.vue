@@ -13,7 +13,7 @@
                 <input v-model="model.firstName"
                        :class="{ 'is-invalid': $v.model.firstName.$error, 'is-valid': !$v.model.firstName.$invalid }"
                        @blur="$v.model.firstName.$touch()" @keydown="registrationKeyDownCheck($event)"
-                       type="text" class="lr-input form-control" id="firstName" ref="firstName" placeholder="Ваше имя"/>
+                       type="text" class="lr-input form-control" id="firstName" ref="firstName" placeholder="Ваше имя" />
 
                 <div v-show="$v.model.firstName.$error" class="invalid-feedback">
                     <p v-if="!$v.model.firstName.required" class="text-danger">Укажите как Вас зовут</p>
@@ -31,7 +31,7 @@
                        :class="{ 'is-invalid': $v.model.lastName.$error, 'is-valid': !$v.model.lastName.$invalid }"
                        @blur="$v.model.lastName.$touch()" @keydown="registrationKeyDownCheck($event)"
                        type="text" class="lr-input form-control" id="lastName" ref="lastName"
-                       placeholder="Ваша фамилия"/>
+                       placeholder="Ваша фамилия" />
 
                 <div v-show="$v.model.lastName.$error" class="invalid-feedback">
                     <p v-if="!$v.model.lastName.required" class="text-danger">Укажите свою фамилию</p>
@@ -48,7 +48,7 @@
                 <input v-model="model.email"
                        :class="{ 'is-invalid': $v.model.email.$error, 'is-valid': !$v.model.email.$invalid }"
                        @blur="$v.model.email.$touch()" @keydown="registrationKeyDownCheck($event)"
-                       type="text" class="lr-input form-control" id="userEmail" placeholder="Ваш E-mail"/>
+                       type="text" class="lr-input form-control" id="userEmail" placeholder="Ваш E-mail" />
 
                 <div v-show="$v.model.email.$error" class="invalid-feedback">
                     <p v-if="!$v.model.email.required" class="text-danger">Укажите свой е-мейл</p>
@@ -68,7 +68,7 @@
                        pattern="(0[1-9]|1[0-9]|2[0-9]|3[01]).(0[1-9]|1[012]).[0-9]{4}"
                        @blur="$v.model.birthDate.$touch()"
                        @keydown="birthDateKeyDown($event)"
-                       placeholder="Дата рождения">
+                       placeholder="Дата рождения" />
 
                 <div v-show="$v.model.birthDate.$error" class="invalid-feedback">
                     <p v-if="!$v.model.birthDate.isValidDMY" class="text-danger">Укажите дату в формате ДД.MM.ГГГГ</p>

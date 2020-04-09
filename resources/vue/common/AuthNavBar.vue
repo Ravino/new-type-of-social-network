@@ -65,7 +65,7 @@
                     </router-link>
 
                     <router-link to="/profile" tag="a" class="profile-menu-link">
-                        <img :src="userData.userPic" :alt="userData.firstName" />
+                        <img ref="navbarAvatar" :src="userData.userPic" :alt="userData.firstName" />
                     </router-link>
                     <i class="profile-menu-opener fa fas fa-chevron-down" aria-hidden="true" @click.stop="goLogout()"></i>
                 </div>
@@ -89,9 +89,15 @@ data () {
 
 methods: {
     goLogout(){
-        this.$router.push({path: '/login'});
+        this.$router.push({path: '/logout'});
     }
 },
+
+mounted() {
+    this.$root.$on('updateUserAvatar', (evData) => {
+        this.$refs.navbarAvatar.src = this.$root.$user.userPic;
+    });
+}
 
 
 }
