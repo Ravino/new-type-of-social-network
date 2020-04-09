@@ -86,96 +86,94 @@
 </template>
 
 <script>
-    import {HTTPer} from '../httper/httper.js';
+import {required, minLength, maxLength, email} from 'vuelidate/lib/validators';
+import {isCorrectHumanName, isValidRegistrationBirthDay} from '../validators/validators.js';
 
-    import {required, minLength, maxLength, email} from 'vuelidate/lib/validators';
-    import {isCorrectHumanName, isValidRegistrationBirthDay} from '../validators/validators.js';
-
-    export default {
-        name: 'RegistrationForm',
-        data() {
-            return {
-                model: {
-                    firstName: ``,
-                    lastName: ``,
-                    email: ``,
-                    birthDate: ``,
-                },
-
-                isServerError: false,
-                serverErrorText: '',
-            }
-        },
-        validations() {
-            return {
-                model: {
-                    firstName: {
-                        required,
-                        minLength: minLength(2),
-                        maxLength: maxLength(100),
-                        isCorrectHumanName
-                    },
-                    lastName: {
-                        required,
-                        minLength: minLength(2),
-                        maxLength: maxLength(100),
-                        isCorrectHumanName
-                    },
-                    email: {
-                        required,
-                        email
-                    },
-                    birthDate: {
-                        isValidRegistrationBirthDay
-                    },
-                }
-            };
-        },
-        methods: {
-            startRegistration() {
-                this.$v.$touch();
-
-                let regData = {
-                    email: this.model.email.trim(),
-                    firstname: this.model.firstName.trim(),
-                    lastname: this.model.lastName.trim(),
-                    birthday: this.model.birthDate.trim()
-                };
-                this.isServerError = false;
-
-                HTTPer.post('api/register', regData)
-                    .then((response) => {
-                        if (response.status === 201) {
-                            this.$emit('successRegistration', this.model);
-                        }
-                    })
-                    .catch((error) => {
-                        if (400 === error.response.status) {
-                            // TODO: @tga довести до ума обработку ошибок
-                            window.console.clear();
-                            window.console.log(error.response.data);
-
-                            this.isServerError = true;
-                            this.serverErrorText = error.response.data.error;
-                            window.console.warn(error.response.status + ': ' + error.response.statusText + ': ' + error.response.data.message);
-                            this.$refs.email.focus();
-                        }
-                        else {
-                            window.console.warn(error.toString());
-                        }
-                    });
-            },
-
-            registrationKeyDownCheck(ev) {
-                if (13 === ev.keyCode)
-                    return this.startRegistration();
-            },
+export default {
+name: 'RegistrationForm',
+data() {
+    return {
+        model: {
+            firstName: ``,
+            lastName: ``,
+            email: ``,
+            birthDate: ``,
         },
 
-        mounted() {
-            setTimeout(() => {
-                this.$refs.firstName.focus();
-            }, 100);
-        },
+        isServerError: false,
+        serverErrorText: '',
     }
+},
+validations() {
+    return {
+        model: {
+            firstName: {
+                required,
+                minLength: minLength(2),
+                maxLength: maxLength(100),
+                isCorrectHumanName
+            },
+            lastName: {
+                required,
+                minLength: minLength(2),
+                maxLength: maxLength(100),
+                isCorrectHumanName
+            },
+            email: {
+                required,
+                email
+            },
+            birthDate: {
+                isValidRegistrationBirthDay
+            },
+        }
+    };
+},
+methods: {
+    startRegistration() {
+        this.$v.$touch();
+        this.isServerError = false;
+
+        let regData = {
+            email     : this.model.email.trim(),
+            firstname : this.model.firstName.trim(),
+            lastname  : this.model.lastName.trim(),
+            birthday  : this.model.birthDate.trim()
+        };
+
+        this.$root.$api.register(regData)
+            .then((response) => {
+                if (response.status === 201) {
+                    this.$emit('successRegistration', this.model);
+                }
+            })
+            .catch((error) => {
+                if (400 === error.response.status) {
+                    // TODO: @tga довести до ума обработку ошибок
+                    window.console.clear();
+                    window.console.log(error.response.data);
+
+                    this.isServerError = true;
+                    this.serverErrorText = error.response.data.error;
+                    window.console.warn(error.response.status + ': ' + error.response.statusText + ': ' + error.response.data.message);
+                    this.$refs.email.focus();
+                }
+                else {
+                    window.console.warn(error.toString());
+                }
+            });
+    },
+
+    registrationKeyDownCheck(ev) {
+        if (13 === ev.keyCode)
+            return this.startRegistration();
+    },
+},
+
+mounted() {
+    setTimeout(() => {
+        this.$refs.firstName.focus();
+    }, 100);
+},
+}
 </script>

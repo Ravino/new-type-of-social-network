@@ -98,174 +98,179 @@
 </template>
 
 <script>
-    import RegistrationModal from './RegistrationModal.vue';
-    import {HTTPer} from '../httper/httper.js';
-    import {email, maxLength, minLength, required} from 'vuelidate/lib/validators';
-    import client_ids from '../libs/social_networks_client_ids';
+import RegistrationModal from './RegistrationModal.vue';
+import {email, maxLength, minLength, required} from 'vuelidate/lib/validators';
+import client_ids from '../libs/social_networks_client_ids';
 
-    export default {
-        name: 'LoginForm',
-        components: {
-            RegistrationModal
+export default {
+name: 'LoginForm',
+components: {
+    RegistrationModal
+},
+data() {
+    return {
+        model: {
+            email: ``,
+            password: ``
         },
-        data() {
-            return {
-                model: {
-                    email: ``,
-                    password: ``
-                },
-                isRegistrationModalShow: false,
-                isServerError: false,
-                serverErrorText: ''
+        isRegistrationModalShow: false,
+        isServerError: false,
+        serverErrorText: ''
+    }
+},
+validations() {
+    return {
+        model: {
+            email: {
+                required,
+                email
+            },
+            password: {
+                required,
+                minLength: minLength(4),
+                maxLength: maxLength(50)
             }
-        },
-        validations() {
-            return {
-                model: {
-                    email: {
-                        required,
-                        email
-                    },
-                    password: {
-                        required,
-                        minLength: minLength(4),
-                        maxLength: maxLength(50)
-                    }
-                }
-            };
-        },
-        mounted() {
-            setTimeout(() => {
-                this.$refs.email.focus();
-            }, 100);
-            this.$root.$on('hideRegistrationModal', (evData) => {
-                this.isRegistrationModalShow = false;
-            });
+        }
+    };
+},
+mounted() {
+    setTimeout(() => {
+        this.$refs.email.focus();
+    }, 100);
+    this.$root.$on('hideRegistrationModal', (evData) => {
+        this.isRegistrationModalShow = false;
+    });
 
-            let params = new URLSearchParams(document.location.search.substring(1));
-            let state = params.get('state');
+    let params = new URLSearchParams(document.location.search.substring(1));
+    let state = params.get('state');
 
-            switch (state) {
-                case 'instagram':
-                    this.getInstagramToken(params);
-                    break;
-                case 'vk':
-                    this.getVKToken(params);
-                    break;
-            }
-        },
-        methods: {
-            startLogin() {
-                this.$v.$touch();
-                let loginData = {
-                    email: this.model.email.trim(),
-                    password: this.model.password.trim()
-                };
-                this.isServerError = false;
+    switch (state) {
+        case 'instagram':
+            this.getInstagramToken(params);
+            break;
+        case 'vk':
+            this.getVKToken(params);
+            break;
+    }
+},
 
-                HTTPer.post('api/login', loginData)
-                    .then((response) => {
-                        if (response.status === 200 && response.statusText.toUpperCase() === 'OK' && response.data && response.data.token && response.data.token !== '') {
-                            this.$root.$emit('afterSuccessLogin', {
-                                token: response.data.token,
-                                chatChannel: response.data.channel,
-                                redirect: true
-                            });
-                        }
-                    })
-                    .catch((error) => {
-                        if (400 === error.response.status) {
-                            this.isServerError = true;
-                            this.serverErrorText = error.response.data.error;
-                            window.console.warn(error.response.status + ': ' + error.response.statusText + ': ' + error.response.data.message);
-                            this.$refs.password.focus();
-                        } else {
-                            window.console.warn(error.toString());
-                        }
+methods: {
+    startLogin() {
+        this.$v.$touch();
+        this.isServerError = false;
+
+        this.$root.$api.login(this.model.email.trim(), this.model.password.trim())
+            .then((response) => {
+                if (response.status === 200 && response.statusText.toUpperCase() === 'OK' && response.data && response.data.token && response.data.token !== '') {
+                    this.$root.$emit('afterSuccessLogin', {
+                        token: response.data.token,
+                        chatChannel: response.data.channel,
+                        redirect: true
                     });
-            },
-            loginKeyDownCheck(ev) {
-                if (13 === ev.keyCode)
-                    return this.startLogin();
-            },
-            openRegistrationModal() {
-                this.isRegistrationModalShow = true;
-            },
-            loginWithSocial(provider) {
-                switch (provider) {
-                    case 'facebook':
-                        this.socialFacebook(provider);
-                        break;
-                    case 'instagram':
-                        this.socialInstagram(provider);
-                        break;
-                    case 'vkontakte':
-                        this.socialVK(provider);
-                        break
                 }
-            },
-            socialFacebook(provider) {
-                let self = this;
+            })
+            .catch((error) => {
+                if (400 === error.response.status) {
+                    this.isServerError = true;
+                    this.serverErrorText = error.response.data.error;
+                    window.console.warn(error.response.status + ': ' + error.response.statusText + ': ' + error.response.data.message);
+                    this.$refs.password.focus();
+                }
+                else {
+                    window.console.warn(error.toString());
+                }
+            });
+    },
 
-                FB.getLoginStatus(function (response) {
-                    if (!response.authResponse) {
-                        FB.login(function (response) {
-                            if (response.authResponse) {
-                                self.saveToken(provider, response.authResponse.accessToken);
-                            }
-                        });
-                    } else {
+    loginKeyDownCheck(ev) {
+        if (13 === ev.keyCode)
+            return this.startLogin();
+    },
+
+    openRegistrationModal() {
+        this.isRegistrationModalShow = true;
+    },
+
+    loginWithSocial(provider) {
+        switch (provider) {
+            case 'facebook':
+                this.socialFacebook(provider);
+                break;
+            case 'instagram':
+                this.socialInstagram(provider);
+                break;
+            case 'vkontakte':
+                this.socialVK(provider);
+                break
+        }
+    },
+
+    socialFacebook(provider) {
+        let self = this;
+
+        FB.getLoginStatus(function (response) {
+            if (!response.authResponse) {
+                FB.login(function (response) {
+                    if (response.authResponse) {
                         self.saveToken(provider, response.authResponse.accessToken);
                     }
                 });
-            },
-            socialInstagram(provider) {
-                let url = {
-                    domain: "https://api.instagram.com/oauth/authorize",
-                    client_id: `client_id=${client_ids.instagram}`,
-                    scope: "scope=user_profile",
-                    response_type: "response_type=code",
-                    state: 'state=instagram',
-                };
+            } else {
+                self.saveToken(provider, response.authResponse.accessToken);
+            }
+        });
+    },
 
-                window.location.href = `${url.domain}?${url.client_id}&redirect_uri=${client_ids.redirect_uri}&${url.scope}&${url.response_type}&${url.state}`;
-            },
-            socialVK(provider) {
-                let url = {
-                    domain: "https://oauth.vk.com/authorize",
-                    client_id: `client_id=${client_ids.vk}`,
-                    display: "display=page",
-                    response_type: "response_type=token",
-                    state: "state=vk",
-                };
+    socialInstagram(provider) {
+        let url = {
+            domain: "https://api.instagram.com/oauth/authorize",
+            client_id: `client_id=${client_ids.instagram}`,
+            scope: "scope=user_profile",
+            response_type: "response_type=code",
+            state: 'state=instagram',
+        };
 
-                window.location.href = `${url.domain}?${url.client_id}&redirect_uri=${client_ids.redirect_uri}&${url.display}&${url.response_type}&${url.state}`;
-            },
-            saveToken(provider, token) {
-                HTTPer.post(`/api/sociallogin/${provider}`, {
-                    token: token,
-                }).then(response => {
-                    console.log(response);
-                });
-            },
-            getInstagramToken(params) {
-                let code = params.get("code");
+        window.location.href = `${url.domain}?${url.client_id}&redirect_uri=${client_ids.redirect_uri}&${url.scope}&${url.response_type}&${url.state}`;
+    },
 
-                if (code) {
-                    this.saveToken('instagram', code);
-                }
-            },
-            getVKToken(params) {
-                let access_token = params.get("access_token");
+    socialVK(provider) {
+        let url = {
+            domain: "https://oauth.vk.com/authorize",
+            client_id: `client_id=${client_ids.vk}`,
+            display: "display=page",
+            response_type: "response_type=token",
+            state: "state=vk",
+        };
 
-                if (access_token) {
-                    this.saveToken('vkontakte', access_token);
-                }
-            },
-            successRegistration(user) {
-                this.model.email = user.email;
-                this.$refs.password.focus();
-            },
-        },
-    }
+        window.location.href = `${url.domain}?${url.client_id}&redirect_uri=${client_ids.redirect_uri}&${url.display}&${url.response_type}&${url.state}`;
+    },
+
+    saveToken(provider, token) {
+        this.$root.$api.socialLogin(provider, token).then(response => {
+            console.log(response);
+        });
+    },
+
+    getInstagramToken(params) {
+        let code = params.get("code");
+
+        if (code) {
+            this.saveToken('instagram', code);
+        }
+    },
+
+    getVKToken(params) {
+        let access_token = params.get("access_token");
+
+        if (access_token) {
+            this.saveToken('vkontakte', access_token);
+        }
+    },
+
+    successRegistration(user) {
+        this.model.email = user.email;
+        this.$refs.password.focus();
+    },
+},
+}
 </script>

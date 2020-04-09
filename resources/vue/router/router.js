@@ -1,7 +1,5 @@
 import VueRouter from 'vue-router';
 
-import { store } from '../store/store.js';
-
 import HomePage from '../pages/HomePage.vue';
 import LoginPage from '../pages/LoginPage.vue';
 import LogoutPage from '../pages/LogoutPage.vue';
@@ -11,7 +9,10 @@ import ProfilePage from '../pages/ProfilePage.vue';
 import ChatsListPage from '../pages/ChatsListPage.vue';
 import ChatMessagesPage from '../pages/ChatMessagesPage.vue';
 
-import {HTTPer} from '../httper/httper.js';
+import { store } from '../store/store.js';
+import { HTTPer } from '../httper/httper.js';
+
+import PliziAPI from '../classes/PliziAPI.js';
 
 const routes = [
     { path: '/', redirect: '/login', isGuest : true },
@@ -32,18 +33,18 @@ const router = new VueRouter({
 });
 
 
-async function getUserData(){
-    try {
-        const response = await HTTPer.get('api/user', store.getters.getHTTPConfig).catch((err) => { console.log(err); });
-        if (200 === response.status) {
-            return response.data;
-        }
-    } catch(err) {
-        window.console.warn(err);
-    }
-
-    return null;
-}
+// async function getUserData(){
+//     try {
+//         const response = await HTTPer.get('api/user', store.getters.getHTTPConfig);
+//         if (200 === response.status) {
+//             return response.data;
+//         }
+//     } catch(err) {
+//         window.console.warn(err);
+//     }
+//
+//     return null;
+// }
 
 
 function routerForcedLogout(next){
@@ -68,7 +69,9 @@ router.beforeEach(async (to, from, next) => {
         const gwt = store.getters.gwToken;
 
         if ((gwt+'')!=='null'  &&  gwt!=='') {
-            const tryToLoadUser = await getUserData(gwt);
+            // const tryToLoadUser = await getUserData(gwt);
+            const api = new PliziAPI({});
+            const tryToLoadUser = await api.getUser(gwt);
 
             if (tryToLoadUser) {
                 window.app.$root.$emit('afterUserLoad', {

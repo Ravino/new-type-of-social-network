@@ -20,6 +20,12 @@ Vue.prototype.$isAuth = false;
  */
 Vue.prototype.$user = null;
 
+/**
+ * добавляем глобально, на использовать будем только от this.$root
+ * @type {PliziAPI}
+ */
+Vue.prototype.$api = null;
+
 // @TGA пока не нужно
 // import { VueResponsiveComponents } from 'vue-responsive-components';
 // Vue.use(VueResponsiveComponents);

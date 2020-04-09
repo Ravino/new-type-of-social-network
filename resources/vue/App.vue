@@ -24,7 +24,6 @@
             </div>
         </div>
     </div>
-
 </template>
 
 <script>
@@ -35,6 +34,7 @@ import GuestFooter from './common/GuestFooter.vue';
 
 import {HTTPer} from './httper/httper';
 import PliziUzer from './classes/PliziUser.js';
+import PliziAPI from './classes/PliziAPI.js';
 
 export default {
 name: 'App',
@@ -73,7 +73,6 @@ methods: {
             this.$router.push({path: '/login'});
         }
     },
-
 
     sentNewChatMessageToAPI(evData) {
         const sendData = {
@@ -115,18 +114,9 @@ methods: {
     }
 },
 
-computed: {
-    // isAuth: function () {
-    //     return this.$root.$isAuth;
-    // },
-},
-
-mounted() {
-
-},
-
 created(){
     this.$root.$user = new PliziUzer({});
+    this.$root.$api  = new PliziAPI({});
 },
 
 beforeMount(){
