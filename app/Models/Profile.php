@@ -43,7 +43,7 @@ class Profile extends Model
             'birthday' => 'date_format:Y-m-d|nullable',
             'sex' => Rule::in(array_keys(self::SEX_VARIANTS)),
             'city' => 'string|min:1|max:255',
-            'relationship' => Rule::exists('profile_relationships', 'id') . 'nullable',
+            'relationship' => Rule::exists('profile_relationships', 'id') . '|nullable',
             'relationship_user_id' => 'nullable',
         ];
 
