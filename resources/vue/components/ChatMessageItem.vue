@@ -59,11 +59,12 @@ methods: {
 },
 
 computed: {
-    ownerPic: function(){
-        return (this.currentDialog  &&  this.currentDialog.userPic) ? this.currentDialog.userPic : this.$defaultAvatarPath;
+    ownerPic(){
+        // return (this.currentDialog  &&  this.currentDialog.userPic) ? this.currentDialog.userPic : this.$defaultAvatarPath;
+        return this.$root.$user.userPic;
     },
 
-    companionName: function(){
+    companionName(){
         let com = null;
         try {
             com = this.getCompanion();
@@ -74,7 +75,7 @@ computed: {
         return (com  &&  com.firstname) ? com.firstname : '---';
     },
 
-    companionPic: function(){
+    companionPic(){
         let com = null;
         try {
             com = this.getCompanion();
