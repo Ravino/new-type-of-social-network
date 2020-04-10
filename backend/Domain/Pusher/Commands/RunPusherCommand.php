@@ -27,11 +27,11 @@ class RunPusherCommand extends Command
 
         $context = new ReactContext($loop);
         $pull = $context->getSocket(\ZMQ::SOCKET_PULL);
-        $pull->bind(config('pusher.zmq_pub_address'));
+        $pull->bind("tcp://0.0.0.0:5555");
         $pull->on('message', [$pusher, 'broadcast']);
 
 
-        $webSock = new Server(config('pusher.websocket_uri'),$loop);
+        $webSock = new Server("0.0.0.0:7070",$loop);
         $server = new IoServer(
             new HttpServer(
                 new WsServer(

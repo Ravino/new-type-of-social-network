@@ -62,7 +62,7 @@ methods: {
             skipSubprotocolCheck: true
         };
 
-        this.chatCarrier = new ab.connect('ws://'+window.wsUrl+'/pubsub',
+        this.chatCarrier = new ab.connect(window.wsUrl,
             this.channelSubscribe,
             (code, reason, detail) => { window.console.warn(reason); },
             channelOptions

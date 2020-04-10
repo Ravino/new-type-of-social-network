@@ -26,6 +26,6 @@ RUN apt-get update \
 
 WORKDIR /app
 
-EXPOSE 7070
+EXPOSE 5555
 
-CMD php artisan ws:serve
+CMD ["php", "artisan", "ws:serve"]

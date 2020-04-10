@@ -51,6 +51,17 @@ services:
     depends_on:
       - mysql
 
+  php_ws:
+    build: ./backend/docker/ws
+    container_name: "plizi_php_ws"
+    working_dir: /app
+    volumes:
+    - ./backend:/app
+    ports:
+    - "7070:7070"
+    depends_on:
+      - php_api
+
 #  redis:
 #    image: redis
 #    container_name: "plizi_redis"
@@ -60,15 +71,6 @@ services:
 #      - redis_data_plizi:/data
 #    ports:
 #    - "6379:6379"
-
-  php_ws:
-    build: ./backend/docker/ws
-    container_name: "plizi_php_ws"
-    working_dir: /app
-    volumes:
-    - ./backend:/app
-    ports:
-    - "7070:7070"
 
 #  node:
 #    build: ./backend/docker/node

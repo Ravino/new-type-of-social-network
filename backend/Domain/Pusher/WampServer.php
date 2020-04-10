@@ -15,9 +15,10 @@ class WampServer implements WampServerInterface
     //todo: вынести метод из данного класса.
     public static function sentDataToServer(array $data)
     {
+        $ip = gethostbyname(config('pusher.zmq_sub_host'));
         $context = new \ZMQContext();
         $socket = $context->getSocket(\ZMQ::SOCKET_PUSH, 'pusher');
-        $socket->connect(config('pusher.zmq_bind_address'));
+        $socket->connect("tcp://$ip:5555");
         $data = json_encode($data);
         $socket->send($data);
     }
