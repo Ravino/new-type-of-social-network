@@ -25,6 +25,14 @@ Route::group(['middleware' => ['auth.jwt', 'track.activity']], function () {
         Route::post('send', 'Api\ChatController@send');
     });
 
+    Route::get('posts', 'Api\PostController@index');
+    Route::get('user/posts', 'Api\PostController@userPosts');
+    Route::get('communities/{community_id}/posts', 'Api\PostController@communityPosts');
+    Route::get('posts/{id}', 'Api\PostController@get');
+    Route::post('posts/{id}', 'Api\PostController@get');
+    Route::post('posts', 'Api\PostController@storeByUser');
+    Route::post('communities/{community_id}/posts', 'Api\PostController@storeByCommunity');
+
     /**
      * User Resource
      */

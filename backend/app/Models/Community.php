@@ -40,6 +40,11 @@ class Community extends Model
         return $this->belongsToMany(User::class, 'community_members')->withPivot(['role'])->wherePivot('role', Community::ROLE_ADMIN);
     }
 
+    public function posts()
+    {
+        return $this->morphMany(Post::class, 'postable');
+    }
+
     /**
      * @return string
      */

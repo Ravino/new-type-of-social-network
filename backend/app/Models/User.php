@@ -77,6 +77,17 @@ class User extends Authenticatable implements JWTSubject
             ->using(CommunityMember::class)->withPivot('role');
     }
 
+    public function posts()
+    {
+        return $this->morphMany(Post::class, 'postable');
+    }
+
+    public function allPosts()
+    {
+        return $this->morphMany(Post::class, 'postable')
+            ->orWhereIn('postable_id', self::communities()->allRelatedIds());
+    }
+
     /**
      * @return \Illuminate\Database\Eloquent\Relations\HasMany
      */
