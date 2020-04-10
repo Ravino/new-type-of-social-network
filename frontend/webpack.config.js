@@ -1,15 +1,26 @@
 const path = require('path');
 const VueLoaderPlugin = require('vue-loader/lib/plugin');
 
-const plzPublicDir = './js/';
+const plzPublicDir = './public/js/';
 const plzPublicPath = path.resolve(__dirname, plzPublicDir);
+// console.log(plzPublicPath, `plzPublicPath`);
+
+const contentPath = path.resolve(__dirname, 'public');
 
 module.exports = {
+
+    devServer: {
+        contentBase: contentPath,
+        // compress: true,
+        port: 8080,
+        historyApiFallback: true
+    },
+
     context: __dirname,
     entry: './src/app.js',
     output: {
         path: plzPublicPath,
-        publicPath: '/js/',
+        publicPath: 'public/js/',
         filename: 'app.js'
     },
     module: {
@@ -69,4 +80,4 @@ module.exports = {
     plugins: [
         new VueLoaderPlugin()
     ]
-}; 
+};
