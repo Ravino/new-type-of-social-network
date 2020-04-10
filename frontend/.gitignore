@@ -2,27 +2,36 @@
 /public/hot
 /public/storage
 
-npm-debug.log
-yarn-error.log
+# Log files
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
 
 /dist
 
 # Editor directories and files
 .idea
+.vscode
 .vs
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+*.sw?
+
 
 # windows thumbnail cache
 Thumbs.db
+.DS_Store
 
 #targa local settings
-#index.html
 /public/js/*.LICENSE.txt
-
 /*/*.bak
-
-/design
+*.bak
 
 /public/apl.html
+/public/index.html
 /public/js/app.js
 /public/css/app.css
 
