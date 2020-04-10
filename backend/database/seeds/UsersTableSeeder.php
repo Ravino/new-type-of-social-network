@@ -16,26 +16,11 @@ class UsersTableSeeder extends Seeder
      */
     public function run()
     {
-        $email1 = $this->command->ask('Enter email of first user', 'user@mail.com');
-        $email2 = $this->command->ask('Enter email of admin user', 'admin@mail.com');
+        $email1 = $this->command->ask('Enter email of first user', 'test@gmail.com');
+        $email2 = $this->command->ask('Enter email of admin user', 'admin@gmail.com');
         $count_of_users = $this->command->ask('How many users you want to generate', 10);
 
-        $test_user = User::where('email', 'test@gmail.com')->first();
-        if (!$test_user) {
-            $user1 = User::create([
-                'email' => 'test@gmail.com',
-                'password' => bcrypt('secret'),
-                'token' => bcrypt('secret'),
-                'last_activity_dt' => time(),
-                'created_at' => time(),
-                'updated_at' => time()
-            ]);
-            $user1->profile()->create($this->generateProfile());
-            $this->command->line("Generate user with email test@gmail.com");
-        } else {
-            $this->command->line("User with email test@gmail.com already exists");
-        }
-
+        $user1 = User::where('email', $email1)->first();
         if (!$user1) {
             $user1 = User::create([
                 'email' => $email1,
@@ -50,6 +35,7 @@ class UsersTableSeeder extends Seeder
         } else {
             $this->command->line("User with email {$email1} already exists");
         }
+
         $user2 = User::where('email', $email2)->first();
         if (!$user2) {
             $user2 = User::create([
@@ -92,8 +78,8 @@ class UsersTableSeeder extends Seeder
     private function generateProfile() {
         $faker = Faker\Factory::create('ru_RU');
         return [
-            'firstname' => $faker->firstName,
-            'lastname' => $faker->lastName,
+            'first_name' => $faker->firstName,
+            'last_name' => $faker->lastName,
             'birthday' => $faker->dateTimeBetween('-70 years', '-20 years'),
             'city' => $faker->city,
             'sex' => $faker->randomElement(['n', 'm', 'f']),
