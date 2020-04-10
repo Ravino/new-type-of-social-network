@@ -67,6 +67,7 @@ $chatMessageCompanionMsgTimeColor: #C1BFBF;
         }
 
         .message-text {
+            margin-left: 1rem;
             display: block;
             color: $chatMessageMyMsgTextColor;
             font-size: $chatMessageFS;
@@ -97,6 +98,7 @@ $chatMessageCompanionMsgTimeColor: #C1BFBF;
         }
 
         .message-text {
+            margin-right: 1rem;
             display: block;
             font-size: $chatMessageFS;
             color: $chatMessageCompanionMsgTextColor;

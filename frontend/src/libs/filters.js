@@ -29,7 +29,7 @@ Vue.filter('toDMYHM', (dateValue) => {
 Vue.filter('lastMessageTime', (messageDT) => {
     let now = moment();
     let yesterday = moment().subtract(1, 'days');
-    let lmt = moment(messageDT);
+    let lmt = moment.unix(messageDT);
 
     // если сообщение было сегодня или вчера
     if (now.format('YYYY-MM-DD')===lmt.format('YYYY-MM-DD')  ||  yesterday.format('YYYY-MM-DD')===lmt.format('YYYY-MM-DD')) {
@@ -72,5 +72,9 @@ Vue.filter('toBR', (text) => {
  */
 Vue.filter('space1000', (dValue) => {
     return numeral(dValue).format('0,0').replace(/,/g,' ');
+});
+
+Vue.filter('toYMD', (value) => {
+    return moment(value).format('YYYY-MM-DD');
 });
 

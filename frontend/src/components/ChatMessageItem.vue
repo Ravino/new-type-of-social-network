@@ -11,7 +11,7 @@
             <div class="message-body">
                 <div class="message-text">{{message.body}}</div>
                 <time v-if="!isNextIsSamePerson()" class="message-time" :datetime="message.createdAt">
-                    {{message.createdAt | lastMessageTime}}
+                    {{ message.createdAt | lastMessageTime }}
                 </time>
             </div>
         </div>

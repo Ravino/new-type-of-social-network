@@ -148,6 +148,10 @@ class PliziUser {
         }
     }
 
+    get originalSex() {
+        return this._sex.trim();
+    }
+
     /**
      *
      * @returns {Date}
