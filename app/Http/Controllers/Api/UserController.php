@@ -3,6 +3,8 @@
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
+use App\Http\Resources\Community\CommunityUserCollection;
+use App\Http\Resources\User\UserCollection;
 use App\Models\Profile;
 use App\Models\User;
 use Domain\Pusher\WampServer;
@@ -15,26 +17,22 @@ class UserController extends Controller
 {
 
     /**
-     * Search user api method.
      * @param Request $request
-     * @return \Illuminate\Http\JsonResponse
+     * @return UserCollection|\Illuminate\Http\JsonResponse
      */
     public function search(Request $request)
     {
         $search = $request->get('search', '');
         if (!empty($search)) {
-            $users = \DB::table('users')
-                ->select('id', 'lastname', 'firstname')
-                ->join('profiles', 'users.id', '=', 'profiles.user_id')
-                ->where('users.email', 'LIKE', '%' . $search . '%')
-                ->orWhere('profiles.firstname', 'LIKE', '%' . $search . '%')
-                ->orWhere('profiles.lastname', 'LIKE', '%' . $search . '%')
+            $users = User::whereHas('profile', function($profile) use ($search) {
+                $profile
+                    ->where('first_name', 'LIKE', "%{$search}%")
+                    ->orWhere('last_name', 'LIKE', "%{$search}%")
+                    ->orderBy('last_name');
+            })->orWhere('email', 'LIKE', "%{$search}%")
                 ->limit(10)
-                ->orderBy('profiles.lastname')
                 ->get();
-            if (count($users)) {
-                return response()->json($users, 200);
-            }
+            return new UserCollection($users);
         }
         return response()->json(['message' => 'No found'], 200);
     }

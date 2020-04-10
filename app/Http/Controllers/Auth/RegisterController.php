@@ -86,8 +86,8 @@ class RegisterController extends Controller
     {
         return Validator::make($data, [
             'email' => 'required|string|email|max:255|unique:users',
-            'firstname' => 'required|string|min:1|max:255',
-            'lastname' => 'required|string|min:1|max:255',
+            'firstName' => 'required|string|min:1|max:255',
+            'lastName' => 'required|string|min:1|max:255',
             'birthday' => 'date_format:Y-m-d|nullable',
         ]);
     }
@@ -108,7 +108,12 @@ class RegisterController extends Controller
         $user->password = $token; // password is not filable
         $user->save();
 
-        $user->profile()->create($data);
+        $user->profile()->create([
+            'email' => $data['email'],
+            'first_name' => $data['firstName'],
+            'last_name' => $data['lastName'],
+            'birthday' => $data['birthday'],
+        ]);
 
         return $user;
     }

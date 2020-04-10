@@ -40,8 +40,8 @@ class MessageRepository
             ->get([
                 'chat_messages.id',
                 'chat_messages.user_id',
-                'profiles.firstname',
-                'profiles.lastname',
+                'profiles.first_name',
+                'profiles.last_name',
                 'profiles.user_pic',
                 'chat_messages.body',
                 'chat_message_status.is_read',
@@ -53,8 +53,8 @@ class MessageRepository
         foreach ($items as $item){
             $message = new Message();
             $message->id = $item->id;
-            $message->firstName = $item->firstname;
-            $message->lastName = $item->lastname;
+            $message->firstName = $item->first_name;
+            $message->lastName = $item->last_name;
             $message->userPic = $item->user_pic;
             $message->body = $item->body;
             $message->isMine = ($item->user_id == $user_id);
@@ -86,8 +86,8 @@ class MessageRepository
             ->get([
                 'chat_messages.id',
                 'chat_messages.user_id',
-                'profiles.firstname',
-                'profiles.lastname',
+                'profiles.first_name',
+                'profiles.last_name',
                 'chat_messages.body',
                 'chat_message_status.is_read',
                 'chat_messages.created_at',
@@ -97,8 +97,8 @@ class MessageRepository
 
         $message = new Message();
         $message->id = $item->id;
-        $message->firstName = $item->firstname;
-        $message->lastName = $item->lastname;
+        $message->firstName = $item->first_name;
+        $message->lastName = $item->last_name;
         $message->chatId = $item->chat_id;
         $message->userPic = 'https://habrastorage.org/storage2/b92/bcf/532/b92bcf532c0a2889272ffd72ffb1f2b5.png';
         $message->body = $item->body;
