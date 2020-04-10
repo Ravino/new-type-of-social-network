@@ -14,8 +14,8 @@ class AlterProfileRenameFirstnameAndLastname extends Migration
     public function up()
     {
         Schema::table('profiles', function (Blueprint $table) {
-            $table->renameColumn('firstname', 'first_name');
-            $table->renameColumn('lastname', 'last_name');
+            DB::statement('ALTER TABLE profiles CHANGE firstname first_name VARCHAR(200)');
+            DB::statement('ALTER TABLE profiles CHANGE lastname last_name VARCHAR(200)');
         });
     }
 
@@ -27,8 +27,8 @@ class AlterProfileRenameFirstnameAndLastname extends Migration
     public function down()
     {
         Schema::table('profiles', function (Blueprint $table) {
-            $table->renameColumn('first_name', 'firstname');
-            $table->renameColumn('last_name', 'lastname');
+            DB::statement('ALTER TABLE profiles CHANGE first_name firstname VARCHAR(200)');
+            DB::statement('ALTER TABLE profiles CHANGE last_name lastname VARCHAR(200)');
         });
     }
 }

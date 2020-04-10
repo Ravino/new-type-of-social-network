@@ -1,166 +1,28 @@
-// import Vuex from "vuex";
-
 class PliziUser {
-    /**
-     *
-     * @type {string}
-     * @private
-     */
-    __defaultAvatarPath = `/images/noavatar-256.png`;
 
-    /**
-     *
-     * @type {boolean}
-     * @private
-     */
-    __isDataReady = false;
-
-    /**
-     *
-     * @type {number}
-     * @private
-     */
-    _id = -1;
-
-    /**
-     *
-     * @type {string}
-     * @private
-     */
-    _token = ``;
-
-    /**
-     *
-     * @type {string}
-     * @private
-     */
-    _email = ``;
-
-    /**
-     *
-     * @type {boolean}
-     * @private
-     */
-    _isOnline = false;
-
-    /**
-     *
-     * @type {string}
-     * @private
-     */
-    _firstName = ``;
-
-    /**
-     *
-     * @type {string}
-     * @private
-     */
-    _lastName = ``;
-
-    /**
-     *
-     * @type {string}
-     * @private
-     */
-    _sex = `n`;
-
-    /**
-     *
-     * @type {Date}
-     * @private
-     */
-    _birthDay = null;
-
-    /**
-     *
-     * @type {string}
-     * @private
-     */
-    _city = ``;
-
-    /**
-     *
-     * @type {number}
-     * @private
-     */
-    _relationship = 0;
-
-    /**
-     *
-     * @type {string}
-     * @private
-     */
-    _userPic = ``;
-
-    /**
-     *
-     * @type {string}
-     * @private
-     */
-    _channel = ``;
-
-    /**
-     *
-     * @type {string}
-     * @private
-     */
-    _country =  ``;
-
-    /**
-     *
-     * @type {Date|null}
-     * @private
-     */
-    _created = null;
-
-    /**
-     *
-     * @type {Date|null}
-     * @private
-     */
-    _updated = null;
-
-    /**
-     *
-     * @type {number}
-     * @private
-     */
-    _subscribersNumber = 0;
-
-    /**
-     *
-     * @type {number}
-     * @private
-     */
-    _friendsNumber = 0;
-
-    /**
-     *
-     * @type {number}
-     * @private
-     */
-    _photosNumber = 0;
-
-    /**
-     *
-     * @type {number}
-     * @private
-     */
-    _videosNumber = 0;
-
-    /**
-     *
-     * @type {number}
-     * @private
-     */
-    _audiosNumber = 0;
-
-    // значения как в PHP
-    __RELATIONSHIP_MARRIED = 1;
-    __RELATIONSHIP_NOT_MARRIED = 2;
-
-    constructor(){
-
+    constructor() {
+        this.__defaultAvatarPath = `/images/noavatar-256.png`;
+        this.__isDataReady = false;
+        this._id = -1;
+        this._token = ``;
+        this._email = ``;
+        this._isOnline = false;
+        this._firstName = ``;
+        this._lastName = ``;
+        this._sex = `n`;
+        this._birthDay = null;
+        this._city = ``;
+        this._relationship = 0;
+        this._userPic = ``;
+        this._channel = ``;
+        this._country =  ``;
+        this._created = null;
+        this._updated = null;
+        this._subscribersNumber = 0;
+        this._friendsNumber = 0;
+        this._photosNumber = 0;
+        this._videosNumber = 0;
+        this._audiosNumber = 0;
     }
 
     /**

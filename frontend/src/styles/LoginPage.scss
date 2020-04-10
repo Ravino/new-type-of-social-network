@@ -1,12 +1,14 @@
 @import './ui-kit/plizi-variables.scss';
 
+$bgImage: "/images/plizi-bg-exp.svg";
+
 .loginPage-wrap {
     height: 100%;
     min-height: 800px;
 }
 
 body.LoginPage, body.HomePage {
-    background-image: url("../images/plizi-bg-exp.svg");
+    background-image: url($bgImage);
     background-size: cover;
     background-repeat: no-repeat;
     background-position: center top;
