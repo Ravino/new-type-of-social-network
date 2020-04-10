@@ -51,24 +51,33 @@ services:
     depends_on:
       - mysql
 
-  redis:
-    image: redis
-    container_name: "plizi_redis"
-    env_file:
-      - ./backend/docker/redis/.env
-    volumes:
-      - redis_data_plizi:/data
-    ports:
-    - "6379:6379"
+#  redis:
+#    image: redis
+#    container_name: "plizi_redis"
+#    env_file:
+#      - ./backend/docker/redis/.env
+#    volumes:
+#      - redis_data_plizi:/data
+#    ports:
+#    - "6379:6379"
 
-  node:
-    build: ./backend/docker/node
-    container_name: "plizi_node_ws"
-    tty: true
+  php_ws:
+    build: ./backend/docker/ws
+    container_name: "plizi_php_ws"
+    working_dir: /app
     volumes:
-      - ./backend:/app
+    - ./backend:/app
     ports:
-    - "6061:6061"
+    - "7070:7070"
+
+#  node:
+#    build: ./backend/docker/node
+#    container_name: "plizi_node_ws"
+#    tty: true
+#    volumes:
+#      - ./backend:/app
+#    ports:
+#    - "6061:6061"
 
 volumes:
   mysql_data_plizi:

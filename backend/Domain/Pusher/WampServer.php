@@ -17,7 +17,7 @@ class WampServer implements WampServerInterface
     {
         $context = new \ZMQContext();
         $socket = $context->getSocket(\ZMQ::SOCKET_PUSH, 'pusher');
-        $socket->connect(config('pusher.zmq_dsn'));
+        $socket->connect(config('pusher.zmq_bind_address'));
         $data = json_encode($data);
         $socket->send($data);
     }

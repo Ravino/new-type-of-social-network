@@ -27,7 +27,7 @@ class RunPusherCommand extends Command
 
         $context = new ReactContext($loop);
         $pull = $context->getSocket(\ZMQ::SOCKET_PULL);
-        $pull->bind(config('pusher.zmq_dsn'));
+        $pull->bind(config('pusher.zmq_pub_address'));
         $pull->on('message', [$pusher, 'broadcast']);
 
 
