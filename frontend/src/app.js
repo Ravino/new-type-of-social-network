@@ -27,7 +27,7 @@ Vue.prototype.$user = null;
 Vue.prototype.$api = null;
 
 // @TGA пока не нужно
-// import { VueResponsiveComponents } from 'vue-responsive-components';
+import { VueResponsiveComponents } from 'vue-responsive-components';
 // Vue.use(VueResponsiveComponents);
 
 import router from './router/router.js';
