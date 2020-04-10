@@ -56,7 +56,7 @@ class ProfileController extends Controller
             'birthday' => $request->birthday,
             'sex' => $request->sex,
             'city' => $request->city,
-            'relationship' => $request->relationship,
+            'relationship_id' => $request->relationshipId,
             'relationship_user_id' => $request->relationshipUserId,
         ]));
         return new ProfileResource($profile);

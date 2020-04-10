@@ -16,7 +16,7 @@ class Profile extends JsonResource
             'sex' => $this->sex,
             'birthday' => $this->birthday,
             'city' => $this->city,
-            'relationship' => $this->relationship,
+            'relationshipId' => $this->relationship_id,
             'userPic' => $this->user_pic,
         ];
     }

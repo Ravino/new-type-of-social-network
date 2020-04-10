@@ -31,7 +31,7 @@ class Profile extends Model
     ];
 
     protected $fillable = [
-        'first_name', 'last_name', 'birthday', 'city', 'sex', 'relationship', 'relationship_user_id',
+        'first_name', 'last_name', 'birthday', 'city', 'sex', 'relationship_id', 'relationship_user_id',
     ];
 
     public function getDateFormat()
@@ -41,6 +41,6 @@ class Profile extends Model
 
     public function relationship()
     {
-        return $this->hasOne(Relationship::class, 'id', 'relationship');
+        return $this->hasOne(Relationship::class, 'id', 'relationship_id');
     }
 }

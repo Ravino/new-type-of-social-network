@@ -33,7 +33,7 @@ class Profile extends Request
             'birthday' => 'date_format:Y-m-d|nullable',
             'sex' => Rule::in(array_keys(ProfileModel::SEX_VARIANTS)),
             'city' => 'string|min:1|max:255',
-            'relationship' => Rule::exists('profile_relationships', 'id') . '|nullable',
+            'relationshipId' => Rule::exists('profile_relationships', 'id') . '|nullable',
             'relationshipUserId' => 'nullable',
         ];
     }
