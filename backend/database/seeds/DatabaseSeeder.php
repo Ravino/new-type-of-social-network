@@ -14,7 +14,7 @@ class DatabaseSeeder extends Seeder
     public function run()
     {
         Model::unguard();
-        if(App::environment() == 'staging' || App::environment() == 'local') {
+        if(in_array(App::environment(), ['staging', 'local', 'testing'])) {
             $this->doSeed(UsersTableSeeder::class);
             $this->doSeed(ChatSeeder::class);
             $this->doSeed(ProfileRelationshipsSeeder::class);

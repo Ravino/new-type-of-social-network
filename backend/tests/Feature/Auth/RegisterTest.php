@@ -20,8 +20,9 @@ class RegisterTest extends TestApi
             '/api/register',
             [
                 'email' => $email,
-                'firstname' => 'Hoirfjoiejfier',
-                'lastname' => 'Jpwejfkpowekfpoew',
+                'firstName' => 'Newname',
+                'lastName' => 'Newlastname',
+                'birthday' => '1991-01-01'
             ],
             [
                 'Content-Type: application/x-www-form-urlencoded',
