@@ -3,7 +3,7 @@ const VueLoaderPlugin = require('vue-loader/lib/plugin');
 
 const plzPublicDir = './public/js/';
 const plzPublicPath = path.resolve(__dirname, plzPublicDir);
-console.log(plzPublicPath, `plzPublicPath`);
+// console.log(plzPublicPath, `plzPublicPath`);
 
 const contentPath = path.resolve(__dirname, 'public');
 
