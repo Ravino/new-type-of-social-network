@@ -1,5 +1,4 @@
 <?php
-//namespace
 
 use Illuminate\Database\Seeder;
 
@@ -16,9 +15,15 @@ class UsersTableSeeder extends Seeder
      */
     public function run()
     {
-        $email1 = $this->command->ask('Enter email of first user', 'test@gmail.com');
-        $email2 = $this->command->ask('Enter email of admin user', 'admin@gmail.com');
-        $count_of_users = $this->command->ask('How many users you want to generate', 10);
+        $email1 = 'test@gmail.com';
+        $email2 = 'admin@mail.com';
+        $countOfUsers = 10;
+
+        if (App::environment() != 'testing') {
+            $email1 = $this->command->ask('Enter email of first user', 'test@gmail.com');
+            $email2 = $this->command->ask('Enter email of admin user', 'admin@mail.com');
+            $countOfUsers = $this->command->ask('How many users you want to generate', 10);
+        }
 
         $user1 = User::where('email', $email1)->first();
         if (!$user1) {
@@ -54,7 +59,7 @@ class UsersTableSeeder extends Seeder
         }
 
         $faker = Faker\Factory::create();
-        for ($i = 0; $i <= $count_of_users; $i++) {
+        for ($i = 0; $i <= $countOfUsers; $i++) {
             $fakeEmail = $faker->email;
             $user = User::where('email', $fakeEmail)->first();
             if (!$user) {
