@@ -1,23 +1,18 @@
 import axios from 'axios';
-import {HTTPer} from "../httper/httper";
 
 class PliziAPI {
 
-    /**
-     * @type {AxiosInstance}
-     * @private
-     */
-    __axios = null;
-
-    __token = ``;
-
-    __baseURL = null;
-
-    __defaultHeaders = {
-        'X-Requested-With': 'XMLHttpRequest',
-    };
-
     constructor(token){
+        this.__axios = null;
+
+        this.__token = ``;
+
+        this.__baseURL = null;
+
+        this.__defaultHeaders = {
+            'X-Requested-With': 'XMLHttpRequest',
+        };
+
         this.__baseURL = window.apiURL;
 
         if (token) {

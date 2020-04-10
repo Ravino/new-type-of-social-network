@@ -14,12 +14,14 @@ class ChatSeeder extends Seeder
      */
     public function run()
     {
-        $count_of_messages = $this->command->ask('How many messages are you want to generate?', 10);
+        $countOfMessages = (App::environment() == 'testing')
+            ? 10
+            : $this->command->ask('How many messages are you want to generate?', 10);
         $users = User::all();
         $faker = Faker\Factory::create('ru_RU');
         $pairs = [];
         $messages = [];
-        for ($j = 0; $j <= $count_of_messages; $j++) {
+        for ($j = 0; $j <= $countOfMessages; $j++) {
             $messages[] = $faker->realText(70);
         }
         for ($i = 0; $i <= count($users); $i++) {

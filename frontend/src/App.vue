@@ -38,7 +38,9 @@ import PliziUzer from './classes/PliziUser.js';
 
 export default {
 name: 'App',
-components: {GuestNavBar, AuthNavBar, AuthFooter, GuestFooter},
+components: {
+    GuestNavBar, AuthNavBar, AuthFooter, GuestFooter
+},
 data () {
     return {
         containerID: `contentContainer` /** @TGA - просто хак чтобы phpStorm не ругался на одинаковый ID у элемента */
@@ -116,9 +118,6 @@ methods: {
 },
 
 computed: {
-    // isAuth: function () {
-    //     return this.$root.$isAuth;
-    // },
 },
 
 mounted() {

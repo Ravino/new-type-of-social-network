@@ -31,10 +31,10 @@ class ProfileTest extends TestApi
             ->assertJsonStructure(
                 [
                     'data' => [
-                        'firstname',
-                        'lastname',
-                        'sex',
-                        'birthday',
+                        'id',
+                        'email',
+                        'profile',
+                        'privacySettings',
                     ],
                     'channel',
                 ]
@@ -51,8 +51,8 @@ class ProfileTest extends TestApi
             'PATCH',
             '/api/user',
             [
-                'firstname' => 'Hoirfjoiejfier',
-                'lastname' => 'Jpwejfkpowekfpoew',
+                'first_name' => 'Newname',
+                'last_name' => 'Newlastname',
             ],
             [
                 'Content-Type: application/x-www-form-urlencoded',
@@ -61,10 +61,15 @@ class ProfileTest extends TestApi
             ]
         );
         $response
-            ->assertStatus(201)
-            ->assertJson(
+            ->assertStatus(200)
+            ->assertJsonStructure(
                 [
-                    'message' => 'updated',
+                    'data' => [
+                        'firstName',
+                        'lastName',
+                        'sex',
+                        'birthday',
+                    ],
                 ]
             );
     }
