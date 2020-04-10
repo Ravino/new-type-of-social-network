@@ -11,6 +11,8 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use App\Http\Resources\User\User as UserResource;
+use App\Http\Requests\Profile\Profile as ProfileRequest;
+use App\Http\Resources\User\Profile as ProfileResource;
 
 class ProfileController extends Controller
 {
@@ -43,20 +45,20 @@ class ProfileController extends Controller
     }
 
     /**
-     * Patch user account api method.
-     * @queryParam email required The email of the user.<br />
-     * @queryParam password required The password of the user.<br />
-     * @param Request $request
-     * @return \Illuminate\Http\JsonResponse
-     * @authenticated
-     * @throws \Illuminate\Validation\ValidationException
+     * @param ProfileRequest $request
+     * @return ProfileResource
      */
-    public function patch(Request $request)
+    public function patch(ProfileRequest $request)
     {
-        $this->validate($request, Profile::rules($request->keys()));
-
-        Auth::user()->profile->update($request->all());
-
-        return response()->json(['message' => 'updated'], 201);
+        $profile = tap(Auth::user()->profile)->update(array_filter([
+            'first_name' => $request->firstName,
+            'last_name' => $request->lastName,
+            'birthday' => $request->birthday,
+            'sex' => $request->sex,
+            'city' => $request->city,
+            'relationship' => $request->relationship,
+            'relationship_user_id' => $request->relationshipUserId,
+        ]));
+        return new ProfileResource($profile);
     }
 }

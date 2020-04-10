@@ -41,8 +41,8 @@ class ChatRepository
             ->get([
                 'chat_party.chat_id',
                 'users.last_activity_dt',
-                'profiles.firstname',
-                'profiles.lastname',
+                'profiles.first_name',
+                'profiles.last_name',
                 'profiles.birthday',
                 'profiles.city',
                 'profiles.user_pic'
@@ -51,6 +51,10 @@ class ChatRepository
         foreach( $attendees as $attendee) {
             $attendee->lastActivityDT = $attendee->last_activity_dt;
             $attendee->userPic = $attendee->user_pic;
+            $attendee->firstName = $attendee->first_name;
+            $attendee->lastName = $attendee->last_name;
+            unset($attendee->first_name);
+            unset($attendee->last_name);
             unset($attendee->user_pic);
             unset($attendee->last_activity_dt);
         }

@@ -38,8 +38,8 @@ class SocialAccountsService
                     'username' => $providerUser->getNickname(),
                 ]);
                 $user->profile()->create([
-                    'firstname' => $providerUser->getName(),
-                    'lastname' => $providerUser->getName(),
+                    'first_name' => $providerUser->getName(),
+                    'last_name' => $providerUser->getName(),
                 ]);
             }
 
