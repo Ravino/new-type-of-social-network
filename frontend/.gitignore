@@ -29,5 +29,4 @@ Thumbs.db
 *.js.map
 *.css.map
 
-/src/libs
-/public/mix-manifest.json
+/mix-manifest.json
