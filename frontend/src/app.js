@@ -44,6 +44,8 @@ Vue.use(Vuelidate);
 
 import App from './App.vue';
 
+window.console.info('Before vue run');
+
 window.app = new Vue({
     router,
     store,
