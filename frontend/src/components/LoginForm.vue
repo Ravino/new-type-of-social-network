@@ -165,7 +165,7 @@
 
                 HTTPer.post('api/login', loginData)
                     .then((response) => {
-                        if (response.status === 200 && response.statusText.toUpperCase() === 'OK' && response.data && response.data.token && response.data.token !== '') {
+                        if (response.status === 200 && response.data && response.data.token && response.data.token !== '') {
                             this.$root.$emit('afterSuccessLogin', {
                                 token: response.data.token,
                                 chatChannel: response.data.channel,
@@ -174,7 +174,7 @@
                         }
                     })
                     .catch((error) => {
-                        if (400 === error.response.status) {
+                        if (error.response.status >= 400) {
                             this.isServerError = true;
                             this.serverErrorText = error.response.data.error;
                             window.console.warn(error.response.status + ': ' + error.response.statusText + ': ' + error.response.data.message);

@@ -23,11 +23,17 @@
             return {}
         },
         methods: {
-            logInWithEntryItem(entries) {
-                if (entries && entries.isUser) {
-                    this.$refs.loginForm.model.email = "user@mail.com";
-                    this.$refs.loginForm.model.password = "secret";
+            logInWithEntryItem(entry) {
+                if (! entry)
+                    return;
+
+                if (entry.isUser) {
+                    this.$refs.loginForm.model.email = entry.email;
+                    this.$refs.loginForm.model.password = `secret`;
                     this.$refs.loginForm.startLogin();
+                }
+                else {
+                    this.$refs.loginForm.openRegistrationModal();
                 }
             },
         },
