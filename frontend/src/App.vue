@@ -122,7 +122,6 @@ computed: {
 },
 
 mounted() {
-    window.console.log(`21-57`);
 },
 
 created(){

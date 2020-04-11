@@ -3,21 +3,18 @@ const VueLoaderPlugin = require('vue-loader/lib/plugin');
 
 const plzPublicDir = './public/js/';
 const plzPublicPath = path.resolve(__dirname, plzPublicDir);
-// console.log(plzPublicPath, `plzPublicPath`);
-
 const contentPath = path.resolve(__dirname, 'public');
 
 module.exports = {
 
     devServer: {
         contentBase: contentPath,
-        // compress: true,
         port: 8080,
         historyApiFallback: true
     },
 
     context: __dirname,
-    entry: './src/app.js',
+    entry: './src/main.js',
     output: {
         path: plzPublicPath,
         publicPath: 'public/js/',
@@ -32,24 +29,6 @@ module.exports = {
 
             // TODO: @TGA подключить Babel
             // @link https://webpack.js.org/loaders/babel-loader/
-            // {
-            //     test: /\.js$/,
-            //     exclude: /(node_modules|bower_components)/,
-            //     use: {
-            //         loader: 'babel-loader',
-            //         options: {
-            //             "presets": [
-            //                 "@babel/preset-env"
-            //             ],
-            //             "plugins": [
-            //                 [
-            //                     "@babel/plugin-proposal-class-properties", {"loose":  true}
-            //                 ]
-            //             ]
-            //         }
-            //     }
-            // },
-
             {
                 test: /\.css$/,
                 use: [

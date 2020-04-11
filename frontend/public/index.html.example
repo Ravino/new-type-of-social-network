@@ -5,11 +5,12 @@
         просьба не удалять
     -->
     <meta charset="utf-8" />
-    <!-- Styles -->
+
+    <!-- Library Styles -->
     <link rel="stylesheet" href="/css/bootstrap-4.3.1.min.css" />
     <link rel="stylesheet" href="/font-awesome/css/all.css" />
 
-
+    <!-- Library JS -->
     <script src="/js/jquery-3.3.1.min.js" type="application/javascript"></script>
     <script src="/js/bootstrap-4.3.1.min.js" type="application/javascript"></script>
     <script src="/js/autobahn.min.js" type="application/javascript"></script>
@@ -17,16 +18,18 @@
     <title>Plizi</title>
 
     <script>
-        // var apiURL = 'http://plizi.loc';
-        // var wsUrl = 'ws://127.0.0.1:7070';
-        var apiURL = 'http://plizi.loc/';
-        var wsUrl  = '127.0.0.1:7070';
+        // local access
+        var apiURL = 'http://plizi.loc';
+        var wsUrl = 'ws://127.0.0.1:7070';
+        // remote access
+        // var apiURL = 'http://vm1020511.had.pm/';
+        // var wsUrl  = 'ws://45.82.71.126:8080';
     </script>
 </head>
 <body>
 
 <div id="app"></div>
 
-<script src="./js/app.js" type="application/javascript"></script>
+<!--<script src="./js/app.js" type="application/javascript"></script>-->
 </body>
 </html>
