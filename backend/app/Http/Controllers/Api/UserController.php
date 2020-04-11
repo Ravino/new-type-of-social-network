@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\User\AddToFriend;
 use App\Http\Resources\Community\CommunityUserCollection;
 use App\Http\Resources\User\UserCollection;
 use App\Models\Profile;
@@ -35,5 +36,62 @@ class UserController extends Controller
             return new UserCollection($users);
         }
         return response()->json(['message' => 'No found'], 200);
+    }
+
+    /**
+     * @param AddToFriend $request
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function sendFriendshipRequest(AddToFriend $request) {
+        $recipient = User::find($request->userId);
+        if($recipient) {
+            if($recipient->hasFriendRequestFrom(Auth::user())) {
+                return response()->json(['message' => 'Вы уже отправляли запрос данному пользователю'], 200);
+            }
+            Auth::user()->befriend($recipient);
+            return response()->json(['message' => 'Запрос на добавление в друзья отправлен'], 200);
+        }
+        return response()->json(['message' => 'Данный пользователь не найден'], 404);
+    }
+
+    /**
+     * @param AddToFriend $request
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function acceptFriendshipRequest(AddToFriend $request) {
+        $sender = User::find($request->userId);
+        if($sender) {
+            if(Auth::user()->hasFriendRequestFrom($sender)) {
+                Auth::user()->acceptFriendRequest($sender);
+                return response()->json(['message' => 'Вы приняли пользователя в друзья'], 200);
+            }
+            return response()->json(['message' => 'Данный пользователь не отправлял вам запрос в друзья'], 200);
+        }
+        return response()->json(['message' => 'Данный пользователь не найден'], 404);
+    }
+
+    /**
+     * @param AddToFriend $request
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function declineFriendshipRequest(AddToFriend $request) {
+        $sender = User::find($request->userId);
+        if($sender) {
+            if(Auth::user()->hasFriendRequestFrom($sender)) {
+                Auth::user()->denyFriendRequest($sender);
+                return response()->json(['message' => 'Вы отклонили запрос на добавление в друзья от пользователя'], 200);
+            }
+            return response()->json(['message' => 'Данный пользователь не отправлял вам запрос в друзья'], 200);
+        }
+        return response()->json(['message' => 'Данный пользователь не найден'], 404);
+    }
+
+    /**
+     * @return UserCollection
+     */
+    public function getMyFriendsList() {
+        $friend_ids = Auth::user()->getFriends()->pluck('id');
+        $friends = User::with('profile', 'privacySettings')->whereIn('id', $friend_ids)->get();
+        return new UserCollection($friends);
     }
 }

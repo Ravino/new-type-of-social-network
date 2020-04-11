@@ -5,6 +5,7 @@ namespace App\Models;
 use App\CommunityMember;
 use App\Models\User\PrivacySettings;
 use App\Notifications\ResetPassword as ResetPasswordNotification;
+use App\Traits\Friendable;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Tymon\JWTAuth\Contracts\JWTSubject;
@@ -12,6 +13,8 @@ use Tymon\JWTAuth\Contracts\JWTSubject;
 class User extends Authenticatable implements JWTSubject
 {
     use Notifiable;
+
+    use Friendable;
 
     /**
      * The attributes that are mass assignable.
@@ -30,6 +33,8 @@ class User extends Authenticatable implements JWTSubject
     protected $hidden = [
         'password', 'remember_token',
     ];
+
+    protected $with = ['profile', 'privacySettings'];
 
     /**
      * The attributes that should be cast to native types.
@@ -85,8 +90,9 @@ class User extends Authenticatable implements JWTSubject
 
     public function allPosts()
     {
-        return $this->morphMany(Post::class, 'postable')
-            ->orWhereIn('postable_id', self::communities()->allRelatedIds());
+        return $this->morphMany(Post::class, 'postable')->with('postable')
+            ->orWhereIn( 'postable_id', self::communities()->allRelatedIds())
+            ->orWhereIn( 'postable_id', self::getFriends()->pluck('id'));
     }
 
     /**

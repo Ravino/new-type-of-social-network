@@ -14,7 +14,7 @@ class LastActivityDt
         if (auth()->guest()) {
             return $next($request);
         }
-        if (Carbon::create(auth()->user()->last_activity_dt)->diffInMinutes(now()) !== config('app.user_activity_margin')) {
+        if (Carbon::create(auth()->user()->last_activity_dt)->diffInMinutes(now()) <= config('app.user_activity_margin')) {
             DB::table("users")
                 ->where("id", auth()->user()->id)
                 ->update(["last_activity_dt" => time()]);
