@@ -11,7 +11,10 @@ import ProfilePage from '../pages/ProfilePage.vue';
 import ChatsListPage from '../pages/ChatsListPage.vue';
 import ChatMessagesPage from '../pages/ChatMessagesPage.vue';
 
-import {HTTPer} from '../httper/httper.js';
+//import {HTTPer} from '../httper/httper.js';
+
+import PliziAPI from '../classes/PliziAPI.js';
+import PliziUser from '../classes/PliziUser.js';
 
 const routes = [
     { path: '/', redirect: '/login', isGuest : true },
@@ -32,18 +35,18 @@ const router = new VueRouter({
 });
 
 
-async function getUserData(){
-    try {
-        const response = await HTTPer.get('api/user', store.getters.getHTTPConfig).catch((err) => { console.log(err); });
-        if (200 === response.status) {
-            return response.data;
-        }
-    } catch(err) {
-        window.console.warn(err);
-    }
-
-    return null;
-}
+//async function getUserData(){
+//    try {
+//        const response = await HTTPer.get('api/user', store.getters.getHTTPConfig).catch((err) => { console.log(err); });
+//        if (200 === response.status) {
+//            return response.data;
+//        }
+//    } catch(err) {
+//        window.console.warn(err);
+//    }
+//
+//    return null;
+//}
 
 
 function routerForcedLogout(next){
@@ -67,19 +70,35 @@ router.beforeEach(async (to, from, next) => {
     if (! to.meta.isGuest) {
         const gwt = store.getters.gwToken;
 
-        if ((gwt+'')!=='null'  &&  gwt!=='') {
-            const tryToLoadUser = await getUserData(gwt);
+        await Vue.nextTick(); // @TGA иначе загрузка из localStorage не срабатывает
 
-            if (tryToLoadUser) {
+        if ((gwt+'')!=='null'  &&  gwt!=='') {
+            // const tryToLoadUser = await getUserData(gwt);
+            const tstUser = new PliziUser();
+            const tstUserData = tstUser.restoreData();
+
+            if (tstUserData) {
                 window.app.$root.$emit('afterUserLoad', {
-                    user  : JSON.parse(JSON.stringify(tryToLoadUser)),
+                    user  : tstUserData,
                     token : gwt,
                     save  : true
                 });
             }
             else {
-                routerForcedLogout(next);
+                const tryToLoadUser = await (new PliziAPI(gwt)).getUser();
+
+                if (tryToLoadUser) {
+                    window.app.$root.$emit('afterUserLoad', {
+                        user  : tryToLoadUser,
+                        token : gwt,
+                        save  : true
+                    });
+                }
+                else {
+                    routerForcedLogout(next);
+                }
             }
+
         }
         else {
             routerForcedLogout(next);

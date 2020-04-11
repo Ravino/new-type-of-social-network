@@ -34,6 +34,7 @@ import AuthFooter from './common/AuthFooter.vue';
 import GuestFooter from './common/GuestFooter.vue';
 
 import {HTTPer} from './httper/httper';
+import PliziAPI from './classes/PliziAPI.js';
 import PliziUzer from './classes/PliziUser.js';
 
 export default {
@@ -49,15 +50,23 @@ data () {
 
 methods: {
     afterSuccessLogin(evData) {
-        if (evData.token !== ``) {
+        if (evData.token  &&  (evData.token+'').trim() !== ``) {
+            //window.console.log( JSON.parse( JSON.stringify(evData) ), 'Success');
+
             this.$root.$isAuth = true;
 
             this.$store.dispatch('SET_GWT', evData.token);
             this.$store.dispatch('SET_CHAT_CHANNEL', evData.chatChannel);
 
+            this.$root.$api.token = evData.token;
+
             if (evData.redirect) {
                 this.$router.push({ path: '/profile' });
             }
+        }
+        else {
+            window.console.warn('afterSuccessLogin: no token');
+            this.$router.push({ path: '/login' });
         }
     },
 
@@ -67,6 +76,9 @@ methods: {
 
         this.$store.dispatch('SET_GWT', ``);
         this.$store.dispatch('SET_CHAT_CHANNEL', ``);
+
+        this.$root.$user.cleanData();
+        this.$root.$api.token = ``;
 
         window.localStorage.removeItem('pliziJWToken');
         window.localStorage.removeItem('pliziUser');
@@ -105,11 +117,11 @@ methods: {
         if (evData.token !== ``  &&  evData.user) {
             this.$root.$isAuth = true;
 
-            if (evData.save) {
-                this.$root.$user.saveUserData( evData.user, evData.token );
+            //if (evData.save) {
+            //    this.$root.$user.saveUserData( evData.user, evData.token );
+            //}
 
-                this.$store.dispatch('SET_GWT', evData.token);
-            }
+            this.$root.$user.saveUserData( evData.user, evData.token );
         }
     },
 
@@ -125,6 +137,7 @@ mounted() {
 },
 
 created(){
+    this.$root.$api = new PliziAPI(``);
     this.$root.$user = new PliziUzer({});
 },
 

@@ -7,6 +7,13 @@ class PliziUser {
     __defaultAvatarPath = `/images/noavatar-256.png`;
 
     /**
+     * ключ в localStorage куда сохраняем данные юзера
+     * @type {string}
+     * @private
+     */
+    __localStorageKey = `pliziUser`;
+
+    /**
      *
      * @type {boolean}
      * @private
@@ -184,7 +191,15 @@ class PliziUser {
         this._birthDay = new Date((prof.birthday+``).trim());
         this._city = (prof.city+``).trim();
         this._relationship = prof.relationship >>> 0;
-        this._userPic = (prof.user_pic+``).trim();
+
+        if (prof.userPic) {
+            this._userPic = (prof.userPic+``).trim();
+        }
+
+        // TODO @TGA удалить когда бэкендеры пофиксят
+        if (prof.user_pic) {
+            this._userPic = (prof.user_pic+``).trim();
+        }
 
         // TODO: @TGA переписать потом на загрузку реальных данных
         this._country = ``;
@@ -196,7 +211,86 @@ class PliziUser {
         this._videosNumber = Math.floor(Math.random() * 100);
         this._audiosNumber = Math.floor(Math.random() * 5000);
 
+        this.storeData();
+
         this.__isDataReady = true;
+    }
+
+
+    /**
+     * сохраняет в localStorage (по ключу localStorageKey) данные юзера в строком виде
+     * @returns {string} - данные юзера в строком виде
+     */
+    storeData() {
+        const sData = this.toString();
+        window.localStorage.setItem( this.localStorageKey, sData );
+
+        return sData;
+    }
+
+
+    /**
+     * пытается восстановить данные юзера из localStorage
+     * @returns {object|null} - данные юзера в виде объекта, если данные из localStorage
+     */
+    restoreData() {
+        const sData = window.localStorage.getItem( this.localStorageKey);
+
+        if (typeof sData === 'undefined'  ||  sData===null  ||  sData===``)
+            return null;
+
+        let oData = null;
+
+        try {
+            oData = JSON.parse(sData);
+
+            if (oData  &&  oData.data &&  oData.data.email  &&  oData.data.profile  &&  oData.data.profile.firstName   &&  oData.data.profile.lastName) {
+                this.saveUserData(oData, ``);
+            }
+            else {
+                return null;
+            }
+
+        } catch (e){
+            if ( window.console !== undefined && window.console.error ) window.console.warn( e.toString() );
+            return null;
+        }
+
+        return this.toJSON();
+    }
+
+
+    /**
+     * очищает данные
+     */
+    cleanData(){
+        this._token = ``;
+
+        this._id = -1;
+        this._email = ``;
+        this._isOnline = false;
+        this._channel = ``;
+
+        this._firstName = ``;
+        this._lastName = ``;
+        this._sex = ``;
+        this._birthDay = ``;
+        this._city = ``;
+        this._relationship = -1;
+        this._userPic = ``;
+
+        this._country = ``;
+        this._created = null;
+        this._updated = null;
+        this._subscribersNumber = -1;
+        this._friendsNumber = -1;
+        this._photosNumber = -1;
+        this._videosNumber = -1;
+        this._audiosNumber = -1;
+
+        window.localStorage.removeItem( this.localStorageKey );
+
+        this.__isDataReady = false;
     }
 
 
@@ -206,6 +300,14 @@ class PliziUser {
      */
     get defaultAvatar() {
         return this.__defaultAvatarPath;
+    }
+
+    /**
+     * ключ в localStorage куда сохраняем данные юзера
+     * @returns {string}
+     */
+    get localStorageKey(){
+        return this.__localStorageKey;
     }
 
     /**
@@ -230,6 +332,13 @@ class PliziUser {
      */
     get token(){
         return this._token;
+    }
+
+    /**
+     * @param {string} jToken
+     */
+    set token(jToken){
+       this._token = (jToken+'').trim();
     }
 
     /**
@@ -449,6 +558,12 @@ class PliziUser {
      * @returns {Object}
      */
     toJSON() {
+        let month = (this._birthDay.getMonth()+1)+``;
+        month = (month.length === 1) ? '0'+month : month;
+
+        let day = this._birthDay.getDay()+``;
+        day = (day.length === 1) ? '0'+day : day;
+
         return {
             data: {
                 id: this._id,
@@ -458,10 +573,10 @@ class PliziUser {
                     firstName: this._firstName,
                     lastName: this._lastName,
                     sex: this._sex,
-                    birthday: `${this._birthDay.getFullYear()}-${(this._birthDay.getMonth()+1)}-${this._birthDay.getDay()}`,
+                    birthday: `${this._birthDay.getFullYear()}-${month}-${day}`,
                     city: this._city,
                     relationship: this._relationship,
-                    user_pic: this._userPic
+                    userPic: this._userPic
                 }
             },
             channel: this._channel

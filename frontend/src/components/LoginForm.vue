@@ -108,6 +108,7 @@
         components: {
             RegistrationModal
         },
+
         data() {
             return {
                 model: {
@@ -119,6 +120,7 @@
                 serverErrorText: ''
             }
         },
+
         validations() {
             return {
                 model: {
@@ -134,10 +136,12 @@
                 }
             };
         },
+
         mounted() {
             setTimeout(() => {
                 this.$refs.email.focus();
             }, 100);
+
             this.$root.$on('hideRegistrationModal', (evData) => {
                 this.isRegistrationModalShow = false;
             });
@@ -154,16 +158,19 @@
                     break;
             }
         },
+
         methods: {
             startLogin() {
                 this.$v.$touch();
-                let loginData = {
-                    email: this.model.email.trim(),
-                    password: this.model.password.trim()
-                };
                 this.isServerError = false;
 
-                HTTPer.post('api/login', loginData)
+                // let loginData = {
+                //     email: this.model.email.trim(),
+                //     password: this.model.password.trim()
+                // };
+                // HTTPer.post('api/login', loginData)
+
+                this.$root.$api.login(this.model.email.trim(), this.model.password.trim())
                     .then((response) => {
                         if (response.status === 200 && response.data && response.data.token && response.data.token !== '') {
                             this.$root.$emit('afterSuccessLogin', {
@@ -179,18 +186,22 @@
                             this.serverErrorText = error.response.data.error;
                             window.console.warn(error.response.status + ': ' + error.response.statusText + ': ' + error.response.data.message);
                             this.$refs.password.focus();
-                        } else {
+                        }
+                        else {
                             window.console.warn(error.toString());
                         }
                     });
             },
-            loginKeyDownCheck(ev) {
-                if (13 === ev.keyCode)
+            loginKeyDownCheck( ev ){
+                if ( 13 === ev.keyCode ){
                     return this.startLogin();
+                }
             },
             openRegistrationModal() {
                 this.isRegistrationModalShow = true;
             },
+
+            // TODO: @TGA вынести социалку в отдельный компонент
             loginWithSocial(provider) {
                 switch (provider) {
                     case 'facebook':
