@@ -46,11 +46,12 @@
                 <input v-model="model.email"
                        :class="{ 'is-invalid': $v.model.email.$error, 'is-valid': !$v.model.email.$invalid }"
                        @blur="$v.model.email.$touch()" @keydown="registrationKeyDownCheck($event)"
-                       type="text" class="lr-input form-control" id="userEmail" placeholder="Ваш E-mail" />
+                       type="text" class="lr-input form-control" id="userEmail" ref="userEmail" placeholder="Ваш E-mail" />
 
                 <div v-show="$v.model.email.$error" class="invalid-feedback">
                     <p v-if="!$v.model.email.required" class="text-danger">Укажите свой е-мейл</p>
                     <p v-if="!$v.model.email.email" class="text-danger">Укажите корректный е-мейл</p>
+                    <p v-if="!$v.model.email.isDuplicateEmail" class="text-danger" v-html="serverRegMessages.email"></p>
                 </div>
             </div>
 
@@ -60,9 +61,9 @@
                 <label for="userBirth" class="d-none">Дата рождения</label>
                 <input v-model="model.birthDate"
                        type="date"
-                       id="userBirth"
+                       id="userBirth" ref="userBirth"
                        class="lr-input form-control"
-                       :class="{ 'is-invalid': $v.model.birthDate.$error, '&#45;&#45;is-valid': !$v.model.birthDate.$invalid }"
+                       :class="{ 'is-invalid': $v.model.birthDate.$error, 'is-valid': !$v.model.birthDate.$invalid }"
                        pattern="(0[1-9]|1[0-9]|2[0-9]|3[01]).(0[1-9]|1[012]).[0-9]{4}"
                        @blur="$v.model.birthDate.$touch()"
                        @keydown="registrationKeyDownCheck($event)"
@@ -102,8 +103,25 @@ data() {
 
         isServerError: false,
         serverErrorText: '',
+
+        duplicateEmail: ``,
+
+        serverRegErrors : {
+            firstName: false,
+            lastName: false,
+            email: false,
+            birthDate: false,
+        },
+
+        serverRegMessages : {
+            firstName: ``,
+            lastName: ``,
+            email: ``,
+            birthDate: ``,
+        }
     }
 },
+
 validations() {
     return {
         model: {
@@ -121,7 +139,15 @@ validations() {
             },
             email: {
                 required,
-                email
+                email,
+                isDuplicateEmail: (value) => {
+                    if ((value+'') === '')
+                        return true;
+
+                    return value !== this.duplicateEmail;
+                    //
+                    //return ! this.serverRegErrors.email;
+                }
             },
             birthDate: {
                 isValidRegistrationBirthDay
@@ -129,10 +155,16 @@ validations() {
         }
     };
 },
+
 methods: {
     startRegistration() {
         this.$v.$touch();
         this.isServerError = false;
+
+        for (let [key, value] of Object.entries(this.serverRegErrors)) {
+            this.serverRegErrors[key] = false;
+            this.serverRegMessages[key] = ``;
+        }
 
         let regData = {
             email     : this.model.email.trim(),
@@ -148,20 +180,28 @@ methods: {
                 }
             })
             .catch((error) => {
-                if (400 === error.response.status) {
-                    // TODO: @tga довести до ума обработку ошибок
-                    window.console.clear();
-                    window.console.log(error.response.data);
-
-                    this.isServerError = true;
-                    this.serverErrorText = error.response.data.error;
-                    window.console.warn(error.response.status + ': ' + error.response.statusText + ': ' + error.response.data.message);
-                    this.$refs.email.focus();
+                if (error.response.status >= 400) {
+                    this.processServerErrors(error, regData);
                 }
                 else {
                     window.console.warn(error.toString());
                 }
             });
+    },
+
+    processServerErrors(error, oldRegData) {
+        // TODO: @tga довести до ума обработку ошибок
+        window.console.warn(error.response.status + ': ' + error.response.statusText);
+        this.isServerError = true;
+
+        if (error.response.data.errors){
+            if (error.response.data.errors.email) {
+                this.serverRegErrors.email = true;
+                this.duplicateEmail = oldRegData.email.trim();
+                this.serverRegMessages.email = error.response.data.errors.email.join('<br />');
+                this.$refs.userEmail.focus();
+            }
+        }
     },
 
     registrationKeyDownCheck(ev) {

@@ -164,12 +164,6 @@
                 this.$v.$touch();
                 this.isServerError = false;
 
-                // let loginData = {
-                //     email: this.model.email.trim(),
-                //     password: this.model.password.trim()
-                // };
-                // HTTPer.post('api/login', loginData)
-
                 this.$root.$api.login(this.model.email.trim(), this.model.password.trim())
                     .then((response) => {
                         if (response.status === 200 && response.data && response.data.token && response.data.token !== '') {
