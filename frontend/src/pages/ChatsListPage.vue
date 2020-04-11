@@ -5,7 +5,7 @@
         </div>
 
         <div class="col-sm-12 col-md-9 col-lg-11 pr-3">
-            <div id="chatMain" class="row bg-white-br20 overflow-hidden">
+            <div v-if="(dialogsList.length > 0)" id="chatMain" class="row bg-white-br20 overflow-hidden">
                 <div class="col-sm-12 col-md-12 col-lg-4 col-xl-4 col-auto px-sm-0 px-md-0 py-4 border-right">
                     <ul id="chatFriends" class="list-unstyled mb-0">
                         <ChatListItem v-for="(dialog, dialogIndex) in dialogsList"
@@ -20,6 +20,19 @@
                     <ChatHeader v-bind:currentDialog="currentDialog"></ChatHeader>
                     <ChatMessages v-bind:messages="messagesList" v-bind:currentDialog="currentDialog"></ChatMessages>
                     <ChatFooter v-bind:currentDialog="currentDialog"></ChatFooter>
+                </div>
+            </div>
+            <div v-else class="row bg-white-br20">
+                <div v-if="isDialogsLoaded" class="col-sm-12 col-md-12 col-lg-4 col-xl-12 py-5 px-5 text-center">
+                    <h3 class="text-info">Вы ещё ни с кем не общались.</h3>
+                </div>
+                <div v-else class="col-sm-12 col-md-12 col-lg-4 col-xl-12 py-5 px-5 d-flex flex-row">
+                    <div class="w-50 text-right pr-3">
+                        <i class="fas fa-spinner fa-3x fa-spin text-info"></i>
+                    </div>
+                    <div class="w-50 pt-1 text-info">
+                        <h3>Данные загружаются...</h3>
+                    </div>
                 </div>
             </div>
         </div>
@@ -51,6 +64,7 @@ data() {
         dialogsList   : [],
         currentDialog : {},
         messagesList  : [],
+        isDialogsLoaded: false
     }
 },
 
@@ -131,9 +145,11 @@ methods: {
             this.currentDialog = this.dialogsList.find((dItem) => +dItem.id === lastDialogID);
         }
 
-        if (typeof this.currentDialog==='undefined') {
-            this.currentDialog = this.dialogsList[0];
-            this.$store.dispatch('SET_ACTIVE_DIALOG', this.currentDialog.id);
+        if (typeof this.currentDialog === 'undefined') {
+            if (this.dialogsList.length > 0) { // new user === no dialogs
+                this.currentDialog = this.dialogsList[0];
+                this.$store.dispatch('SET_ACTIVE_DIALOG', this.currentDialog.id);
+            }
         }
 
         return true;
@@ -149,6 +165,7 @@ methods: {
 
 async mounted() {
     const isDialogsLoaded = await this.loadDialogsList();
+    this.isDialogsLoaded = true;
 
     let messagesIsLoaded = false;
 

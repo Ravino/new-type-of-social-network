@@ -145,8 +145,6 @@ validations() {
                         return true;
 
                     return value !== this.duplicateEmail;
-                    //
-                    //return ! this.serverRegErrors.email;
                 }
             },
             birthDate: {

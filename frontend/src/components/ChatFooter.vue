@@ -4,7 +4,7 @@
             <div class="col-1 col-md-2">
                 <div class="">
                     <img class="chat-companion-user-pic rounded-circle my-0 mx-auto"
-                         v-bind:src="userPic" v-bind:alt="currentDialog.firstname" />
+                         v-bind:src="userPic" v-bind:alt="userFullName" />
                 </div>
             </div>
             <div class="col-9 col-md-8 pl-0">
@@ -96,8 +96,11 @@ methods: {
 
 computed : {
     userPic() {
-        // return (this.currentDialog  &&  this.currentDialog.userPic) ? this.currentDialog.userPic : this.$defaultAvatarPath;
         return this.$root.$user.userPic;
+    },
+
+    userFullName() {
+        return this.$root.$user.fullName;
     }
 },
 
