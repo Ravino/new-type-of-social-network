@@ -44,7 +44,8 @@ components: {
 },
 data () {
     return {
-        containerID: `contentContainer` /** @TGA - просто хак чтобы phpStorm не ругался на одинаковый ID у элемента */
+        containerID : `contentContainer`, /** @TGA - просто хак чтобы phpStorm не ругался на одинаковый ID у элемента */
+        lastSearchText: ``
     }
 },
 
@@ -115,11 +116,9 @@ methods: {
 
     afterUserLoad(evData) {
         if (evData.token !== ``  &&  evData.user) {
-            this.$root.$isAuth = true;
 
-            //if (evData.save) {
-            //    this.$root.$user.saveUserData( evData.user, evData.token );
-            //}
+            this.$root.$isAuth = true;
+            this.$root.$api.token = evData.token;
 
             this.$root.$user.saveUserData( evData.user, evData.token );
         }
@@ -149,6 +148,10 @@ beforeMount(){
     this.$root.$on('sentNewChatMessageToAPI', this.sentNewChatMessageToAPI);
 
     this.$root.$on('afterUserLoad', this.afterUserLoad);
+
+    this.$root.$on('searchStart', (evData) => {
+        this.lastSearchText = evData.searchText;
+    });
 }
 
 }

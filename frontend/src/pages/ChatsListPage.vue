@@ -5,7 +5,7 @@
         </div>
 
         <div class="col-sm-12 col-md-9 col-lg-11 pr-3">
-            <div v-if="(dialogsList.length > 0)" id="chatMain" class="row bg-white-br20 overflow-hidden">
+            <div v-if="checkIsDialogsList('template')" id="chatMain" class="row bg-white-br20 overflow-hidden">
                 <div class="col-sm-12 col-md-12 col-lg-4 col-xl-4 col-auto px-sm-0 px-md-0 py-4 border-right">
                     <ul id="chatFriends" class="list-unstyled mb-0">
                         <ChatListItem v-for="(dialog, dialogIndex) in dialogsList"
@@ -22,6 +22,7 @@
                     <ChatFooter v-bind:currentDialog="currentDialog"></ChatFooter>
                 </div>
             </div>
+
             <div v-else class="row bg-white-br20">
                 <div v-if="isDialogsLoaded" class="col-sm-12 col-md-12 col-lg-4 col-xl-12 py-5 px-5 text-center">
                     <h3 class="text-info">Вы ещё ни с кем не общались.</h3>
@@ -61,10 +62,17 @@ components: {
 data() {
     return {
         chatCarrier   : null,
-        dialogsList   : [],
+        //dialogsList   : [],
+        dialogsList   : null,
         currentDialog : {},
         messagesList  : [],
         isDialogsLoaded: false
+    }
+},
+
+computed: {
+    isDialogsList(){
+        return this.checkIsDialogsList();
     }
 },
 
@@ -135,24 +143,39 @@ methods: {
 
 
     async loadDialogsList() {
-        const response = await HTTPer.get('api/chat/dialogs', this.$store.getters.getHTTPConfig);
-        this.dialogsList = response.data;
+        const response = await this.$root.$api.chatDialogs();
+
+        if (response === null) {
+            this.$router.push({ path: '/logout' });
+            return null;
+        }
+
+        this.dialogsList = response;
+        this.isDialogsLoaded = true;
 
         const lastDialogID = +this.$store.getters.activeDialog;
         this.currentDialog = undefined;
 
-        if (Array.isArray(this.dialogsList)  &&  this.dialogsList  &&  this.dialogsList.length>0) {
+        if (this.checkIsDialogsList()) {
             this.currentDialog = this.dialogsList.find((dItem) => +dItem.id === lastDialogID);
         }
 
         if (typeof this.currentDialog === 'undefined') {
-            if (this.dialogsList.length > 0) { // new user === no dialogs
+            if (this.checkIsDialogsList()) { // new user === no dialogs
                 this.currentDialog = this.dialogsList[0];
                 this.$store.dispatch('SET_ACTIVE_DIALOG', this.currentDialog.id);
             }
         }
 
         return true;
+    },
+
+    /**
+     *  для кратости записи
+     * @returns {boolean} - true если dialogsList определён и массив
+     */
+    checkIsDialogsList(){
+        return (typeof this.dialogsList!='undefined'  &&  Array.isArray(this.dialogsList)  &&  this.dialogsList  &&  this.dialogsList.length>0);
     },
 
 
@@ -165,7 +188,6 @@ methods: {
 
 async mounted() {
     const isDialogsLoaded = await this.loadDialogsList();
-    this.isDialogsLoaded = true;
 
     let messagesIsLoaded = false;
 

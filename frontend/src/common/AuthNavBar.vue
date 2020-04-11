@@ -13,13 +13,7 @@
                 </div>
 
                 <div class="col-sm-4 col-md-6 col-lg-4 d-sm-none d-md-block d-lg-block d-xl-block pl-0">
-                    <form class="form-inline mt-3 mt-md-3">
-                        <input id="topSearch" ref="topSearch"  class="top-search form-control form-control rounded-pill w-100"
-                               type="text"
-                               placeholder="Поиск"
-                               aria-label="Поиск" />
-                        <button class="d-none btn btn-outline-success" type="submit">Search</button>
-                    </form>
+                    <NavBarSearch/>
                 </div>
 
                 <div id="playerWrapper" class="plz-top-player col-lg-3 col-xl-3 d-sm-none d-md-none d-lg-block d-xl-block text-center mt-1">
@@ -76,9 +70,12 @@
 </template>
 
 <script>
+import NavBarSearch from './NavBarSearch';
+
 export default {
 name: 'AuthNavBar',
-props: {
+    components : { NavBarSearch },
+    props: {
 },
 data () {
     return {

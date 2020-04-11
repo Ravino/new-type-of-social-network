@@ -10,8 +10,7 @@ import AccountPage from '../pages/AccountPage.vue';
 import ProfilePage from '../pages/ProfilePage.vue';
 import ChatsListPage from '../pages/ChatsListPage.vue';
 import ChatMessagesPage from '../pages/ChatMessagesPage.vue';
-
-//import {HTTPer} from '../httper/httper.js';
+import SearchResultsPage from '../pages/SearchResultsPage.vue';
 
 import PliziAPI from '../classes/PliziAPI.js';
 import PliziUser from '../classes/PliziUser.js';
@@ -26,6 +25,7 @@ const routes = [
     { path: '/profile', component: ProfilePage, name: 'ProfilePage', meta: {title: 'Plizi: Домашняя'}, props: true },
     { path: '/chats-list', component: ChatsListPage, name: 'ChatsListPage', meta: {title: 'Plizi: Чаты'}, props: true },
     { path: '/chat-messages', component: ChatMessagesPage, name: 'ChatMessagesPage', meta: {title: 'Plizi: Чат'}, props: true },
+    { path: '/search-results', component: SearchResultsPage, name: 'SearchResultsPage', meta: {title: 'Plizi: Результаты поиска'}, props: true },
 ];
 
 const router = new VueRouter({
@@ -33,20 +33,6 @@ const router = new VueRouter({
     base: process.env.BASE_URL,
     routes: routes
 });
-
-
-//async function getUserData(){
-//    try {
-//        const response = await HTTPer.get('api/user', store.getters.getHTTPConfig).catch((err) => { console.log(err); });
-//        if (200 === response.status) {
-//            return response.data;
-//        }
-//    } catch(err) {
-//        window.console.warn(err);
-//    }
-//
-//    return null;
-//}
 
 
 function routerForcedLogout(next){
@@ -59,9 +45,6 @@ function routerForcedLogout(next){
 
     document.body.className = 'LoginPage';
 
-    // router.push({ path: '/login' });
-    // router.replace({ path: '/login' });
-
     next({ path: '/login', component: LoginPage, name: 'LoginPage' });
 }
 
@@ -73,7 +56,6 @@ router.beforeEach(async (to, from, next) => {
         await Vue.nextTick(); // @TGA иначе загрузка из localStorage не срабатывает
 
         if ((gwt+'')!=='null'  &&  gwt!=='') {
-            // const tryToLoadUser = await getUserData(gwt);
             const tstUser = new PliziUser();
             const tstUserData = tstUser.restoreData();
 

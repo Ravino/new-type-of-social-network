@@ -71,16 +71,59 @@ class PliziAPI {
         return this.__axios.post('api/login', loginData);
     }
 
-
     /**
-     *
-     * @param regData
-     * @returns {Promise}
+     * попытка регистрации пользователя
+     * @param {object} regData - регистрационные данные
+     * @returns {Promise} - промис для обработки
      */
     register(regData) {
         return this.__axios.post('api/register', regData);
     }
 
+    /**
+     * загружает список диалогов (чатов) у юзера
+     * @returns {object[]|null} - список диалогов юзера, или NULL если их нет
+     */
+    async chatDialogs() {
+        let response = null;
+
+        try {
+            response = await this.__axios.get('api/chat/dialogs',  this.authHeaders);
+        }
+        catch (e) {
+            if (window.console !== undefined && window.console.error) window.console.warn(e.toString(), 'qqqqq');
+            return null;
+        }
+
+        if (response.status === 200) {
+            return response.data;
+        }
+
+        return null;
+    }
+
+
+    async userSearch(sText) {
+        let response = null;
+
+        const sData = {
+            search : (sText+'').trim()
+        };
+
+        try {
+            response = await this.__axios.post('/api/user/search', sData,  this.authHeaders);
+        }
+        catch (e) {
+            if (window.console !== undefined && window.console.error) window.console.warn(e.toString(), 'qqqqq');
+            return null;
+        }
+
+        if (response.status === 200) {
+            return response.data;
+        }
+
+        return null;
+    }
 
     /**
      *
