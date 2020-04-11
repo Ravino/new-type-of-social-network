@@ -165,6 +165,25 @@ class PliziAPI {
         return null;
     }
 
+
+    async infoUser(id) {
+        let response = null;
+
+        try {
+            response = await this.__axios.get('api/user/'+id, this.authHeaders);
+        }
+        catch (e) {
+            if (window.console !== undefined && window.console.error) window.console.warn(e.toString());
+            return null;
+        }
+
+        if (200 === response.status) {
+            return response.data;
+        }
+
+        return null;
+    }
+
 }
 
 export { PliziAPI as default}

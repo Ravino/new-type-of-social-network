@@ -30,7 +30,11 @@
 
                         <div class="plizi-friends-list">
                             <div v-for="(srItem, srIndex) in searchResult" v-bind:key="srIndex">
-                                <a :href="`#user-${srItem.id}`">{{srItem.fullname}}</a>
+                                <div class="plizi-friend-item text-left py-2">
+                                    <router-link :to="`/user-${srItem.id}`" tag="a" class="plizi-friend-link btn btn-link btn-block text-left pl-3">
+                                        <span class="plizi-friend-name">{{srItem.fullname}}</span>
+                                    </router-link>
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -66,8 +70,6 @@ data() {
 
 methods: {
     async searchProcess(evData){
-        window.console.log(evData.searchText, `searchProcess`);
-
         const searchResult = await this.$root.$api.userSearch(evData.searchText);
         window.console.log(searchResult, 'searchResult');
 

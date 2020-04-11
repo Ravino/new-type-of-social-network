@@ -4,7 +4,8 @@
             <div class="plz-profile-userpic-container h-100 bg-white-br20 overflow-hidden">
                 <div class="plz-profile-userpic-wrapper">
                     <img ref="userAvatar" :src="userData.userPic" :alt="userData.fullName" class="plz-br20-top" />
-                    <div class="plz-profile-userpic-footer">
+
+                    <div v-if="isOwner===true" class="plz-profile-userpic-footer">
                         <label for="userAvatarFile" class="plz-profile-userpic-edit d-flex align-items-center justify-content-between">
                             <span class="align-items-center justify-content-center d-flex w-75 border-right">Редактировать</span>
                             <span class="align-items-center justify-content-center d-flex w-25">
@@ -13,12 +14,18 @@
                                 <span class="ps-dot"></span>
                             </span>
                         </label>
-
-<!--                        <label for="userAvatarUpload" class="custom-file-upload">-->
-<!--                            <i class="fa fa-cloud-upload"></i> Custom Upload-->
-<!--                        </label>-->
                         <input id="userAvatarFile" ref="userAvatarFile" type="file" @change="uploadUserAvatar()" />
                     </div>
+
+                    <div v-else class="plz-profile-userpic-footer">
+                        <label class="plz-profile-userpic-edit d-flex align-items-center justify-content-between">
+                            <span class="align-items-center justify-content-center d-flex w-75 border-right">Написать</span>
+                            <span class="align-items-center justify-content-center d-flex w-25">
+                                <i class="fas fa-user-plus"></i>
+                            </span>
+                        </label>
+                    </div>
+
                 </div>
             </div>
         </div>
@@ -79,7 +86,8 @@ import {HTTPer} from '../httper/httper.js';
 export default {
 name: 'ProfileHeader',
 props: {
-
+    userData: Object,
+    isOwner : false
 },
 data() {
     return {
@@ -88,11 +96,13 @@ data() {
 
 methods: {
     sBeaty(param){
-        // return Vue.filter('statsBeauty')(param);
         return this.$options.filters.statsBeauty(param);
     },
 
     uploadUserAvatar(){
+        if (this.isOwner!==true)
+            return;
+
         const fName = this.$refs.userAvatarFile.value;
         const fExt = fName.split('.').pop().toLowerCase();
         const allowExts = ['png', 'jpg', 'jpeg', 'bmp', 'webp', 'gif'];
@@ -140,11 +150,11 @@ methods: {
 
 },
 
-computed : {
-    userData() {
-        return this.$root.$user;
-    },
-}
+//computed : {
+//    userData() {
+//        return this.$root.$user;
+//    },
+//}
 
 }
 </script>

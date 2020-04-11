@@ -11,9 +11,10 @@ import ProfilePage from '../pages/ProfilePage.vue';
 import ChatsListPage from '../pages/ChatsListPage.vue';
 import ChatMessagesPage from '../pages/ChatMessagesPage.vue';
 import SearchResultsPage from '../pages/SearchResultsPage.vue';
+import PersonalPage from '../pages/PersonalPage.vue';
 
 import PliziAPI from '../classes/PliziAPI.js';
-import PliziUser from '../classes/PliziUser.js';
+import PliziAuthUser from '../classes/PliziAuthUser.js';
 
 const routes = [
     { path: '/', redirect: '/login', isGuest : true },
@@ -26,6 +27,7 @@ const routes = [
     { path: '/chats-list', component: ChatsListPage, name: 'ChatsListPage', meta: {title: 'Plizi: Чаты'}, props: true },
     { path: '/chat-messages', component: ChatMessagesPage, name: 'ChatMessagesPage', meta: {title: 'Plizi: Чат'}, props: true },
     { path: '/search-results', component: SearchResultsPage, name: 'SearchResultsPage', meta: {title: 'Plizi: Результаты поиска'}, props: true },
+    { path: '/user-:id', component: PersonalPage, name: 'PersonalPage', meta: {title: 'Plizi:'}, props: true },
 ];
 
 const router = new VueRouter({
@@ -56,7 +58,7 @@ router.beforeEach(async (to, from, next) => {
         await Vue.nextTick(); // @TGA иначе загрузка из localStorage не срабатывает
 
         if ((gwt+'')!=='null'  &&  gwt!=='') {
-            const tstUser = new PliziUser();
+            const tstUser = new PliziAuthUser();
             const tstUserData = tstUser.restoreData();
 
             if (tstUserData) {

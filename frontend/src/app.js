@@ -16,7 +16,7 @@ Vue.prototype.$isAuth = false;
 
 /**
  * добавляем глобально, на использовать будем только от this.$root
- * @type {PliziUser}
+ * @type {PliziAuthUser}
  */
 Vue.prototype.$user = null;
 

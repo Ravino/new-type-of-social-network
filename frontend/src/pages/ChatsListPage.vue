@@ -27,14 +27,7 @@
                 <div v-if="isDialogsLoaded" class="col-sm-12 col-md-12 col-lg-4 col-xl-12 py-5 px-5 text-center">
                     <h3 class="text-info">Вы ещё ни с кем не общались.</h3>
                 </div>
-                <div v-else class="col-sm-12 col-md-12 col-lg-4 col-xl-12 py-5 px-5 d-flex flex-row">
-                    <div class="w-50 text-right pr-3">
-                        <i class="fas fa-spinner fa-3x fa-spin text-info"></i>
-                    </div>
-                    <div class="w-50 pt-1 text-info">
-                        <h3>Данные загружаются...</h3>
-                    </div>
-                </div>
+                <Spinner v-else></Spinner>
             </div>
         </div>
     </div>
@@ -42,7 +35,7 @@
 
 <script>
 import AccountToolbarLeft from '../common/AccountToolbarLeft.vue';
-import AccountToolbarRight from '../common/AccountToolbarRight.vue';
+import Spinner from '../common/Spinner.vue';
 
 import ChatListItem from '../components/ChatListItem.vue';
 
@@ -52,11 +45,11 @@ import ChatFooter from '../components/ChatFooter.vue';
 
 import { HTTPer } from '../httper/httper';
 
-export default {
+    export default {
 name: 'ChatsListPage',
 components: {
-    AccountToolbarLeft, AccountToolbarRight,
-    ChatListItem, ChatHeader, ChatMessages, ChatFooter
+    Spinner,
+    AccountToolbarLeft, ChatListItem, ChatHeader, ChatMessages, ChatFooter
 },
 
 data() {

@@ -35,7 +35,7 @@ import GuestFooter from './common/GuestFooter.vue';
 
 import {HTTPer} from './httper/httper';
 import PliziAPI from './classes/PliziAPI.js';
-import PliziUzer from './classes/PliziUser.js';
+import PliziAuthUser from './classes/PliziAuthUser.js';
 
 export default {
 name: 'App',
@@ -137,7 +137,7 @@ mounted() {
 
 created(){
     this.$root.$api = new PliziAPI(``);
-    this.$root.$user = new PliziUzer({});
+    this.$root.$user = new PliziAuthUser({});
 },
 
 beforeMount(){

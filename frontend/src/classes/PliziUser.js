@@ -7,13 +7,6 @@ class PliziUser {
     __defaultAvatarPath = `/images/noavatar-256.png`;
 
     /**
-     * ключ в localStorage куда сохраняем данные юзера
-     * @type {string}
-     * @private
-     */
-    __localStorageKey = `pliziUser`;
-
-    /**
      *
      * @type {boolean}
      * @private
@@ -26,13 +19,6 @@ class PliziUser {
      * @private
      */
     _id = -1;
-
-    /**
-     *
-     * @type {string}
-     * @private
-     */
-    _token = ``;
 
     /**
      *
@@ -171,13 +157,8 @@ class PliziUser {
     /**
      * загружаем тут данные которые пришли от метода api/user
      * @param {Object} inputData
-     * @param {string} token
      */
-    saveUserData(inputData, token){
-        if (token) {
-            this._token = (token+'').trim();
-        }
-
+    saveUserData(inputData){
         this._id = inputData.data.id >>> 0;
         this._email = (inputData.data.email+``).trim();
         this._isOnline = inputData.data.isOnline;
@@ -211,52 +192,7 @@ class PliziUser {
         this._videosNumber = Math.floor(Math.random() * 100);
         this._audiosNumber = Math.floor(Math.random() * 5000);
 
-        this.storeData();
-
         this.__isDataReady = true;
-    }
-
-
-    /**
-     * сохраняет в localStorage (по ключу localStorageKey) данные юзера в строком виде
-     * @returns {string} - данные юзера в строком виде
-     */
-    storeData() {
-        const sData = this.toString();
-        window.localStorage.setItem( this.localStorageKey, sData );
-
-        return sData;
-    }
-
-
-    /**
-     * пытается восстановить данные юзера из localStorage
-     * @returns {object|null} - данные юзера в виде объекта, если данные из localStorage
-     */
-    restoreData() {
-        const sData = window.localStorage.getItem( this.localStorageKey);
-
-        if (typeof sData === 'undefined'  ||  sData===null  ||  sData===``)
-            return null;
-
-        let oData = null;
-
-        try {
-            oData = JSON.parse(sData);
-
-            if (oData  &&  oData.data &&  oData.data.email  &&  oData.data.profile  &&  oData.data.profile.firstName   &&  oData.data.profile.lastName) {
-                this.saveUserData(oData, ``);
-            }
-            else {
-                return null;
-            }
-
-        } catch (e){
-            if ( window.console !== undefined && window.console.error ) window.console.warn( e.toString() );
-            return null;
-        }
-
-        return this.toJSON();
     }
 
 
@@ -264,8 +200,6 @@ class PliziUser {
      * очищает данные
      */
     cleanData(){
-        this._token = ``;
-
         this._id = -1;
         this._email = ``;
         this._isOnline = false;
@@ -288,8 +222,6 @@ class PliziUser {
         this._videosNumber = -1;
         this._audiosNumber = -1;
 
-        window.localStorage.removeItem( this.localStorageKey );
-
         this.__isDataReady = false;
     }
 
@@ -300,14 +232,6 @@ class PliziUser {
      */
     get defaultAvatar() {
         return this.__defaultAvatarPath;
-    }
-
-    /**
-     * ключ в localStorage куда сохраняем данные юзера
-     * @returns {string}
-     */
-    get localStorageKey(){
-        return this.__localStorageKey;
     }
 
     /**
@@ -324,21 +248,6 @@ class PliziUser {
      */
     get id(){
         return this._id;
-    }
-
-    /**
-     *
-     * @returns {string}
-     */
-    get token(){
-        return this._token;
-    }
-
-    /**
-     * @param {string} jToken
-     */
-    set token(jToken){
-       this._token = (jToken+'').trim();
     }
 
     /**
@@ -581,23 +490,6 @@ class PliziUser {
             },
             channel: this._channel
         };
-    }
-
-    updateData(fieldName, newValue) {
-        switch(fieldName){
-            case `firstName`:
-                this._firstName = (newValue+'').trim();
-                window.console.log( this._firstName, 'firstName new');
-                break;
-
-            case `lastName`:
-                this._lastName = (newValue+'').trim();
-                window.console.log( this._lastName, 'lastName new');
-                break;
-
-            default:
-                window.console.warn(`PliziUser::updateData: unknown field ${fieldName}!`);
-        }
     }
 
 }
