@@ -1,17 +1,17 @@
 {
     "data": {
-        "id": 30,
-        "email": "user@mail.com",
+        "id": 28,
+        "email": "test@gmail.com",
         "isOnline": true,
         "profile": {
-            "firstName": "Варвара",
-            "lastName": "Захаровa",
+            "firstName": "Анжелика",
+            "lastName": "Герасимова",
             "sex": "m",
-            "birthday": "1974-09-27",
-            "city": "Одинцово",
+            "birthday": "1969-07-07",
+            "city": "Балашиха",
             "relationship": 0,
-            "user_pic": "https://plizi.s3.eu-north-1.amazonaws.com/images/originals/OnOze2cIKN6kIil4VyeGdqCb4dd7tEf1rqZGFWjN.jpeg"
+            "user_pic": "https://plizi.s3.eu-north-1.amazonaws.com/images/originals/d8tDBomifqOauOUIMrbEcwGfoYVlhMmT4GXm6IXN.png"
         }
     },
-    "channel": "474544ae25c3f193a34dbedbd24db05ed6b9d955"
+    "channel": "9c3dc519b318be5aa642879e945b3dcd2ce8064a"
 }

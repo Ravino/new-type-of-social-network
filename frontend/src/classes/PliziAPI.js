@@ -2,17 +2,26 @@ import axios from 'axios';
 
 class PliziAPI {
 
+    /**
+     * @type {AxiosInstance}
+     * @private
+     */
+    __axios = null;
+
+    __token = ``;
+
+    __baseURL = null;
+
+    __defaultHeaders = {
+        'X-Requested-With': 'XMLHttpRequest',
+    };
+
+
+    /**
+     *
+     * @param {string} token
+     */
     constructor(token){
-        this.__axios = null;
-
-        this.__token = ``;
-
-        this.__baseURL = null;
-
-        this.__defaultHeaders = {
-            'X-Requested-With': 'XMLHttpRequest',
-        };
-
         this.__baseURL = window.apiURL;
 
         if (token) {
@@ -29,10 +38,17 @@ class PliziAPI {
         return 'Bearer ' + this.__token;
     }
 
+    /**
+     * устанавливает токен для запросов
+     * @param {string} jwToken
+     */
     set token(jwToken) {
         this.__token = (jwToken+'').trim();
     }
 
+    /**
+     * @returns {string} - токен для запросов
+     */
     get token() {
         return this.__token;
     }
@@ -85,7 +101,9 @@ class PliziAPI {
      * @returns {Promise|object}
      */
     async getUser(jwt) {
-        this.token = jwt;
+        if (jwt  &&  jwt!==``) {
+            this.token = jwt;
+        }
 
         let response = null;
 
