@@ -105,19 +105,14 @@ class PliziAPI {
 
 
     async userSearch(sText) {
-        let response = null;
-
         const sData = {
             search : (sText+'').trim()
         };
 
-        try {
-            response = await this.__axios.post('/api/user/search', sData,  this.authHeaders);
-        }
-        catch (e) {
-            if (window.console !== undefined && window.console.error) window.console.warn(e.toString(), 'qqqqq');
-            return null;
-        }
+        let response = await this.__axios.post('/api/user/search', sData,  this.authHeaders)
+            .catch((error) => {
+                throw new PliziAPIError(`userSearch`, error.response);
+            });
 
         if (response.status === 200) {
             return response.data;

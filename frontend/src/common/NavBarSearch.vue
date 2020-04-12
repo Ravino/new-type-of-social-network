@@ -1,6 +1,6 @@
 <template>
     <div class="form-inline mt-3 mt-md-3">
-        <input v-model="searchText" id="topSearch" ref="topSearch"
+        <input :value="lastSearch" id="topSearch" ref="topSearch"
                @keydown.stop="topSearchKeyDownCheck($event)"
                class="top-search form-control form-control rounded-pill w-100"
                type="text" placeholder="Поиск" aria-label="Поиск" />
@@ -13,7 +13,12 @@ export default {
 name : 'NavBarSearch',
 data () {
     return {
-        searchText: ``,
+    }
+},
+
+computed: {
+    lastSearch(){
+        return (this.$root.$lastSearch+``).trim();
     }
 },
 
@@ -27,6 +32,9 @@ methods: {
     },
 
     startSearch(sText){
+        this.$root.$lastSearch = sText;
+        this.$store.dispatch('SET_LAST_SEARCH', sText);
+
         this.$root.$emit('searchStart', {
             searchText : sText,
             source: `topSearch`

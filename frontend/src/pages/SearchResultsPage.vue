@@ -28,12 +28,29 @@
                         </div>
                         <hr />
 
-                        <div class="plizi-friends-list">
-                            <div v-for="(srItem, srIndex) in searchResult" v-bind:key="srIndex">
-                                <div class="plizi-friend-item text-left py-2">
-                                    <router-link :to="`/user-${srItem.id}`" tag="a" class="plizi-friend-link btn btn-link btn-block text-left pl-3">
-                                        <span class="plizi-friend-name">{{srItem.fullname}}</span>
-                                    </router-link>
+                        <div v-if="isDataReady" class="plizi-friends-list">
+                            <div v-if="(searchResults.length > 0)">
+                                <div v-for="(srItem, srIndex) in searchResults" v-bind:key="srIndex">
+                                    <div class="plizi-friend-item text-left py-2">
+                                        <router-link :to="`/user-${srItem.id}`" tag="a" class="plizi-friend-link btn btn-link btn-block text-left pl-3">
+                                            <span class="plizi-friend-name">{{srItem.fullname}}</span>
+                                        </router-link>
+                                    </div>
+                                </div>
+                            </div>
+                            <div v-else>
+                                <div class="alert alert-info">
+                                    По Вашему запросу &quot;<b>{{searchText}}</b>&quot; ничего не найдено
+                                </div>
+                            </div>
+                        </div>
+                        <div v-else>
+                            <div class="d-flex flex-row">
+                                <div class="w-50 text-right pr-3">
+                                    <i class="fas fa-spinner fa-3x fa-spin text-info"></i>
+                                </div>
+                                <div class="w-50 pt-1 text-info">
+                                    <h3>Данные загружаются...</h3>
                                 </div>
                             </div>
                         </div>
@@ -64,16 +81,33 @@ components: { AccountToolbarLeft,
 },
 data() {
     return {
-        searchResult: []
+        searchResultsList: [],
+        isDataReady : false
+    }
+},
+
+computed: {
+    searchResults() {
+        return this.searchResultsList;
+    },
+
+    searchText(){
+        return this.$root.$lastSearch;
     }
 },
 
 methods: {
-    async searchProcess(evData){
-        const searchResult = await this.$root.$api.userSearch(evData.searchText);
-        window.console.log(searchResult, 'searchResult');
+    async searchProcess(){
+        this.isDataReady = true;
 
-        this.searchResult = JSON.parse( JSON.stringify(searchResult) );
+        if (this.$root.$lastSearch === ``)
+            return;
+
+        this.isDataReady = false;
+        const searchResultsList = await this.$root.$api.userSearch(this.$root.$lastSearch);
+
+        this.searchResultsList = JSON.parse( JSON.stringify(searchResultsList) );
+        this.isDataReady = true;
     }
 },
 
@@ -81,6 +115,14 @@ beforeMount() {
     this.$root.$on('searchStart', this.searchProcess);
 },
 
+mounted(){
+    const lst = this.$root.$store.getters.lastSearch;
+
+    if (lst  &&  lst!==``) {
+        this.$root.$lastSearch = lst;
+        this.searchProcess();
+    }
+}
 
 }
 </script>

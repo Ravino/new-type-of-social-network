@@ -77,6 +77,7 @@ methods: {
 
         this.$store.dispatch('SET_GWT', ``);
         this.$store.dispatch('SET_CHAT_CHANNEL', ``);
+        this.$store.dispatch('SET_LAST_SEARCH', ``);
 
         this.$root.$user.cleanData();
         this.$root.$api.token = ``;
@@ -84,6 +85,7 @@ methods: {
         window.localStorage.removeItem('pliziJWToken');
         window.localStorage.removeItem('pliziUser');
         window.localStorage.removeItem('pliziChatChannel');
+        window.localStorage.removeItem('pliziLastSearch');
 
         if (evData.redirect) {
             this.$router.push({path: '/login'});
@@ -119,6 +121,8 @@ methods: {
 
             this.$root.$isAuth = true;
             this.$root.$api.token = evData.token;
+
+            this.$root.$lastSearch = this.$store.getters.lastSearch;
 
             this.$root.$user.saveUserData( evData.user, evData.token );
         }

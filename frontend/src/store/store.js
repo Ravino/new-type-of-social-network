@@ -7,6 +7,7 @@ export const store = new Vuex.Store({
     state: {
         gwToken : ``,
         chatChannel : ``,
+        lastSearch : ``,
         activeDialog: -1,
     },
 
@@ -46,6 +47,21 @@ export const store = new Vuex.Store({
             return state.gwToken;
         },
 
+        lastSearch : state => {
+            let lst = state.lastSearch;
+
+            if (!lst  ||  ``===lst) {
+                lst = window.localStorage.getItem('pliziLastSearch');
+            }
+
+            if (lst  &&  lst !== ``) {
+                state.lastSearch = lst;
+                return lst;
+            }
+
+            return state.lastSearch;
+        },
+
         chatChannel : state => {
             let pc = state.chatChannel;
 
@@ -83,6 +99,11 @@ export const store = new Vuex.Store({
             window.localStorage.setItem('pliziJWToken', payload);
         },
 
+        SET_LAST_SEARCH : (state, payload) => {
+            state.lastSearch = payload;
+            window.localStorage.setItem('pliziLastSearch', payload);
+        },
+
         SET_CHAT_CHANNEL: (state, payload) => {
             state.chatChannel = payload;
             window.localStorage.setItem('pliziChatChannel', payload);
@@ -97,6 +118,10 @@ export const store = new Vuex.Store({
     actions: {
         SET_GWT : (context, payload) => {
             context.commit('SET_GWT', payload);
+        },
+
+        SET_LAST_SEARCH : (context, payload) => {
+            context.commit('SET_LAST_SEARCH', payload);
         },
 
         SET_CHAT_CHANNEL : (context, payload) => {

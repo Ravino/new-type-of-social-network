@@ -15,10 +15,18 @@ Vue.prototype.$defaultAvatarPath = `/images/noavatar-256.png`;
 Vue.prototype.$isAuth = false;
 
 /**
+ * ссылка на текущего авторизованного юзера
  * добавляем глобально, на использовать будем только от this.$root
  * @type {PliziAuthUser}
  */
 Vue.prototype.$user = null;
+
+/**
+ * текст последнего поиска
+ * добавляем глобально, на использовать будем только от this.$root
+ * @type {string}
+ */
+Vue.prototype.$lastSearch = ``;
 
 /**
  * добавляем глобально, на использовать будем только от this.$root

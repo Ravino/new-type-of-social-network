@@ -40,10 +40,12 @@ const router = new VueRouter({
 function routerForcedLogout(next){
     store.dispatch('SET_GWT', ``);
     store.dispatch('SET_CHAT_CHANNEL', ``);
+    store.dispatch('SET_LAST_SEARCH', ``);
 
     window.localStorage.removeItem('pliziJWToken');
     window.localStorage.removeItem('pliziUser');
     window.localStorage.removeItem('pliziChatChannel');
+    window.localStorage.removeItem('pliziLastSearch');
 
     document.body.className = 'LoginPage';
 
