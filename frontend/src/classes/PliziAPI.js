@@ -1,4 +1,5 @@
 import axios from 'axios';
+import PliziAPIError from './PliziAPIError.js';
 
 class PliziAPI {
 
@@ -62,13 +63,16 @@ class PliziAPI {
      * @param password
      * @returns {Promise}
      */
-    login(email, password) {
+    async login(email, password) {
         let loginData = {
             email: email.trim(),
             password: password.trim()
         };
 
-        return this.__axios.post('api/login', loginData);
+        return await this.__axios.post('api/login', loginData)
+            .catch((error) => {
+                throw new PliziAPIError(`login`, error.response);
+            });
     }
 
     /**
@@ -76,8 +80,11 @@ class PliziAPI {
      * @param {object} regData - регистрационные данные
      * @returns {Promise} - промис для обработки
      */
-    register(regData) {
-        return this.__axios.post('api/register', regData);
+    async register(regData) {
+        return await this.__axios.post('api/register', regData)
+            .catch((error) => {
+                throw new PliziAPIError(`register`, error.response);
+            });
     }
 
     /**
@@ -85,15 +92,9 @@ class PliziAPI {
      * @returns {object[]|null} - список диалогов юзера, или NULL если их нет
      */
     async chatDialogs() {
-        let response = null;
-
-        try {
-            response = await this.__axios.get('api/chat/dialogs',  this.authHeaders);
-        }
-        catch (e) {
-            if (window.console !== undefined && window.console.error) window.console.warn(e.toString(), 'qqqqq');
-            return null;
-        }
+        let response = await this.__axios.get('api/chat/dialogs',  this.authHeaders).catch((error) => {
+            throw new PliziAPIError(`chatDialogs`, error.response);
+        });
 
         if (response.status === 200) {
             return response.data;
@@ -131,7 +132,7 @@ class PliziAPI {
      * @param {string} token
      * @returns {Promise}
      */
-    socialLogin(provider, token) {
+    async socialLogin(provider, token) {
         return this.__axios.post(`/api/sociallogin/${provider}`, {
             token: token,
         });
@@ -148,15 +149,10 @@ class PliziAPI {
             this.token = jwt;
         }
 
-        let response = null;
-
-        try {
-            response = await this.__axios.get('api/user', this.authHeaders);
-        }
-        catch (e) {
-            if (window.console !== undefined && window.console.error) window.console.warn(e.toString());
-            return null;
-        }
+        let response = await this.__axios.get('api/user', this.authHeaders)
+            .catch((error) => {
+                throw new PliziAPIError(`infoUser`, error.response);
+            });
 
         if (200 === response.status) {
             return response.data;
@@ -167,15 +163,10 @@ class PliziAPI {
 
 
     async infoUser(id) {
-        let response = null;
-
-        try {
-            response = await this.__axios.get('api/user/'+id, this.authHeaders);
-        }
-        catch (e) {
-            if (window.console !== undefined && window.console.error) window.console.warn(e.toString());
-            return null;
-        }
+        let response = await this.__axios.get('api/user/'+id, this.authHeaders)
+            .catch((error) => {
+                throw new PliziAPIError(`infoUser`, error.response);
+            });
 
         if (200 === response.status) {
             return response.data;

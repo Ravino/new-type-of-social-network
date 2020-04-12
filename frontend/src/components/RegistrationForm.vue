@@ -155,7 +155,7 @@ validations() {
 },
 
 methods: {
-    startRegistration() {
+    async startRegistration() {
         this.$v.$touch();
         this.isServerError = false;
 
@@ -171,32 +171,34 @@ methods: {
             birthday  : this.model.birthDate.trim()
         };
 
-        this.$root.$api.register(regData)
-            .then((response) => {
-                if (response.status === 201) {
-                    this.$emit('successRegistration', this.model);
-                }
-            })
-            .catch((error) => {
-                if (error.response.status >= 400) {
-                    this.processServerErrors(error, regData);
-                }
-                else {
-                    window.console.warn(error.toString());
-                }
-            });
+        let regResponse = null;
+        try{
+            regResponse = await this.$root.$api.register(regData);
+        }
+        catch (e){
+            if (e.status >= 400) {
+                this.processServerErrors(e, regData);
+            }
+            else {
+                window.console.warn(e.message);
+            }
+        }
+
+        if (regResponse  &&  regResponse.status===201) {
+            this.$emit('successRegistration', this.model);
+        }
     },
 
     processServerErrors(error, oldRegData) {
         // TODO: @tga довести до ума обработку ошибок
-        window.console.warn(error.response.status + ': ' + error.response.statusText);
+        window.console.warn(error.detailMessage);
         this.isServerError = true;
 
-        if (error.response.data.errors){
-            if (error.response.data.errors.email) {
+        if (error.data  &&  error.data.errors){
+            if (error.data.errors.email) {
                 this.serverRegErrors.email = true;
                 this.duplicateEmail = oldRegData.email.trim();
-                this.serverRegMessages.email = error.response.data.errors.email.join('<br />');
+                this.serverRegMessages.email = error.data.errors.email.join('<br />');
                 this.$refs.userEmail.focus();
             }
         }

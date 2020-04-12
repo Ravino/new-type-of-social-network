@@ -136,11 +136,18 @@ methods: {
 
 
     async loadDialogsList() {
-        const response = await this.$root.$api.chatDialogs();
+        let response = null;
 
-        if (response === null) {
-            this.$router.push({ path: '/logout' });
-            return null;
+        try {
+            response = await this.$root.$api.chatDialogs();
+        }
+        catch (e){
+            if (e.status  &&  e.status===401) {
+                this.$root.$emit('afterSuccessLogout', {});
+            }
+            else {
+                throw e;
+            }
         }
 
         this.dialogsList = response;

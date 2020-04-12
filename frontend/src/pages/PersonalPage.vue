@@ -29,6 +29,7 @@ import Spinner from '../common/Spinner.vue';
 import ProfileHeader from '../components/ProfileHeader.vue';
 
 import PliziUser from '../classes/PliziUser.js';
+import PliziAPIError from '../classes/PliziAPI.js';
 
 export default {
 name: 'PersonalPage',
@@ -51,10 +52,21 @@ data() {
 
 methods: {
     async getUserInfo() {
-        const profile = await this.$root.$api.infoUser(this.id >>> 0);
-        window.console.log( JSON.parse( JSON.stringify(profile) ), 'profile' );
+        let profile = null;
 
-        if (profile !== null) {
+        try {
+            profile = await this.$root.$api.infoUser(this.id >>> 0);
+        }
+        catch (e){
+            if (e.status  &&  e.status===401) {
+                this.$root.$emit('afterSuccessLogout', {});
+            }
+            else {
+                throw e;
+            }
+        }
+
+        if (profile) {
             this.profileData = new PliziUser();
             this.profileData.saveUserData(profile);
             this.isDataReady = true;

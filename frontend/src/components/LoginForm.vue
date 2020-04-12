@@ -40,7 +40,7 @@
 
                 <div class="form-group">
                     <button id="btnLogin" type="button"
-                            @click="startLogin()" :disabled="$v.$invalid"
+                            @click="initLogin()" :disabled="$v.$invalid"
                             class="btn-login btn plz-btn plz-btn-primary">Войти
                     </button>
                     <button id="btnRegistration" type="button"
@@ -160,32 +160,37 @@
         },
 
         methods: {
-            startLogin() {
+            async initLogin(){
+                // обёртка, чтобы ошибка при 400-х не выпадал "наружу"
+                await this.startLogin().catch(()=>{ });
+            },
+
+            async startLogin() {
                 this.$v.$touch();
                 this.isServerError = false;
 
-                this.$root.$api.login(this.model.email.trim(), this.model.password.trim())
-                    .then((response) => {
-                        if (response.status === 200 && response.data && response.data.token && response.data.token !== '') {
-                            this.$root.$emit('afterSuccessLogin', {
-                                token: response.data.token,
-                                chatChannel: response.data.channel,
-                                redirect: true
-                            });
-                        }
-                    })
-                    .catch((error) => {
-                        if (error.response.status >= 400) {
-                            this.isServerError = true;
-                            this.serverErrorText = error.response.data.error;
-                            window.console.warn(error.response.status + ': ' + error.response.statusText + ': ' + error.response.data.message);
-                            this.$refs.password.focus();
-                        }
-                        else {
-                            window.console.warn(error.toString());
-                        }
+                let response = null;
+
+                try {
+                    response = await this.$root.$api.login(this.model.email.trim(), this.model.password.trim());
+                }
+                catch (e){
+                    if (e.status >= 400) {
+                        this.isServerError = true;
+                        this.serverErrorText = e.response.data.error;
+                        this.$refs.password.focus();
+                    }
+                }
+
+                if (response  &&  response.status === 200 && response.data && response.data.token && response.data.token !== '') {
+                    this.$root.$emit('afterSuccessLogin', {
+                        token: response.data.token,
+                        chatChannel: response.data.channel,
+                        redirect: true
                     });
+                }
             },
+
             loginKeyDownCheck( ev ){
                 if ( 13 === ev.keyCode ){
                     return this.startLogin();
