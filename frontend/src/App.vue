@@ -93,6 +93,12 @@ methods: {
     },
 
 
+    // TODO: @TGA тут времененно, для отладки
+    handlePersonalMessage(evData){
+        window.console.log(evData, `handlePersonalMessage`);
+    },
+
+
     sentNewChatMessageToAPI(evData) {
         const sendData = {
             body: evData.message.body,
@@ -156,6 +162,9 @@ beforeMount(){
     this.$root.$on('searchStart', (evData) => {
         this.lastSearchText = evData.searchText;
     });
+
+    // TODO: @TGA тут времененно, для отладки
+    this.$root.$on('sendPersonalMessage', this.handlePersonalMessage);
 }
 
 }

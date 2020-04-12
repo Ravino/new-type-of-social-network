@@ -11,6 +11,7 @@
                 <Spinner v-else></Spinner>
             </div>
 
+            <NewPersonalMessageModal v-if="isShowMessageDialog" v-bind:user="profileData"></NewPersonalMessageModal>
         </div>
 
         <div class="col-sm-3 col-md-3 col-lg-3 col-xl-3 pr-0">
@@ -27,9 +28,9 @@ import ShortFriends from '../common/ShortFriends.vue';
 import Spinner from '../common/Spinner.vue';
 
 import ProfileHeader from '../components/ProfileHeader.vue';
+import NewPersonalMessageModal from '../components/NewPersonalMessageModal.vue';
 
 import PliziUser from '../classes/PliziUser.js';
-import PliziAPIError from '../classes/PliziAPI.js';
 
 export default {
 name: 'PersonalPage',
@@ -40,13 +41,15 @@ props: {
 components: {
     Spinner,
     AccountToolbarLeft, FavoritFriends, ShortFriends,
-    ProfileHeader
+    ProfileHeader, NewPersonalMessageModal
 },
 
 data() {
     return {
         profileData: {},
-        isDataReady: false
+        isDataReady: false,
+        isShowMessageDialog: false,
+
     }
 },
 
@@ -67,6 +70,8 @@ methods: {
         }
 
         if (profile) {
+            //window.console.info( JSON.parse( JSON.stringify(profile) ), `profile` );
+
             this.profileData = new PliziUser();
             this.profileData.saveUserData(profile);
             this.isDataReady = true;
@@ -76,6 +81,14 @@ methods: {
 
 mounted() {
     this.getUserInfo();
+
+    this.$root.$on('hidePersonalMsgModal', ()=>{
+        this.isShowMessageDialog = false;
+    });
+
+    this.$root.$on('showPersonalMsgModal', ()=>{
+        this.isShowMessageDialog = true;
+    });
 }
 
 }

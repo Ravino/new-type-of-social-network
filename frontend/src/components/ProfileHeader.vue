@@ -18,7 +18,7 @@
                     </div>
 
                     <div v-else class="plz-profile-userpic-footer">
-                        <label class="plz-profile-userpic-edit d-flex align-items-center justify-content-between">
+                        <label class="plz-profile-userpic-edit d-flex align-items-center justify-content-between" @click="showPersonalMsgDialog()">
                             <span class="align-items-center justify-content-center d-flex w-75 border-right">Написать</span>
                             <span class="align-items-center justify-content-center d-flex w-25">
                                 <i class="fas fa-user-plus"></i>
@@ -97,6 +97,10 @@ data() {
 methods: {
     sBeaty(param){
         return this.$options.filters.statsBeauty(param);
+    },
+
+    showPersonalMsgDialog(){
+        this.$root.$emit('showPersonalMsgModal', { user: this.userData, src : this.$route.name });
     },
 
     uploadUserAvatar(){

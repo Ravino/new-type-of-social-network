@@ -7,6 +7,11 @@ $chatMessageUserPicMarginX: 10px;
 $userMessageUserPicSize: 42px;
 $chatMessageFS: 13px;
 
+$chatTimeSizeMargin: 14px;
+$chatTimeFontSize: 11px;
+
+$chatTextSideMargin: 0.8rem;
+
 $chatMessageMyMsgBG: #3D51DE;
 $chatMessageMyMsgTextColor: white;
 $chatMessageMyMsgTimeColor: #DEE2FD;
@@ -52,13 +57,17 @@ $chatMessageCompanionMsgTimeColor: #C1BFBF;
     }
 
     &.my-message {
+        &.fullsize-message {
+            .message-body {
+                padding-left: $chatTimePadding;
+            }
+        }
 
         .message-body {
             position: relative;
             background-color: $chatMessageMyMsgBG;
             border-radius: $chatMessageRadius $chatMessageRadius 0px $chatMessageRadius;
             padding: $chatMessagePadding;
-            padding-left: $chatTimePadding;
             box-shadow: 0 2px 20px 0 rgba(0, 0, 0, 0.2);
         }
 
@@ -67,7 +76,7 @@ $chatMessageCompanionMsgTimeColor: #C1BFBF;
         }
 
         .message-text {
-            margin-left: 1rem;
+            margin-left: $chatTextSideMargin;
             display: block;
             color: $chatMessageMyMsgTextColor;
             font-size: $chatMessageFS;
@@ -76,20 +85,25 @@ $chatMessageCompanionMsgTimeColor: #C1BFBF;
         .message-time {
             position: absolute;
             top: $chatMessageFS + 1;
-            left: 10px;
-            font-size: 11px;
+            left: $chatTimeSizeMargin;
+            font-size: $chatTimeFontSize;
             color: $chatMessageMyMsgTimeColor;
         }
     }
 
     &.companion-message {
 
+        &.fullsize-message {
+            .message-body {
+                padding-right: $chatTimePadding;
+            }
+        }
+
         .message-body {
             position: relative;
             background-color: white;
             border-radius: $chatMessageRadius $chatMessageRadius $chatMessageRadius 0px;
             padding: $chatMessagePadding;
-            padding-right: $chatTimePadding;
             box-shadow: 0 2px 20px 0 rgba(0, 0, 0, 0.07);
         }
 
@@ -98,7 +112,7 @@ $chatMessageCompanionMsgTimeColor: #C1BFBF;
         }
 
         .message-text {
-            margin-right: 1rem;
+            margin-right: $chatTextSideMargin;
             display: block;
             font-size: $chatMessageFS;
             color: $chatMessageCompanionMsgTextColor;
@@ -107,8 +121,8 @@ $chatMessageCompanionMsgTimeColor: #C1BFBF;
         .message-time {
             position: absolute;
             top: $chatMessageFS + 1;
-            right: 10px;
-            font-size: 11px;
+            right: $chatTimeSizeMargin;
+            font-size: $chatTimeFontSize;
             color: $chatMessageCompanionMsgTimeColor;
         }
     }

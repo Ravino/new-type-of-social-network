@@ -1,9 +1,7 @@
 <template>
     <div class="w-100 d-flex">
         <div class="message-item d-flex w-100 justify-content-start"
-             :class="{ 'my-message ml-auto flex-row-reverse': message.isMine,
-                        'companion-message ': !message.isMine,
-                        'compact-message': isNextIsSamePerson() }">
+             :class="calcMessageItemClass()">
             <div class="message-user-pic mt-auto">
                 <img v-if="message.isMine" :src="ownerPic" :alt="currentDialog.firstname" class="message-user-img" />
                 <img v-else :src="companionPic" :alt="companionName" class="message-user-img" />
@@ -55,12 +53,22 @@ methods: {
         }
 
         return co;
+    },
+
+    calcMessageItemClass(){
+        const isNextSame = this.isNextIsSamePerson();
+
+        return {
+            'my-message ml-auto flex-row-reverse': this.message.isMine,
+            'companion-message ' : !this.message.isMine,
+            'compact-message'    :  isNextSame,
+            'fullsize-message'   : !isNextSame
+        }
     }
 },
 
 computed: {
     ownerPic(){
-        // return (this.currentDialog  &&  this.currentDialog.userPic) ? this.currentDialog.userPic : this.$defaultAvatarPath;
         return this.$root.$user.userPic;
     },
 

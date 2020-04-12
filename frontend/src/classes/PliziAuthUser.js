@@ -29,6 +29,13 @@ class PliziAuthUser extends PliziUzer{
      */
     _token = ``;
 
+    /**
+     *
+     * @type {string}
+     * @private
+     */
+    _channel = ``;
+
 
     /**
      * загружаем тут данные которые пришли от метода api/user
@@ -37,6 +44,9 @@ class PliziAuthUser extends PliziUzer{
      */
     saveUserData(inputData, token){
         super.saveUserData(inputData);
+
+        this._channel = (inputData.channel) ? (inputData.channel+``).trim() : null;
+
         if (token) {
             this._token = (token+'').trim();
         }
@@ -119,6 +129,22 @@ class PliziAuthUser extends PliziUzer{
      */
     set token(jToken){
        this._token = (jToken+'').trim();
+    }
+
+    /**
+     *
+     * @returns {string}
+     */
+    get channel(){
+        return this._channel;
+    }
+
+
+    toJSON() {
+        let res = super.toJSON();
+        res.channel = this._channel;
+
+        return res;
     }
 
     updateData(fieldName, newValue) {

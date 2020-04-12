@@ -88,13 +88,6 @@ class PliziUser {
      * @type {string}
      * @private
      */
-    _channel = ``;
-
-    /**
-     *
-     * @type {string}
-     * @private
-     */
     _country =  ``;
 
     /**
@@ -162,7 +155,6 @@ class PliziUser {
         this._id = inputData.data.id >>> 0;
         this._email = (inputData.data.email+``).trim();
         this._isOnline = inputData.data.isOnline;
-        this._channel = (inputData.channel+``).trim();
 
         const prof = inputData.data.profile;
 
@@ -203,7 +195,6 @@ class PliziUser {
         this._id = -1;
         this._email = ``;
         this._isOnline = false;
-        this._channel = ``;
 
         this._firstName = ``;
         this._lastName = ``;
@@ -444,14 +435,6 @@ class PliziUser {
         return this._audiosNumber;
     }
 
-    /**
-     *
-     * @returns {string}
-     */
-    get channel(){
-        return this._channel;
-    }
-
 
     /**
      * возвращает данные юзера в том виде как их воазващает api/user
@@ -487,8 +470,7 @@ class PliziUser {
                     relationship: this._relationship,
                     userPic: this._userPic
                 }
-            },
-            channel: this._channel
+            }
         };
     }
 
