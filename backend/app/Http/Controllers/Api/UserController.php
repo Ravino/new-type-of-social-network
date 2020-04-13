@@ -44,14 +44,14 @@ class UserController extends Controller
      */
     public function sendFriendshipRequest(AddToFriend $request) {
         $recipient = User::find($request->userId);
-        if($recipient) {
-            if($recipient->hasFriendRequestFrom(Auth::user())) {
-                return response()->json(['message' => 'Вы уже отправляли запрос данному пользователю'], 200);
-            }
-            Auth::user()->befriend($recipient);
-            return response()->json(['message' => 'Запрос на добавление в друзья отправлен'], 200);
+        if($recipient->hasFriendRequestFrom(Auth::user())) {
+            return response()->json(['message' => 'Вы уже отправляли запрос данному пользователю'], 200);
         }
-        return response()->json(['message' => 'Данный пользователь не найден'], 404);
+        if($recipient->isFriendWith(Auth::user())) {
+            return response()->json(['message' => 'Вы уже являетесь другом данному пользователю'], 200);
+        }
+        Auth::user()->befriend($recipient);
+        return response()->json(['message' => 'Запрос на добавление в друзья отправлен'], 200);
     }
 
     /**
@@ -60,14 +60,11 @@ class UserController extends Controller
      */
     public function acceptFriendshipRequest(AddToFriend $request) {
         $sender = User::find($request->userId);
-        if($sender) {
-            if(Auth::user()->hasFriendRequestFrom($sender)) {
-                Auth::user()->acceptFriendRequest($sender);
-                return response()->json(['message' => 'Вы приняли пользователя в друзья'], 200);
-            }
-            return response()->json(['message' => 'Данный пользователь не отправлял вам запрос в друзья'], 200);
+        if(Auth::user()->hasFriendRequestFrom($sender)) {
+            Auth::user()->acceptFriendRequest($sender);
+            return response()->json(['message' => 'Вы приняли пользователя в друзья'], 200);
         }
-        return response()->json(['message' => 'Данный пользователь не найден'], 404);
+        return response()->json(['message' => 'Данный пользователь не отправлял вам запрос в друзья'], 200);
     }
 
     /**
@@ -76,14 +73,11 @@ class UserController extends Controller
      */
     public function declineFriendshipRequest(AddToFriend $request) {
         $sender = User::find($request->userId);
-        if($sender) {
-            if(Auth::user()->hasFriendRequestFrom($sender)) {
-                Auth::user()->denyFriendRequest($sender);
-                return response()->json(['message' => 'Вы отклонили запрос на добавление в друзья от пользователя'], 200);
-            }
-            return response()->json(['message' => 'Данный пользователь не отправлял вам запрос в друзья'], 200);
+        if(Auth::user()->hasFriendRequestFrom($sender)) {
+            Auth::user()->denyFriendRequest($sender);
+            return response()->json(['message' => 'Вы отклонили запрос на добавление в друзья от пользователя'], 200);
         }
-        return response()->json(['message' => 'Данный пользователь не найден'], 404);
+        return response()->json(['message' => 'Данный пользователь не отправлял вам запрос в друзья'], 200);
     }
 
     /**
