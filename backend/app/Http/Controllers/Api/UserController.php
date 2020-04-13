@@ -20,12 +20,15 @@ class UserController extends Controller
     {
         $search = $request->get('search', '');
         if (!empty($search)) {
-            $users = User::whereHas('profile', function($profile) use ($search) {
-                $profile
-                    ->where('first_name', 'LIKE', "%{$search}%")
-                    ->orWhere('last_name', 'LIKE', "%{$search}%")
-                    ->orderBy('last_name');
-            })->orWhere('email', 'LIKE', "%{$search}%")
+            $users = User::where(function($query) use ($search)  {
+                $query->whereHas('profile', function($profile) use ($search) {
+                    $profile
+                        ->where('first_name', 'LIKE', "%{$search}%")
+                        ->orWhere('last_name', 'LIKE', "%{$search}%")
+                        ->orderBy('last_name');
+                })
+                ->orWhere('email', 'LIKE', "%{$search}%");
+            })->where('id', '<>', Auth::user()->id)
                 ->limit(10)
                 ->get();
             return new UserCollection($users);
