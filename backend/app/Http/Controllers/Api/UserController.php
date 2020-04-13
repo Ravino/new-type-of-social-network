@@ -90,6 +90,23 @@ class UserController extends Controller
     }
 
     /**
+     * @param $id
+     * @return UserCollection|\Illuminate\Http\JsonResponse
+     */
+    public function getUserFriendsList($id) {
+        $user = User::find($id);
+        if($user) {
+            if($user->canShowFriendsListTo(Auth::user())) {
+                $friend_ids = $user->getFriends()->pluck('id');
+                $friends = User::with('profile', 'privacySettings')->whereIn('id', $friend_ids)->get();
+                return new UserCollection($friends);
+            }
+            return response()->json(['message' => 'Not allowed'], 403);
+        }
+        return response()->json(['message' => 'Данный пользователь не найден'], 403);
+    }
+
+    /**
      * @return NotificationCollection
      */
     public function notifications() {

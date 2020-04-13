@@ -10,6 +10,7 @@ use App\Http\Requests\Post\Post as PostRequest;
 use App\Http\Resources\Post\PostCollection;
 use App\Models\Community;
 use App\Models\Post;
+use App\Models\User;
 
 class PostController extends Controller
 {
@@ -24,8 +25,23 @@ class PostController extends Controller
     /**
      * @return PostCollection
      */
-    public function userPosts() {
+    public function myPosts() {
         return new PostCollection(\Auth::user()->allPosts);
+    }
+
+    /**
+     * @param $id
+     * @return PostCollection|\Illuminate\Http\JsonResponse
+     */
+    public function userPosts($id) {
+        $user = User::find($id);
+        if($user) {
+            if($user->canShowWallTo(\Auth::user())) {
+                return new PostCollection($user->allPosts);
+            }
+            return response()->json(['message' => 'Not allowed'], 403);
+        }
+        return response()->json(['message' => 'Пользователь не найден'], 404);
     }
 
     /**
