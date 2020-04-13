@@ -48,7 +48,9 @@ class ChatController extends Controller
     public function dialogs()
     {
         $dialogs = $this->repository->getChatsByUserId(Auth::user()->id);
-        return response()->json($dialogs);
+        return response()->json([
+            'list' => $dialogs
+        ]);
     }
 
     /**
@@ -58,7 +60,9 @@ class ChatController extends Controller
     public function messages(int $chat_id)
     {
         $messages = $this->messageRepository->getAllOfChatById($chat_id, Auth::user()->id);
-        return response()->json($messages);
+        return response()->json([
+            'list' => $messages
+        ]);
     }
 
     /**
