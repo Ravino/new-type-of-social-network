@@ -18,11 +18,12 @@
                     </div>
 
                     <div v-else class="plz-profile-userpic-footer">
-                        <label class="plz-profile-userpic-edit d-flex align-items-center justify-content-between" @click="showPersonalMsgDialog()">
-                            <span class="align-items-center justify-content-center d-flex w-75 border-right">Написать</span>
-                            <span class="align-items-center justify-content-center d-flex w-25">
+                        <label class="plz-profile-userpic-edit d-flex align-items-center justify-content-between overflow-hidden d-flex p-0"
+                               @click="showPersonalMsgDialog()">
+                            <button class="btn align-items-center justify-content-center d-flex w-75 border-right">Написать</button>
+                            <button class="btn align-items-center justify-content-center d-flex w-25">
                                 <i class="fas fa-user-plus"></i>
-                            </span>
+                            </button>
                         </label>
                     </div>
 
