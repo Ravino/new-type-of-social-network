@@ -5,7 +5,7 @@
     "author": "Jade Bear ltd",
     "private": true,
     "scripts": {
-        "dev":   "vue-cli-service serve src/app.js --copy --host=127.0.0.1 --port=8080",
+        "dev": "vue-cli-service serve src/app.js --copy --host=127.0.0.1 --port=8080",
         "build": "vue-cli-service build src/app.js --dest=dist --DONT-CHANGE-DEST--or-u-break-build",
         "prod": "npm run production",
         "production": "cross-env NODE_ENV=production node_modules/webpack/bin/webpack.js --no-progress --hide-modules --config=node_modules/laravel-mix/setup/webpack.config.js"

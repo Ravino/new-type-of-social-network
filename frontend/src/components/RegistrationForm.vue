@@ -166,8 +166,8 @@ methods: {
 
         let regData = {
             email     : this.model.email.trim(),
-            firstname : this.model.firstName.trim(),
-            lastname  : this.model.lastName.trim(),
+            firstName : this.model.firstName.trim(),
+            lastName  : this.model.lastName.trim(),
             birthday  : this.model.birthDate.trim()
         };
 
