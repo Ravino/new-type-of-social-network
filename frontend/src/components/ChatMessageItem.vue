@@ -47,7 +47,6 @@ methods: {
         /**TODO: @TGA перетестировать в разных кейсах и убрать **/
         try {
             co = this.currentDialog.attendees[0];
-            co = JSON.parse(JSON.stringify(co));
         } catch (e) {
             if (window.console !== undefined && window.console.error) window.console.warn(e.toString());
         }
@@ -80,7 +79,7 @@ computed: {
             if (console !== undefined && console.error) console.error(e);
         }
 
-        return (com  &&  com.firstname) ? com.firstname : '---';
+        return (com  &&  com.firstName) ? com.firstName : '---';
     },
 
     companionPic(){
@@ -91,7 +90,17 @@ computed: {
             if (window.console !== undefined && window.console.error) window.console.warn(e.toString());
         }
 
-        return (com  &&  com.userPic) ? com.userPic : this.$defaultAvatarPath;
+        let res = (com  &&  com.userPic) ? com.userPic : this.$defaultAvatarPath;
+
+        // TODO: @TGA выпилить когда перестанут сеять в БД lorempixel.com
+        const url = document.createElement('a');
+        url.href = res;
+
+        if (`lorempixel.com` === url.hostname.toLowerCase()) {
+            res = this.$defaultAvatarPath;
+        }
+
+        return res;
     },
 },
 

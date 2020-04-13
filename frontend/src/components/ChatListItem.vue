@@ -12,14 +12,11 @@
 
             <div class=" user-friend-body m-0 col-12 pr-5 ">
                 <div class="user-friend-body-top d-flex align-items-end justify-content-between">
-                    <h6 class="user-friend-name my-0">
-                        {{ dialog.attendees[0].firstname }}
-                    </h6>
+                    <h6 class="user-friend-name my-0">{{ companionName }}</h6>
                     <small v-if="dialog.isRead" class="mr-1 ml-auto">
                         <i class="fas fa-check-double text-success mt-1"></i>
                     </small>
-                    <time :datetime="dialog.lastMessageDT"
-                          class="">
+                    <time :datetime="dialog.lastMessageDT" class="">
                         {{ dialog.lastMessageDT | lastMessageTime }}
                     </time>
                 </div>
@@ -54,57 +51,34 @@ methods: {
 },
 
 computed : {
-    companionPic: function(){
-        if (this.dialog  &&  this.dialog.attendees  &&  this.dialog.attendees[0]  &&  this.dialog.attendees[0].userPic) {
-            return this.dialog.attendees[0].userPic;
+    companionPic(){
+        let res = this.$defaultAvatarPath;
+
+        if (this.dialog  &&  this.dialog.attendees  &&  this.dialog.attendees[0]  &&  this.dialog.attendees[0].userPic  &&  !!this.dialog.attendees[0].userPic) {
+            res = this.dialog.attendees[0].userPic;
         }
 
-        return this.$defaultAvatarPath;
+        // TODO: @TGA выпилить когда перестанут сеять в БД lorempixel.com
+        const url = document.createElement('a');
+        url.href = res;
+
+        if (`lorempixel.com` === url.hostname.toLowerCase()) {
+            res = this.$defaultAvatarPath;
+        }
+
+        return res;
+    },
+
+    companionName(){
+        let res = `Кто-то неизвестный`;
+
+        if (this.dialog  &&  this.dialog.attendees  &&  this.dialog.attendees[0]  &&  this.dialog.attendees[0].firstName  &&  !!this.dialog.attendees[0].firstName) {
+            res = this.dialog.attendees[0].firstName;
+        }
+
+        return res;
     }
 }
 
 }
 </script>
-
-
-<style lang="scss">
-/*:root {*/
-/*    --user-pic-size: 32px;*/
-/*    --isonline-pic-size: 10px;*/
-/*}*/
-
-/*.chat-list-user.media {*/
-/*    position: relative;*/
-
-/*    .chat-list-user-pic {*/
-/*        width: var(--user-pic-size);*/
-/*        min-width: var(--user-pic-size);*/
-/*        max-width: var(--user-pic-size);*/
-/*        height: var(--user-pic-size);*/
-/*        min-height: var(--user-pic-size);*/
-/*        max-height: var(--user-pic-size);*/
-/*        border-radius: var(--user-pic-size);*/
-/*        margin-right: 10px;*/
-/*        !*background-color: yellow;*!*/
-/*        !*border: 1px solid red;*!*/
-/*    }*/
-/*}*/
-
-/*.chat-list-user {*/
-/*    .btn-switch-to-chat-room {*/
-/*        cursor: pointer;*/
-/*    }*/
-
-/*    .btn-switch-to-chat-room:hover {*/
-/*        text-decoration: underline;*/
-/*    }*/
-
-/*    .wide-list.chat-list-user-isonline {*/
-/*        display: block;*/
-/*        position: absolute;*/
-/*        left: calc(var(--user-pic-size) + 8px);*/
-/*        top: calc(var(--user-pic-size));*/
-/*        z-index: 100;*/
-/*    }*/
-/*}*/
-</style>

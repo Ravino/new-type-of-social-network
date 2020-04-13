@@ -149,7 +149,7 @@ mounted() {
 },
 
 created(){
-    this.$root.$api = new PliziAPI(``);
+    this.$root.$api = new PliziAPI(this.$root, ``);
     this.$root.$user = new PliziAuthUser({});
 },
 
@@ -168,6 +168,11 @@ beforeMount(){
 
     // TODO: @TGA тут времененно, для отладки
     this.$root.$on('sendPersonalMessage', this.handlePersonalMessage);
+
+    this.$root.$on('api:Unauthorized', (evData)=>{
+        window.console.warn(evData, `api:Unauthorized!`);
+        this.afterSuccessLogout();
+    });
 }
 
 }

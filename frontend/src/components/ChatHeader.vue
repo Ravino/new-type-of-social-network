@@ -51,19 +51,29 @@ data() {
 
 computed: {
     companionUserPic: function() {
+        let res = this.$defaultAvatarPath;
+
         if (this.currentDialog  &&  this.currentDialog.attendees  &&  this.currentDialog.attendees[0]  &&  this.currentDialog.attendees[0].userPic) {
-            return this.currentDialog.attendees[0].userPic;
+            res = this.currentDialog.attendees[0].userPic;
         }
 
-        return this.$defaultAvatarPath;
+        // TODO: @TGA выпилить когда перестанут сеять в БД lorempixel.com
+        const url = document.createElement('a');
+        url.href = res;
+
+        if (`lorempixel.com` === url.hostname.toLowerCase()) {
+            res = this.$defaultAvatarPath;
+        }
+
+        return res;
     },
 
     companionName: function(){
-        if (this.currentDialog  &&  this.currentDialog.attendees  &&  this.currentDialog.attendees[0]  &&  this.currentDialog.attendees[0].firstname) {
-            return this.currentDialog.attendees[0].firstname;
+        if (this.currentDialog  &&  this.currentDialog.attendees  &&  this.currentDialog.attendees[0]  &&  this.currentDialog.attendees[0].firstName) {
+            return this.currentDialog.attendees[0].firstName;
         }
 
-        return `!---`;
+        return `Кто-то неизвестный`;
     },
 
     companionLastActivity: function(){

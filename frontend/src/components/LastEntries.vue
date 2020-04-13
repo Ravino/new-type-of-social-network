@@ -22,8 +22,8 @@ export default {
         return {
             //TODO: @TGA удалить потом эти mock-данные
             lastEntriesList: [
-                {src: '/images/last-entries/ava-2.png', fullName: 'Анжелика Герасимовa', isUser: true, email: `test@gmail.com` },
-                {src: '/images/last-entries/ava-1.png', fullName: 'Варвара Захаровa', isUser: true, email: `user@mail.com`},
+                {src: '/images/last-entries/ava-2.png', fullName: 'Марина Кабанова', isUser: true, email: `test@gmail.com` },
+                {src: '/images/last-entries/ava-1.png', fullName: 'Кристина Мамонтовa', isUser: true, email: `user@mail.com`},
                 {src: '/images/icons/add-account.png', fullName: 'Добавить аккаунт', isUser: false},
             ],
         }
