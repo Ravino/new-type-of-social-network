@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\User\AddToFriend;
+use App\Http\Resources\Notification\NotificationCollection;
 use App\Http\Resources\User\UserCollection;
 use App\Models\User;
 use Illuminate\Http\Request;
@@ -20,12 +21,15 @@ class UserController extends Controller
     {
         $search = $request->get('search', '');
         if (!empty($search)) {
-            $users = User::whereHas('profile', function($profile) use ($search) {
-                $profile
-                    ->where('first_name', 'LIKE', "%{$search}%")
-                    ->orWhere('last_name', 'LIKE', "%{$search}%")
-                    ->orderBy('last_name');
-            })->orWhere('email', 'LIKE', "%{$search}%")
+            $users = User::where(function($query) use ($search)  {
+                $query->whereHas('profile', function($profile) use ($search) {
+                    $profile
+                        ->where('first_name', 'LIKE', "%{$search}%")
+                        ->orWhere('last_name', 'LIKE', "%{$search}%")
+                        ->orderBy('last_name');
+                })
+                ->orWhere('email', 'LIKE', "%{$search}%");
+            })->where('id', '<>', Auth::user()->id)
                 ->limit(10)
                 ->get();
             return new UserCollection($users);
@@ -82,5 +86,12 @@ class UserController extends Controller
         $friend_ids = Auth::user()->getFriends()->pluck('id');
         $friends = User::with('profile', 'privacySettings')->whereIn('id', $friend_ids)->get();
         return new UserCollection($friends);
+    }
+
+    /**
+     * @return NotificationCollection
+     */
+    public function notifications() {
+        return new NotificationCollection(Auth::user()->notifications()->with(['sender', 'recipient'])->get());
     }
 }

@@ -23,4 +23,14 @@ class City extends Model
     {
         return 'U';
     }
+
+    public function country()
+    {
+        return $this->hasOne(Country::class, 'id', 'country_id');
+    }
+
+    public function region()
+    {
+        return $this->hasOne(Region::class, 'id', 'region_id');
+    }
 }

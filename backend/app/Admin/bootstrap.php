@@ -64,7 +64,7 @@ AdminSection::registerModel(\App\Models\Geo\Country::class, function (\SleepingO
     // Display
     $model->onDisplay(function () {
         $display = AdminDisplay::table()->setColumns([
-            AdminColumn::link('id')->setLabel('ID')->setWidth('400px'),
+            AdminColumn::link('id')->setLabel('ID')->setWidth('100px'),
             AdminColumn::text('title_ru')->setLabel('Title RU'),
             AdminColumn::text('title_ua')->setLabel('Title UA'),
             AdminColumn::text('title_en')->setLabel('Title EN'),
@@ -94,7 +94,8 @@ AdminSection::registerModel(\App\Models\Geo\Region::class, function (\SleepingOw
     // Display
     $model->onDisplay(function () {
         $display = AdminDisplay::table()->setColumns([
-            AdminColumn::link('id')->setLabel('ID')->setWidth('400px'),
+            AdminColumn::link('id')->setLabel('ID')->setWidth('100px'),
+            AdminColumn::text('country.title_ru')->setLabel('Country RU'),
             AdminColumn::text('title_ru')->setLabel('Title RU'),
             AdminColumn::text('title_ua')->setLabel('Title UA'),
             AdminColumn::text('title_en')->setLabel('Title EN'),
@@ -124,7 +125,9 @@ AdminSection::registerModel(\App\Models\Geo\City::class, function (\SleepingOwl\
     // Display
     $model->onDisplay(function () {
         $display = AdminDisplay::table()->setColumns([
-            AdminColumn::link('id')->setLabel('ID')->setWidth('400px'),
+            AdminColumn::link('id')->setLabel('ID')->setWidth('100px'),
+            AdminColumn::text('country.title_ru')->setLabel('Country RU'),
+            AdminColumn::text('region.title_ru')->setLabel('Region RU'),
             AdminColumn::text('title_ru')->setLabel('Title RU'),
             AdminColumn::text('title_ua')->setLabel('Title UA'),
             AdminColumn::text('title_en')->setLabel('Title EN'),

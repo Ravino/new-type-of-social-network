@@ -6,6 +6,7 @@ use App\CommunityMember;
 use App\Models\User\PrivacySettings;
 use App\Notifications\ResetPassword as ResetPasswordNotification;
 use App\Traits\Friendable;
+use App\Traits\Permissions;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Tymon\JWTAuth\Contracts\JWTSubject;
@@ -15,6 +16,8 @@ class User extends Authenticatable implements JWTSubject
     use Notifiable;
 
     use Friendable;
+
+    use Permissions;
 
     /**
      * The attributes that are mass assignable.
@@ -86,6 +89,11 @@ class User extends Authenticatable implements JWTSubject
     public function posts()
     {
         return $this->morphMany(Post::class, 'postable');
+    }
+
+    public function notifications()
+    {
+        return $this->hasMany(Notification::class,  'recipient_id');
     }
 
     public function allPosts()
