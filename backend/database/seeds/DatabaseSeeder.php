@@ -14,12 +14,15 @@ class DatabaseSeeder extends Seeder
     public function run()
     {
         Model::unguard();
-        if(in_array(App::environment(), ['staging', 'local', 'testing'])) {
+        if (in_array(App::environment(), ['staging', 'local', 'testing'])) {
             $this->doSeed(UsersTableSeeder::class);
             $this->doSeed(ChatSeeder::class);
             $this->doSeed(ProfileRelationshipsSeeder::class);
             $this->doSeed(CommunitiesTableSeeder::class);
             $this->doSeed(PostsTableSeeder::class);
+            $this->doSeed(CountriesGeoSeeder::class);
+            $this->doSeed(RegionsGeoSeeder::class);
+            $this->doSeed(CitiesGeoSeeder::class);
         }
         Model::reguard();
     }

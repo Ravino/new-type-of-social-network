@@ -58,3 +58,93 @@ AdminSection::registerModel(\App\Models\Profile\Relationship::class, function (\
         $user = auth()->user();
         return $user instanceof \App\Models\User && $user->isAdmin();
     });
+
+AdminSection::registerModel(\App\Models\Geo\Country::class, function (\SleepingOwl\Admin\Model\ModelConfiguration $model) {
+    $model->setTitle('Countries');
+    // Display
+    $model->onDisplay(function () {
+        $display = AdminDisplay::table()->setColumns([
+            AdminColumn::link('id')->setLabel('ID')->setWidth('400px'),
+            AdminColumn::text('title_ru')->setLabel('Title RU'),
+            AdminColumn::text('title_ua')->setLabel('Title UA'),
+            AdminColumn::text('title_en')->setLabel('Title EN'),
+        ]);
+        $display->paginate(15);
+        return $display;
+    });
+    // Create And Edit
+    $model->onCreateAndEdit(function() {
+        $form = AdminForm::panel()->addBody(
+            AdminFormElement::text('title_ru', 'Title RU'),
+            AdminFormElement::text('title_ua', 'Title UA'),
+            AdminFormElement::text('title_en', 'Title EN')
+        );
+        return $form;
+    });
+})
+    ->addMenuPage(\App\Models\Geo\Country::class, 0)
+    ->setIcon('fa fa-user')
+    ->setAccessLogic(function() {
+        $user = auth()->user();
+        return $user instanceof \App\Models\User && $user->isAdmin();
+    });
+
+AdminSection::registerModel(\App\Models\Geo\Region::class, function (\SleepingOwl\Admin\Model\ModelConfiguration $model) {
+    $model->setTitle('Regions');
+    // Display
+    $model->onDisplay(function () {
+        $display = AdminDisplay::table()->setColumns([
+            AdminColumn::link('id')->setLabel('ID')->setWidth('400px'),
+            AdminColumn::text('title_ru')->setLabel('Title RU'),
+            AdminColumn::text('title_ua')->setLabel('Title UA'),
+            AdminColumn::text('title_en')->setLabel('Title EN'),
+        ]);
+        $display->paginate(15);
+        return $display;
+    });
+    // Create And Edit
+    $model->onCreateAndEdit(function() {
+        $form = AdminForm::panel()->addBody(
+            AdminFormElement::text('title_ru', 'Title RU'),
+            AdminFormElement::text('title_ua', 'Title UA'),
+            AdminFormElement::text('title_en', 'Title EN')
+        );
+        return $form;
+    });
+})
+    ->addMenuPage(\App\Models\Geo\Region::class, 0)
+    ->setIcon('fa fa-user')
+    ->setAccessLogic(function() {
+        $user = auth()->user();
+        return $user instanceof \App\Models\User && $user->isAdmin();
+    });
+
+AdminSection::registerModel(\App\Models\Geo\City::class, function (\SleepingOwl\Admin\Model\ModelConfiguration $model) {
+    $model->setTitle('Cities');
+    // Display
+    $model->onDisplay(function () {
+        $display = AdminDisplay::table()->setColumns([
+            AdminColumn::link('id')->setLabel('ID')->setWidth('400px'),
+            AdminColumn::text('title_ru')->setLabel('Title RU'),
+            AdminColumn::text('title_ua')->setLabel('Title UA'),
+            AdminColumn::text('title_en')->setLabel('Title EN'),
+        ]);
+        $display->paginate(15);
+        return $display;
+    });
+    // Create And Edit
+    $model->onCreateAndEdit(function() {
+        $form = AdminForm::panel()->addBody(
+            AdminFormElement::text('title_ru', 'Title RU'),
+            AdminFormElement::text('title_ua', 'Title UA'),
+            AdminFormElement::text('title_en', 'Title EN')
+        );
+        return $form;
+    });
+})
+    ->addMenuPage(\App\Models\Geo\City::class, 0)
+    ->setIcon('fa fa-user')
+    ->setAccessLogic(function() {
+        $user = auth()->user();
+        return $user instanceof \App\Models\User && $user->isAdmin();
+    });
