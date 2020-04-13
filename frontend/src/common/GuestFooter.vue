@@ -17,12 +17,12 @@
                     </div>
 
                     <div class="plz-bottom-link dropup">
-                        <p class="nav-link" type="button" id="dropdownMenuButton"
+                        <p class="nav-link dropdown-menu-btn" type="button" id="dropdownMenuButton"
                            data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                             Русский
                             <i class="fas fa-chevron-down ml-1"></i>
                         </p>
-                        <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                        <div class="dropdown-menu py-3 px-0" aria-labelledby="dropdownMenuButton">
                             <router-link to="/switch-language" tag="div" class="nav-item">
                                 <a class="dropdown-item" href="#">English</a>
                             </router-link>

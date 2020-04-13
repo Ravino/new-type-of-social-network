@@ -51,24 +51,3 @@ methods: {
 }
 </script>
 
-<style lang="scss">
-$plzGuestNavbarH: 56px;
-
-.navbar.plz-guest-navbar {
-    height: $plzGuestNavbarH;
-    min-height: $plzGuestNavbarH;
-    max-height: $plzGuestNavbarH;
-    padding: 0px;
-    margin-top: 153px;
-
-    .to-english.btn.btn-link {
-        display: block;
-        color: #AFB4C5;
-        float: right;
-        line-height: $plzGuestNavbarH;
-        height: $plzGuestNavbarH;
-    }
-}
-
-
-</style>

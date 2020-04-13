@@ -1,0 +1,19 @@
+$plzGuestNavbarH: 56px;
+
+.navbar.plz-guest-navbar {
+    height: $plzGuestNavbarH;
+    min-height: $plzGuestNavbarH;
+    max-height: $plzGuestNavbarH;
+    padding: 0;
+    margin-top: 153px;
+
+    .to-english.btn.btn-link {
+        display: block;
+        color: #AFB4C5;
+        float: right;
+        line-height: $plzGuestNavbarH;
+        height: $plzGuestNavbarH;
+    }
+}
+
+

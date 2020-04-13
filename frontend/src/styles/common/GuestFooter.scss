@@ -29,19 +29,7 @@
             transform: rotate(180deg);
         }
     }
-    .dropdown {
-        &-menu {
-            min-width: 7rem;
-        }
-        &-item {
-            padding: .2rem .7rem;
-            line-height: 1.3rem;
-        }
-    }
-}
 
-#dropdownMenuButton {
-    background-color: transparent;
 }
 
 #guestPageWrapper {
