@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\User\AddToFriend;
 use App\Http\Resources\Notification\NotificationCollection;
 use App\Http\Resources\User\UserCollection;
+use App\Http\Resources\User\UserSearchCollection;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -15,7 +16,7 @@ class UserController extends Controller
 
     /**
      * @param Request $request
-     * @return UserCollection|\Illuminate\Http\JsonResponse
+     * @return UserSearchCollection|\Illuminate\Http\JsonResponse
      */
     public function search(Request $request)
     {
@@ -32,7 +33,7 @@ class UserController extends Controller
             })->where('id', '<>', Auth::user()->id)
                 ->limit(10)
                 ->get();
-            return new UserCollection($users);
+            return new UserSearchCollection($users);
         }
         return response()->json(['message' => 'No found'], 200);
     }
