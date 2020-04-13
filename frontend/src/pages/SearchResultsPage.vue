@@ -104,10 +104,22 @@ methods: {
             return;
 
         this.isDataReady = false;
-        const searchResultsList = await this.$root.$api.userSearch(this.$root.$lastSearch);
+        let searchResultsList = null;
+        try {
+            searchResultsList = await this.$root.$api.userSearch(this.$root.$lastSearch);
+        } catch (e) {
+            if (e.status  &&  e.status>=400  &&  e.serverMessage  &&  `TOKEN_IS_EXPIRED` === e.serverAnswer) {
+                this.$root.$emit('afterSuccessLogout', {});
+            }
+            else {
+                throw e;
+            }
+        }
 
-        this.searchResultsList = JSON.parse( JSON.stringify(searchResultsList) );
-        this.isDataReady = true;
+        if (searchResultsList !== null) {
+            this.searchResultsList = JSON.parse( JSON.stringify(searchResultsList) );
+            this.isDataReady = true;
+        }
     }
 },
 

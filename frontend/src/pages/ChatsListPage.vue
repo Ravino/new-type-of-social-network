@@ -45,7 +45,7 @@ import ChatFooter from '../components/ChatFooter.vue';
 
 import { HTTPer } from '../httper/httper';
 
-    export default {
+export default {
 name: 'ChatsListPage',
 components: {
     Spinner,
