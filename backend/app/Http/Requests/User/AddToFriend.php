@@ -27,4 +27,11 @@ class AddToFriend extends Request
             'userId' => 'required|exists:App\Models\User,id',
         ];
     }
+
+    public function messages()
+    {
+        return [
+            'userId.exists' => 'Данный пользователь не найден'
+        ];
+    }
 }

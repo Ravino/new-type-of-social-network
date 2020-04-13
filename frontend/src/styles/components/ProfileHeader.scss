@@ -1,7 +1,12 @@
+#authHeader {
+    background-color: #f7f8fc;
+    box-shadow: 0 0 4px 0 rgba(0, 0, 0, .05);
+}
+
 .plz-profile-userpic-container {
     width: 100%;
     max-width: 245px;
-    box-shadow: 0px 2px 5px 0px rgba(0, 0, 0, 0.05);
+    box-shadow: 0 2px 5px 0 rgba(0, 0, 0, 0.05);
 }
 .plz-profile-userpic-wrapper {
     position: relative;
@@ -22,27 +27,25 @@
     padding: 9px;
 }
 .plz-profile-userpic-edit {
-    display: block;
-    height: 34px;
-    line-height: 32px;
-    padding: 0;
     border: 2px solid #f0f0f0;
     border-radius: 20px;
-    background-color: transparent;
-    width: 100%;
-    text-align: center;
-    cursor: pointer;
-    transition: .4s;
-}
-.plz-profile-userpic-edit  {
-    text-transform: uppercase;
-    color: #6f7487;
-    font-size: 11px;
-    text-align: center;
-    font-weight: 600;
 
-    span {
-        line-height: 32px
+    .btn {
+        text-transform: uppercase;
+        background-color: transparent;
+        height: 34px;
+        cursor: pointer;
+        font-size: 11px;
+        font-weight: 600;
+        color: #6f7487;
+        border-radius: 0;
+        border: 0;
+        transition: .4s;
+
+        &:hover {
+            background-color: #a6a7a9;
+            color: #fff;
+        }
     }
     .ps-dot {
         display: inline-block;
@@ -53,35 +56,34 @@
         margin: 0 3px;
     }
 }
-.plz-profile-userpic-edit:hover {
-    background-color: #a6a7a9;
-    color: #fff;
-}
 
 .plz-profile-userdetails {
     border-radius: 20px;
     overflow: hidden;
     box-shadow: 0 2px 5px 0 rgba(0, 0, 0, 0.05);
     background-color: white;
+
+     .online {
+        position: relative;
+        margin: 0;
+        color: #acacac;
+
+            &:after {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: -20px;
+            display: inline-block;
+            vertical-align: top;
+            width: 10px;
+            height: 10px;
+            border-radius: 100%;
+            background-color: #9fcd48;
+            transform: translateY(-60%);
+        }
+     }
 }
-.plz-profile-userdetails .online{
-    position: relative;
-    margin: 0;
-    color: #acacac
-}
-.plz-profile-userdetails .online:after {
-    content: '';
-    position: absolute;
-    top: 50%;
-    left: -20px;
-    display: inline-block;
-    vertical-align: top;
-    width: 10px;
-    height: 10px;
-    border-radius: 100%;
-    background-color: #9fcd48;
-    transform: translateY(-60%);
-}
+
 .plz-user-name {
     font-size: 16px;
     color: #4e4e4d;

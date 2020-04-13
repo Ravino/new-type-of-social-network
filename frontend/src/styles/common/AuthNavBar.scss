@@ -2,8 +2,42 @@
 $plzNavBarAvatarSize: 40px;
 $plzNavBarProfileColor: #A6A7A9;
 
-#authHeader.fixed-top {
-    background-color: $plzBodyBG;
+#authHeader {
+    .profile-menu {
+        .dropdown-item {
+            font-size: 12px;
+            opacity: .8;
+            transition: .4s;
+
+            &.active,
+            &:hover {
+                opacity: 1;
+                background-color: transparent;
+            }
+        }
+        .dropdown-menu-btn {
+            box-shadow: none;
+            &[aria-expanded="true"] {
+              .fa-chevron-down {
+                  transform: rotate(180deg);
+              }
+            }
+        }
+    }
+    .fixed-top {
+        background-color: $plzBodyBG;
+    }
+    .fa-chevron-down {
+        transition: .4s;
+    }
+    .user-friend {
+        transition: .4s;
+
+        &:hover {
+            background-color: $bgHover;
+        }
+    }
+
 }
 
 .plz-top-player {
@@ -28,7 +62,10 @@ $plzNavBarProfileColor: #A6A7A9;
         cursor: pointer;
     }
 
+    .profile-menu-item,
     .profile-menu-link {
+        position: relative;
+
         span {
             display: inline-block;
             line-height: $plzNavBarAvatarSize;
@@ -41,7 +78,6 @@ $plzNavBarProfileColor: #A6A7A9;
             vertical-align: top;
             width: $plzNavBarAvatarSize;
             height: $plzNavBarAvatarSize;
-            margin-right: 12px;
             border-radius: $plzNavBarAvatarSize;
         }
 
@@ -49,6 +85,7 @@ $plzNavBarProfileColor: #A6A7A9;
         img.default-avatar {
             //border: 1px solid red;
         }
+
     }
 }
 

@@ -33,6 +33,7 @@ Route::group(['middleware' => ['auth.jwt', 'track.activity']], function () {
     Route::post('posts', 'Api\PostController@storeByUser');
     Route::post('communities/{community_id}/posts', 'Api\PostController@storeByCommunity');
 
+    Route::get('user/notifications', 'Api\UserController@notifications');
     Route::get('user/friendship', 'Api\UserController@getMyFriendsList');
     Route::post('user/friendship', 'Api\UserController@sendFriendshipRequest');
     Route::post('user/friendship/accept', 'Api\UserController@acceptFriendshipRequest');
@@ -61,6 +62,11 @@ Route::group(['middleware' => ['auth.jwt', 'track.activity']], function () {
         Route::get('{id}/subscribe', 'Api\CommunityController@subscribe');
         Route::get('{id}/unsubscribe', 'Api\CommunityController@unsubscribe');
     });
+
+    /**
+     * Geo data Resource
+     */
+    Route::get('city/search', 'Api\GeoController@search');
 });
 
 Route::get('login/{provider}', 'Auth\LoginController@redirectToProvider');

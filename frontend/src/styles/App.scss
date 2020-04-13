@@ -222,3 +222,49 @@ $dotsWidth: 4px;
         transform: scale(.7) translateX(4px);
     }
 }
+
+.dropdown {
+    &-menu {
+        background-color: rgba(0, 0, 0, .7);
+        min-width: 7rem;
+        border-radius: 10px;
+
+        &.dropdown-white {
+            background-color: #ffffff;
+            border-radius: 20px;
+            box-shadow: 0 0 5px 0 rgba(0, 0, 0, 0.11);
+            border: 0;
+        }
+
+    }
+    &-btn {
+        background-color: transparent;
+        border: 0;
+        box-shadow: none!important;
+    }
+
+    &-item {
+        padding: .2rem .7rem;
+        line-height: 1.3rem;
+        color: #ffffff;
+        transition: .4s;
+        &:hover {
+            background-color: rgba(0, 0, 0, .9);
+            color: #ffffff;
+        }
+    }
+}
+
+.counter-info {
+    position: absolute;
+    top: 4px;
+    left: 100%;
+    transform: translate(-50%, -50%);
+    background-color: $counterInfoColor;
+    color: #ffffff;
+    font-size: 10px;
+    border-radius: 50%;
+    padding: 2px 4px;
+    line-height: 1;
+    z-index: 1;
+}
