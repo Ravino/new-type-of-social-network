@@ -20,6 +20,7 @@ class User extends JsonResource
             'id' => $this->id,
             'email' => $this->email,
             'isOnline' => $this->isOnline(),
+            'lastActivity' => $this->last_activity_dt,
             'profile' => new Profile($this->profile),
             'privacySettings' => new PrivacySettings($this->privacySettings)
         ];
