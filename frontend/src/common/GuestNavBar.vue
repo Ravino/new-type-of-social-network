@@ -19,8 +19,8 @@
                     </form>
                 </div>
                 <div class="col-3 px-0 mr-0">
-                    <div class="w-100 h-100 --d-flex --flex-row-reverse">
-                        <a id="toEnglish" href="#toEnglish" class="to-english btn btn-link">Switch to English</a>
+                    <div class="w-100 h-100 d-flex align-items-center justify-content-end">
+                        <a id="toEnglish" href="#toEnglish" class="to-english btn btn-link p-0">Switch to English</a>
                     </div>
                 </div>
             </div>

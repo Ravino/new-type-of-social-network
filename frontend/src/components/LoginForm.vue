@@ -1,10 +1,11 @@
 <template>
-    <div id="loginForm" class="bg-white-br20 plz-login-form h-100">
+    <div id="loginForm" class="bg-white-br20 plz-login-form h-100 pt-3">
         <div class="card-body">
-            <form novalidate="novalidate">
+            <form id="loginFormForm" novalidate="novalidate">
                 <div class="form-group"
                      :class="{ 'has-error': $v.model.email.$error, 'has-success': !$v.model.email.$invalid, 'has-error': isServerError }">
                     <label for="userEmail" class="d-none">Ваш E-mail</label>
+                    <i class="icon icon-letter"></i>
                     <input v-model="model.email" ref="email"
                            :class="{ '--is-invalid': $v.model.email.$error, '--is-valid': !$v.model.email.$invalid }"
                            @blur="$v.model.email.$touch()" @keydown="loginKeyDownCheck($event)"
@@ -20,6 +21,7 @@
                 <div class="form-group"
                      :class="{ 'has-error': $v.model.password.$error, 'has-success': !$v.model.password.$invalid }">
                     <label for="password" class="d-none">Пароль</label>
+                    <i class="icon icon-user"></i>
                     <input v-model="model.password" ref="password"
                            :class="{ '--is-invalid': $v.model.password.$error, '--is-valid': !$v.model.password.$invalid }"
                            @blur="$v.model.password.$touch()" @keydown="loginKeyDownCheck($event)"

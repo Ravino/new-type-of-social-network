@@ -1,10 +1,10 @@
 <template>
     <div class="row">
-        <div class="col-5 px-0">
+        <div class="col-12 col-xl-5 px-0 mb-3">
             <LoginForm ref="loginForm"></LoginForm>
         </div>
 
-        <div class="col-7 pr-0 pb-0" style="padding-left: 24px;">
+        <div class="col-12 col-xl-7 pr-0 pl-0 pl-xl-3 pb-0" >
             <LastEntries @logInWithEntryItem="logInWithEntryItem"></LastEntries>
             <PliziMobile></PliziMobile>
         </div>
@@ -42,5 +42,3 @@
         },
     }
 </script>
-
-<style lang="scss" src="../styles/LoginPage.scss"></style>
