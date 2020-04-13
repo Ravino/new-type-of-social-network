@@ -58,7 +58,7 @@ class PliziAPIError extends Error {
         const sts = errResponse  && errResponse.status ? errResponse.status : -1;
         const sText = errResponse  &&  errResponse.statusText ? errResponse.statusText : `Unknown status`;
         const eName = `PliziAPIError`;
-        const msg = `PliziAP->${method}: ${sts} ${sText}`;
+        const msg = `PliziAPI->${method}: ${sts} ${sText}`;
 
         super(msg);
 
@@ -77,12 +77,12 @@ class PliziAPIError extends Error {
             }
 
             if (errResponse.data.messages  &&  Array.isArray(errResponse.data.messages) && errResponse.data.messages.length>0) {
-                errResponse.data.messages.map( mItem => this.serverMessage.push(mItem) );
+                errResponse.data.messages.map( mItem => this.serverMessages.push(mItem) );
                 this.serverMessage = this.serverMessages.join('\r\n').trim();
             }
         }
 
-        this.detailMessage = `PliziAP->${this.method}: ${this.status} ${this.statusText}` + (this.message !== '' ? ' :'+this.message: '');
+        this.detailMessage = `PliziAPI->${this.method}: ${this.status} ${this.statusText}` + (this.message !== '' ? ' :'+this.message: '');
 
         if (Error.captureStackTrace) {
             Error.captureStackTrace(this, PliziAPIError);

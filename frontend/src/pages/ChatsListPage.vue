@@ -5,7 +5,7 @@
         </div>
 
         <div class="col-sm-12 col-md-9 col-lg-11 pr-3">
-            <div v-if="checkIsDialogsList('template')" id="chatMain" class="row bg-white-br20 overflow-hidden">
+            <div v-if="checkIsDialogsList()" id="chatMain" class="row bg-white-br20 overflow-hidden">
                 <div class="col-sm-12 col-md-12 col-lg-4 col-xl-4 col-auto px-sm-0 px-md-0 py-4 border-right">
                     <ul id="chatFriends" class="list-unstyled mb-0">
                         <ChatListItem v-for="(dialog, dialogIndex) in dialogsList"
@@ -18,7 +18,10 @@
                 <div id="chatMessangesWrapper"
                      class="col-8 col-lg-8 col-xl-8 bg-light d-none d-lg-flex flex-column p-0">
                     <ChatHeader v-bind:currentDialog="currentDialog"></ChatHeader>
-                    <ChatMessages v-bind:messages="messagesList" v-bind:currentDialog="currentDialog"></ChatMessages>
+
+                    <ChatMessages v-if="isMessagesLoaded" v-bind:messages="messagesList" v-bind:currentDialog="currentDialog"></ChatMessages>
+                    <Spinner v-else v-bind:message="`Сообщения загружаются`"></Spinner>
+
                     <ChatFooter v-bind:currentDialog="currentDialog"></ChatFooter>
                 </div>
             </div>
@@ -43,8 +46,6 @@ import ChatHeader from '../components/ChatHeader.vue';
 import ChatMessages from '../components/ChatMessages.vue';
 import ChatFooter from '../components/ChatFooter.vue';
 
-import { HTTPer } from '../httper/httper';
-
 export default {
 name: 'ChatsListPage',
 components: {
@@ -57,15 +58,10 @@ data() {
         chatCarrier   : null,
         //dialogsList   : [],
         dialogsList   : null,
+        isDialogsLoaded: false,
         currentDialog : {},
         messagesList  : [],
-        isDialogsLoaded: false
-    }
-},
-
-computed: {
-    isDialogsList(){
-        return this.checkIsDialogsList();
+        isMessagesLoaded: false
     }
 },
 
@@ -101,9 +97,6 @@ methods: {
 
 
     updateDialogsList(evData, wMode){
-        // @TGA .find не срабатывает :(
-        // let luDialog = this.dialogsList.find( (dItem) => { dItem.id === this.currentDialog.id } );
-
         let luDialog = null;
 
         this.dialogsList.map( (dItem) => {
@@ -121,17 +114,27 @@ methods: {
     },
 
 
-    switchToChat(evData) {
-        HTTPer.get('api/chat/messages/' + evData.dialogID, this.$store.getters.getHTTPConfig)
-            .then((response) => {
-                this.$store.dispatch('SET_ACTIVE_DIALOG', evData.dialogID);
+    async switchToChat(evData) {
+        let messageResponse = null;
+        this.isMessagesLoaded = false;
 
-                this.messagesList = response.data;
-                this.currentDialog = this.dialogsList.find((dialog) => dialog.id === evData.dialogID);
-            })
-            .catch((error) => {
-                window.console.warn(error.response.status+': '+error.response.statusText+': ' +error.response.data.message);
-            });
+        try {
+            messageResponse = await this.$root.$api.chatMessages(evData.dialogID);
+        }
+        catch (e){
+            if (e.status  &&  e.status===401) {
+                this.$root.$emit('afterSuccessLogout', {});
+            }
+            else {
+                throw e;
+            }
+        }
+
+        this.$store.dispatch('SET_ACTIVE_DIALOG', evData.dialogID);
+
+        this.messagesList = messageResponse;
+        this.currentDialog = this.dialogsList.find((dialog) => dialog.id === evData.dialogID);
+        this.isMessagesLoaded = true;
     },
 
 
@@ -170,30 +173,23 @@ methods: {
         return true;
     },
 
+
     /**
      *  для кратости записи
      * @returns {boolean} - true если dialogsList определён и массив
      */
     checkIsDialogsList(){
         return (typeof this.dialogsList!='undefined'  &&  Array.isArray(this.dialogsList)  &&  this.dialogsList  &&  this.dialogsList.length>0);
-    },
-
-
-    async loadMessagesList(dialogID) {
-        let messageResponse = await HTTPer.get('api/chat/messages/' + dialogID, this.$store.getters.getHTTPConfig);
-        this.messagesList = messageResponse.data;
-        return true;
     }
 },
+
 
 async mounted() {
     const isDialogsLoaded = await this.loadDialogsList();
 
-    let messagesIsLoaded = false;
-
     if (isDialogsLoaded) {
         if (Array.isArray(this.dialogsList) && this.dialogsList  &&  this.currentDialog) {
-            messagesIsLoaded = this.loadMessagesList(this.currentDialog.id);
+            this.switchToChat( { dialogID : this.currentDialog.id })
         }
     }
 

@@ -12,6 +12,7 @@ import ChatsListPage from '../pages/ChatsListPage.vue';
 import ChatMessagesPage from '../pages/ChatMessagesPage.vue';
 import SearchResultsPage from '../pages/SearchResultsPage.vue';
 import PersonalPage from '../pages/PersonalPage.vue';
+import FriendsListPage from '../pages/FriendsListPage.vue';
 
 import PliziAPI from '../classes/PliziAPI.js';
 import PliziAuthUser from '../classes/PliziAuthUser.js';
@@ -46,6 +47,7 @@ const routes = [
         props: true
     },
     {path: '/user-:id', component: PersonalPage, name: 'PersonalPage', meta: {title: 'Plizi:'}, props: true},
+    { path: '/friends', component: FriendsListPage, name: 'FriendsListPage', meta: {title: 'Plizi: Друзья'}, props: true },
 ];
 
 const router = new VueRouter({
@@ -87,8 +89,9 @@ router.beforeEach(async (to, from, next) => {
                     token: gwt,
                     save: true
                 });
-            } else {
-                const tryToLoadUser = await (new PliziAPI(gwt)).getUser();
+            }
+            else {
+                const tryToLoadUser = await (new PliziAPI()).getUser(gwt);
 
                 if (tryToLoadUser) {
                     window.app.$root.$emit('afterUserLoad', {
@@ -96,12 +99,14 @@ router.beforeEach(async (to, from, next) => {
                         token: gwt,
                         save: true
                     });
-                } else {
+                }
+                else {
                     routerForcedLogout(next);
                 }
             }
 
-        } else {
+        }
+        else {
             routerForcedLogout(next);
         }
     }

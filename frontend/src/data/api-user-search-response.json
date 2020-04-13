@@ -1,0 +1,179 @@
+{
+    "data": {
+        "list": [
+            {
+                "id": 25,
+                "email": "targa@ua.fm",
+                "isOnline": false,
+                "profile": {
+                    "firstName": "Alex",
+                    "lastName": "Bashmakow",
+                    "sex": "n",
+                    "birthday": "1976-02-02",
+                    "city": null,
+                    "relationshipId": null,
+                    "userPic": ""
+                },
+                "privacySettings": {
+                    "pageType": 1,
+                    "writeMessagesPermissions": 1,
+                    "postWallPermissions": 1,
+                    "viewWallPermissions": 1,
+                    "viewFriendsPermissions": 1,
+                    "twoFactorAuthEnabled": 0,
+                    "smsConfirm": 0
+                }
+            },
+            {
+                "id": 26,
+                "email": "targettius@gmail.com",
+                "isOnline": false,
+                "profile": {
+                    "firstName": "Alex",
+                    "lastName": "Bashmakow",
+                    "sex": "n",
+                    "birthday": "1976-02-02",
+                    "city": null,
+                    "relationshipId": null,
+                    "userPic": ""
+                },
+                "privacySettings": {
+                    "pageType": 1,
+                    "writeMessagesPermissions": 1,
+                    "postWallPermissions": 1,
+                    "viewWallPermissions": 1,
+                    "viewFriendsPermissions": 1,
+                    "twoFactorAuthEnabled": 0,
+                    "smsConfirm": 0
+                }
+            },
+            {
+                "id": 27,
+                "email": "targa@arma3in.ua",
+                "isOnline": false,
+                "profile": {
+                    "firstName": "Alexey",
+                    "lastName": "Bashmakow",
+                    "sex": "n",
+                    "birthday": "1976-02-02",
+                    "city": null,
+                    "relationshipId": null,
+                    "userPic": ""
+                },
+                "privacySettings": {
+                    "pageType": 1,
+                    "writeMessagesPermissions": 1,
+                    "postWallPermissions": 1,
+                    "viewWallPermissions": 1,
+                    "viewFriendsPermissions": 1,
+                    "twoFactorAuthEnabled": 0,
+                    "smsConfirm": 0
+                }
+            },
+            {
+                "id": 28,
+                "email": "targa@arma3.in.ua",
+                "isOnline": false,
+                "profile": {
+                    "firstName": "Alexey",
+                    "lastName": "Bashmakow",
+                    "sex": "n",
+                    "birthday": "1976-02-02",
+                    "city": null,
+                    "relationshipId": null,
+                    "userPic": ""
+                },
+                "privacySettings": {
+                    "pageType": 1,
+                    "writeMessagesPermissions": 1,
+                    "postWallPermissions": 1,
+                    "viewWallPermissions": 1,
+                    "viewFriendsPermissions": 1,
+                    "twoFactorAuthEnabled": 0,
+                    "smsConfirm": 0
+                }
+            },
+            {
+                "id": 29,
+                "email": "targettius@yandex.ua",
+                "isOnline": false,
+                "profile": {
+                    "firstName": "Alexey",
+                    "lastName": "Bashmakow",
+                    "sex": "n",
+                    "birthday": "1976-02-02",
+                    "city": null,
+                    "relationshipId": null,
+                    "userPic": ""
+                },
+                "privacySettings": {
+                    "pageType": 1,
+                    "writeMessagesPermissions": 1,
+                    "postWallPermissions": 1,
+                    "viewWallPermissions": 1,
+                    "viewFriendsPermissions": 1,
+                    "twoFactorAuthEnabled": 0,
+                    "smsConfirm": 0
+                }
+            }
+        ]
+    },
+    "debug": {
+        "database": {
+            "total": 3,
+            "items": [
+                {
+                    "connection": "mysql",
+                    "query": "select * from `users` where (exists (select * from `profiles` where `users`.`id` = `profiles`.`user_id` and (`first_name` LIKE '%alex%' or `last_name` LIKE '%alex%') order by `last_name` asc) or `email` LIKE '%alex%') and `id` <> '3' limit 10;",
+                    "time": 5
+                },
+                {
+                    "connection": "mysql",
+                    "query": "select * from `profiles` where `profiles`.`user_id` in (25, 26, 27, 28, 29);",
+                    "time": 0.93
+                },
+                {
+                    "connection": "mysql",
+                    "query": "select * from `users_privacy_settings` where `users_privacy_settings`.`user_id` in (25, 26, 27, 28, 29);",
+                    "time": 0.81
+                }
+            ]
+        },
+        "cache": {
+            "hit": {
+                "keys": [
+                    "7e12438a9e0864fbcfb70d4f89929e22840e807b",
+                    "7e12438a9e0864fbcfb70d4f89929e22840e807b:timer",
+                    "7e12438a9e0864fbcfb70d4f89929e22840e807b",
+                    "id-3",
+                    "7e12438a9e0864fbcfb70d4f89929e22840e807b"
+                ],
+                "total": 5
+            },
+            "miss": {
+                "keys": [
+                    "Sg8ahFfl50WNbWMz"
+                ],
+                "total": 1
+            },
+            "write": {
+                "keys": [],
+                "total": 0
+            },
+            "forget": {
+                "keys": [],
+                "total": 0
+            }
+        },
+        "profiling": [
+            {
+                "event": "request-time",
+                "time": 0.050972938537597656
+            }
+        ],
+        "memory": {
+            "usage": 6554240,
+            "peak": 6583304
+        }
+    }
+}
