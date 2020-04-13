@@ -1,5 +1,5 @@
 <template>
-    <div class="form-inline mt-3 mt-md-3">
+    <div class="form-inline mt-1 mt-md-1">
         <input :value="lastSearch" id="topSearch" ref="topSearch"
                @keydown.stop="topSearchKeyDownCheck($event)"
                class="top-search form-control form-control rounded-pill w-100"
