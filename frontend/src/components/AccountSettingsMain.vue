@@ -10,21 +10,20 @@
                 <label for="firstName"
                        class="col-sm-6 col-md-6 col-lg-4 col-xl-4 col-form-label text-secondary">Имя</label>
                 <div class="col-sm-6 col-md-6 col-lg-6 col-xl-6">
-                    <input v-show="isEdit.firstName" v-model="model.firstName" type="text"
-                           @keyup.enter.stop="accountStartSaveData($event.target.value, `firstName`)"
-                           @blur="accountFieldBlur($event, `firstName`)"
-                           class="form-control" id="firstName" ref="firstName"/>
-                    <input v-show="!isEdit.firstName" v-model="userData.firstName" type="text" readonly
-                           class="form-control-plaintext" ref="firstNameDisplay"/>
+                    <input type="text"
+                           id="firstName"
+                           v-model="model.firstName"
+                           :class="[isEdit.firstName ? 'form-control' : 'form-control-plaintext']"
+                           @keyup.enter="accountStartSaveData($event.target.value, `firstName`)"
+                           @blur="finishFieldEdit(`firstName`)"
+                           :readonly="!isEdit.firstName"/>
                 </div>
                 <div class="col-2 d-sm-none d-md-none d-lg-flex d-xl-flex">
-                    <button v-show="isEdit.firstName" type="button" class="btn btn-link text-primary"
-                            @click.stop.prevent="finishFieldEdit(`firstName`)">
-                        Сохранить
-                    </button>
-                    <button v-show="!isEdit.firstName" type="button" class="btn btn-link text-body"
-                            @click.stop.prevent="startFieldEdit(`firstName`)">
-                        Изменить
+                    <button type="button"
+                            class="btn btn-link text-body"
+                            :class="[isEdit.firstName ? 'text-primary' : 'text-body']"
+                            @click="[isEdit.firstName ? finishFieldEdit('firstName') : startFieldEdit('firstName')]">
+                        {{ isEdit.firstName ? 'Сохранить' : 'Изменить' }}
                     </button>
                 </div>
             </div>
@@ -33,29 +32,20 @@
                 <label for="lastName"
                        class="col-sm-6 col-md-6 col-lg-4 col-xl-4 col-form-label text-secondary">Фамилия</label>
                 <div class="col-sm-6 col-md-6 col-lg-6 col-xl-6">
-                    <input v-show="isEdit.lastName" v-model="model.lastName" type="text"
-                           @keydown="accountKeyDownCheck($event, `lastName`)"
-                           @blur="accountFieldBlur($event, `lastName`)"
-                           class="form-control" id="lastName" ref="lastName"/>
-                    <input v-show="!isEdit.lastName"
-                           v-model="userData.lastName"
+                    <input id="lastName"
                            type="text"
-                           class="form-control-plaintext"
-                           ref="lastNameDisplay"
-                           readonly/>
+                           v-model="model.lastName"
+                           :class="[isEdit.lastName ? 'form-control' : 'form-control-plaintext']"
+                           @keyup.enter="accountStartSaveData($event.target.value, `lastName`)"
+                           @blur="finishFieldEdit(`lastName`)"
+                           :readonly="!isEdit.lastName"/>
                 </div>
                 <div class="col-2 d-sm-none d-md-none d-lg-flex d-xl-flex">
-                    <button v-show="isEdit.lastName"
-                            type="button"
+                    <button type="button"
                             class="btn btn-link text-body"
-                            @click.stop.prevent="startFieldEdit(`lastName`)">
-                        <span>Сохранить</span>
-                    </button>
-                    <button v-show="!isEdit.lastName"
-                            type="button"
-                            class="btn btn-link text-body"
-                            @click.stop.prevent="startFieldEdit(`lastName`)">
-                        Изменить
+                            :class="[isEdit.lastName ? 'text-primary' : 'text-body']"
+                            @click="[isEdit.lastName ? finishFieldEdit('lastName') : startFieldEdit('lastName')]">
+                        {{ isEdit.lastName ? 'Сохранить' : 'Изменить' }}
                     </button>
                 </div>
             </div>
@@ -84,9 +74,9 @@
                 <div class="col-sm-6 col-md-6 col-lg-6 col-xl-6">
                     <div class="w-50">
                         <select class="form-control border-0 pl-0"
-                                @change="accountStartSaveData(model.relationship, 'relationship')"
-                                v-model="model.relationship">
-                            <option value="0">В активном поиске</option>
+                                @change="accountStartSaveData(model.relationshipId, 'relationshipId')"
+                                v-model="model.relationshipId">
+                            <option value="null">В активном поиске</option>
                             <option value="1">В браке</option>
                             <option value="2">Не в браке</option>
                         </select>
@@ -100,33 +90,21 @@
                 <label for="birthday" class="col-sm-6 col-md-6 col-lg-4 col-xl-4 col-form-label text-secondary">Дата
                     рождения</label>
                 <div class="col-sm-6 col-md-6 col-lg-6 col-xl-6">
-                    <input v-show="isEdit.birthday"
-                           v-model="model.birthday"
-                           @keydown="accountKeyDownCheck($event, `birthday`)"
-                           @blur="accountFieldBlur($event, `birthday`)"
+                    <input id="birthday"
                            type="date"
-                           id="birthday"
-                           class="form-control-plaintext"
-                           ref="birthday"/>
-                    <input v-show="!isEdit.birthday"
-                           :value="userData.birthday | toYMD"
-                           type="date"
-                           class="form-control-plaintext"
-                           ref="birthdayDisplay"
-                           readonly/>
+                           :value="model.birthday | toYMD"
+                           :class="[isEdit.birthday ? 'form-control' : 'form-control-plaintext']"
+                           @keyup.enter="accountStartSaveData($event.target.value, `birthday`)"
+                           @blur="finishFieldEdit(`birthday`)"
+                           @input="model.birthday = $event.target.value"
+                           :readonly="!isEdit.birthday"/>
                 </div>
                 <div class="col-2 d-sm-none d-md-none d-lg-flex d-xl-flex">
-                    <button v-show="isEdit.birthday"
-                            type="button"
+                    <button type="button"
                             class="btn btn-link text-body"
-                            @click.stop.prevent="finishFieldEdit(`birthday`)">
-                        Сохранить
-                    </button>
-                    <button v-show="!isEdit.birthday"
-                            type="button"
-                            class="btn btn-link text-body"
-                            @click.stop.prevent="startFieldEdit(`birthday`)">
-                        Изменить
+                            :class="[isEdit.birthday ? 'text-primary' : 'text-body']"
+                            @click="[isEdit.birthday ? finishFieldEdit('birthday') : startFieldEdit('birthday')]">
+                        {{ isEdit.birthday ? 'Сохранить' : 'Изменить' }}
                     </button>
                 </div>
             </div>
@@ -135,33 +113,21 @@
                 <label for="city" class="col-sm-6 col-md-6 col-lg-4 col-xl-4 col-form-label text-secondary">Месторасположение</label>
                 <div class="col-sm-6 col-md-6 col-lg-6 col-xl-6 d-flex align-items-center">
                     <i class="fas fa-map-marker-alt"></i>
-                    <input v-show="isEdit.city"
-                           v-model="model.city"
-                           @keydown="accountKeyDownCheck($event, `city`)"
-                           @blur="accountFieldBlur($event, `city`)"
+                    <input id="location"
                            type="text"
-                           id="location"
-                           class="form-control-plaintext w-75 ml-1"
-                           ref="city"/>
-                    <input v-show="!isEdit.city"
-                           v-model="userData.city"
-                           type="text"
-                           class="form-control-plaintext w-75 ml-1"
-                           ref="cityDisplay"
-                           readonly/>
+                           class="ml-1"
+                           v-model="model.location"
+                           :class="[isEdit.location ? 'form-control' : 'form-control-plaintext']"
+                           @keyup.enter="accountStartSaveData($event.target.value, `location`)"
+                           @blur="finishFieldEdit(`location`)"
+                           :readonly="!isEdit.location"/>
                 </div>
                 <div class="col-2 d-sm-none d-md-none d-lg-flex d-xl-flex">
-                    <button v-show="isEdit.city"
-                            type="button"
+                    <button type="button"
                             class="btn btn-link text-body"
-                            @click="finishFieldEdit(`city`)">
-                        Сохранить
-                    </button>
-                    <button v-show="!isEdit.city"
-                            type="button"
-                            class="btn btn-link text-body"
-                            @click.stop.prevent="startFieldEdit(`city`)">
-                        Изменить
+                            :class="[isEdit.location ? 'text-primary' : 'text-body']"
+                            @click="[isEdit.location ? finishFieldEdit('location') : startFieldEdit('location')]">
+                        {{ isEdit.location ? 'Сохранить' : 'Изменить' }}
                     </button>
                 </div>
             </div>
@@ -179,20 +145,20 @@
                 </div>
             </div>
 
-            <!--            <div class="form-group row mb-0 &#45;&#45;border-bottom d-lg-none d-xl-none">-->
-            <!--                <label for="city" class="col-4 col-sm-6 col-md-6 col-form-label text-secondary">Город</label>-->
-            <!--                <div class="col-sm-6 col-md-6 col-lg-6 col-xl-6">-->
-            <!--                    <input v-model="userData.city" type="text" readonly-->
-            <!--                           class="form-control-plaintext d-inline-block w-50" id="city" ref="city"/>-->
-            <!--                </div>-->
-            <!--            </div>-->
+            <div class="form-group row mb-0 --border-bottom d-lg-none d-xl-none">
+                <label for="city" class="col-4 col-sm-6 col-md-6 col-form-label text-secondary">Город</label>
+                <div class="col-sm-6 col-md-6 col-lg-6 col-xl-6">
+                    <input v-model="userData.city" type="text" readonly
+                           class="form-control-plaintext d-inline-block w-50" id="city" ref="city"/>
+                </div>
+            </div>
 
         </form>
     </div>
 </template>
 
 <script>
-    import {HTTPer} from "../httper/httper";
+    import PliziAPI from "../classes/PliziAPI";
 
     export default {
         name: 'AccountSettingsMain',
@@ -200,19 +166,19 @@
         data() {
             return {
                 model: {
-                    firstName: ``,
-                    lastName: ``,
-                    birthday: '',
-                    city: '',
-                    sex: this.$root.$user.originalSex,
-                    relationship: this.$root.$user.relationship,
+                    firstName: this.$root.$user.firstName,
+                    lastName: this.$root.$user.lastName,
+                    sex: this.$root.$user.sex,
+                    relationshipId: this.$root.$user.relationshipId,
+                    birthday: this.$root.$user.birthday,
+                    location: this.$root.$user.country + ', ' + this.$root.$user.city,
                 },
 
                 isEdit: {
                     firstName: false,
                     lastName: false,
                     birthday: false,
-                    city: false,
+                    location: false,
                 }
             }
         },
@@ -220,87 +186,66 @@
         methods: {
             startFieldEdit(fieldName) {
                 this.isEdit[fieldName] = true;
-
-                const inpRef = this.getRef(fieldName);
-                if (inpRef) {
-                    this.model[fieldName] = this.$root.$user[fieldName];
-                    setTimeout(() => {
-                        inpRef.focus();
-                    }, 100);
-                } else {
-                    window.console.warn(`Ошибка редактирования поля`);
-                }
             },
 
             finishFieldEdit(fieldName) {
-                this.isEdit[fieldName] = false;
-                const inpRef = this.getRef(fieldName);
-
-                if (inpRef) {
-                    this.accountStartSaveData(inpRef.value.trim(), fieldName);
-                } else {
-                    window.console.warn(`Ошибка редактирования поля`);
-                }
-            },
-
-            // TODO: перенести потом в глобал
-            getRef(refKey) {
-                for (let [key, value] of Object.entries(this.$refs)) {
-                    if (refKey === key)
-                        return value;
-                }
-
-                return null;
-            },
-
-            accountKeyDownCheck(ev, fieldName) {
-                if (13 === ev.keyCode) {
+                setTimeout(() => {
                     this.isEdit[fieldName] = false;
-                    this.accountStartSaveData(ev.target.value, fieldName)
+                    this.accountStartSaveData(this.model[fieldName], fieldName);
+                }, 100);
+            },
+
+            async accountStartSaveData(newValue, fieldName) {
+                let formData = {};
+
+                if (fieldName === 'location') {
+                    let location = newValue.split(',');
+
+                    formData.country = location[0].trim();
+                    formData.city = location[1].trim();
+                } else {
+                    formData[fieldName] = newValue.trim();
+                    this.isEdit[fieldName] = false;
+
+                    if (fieldName === 'relationshipId' && newValue === 'null') {
+                        newValue = null;
+                    }
                 }
-            },
-
-            accountFieldBlur(ev, fieldName) {
-                this.finishFieldEdit(fieldName);
-            },
-
-            accountStartSaveData(newValue, fieldName) {
-                newValue = newValue.trim();
 
                 this.isEdit[fieldName] = false;
+
+                let response = null;
+
+                try {
+                    response = await this.$root.$api.updateUser(formData);
+                } catch (e) {
+                    if (e.status && e.status === 401) {
+                        this.$root.$emit('afterSuccessLogout', {});
+                    } else {
+                        throw e;
+                    }
+                }
+
+                if (response.status === 201) {
+                    this.$root.$user.updateData(fieldName, newValue);
+
+                    if (fieldName === `firstName` || fieldName === `lastName`) {
+                        this.$root.$emit('updateUserName', {
+                            firstName: this.$root.$user.firstName,
+                            lastName: this.$root.$user.lastName
+                        });
+                    }
+                }
 
                 const gwt = this.$store.getters.gwToken;
-                const headers = {
-                    headers: {
-                        'Authorization': `Bearer ${gwt}`,
-                    }
-                };
+                const tryToLoadUser = await (new PliziAPI(gwt)).getUser();
 
-                HTTPer.patch('/api/user', {
-                    [fieldName]: newValue,
-                }, headers)
-                    .then((response) => {
-                        if (response.status === 201) {
-                            this.$root.$user.updateData(fieldName, newValue);
-
-                            if (fieldName === `firstName` || fieldName === `lastName`) {
-                                this.$root.$emit('updateUserName', {
-                                    firstName: this.$root.$user.firstName,
-                                    lastName: this.$root.$user.lastName
-                                });
-                            }
-                        }
-                    })
-                    .catch((error) => {
-                        if (error.response.status >= 400) {
-                            window.console.log(error.response.data);
-                            window.console.warn(error.response.status + ': ' + error.response.statusText + ': ' + error.response.data.message);
-                        } else {
-                            window.console.warn(error.toString());
-                        }
-                    });
+                window.app.$root.$emit('afterUserLoad', {
+                    user: tryToLoadUser,
+                    token: gwt,
+                    save: true
+                });
             }
-
         },
 
         computed: {
@@ -308,7 +253,6 @@
                 return this.$root.$user;
             },
         }
-
     }
 </script>
 

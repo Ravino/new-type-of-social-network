@@ -22,7 +22,7 @@ class PliziAPI {
      *
      * @param {string} token
      */
-    constructor(token){
+    constructor(token) {
         this.__baseURL = window.apiURL;
 
         if (token) {
@@ -30,12 +30,12 @@ class PliziAPI {
         }
 
         this.__axios = axios.create({
-            baseURL : this.__baseURL,
-            headers : this.__defaultHeaders
+            baseURL: this.__baseURL,
+            headers: this.__defaultHeaders
         });
     }
 
-    get bearer(){
+    get bearer() {
         return 'Bearer ' + this.__token;
     }
 
@@ -44,7 +44,7 @@ class PliziAPI {
      * @param {string} jwToken
      */
     set token(jwToken) {
-        this.__token = (jwToken+'').trim();
+        this.__token = (jwToken + '').trim();
     }
 
     /**
@@ -54,8 +54,8 @@ class PliziAPI {
         return this.__token;
     }
 
-    get authHeaders(){
-        return { headers: { Authorization: this.bearer } };
+    get authHeaders() {
+        return {headers: {Authorization: this.bearer}};
     }
 
     /**
@@ -92,7 +92,7 @@ class PliziAPI {
      * @returns {object[]|null} - список диалогов юзера, или NULL если их нет
      */
     async chatDialogs() {
-        let response = await this.__axios.get('api/chat/dialogs',  this.authHeaders).catch((error) => {
+        let response = await this.__axios.get('api/chat/dialogs', this.authHeaders).catch((error) => {
             throw new PliziAPIError(`chatDialogs`, error.response);
         });
 
@@ -106,10 +106,10 @@ class PliziAPI {
 
     async userSearch(sText) {
         const sData = {
-            search : (sText+'').trim()
+            search: (sText + '').trim()
         };
 
-        let response = await this.__axios.post('/api/user/search', sData,  this.authHeaders)
+        let response = await this.__axios.post('/api/user/search', sData, this.authHeaders)
             .catch((error) => {
                 throw new PliziAPIError(`userSearch`, error.response);
             });
@@ -140,7 +140,7 @@ class PliziAPI {
      * @returns {Promise|object}
      */
     async getUser(jwt) {
-        if (jwt  &&  jwt!==``) {
+        if (jwt && jwt !== ``) {
             this.token = jwt;
         }
 
@@ -156,9 +156,8 @@ class PliziAPI {
         return null;
     }
 
-
     async infoUser(id) {
-        let response = await this.__axios.get('api/user/'+id, this.authHeaders)
+        let response = await this.__axios.get('api/user/' + id, this.authHeaders)
             .catch((error) => {
                 throw new PliziAPIError(`infoUser`, error.response);
             });
@@ -170,6 +169,23 @@ class PliziAPI {
         return null;
     }
 
+    /**
+     * Update user data.
+     * @param user_data
+     * @returns {Promise}
+     */
+    async updateUser(user_data) {
+        let response = await this.__axios.patch('api/user', user_data, this.authHeaders)
+            .catch((error) => {
+                throw new PliziAPIError(`updateUser`, error.response);
+            });
+
+        if (response.status === 200) {
+            return response.data;
+        }
+
+        return null;
+    }
 }
 
-export { PliziAPI as default}
+export {PliziAPI as default}

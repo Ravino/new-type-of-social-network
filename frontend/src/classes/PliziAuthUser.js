@@ -72,10 +72,9 @@ class PliziAuthUser extends PliziUzer{
      * @returns {object|null} - данные юзера в виде объекта, если данные из localStorage
      */
     restoreData() {
-        const sData = window.localStorage.getItem( this.localStorageKey);
+        const sData = window.localStorage.getItem(this.localStorageKey);
 
-        if (typeof sData === 'undefined'  ||  sData===null  ||  sData===``)
-            return null;
+        if (typeof sData === 'undefined'  ||  sData===null  ||  sData===``) return null;
 
         let oData = null;
 
@@ -84,13 +83,13 @@ class PliziAuthUser extends PliziUzer{
 
             if (oData  &&  oData.data &&  oData.data.email  &&  oData.data.profile  &&  oData.data.profile.firstName   &&  oData.data.profile.lastName) {
                 this.saveUserData(oData, ``);
-            }
-            else {
+            } else {
                 return null;
             }
 
         } catch (e){
             if ( window.console !== undefined && window.console.error ) window.console.warn( e.toString() );
+
             return null;
         }
 

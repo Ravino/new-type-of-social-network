@@ -60,7 +60,7 @@ class PliziUser {
      * @type {Date}
      * @private
      */
-    _birthDay = null;
+    _birthday = null;
 
     /**
      *
@@ -74,7 +74,7 @@ class PliziUser {
      * @type {number}
      * @private
      */
-    _relationship = 0;
+    _relationshipId = 0;
 
     /**
      *
@@ -161,9 +161,9 @@ class PliziUser {
         this._firstName = (prof.firstName+``).trim();
         this._lastName = (prof.lastName+``).trim();
         this._sex = (prof.sex+``).trim();
-        this._birthDay = new Date((prof.birthday+``).trim());
+        this._birthday = new Date((prof.birthday+``).trim());
         this._city = (prof.city+``).trim();
-        this._relationship = prof.relationship >>> 0;
+        this._relationshipId = prof.relationshipId;
 
         if (prof.userPic) {
             this._userPic = (prof.userPic+``).trim();
@@ -199,9 +199,9 @@ class PliziUser {
         this._firstName = ``;
         this._lastName = ``;
         this._sex = ``;
-        this._birthDay = ``;
+        this._birthday = null;
         this._city = ``;
-        this._relationship = -1;
+        this._relationshipId = -1;
         this._userPic = ``;
 
         this._country = ``;
@@ -282,10 +282,10 @@ class PliziUser {
     }
 
     /**
-     *
+     * Возвращает пол в человеческом виде.
      * @returns {string}
      */
-    get sex(){
+    get sexShow(){
         switch (this._sex) {
             case `m`: return 'мужской';
             case `f`: return 'женский';
@@ -295,18 +295,18 @@ class PliziUser {
 
     /**
      *
-     * @returns {Date}
+     * @returns {string}
      */
-    get birthday(){
-        return this._birthDay;
+    get sex() {
+        return this._sex.trim();
     }
 
     /**
      *
      * @returns {Date}
      */
-    get birthDate(){
-        return this._birthDay;
+    get birthday(){
+        return this._birthday;
     }
 
     /**
@@ -333,15 +333,15 @@ class PliziUser {
      *
      * @returns {number}
      */
-    get relationship(){
-        return this._relationship;
+    get relationshipId(){
+        return this._relationshipId;
     }
 
     get family(){
-        if (0 === this._relationship)
+        if (0 === this._relationshipId)
             return `Не указано`;
 
-        if (this.__RELATIONSHIP_MARRIED === this._relationship) {
+        if (this.__RELATIONSHIP_MARRIED === this._relationshipId) {
             switch (this._sex) {
                 case 'm': return `Женат`;
                 case 'f': return `Замужем`;
@@ -349,7 +349,7 @@ class PliziUser {
             }
         }
 
-        if (this.__RELATIONSHIP_NOT_MARRIED === this._relationship) {
+        if (this.__RELATIONSHIP_NOT_MARRIED === this._relationshipId) {
             switch (this._sex) {
                 case 'm': return `Не женат`;
                 case 'f': return `Не замужем`;
@@ -450,10 +450,10 @@ class PliziUser {
      * @returns {Object}
      */
     toJSON() {
-        let month = (this._birthDay.getMonth()+1)+``;
+        let month = (this._birthday.getMonth()+1)+``;
         month = (month.length === 1) ? '0'+month : month;
 
-        let day = this._birthDay.getDay()+``;
+        let day = this._birthday.getDay()+``;
         day = (day.length === 1) ? '0'+day : day;
 
         return {
@@ -465,9 +465,9 @@ class PliziUser {
                     firstName: this._firstName,
                     lastName: this._lastName,
                     sex: this._sex,
-                    birthday: `${this._birthDay.getFullYear()}-${month}-${day}`,
+                    birthday: this.birthday,
                     city: this._city,
-                    relationship: this._relationship,
+                    relationshipId: this._relationshipId,
                     userPic: this._userPic
                 }
             }
