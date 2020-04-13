@@ -125,7 +125,6 @@ methods: {
             });
     },
 
-
     afterUserLoad(evData) {
         if (evData.token !== ``  &&  evData.user) {
 
