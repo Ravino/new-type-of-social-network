@@ -6,7 +6,9 @@
                 <GuestNavBar></GuestNavBar>
                 <main :id="containerID" role="main"
                       class="container-fluid pb-sm-5 pb-md-5">
-                    <router-view></router-view>
+                    <transition>
+                        <router-view></router-view>
+                    </transition>
                 </main>
                 <GuestFooter></GuestFooter>
             </div>
@@ -18,7 +20,9 @@
             <div class="--container-fluid container px-0 my-0 pt-3 container-wide  mx-auto mt-4">
                 <main :id="containerID" role="main"
                       class="container-fluid pb-sm-5 pb-md-5">
-                    <router-view></router-view>
+                    <transition>
+                        <router-view></router-view>
+                    </transition>
                 </main>
                 <AuthFooter></AuthFooter>
             </div>
