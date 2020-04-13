@@ -16,6 +16,11 @@ class PliziAPI {
      */
     __$root = null;
 
+    /**
+     * токен авторизации которые возвращает нам наш серверный API после логина
+     * @type {string}
+     * @private
+     */
     __token = ``;
 
     /**
@@ -44,7 +49,7 @@ class PliziAPI {
     /**
      *
      * @param {Vue} $root
-     * @param {socialLogin} token
+     * @param {string} token
      */
     constructor($root, token){
         this.__baseURL = (window.apiURL) ? window.apiURL+``.trim() : ``;
@@ -64,6 +69,10 @@ class PliziAPI {
         });
     }
 
+    /**
+     * геттер для получения header'а bearer
+     * @returns {string} - Bearer вместе с токеном
+     */
     get bearer(){
         return 'Bearer ' + this.__token;
     }
@@ -94,6 +103,7 @@ class PliziAPI {
 
     /**
      * бросает событие с именем eventName через Vue'шный $root.emit
+     * @private
      * @param {string} eventName
      * @param {object|boolean|null} eventData
      */
@@ -122,6 +132,7 @@ class PliziAPI {
 
     /**
      * попытка регистрации пользователя
+     * @public
      * @param {object} regData - регистрационные данные
      * @returns {Promise} - промис для обработки
      */
@@ -135,7 +146,7 @@ class PliziAPI {
 
     /**
      * @private
-     * @param {} errResponse
+     * @param {Object} errResponse
      * @returns {string}
      */
     getServerMessage(errResponse){
@@ -154,6 +165,12 @@ class PliziAPI {
     }
 
 
+    /**
+     * если в ответе сервер вернул, что `Token is expired`, то бросит событие `api:Unauthorized`
+     * @private
+     * @param {Object} error - ответ сервера с ошибкой в том виде как возвращает axios
+     * @throws {Event} - событие `api:Unauthorized`
+     */
     checkIsTokenExperis(error) {
         const srvMsg = this.getServerMessage(error.response);
 
@@ -165,6 +182,12 @@ class PliziAPI {
     }
 
 
+    /**
+     * поиск по юзерам
+     * @public
+     * @param sText - строка поиска
+     * @returns {object[]|null} - коллеция с найденными юзерами или null как ещё один признак ошибки
+     */
     async userSearch(sText) {
         const sData = {
             search : (sText+'').trim()
@@ -183,8 +206,9 @@ class PliziAPI {
         return null;
     }
 
+
     /**
-     *
+     * @public
      * @param {string} provider
      * @param {string} token
      * @returns {Promise}
@@ -198,7 +222,8 @@ class PliziAPI {
 
     /**
      * доступ к API методу api/user
-     * @param {string} jwt
+     * @public
+     * @param {string} jwt - токен авторизации, если не задан, используется тот что был определён ранее
      * @returns {Promise|object}
      */
     async getUser(jwt) {
@@ -219,6 +244,12 @@ class PliziAPI {
     }
 
 
+    /**
+     * получение детальной информации о юзере
+     * @public
+     * @param {number} id - числовой ID юзера
+     * @returns {Object|null} - объект с данными юзера
+     */
     async infoUser(id) {
         let response = await this.__axios.get('api/user/'+id, this.authHeaders)
             .catch((error) => {
@@ -233,12 +264,13 @@ class PliziAPI {
     }
 
     /**
-     * Update user data.
-     * @param user_data
+     * обновление данных юзера
+     * @public
+     * @param {Object} userData - данные юзера
      * @returns {Promise}
      */
-    async updateUser(user_data) {
-        let response = await this.__axios.patch('api/user', user_data, this.authHeaders)
+    async updateUser(userData) {
+        let response = await this.__axios.patch('api/user', userData, this.authHeaders)
             .catch((error) => {
                 throw new PliziAPIError(`updateUser`, error.response);
             });
@@ -253,6 +285,7 @@ class PliziAPI {
 
     /**
      * загружает список диалогов (чатов) у юзера
+     * @public
      * @returns {object[]|null} - список диалогов юзера, или NULL если их нет
      */
     async chatDialogs() {
@@ -271,7 +304,8 @@ class PliziAPI {
 
     /**
      * загружает список сообщений (переписку) в определённом диалоге чата
-     * @param {number} dialogID -
+     * @public
+     * @param {number} dialogID - ID диалога
      * @returns {object[]|null} - список сообщений в диалоге, или NULL если была ошибка
      */
     async chatMessages(dialogID) {
