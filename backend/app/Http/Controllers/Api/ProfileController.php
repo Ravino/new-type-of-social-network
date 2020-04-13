@@ -29,7 +29,7 @@ class ProfileController extends Controller
     public function show($user)
     {
         $user = User::with('profile')->find($user);
-        if(!$user){
+        if(!$user) {
             throw new NotFoundHttpException();
         }
         return new UserResource($user);
@@ -56,9 +56,13 @@ class ProfileController extends Controller
             'birthday' => $request->birthday,
             'sex' => $request->sex,
             'city' => $request->city,
-            'relationship_id' => $request->relationshipId,
             'relationship_user_id' => $request->relationshipUserId,
         ]));
+        if(key_exists('relationshipId', $request->post())) {
+            $profile = tap(Auth::user()->profile)->update([
+                'relationship_id' => $request->relationshipId,
+            ]);
+        }
         return new ProfileResource($profile);
     }
 }

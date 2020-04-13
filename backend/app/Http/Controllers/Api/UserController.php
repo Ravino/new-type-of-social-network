@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\User\AddToFriend;
+use App\Http\Resources\Notification\NotificationCollection;
 use App\Http\Resources\User\UserCollection;
 use App\Models\User;
 use Illuminate\Http\Request;
@@ -85,5 +86,12 @@ class UserController extends Controller
         $friend_ids = Auth::user()->getFriends()->pluck('id');
         $friends = User::with('profile', 'privacySettings')->whereIn('id', $friend_ids)->get();
         return new UserCollection($friends);
+    }
+
+    /**
+     * @return NotificationCollection
+     */
+    public function notifications() {
+        return new NotificationCollection(Auth::user()->notifications()->with(['sender', 'recipient'])->get());
     }
 }
