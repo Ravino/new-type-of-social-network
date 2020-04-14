@@ -6,6 +6,8 @@ $lastEntryPicSize: 85px;
 
 .plz-latest-entries {
     min-height: $lastEntriesH;
+    height: 49%;
+    margin-bottom: 2%;
 
     > h6 {
         text-align: left;

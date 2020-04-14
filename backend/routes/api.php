@@ -30,7 +30,6 @@ Route::group(['middleware' => ['auth.jwt', 'track.activity']], function () {
     Route::get('user/{id}/posts', 'Api\PostController@userPosts');
     Route::get('communities/{community_id}/posts', 'Api\PostController@communityPosts');
     Route::get('posts/{id}', 'Api\PostController@get');
-    Route::post('posts/{id}', 'Api\PostController@get');
     Route::post('posts', 'Api\PostController@storeByUser');
     Route::post('communities/{community_id}/posts', 'Api\PostController@storeByCommunity');
 

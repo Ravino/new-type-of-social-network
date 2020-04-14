@@ -4,23 +4,23 @@ namespace App\Console\Commands;
 
 use App\Models\User;
 use Illuminate\Console\Command;
-use Illuminate\Database\Query\Expression;
+use Illuminate\Support\Facades\Hash;
 
-class UserSetAdmin extends Command
+class UserResetPassword extends Command
 {
     /**
      * The name and signature of the console command.
      *
      * @var string
      */
-    protected $signature = 'user:admin {user}';
+    protected $signature = 'user:password {user} {password}';
 
     /**
      * The console command description.
      *
      * @var string
      */
-    protected $description = 'Set or unset user as admin by ID or email';
+    protected $description = 'Change user password';
 
     /**
      * Create a new command instance.
@@ -40,16 +40,13 @@ class UserSetAdmin extends Command
     public function handle()
     {
         $user = $this->argument('user');
+        $password = $this->argument('password');
         $field = 'email';
         if (is_numeric($user)) {
             $field = 'id';
         }
-        if (\DB::table('users')->where($field, $user)->update(['is_admin' => new Expression('ABS(is_admin - 1)')])) {
-            $this->info(
-                'User with ' . $field . ' ' . $user . (
-                    User::where($field, $user)->get()->first()->isAdmin() ? ' is admin now' : ' is not admin anymore'
-                )
-            );
+        if (\DB::table('users')->where($field, $user)->update(['password' => Hash::make($password)])) {
+            $this->info('The new password for user with ' . $field . ' ' . $user . ' was created: ' . $password);
         } else {
             $this->info('Something went wrong(');
         }

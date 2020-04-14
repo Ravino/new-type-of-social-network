@@ -1,8 +1,7 @@
 .plz-plizi-mobile {
     position: relative;
-    height: 212px; /* 183px */
+    height: 49%; /* 183px */
     min-height: 212px;
-    max-height: 212px;
 }
 
 .plz-plizi-mobile .plz-for-mobile {
@@ -24,7 +23,7 @@
     display: block;
     position: absolute;
     left: 252px;
-    top: 63px;
+    bottom: 0;
 
     background-image: url("../images/plizi-mobile-bg.png");
     background-position: 100% 100%;
