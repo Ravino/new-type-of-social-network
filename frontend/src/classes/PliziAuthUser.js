@@ -156,14 +156,10 @@ class PliziAuthUser extends PliziUzer{
         return this._email;
     }
 
-    toJSON() {
-        let res = super.toJSON();
-        res.channel = this._channel;
-        res.email = this._email;
-
-        return res;
-    }
-
+    /**
+     * Обновление данных в классе.
+     * @param data
+     */
     updateData(data) {
         for(let prop in data) {
             if (prop === 'birthday') {
@@ -174,6 +170,23 @@ class PliziAuthUser extends PliziUzer{
         }
 
         this.storeData();
+    }
+
+    /**
+     * Обновление токена
+     * @param newToken
+     */
+    updateToken(newToken) {
+        this.__token = newToken;
+        this.storeData();
+    }
+
+    toJSON() {
+        let res = super.toJSON();
+        res.channel = this._channel;
+        res.email = this._email;
+
+        return res;
     }
 }
 

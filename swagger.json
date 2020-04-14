@@ -96,7 +96,12 @@
               }
             }
           }
-        }
+        },
+        "security": [
+          {
+            "Authorization": []
+          }
+        ]
       }
     },
     "/posts/{id}": {
@@ -134,7 +139,12 @@
               }
             }
           }
-        }
+        },
+        "security": [
+          {
+            "Authorization": []
+          }
+        ]
       }
     },
     "/communities/{id}/posts": {
@@ -188,7 +198,7 @@
                     "list": {
                       "type": "array",
                       "items": {
-                        "$ref": "#/definitions/PostByUser"
+                        "$ref": "#/definitions/PostByCommunity"
                       }
                     }
                   }
@@ -218,7 +228,12 @@
               }
             }
           }
-        }
+        },
+        "security": [
+          {
+            "Authorization": []
+          }
+        ]
       }
     },
     "/user/posts": {
@@ -255,7 +270,12 @@
               }
             }
           }
-        }
+        },
+        "security": [
+          {
+            "Authorization": []
+          }
+        ]
       }
     },
     "/register": {
@@ -444,7 +464,50 @@
               "$ref": "#/definitions/User"
             }
           }
-        }
+        },
+        "security": [
+          {
+            "Authorization": []
+          }
+        ]
+      }
+    },
+    "/user/{id}": {
+      "get": {
+        "tags": [
+          "User"
+        ],
+        "summary": "",
+        "description": "Получить данные пользователя",
+        "operationId": "getUserById",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "description": "ID пользователя",
+            "required": true,
+            "type": "integer"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Успешно получен",
+            "schema": {
+              "$ref": "#/definitions/User"
+            }
+          }
+        },
+        "security": [
+          {
+            "Authorization": []
+          }
+        ]
       }
     },
     "/user/search": {
@@ -614,7 +677,12 @@
               }
             }
           }
-        }
+        },
+        "security": [
+          {
+            "Authorization": []
+          }
+        ]
       },
       "get": {
         "tags": [
@@ -649,7 +717,12 @@
               }
             }
           }
-        }
+        },
+        "security": [
+          {
+            "Authorization": []
+          }
+        ]
       }
     },
     "/communities/{id}": {
@@ -687,7 +760,12 @@
               }
             }
           }
-        }
+        },
+        "security": [
+          {
+            "Authorization": []
+          }
+        ]
       },
       "patch": {
         "tags": [
@@ -799,7 +877,12 @@
               }
             }
           }
-        }
+        },
+        "security": [
+          {
+            "Authorization": []
+          }
+        ]
       }
     },
     "/communities/{id}/unsubscribe": {
@@ -840,7 +923,12 @@
               }
             }
           }
-        }
+        },
+        "security": [
+          {
+            "Authorization": []
+          }
+        ]
       }
     },
     "/user/communities": {
@@ -878,7 +966,12 @@
               }
             }
           }
-        }
+        },
+        "security": [
+          {
+            "Authorization": []
+          }
+        ]
       }
     },
     "/user/friendship": {
@@ -1173,6 +1266,15 @@
         "views": {
           "type": "number"
         },
+        "sharesCount": {
+          "type": "number"
+        },
+        "commentsCount": {
+          "type": "number"
+        },
+        "createdAt": {
+          "type": "number"
+        },
         "user": {
           "$ref": "#/definitions/User"
         }
@@ -1199,6 +1301,15 @@
         "views": {
           "type": "number"
         },
+        "sharesCount": {
+          "type": "number"
+        },
+        "commentsCount": {
+          "type": "number"
+        },
+        "createdAt": {
+          "type": "number"
+        },
         "community": {
           "$ref": "#/definitions/Community"
         }
@@ -1223,6 +1334,15 @@
           "type": "number"
         },
         "views": {
+          "type": "number"
+        },
+        "sharesCount": {
+          "type": "number"
+        },
+        "commentsCount": {
+          "type": "number"
+        },
+        "createdAt": {
           "type": "number"
         },
         "user": {
@@ -1266,6 +1386,9 @@
           "type": "string"
         },
         "notice": {
+          "type": "string"
+        },
+        "primaryImage": {
           "type": "string"
         },
         "url": {

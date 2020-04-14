@@ -115,7 +115,8 @@
                 HTTPer.post(`/api/sociallogin/${provider}`, {
                     token: token,
                 }).then(response => {
-                    console.log(response);
+                    this.$root.$user.updateToken(response.data.token);
+                    this.$router.push({name: 'NewsPage'});
                 });
             },
         },

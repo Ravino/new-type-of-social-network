@@ -7,7 +7,7 @@
                 <div class="modal-body">
                     <div id="" class="plz-recover-pass-form-wrapper ">
                         <div class="text-center"><h5>Восстановление пароля</h5></div>
-                        <img class="mb-4 mt-2 mx-auto" src="./../images/icons/icon-recoverPass.png" alt="">
+                        <img class="mb-4 mt-2 mx-auto" src="../images/icons/icon-recoverPass.png" alt="">
 
                         <form id="recoverPass" novalidate="novalidate">
                             <div class="form-group">
