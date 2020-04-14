@@ -26,6 +26,8 @@
         "laravelrus/sleepingowl": "^7.0",
         "league/flysystem-aws-s3-v3": "^1.0",
         "react/zmq": "^0.4.0",
+        "socialiteproviders/instagram": "^3.0",
+        "socialiteproviders/twitter": "^3.0",
         "socialiteproviders/vkontakte": "^4.0",
         "tymon/jwt-auth": "^1.0"
     },

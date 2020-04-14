@@ -45,10 +45,10 @@ class UserController extends Controller
     public function sendFriendshipRequest(AddToFriend $request) {
         $recipient = User::find($request->userId);
         if($recipient->hasFriendRequestFrom(Auth::user())) {
-            return response()->json(['message' => 'Вы уже отправляли запрос данному пользователю'], 200);
+            return response()->json(['message' => 'Вы уже отправляли запрос данному пользователю'], 422);
         }
         if($recipient->isFriendWith(Auth::user())) {
-            return response()->json(['message' => 'Вы уже являетесь другом данному пользователю'], 200);
+            return response()->json(['message' => 'Вы уже являетесь другом данному пользователю'], 422);
         }
         Auth::user()->befriend($recipient);
         return response()->json(['message' => 'Запрос на добавление в друзья отправлен'], 200);
@@ -64,7 +64,7 @@ class UserController extends Controller
             Auth::user()->acceptFriendRequest($sender);
             return response()->json(['message' => 'Вы приняли пользователя в друзья'], 200);
         }
-        return response()->json(['message' => 'Данный пользователь не отправлял вам запрос в друзья'], 200);
+        return response()->json(['message' => 'Данный пользователь не отправлял вам запрос в друзья'], 422);
     }
 
     /**
