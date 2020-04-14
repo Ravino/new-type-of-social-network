@@ -43,6 +43,6 @@ class UserSetAdmin extends Command
         if (is_numeric($user)) {
             $field = 'id';
         }
-        $r = \DB::table('users')->where($field, $user)->update(['is_admin' => 1]);
+        \DB::table('users')->where($field, $user)->update(['is_admin' => 1]);
     }
 }
