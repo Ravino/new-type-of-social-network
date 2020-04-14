@@ -1173,6 +1173,15 @@
         "views": {
           "type": "number"
         },
+          "sharesCount": {
+              "type": "number"
+          },
+          "commentsCount": {
+              "type": "number"
+          },
+          "createdAt": {
+              "type": "number"
+          },
         "user": {
           "$ref": "#/definitions/User"
         }
@@ -1199,6 +1208,15 @@
         "views": {
           "type": "number"
         },
+          "sharesCount": {
+              "type": "number"
+          },
+          "commentsCount": {
+              "type": "number"
+          },
+          "createdAt": {
+              "type": "number"
+          },
         "community": {
           "$ref": "#/definitions/Community"
         }
@@ -1225,6 +1243,15 @@
         "views": {
           "type": "number"
         },
+      "sharesCount": {
+          "type": "number"
+      },
+      "commentsCount": {
+          "type": "number"
+      },
+      "createdAt": {
+          "type": "number"
+      },
         "user": {
           "$ref": "#/definitions/User"
         },
@@ -1268,6 +1295,9 @@
         "notice": {
           "type": "string"
         },
+          "primaryImage": {
+              "type": "string"
+          },
         "url": {
           "type": "string"
         },
