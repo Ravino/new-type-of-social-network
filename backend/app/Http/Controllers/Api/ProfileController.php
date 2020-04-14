@@ -63,6 +63,7 @@ class ProfileController extends Controller
                 'relationship_id' => $request->relationshipId,
             ]);
         }
+        $profile = User::find(Auth::user()->id);
         return new ProfileResource($profile);
     }
 }

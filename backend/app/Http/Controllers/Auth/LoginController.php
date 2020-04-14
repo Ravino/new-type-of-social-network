@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
+use App\Models\User;
 use App\Providers\RouteServiceProvider;
 use App\Services\SocialAccountsService;
 use Carbon\Carbon;
@@ -75,6 +76,9 @@ class LoginController extends Controller
         } catch (JWTException $e) {
             return response()->json(['message' => 'could not create token'], 500);
         }
+        $this->guard->user()->update([
+            'last_activity_dt' => time()
+        ]);
         $channel = WampServer::channelForUser($this->guard->user()->id);
         return response()->json(compact('token', 'channel'));
     }

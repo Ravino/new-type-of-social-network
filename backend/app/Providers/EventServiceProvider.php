@@ -23,6 +23,11 @@ class EventServiceProvider extends ServiceProvider
         NewMessageEvent::class => [
             NewMessageNotification::class
         ],
+        \SocialiteProviders\Manager\SocialiteWasCalled::class => [
+            'SocialiteProviders\Instagram\InstagramExtendSocialite@handle',
+            'SocialiteProviders\Twitter\TwitterExtendSocialite@handle',
+            'SocialiteProviders\VKontakte\VKontakteExtendSocialite@handle',
+        ],
         'friendships.*' => [
             FriendshipNotification::class
         ]
