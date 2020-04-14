@@ -23,18 +23,21 @@
                     </div>
                 </div>
             </div>
-            <div class="col-2 ">
-                <div class="btn-group ">
-                    <button class="btn btn-link mx-0 px-1 btn-add-file" type="button">
-                        <IconAddFile />
-                    </button>
-                    <button class="btn btn-link mx-0 px-1 btn-add-camera" type="button">
-                        <IconAddCamera />
-                    </button>
-                    <button class="btn btn-link mx-0 px-1 btn-add-smile" type="button">
-                        <IconAddSmile />
-                    </button>
-                </div>
+            <div class="col-2 d-flex justify-content-end">
+
+                <label class="attach-file btn btn-link my-0 ml-0 mr-2 px-1 btn-add-file position-relative">
+                    <IconAddFile />
+                    <input type="file">
+                </label>
+                <label class="attach-file btn btn-link my-0 ml-0 mr-2 px-1 btn-add-camera position-relative">
+                    <IconAddCamera />
+                    <input type="file">
+                </label>
+
+                <button class="btn btn-link mx-0 px-1 btn-add-smile" type="button">
+                    <IconAddSmile />
+                </button>
+
             </div>
         </div>
     </div>

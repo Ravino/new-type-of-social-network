@@ -271,9 +271,10 @@ $dotsWidth: 4px;
 }
 
 /*- Radio button -*/
-$radioTop: 18px;
-$radioLeft: 20px;
-$borderRadius: 8px;
+$radioTop: -2px;
+$radioLeft: 0px;
+$borderRadius: 18px;
+$radioWidth: 18px;
 
 .radio {
     display: flex;
@@ -297,13 +298,13 @@ $borderRadius: 8px;
                 position: absolute;
                 left: -$radioLeft;
                 bottom: $radioTop;
-                width: 18px;
+                width: $radioWidth;
                 display: inline-block;
-                height: 18px;
+                height: $radioWidth;
                 z-index: 12;
-                background-color: #25282B;
-                //background-image: url('../img/content/shop/checked.svg');
-                background-size: 14px 14px;
+                background-color: #4d54e5;
+                background-image: url('../images/checked.svg');
+                background-size: 12px 9px;
                 background-repeat: no-repeat;
                 background-position: 50%;
                 border-radius: $borderRadius;
@@ -333,8 +334,8 @@ $borderRadius: 8px;
         position: absolute;
         left: -$radioLeft;
         bottom: $radioTop;
-        width: 18px;
-        height: 18px;
+        width: $radioWidth;
+        height: $radioWidth;
         z-index: 10;
         background-color: #CACCCF;
         border-radius: $borderRadius;
@@ -345,5 +346,26 @@ $borderRadius: 8px;
         //font-family: $light;
         color: #828282;
         margin-left: auto;
+    }
+}
+
+.attach-file {
+    display: inline-block;
+    cursor: pointer;
+
+    input[type=file] {
+        width: 0;
+        height: 0;
+        position: absolute;
+        outline: 0;
+        opacity: 0;
+        pointer-events: none;
+        user-select: none;
+    }
+
+    &:hover {
+        svg {
+            fill: $iconHoverColor;
+        }
     }
 }

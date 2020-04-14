@@ -1,31 +1,56 @@
 <template>
-    <div class="w-100 d-flex">
-        <div class="message-item d-flex w-100 justify-content-start position-relative"
+    <div class="w-100 d-flex px-5 " :class="{ ' checked-message': true}"><!-- TODO: добавить сюда класс .checked-messageпри появлении чекбокса -->
+        <div class="message-item d-flex w-100 justify-content-start"
              :class="calcMessageItemClass()">
-            <div class="checkBtns">
-                <label class="radio m-0 mr-2">
-                    <input type="checkbox" name="sex" id="" checked>
+
+                <label v-if="true" class="radio position-relative d-none" > <!-- TODO: показать при клике на сообщение-->
+                    <input type="checkbox" name="dateTimeId" ref="dateTimeId" id="dateTimeId" >
                     <span></span>
                 </label>
-            </div>
+
             <div class="message-user-pic mt-auto">
                 <img v-if="message.isMine" :src="ownerPic" :alt="currentDialog.firstname" class="message-user-img" />
                 <img v-else :src="companionPic" :alt="companionName" class="message-user-img" />
             </div>
             <div class="message-body">
-                <div class="message-text">{{message.body}}</div>
+                <div class="message-text">
+                    <p>{{message.body}}</p>
+
+                    <img class="message-sended-image" v-if="true" src="../images/user-main-photo.png" alt=""><!-- TODO: Показать картинку -->
+                    <span class="message-sended-zip d-flex align-items-center" v-if="false" ><!-- TODO: Показать Архив -->
+                        <IconZip />
+                        <span class="message-sended-zip-info mx-2">
+                            <p class="message-sended-name m-0">Dixy.zip</p>
+                            <p class="message-sended-size m-0">15Mb</p>
+                        </span>
+                    </span>
+                </div>
                 <time v-if="!isNextIsSamePerson()" class="message-time" :datetime="message.createdAt">
                     {{ message.createdAt | lastMessageTime }}
                 </time>
+                <div class="message-info">
+                    <span class="" :class="{ ' message-edited': true}"> <!--TODO:  -->
+                        <IconPencilEdit />
+                    </span>
+                    <span class="message-delivery ml-3" :class="{ ' message-writed': true }"> <!--TODO:  -->
+                        <IconCheckedDouble />
+                    </span>
+                </div>
+
             </div>
         </div>
     </div>
 </template>
 
 <script>
+import IconPencilEdit from "../icons/IconPencilEdit.vue";
+import IconCheckedDouble from "../icons/IconCheckedDouble.vue";
+import IconZip from "../icons/IconZip.vue";
+
 export default {
 name: 'ChatMessageItem',
-props: {
+    components: {IconPencilEdit, IconCheckedDouble, IconZip},
+    props: {
     message : Object,
     next : Object | null,
     currentDialog: Object
