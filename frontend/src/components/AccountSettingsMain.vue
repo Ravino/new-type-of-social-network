@@ -201,8 +201,6 @@
                 return null;
             },
             startFieldEdit(fieldName) {
-                // FIXME: @TGA после клика [редактировать] поля не получают фокус
-                // вот потому $refs и нужен был :)
                 this.isEdit[fieldName] = true;
 
                 const inpRef = this.getRef(fieldName);

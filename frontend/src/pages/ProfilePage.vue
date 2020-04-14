@@ -36,9 +36,9 @@ import ShortFriends from '../common/ShortFriends.vue';
 
 import ProfileHeader from '../components/ProfileHeader.vue';
 import ProfilePhotos from '../components/ProfilePhotos.vue';
-import ProfileWhatsNew from '../components/ProfileWhatsNew.vue';
+import ProfileWhatsNew from '../common/WhatsNewBlock.vue';
 import ProfileFilter from '../components/ProfileFilter.vue';
-import ProfilePost from '../components/ProfilePost.vue';
+import ProfilePost from '../common/Post.vue';
 
 import userProfilePosts from '../data/userProfilePosts.js';
 
