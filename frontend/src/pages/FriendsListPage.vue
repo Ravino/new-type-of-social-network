@@ -28,12 +28,17 @@
                         </div>
                         <hr />
 
-                        <div class="plizi-friends-list">
-                            <div class="alert alert-light todo-remove-this-div" >
+                        <div v-if="isFriendsLoaded" class="plizi-friends-list">
+                            <div v-if="friendsList  &&  friendsList.length>0" class="alert alert-light" >
                                 Тут список френдов<br />
                                 И он будет красивым когда мы его сделаем :)
                             </div>
+                            <div v-else class="alert alert-info">
+                                У Вас ещё нет друзей!<br />
+                                &quot;Молодой крАкодил хочет завести себе друзей&quot;?
+                            </div>
                         </div>
+                        <Spinner v-else></Spinner>
                     </div>
                 </div>
 
@@ -53,26 +58,54 @@
 <script>
 import AccountToolbarLeft from '../common/AccountToolbarLeft.vue';
 import AccountToolbarRight from '../common/AccountToolbarRight.vue';
+import Spinner from '../common/Spinner.vue';
 
 export default {
 name: 'FriendsListPage',
-components: { AccountToolbarLeft,
+components: {
+    Spinner, AccountToolbarLeft,
     AccountToolbarRight
 },
 data() {
     return {
+        friendsList : [],
+        isFriendsLoaded : false
     }
 },
 
 methods: {
+    async loadFriendsList() {
+        let response = null;
 
+        try {
+            response = await this.$root.$api.friendsList();
+        }
+        catch (e){
+            if (e.status  &&  e.status>=400) {
+                window.console.warn(e.detailMessage);
+            }
+            else {
+                throw e;
+            }
+        }
+
+        //window.console.warn( JSON.parse( JSON.stringify(response) ), `response` );
+
+        if (response) {
+            this.friendsList = response;
+            this.isFriendsLoaded = true;
+        }
+
+        return true;
+    },
 },
 
 beforeMount() {
 
 },
 
-mounted(){
+async mounted(){
+    await this.loadFriendsList();
 }
 
 }

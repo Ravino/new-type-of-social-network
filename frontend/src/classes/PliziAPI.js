@@ -320,6 +320,46 @@ class PliziAPI {
 
         return null;
     }
+
+
+    /**
+     * получаем список френдов, свой или другого юзера
+     * @param {number|null} userID - ID юзера чей список друзей хотим получить
+     * @returns {object[]|null}
+     * @throws PliziAPIError
+     */
+    async friendsList(userID) {
+        let path = 'api/user/friendship';
+        if (path &&  (userID>>>0)!==0) {
+            path = `api/user/${userID}/friendship`;
+        }
+
+        let response = await this.__axios.get(path, this.authHeaders).catch((error) => {
+            this.checkIsTokenExperis(error);
+            throw new PliziAPIError(`friendsList`, error.response);
+        });
+
+        if (response.status === 200) {
+            return response.data.data.list;
+        }
+
+        return null;
+    }
+
+
+    async notificationsList() {
+        let response = await this.__axios.get('api/user/notifications', this.authHeaders).catch((error) => {
+            this.checkIsTokenExperis(error);
+            throw new PliziAPIError(`notificationsList`, error.response);
+        });
+
+        if (response.status === 200) {
+            return response.data.data.list;
+        }
+
+        return null;
+    }
+
 }
 
 export { PliziAPI as default}

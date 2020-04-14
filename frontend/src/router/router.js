@@ -13,6 +13,7 @@ import ChatMessagesPage from '../pages/ChatMessagesPage.vue';
 import SearchResultsPage from '../pages/SearchResultsPage.vue';
 import PersonalPage from '../pages/PersonalPage.vue';
 import FriendsListPage from '../pages/FriendsListPage.vue';
+import NotificationsPage from '../pages/NotificationsPage.vue';
 
 import PliziAPI from '../classes/PliziAPI.js';
 import PliziAuthUser from '../classes/PliziAuthUser.js';
@@ -23,31 +24,14 @@ const routes = [
     {path: '/login', component: LoginPage, name: 'LoginPage', meta: {title: 'Plizi: Авторизация', isGuest: true}},
     {path: '/logout', component: LogoutPage, name: 'LogoutPage', meta: {title: 'Plizi: Выход', isGuest: true}},
 // Auth
-    {
-        path: '/account',
-        component: AccountPage,
-        name: 'AccountPage',
-        meta: {title: 'Plizi: Настройки аккаунта'},
-        props: true
-    },
+    {path: '/account', component: AccountPage, name: 'AccountPage', meta: {title: 'Plizi: Настройки аккаунта'}, props: true },
     {path: '/profile', component: ProfilePage, name: 'ProfilePage', meta: {title: 'Plizi: Домашняя'}, props: true},
     {path: '/chats-list', component: ChatsListPage, name: 'ChatsListPage', meta: {title: 'Plizi: Чаты'}, props: true},
-    {
-        path: '/chat-messages',
-        component: ChatMessagesPage,
-        name: 'ChatMessagesPage',
-        meta: {title: 'Plizi: Чат'},
-        props: true
-    },
-    {
-        path: '/search-results',
-        component: SearchResultsPage,
-        name: 'SearchResultsPage',
-        meta: {title: 'Plizi: Результаты поиска'},
-        props: true
-    },
+    {path: '/chat-messages', component: ChatMessagesPage, name: 'ChatMessagesPage', meta: {title: 'Plizi: Чат'}, props: true },
+    {path: '/search-results', component: SearchResultsPage, name: 'SearchResultsPage', meta: {title: 'Plizi: Результаты поиска'}, props: true },
     {path: '/user-:id', component: PersonalPage, name: 'PersonalPage', meta: {title: 'Plizi:'}, props: true},
-    { path: '/friends', component: FriendsListPage, name: 'FriendsListPage', meta: {title: 'Plizi: Друзья'}, props: true },
+    {path: '/friends', component: FriendsListPage, name: 'FriendsListPage', meta: {title: 'Plizi: Друзья'}, props: true },
+    {path: '/notifications', component: NotificationsPage, name: 'NotificationsPage', meta: {title: 'Plizi: напоминания'}, props: true },
 ];
 
 const router = new VueRouter({
@@ -77,7 +61,7 @@ router.beforeEach(async (to, from, next) => {
     if (!to.meta.isGuest) {
         const gwt = store.getters.gwToken;
 
-        await Vue.nextTick(); // @TGA иначе загрузка из localStorage не срабатывает
+        await Vue.nextTick(); /** @TGA иначе загрузка из localStorage не срабатывает **/
 
         if ((gwt + '') !== 'null' && gwt !== '') {
             const tstUser = new PliziAuthUser();

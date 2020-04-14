@@ -56,7 +56,6 @@ components: {
 data() {
     return {
         chatCarrier   : null,
-        //dialogsList   : [],
         dialogsList   : null,
         isDialogsLoaded: false,
         currentDialog : {},
