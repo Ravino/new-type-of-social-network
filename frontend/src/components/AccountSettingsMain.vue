@@ -168,7 +168,11 @@
 <script>
     export default {
         name: 'AccountSettingsMain',
-
+        computed: {
+            userData: function () {
+                return this.$root.$user;
+            },
+        },
         data() {
             return {
                 model: {
@@ -188,7 +192,6 @@
                 }
             }
         },
-
         methods: {
             getRef(refKey) {
                 for (let [key, value] of Object.entries(this.$refs)) {
@@ -205,9 +208,7 @@
                 const inpRef = this.getRef(fieldName);
 
                 if (inpRef) {
-                    setTimeout(() => {
-                        inpRef.focus();
-                    }, 100);
+                    inpRef.focus();
                 } else {
                     window.console.warn(`Ошибка редактирования поля`);
                 }
@@ -217,13 +218,14 @@
 
                 setTimeout(() => {
                     this.isEdit[fieldName] = false;
-                }, 100);
 
-                if (inpRef) {
-                    this.accountStartSaveData(this.model[fieldName], fieldName);
-                } else {
-                    window.console.warn(`Ошибка редактирования поля`);
-                }
+                    if (inpRef) {
+                        inpRef.blur();
+                        this.accountStartSaveData(this.model[fieldName], fieldName);
+                    } else {
+                        window.console.warn(`Ошибка редактирования поля`);
+                    }
+                }, 100);
             },
             formatFormData(newValue, fieldName) {
                 let formData = {};
@@ -256,43 +258,18 @@
 
                 response = await this.$root.$api.updateUser(formData);
 
-                window.console.log(response);
-                // FIXME: @TGA никогда не выполнится - посмотри, что выводит console.log() строкой выше
-                // там поля status нету, потому ты ниже и делаешь запрос к $api.getUser(), а потом бросаешь afterUserLoad
                 if (response !== null) {
                     this.$root.$user.updateData(response.data);
-                //
-                //     if (fieldName === `firstName` || fieldName === `lastName`) {
-                //         this.$root.$emit('updateUserName', {
-                //             firstName: this.$root.$user.firstName,
-                //             lastName: this.$root.$user.lastName
-                //         });
-                //     }
+
+                    if (fieldName === `firstName` || fieldName === `lastName`) {
+                        this.$root.$emit('updateUserName', {
+                            firstName: this.$root.$user.firstName,
+                            lastName: this.$root.$user.lastName
+                        });
+                    }
                 }
-
-                // FIXME: @TGA эти две строки делаются проще - смотри ниже (и PliziAPI подключать ещё раз не надо)
-                //const gwt = this.$store.getters.gwToken;
-                //const tryToLoadUser = await (new PliziAPI(gwt)).getUser();
-
-                // const updatedUser = await this.$root.$api.getUser();
-
-                // FIXME: @TGA - это лишний запрос к БД
-                // в response у тебя уже есть обновлённые данные юзера - их прислал сервер
-                // надо просто обновить ими данные юзера
-                // и кстати не факт что tryToLoadUser у тебя будет корректен - может истечь жизнь токена
-                // window.app.$root.$emit('afterUserLoad', {
-                //     user: updatedUser,
-                //     token: this.$root.$api.token,
-                //     save: true
-                // });
             }
         },
-
-        computed: {
-            userData: function () {
-                return this.$root.$user;
-            },
-        }
     }
 </script>
 
