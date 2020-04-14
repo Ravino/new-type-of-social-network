@@ -50,7 +50,7 @@ class ProfileController extends Controller
      */
     public function patch(ProfileRequest $request)
     {
-        $profile = tap(Auth::user()->profile)->update(array_filter([
+        Auth::user()->profile->update(array_filter([
             'first_name' => $request->firstName,
             'last_name' => $request->lastName,
             'birthday' => $request->birthday,
@@ -59,7 +59,7 @@ class ProfileController extends Controller
             'relationship_user_id' => $request->relationshipUserId,
         ]));
         if(key_exists('relationshipId', $request->post())) {
-            $profile = tap(Auth::user()->profile)->update([
+            Auth::user()->profile->update([
                 'relationship_id' => $request->relationshipId,
             ]);
         }
