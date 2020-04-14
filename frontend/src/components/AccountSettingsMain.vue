@@ -51,10 +51,10 @@
             </div>
 
             <div class="form-group row mb-0 border-bottom">
-                <label class="col-sm-6 col-md-6 col-lg-4 col-xl-4 col-form-label text-secondary">Пол</label>
+                <label for="userSex" class="col-sm-6 col-md-6 col-lg-4 col-xl-4 col-form-label text-secondary">Пол</label>
                 <div class="col-sm-6 col-md-6 col-lg-6 col-xl-6">
                     <div class="w-50">
-                        <select class="form-control border-0 pl-0"
+                        <select id="userSex" class="form-control border-0 pl-0"
                                 @change="accountStartSaveData(model.sex, 'sex')"
                                 v-model="model.sex">
                             <option value="n">Не указано</option>
@@ -68,12 +68,12 @@
             </div>
 
             <div class="form-group row mb-0 border-bottom">
-                <label class="col-sm-6 col-md-6 col-lg-4 col-xl-4 col-form-label text-secondary">
+                <label for="relationship" class="col-sm-6 col-md-6 col-lg-4 col-xl-4 col-form-label text-secondary">
                     Семейной положение
                 </label>
                 <div class="col-sm-6 col-md-6 col-lg-6 col-xl-6">
                     <div class="w-50">
-                        <select class="form-control border-0 pl-0"
+                        <select id="relationship" class="form-control border-0 pl-0"
                                 @change="accountStartSaveData(model.relationshipId, 'relationshipId')"
                                 v-model="model.relationshipId">
                             <option value="null">В активном поиске</option>
@@ -90,6 +90,7 @@
                 <label for="birthday" class="col-sm-6 col-md-6 col-lg-4 col-xl-4 col-form-label text-secondary">Дата
                     рождения</label>
                 <div class="col-sm-6 col-md-6 col-lg-6 col-xl-6">
+                    <!-- FIXME: @TGA поле слишком широкое и в ФФ крестик справа выглядит тупо поэтому -->
                     <input id="birthday"
                            type="date"
                            :value="model.birthday | toYMD"
@@ -110,7 +111,7 @@
             </div>
 
             <div class="form-group row mb-0 --border-bottom d-sm-none d-md-none d-lg-flex d-xl-flex">
-                <label for="city" class="col-sm-6 col-md-6 col-lg-4 col-xl-4 col-form-label text-secondary">Месторасположение</label>
+                <label for="location" class="col-sm-6 col-md-6 col-lg-4 col-xl-4 col-form-label text-secondary">Месторасположение</label>
                 <div class="col-sm-6 col-md-6 col-lg-6 col-xl-6 d-flex align-items-center">
                     <i class="fas fa-map-marker-alt"></i>
                     <input id="location"
@@ -141,14 +142,14 @@
                 <label for="country" class="col-4 col-sm-6 col-md-6 col-form-label text-secondary">Страна</label>
                 <div class="col-sm-6 col-md-6 col-lg-6 col-xl-6">
                     <input type="text" readonly class="form-control-plaintext d-inline-block w-50" id="country"
-                           ref="country" value="Россия"/>
+                           ref="country" />
                 </div>
             </div>
 
             <div class="form-group row mb-0 --border-bottom d-lg-none d-xl-none">
                 <label for="city" class="col-4 col-sm-6 col-md-6 col-form-label text-secondary">Город</label>
                 <div class="col-sm-6 col-md-6 col-lg-6 col-xl-6">
-                    <input v-model="userData.city" type="text" readonly
+                    <input type="text" readonly
                            class="form-control-plaintext d-inline-block w-50" id="city" ref="city"/>
                 </div>
             </div>
@@ -158,8 +159,6 @@
 </template>
 
 <script>
-    import PliziAPI from "../classes/PliziAPI";
-
     export default {
         name: 'AccountSettingsMain',
 
@@ -185,6 +184,8 @@
 
         methods: {
             startFieldEdit(fieldName) {
+                // FIXME: @TGA после клика [редактировать] поля не получают фокус
+                // вот потому $refs и нужен был :)
                 this.isEdit[fieldName] = true;
             },
 
@@ -196,14 +197,18 @@
             },
 
             async accountStartSaveData(newValue, fieldName) {
+                // FIXME: @TGA - подготовку данных формы лучше вынести в отдельный метод - так будет читабельнее
                 let formData = {};
 
                 if (fieldName === 'location') {
+                    // FIXME: @TGA - декструктуризация https://learn.javascript.ru/destructuring
+                    //let [country, city] = 'Украина,Днепр'.split(','); // пример
                     let location = newValue.split(',');
 
                     formData.country = location[0].trim();
                     formData.city = location[1].trim();
-                } else {
+                }
+                else {
                     formData[fieldName] = newValue.trim();
                     this.isEdit[fieldName] = false;
 
@@ -226,7 +231,10 @@
                     }
                 }
 
-                if (response.status === 201) {
+                window.console.log(response, `response from PATCH`);
+                // FIXME: @TGA никогда не выполнится - посмотри, что выводит console.log() строкой выше
+                // там поля status нету, потому ты ниже и делаешь запрос к $api.getUser(), а потом бросаешь afterUserLoad
+                if (response.status === 200) {
                     this.$root.$user.updateData(fieldName, newValue);
 
                     if (fieldName === `firstName` || fieldName === `lastName`) {
@@ -237,12 +245,19 @@
                     }
                 }
 
-                const gwt = this.$store.getters.gwToken;
-                const tryToLoadUser = await (new PliziAPI(gwt)).getUser();
+                // FIXME: @TGA эти две строки делаются проще - смотри ниже (и PliziAPI подключать ещё раз не надо)
+                //const gwt = this.$store.getters.gwToken;
+                //const tryToLoadUser = await (new PliziAPI(gwt)).getUser();
 
+                const updatedUser = await this.$root.$api.getUser();
+
+                // FIXME: @TGA - это лишний запрос к БД
+                // в response у тебя уже есть обновлённые данные юзера - их прислал сервер
+                // надо просто обновить ими данные юзера
+                // и кстати не факт что tryToLoadUser у тебя будет корректен - может истечь жизнь токена
                 window.app.$root.$emit('afterUserLoad', {
-                    user: tryToLoadUser,
-                    token: gwt,
+                    user: updatedUser,
+                    token: this.$root.$api.token,
                     save: true
                 });
             }

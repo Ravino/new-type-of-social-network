@@ -7,7 +7,7 @@
         <div class="col-sm-10 col-md-9 col-lg-8 col-xl-8 pl-0 --bg-danger">
 
             <div class="container">
-                <ProfileHeader v-bind:user-data="userData"></ProfileHeader>
+                <ProfileHeader v-bind:user-data="userData" v-bind:is-owner="true"></ProfileHeader>
 
                 <ProfilePhotos v-bind:photos="userPhotos"></ProfilePhotos>
 

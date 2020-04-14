@@ -5,9 +5,7 @@ $lastEntryRadius: 18px;
 $lastEntryPicSize: 85px;
 
 .plz-latest-entries {
-    height: $lastEntriesH;
     min-height: $lastEntriesH;
-    max-height: $lastEntriesH;
 
     > h6 {
         text-align: left;

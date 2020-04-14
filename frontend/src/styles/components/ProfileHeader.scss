@@ -30,6 +30,10 @@
     border: 2px solid #f0f0f0;
     border-radius: 20px;
 
+    &.file-label{
+        cursor: pointer;
+    }
+
     .btn {
         text-transform: uppercase;
         background-color: transparent;

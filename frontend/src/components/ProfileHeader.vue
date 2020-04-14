@@ -6,7 +6,7 @@
                     <img ref="userAvatar" :src="userData.userPic" :alt="userData.fullName" class="plz-br20-top" />
 
                     <div v-if="isOwner===true" class="plz-profile-userpic-footer">
-                        <label for="userAvatarFile" class="plz-profile-userpic-edit d-flex align-items-center justify-content-between">
+                        <label for="userAvatarFile" class="plz-profile-userpic-edit file-label d-flex align-items-center justify-content-between">
                             <span class="align-items-center justify-content-center d-flex w-75 border-right">Редактировать</span>
                             <span class="align-items-center justify-content-center d-flex w-25">
                                 <span class="ps-dot"></span>
@@ -18,15 +18,13 @@
                     </div>
 
                     <div v-else class="plz-profile-userpic-footer">
-                        <div class="plz-profile-userpic-edit d-flex align-items-center justify-content-between overflow-hidden d-flex m-0 p-0"
-                               @click="showPersonalMsgDialog()">
-                            <button class="btn align-items-center justify-content-center d-flex w-75 border-right">Написать</button>
-                            <button class="btn align-items-center justify-content-center d-flex w-25">
+                        <div class="plz-profile-userpic-edit d-flex align-items-center justify-content-between overflow-hidden d-flex m-0 p-0">
+                            <button class="btn align-items-center justify-content-center d-flex w-75 border-right" @click="showPersonalMsgDialog()">Написать</button>
+                            <button class="btn align-items-center justify-content-center d-flex w-25" @click="sendFriendshipInvitation()" title="добавить в друзья">
                                 <i class="fas fa-user-plus"></i>
                             </button>
                         </div>
                     </div>
-
                 </div>
             </div>
         </div>
@@ -104,6 +102,10 @@ methods: {
         this.$root.$emit('showPersonalMsgModal', { user: this.userData, src : this.$route.name });
     },
 
+    sendFriendshipInvitation(){
+        window.console.info(`sendFriendshipInvitation`);
+    },
+
     uploadUserAvatar(){
         if (this.isOwner!==true)
             return;
@@ -153,13 +155,7 @@ methods: {
             });
     },
 
-},
-
-//computed : {
-//    userData() {
-//        return this.$root.$user;
-//    },
-//}
+}
 
 }
 </script>
@@ -167,12 +163,5 @@ methods: {
 <style scoped lang="scss">
 input[type="file"] {
     display: none;
-}
-
-.custom-file-upload {
-    border: 1px solid #ccc;
-    display: inline-block;
-    padding: 6px 12px;
-    cursor: pointer;
 }
 </style>
