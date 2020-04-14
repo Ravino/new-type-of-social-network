@@ -28,6 +28,13 @@ class PliziUser {
     _isOnline = false;
 
     /**
+     * метка времени когда у юзера была последняя актиновсть
+     * @type {Date}
+     * @private
+     */
+    _lastActivity = null;
+
+    /**
      *
      * @type {string}
      * @private
@@ -149,6 +156,7 @@ class PliziUser {
     saveUserData(inputData){
         this._id = inputData.data.id >>> 0;
         this._isOnline = inputData.data.isOnline;
+        this._lastActivity = new Date( inputData.data.lastActivity );
 
         const prof = inputData.data.profile;
 
@@ -183,6 +191,7 @@ class PliziUser {
     cleanData(){
         this._id = -1;
         this._isOnline = false;
+        this._lastActivity = null;
 
         this._firstName = ``;
         this._lastName = ``;
@@ -230,12 +239,26 @@ class PliziUser {
     }
 
     /**
-     *
      * @returns {boolean}
      */
     get isOnline(){
         return this._isOnline;
     }
+
+    /**
+     * @returns {Date}
+     */
+    get lastActivity(){
+        return this._lastActivity;
+    }
+
+    /**
+     * @param {number|string|Date} lastActivityDT
+     */
+    set lastActivity(lastActivityDT){
+        this._lastActivity = new Date(lastActivityDT);
+    }
+
 
     /**
      *
@@ -439,6 +462,7 @@ class PliziUser {
             data: {
                 id: this._id,
                 isOnline: this._isOnline,
+                lastActivity: +(+this._lastActivity / 1000).toFixed(0),
                 profile: {
                     firstName: this._firstName,
                     lastName: this._lastName,

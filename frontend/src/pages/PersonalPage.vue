@@ -5,7 +5,6 @@
         </div>
 
         <div class="col-sm-10 col-md-9 col-lg-8 col-xl-8 pl-0 --bg-danger">
-
             <div class="container">
                 <ProfileHeader v-if="isDataReady" v-bind:user-data="profileData"></ProfileHeader>
                 <Spinner v-else></Spinner>
@@ -70,8 +69,6 @@ methods: {
         }
 
         if (profile) {
-            //window.console.info( JSON.parse( JSON.stringify(profile) ), `profile` );
-
             this.profileData = new PliziUser();
             this.profileData.saveUserData(profile);
             this.isDataReady = true;

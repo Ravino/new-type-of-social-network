@@ -1,5 +1,6 @@
 import axios from 'axios';
 import PliziAPIError from './PliziAPIError.js';
+import { HTTPer } from "../httper/httper";
 
 class PliziAPI {
 
@@ -212,6 +213,31 @@ class PliziAPI {
 
 
     /**
+     * загружает аватарку юзера
+     * @param {formData} formData - данные для загрузки
+     * @returns {object|null} - ответ сервера
+     * @throws PliziAPIError
+     */
+    async userProfileImage(formData) {
+        let config = this.authHeaders;
+
+        config.headers[`Content-Type`] = 'multipart/form-data';
+
+        let response = await this.__axios.post('/api/user/profile/image', formData, config)
+            .catch((error) => {
+                this.checkIsTokenExperis(error);
+                throw new PliziAPIError(`userProfileImage`, error.response);
+            });
+
+        if (response.status === 200) {
+            return response;
+        }
+
+        return null;
+    }
+
+
+    /**
      * поиск по юзерам
      * @public
      * @param sText - строка поиска
@@ -232,6 +258,39 @@ class PliziAPI {
 
         return null;
     }
+
+
+    /**
+     * отправляет приграшение дружбы
+     * поле status в ответе:
+     * 200 - инвайт отправили
+     * 422 - инвайт отправляли ранее
+     * @param {number} potentialFriendID - ID юзера с которым хотим подружиться
+     * @returns {{ status: number, message: string }}
+     * @throws PliziAPIError
+     */
+    async sendFriendshipInvitation(potentialFriendID) {
+        const data = {
+            userId: potentialFriendID
+        };
+
+        return await this.__axios.post('/api/user/friendship', data, this.authHeaders)
+            .catch((error) => {
+                /** @TGA так сервер ответчает, что инвайт уже отправлялся **/
+                if (error.response.status === 422) {
+                    return {
+                        status: 422,
+                        message: error.response.data.message
+                    }
+                }
+                else {
+                    this.checkIsTokenExperis(error);
+                    throw new PliziAPIError(`sendFriendshipInvitation`, error.response);
+                }
+            });
+    }
+
+
 
 
     /**
