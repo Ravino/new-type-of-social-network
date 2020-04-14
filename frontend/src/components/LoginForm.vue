@@ -49,6 +49,10 @@
                             class="btn-registration btn plz-btn plz-btn-outline" @click="openRegistrationModal()">
                         Регистрация
                     </button>
+                    <button id="btnRecoverPass" type="button"
+                            class="btn-recover-pas btn plz-btn btn-link mt-3 "  @click="openRecoverPassModal()">
+                        Восстановить пароль
+                    </button>
                 </div>
                 <LoginSocialLinks></LoginSocialLinks>
             </form>
@@ -57,11 +61,15 @@
         <RegistrationModal v-if="isRegistrationModalShow"
                            v-bind:reg-modal-visible="isRegistrationModalShow"
                            @successRegistration="successRegistration"></RegistrationModal>
+        <RecoverPassModal  v-if="isRecoverPassModalShow"
+                           v-bind:reg-modal-visible="isRecoverPassModalShow"
+                          ></RecoverPassModal>
     </div>
 </template>
 
 <script>
     import RegistrationModal from './RegistrationModal.vue';
+    import RecoverPassModal from './RecoverPassModal.vue';
     import {HTTPer} from '../httper/httper.js';
     import {email, maxLength, minLength, required} from 'vuelidate/lib/validators';
     import client_ids from '../libs/social_networks_client_ids';
@@ -71,6 +79,7 @@
         name: 'LoginForm',
         components: {
             RegistrationModal,
+            RecoverPassModal,
             LoginSocialLinks,
         },
 
@@ -81,6 +90,7 @@
                     password: ``
                 },
                 isRegistrationModalShow: false,
+                isRecoverPassModalShow: false, // TODO: НУжно прописать логику, для включения этого поповера
                 isServerError: false,
                 serverErrorText: ''
             }
@@ -109,6 +119,9 @@
 
             this.$root.$on('hideRegistrationModal', (evData) => {
                 this.isRegistrationModalShow = false;
+            });
+            this.$root.$on('hideRecoverPassModal', (evData) => {
+                this.isRecoverPassModalShow = false;
             });
         },
 
@@ -152,7 +165,14 @@
             openRegistrationModal() {
                 this.isRegistrationModalShow = true;
             },
+            openRecoverPassModal() {
+                this.isRecoverPassModalShow = true;
+            },
             successRegistration(user) {
+                this.model.email = user.email;
+                this.$refs.password.focus();
+            },
+            successRecoverPass(user) {
                 this.model.email = user.email;
                 this.$refs.password.focus();
             },

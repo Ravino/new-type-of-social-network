@@ -172,3 +172,13 @@ $plzLoginBtnBlueColor: #3D51DE;
     border-width: 2px;
     border-color: $plzLoginBtnBlueColor;
 }
+
+#btnRecoverPass {
+    text-decoration: none;
+    color: #3d51de;
+    transition: .4s;
+    &:hover {
+        color: $linkHoverColor;
+    }
+}
+
