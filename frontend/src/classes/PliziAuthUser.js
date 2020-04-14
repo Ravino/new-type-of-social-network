@@ -36,6 +36,13 @@ class PliziAuthUser extends PliziUzer{
      */
     _channel = ``;
 
+    /**
+     *
+     * @type {string}
+     * @private
+     */
+    _email = ``;
+
 
     /**
      * загружаем тут данные которые пришли от метода api/user
@@ -45,7 +52,8 @@ class PliziAuthUser extends PliziUzer{
     saveUserData(inputData, token){
         super.saveUserData(inputData);
 
-        this._channel = (inputData.channel) ? (inputData.channel+``).trim() : null;
+        this._email = (inputData.data.email+``).trim();
+        this._channel = (inputData.channel) ? (inputData.channel+``).trim() : ``;
 
         if (token) {
             this._token = (token+'').trim();
@@ -102,6 +110,8 @@ class PliziAuthUser extends PliziUzer{
      */
     cleanData(){
         super.cleanData();
+        this._email = ``;
+        this._channel = ``;
 
         window.localStorage.removeItem( this.localStorageKey );
     }
@@ -138,10 +148,18 @@ class PliziAuthUser extends PliziUzer{
         return this._channel;
     }
 
+    /**
+     *
+     * @returns {string}
+     */
+    get email(){
+        return this._email;
+    }
 
     toJSON() {
         let res = super.toJSON();
         res.channel = this._channel;
+        res.email = this._email;
 
         return res;
     }
@@ -149,13 +167,13 @@ class PliziAuthUser extends PliziUzer{
     updateData(fieldName, newValue) {
         switch(fieldName){
             case `firstName`:
-                this._firstName = (newValue+'').trim();
-                window.console.log( this._firstName, 'firstName new');
+                this.firstName = (newValue+'').trim();
+                window.console.log( this.firstName, 'firstName new');
                 break;
 
             case `lastName`:
-                this._lastName = (newValue+'').trim();
-                window.console.log( this._lastName, 'lastName new');
+                this.lastName = (newValue+'').trim();
+                window.console.log( this.lastName, 'lastName new');
                 break;
 
             default:

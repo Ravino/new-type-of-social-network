@@ -189,11 +189,9 @@ class PliziAPI {
      * @returns {object[]|null} - коллеция с найденными юзерами или null как ещё один признак ошибки
      */
     async userSearch(sText) {
-        const sData = {
-            search : (sText+'').trim()
-        };
+        const sData = (sText+'').trim();
 
-        let response = await this.__axios.post('/api/user/search', sData,  this.authHeaders)
+        let response = await this.__axios.get('/api/user/search/' + sData,  this.authHeaders)
             .catch((error) => {
                 this.checkIsTokenExperis(error);
                 throw new PliziAPIError(`userSearch`, error.response);
