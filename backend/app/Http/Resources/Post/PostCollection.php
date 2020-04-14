@@ -41,7 +41,10 @@ class PostCollection extends ResourceCollection
                             'primaryImage' => $post->primary_image,
                             'likes' => $post->likes,
                             'views' => $post->views,
-                            'user' => new User($post->postable)
+                            'sharesCount' => 25,
+                            'commentsCount' => 48,
+                            'user' => new User($post->postable),
+                            'createdAt' => $post->created_at
                         ];
                     } else if($post->postable instanceof CommunityModel) {
                         return [
@@ -51,7 +54,10 @@ class PostCollection extends ResourceCollection
                             'primaryImage' => $post->primary_image,
                             'likes' => $post->likes,
                             'views' => $post->views,
-                            'community' => new Community($post->postable)
+                            'sharesCount' => 25,
+                            'commentsCount' => 48,
+                            'community' => new Community($post->postable),
+                            'createdAt' => $post->created_at
                         ];
                     }
                 } else {
@@ -62,6 +68,9 @@ class PostCollection extends ResourceCollection
                         'primaryImage' => $post->primary_image,
                         'likes' => $post->likes,
                         'views' => $post->views,
+                        'sharesCount' => 25,
+                        'commentsCount' => 48,
+                        'createdAt' => $post->created_at
                     ];
                 }
             }),

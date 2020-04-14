@@ -26,7 +26,10 @@ class Post extends JsonResource
                 'primaryImage' => $this->primary_image,
                 'likes' => $this->likes,
                 'views' => $this->views,
-                'user' => new User($this->postable)
+                'sharesCount' => 25,
+                'commentsCount' => 48,
+                'user' => new User($this->postable),
+                'createdAt' => $this->created_at
             ];
         } else if($this->postable instanceof CommunityModel) {
             return [
@@ -36,7 +39,10 @@ class Post extends JsonResource
                 'primaryImage' => $this->primary_image,
                 'likes' => $this->likes,
                 'views' => $this->views,
-                'community' => new Community($this->postable)
+                'sharesCount' => 25,
+                'commentsCount' => 48,
+                'community' => new Community($this->postable),
+                'createdAt' => $this->created_at
             ];
         }
     }

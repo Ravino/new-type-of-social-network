@@ -325,6 +325,25 @@ class PliziAPI {
     }
 
     /**
+     * получение постов для ленты
+     * @public
+     * @returns {Promise}
+     */
+    async getUserPosts() {
+        let response = await this.__axios.get('api/user/posts', this.authHeaders)
+            .catch((error) => {
+                this.checkIsTokenExperis(error);
+                throw new PliziAPIError(`getUserPosts`, error.response);
+            });
+
+        if (response.status === 200) {
+            return response.data;
+        }
+
+        return null;
+    }
+
+    /**
      **************************************************************************
      * Private section
      **************************************************************************
