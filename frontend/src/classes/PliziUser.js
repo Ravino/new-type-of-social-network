@@ -22,13 +22,6 @@ class PliziUser {
 
     /**
      *
-     * @type {string}
-     * @private
-     */
-    _email = ``;
-
-    /**
-     *
      * @type {boolean}
      * @private
      */
@@ -155,7 +148,6 @@ class PliziUser {
      */
     saveUserData(inputData){
         this._id = inputData.data.id >>> 0;
-        this._email = (inputData.data.email+``).trim();
         this._isOnline = inputData.data.isOnline;
 
         const prof = inputData.data.profile;
@@ -190,7 +182,6 @@ class PliziUser {
      */
     cleanData(){
         this._id = -1;
-        this._email = ``;
         this._isOnline = false;
 
         this._firstName = ``;
@@ -236,14 +227,6 @@ class PliziUser {
      */
     get id(){
         return this._id;
-    }
-
-    /**
-     *
-     * @returns {string}
-     */
-    get email(){
-        return this._email;
     }
 
     /**
@@ -445,6 +428,7 @@ class PliziUser {
      * @returns {Object}
      */
     toJSON() {
+        /** @TGA чтобы momentJS не подключать **/
         let month = (this._birthday.getMonth()+1)+``;
         month = (month.length === 1) ? '0'+month : month;
 
@@ -454,13 +438,12 @@ class PliziUser {
         return {
             data: {
                 id: this._id,
-                email: this._email,
                 isOnline: this._isOnline,
                 profile: {
                     firstName: this._firstName,
                     lastName: this._lastName,
                     sex: this._sex,
-                    birthday: this.birthday,
+                    birthday: `${this._birthday.getFullYear()}-${month}-${day}`, // this._birthday - вернёт Date, а нам нужно в формате `YYYY-MM-DD`
                     city: this._city,
                     relationshipId: this._relationshipId,
                     userPic: this._userPic

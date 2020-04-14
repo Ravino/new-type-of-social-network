@@ -28,10 +28,14 @@
 
 <script>
 export default {
-    name : 'SearchResultItem',
-    props : {
-        srItem : Object
-    }
+name : 'SearchResultItem',
+props : {
+    srItem : Object
+},
+
+mounted(){
+    window.console.dir( JSON.parse( JSON.stringify(this.srItem) ), `SearchResultItem` );
+}
 }
 </script>
 

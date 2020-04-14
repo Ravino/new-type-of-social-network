@@ -30,8 +30,9 @@
 
                         <div v-if="isFriendsLoaded" class="plizi-friends-list">
                             <div v-if="friendsList  &&  friendsList.length>0" class="alert alert-light" >
-                                Тут список френдов<br />
-                                И он будет красивым когда мы его сделаем :)
+                                <SearchResultItem v-for="(friendItem, friendIndex) in friendsList"
+                                                  v-bind:key="friendIndex" v-bind:srItem="friendItem">
+                                </SearchResultItem>
                             </div>
                             <div v-else class="alert alert-info">
                                 У Вас ещё нет друзей!<br />
@@ -59,12 +60,14 @@
 import AccountToolbarLeft from '../common/AccountToolbarLeft.vue';
 import AccountToolbarRight from '../common/AccountToolbarRight.vue';
 import Spinner from '../common/Spinner.vue';
+import SearchResultItem from '../components/SearchResultItem.vue';
+
+import PliziUser from '../classes/PliziUser.js';
 
 export default {
 name: 'FriendsListPage',
 components: {
-    Spinner, AccountToolbarLeft,
-    AccountToolbarRight
+    AccountToolbarLeft, AccountToolbarRight, SearchResultItem, Spinner
 },
 data() {
     return {
@@ -75,10 +78,13 @@ data() {
 
 methods: {
     async loadFriendsList() {
-        let response = null;
+        let apiResponse = null;
+
+        this.friendsList = null;
+        this.isFriendsLoaded = false;
 
         try {
-            response = await this.$root.$api.friendsList();
+            apiResponse = await this.$root.$api.friendsList();
         }
         catch (e){
             if (e.status  &&  e.status>=400) {
@@ -89,10 +95,13 @@ methods: {
             }
         }
 
-        //window.console.warn( JSON.parse( JSON.stringify(response) ), `response` );
+        this.friendsList = [];
 
-        if (response) {
-            this.friendsList = response;
+        if (apiResponse) {
+            apiResponse.map( (srItem)=> {
+                this.friendsList.push( new PliziUser({ data : srItem} ) );
+            });
+
             this.isFriendsLoaded = true;
         }
 
