@@ -56,8 +56,6 @@ data () {
 methods: {
     afterSuccessLogin(evData) {
         if (evData.token  &&  (evData.token+'').trim() !== ``) {
-            //window.console.log( JSON.parse( JSON.stringify(evData) ), 'Success');
-
             this.$root.$isAuth = true;
 
             this.$store.dispatch('SET_GWT', evData.token);
@@ -149,11 +147,6 @@ mounted() {
 },
 
 created(){
-    this.$root.$api = new PliziAPI(this.$root, ``);
-    this.$root.$user = new PliziAuthUser({});
-},
-
-beforeMount(){
     this.$root.$on('afterSuccessLogin',  this.afterSuccessLogin);
 
     this.$root.$on('afterSuccessLogout', this.afterSuccessLogout);
@@ -173,6 +166,13 @@ beforeMount(){
         window.console.warn(evData, `api:Unauthorized!`);
         this.afterSuccessLogout();
     });
+
+    this.$root.$api = new PliziAPI(this.$root, ``);
+    this.$root.$user = new PliziAuthUser({});
+},
+
+beforeMount(){
+
 }
 
 }
