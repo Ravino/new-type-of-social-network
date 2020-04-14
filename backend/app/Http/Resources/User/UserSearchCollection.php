@@ -3,11 +3,7 @@
 namespace App\Http\Resources\User;
 
 
-use App\Http\Resources\PrivacySettings;
-use Illuminate\Http\Resources\Json\JsonResource;
-use Illuminate\Http\Resources\Json\ResourceCollection;
-
-class UserSearchCollection extends ResourceCollection
+class UserSearchCollection extends UserCollection
 {
     /**
      * Transform the resource into an array.
@@ -27,12 +23,6 @@ class UserSearchCollection extends ResourceCollection
                 ];
             }),
         ];
-    }
-
-    public function isOnline($user): bool
-    {
-        $period = config('user_activity_margin');
-        return $user->last_activity_dt > strtotime("-$period minutes");
     }
 }
 
