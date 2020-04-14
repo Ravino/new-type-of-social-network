@@ -60,10 +60,9 @@
         },
         methods: {
             async getPosts() {
-                console.log("Start");
                 let response = null;
 
-                response = await this.$root.$api.getUserPosts();
+                response = await this.$root.$api.getNews();
 
                 if (response !== null) {
                     this.news = [];
