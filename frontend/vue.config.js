@@ -4,5 +4,10 @@
 module.exports = {
     pluginOptions: {
         sourceDir: 'src'
-    }
+    },
+    // First prop for ngrok, second enable https protocol.
+    // devServer: {
+    //     disableHostCheck: true,
+    //     https: true,
+    // },
 };
