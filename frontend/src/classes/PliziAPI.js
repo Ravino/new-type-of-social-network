@@ -329,11 +329,11 @@ class PliziAPI {
      * @public
      * @returns {Promise}
      */
-    async getUserPosts() {
+    async getNews() {
         let response = await this.__axios.get('api/user/posts', this.authHeaders)
             .catch((error) => {
                 this.checkIsTokenExperis(error);
-                throw new PliziAPIError(`getUserPosts`, error.response);
+                throw new PliziAPIError(`getNews`, error.response);
             });
 
         if (response.status === 200) {
