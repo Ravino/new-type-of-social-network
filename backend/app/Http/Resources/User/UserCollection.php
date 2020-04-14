@@ -23,6 +23,7 @@ class UserCollection extends ResourceCollection
                     'id' => $user->id,
                     'email' => $user->email,
                     'isOnline' => $this->isOnline($user),
+                    'lastActivity' => $user->last_activity_dt,
                     'profile' => new Profile($user->profile),
                     'privacySettings' => new PrivacySettings($user->privacySettings)
                 ];
