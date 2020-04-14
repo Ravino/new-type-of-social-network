@@ -12,11 +12,13 @@
                 <div class="col-sm-6 col-md-6 col-lg-6 col-xl-6">
                     <input type="text"
                            id="firstName"
+                           class="w-75"
                            v-model="model.firstName"
                            :class="[isEdit.firstName ? 'form-control' : 'form-control-plaintext']"
                            @keyup.enter="accountStartSaveData($event.target.value, `firstName`)"
                            @blur="finishFieldEdit(`firstName`)"
-                           :readonly="!isEdit.firstName"/>
+                           :readonly="!isEdit.firstName"
+                           ref="firstName"/>
                 </div>
                 <div class="col-2 d-sm-none d-md-none d-lg-flex d-xl-flex">
                     <button type="button"
@@ -34,11 +36,13 @@
                 <div class="col-sm-6 col-md-6 col-lg-6 col-xl-6">
                     <input id="lastName"
                            type="text"
+                           class="w-75"
                            v-model="model.lastName"
                            :class="[isEdit.lastName ? 'form-control' : 'form-control-plaintext']"
                            @keyup.enter="accountStartSaveData($event.target.value, `lastName`)"
                            @blur="finishFieldEdit(`lastName`)"
-                           :readonly="!isEdit.lastName"/>
+                           :readonly="!isEdit.lastName"
+                           ref="lastName"/>
                 </div>
                 <div class="col-2 d-sm-none d-md-none d-lg-flex d-xl-flex">
                     <button type="button"
@@ -51,9 +55,10 @@
             </div>
 
             <div class="form-group row mb-0 border-bottom">
-                <label for="userSex" class="col-sm-6 col-md-6 col-lg-4 col-xl-4 col-form-label text-secondary">Пол</label>
+                <label for="userSex"
+                       class="col-sm-6 col-md-6 col-lg-4 col-xl-4 col-form-label text-secondary">Пол</label>
                 <div class="col-sm-6 col-md-6 col-lg-6 col-xl-6">
-                    <div class="w-50">
+                    <div class="w-75">
                         <select id="userSex" class="form-control border-0 pl-0"
                                 @change="accountStartSaveData(model.sex, 'sex')"
                                 v-model="model.sex">
@@ -72,7 +77,7 @@
                     Семейной положение
                 </label>
                 <div class="col-sm-6 col-md-6 col-lg-6 col-xl-6">
-                    <div class="w-50">
+                    <div class="w-75">
                         <select id="relationship" class="form-control border-0 pl-0"
                                 @change="accountStartSaveData(model.relationshipId, 'relationshipId')"
                                 v-model="model.relationshipId">
@@ -90,15 +95,16 @@
                 <label for="birthday" class="col-sm-6 col-md-6 col-lg-4 col-xl-4 col-form-label text-secondary">Дата
                     рождения</label>
                 <div class="col-sm-6 col-md-6 col-lg-6 col-xl-6">
-                    <!-- FIXME: @TGA поле слишком широкое и в ФФ крестик справа выглядит тупо поэтому -->
                     <input id="birthday"
                            type="date"
+                           class="w-75"
                            :value="model.birthday | toYMD"
                            :class="[isEdit.birthday ? 'form-control' : 'form-control-plaintext']"
                            @keyup.enter="accountStartSaveData($event.target.value, `birthday`)"
                            @blur="finishFieldEdit(`birthday`)"
                            @input="model.birthday = $event.target.value"
-                           :readonly="!isEdit.birthday"/>
+                           :readonly="!isEdit.birthday"
+                           ref="birthday"/>
                 </div>
                 <div class="col-2 d-sm-none d-md-none d-lg-flex d-xl-flex">
                     <button type="button"
@@ -116,12 +122,13 @@
                     <i class="fas fa-map-marker-alt"></i>
                     <input id="location"
                            type="text"
-                           class="ml-1"
+                           class="w-75 ml-1"
                            v-model="model.location"
                            :class="[isEdit.location ? 'form-control' : 'form-control-plaintext']"
                            @keyup.enter="accountStartSaveData($event.target.value, `location`)"
                            @blur="finishFieldEdit(`location`)"
-                           :readonly="!isEdit.location"/>
+                           :readonly="!isEdit.location"
+                           ref="location"/>
                 </div>
                 <div class="col-2 d-sm-none d-md-none d-lg-flex d-xl-flex">
                     <button type="button"
@@ -142,7 +149,7 @@
                 <label for="country" class="col-4 col-sm-6 col-md-6 col-form-label text-secondary">Страна</label>
                 <div class="col-sm-6 col-md-6 col-lg-6 col-xl-6">
                     <input type="text" readonly class="form-control-plaintext d-inline-block w-50" id="country"
-                           ref="country" />
+                           ref="country"/>
                 </div>
             </div>
 
@@ -183,83 +190,101 @@
         },
 
         methods: {
+            getRef(refKey) {
+                for (let [key, value] of Object.entries(this.$refs)) {
+                    if (refKey === key)
+                        return value;
+                }
+                return null;
+            },
             startFieldEdit(fieldName) {
                 // FIXME: @TGA после клика [редактировать] поля не получают фокус
                 // вот потому $refs и нужен был :)
                 this.isEdit[fieldName] = true;
-            },
 
+                const inpRef = this.getRef(fieldName);
+
+                if (inpRef) {
+                    setTimeout(() => {
+                        inpRef.focus();
+                    }, 100);
+                } else {
+                    window.console.warn(`Ошибка редактирования поля`);
+                }
+            },
             finishFieldEdit(fieldName) {
+                const inpRef = this.getRef(fieldName);
+
                 setTimeout(() => {
                     this.isEdit[fieldName] = false;
-                    this.accountStartSaveData(this.model[fieldName], fieldName);
                 }, 100);
-            },
 
-            async accountStartSaveData(newValue, fieldName) {
-                // FIXME: @TGA - подготовку данных формы лучше вынести в отдельный метод - так будет читабельнее
+                if (inpRef) {
+                    this.accountStartSaveData(this.model[fieldName], fieldName);
+                } else {
+                    window.console.warn(`Ошибка редактирования поля`);
+                }
+            },
+            formatFormData(newValue, fieldName) {
                 let formData = {};
 
                 if (fieldName === 'location') {
-                    // FIXME: @TGA - декструктуризация https://learn.javascript.ru/destructuring
-                    //let [country, city] = 'Украина,Днепр'.split(','); // пример
-                    let location = newValue.split(',');
+                    let [country, city] = newValue.split(',');
 
-                    formData.country = location[0].trim();
-                    formData.city = location[1].trim();
-                }
-                else {
-                    formData[fieldName] = newValue.trim();
-                    this.isEdit[fieldName] = false;
+                    formData = {country, city};
+                } else {
+                    for(let prop in formData) {
+                        if (prop !== 'birthday') {
+                            formData[prop] = formData[prop].trim();
+                        }
+                    }
 
                     if (fieldName === 'relationshipId' && newValue === 'null') {
                         newValue = null;
                     }
+
+                    formData[fieldName] = newValue;
                 }
 
+                return formData;
+            },
+            async accountStartSaveData(newValue, fieldName) {
                 this.isEdit[fieldName] = false;
 
+                let formData = this.formatFormData(newValue, fieldName);
                 let response = null;
 
-                try {
-                    response = await this.$root.$api.updateUser(formData);
-                } catch (e) {
-                    if (e.status && e.status === 401) {
-                        this.$root.$emit('afterSuccessLogout', {});
-                    } else {
-                        throw e;
-                    }
-                }
+                response = await this.$root.$api.updateUser(formData);
 
-                window.console.log(response, `response from PATCH`);
+                window.console.log(response);
                 // FIXME: @TGA никогда не выполнится - посмотри, что выводит console.log() строкой выше
                 // там поля status нету, потому ты ниже и делаешь запрос к $api.getUser(), а потом бросаешь afterUserLoad
-                if (response.status === 200) {
-                    this.$root.$user.updateData(fieldName, newValue);
-
-                    if (fieldName === `firstName` || fieldName === `lastName`) {
-                        this.$root.$emit('updateUserName', {
-                            firstName: this.$root.$user.firstName,
-                            lastName: this.$root.$user.lastName
-                        });
-                    }
+                if (response !== null) {
+                    this.$root.$user.updateData(response.data);
+                //
+                //     if (fieldName === `firstName` || fieldName === `lastName`) {
+                //         this.$root.$emit('updateUserName', {
+                //             firstName: this.$root.$user.firstName,
+                //             lastName: this.$root.$user.lastName
+                //         });
+                //     }
                 }
 
                 // FIXME: @TGA эти две строки делаются проще - смотри ниже (и PliziAPI подключать ещё раз не надо)
                 //const gwt = this.$store.getters.gwToken;
                 //const tryToLoadUser = await (new PliziAPI(gwt)).getUser();
 
-                const updatedUser = await this.$root.$api.getUser();
+                // const updatedUser = await this.$root.$api.getUser();
 
                 // FIXME: @TGA - это лишний запрос к БД
                 // в response у тебя уже есть обновлённые данные юзера - их прислал сервер
                 // надо просто обновить ими данные юзера
                 // и кстати не факт что tryToLoadUser у тебя будет корректен - может истечь жизнь токена
-                window.app.$root.$emit('afterUserLoad', {
-                    user: updatedUser,
-                    token: this.$root.$api.token,
-                    save: true
-                });
+                // window.app.$root.$emit('afterUserLoad', {
+                //     user: updatedUser,
+                //     token: this.$root.$api.token,
+                //     save: true
+                // });
             }
         },
 

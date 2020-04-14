@@ -272,6 +272,7 @@ class PliziAPI {
     async updateUser(userData) {
         let response = await this.__axios.patch('api/user', userData, this.authHeaders)
             .catch((error) => {
+                this.checkIsTokenExperis(error);
                 throw new PliziAPIError(`updateUser`, error.response);
             });
 
