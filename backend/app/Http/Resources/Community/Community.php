@@ -20,7 +20,7 @@ class Community extends JsonResource
                 'name' => $this->name,
                 'description' => $this->description,
                 'notice' => $this->notice,
-                'primary_image' => $this->primary_image,
+                'primaryImage' => $this->primary_image,
                 'url' => $this->url,
                 'website' => $this->website,
                 'location' => $this->location,
@@ -32,7 +32,7 @@ class Community extends JsonResource
                 'name' => $this->name,
                 'description' => $this->description,
                 'notice' => $this->notice,
-                'primary_image' => $this->primary_image,
+                'primaryImage' => $this->primary_image,
                 'url' => $this->url,
                 'website' => $this->website,
                 'location' => $this->location
