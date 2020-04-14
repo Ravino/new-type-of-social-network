@@ -39,6 +39,18 @@ class PliziPost {
      * @type {null}
      * @private
      */
+    _commentsCount = null;
+
+    /**
+     * @type {null}
+     * @private
+     */
+    _sharesCount = null;
+
+    /**
+     * @type {null}
+     * @private
+     */
     _user = null;
 
     /**
@@ -77,6 +89,14 @@ class PliziPost {
 
     get community() {
         return this._community;
+    }
+
+    get commentsCount() {
+        return this._commentsCount;
+    }
+
+    get sharesCount() {
+        return this._sharesCount;
     }
 
     constructor(post) {

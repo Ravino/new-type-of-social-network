@@ -1,7 +1,13 @@
 <template>
     <div class="w-100 d-flex">
-        <div class="message-item d-flex w-100 justify-content-start"
+        <div class="message-item d-flex w-100 justify-content-start position-relative"
              :class="calcMessageItemClass()">
+            <div class="checkBtns">
+                <label class="radio m-0 mr-2">
+                    <input type="checkbox" name="sex" id="" checked>
+                    <span></span>
+                </label>
+            </div>
             <div class="message-user-pic mt-auto">
                 <img v-if="message.isMine" :src="ownerPic" :alt="currentDialog.firstname" class="message-user-img" />
                 <img v-else :src="companionPic" :alt="companionName" class="message-user-img" />

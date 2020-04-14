@@ -11,9 +11,9 @@
                     <h6 class="post-poster-title mb-1">
                         <b>{{posterName}}</b>
                     </h6>
-<!--                    <time :datetime="post.dtLabel" class="post-poster-time">-->
-<!--                        {{ post.dtLabel | lastMessageTime }}-->
-<!--                    </time>-->
+                    <!--                    <time :datetime="post.dtLabel" class="post-poster-time">-->
+                    <!--                        {{ post.dtLabel | lastMessageTime }}-->
+                    <!--                    </time>-->
                 </div>
 
                 <div class="post-poster-actions my-auto ml-auto">
@@ -26,16 +26,16 @@
             <p class="post-main-text mb-2" v-html="this.$options.filters.toBR(postBody)"></p>
         </div>
 
-<!--        <div v-if="(post.images  &&  post.images.length>0)"-->
-<!--             class="col-12 px-4 post-pictures"-->
-<!--             :style="calcPostPictures(post.images.length)">-->
-<!--            <img v-for="(postPic, postPicIndex) in post.images"-->
-<!--                 :key="postPicIndex"-->
-<!--                 :src="postPic.path"-->
-<!--                 :alt="postPic.name"-->
-<!--                 :class="'postPictures-' + postPicIndex"-->
-<!--                 :style="calcPostPicturesImg(postPicIndex, post.images.length)"/>-->
-<!--        </div>-->
+        <!--        <div v-if="(post.images  &&  post.images.length>0)"-->
+        <!--             class="col-12 px-4 post-pictures"-->
+        <!--             :style="calcPostPictures(post.images.length)">-->
+        <!--            <img v-for="(postPic, postPicIndex) in post.images"-->
+        <!--                 :key="postPicIndex"-->
+        <!--                 :src="postPic.path"-->
+        <!--                 :alt="postPic.name"-->
+        <!--                 :class="'postPictures-' + postPicIndex"-->
+        <!--                 :style="calcPostPicturesImg(postPicIndex, post.images.length)"/>-->
+        <!--        </div>-->
 
         <div class="plz-post-item-footer col-12 px-4 pt-4">
             <div class="d-flex">
@@ -46,12 +46,12 @@
                     </div>
                     <div class="post-watched-counter ml-4">
                         <IconMessage/>
-                        <!--                        <span>{{ post.commentsNumber | space1000 }}</span>-->
+                        <span>{{ postCommentsCount | space1000 }}</span>
                     </div>
 
                     <div class="post-watched-counter ml-4">
                         <IconShare/>
-                        <!--                        <span>{{ post.sharesNumber | space1000 }}</span>-->
+                        <span>{{ postSharesCount | space1000 }}</span>
                     </div>
                 </div>
 
@@ -101,6 +101,12 @@
             postLikes() {
                 return this.post.likes;
             },
+            postCommentsCount() {
+                return this.post.commentsCount;
+            },
+            postSharesCount() {
+                return this.post.sharesCount;
+            }
         },
         data() {
             return {}
