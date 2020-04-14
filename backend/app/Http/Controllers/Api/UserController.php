@@ -15,12 +15,11 @@ class UserController extends Controller
 {
 
     /**
-     * @param Request $request
+     * @param string $search
      * @return UserSearchCollection|\Illuminate\Http\JsonResponse
      */
-    public function search(Request $request)
+    public function search(string $search)
     {
-        $search = $request->get('search', '');
         if (!empty($search)) {
             $users = User::where(function($query) use ($search)  {
                 $query->whereHas('profile', function($profile) use ($search) {

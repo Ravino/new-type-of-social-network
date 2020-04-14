@@ -49,7 +49,7 @@ Route::group(['middleware' => ['auth.jwt', 'track.activity']], function () {
     Route::resource('user', 'Api\ProfileController', ['only' => ['index', 'show']]);
     Route::post('user/profile/image', 'Api\ImageUploadController@upload');
     Route::patch('user/privacy', 'Api\UserPrivacySettingController@patch');
-    Route::post('user/search', 'Api\UserController@search');
+    Route::get('user/search/{search}', 'Api\UserController@search');
     Route::post('user/blacklist', 'Api\UserBlacklistController@post');
     Route::delete('user/blacklist', 'Api\UserBlacklistController@delete');
 
