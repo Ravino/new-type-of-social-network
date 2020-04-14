@@ -1,5 +1,5 @@
 <template>
-    <div id="pliziMobile" class="plz-plizi-mobile bg-white-br20 d-flex justify-content-between align-items-start mt-3">
+    <div id="pliziMobile" class="plz-plizi-mobile bg-white-br20 d-flex justify-content-between align-items-start ">
         <div class="plz-for-mobile">
             <h5 class="w-75"><b>Plizi для мобильных устройств</b></h5>
             <div class="plz-social-apps d-flex justify-content-start">

@@ -8,7 +8,7 @@
             <div class="row">
                 <div class="offset-2 col-8 bg-white-br20 p-4">
                     <div v-if="isDataReady" class="plizi-search-results-list">
-                        <ul v-if="(searchResults.length > 0)" class="list-unstyled mb-0">
+                        <ul v-if="searchResults  &&  (searchResults.length > 0)" class="list-unstyled mb-0">
                             <SearchResultItem v-for="(srItem, srIndex) in searchResults"
                                               v-bind:key="srIndex" v-bind:srItem="srItem">
                             </SearchResultItem>
@@ -39,7 +39,7 @@ import SearchResultItem from '../components/SearchResultItem.vue';
 
 import PliziUser from '../classes/PliziUser.js';
 
-    export default {
+export default {
 name: 'SearchResultsPage',
 components: {
     SearchResultItem,
@@ -65,32 +65,26 @@ computed: {
 
 methods: {
     async searchProcess(){
-        this.isDataReady = true;
+        this.isDataReady = true; // на случай если строка поиска пустая
+        this.searchResultsList = [];
 
         if (this.$root.$lastSearch === ``)
             return;
 
         this.isDataReady = false;
-        let searchResultsList = null;
+        let apiResponse = null;
 
         try {
-            searchResultsList = await this.$root.$api.userSearch(this.$root.$lastSearch);
+            apiResponse = await this.$root.$api.userSearch(this.$root.$lastSearch);
         }
         catch (e) {
-            if (e.status  &&  e.status>=400  &&  e.serverMessage  &&  `TOKEN_IS_EXPIRED` === e.serverAnswer) {
-                this.$root.$emit('afterSuccessLogout', {});
-            }
-            else {
-                throw e;
-            }
+            window.console.warn(e.detailMessage);
         }
 
-        if (searchResultsList !== null) {
-            //window.console.log(JSON.parse( JSON.stringify(searchResultsList) ), `this.searchResultsList`);
-
+        if (apiResponse !== null) {
             this.searchResultsList = [];
 
-            searchResultsList.map( (srItem)=> {
+            apiResponse.map( (srItem)=> {
                 this.searchResultsList.push( new PliziUser({ data : srItem} ) );
             });
 
@@ -117,13 +111,6 @@ mounted(){
 
 
 <style lang="scss">
-$srUserPicSize: 48px;
-$srItemTimeColor: #9A9A9A;
-$srItemNameColor: #363636;
-$srItemOnlineColor: #9FCD48;
-$srItemOfflineColor: #CACAC9;
-
-
 .chat-list-user {
     transition: .4s;
 
@@ -137,6 +124,4 @@ $srItemOfflineColor: #CACAC9;
         white-space: nowrap;
     }
 }
-
-
 </style>

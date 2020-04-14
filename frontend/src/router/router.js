@@ -75,7 +75,13 @@ router.beforeEach(async (to, from, next) => {
                 });
             }
             else {
-                const tryToLoadUser = await (new PliziAPI()).getUser(gwt);
+                let tryToLoadUser = null;
+                try {
+                    tryToLoadUser = await (new PliziAPI()).getUser(gwt);
+                }
+                catch (e) {
+                    routerForcedLogout(next);
+                }
 
                 if (tryToLoadUser) {
                     window.app.$root.$emit('afterUserLoad', {

@@ -145,40 +145,69 @@ class PliziAPI {
 
 
     /**
-     * @private
-     * @param {Object} errResponse
-     * @returns {string}
+     * доступ к API методу api/user
+     * @public
+     * @param {string} jwt - токен авторизации, если не задан, используется тот что был определён ранее
+     * @returns {Promise|object}
      */
-    getServerMessage(errResponse){
-        if (errResponse  &&  errResponse.data) {
-            if (errResponse.data.message) {
-                const serverMessage = (errResponse.data.message+'').trim();
-                return serverMessage.trim().toUpperCase().replace(/\s/g, '_')
-            }
-
-            if (errResponse.data.messages  &&  Array.isArray(errResponse.data.messages) && errResponse.data.messages.length>0) {
-                let serverMessages = [];
-                errResponse.data.messages.map( mItem => serverMessages.push(mItem) );
-                return serverMessages.join('\r\n').trim();
-            }
+    async getUser(jwt) {
+        if (jwt  &&  jwt!==``) {
+            this.token = jwt;
         }
+
+        let response = await this.__axios.get('api/user', this.authHeaders)
+            .catch((error) => {
+                this.checkIsTokenExperis(error);
+                throw new PliziAPIError(`getUser`, error.response);
+            });
+
+        if (200 === response.status) {
+            return response.data;
+        }
+
+        return null;
     }
 
 
     /**
-     * если в ответе сервер вернул, что `Token is expired`, то бросит событие `api:Unauthorized`
-     * @private
-     * @param {Object} error - ответ сервера с ошибкой в том виде как возвращает axios
-     * @throws {Event} - событие `api:Unauthorized`
+     * получение детальной информации о юзере
+     * @public
+     * @param {number} id - числовой ID юзера
+     * @returns {Object|null} - объект с данными юзера
      */
-    checkIsTokenExperis(error) {
-        const srvMsg = this.getServerMessage(error.response);
-
-        if (`TOKEN_IS_EXPIRED` === srvMsg) {
-            this.emit(`api:Unauthorized`, {
-                srcMethod: `userSearch`
+    async infoUser(id) {
+        let response = await this.__axios.get('api/user/'+id, this.authHeaders)
+            .catch((error) => {
+                this.checkIsTokenExperis(error);
+                throw new PliziAPIError(`infoUser`, error.response);
             });
+
+        if (200 === response.status) {
+            return response.data;
         }
+
+        return null;
+    }
+
+
+    /**
+     * обновление данных юзера
+     * @public
+     * @param {Object} userData - данные юзера
+     * @returns {Promise}
+     */
+    async updateUser(userData) {
+        let response = await this.__axios.patch('api/user', userData, this.authHeaders)
+            .catch((error) => {
+                this.checkIsTokenExperis(error);
+                throw new PliziAPIError(`updateUser`, error.response);
+            });
+
+        if (response.status === 200) {
+            return response.data;
+        }
+
+        return null;
     }
 
 
@@ -189,11 +218,9 @@ class PliziAPI {
      * @returns {object[]|null} - коллеция с найденными юзерами или null как ещё один признак ошибки
      */
     async userSearch(sText) {
-        const sData = {
-            search : (sText+'').trim()
-        };
+        const sData = (sText+'').trim();
 
-        let response = await this.__axios.post('/api/user/search', sData,  this.authHeaders)
+        let response = await this.__axios.get('/api/user/search/' + sData,  this.authHeaders)
             .catch((error) => {
                 this.checkIsTokenExperis(error);
                 throw new PliziAPIError(`userSearch`, error.response);
@@ -217,69 +244,6 @@ class PliziAPI {
         return this.__axios.post(`/api/sociallogin/${provider}`, {
             token: token,
         });
-    }
-
-
-    /**
-     * доступ к API методу api/user
-     * @public
-     * @param {string} jwt - токен авторизации, если не задан, используется тот что был определён ранее
-     * @returns {Promise|object}
-     */
-    async getUser(jwt) {
-        if (jwt  &&  jwt!==``) {
-            this.token = jwt;
-        }
-
-        let response = await this.__axios.get('api/user', this.authHeaders)
-            .catch((error) => {
-                throw new PliziAPIError(`infoUser`, error.response);
-            });
-
-        if (200 === response.status) {
-            return response.data;
-        }
-
-        return null;
-    }
-
-
-    /**
-     * получение детальной информации о юзере
-     * @public
-     * @param {number} id - числовой ID юзера
-     * @returns {Object|null} - объект с данными юзера
-     */
-    async infoUser(id) {
-        let response = await this.__axios.get('api/user/'+id, this.authHeaders)
-            .catch((error) => {
-                throw new PliziAPIError(`infoUser`, error.response);
-            });
-
-        if (200 === response.status) {
-            return response.data;
-        }
-
-        return null;
-    }
-
-    /**
-     * обновление данных юзера
-     * @public
-     * @param {Object} userData - данные юзера
-     * @returns {Promise}
-     */
-    async updateUser(userData) {
-        let response = await this.__axios.patch('api/user', userData, this.authHeaders)
-            .catch((error) => {
-                throw new PliziAPIError(`updateUser`, error.response);
-            });
-
-        if (response.status === 200) {
-            return response.data;
-        }
-
-        return null;
     }
 
 
@@ -360,6 +324,48 @@ class PliziAPI {
         return null;
     }
 
+    /**
+     **************************************************************************
+     * Private section
+     **************************************************************************
+     */
+
+    /**
+     * @private
+     * @param {Object} errResponse
+     * @returns {string}
+     */
+    getServerMessage(errResponse){
+        if (errResponse  &&  errResponse.data) {
+            if (errResponse.data.message) {
+                const serverMessage = (errResponse.data.message+'').trim();
+                return serverMessage.trim().toUpperCase().replace(/\s/g, '_')
+            }
+
+            if (errResponse.data.messages  &&  Array.isArray(errResponse.data.messages) && errResponse.data.messages.length>0) {
+                let serverMessages = [];
+                errResponse.data.messages.map( mItem => serverMessages.push(mItem) );
+                return serverMessages.join('\r\n').trim();
+            }
+        }
+    }
+
+
+    /**
+     * если в ответе сервер вернул, что `Token is expired`, то бросит событие `api:Unauthorized`
+     * @private
+     * @param {Object} error - ответ сервера с ошибкой в том виде как возвращает axios
+     * @throws {Event} - событие `api:Unauthorized`
+     */
+    checkIsTokenExperis(error) {
+        const srvMsg = this.getServerMessage(error.response);
+
+        if (`TOKEN_IS_EXPIRED` === srvMsg) {
+            this.emit(`api:Unauthorized`, {
+                srcMethod: `userSearch`
+            });
+        }
+    }
 }
 
 export { PliziAPI as default}
