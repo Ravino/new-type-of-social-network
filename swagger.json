@@ -9,8 +9,20 @@
   "basePath": "/api",
   "tags": [
     {
+      "name": "User",
+      "description": "Все, что касается пользователей"
+    },
+    {
       "name": "Friendships",
       "description": "Все, что касается друзей"
+    },
+    {
+      "name": "Communities",
+      "description": "Все, что касается сообществ"
+    },
+    {
+      "name": "Posts",
+      "description": "Все, что касается публикаций"
     }
   ],
   "schemes": [
@@ -18,6 +30,857 @@
     "http"
   ],
   "paths": {
+    "/post": {
+      "post": {
+        "tags": [
+          "Posts"
+        ],
+        "summary": "",
+        "description": "Создать пост",
+        "operationId": "createPost",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "body",
+            "name": "body",
+            "required": true,
+            "schema": {
+              "type": "object",
+              "properties": {
+                "name": {
+                  "type": "string"
+                },
+                "body": {
+                  "type": "string"
+                }
+              }
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "data": {
+                  "$ref": "#/definitions/PostByUser"
+                }
+              }
+            }
+          },
+          "402": {
+            "description": "",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "message": {
+                  "type": "string"
+                },
+                "errors": {
+                  "type": "object",
+                  "properties": {
+                    "field": {
+                      "type": "array",
+                      "items": {
+                        "example": "Here will be error of the field"
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/posts/{id}": {
+      "get": {
+        "tags": [
+          "Posts"
+        ],
+        "summary": "",
+        "description": "Посты на моей стене",
+        "operationId": "postsById",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "description": "ID Поста",
+            "required": true,
+            "type": "integer"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "data": {
+                  "$ref": "#/definitions/PostWithAll"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/communities/{id}/posts": {
+      "post": {
+        "tags": [
+          "Posts"
+        ],
+        "summary": "",
+        "description": "Создать пост в группе",
+        "operationId": "createPostFromCommunity",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "description": "ID сообщества",
+            "required": true,
+            "type": "integer"
+          },
+          {
+            "in": "body",
+            "name": "body",
+            "required": true,
+            "schema": {
+              "type": "object",
+              "properties": {
+                "name": {
+                  "type": "string"
+                },
+                "body": {
+                  "type": "string"
+                }
+              }
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "data": {
+                  "type": "object",
+                  "properties": {
+                    "list": {
+                      "type": "array",
+                      "items": {
+                        "$ref": "#/definitions/PostByUser"
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "402": {
+            "description": "",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "message": {
+                  "type": "string"
+                },
+                "errors": {
+                  "type": "object",
+                  "properties": {
+                    "field": {
+                      "type": "array",
+                      "items": {
+                        "example": "Here will be error of the field"
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/user/posts": {
+      "get": {
+        "tags": [
+          "Posts"
+        ],
+        "summary": "",
+        "description": "Посты на моей стене",
+        "operationId": "postsFromMyWall",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "data": {
+                  "type": "object",
+                  "properties": {
+                    "list": {
+                      "type": "array",
+                      "items": {
+                        "$ref": "#/definitions/PostWithAll"
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/register": {
+      "post": {
+        "tags": [
+          "User"
+        ],
+        "summary": "",
+        "description": "Отправить запрос на регистрацию",
+        "operationId": "register",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "body",
+            "name": "body",
+            "required": true,
+            "schema": {
+              "type": "object",
+              "properties": {
+                "email": {
+                  "type": "string"
+                },
+                "firstName": {
+                  "type": "string"
+                },
+                "lastName": {
+                  "type": "string"
+                },
+                "birthday": {
+                  "type": "string",
+                  "default": null
+                }
+              }
+            }
+          }
+        ],
+        "responses": {
+          "201": {
+            "description": "Успешно зарегистрирован",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "message": {
+                  "type": "string"
+                },
+                "email": {
+                  "type": "string"
+                }
+              }
+            }
+          },
+          "402": {
+            "description": "",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "message": {
+                  "type": "string"
+                },
+                "errors": {
+                  "type": "object",
+                  "properties": {
+                    "field": {
+                      "type": "array",
+                      "items": {
+                        "example": "Here will be error of the field"
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/login": {
+      "post": {
+        "tags": [
+          "User"
+        ],
+        "summary": "",
+        "description": "Отправить запрос на регистрацию",
+        "operationId": "login",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "body",
+            "name": "body",
+            "required": true,
+            "schema": {
+              "type": "object",
+              "properties": {
+                "email": {
+                  "type": "string"
+                },
+                "password": {
+                  "type": "string"
+                }
+              }
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Успешно авторизован",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "token": {
+                  "type": "string"
+                },
+                "chanel": {
+                  "type": "string"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/user": {
+      "get": {
+        "tags": [
+          "User"
+        ],
+        "summary": "",
+        "description": "Получить данные пользователя",
+        "operationId": "getUser",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "responses": {
+          "200": {
+            "description": "Успешно получен",
+            "schema": {
+              "$ref": "#/definitions/User"
+            }
+          }
+        },
+        "security": [
+          {
+            "Authorization": []
+          }
+        ]
+      },
+      "patch": {
+        "tags": [
+          "User"
+        ],
+        "summary": "",
+        "description": "",
+        "parameters": [
+          {
+            "in": "body",
+            "name": "body",
+            "required": true,
+            "schema": {
+              "type": "object",
+              "properties": {
+                "firstName": {
+                  "type": "string",
+                  "example": "new name"
+                }
+              }
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "$ref": "#/definitions/User"
+            }
+          }
+        }
+      }
+    },
+    "/user/search": {
+      "get": {
+        "tags": [
+          "User"
+        ],
+        "summary": "",
+        "description": "Получить данные пользователя",
+        "operationId": "searchUser",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "body",
+            "name": "body",
+            "required": true,
+            "schema": {
+              "type": "object",
+              "properties": {
+                "search": {
+                  "type": "string",
+                  "example": "Search string"
+                }
+              }
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "data": {
+                  "type": "object",
+                  "properties": {
+                    "list": {
+                      "type": "array",
+                      "items": {
+                        "$ref": "#/definitions/User"
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "Authorization": []
+          }
+        ]
+      }
+    },
+    "/user/profile/image": {
+      "get": {
+        "tags": [
+          "User"
+        ],
+        "summary": "",
+        "description": "Загрузить изображение для пользователя",
+        "operationId": "uploadImage",
+        "consumes": [
+          "multipart/form-data"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "name": "tag",
+            "in": "formData",
+            "description": "Additional data to pass to server",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "file",
+            "in": "formData",
+            "description": "file to upload",
+            "required": true,
+            "type": "file"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Успешно получен",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "path": {
+                  "type": "string",
+                  "example": "https://plizi.s3.eu-north-1.amazonaws.com/images/originals/WEP0464rMZ9J3j0QWmTTbX5oVyC46kJI6PZMtI56.png"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "Authorization": []
+          }
+        ]
+      }
+    },
+    "/communities": {
+      "post": {
+        "tags": [
+          "Communities"
+        ],
+        "summary": "",
+        "description": "Создать сообщество",
+        "operationId": "createCommunity",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "body",
+            "name": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/CommunityInput"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "data": {
+                  "$ref": "#/definitions/Community"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "message": {
+                  "type": "string"
+                },
+                "errors": {
+                  "type": "object",
+                  "properties": {
+                    "field": {
+                      "type": "array",
+                      "items": {
+                        "example": "Here will be error of the field"
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "get": {
+        "tags": [
+          "Communities"
+        ],
+        "summary": "",
+        "description": "Список сообществ",
+        "operationId": "getCommunities",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "data": {
+                  "type": "object",
+                  "properties": {
+                    "list": {
+                      "type": "array",
+                      "items": {
+                        "$ref": "#/definitions/Community"
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/communities/{id}": {
+      "get": {
+        "tags": [
+          "Communities"
+        ],
+        "summary": "",
+        "description": "Список сообществ в которых я учавствую",
+        "operationId": "getCommunityById",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "description": "ID сообщества",
+            "required": true,
+            "type": "integer"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "data": {
+                  "$ref": "#/definitions/Community"
+                }
+              }
+            }
+          }
+        }
+      },
+      "patch": {
+        "tags": [
+          "Communities"
+        ],
+        "summary": "",
+        "description": "Обновить сообщество",
+        "operationId": "updateCommunity",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "description": "ID сообщества",
+            "required": true,
+            "type": "integer"
+          },
+          {
+            "in": "body",
+            "name": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/CommunityInput"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "data": {
+                  "$ref": "#/definitions/Community"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "message": {
+                  "type": "string"
+                },
+                "errors": {
+                  "type": "object",
+                  "properties": {
+                    "field": {
+                      "type": "array",
+                      "items": {
+                        "example": "Here will be error of the field"
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "Authorization": []
+          }
+        ]
+      }
+    },
+    "/communities/{id}/subscribe": {
+      "get": {
+        "tags": [
+          "Communities"
+        ],
+        "summary": "",
+        "description": "Подписаться на сообщество",
+        "operationId": "subscribeOnCommunity",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "description": "ID сообщества",
+            "required": true,
+            "type": "integer"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "message": {
+                  "type": "string"
+                },
+                "id": {
+                  "type": "number"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/communities/{id}/unsubscribe": {
+      "get": {
+        "tags": [
+          "Communities"
+        ],
+        "summary": "",
+        "description": "Отписаться от сообщества",
+        "operationId": "unsubscribeFromCommunity",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "description": "ID сообщества",
+            "required": true,
+            "type": "integer"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "message": {
+                  "type": "string"
+                },
+                "id": {
+                  "type": "number"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/user/communities": {
+      "get": {
+        "tags": [
+          "Communities"
+        ],
+        "summary": "",
+        "description": "Список сообществ в которых я учавствую",
+        "operationId": "getUserCommunities",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "description": "ID сообщества",
+            "required": true,
+            "type": "integer"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "data": {
+                  "$ref": "#/definitions/UserWithCommunities"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/user/friendship": {
       "post": {
         "tags": [
@@ -289,6 +1152,185 @@
     }
   },
   "definitions": {
+    "PostByUser": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "number"
+        },
+        "name": {
+          "type": "string"
+        },
+        "body": {
+          "type": "string"
+        },
+        "primaryImage": {
+          "type": "string"
+        },
+        "likes": {
+          "type": "number"
+        },
+        "views": {
+          "type": "number"
+        },
+        "user": {
+          "$ref": "#/definitions/User"
+        }
+      }
+    },
+    "PostByCommunity": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "number"
+        },
+        "name": {
+          "type": "string"
+        },
+        "body": {
+          "type": "string"
+        },
+        "primaryImage": {
+          "type": "string"
+        },
+        "likes": {
+          "type": "number"
+        },
+        "views": {
+          "type": "number"
+        },
+        "community": {
+          "$ref": "#/definitions/Community"
+        }
+      }
+    },
+    "PostWithAll": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "number"
+        },
+        "name": {
+          "type": "string"
+        },
+        "body": {
+          "type": "string"
+        },
+        "primaryImage": {
+          "type": "string"
+        },
+        "likes": {
+          "type": "number"
+        },
+        "views": {
+          "type": "number"
+        },
+        "user": {
+          "$ref": "#/definitions/User"
+        },
+        "community": {
+          "$ref": "#/definitions/Community"
+        }
+      }
+    },
+    "CommunityInput": {
+      "type": "object",
+      "properties": {
+        "name": {
+          "type": "string"
+        },
+        "description": {
+          "type": "string"
+        },
+        "notice": {
+          "type": "string"
+        },
+        "url": {
+          "type": "string"
+        },
+        "website": {
+          "type": "string"
+        },
+        "location": {
+          "type": "string"
+        }
+      }
+    },
+    "Community": {
+      "type": "object",
+      "properties": {
+        "name": {
+          "type": "string"
+        },
+        "description": {
+          "type": "string"
+        },
+        "notice": {
+          "type": "string"
+        },
+        "url": {
+          "type": "string"
+        },
+        "website": {
+          "type": "string"
+        },
+        "location": {
+          "type": "string"
+        }
+      }
+    },
+    "UserWithCommunities": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "integer",
+          "format": "int64"
+        },
+        "email": {
+          "type": "string"
+        },
+        "isOnline": {
+          "type": "boolean"
+        },
+        "communities": {
+          "type": "object",
+          "properties": {
+            "list": {
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/Community"
+              }
+            }
+          }
+        },
+        "profile": {
+          "type": "object",
+          "properties": {
+            "firstName": {
+              "type": "string"
+            },
+            "lastName": {
+              "type": "string"
+            },
+            "sex": {
+              "type": "string"
+            },
+            "birthday": {
+              "type": "string"
+            },
+            "city": {
+              "type": "string"
+            },
+            "relationshipId": {
+              "type": "number"
+            },
+            "userPic": {
+              "type": "string"
+            }
+          }
+        }
+      }
+    },
     "User": {
       "type": "object",
       "properties": {
@@ -321,7 +1363,7 @@
               "type": "string"
             },
             "relationshipId": {
-              "type": "string"
+              "type": "number"
             },
             "userPic": {
               "type": "string"
