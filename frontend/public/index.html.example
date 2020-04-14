@@ -22,8 +22,8 @@
         var apiURL = 'http://plizi.loc';
         var wsUrl = 'ws://127.0.0.1:7070';
         // remote access
-        // var apiURL = 'http://vm1020511.had.pm/';
-        // var wsUrl  = 'ws://45.82.71.126:8080';
+        // var apiURL = 'https://vm1095330.hl.had.pm';
+        // var wsUrl  = 'ws://80.89.235.173:7070';
     </script>
 </head>
 <body>

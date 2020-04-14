@@ -2,7 +2,7 @@
     <div id="latestEntries" class="plz-latest-entries bg-white-br20">
         <h6 class="">Вы недавно входили в аккаунт с этого компьютера</h6>
 
-        <div class="plz-last-entries-list d-flex justify-content-start">
+        <div class="plz-last-entries-list d-flex justify-content-start flex-wrap">
             <LastEntryItem v-for="(leItem, leKey) in lastEntriesList"
                            v-bind:entry-item="leItem"
                            v-bind:key="leKey"
@@ -22,8 +22,8 @@ export default {
         return {
             //TODO: @TGA удалить потом эти mock-данные
             lastEntriesList: [
-                {src: '/images/last-entries/ava-2.png', fullName: 'Анжелика Герасимовa', isUser: true, email: `test@gmail.com` },
-                {src: '/images/last-entries/ava-1.png', fullName: 'Варвара Захаровa', isUser: true, email: `user@mail.com`},
+                {src: '/images/last-entries/ava-2.png', fullName: 'Марина Кабанова', isUser: true, email: `test@gmail.com` },
+                {src: '/images/last-entries/ava-1.png', fullName: 'Кристина Мамонтовa', isUser: true, email: `user@mail.com`},
                 {src: '/images/icons/add-account.png', fullName: 'Добавить аккаунт', isUser: false},
             ],
         }

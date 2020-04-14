@@ -1,10 +1,11 @@
 <template>
-    <div id="loginForm" class="bg-white-br20 plz-login-form h-100">
+    <div id="loginForm" class="bg-white-br20 plz-login-form h-100 pt-3">
         <div class="card-body">
-            <form novalidate="novalidate">
+            <form id="loginFormForm" novalidate="novalidate">
                 <div class="form-group"
                      :class="{ 'has-error': $v.model.email.$error, 'has-success': !$v.model.email.$invalid, 'has-error': isServerError }">
                     <label for="userEmail" class="d-none">Ваш E-mail</label>
+                    <i class="icon icon-letter"></i>
                     <input v-model="model.email" ref="email"
                            :class="{ '--is-invalid': $v.model.email.$error, '--is-valid': !$v.model.email.$invalid }"
                            @blur="$v.model.email.$touch()" @keydown="loginKeyDownCheck($event)"
@@ -20,6 +21,7 @@
                 <div class="form-group"
                      :class="{ 'has-error': $v.model.password.$error, 'has-success': !$v.model.password.$invalid }">
                     <label for="password" class="d-none">Пароль</label>
+                    <i class="icon icon-user"></i>
                     <input v-model="model.password" ref="password"
                            :class="{ '--is-invalid': $v.model.password.$error, '--is-valid': !$v.model.password.$invalid }"
                            @blur="$v.model.password.$touch()" @keydown="loginKeyDownCheck($event)"
@@ -48,46 +50,7 @@
                         Регистрация
                     </button>
                 </div>
-
-                <div class="plz-import-socnet form-group text-center">
-                    <h6 class="">Импорт аккаунта</h6>
-                    <div class="plz-import-socnet-text">Импортируйте свой аккаунт из списка следующих социальных сетей
-                    </div>
-                    <div class="plz-import-socnet-btns d-flex justify-content-center">
-                        <div class="mx-3">
-                            <a href="#twitter"
-                               title="Twitter"
-                               class="plz-socnet-btn"
-                               @click.prevent="loginWithSocial('twitter')">
-                                <i class="fab fa-twitter fa-2x mt-2"></i>
-                            </a>
-                        </div>
-                        <div class="mx-3">
-                            <a href="#vk"
-                               title="VKontakte"
-                               class="plz-socnet-btn"
-                               @click.prevent="loginWithSocial('vkontakte')">
-                                <i class="fab fa-vk fa-2x mt-2"></i>
-                            </a>
-                        </div>
-                        <div class="mx-3">
-                            <a href="#fb"
-                               title="Facebook"
-                               class="plz-socnet-btn"
-                               @click.prevent="loginWithSocial('facebook')">
-                                <i class="fab fa-facebook-f fa-2x mt-2"></i>
-                            </a>
-                        </div>
-                        <div class="mx-3">
-                            <a href="#instagram"
-                               title="Instagram"
-                               class="plz-socnet-btn"
-                               @click.prevent="loginWithSocial('instagram')">
-                                <i class="fab fa-instagram fa-2x mt-2"></i>
-                            </a>
-                        </div>
-                    </div>
-                </div>
+                <LoginSocialLinks></LoginSocialLinks>
             </form>
         </div>
 
@@ -102,11 +65,13 @@
     import {HTTPer} from '../httper/httper.js';
     import {email, maxLength, minLength, required} from 'vuelidate/lib/validators';
     import client_ids from '../libs/social_networks_client_ids';
+    import LoginSocialLinks from "./LoginSocialLinks";
 
     export default {
         name: 'LoginForm',
         components: {
-            RegistrationModal
+            RegistrationModal,
+            LoginSocialLinks,
         },
 
         data() {
@@ -145,18 +110,6 @@
             this.$root.$on('hideRegistrationModal', (evData) => {
                 this.isRegistrationModalShow = false;
             });
-
-            let params = new URLSearchParams(document.location.search.substring(1));
-            let state = params.get('state');
-
-            switch (state) {
-                case 'instagram':
-                    this.getInstagramToken(params);
-                    break;
-                case 'vk':
-                    this.getVKToken(params);
-                    break;
-            }
         },
 
         methods: {
@@ -198,79 +151,6 @@
             },
             openRegistrationModal() {
                 this.isRegistrationModalShow = true;
-            },
-
-            // TODO: @TGA вынести социалку в отдельный компонент
-            loginWithSocial(provider) {
-                switch (provider) {
-                    case 'facebook':
-                        this.socialFacebook(provider);
-                        break;
-                    case 'instagram':
-                        this.socialInstagram(provider);
-                        break;
-                    case 'vkontakte':
-                        this.socialVK(provider);
-                        break
-                }
-            },
-            socialFacebook(provider) {
-                let self = this;
-
-                FB.getLoginStatus(function (response) {
-                    if (!response.authResponse) {
-                        FB.login(function (response) {
-                            if (response.authResponse) {
-                                self.saveToken(provider, response.authResponse.accessToken);
-                            }
-                        });
-                    } else {
-                        self.saveToken(provider, response.authResponse.accessToken);
-                    }
-                });
-            },
-            socialInstagram(provider) {
-                let url = {
-                    domain: "https://api.instagram.com/oauth/authorize",
-                    client_id: `client_id=${client_ids.instagram}`,
-                    scope: "scope=user_profile",
-                    response_type: "response_type=code",
-                    state: 'state=instagram',
-                };
-
-                window.location.href = `${url.domain}?${url.client_id}&redirect_uri=${client_ids.redirect_uri}&${url.scope}&${url.response_type}&${url.state}`;
-            },
-            socialVK(provider) {
-                let url = {
-                    domain: "https://oauth.vk.com/authorize",
-                    client_id: `client_id=${client_ids.vk}`,
-                    display: "display=page",
-                    response_type: "response_type=token",
-                    state: "state=vk",
-                };
-
-                window.location.href = `${url.domain}?${url.client_id}&redirect_uri=${client_ids.redirect_uri}&${url.display}&${url.response_type}&${url.state}`;
-            },
-            saveToken(provider, token) {
-                HTTPer.post(`/api/sociallogin/${provider}`, {
-                    token: token,
-                }).then(response => {
-                    console.log(response);
-                });
-            },
-            getInstagramToken(params) {
-                let code = params.get("code");
-
-                if (code) {
-                    this.saveToken('instagram', code);
-                }
-            },
-            getVKToken(params) {
-                let access_token = params.get("access_token");
-
-                if (access_token) {
-                    this.saveToken('vkontakte', access_token);
-                }
             },
             successRegistration(user) {
                 this.model.email = user.email;

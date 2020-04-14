@@ -1,8 +1,25 @@
 
-$plzLoginFormW: 420px;
+$plzLoginFormW: 100%;
 $plzSocNetBtnSize: 48px;
 $plzLoginBtnBlueColor: #3D51DE;
 
+#loginFormForm {
+    .form-group {
+        position: relative;
+        width: 278px;
+        max-width: 278px;
+        margin-left: auto;
+        margin-right: auto;
+        .icon-letter,
+        .icon-user {
+            position: absolute;
+            top: 11px;
+            left: 8px;
+            display: inline-block;
+            z-index: 1;
+        }
+    }
+}
 .plz-login-form {
     width: $plzLoginFormW;
     max-width: $plzLoginFormW;
@@ -12,25 +29,17 @@ $plzLoginBtnBlueColor: #3D51DE;
 
 .lr-input-email, .lr-input-password {
     position: relative;
-    background-image: url("../images/icons/input-email.png");
-    background-position: 8px center;
+
     background-repeat: no-repeat;
     padding-left: 40px;
     border-radius: 0;
 }
 
-.lr-input-password {
-    background-image: url("../images/icons/input-name.png");
-}
 
 .btn.plz-btn.btn-login {
     margin-top: 27px;
     box-shadow: 0 5px 18px rgba(61, 81, 222, .4);
 }
-
-//.btn {
-//    cursor: pointer;
-//}
 
 .btn.plz-btn.btn-login:hover {
     box-shadow: none;
@@ -117,10 +126,7 @@ $plzLoginBtnBlueColor: #3D51DE;
 
 .form-control.lr-input {
     border-radius: 0;
-    width: 278px;
-    max-width: 278px;
-    margin-left: auto;
-    margin-right: auto;
+
     border-width: 0 0 1px 0;
     border-color: #D7D7D7;
     background-color: transparent;

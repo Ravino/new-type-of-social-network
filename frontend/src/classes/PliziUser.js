@@ -143,8 +143,10 @@ class PliziUser {
     __RELATIONSHIP_MARRIED = 1;
     __RELATIONSHIP_NOT_MARRIED = 2;
 
-    constructor(){
-
+    constructor(usrData){
+       if (usrData  &&  typeof  usrData==='object'  &&  Object.keys(usrData).length>0) {
+            this.saveUserData(usrData);
+        }
     }
 
     /**
@@ -167,11 +169,6 @@ class PliziUser {
 
         if (prof.userPic) {
             this._userPic = (prof.userPic+``).trim();
-        }
-
-        // TODO @TGA удалить когда бэкендеры пофиксят
-        if (prof.user_pic) {
-            this._userPic = (prof.user_pic+``).trim();
         }
 
         // TODO: @TGA переписать потом на загрузку реальных данных
@@ -435,7 +432,6 @@ class PliziUser {
         return this._audiosNumber;
     }
 
-
     /**
      * возвращает данные юзера в том виде как их воазващает api/user
      * @returns {string}
@@ -443,7 +439,6 @@ class PliziUser {
     toString(){
         return JSON.stringify( this.toJSON() )
     }
-
 
     /**
      * возвращает данные юзера в том виде как их воазващает api/user
