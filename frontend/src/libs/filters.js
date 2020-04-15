@@ -26,7 +26,7 @@ Vue.filter('toDMYHM', (dateValue) => {
     return moment(dateValue).format('DD.MM.YYYY HH:mm');
 });
 
-Vue.filter('lastMessageTime', (messageDT) => {
+Vue.filter('lastEventTime', (messageDT) => {
     let now = moment();
     let yesterday = moment().subtract(1, 'days');
     let lmt = moment.unix(messageDT);
@@ -40,6 +40,26 @@ Vue.filter('lastMessageTime', (messageDT) => {
     let lastWeek = moment().subtract(7, 'days');
     if ( +lmt.format('X') >= +lastWeek.format('X')) {
         let dow = lmt.format('dddd');
+        return dow.charAt(0).toUpperCase() + dow.slice(1);
+    }
+
+    return lmt.format('DD.MM.YY');
+});
+
+Vue.filter('lastMessageTime', (messageDT) => {
+    let now = moment();
+    let yesterday = moment().subtract(1, 'days');
+    let lmt = moment.unix(messageDT);
+
+    // если сообщение было сегодня или вчера
+    if (now.format('YYYY-MM-DD')===lmt.format('YYYY-MM-DD')  ||  yesterday.format('YYYY-MM-DD')===lmt.format('YYYY-MM-DD')) {
+        return lmt.format('HH:mm');
+    }
+
+    // сообщение было в течение последних 7 дней
+    let lastWeek = moment().subtract(7, 'days');
+    if ( +lmt.format('X') >= +lastWeek.format('X')) {
+        let dow = lmt.format('ddd');
         return dow.charAt(0).toUpperCase() + dow.slice(1);
     }
 

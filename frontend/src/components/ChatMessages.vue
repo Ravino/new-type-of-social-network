@@ -1,7 +1,7 @@
 <template>
     <div id="chatMessagesBody" class="w-100 align-self-stretch position-relative">
         <vue-custom-scrollbar class="chat-messages-scroll py-4"  :settings="settings"
-                              @ps-scroll-y="scrollHanle">
+                              @ps-scroll-y="scrollHandle">
             <div class="d-flex flex-column --align-items-start">
                 <ChatMessageItem v-for="(message, messageIndex) in messages"
                                  v-bind:currentDialog="currentDialog"
@@ -26,10 +26,10 @@
 </template>
 
 <script>
-// import moment from 'moment';
 import ChatMessageItem from './ChatMessageItem.vue';
-import IconShare from "../icons/IconShare.vue";
-import IconBasket from "../icons/IconBasket.vue";
+import IconShare from '../icons/IconShare.vue';
+import IconBasket from '../icons/IconBasket.vue';
+/** @link https://binaryify.github.io/vue-custom-scrollbar/en/#why-custom-scrollbar **/
 import vueCustomScrollbar from 'vue-custom-scrollbar';
 
 
@@ -60,8 +60,8 @@ methods: {
         return (typeof ret === 'undefined') ? null : ret;
     },
 
-    scrollHanle(evt) {
-        console.log(evt)
+    scrollHandle(evt) {
+        console.log(evt, `scrollHandle`)
     }
 },
 

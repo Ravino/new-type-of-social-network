@@ -54,7 +54,7 @@ Vue.prototype.$alert = function(message, clazz, timeOut){
 // Vue.use(VueResponsiveComponents);
 
 import router from './router/router.js';
-import { store } from './store/store.js'
+import store from './store/store.js'
 import './libs/filters.js';
 
 import './libs/facebook.js';

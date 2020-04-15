@@ -114,28 +114,6 @@ methods: {
     },
 
 
-    sentNewChatMessageToAPI(evData) {
-        const sendData = {
-            body: evData.message.body,
-            chat_id: evData.chatId
-        };
-
-        HTTPer.post('api/chat/send', sendData, this.$store.getters.getHTTPConfig)
-            .then((response) => {
-                if (response.status === 200) {
-                    this.$root.$emit('addNewChatMessageToList', evData.message);
-                }
-            })
-            .catch((error) => {
-                if (400 === error.response.status) {
-                    window.console.warn(error.response.status+': '+error.response.statusText+': ' +error.response.data.message);
-                }
-                else {
-                    window.console.warn( error.toString() );
-                }
-            });
-    },
-
     afterUserLoad(evData) {
         if (evData.token !== ``  &&  evData.user) {
 
@@ -164,8 +142,6 @@ created(){
 
     this.$root.$on('afterSuccessLogout', this.afterSuccessLogout);
 
-    this.$root.$on('sentNewChatMessageToAPI', this.sentNewChatMessageToAPI);
-
     this.$root.$on('afterUserLoad', this.afterUserLoad);
 
     this.$root.$on('searchStart', (evData) => {
@@ -175,7 +151,7 @@ created(){
     // TODO: @TGA тут времененно, для отладки
     this.$root.$on('sendPersonalMessage', this.handlePersonalMessage);
 
-    this.$root.$on('api:Unauthorized', (evData)=>{
+    this.$root.$on('api:Unauthorized', (evData) => {
         window.console.warn(evData, `api:Unauthorized!`);
         this.afterSuccessLogout();
     });
