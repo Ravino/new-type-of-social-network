@@ -8,6 +8,7 @@ use App\Providers\RouteServiceProvider;
 use App\Services\SocialAccountsService;
 use Carbon\Carbon;
 use Domain\Pusher\WampServer;
+use Http;
 use Illuminate\Foundation\Auth\AuthenticatesUsers;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
@@ -91,40 +92,30 @@ class LoginController extends Controller
     public function socialLogin(Request $request, $provider)
     {
         $providerUser = null;
-        try {
-            $providerUser = Socialite::driver($provider)->userFromToken($request['token']);
-        } catch (Exception $exception) {
-            \Log::debug($exception);
+        if($provider === 'instagram') {
+            $request['token'] = Socialite::driver($provider)->getAccessTokenResponse($request['token'])['access_token'];
         }
-
-        if ($providerUser) {
-            $user = (new SocialAccountsService())->findOrCreate($providerUser, $provider);
+        if($request['token']) {
             try {
-                if (!$token = JWTAuth::fromUser($user)) {
-                    return response()->json(['message' => 'invalid credentials'], 400);
-                }
-            } catch (JWTException $e) {
-                return response()->json(['message' => 'could not create token'], 500);
+                $providerUser = Socialite::driver($provider)->userFromToken($request['token']);
+            } catch (Exception $exception) {
+                \Log::debug($exception);
             }
-            $channel = WampServer::channelForUser($user->id);
-            return response()->json(compact('token', 'channel'));
-        }
 
-        return null;
-    }
-
-    /**
-     * @param $provider
-     * @return \Symfony\Component\HttpFoundation\RedirectResponse
-     */
-    public function redirectToProvider($provider)
-    {
-        try {
-            return Socialite::driver('vkontakte')->stateless()->redirect();
-        } catch (Exception $e) {
-            \Log::debug($e);
+            if ($providerUser) {
+                $user = (new SocialAccountsService())->findOrCreate($providerUser, $provider);
+                try {
+                    if (!$token = JWTAuth::fromUser($user)) {
+                        return response()->json(['message' => 'invalid credentials'], 400);
+                    }
+                } catch (JWTException $e) {
+                    return response()->json(['message' => 'could not create token'], 500);
+                }
+                $channel = WampServer::channelForUser($user->id);
+                return response()->json(compact('token', 'channel'));
+            }
         }
-        return 'smth';
+        return response()->json(['message' => 'invalid access token provided'], 422);
     }
 
     /**

@@ -18,6 +18,7 @@ import NotificationsPage from '../pages/NotificationsPage.vue';
 import PliziAPI from '../classes/PliziAPI.js';
 import PliziAuthUser from '../classes/PliziAuthUser.js';
 import NewsPage from "../pages/NewsPage";
+import UpdatePasswordPage from "../pages/UpdatePasswordPage";
 
 const routes = [
     {path: '/', redirect: '/login', isGuest: true},
@@ -34,6 +35,7 @@ const routes = [
     {path: '/friends', component: FriendsListPage, name: 'FriendsListPage', meta: {title: 'Plizi: Друзья'}, props: true },
     {path: '/notifications', component: NotificationsPage, name: 'NotificationsPage', meta: {title: 'Plizi: напоминания'}, props: true },
     {path: '/news', component: NewsPage, name: 'NewsPage', meta: {title: 'Plizi: Новости', props: true}},
+    {path: '/password/update', component: UpdatePasswordPage, meta: {title: 'Plizi: Обновление пароля', props: true, isGuest: true}},
 ];
 
 const router = new VueRouter({

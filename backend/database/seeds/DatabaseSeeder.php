@@ -23,6 +23,7 @@ class DatabaseSeeder extends Seeder
             $this->doSeed(CountriesGeoSeeder::class);
             $this->doSeed(RegionsGeoSeeder::class);
             $this->doSeed(CitiesGeoSeeder::class);
+            $this->doSeed(FriendshipTableSeeder::class);
         }
         Model::reguard();
     }
