@@ -19,14 +19,23 @@ class UserCollection extends ResourceCollection
     {
         return [
             'list' => $this->collection->map(function ($user) {
-                return [
-                    'id' => $user->id,
-                    'email' => $user->email,
-                    'isOnline' => $this->isOnline($user),
-                    'lastActivity' => $user->last_activity_dt,
-                    'profile' => new Profile($user->profile),
-                    'privacySettings' => new PrivacySettings($user->privacySettings)
-                ];
+                if(\Auth::user()->id === $user->id) {
+                    return [
+                        'id' => $user->id,
+                        'email' => $user->email,
+                        'isOnline' => $this->isOnline($user),
+                        'lastActivity' => $user->last_activity_dt,
+                        'profile' => new Profile($user->profile),
+                        'privacySettings' => new PrivacySettings($user->privacySettings)
+                    ];
+                } else {
+                    return [
+                        'id' => $user->id,
+                        'isOnline' => $this->isOnline($user),
+                        'lastActivity' => $user->last_activity_dt,
+                        'profile' => new Profile($user->profile),
+                    ];
+                }
             }),
         ];
     }

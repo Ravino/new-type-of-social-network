@@ -16,14 +16,23 @@ class User extends JsonResource
      */
     public function toArray($request)
     {
-        return [
-            'id' => $this->id,
-            'email' => $this->email,
-            'isOnline' => $this->isOnline(),
-            'lastActivity' => $this->last_activity_dt,
-            'profile' => new Profile($this->profile),
-            'privacySettings' => new PrivacySettings($this->privacySettings)
-        ];
+        if(\Auth::user()->id === $this->id) {
+            return [
+                'id' => $this->id,
+                'email' => $this->email,
+                'isOnline' => $this->isOnline(),
+                'lastActivity' => $this->last_activity_dt,
+                'profile' => new Profile($this->profile),
+                'privacySettings' => new PrivacySettings($this->privacySettings)
+            ];
+        } else {
+            return [
+                'id' => $this->id,
+                'isOnline' => $this->isOnline(),
+                'lastActivity' => $this->last_activity_dt,
+                'profile' => new Profile($this->profile),
+            ];
+        }
     }
 
     public function isOnline() : bool
