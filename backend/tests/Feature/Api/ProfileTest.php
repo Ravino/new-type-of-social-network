@@ -9,14 +9,15 @@ use Tests\Feature\TestApi;
 
 class ProfileTest extends TestApi
 {
+
     /**
-     * @return void
+     * Processed route: [GET] api/user
      */
-    public function testIndexProfile()
+    public function testGetApiUser()
     {
         $token = $this->getAuthToken();
         /* @var TestResponse $response */
-        $response = $this->json(
+        $this->json(
             'GET',
             '/api/user',
             [],
@@ -24,10 +25,9 @@ class ProfileTest extends TestApi
                 'Content-Type: application/x-www-form-urlencoded',
                 'Cache-Control: no-cache',
                 'Authorization' => 'Bearer ' . $token . '',
-            ]
-        );
-        $response
-            ->assertStatus(200)
+            ],
+            'Get current user'
+        )   ->assertStatus(200)
             ->assertJsonStructure(
                 [
                     'data' => [
@@ -42,12 +42,41 @@ class ProfileTest extends TestApi
     }
 
     /**
-     * @return void
+     * Processed route: [GET] api/user/{user}
      */
-    public function testUpdateProfile()
+    public function testGetApiUserId()
     {
         $token = $this->getAuthToken();
-        $response = $this->json(
+        /* @var TestResponse $response */
+        $this->json(
+            'GET',
+            '/api/user/2',
+            [],
+            [
+                'Content-Type: application/x-www-form-urlencoded',
+                'Cache-Control: no-cache',
+                'Authorization' => 'Bearer ' . $token . '',
+            ],
+            'Get user by ID'
+        )   ->assertStatus(200)
+            ->assertJsonStructure(
+                [
+                    'data' => [
+                        'id',
+                        'profile',
+                    ],
+                ]
+            );
+    }
+
+    /**
+     * Processed route: [PATCH] api/user
+     * @return void
+     */
+    public function testPatchApiUser()
+    {
+        $token = $this->getAuthToken();
+        $this->json(
             'PATCH',
             '/api/user',
             [
@@ -58,10 +87,9 @@ class ProfileTest extends TestApi
                 'Content-Type: application/x-www-form-urlencoded',
                 'Cache-Control: no-cache',
                 'Authorization' => 'Bearer ' . $token . '',
-            ]
-        );
-        $response
-            ->assertStatus(200)
+            ],
+            'Update user'
+        )->assertStatus(200)
             ->assertJsonStructure(
                 [
                     'data' => [
@@ -72,5 +100,27 @@ class ProfileTest extends TestApi
                     ],
                 ]
             );
+    }
+
+    /**
+     *
+     * Processed route: [GET] api/user/communities
+     */
+    public function testGetApiUserCommunities()
+    {
+        $token = $this->getAuthToken();
+        /* @var TestResponse $response */
+        $this->json(
+            'GET',
+            '/api/user/communities',
+            [],
+            [
+                'Content-Type: application/x-www-form-urlencoded',
+                'Cache-Control: no-cache',
+                'Authorization' => 'Bearer ' . $token . '',
+            ],
+            'Get current user communities'
+        )   ->assertStatus(200)
+            ->assertJsonStructure(['data']);
     }
 }

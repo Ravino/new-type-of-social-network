@@ -1,6 +1,6 @@
 import axios from 'axios';
 import PliziAPIError from './PliziAPIError.js';
-import { HTTPer } from "../httper/httper";
+import {HTTPer} from "../httper/httper";
 
 class PliziAPI {
 
@@ -52,9 +52,9 @@ class PliziAPI {
      * @param {Vue} $root
      * @param {string} token
      */
-    constructor($root, token){
-        this.__baseURL = (window.apiURL) ? window.apiURL+``.trim() : ``;
-        this.__baseWsURL = (window.wsUrl) ? window.wsUrl+``.trim() : ``;
+    constructor($root, token) {
+        this.__baseURL = (window.apiURL) ? window.apiURL + ``.trim() : ``;
+        this.__baseWsURL = (window.wsUrl) ? window.wsUrl + ``.trim() : ``;
 
         if (token) {
             this.token = token;
@@ -65,8 +65,8 @@ class PliziAPI {
         }
 
         this.__axios = axios.create({
-            baseURL : this.__baseURL,
-            headers : this.__defaultHeaders
+            baseURL: this.__baseURL,
+            headers: this.__defaultHeaders
         });
     }
 
@@ -74,7 +74,7 @@ class PliziAPI {
      * геттер для получения header'а bearer
      * @returns {string} - Bearer вместе с токеном
      */
-    get bearer(){
+    get bearer() {
         return 'Bearer ' + this.__token;
     }
 
@@ -83,7 +83,7 @@ class PliziAPI {
      * @param {string} jwToken
      */
     set token(jwToken) {
-        this.__token = (jwToken+'').trim();
+        this.__token = (jwToken + '').trim();
     }
 
     /**
@@ -97,8 +97,8 @@ class PliziAPI {
      * геттер для упрощения получения заголовков с токеном авторизации
      * @returns {Object}
      */
-    get authHeaders(){
-        return { headers: { Authorization: this.bearer } };
+    get authHeaders() {
+        return {headers: {Authorization: this.bearer}};
     }
 
 
@@ -108,7 +108,7 @@ class PliziAPI {
      * @param {string} eventName
      * @param {object|boolean|null} eventData
      */
-    emit(eventName, eventData){
+    emit(eventName, eventData) {
         if (this.__$root)
             return this.__$root.$emit(eventName, eventData || {});
     }
@@ -152,7 +152,7 @@ class PliziAPI {
      * @returns {Promise|object}
      */
     async getUser(jwt) {
-        if (jwt  &&  jwt!==``) {
+        if (jwt && jwt !== ``) {
             this.token = jwt;
         }
 
@@ -177,7 +177,7 @@ class PliziAPI {
      * @returns {Object|null} - объект с данными юзера
      */
     async infoUser(id) {
-        let response = await this.__axios.get('api/user/'+id, this.authHeaders)
+        let response = await this.__axios.get('api/user/' + id, this.authHeaders)
             .catch((error) => {
                 this.checkIsTokenExperis(error);
                 throw new PliziAPIError(`infoUser`, error.response);
@@ -244,9 +244,9 @@ class PliziAPI {
      * @returns {object[]|null} - коллеция с найденными юзерами или null как ещё один признак ошибки
      */
     async userSearch(sText) {
-        const sData = (sText+'').trim();
+        const sData = (sText + '').trim();
 
-        let response = await this.__axios.get('/api/user/search/' + sData,  this.authHeaders)
+        let response = await this.__axios.get('/api/user/search/' + sData, this.authHeaders)
             .catch((error) => {
                 this.checkIsTokenExperis(error);
                 throw new PliziAPIError(`userSearch`, error.response);
@@ -282,15 +282,12 @@ class PliziAPI {
                         status: 422,
                         message: error.response.data.message
                     }
-                }
-                else {
+                } else {
                     this.checkIsTokenExperis(error);
                     throw new PliziAPIError(`sendFriendshipInvitation`, error.response);
                 }
             });
     }
-
-
 
 
     /**
@@ -312,7 +309,7 @@ class PliziAPI {
      * @returns {object[]|null} - список диалогов юзера, или NULL если их нет
      */
     async chatDialogs() {
-        let response = await this.__axios.get('api/chat/dialogs',  this.authHeaders).catch((error) => {
+        let response = await this.__axios.get('api/chat/dialogs', this.authHeaders).catch((error) => {
             this.checkIsTokenExperis(error);
             throw new PliziAPIError(`chatDialogs`, error.response);
         });
@@ -332,7 +329,7 @@ class PliziAPI {
      * @returns {object[]|null} - список сообщений в диалоге, или NULL если была ошибка
      */
     async chatMessages(dialogID) {
-        let response = await this.__axios.get('api/chat/messages/'+(dialogID >>> 0),  this.authHeaders).catch((error) => {
+        let response = await this.__axios.get('api/chat/messages/' + (dialogID >>> 0), this.authHeaders).catch((error) => {
             this.checkIsTokenExperis(error);
             throw new PliziAPIError(`chatMessages`, error.response);
         });
@@ -353,7 +350,7 @@ class PliziAPI {
      */
     async friendsList(userID) {
         let path = 'api/user/friendship';
-        if (path &&  (userID>>>0)!==0) {
+        if (path && (userID >>> 0) !== 0) {
             path = `api/user/${userID}/friendship`;
         }
 
@@ -410,6 +407,14 @@ class PliziAPI {
         return null;
     }
 
+    async recoveryPassword(email) {
+        return await this.__axios.post('api/password/email', {email})
+            .catch((error) => {
+                this.checkIsTokenExperis(error);
+                throw new PliziAPIError(`recoveryPassword`, error.response);
+            });
+    }
+
     /**
      **************************************************************************
      * Private section
@@ -421,16 +426,16 @@ class PliziAPI {
      * @param {Object} errResponse
      * @returns {string}
      */
-    getServerMessage(errResponse){
-        if (errResponse  &&  errResponse.data) {
+    getServerMessage(errResponse) {
+        if (errResponse && errResponse.data) {
             if (errResponse.data.message) {
-                const serverMessage = (errResponse.data.message+'').trim();
+                const serverMessage = (errResponse.data.message + '').trim();
                 return serverMessage.trim().toUpperCase().replace(/\s/g, '_')
             }
 
-            if (errResponse.data.messages  &&  Array.isArray(errResponse.data.messages) && errResponse.data.messages.length>0) {
+            if (errResponse.data.messages && Array.isArray(errResponse.data.messages) && errResponse.data.messages.length > 0) {
                 let serverMessages = [];
-                errResponse.data.messages.map( mItem => serverMessages.push(mItem) );
+                errResponse.data.messages.map(mItem => serverMessages.push(mItem));
                 return serverMessages.join('\r\n').trim();
             }
         }
@@ -454,4 +459,4 @@ class PliziAPI {
     }
 }
 
-export { PliziAPI as default}
+export {PliziAPI as default}

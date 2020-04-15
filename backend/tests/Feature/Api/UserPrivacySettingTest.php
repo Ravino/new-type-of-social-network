@@ -7,30 +7,39 @@ use Illuminate\Foundation\Testing\WithFaker;
 use Illuminate\Testing\TestResponse;
 use Tests\Feature\TestApi;
 
-class GeoTest extends TestApi
+class UserPrivacySettingTest extends TestApi
 {
     /**
-     * Processed route: [GET] api/city/search
+     * Processed route: [PATCH] api/user/privacy
      * @return void
      */
-    public function testGetApiCitySearch()
+    public function testPatchUserPrivacy()
     {
         $token = $this->getAuthToken();
         /* @var TestResponse $response */
         $response = $this->json(
             'GET',
-            '/api/city/search',
-            [
-                'search' => 'москв',
-            ],
+            '/api/user',
+            [],
             [
                 'Content-Type: application/x-www-form-urlencoded',
                 'Cache-Control: no-cache',
                 'Authorization' => 'Bearer ' . $token . '',
             ],
-            'Search user city'
+            'Test User Privacy settings method 1'
         );
         $response
-            ->assertStatus(200);
+            ->assertStatus(200)
+            ->assertJsonStructure(
+                [
+                    'data' => [
+                        'id',
+                        'email',
+                        'profile',
+                        'privacySettings',
+                    ],
+                    'channel',
+                ]
+            );
     }
 }
