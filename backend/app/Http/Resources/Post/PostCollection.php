@@ -38,7 +38,10 @@ class PostCollection extends ResourceCollection
                             'id' => $post->id,
                             'name' => $post->name,
                             'body' => $post->body,
-                            'primaryImage' => $post->primary_image,
+                            'primaryImage' => [
+                                'https://picsum.photos/200/300?grayscale',
+                                'https://picsum.photos/200/300?grayscale',
+                            ],
                             'likes' => $post->likes,
                             'views' => $post->views,
                             'sharesCount' => 25,

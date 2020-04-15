@@ -1,10 +1,10 @@
 <template>
-    <div class="w-100 d-flex px-5 " :class="{ ' checked-message': true}"><!-- TODO: добавить сюда класс .checked-messageпри появлении чекбокса -->
+    <div class="w-100 d-flex px-5 " v-on:click="messageSettings = !messageSettings" :class="{ ' checked-message': messageSettings}">
         <div class="message-item d-flex w-100 justify-content-start"
              :class="calcMessageItemClass()">
 
-                <label v-if="true" class="radio position-relative d-none" > <!-- TODO: показать при клике на сообщение-->
-                    <input type="checkbox" name="dateTimeId" ref="dateTimeId" id="dateTimeId" >
+                <label v-if="messageSettings" class="radio position-relative " > <!-- TODO: показать при клике на сообщение-->
+                    <input type="checkbox" name="dateTimeId" ref="dateTimeId" id="dateTimeId" checked >
                     <span></span>
                 </label>
 
@@ -12,12 +12,12 @@
                 <img v-if="message.isMine" :src="ownerPic" :alt="currentDialog.firstname" class="message-user-img" />
                 <img v-else :src="companionPic" :alt="companionName" class="message-user-img" />
             </div>
-            <div class="message-body">
+            <div class="message-body d-flex ">
                 <div class="message-text">
                     <p>{{message.body}}</p>
 
-                    <img class="message-sended-image" v-if="true" src="../images/user-main-photo.png" alt=""><!-- TODO: Показать картинку -->
-                    <span class="message-sended-zip d-flex align-items-center" v-if="false" ><!-- TODO: Показать Архив -->
+                    <img class="message-sended-image" v-if="messageSendedImg" src="../images/user-main-photo.png" alt="">
+                    <span class="message-sended-zip d-flex align-items-center" v-if="messageSendedZip" ><!-- TODO: Показать Архив -->
                         <IconZip />
                         <span class="message-sended-zip-info mx-2">
                             <p class="message-sended-name m-0">Dixy.zip</p>
@@ -25,14 +25,14 @@
                         </span>
                     </span>
                 </div>
-                <time v-if="!isNextIsSamePerson()" class="message-time" :datetime="message.createdAt">
+                <time v-if="!isNextIsSamePerson()" class="message-time mx-2" :datetime="message.createdAt">
                     {{ message.createdAt | lastMessageTime }}
                 </time>
                 <div class="message-info">
-                    <span class="" :class="{ ' message-edited': true}"> <!--TODO:  -->
+                    <span class="" :class="{ ' message-edited': messageEdited}">
                         <IconPencilEdit />
                     </span>
-                    <span class="message-delivery ml-3" :class="{ ' message-writed': true }"> <!--TODO:  -->
+                    <span class="message-delivery ml-3" :class="{ ' message-readed': messageReaded }">
                         <IconCheckedDouble />
                     </span>
                 </div>
@@ -57,6 +57,12 @@ name: 'ChatMessageItem',
 },
 data() {
     return {
+        messageReaded: true,
+        messageEdited: true,
+        messageSendedImg: true,
+        messageSendedZip: false,
+        messageSettings: false,
+        messageChecked: true,
 
     }
 },

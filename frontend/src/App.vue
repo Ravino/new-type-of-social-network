@@ -17,7 +17,7 @@
         <div v-else id="authPageWrapper">
             <AuthNavBar></AuthNavBar>
 
-            <div class="--container-fluid container px-0 my-0 pt-3 container-wide mx-auto mt-4">
+            <div class="--container-fluid container my-0 pt-3 container-wide mx-auto mt-4">
                 <main :id="containerID" role="main"
                       class="container-fluid pb-sm-5 pb-md-5">
                     <transition>
