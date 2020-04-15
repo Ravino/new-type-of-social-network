@@ -100,28 +100,30 @@ class LoginController extends Controller
                 'redirect_uri' => config('services.instagram.redirect'),
                 'code' => $request['token'],
             ])->header('Content-Type: application/x-www-form-urlencoded');
-            $request['token'] = $response['access_token'];
+            \Log::debug($response);
+            $request['token'] = isset($response['access_token']) ? $response['access_token'] : '';
         }
-        try {
-            $providerUser = Socialite::driver($provider)->userFromToken($request['token']);
-        } catch (Exception $exception) {
-            \Log::debug($exception);
-        }
-
-        if ($providerUser) {
-            $user = (new SocialAccountsService())->findOrCreate($providerUser, $provider);
+        if($request['token']) {
             try {
-                if (!$token = JWTAuth::fromUser($user)) {
-                    return response()->json(['message' => 'invalid credentials'], 400);
-                }
-            } catch (JWTException $e) {
-                return response()->json(['message' => 'could not create token'], 500);
+                $providerUser = Socialite::driver($provider)->userFromToken($request['token']);
+            } catch (Exception $exception) {
+                \Log::debug($exception);
             }
-            $channel = WampServer::channelForUser($user->id);
-            return response()->json(compact('token', 'channel'));
-        }
 
-        return null;
+            if ($providerUser) {
+                $user = (new SocialAccountsService())->findOrCreate($providerUser, $provider);
+                try {
+                    if (!$token = JWTAuth::fromUser($user)) {
+                        return response()->json(['message' => 'invalid credentials'], 400);
+                    }
+                } catch (JWTException $e) {
+                    return response()->json(['message' => 'could not create token'], 500);
+                }
+                $channel = WampServer::channelForUser($user->id);
+                return response()->json(compact('token', 'channel'));
+            }
+        }
+        return response()->json(['message' => 'invalid access token provided'], 422);
     }
 
     /**
