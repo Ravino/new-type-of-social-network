@@ -90,12 +90,13 @@
                 let url = {
                     domain: "https://oauth.vk.com/authorize",
                     client_id: `client_id=${client_ids.vk}`,
+                    scope: `scope=offline`,
                     display: "display=page",
                     response_type: "response_type=token",
                     state: "state=vk",
                 };
 
-                window.location.href = `${url.domain}?${url.client_id}&redirect_uri=${client_ids.redirect_uri}&${url.display}&${url.response_type}&${url.state}`;
+                window.location.href = `${url.domain}?${url.client_id}&${url.scope}&redirect_uri=${client_ids.redirect_uri}&${url.display}&${url.response_type}&${url.state}`;
             },
             getInstagramToken(params) {
                 let code = params.get("code");

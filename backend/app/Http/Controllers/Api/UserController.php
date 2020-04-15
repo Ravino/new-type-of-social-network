@@ -89,6 +89,15 @@ class UserController extends Controller
     }
 
     /**
+     * @return UserCollection
+     */
+    public function getMyPendingFriendsList() {
+        $request_user_ids = Auth::user()->getFriendRequests()->pluck('sender_id');
+        $requests = User::whereIn('id', $request_user_ids)->get();
+        return new UserCollection($requests);
+    }
+
+    /**
      * @param $id
      * @return UserCollection|\Illuminate\Http\JsonResponse
      */
