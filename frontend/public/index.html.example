@@ -1,19 +1,14 @@
 <html>
-<head>
-    <!--
-        это файл, чтобы фронтендеры могли запускать у себя DEV-сервер для Vue на http://localhost:8080/
-        просьба не удалять
-    -->
     <meta charset="utf-8" />
 
     <!-- Library Styles -->
-    <link rel="stylesheet" href="/css/bootstrap-4.3.1.min.css" />
-    <link rel="stylesheet" href="/font-awesome/css/all.css" />
+    <link rel="stylesheet" href="./css/bootstrap-4.3.1.min.css" />
+    <link rel="stylesheet" href="./font-awesome/css/all.css" />
 
     <!-- Library JS -->
-    <script src="/js/jquery-3.3.1.min.js" type="application/javascript"></script>
-    <script src="/js/bootstrap-4.3.1.min.js" type="application/javascript"></script>
-    <script src="/js/autobahn.min.js" type="application/javascript"></script>
+    <script src="./js/jquery-3.3.1.min.js" type="application/javascript"></script>
+    <script src="./js/bootstrap-4.3.1.min.js" type="application/javascript"></script>
+    <script src="./js/autobahn.min.js" type="application/javascript"></script>
 
     <title>Plizi</title>
 
@@ -30,6 +25,6 @@
 
 <div id="app"></div>
 
-<!--<script src="./js/app.js" type="application/javascript"></script>-->
+<script src="./js/app.js" type="application/javascript"></script>
 </body>
 </html>

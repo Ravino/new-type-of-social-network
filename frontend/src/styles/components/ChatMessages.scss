@@ -1,0 +1,41 @@
+
+#chatMessagesBody {
+
+}
+.messages-edit-group {
+    position: absolute;
+    bottom: 20px;
+    left: 50%;
+    transform: translateX(-50%);
+    background-color: #FFFFFF;
+
+    .icon {
+        display: inline-block;
+        height: 16px;
+    }
+    .btn {
+        font-size: 13px;
+        font-weight: 700;
+        color: #808086;
+        transition: .4s;
+        &:hover {
+            background-color: $bgHover;
+            color: $iconHoverColor;
+
+            .icon {
+                fill: $iconHoverColor;
+            }
+        }
+        .icon {
+            margin-right: 10px;
+        }
+    }
+    .btn-message-basket {
+        &:hover {
+            color: #FF4626;
+            .icon-basket {
+                fill: #FF4626;
+            }
+        }
+    }
+}

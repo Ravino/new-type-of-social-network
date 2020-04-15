@@ -80,8 +80,6 @@
 </template>
 
 <script>
-import {HTTPer} from '../httper/httper.js';
-
 export default {
 name: 'ProfileHeader',
 props: {
@@ -98,63 +96,88 @@ methods: {
         return this.$options.filters.statsBeauty(param);
     },
 
+
     showPersonalMsgDialog(){
         this.$root.$emit('showPersonalMsgModal', { user: this.userData, src : this.$route.name });
     },
 
-    sendFriendshipInvitation(){
-        window.console.info(`sendFriendshipInvitation`);
+
+    async sendFriendshipInvitation(){
+        let apiResponse = null;
+
+        try {
+            apiResponse = await this.$root.$api.sendFriendshipInvitation(this.userData.id);
+        }
+        catch (e) {
+            window.console.warn(e.detailMessage);
+            return;
+        }
+
+        if (apiResponse !== null) {
+            if (apiResponse.status === 200) {
+                this.$alert(`<h6>Приглашение дружить</h6>
+<div class="alert alert-info">
+    Приглашение дружбы для <b class="friend-name">${this.userData.fullName}</b> отправлено!
+</div>`, `bg-success`, 10);
+            }
+
+            if (apiResponse.status === 422) {
+                this.$alert(`<h6>Приглашение дружить</h6>
+<div class="alert alert-info">${apiResponse.message}.</div>`, `bg-info`, 10);
+            }
+        }
     },
 
-    uploadUserAvatar(){
+
+    async uploadUserAvatar(){
         if (this.isOwner!==true)
             return;
 
+        const formData = this.getFormData();
+
+        if (! formData)
+            return;
+
+        let apiResponse = null;
+
+        try {
+            apiResponse = await this.$root.$api.userProfileImage(formData);
+        }
+        catch (e) {
+            window.console.warn(e.detailMessage);
+        }
+
+        if (apiResponse !== null) {
+            this.$root.$user.userPic = apiResponse.data.path;
+            this.$refs.userAvatar.src = this.$root.$user.userPic;
+            this.$root.$emit('updateUserAvatar', {userPic: this.$root.$user.userPic});
+        }
+    },
+
+
+    /**
+     * @returns {boolean|FormData}
+     */
+    getFormData(){
         const fName = this.$refs.userAvatarFile.value;
         const fExt = fName.split('.').pop().toLowerCase();
         const allowExts = ['png', 'jpg', 'jpeg', 'bmp', 'webp', 'gif'];
 
         if ( ! allowExts.includes(fExt) ) {
-            // TODO: @TGA добавить потом сюда модальное окно для этой ошибки
-            window.console.warn(`Недопустимое расширение у файла ${fName}\r\nДопустимы только: ${allowExts.join(', ')}`);
-            return;
+            this.$alert(`<h4 class="text-white">Ошибка</h4><div class="alert alert-danger">
+Недопустимое расширение у файла <b>${fName}</b><br />
+Допустимы только: <b class="text-success">${allowExts.join( ', ' )}</b>
+</div>`, `bg-danger`, 30);
+            return false;
         }
 
         const formData = new FormData();
-        const imagefile = document.querySelector('#userAvatarFile');
-        formData.append('image', imagefile.files[0]);
+        const imageFile = document.querySelector('#userAvatarFile');
+        formData.append('image', imageFile.files[0]);
         formData.append('tag', 'primary');
 
-        const gwt = this.$store.getters.gwToken;
-        const headers = {
-            headers : {
-                'Authorization': `Bearer ${gwt}`,
-                'Content-Type' : 'multipart/form-data'
-            }
-        };
-
-        HTTPer.post('/api/user/profile/image', formData, headers)
-            .then((response) => {
-                if (response.status === 200) {
-                    this.$root.$user.userPic = response.data.path;
-
-                    this.$refs.userAvatar.src = this.$root.$user.userPic;
-
-                    this.$root.$emit('updateUserAvatar', {userPic: this.$root.$user.userPic});
-                }
-            })
-            .catch((error) => {
-                if (error.response.status >= 400) {
-                    window.console.clear();
-                    window.console.log(error.response.data);
-                    window.console.warn(error.response.status + ': ' + error.response.statusText + ': ' + error.response.data.message);
-                }
-                else {
-                    window.console.warn(error.toString());
-                }
-            });
-    },
-
+        return formData;
+    }
 }
 
 }

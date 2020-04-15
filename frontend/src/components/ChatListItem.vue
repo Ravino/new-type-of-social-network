@@ -13,8 +13,8 @@
             <div class=" user-friend-body m-0 col-12 pr-5 ">
                 <div class="user-friend-body-top d-flex align-items-end justify-content-between">
                     <h6 class="user-friend-name my-0">{{ companionName }}</h6>
-                    <small v-if="dialog.isRead" class="mr-1 ml-auto">
-                        <i class="fas fa-check-double text-success mt-1"></i>
+                    <small v-if="dialog.isRead " class="mr-1 ml-auto mb-1">
+                        <IconCheckedDouble :clazz="'mb-2'"/>
                     </small>
                     <time :datetime="dialog.lastMessageDT" class="">
                         {{ dialog.lastMessageDT | lastMessageTime }}
@@ -33,8 +33,12 @@
 </template>
 
 <script>
+
+import IconCheckedDouble from "../icons/IconCheckedDouble.vue";
+
 export default {
 name: 'ChatListItem',
+    components: { IconCheckedDouble},
 props: {
     dialog: Object,
     currentDialog: Object,

@@ -34,6 +34,20 @@ Vue.prototype.$lastSearch = ``;
  */
 Vue.prototype.$api = null;
 
+/**
+ * функция которая будет показывать наш стилизованный Alert
+ * @param {string} message - сообщение которое будем показывать (можно HTML-код)
+ * @param {string} clazz - CSS-класс (например bg-info, bg-warning, bg-danger, bg-success, bg-light, bg-white)
+ * @param {number} timeOut - кол-во секунд, через которое закроется алерт
+ */
+Vue.prototype.$alert = function(message, clazz, timeOut){
+    this.$root.$emit('alertModal', {
+        message : message ||  ``,
+        clazz : clazz ||  ``,
+        timeOut : timeOut ||  0,
+    });
+};
+
 // @TGA пока не нужно
 //import { VueResponsiveComponents } from 'vue-responsive-components';
 // Vue.use(VueResponsiveComponents);

@@ -62,11 +62,14 @@ $chatMessageCompanionMsgTimeColor: #C1BFBF;
                 padding-left: $chatTimePadding;
             }
         }
+        .radio {
+            margin-left: 20px;
+        }
 
         .message-body {
             position: relative;
             background-color: $chatMessageMyMsgBG;
-            border-radius: $chatMessageRadius $chatMessageRadius 0px $chatMessageRadius;
+            border-radius: $chatMessageRadius $chatMessageRadius 0 $chatMessageRadius;
             padding: $chatMessagePadding;
             box-shadow: 0 2px 20px 0 rgba(0, 0, 0, 0.2);
         }
@@ -78,8 +81,10 @@ $chatMessageCompanionMsgTimeColor: #C1BFBF;
         .message-text {
             margin-left: $chatTextSideMargin;
             display: block;
-            color: $chatMessageMyMsgTextColor;
-            font-size: $chatMessageFS;
+            p {
+                color: $chatMessageMyMsgTextColor;
+                font-size: $chatMessageFS;
+            }
         }
 
         .message-time {
@@ -88,6 +93,10 @@ $chatMessageCompanionMsgTimeColor: #C1BFBF;
             left: $chatTimeSizeMargin;
             font-size: $chatTimeFontSize;
             color: $chatMessageMyMsgTimeColor;
+        }
+        .message-info {
+            left: auto;
+            right: calc(100% + 20px);
         }
     }
 
@@ -98,11 +107,13 @@ $chatMessageCompanionMsgTimeColor: #C1BFBF;
                 padding-right: $chatTimePadding;
             }
         }
-
+        .radio {
+            margin-right: 20px;
+        }
         .message-body {
             position: relative;
             background-color: white;
-            border-radius: $chatMessageRadius $chatMessageRadius $chatMessageRadius 0px;
+            border-radius: $chatMessageRadius $chatMessageRadius $chatMessageRadius 0;
             padding: $chatMessagePadding;
             box-shadow: 0 2px 20px 0 rgba(0, 0, 0, 0.07);
         }
@@ -127,6 +138,42 @@ $chatMessageCompanionMsgTimeColor: #C1BFBF;
         }
     }
 
+    .radio {
+        align-items: flex-end;
+        span {
+            width: 18px;
+            height: 18px;
+            margin: 0;
+            font-size: 0;
+            line-height: 0;
+        }
+    }
+    .message-info {
+        position: absolute;
+        bottom: 12px;
+        left: calc(100% + 20px);
+        display: flex;
+        align-items: center;
+    }
+    .message-edited {
+        .icon-pencil-edit {
+            height: 16px;
+            width: 16px;
+        }
+    }
+    .message-delivery {
+        &.message-writed {
+            .icon-checked-double {
+                fill: $lightGreen;
+            }
+        }
+        .icon-checked-double {
+            height: 10px;
+            width: 18px;
+            fill: $grey;
+        }
+    }
+
     .message-user-pic {
         width: $chatMessageUserPicSize;
         min-width: $chatMessageUserPicSize;
@@ -143,4 +190,17 @@ $chatMessageCompanionMsgTimeColor: #C1BFBF;
             border-radius: $chatMessageUserPicSize/2;
         }
     }
+}
+
+.message-sended-image {
+    max-width: 200px;
+    max-height: 200px;
+}
+
+.message-sended-zip {
+    .icon-zip {
+         width: 28px;
+         height: 28px;
+         margin: 0 5px;
+     }
 }
