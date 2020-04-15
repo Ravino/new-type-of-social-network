@@ -93,15 +93,7 @@ class LoginController extends Controller
     {
         $providerUser = null;
         if($provider === 'instagram') {
-            $response = Http::post('https://api.instagram.com/oauth/access_token', [
-                'client_id' => config('services.instagram.client_id'),
-                'client_secret' => config('services.instagram.client_secret'),
-                'grant_type' => 'authorization_code',
-                'redirect_uri' => config('services.instagram.redirect'),
-                'code' => $request['token'],
-            ])->header('Content-Type: application/x-www-form-urlencoded');
-            \Log::debug($response);
-            $request['token'] = isset($response['access_token']) ? $response['access_token'] : '';
+            $request['token'] = Socialite::driver($provider)->getAccessTokenResponse($request['token'])['access_token'];
         }
         if($request['token']) {
             try {
@@ -124,20 +116,6 @@ class LoginController extends Controller
             }
         }
         return response()->json(['message' => 'invalid access token provided'], 422);
-    }
-
-    /**
-     * @param $provider
-     * @return \Symfony\Component\HttpFoundation\RedirectResponse
-     */
-    public function redirectToProvider($provider)
-    {
-        try {
-            return Socialite::driver('vkontakte')->stateless()->redirect();
-        } catch (Exception $e) {
-            \Log::debug($e);
-        }
-        return 'smth';
     }
 
     /**
