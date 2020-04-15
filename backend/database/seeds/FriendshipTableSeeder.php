@@ -22,13 +22,13 @@ class FriendshipTableSeeder extends Seeder
         for ($i = 0; $i <= count($users) / 2; $i++) {
             if($user1->id !== $users[$i]->id) {
                 User::find($user1->id)->beFriend($users[$i]);
-                User::find($users[$i]->id)->beFriend($user1);
+                User::find($users[$i]->id)->acceptFriendRequest($user1);
             }
         }
         for ($i = count($users) / 2; $i <= count($users); $i++) {
             if($user2->id !== $users[$i]->id) {
                 User::find($user2->id)->beFriend($users[$i]);
-                User::find($users[$i]->id)->beFriend($user2);
+                User::find($users[$i]->id)->acceptFriendRequest($user2);
             }
         }
     }
