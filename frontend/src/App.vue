@@ -17,7 +17,7 @@
         <div v-else id="authPageWrapper">
             <AuthNavBar></AuthNavBar>
 
-            <div class="--container-fluid container px-0 my-0 pt-3 container-wide  mx-auto mt-4">
+            <div class="--container-fluid container px-0 my-0 pt-3 container-wide mx-auto mt-4">
                 <main :id="containerID" role="main"
                       class="container-fluid pb-sm-5 pb-md-5">
                     <transition>
@@ -26,6 +26,12 @@
                 </main>
                 <AuthFooter></AuthFooter>
             </div>
+
+            <AlertModal v-if="mainModalVisible"
+                        v-bind:alertMessage="mainModalMessage"
+                        v-bind:alertClass="mainModalClass"
+                        v-bind:alertTimeout="mainModalTimeOut"
+            ></AlertModal>
         </div>
     </div>
 
@@ -36,6 +42,7 @@ import GuestNavBar from './common/GuestNavBar.vue';
 import AuthNavBar from './common/AuthNavBar.vue';
 import AuthFooter from './common/AuthFooter.vue';
 import GuestFooter from './common/GuestFooter.vue';
+import AlertModal from './common/AlertModal.vue';
 
 import {HTTPer} from './httper/httper';
 import PliziAPI from './classes/PliziAPI.js';
@@ -44,12 +51,18 @@ import PliziAuthUser from './classes/PliziAuthUser.js';
 export default {
 name: 'App',
 components: {
-    GuestNavBar, AuthNavBar, AuthFooter, GuestFooter
+    GuestNavBar, AuthNavBar, AuthFooter, GuestFooter, AlertModal
 },
 data () {
     return {
-        containerID : `contentContainer`, /** @TGA - просто хак чтобы phpStorm не ругался на одинаковый ID у элемента */
-        lastSearchText: ``
+        containerID : `contentContainer`, /** @TGA - просто хак, чтобы phpStorm не ругался на одинаковый ID у элемента */
+        lastSearchText: ``,
+
+        mainModalVisible : false,
+        mainModalTitle   : '',
+        mainModalMessage : '',
+        mainModalClass   : '',
+        mainModalTimeOut : 0
     }
 },
 
@@ -165,6 +178,16 @@ created(){
     this.$root.$on('api:Unauthorized', (evData)=>{
         window.console.warn(evData, `api:Unauthorized!`);
         this.afterSuccessLogout();
+    });
+
+    this.$root.$on('alertModal', (evData) => {
+        this.mainModalMessage = evData.message;
+        this.mainModalClass = evData.clazz || ``;
+        this.mainModalTimeOut = evData.timeOut ? (evData.timeOut >>> 0) : 0;
+        this.mainModalVisible = true;
+    });
+    this.$root.$on('hideAlertModal', () => {
+        this.mainModalVisible = false;
     });
 
     this.$root.$api = new PliziAPI(this.$root, ``);

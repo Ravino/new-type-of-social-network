@@ -16,8 +16,8 @@
 
                 <div class="plizi-sr-item-body-bottom d-flex pr-5">
                     <p class="plizi-sr-item-desc p-0 my-0  d-inline ">
-                        <time :datetime="srItem.lastMessageDT" class="">
-                            {{ srItem.lastActivityDT | lastMessageTime }}
+                        <time :datetime="srItem.lastActivity" class="">
+                            {{ srItem.lastActivity | lastMessageTime }}
                         </time>
                     </p>
                 </div>
@@ -34,7 +34,7 @@ props : {
 },
 
 mounted(){
-    window.console.dir( JSON.parse( JSON.stringify(this.srItem) ), `SearchResultItem` );
+    //window.console.dir( JSON.parse( JSON.stringify(this.srItem) ), `SearchResultItem` );
 }
 }
 </script>
