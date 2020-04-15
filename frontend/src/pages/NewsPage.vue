@@ -6,11 +6,8 @@
 
         <div class="col-sm-9 col-md-9 col-lg-10 col-xl-10">
             <div class="container">
-                <ProfileWhatsNew></ProfileWhatsNew>
-                <!-- FIXME: не использовать такие короткие и распотранённые имена для ID
-                    заменить на что-то типа postsFilter
-                -->
-                <div id="filter" class="row bg-white-br20 mt-4 pt-0 px-4">
+                <WhatsNewBlock></WhatsNewBlock>
+                <div id="postFilter" class="row bg-white-br20 mt-4 pt-0 px-4">
                     <div class="col-12 d-flex align-items-center justify-content-between px-0 ">
                         <nav class="nav profile-filter-links align-items-center" role="tablist">
                             <span class="nav-link py-3 px-1 mr-4">Рекомендации <i
@@ -43,12 +40,9 @@
     import AccountToolbarLeft from '../common/AccountToolbarLeft.vue';
     import AccountToolbarRight from '../common/AccountToolbarRight.vue';
     import AccountSettingsSideMenu from '../components/AccountSettingsSideMenu.vue';
-
-    //FIXME: привести наименование в компонента в соответствие с названием его файла
-    //FIXME: ДОПИСЫВАТЬ! расширения файлов
-    import ProfileWhatsNew from "../common/WhatsNewBlock";
-    import Post from "../common/Post";
-    import PliziPost from '../classes/PliziPost';
+    import WhatsNewBlock from "../common/WhatsNewBlock.vue";
+    import Post from "../common/Post.vue";
+    import PliziPost from '../classes/PliziPost.js';
 
     export default {
         name: "NewsPage",
@@ -56,7 +50,7 @@
             AccountToolbarLeft,
             AccountToolbarRight,
             AccountSettingsSideMenu,
-            ProfileWhatsNew,
+            WhatsNewBlock,
             Post,
         },
         data() {
@@ -68,13 +62,16 @@
             async getPosts() {
                 let response = null;
 
-                //FIXME: где try-catch? как серверные ошибки ловить будешь?
-                response = await this.$root.$api.getNews();
+                try {
+                    response = await this.$root.$api.getPosts();
+                } catch (e) {
+                    console.warn(e.message);
+                }
 
                 if (response !== null) {
                     this.news = [];
 
-                    response.data.list.map((post) => {
+                    response.map((post) => {
                         this.news.push(new PliziPost(post));
                     });
                 }

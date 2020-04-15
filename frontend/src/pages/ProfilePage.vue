@@ -100,7 +100,7 @@
             async getPosts() {
                 let response = null;
 
-                response = await this.$root.$api.getNews();
+                response = await this.$root.$api.getPosts();
 
                 if (response !== null) {
                     this.userPosts = [];

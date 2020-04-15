@@ -381,16 +381,12 @@ class PliziAPI {
     }
 
     /**
-     * получение постов для ленты
+     * Получение пользовательских постов.
      * @public
-     * @returns {Promise}
-     * FIXME: возвращается или object[] или null
-     * или бросается ошибка PliziAPIError
+     * @returns {object[]|null}
      * @throws PliziAPIError
      */
-    // FIXME: раз мы делаем GET api/user/posts то им метод должен называться getPosts
-    // посты будутне только на странице "Лента новостей"
-    async getNews() {
+    async getPosts() {
         let response = await this.__axios.get('api/user/posts', this.authHeaders)
             .catch((error) => {
                 this.checkIsTokenExperis(error);
@@ -398,10 +394,7 @@ class PliziAPI {
             });
 
         if (response.status === 200) {
-            // FIXME: возвращать лучше уже response.data.data.list
-            // чем меньше клиенты будут знать о внутрянке, тем лучше
-            // если бэкенд поменяет формат выдачи - будешь переписывать везде где вызываешь этот метод?
-            return response.data;
+            return response.data.data.list;
         }
 
         return null;
