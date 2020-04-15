@@ -3,9 +3,7 @@
 
 namespace App\Listeners\Friendships;
 
-use App\Models\Notification;
-use App\Models\User;
-use Log;
+use App\Notifications\UserSystemNotifications;
 
 class FriendshipNotification
 {
@@ -17,12 +15,16 @@ class FriendshipNotification
     public function handle($event, $users)
     {
         [$sender, $recipient] = $users;
-        Notification::create([
-            'sender_id' => $sender->id,
-            'recipient_id' => $recipient->id,
-            'action' => $event,
-            'created_at' => time(),
-            'updated_at' => time()
-        ]);
+
+        $details = [
+            'sender' => [
+                'firstName' => $sender->profile->first_name,
+                'lastName' => $sender->profile->last_name,
+                'id' => $sender->id
+            ],
+            'body' => 'User {0, string} sent you friend request',
+            'type' => $event,
+        ];
+        $recipient->notify(new UserSystemNotifications($details));
     }
 }
