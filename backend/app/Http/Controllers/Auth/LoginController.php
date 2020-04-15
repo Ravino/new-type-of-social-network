@@ -106,8 +106,8 @@ class LoginController extends Controller
             } catch (JWTException $e) {
                 return response()->json(['message' => 'could not create token'], 500);
             }
-
-            return response()->json(compact('token'));
+            $channel = WampServer::channelForUser($user->id);
+            return response()->json(compact('token', 'channel'));
         }
 
         return null;
