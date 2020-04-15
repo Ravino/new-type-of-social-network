@@ -71,15 +71,32 @@ methods: {
                 isEdited: false
             };
 
-            const evData = {
-                message : newMsg,
-                chatId : (this.currentDialog) ? this.currentDialog.id : -1
-            };
+            this.sendMessage(newMsg);
+        }
+    },
 
-            this.$root.$emit('sentNewChatMessageToAPI', evData);
 
+    async sendMessage(msg){
+        const chatId = (this.currentDialog) ? this.currentDialog.id : -1;
+
+        let response = null;
+
+        try {
+            response = await this.$root.$api.chatSend(chatId, msg.body);
+        }
+        catch (e){
+            window.console.warn(e.detailMessage);
+            throw e;
+        }
+
+        if (response != null &&  response.status.toUpperCase() === 'OK') {
+            this.$root.$emit('addNewChatMessageToList', msg);
             this.newMessage = ``;
         }
+        else {
+            window.console.info(response);
+        }
+
     }
 },
 

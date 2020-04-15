@@ -105,7 +105,12 @@
                 if (response !== null) {
                     this.userPosts = [];
 
-                    response.data.list.map((post) => {
+                    // FIXME: так не работает
+                    //response.data.list.map((post) => {
+                    //    this.userPosts.push(new PliziPost(post));
+                    //});
+
+                    response.map((post) => {
                         this.userPosts.push(new PliziPost(post));
                     });
                 }

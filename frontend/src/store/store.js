@@ -3,7 +3,7 @@ import Vue from 'vue';
 
 Vue.use(Vuex);
 
-export const store = new Vuex.Store({
+const store = new Vuex.Store({
     state: {
         gwToken : ``,
         chatChannel : ``,
@@ -76,8 +76,14 @@ export const store = new Vuex.Store({
             return state.chatChannel;
         },
 
+        /**
+         * @deprecated
+         * @param state
+         * @returns {null|{headers: {Authorization: string}}}
+         */
         getHTTPConfig : state => {
             const gwt = state.gwToken;
+            window.console.warn(`getHTTPConfig deprecated!!!`);
 
             if (!gwt ||  ``===gwt) {
                 window.console.warn('store->getHTTPConfig: gwToken null or empty!');
@@ -133,3 +139,5 @@ export const store = new Vuex.Store({
         },
     },
 });
+
+export default store;
