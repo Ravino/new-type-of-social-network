@@ -17,8 +17,6 @@ class FriendshipTableSeeder extends Seeder
     {
         $user1 = User::where('email', 'test@gmail.com')->first();
         $user2 = User::where('email', 'admin@mail.com')->first();
-        Log::debug($user1);
-        Log::debug($user2);
 
         $users = User::all();
         for ($i = 0; $i <= count($users) / 2; $i++) {
