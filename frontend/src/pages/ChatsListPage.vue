@@ -25,7 +25,7 @@
                     <ChatMessages v-if="isMessagesLoaded" v-bind:messages="messagesList" v-bind:currentDialog="currentDialog"></ChatMessages>
                     <Spinner v-else v-bind:message="`Сообщения загружаются`"></Spinner>
 
-                    <ChatFooter v-bind:currentDialog="currentDialog"></ChatFooter>
+                    <ChatFooter v-bind:currentDialog="currentDialog"  ></ChatFooter>
                 </div>
             </div>
 

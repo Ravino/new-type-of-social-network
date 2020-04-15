@@ -92,6 +92,9 @@ $chatMessageCompanionMsgTimeColor: #C1BFBF;
             left: auto;
             right: calc(100% + 20px);
         }
+        .message-resend {
+            border-left: 2px solid #5774F3;
+        }
     }
 
     &.companion-message {
@@ -127,6 +130,9 @@ $chatMessageCompanionMsgTimeColor: #C1BFBF;
             font-size: $chatTimeFontSize;
             line-height: 1.8;
             color: $chatMessageCompanionMsgTimeColor;
+        }
+        .message-resend {
+            border-left: 2px solid $grey;
         }
     }
 

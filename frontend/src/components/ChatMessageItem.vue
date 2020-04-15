@@ -1,5 +1,6 @@
 <template>
-    <div class="w-100 d-flex px-5 " v-on:click="messageSettings = !messageSettings" :class="{ ' checked-message': messageSettings}">
+    <div class="w-100 d-flex px-5 " v-on:click="messageSettings = !messageSettings"
+         :class="{ ' checked-message': messageSettings}">
         <div class="message-item d-flex w-100 justify-content-start"
              :class="calcMessageItemClass()">
 
@@ -14,7 +15,7 @@
             </div>
             <div class="message-body d-flex ">
                 <div class="message-text">
-                    <p>{{message.body}}</p>
+                    <p class="mb-0">{{message.body}}</p>
 
                     <img class="message-sended-image" v-if="messageSendedImg" src="../images/user-main-photo.png" alt="">
                     <span class="message-sended-zip d-flex align-items-center" v-if="messageSendedZip" ><!-- TODO: Показать Архив -->
@@ -24,6 +25,20 @@
                             <p class="message-sended-size m-0">15Mb</p>
                         </span>
                     </span>
+
+                    <div class="message-resend pl-3 ml-3 mt-3" v-if="messageResend">
+                        <div class="message-user-data  d-flex align-items-center mb-2 ">
+                            <div class="media-pic border rounded-circle  mr-3">
+                                <img src="/images/user-photos/user-photo-01.png" alt="Дарья">
+                            </div>
+                            <div class="media-body">
+                                <h6 class="chatHeader-title w-75 align-self-start mt-2 pb-0 mb-0 pull-left text-body" style="line-height: 20px;"> Дарья </h6>
+                                <p class="chatHeader-subtitle p-0 mb-0 mt-1 w-100 d-block"> Понедельник </p>
+                            </div>
+                        </div>
+                        <p>{{message.body}}</p>
+                    </div>
+
                 </div>
                 <time v-if="!isNextIsSamePerson()" class="message-time mx-2" :datetime="message.createdAt">
                     {{ message.createdAt | lastMessageTime }}
@@ -63,7 +78,7 @@ data() {
         messageSendedZip: false,
         messageSettings: false,
         messageChecked: true,
-
+        messageResend: true,
     }
 },
 
