@@ -31,7 +31,7 @@ class Profile extends Model
     ];
 
     protected $fillable = [
-        'first_name', 'last_name', 'birthday', 'city', 'sex', 'relationship_id', 'relationship_user_id',
+        'first_name', 'last_name', 'birthday', 'city', 'sex', 'relationship_id', 'relationship_user_id', 'user_pic'
     ];
 
     public function getDateFormat()
