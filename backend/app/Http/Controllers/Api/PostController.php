@@ -11,6 +11,8 @@ use App\Http\Resources\Post\PostCollection;
 use App\Models\Community;
 use App\Models\Post;
 use App\Models\User;
+use App\Notifications\UserSystemNotifications;
+use Illuminate\Support\Facades\Notification;
 
 class PostController extends Controller
 {
@@ -77,6 +79,19 @@ class PostController extends Controller
             'name' => $request->name,
             'body' => $request->body,
         ]);
+        $friend_ids = \Auth::user()->getFriends()->pluck('id');
+        $friends = User::whereIn('id', $friend_ids)->get();
+        $details = [
+            'sender' => [
+                'firstName' => \Auth::user()->profile->first_name,
+                'lastName' => \Auth::user()->profile->last_name,
+                'id' => \Auth::user()->id,
+                'postId' => $post->id
+            ],
+            'body' => 'User {0, string} created new post',
+            'type' => 'user.post.created',
+        ];
+        Notification::send($friends, new UserSystemNotifications($details));
         return new PostResource($post);
     }
 
@@ -86,13 +101,23 @@ class PostController extends Controller
      * @return PostResource|\Illuminate\Http\JsonResponse
      */
     public function storeByCommunity(PostRequest $request, $community_id) {
-        $community = Community::find($community_id);
+        $community = Community::with('users')->find($community_id);
         if($community) {
             if($community->users->contains(auth()->user()->id)) {
                 $post = $community->posts()->create([
                     'name' => $request->name,
                     'body' => $request->body,
                 ]);
+                $details = [
+                    'community' => [
+                        'name' => $community->name,
+                        'id' => $community->id,
+                        'postId' => $post->id
+                    ],
+                    'body' => 'There is new post in community {0, string}',
+                    'type' => 'community.post.created',
+                ];
+                Notification::send($community->users, new UserSystemNotifications($details));
                 return new PostResource($post);
             } else {
                 return response()->json(['message' => 'Вы не являетесь участником данного сообщества'], 422);

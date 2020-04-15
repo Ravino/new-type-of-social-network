@@ -90,7 +90,7 @@
                     password: ``
                 },
                 isRegistrationModalShow: false,
-                isRecoverPassModalShow: false, // TODO: НУжно прописать логику, для включения этого поповера
+                isRecoverPassModalShow: false,
                 isServerError: false,
                 serverErrorText: ''
             }

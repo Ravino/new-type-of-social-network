@@ -10,6 +10,7 @@
             <textarea class="form-control profileWhatsNew-textarea"
                       name="profileWhatsNew-textarea"
                       id="txtWhatsNew" cols="1" rows="1"
+                      @input="textAreaAutoHeight"
                       placeholder="Что у Вас нового?">
             </textarea>
         </div>
@@ -45,9 +46,14 @@
             userData() {
                 return this.$root.$user;
             },
-        }
+        },
+        methods: {
+            textAreaAutoHeight() {
+                let textarea = document.querySelector('#txtWhatsNew');
+                textarea.style.height = "";
+                textarea.style.height = Math.min(textarea.scrollHeight, 300) + "px";
+            },
+        },
     }
-
-    // TODO: textarea autoheight on new line text wrighting  https://stackoverflow.com/questions/46777446/textarea-auto-height-increase
 </script>
 

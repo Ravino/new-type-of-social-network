@@ -26,16 +26,27 @@
             <p class="post-main-text mb-2" v-html="this.$options.filters.toBR(postBody)"></p>
         </div>
 
-        <!--        <div v-if="(post.images  &&  post.images.length>0)"-->
-        <!--             class="col-12 px-4 post-pictures"-->
-        <!--             :style="calcPostPictures(post.images.length)">-->
-        <!--            <img v-for="(postPic, postPicIndex) in post.images"-->
-        <!--                 :key="postPicIndex"-->
-        <!--                 :src="postPic.path"-->
-        <!--                 :alt="postPic.name"-->
-        <!--                 :class="'postPictures-' + postPicIndex"-->
-        <!--                 :style="calcPostPicturesImg(postPicIndex, post.images.length)"/>-->
-        <!--        </div>-->
+        <div class="col-12">
+            <div v-if="(postImages && postImages.length > 0)"
+                 :id="postImagesId"
+                 class="post-images">
+                <!--                <template v-for="(postPic, postPicIndex) in postImages">-->
+                <!--                    <div v-if="postImages.length === 1"-->
+                <!--                         class="col-12">-->
+                <!--                        <img :src="postPic" class="w-100" alt="">-->
+                <!--                    </div>-->
+
+                <!--                    <div v-if="postImages.length >= 2">-->
+                <!--                        <div class="col col-6">-->
+                <!--                            <img :src="postPic" class="w-100" alt="">-->
+                <!--                        </div>-->
+                <!--                        <div class="col col-6">-->
+                <!--                            <img :src="postPic" class="w-100" alt="">-->
+                <!--                        </div>-->
+                <!--                    </div>-->
+                <!--                </template>-->
+            </div>
+        </div>
 
         <div class="plz-post-item-footer col-12 px-4 pt-4">
             <div class="d-flex">
@@ -95,6 +106,9 @@
             postBody() {
                 return this.post.body;
             },
+            postImages() {
+                return this.post.primaryImage;
+            },
             postViews() {
                 return this.post.views;
             },
@@ -109,65 +123,98 @@
             }
         },
         data() {
-            return {}
+            return {
+                postImagesId: 'postImages-' + Math.floor(Math.random() * 1000),
+            }
         },
         methods: {
-            /**
-             * Calc "grid-template-columns" style.
-             *
-             * @param count
-             * @returns {{gridTemplateColumns: string}}
-             */
-            calcPostPictures(count) {
-                let gridTemplateColumns;
+            calcPic() {
+                let postImagesDiv = document.querySelector('#' + this.postImagesId);
+                let post_images = this.postImages;
+                let count_post_images = this.postImages.length;
+                let parent_div = document.createElement('div');
+                let child_div = document.createElement('div');
+                let image = document.createElement('img');
 
-                if (count === 3) {
-                    gridTemplateColumns = '1fr 1fr';
-                } else {
-                    gridTemplateColumns = '1fr 0.5fr';
+                if (count_post_images) {
+                    if (count_post_images === 1) {
+                        image.classList.add('w-100');
+                        child_div.classList.add('col-12');
+
+                        image.setAttribute('src', post_images[0]);
+                        child_div.append(image);
+                        parent_div.append(child_div);
+                    } else {
+                        let second_child_div = document.createElement('div');
+                        let margin = 0;
+
+                        parent_div.classList.add('d-flex');
+
+                        post_images.forEach(function (postImage, index) {
+                            image = document.createElement('img');
+                            image.classList.add('w-100');
+
+                            if (count_post_images >= 3) {
+                                margin = index % 2 !== 0 ? 5 : 0;
+                            }
+
+                            if (index === 0) {
+                                image.setAttribute('src', postImage);
+                                child_div.append(image);
+                                child_div.classList.add('w-75');
+                                child_div.classList.add('mr-2');
+                                parent_div.append(child_div);
+                            } else {
+                                image.setAttribute('src', postImage);
+                                image.style = "height:" + (500 / (count_post_images - 1) - margin) + "px; margin-bottom: 5px;";
+                                second_child_div.append(image);
+                                second_child_div.classList.add('w-25');
+                                parent_div.append(second_child_div);
+                            }
+                        });
+                    }
+
+                    postImagesDiv.append(parent_div);
                 }
 
-                return {
-                    gridTemplateColumns,
-                }
-            },
-            /**
-             * Calc "grid-row" and "grid-column" styles.
-             *
-             * @param index
-             * @param count
-             * @returns {{gridRow: string, gridColumn: string}}
-             */
-            calcPostPicturesImg(index, count) {
-                let gridRow, gridColumn;
+                // if (post_images) {
+                //     let el = document.createElement('div');
+                //
+                //     post_images.forEach(function (postImage, index) {
+                //         let div_second = document.createElement('div');
+                //
+                //         div_second.classList.add('mb-2');
+                //         image = document.createElement('img');
+                //         image.classList.add('w-100');
+                //
+                //         if (index === 0) {
+                //             image.setAttribute('src', postImage);
+                //             div.append(image);
+                //             row.append(div);
+                //         } else {
+                //             image.setAttribute('src', postImage);
+                //             image.classList.add('h-50');
+                //             div_second.append(image);
+                //             el.append(div_second);
+                //             row.append(el);
+                //         }
+                //     });
+                //
 
-                if (index === 0) {
-                    gridRow = '1 / span 3';
-                    gridColumn = '1 / -1';
-                } else {
-                    gridRow = index;
-                    gridColumn = '2 / 3';
-                }
-
-                return {
-                    gridRow,
-                    gridColumn,
-                }
-            },
+                // }
+            }
+        },
+        mounted() {
+            this.calcPic();
         },
     }
 </script>
 
 <style lang="scss">
-    img {
-        width: 100%;
-        display: block;
-        object-fit: cover;
-        object-position: left bottom;
-    }
-
-    .post-pictures {
-        display: grid;
+    .post-images {
+        img {
+            max-height: 500px;
+            border-radius: 5px;
+        }
     }
 </style>
-
