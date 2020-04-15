@@ -11,6 +11,8 @@
             <ChatMessages v-bind:messages="messages" v-bind:messageSettings="messageSettings"></ChatMessages>
             <ChatFooter v-bind:currentDialog="currentDialog"  ></ChatFooter>
         </div>
+
+
     </div>
 </template>
 
@@ -27,7 +29,8 @@ export default {
         dialogs: Array,
         messages: Array,
         currentDialog: Object,
-        messageSettings: String
+        messageSettings: String,
+        messageResendModalShow: false
     },
     components: {ChatListItem, ChatHeader, ChatMessages, ChatFooter},
     data() {
@@ -37,6 +40,9 @@ export default {
     methods: {},
 
     mounted() {
+        this.$root.$on('hideMessageResendModal', (evData) => {
+            this.messageResendModalShow = false;
+        });
     },
 
     updated() {

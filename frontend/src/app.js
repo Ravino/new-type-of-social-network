@@ -2,6 +2,10 @@ import Vue from 'vue';
 import VueRouter from 'vue-router';
 import Vuelidate from 'vuelidate';
 
+//import Multiselect from 'vue-multiselect';
+
+// register globally
+//Vue.component('multiselect', Multiselect); // TODO: Узнать у @tga правильно ли так делать
 
 /**
  * для упрощения получения доступа к дефолтному аватару
@@ -48,6 +52,7 @@ Vue.prototype.$alert = function(message, clazz, timeOut){
         timeOut : timeOut ||  0,
     });
 };
+
 
 // @TGA пока не нужно
 //import { VueResponsiveComponents } from 'vue-responsive-components';

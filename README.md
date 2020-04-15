@@ -204,3 +204,8 @@ CREATE DATABASE plizi_test;
 `http://localhost:9080`
 
 Если необходимо поменяйте порт для сервиса nginx в файле **`docker-compose.yml`**
+
+# Customize elements for markup 
+
+Мультиселект     - https://vue-multiselect.js.org/  
+Кастомный скролл - https://binaryify.github.io/vue-custom-scrollbar/en/#why-custom-scrollbar
