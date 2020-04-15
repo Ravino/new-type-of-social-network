@@ -92,7 +92,7 @@ export default {
             return setTimeout(() => {
                 const container = this.$el.querySelector('.ps-container');
                 container.scrollTop = container.scrollHeight;
-                console.log('yo-yo-yo')
+
             }, 500);
         }
     },
