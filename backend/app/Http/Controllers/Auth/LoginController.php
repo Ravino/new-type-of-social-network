@@ -8,6 +8,7 @@ use App\Providers\RouteServiceProvider;
 use App\Services\SocialAccountsService;
 use Carbon\Carbon;
 use Domain\Pusher\WampServer;
+use Http;
 use Illuminate\Foundation\Auth\AuthenticatesUsers;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
@@ -91,6 +92,16 @@ class LoginController extends Controller
     public function socialLogin(Request $request, $provider)
     {
         $providerUser = null;
+        if($provider === 'instagram') {
+            $response = Http::post('https://api.instagram.com/oauth/access_token', [
+                'client_id' => config('services.instagram.client_id'),
+                'client_secret' => config('services.instagram.client_secret'),
+                'grant_type' => 'authorization_code',
+                'redirect_uri' => config('services.instagram.redirect'),
+                'code' => $request['token'],
+            ])->header('Content-Type: application/x-www-form-urlencoded');
+            $request['token'] = $response['access_token'];
+        }
         try {
             $providerUser = Socialite::driver($provider)->userFromToken($request['token']);
         } catch (Exception $exception) {
