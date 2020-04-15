@@ -47,20 +47,18 @@ components: {
 },
 data() {
     return {
-        invitationsList: [],
         isDataReady : false
     }
 },
 
 computed: {
     invitations() {
-        return this.invitationsList;
+        return this.$root.$user.invitations;
     },
 },
 
 methods: {
     async loadInvitationsList(){
-        this.invitationsList = [];
         this.isDataReady = false;
         let apiResponse = null;
 
@@ -72,9 +70,8 @@ methods: {
         }
 
         if (apiResponse !== null) {
-            apiResponse.map( (invItem)=> {
-                this.invitationsList.push( new PliziUser({ data : invItem} ) );
-            });
+            this.$root.$user.invitationsLoad(apiResponse);
+            this.$root.$emit('invitationsLoad', {});
 
             this.isDataReady = true;
         }
@@ -82,9 +79,7 @@ methods: {
 
 
     removeFromInvitations(invit){
-        this.invitationsList = this.invitationsList.filter((invItem) => {
-            return invItem.id !== invit.id;
-        });
+        this.$root.$user.invitationRemove(invit);
     }
 },
 

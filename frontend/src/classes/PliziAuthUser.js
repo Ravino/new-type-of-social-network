@@ -1,4 +1,5 @@
 import PliziUzer from './PliziUser.js';
+import PliziUser from "./PliziUser";
 
 class PliziAuthUser extends PliziUzer{
     /**
@@ -42,6 +43,13 @@ class PliziAuthUser extends PliziUzer{
      * @private
      */
     _email = ``;
+
+    /**
+     * массивс полученными инвайтами
+     * @type {PliziUzer[]}
+     * @private
+     */
+    _invitations = [];
 
 
     /**
@@ -157,6 +165,51 @@ class PliziAuthUser extends PliziUzer{
     }
 
     /**
+     * @returns {PliziUzer[]}
+     */
+    get invitations(){
+        return this._invitations;
+    }
+
+    /**
+     * кол-во полученные инвайтов
+     * @returns {number}
+     */
+    get invitationsNumber(){
+        return (this._invitations) ? this._invitations.length : 0;
+    }
+
+
+    invitationsClean(){
+        this._invitations = [];
+    }
+
+    /**
+     * должен получать респонс от сервера, сам преобразует в коллекцию PliziUser
+     * @param {object[]} invs
+     */
+    invitationsLoad(invs){
+        window.console.log(`UserAuth::invitationsLoad`);
+        this.invitationsClean();
+
+        invs.map( (invItem) => {
+            this._invitations.push( new PliziUser({ data : invItem} ) );
+        });
+    }
+
+
+    /**
+     * объект который надо удалить
+     * @param {PliziUzer|{id:number}} invit
+     */
+    invitationRemove(invit){
+        this._invitations = this._invitations.filter((invItem) => {
+            return invItem.id !== invit.id;
+        });
+    }
+
+
+    /**
      * Обновление данных в классе.
      * @param data
      */
@@ -173,10 +226,16 @@ class PliziAuthUser extends PliziUzer{
     }
 
     /**
+     * @deprecated
      * Обновление токена
      * @param newToken
      */
     updateToken(newToken) {
+        // FIXME: зачем тут вызов storeData ?
+        // токен в localStorage это не сохранит
+        // этот метод должен решать одну задачу - сохранение токена в localStorage
+        // для того, чтобы просто сохранить в класс лучше использовать сеттер (который уже есть выше)
+        // и в нём заодно и сохранять в localStorage
         this.__token = newToken;
         this.storeData();
     }

@@ -47,6 +47,7 @@ import AlertModal from './common/AlertModal.vue';
 import {HTTPer} from './httper/httper';
 import PliziAPI from './classes/PliziAPI.js';
 import PliziAuthUser from './classes/PliziAuthUser.js';
+import PliziUser from "./classes/PliziUser";
 
 export default {
 name: 'App',
@@ -123,8 +124,31 @@ methods: {
             this.$root.$lastSearch = this.$store.getters.lastSearch;
 
             this.$root.$user.saveUserData( evData.user, evData.token );
+
+            this.loadInvitations();
         }
     },
+
+
+    /**
+     * загружает инвайты для навбара
+     */
+    async loadInvitations(){
+        let apiResponse = null;
+
+        try {
+            apiResponse = await this.$root.$api.invitationsList();
+        }
+        catch (e) {
+            window.console.warn(e.detailMessage);
+        }
+
+        if (apiResponse !== null) {
+            this.$root.$user.invitationsLoad(apiResponse);
+            this.$root.$emit('invitationsLoad', {});
+        }
+    },
+
 
     isAuthorized(){
         return this.$root.$isAuth;
