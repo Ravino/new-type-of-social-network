@@ -1,7 +1,7 @@
 $chatMessageRadius: 20px;
 $chatMessageMargin: 12px;
 $chatMessagePadding: 12px;
-$chatTimePadding: 50px;
+$chatTimePadding: 20px;
 $chatMessageUserPicSize: 32px;
 $chatMessageUserPicMarginX: 10px;
 $userMessageUserPicSize: 42px;
@@ -20,10 +20,6 @@ $chatMessageCompanionMsgBG: white;
 $chatMessageCompanionMsgTextColor: #363636;
 $chatMessageCompanionMsgTimeColor: #C1BFBF;
 
-#chatMain {
-    box-shadow: 0 2px 54px 0 rgba(0, 0, 0, 0.07);
-    min-height: calc(100vh - 105px);
-}
 
 .media-pic {
     display: inline-block;
@@ -88,10 +84,8 @@ $chatMessageCompanionMsgTimeColor: #C1BFBF;
         }
 
         .message-time {
-            position: absolute;
-            top: $chatMessageFS + 1;
-            left: $chatTimeSizeMargin;
             font-size: $chatTimeFontSize;
+            line-height: 1.8;
             color: $chatMessageMyMsgTimeColor;
         }
         .message-info {
@@ -130,10 +124,8 @@ $chatMessageCompanionMsgTimeColor: #C1BFBF;
         }
 
         .message-time {
-            position: absolute;
-            top: $chatMessageFS + 1;
-            right: $chatTimeSizeMargin;
             font-size: $chatTimeFontSize;
+            line-height: 1.8;
             color: $chatMessageCompanionMsgTimeColor;
         }
     }
@@ -162,7 +154,7 @@ $chatMessageCompanionMsgTimeColor: #C1BFBF;
         }
     }
     .message-delivery {
-        &.message-writed {
+        &.message-readed {
             .icon-checked-double {
                 fill: $lightGreen;
             }
@@ -181,6 +173,8 @@ $chatMessageCompanionMsgTimeColor: #C1BFBF;
         height: $chatMessageUserPicSize;
         min-height: $chatMessageUserPicSize;
         max-height: $chatMessageUserPicSize;
+        border-radius: $chatMessageUserPicSize;
+        box-shadow: 0 0 2px 1px #fff;
         display: block;
         overflow: hidden;
 

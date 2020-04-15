@@ -1,5 +1,23 @@
+
 #chatMessangesWrapper {
     .checked-message {
         background-color: #e3e6ec;
     }
 }
+
+#chatMain {
+    box-shadow: 0 2px 54px 0 rgba(0, 0, 0, 0.07);
+    height: calc(100vh - 200px);
+    min-height: 800px;
+
+    .chat-list-scroll {
+        position: relative;
+        margin: 0;
+        width: 100%;
+        overflow: hidden;
+
+        height: calc(100vh - 240px); // padding-y
+        min-height: 800px;
+    }
+}
+

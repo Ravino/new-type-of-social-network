@@ -1,22 +1,25 @@
 <template>
-    <div class="row">
-        <div class="col-sm-1 col-md-1 col-lg-1 col-xl-1">
+    <div class="row ">
+        <div class="col-sm-1 col-md-1 col-lg-1 col-xl-1 ">
             <AccountToolbarLeft></AccountToolbarLeft>
         </div>
 
         <div class="col-sm-12 col-md-9 col-lg-11 pr-3">
             <div v-if="checkIsDialogsList()" id="chatMain" class="row bg-white-br20 overflow-hidden">
-                <div class="col-sm-12 col-md-12 col-lg-4 col-xl-4 col-auto px-sm-0 px-md-0 py-4 border-right">
-                    <ul id="chatFriends" class="list-unstyled mb-0">
-                        <ChatListItem v-for="(dialog, dialogIndex) in dialogsList"
-                                      v-bind:currentDialog="currentDialog" v-bind:dialog="dialog"
-                                      v-bind:key="dialogIndex" v-bind:dialogID="dialogIndex">
-                        </ChatListItem>
-                    </ul>
+                <div class="col-sm-12 col-md-12 col-lg-4 col-xl-4 col-auto px-sm-0 px-md-0 h-100 border-right">
+                    <vue-custom-scrollbar class="chat-list-scroll py-4"  :settings="settings"
+                                          @ps-scroll-y="scrollHanle">
+                        <ul id="chatFriends" class="list-unstyled mb-0">
+                            <ChatListItem v-for="(dialog, dialogIndex) in dialogsList"
+                                          v-bind:currentDialog="currentDialog" v-bind:dialog="dialog"
+                                          v-bind:key="dialogIndex" v-bind:dialogID="dialogIndex">
+                            </ChatListItem>
+                        </ul>
+                    </vue-custom-scrollbar>
                 </div>
 
                 <div id="chatMessangesWrapper"
-                     class="col-8 col-lg-8 col-xl-8 bg-light d-none d-lg-flex flex-column p-0">
+                     class="col-8 col-lg-8 col-xl-8 bg-light d-none d-lg-flex flex-column p-0 h-100">
                     <ChatHeader v-bind:currentDialog="currentDialog"></ChatHeader>
 
                     <ChatMessages v-if="isMessagesLoaded" v-bind:messages="messagesList" v-bind:currentDialog="currentDialog"></ChatMessages>
@@ -45,12 +48,15 @@ import ChatListItem from '../components/ChatListItem.vue';
 import ChatHeader from '../components/ChatHeader.vue';
 import ChatMessages from '../components/ChatMessages.vue';
 import ChatFooter from '../components/ChatFooter.vue';
+import vueCustomScrollbar from 'vue-custom-scrollbar';
+
 
 export default {
 name: 'ChatsListPage',
 components: {
     Spinner,
-    AccountToolbarLeft, ChatListItem, ChatHeader, ChatMessages, ChatFooter
+    AccountToolbarLeft, ChatListItem, ChatHeader, ChatMessages, ChatFooter,
+    vueCustomScrollbar
 },
 
 data() {
@@ -60,7 +66,12 @@ data() {
         isDialogsLoaded: false,
         currentDialog : {},
         messagesList  : [],
-        isMessagesLoaded: false
+        isMessagesLoaded: false,
+        settings: {
+            maxScrollbarLength: 60,
+            useBothWheelAxes: false,
+            suppressScrollX: true
+        }
     }
 },
 
@@ -179,6 +190,11 @@ methods: {
      */
     checkIsDialogsList(){
         return (typeof this.dialogsList!='undefined'  &&  Array.isArray(this.dialogsList)  &&  this.dialogsList  &&  this.dialogsList.length>0);
+    },
+
+
+    scrollHanle(evt) {
+        console.log(evt)
     }
 },
 
@@ -202,4 +218,8 @@ async mounted() {
 },
 
 }
+
+
+
 </script>
+
