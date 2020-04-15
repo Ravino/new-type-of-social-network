@@ -80,7 +80,7 @@
                     domain: "https://api.instagram.com/oauth/authorize",
                     client_id: `client_id=${client_ids.instagram}`,
                     scope: "scope=user_profile",
-                    response_type: "response_type=code",
+                    response_type: "response_type=token",
                     state: 'state=instagram',
                 };
 
