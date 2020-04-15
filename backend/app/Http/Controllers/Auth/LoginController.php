@@ -93,11 +93,11 @@ class LoginController extends Controller
     {
         $providerUser = null;
         if($provider === 'instagram') {
-            $request['token'] = Socialite::driver('instagram')->getAccessTokenResponse($request['token'])['access_token'];
+            $request['token'] = Socialite::driver($provider)->getAccessTokenResponse($request['token'])['access_token'];
         }
         if($request['token']) {
             try {
-                $providerUser = Socialite::driver('instagram')->userFromToken($request['token']);
+                $providerUser = Socialite::driver($provider)->userFromToken($request['token']);
             } catch (Exception $exception) {
                 \Log::debug($exception);
             }
