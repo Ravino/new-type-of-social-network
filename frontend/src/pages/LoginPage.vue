@@ -1,10 +1,10 @@
 <template>
     <div class="row">
-        <div class="col-12 col-xl-5 px-0 mb-3 mb-lg-0">
+        <div class="col-12 col-lg-5 px-0 mb-3 mb-lg-0">
             <LoginForm ref="loginForm"></LoginForm>
         </div>
 
-        <div class="col-12 col-xl-7 pr-0 pl-0 pl-xl-3 pb-0" >
+        <div class="col-12 col-lg-7 pr-0 pl-0 pl-lg-3 pb-0" >
             <LastEntries @logInWithEntryItem="logInWithEntryItem"></LastEntries>
             <PliziMobile></PliziMobile>
         </div>
