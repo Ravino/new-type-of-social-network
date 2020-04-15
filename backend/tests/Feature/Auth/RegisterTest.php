@@ -27,7 +27,8 @@ class RegisterTest extends TestApi
             [
                 'Content-Type: application/x-www-form-urlencoded',
                 'Cache-Control: no-cache',
-            ]
+            ],
+            'Test User Register method'
         );
 
         $response
