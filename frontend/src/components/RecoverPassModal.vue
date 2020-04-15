@@ -21,8 +21,8 @@
                                        @input="errors = null"
                                        ref="recoverPassInput"
                                        placeholder="Введите mail или номер телефона"/>
-                                <div v-show="errors && errors['email']" class="invalid-feedback">
-                                    <p class="text-danger">{{ errors && errors['email'][0] }}</p>
+                                <div v-if="errors && errors['email']" class="invalid-feedback">
+                                    <p class="text-danger">{{errors['email'][0] }}</p>
                                 </div>
                             </div>
 
@@ -31,6 +31,10 @@
                                     class="btn-login btn plz-btn plz-btn-primary mt-4">
                                 Восстановить
                             </button>
+
+                            <div v-if="successMessage" class="text-center mt-3">
+                                <p class="text-success">{{ successMessage }}</p>
+                            </div>
 
                         </form>
                     </div>
@@ -55,29 +59,16 @@
                     email: null,
                 },
                 errors: null,
+                successMessage: null,
             }
         },
         methods: {
-            fillUserCredentialsInLoginForm(user) {
-                this.$emit('successRegistration', user);
-            },
             hideRecoverPassModal() {
                 this.$root.$emit('hideRecoverPassModal', {});
-
-                if (this.user) {
-                    this.fillUserCredentialsInLoginForm(this.user);
-                }
-            },
-            successRegistration(user) {
-                this.isSuccessRegistration = true;
-                this.user = user;
-
-                setTimeout(() => {
-                    this.hideRecoverPassModal();
-                }, 60000);
             },
             async sendForm() {
                 let response;
+                this.errors = null;
 
                 try {
                     response = await this.$root.$api.recoveryPassword(this.form.email);
@@ -85,6 +76,14 @@
                     if (e.status === 422) {
                         this.errors = e.data.errors;
                     }
+                }
+
+                if (response) {
+                    this.successMessage = response.message;
+
+                    setTimeout(() => {
+                        this.hideRecoverPassModal();
+                    }, 3000);
                 }
             },
         }

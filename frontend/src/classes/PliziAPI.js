@@ -408,11 +408,29 @@ class PliziAPI {
     }
 
     async recoveryPassword(email) {
-        return await this.__axios.post('api/password/email', {email})
+        let response = await this.__axios.post('api/password/email', {email})
             .catch((error) => {
-                this.checkIsTokenExperis(error);
                 throw new PliziAPIError(`recoveryPassword`, error.response);
             });
+
+        if (response.status === 200) {
+            return response.data;
+        }
+
+        return null;
+    }
+
+    async resetPassword(formData) {
+        let response = await this.__axios.post('api/password/reset', formData)
+            .catch((error) => {
+                throw new PliziAPIError(`updatePassword`, error.response);
+            });
+
+        if (response.status === 200) {
+            return response.data;
+        }
+
+        return null;
     }
 
     /**
