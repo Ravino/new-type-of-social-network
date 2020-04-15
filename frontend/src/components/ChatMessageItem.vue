@@ -13,7 +13,15 @@
                 <img v-if="message.isMine" :src="ownerPic" :alt="currentDialog.firstname" class="message-user-img" />
                 <img v-else :src="companionPic" :alt="companionName" class="message-user-img" />
             </div>
-            <div class="message-body d-flex ">
+            <div class="message-body py-2" v-if="messageWriting">
+                <p class="d-flex align-items-center mb-0">
+                    <span class="loading ">
+                        <span></span><span></span><span></span>
+                    </span>
+                    Печатает
+                </p>
+            </div>
+            <div v-else class="message-body d-flex ">
                 <div class="message-text">
                     <p class="mb-0">{{message.body}}</p>
 
@@ -79,6 +87,7 @@ data() {
         messageSettings: false,
         messageChecked: true,
         messageResend: true,
+        messageWriting: false,
     }
 },
 
