@@ -569,7 +569,7 @@
       }
     },
     "/user/profile/image": {
-      "get": {
+      "post": {
         "tags": [
           "User"
         ],
@@ -1060,9 +1060,6 @@
                 }
               }
             }
-          },
-          "422": {
-            "description": "Вы уже отправляли запрос данному пользователю / Вы уже отправляли запрос данному пользователю"
           }
         },
         "security": [
@@ -1078,7 +1075,7 @@
           "Friendships"
         ],
         "summary": "",
-        "description": "Список моих друзей",
+        "description": "Список друзей пользователя",
         "operationId": "userFriendsList",
         "consumes": [
           "application/json"
@@ -1098,6 +1095,51 @@
         "responses": {
           "200": {
             "description": "Успешно добавлен",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "data": {
+                  "type": "object",
+                  "properties": {
+                    "list": {
+                      "type": "array",
+                      "items": {
+                        "$ref": "#/definitions/User"
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Not allowed"
+          }
+        },
+        "security": [
+          {
+            "Authorization": []
+          }
+        ]
+      }
+    },
+    "/user/friendship/pending": {
+      "get": {
+        "tags": [
+          "Friendships"
+        ],
+        "summary": "",
+        "description": "Список пользователей запросившых подтверждение на добавление в друзья",
+        "operationId": "pendingFriendsRequests",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "responses": {
+          "200": {
+            "description": "ОК",
             "schema": {
               "type": "object",
               "properties": {

@@ -35,6 +35,7 @@ Route::group(['middleware' => ['auth.jwt', 'track.activity']], function () {
 
     Route::get('user/notifications', 'Api\UserController@notifications');
     Route::get('user/friendship', 'Api\UserController@getMyFriendsList');
+    Route::get('user/friendship/pending', 'Api\UserController@getMyPendingFriendsList');
     Route::get('user/{id}/friendship', 'Api\UserController@getUserFriendsList');
     Route::post('user/friendship', 'Api\UserController@sendFriendshipRequest');
     Route::post('user/friendship/accept', 'Api\UserController@acceptFriendshipRequest');
