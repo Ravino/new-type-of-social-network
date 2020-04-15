@@ -16,4 +16,10 @@ class LoginTest extends TestApi
         $response = $this->getAuthToken(true);
         $response->assertStatus(200);
     }
+
+    /**
+     * Processed route: [GET] api/login/{provider}
+     * Processed route: [GET] api/login/{provider}/callback
+     * Processed route: [POST] api/sociallogin/{provider}
+     */
 }

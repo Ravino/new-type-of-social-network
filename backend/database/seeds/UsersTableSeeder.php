@@ -17,7 +17,7 @@ class UsersTableSeeder extends Seeder
     {
         $email1 = 'test@gmail.com';
         $email2 = 'admin@mail.com';
-        $countOfUsers = 10;
+        $countOfUsers = App::environment() != 'testing' ? 10 : 1;
 
         if (App::environment() != 'testing') {
             $email1 = $this->command->ask('Enter email of first user', 'test@gmail.com');
@@ -45,7 +45,7 @@ class UsersTableSeeder extends Seeder
         if (!$user2) {
             $user2 = User::create([
                 'email' => $email2,
-                'password' => bcrypt('hfj4675kf'),
+                'password' => App::environment() != 'testing' ? bcrypt('hfj4675kf') : bcrypt('secret'),
                 'token' => bcrypt('hfj4675kf'),
                 'last_activity_dt' => time(),
                 'is_admin' => true,
@@ -78,7 +78,6 @@ class UsersTableSeeder extends Seeder
             }
         }
     }
-
 
     private function generateProfile() {
         $faker = Faker\Factory::create('ru_RU');

@@ -80,7 +80,7 @@
                     domain: "https://api.instagram.com/oauth/authorize",
                     client_id: `client_id=${client_ids.instagram}`,
                     scope: "scope=user_profile",
-                    response_type: "response_type=code",
+                    response_type: "response_type=token",
                     state: 'state=instagram',
                 };
 
@@ -116,8 +116,13 @@
                 HTTPer.post(`/api/sociallogin/${provider}`, {
                     token: token,
                 }).then(response => {
-                    this.$root.$user.updateToken(response.data.token);
-                    this.$router.push({name: 'NewsPage'});
+                    if (response  &&  response.status === 200 && response.data && response.data.token && response.data.token !== '') {
+                        this.$root.$emit('afterSuccessLogin', {
+                            token: response.data.token,
+                            chatChannel: response.data.channel,
+                            redirect: true
+                        });
+                    }
                 });
             },
         },
