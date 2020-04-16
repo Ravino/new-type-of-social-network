@@ -42,7 +42,6 @@
 
 <script>
     import client_ids from "../libs/social_networks_client_ids";
-    import {HTTPer} from "../httper/httper";
 
     export default {
         name: "LoginSocialLinks",
