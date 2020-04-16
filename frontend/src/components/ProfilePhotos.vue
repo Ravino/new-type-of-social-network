@@ -1,5 +1,5 @@
 <template>
-    <div id="profilePhotos" class="row bg-white-br20 mt-5 p-4">
+    <div id="profilePhotos" class="row bg-white-br20 p-4 mb-4">
         <div class="col-12 bg-white-br20 p-0">
             <div class="w-100 d-flex flex-row justify-content-between align-items-center pb-4">
                 <div class="">

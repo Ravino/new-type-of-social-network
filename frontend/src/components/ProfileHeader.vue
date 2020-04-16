@@ -1,5 +1,5 @@
 <template>
-    <div id="profileHeader" class="row plz-profile-header">
+    <div id="profileHeader" class="row plz-profile-header mb-4">
         <div class="col-md-3 pl-0">
             <div class="plz-profile-userpic-container h-100 bg-white-br20 overflow-hidden">
                 <div class="plz-profile-userpic-wrapper">
