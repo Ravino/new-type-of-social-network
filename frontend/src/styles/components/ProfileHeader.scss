@@ -26,9 +26,14 @@
 .plz-profile-userpic-footer {
     padding: 9px;
 }
+
+
+$dotSize: 2px;
+
 .plz-profile-userpic-edit {
     border: 2px solid #f0f0f0;
     border-radius: 20px;
+    overflow: hidden;
 
     &.file-label{
         cursor: pointer;
@@ -44,18 +49,23 @@
         color: #6f7487;
         border-radius: 0;
         border: 0;
+        box-shadow: none;
         transition: .4s;
 
         &:hover {
             background-color: #a6a7a9;
             color: #fff;
+            .ps-dot {
+                background-color: #ffffff;
+            }
         }
     }
     .ps-dot {
         display: inline-block;
-        width: 2px;
-        height: 2px;
-        border-radius: 2px;
+        width: $dotSize;
+        min-width: $dotSize;
+        height: $dotSize;
+        border-radius: $dotSize;
         background-color: #6f7487;
         margin: 0 3px;
     }

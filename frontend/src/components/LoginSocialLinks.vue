@@ -42,7 +42,6 @@
 
 <script>
     import client_ids from "../libs/social_networks_client_ids";
-    import {HTTPer} from "../httper/httper";
 
     export default {
         name: "LoginSocialLinks",
@@ -113,17 +112,21 @@
                 }
             },
             saveToken(provider, token) {
-                HTTPer.post(`/api/sociallogin/${provider}`, {
-                    token: token,
-                }).then(response => {
-                    if (response  &&  response.status === 200 && response.data && response.data.token && response.data.token !== '') {
-                        this.$root.$emit('afterSuccessLogin', {
-                            token: response.data.token,
-                            chatChannel: response.data.channel,
-                            redirect: true
-                        });
-                    }
-                });
+                let response;
+
+                try {
+                    response = this.$root.$api.registerThroughSocialServices(provider, token);
+                } catch (e) {
+                    console.warn(e.detailMessage);
+                }
+
+                if (response && response.data && response.data.token && response.data.token !== '') {
+                    this.$root.$emit('afterSuccessLogin', {
+                        token: response.data.token,
+                        chatChannel: response.data.channel,
+                        redirect: true
+                    });
+                }
             },
         },
         mounted() {

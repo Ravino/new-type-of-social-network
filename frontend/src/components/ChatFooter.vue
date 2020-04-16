@@ -1,24 +1,27 @@
 <template>
     <div id="chatFooter" class="bg-white w-100 border-top">
         <div class="row d-flex align-items-center mx-0 py-4">
-            <div class="col-1 col-md-2">
-                <div class="">
+            <div class="col-1 col-md-2 align-items-center text-center">
+
                     <img class="chat-companion-user-pic rounded-circle my-0 mx-auto"
                          v-bind:src="userPic" v-bind:alt="userFullName" />
-                </div>
+
             </div>
             <div class="col-9 col-md-8 pl-0">
                 <div class="form">
                     <div class="form-row align-items-center ">
                         <div class="col-12  p-0">
-                            <label class="sr-only d-none" for="txtMessage">Написать сообщение</label>
-                            <input type="search"
-                                   v-model="newMessage"
-                                   @keydown="onMessageKeyDown($event)"
-                                   class="form-control px-2 w-100"
-                                   id="txtMessage"
-                                   ref="txtMessage"
-                                   placeholder="Написать сообщение..." />
+
+                            <textarea-autosize
+                                class="form-control px-2 pt-4 w-100"
+
+                                @keydown="onMessageKeyDown($event)"
+                                ref="txtMessage"
+                                id="txtMessage"
+                                :min-height="10"
+                                :max-height="200"
+                                placeholder="Написать сообщение..."
+                            />
                         </div>
                     </div>
                 </div>
@@ -48,6 +51,9 @@ import IconAddFile from '../icons/IconAddFile.vue';
 import IconAddCamera from '../icons/IconAddCamera.vue';
 import IconAddSmile from '../icons/IconAddSmile.vue';
 
+/*-  TODO: Вставка файлов */
+/*- @link https://www.npmjs.com/package/vue-filepond*/
+
 export default {
 name: 'ChatFooter',
 props: {
@@ -62,7 +68,7 @@ data() {
 
 methods: {
     onMessageKeyDown(ev) {
-        if (13===ev.keyCode  &&  this.newMessage.trim()!=='') {
+        if (13===ev.keyCode && ev.ctrlKey===true  &&  this.newMessage.trim()!=='') { //TODO не работает отправка
             const newMsg = {
                 body: this.newMessage.trim(),
                 createdAt: Math.floor((new Date()).getTime() / 1000),

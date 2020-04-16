@@ -5,9 +5,9 @@
         <div class="modal-dialog modal-dialog-centered" role="document" @click.stop="">
             <div class="modal-content bg-white-br20">
 
-                <div class="modal-body p-4">
+                <div id="resendMessageModalBody" class="modal-body p-4">
                     <h5 class="resend-message-title text-left mb-3" >Переслать собщение</h5>
-                    <form id="resendMessageModalBody" novalidate="novalidate" >
+                    <form id="resendMessageModalForm" novalidate="novalidate" >
                         <div class="form-group">
                             <multiselect v-model="value"
                                          :options="options"
@@ -21,16 +21,18 @@
                         <div class="form-group position-relative">
                             <h5 class="title-h5 ml-1">Ваше сообщение</h5>
                             <div class="d-flex resend-message-row mb-3">
-                                <div class="col-9 py-0 px-0">
-                                    <label for="resendMessageText" class="d-none">Начните печатать текст...</label>
-                                    <textarea class="form-control profileWhatsNew-textarea"
-                                              name="profileWhatsNew-textarea"
-                                              id="resendMessageText" cols="1" rows="1"
+                                <div class="col-8 py-0 px-0">
 
-                                              placeholder="Начните печатать текст...">
-                                    </textarea>
+                                    <textarea-autosize
+                                        class="form-control profileWhatsNew-textarea pb-0 pl-2"
+                                        placeholder="Начните печатать текст..."
+                                        ref="myTextarea"
+                                        v-model="textareaValue"
+                                        :min-height="10"
+                                        :max-height="200"
+                                    />
                                 </div>
-                                <div class="col-2 ml-auto py0 pr-0 d-flex align-items-center justify-content-end">
+                                <div class="col-4 ml-auto py0 pr-0 d-flex align-items-center justify-content-end">
                                     <label class="attach-file btn btn-link my-0 ml-0 mr-2 px-1 btn-add-file position-relative">
                                         <IconAddFile />
                                         <input type="file">
@@ -47,7 +49,7 @@
                             </div>
                         </div>
 
-                        <div class="form-group">
+                        <div class="form-group mb-4">
                             <div class="message-resend pl-3 ml-1 mt-3" >
                                 <div class="message-user-data  d-flex align-items-center mb-2 ">
                                     <div class="media-pic border rounded-circle  mr-3">
@@ -81,11 +83,11 @@
     import IconAddFile from '../icons/IconAddFile.vue';
     import IconAddCamera from '../icons/IconAddCamera.vue';
     import IconAddSmile from '../icons/IconAddSmile.vue';
-    import Multiselect from 'vue-multiselect';
+
 
     export default {
         name: 'ResendMessageModal',
-        components: { IconAddCamera, IconAddSmile, IconAddFile, Multiselect },
+        components: { IconAddCamera, IconAddSmile, IconAddFile },
         props: {
 
         },
@@ -94,7 +96,8 @@
                 value: [
                      'Pitter Pen'
                 ],
-                options: ['Vue.js', 'Javascript', 'Open Source', 'os' ]
+                options: ['Vue.js', 'Javascript', 'Open Source', 'os' ],
+                textareaValue: ''
             }
         },
         methods: {
@@ -117,6 +120,7 @@
 
 
 <style lang="scss">
+
     .successRegistration {
         i {
             font-size: 3rem;

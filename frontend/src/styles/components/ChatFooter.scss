@@ -8,6 +8,9 @@ $chatMessageUserPicSize: 32px;
             font-size: 13px;
             color: #9a9a9a;
         }
+        &:focus {
+            padding-top: 5px!important;
+        }
     }
 
     .chat-companion-user-pic {

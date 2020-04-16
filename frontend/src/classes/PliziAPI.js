@@ -144,6 +144,26 @@ class PliziAPI {
             });
     }
 
+    /**
+     * Регистрация через соц. сети.
+     * @param provider
+     * @param token
+     * @returns {object[]|null}
+     * @throws PliziAPIError
+     */
+    async registerThroughSocialServices(provider, token) {
+        let response = await this.__axios.post(`/api/sociallogin/${provider}`, {token})
+            .catch((error) => {
+                throw new PliziAPIError(`registerThroughSocialServices`, error.response);
+            });
+
+        if (response.status === 200) {
+            return response.data;
+        }
+
+        return null;
+    }
+
 
     /**
      * доступ к API методу api/user
@@ -449,9 +469,6 @@ class PliziAPI {
         return null;
     }
 
-
-
-
     async notificationsList() {
         let response = await this.__axios.get('api/user/notifications', this.authHeaders).catch((error) => {
             this.checkIsTokenExperis(error);
@@ -486,6 +503,12 @@ class PliziAPI {
     }
 
 
+    /**
+     * Отправка запроса на восстановление пароля.
+     * @param email
+     * @returns {object[]|null}
+     * @throws PliziAPIError
+     */
     async recoveryPassword(email) {
         let response = await this.__axios.post('api/password/email', {email})
             .catch((error) => {
@@ -499,7 +522,12 @@ class PliziAPI {
         return null;
     }
 
-
+    /**
+     * Обновление пароля.
+     * @param formData
+     * @returns {object[]|null}
+     * @throws PliziAPIError
+     */
     async resetPassword(formData) {
         let response = await this.__axios.post('api/password/reset', formData)
             .catch((error) => {
