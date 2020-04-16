@@ -21,26 +21,28 @@
 </template>
 
 <script>
-import AccountToolbarLeft from '../common/AccountToolbarLeft.vue';
-import AccountToolbarRight from '../common/AccountToolbarRight.vue';
+    import AccountToolbarLeft from '../common/AccountToolbarLeft.vue';
+    import AccountToolbarRight from '../common/AccountToolbarRight.vue';
 
-import AccountSettingsMain from '../components/AccountSettingsMain.vue';
-import AccountSettingsPrivacy from '../components/AccountSettingsPrivacy.vue';
-import AccountSettingsSecurity from '../components/AccountSettingsSecurity.vue';
+    import AccountSettingsMain from '../components/AccountSettingsMain.vue';
+    import AccountSettingsPrivacy from '../components/AccountSettingsPrivacy.vue';
+    import AccountSettingsSecurity from '../components/AccountSettingsSecurity.vue';
 
-import AccountSettingsSideMenu from '../components/AccountSettingsSideMenu.vue';
+    import AccountSettingsSideMenu from '../components/AccountSettingsSideMenu.vue';
 
-export default {
-name: 'AccountPage',
-components: { AccountToolbarLeft,
-    AccountSettingsMain, AccountSettingsPrivacy, AccountSettingsSecurity,
-    AccountSettingsSideMenu,
-    AccountToolbarRight
-},
-data() {
-    return {
+    export default {
+        name: 'AccountPage',
+        components: {
+            AccountToolbarLeft,
+            AccountSettingsMain, AccountSettingsPrivacy, AccountSettingsSecurity,
+            AccountSettingsSideMenu,
+            AccountToolbarRight
+        },
+        data() {
+            return {}
+        },
+        methods: {
+
+        },
     }
-}
-
-}
 </script>
