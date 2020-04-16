@@ -7,7 +7,7 @@ namespace Domain\Pusher\Repositories;
 use Carbon\Carbon;
 use DB;
 use Domain\Pusher\Helpers\ArrayUtils;
-use Domain\Pusher\Models\Dialog;
+use Domain\Pusher\DTOs\Dialog;
 
 class ChatRepository
 {

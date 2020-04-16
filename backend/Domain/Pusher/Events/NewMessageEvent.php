@@ -3,7 +3,7 @@
 namespace Domain\Pusher\Events;
 
 
-use Domain\Pusher\Models\Message;
+use Domain\Pusher\DTOS\Message;
 
 class NewMessageEvent
 {
