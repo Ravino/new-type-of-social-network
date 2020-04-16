@@ -7,7 +7,7 @@ import TextareaAutosize from 'vue-textarea-autosize'
 import Multiselect from 'vue-multiselect';
 
 // register globally
-Vue.component('multiselect', Multiselect); // TODO: Узнать у @tga правильно ли так делать
+Vue.component('multiselect', Multiselect);
 
 /**
  * для упрощения получения доступа к дефолтному аватару
@@ -72,7 +72,7 @@ Vue.config.productionTip = false;
 Vue.use(VueRouter);
 Vue.use(Vuelidate);
 
-Vue.use(TextareaAutosize); // TODO: @SV
+Vue.use(TextareaAutosize);
 
 import App from './App.vue';
 

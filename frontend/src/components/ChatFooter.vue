@@ -1,11 +1,11 @@
 <template>
     <div id="chatFooter" class="bg-white w-100 border-top">
         <div class="row d-flex align-items-center mx-0 py-4">
-            <div class="col-1 col-md-2">
-                <div class="">
+            <div class="col-1 col-md-2 align-items-center text-center">
+
                     <img class="chat-companion-user-pic rounded-circle my-0 mx-auto"
                          v-bind:src="userPic" v-bind:alt="userFullName" />
-                </div>
+
             </div>
             <div class="col-9 col-md-8 pl-0">
                 <div class="form">
@@ -13,7 +13,7 @@
                         <div class="col-12  p-0">
 
                             <textarea-autosize
-                                class="form-control px-2 w-100"
+                                class="form-control px-2 pt-4 w-100"
                                 v-model="newMessage"
                                 @keydown="onMessageKeyDown($event)"
                                 ref="txtMessage"
