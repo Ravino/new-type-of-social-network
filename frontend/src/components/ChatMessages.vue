@@ -90,7 +90,7 @@ export default {
         scrollToEnd () {
 
             return setTimeout(() => {
-                const container = this.$el.querySelector('.ps-container');
+                const container = this.$el.querySelector('.ps-container'); // TODO: Проскролить каждый
                 container.scrollTop = container.scrollHeight;
 
             }, 500);

@@ -14,7 +14,7 @@
 
                             <textarea-autosize
                                 class="form-control px-2 pt-4 w-100"
-                                v-model="newMessage"
+
                                 @keydown="onMessageKeyDown($event)"
                                 ref="txtMessage"
                                 id="txtMessage"
@@ -51,6 +51,9 @@ import IconAddFile from '../icons/IconAddFile.vue';
 import IconAddCamera from '../icons/IconAddCamera.vue';
 import IconAddSmile from '../icons/IconAddSmile.vue';
 
+/*-  TODO: Вставка файлов */
+/*- @link https://www.npmjs.com/package/vue-filepond*/
+
 export default {
 name: 'ChatFooter',
 props: {
@@ -60,13 +63,12 @@ components: { IconAddCamera, IconAddSmile, IconAddFile },
 data() {
     return {
         newMessage: ``,
-        textareaValue: ''
     }
 },
 
 methods: {
     onMessageKeyDown(ev) {
-        if (13===ev.keyCode  &&  this.newMessage.trim()!=='') {
+        if (13===ev.keyCode && ev.ctrlKey===true  &&  this.newMessage.trim()!=='') { //TODO не работает отправка
             const newMsg = {
                 body: this.newMessage.trim(),
                 createdAt: Math.floor((new Date()).getTime() / 1000),
