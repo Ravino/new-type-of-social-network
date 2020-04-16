@@ -1,7 +1,7 @@
 <template>
     <div class="row plz-post-item mt-4 bg-white-br20 py-4">
 
-        <div class="col-12 border-bottom px-4">
+        <div class="col-12 border-bottom plz-post-item-header">
             <div class="d-flex flex-row align-content-center pb-4">
                 <div class="post-poster-pic mr-3">
                     <img :src="posterPic" :alt="posterName"/>
@@ -11,9 +11,9 @@
                     <h6 class="post-poster-title mb-1">
                         <b>{{posterName}}</b>
                     </h6>
-                    <!--                    <time :datetime="post.dtLabel" class="post-poster-time">-->
-                    <!--                        {{ post.dtLabel | lastMessageTime }}-->
-                    <!--                    </time>-->
+                    <time :datetime="postCreatedAt" class="post-poster-time">
+                        {{ postCreatedAt | lastMessageTime }}
+                    </time>
                 </div>
 
                 <div class="post-poster-actions my-auto ml-auto">
@@ -22,36 +22,21 @@
             </div>
         </div>
 
-        <div class="col-12 pt-4 px-4 pb-2">
+        <div class="col-12 plz-post-item-body pt-4 pb-2">
             <p class="post-main-text mb-2" v-html="this.$options.filters.toBR(postBody)"></p>
         </div>
 
-        <div class="col-12">
+        <div class="col-12 plz-post-item-images">
             <div v-if="(postImages && postImages.length > 0)"
-                 :id="postImagesId"
+                 :id="post_images_id"
                  class="post-images">
-                <!--                <template v-for="(postPic, postPicIndex) in postImages">-->
-                <!--                    <div v-if="postImages.length === 1"-->
-                <!--                         class="col-12">-->
-                <!--                        <img :src="postPic" class="w-100" alt="">-->
-                <!--                    </div>-->
-
-                <!--                    <div v-if="postImages.length >= 2">-->
-                <!--                        <div class="col col-6">-->
-                <!--                            <img :src="postPic" class="w-100" alt="">-->
-                <!--                        </div>-->
-                <!--                        <div class="col col-6">-->
-                <!--                            <img :src="postPic" class="w-100" alt="">-->
-                <!--                        </div>-->
-                <!--                    </div>-->
-                <!--                </template>-->
             </div>
         </div>
 
-        <div class="plz-post-item-footer col-12 px-4 pt-4">
+        <div class="plz-post-item-footer col-12 pt-4">
             <div class="d-flex">
                 <div class="d-flex">
-                    <div class="post-watched-counter ml-4">
+                    <div class="post-watched-counter">
                         <IconHeard/>
                         <span>{{ postLikes | space1000 }}</span>
                     </div>
@@ -120,88 +105,88 @@
             },
             postSharesCount() {
                 return this.post.sharesCount;
-            }
+            },
+            postCreatedAt() {
+                return this.post.createdAt;
+            },
         },
         data() {
             return {
-                postImagesId: 'postImages-' + Math.floor(Math.random() * 1000),
+                post_images_id: 'postImages-' + Math.floor(Math.random() * 1000),
+                image: {
+                    width: this.$router.currentRoute.name === 'NewsPage' ? 752 : 538,
+                    height: 337,
+                    "margin for two images": 27,
+                },
             }
         },
         methods: {
             calcPic() {
-                let postImagesDiv = document.querySelector('#' + this.postImagesId);
+                let self = this;
+                let post_images_div = document.querySelector('#' + this.post_images_id);
                 let post_images = this.postImages;
                 let count_post_images = this.postImages.length;
                 let parent_div = document.createElement('div');
                 let child_div = document.createElement('div');
-                let image = document.createElement('img');
+                let image;
 
-                if (count_post_images) {
-                    if (count_post_images === 1) {
-                        image.classList.add('w-100');
-                        child_div.classList.add('col-12');
+                parent_div.classList.add('d-flex');
+                child_div.classList.add('d-flex', 'flex-wrap');
 
-                        image.setAttribute('src', post_images[0]);
-                        child_div.append(image);
-                        parent_div.append(child_div);
-                    } else {
-                        let second_child_div = document.createElement('div');
-                        let margin = 0;
+                if (post_images) {
+                    post_images.forEach(function (post_image, index) {
+                        image = document.createElement('img');
+                        image.setAttribute('src', post_image);
 
-                        parent_div.classList.add('d-flex');
-
-                        post_images.forEach(function (postImage, index) {
-                            image = document.createElement('img');
+                        if (count_post_images === 1) {
                             image.classList.add('w-100');
-
-                            if (count_post_images >= 3) {
-                                margin = index % 2 !== 0 ? 5 : 0;
+                            parent_div.append(image);
+                        } else if (count_post_images === 2) {
+                            image.classList.add('w-100');
+                            let margin = self.image['margin for two images'] / 2;
+                            if (index === 0) {
+                                image.style = "margin-right: " + margin + 'px';
+                            } else {
+                                image.style = "margin-left: " + margin + 'px';
                             }
+
+                            parent_div.append(image);
+                        } else {
+                            let second_child_div = document.createElement('div');
 
                             if (index === 0) {
-                                image.setAttribute('src', postImage);
-                                child_div.append(image);
-                                child_div.classList.add('w-75');
-                                child_div.classList.add('mr-2');
-                                parent_div.append(child_div);
-                            } else {
-                                image.setAttribute('src', postImage);
-                                image.style = "height:" + (500 / (count_post_images - 1) - margin) + "px; margin-bottom: 5px;";
+                                image.style = "width: " + self.image.width + "px; margin-right: 7px";
                                 second_child_div.append(image);
-                                second_child_div.classList.add('w-25');
                                 parent_div.append(second_child_div);
+                            } else {
+                                if ((((count_post_images - 1) % 2 === 0) && count_post_images < 5) || count_post_images === 4) {
+                                    let height = self.image.height / (count_post_images - 1);
+                                    let margin = count_post_images - 1 !== index ? 6 : null;
+                                    image.style = "width: 312px; height: " + (height - margin) + "px; margin-bottom: " + margin + "px;";
+                                    child_div.append(image);
+                                } else {
+                                    let width = 280 / 2;
+                                    let height = self.image.height / 2;
+                                    let margin_bottom = 6;
+                                    let margin_right = index % 2 !== 0 ? 6 : null;
+
+                                    image.style.width = width + "px";
+                                    image.style.height = (height - (margin_bottom) / 2) + "px";
+                                    image.style.marginRight = margin_right + "px";
+
+                                    if (!((index === count_post_images - 1) || (index === count_post_images - 2))) {
+                                        image.style.marginBottom = margin_bottom + "px";
+                                    }
+
+                                    child_div.append(image);
+                                }
                             }
-                        });
-                    }
+                        }
+                    });
 
-                    postImagesDiv.append(parent_div);
+                    parent_div.append(child_div);
+                    post_images_div.append(parent_div);
                 }
-
-                // if (post_images) {
-                //     let el = document.createElement('div');
-                //
-                //     post_images.forEach(function (postImage, index) {
-                //         let div_second = document.createElement('div');
-                //
-                //         div_second.classList.add('mb-2');
-                //         image = document.createElement('img');
-                //         image.classList.add('w-100');
-                //
-                //         if (index === 0) {
-                //             image.setAttribute('src', postImage);
-                //             div.append(image);
-                //             row.append(div);
-                //         } else {
-                //             image.setAttribute('src', postImage);
-                //             image.classList.add('h-50');
-                //             div_second.append(image);
-                //             el.append(div_second);
-                //             row.append(el);
-                //         }
-                //     });
-                //
-
-                // }
             }
         },
         mounted() {
@@ -211,10 +196,19 @@
 </script>
 
 <style lang="scss">
+    .plz-post-item {
+        .plz-post-item-header,
+        .plz-post-item-body,
+        .plz-post-item-images,
+        .plz-post-item-footer {
+            padding: 0 35px 0 39px;
+        }
+    }
+
     .post-images {
         img {
-            max-height: 500px;
-            border-radius: 5px;
+            max-height: 337px;
+            border-radius: 3px;
         }
     }
 </style>

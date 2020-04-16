@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
 use Domain\Pusher\Http\Requests\SendMessageRequest;
+use Domain\Pusher\Http\Requests\SendMessageToUserRequest;
 use Domain\Pusher\Repositories\ChatRepository;
 use Domain\Pusher\Repositories\MessageRepository;
 use Domain\Pusher\Services\ChatService;
@@ -66,13 +67,23 @@ class ChatController extends Controller
     }
 
     /**
-     * Отправка сообщения пользователю
+     * Отправка сообщения в чат
      * @param SendMessageRequest $request
      * @return \Illuminate\Http\JsonResponse
      */
     public function send(SendMessageRequest $request)
     {
         $this->chatService->send($request->get('body'), $request->get('chat_id'), Auth::user()->id);
+        return response()->json(['status' => 'OK']);
+    }
+
+    /**
+     * @param SendMessageToUserRequest $request
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function sendToUser(SendMessageToUserRequest $request)
+    {
+        $this->chatService->sendToUser($request->get('body'), $request->get('user_id'), Auth::user()->id);
         return response()->json(['status' => 'OK']);
     }
 }

@@ -29,10 +29,8 @@ class NotificationCollection extends ResourceCollection
             'list' => $this->collection->map(function ($notification) {
                 return [
                     'id' => $notification->id,
-                    'action' => $notification->action,
-                    'sender' => new User($notification->sender),
-                    'recipient' => new User($notification->recipient),
-                    'isRead' => $notification->is_read,
+                    'data' => $notification->data['data'],
+                    'readAt' => $notification->read_at,
                     'createdAt' => $notification->created_at
                 ];
             }),

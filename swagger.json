@@ -30,7 +30,7 @@
     "http"
   ],
   "paths": {
-    "/post": {
+    "/posts": {
       "post": {
         "tags": [
           "Posts"
@@ -607,6 +607,48 @@
                 "path": {
                   "type": "string",
                   "example": "https://plizi.s3.eu-north-1.amazonaws.com/images/originals/WEP0464rMZ9J3j0QWmTTbX5oVyC46kJI6PZMtI56.png"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "Authorization": []
+          }
+        ]
+      }
+    },
+    "/user/notifications": {
+      "get": {
+        "tags": [
+          "User"
+        ],
+        "summary": "",
+        "description": "Получить уведомления пользователя",
+        "operationId": "getUserNotifications",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "data": {
+                  "type": "object",
+                  "properties": {
+                    "list": {
+                      "type": "array",
+                      "items": {
+                        "$ref": "#/definitions/NotificationRes"
+                      }
+                    }
+                  }
                 }
               }
             }
@@ -1287,6 +1329,49 @@
     }
   },
   "definitions": {
+    "NotificationRes": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "data": {
+          "type": "object",
+          "properties": {
+            "sender": {
+              "type": "object",
+              "properties": {
+                "firstName": {
+                  "type": "string"
+                },
+                "lastName": {
+                  "type": "string"
+                },
+                "id": {
+                  "type": "number"
+                },
+                "postId": {
+                  "type": "number"
+                }
+              }
+            },
+            "body": {
+              "type": "string"
+            },
+            "type": {
+              "type": "string",
+              "example": "user.post.created"
+            }
+          }
+        },
+        "readAt": {
+          "type": "string"
+        },
+        "createdAt": {
+          "type": "string"
+        }
+      }
+    },
     "PostByUser": {
       "type": "object",
       "properties": {

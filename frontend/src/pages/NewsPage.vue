@@ -15,14 +15,19 @@
                             <span class="nav-link py-3 px-1 mr-4">Обновления</span>
                             <span class="nav-link py-3 px-1 mr-4">Понравилось</span>
                             <span class="nav-link py-3 px-1 mr-4">
-                                <i class="fas fa-search"></i>
+                                <IconSearch style="width: 15px; height: 16px;"/>
                             </span>
                         </nav>
 
-                        <button class="btn btn-link mx-1 px-1 btn-add-file" type="button">
-                            Вид:
-                        </button>
-
+                        <div class="newsViewModes mx-1 px-1">
+                            <span>Вид:</span>
+                            <button class="btn bg-transparent p-0">
+                                <IconMultipleViewMode style="width: 16px; height: 16px;"/>
+                            </button>
+                            <button class="btn bg-transparent p-0">
+                                <IconSingleViewMode style="width: 16px; height: 16px;"/>
+                            </button>
+                        </div>
                     </div>
                 </div>
                 <Post v-for="(postData, postIndex) in news"
@@ -41,6 +46,9 @@
     import AccountToolbarRight from '../common/AccountToolbarRight.vue';
     import AccountSettingsSideMenu from '../components/AccountSettingsSideMenu.vue';
     import WhatsNewBlock from "../common/WhatsNewBlock.vue";
+    import IconSearch from "../icons/IconSearch";
+    import IconSingleViewMode from "../icons/IconSingleViewMode";
+    import IconMultipleViewMode from "../icons/IconMultipleViewMode";
     import Post from "../common/Post.vue";
     import PliziPost from '../classes/PliziPost.js';
 
@@ -51,6 +59,9 @@
             AccountToolbarRight,
             AccountSettingsSideMenu,
             WhatsNewBlock,
+            IconSearch,
+            IconSingleViewMode,
+            IconMultipleViewMode,
             Post,
         },
         data() {
@@ -83,6 +94,26 @@
     }
 </script>
 
-<style scoped>
+<style lang="scss">
+    .newsViewModes {
+        color: #939292;
 
+        span:first-child {
+            margin-right: 11px;
+        }
+
+        button:nth-child(2) {
+            margin-right: 7px;
+        }
+
+        button {
+            svg {
+                fill: #939292;
+
+                &:hover {
+                    fill: #204af4;
+                }
+            }
+        }
+    }
 </style>
