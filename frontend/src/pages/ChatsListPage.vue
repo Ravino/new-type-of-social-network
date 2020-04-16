@@ -25,7 +25,7 @@
                     <ChatMessages v-if="isMessagesLoaded" v-bind:messages="messagesList" v-bind:currentDialog="currentDialog"></ChatMessages>
                     <Spinner v-else v-bind:message="`Сообщения загружаются`"></Spinner>
 
-                    <ChatFooter v-bind:currentDialog="currentDialog"></ChatFooter>
+                    <ChatFooter v-bind:currentDialog="currentDialog"  ></ChatFooter>
                 </div>
             </div>
 
@@ -132,12 +132,8 @@ methods: {
             messageResponse = await this.$root.$api.chatMessages(evData.dialogID);
         }
         catch (e){
-            if (e.status  &&  e.status===401) {
-                this.$root.$emit('afterSuccessLogout', {});
-            }
-            else {
-                throw e;
-            }
+            window.console.warn(e.detailMessage);
+            throw e;
         }
 
         this.$store.dispatch('SET_ACTIVE_DIALOG', evData.dialogID);
@@ -155,12 +151,8 @@ methods: {
             response = await this.$root.$api.chatDialogs();
         }
         catch (e){
-            if (e.status  &&  e.status===401) {
-                this.$root.$emit('afterSuccessLogout', {});
-            }
-            else {
-                throw e;
-            }
+            window.console.warn(e.detailMessage);
+            throw e;
         }
 
         this.dialogsList = response;

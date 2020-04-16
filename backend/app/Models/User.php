@@ -91,11 +91,6 @@ class User extends Authenticatable implements JWTSubject
         return $this->morphMany(Post::class, 'postable');
     }
 
-    public function notifications()
-    {
-        return $this->hasMany(Notification::class,  'recipient_id');
-    }
-
     public function allPosts()
     {
         return $this->morphMany(Post::class, 'postable')->with('postable')

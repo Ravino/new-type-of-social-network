@@ -47,6 +47,7 @@ import AlertModal from './common/AlertModal.vue';
 import {HTTPer} from './httper/httper';
 import PliziAPI from './classes/PliziAPI.js';
 import PliziAuthUser from './classes/PliziAuthUser.js';
+import PliziUser from "./classes/PliziUser";
 
 export default {
 name: 'App',
@@ -114,28 +115,6 @@ methods: {
     },
 
 
-    sentNewChatMessageToAPI(evData) {
-        const sendData = {
-            body: evData.message.body,
-            chat_id: evData.chatId
-        };
-
-        HTTPer.post('api/chat/send', sendData, this.$store.getters.getHTTPConfig)
-            .then((response) => {
-                if (response.status === 200) {
-                    this.$root.$emit('addNewChatMessageToList', evData.message);
-                }
-            })
-            .catch((error) => {
-                if (400 === error.response.status) {
-                    window.console.warn(error.response.status+': '+error.response.statusText+': ' +error.response.data.message);
-                }
-                else {
-                    window.console.warn( error.toString() );
-                }
-            });
-    },
-
     afterUserLoad(evData) {
         if (evData.token !== ``  &&  evData.user) {
 
@@ -145,8 +124,31 @@ methods: {
             this.$root.$lastSearch = this.$store.getters.lastSearch;
 
             this.$root.$user.saveUserData( evData.user, evData.token );
+
+            this.loadInvitations();
         }
     },
+
+
+    /**
+     * загружает инвайты для навбара
+     */
+    async loadInvitations(){
+        let apiResponse = null;
+
+        try {
+            apiResponse = await this.$root.$api.invitationsList();
+        }
+        catch (e) {
+            window.console.warn(e.detailMessage);
+        }
+
+        if (apiResponse !== null) {
+            this.$root.$user.invitationsLoad(apiResponse);
+            this.$root.$emit('invitationsLoad', {});
+        }
+    },
+
 
     isAuthorized(){
         return this.$root.$isAuth;
@@ -164,8 +166,6 @@ created(){
 
     this.$root.$on('afterSuccessLogout', this.afterSuccessLogout);
 
-    this.$root.$on('sentNewChatMessageToAPI', this.sentNewChatMessageToAPI);
-
     this.$root.$on('afterUserLoad', this.afterUserLoad);
 
     this.$root.$on('searchStart', (evData) => {
@@ -175,7 +175,7 @@ created(){
     // TODO: @TGA тут времененно, для отладки
     this.$root.$on('sendPersonalMessage', this.handlePersonalMessage);
 
-    this.$root.$on('api:Unauthorized', (evData)=>{
+    this.$root.$on('api:Unauthorized', (evData) => {
         window.console.warn(evData, `api:Unauthorized!`);
         this.afterSuccessLogout();
     });

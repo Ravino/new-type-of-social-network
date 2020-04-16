@@ -1,11 +1,12 @@
 <template>
-    <div class="modal show recover-pass-modal" tabindex="-1" role="dialog" aria-labelledby="Modal" aria-hidden="true"
+    <div class="modal show recover-pass-modal" tabindex="-1" role="dialog" aria-labelledby="Modal"
+         aria-hidden="true"
          style="display: block; background-color: rgba(0, 0, 0, .7);" @click.stop="hideRecoverPassModal">
         <div class="modal-dialog modal-dialog-centered" role="document" @click.stop="">
             <div class="modal-content bg-white-br20">
 
                 <div class="modal-body">
-                    <div id="" class="plz-recover-pass-form-wrapper ">
+                    <div id="" class="plz-recover-pass-form-wrapper text-center">
                         <div class="text-center"><h5>Восстановление пароля</h5></div>
                         <img class="mb-4 mt-2 mx-auto" src="../images/icons/icon-recoverPass.png" alt="">
 

@@ -8,9 +8,11 @@
 
         <div id="chatMessangesWrapper" class="col-8 col-lg-8 col-xl-8 bg-light d-none d-lg-block d-xl-block h-100">
             <ChatHeader v-bind:currentDialog="currentDialog"></ChatHeader>
-            <ChatMessages v-bind:messages="messages"></ChatMessages>
-            <ChatFooter v-bind:currentDialog="currentDialog"></ChatFooter>
+            <ChatMessages v-bind:messages="messages" v-bind:messageSettings="messageSettings"></ChatMessages>
+            <ChatFooter v-bind:currentDialog="currentDialog"  ></ChatFooter>
         </div>
+
+
     </div>
 </template>
 
@@ -26,7 +28,9 @@ export default {
     props: {
         dialogs: Array,
         messages: Array,
-        currentDialog: Object
+        currentDialog: Object,
+        messageSettings: String,
+        messageResendModalShow: false
     },
     components: {ChatListItem, ChatHeader, ChatMessages, ChatFooter},
     data() {
@@ -36,6 +40,9 @@ export default {
     methods: {},
 
     mounted() {
+        this.$root.$on('hideMessageResendModal', (evData) => {
+            this.messageResendModalShow = false;
+        });
     },
 
     updated() {

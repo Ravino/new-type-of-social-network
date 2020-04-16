@@ -1,6 +1,6 @@
 import VueRouter from 'vue-router';
 
-import {store} from '../store/store.js';
+import store from '../store/store.js';
 
 import HomePage from '../pages/HomePage.vue';
 import LoginPage from '../pages/LoginPage.vue';
@@ -13,11 +13,12 @@ import ChatMessagesPage from '../pages/ChatMessagesPage.vue';
 import SearchResultsPage from '../pages/SearchResultsPage.vue';
 import PersonalPage from '../pages/PersonalPage.vue';
 import FriendsListPage from '../pages/FriendsListPage.vue';
+import InvitationsPage from '../pages/InvitationsPage.vue';
 import NotificationsPage from '../pages/NotificationsPage.vue';
 
 import PliziAPI from '../classes/PliziAPI.js';
 import PliziAuthUser from '../classes/PliziAuthUser.js';
-import NewsPage from "../pages/NewsPage";
+import NewsPage from '../pages/NewsPage.vue';
 import UpdatePasswordPage from "../pages/UpdatePasswordPage";
 
 const routes = [
@@ -32,7 +33,8 @@ const routes = [
     {path: '/chat-messages', component: ChatMessagesPage, name: 'ChatMessagesPage', meta: {title: 'Plizi: Чат'}, props: true },
     {path: '/search-results', component: SearchResultsPage, name: 'SearchResultsPage', meta: {title: 'Plizi: Результаты поиска'}, props: true },
     {path: '/user-:id', component: PersonalPage, name: 'PersonalPage', meta: {title: 'Plizi:'}, props: true},
-    {path: '/friends', component: FriendsListPage, name: 'FriendsListPage', meta: {title: 'Plizi: Друзья'}, props: true },
+    {path: '/friends', component: FriendsListPage, name: 'FriendsListPage', meta: {title: 'Plizi: Ваши друзья'}, props: true },
+    {path: '/invitations', component: InvitationsPage, name: 'InvitationsPage', meta: {title: 'Plizi: приглашения дружбы'}, props: true },
     {path: '/notifications', component: NotificationsPage, name: 'NotificationsPage', meta: {title: 'Plizi: напоминания'}, props: true },
     {path: '/news', component: NewsPage, name: 'NewsPage', meta: {title: 'Plizi: Новости', props: true}},
     {path: '/password/update', component: UpdatePasswordPage, meta: {title: 'Plizi: Обновление пароля', props: true, isGuest: true}},
@@ -98,7 +100,6 @@ router.beforeEach(async (to, from, next) => {
                     routerForcedLogout(next);
                 }
             }
-
         }
         else {
             routerForcedLogout(next);

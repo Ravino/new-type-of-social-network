@@ -2,6 +2,10 @@ import Vue from 'vue';
 import VueRouter from 'vue-router';
 import Vuelidate from 'vuelidate';
 
+//import Multiselect from 'vue-multiselect';
+
+// register globally
+//Vue.component('multiselect', Multiselect); // TODO: Узнать у @tga правильно ли так делать
 
 /**
  * для упрощения получения доступа к дефолтному аватару
@@ -49,12 +53,13 @@ Vue.prototype.$alert = function(message, clazz, timeOut){
     });
 };
 
+
 // @TGA пока не нужно
 //import { VueResponsiveComponents } from 'vue-responsive-components';
 // Vue.use(VueResponsiveComponents);
 
 import router from './router/router.js';
-import { store } from './store/store.js'
+import store from './store/store.js'
 import './libs/filters.js';
 
 import './libs/facebook.js';

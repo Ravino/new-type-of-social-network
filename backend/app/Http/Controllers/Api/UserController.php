@@ -118,6 +118,6 @@ class UserController extends Controller
      * @return NotificationCollection
      */
     public function notifications() {
-        return new NotificationCollection(Auth::user()->notifications()->with(['sender', 'recipient'])->get());
+        return new NotificationCollection(Auth::user()->notifications()->get());
     }
 }
