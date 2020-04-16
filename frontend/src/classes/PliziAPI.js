@@ -231,6 +231,20 @@ class PliziAPI {
         return null;
     }
 
+    async updateUserPrivacy(privacyData) {
+        let response = await this.__axios.patch('api/user/privacy', privacyData, this.authHeaders)
+            .catch((error) => {
+                this.checkIsTokenExperis(error);
+                throw new PliziAPIError(`updateUserPrivacy`, error.response);
+            });
+
+        if (response.status === 200) {
+            return response.data;
+        }
+
+        return null;
+    }
+
 
     /**
      * загружает аватарку юзера

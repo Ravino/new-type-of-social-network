@@ -266,25 +266,27 @@
                         });
                     }
                 }
-            }
+            },
         },
     }
 </script>
 
 <style lang="scss">
-    select {
-        -webkit-appearance: none;
-        -moz-appearance: none;
-        -o-appearance: none;
-        color: #212529 !important;
-    }
+    .plz-account-settings-main {
+        select {
+            -webkit-appearance: none;
+            -moz-appearance: none;
+            -o-appearance: none;
+            color: #212529 !important;
+        }
 
-    select + i {
-        float: right;
-        margin-top: -25px;
-        margin-right: 5px;
-        pointer-events: none;
-        background-color: #fff;
-        padding-right: 5px;
+        select + i {
+            float: right;
+            margin-top: -25px;
+            margin-right: 5px;
+            pointer-events: none;
+            background-color: #fff;
+            padding-right: 5px;
+        }
     }
 </style>

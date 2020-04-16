@@ -139,6 +139,21 @@ class PliziUser {
      */
     _audiosNumber = 0;
 
+    /**
+     *
+     * @type {Object|null}
+     * @private
+     */
+    _privacySettings = {
+        pageType: 1,
+        writeMessagesPermissions: 1,
+        postWallPermissions: 1,
+        viewWallPermissions: 1,
+        viewFriendsPermissions: 1,
+        twoFactorAuthEnabled: 0,
+        smsConfirm: 0,
+    };
+
     // значения как в PHP
     __RELATIONSHIP_MARRIED = 1;
     __RELATIONSHIP_NOT_MARRIED = 2;
@@ -159,6 +174,7 @@ class PliziUser {
         this._lastActivity = new Date( inputData.data.lastActivity );
 
         const prof = inputData.data.profile;
+        const privacySettings = inputData.data.privacySettings;
 
         this._firstName = (prof.firstName+``).trim();
         this._lastName = (prof.lastName+``).trim();
@@ -170,6 +186,8 @@ class PliziUser {
         if (prof.userPic) {
             this._userPic = (prof.userPic+``).trim();
         }
+
+        this._privacySettings = privacySettings;
 
         // TODO: @TGA переписать потом на загрузку реальных данных
         this._country = ``;
@@ -209,6 +227,15 @@ class PliziUser {
         this._photosNumber = -1;
         this._videosNumber = -1;
         this._audiosNumber = -1;
+        this._privacySettings = {
+            pageType: 1,
+            writeMessagesPermissions: 1,
+            postWallPermissions: 1,
+            viewWallPermissions: 1,
+            viewFriendsPermissions: 1,
+            twoFactorAuthEnabled: 0,
+            smsConfirm: 0,
+        };
 
         this.__isDataReady = false;
     }
@@ -439,6 +466,13 @@ class PliziUser {
     }
 
     /**
+     * @returns {Object|null}
+     */
+    get privacySettings() {
+        return this._privacySettings;
+    }
+
+    /**
      * возвращает данные юзера в том виде как их воазващает api/user
      * @returns {string}
      */
@@ -471,7 +505,8 @@ class PliziUser {
                     city: this._city,
                     relationshipId: this._relationshipId,
                     userPic: this._userPic
-                }
+                },
+                privacySettings: this._privacySettings,
             }
         };
     }
