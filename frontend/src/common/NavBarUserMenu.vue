@@ -10,8 +10,12 @@
                 <img v-if="isShowAvatar" ref="navbarAvatar" :src="userData.userPic" :alt="userData.firstName"/>
             </router-link>
 
-            <button class="btn dropdown-menu-btn" id="dropdownMenuUser"
-                    type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+            <button class="btn dropdown-menu-btn"
+                    id="dropdownMenuUser"
+                    type="button"
+                    data-toggle="dropdown"
+                    aria-haspopup="true"
+                    aria-expanded="false">
                 <i class="profile-menu-opener fa fas fa-chevron-down py-2 px-1 "></i>
             </button>
 

@@ -17,7 +17,24 @@
                 </div>
 
                 <div class="post-poster-actions my-auto ml-auto">
-                    <button class="btn btn-link" type="button"><i class="dots-vertical"></i></button>
+                    <button class="btn btn-link"
+                            :id="`postSettings` + post.id"
+                            type="button"
+                            data-toggle="dropdown"
+                            aria-haspopup="true"
+                            aria-expanded="false">
+                        <i class="dots-vertical"></i>
+                    </button>
+                    <div class="dropdown-menu dropdown-menu-right py-3 px-3"
+                         :aria-labelledby="`postSettings` + post.id">
+
+                        <div class="nav-item border-bottom">
+                            Моя страница
+                        </div>
+                        <div class="nav-item">
+                            Редактировать
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
