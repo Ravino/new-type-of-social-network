@@ -61,9 +61,7 @@ class ChatController extends Controller
     public function messages(int $chat_id)
     {
         $messages = $this->messageRepository->getAllOfChatById($chat_id, Auth::user()->id);
-        return response()->json([
-            'list' => $messages
-        ]);
+        return response()->json($messages);
     }
 
     /**
@@ -73,7 +71,13 @@ class ChatController extends Controller
      */
     public function send(SendMessageRequest $request)
     {
-        $this->chatService->send($request->get('body'), $request->get('chat_id'), Auth::user()->id);
+        $this->chatService->send(
+            $request->get('body'),
+            $request->get('chat_id'),
+            Auth::user()->id,
+            $request->get('replyOnMessageId'),
+            $request->get('forwardFromChatId'),
+        );
         return response()->json(['status' => 'OK']);
     }
 

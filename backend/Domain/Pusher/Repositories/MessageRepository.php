@@ -5,67 +5,52 @@ namespace Domain\Pusher\Repositories;
 
 
 use Carbon\Carbon;
-use Domain\Pusher\Models\Message;
+use Domain\Pusher\DTOs\Message;
+use Domain\Pusher\Http\Resources\Message\MessageCollection;
+use Domain\Pusher\Models\ChatMessage;
 
 class MessageRepository
 {
 
     /**
      * Сохраняет сообщениие
+     *
      * @param int $chat_id
      * @param string $body
      * @param int $author_id
+     * @param int|null $parent_id
+     * @param int|null $parent_chat_id
      * @return int
      */
-    public function saveInChatById(int $chat_id, string $body, int $author_id) : int
+    public function saveInChatById(int $chat_id, string $body, int $author_id, int $parent_id = null, int $parent_chat_id = null) : int
     {
-        return \DB::table('chat_messages')->insertGetId(
-            ['chat_id' => $chat_id, 'body' => $body, 'user_id' => $author_id, 'created_at' => time(), 'updated_at' => time()]
-        );
+        return \DB::table('chat_messages')->insertGetId([
+                'chat_id' => $chat_id,
+                'body' => $body,
+                'user_id' => $author_id,
+                'parent_id' => $parent_id,
+                'parent_chat_id' => $parent_chat_id,
+                'created_at' => time(),
+                'updated_at' => time()
+            ]);
     }
 
     /**
      * Возвращает список сообщений в чате.
+     *
      * @param int $chat_id
-     * @param int $user_id
-     * @return array
+     * @param int|null $user_id
+     * @return MessageCollection
      */
-    public function getAllOfChatById(int $chat_id, int $user_id = null):array
+    public function getAllOfChatById(int $chat_id, int $user_id = null)
     {
-        $items = \DB::table('chat_messages')
+        $items = ChatMessage::with('parent')->where('chat_id', $chat_id)
             ->join('profiles', 'profiles.user_id', '=', 'chat_messages.user_id')
             ->leftJoin('chat_message_status', 'chat_message_status.message_id', '=', 'chat_messages.id')
-            ->where('chat_messages.chat_id', '=', $chat_id)
             ->orderBy('chat_messages.id')
-            ->get([
-                'chat_messages.id',
-                'chat_messages.user_id',
-                'profiles.first_name',
-                'profiles.last_name',
-                'profiles.user_pic',
-                'chat_messages.body',
-                'chat_message_status.is_read',
-                'chat_messages.created_at',
-                'chat_messages.updated_at'
-            ])->toArray();
+            ->get();
 
-        $collection = [];
-        foreach ($items as $item){
-            $message = new Message();
-            $message->id = $item->id;
-            $message->firstName = $item->first_name;
-            $message->lastName = $item->last_name;
-            $message->userPic = $item->user_pic;
-            $message->body = $item->body;
-            $message->isMine = ($item->user_id == $user_id);
-            $message->isRead = $item->is_read;
-            $message->isEdited = false;
-            $message->createdAt = $item->created_at;
-            $message->updatedAt = $item->updated_at;
-            $collection[] = $message;
-        }
-
-        return $collection;
+        return new MessageCollection($items, $user_id);
     }
 
 

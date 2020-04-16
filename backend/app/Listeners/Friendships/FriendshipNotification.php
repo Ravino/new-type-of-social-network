@@ -20,6 +20,7 @@ class FriendshipNotification
             'sender' => [
                 'firstName' => $sender->profile->first_name,
                 'lastName' => $sender->profile->last_name,
+                'sex' => $sender->profile->sex,
                 'userPic' => $sender->profile->user_pic,
                 'lastActivity' => $sender->last_activity_dt,
                 'id' => $sender->id

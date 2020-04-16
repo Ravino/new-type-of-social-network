@@ -85,6 +85,7 @@ class PostController extends Controller
             'sender' => [
                 'firstName' => \Auth::user()->profile->first_name,
                 'lastName' => \Auth::user()->profile->last_name,
+                'sex' => \Auth::user()->profile->sex,
                 'userPic' => \Auth::user()->profile->user_pic,
                 'lastActivity' => \Auth::user()->last_activity_dt,
                 'id' => \Auth::user()->id,
