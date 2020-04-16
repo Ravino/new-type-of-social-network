@@ -1,0 +1,13 @@
+
+#postNewsItem {
+    .nav-item a {
+        &:hover {
+            background-color: transparent;
+            color: $grey;
+        }
+    }
+}
+
+.post-settings {
+    height: 30px;
+}

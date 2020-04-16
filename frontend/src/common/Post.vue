@@ -2,7 +2,7 @@
     <div class="row plz-post-item mb-4 bg-white-br20 py-4">
 
         <div class="col-12 border-bottom plz-post-item-header">
-            <div class="d-flex flex-row align-content-center pb-4">
+            <div id="postNewsItem" class="d-flex flex-row align-content-center pb-4">
                 <div class="post-poster-pic mr-3">
                     <img :src="posterPic" :alt="posterName"/>
                 </div>
@@ -17,7 +17,7 @@
                 </div>
 
                 <div class="post-poster-actions my-auto ml-auto">
-                    <button class="btn btn-link"
+                    <button class="btn btn-link post-settings"
                             :id="`postSettings` + post.id"
                             type="button"
                             data-toggle="dropdown"
@@ -28,11 +28,16 @@
                     <div class="dropdown-menu dropdown-menu-right py-3 px-3"
                          :aria-labelledby="`postSettings` + post.id">
 
-                        <div class="nav-item border-bottom">
-                            Моя страница
-                        </div>
                         <div class="nav-item">
-                            Редактировать
+                            <router-link tag="a" class="dropdown-item px-0 py-1" to="/editing">Редактировать</router-link>
+                        </div>
+
+                        <div class="nav-item">
+                            <router-link tag="a" class="dropdown-item px-0 py-1" to="/account">Настройки</router-link>
+                        </div>
+
+                        <div class="nav-item">
+                            <router-link tag="a" class="dropdown-item px-0 py-1" to="/help">Помощь</router-link>
                         </div>
                     </div>
                 </div>
