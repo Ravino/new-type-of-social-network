@@ -7,12 +7,13 @@
 
                     <div v-if="isOwner===true" class="plz-profile-userpic-footer">
                         <label for="userAvatarFile" class="plz-profile-userpic-edit file-label d-flex align-items-center justify-content-between">
-                            <span class="align-items-center justify-content-center d-flex w-75 border-right">Редактировать</span>
-                            <span class="align-items-center justify-content-center d-flex w-25">
+
+                            <button class="btn align-items-center justify-content-center d-flex w-75 border-right" @click="showPersonalMsgDialog()">Редактировать</button>
+                            <button class="btn align-items-center justify-content-center d-flex w-25" @click="sendFriendshipInvitation()" title="добавить в друзья">
                                 <span class="ps-dot"></span>
                                 <span class="ps-dot"></span>
                                 <span class="ps-dot"></span>
-                            </span>
+                            </button>
                         </label>
                         <input id="userAvatarFile" ref="userAvatarFile" type="file" @change="uploadUserAvatar()" />
                     </div>
