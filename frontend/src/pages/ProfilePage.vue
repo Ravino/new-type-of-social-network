@@ -116,7 +116,12 @@
                 }
             },
         },
+
         mounted() {
+            this.$root.$on('showProfileOptionsModal', ()=>{
+                this.$alert(`Какие-то опции пользователя`, 'bg-info', 10);
+            });
+
             this.$root.$on('wallPostsSelect', this.wallPostsSelectHandler);
             this.getPosts();
         }

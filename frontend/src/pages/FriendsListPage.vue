@@ -5,16 +5,8 @@
         </div>
 
         <div class="col-sm-10 col-md-10 col-lg-10 col-xl-10">
-            <div class="row">
-                <div class="col-sm-5 col-md-5 col-lg-5 col-xl-5 pr-3">
-                    <div class="p-4 bg-white-br20">
-                        Новые друзья | <router-link tag="a" to="/invitations">Заявки в друзья</router-link> | <b>Новые друзья</b>
-                    </div>
-                </div>
-                <div class="col-sm-7 col-md-7 col-lg-7 col-xl-7 bg-white-br20">
-                    <div class="p-4">поиск друзей</div>
-                </div>
-            </div>
+
+            <FriendsListHeader></FriendsListHeader>
 
             <div class="row">
                 <div class="col-12 py-3"></div>
@@ -71,11 +63,15 @@ import Spinner from '../common/Spinner.vue';
 import IconSearch from '../icons/IconSearch.vue';
 
 import SearchResultItem from '../components/SearchResultItem.vue';
+import FriendsListHeader from './FriendsListHeader.vue';
+
 import PliziUser from '../classes/PliziUser.js';
+
 
 export default {
 name: 'FriendsListPage',
 components: {
+    FriendsListHeader,
     IconSearch,
     AccountToolbarLeft, AccountToolbarRight, SearchResultItem, Spinner
 },

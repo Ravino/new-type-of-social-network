@@ -1,5 +1,6 @@
 import PliziUzer from './PliziUser.js';
-import PliziUser from "./PliziUser";
+import PliziInvitation from './PliziInvitation.js';
+import PliziNotification from './PliziNotification.js';
 
 class PliziAuthUser extends PliziUzer{
     /**
@@ -44,12 +45,18 @@ class PliziAuthUser extends PliziUzer{
      */
     _email = ``;
 
-    /**
+     /**
      * массивс полученными инвайтами
-     * @type {PliziUzer[]}
+     * @type {PliziInvitation[]}
      * @private
      */
     _invitations = [];
+
+    /**
+     * @type {PliziNotification[]}
+     * @private
+     */
+    _notifications = [];
 
 
     /**
@@ -165,7 +172,7 @@ class PliziAuthUser extends PliziUzer{
     }
 
     /**
-     * @returns {PliziUzer[]}
+     * @returns {PliziInvitation[]}
      */
     get invitations(){
         return this._invitations;
@@ -179,32 +186,61 @@ class PliziAuthUser extends PliziUzer{
         return (this._invitations) ? this._invitations.length : 0;
     }
 
-
     invitationsClean(){
         this._invitations = [];
     }
 
     /**
-     * должен получать респонс от сервера, сам преобразует в коллекцию PliziUser
+     * должен получать респонс от сервера, сам преобразует в коллекцию PliziInvitation
      * @param {object[]} invs
      */
     invitationsLoad(invs){
-        window.console.log(`UserAuth::invitationsLoad`);
         this.invitationsClean();
 
         invs.map( (invItem) => {
-            this._invitations.push( new PliziUser({ data : invItem} ) );
+            this._invitations.push( new PliziInvitation({ data : invItem} ) );
         });
     }
 
 
     /**
      * объект который надо удалить
-     * @param {PliziUzer|{id:number}} invit
+     * @param {PliziInvitation|{id:number}} invit
      */
     invitationRemove(invit){
         this._invitations = this._invitations.filter((invItem) => {
             return invItem.id !== invit.id;
+        });
+    }
+
+    /**
+     * @returns {number}
+     */
+    get notificationsNumber(){
+        return this._notifications.length;
+    }
+
+    /**
+     * @returns {PliziNotification[]}
+     */
+    get notifications(){
+        return this._notifications;
+    }
+
+    notificationsClean(){
+        this._notifications = [];
+    }
+
+
+    /**
+     * должен получать респонс от сервера, сам преобразует в коллекцию PliziNotification
+     * @param {object[]} notifs
+     */
+    notificationsLoad(notifs){
+        this.notificationsClean();
+
+        notifs.map( (invItem) => {
+            this._notifications.push( new PliziNotification(invItem ) );
         });
     }
 

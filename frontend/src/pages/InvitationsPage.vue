@@ -47,7 +47,7 @@ components: {
 },
 data() {
     return {
-        isDataReady : false
+        isDataReady : true
     }
 },
 
@@ -58,34 +58,12 @@ computed: {
 },
 
 methods: {
-    async loadInvitationsList(){
-        this.isDataReady = false;
-        let apiResponse = null;
-
-        try {
-            apiResponse = await this.$root.$api.invitationsList();
-        }
-        catch (e) {
-            window.console.warn(e.detailMessage);
-        }
-
-        if (apiResponse !== null) {
-            this.$root.$user.invitationsLoad(apiResponse);
-            this.$root.$emit('invitationsLoad', {});
-
-            this.isDataReady = true;
-        }
-    },
-
-
     removeFromInvitations(invit){
         this.$root.$user.invitationRemove(invit);
     }
 },
 
 mounted(){
-    this.loadInvitationsList();
-
     this.$root.$on('invitationAccept', (evData)=>{
         setTimeout(()=>{
             this.removeFromInvitations(evData);

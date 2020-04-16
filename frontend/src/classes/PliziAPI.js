@@ -1,6 +1,5 @@
 import axios from 'axios';
 import PliziAPIError from './PliziAPIError.js';
-import {HTTPer} from "../httper/httper";
 
 class PliziAPI {
 
