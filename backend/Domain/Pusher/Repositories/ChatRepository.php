@@ -97,4 +97,44 @@ class ChatRepository
 
         return $query->get('profiles.user_id')->toArray();
     }
+
+    /**
+     * Возвращает ID чата если он уже существует
+     * для пары пользователей который были
+     * переданы в параметрах
+     *
+     * @param $first_user
+     * @param $second_user
+     * @return mixed|null
+     */
+    public function getChatIdForCoupleUsers($first_user, $second_user) {
+        $chat = DB::table('chat_party')->select('chat_id')
+            ->where('user_id', $first_user)
+            ->orWhere('user_id', $second_user)
+            ->groupBy('chat_id')
+            ->havingRaw('COUNT(chat_id) = 2')->first();
+
+        if($chat) {
+            return $chat->chat_id;
+        }
+        return null;
+    }
+
+    /**
+     * Создает чат для двух пользователей
+     *
+     * @param $reciever_id
+     * @param $author_id
+     * @return int
+     */
+    public function createChatForCoupleUsers($reciever_id, $author_id) {
+        $chat_id = \DB::table('chat')->insertGetId(
+            ['user_id' => $author_id, 'created_at' => time(), 'updated_at' => time()]
+        );
+        DB::table('chat_party')->insert([
+            ['chat_id' => $chat_id, 'user_id' => $author_id, 'created_at' => time()],
+            ['chat_id' => $chat_id, 'user_id' => $reciever_id, 'created_at' => time()]
+        ]);
+        return $chat_id;
+    }
 }
