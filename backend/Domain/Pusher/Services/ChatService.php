@@ -48,9 +48,11 @@ class ChatService extends BaseService
     /**
      * Отправка сообщения пользователю
      * Создаст диалог, если диалога с данным пользователем не имеется
-     * @param string $body тело сообщения
-     * @param int $chat_id чат, куда шлется сообщение.
-     * @param int $author_id отправитель
+     *
+     * @param string $body
+     * @param int $user_id
+     * @param int $author_id
+     * @return int|mixed|null
      */
     public function sendToUser(string $body, int $user_id, int $author_id)
     {
@@ -62,5 +64,6 @@ class ChatService extends BaseService
         $message = $this->repository->getMessageById($message_id);
         $users_list = $this->chatRepository->getUsersIdListFromChat($chat_id, $author_id);
         $this->dispatcher->dispatch(new NewMessageEvent($message, $users_list));
+        return $chat_id;
     }
 }

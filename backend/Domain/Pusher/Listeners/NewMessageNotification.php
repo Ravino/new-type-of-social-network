@@ -17,7 +17,7 @@ class NewMessageNotification
         $idsOfUsers = $event->getUsersListIds();
         $body = $event->getMessage();
         foreach ($idsOfUsers as $user_id) {
-            Pusher::sentDataToServer(['data' => $body, 'topic_id' => Pusher::channelForUser($user_id->user_id)]);
+            Pusher::sentDataToServer(['data' => $body, 'topic_id' => Pusher::channelForUser($user_id->user_id), 'event_type' => 'message.new']);
         }
     }
 }
