@@ -79,6 +79,15 @@ class UserController extends Controller
         return response()->json(['message' => 'Данный пользователь не отправлял вам запрос в друзья'], 200);
     }
 
+    public function blockFriendshipRequest(AddToFriend $request) {
+        $sender = User::find($request->userId);
+        if(Auth::user()->hasFriendRequestFrom($sender)) {
+            Auth::user()->blockFriend($sender);
+            return response()->json(['message' => 'Вы Заблокировали пользователя'], 200);
+        }
+        return response()->json(['message' => 'Данный пользователь не отправлял вам запрос в друзья'], 200);
+    }
+
     /**
      * @return UserCollection
      */

@@ -1,5 +1,5 @@
 <template>
-    <div class="row plz-post-item mt-4 bg-white-br20 py-4">
+    <div class="row plz-post-item mb-4 bg-white-br20 py-4">
 
         <div class="col-12 border-bottom plz-post-item-header">
             <div class="d-flex flex-row align-content-center pb-4">

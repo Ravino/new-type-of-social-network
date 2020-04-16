@@ -86,6 +86,12 @@ class User extends Authenticatable implements JWTSubject
             ->using(CommunityMember::class)->withPivot('role');
     }
 
+    public function notifications()
+    {
+        return $this->morphMany(Notification::class, 'notifiable')
+            ->orderBy('created_at', 'desc');
+    }
+
     public function posts()
     {
         return $this->morphMany(Post::class, 'postable');

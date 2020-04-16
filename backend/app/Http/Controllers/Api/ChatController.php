@@ -83,7 +83,7 @@ class ChatController extends Controller
      */
     public function sendToUser(SendMessageToUserRequest $request)
     {
-        $this->chatService->sendToUser($request->get('body'), $request->get('user_id'), Auth::user()->id);
-        return response()->json(['status' => 'OK']);
+        $chat_id = $this->chatService->sendToUser($request->get('body'), $request->get('user_id'), Auth::user()->id);
+        return response()->json(['status' => 'OK', 'chatId' => $chat_id]);
     }
 }

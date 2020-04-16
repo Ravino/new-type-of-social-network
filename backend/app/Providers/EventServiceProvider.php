@@ -6,6 +6,7 @@ namespace App\Providers;
 //use Illuminate\Auth\Listeners\SendEmailVerificationNotification;
 use App\Listeners\Friendships\FriendshipNotification;
 use Domain\Pusher\Events\NewMessageEvent;
+use Domain\Pusher\Listeners\NewNotification;
 use Domain\PusherListeners\NewMessageNotification;
 use Illuminate\Foundation\Support\Providers\EventServiceProvider as ServiceProvider;
 
@@ -22,6 +23,9 @@ class EventServiceProvider extends ServiceProvider
         ],
         NewMessageEvent::class => [
             NewMessageNotification::class
+        ],
+        'Illuminate\Notifications\Events\NotificationSent' => [
+            NewNotification::class
         ],
         \SocialiteProviders\Manager\SocialiteWasCalled::class => [
             'SocialiteProviders\Instagram\InstagramExtendSocialite@handle',

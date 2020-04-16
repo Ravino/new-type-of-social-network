@@ -29,8 +29,8 @@
                     <span class="message-sended-zip d-flex align-items-center mt-1" v-if="messageSendedZip" ><!-- TODO: Показать Архив -->
                         <IconZip />
                         <span class="message-sended-zip-info mx-2">
-                            <p class="message-sended-name m-0">Dixy.zip</p>
-                            <p class="message-sended-size m-0">15Mb</p>
+                            <span class="message-sended-name m-0">Dixy.zip</span>
+                            <span class="message-sended-size m-0">15Mb</span>
                         </span>
                     </span>
 

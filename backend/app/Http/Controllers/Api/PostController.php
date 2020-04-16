@@ -85,11 +85,13 @@ class PostController extends Controller
             'sender' => [
                 'firstName' => \Auth::user()->profile->first_name,
                 'lastName' => \Auth::user()->profile->last_name,
+                'userPic' => \Auth::user()->profile->user_pic,
+                'lastActivity' => \Auth::user()->last_activity_dt,
                 'id' => \Auth::user()->id,
                 'postId' => $post->id
             ],
             'body' => 'User {0, string} created new post',
-            'type' => 'user.post.created',
+            'notificationType' => 'user.post.created',
         ];
         Notification::send($friends, new UserSystemNotifications($details));
         return new PostResource($post);
@@ -111,11 +113,12 @@ class PostController extends Controller
                 $details = [
                     'community' => [
                         'name' => $community->name,
+                        'primaryImage' => $community->primary_image,
                         'id' => $community->id,
                         'postId' => $post->id
                     ],
                     'body' => 'There is new post in community {0, string}',
-                    'type' => 'community.post.created',
+                    'notificationType' => 'community.post.created',
                 ];
                 Notification::send($community->users, new UserSystemNotifications($details));
                 return new PostResource($post);

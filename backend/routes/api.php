@@ -41,6 +41,7 @@ Route::group(['middleware' => ['auth.jwt', 'track.activity']], function () {
     Route::post('user/friendship', 'Api\UserController@sendFriendshipRequest');
     Route::post('user/friendship/accept', 'Api\UserController@acceptFriendshipRequest');
     Route::post('user/friendship/decline', 'Api\UserController@declineFriendshipRequest');
+    Route::post('user/friendship/block', 'Api\UserController@blockFriendshipRequest');
 
     /**
      * User Resource

@@ -20,10 +20,12 @@ class FriendshipNotification
             'sender' => [
                 'firstName' => $sender->profile->first_name,
                 'lastName' => $sender->profile->last_name,
+                'userPic' => $sender->profile->user_pic,
+                'lastActivity' => $sender->last_activity_dt,
                 'id' => $sender->id
             ],
             'body' => 'User {0, string} sent you friend request',
-            'type' => $event,
+            'notificationType' => $event,
         ];
         $recipient->notify(new UserSystemNotifications($details));
     }

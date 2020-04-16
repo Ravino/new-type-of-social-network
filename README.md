@@ -207,5 +207,6 @@ CREATE DATABASE plizi_test;
 
 # Customize elements for markup 
 
-Мультиселект     - https://vue-multiselect.js.org/  
-Кастомный скролл - https://binaryify.github.io/vue-custom-scrollbar/en/#why-custom-scrollbar
+Мультиселект        - https://vue-multiselect.js.org/  
+Кастомный скролл    - https://binaryify.github.io/vue-custom-scrollbar/en/#why-custom-scrollbar
+Резиновый textarea  - https://www.npmjs.com/package/vue-textarea-autosize
