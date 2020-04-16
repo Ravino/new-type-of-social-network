@@ -25,8 +25,8 @@
                 <div class="message-text">
                     <p class="mb-0">{{message.body}}</p>
 
-                    <img class="message-sended-image" v-if="messageSendedImg" src="../images/user-main-photo.png" alt="">
-                    <span class="message-sended-zip d-flex align-items-center" v-if="messageSendedZip" ><!-- TODO: Показать Архив -->
+                    <img class="message-sended-image mt-1" v-if="messageSendedImg" src="../images/user-main-photo.png" alt="">
+                    <span class="message-sended-zip d-flex align-items-center mt-1" v-if="messageSendedZip" ><!-- TODO: Показать Архив -->
                         <IconZip />
                         <span class="message-sended-zip-info mx-2">
                             <p class="message-sended-name m-0">Dixy.zip</p>
@@ -40,7 +40,7 @@
                                 <img src="/images/user-photos/user-photo-01.png" alt="Дарья">
                             </div>
                             <div class="media-body">
-                                <h6 class="chatHeader-title w-75 align-self-start mt-2 pb-0 mb-0 pull-left text-body" style="line-height: 20px;"> Дарья </h6>
+                                <h6 class="chatHeader-title w-75 align-self-start mt-2 pb-0 mb-0 pull-left" style="line-height: 20px;"> Дарья </h6>
                                 <p class="chatHeader-subtitle p-0 mb-0 mt-1 w-100 d-block"> Понедельник </p>
                             </div>
                         </div>
