@@ -2,10 +2,12 @@ import Vue from 'vue';
 import VueRouter from 'vue-router';
 import Vuelidate from 'vuelidate';
 
-//import Multiselect from 'vue-multiselect';
+import TextareaAutosize from 'vue-textarea-autosize'
+
+import Multiselect from 'vue-multiselect';
 
 // register globally
-//Vue.component('multiselect', Multiselect); // TODO: Узнать у @tga правильно ли так делать
+Vue.component('multiselect', Multiselect); // TODO: Узнать у @tga правильно ли так делать
 
 /**
  * для упрощения получения доступа к дефолтному аватару
@@ -69,6 +71,8 @@ window.Vue = Vue;
 Vue.config.productionTip = false;
 Vue.use(VueRouter);
 Vue.use(Vuelidate);
+
+Vue.use(TextareaAutosize); // TODO: @SV
 
 import App from './App.vue';
 

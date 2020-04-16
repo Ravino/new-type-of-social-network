@@ -11,14 +11,17 @@
                 <div class="form">
                     <div class="form-row align-items-center ">
                         <div class="col-12  p-0">
-                            <label class="sr-only d-none" for="txtMessage">Написать сообщение</label>
-                            <input type="search"
-                                   v-model="newMessage"
-                                   @keydown="onMessageKeyDown($event)"
-                                   class="form-control px-2 w-100"
-                                   id="txtMessage"
-                                   ref="txtMessage"
-                                   placeholder="Написать сообщение..." />
+
+                            <textarea-autosize
+                                class="form-control px-2 w-100"
+                                v-model="newMessage"
+                                @keydown="onMessageKeyDown($event)"
+                                ref="txtMessage"
+                                id="txtMessage"
+                                :min-height="10"
+                                :max-height="200"
+                                placeholder="Написать сообщение..."
+                            />
                         </div>
                     </div>
                 </div>
@@ -57,6 +60,7 @@ components: { IconAddCamera, IconAddSmile, IconAddFile },
 data() {
     return {
         newMessage: ``,
+        textareaValue: ''
     }
 },
 
