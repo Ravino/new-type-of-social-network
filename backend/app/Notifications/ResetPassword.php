@@ -50,7 +50,7 @@ class ResetPassword extends Notification
     {
         $token = $this->token;
         $email = $notifiable->getEmailForPasswordReset();
-        $url = url(config('app.api_url') . '/password/update?token=' . $token . '&email=' . $email);
+        $url = url(config('app.api_url') . 'password/update?token=' . $token . '&email=' . $email);
 
         return (new MailMessage)
             ->view(
