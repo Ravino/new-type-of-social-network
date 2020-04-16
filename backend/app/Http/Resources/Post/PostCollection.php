@@ -40,6 +40,9 @@ class PostCollection extends ResourceCollection
                             'body' => $post->body,
                             'primaryImage' => [
                                 'https://picsum.photos/200/300?grayscale',
+                                'https://picsum.photos/200/300?abstract',
+                                'https://picsum.photos/200/300?transport',
+                                'https://picsum.photos/200/300?technics',
                                 'https://picsum.photos/200/300?grayscale',
                             ],
                             'likes' => $post->likes,

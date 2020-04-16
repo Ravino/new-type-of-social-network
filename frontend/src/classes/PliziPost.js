@@ -59,6 +59,12 @@ class PliziPost {
      */
     _community = null;
 
+    /**
+     * @type {null}
+     * @private
+     */
+    _createdAt = null;
+
     get id() {
         return this._id;
     }
@@ -97,6 +103,10 @@ class PliziPost {
 
     get sharesCount() {
         return this._sharesCount;
+    }
+
+    get createdAt() {
+        return this._createdAt;
     }
 
     constructor(post) {
