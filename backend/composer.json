@@ -29,7 +29,8 @@
         "socialiteproviders/instagram": "^3.0",
         "socialiteproviders/twitter": "^3.0",
         "socialiteproviders/vkontakte": "^4.0",
-        "tymon/jwt-auth": "^1.0"
+        "tymon/jwt-auth": "^1.0",
+        "santigarcor/laratrust": "5.2.*"
     },
     "require-dev": {
         "barryvdh/laravel-ide-helper": "^2.6",

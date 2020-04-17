@@ -20,7 +20,7 @@ class AdminAuthenticate
      */
     public function handle($request, Closure $next, $guard = null)
     {
-        $auth = Auth::guard($guard);//var_dump($auth);die();
+        $auth = Auth::guard($guard);
 
         if (Auth::guard($guard)->guest()) {
             if ($request->getRequestUri() == '/admin/login') {
