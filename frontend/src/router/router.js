@@ -9,7 +9,6 @@ import LogoutPage from '../pages/LogoutPage.vue';
 import AccountPage from '../pages/AccountPage.vue';
 import ProfilePage from '../pages/ProfilePage.vue';
 import ChatsListPage from '../pages/ChatsListPage.vue';
-import ChatMessagesPage from '../pages/ChatMessagesPage.vue';
 import SearchResultsPage from '../pages/SearchResultsPage.vue';
 import PersonalPage from '../pages/PersonalPage.vue';
 import FriendsListPage from '../pages/FriendsListPage.vue';
@@ -30,7 +29,6 @@ const routes = [
     {path: '/account', component: AccountPage, name: 'AccountPage', meta: {title: 'Plizi: Настройки аккаунта'}, props: true },
     {path: '/profile', component: ProfilePage, name: 'ProfilePage', meta: {title: 'Plizi: Домашняя'}, props: true},
     {path: '/chats-list', component: ChatsListPage, name: 'ChatsListPage', meta: {title: 'Plizi: Чаты'}, props: true},
-    {path: '/chat-messages', component: ChatMessagesPage, name: 'ChatMessagesPage', meta: {title: 'Plizi: Чат'}, props: true },
     {path: '/search-results', component: SearchResultsPage, name: 'SearchResultsPage', meta: {title: 'Plizi: Результаты поиска'}, props: true },
     {path: '/user-:id', component: PersonalPage, name: 'PersonalPage', meta: {title: 'Plizi:'}, props: true},
     {path: '/friends', component: FriendsListPage, name: 'FriendsListPage', meta: {title: 'Plizi: Ваши друзья'}, props: true },
