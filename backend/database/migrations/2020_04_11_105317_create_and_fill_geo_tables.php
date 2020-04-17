@@ -57,8 +57,10 @@ class CreateAndFillGeoTables extends Migration
      */
     public function down()
     {
+        Schema::disableForeignKeyConstraints();
         Schema::dropIfExists('geo_countries');
         Schema::dropIfExists('geo_regions');
         Schema::dropIfExists('geo_cities');
+        Schema::enableForeignKeyConstraints();
     }
 }

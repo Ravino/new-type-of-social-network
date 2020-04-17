@@ -55,7 +55,7 @@ class ProfileController extends Controller
             'last_name' => $request->lastName,
             'birthday' => $request->birthday,
             'sex' => $request->sex,
-            'city' => $request->city,
+            'geo_city_id' => $request->geoCityId,
             'relationship_user_id' => $request->relationshipUserId,
         ]));
         if(key_exists('relationshipId', $request->post())) {

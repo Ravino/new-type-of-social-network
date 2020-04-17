@@ -554,6 +554,25 @@ class PliziAPI {
         return null;
     }
 
+    /**
+     * Получение списка локаций по аргументу.
+     * @param location
+     * @returns {object[]|null}
+     */
+    async getLocationsByInput(location) {
+        let response = await this.__axios.get(`api/city/search?search=${location}`, this.authHeaders)
+            .catch((error) => {
+                this.checkIsTokenExperis(error);
+                throw new PliziAPIError(`getLocationsByInput`, error.response);
+            });
+
+        if (response.status === 200) {
+            return response.data.data;
+        }
+
+        return null;
+    }
+
 
     /**
      **************************************************************************

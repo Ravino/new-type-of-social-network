@@ -52,7 +52,7 @@
 
         .form-group {
             margin-bottom: 0;
-            height: 50px;
+            padding: 20px 0;
         }
 
         .plz-account-settings-header {
@@ -86,6 +86,14 @@
                     .form-control, .form-control-plaintext {
                         color: #363636;
                         font-size: 13pt;
+
+                        .multiselect__tags {
+                            border: none;
+                        }
+
+                        .multiselect__option--highlight {
+                            background: #576DF6;
+                        }
                     }
 
                     select {

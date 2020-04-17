@@ -45,7 +45,15 @@
                     </tr>
                     <tr>
                         <td class="">Город:</td>
-                        <td class=""><i class="fas fa-map-marker-alt"></i> {{userData.country}}, {{userData.city}}</td>
+                        <td class="">
+                            <template v-if="userData.country && userData.city.title">
+                                <i class="fas fa-map-marker-alt"></i>
+                                {{userData.country.title.ru}}, {{userData.city.title.ru}}
+                            </template>
+                            <template v-else>
+                                Не указано
+                            </template>
+                        </td>
                     </tr>
                     <tr>
                         <td class="">Семейное положение:</td>

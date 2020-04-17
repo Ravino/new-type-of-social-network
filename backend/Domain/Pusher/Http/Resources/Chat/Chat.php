@@ -1,0 +1,42 @@
+<?php
+
+namespace Domain\Pusher\Http\Resources\Message;
+
+use App\Http\Resources\Community\Community;
+use App\Http\Resources\User\User;
+use App\Models\User as UserModel;
+use App\Models\Community as CommunityModel;
+use Illuminate\Http\Resources\Json\JsonResource;
+
+class Chat extends JsonResource
+{
+
+    /**
+     * @var int
+     */
+    public $userId;
+
+    public function __construct($resource, $user_id)
+    {
+        $this->userId = $user_id;
+        parent::__construct($resource);
+    }
+
+    /**
+     * Transform the resource into an array.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @return array
+     */
+    public function toArray($request)
+    {
+        return [
+            'id' => $this->id,
+            'name' => $this->name,
+            'lastMessageText' => $this->last_message_body,
+            'lastMessageDT' => $this->last_message_time,
+            'isRead' => (bool)$this->last_is_read,
+            'isLastFromMe' => ($this->user_id == $this->last_user_id),
+        ];
+    }
+}

@@ -1,5 +1,6 @@
 <template>
-    <div id="accountSettingsMain" class="plz-account-settings plz-account-settings-main bg-white-br20 plz-mb20 container-fluid">
+    <div id="accountSettingsMain"
+         class="plz-account-settings plz-account-settings-main bg-white-br20 plz-mb20 container-fluid">
         <form class="m-3 pb-2">
             <div class="plz-account-settings-header plz-account-settings-main-header form-group row border-bottom">
                 <div class="col-12 d-sm-none d-md-none d-lg-flex d-xl-flex">
@@ -16,7 +17,8 @@
                            class="plz-account-settings-body-label plz-account-settings-main-label col-sm-6 col-md-6 col-lg-4 col-xl-4">
                         Имя
                     </label>
-                    <div class="plz-account-settings-body-field plz-account-settings-main-body-field col-sm-6 col-md-6 col-lg-6 col-xl-6">
+                    <div
+                        class="plz-account-settings-body-field plz-account-settings-main-body-field col-sm-6 col-md-6 col-lg-6 col-xl-6">
                         <input type="text"
                                id="firstName"
                                class="w-75"
@@ -27,7 +29,8 @@
                                :readonly="!isEdit.firstName"
                                ref="firstName"/>
                     </div>
-                    <div class="plz-account-settings-body-action plz-account-settings-main-body-action col-2 d-sm-none d-md-none d-lg-flex d-xl-flex">
+                    <div
+                        class="plz-account-settings-body-action plz-account-settings-main-body-action col-2 d-sm-none d-md-none d-lg-flex d-xl-flex">
                         <button type="button"
                                 class="btn btn-link"
                                 :class="{'text-primary': isEdit.firstName}"
@@ -40,7 +43,8 @@
                 <div class="form-group row border-bottom">
                     <label for="lastName"
                            class="plz-account-settings-body-label plz-account-settings-main-label col-sm-6 col-md-6 col-lg-4 col-xl-4">Фамилия</label>
-                    <div class="plz-account-settings-body-field plz-account-settings-main-body-field col-sm-6 col-md-6 col-lg-6 col-xl-6">
+                    <div
+                        class="plz-account-settings-body-field plz-account-settings-main-body-field col-sm-6 col-md-6 col-lg-6 col-xl-6">
                         <input id="lastName"
                                type="text"
                                class="w-75"
@@ -51,7 +55,8 @@
                                :readonly="!isEdit.lastName"
                                ref="lastName"/>
                     </div>
-                    <div class="plz-account-settings-body-action plz-account-settings-main-body-action col-2 d-sm-none d-md-none d-lg-flex d-xl-flex">
+                    <div
+                        class="plz-account-settings-body-action plz-account-settings-main-body-action col-2 d-sm-none d-md-none d-lg-flex d-xl-flex">
                         <button type="button"
                                 class="btn btn-link"
                                 :class="{'text-primary': isEdit.firstName}"
@@ -64,7 +69,8 @@
                 <div class="form-group row border-bottom">
                     <label for="userSex"
                            class="plz-account-settings-body-label plz-account-settings-main-label col-sm-6 col-md-6 col-lg-4 col-xl-4">Пол</label>
-                    <div class="plz-account-settings-body-field plz-account-settings-main-body-field col-sm-6 col-md-6 col-lg-6 col-xl-6">
+                    <div
+                        class="plz-account-settings-body-field plz-account-settings-main-body-field col-sm-6 col-md-6 col-lg-6 col-xl-6">
                         <div class="w-75">
                             <select id="userSex" class="form-control border-0 pl-0"
                                     @change="accountStartSaveData(model.sex, 'sex')"
@@ -84,7 +90,8 @@
                            class="plz-account-settings-body-label plz-account-settings-main-label col-sm-6 col-md-6 col-lg-4 col-xl-4">
                         Семейной положение
                     </label>
-                    <div class="plz-account-settings-body-field plz-account-settings-main-body-field col-sm-6 col-md-6 col-lg-6 col-xl-6">
+                    <div
+                        class="plz-account-settings-body-field plz-account-settings-main-body-field col-sm-6 col-md-6 col-lg-6 col-xl-6">
                         <div class="w-75">
                             <select id="relationship" class="form-control border-0 pl-0"
                                     @change="accountStartSaveData(model.relationshipId, 'relationshipId')"
@@ -104,7 +111,8 @@
                            class="plz-account-settings-body-label plz-account-settings-main-label col-sm-6 col-md-6 col-lg-4 col-xl-4">
                         Дата рождения
                     </label>
-                    <div class="plz-account-settings-body-field plz-account-settings-main-body-field col-sm-6 col-md-6 col-lg-6 col-xl-6">
+                    <div
+                        class="plz-account-settings-body-field plz-account-settings-main-body-field col-sm-6 col-md-6 col-lg-6 col-xl-6">
                         <input id="birthday"
                                type="date"
                                class="w-75"
@@ -116,7 +124,8 @@
                                :readonly="!isEdit.birthday"
                                ref="birthday"/>
                     </div>
-                    <div class="plz-account-settings-body-action plz-account-settings-main-body-action col-2 d-sm-none d-md-none d-lg-flex d-xl-flex">
+                    <div
+                        class="plz-account-settings-body-action plz-account-settings-main-body-action col-2 d-sm-none d-md-none d-lg-flex d-xl-flex">
                         <button type="button"
                                 class="btn btn-link"
                                 :class="{'text-primary': isEdit.firstName}"
@@ -132,25 +141,22 @@
                         Месторасположение
                     </label>
                     <div
-                        class="plz-account-settings-body-field plz-account-settings-main-body-field col-sm-6 col-md-6 col-lg-6 col-xl-6 d-flex align-items-center">
+                        class="plz-account-settings-body-field plz-account-settings-main-body-field col-sm-8 col-md-8 col-lg-8 col-xl-8 d-flex align-items-center">
                         <i class="fas fa-map-marker-alt"></i>
-                        <input id="location"
-                               type="text"
-                               class="w-75 ml-1"
-                               v-model="model.location"
-                               :class="[isEdit.location ? 'form-control' : 'form-control-plaintext']"
-                               @keyup.enter="accountStartSaveData($event.target.value, `location`)"
-                               @blur="finishFieldEdit(`location`)"
-                               :readonly="!isEdit.location"
-                               ref="location"/>
-                    </div>
-                    <div class="plz-account-settings-body-action plz-account-settings-main-body-action col-2 d-sm-none d-md-none d-lg-flex d-xl-flex">
-                        <button type="button"
-                                class="btn btn-link"
-                                :class="{'text-primary': isEdit.firstName}"
-                                @click="[isEdit.location ? finishFieldEdit('location') : startFieldEdit('location')]">
-                            {{ isEdit.location ? 'Сохранить' : 'Изменить' }}
-                        </button>
+                        <multiselect id="location"
+                                     class="w-75 ml-1 border-0 form-control p-0"
+                                     v-model="model.location"
+                                     :options="geoLocations"
+                                     :showLabels="false"
+                                     @select="accountStartSaveData"
+                                     track-by="title"
+                                     label="title"
+                                     placeholder="Выберите местоположение"
+                                     :custom-label="locationLabel"
+                                     @search-change="getLocations">
+                            <template slot="noOptions">Результатов нет.</template>
+                            <template slot="noResult">Такого города не существует.</template>
+                        </multiselect>
                     </div>
                 </div>
 
@@ -180,11 +186,37 @@
 </template>
 
 <script>
+    /**
+     * @link https://vue-multiselect.js.org/#sub-getting-started
+     */
+    import Multiselect from 'vue-multiselect'
+
     export default {
         name: 'AccountSettingsMain',
+        components: {Multiselect},
         computed: {
             userData: function () {
                 return this.$root.$user;
+            },
+            geoLocations() {
+                let geolocation = [];
+
+                if (!this.locations) return;
+
+                this.locations.forEach((item) => {
+                    geolocation.push({
+                        id: item.id,
+                        title: {
+                            ru: item.title.ru,
+                            ua: item.title.ua,
+                            en: item.title.en,
+                        },
+                        region: item.region,
+                        country: item.country,
+                    });
+                });
+
+                return geolocation;
             },
         },
         data() {
@@ -195,7 +227,16 @@
                     sex: this.$root.$user.sex,
                     relationshipId: this.$root.$user.relationshipId,
                     birthday: this.$root.$user.birthday,
-                    location: this.$root.$user.country + ', ' + this.$root.$user.city,
+                    location: this.$root.$user.city.id ? {
+                        id: this.$root.$user.city.id,
+                        title: {
+                            ru: this.$root.$user.city.title.ru,
+                            ua: this.$root.$user.city.title.ua,
+                            en: this.$root.$user.city.title.en,
+                        },
+                        region: this.$root.$user.region,
+                        country: this.$root.$user.country,
+                    } : null,
                 },
 
                 isEdit: {
@@ -203,7 +244,8 @@
                     lastName: false,
                     birthday: false,
                     location: false,
-                }
+                },
+                locations: [],
             }
         },
         methods: {
@@ -243,9 +285,7 @@
                 let formData = {};
 
                 if (fieldName === 'location') {
-                    let [country, city] = newValue.split(',');
-
-                    formData = {country, city};
+                    formData = {geoCityId: newValue.id};
                 } else {
                     for (let prop in formData) {
                         if (prop !== 'birthday') {
@@ -268,7 +308,11 @@
                 let formData = this.formatFormData(newValue, fieldName);
                 let response = null;
 
-                response = await this.$root.$api.updateUser(formData);
+                try {
+                    response = await this.$root.$api.updateUser(formData);
+                } catch (e) {
+                    console.warn(e.detailMessage);
+                }
 
                 if (response !== null) {
                     //FIXME: переписать на специальный метод
@@ -280,6 +324,24 @@
                             lastName: this.$root.$user.lastName
                         });
                     }
+                }
+            },
+            async getLocations(location) {
+                let response;
+
+                try {
+                    response = await this.$root.$api.getLocationsByInput(location);
+                } catch (e) {
+                    console.warn(e.detailMessage);
+                }
+
+                if (response) {
+                    this.locations = response;
+                }
+            },
+            locationLabel({title, region, country}) {
+                if (title) {
+                    return `${country.title.ru}, ${region.title.ru}, ${title.ru}`;
                 }
             },
         },

@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
 use App\Http\Resources\Geo\CitiesCollection;
+use App\Models\Geo\City;
 use Illuminate\Http\Request;
 
 class GeoController extends Controller
@@ -17,7 +18,7 @@ class GeoController extends Controller
     {
         $search = $request->get('search', '');
         if (!empty($search)) {
-            $result = \DB::table('geo_cities')
+            $result = City::with('country', 'region')
                 ->where('title_ru', 'LIKE', "%{$search}%")
                 ->where('title_ua', 'LIKE', "%{$search}%")
                 ->where('title_en', 'LIKE', "%{$search}%")

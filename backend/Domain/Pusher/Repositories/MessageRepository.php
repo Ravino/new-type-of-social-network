@@ -6,6 +6,7 @@ namespace Domain\Pusher\Repositories;
 
 use Carbon\Carbon;
 use Domain\Pusher\DTOs\Message;
+use Domain\Pusher\Http\Resources\Chat\ChatCollection;
 use Domain\Pusher\Http\Resources\Message\MessageCollection;
 use Domain\Pusher\Models\ChatMessage;
 

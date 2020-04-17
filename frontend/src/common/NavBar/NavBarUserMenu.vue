@@ -26,7 +26,12 @@
                 </div>
 
                 <div class="nav-item">
-                    <router-link tag="a" class="dropdown-item px-0 py-1" to="/editing">Редактировать</router-link>
+                    <router-link
+                        tag="a"
+                        class="dropdown-item px-0 py-1"
+                        :to="{name: 'AccountPage'}">
+                        Редактировать
+                    </router-link>
                 </div>
 
                 <div class="nav-item">

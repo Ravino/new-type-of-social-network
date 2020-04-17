@@ -83,28 +83,40 @@ class User extends Authenticatable implements JWTSubject
         );
     }
 
+    /**
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany
+     */
     public function communities()
     {
         return $this->belongsToMany(Community::class, 'community_members')
             ->using(CommunityMember::class)->withPivot('role');
     }
 
+    /**
+     * @return \Illuminate\Database\Eloquent\Relations\MorphMany
+     */
     public function notifications()
     {
         return $this->morphMany(Notification::class, 'notifiable')
             ->orderBy('created_at', 'desc');
     }
 
+    /**
+     * @return \Illuminate\Database\Eloquent\Relations\MorphMany
+     */
     public function posts()
     {
         return $this->morphMany(Post::class, 'postable');
     }
 
+    /**
+     * @return \Illuminate\Database\Eloquent\Relations\MorphMany
+     */
     public function allPosts()
     {
         return $this->morphMany(Post::class, 'postable')->with('postable')
             ->orWhereIn( 'postable_id', self::communities()->allRelatedIds())
-            ->orWhereIn( 'postable_id', self::getFriends()->pluck('id'));
+            ->orWhereIn( 'postable_id', self::getFriends()->pluck('id'))->orderBy('posts.id', 'desc');
     }
 
     /**
