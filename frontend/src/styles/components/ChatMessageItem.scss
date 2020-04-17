@@ -20,6 +20,9 @@ $chatMessageCompanionMsgBG: white;
 $chatMessageCompanionMsgTextColor: #363636;
 $chatMessageCompanionMsgTimeColor: #C1BFBF;
 
+$chatHeight: calc(100vh - 154px);
+$chatMessagesBodyHeight: calc(100% - 206px);
+
 
 .media-pic {
     display: inline-block;
@@ -207,4 +210,19 @@ $chatMessageCompanionMsgTimeColor: #C1BFBF;
          height: 28px;
          margin: 0 5px;
      }
+}
+
+.is-chatPage {
+    .chat-page-height{
+        height: $chatHeight;
+        min-height: 200px;
+    }
+
+    #chatMain {
+        height: 100%;
+    }
+
+    #chatMessagesBody {
+        height: $chatMessagesBodyHeight;
+    }
 }

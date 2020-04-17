@@ -1,13 +1,13 @@
 <template>
-    <div class="row ">
-        <div class="col-sm-1 col-md-1 col-lg-1 col-xl-1" :class="{ 'is-chatPage' : 'ChatsListPage'===this.$root.$router.currentRoute.name }">
+    <div class="row "  :class="{ 'is-chatPage' : 'ChatsListPage'===this.$root.$router.currentRoute.name }" >
+        <div class="col-sm-1 col-md-1 col-lg-1 col-xl-1 chat-page-height overflow-hidden">
             <AccountToolbarLeft></AccountToolbarLeft>
         </div>
 
-        <div class="col-sm-12 col-md-9 col-lg-11 pr-3">
+        <div class="col-sm-12 col-md-9 col-lg-11 pr-3  chat-page-height">
             <div v-if="checkIsDialogsList()" id="chatMain" class="row bg-white-br20 overflow-hidden">
                 <div class="col-sm-12 col-md-12 col-lg-4 col-xl-4 col-auto px-sm-0 px-md-0 h-100 border-right">
-                    <vue-custom-scrollbar class="chat-list-scroll py-4"  :settings="settings"
+                    <vue-custom-scrollbar class="chat-list-scroll py-4 h-100"  :settings="settings"
                                           @ps-scroll-y="scrollHanle">
                         <ul id="chatFriends" class="list-unstyled mb-0">
                             <ChatListItem v-for="(dialog, dialogIndex) in dialogsList"
@@ -184,10 +184,6 @@ methods: {
         return (typeof this.dialogsList!='undefined'  &&  Array.isArray(this.dialogsList)  &&  this.dialogsList  &&  this.dialogsList.length>0);
     },
 
-
-    scrollHanle(evt) {
-        console.log(evt)
-    }
 },
 
 
