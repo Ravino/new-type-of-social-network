@@ -16,9 +16,9 @@
 </template>
 
 <script>
-import IconPlayerNext from '../icons/IconPlayerNext.vue';
-import IconPlayerPlay from '../icons/IconPlayerPlay.vue';
-import IconPlayerPrev from '../icons/IconPlayerPrev.vue';
+import IconPlayerNext from '../../icons/IconPlayerNext.vue';
+import IconPlayerPlay from '../../icons/IconPlayerPlay.vue';
+import IconPlayerPrev from '../../icons/IconPlayerPrev.vue';
 
 export default {
     name : 'NavBarPlayer',

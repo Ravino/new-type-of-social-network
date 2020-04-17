@@ -14,7 +14,7 @@ AdminSection::registerModel(\App\Models\User::class, function (\SleepingOwl\Admi
                 return (int) $model->is_admin === 1 ? 'Да' : 'Нет';
             })->setLabel('Admin')
         ]);
-        $display->paginate(15);
+        $display->paginate(30);
         return $display;
     });
     // Create And Edit
@@ -41,7 +41,7 @@ AdminSection::registerModel(\App\Models\Profile\Relationship::class, function (\
             AdminColumn::link('id')->setLabel('ID')->setWidth('400px'),
             AdminColumn::text('title')->setLabel('Title'),
         ]);
-        $display->paginate(15);
+        $display->paginate(30);
         return $display;
     });
     // Create And Edit
@@ -69,7 +69,7 @@ AdminSection::registerModel(\App\Models\Geo\Country::class, function (\SleepingO
             AdminColumn::text('title_ua')->setLabel('Title UA'),
             AdminColumn::text('title_en')->setLabel('Title EN'),
         ]);
-        $display->paginate(15);
+        $display->paginate(30);
         return $display;
     });
     // Create And Edit
@@ -100,7 +100,7 @@ AdminSection::registerModel(\App\Models\Geo\Region::class, function (\SleepingOw
             AdminColumn::text('title_ua')->setLabel('Title UA'),
             AdminColumn::text('title_en')->setLabel('Title EN'),
         ]);
-        $display->paginate(15);
+        $display->paginate(30);
         return $display;
     });
     // Create And Edit
@@ -132,7 +132,7 @@ AdminSection::registerModel(\App\Models\Geo\City::class, function (\SleepingOwl\
             AdminColumn::text('title_ua')->setLabel('Title UA'),
             AdminColumn::text('title_en')->setLabel('Title EN'),
         ]);
-        $display->paginate(15);
+        $display->paginate(30);
         return $display;
     });
     // Create And Edit
@@ -146,6 +146,71 @@ AdminSection::registerModel(\App\Models\Geo\City::class, function (\SleepingOwl\
     });
 })
     ->addMenuPage(\App\Models\Geo\City::class, 0)
+    ->setIcon('fa fa-user')
+    ->setAccessLogic(function() {
+        $user = auth()->user();
+        return $user instanceof \App\Models\User && $user->isAdmin();
+    });
+
+/**
+ * RBAC
+ */
+AdminSection::registerModel(\App\Models\Rbac\Permission::class, function (\SleepingOwl\Admin\Model\ModelConfiguration $model) {
+    $model->setTitle('RBAC Permitions');
+    // Display
+    $model->onDisplay(function () {
+        $display = AdminDisplay::table()->setColumns([
+            AdminColumn::link('id')->setLabel('ID')->setWidth('100px'),
+            AdminColumn::text('name')->setLabel('Name'),
+            AdminColumn::text('display_name')->setLabel('Display name'),
+            AdminColumn::text('description')->setLabel('Description'),
+        ]);
+        $display->paginate(30);
+        return $display;
+    });
+    // Create And Edit
+    $model->onCreateAndEdit(function() {
+        $form = AdminForm::panel()->addBody(
+            AdminFormElement::text('name', 'Name'),
+            AdminFormElement::text('display_name', 'Display name'),
+            AdminFormElement::text('description', 'Description')
+        );
+        return $form;
+    });
+})
+    ->addMenuPage(\App\Models\Rbac\Permission::class, 0)
+    ->setIcon('fa fa-user')
+    ->setAccessLogic(function() {
+        $user = auth()->user();
+        return $user instanceof \App\Models\User && $user->isAdmin();
+    });
+
+AdminSection::registerModel(\App\Models\Rbac\Role::class, function (\SleepingOwl\Admin\Model\ModelConfiguration $model) {
+    $model->setTitle('RBAC Role');
+    // Display
+    $model->onDisplay(function () {
+        $display = AdminDisplay::table()->setColumns([
+            AdminColumn::link('id')->setLabel('ID')->setWidth('100px'),
+            AdminColumn::text('name')->setLabel('Name'),
+            AdminColumn::text('display_name')->setLabel('Display name'),
+            AdminColumn::text('description')->setLabel('Description'),
+            AdminColumn::text('priority')->setLabel('Priority'),
+        ]);
+        $display->paginate(30);
+        return $display;
+    });
+    // Create And Edit
+    $model->onCreateAndEdit(function() {
+        $form = AdminForm::panel()->addBody(
+            AdminFormElement::text('name', 'Name'),
+            AdminFormElement::text('display_name', 'Display name'),
+            AdminFormElement::text('description', 'Description'),
+            AdminFormElement::text('priority', 'Priority')
+        );
+        return $form;
+    });
+})
+    ->addMenuPage(\App\Models\Rbac\Role::class, 0)
     ->setIcon('fa fa-user')
     ->setAccessLogic(function() {
         $user = auth()->user();

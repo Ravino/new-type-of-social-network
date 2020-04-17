@@ -3,21 +3,23 @@
 namespace App\Models;
 
 use App\CommunityMember;
+use App\Models\Rbac\Role;
 use App\Models\User\PrivacySettings;
 use App\Notifications\ResetPassword as ResetPasswordNotification;
 use App\Traits\Friendable;
-use App\Traits\Permissions;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Tymon\JWTAuth\Contracts\JWTSubject;
+use Laratrust\Traits\LaratrustUserTrait;
 
 class User extends Authenticatable implements JWTSubject
 {
-    use Notifiable;
 
-    use Friendable;
+    use LaratrustUserTrait, Notifiable, Friendable;
 
-    use Permissions;
+    const PERMISSION_ROLE_FOF = 'friendOfFriend';//friend of friend
+    const PERMISSION_ROLE_FRIEND = 'friend';
+    const PERMISSION_ROLE_GUEST = 'guest';
 
     /**
      * The attributes that are mass assignable.
@@ -67,13 +69,14 @@ class User extends Authenticatable implements JWTSubject
 
     public function privacySettings()
     {
+        $default = (int) Role::where('flag', Role::FLAG_DEFAULT)->get()->first()->id ?? 0;
         return $this->hasOne(PrivacySettings::class)->withDefault(
             [
-                'page_type' => PrivacySettings::PAGE_TYPE_DEFAULT,
-                'write_messages_permissions' => PrivacySettings::MESSAGES_PERMISSIONS_DEFAULT,
-                'post_wall_permissions' => PrivacySettings::POST_WALL_PERMISSIONS_FRIENDS_DEFAULT,
-                'view_wall_permissions' => PrivacySettings::VIEW_WALL_PERMISSIONS_DEFAULT,
-                'view_friends_permissions' => PrivacySettings::VIEW_FRIENDS_PERMISSIONS_DEFAULT,
+                'page_type' => $default,
+                'write_messages_permissions' => $default,
+                'post_wall_permissions' => $default,
+                'view_wall_permissions' => $default,
+                'view_friends_permissions' => $default,
                 'two_factor_auth_enabled' => PrivacySettings::TWO_FACTOR_AUTH_ENABLED_DEFAULT,
                 'sms_confirm' => PrivacySettings::SMS_CONFIRM_DEFAULT,
             ]
@@ -130,5 +133,20 @@ class User extends Authenticatable implements JWTSubject
     public function sendPasswordResetNotification($token)
     {
         $this->notify(new ResetPasswordNotification($token));
+    }
+
+    /**
+     * @param User $user
+     * @return string
+     */
+    public function getUserPrivacyRole(User $user)
+    {
+        if ($this->getFriendsOfFriends()->contains($user)) {
+            return Role::where('name', self::PERMISSION_ROLE_FOF)->get()->first();
+        }
+        if ($this->isFriendWith($user)) {
+            return Role::where('name', self::PERMISSION_ROLE_FRIEND)->get()->first();
+        }
+        return Role::where('name', self::PERMISSION_ROLE_GUEST)->get()->first();
     }
 }

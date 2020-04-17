@@ -8,11 +8,11 @@
             <div class="row">
                 <div class="offset-2 col-8 bg-white-br20 p-4">
                     <div v-if="isNotificationsReady" class="plizi-notifications-list">
-                        <div v-if="notificationsList  &&  notificationsList.length>0">
-                            <div class="alert alert-info">
-                                Список нотификаций
-                            </div>
-                        </div>
+                        <ul v-if="notificationsList  &&  notificationsList.length>0" class="list-unstyled mb-0">
+                            <NotificationItem v-for="(notifItem, notifIndex) in notificationsList"
+                                              v-bind:key="notifIndex" v-bind:notification="notifItem">
+                            </NotificationItem>
+                        </ul>
                         <div v-else class="">
                             <div class="alert alert-info">
                                 Пока нет никаких нотификаций
@@ -34,54 +34,26 @@
 import AccountToolbarLeft from '../common/AccountToolbarLeft.vue';
 import AccountToolbarRight from '../common/AccountToolbarRight.vue';
 import Spinner from '../common/Spinner.vue';
+import NotificationItem from '../components/NotificationItem.vue';
 
 export default {
 name: 'NotificationsPage',
 components: {
-    Spinner, AccountToolbarLeft,
-    AccountToolbarRight
+    AccountToolbarLeft, AccountToolbarRight,
+    Spinner, NotificationItem
 },
 data() {
     return {
-        notificationsList : [],
-        isNotificationsReady : false
+        isNotificationsReady : true
     }
 },
 
-methods: {
-    async loadFriendsList() {
-        let response = null;
-
-        try {
-            response = await this.$root.$api.notificationsList();
-        }
-        catch (e){
-            if (e.status  &&  e.status>=400) {
-                window.console.warn(e.detailMessage);
-            }
-            else {
-                throw e;
-            }
-        }
-
-        //window.console.warn( JSON.parse( JSON.stringify(response) ), `response` );
-
-        if (response) {
-            this.notificationsList = response;
-            this.isNotificationsReady = true;
-        }
-
-        return true;
-    },
+computed: {
+    notificationsList(){
+        return this.$root.$user.notifications;
+    }
 },
 
-beforeMount() {
-
-},
-
-async mounted(){
-    await this.loadFriendsList();
-}
 
 }
 </script>

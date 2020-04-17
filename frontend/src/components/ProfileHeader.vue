@@ -6,16 +6,16 @@
                     <img ref="userAvatar" :src="userData.userPic" :alt="userData.fullName" class="plz-br20-top" />
 
                     <div v-if="isOwner===true" class="plz-profile-userpic-footer">
-                        <label for="userAvatarFile" class="plz-profile-userpic-edit file-label d-flex align-items-center justify-content-between">
+                        <div class="plz-profile-userpic-edit file-label d-flex align-items-center justify-content-between">
+                            <label for="userAvatarFile" class="btn align-items-center justify-content-center d-flex w-75 border-right">Редактировать</label>
 
-                            <button class="btn align-items-center justify-content-center d-flex w-75 border-right" @click="showPersonalMsgDialog()">Редактировать</button>
-                            <button class="btn align-items-center justify-content-center d-flex w-25" @click="sendFriendshipInvitation()" title="добавить в друзья">
+                            <button class="btn align-items-center justify-content-center d-flex w-25" @click="showProfileOptionsModal()" title="опции">
                                 <span class="ps-dot"></span>
                                 <span class="ps-dot"></span>
                                 <span class="ps-dot"></span>
                             </button>
-                        </label>
-                        <input id="userAvatarFile" ref="userAvatarFile" type="file" @change="uploadUserAvatar()" />
+                        </div>
+                        <input id="userAvatarFile" ref="userAvatarFile" type="file" @change="uploadUserAvatar()" class="d-none" />
                     </div>
 
                     <div v-else class="plz-profile-userpic-footer">
@@ -85,7 +85,7 @@ export default {
 name: 'ProfileHeader',
 props: {
     userData: Object,
-    isOwner : false
+    isOwner : Boolean
 },
 data() {
     return {
@@ -95,6 +95,11 @@ data() {
 methods: {
     sBeaty(param){
         return this.$options.filters.statsBeauty(param);
+    },
+
+
+    showProfileOptionsModal(){
+        this.$root.$emit('showProfileOptionsModal', { user: this.userData, src : this.$route.name });
     },
 
 
@@ -123,14 +128,15 @@ methods: {
             }
 
             if (apiResponse.status === 422) {
-                this.$alert(`<h6>Приглашение дружить</h6>
-<div class="alert alert-info">${apiResponse.message}.</div>`, `bg-info`, 10);
+                this.$alert(`<h6>Приглашение дружить</h6><div class="alert alert-info">${apiResponse.message}.</div>`, `bg-info`, 10);
             }
         }
     },
 
 
     async uploadUserAvatar(){
+        window.console.log(`uploadUserAvatar`);
+
         if (this.isOwner!==true)
             return;
 

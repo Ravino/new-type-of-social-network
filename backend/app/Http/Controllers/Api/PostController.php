@@ -37,13 +37,7 @@ class PostController extends Controller
      */
     public function userPosts($id) {
         $user = User::find($id);
-        if($user) {
-            if($user->canShowWallTo(\Auth::user())) {
-                return new PostCollection($user->allPosts);
-            }
-            return response()->json(['message' => 'Not allowed'], 403);
-        }
-        return response()->json(['message' => 'Пользователь не найден'], 404);
+        return new PostCollection($user->allPosts);
     }
 
     /**

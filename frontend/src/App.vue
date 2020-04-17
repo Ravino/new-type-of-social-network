@@ -42,12 +42,10 @@ import GuestNavBar from './common/GuestNavBar.vue';
 import AuthNavBar from './common/AuthNavBar.vue';
 import AuthFooter from './common/AuthFooter.vue';
 import GuestFooter from './common/GuestFooter.vue';
-import AlertModal from './common/AlertModal.vue';
+import AlertModal from './components/AlertModal.vue';
 
-import {HTTPer} from './httper/httper';
 import PliziAPI from './classes/PliziAPI.js';
 import PliziAuthUser from './classes/PliziAuthUser.js';
-import PliziUser from "./classes/PliziUser";
 
 export default {
 name: 'App',
@@ -117,6 +115,7 @@ methods: {
 
     afterUserLoad(evData) {
         if (evData.token !== ``  &&  evData.user) {
+            window.console.log(`afterUserLoad`);
 
             this.$root.$isAuth = true;
             this.$root.$api.token = evData.token;
@@ -125,7 +124,9 @@ methods: {
 
             this.$root.$user.saveUserData( evData.user, evData.token );
 
+            // TODO: перенести отсюда - слишком часто будет вызываться
             this.loadInvitations();
+            this.loadNotifications();
         }
     },
 
@@ -150,9 +151,29 @@ methods: {
     },
 
 
+    async loadNotifications() {
+        let apiResponse = null;
+
+        try {
+            apiResponse = await this.$root.$api.notificationsList();
+        }
+        catch (e){
+            window.console.warn(e.detailMessage);
+        }
+
+        if (apiResponse) {
+            this.$root.$user.notificationsLoad(apiResponse);
+            this.$root.$emit('notificationsLoad', {});
+        }
+
+        return true;
+    },
+
+
     isAuthorized(){
         return this.$root.$isAuth;
-    }
+    },
+
 },
 
 computed: {

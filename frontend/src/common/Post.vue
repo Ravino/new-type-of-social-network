@@ -2,7 +2,7 @@
     <div class="row plz-post-item mb-4 bg-white-br20 py-4">
 
         <div class="col-12 border-bottom plz-post-item-header">
-            <div id="postNewsItem" class="d-flex flex-row align-content-center pb-4">
+            <div class="post-news-item d-flex flex-row align-content-center pb-4">
                 <div class="post-poster-pic mr-3">
                     <img :src="posterPic" :alt="posterName"/>
                 </div>

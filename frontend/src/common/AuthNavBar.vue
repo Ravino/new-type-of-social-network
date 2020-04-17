@@ -10,15 +10,15 @@
                 </div>
 
                 <div class="col-sm-4 col-md-6 col-lg-4 d-sm-none d-md-block d-lg-block d-xl-block pl-0">
-                    <NavBarSearch/>
+                    <NavBarSearch></NavBarSearch>
                 </div>
 
                 <div id="playerWrapper" class="plz-top-player col-lg-2 col-xl-2 d-sm-none d-md-none d-lg-block d-xl-block text-center ">
-                    <NavBarPlayer/>
+                    <NavBarPlayer></NavBarPlayer>
                 </div>
 
                 <div id="watcherWrapper" class="plz-top-watcher col-sm-4 col-md-4 col-lg-2 w-auto ml-auto text-center">
-                    <NavBarWatcher />
+                    <NavBarWatcher></NavBarWatcher>
                 </div>
 
                 <NavBarUserMenu></NavBarUserMenu>
@@ -31,10 +31,10 @@
 <script>
 import IconPliziLogo from '../icons/IconPliziLogo.vue';
 
-import NavBarSearch from './NavBarSearch.vue';
-import NavBarPlayer from './NavBarPlayer.vue';
-import NavBarWatcher from './NavBarWatcher.vue';
-import NavBarUserMenu from './NavBarUserMenu.vue';
+import NavBarSearch from './NavBar/NavBarSearch.vue';
+import NavBarPlayer from './NavBar/NavBarPlayer.vue';
+import NavBarWatcher from './NavBar/NavBarWatcher.vue';
+import NavBarUserMenu from './NavBar/NavBarUserMenu.vue';
 
 export default {
 name: 'AuthNavBar',

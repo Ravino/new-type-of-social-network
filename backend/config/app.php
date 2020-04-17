@@ -201,6 +201,11 @@ return [
 
         Tymon\JWTAuth\Providers\LaravelServiceProvider::class,
         SocialiteProviders\Manager\ServiceProvider::class,
+
+        /**
+         * RBAC
+         */
+        Laratrust\LaratrustServiceProvider::class,
     ],
 
     /*
@@ -253,6 +258,10 @@ return [
         'Validator' => Illuminate\Support\Facades\Validator::class,
         'View' => Illuminate\Support\Facades\View::class,
         'Debugger' => Lanin\Laravel\ApiDebugger\Facade::class,
+        /**
+         * RBAC
+         */
+        'Laratrust'   => Laratrust\LaratrustFacade::class,
     ],
 
 ];
