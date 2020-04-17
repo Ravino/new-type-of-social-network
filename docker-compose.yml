@@ -67,6 +67,15 @@ services:
     depends_on:
       - php_api
 
+  queue_worker:
+    container_name: "plizi_queue_worker"
+    working_dir: /app
+    volumes:
+      - ./backend:/app
+    command: php artisan queue:work
+    depends_on:
+      - php_api
+
   swaggereditor:
     image: sebp/swagger-editor
     container_name: "plizi_swagger_editor_api"
