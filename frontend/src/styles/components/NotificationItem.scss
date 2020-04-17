@@ -1,0 +1,89 @@
+$notificationUserPicSize: 48px;
+$notificationTimeColor: #9A9A9A;
+$notificationNameColor: #363636;
+$notificationOnlineColor: #9FCD48;
+$notificationOfflineColor: #CACAC9;
+
+
+.plizi-notification-item-user {
+    transition: .4s;
+
+    .user-friend-desc {
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+    }
+}
+
+.plizi-notification-item {
+    &-pic {
+        display: inline-block;
+        position: relative;
+        height: $notificationUserPicSize;
+        width: $notificationUserPicSize;
+
+        img {
+            display: inline-block;
+            width: $notificationUserPicSize;
+            height: $notificationUserPicSize;
+        }
+    }
+
+    &-isonline {
+        display: block;
+        position: absolute;
+        width: 10px;
+        height: 10px;
+        right: 0;
+        bottom: 0;
+        background-color: $notificationOnlineColor;
+        border: 1px solid white;
+        border-radius: 100%;
+    }
+
+    &-isoffline {
+        display: block;
+        position: absolute;
+        width: 10px;
+        height: 10px;
+        right: 0;
+        bottom: 0;
+        background-color: $notificationOfflineColor;
+        border: 1px solid white;
+        border-radius: 100%;
+    }
+
+    &-body {
+        &-top {
+            time {
+                font-size: 11px;
+                color: $notificationTimeColor; // add color to var
+            }
+
+        }
+    }
+
+    &-name {
+        font-size: 13px;
+        font-weight: 600;
+        color: $notificationNameColor;
+        line-height: 20px;
+        cursor: pointer;
+
+        &:hover {
+            text-decoration: underline;
+            color: $notificationTimeColor;
+        }
+    }
+
+    &-desc {
+        font-size: 12px;
+        color: $notificationTimeColor;
+    }
+
+    &-details {
+        font-size: 12px;
+        color: $notificationNameColor;
+    }
+
+}
