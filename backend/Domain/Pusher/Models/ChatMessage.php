@@ -25,14 +25,17 @@ class ChatMessage extends Model
             ->leftJoin('chat_message_status', 'chat_message_status.message_id', '=', 'chat_messages.id');
     }
 
+    /**
+     * @return \Illuminate\Database\Eloquent\Relations\HasOne
+     */
     public function parent_chat() {
         return $this->hasOne( Chat::class, 'id', 'parent_chat_id');
     }
 
     /**
-     * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
      */
     public function attachments() {
-        return $this->belongsToMany(ChatMessageAttachment::class, 'chat_message_attachments', 'message_id');
+        return $this->hasMany(ChatMessageAttachment::class, 'message_id', 'id');
     }
 }

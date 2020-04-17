@@ -42,6 +42,7 @@ class Message extends JsonResource
             'isEdited' => false,
             'createdAt' => $this->created_at,
             'updatedAt' => $this->updated_at,
+            'attachments' => new AttachmentsCollection($this->attachments),
         ];
     }
 }

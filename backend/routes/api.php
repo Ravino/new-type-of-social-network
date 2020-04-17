@@ -24,6 +24,7 @@ Route::group(['middleware' => ['auth.jwt', 'track.activity']], function () {
         Route::get('messages/{chat_id}', 'Api\ChatController@messages');
         Route::post('send', 'Api\ChatController@send');
         Route::post('message/user', 'Api\ChatController@sendToUser');
+        Route::post('message/attachments', 'Api\ChatController@uploadAttachments');
     });
 
     Route::get('posts', 'Api\PostController@index');

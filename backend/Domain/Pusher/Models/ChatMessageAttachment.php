@@ -13,6 +13,10 @@ use Storage;
  */
 class ChatMessageAttachment extends Model
 {
+    protected $table = 'chat_message_attachments';
+
+    protected $primaryKey = 'id';
+
     protected $fillable = [
         'original_name', 'path', 'url', 'user_id', 'size', 'tag', 'mime_type'
     ];
@@ -39,5 +43,14 @@ class ChatMessageAttachment extends Model
     public function getDateFormat()
     {
         return 'U';
+    }
+
+    public static function boot()
+    {
+        parent::boot();
+        static::creating(function ($file) {
+            $file->user_id = auth()->user()->id;
+            $file->url = $file->s3Url;
+        });
     }
 }

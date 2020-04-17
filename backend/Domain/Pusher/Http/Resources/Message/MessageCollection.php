@@ -41,6 +41,7 @@ class MessageCollection extends ResourceCollection
                     'isEdited' => false,
                     'createdAt' => $message->created_at,
                     'updatedAt' => $message->updated_at,
+                    'attachments' => new AttachmentsCollection($message->attachments),
                     'replyOn' => $message->parent ? new Message($message->parent, $this->user_id) : null,
                     'isForward' => $message->parent_chat_id ? true : false,
                 ];
