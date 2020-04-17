@@ -1,9 +1,12 @@
 $notificationUserPicSize: 48px;
-$notificationTimeColor: #9A9A9A;
+$notificationStatusSize: 22px;
+$notificationDescColor: #9A9A9A;
+$notificationTimeColor: #bab8b8;
 $notificationNameColor: #363636;
 $notificationOnlineColor: #9FCD48;
 $notificationOfflineColor: #CACAC9;
-
+$maxTextWidth: 120px;
+$notificationPicSize: 50px;
 
 .plizi-notification-item-user {
     transition: .4s;
@@ -26,6 +29,25 @@ $notificationOfflineColor: #CACAC9;
             display: inline-block;
             width: $notificationUserPicSize;
             height: $notificationUserPicSize;
+        }
+
+        &-status {
+            position: absolute;
+            bottom: 0;
+            right: 0;
+            width: $notificationStatusSize;
+            height: $notificationStatusSize;
+            border-radius: $notificationStatusSize;
+            transform: translate(2px, 2px);
+            background-color: #fb3e3e;
+            text-align: center;
+
+            .fa,
+            .fas {
+                line-height: $notificationStatusSize;
+                color: #fff;
+                font-size: 10px;
+            }
         }
     }
 
@@ -69,6 +91,10 @@ $notificationOfflineColor: #CACAC9;
         color: $notificationNameColor;
         line-height: 20px;
         cursor: pointer;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        max-width: $maxTextWidth;
 
         &:hover {
             text-decoration: underline;
@@ -78,12 +104,35 @@ $notificationOfflineColor: #CACAC9;
 
     &-desc {
         font-size: 12px;
+        color: $notificationDescColor;
+    }
+
+    &-subdesc {
+        font-size: 11px;
         color: $notificationTimeColor;
     }
 
     &-details {
         font-size: 12px;
         color: $notificationNameColor;
+    }
+    &-point {
+        position: relative;
+        width: $notificationPicSize;
+        height: $notificationPicSize;
+        border-radius: 2px;
+        overflow: hidden;
+        img,
+        i {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%)
+        }
+    }
+
+    a {
+        color: $iconHoverColor;
     }
 
 }

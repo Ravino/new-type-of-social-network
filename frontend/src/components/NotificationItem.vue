@@ -4,21 +4,25 @@
             <router-link :to="`/user-`+notification.senderID" tag="div" class="plizi-notification-item-pic mr-3">
                 <img class="plizi-notification-item-img rounded-circle overflow-hidden"
                      v-bind:src="notification.senderPic" v-bind:alt="notification.senderFullName" />
+                <div class="plizi-notification-item-pic-status status-like">
+                    <i class="fa fa-heart"></i>
+                </div>
             </router-link>
 
             <div class="plizi-notification-item-body m-0 pr-5">
                 <div class="plizi-notification-item-top d-flex align-items-end justify-content-between">
-                    <router-link :to="`/user-`+notification.id" tag="h6" class="plizi-notification-item-name my-0">
+                    <router-link :to="`/user-`+notification.id" tag="h6" class="plizi-notification-item-name my-0" :title=" notification.senderFullName ">
                         {{ notification.senderFullName }}
                     </router-link>
                 </div>
 
                 <div class="plizi-notification-item-top d-flex align-items-end justify-content-between">
-                    {{notification.notifMessage}}
+<!--                    {{notification.notifMessage}}-->
+                    <p class="plizi-notification-item-desc mb-1"> оценила ваше <a class="link" href="/">фото</a></p>
                 </div>
 
                 <div class="plizi-notification-item-body-bottom">
-                    <p class="plizi-notification-item-desc p-0 my-0 d-inline-block">
+                    <p class="plizi-notification-item-subdesc p-0 my-0 d-inline-block">
                         <time :datetime="notification.createdAt" class="">
                             {{ notification.createdAt | lastMessageTime }}
                         </time>
@@ -26,8 +30,8 @@
                 </div>
             </div>
 
-            <div class="align-self-end ml-auto">
-                <i class="fas fa-info-circle fa-3x"></i>
+            <div class="align-self-start ml-auto plizi-notification-item-point">
+                <img src="../images/last-entries/alex.png" alt="picture">
             </div>
         </div>
     </li>
