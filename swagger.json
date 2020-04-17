@@ -23,6 +23,10 @@
     {
       "name": "Posts",
       "description": "Все, что касается публикаций"
+    },
+    {
+      "name": "Chats",
+      "description": "Все, что касается диалогов и сообщений"
     }
   ],
   "schemes": [
@@ -30,6 +34,284 @@
     "http"
   ],
   "paths": {
+    "/chat/dialogs": {
+      "get": {
+        "tags": [
+          "Chats"
+        ],
+        "summary": "",
+        "description": "Список моих диалогов",
+        "operationId": "getListOfDialogs",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "list": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/definitions/Dialogs"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "Authorization": []
+          }
+        ]
+      }
+    },
+    "/chat/messages/{dialog_id}": {
+      "get": {
+        "tags": [
+          "Chats"
+        ],
+        "summary": "",
+        "description": "Список сообщений в диалоге",
+        "operationId": "getListOfDialogMessages",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "dialog_id",
+            "description": "ID диалога",
+            "required": true,
+            "type": "integer"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "list": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/definitions/Messages"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "Authorization": []
+          }
+        ]
+      }
+    },
+    "/send": {
+      "post": {
+        "tags": [
+          "Chats"
+        ],
+        "summary": "",
+        "description": "Отправить сообщение",
+        "operationId": "sendMessage",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "body",
+            "name": "body",
+            "schema": {
+              "$ref": "#/definitions/CreateMessage"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "data": {
+                  "$ref": "#/definitions/PostByUser"
+                }
+              }
+            }
+          },
+          "402": {
+            "description": "",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "message": {
+                  "type": "string"
+                },
+                "errors": {
+                  "type": "object",
+                  "properties": {
+                    "field": {
+                      "type": "array",
+                      "items": {
+                        "example": "Here will be error of the field"
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "Authorization": []
+          }
+        ]
+      }
+    },
+    "/message/user": {
+      "post": {
+        "tags": [
+          "Chats"
+        ],
+        "summary": "",
+        "description": "Отправить сообщение пользователю",
+        "operationId": "sendMessageToUser",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "body",
+            "name": "body",
+            "schema": {
+              "$ref": "#/definitions/CreateMessageToUser"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "data": {
+                  "$ref": "#/definitions/PostByUser"
+                }
+              }
+            }
+          },
+          "402": {
+            "description": "",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "message": {
+                  "type": "string"
+                },
+                "errors": {
+                  "type": "object",
+                  "properties": {
+                    "field": {
+                      "type": "array",
+                      "items": {
+                        "example": "Here will be error of the field"
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "Authorization": []
+          }
+        ]
+      }
+    },
+    "/message/attachments": {
+      "post": {
+        "tags": [
+          "Chats"
+        ],
+        "summary": "",
+        "description": "Загрузить файлы",
+        "operationId": "uploadMessageAttachments",
+        "consumes": [
+          "multipart/form-data"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "name": "files",
+            "in": "formData",
+            "description": "file to upload",
+            "required": true,
+            "type": "file"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "data": {
+                  "$ref": "#/definitions/PostByUser"
+                }
+              }
+            }
+          },
+          "402": {
+            "description": "",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "message": {
+                  "type": "string"
+                },
+                "errors": {
+                  "type": "object",
+                  "properties": {
+                    "field": {
+                      "type": "array",
+                      "items": {
+                        "example": "Here will be error of the field"
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "Authorization": []
+          }
+        ]
+      }
+    },
     "/posts": {
       "post": {
         "tags": [
@@ -1329,6 +1611,234 @@
     }
   },
   "definitions": {
+    "CreateMessage": {
+      "type": "object",
+      "properties": {
+        "chat_id": {
+          "type": "number"
+        },
+        "body": {
+          "type": "string"
+        },
+        "replyOnMessageId": {
+          "type": "number"
+        },
+        "forwardFromChatId": {
+          "type": "number"
+        },
+        "attachments": {
+          "type": "array",
+          "items": {
+            "type": "number"
+          }
+        }
+      }
+    },
+    "CreateMessageToUser": {
+      "type": "object",
+      "properties": {
+        "chat_id": {
+          "type": "number"
+        },
+        "body": {
+          "type": "string"
+        },
+        "replyOnMessageId": {
+          "type": "number"
+        },
+        "forwardFromChatId": {
+          "type": "number"
+        },
+        "attachments": {
+          "type": "array",
+          "items": {
+            "type": "number"
+          }
+        }
+      }
+    },
+    "Messages": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "number"
+        },
+        "firstName": {
+          "type": "string"
+        },
+        "lastName": {
+          "type": "string"
+        },
+        "userPic": {
+          "type": "string"
+        },
+        "sex": {
+          "type": "string"
+        },
+        "body": {
+          "type": "string"
+        },
+        "isMine": {
+          "type": "boolean"
+        },
+        "isRead": {
+          "type": "boolean"
+        },
+        "isEdited": {
+          "type": "boolean"
+        },
+        "createdAt": {
+          "type": "number"
+        },
+        "updatedAt": {
+          "type": "number"
+        },
+        "attachments": {
+          "type": "object",
+          "properties": {
+            "list": {
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/MessageAttachments"
+              }
+            }
+          }
+        },
+        "replyOn": {
+          "$ref": "#/definitions/MessagesWithoutRef"
+        },
+        "isForward": {
+          "type": "boolean"
+        }
+      }
+    },
+    "MessagesWithoutRef": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "number"
+        },
+        "firstName": {
+          "type": "string"
+        },
+        "lastName": {
+          "type": "string"
+        },
+        "userPic": {
+          "type": "string"
+        },
+        "sex": {
+          "type": "string"
+        },
+        "body": {
+          "type": "string"
+        },
+        "isMine": {
+          "type": "boolean"
+        },
+        "isRead": {
+          "type": "boolean"
+        },
+        "isEdited": {
+          "type": "boolean"
+        },
+        "createdAt": {
+          "type": "number"
+        },
+        "updatedAt": {
+          "type": "number"
+        },
+        "attachments": {
+          "type": "object",
+          "properties": {
+            "list": {
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/MessageAttachments"
+              }
+            }
+          }
+        },
+        "replyOn": {
+          "$ref": "#/definitions/Messages"
+        },
+        "isForward": {
+          "type": "boolean"
+        }
+      }
+    },
+    "MessageAttachments": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "originalName": {
+          "type": "string"
+        },
+        "url": {
+          "type": "string"
+        },
+        "mimeType": {
+          "type": "string"
+        },
+        "size": {
+          "type": "number"
+        }
+      }
+    },
+    "Dialogs": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "number"
+        },
+        "name": {
+          "type": "string"
+        },
+        "lastMessageText": {
+          "type": "string"
+        },
+        "lastMessageDT": {
+          "type": "string"
+        },
+        "isRead": {
+          "type": "boolean"
+        },
+        "isLastFromMe": {
+          "type": "boolean"
+        },
+        "attendees": {
+          "$ref": "#/definitions/Attendees"
+        }
+      }
+    },
+    "Attendees": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "number"
+        },
+        "lastActivity": {
+          "type": "string"
+        },
+        "userPic": {
+          "type": "string"
+        },
+        "firstName": {
+          "type": "string"
+        },
+        "lastName": {
+          "type": "string"
+        },
+        "isOnline": {
+          "type": "boolean"
+        },
+        "sex": {
+          "type": "string"
+        }
+      }
+    },
     "NotificationRes": {
       "type": "object",
       "properties": {
