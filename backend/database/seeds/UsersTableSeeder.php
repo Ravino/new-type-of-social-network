@@ -85,7 +85,7 @@ class UsersTableSeeder extends Seeder
             'first_name' => $faker->firstName,
             'last_name' => $faker->lastName,
             'birthday' => $faker->dateTimeBetween('-70 years', '-20 years'),
-            'city' => $faker->city,
+            'geo_city_id' => null,
             'sex' => $faker->randomElement(['n', 'm', 'f']),
             'user_pic' => $faker->imageUrl(640, 480, 'people', false),
         ];

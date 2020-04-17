@@ -64,10 +64,27 @@ class PliziUser {
 
     /**
      *
-     * @type {string}
+     * @type {Object[]|null}
      * @private
      */
-    _city = ``;
+    _city = {
+        id: null,
+        title: null,
+    };
+
+    /**
+     *
+     * @type {Object[]|null}
+     * @private
+     */
+    _region = null;
+
+    /**
+     *
+     * @type {Object[]|null}
+     * @private
+     */
+    _country =  null;
 
     /**
      *
@@ -82,13 +99,6 @@ class PliziUser {
      * @private
      */
     _userPic = ``;
-
-    /**
-     *
-     * @type {string}
-     * @private
-     */
-    _country =  ``;
 
     /**
      *
@@ -180,8 +190,16 @@ class PliziUser {
         this._lastName = (prof.lastName+``).trim();
         this._sex = (prof.sex+``).trim();
         this._birthday = new Date((prof.birthday+``).trim());
-        this._city = (prof.city+``).trim();
         this._relationshipId = prof.relationshipId;
+
+        if (prof.location) {
+            this._city = {
+                id: prof.location.id,
+                title: prof.location.title,
+            };
+            this._region = prof.location.region;
+            this._country = prof.location.country;
+        }
 
         if (prof.userPic) {
             this._userPic = (prof.userPic+``).trim();
@@ -190,7 +208,6 @@ class PliziUser {
         this._privacySettings = privacySettings;
 
         // TODO: @TGA переписать потом на загрузку реальных данных
-        this._country = ``;
         this._created = new Date();
         this._updated = new Date();
         this._subscribersNumber = Math.floor(Math.random() * 10000);
@@ -215,11 +232,15 @@ class PliziUser {
         this._lastName = ``;
         this._sex = ``;
         this._birthday = null;
-        this._city = ``;
+        this._city = {
+            id: null,
+            title: null,
+        };
+        this._region = null;
+        this._country = null;
         this._relationshipId = -1;
         this._userPic = ``;
 
-        this._country = ``;
         this._created = null;
         this._updated = null;
         this._subscribersNumber = -1;
@@ -341,7 +362,7 @@ class PliziUser {
 
     /**
      *
-     * @returns {string}
+     * @returns {Object[]|null}
      */
     get city(){
         return this._city;
@@ -349,13 +370,17 @@ class PliziUser {
 
     /**
      *
-     * @returns {string}
+     * @returns {Object[]|null}
+     */
+    get region(){
+        return this._region;
+    }
+
+    /**
+     *
+     * @returns {Object[]|null}
      */
     get country(){
-        // TODO: @TGA убрать это когда будут реальные данные по стране у юзеров
-        if (`` === this._country)
-            return `Россия`;
-
         return this._country;
     }
 
@@ -502,6 +527,12 @@ class PliziUser {
                     lastName: this._lastName,
                     sex: this._sex,
                     birthday: `${this._birthday.getFullYear()}-${month}-${day}`, // this._birthday - вернёт Date, а нам нужно в формате `YYYY-MM-DD`
+                    location: {
+                        id: this._city.id,
+                        title: this._city.title,
+                        region: this._region,
+                        country: this._country,
+                    },
                     city: this._city,
                     relationshipId: this._relationshipId,
                     userPic: this._userPic

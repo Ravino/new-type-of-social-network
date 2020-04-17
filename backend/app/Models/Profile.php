@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Models\Geo\City;
 use App\Models\Profile\Relationship;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Validation\Rule;
@@ -31,7 +32,15 @@ class Profile extends Model
     ];
 
     protected $fillable = [
-        'first_name', 'last_name', 'birthday', 'city', 'sex', 'relationship_id', 'relationship_user_id', 'user_pic'
+        'first_name',
+        'last_name',
+        'birthday',
+        'city',
+        'sex',
+        'relationship_id',
+        'relationship_user_id',
+        'user_pic',
+        'geo_city_id',
     ];
 
     public function getDateFormat()
@@ -42,5 +51,10 @@ class Profile extends Model
     public function relationship()
     {
         return $this->hasOne(Relationship::class, 'id', 'relationship_id');
+    }
+
+    public function city()
+    {
+        return $this->hasOne(City::class, 'id', 'geo_city_id');
     }
 }

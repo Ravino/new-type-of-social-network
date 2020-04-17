@@ -2,7 +2,6 @@
 
 namespace App\Http\Resources\Geo;
 
-use Illuminate\Http\Resources\Json\JsonResource;
 use Illuminate\Http\Resources\Json\ResourceCollection;
 
 class CitiesCollection extends ResourceCollection
@@ -17,7 +16,9 @@ class CitiesCollection extends ResourceCollection
                     'ru' => $city->title_ru,
                     'ua' => $city->title_ua,
                     'en' => $city->title_en,
-                ]
+                ],
+                'region' => new Region(\App\Models\Geo\City::find($city->id)->region),
+                'country' => new Country(\App\Models\Geo\City::find($city->id)->country),
             ];
         });
     }

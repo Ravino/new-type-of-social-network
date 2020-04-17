@@ -63,7 +63,7 @@
                 </div>
 
                 <!-- TODO: поправить, когда будет понятно что это за поле -->
-                <div class="form-group row border-bottom">
+                <div class="form-group row border-bottom d-none">
                     <label for="writeMessagesPermissions"
                            class="plz-account-settings-body-label plz-account-settings-privacy-body-label col-sm-6 col-md-6 col-lg-4 col-xl-4">
                         Вас могут
@@ -90,7 +90,7 @@
                 </div>
 
                 <!-- TODO: поправить, когда будет понятно что это за поле -->
-                <div class="form-group row border-bottom">
+                <div class="form-group row border-bottom d-none">
                     <label for="writeMessagesPermissions"
                            class="plz-account-settings-body-label plz-account-settings-privacy-body-label col-sm-6 col-md-6 col-lg-4 col-xl-4">
                         Раздел сообщества

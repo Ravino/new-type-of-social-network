@@ -3,7 +3,7 @@
 
 namespace App\Http\Resources\User;
 
-
+use App\Http\Resources\Geo\City as CityResource;
 use Illuminate\Http\Resources\Json\JsonResource;
 
 class Profile extends JsonResource
@@ -15,7 +15,7 @@ class Profile extends JsonResource
             'lastName' => $this->last_name,
             'sex' => $this->sex,
             'birthday' => $this->birthday,
-            'city' => $this->city,
+            'location' => new CityResource($this->city),
             'relationshipId' => $this->relationship_id,
             'userPic' => $this->user_pic,
         ];
