@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Api;
 use App\Http\Controllers\Controller;
 use Domain\Pusher\Http\Requests\SendMessageRequest;
 use Domain\Pusher\Http\Requests\SendMessageToUserRequest;
+use Domain\Pusher\Http\Requests\UploadFileRequest;
 use Domain\Pusher\Repositories\ChatRepository;
 use Domain\Pusher\Repositories\MessageRepository;
 use Domain\Pusher\Services\ChatService;
@@ -77,6 +78,7 @@ class ChatController extends Controller
             Auth::user()->id,
             $request->get('replyOnMessageId'),
             $request->get('forwardFromChatId'),
+            $request->get('attachmentIds'),
         );
         return response()->json(['status' => 'OK']);
     }
@@ -87,7 +89,18 @@ class ChatController extends Controller
      */
     public function sendToUser(SendMessageToUserRequest $request)
     {
-        $chat_id = $this->chatService->sendToUser($request->get('body'), $request->get('user_id'), Auth::user()->id);
+        $chat_id = $this->chatService->sendToUser($request->get('body'), $request->get('user_id'), Auth::user()->id, $request->get('attachmentIds'),);
         return response()->json(['status' => 'OK', 'chatId' => $chat_id]);
+    }
+
+    /**
+     * @param UploadFileRequest $request
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function uploadAttachments(UploadFileRequest $request) {
+        $attachment_ids = $this->chatService->uploadFiles($request->allFiles());
+        return response()->json([
+            'attachmentIds' => $attachment_ids
+        ]);
     }
 }

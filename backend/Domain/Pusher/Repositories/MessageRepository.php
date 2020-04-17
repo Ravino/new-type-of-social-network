@@ -44,7 +44,7 @@ class MessageRepository
      */
     public function getAllOfChatById(int $chat_id, int $user_id = null)
     {
-        $items = ChatMessage::with('parent')->where('chat_id', $chat_id)
+        $items = ChatMessage::with('parent', 'attachments')->where('chat_id', $chat_id)
             ->join('profiles', 'profiles.user_id', '=', 'chat_messages.user_id')
             ->leftJoin('chat_message_status', 'chat_message_status.message_id', '=', 'chat_messages.id')
             ->orderBy('chat_messages.id')
