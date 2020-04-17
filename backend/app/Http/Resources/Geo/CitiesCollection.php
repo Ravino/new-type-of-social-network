@@ -6,7 +6,6 @@ use Illuminate\Http\Resources\Json\ResourceCollection;
 
 class CitiesCollection extends ResourceCollection
 {
-
     public function toArray($request)
     {
         return [
@@ -18,8 +17,8 @@ class CitiesCollection extends ResourceCollection
                         'ua' => $city->title_ua,
                         'en' => $city->title_en,
                     ],
-                    'region' => new Region(\App\Models\Geo\City::find($city->id)->region),
-                    'country' => new Country(\App\Models\Geo\City::find($city->id)->country),
+                    'region' => new Region($city->region),
+                    'country' => new Country($city->country),
                 ];
             }),
         ];

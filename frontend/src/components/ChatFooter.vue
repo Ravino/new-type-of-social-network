@@ -1,5 +1,5 @@
 <template>
-    <div id="chatFooter" class="bg-white w-100 border-top">
+    <div id="chatFooter" class="bg-white w-100 border-top position-relative">
         <div class="row d-flex align-items-center mx-0 py-4">
             <div class="col-1 col-md-2 align-items-center text-center">
 
