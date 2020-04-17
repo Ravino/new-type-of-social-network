@@ -33,8 +33,11 @@
 import ChatMessageItem from './ChatMessageItem.vue';
 import IconShare from '../icons/IconShare.vue';
 import IconBasket from '../icons/IconBasket.vue';
+
 /** @link https://binaryify.github.io/vue-custom-scrollbar/en/#why-custom-scrollbar **/
 import vueCustomScrollbar from 'vue-custom-scrollbar';
+
+/** TODO: переименовать в ForwardMessageModal **/
 import ResendMessageModal from './ResendMessageModal.vue';
 
 
@@ -88,7 +91,6 @@ export default {
         },
 
         scrollToEnd () {
-
             return setTimeout(() => {
                 const container = this.$el.querySelector('.ps-container'); // TODO: Проскролить каждый
                 container.scrollTop = container.scrollHeight;

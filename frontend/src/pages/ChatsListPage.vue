@@ -1,18 +1,17 @@
 <template>
-    <div class="row "  :class="{ 'is-chatPage' : 'ChatsListPage'===this.$root.$router.currentRoute.name }" >
+    <div class="row" :class="{ 'is-chatPage' : 'ChatsListPage'===this.$root.$router.currentRoute.name }" >
         <div class="col-sm-1 col-md-1 col-lg-1 col-xl-1 chat-page-height overflow-hidden">
             <AccountToolbarLeft></AccountToolbarLeft>
         </div>
 
         <div class="col-sm-12 col-md-9 col-lg-11 pr-3  chat-page-height">
-            <div v-if="checkIsDialogsList()" id="chatMain" class="row bg-white-br20 overflow-hidden">
+            <div v-if="checkIsDialogsList()" id="chatMain" class="row bg-white-br20 overflow-hidden" :key="componentKey+100">
                 <div class="col-sm-12 col-md-12 col-lg-4 col-xl-4 col-auto px-sm-0 px-md-0 h-100 border-right">
-                    <vue-custom-scrollbar class="chat-list-scroll py-4 h-100"  :settings="settings"
-                                          @ps-scroll-y="scrollHanle">
+                    <vue-custom-scrollbar class="chat-list-scroll py-4 h-100" :settings="customScrollBarSettings" @ps-scroll-y="scrollHandle">
                         <ul id="chatFriends" class="list-unstyled mb-0">
                             <ChatListItem v-for="(dialog, dialogIndex) in dialogsList"
-                                          v-bind:currentDialog="currentDialog" v-bind:dialog="dialog"
-                                          v-bind:key="dialogIndex" v-bind:dialogID="dialogIndex">
+                                          v-bind:dialog="dialog" v-bind:currentDialogID="currentDialogID"
+                                          v-bind:key="dialogIndex+componentKey">
                             </ChatListItem>
                         </ul>
                     </vue-custom-scrollbar>
@@ -29,7 +28,7 @@
                 </div>
             </div>
 
-            <div v-else class="row bg-white-br20">
+            <div v-else class="row bg-white-br20"  :key="componentKey+120">
                 <div v-if="isDialogsLoaded" class="col-sm-12 col-md-12 col-lg-4 col-xl-12 py-5 px-5 text-center">
                     <h3 class="text-info">Вы ещё ни с кем не общались.</h3>
                 </div>
@@ -61,13 +60,14 @@ components: {
 
 data() {
     return {
+        componentKey: 0,
         chatCarrier   : null,
-        //dialogsList   : null,
         isDialogsLoaded: false,
         currentDialog : {},
         messagesList  : [],
         isMessagesLoaded: false,
-        settings: {
+
+        customScrollBarSettings: {
             maxScrollbarLength: 60,
             useBothWheelAxes: false,
             suppressScrollX: true
@@ -95,7 +95,10 @@ methods: {
         s.subscribe(this.$store.getters.chatChannel, (topicID, data) => {
             if (this.currentDialog.id === data.data.chatId) {
                 this.addMessageToMessageList(data.data);
-                this.updateDialogsList(data.data, 'other')
+                this.updateDialogsList({
+                    message : data.data,
+                    dialog: this.currentDialog
+                }, 'other')
             }
         });
     },
@@ -107,20 +110,14 @@ methods: {
 
 
     updateDialogsList(evData, wMode){
-        let luDialog = null;
+        const updatedFields = {
+            lastMessageDT : evData.message.createdAt,
+            lastMessageText : evData.message.body,
+            isLastFromMe : (`mine` === wMode),
+            isRead : (`mine` === wMode)
+        };
 
-        this.dialogsList.map( (dItem) => {
-            if (+dItem.id === this.currentDialog.id) {
-                luDialog = dItem;
-            }
-        });
-
-        if ( luDialog ) {
-            luDialog.lastMessageDT = evData.createdAt;
-            luDialog.lastMessageText = evData.body;
-            luDialog.isLastFromMe = (`mine` === wMode);
-            luDialog.isRead = (`mine` === wMode);
-        }
+        this.$root.$user.dialogStateUpdated(+evData.dialog.id, updatedFields);
     },
 
 
@@ -145,28 +142,19 @@ methods: {
 
 
     async loadDialogsList() {
-        //let response = null;
-        //
-        //try {
-        //    response = await this.$root.$api.chatDialogs();
-        //}
-        //catch (e){
-        //    window.console.warn(e.detailMessage);
-        //    throw e;
-        //}
-
         this.isDialogsLoaded = true;
 
         const lastDialogID = +this.$store.getters.activeDialog;
         this.currentDialog = undefined;
 
         if (this.checkIsDialogsList()) {
-            this.currentDialog = this.dialogsList.find((dItem) => +dItem.id === lastDialogID);
+            this.currentDialog = this.$root.$user.dialogsSearch(+lastDialogID);
         }
 
         if (typeof this.currentDialog === 'undefined') {
-            if (this.checkIsDialogsList()) { // new user === no dialogs
-                this.currentDialog = this.$root.$user.dialogs[0];
+            this.currentDialog = this.$root.$user.firstDialog;
+
+            if (this.currentDialog) {
                 await this.$store.dispatch('SET_ACTIVE_DIALOG', this.currentDialog.id);
             }
         }
@@ -180,35 +168,52 @@ methods: {
      * @returns {boolean} - true если dialogsList определён и массив
      */
     checkIsDialogsList(){
+        window.console.log(`checkIsDialogsList`);
         return (this.$root.$user.dialogsNumber > 0);
     },
 
+
+    scrollHandle(evt) {
+        //console.log(evt);
+    },
+
+    addNewChatMessageToList(evData) {
+        this.addMessageToMessageList(evData.message);
+        this.updateDialogsList(evData, 'mine');
+
+        this.componentKey ++;
+
+        //this.$forceUpdate();
+    }
 },
 
 
 computed: {
     dialogsList(){
         return this.$root.$user.dialogs;
+    },
+
+    currentDialogID(){
+        return (this.currentDialog) ? +this.currentDialog.id : -1;
     }
 },
 
 async mounted() {
-    const isDialogsLoaded = await this.loadDialogsList();
-
-    this.$root.$on('switchToChat', this.switchToChat);
-    this.$root.$on('addNewChatMessageToList', (evData) => {
-        this.addMessageToMessageList(evData);
-        this.updateDialogsList(evData, 'mine');
-    });
+    await this.loadDialogsList();
 
     this.connectToChatChannel();
 
-    if (isDialogsLoaded) {
-        if ( this.checkIsDialogsList() ) {
-            await this.switchToChat( { dialogID : this.currentDialog.id })
-        }
+    if ( this.checkIsDialogsList()  &&  this.currentDialog ) {
+        await this.switchToChat( { dialogID : this.currentDialog.id })
     }
 
+    this.$root.$on('switchToChat', this.switchToChat);
+    this.$root.$on('addNewChatMessageToList', this.addNewChatMessageToList);
+    this.$root.$on('dialogsLoad', ()=>{
+        this.$forceUpdate();
+    });
+
+    this.$forceUpdate();
 },
 
 }

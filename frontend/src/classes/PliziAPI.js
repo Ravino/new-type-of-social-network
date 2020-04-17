@@ -389,7 +389,7 @@ class PliziAPI {
         };
 
         let response = await this.__axios.post('api/chat/send', sendData, this.authHeaders).catch((error) => {
-            this.checkIsTokenExperis(error);
+            this.checkIsTokenExperis(error, `chatSend`);
             throw new PliziAPIError(`chatSend`, error.response);
         });
 
@@ -605,14 +605,15 @@ class PliziAPI {
      * если в ответе сервер вернул, что `Token is expired`, то бросит событие `api:Unauthorized`
      * @private
      * @param {Object} error - ответ сервера с ошибкой в том виде как возвращает axios
+     * @param {string} srcMethod - имя API-метода, который вызвал ошибку
      * @throws {Event} - событие `api:Unauthorized`
      */
-    checkIsTokenExperis(error) {
+    checkIsTokenExperis(error, srcMethod) {
         const srvMsg = this.getServerMessage(error.response);
 
         if (`TOKEN_IS_EXPIRED` === srvMsg) {
             this.emit(`api:Unauthorized`, {
-                srcMethod: `userSearch`
+                srcMethod: srcMethod || `pliziAPI`
             });
         }
     }

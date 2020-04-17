@@ -42,10 +42,6 @@ class PliziNotificationData {
         return this._body;
     }
 
-    /**
-     *
-     * @returns {PliziNotificationSender}
-     */
     get sender(){
         return this._sender;
     }

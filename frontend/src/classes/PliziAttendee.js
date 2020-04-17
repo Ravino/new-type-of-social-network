@@ -7,26 +7,11 @@ class PliziAttendee{
     __defaultAvatarPath = `/images/noavatar-256.png`;
 
     /**
-     * бэкенд сказал, что это поле удалят
-     * @deprecated
+     * ID собеседника
      * @type {number}
      * @private
      */
-    _chat_id = null;
-
-    /**
-     * дата рождения собеседника
-     * @type {Date}
-     * @private
-     */
-    _birthday = null;
-
-    /**
-     * город собеседника
-     * @type {null}
-     * @private
-     */
-    _city = null;
+    _id = null;
 
     /**
      * время последней активности собеседника
@@ -72,16 +57,9 @@ class PliziAttendee{
     _sex = null;
 
     constructor( attData ){
-        this._chat_id = attData.chat_id;
-
-        this._birthday = new Date(attData.birthday);
-        this._city = attData.city;
-        this._lastActivity = (attData.lastActivity  &&  !attData.lastActivityDT) ? new Date(attData.lastActivity) : null;
-
-        // TODO: удалить когда lastActivityDT изменят на lastActivity
-        this._lastActivity = (!attData.lastActivity  &&  attData.lastActivityDT) ? new Date(attData.lastActivityDT) : null;
+        this._id = attData.id;
+        this._lastActivity = new Date(attData.lastActivity);
         this._isOnline = attData.isOnline;
-
         this._userPic = attData.userPic;
         this._firstName = attData.firstName;
         this._lastName = attData.lastName;
@@ -89,12 +67,8 @@ class PliziAttendee{
     }
 
 
-    get birthday(){
-        return this._birthday;
-    }
-
-    get city(){
-        return this._city;
+    get id(){
+        return this._id;
     }
 
     get lastActivity(){
@@ -125,23 +99,14 @@ class PliziAttendee{
     }
 
     toJSON(){
-        /** @TGA чтобы momentJS не подключать **/
-        let month = (this._birthday.getMonth()+1)+``;
-        month = (month.length === 1) ? '0'+month : month;
-
-        let day = this._birthday.getDay()+``;
-        day = (day.length === 1) ? '0'+day : day;
-
         return {
-            chat_id: this._chat_id,
-            birthday: `${this._birthday.getFullYear()}-${month}-${day}`, // this._birthday - вернёт Date, а нам нужно в формате `YYYY-MM-DD`
-            city: this.city,
+            id: this.id,
             lastActivity: (this.lastActivity.getTime() / 1000) >>> 0,
-            sex : this.sex,
-            isOnline: this.isOnline,
             userPic: this._userPic,
             firstName: this.firstName,
-            lastName: this.lastName
+            lastName: this.lastName,
+            isOnline: this.isOnline,
+            sex : this.sex
         }
     }
 }

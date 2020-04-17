@@ -39,19 +39,14 @@ methods : {
         //window.console.log(this.$root.$user.dialogsNumber, `updateMessages`);
         this.messagesNumber = 0;
 
-        let cnt = 0;
-
         this.$root.$user.dialogs.map( (dItem) => {
             if (!dItem.isLastFromMe  && !dItem.isRead) {
-                cnt++;
+                this.messagesNumber++;
             }
         });
 
         // @TGA хак чтобы отображало актуальное кол-во
-        setTimeout( () => {
-            this.messagesNumber = cnt;
-            //window.console.log(this.messagesNumber, `this.messagesNumber`);
-        }, 10 );
+        this.$forceUpdate();
     }
 },
 

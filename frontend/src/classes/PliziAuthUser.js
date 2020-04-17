@@ -245,6 +245,52 @@ class PliziAuthUser extends PliziUzer{
         return this._dialogs;
     }
 
+    /**
+     * возвращает первый (нулевой) диалог из списка диалогов, или NULL если список диалогов пустой
+     * @returns {PliziDialog|null}
+     */
+    get firstDialog(){
+        if (this._dialogs.length > 0)
+            return this._dialogs[0];
+
+        return null;
+    }
+
+
+    /**
+     * поиск диалога по его ID
+     * @param {number} dialogID - ID нужного диалога
+     * @returns {PliziDialog|null} - нужный диалог как объект типа PliziDialog, или NULL если не нашли
+     */
+    dialogsSearch(dialogID){
+        let found = null;
+
+        // TODO: @TGA перевести потом на .filter
+        this.dialogs.map( (dItem) => {
+            if (dialogID === dItem.id) {
+                found = new PliziDialog( dItem.toJSON() );
+            }
+        });
+
+        return found;
+    }
+
+    /**
+     *
+     * @param {number} dialogID - ID диалога который нужно обновить
+     * @param {object} updatedData - объект с полями lastMessageDT, lastMessageText, isLastFromMe, isRead
+     */
+    dialogStateUpdated(dialogID, updatedData){
+        let dlg = this.dialogsSearch(dialogID);
+
+        if (dlg) {
+            dlg.stateUpdate(updatedData);
+        }
+        else {
+            window.console.warn(`PliziAuthUser->dialogStateUpdated: диалог с ID ${dialogID} не найден!`);
+        }
+    }
+
     dialogsClean(){
         this._dialogs = [];
     }

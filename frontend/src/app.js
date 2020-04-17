@@ -1,12 +1,16 @@
 import Vue from 'vue';
-import VueRouter from 'vue-router';
-import Vuelidate from 'vuelidate';
 
-import TextareaAutosize from 'vue-textarea-autosize'
+import VueRouter from 'vue-router';
+Vue.use(VueRouter);
+
+import Vuelidate from 'vuelidate';
+Vue.use(Vuelidate);
+
+/** @link https://www.npmjs.com/package/vue-textarea-autosize **/
+import TextareaAutosize from 'vue-textarea-autosize';
+Vue.use(TextareaAutosize);
 
 import Multiselect from 'vue-multiselect';
-
-// register globally
 Vue.component('multiselect', Multiselect);
 
 /**
@@ -55,7 +59,6 @@ Vue.prototype.$alert = function(message, clazz, timeOut){
     });
 };
 
-
 // @TGA пока не нужно
 //import { VueResponsiveComponents } from 'vue-responsive-components';
 // Vue.use(VueResponsiveComponents);
@@ -69,10 +72,10 @@ import './libs/facebook.js';
 window.Vue = Vue;
 
 Vue.config.productionTip = false;
-Vue.use(VueRouter);
-Vue.use(Vuelidate);
 
-Vue.use(TextareaAutosize);
+Vue.config.silent = false;
+
+Vue.config.devtools = true;
 
 import App from './App.vue';
 

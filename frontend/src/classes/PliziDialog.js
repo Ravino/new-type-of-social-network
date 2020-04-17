@@ -25,14 +25,6 @@ class PliziDialog{
     _name = null;
 
     /**
-     * * пока не используется, в будущем возможно аватарка группового чата
-     * @deprecated
-     * @type {string}
-     * @private
-     */
-    _userPic = null;
-
-    /**
      * текст последнего сообщений
      * @type {string}
      * @private
@@ -61,14 +53,6 @@ class PliziDialog{
     _isLastFromMe = null;
 
     /**
-     * онлайн (кто?)
-     * @deprecated
-     * @type {boolean}
-     * @private
-     */
-    _isOnline = null;
-
-    /**
      * участники чата
      * @type {PliziAttendee[]}
      * @private
@@ -79,12 +63,10 @@ class PliziDialog{
     constructor(dialogData){
         this._id = dialogData.id;
         this._name = dialogData.name;
-        this._userPic = dialogData.userPic;
         this._lastMessageText = dialogData.lastMessageText;
         this._lastMessageDT = new Date(dialogData.lastMessageDT);
         this._isRead = dialogData.isRead;
         this._isLastFromMe = dialogData.isLastFromMe;
-        this._isOnline = dialogData.isOnline;
 
         this._attendees = [];
         dialogData.attendees.map( (aItem) => {
@@ -102,12 +84,10 @@ class PliziDialog{
         return {
             id: this.id,
             name: this.name,
-            userPic: this.userPic,
             lastMessageText: this.lastMessageText,
             lastMessageDT: (this.lastMessageDT.getTime() / 1000) >>> 0,
             isRead: this.isRead,
             isLastFromMe: this.isLastFromMe,
-            isOnline: this.isOnline,
             attendees: atts
         }
     }
@@ -118,13 +98,6 @@ class PliziDialog{
 
     get name(){
         return this._name;
-    }
-
-    get userPic(){
-        if (this._userPic!==``)
-            return this._userPic;
-
-        return this.__defaultAvatarPath;
     }
 
     get lastMessageText(){
@@ -143,16 +116,45 @@ class PliziDialog{
         return this._isLastFromMe;
     }
 
-    get isOnline(){
-        return this._isOnline;
-    }
-
+    /**
+     * @returns {PliziAttendee[]}
+     */
     get attendees(){
         return this._attendees;
     }
 
+
+    /**
+     * @returns {PliziAttendee}
+     */
     get companion(){
         return this.attendees[0];
+    }
+
+    set lastMessageText( value ){
+        this._lastMessageText = value.trim();
+    }
+
+    /**
+     * @param {number|date} value
+     */
+    set lastMessageDT( value ){
+        this._lastMessageDT = new Date(value);
+    }
+
+    set isRead( value ){
+        this._isRead = !!value;
+    }
+
+    set isLastFromMe( value ){
+        this._isLastFromMe = !!value;
+    }
+
+    stateUpdate(updatedData) {
+        this.lastMessageDT = updatedData.lastMessageDT;
+        this.lastMessageText = updatedData.lastMessageText;
+        this.isLastFromMe = updatedData.isLastFromMe;
+        this.isRead = updatedData.isRead;
     }
 }
 
