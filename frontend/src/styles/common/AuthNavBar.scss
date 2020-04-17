@@ -39,6 +39,25 @@ $plzNavBarProfileColor: #A6A7A9;
         }
     }
 
+    #topSearch {
+        box-shadow: none;
+        border: 0;
+        outline: none;
+    }
+    .btn-search {
+        position: absolute;
+        top: 50%;
+        right: 0;
+        transform: translateY(-50%);
+        box-shadow: none;
+        border: 0;
+        outline: none;
+        &:hover {
+            svg {
+                fill: $iconHoverColor;
+            }
+        }
+    }
 }
 
 .plz-top-player {
