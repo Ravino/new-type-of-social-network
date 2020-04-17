@@ -1,6 +1,7 @@
 import PliziUzer from './PliziUser.js';
 import PliziInvitation from './PliziInvitation.js';
 import PliziNotification from './PliziNotification.js';
+import PliziDialog from './PliziDialog.js';
 
 class PliziAuthUser extends PliziUzer{
     /**
@@ -9,20 +10,6 @@ class PliziAuthUser extends PliziUzer{
      * @private
      */
     __localStorageKey = `pliziUser`;
-
-    /**
-     *
-     * @type {boolean}
-     * @private
-     */
-    __isDataReady = false;
-
-    /**
-     *
-     * @type {number}
-     * @private
-     */
-    _id = -1;
 
     /**
      *
@@ -57,6 +44,13 @@ class PliziAuthUser extends PliziUzer{
      * @private
      */
     _notifications = [];
+
+    /**
+     * список диалогов
+     * @type {PliziDialog[]}
+     * @private
+     */
+    _dialogs = [];
 
 
     /**
@@ -202,7 +196,6 @@ class PliziAuthUser extends PliziUzer{
         });
     }
 
-
     /**
      * объект который надо удалить
      * @param {PliziInvitation|{id:number}} invit
@@ -240,7 +233,31 @@ class PliziAuthUser extends PliziUzer{
         this.notificationsClean();
 
         notifs.map( (invItem) => {
-            this._notifications.push( new PliziNotification(invItem ) );
+            this._notifications.push( new PliziNotification(invItem) );
+        });
+    }
+
+    get dialogsNumber(){
+        return this._dialogs.length;
+    }
+
+    get dialogs(){
+        return this._dialogs;
+    }
+
+    dialogsClean(){
+        this._dialogs = [];
+    }
+
+    /**
+     * должен получать респонс от сервера, сам преобразует в коллекцию PliziDialog
+     * @param {object[]} dialogs
+     */
+    dialogsLoad(dialogs){
+        this.dialogsClean();
+
+        dialogs.map( (invItem) => {
+            this._dialogs.push( new PliziDialog(invItem) );
         });
     }
 
@@ -261,20 +278,6 @@ class PliziAuthUser extends PliziUzer{
         this.storeData();
     }
 
-    /**
-     * @deprecated
-     * Обновление токена
-     * @param newToken
-     */
-    updateToken(newToken) {
-        // FIXME: зачем тут вызов storeData ?
-        // токен в localStorage это не сохранит
-        // этот метод должен решать одну задачу - сохранение токена в localStorage
-        // для того, чтобы просто сохранить в класс лучше использовать сеттер (который уже есть выше)
-        // и в нём заодно и сохранять в localStorage
-        this.__token = newToken;
-        this.storeData();
-    }
 
     toJSON() {
         let res = super.toJSON();
