@@ -78,7 +78,7 @@ class ChatController extends Controller
             Auth::user()->id,
             $request->get('replyOnMessageId'),
             $request->get('forwardFromChatId'),
-            $request->get('attachmentIds'),
+            $request->get('attachmentIds') ? $request->get('attachmentIds') : []
         );
         return response()->json(['status' => 'OK']);
     }
@@ -89,7 +89,12 @@ class ChatController extends Controller
      */
     public function sendToUser(SendMessageToUserRequest $request)
     {
-        $chat_id = $this->chatService->sendToUser($request->get('body'), $request->get('user_id'), Auth::user()->id, $request->get('attachmentIds'),);
+        $chat_id = $this->chatService->sendToUser(
+            $request->get('body'),
+            $request->get('user_id'),
+            Auth::user()->id,
+            $request->get('attachmentIds') ? $request->get('attachmentIds') : []
+        );
         return response()->json(['status' => 'OK', 'chatId' => $chat_id]);
     }
 

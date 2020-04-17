@@ -43,16 +43,17 @@ class ChatRepository
                 'users.last_activity_dt',
                 'profiles.first_name',
                 'profiles.last_name',
-                'profiles.birthday',
+                'profiles.sex',
                 'profiles.city',
                 'profiles.user_pic'
             ])->toArray();
 
         foreach( $attendees as $attendee) {
-            $attendee->lastActivityDT = $attendee->last_activity_dt;
+            $attendee->lastActivity = $attendee->last_activity_dt;
             $attendee->userPic = $attendee->user_pic;
             $attendee->firstName = $attendee->first_name;
             $attendee->lastName = $attendee->last_name;
+            $attendee->isOnline = $this->isOnline($attendee->last_activity_dt);
             unset($attendee->first_name);
             unset($attendee->last_name);
             unset($attendee->user_pic);
@@ -68,7 +69,6 @@ class ChatRepository
             $dialog->lastMessageDT = $item->last_message_time;
             $dialog->isRead = (bool)$item->last_is_read;
             $dialog->isLastFromMe = ($user_id == $item->last_user_id);
-            $dialog->isOnline = ($user_id == $item->last_user_id);
             $dialog->attendees = ArrayUtils::objArraySearch($attendees, 'chat_id', $item->id);
             $collection[] = $dialog;
         }
@@ -136,5 +136,17 @@ class ChatRepository
             ['chat_id' => $chat_id, 'user_id' => $reciever_id, 'created_at' => time()]
         ]);
         return $chat_id;
+    }
+
+
+    /**
+     * @param $last_activity_dt
+     * @return bool
+     */
+    public function isOnline($last_activity_dt) : bool
+    {
+        // TODO: Need to remove it from here
+        $period = config('user_activity_margin');
+        return $last_activity_dt > strtotime("-$period minutes");
     }
 }

@@ -1,6 +1,6 @@
 <template>
     <div class="row ">
-        <div class="col-sm-1 col-md-1 col-lg-1 col-xl-1 ">
+        <div class="col-sm-1 col-md-1 col-lg-1 col-xl-1" :class="{ 'is-chatPage' : 'ChatsListPage'===this.$root.$router.currentRoute.name }">
             <AccountToolbarLeft></AccountToolbarLeft>
         </div>
 
@@ -25,7 +25,7 @@
                     <ChatMessages v-if="isMessagesLoaded" v-bind:messages="messagesList" v-bind:currentDialog="currentDialog"></ChatMessages>
                     <Spinner v-else v-bind:message="`Сообщения загружаются`"></Spinner>
 
-                    <ChatFooter v-bind:currentDialog="currentDialog"  ></ChatFooter>
+                    <ChatFooter v-bind:currentDialog="currentDialog" ref="ChatFooter"></ChatFooter>
                 </div>
             </div>
 
@@ -136,7 +136,7 @@ methods: {
             throw e;
         }
 
-        this.$store.dispatch('SET_ACTIVE_DIALOG', evData.dialogID);
+        await this.$store.dispatch('SET_ACTIVE_DIALOG', evData.dialogID);
 
         this.messagesList = messageResponse;
         this.currentDialog = this.dialogsList.find((dialog) => dialog.id === evData.dialogID);
@@ -168,7 +168,7 @@ methods: {
         if (typeof this.currentDialog === 'undefined') {
             if (this.checkIsDialogsList()) { // new user === no dialogs
                 this.currentDialog = this.dialogsList[0];
-                this.$store.dispatch('SET_ACTIVE_DIALOG', this.currentDialog.id);
+                await this.$store.dispatch('SET_ACTIVE_DIALOG', this.currentDialog.id);
             }
         }
 
@@ -194,19 +194,20 @@ methods: {
 async mounted() {
     const isDialogsLoaded = await this.loadDialogsList();
 
-    if (isDialogsLoaded) {
-        if (Array.isArray(this.dialogsList) && this.dialogsList  &&  this.currentDialog) {
-            this.switchToChat( { dialogID : this.currentDialog.id })
-        }
-    }
-
     this.$root.$on('switchToChat', this.switchToChat);
-    this.$root.$on('addNewChatMessageToList', (evData)=>{
+    this.$root.$on('addNewChatMessageToList', (evData) => {
         this.addMessageToMessageList(evData);
         this.updateDialogsList(evData, 'mine');
     });
 
     this.connectToChatChannel();
+
+    if (isDialogsLoaded) {
+        if (Array.isArray(this.dialogsList) && this.dialogsList  &&  this.currentDialog) {
+            await this.switchToChat( { dialogID : this.currentDialog.id })
+        }
+    }
+
 },
 
 }

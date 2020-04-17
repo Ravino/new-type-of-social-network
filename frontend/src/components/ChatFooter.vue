@@ -51,8 +51,8 @@ import IconAddFile from '../icons/IconAddFile.vue';
 import IconAddCamera from '../icons/IconAddCamera.vue';
 import IconAddSmile from '../icons/IconAddSmile.vue';
 
-/*-  TODO: Вставка файлов */
-/*- @link https://www.npmjs.com/package/vue-filepond*/
+/**  TODO: Вставка файлов **/
+/** @link https://www.npmjs.com/package/vue-filepond **/
 
 export default {
 name: 'ChatFooter',
