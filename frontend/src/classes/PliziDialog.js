@@ -151,6 +151,9 @@ class PliziDialog{
         return this._attendees;
     }
 
+    get companion(){
+        return this.attendees[0];
+    }
 }
 
 export { PliziDialog as default}

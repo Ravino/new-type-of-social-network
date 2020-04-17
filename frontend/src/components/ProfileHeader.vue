@@ -7,7 +7,7 @@
 
                     <div v-if="isOwner===true" class="plz-profile-userpic-footer">
                         <div class="plz-profile-userpic-edit file-label d-flex align-items-center justify-content-between">
-                            <label for="userAvatarFile" class="btn align-items-center justify-content-center d-flex w-75 border-right">Редактировать</label>
+                            <label for="userAvatarFile" class="btn align-items-center justify-content-center d-flex w-75 border-right m-0">Редактировать</label>
 
                             <button class="btn align-items-center justify-content-center d-flex w-25" @click="showProfileOptionsModal()" title="опции">
                                 <span class="ps-dot"></span>

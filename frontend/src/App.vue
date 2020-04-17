@@ -115,7 +115,7 @@ methods: {
 
     afterUserLoad(evData) {
         if (evData.token !== ``  &&  evData.user) {
-            window.console.log(`afterUserLoad`);
+            //window.console.log(`afterUserLoad`);
 
             this.$root.$isAuth = true;
             this.$root.$api.token = evData.token;
@@ -127,6 +127,7 @@ methods: {
             // TODO: перенести отсюда - слишком часто будет вызываться
             this.loadInvitations();
             this.loadNotifications();
+            this.loadDialogs();
         }
     },
 
