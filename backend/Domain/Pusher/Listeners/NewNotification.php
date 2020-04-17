@@ -5,10 +5,14 @@ namespace Domain\Pusher\Listeners;
 
 use App\Notifications\UserSystemNotifications;
 use Domain\Pusher\WampServer as Pusher;
+use Illuminate\Bus\Queueable;
+use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Notifications\Events\NotificationSent;
 
-class NewNotification
+class NewNotification implements ShouldQueue
 {
+
+    use Queueable;
 
     /**
      * @param NotificationSent $event

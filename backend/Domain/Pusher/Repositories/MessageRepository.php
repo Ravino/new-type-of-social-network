@@ -6,6 +6,7 @@ namespace Domain\Pusher\Repositories;
 
 use Carbon\Carbon;
 use Domain\Pusher\DTOs\Message;
+use Domain\Pusher\Http\Resources\Chat\ChatCollection;
 use Domain\Pusher\Http\Resources\Message\MessageCollection;
 use Domain\Pusher\Models\ChatMessage;
 
@@ -48,7 +49,10 @@ class MessageRepository
             ->join('profiles', 'profiles.user_id', '=', 'chat_messages.user_id')
             ->leftJoin('chat_message_status', 'chat_message_status.message_id', '=', 'chat_messages.id')
             ->orderBy('chat_messages.id')
-            ->get();
+            ->get([
+                'profiles.*',
+                'chat_messages.*',
+            ]);
 
         return new MessageCollection($items, $user_id);
     }

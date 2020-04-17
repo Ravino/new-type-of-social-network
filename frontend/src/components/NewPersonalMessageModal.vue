@@ -38,13 +38,19 @@
                             <label for="privateMessage" class="col-12 col-form-label">Ваше сообщение</label>
 
                             <div class="col-9 py-1">
-                                <input type="text" class="form-control border-0"
-                                       v-model="privateMessage" id="privateMessage" ref="privateMessage"
-                                       @keydown="personalMsgKeyDownCheck($event)"
-                                       placeholder="Начните печатать..." />
+
+                                <textarea-autosize
+                                    class="form-control border-0"
+                                    placeholder="Начните печатать..."
+                                    id="privateMessage" ref="privateMessage"
+                                    v-model="privateMessage"
+                                    @keydown="personalMsgKeyDownCheck($event)"
+                                    :min-height="10"
+                                    :max-height="200"
+                                />
                             </div>
 
-                            <div class="col-3">
+                            <div class="col-3 pt-2">
                                 <div class="btn-group ">
                                     <button class="btn btn-link mx-0 px-1 btn-add-file" type="button">
                                         <IconAddFile />
