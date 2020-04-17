@@ -271,6 +271,7 @@
                 response = await this.$root.$api.updateUser(formData);
 
                 if (response !== null) {
+                    //FIXME: переписать на специальный метод
                     this.$root.$user.updateData(response.data);
 
                     if (fieldName === `firstName` || fieldName === `lastName`) {

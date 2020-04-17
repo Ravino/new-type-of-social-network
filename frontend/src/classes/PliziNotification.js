@@ -90,8 +90,8 @@ class PliziNotification {
     toJSON(){
         return {
             id : this._id,
-            createdAt: (this._createdAt) ? (this._createdAt.getTime() / 1000)>>>0 : null ,
-            reedAt : (this._readAt) ? (_.readAt.getTime() / 1000)>>>0 : null,
+            createdAt: (this._createdAt) ? (this.createdAt.getTime() / 1000)>>>0 : null ,
+            reedAt : (this._readAt) ? (this.readAt.getTime() / 1000)>>>0 : null,
             data : (this._data) ? this.data.toJSON() : null
         }
     }

@@ -24,7 +24,7 @@
                         <router-view></router-view>
                     </transition>
                 </main>
-                <AuthFooter></AuthFooter>
+                <AuthFooter v-if=" 'ChatsListPage'!==this.$root.$router.currentRoute.name "></AuthFooter>
             </div>
 
             <AlertModal v-if="mainModalVisible"
@@ -164,6 +164,25 @@ methods: {
         if (apiResponse) {
             this.$root.$user.notificationsLoad(apiResponse);
             this.$root.$emit('notificationsLoad', {});
+        }
+
+        return true;
+    },
+
+
+    async loadDialogs() {
+        let apiResponse = null;
+
+        try {
+            apiResponse = await this.$root.$api.chatDialogs();
+        }
+        catch (e){
+            window.console.warn(e.detailMessage);
+        }
+
+        if (apiResponse) {
+            this.$root.$user.dialogsLoad(apiResponse);
+            this.$root.$emit('dialogsLoad', {});
         }
 
         return true;
