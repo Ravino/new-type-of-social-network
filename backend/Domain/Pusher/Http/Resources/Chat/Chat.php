@@ -6,6 +6,7 @@ use App\Http\Resources\Community\Community;
 use App\Http\Resources\User\User;
 use App\Models\User as UserModel;
 use App\Models\Community as CommunityModel;
+use Domain\Pusher\Http\Resources\Chat\AttendeesCollection;
 use Illuminate\Http\Resources\Json\JsonResource;
 
 class Chat extends JsonResource
@@ -36,7 +37,8 @@ class Chat extends JsonResource
             'lastMessageText' => $this->last_message_body,
             'lastMessageDT' => $this->last_message_time,
             'isRead' => (bool)$this->last_is_read,
-            'isLastFromMe' => ($this->user_id == $this->last_user_id),
+            'isLastFromMe' => ($this->userId == $this->last_user_id),
+            'attendees' => new AttendeesCollection($this->attendees, $this->userId)
         ];
     }
 }
