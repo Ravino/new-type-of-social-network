@@ -5,10 +5,11 @@ $notificationTimeColor: #bab8b8;
 $notificationNameColor: #363636;
 $notificationOnlineColor: #9FCD48;
 $notificationOfflineColor: #CACAC9;
-$maxTextWidth: 120px;
+$maxTextWidth: 130px;
 $notificationPicSize: 50px;
 
-.plizi-notification-item-user {
+.plizi-notification-item-user,
+.plizi-invitation-item {
     transition: .4s;
 
     .user-friend-desc {
@@ -18,7 +19,8 @@ $notificationPicSize: 50px;
     }
 }
 
-.plizi-notification-item {
+.plizi-notification-item,
+.plizi-invitation-item {
     &-pic {
         display: inline-block;
         position: relative;
@@ -136,3 +138,96 @@ $notificationPicSize: 50px;
     }
 
 }
+
+
+/*-
+$invitationUserPicSize: 48px;
+$invitationTimeColor: #9A9A9A;
+$invitationNameColor: #363636;
+$invitationOnlineColor: #9FCD48;
+$invitationOfflineColor: #CACAC9;
+
+.plizi-invitation-item-user {
+    transition: .4s;
+
+    .user-friend-desc {
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+    }
+}
+
+.plizi-invitation-item {
+    &-pic {
+        display: inline-block;
+        position: relative;
+        height: $invitationUserPicSize;
+        width: $invitationUserPicSize;
+
+        img {
+            display: inline-block;
+            width: $invitationUserPicSize;
+            height: $invitationUserPicSize;
+        }
+    }
+
+    &-isonline {
+        display: block;
+        position: absolute;
+        width: 10px;
+        height: 10px;
+        right: 0px;
+        bottom: 0px;
+        background-color: $invitationOnlineColor;
+        border: 1px solid white;
+        border-radius: 100%;
+    }
+
+    &-isoffline {
+        display: block;
+        position: absolute;
+        width: 10px;
+        height: 10px;
+        right: 0px;
+        bottom: 0px;
+        background-color: $invitationOfflineColor;
+        border: 1px solid white;
+        border-radius: 100%;
+    }
+
+    &-body {
+        &-top {
+            time {
+                font-size: 11px;
+                color: $invitationTimeColor; // add color to var
+            }
+
+        }
+    }
+
+    &-name {
+        font-size: 13px;
+        font-weight: 600;
+        color: $invitationNameColor;
+        line-height: 20px;
+        cursor: pointer;
+
+        &:hover {
+            text-decoration: underline;
+            color: $invitationTimeColor;
+        }
+    }
+
+    &-desc {
+        font-size: 12px;
+        color: $invitationTimeColor;
+    }
+
+    &-details {
+        font-size: 12px;
+        color: $invitationNameColor;
+    }
+
+}
+
+    */
