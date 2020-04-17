@@ -48,7 +48,10 @@ class MessageRepository
             ->join('profiles', 'profiles.user_id', '=', 'chat_messages.user_id')
             ->leftJoin('chat_message_status', 'chat_message_status.message_id', '=', 'chat_messages.id')
             ->orderBy('chat_messages.id')
-            ->get();
+            ->get([
+                'profiles.*',
+                'chat_messages.*',
+            ]);
 
         return new MessageCollection($items, $user_id);
     }

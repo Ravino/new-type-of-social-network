@@ -36,7 +36,7 @@ class MessageCollection extends ResourceCollection
                     'userPic' => $message->user_pic,
                     'sex' => $message->sex,
                     'body' => $message->body,
-                    'isMine' => ($message->user_id == $this->user_id),
+                    'isMine' => ($message->user_id === $this->user_id),
                     'isRead' => $message->is_read,
                     'isEdited' => false,
                     'createdAt' => $message->created_at,
