@@ -29,15 +29,21 @@
                          :aria-labelledby="`postSettings` + post.id">
 
                         <div class="nav-item">
-                            <router-link tag="a" class="dropdown-item px-0 py-1" to="/editing">Редактировать</router-link>
+                            <router-link tag="a" class="dropdown-item px-0 py-1" to="/editing">
+                                Редактировать
+                            </router-link>
                         </div>
 
                         <div class="nav-item">
-                            <router-link tag="a" class="dropdown-item px-0 py-1" to="/account">Настройки</router-link>
+                            <router-link tag="a" class="dropdown-item px-0 py-1" to="/account">
+                                Настройки
+                            </router-link>
                         </div>
 
                         <div class="nav-item">
-                            <router-link tag="a" class="dropdown-item px-0 py-1" to="/help">Помощь</router-link>
+                            <router-link tag="a" class="dropdown-item px-0 py-1" to="/help">
+                                Помощь
+                            </router-link>
                         </div>
                     </div>
                 </div>
@@ -45,12 +51,12 @@
         </div>
 
         <div class="col-12 plz-post-item-body pt-4 pb-2">
-            <p class="post-main-text mb-2" v-html="this.$options.filters.toBR(postBody)"></p>
+            <p v-if="postBody" class="post-main-text mb-2" v-html="this.$options.filters.toBR(postBody)"></p>
         </div>
 
         <div class="col-12 plz-post-item-images">
             <div v-if="(postImages && postImages.length > 0)"
-                 :id="post_images_id"
+                 :id="postImagesId"
                  class="post-images">
             </div>
         </div>
@@ -108,7 +114,7 @@
             },
             posterName() {
                 return this.post.user ? this.post.user.profile.firstName + " " + this.post.user.profile.lastName
-                    : this.post.community.name;
+                    : this.post.community ? this.post.community.name : null;
             },
             postBody() {
                 return this.post.body;
@@ -134,7 +140,7 @@
         },
         data() {
             return {
-                post_images_id: 'postImages-' + Math.floor(Math.random() * 1000),
+                postImagesId: 'postImages-' + Math.floor(Math.random() * 1000),
                 image: {
                     width: this.$router.currentRoute.name === 'NewsPage' ? 752 : 538,
                     height: 337,
@@ -144,8 +150,7 @@
         },
         methods: {
             calcPic() {
-                let self = this;
-                let post_images_div = document.querySelector('#' + this.post_images_id);
+                let post_images_div = document.querySelector('#' + this.postImagesId);
                 let post_images = this.postImages;
                 let count_post_images = this.postImages.length;
                 let parent_div = document.createElement('div');
@@ -156,7 +161,7 @@
                 child_div.classList.add('d-flex', 'flex-wrap');
 
                 if (post_images) {
-                    post_images.forEach(function (post_image, index) {
+                    post_images.forEach((post_image, index) => {
                         image = document.createElement('img');
                         image.setAttribute('src', post_image);
 
@@ -165,7 +170,7 @@
                             parent_div.append(image);
                         } else if (count_post_images === 2) {
                             image.classList.add('w-100');
-                            let margin = self.image['margin for two images'] / 2;
+                            let margin = this.image['margin for two images'] / 2;
                             if (index === 0) {
                                 image.style = "margin-right: " + margin + 'px';
                             } else {
@@ -177,18 +182,18 @@
                             let second_child_div = document.createElement('div');
 
                             if (index === 0) {
-                                image.style = "width: " + self.image.width + "px; margin-right: 7px";
+                                image.style = "width: " + this.image.width + "px; margin-right: 7px";
                                 second_child_div.append(image);
                                 parent_div.append(second_child_div);
                             } else {
                                 if ((((count_post_images - 1) % 2 === 0) && count_post_images < 5) || count_post_images === 4) {
-                                    let height = self.image.height / (count_post_images - 1);
+                                    let height = this.image.height / (count_post_images - 1);
                                     let margin = count_post_images - 1 !== index ? 6 : null;
                                     image.style = "width: 312px; height: " + (height - margin) + "px; margin-bottom: " + margin + "px;";
                                     child_div.append(image);
                                 } else {
                                     let width = 280 / 2;
-                                    let height = self.image.height / 2;
+                                    let height = this.image.height / 2;
                                     let margin_bottom = 6;
                                     let margin_right = index % 2 !== 0 ? 6 : null;
 
