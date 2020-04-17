@@ -68,6 +68,7 @@ services:
       - php_api
 
   queue_worker:
+    build: ./backend/docker/
     container_name: "plizi_queue_worker"
     working_dir: /app
     volumes:
