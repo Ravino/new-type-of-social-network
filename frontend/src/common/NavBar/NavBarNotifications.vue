@@ -20,6 +20,7 @@
         </div>
     </div>
 </template>
+
 <script>
 import IconBell from '../../icons/IconBell.vue';
 import NotificationItem from '../../components/NotificationItem.vue';
