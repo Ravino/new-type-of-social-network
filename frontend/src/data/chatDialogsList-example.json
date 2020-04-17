@@ -8,7 +8,6 @@
         "isRead": true,
         "isLastFromMe": false,
         "isOnline": false,
-
         "attendees": [
             {
                 "chat_id": 80,
@@ -25,11 +24,6 @@
             }
         ]
     },
-
-
-
-
-
     {
         "id": 98,
         "name": "Кирилловaа Антонина Дмитриевна",

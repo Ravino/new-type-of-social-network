@@ -62,7 +62,7 @@ components: {
 data() {
     return {
         chatCarrier   : null,
-        dialogsList   : null,
+        //dialogsList   : null,
         isDialogsLoaded: false,
         currentDialog : {},
         messagesList  : [],
@@ -145,17 +145,16 @@ methods: {
 
 
     async loadDialogsList() {
-        let response = null;
+        //let response = null;
+        //
+        //try {
+        //    response = await this.$root.$api.chatDialogs();
+        //}
+        //catch (e){
+        //    window.console.warn(e.detailMessage);
+        //    throw e;
+        //}
 
-        try {
-            response = await this.$root.$api.chatDialogs();
-        }
-        catch (e){
-            window.console.warn(e.detailMessage);
-            throw e;
-        }
-
-        this.dialogsList = response;
         this.isDialogsLoaded = true;
 
         const lastDialogID = +this.$store.getters.activeDialog;
@@ -167,7 +166,7 @@ methods: {
 
         if (typeof this.currentDialog === 'undefined') {
             if (this.checkIsDialogsList()) { // new user === no dialogs
-                this.currentDialog = this.dialogsList[0];
+                this.currentDialog = this.$root.$user.dialogs[0];
                 await this.$store.dispatch('SET_ACTIVE_DIALOG', this.currentDialog.id);
             }
         }
@@ -181,7 +180,7 @@ methods: {
      * @returns {boolean} - true если dialogsList определён и массив
      */
     checkIsDialogsList(){
-        return (typeof this.dialogsList!='undefined'  &&  Array.isArray(this.dialogsList)  &&  this.dialogsList  &&  this.dialogsList.length>0);
+        return (this.$root.$user.dialogsNumber > 0);
     },
 
 
@@ -190,6 +189,12 @@ methods: {
     }
 },
 
+
+computed: {
+    dialogsList(){
+        return this.$root.$user.dialogs;
+    }
+},
 
 async mounted() {
     const isDialogsLoaded = await this.loadDialogsList();
@@ -203,7 +208,7 @@ async mounted() {
     this.connectToChatChannel();
 
     if (isDialogsLoaded) {
-        if (Array.isArray(this.dialogsList) && this.dialogsList  &&  this.currentDialog) {
+        if ( this.checkIsDialogsList() ) {
             await this.switchToChat( { dialogID : this.currentDialog.id })
         }
     }
