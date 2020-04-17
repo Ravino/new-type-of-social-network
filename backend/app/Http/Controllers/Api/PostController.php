@@ -37,13 +37,7 @@ class PostController extends Controller
      */
     public function userPosts($id) {
         $user = User::find($id);
-        if($user) {
-            if($user->canShowWallTo(\Auth::user())) {
-                return new PostCollection($user->allPosts);
-            }
-            return response()->json(['message' => 'Not allowed'], 403);
-        }
-        return response()->json(['message' => 'Пользователь не найден'], 404);
+        return new PostCollection($user->allPosts);
     }
 
     /**
@@ -85,6 +79,7 @@ class PostController extends Controller
             'sender' => [
                 'firstName' => \Auth::user()->profile->first_name,
                 'lastName' => \Auth::user()->profile->last_name,
+                'sex' => \Auth::user()->profile->sex,
                 'userPic' => \Auth::user()->profile->user_pic,
                 'lastActivity' => \Auth::user()->last_activity_dt,
                 'id' => \Auth::user()->id,

@@ -24,11 +24,15 @@ Route::group(['middleware' => ['auth.jwt', 'track.activity']], function () {
         Route::get('messages/{chat_id}', 'Api\ChatController@messages');
         Route::post('send', 'Api\ChatController@send');
         Route::post('message/user', 'Api\ChatController@sendToUser');
+        Route::post('message/attachments', 'Api\ChatController@uploadAttachments');
     });
 
     Route::get('posts', 'Api\PostController@index');
     Route::get('user/posts', 'Api\PostController@myPosts');
-    Route::get('user/{id}/posts', 'Api\PostController@userPosts');
+    Route::get('user/{id}/posts', [
+        'middleware' => ['privacy.role:view_wall_permissions'],
+        'uses' => 'Api\PostController@userPosts'
+    ]);
     Route::get('communities/{community_id}/posts', 'Api\PostController@communityPosts');
     Route::get('posts/{id}', 'Api\PostController@get');
     Route::post('posts', 'Api\PostController@storeByUser');
@@ -37,7 +41,10 @@ Route::group(['middleware' => ['auth.jwt', 'track.activity']], function () {
     Route::get('user/notifications', 'Api\UserController@notifications');
     Route::get('user/friendship', 'Api\UserController@getMyFriendsList');
     Route::get('user/friendship/pending', 'Api\UserController@getMyPendingFriendsList');
-    Route::get('user/{id}/friendship', 'Api\UserController@getUserFriendsList');
+    Route::get('user/{id}/friendship', [
+        'middleware' => ['privacy.role:view_friends_permissions'],
+        'uses' => 'Api\UserController@getUserFriendsList'
+    ]);
     Route::post('user/friendship', 'Api\UserController@sendFriendshipRequest');
     Route::post('user/friendship/accept', 'Api\UserController@acceptFriendshipRequest');
     Route::post('user/friendship/decline', 'Api\UserController@declineFriendshipRequest');
@@ -51,6 +58,7 @@ Route::group(['middleware' => ['auth.jwt', 'track.activity']], function () {
     Route::resource('user', 'Api\ProfileController', ['only' => ['index', 'show']]);
     Route::post('user/profile/image', 'Api\ImageUploadController@upload');
     Route::patch('user/privacy', 'Api\UserPrivacySettingController@patch');
+    Route::get('user/privacy/roles', 'Api\UserPrivacySettingController@roles');
     Route::get('user/search/{search}', 'Api\UserController@search');
     Route::post('user/blacklist', 'Api\UserBlacklistController@post');
     Route::delete('user/blacklist', 'Api\UserBlacklistController@delete');

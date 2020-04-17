@@ -1,7 +1,7 @@
 <?php
 
 
-namespace Domain\Pusher\Models;
+namespace Domain\Pusher\DTOs;
 
 
 class Dialog
