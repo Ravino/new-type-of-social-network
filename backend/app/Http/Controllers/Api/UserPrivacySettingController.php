@@ -3,6 +3,8 @@
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
+use App\Http\Resources\User\PrivacyRolesCollection;
+use App\Models\Rbac\Role;
 use App\Models\User;
 use Domain\Pusher\WampServer;
 use Illuminate\Http\Request;
@@ -37,5 +39,10 @@ class UserPrivacySettingController extends Controller
         ]));
 
         return response()->json(['message' => 'updated'], 201);
+    }
+
+    public function roles()
+    {
+        return new PrivacyRolesCollection(Role::all());
     }
 }

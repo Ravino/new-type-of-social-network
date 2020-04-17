@@ -41,8 +41,77 @@
         data() {
             return {}
         },
-        methods: {
-
-        },
+        methods: {},
     }
 </script>
+
+<style lang="scss">
+    .plz-account-settings {
+        padding: 29px 30px;
+        box-shadow: 0px 2px 5px 0px rgba(0, 0, 0, 0.05);
+
+        .form-group {
+            margin-bottom: 0;
+            height: 50px;
+        }
+
+        .plz-account-settings-header {
+            padding-bottom: 27px;
+
+            h6 {
+                b {
+                    color: #363636;
+                    font-size: 14pt;
+                }
+            }
+        }
+
+        .plz-account-settings-body {
+            .form-group {
+                .plz-account-settings-body-label {
+                    margin-bottom: 0;
+                    display: flex;
+                    align-items: center;
+                    color: #9a9a9a;
+                    font-size: 13pt;
+                }
+
+                .plz-account-settings-body-field {
+                    display: flex;
+
+                    i {
+                        margin-right: 7px;
+                    }
+
+                    .form-control, .form-control-plaintext {
+                        color: #363636;
+                        font-size: 13pt;
+                    }
+
+                    select {
+                        -webkit-appearance: none;
+                        -moz-appearance: none;
+                        -o-appearance: none;
+                        color: #212529 !important;
+                    }
+
+                    select + i {
+                        float: right;
+                        margin-top: -25px;
+                        margin-right: 5px;
+                        pointer-events: none;
+                        background-color: #fff;
+                        padding-right: 5px;
+                    }
+                }
+
+                .plz-account-settings-body-action {
+                    button {
+                        color: #9a9a9a;
+                        font-size: 13pt;
+                    }
+                }
+            }
+        }
+    }
+</style>
