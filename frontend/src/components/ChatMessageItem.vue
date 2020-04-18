@@ -1,6 +1,6 @@
 <template>
     <div class="w-100 d-flex px-5 " v-on:click="messageSettings = !messageSettings"
-         :class="{ ' checked-message': messageSettings}">
+         :class="{ 'checked-message': messageSettings }">
         <div class="message-item d-flex w-100 justify-content-start"
                 :class="calcMessageItemClass()">
 
@@ -11,8 +11,7 @@
             </label>
 
             <div class="message-user-pic mt-auto">
-                <img v-if="message.isMine" :src="ownerPic" :alt="ownerName" class="message-user-img" />
-                <img v-else :src="currentDialog.companion.userPic" :alt="currentDialog.companion.firstName" class="message-user-img" />
+                <img :src="message.userPic" :alt="message.firstName" class="message-user-img" />
             </div>
 
             <div v-if="messageWriting" class="message-body py-2">
@@ -23,32 +22,35 @@
                     Печатает
                 </p>
             </div>
+
             <div v-else class="message-body d-flex">
                 <div class="message-text">
                     <p class="mb-0">{{message.body}}</p>
 
-                    <img v-if="messageSendedImg" class="message-sended-image mt-1" src="../images/user-main-photo.png" alt="" />
+                    <template v-if="message.isAttachments">
+                        <img v-if="messageSendedImg" class="message-sended-image mt-1" src="../images/user-main-photo.png" alt="" />
 
-                    <!-- TODO: Показать архив -->
-                    <span v-if="messageSendedZip" class="message-sended-zip d-flex align-items-center mt-1">
-                        <IconZip />
-                        <span class="message-sended-zip-info mx-2">
-                            <span class="message-sended-name m-0">Dixy.zip</span>
-                            <span class="message-sended-size m-0">15Mb</span>
+                        <!-- TODO: Показать архив -->
+                        <span v-if="messageSendedZip" class="message-sended-zip d-flex align-items-center mt-1">
+                            <IconZip />
+                            <span class="message-sended-zip-info mx-2">
+                                <span class="message-sended-name m-0">Dixy.zip</span>
+                                <span class="message-sended-size m-0">15Mb</span>
+                            </span>
                         </span>
-                    </span>
+                    </template>
 
-                    <div v-if="messageResend" class="message-resend pl-3 ml-3 mt-3">
+                    <div v-if="message.isReply" class="message-resend pl-3 ml-3 mt-3">
                         <div class="message-user-data  d-flex align-items-center mb-2 ">
                             <div class="media-pic border rounded-circle mr-3">
-                                <img src="/images/user-photos/user-photo-01.png" alt="Дарья" />
+                                <img :src="message.replyOn.userPic" :alt="message.replyOn.firstName" />
                             </div>
                             <div class="media-body">
-                                <h6 class="chatHeader-title w-75 align-self-start mt-2 pb-0 mb-0 pull-left" style="line-height: 20px;"> Дарья </h6>
-                                <p class="chatHeader-subtitle p-0 mb-0 mt-1 w-100 d-block">Понедельник</p>
+                                <h6 class="chatHeader-title w-75 align-self-start mt-2 pb-0 mb-0 pull-left" style="line-height: 20px;">{{message.replyOn.firstName}}</h6>
+                                <p class="chatHeader-subtitle p-0 mb-0 mt-1 w-100 d-block">{{message.replyOn.createdAt | lastMessageTime}}</p>
                             </div>
                         </div>
-                        <p>{{message.body}}</p>
+                        <p>{{message.replyOn.body}}</p>
                     </div>
                 </div>
 
@@ -57,10 +59,10 @@
                 </time>
 
                 <div class="message-info">
-                    <span v-if="message.isMine" class="" :class="{ 'message-edited': messageEdited }">
+                    <span v-if="message.isMine &&  message.isEdited" class="message-edited">
                         <IconPencilEdit />
                     </span>
-                    <span class="message-delivery ml-3" :class="{ 'message-readed': messageReaded }">
+                    <span v-if="message.isMine" class="message-delivery ml-3" :class="{ 'message-readed': message.isRead }">
                         <IconCheckedDouble />
                     </span>
                 </div>
@@ -75,13 +77,17 @@ import IconPencilEdit from '../icons/IconPencilEdit.vue';
 import IconCheckedDouble from '../icons/IconCheckedDouble.vue';
 import IconZip from '../icons/IconZip.vue';
 
+import PliziMessage from '../classes/PliziMessage.js';
+
 export default {
 name: 'ChatMessageItem',
 components: {IconPencilEdit, IconCheckedDouble, IconZip},
 props: {
-    message : Object,
-    next : Object | null,
-    currentDialog: Object
+    message : {
+        type: PliziMessage,
+        required : true
+    },
+    next : PliziMessage | null
 },
 data() {
     return {
@@ -116,16 +122,6 @@ methods: {
             'compact-message'    :  isNextSame,
             'fullsize-message'   : !isNextSame
         }
-    }
-},
-
-computed: {
-    ownerPic(){
-        return this.$root.$user.userPic;
-    },
-
-    ownerName(){
-        return this.$root.$user.firstName;
     }
 },
 

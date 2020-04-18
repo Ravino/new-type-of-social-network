@@ -150,7 +150,7 @@ class PliziUser {
     _audiosNumber = 0;
 
     /**
-     *
+     * TODO: сделать это сущностью отдельного класса
      * @type {Object|null}
      * @private
      */
@@ -232,10 +232,12 @@ class PliziUser {
         this._lastName = ``;
         this._sex = ``;
         this._birthday = null;
+
         this._city = {
             id: null,
             title: null,
         };
+
         this._region = null;
         this._country = null;
         this._relationshipId = -1;
@@ -248,6 +250,7 @@ class PliziUser {
         this._photosNumber = -1;
         this._videosNumber = -1;
         this._audiosNumber = -1;
+
         this._privacySettings = {
             pageType: 1,
             writeMessagesPermissions: 1,

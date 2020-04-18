@@ -1,5 +1,5 @@
 <template>
-    <div class="row" :class="{ 'is-chatPage' : 'ChatsListPage'===this.$root.$router.currentRoute.name }" >
+    <div class="row" :class="{ 'is-chatPage' : ('ChatsListPage'===this.$root.$router.currentRoute.name) }" >
         <div class="col-sm-1 col-md-1 col-lg-1 col-xl-1 chat-page-height overflow-hidden">
             <AccountToolbarLeft></AccountToolbarLeft>
         </div>
@@ -22,7 +22,7 @@
                     <ChatHeader v-bind:currentDialog="currentDialog"></ChatHeader>
 
                     <ChatMessages v-if="isMessagesLoaded" v-bind:messages="messagesList" v-bind:currentDialog="currentDialog"></ChatMessages>
-                    <Spinner v-else v-bind:message="`Сообщения загружаются`"></Spinner>
+                    <Spinner v-else v-bind:message="`Сообщения загружаются,<br />можно выбрать другой диалог`"></Spinner>
 
                     <ChatFooter v-bind:currentDialog="currentDialog" ref="ChatFooter"></ChatFooter>
                 </div>
@@ -39,6 +39,8 @@
 </template>
 
 <script>
+import vueCustomScrollbar from 'vue-custom-scrollbar';
+
 import AccountToolbarLeft from '../common/AccountToolbarLeft.vue';
 import Spinner from '../common/Spinner.vue';
 
@@ -47,8 +49,8 @@ import ChatListItem from '../components/ChatListItem.vue';
 import ChatHeader from '../components/ChatHeader.vue';
 import ChatMessages from '../components/ChatMessages.vue';
 import ChatFooter from '../components/ChatFooter.vue';
-import vueCustomScrollbar from 'vue-custom-scrollbar';
 
+import PliziMessage from '../classes/PliziMessage.js';
 
 export default {
 name: 'ChatsListPage',
@@ -122,11 +124,11 @@ methods: {
 
 
     async switchToChat(evData) {
-        let messageResponse = null;
+        let msgsResponse = null;
         this.isMessagesLoaded = false;
 
         try {
-            messageResponse = await this.$root.$api.chatMessages(evData.dialogID);
+            msgsResponse = await this.$root.$api.chatMessages(evData.dialogID);
         }
         catch (e){
             window.console.warn(e.detailMessage);
@@ -135,8 +137,14 @@ methods: {
 
         await this.$store.dispatch('SET_ACTIVE_DIALOG', evData.dialogID);
 
-        this.messagesList = messageResponse;
-        this.currentDialog = this.dialogsList.find((dialog) => dialog.id === evData.dialogID);
+        this.messagesList = [];
+        msgsResponse.map( (msg) => {
+            this.messagesList.push( new PliziMessage(msg) );
+        });
+
+        //this.currentDialog = this.dialogsList.find((dialog) => dialog.id === evData.dialogID);
+        this.currentDialog = this.$root.$user.dialogsSearch(+evData.dialogID);
+
         this.isMessagesLoaded = true;
     },
 
