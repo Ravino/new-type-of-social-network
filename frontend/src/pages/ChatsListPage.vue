@@ -11,7 +11,7 @@
                         <ul id="chatFriends" class="list-unstyled mb-0">
                             <ChatListItem v-for="(dialog, dialogIndex) in dialogsList"
                                           v-bind:dialog="dialog" v-bind:currentDialogID="currentDialogID"
-                                          v-bind:key="dialogIndex+componentKey">
+                                          v-bind:key="dialog.id" :ref="`chatDialog-`+dialog.id">
                             </ChatListItem>
                         </ul>
                     </vue-custom-scrollbar>
@@ -87,25 +87,6 @@ methods: {
         return (this.$root.$user.dialogsNumber > 0);
     },
 
-    addMessageToMessageList(evData){
-        this.messagesList.push( new PliziMessage(evData) );
-    },
-
-
-    updateDialogsList(evData, wMode){
-        const updatedFields = {
-            lastMessageDT : evData.message.createdAt,
-            lastMessageText : evData.message.body,
-            isLastFromMe : (`mine` === wMode),
-            isRead : (`mine` === wMode)
-        };
-
-        this.$root.$user.dialogStateUpdated(+evData.dialogId, updatedFields);
-        this.$forceUpdate();
-        this.componentKey++;
-    },
-
-
     async switchToChat(evData) {
         let msgsResponse = null;
         this.isMessagesLoaded = false;
@@ -160,7 +141,25 @@ methods: {
     addNewChatMessageToList(evData) {
         this.addMessageToMessageList(evData.message);
         this.updateDialogsList(evData, 'mine');
-    }
+    },
+
+    addMessageToMessageList(evData){
+        this.messagesList.push( new PliziMessage(evData) );
+    },
+
+    updateDialogsList(evData, wMode){
+        const updatedFields = {
+            lastMessageDT : evData.message.createdAt,
+            lastMessageText : evData.message.body,
+            isLastFromMe : (`mine` === wMode),
+            isRead : (`mine` === wMode)
+        };
+
+        this.$root.$user.dialogStateUpdated(+evData.dialogId, updatedFields);
+        //this.$root.$user.dialogsRearrange();
+
+        this.$forceUpdate();
+    },
 },
 
 

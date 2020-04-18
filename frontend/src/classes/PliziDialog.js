@@ -142,6 +142,10 @@ class PliziDialog{
         this._lastMessageDT = new Date(value);
     }
 
+    get lastMessageUnixTime(){
+        return (this._lastMessageDT.getTime() / 1000) >>> 0;
+    }
+
     set isRead( value ){
         this._isRead = !!value;
     }

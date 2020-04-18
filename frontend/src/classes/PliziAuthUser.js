@@ -246,6 +246,23 @@ class PliziAuthUser extends PliziUzer{
     }
 
     /**
+     *
+     * @param {PliziDialog} d1
+     * @param {PliziDialog} d2
+     * @returns {number}
+     * @private
+     */
+    __dialogCompare(d1, d2){
+        const t1 = d1.lastMessageUnixTime;
+        const t2 = d2.lastMessageUnixTime;
+
+        if (t1 > t2) return -1;
+        if (t2 > t1) return 1;
+
+        return 0;
+    }
+
+    /**
      * возвращает первый (нулевой) диалог из списка диалогов, или NULL если список диалогов пустой
      * @returns {PliziDialog|null}
      */
@@ -268,11 +285,16 @@ class PliziAuthUser extends PliziUzer{
         // TODO: @TGA перевести потом на .filter
         this.dialogs.map( (dItem) => {
             if (dialogID === dItem.id) {
-                found = new PliziDialog( dItem.toJSON() );
+                found = dItem;
             }
         });
 
         return found;
+    }
+
+    dialogsRearrange(){
+        window.console.log(`dialogsRearrange`);
+        this._dialogs = this._dialogs.slice().sort(this.__dialogCompare);
     }
 
     /**
