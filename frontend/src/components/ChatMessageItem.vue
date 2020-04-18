@@ -10,7 +10,7 @@
                 <span></span>
             </label>
 
-            <div class="message-user-pic mt-auto">
+            <div v-if="!isNextIsSamePerson()" class="message-user-pic mt-auto">
                 <img :src="message.userPic" :alt="message.firstName" class="message-user-img" />
             </div>
 

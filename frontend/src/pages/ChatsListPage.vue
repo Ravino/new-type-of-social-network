@@ -55,9 +55,9 @@ import PliziMessage from '../classes/PliziMessage.js';
 export default {
 name: 'ChatsListPage',
 components: {
-    Spinner,
-    AccountToolbarLeft, ChatListItem, ChatHeader, ChatMessages, ChatFooter,
-    vueCustomScrollbar
+    vueCustomScrollbar,
+    AccountToolbarLeft, Spinner,
+    ChatListItem, ChatHeader, ChatMessages, ChatFooter
 },
 
 data() {
@@ -78,36 +78,17 @@ data() {
 },
 
 methods: {
-    connectToChatChannel(){
-        const channelOptions = {
-            maxRetries: 10,
-            retryDelay: 4000,
-            skipSubprotocolCheck: true
-        };
 
-        this.chatCarrier = new ab.connect(window.wsUrl,
-            this.channelSubscribe,
-            (code, reason, detail) => { window.console.warn(reason); },
-            channelOptions
-        );
+    /**
+     *  для кратости записи
+     * @returns {boolean} - true если диалоги есть
+     */
+    checkIsDialogsList(){
+        return (this.$root.$user.dialogsNumber > 0);
     },
-
-
-    channelSubscribe(s) {
-        s.subscribe(this.$store.getters.chatChannel, (topicID, data) => {
-            if (this.currentDialog.id === data.data.chatId) {
-                this.addMessageToMessageList(data.data);
-                this.updateDialogsList({
-                    message : data.data,
-                    dialog: this.currentDialog
-                }, 'other')
-            }
-        });
-    },
-
 
     addMessageToMessageList(evData){
-        this.messagesList.push(evData);
+        this.messagesList.push( new PliziMessage(evData) );
     },
 
 
@@ -119,7 +100,9 @@ methods: {
             isRead : (`mine` === wMode)
         };
 
-        this.$root.$user.dialogStateUpdated(+evData.dialog.id, updatedFields);
+        this.$root.$user.dialogStateUpdated(+evData.dialogId, updatedFields);
+        this.$forceUpdate();
+        this.componentKey++;
     },
 
 
@@ -128,22 +111,21 @@ methods: {
         this.isMessagesLoaded = false;
 
         try {
-            msgsResponse = await this.$root.$api.chatMessages(evData.dialogID);
+            msgsResponse = await this.$root.$api.chatMessages(evData.dialogId);
         }
         catch (e){
             window.console.warn(e.detailMessage);
             throw e;
         }
 
-        await this.$store.dispatch('SET_ACTIVE_DIALOG', evData.dialogID);
+        await this.$store.dispatch('SET_ACTIVE_DIALOG', evData.dialogId);
 
         this.messagesList = [];
         msgsResponse.map( (msg) => {
             this.messagesList.push( new PliziMessage(msg) );
         });
 
-        //this.currentDialog = this.dialogsList.find((dialog) => dialog.id === evData.dialogID);
-        this.currentDialog = this.$root.$user.dialogsSearch(+evData.dialogID);
+        this.currentDialog = this.$root.$user.dialogsSearch(+evData.dialogId);
 
         this.isMessagesLoaded = true;
     },
@@ -171,16 +153,6 @@ methods: {
     },
 
 
-    /**
-     *  для кратости записи
-     * @returns {boolean} - true если dialogsList определён и массив
-     */
-    checkIsDialogsList(){
-        window.console.log(`checkIsDialogsList`);
-        return (this.$root.$user.dialogsNumber > 0);
-    },
-
-
     scrollHandle(evt) {
         //console.log(evt);
     },
@@ -188,10 +160,6 @@ methods: {
     addNewChatMessageToList(evData) {
         this.addMessageToMessageList(evData.message);
         this.updateDialogsList(evData, 'mine');
-
-        this.componentKey ++;
-
-        //this.$forceUpdate();
     }
 },
 
@@ -209,14 +177,13 @@ computed: {
 async mounted() {
     await this.loadDialogsList();
 
-    this.connectToChatChannel();
-
     if ( this.checkIsDialogsList()  &&  this.currentDialog ) {
-        await this.switchToChat( { dialogID : this.currentDialog.id })
+        await this.switchToChat( { dialogId : this.currentDialog.id })
     }
 
     this.$root.$on('switchToChat', this.switchToChat);
-    this.$root.$on('addNewChatMessageToList', this.addNewChatMessageToList);
+    this.$root.$on('newMessageInDialog', this.addNewChatMessageToList);
+
     this.$root.$on('dialogsLoad', ()=>{
         this.$forceUpdate();
     });
@@ -225,8 +192,5 @@ async mounted() {
 },
 
 }
-
-
-
 </script>
 

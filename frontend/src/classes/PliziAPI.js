@@ -17,7 +17,7 @@ class PliziAPI {
     __$root = null;
 
     /**
-     * токен авторизации которые возвращает нам наш серверный API после логина
+     * токен авторизации, который возвращает нам наш серверный API после логина
      * @type {string}
      * @private
      */
@@ -30,6 +30,17 @@ class PliziAPI {
      */
     __baseURL = ``;
 
+    __defaultHeaders = {
+        'X-Requested-With': 'XMLHttpRequest',
+    };
+
+    /**
+     * токен канала, который возвращает нам наш серверный API после логина
+     * @type {string}
+     * @private
+     */
+    __channel = ``;
+
     /**
      * базовый URL для доступа к API по WebSockets
      * @type {string}
@@ -37,27 +48,23 @@ class PliziAPI {
      */
     __baseWsURL = ``;
 
-    __defaultHeaders = {
-        'X-Requested-With': 'XMLHttpRequest',
+    __wsChannelCarrier = null;
+
+    __wsIsConnected = false;
+
+    __wsChannelOptions = {
+        maxRetries: 10,
+        retryDelay: 4000,
+        skipSubprotocolCheck: true
     };
 
 
     /**
-     *
-     * @param {string} token
+     * @param {Vue} $root - ссылка на Vue объект, который вызывает этот конструктор
      */
-    /**
-     *
-     * @param {Vue} $root
-     * @param {string} token
-     */
-    constructor($root, token) {
+    constructor($root) {
         this.__baseURL = (window.apiURL) ? window.apiURL + ``.trim() : ``;
         this.__baseWsURL = (window.wsUrl) ? window.wsUrl + ``.trim() : ``;
-
-        if (token) {
-            this.token = token;
-        }
 
         if ($root) {
             this.__$root = $root;
@@ -70,18 +77,14 @@ class PliziAPI {
     }
 
     /**
-     * геттер для получения header'а bearer
-     * @returns {string} - Bearer вместе с токеном
-     */
-    get bearer() {
-        return 'Bearer ' + this.__token;
-    }
-
-    /**
      * устанавливает токен для запросов
      * @param {string} jwToken
      */
     set token(jwToken) {
+        if (jwToken === ``) {
+            window.console.warn(`API: try to set empty token!`);
+        }
+
         this.__token = (jwToken + '').trim();
     }
 
@@ -92,24 +95,59 @@ class PliziAPI {
         return this.__token;
     }
 
+
+    set channel(cnl){
+        if (cnl === ``) {
+            window.console.warn(`Try to set empty channel`);
+        }
+
+        this.__channel = (cnl+'').trim();
+    }
+
+
+    get channel(){
+        return this.__channel;
+    }
+
     /**
-     * геттер для упрощения получения заголовков с токеном авторизации
-     * @returns {Object}
+     * пытаемся законнектится к WebSocket каналу
+     * @param {string} cnlToken
      */
-    get authHeaders() {
-        return {headers: {Authorization: this.bearer}};
+    connectToChannel(cnlToken){
+        if (cnlToken !==``){
+            this.__channel = cnlToken;
+        }
+
+        this.__tryConnectToWebSocketsChannel();
     }
 
 
     /**
-     * бросает событие с именем eventName через Vue'шный $root.emit
+     * метод для упрощения получения заголовков
+     * @returns {{headers: {Authorization: string}}}
      * @private
-     * @param {string} eventName
-     * @param {object|boolean|null} eventData
      */
-    emit(eventName, eventData) {
-        if (this.__$root)
-            return this.__$root.$emit(eventName, eventData || {});
+    __getAuthHeaders() {
+        return {
+            headers: {
+                Authorization: this.__getBearer()
+            }
+        };
+    }
+
+
+    /**
+     * геттер для получения header'а bearer
+     * @returns {string} - Bearer вместе с токеном
+     */
+    __getBearer() {
+        if (this.token === ``) {
+            window.console.warn(`API:getBearer - token is empty!`);
+
+            throw new PliziAPIError(`getBearer`, {});
+        }
+
+        return 'Bearer ' + this.__token;
     }
 
 
@@ -130,6 +168,7 @@ class PliziAPI {
             });
     }
 
+
     /**
      * попытка регистрации пользователя
      * @public
@@ -142,6 +181,7 @@ class PliziAPI {
                 throw new PliziAPIError(`register`, error.response);
             });
     }
+
 
     /**
      * Регистрация через соц. сети.
@@ -175,9 +215,9 @@ class PliziAPI {
             this.token = jwt;
         }
 
-        let response = await this.__axios.get('api/user', this.authHeaders)
+        let response = await this.__axios.get('api/user', this.__getAuthHeaders())
             .catch((error) => {
-                this.checkIsTokenExperis(error);
+                this.__checkIsTokenExperis(error, `getUser`);
                 throw new PliziAPIError(`getUser`, error.response);
             });
 
@@ -196,9 +236,9 @@ class PliziAPI {
      * @returns {Object|null} - объект с данными юзера
      */
     async infoUser(id) {
-        let response = await this.__axios.get('api/user/' + id, this.authHeaders)
+        let response = await this.__axios.get('api/user/' + id, this.__getAuthHeaders())
             .catch((error) => {
-                this.checkIsTokenExperis(error);
+                this.__checkIsTokenExperis(error, `infoUser`);
                 throw new PliziAPIError(`infoUser`, error.response);
             });
 
@@ -217,9 +257,9 @@ class PliziAPI {
      * @returns {Promise}
      */
     async updateUser(userData) {
-        let response = await this.__axios.patch('api/user', userData, this.authHeaders)
+        let response = await this.__axios.patch('api/user', userData, this.__getAuthHeaders())
             .catch((error) => {
-                this.checkIsTokenExperis(error);
+                this.__checkIsTokenExperis(error, `updateUser`);
                 throw new PliziAPIError(`updateUser`, error.response);
             });
 
@@ -231,9 +271,9 @@ class PliziAPI {
     }
 
     async updateUserPrivacy(privacyData) {
-        let response = await this.__axios.patch('api/user/privacy', privacyData, this.authHeaders)
+        let response = await this.__axios.patch('api/user/privacy', privacyData, this.__getAuthHeaders())
             .catch((error) => {
-                this.checkIsTokenExperis(error);
+                this.__checkIsTokenExperis(error, `updateUserPrivacy`);
                 throw new PliziAPIError(`updateUserPrivacy`, error.response);
             });
 
@@ -252,13 +292,13 @@ class PliziAPI {
      * @throws PliziAPIError
      */
     async userProfileImage(formData) {
-        let config = this.authHeaders;
+        let config = this.__getAuthHeaders();
 
         config.headers[`Content-Type`] = 'multipart/form-data';
 
         let response = await this.__axios.post('/api/user/profile/image', formData, config)
             .catch((error) => {
-                this.checkIsTokenExperis(error);
+                this.__checkIsTokenExperis(error, `userProfileImage`);
                 throw new PliziAPIError(`userProfileImage`, error.response);
             });
 
@@ -279,9 +319,9 @@ class PliziAPI {
     async userSearch(sText) {
         const sData = (sText + '').trim();
 
-        let response = await this.__axios.get('/api/user/search/' + sData, this.authHeaders)
+        let response = await this.__axios.get('/api/user/search/' + sData, this.__getAuthHeaders())
             .catch((error) => {
-                this.checkIsTokenExperis(error);
+                this.__checkIsTokenExperis(error, `userSearch`);
                 throw new PliziAPIError(`userSearch`, error.response);
             });
 
@@ -307,7 +347,7 @@ class PliziAPI {
             userId: potentialFriendID
         };
 
-        return await this.__axios.post('/api/user/friendship', data, this.authHeaders)
+        return await this.__axios.post('/api/user/friendship', data, this.__getAuthHeaders())
             .catch((error) => {
                 /** @TGA так сервер ответчает, что инвайт уже отправлялся **/
                 if (error.response.status === 422) {
@@ -316,7 +356,7 @@ class PliziAPI {
                         message: error.response.data.message
                     }
                 } else {
-                    this.checkIsTokenExperis(error);
+                    this.__checkIsTokenExperis(error, `sendFriendshipInvitation`);
                     throw new PliziAPIError(`sendFriendshipInvitation`, error.response);
                 }
             });
@@ -342,8 +382,8 @@ class PliziAPI {
      * @returns {object[]|null} - список диалогов юзера, или NULL если их нет
      */
     async chatDialogs() {
-        let response = await this.__axios.get('api/chat/dialogs', this.authHeaders).catch((error) => {
-            this.checkIsTokenExperis(error);
+        let response = await this.__axios.get('api/chat/dialogs', this.__getAuthHeaders()).catch((error) => {
+            this.__checkIsTokenExperis(error, `chatDialogs`);
             throw new PliziAPIError(`chatDialogs`, error.response);
         });
 
@@ -362,8 +402,8 @@ class PliziAPI {
      * @returns {object[]|null} - список сообщений в диалоге, или NULL если была ошибка
      */
     async chatMessages(dialogID) {
-        let response = await this.__axios.get('api/chat/messages/' + (dialogID >>> 0), this.authHeaders).catch((error) => {
-            this.checkIsTokenExperis(error);
+        let response = await this.__axios.get('api/chat/messages/' + (dialogID >>> 0), this.__getAuthHeaders()).catch((error) => {
+            this.__checkIsTokenExperis(error, `chatMessages`);
             throw new PliziAPIError(`chatMessages`, error.response);
         });
 
@@ -388,8 +428,8 @@ class PliziAPI {
             chat_id: dialogID
         };
 
-        let response = await this.__axios.post('api/chat/send', sendData, this.authHeaders).catch((error) => {
-            this.checkIsTokenExperis(error, `chatSend`);
+        let response = await this.__axios.post('api/chat/send', sendData, this.__getAuthHeaders()).catch((error) => {
+            this.__checkIsTokenExperis(error, `chatSend`);
             throw new PliziAPIError(`chatSend`, error.response);
         });
 
@@ -413,8 +453,8 @@ class PliziAPI {
             path = `api/user/${userID}/friendship`;
         }
 
-        let response = await this.__axios.get(path, this.authHeaders).catch((error) => {
-            this.checkIsTokenExperis(error);
+        let response = await this.__axios.get(path, this.__getAuthHeaders()).catch((error) => {
+            this.__checkIsTokenExperis(error, `friendsList`);
             throw new PliziAPIError(`friendsList`, error.response);
         });
 
@@ -434,8 +474,8 @@ class PliziAPI {
     async invitationsList() {
         let path = 'api/user/friendship/pending';
 
-        let response = await this.__axios.get(path, this.authHeaders).catch((error) => {
-            this.checkIsTokenExperis(error);
+        let response = await this.__axios.get(path, this.__getAuthHeaders()).catch((error) => {
+            this.__checkIsTokenExperis(error, `invitationsList`);
             throw new PliziAPIError(`invitationsList`, error.response);
         });
 
@@ -452,8 +492,8 @@ class PliziAPI {
             userId: friendID
         };
 
-        let response = await this.__axios.post('api/user/friendship/accept', sendData, this.authHeaders).catch((error) => {
-            this.checkIsTokenExperis(error);
+        let response = await this.__axios.post('api/user/friendship/accept', sendData, this.__getAuthHeaders()).catch((error) => {
+            this.__checkIsTokenExperis(error);
             throw new PliziAPIError(`invitationAccept`, error.response);
         });
 
@@ -470,8 +510,8 @@ class PliziAPI {
             userId: friendID
         };
 
-        let response = await this.__axios.post('api/user/friendship/decline', sendData, this.authHeaders).catch((error) => {
-            this.checkIsTokenExperis(error);
+        let response = await this.__axios.post('api/user/friendship/decline', sendData, this.__getAuthHeaders()).catch((error) => {
+            this.__checkIsTokenExperis(error);
             throw new PliziAPIError(`invitationDecline`, error.response);
         });
 
@@ -483,8 +523,8 @@ class PliziAPI {
     }
 
     async notificationsList() {
-        let response = await this.__axios.get('api/user/notifications', this.authHeaders).catch((error) => {
-            this.checkIsTokenExperis(error);
+        let response = await this.__axios.get('api/user/notifications', this.__getAuthHeaders()).catch((error) => {
+            this.__checkIsTokenExperis(error);
             throw new PliziAPIError(`notificationsList`, error.response);
         });
 
@@ -502,10 +542,10 @@ class PliziAPI {
      * @throws PliziAPIError
      */
     async getPosts() {
-        let response = await this.__axios.get('api/user/posts', this.authHeaders)
+        let response = await this.__axios.get('api/user/posts', this.__getAuthHeaders())
             .catch((error) => {
-                this.checkIsTokenExperis(error);
-                throw new PliziAPIError(`getNews`, error.response);
+                this.__checkIsTokenExperis(error, `getPosts`);
+                throw new PliziAPIError(`getPosts`, error.response);
             });
 
         if (response.status === 200) {
@@ -560,9 +600,9 @@ class PliziAPI {
      * @returns {object[]|null}
      */
     async getLocationsByInput(location) {
-        let response = await this.__axios.get(`api/city/search?search=${location}`, this.authHeaders)
+        let response = await this.__axios.get(`api/city/search?search=${location}`, this.__getAuthHeaders())
             .catch((error) => {
-                this.checkIsTokenExperis(error);
+                this.__checkIsTokenExperis(error, `getLocationsByInput`);
                 throw new PliziAPIError(`getLocationsByInput`, error.response);
             });
 
@@ -573,6 +613,14 @@ class PliziAPI {
         return null;
     }
 
+    /**
+     **************************************************************************
+     * Web-sockets section
+     **************************************************************************
+     */
+
+
+
 
     /**
      **************************************************************************
@@ -580,12 +628,72 @@ class PliziAPI {
      **************************************************************************
      */
 
+    __tryConnectToWebSocketsChannel(){
+        if (this.__wsIsConnected)
+            return;
+
+        setTimeout(()=>{
+            if(this.channel !== ``) {
+                this.__wsRealConnect();
+            }
+            else {
+                this.__tryConnectToWebSocketsChannel();
+            }
+        }, 500);
+    }
+
+
+    __wsRealConnect(){
+        const channelOptions = {
+            maxRetries: 10,
+            retryDelay: 4000,
+            skipSubprotocolCheck: true
+        };
+
+        this.__wsChannelCarrier = new ab.connect(this.__baseWsURL,
+            (s)=>{this.__channelReceiver(s)},
+            (code, reason, detail)=>{this.__channelErrorHandler(code, reason, detail)},
+            channelOptions
+        );
+
+        this.__wsIsConnected = true;
+    }
+
+
+    __channelReceiver(s) {
+        s.subscribe(this.__channel, (channelID, data) => {
+            if (channelID=== this.channel  &&  `message.new`===data.event_type) {
+                this.__emit('newMessageInDialog', {
+                    dialogId :  data.data.chatId,
+                    message : data.data
+                });
+            }
+
+            //if (this.currentDialog.id === data.data.chatId) {
+            //    this.addMessageToMessageList(data.data);
+            //    this.updateDialogsList({
+            //        message : data.data,
+            //        dialog: this.currentDialog
+            //    }, 'other')
+            //}
+        });
+    }
+
+
+    __channelErrorHandler(code, reason, detail){
+        window.console.warn(`__channelErrorHandler`);
+        window.console.log(code, `code`);
+        window.console.log(reason, `reason`);
+        window.console.log(detail, `detail`);
+    }
+
+
     /**
      * @private
      * @param {Object} errResponse
      * @returns {string}
      */
-    getServerMessage(errResponse) {
+    __getServerMessage(errResponse) {
         if (errResponse && errResponse.data) {
             if (errResponse.data.message) {
                 const serverMessage = (errResponse.data.message + '').trim();
@@ -608,15 +716,28 @@ class PliziAPI {
      * @param {string} srcMethod - имя API-метода, который вызвал ошибку
      * @throws {Event} - событие `api:Unauthorized`
      */
-    checkIsTokenExperis(error, srcMethod) {
-        const srvMsg = this.getServerMessage(error.response);
+    __checkIsTokenExperis(error, srcMethod) {
+        const srvMsg = this.__getServerMessage(error.response);
 
         if (`TOKEN_IS_EXPIRED` === srvMsg) {
-            this.emit(`api:Unauthorized`, {
+            this.__emit(`api:Unauthorized`, {
                 srcMethod: srcMethod || `pliziAPI`
             });
         }
     }
+
+
+    /**
+     * бросает событие с именем eventName через Vue'шный $root.emit
+     * @private
+     * @param {string} eventName
+     * @param {object|boolean|null} eventData
+     */
+    __emit(eventName, eventData) {
+        if (this.__$root)
+            return this.__$root.$emit(eventName, eventData || {});
+    }
+
 }
 
 export {PliziAPI as default}

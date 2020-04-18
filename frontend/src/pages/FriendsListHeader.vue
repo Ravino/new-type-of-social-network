@@ -2,7 +2,7 @@
     <div class="row">
         <div class="col-sm-5 col-md-5 col-lg-5 col-xl-5 pr-3">
             <div class="p-4 bg-white-br20">
-                Новые друзья |
+                Мои друзья |
                 <router-link tag="a" to="/invitations">Заявки в друзья</router-link>
                 | <b>Новые друзья</b>
             </div>

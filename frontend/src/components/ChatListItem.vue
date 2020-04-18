@@ -57,7 +57,7 @@ data() {
 
 methods: {
     switchToChat() {
-        this.$root.$emit('switchToChat', {dialogID: this.dialog.id});
+        this.$root.$emit('switchToChat', {dialogId: this.dialog.id});
     }
 },
 

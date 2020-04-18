@@ -62,7 +62,7 @@ export default {
 name: 'ChatFooter',
 props: {
     currentDialog: {
-        //type: [PliziDialog, Object, null],
+        type: PliziDialog | null,
         required : true
     }
 },
@@ -103,13 +103,18 @@ methods: {
         }
 
         if (apiResponse != null &&  apiResponse.status.toUpperCase() === 'OK') {
+            msg.id = -1;
+            msg.firstName = this.$root.$user.firstName;
+            msg.lastName = this.$root.$user.lastName;
+            msg.userPic =  this.$root.$user.userPic;
+
             const eventData = {
-                dialog : (this.currentDialog) ? this.currentDialog : null,
+                dialogId : (this.currentDialog) ? this.currentDialog.id : -1,
                 message : msg
             }
 
             try {
-                this.$root.$emit('addNewChatMessageToList', eventData);
+                this.$root.$emit('newMessageInDialog', eventData);
             } catch (e){
 
             }
@@ -129,14 +134,6 @@ computed : {
     userFullName() {
         return this.$root.$user.fullName;
     }
-},
-
-mounted() {
-    //window.console.log( JSON.parse( JSON.stringify(this.currentDialog) ) , `chatFooter:mounted currentDialog` );
-},
-
-updated(){
-    //window.console.log( JSON.parse( JSON.stringify(this.currentDialog) ) , `chatFooter:updated currentDialog` );
 }
 
 }

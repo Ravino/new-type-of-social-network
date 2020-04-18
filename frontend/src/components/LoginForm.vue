@@ -30,8 +30,7 @@
 
                     <div v-show="$v.model.password.$error" class="invalid-feedback">
                         <p v-if="!$v.model.password.required" class="text-danger">Укажите свой пароль</p>
-                        <p v-if="!$v.model.password.minLength" class="text-danger">Пароль не может быть короче <b>четырех</b>
-                            символов</p>
+                        <p v-if="!$v.model.password.minLength" class="text-danger">Пароль не может быть короче <b>четырёх</b> символов</p>
                         <p v-if="!$v.model.password.maxLength" class="text-danger">Слишком длинный пароль</p>
                     </div>
                 </div>
@@ -61,16 +60,16 @@
         <RegistrationModal v-if="isRegistrationModalShow"
                            v-bind:reg-modal-visible="isRegistrationModalShow"
                            @successRegistration="successRegistration"></RegistrationModal>
+
         <RecoverPassModal  v-if="isRecoverPassModalShow"
-                           v-bind:reg-modal-visible="isRecoverPassModalShow"
-                          ></RecoverPassModal>
+                           v-bind:reg-modal-visible="isRecoverPassModalShow">
+        </RecoverPassModal>
     </div>
 </template>
 
 <script>
     import RegistrationModal from './RegistrationModal.vue';
     import RecoverPassModal from './RecoverPassModal.vue';
-    import {HTTPer} from '../httper/httper.js';
     import {email, maxLength, minLength, required} from 'vuelidate/lib/validators';
     import client_ids from '../libs/social_networks_client_ids';
     import LoginSocialLinks from "./LoginSocialLinks";
