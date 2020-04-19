@@ -56,7 +56,7 @@ data() {
 
 computed: {
     companion(){
-        if (this.currentDialog) {
+        if (this.currentDialog  &&  this.currentDialog.companion) {
             //window.console.log( JSON.parse( JSON.stringify(this.currentDialog.companion) ), `companion this.currentDialog`);
             return this.currentDialog.companion;
         }
