@@ -28,7 +28,7 @@
                             </div>
 
                             <div class="user-friend-body-bottom d-flex pr-5">
-                                <p class="user-friend-desc p-0 my-0  d-inline">{{user.isOnline}}</p>
+                                <p class="user-friend-desc p-0 my-0  d-inline">{{user.lastActivity | lastEventTime}}</p>
                             </div>
                         </div>
                     </div>
@@ -44,7 +44,7 @@
                                     placeholder="Начните печатать..."
                                     id="privateMessage" ref="privateMessage"
                                     v-model="privateMessage"
-                                    @keydown="personalMsgKeyDownCheck($event)"
+                                    @keydown.native="personalMsgKeyDownCheck($event)"
                                     :min-height="10"
                                     :max-height="200"
                                 />
@@ -83,10 +83,14 @@ import IconAddFile from '../icons/IconAddFile.vue';
 import IconAddCamera from '../icons/IconAddCamera.vue';
 import IconAddSmile from '../icons/IconAddSmile.vue';
 
+import PliziUser from '../classes/PliziUser.js';
+
+/** @link https://www.npmjs.com/package/vue-textarea-autosize **/
+
 export default {
 name: 'NewPersonalMessageModal',
 props: {
-    user: Object
+    user: PliziUser
 },
 components: { IconAddCamera, IconAddSmile, IconAddFile },
 data() {
@@ -106,19 +110,26 @@ methods: {
     },
 
     startPersonalMessage(){
-        this.$root.$emit('hidePersonalMsgModal', {});
+        const newMsg = {
+            body: this.privateMessage.trim(),
+            createdAt: Math.floor((new Date()).getTime() / 1000),
+            isMine: true,
+            isRead: false,
+            isEdited: false
+        };
 
         this.$root.$emit('sendPersonalMessage', {
-            message: this.privateMessage.trim(),
-            from: this.$root.$user.toJSON(),
-            to: this.user.toJSON(),
+            message: newMsg,
+            receiverId: this.user.id,
         });
+
+        this.$root.$emit('hidePersonalMsgModal', {});
     }
 },
 
 mounted() {
     setTimeout(() => {
-        this.$refs.privateMessage.focus();
+        this.$refs.privateMessage.$el.focus();
     }, 100);
 },
 }

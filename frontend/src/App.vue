@@ -109,12 +109,6 @@ methods: {
     },
 
 
-    // TODO: @TGA тут времененно, для отладки
-    handlePersonalMessage(evData){
-        window.console.log(evData, `handlePersonalMessage`);
-    },
-
-
     afterUserLoad(evData) {
         if (evData.token !== ``  &&  evData.user) {
             this.$root.$isAuth = true;
@@ -217,9 +211,6 @@ created(){
     this.$root.$on('searchStart', (evData) => {
         this.lastSearchText = evData.searchText;
     });
-
-    // TODO: @TGA тут времененно, для отладки
-    this.$root.$on('sendPersonalMessage', this.handlePersonalMessage);
 
     this.$root.$on('api:Unauthorized', (evData) => {
         window.console.warn(evData, `api:Unauthorized!`);

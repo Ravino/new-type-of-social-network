@@ -441,6 +441,27 @@ class PliziAPI {
     }
 
 
+    async chatMessage(userID, message) {
+        const sendData = {
+            body: message,
+            user_id: userID
+        };
+
+        window.console.dir(sendData, `chatMessage`);
+
+        let response = await this.__axios.post('api/chat/message/user', sendData, this.__getAuthHeaders()).catch((error) => {
+            this.__checkIsTokenExperis(error, `chatMessage`);
+            throw new PliziAPIError(`chatMessage`, error.response);
+        });
+
+        if (response.status === 200) {
+            return response.data;
+        }
+
+        return null;
+    }
+
+
     /**
      * получаем список френдов, свой или другого юзера
      * @param {number|null} userID - ID юзера чей список друзей хотим получить

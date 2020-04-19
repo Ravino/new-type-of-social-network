@@ -84,12 +84,12 @@ methods: {
                 isEdited: false
             };
 
-            this.sendMessage(newMsg);
+            this.addMessageToChat(newMsg);
         }
     },
 
 
-    async sendMessage(msg){
+    async addMessageToChat(msg){
         const chatId = (this.currentDialog) ? this.currentDialog.id : -1;
 
         let apiResponse = null;
