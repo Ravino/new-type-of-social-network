@@ -113,14 +113,21 @@ methods: {
 
 
     async loadDialogsList() {
+        window.console.log(`loadDialogsList`);
         this.isDialogsLoaded = true;
 
-        const lastDialogID = +this.$store.getters.activeDialog;
+        const lastDialogID = this.$store.getters.activeDialog;
+        window.console.log(lastDialogID, `lastDialogID`);
+
         this.currentDialog = undefined;
+
+        window.console.log( this.currentDialog, `this.currentDialog 1` );
 
         if (this.checkIsDialogsList()) {
             this.currentDialog = this.$root.$user.dialogsSearch(+lastDialogID);
         }
+        window.console.log( this.currentDialog, `this.currentDialog 2` );
+
 
         if (typeof this.currentDialog === 'undefined') {
             this.currentDialog = this.$root.$user.firstDialog;
@@ -184,6 +191,7 @@ async mounted() {
     this.$root.$on('newMessageInDialog', this.addNewChatMessageToList);
 
     this.$root.$on('dialogsLoad', ()=>{
+        window.console.info(`dialogsLoad!!!`);
         this.$forceUpdate();
     });
 

@@ -64,7 +64,7 @@
             }
         },
         computed: {
-            userData: function () {
+            userData() {
                 return this.$root.$user;
             },
         },

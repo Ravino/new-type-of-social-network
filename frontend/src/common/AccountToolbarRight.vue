@@ -1,10 +1,10 @@
 <template>
     <div id="rightToolbar" class="bg-white-br20 py-2 overflow-hidden">
-        <div class="d-block w-50 mb-1 mt-2 mx-auto text-center m">
-            <i class="fas fa-chevron-left"></i>
-        </div>
+<!--        <div class="d-block w-50 mb-1 mt-2 mx-auto text-center m">-->
+<!--            <i class="fas fa-chevron-left"></i>-->
+<!--        </div>-->
 
-        <hr class="w-100" />
+<!--        <hr class="w-100" />-->
 
         <a class="rightToolbar-user w-100 d-block text-center py-1" href="#">
             <img class="d-block mx-auto"  src="/images/chat/alexandra.png" alt="Alexandra" />

@@ -3,6 +3,10 @@ import PliziInvitation from './PliziInvitation.js';
 import PliziNotification from './PliziNotification.js';
 import PliziDialog from './PliziDialog.js';
 
+import PliziAPI from './PliziAPI.js';
+
+import PliziFriendsManager from './PliziFriendsManager.js';
+
 class PliziAuthUser extends PliziUzer{
     /**
      * ключ в localStorage куда сохраняем данные юзера
@@ -12,21 +16,25 @@ class PliziAuthUser extends PliziUzer{
     __localStorageKey = `pliziUser`;
 
     /**
-     *
      * @type {string}
      * @private
      */
     _token = ``;
 
     /**
-     *
      * @type {string}
      * @private
      */
     _channel = ``;
 
     /**
-     *
+     * ссылка на API
+     * @type {PliziAPI}
+     * @private
+     */
+    _api = null;
+
+    /**
      * @type {string}
      * @private
      */
@@ -52,6 +60,32 @@ class PliziAuthUser extends PliziUzer{
      */
     _dialogs = [];
 
+    /**
+     * ссылка на PliziFriendsManager - менеджер френдов
+     * @type {PliziFriendsManager}
+     * @private
+     */
+    _fm = null;
+
+    /**
+     * @param {object} usrData
+     * @param {PliziAPI} apiObj
+     */
+    constructor(usrData, apiObj){
+        super( null );
+
+        this._api = apiObj;
+
+        this._fm = new PliziFriendsManager(apiObj);
+    }
+
+    /**
+     * ссылка на менеджер френдов
+     * @returns {PliziFriendsManager}
+     */
+    get fm(){
+        return this._fm;
+    }
 
     /**
      * загружаем тут данные которые пришли от метода api/user
@@ -280,22 +314,15 @@ class PliziAuthUser extends PliziUzer{
      * @returns {PliziDialog|null} - нужный диалог как объект типа PliziDialog, или NULL если не нашли
      */
     dialogsSearch(dialogID){
-        let found = null;
-
-        // TODO: @TGA перевести потом на .filter
-        this.dialogs.map( (dItem) => {
-            if (dialogID === dItem.id) {
-                found = dItem;
-            }
-        });
-
-        return found;
+        return this.dialogs.find( dItem => dialogID === dItem.id);
     }
+
 
     dialogsRearrange(){
         window.console.log(`dialogsRearrange`);
         this._dialogs = this._dialogs.slice().sort(this.__dialogCompare);
     }
+
 
     /**
      *

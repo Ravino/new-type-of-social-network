@@ -21,16 +21,12 @@
                                     <span class="nav-link py-3 px-1 mr-4" :class="{ 'active': wMode==='all' }" id="tabAllFriends" role="tab" @click.stop="friendsListSelect(`all`)">Все друзья</span>
                                     <span class="nav-link py-3 px-1 mr-4" :class="{ 'active': wMode==='online' }" id="tabOnlineFriends" role="tab" @click.stop="friendsListSelect(`online`)">Друзья онлайн</span>
                                 </nav>
-
-                                <button class="btn btn-link mx-1 px-1 btn-add-file" type="button">
-                                    <span class="text-body">Найти друзей</span> <IconSearch />
-                                </button>
                             </div>
                         </div>
 
                         <div v-if="isFriendsLoaded" class="plizi-friends-list">
                             <div v-if="friendsList  &&  friendsList.length>0" class="alert alert-light" >
-                                <SearchResultItem v-for="(friendItem, friendIndex) in friendsList"
+                                <SearchResultItem v-for="(friendItem, friendIndex) in friendsListFilter"
                                                   v-bind:key="friendIndex" v-bind:srItem="friendItem">
                                 </SearchResultItem>
                             </div>
@@ -44,8 +40,8 @@
                 </div>
 
                 <div class="col-sm-4 col-md-4 col-lg-4 col-xl-4">
-                    <h5>Возможные друзья</h5>
-                    <h5>Рекомендуемые друзья</h5>
+                    <PotentialFriends :blockName="`Возможные друзья`" :friends="potentialList"></PotentialFriends>
+                    <PotentialFriends :blockName="`Рекомендуемые друзья`" :friends="potentialList"></PotentialFriends>
                 </div>
             </div>
         </div>
@@ -63,15 +59,16 @@ import Spinner from '../common/Spinner.vue';
 import IconSearch from '../icons/IconSearch.vue';
 
 import SearchResultItem from '../components/SearchResultItem.vue';
-import FriendsListHeader from './FriendsListHeader.vue';
+import FriendsListHeader from '../components/FriendsListHeader.vue';
+
+import PotentialFriends from '../common/PotentialFriends.vue';
 
 import PliziUser from '../classes/PliziUser.js';
-
 
 export default {
 name: 'FriendsListPage',
 components: {
-    FriendsListHeader,
+    FriendsListHeader, PotentialFriends,
     IconSearch,
     AccountToolbarLeft, AccountToolbarRight, SearchResultItem, Spinner
 },
@@ -79,7 +76,8 @@ data() {
     return {
         wMode : `all`,
         friendsList : [],
-        isFriendsLoaded : false
+        isFriendsLoaded : false,
+        potentialList : []
     }
 },
 
@@ -94,12 +92,8 @@ methods: {
             apiResponse = await this.$root.$api.friendsList();
         }
         catch (e){
-            if (e.status  &&  e.status>=400) {
-                window.console.warn(e.detailMessage);
-            }
-            else {
-                throw e;
-            }
+            window.console.warn(e.detailMessage);
+            throw e;
         }
 
         this.friendsList = [];
@@ -110,6 +104,31 @@ methods: {
             });
 
             this.isFriendsLoaded = true;
+        }
+
+        return true;
+    },
+
+
+    async loadPotentialsList() {
+        let apiResponse = null;
+
+        this.potentialList = null;
+
+        try {
+            apiResponse = await this.$root.$api.friendsPotential();
+        }
+        catch (e){
+            window.console.warn(e.detailMessage);
+            throw e;
+        }
+
+        this.potentialList = [];
+
+        if (apiResponse) {
+            apiResponse.map( (srItem)=> {
+                this.potentialList.push( new PliziUser({ data : srItem} ) );
+            });
         }
 
         return true;
@@ -142,6 +161,7 @@ computed: {
 
 async mounted(){
     await this.loadFriendsList();
+    await this.loadPotentialsList();
 }
 
 }

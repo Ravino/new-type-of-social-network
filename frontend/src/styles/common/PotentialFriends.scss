@@ -1,13 +1,13 @@
-.plz-short-friends {
-    .plz-short-friends-item {
+.plz-potential-friends {
+    .plz-potential-friends-item {
         transition: .4s;
     }
 
-    .plz-short-friends-item:hover {
+    .plz-potential-friends-item:hover {
         background-color: #dae4ee;
     }
 
-    .plz-short-friend-userpic {
+    .plz-potential-friend-userpic {
         position: relative;
         display: inline-block;
         vertical-align: top;
@@ -22,18 +22,18 @@
         }
     }
 
-    .plz-short-friend-is-active {
+    .plz-potential-friend-is-active {
         cursor: pointer;
     }
-    .plz-sf-title .plz-sf-subtitle {
+    .plz-pf-title .plz-pf-subtitle {
         display: inline-block;
     }
-    .plz-sf-subtitle {
+    .plz-pf-subtitle {
         color: #9a9a9a;
         font-size: 12px;
     }
 
-    .plz-short-friend-is-active {
+    .plz-potential-friend-is-active {
         font-size: 14px;
         color: #c5c8d1;
         transition: .4s;
@@ -43,7 +43,7 @@
         }
     }
 
-    .plz-short-friend-is-active {
+    .plz-potential-friend-is-active {
         .icon-message {
             width: 17px;
             height: 17px;

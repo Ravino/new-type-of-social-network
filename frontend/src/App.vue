@@ -124,6 +124,8 @@ methods: {
             this.loadInvitations();
             this.loadNotifications();
             this.loadDialogs();
+
+            this.$root.$user.fm.load();
         }
     },
 
@@ -200,7 +202,7 @@ mounted() {
 
 created(){
     this.$root.$api = new PliziAPI(this.$root);
-    this.$root.$user = new PliziAuthUser({});
+    this.$root.$user = new PliziAuthUser({}, this.$root.$api);
 
     this.$root.$on('afterSuccessLogin',  this.afterSuccessLogin);
 

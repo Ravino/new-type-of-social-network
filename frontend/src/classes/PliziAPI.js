@@ -487,6 +487,23 @@ class PliziAPI {
     }
 
 
+    async friendsPotential() {
+        const sData = `@`;
+
+        let response = await this.__axios.get('/api/user/search/' + sData, this.__getAuthHeaders())
+            .catch((error) => {
+                this.__checkIsTokenExperis(error, `friendsPotential`);
+                throw new PliziAPIError(`friendsPotential`, error.response);
+            });
+
+        if (response.status === 200) {
+            return response.data.data.list;
+        }
+
+        return null;
+    }
+
+
     /**
      * получаем список приглашений дружбы
      * @returns {object[]|null} - список инвайтов или NULL
@@ -634,13 +651,17 @@ class PliziAPI {
         return null;
     }
 
+
     /**
-     **************************************************************************
-     * Web-sockets section
-     **************************************************************************
+     * бросает событие с именем eventName через Vue'шный $root.emit
+     * @private
+     * @param {string} eventName
+     * @param {object|boolean|null} eventData
      */
-
-
+    emit(eventName, eventData) {
+        if (this.__$root)
+            return this.__$root.$emit(eventName, eventData || {});
+    }
 
 
     /**
@@ -684,7 +705,7 @@ class PliziAPI {
     __channelReceiver(s) {
         s.subscribe(this.__channel, (channelID, data) => {
             if (channelID=== this.channel  &&  `message.new`===data.event_type) {
-                this.__emit('newMessageInDialog', {
+                this.emit('newMessageInDialog', {
                     dialogId :  data.data.chatId,
                     message : data.data
                 });
@@ -741,22 +762,10 @@ class PliziAPI {
         const srvMsg = this.__getServerMessage(error.response);
 
         if (`TOKEN_IS_EXPIRED` === srvMsg) {
-            this.__emit(`api:Unauthorized`, {
+            this.emit(`api:Unauthorized`, {
                 srcMethod: srcMethod || `pliziAPI`
             });
         }
-    }
-
-
-    /**
-     * бросает событие с именем eventName через Vue'шный $root.emit
-     * @private
-     * @param {string} eventName
-     * @param {object|boolean|null} eventData
-     */
-    __emit(eventName, eventData) {
-        if (this.__$root)
-            return this.__$root.$emit(eventName, eventData || {});
     }
 
 }

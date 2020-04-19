@@ -11,7 +11,8 @@
 </template>
 
 <script>
-import IconSearch from "../../icons/IconSearch";
+import IconSearch from '../../icons/IconSearch.vue';
+
 export default {
 name : 'NavBarSearch',
     components: {IconSearch},
