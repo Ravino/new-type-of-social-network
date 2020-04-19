@@ -20,7 +20,7 @@ import PotentialFriendItem from './PotentialFriendItem.vue';
 import PliziUser from '../classes/PliziUser.js';
 
 export default {
-name: 'ShortFriends',
+name: 'PotentialFriends',
 components : { PotentialFriendItem },
 props: {
     blockName : String,
@@ -28,7 +28,10 @@ props: {
 },
 computed : {
     friendsList() {
-        return this.friends.slice(0, 5);
+        if (this.friends)
+            return this.friends.slice(0, 5);
+
+        return [];
     }
 }
 
