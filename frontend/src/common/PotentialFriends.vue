@@ -17,8 +17,6 @@
 <script>
 import PotentialFriendItem from './PotentialFriendItem.vue';
 
-import PliziUser from '../classes/PliziUser.js';
-
 export default {
 name: 'PotentialFriends',
 components : { PotentialFriendItem },
