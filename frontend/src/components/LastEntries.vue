@@ -1,5 +1,5 @@
 <template>
-    <div id="latestEntries" class="plz-latest-entries bg-white-br20">
+    <div id="latestEntries" class="plz-latest-entries bg-white-br20" :style="calcStyle()">
         <h6 class="">Вы недавно входили в аккаунт с этого компьютера</h6>
 
         <div class="plz-last-entries-list d-flex justify-content-start flex-wrap">
@@ -16,18 +16,49 @@
 import LastEntryItem from '../components/LastEntryItem.vue';
 
 export default {
-    name: 'LastEntries',
-    components: {LastEntryItem},
-    data() {
-        return {
-            //TODO: @TGA удалить потом эти mock-данные
-            lastEntriesList: [
-                {src: '/images/last-entries/ava-2.png', fullName: 'Марина Кабанова', isUser: true, email: `test@gmail.com` },
-                {src: '/images/last-entries/ava-1.png', fullName: 'Кристина Мамонтовa', isUser: true, email: `user@mail.com`},
-                {src: '/images/icons/add-account.png', fullName: 'Добавить аккаунт', isUser: false},
-            ],
-        }
+name: 'LastEntries',
+components: {LastEntryItem},
+data() {
+    return {
+        //TODO: @TGA удалить потом эти mock-данные
+        lastEntriesList: this.getLastEntries(),
+    }
+},
+
+methods: {
+    // TODO: удалить позже
+    checkIsTarga(){
+        return (typeof isTarga !== 'undefined'  &&  !!isTarga);
     },
+
+    // TODO: удалить позже
+    calcStyle(){
+        if (this.checkIsTarga())
+            return { 'height' : 'auto', 'padding-bottom': '2rem' };
+
+        return {};
+    },
+
+    getLastEntries(){
+        if ( !this.checkIsTarga() ) {
+            return [
+                {src: '/images/last-entries/ava-2.png', fullName: 'Мариана Кабанова', isUser: true, email: `test@gmail.com` },
+                {src: '/images/last-entries/ava-1.png', fullName: 'Виктория Мамонтовa', isUser: true, email: `user@mail.com`},
+                {src: '/images/icons/add-account.png', fullName: 'Добавить аккаунт', isUser: false},
+            ];
+        }
+
+        return [
+            {src: '/images/last-entries/ava-2.png', fullName: 'Мариана Кабанова', isUser: true, email: `test@gmail.com` },
+            {src: '/images/last-entries/ava-1.png', fullName: 'Виктория Мамонтовa', isUser: true, email: `user@mail.com`},
+            {src: '/images/last-entries/ava-3.png', fullName: 'Полина Дорожина', isUser: true, email: `admin@mail.com`},
+            {src: '/images/last-entries/ava-4.png', fullName: 'Alexey Arma3', isUser: true, email: `targa@arma3.in.ua`, password: `5e944f8dc5a03`},
+            {src: '/images/last-entries/ava-5.png', fullName: 'Alexey UkrNet', isUser: true, email: `targettius@ukr.net`, password: `5e9721681107f`},
+            {src: '/images/last-entries/ava-6.png', fullName: 'Targa Yandex', isUser: true, email: `targettius@yandex.ua`, password: ``},
+
+        ];
+    }
+}
 }
 </script>
 
