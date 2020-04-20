@@ -51,7 +51,7 @@ class PostCollection extends ResourceCollection
                             'commentsCount' => 48,
                             'user' => new User($post->postable),
                             'createdAt' => $post->created_at,
-                            'sharedFrom' => new PostWithoutParent($post->parent),
+                            'sharedFrom' => $post->parent_id ? new PostWithoutParent($post->parent) : null,
                         ];
                     } else if($post->postable instanceof CommunityModel) {
                         return [
@@ -71,7 +71,7 @@ class PostCollection extends ResourceCollection
                             'commentsCount' => 48,
                             'community' => new Community($post->postable),
                             'createdAt' => $post->created_at,
-                            'sharedFrom' => new PostWithoutParent($post->parent),
+                            'sharedFrom' => $post->parent_id ? new PostWithoutParent($post->parent) : null,
                         ];
                     }
                 } else {
@@ -85,7 +85,7 @@ class PostCollection extends ResourceCollection
                         'sharesCount' => 25,
                         'commentsCount' => 48,
                         'createdAt' => $post->created_at,
-                        'sharedFrom' => new PostWithoutParent($post->parent),
+                        'sharedFrom' => $post->parent_id ? new PostWithoutParent($post->parent) : null,
                     ];
                 }
             }),

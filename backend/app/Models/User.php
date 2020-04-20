@@ -106,7 +106,7 @@ class User extends Authenticatable implements JWTSubject
      */
     public function posts()
     {
-        return $this->morphMany(Post::class, 'postable');
+        return $this->morphMany(Post::class, 'postable')->with('parent');
     }
 
     /**
@@ -114,7 +114,7 @@ class User extends Authenticatable implements JWTSubject
      */
     public function allPosts()
     {
-        return $this->morphMany(Post::class, 'postable')->with('postable')
+        return $this->morphMany(Post::class, 'postable')->with('postable', 'parent')
             ->orWhereIn( 'postable_id', self::communities()->allRelatedIds())
             ->orWhereIn( 'postable_id', self::getFriends()->pluck('id'))->orderBy('posts.id', 'desc');
     }
