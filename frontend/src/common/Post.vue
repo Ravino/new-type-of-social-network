@@ -58,10 +58,9 @@
             <div v-if="(postImages && postImages.length > 0)"
                  class="post-images">
                 <PostImage v-for="(postImage, index) in postImages"
-                           class="post-image"
+                           :class="['post-image', index === 0 ? 'first-post-image' : null]"
                            :key="index"
-                           :src="postImage"
-                           :classnames="{'first-post-image': index === 0}"/>
+                           :src="postImage"/>
             </div>
         </div>
 
