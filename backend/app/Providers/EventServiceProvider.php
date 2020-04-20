@@ -5,6 +5,7 @@ namespace App\Providers;
 //use Illuminate\Auth\Events\Registered;
 //use Illuminate\Auth\Listeners\SendEmailVerificationNotification;
 use App\Listeners\Friendships\FriendshipNotification;
+use App\Listeners\Friendships\NotifyFriends;
 use Domain\Pusher\Events\NewMessageEvent;
 use Domain\Pusher\Listeners\NewNotification;
 use Domain\PusherListeners\NewMessageNotification;
@@ -34,6 +35,9 @@ class EventServiceProvider extends ServiceProvider
         ],
         'friendships.*' => [
             FriendshipNotification::class
+        ],
+        'user.profile.*' => [
+            NotifyFriends::class
         ]
     ];
 

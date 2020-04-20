@@ -78,7 +78,7 @@ class ChatController extends Controller
             $request->get('forwardFromChatId'),
             $request->get('attachmentIds') ? $request->get('attachmentIds') : []
         );
-        return response()->json(['status' => 'OK', 'message' => $message]);
+        return response()->json(['data' => $message]);
     }
 
     /**
@@ -93,7 +93,7 @@ class ChatController extends Controller
             Auth::user()->id,
             $request->get('attachmentIds') ? $request->get('attachmentIds') : []
         );
-        return response()->json(['status' => 'OK', 'message' => $message]);
+        return response()->json(['data' => $message]);
     }
 
     /**

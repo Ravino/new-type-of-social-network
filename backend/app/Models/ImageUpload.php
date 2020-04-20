@@ -5,6 +5,7 @@ namespace App\Models;
 use App\Notifications\ResetPassword as ResetPasswordNotification;
 use App\Notifications\UserSystemNotifications;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\Event;
 use Storage;
 
 class ImageUpload extends Model
@@ -32,8 +33,8 @@ class ImageUpload extends Model
         parent::boot();
         static::creating(function($image) {
             if($image->tag === self::TAG_PRIMARY) {
-                (new ImageUpload)->where('user_id', auth()->user()->id)->update(['tag' => self::TAG_SECONDARY]);
-                $this->notify(new UserSystemNotifications());
+                $affected = (new ImageUpload)->where('user_id', auth()->user()->id)->where('tag', self::TAG_PRIMARY)->update(['tag' => self::TAG_SECONDARY]);
+                Event::dispatch($affected ? 'user.profile.image.updated' : 'user.profile.image.created', \Auth::user()->id);
             }
         });
         static::creating(function ($image) {
