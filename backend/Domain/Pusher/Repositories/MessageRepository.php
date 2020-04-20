@@ -9,6 +9,7 @@ use Domain\Pusher\DTOs\Message;
 use Domain\Pusher\Http\Resources\Chat\ChatCollection;
 use Domain\Pusher\Http\Resources\Message\MessageCollection;
 use Domain\Pusher\Models\ChatMessage;
+use Domain\Pusher\Http\Resources\Message\Message as MessageResource;
 
 class MessageRepository
 {
@@ -58,45 +59,23 @@ class MessageRepository
     }
 
 
-    // TODO: Нужно будет зарефакторить и убрать дублирование
     /**
      * Возвращает сообщение
      *
      * @param int $message_id
-     * @return Message
+     * @return MessageResource
      */
     public function getMessageById(int $message_id)
     {
-        $item = \DB::table('chat_messages')
+        $item = ChatMessage::with('parent', 'attachments')->where('id', $message_id)
             ->join('profiles', 'profiles.user_id', '=', 'chat_messages.user_id')
             ->leftJoin('chat_message_status', 'chat_message_status.message_id', '=', 'chat_messages.id')
-            ->where('chat_messages.id', '=', $message_id)
             ->orderBy('chat_messages.id')
             ->get([
-                'chat_messages.id',
-                'chat_messages.user_id',
-                'profiles.first_name',
-                'profiles.last_name',
-                'chat_messages.body',
-                'chat_message_status.is_read',
-                'chat_messages.created_at',
-                'chat_messages.updated_at',
-                'chat_messages.chat_id'
+                'profiles.*',
+                'chat_messages.*',
             ])->first();
 
-        $message = new Message();
-        $message->id = $item->id;
-        $message->firstName = $item->first_name;
-        $message->lastName = $item->last_name;
-        $message->chatId = $item->chat_id;
-        $message->userPic = 'https://habrastorage.org/storage2/b92/bcf/532/b92bcf532c0a2889272ffd72ffb1f2b5.png';
-        $message->body = $item->body;
-        $message->isMine = false;
-        $message->isRead = $item->is_read;
-        $message->isEdited = false;
-        $message->createdAt = $item->created_at;
-        $message->updatedAt = $item->updated_at;
-
-        return $message;
+        return new MessageResource($item, \Auth::user()->id);
     }
 }

@@ -70,15 +70,15 @@ class ChatController extends Controller
      */
     public function send(SendMessageRequest $request)
     {
-        $this->chatService->send(
+        $message = $this->chatService->send(
             $request->get('body'),
-            $request->get('chat_id'),
+            $request->get('chatId'),
             Auth::user()->id,
             $request->get('replyOnMessageId'),
             $request->get('forwardFromChatId'),
             $request->get('attachmentIds') ? $request->get('attachmentIds') : []
         );
-        return response()->json(['status' => 'OK']);
+        return response()->json(['status' => 'OK', 'message' => $message]);
     }
 
     /**
@@ -87,13 +87,13 @@ class ChatController extends Controller
      */
     public function sendToUser(SendMessageToUserRequest $request)
     {
-        $chat_id = $this->chatService->sendToUser(
+        $message = $this->chatService->sendToUser(
             $request->get('body'),
-            $request->get('user_id'),
+            $request->get('userId'),
             Auth::user()->id,
             $request->get('attachmentIds') ? $request->get('attachmentIds') : []
         );
-        return response()->json(['status' => 'OK', 'chatId' => $chat_id]);
+        return response()->json(['status' => 'OK', 'message' => $message]);
     }
 
     /**

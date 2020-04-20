@@ -16,8 +16,9 @@ class SendMessageToUserRequest extends FormRequest
     public function rules()
     {
         return [
-            'user_id' => 'required',
-            'body' => 'required|string'
+            'userId' => 'required',
+            'body' => 'required|string',
+            'attachmentIds' => 'array'
         ];
     }
 }

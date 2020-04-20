@@ -25,7 +25,7 @@ class NewMessageEvent
      * @param array $ids
      * @return void
      */
-    public function __construct(Message $message, array $ids)
+    public function __construct($message, array $ids)
     {
         $this->message = $message;
         $this->usersListIds = $ids;
