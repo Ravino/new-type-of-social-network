@@ -19,8 +19,11 @@ class NewNotification implements ShouldQueue
      */
     public function handle(NotificationSent $event)
     {
-        if($event->response->type === UserSystemNotifications::class) {
-            Pusher::sentDataToServer(['data' => $event->response->data, 'topic_id' => Pusher::channelForUser($event->response->notifiable_id), 'event_type' => 'user.notification']);
+        if($event->response && $event->response->type === UserSystemNotifications::class) {
+            Pusher::sentDataToServer([
+                'data' => $event->response->data,
+                'topic_id' => Pusher::channelForUser($event->response->notifiable_id),
+                'event_type' => 'user.notification']);
         }
     }
 }
