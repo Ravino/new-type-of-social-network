@@ -425,7 +425,7 @@ class PliziAPI {
     async chatSend(dialogID, message) {
         const sendData = {
             body: message,
-            chat_id: dialogID
+            chatId: dialogID
         };
 
         let response = await this.__axios.post('api/chat/send', sendData, this.__getAuthHeaders()).catch((error) => {
@@ -444,10 +444,8 @@ class PliziAPI {
     async chatMessage(userID, message) {
         const sendData = {
             body: message,
-            user_id: userID
+            userId: userID
         };
-
-        window.console.dir(sendData, `chatMessage`);
 
         let response = await this.__axios.post('api/chat/message/user', sendData, this.__getAuthHeaders()).catch((error) => {
             this.__checkIsTokenExperis(error, `chatMessage`);
