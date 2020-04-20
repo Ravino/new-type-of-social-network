@@ -2,7 +2,7 @@
     <div id="profileHeader" class="row plz-profile-header mb-4">
         <div class="col-md-3 pl-0">
             <div class="plz-profile-userpic-container d-flex flex-column h-100 bg-white-br20 overflow-hidden">
-                <div class="plz-profile-userpic-wrapper position-relative d-flex align-items-center justify-content-center ">
+                <div class="plz-profile-userpic-wrapper overflow-hidden position-relative d-flex align-items-center justify-content-center ">
                     <img ref="userAvatar" :src="userData.userPic" :alt="userData.fullName"/>
                 </div> <div v-if="isOwner===true" class="plz-profile-userpic-footer mt-auto">
                 <div class="plz-profile-userpic-edit file-label d-flex align-items-center justify-content-between">
