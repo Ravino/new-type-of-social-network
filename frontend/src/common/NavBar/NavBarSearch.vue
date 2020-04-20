@@ -4,7 +4,7 @@
                @keydown.stop="topSearchKeyDownCheck($event)"
                class="top-search form-control form-control  w-100"
                type="text" placeholder="Поиск" aria-label="Поиск" />
-        <button class="btn btn-search h-100 " type="submit"  @keydown="topSearchKeyDownCheck($event)">
+        <button class="btn btn-search h-100 " type="submit"  @click="initSearch()">
             <IconSearch style="width: 15px; height: 15px;" />
         </button>
     </div>
@@ -32,7 +32,16 @@ methods: {
         const sText = this.$refs.topSearch.value.trim();
 
         if ( 13 === ev.keyCode   &&  sText!==``){
-            return this.startSearch(this.$refs.topSearch.value);
+            return this.startSearch(sText);
+        }
+    },
+
+    initSearch(){
+        const sText = this.$refs.topSearch.value.trim();
+        window.console.log(sText, `initSearch`);
+
+        if (sText!==``){
+            return this.startSearch(sText);
         }
     },
 

@@ -3,14 +3,15 @@
         <div class="row mx-0 py-2">
             <div class="col-6">
                 <div class="d-flex align-items-center h-100 ">
-                    <div class="media-pic border rounded-circle  mr-3">
+                    <router-link :to="`/user-`+companion.id" tag="div" class="media-pic border rounded-circle mr-3 cursor-pointer">
                         <img :src="companion.userPic" v-bind:alt="companion.firstName" />
-                    </div>
+                    </router-link>
 
                     <div class="media-body">
-                        <h6 class="chatHeader-title w-75 align-self-start mt-2 pb-0 mb-0 pull-left text-body" style="line-height: 20px;">
+                        <router-link :to="`/user-`+companion.id" tag="h6"
+                                     class="chatHeader-title w-75 align-self-start mt-2 pb-0 mb-0 pull-left text-body cursor-pointer">
                             {{companion.firstName}}
-                        </h6>
+                        </router-link>
                         <p class="chatHeader-subtitle p-0 mb-0 mt-1 w-100 d-block">
                             {{ companion.lastActivity  | lastMessageTime }}
                         </p>
@@ -19,7 +20,7 @@
             </div>
 
             <div class="col-6">
-                <form class="d-flex align-items-center justify-content-end">
+                <div class="d-flex align-items-center justify-content-end">
                     <div class="form-row align-items-center mt-3 justify-content-end pr-3">
                         <div class="col-auto">
                             <label class="sr-only d-none" for="txtFindInChat">Поиск</label>
@@ -31,7 +32,7 @@
                             </button>
                         </div>
                     </div>
-                </form>
+                </div>
             </div>
         </div>
     </div>
@@ -55,9 +56,13 @@ data() {
 },
 
 computed: {
+
+    /**
+     * хак, чтобы не падало когда ещё нет данных
+     * @returns {object|PliziAttendee}
+     */
     companion(){
         if (this.currentDialog  &&  this.currentDialog.companion) {
-            //window.console.log( JSON.parse( JSON.stringify(this.currentDialog.companion) ), `companion this.currentDialog`);
             return this.currentDialog.companion;
         }
 

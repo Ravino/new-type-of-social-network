@@ -9,9 +9,14 @@
         border-radius: 20px;
         border-width: 0;
         padding: 0 30px;
-        background-image: url('../images/chat-search-loupe.png');
+        background-image: url('/images/chat-search-loupe.png');
         background-repeat: no-repeat;
         background-position: 90% center;
+
+        /**
+        * @TGA перенесено сюда мной из разметки
+        **/
+        line-height: 20px;
 
         &::placeholder {
             font-size: 13px;

@@ -5,11 +5,11 @@
         </div>
 
         <div class="col-sm-12 col-md-9 col-lg-11 pr-3  chat-page-height">
-            <div v-if="checkIsDialogsList()" id="chatMain" class="row bg-white-br20 overflow-hidden" :key="componentKey+100">
+            <div v-if="checkIsDialogsList()" id="chatMain" class="row bg-white-br20 overflow-hidden">
                 <div class="col-sm-12 col-md-12 col-lg-4 col-xl-4 col-auto px-sm-0 px-md-0 h-100 border-right">
                     <vue-custom-scrollbar class="chat-list-scroll py-4 h-100" :settings="customScrollBarSettings" @ps-scroll-y="scrollHandle">
                         <ul id="chatFriends" class="list-unstyled mb-0">
-                            <ChatListItem v-for="(dialog, dialogIndex) in dialogsList"
+                            <ChatListItem v-for="dialog in dialogsList"
                                           v-bind:dialog="dialog" v-bind:currentDialogID="currentDialogID"
                                           v-bind:key="dialog.id" :ref="`chatDialog-`+dialog.id">
                             </ChatListItem>
@@ -17,18 +17,18 @@
                     </vue-custom-scrollbar>
                 </div>
 
-                <div id="chatMessangesWrapper"
+                <div id="chatMessagesWrapper"
                      class="col-8 col-lg-8 col-xl-8 bg-light d-none d-lg-flex flex-column p-0 h-100">
-                    <ChatHeader v-bind:currentDialog="currentDialog"></ChatHeader>
+                    <ChatHeader v-if="currentDialog" v-bind:currentDialog="currentDialog" ref="ChatHeader"></ChatHeader>
 
                     <ChatMessages v-if="isMessagesLoaded" v-bind:messages="messagesList" v-bind:currentDialog="currentDialog"></ChatMessages>
                     <Spinner v-else v-bind:message="`Сообщения загружаются,<br />можно выбрать другой диалог`"></Spinner>
 
-                    <ChatFooter v-bind:currentDialog="currentDialog" ref="ChatFooter"></ChatFooter>
+                    <ChatFooter v-if="currentDialog" v-bind:currentDialog="currentDialog" ref="ChatFooter"></ChatFooter>
                 </div>
             </div>
 
-            <div v-else class="row bg-white-br20"  :key="componentKey+120">
+            <div v-else class="row bg-white-br20">
                 <div v-if="isDialogsLoaded" class="col-sm-12 col-md-12 col-lg-4 col-xl-12 py-5 px-5 text-center">
                     <h3 class="text-info">Вы ещё ни с кем не общались.</h3>
                 </div>
@@ -113,21 +113,15 @@ methods: {
 
 
     async loadDialogsList() {
-        window.console.log(`loadDialogsList`);
         this.isDialogsLoaded = true;
 
         const lastDialogID = this.$store.getters.activeDialog;
-        window.console.log(lastDialogID, `lastDialogID`);
 
         this.currentDialog = undefined;
-
-        window.console.log( this.currentDialog, `this.currentDialog 1` );
 
         if (this.checkIsDialogsList()) {
             this.currentDialog = this.$root.$user.dialogsSearch(+lastDialogID);
         }
-        window.console.log( this.currentDialog, `this.currentDialog 2` );
-
 
         if (typeof this.currentDialog === 'undefined') {
             this.currentDialog = this.$root.$user.firstDialog;
