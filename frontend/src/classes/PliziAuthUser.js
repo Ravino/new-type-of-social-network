@@ -3,6 +3,10 @@ import PliziInvitation from './PliziInvitation.js';
 import PliziNotification from './PliziNotification.js';
 import PliziDialog from './PliziDialog.js';
 
+import PliziAPI from './PliziAPI.js';
+
+import PliziFriendsManager from './PliziFriendsManager.js';
+
 class PliziAuthUser extends PliziUzer{
     /**
      * ключ в localStorage куда сохраняем данные юзера
@@ -12,21 +16,25 @@ class PliziAuthUser extends PliziUzer{
     __localStorageKey = `pliziUser`;
 
     /**
-     *
      * @type {string}
      * @private
      */
     _token = ``;
 
     /**
-     *
      * @type {string}
      * @private
      */
     _channel = ``;
 
     /**
-     *
+     * ссылка на API
+     * @type {PliziAPI}
+     * @private
+     */
+    _api = null;
+
+    /**
      * @type {string}
      * @private
      */
@@ -52,6 +60,32 @@ class PliziAuthUser extends PliziUzer{
      */
     _dialogs = [];
 
+    /**
+     * ссылка на PliziFriendsManager - менеджер френдов
+     * @type {PliziFriendsManager}
+     * @private
+     */
+    _fm = null;
+
+    /**
+     * @param {object} usrData
+     * @param {PliziAPI} apiObj
+     */
+    constructor(usrData, apiObj){
+        super( null );
+
+        this._api = apiObj;
+
+        this._fm = new PliziFriendsManager(apiObj);
+    }
+
+    /**
+     * ссылка на менеджер френдов
+     * @returns {PliziFriendsManager}
+     */
+    get fm(){
+        return this._fm;
+    }
 
     /**
      * загружаем тут данные которые пришли от метода api/user
@@ -243,6 +277,67 @@ class PliziAuthUser extends PliziUzer{
 
     get dialogs(){
         return this._dialogs;
+    }
+
+    /**
+     *
+     * @param {PliziDialog} d1
+     * @param {PliziDialog} d2
+     * @returns {number}
+     * @private
+     */
+    __dialogCompare(d1, d2){
+        const t1 = d1.lastMessageUnixTime;
+        const t2 = d2.lastMessageUnixTime;
+
+        if (t1 > t2) return -1;
+        if (t2 > t1) return 1;
+
+        return 0;
+    }
+
+    /**
+     * возвращает первый (нулевой) диалог из списка диалогов, или NULL если список диалогов пустой
+     * @returns {PliziDialog|null}
+     */
+    get firstDialog(){
+        if (this._dialogs.length > 0)
+            return this._dialogs[0];
+
+        return null;
+    }
+
+
+    /**
+     * поиск диалога по его ID
+     * @param {number} dialogID - ID нужного диалога
+     * @returns {PliziDialog|null} - нужный диалог как объект типа PliziDialog, или NULL если не нашли
+     */
+    dialogsSearch(dialogID){
+        return this.dialogs.find( dItem => dialogID === dItem.id);
+    }
+
+
+    dialogsRearrange(){
+        window.console.log(`dialogsRearrange`);
+        this._dialogs = this._dialogs.slice().sort(this.__dialogCompare);
+    }
+
+
+    /**
+     *
+     * @param {number} dialogID - ID диалога который нужно обновить
+     * @param {object} updatedData - объект с полями lastMessageDT, lastMessageText, isLastFromMe, isRead
+     */
+    dialogStateUpdated(dialogID, updatedData){
+        let dlg = this.dialogsSearch(dialogID);
+
+        if (dlg) {
+            dlg.stateUpdate(updatedData);
+        }
+        else {
+            window.console.warn(`PliziAuthUser->dialogStateUpdated: диалог с ID ${dialogID} не найден!`);
+        }
     }
 
     dialogsClean(){

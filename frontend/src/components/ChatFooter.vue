@@ -14,8 +14,8 @@
 
                             <textarea-autosize
                                 class="form-control px-2 pt-4 w-100"
-
-                                @keydown="onMessageKeyDown($event)"
+                                v-model="newMessage"
+                                @keydown.native="onMessageKeyDown($event)"
                                 ref="txtMessage"
                                 id="txtMessage"
                                 :min-height="10"
@@ -51,13 +51,20 @@ import IconAddFile from '../icons/IconAddFile.vue';
 import IconAddCamera from '../icons/IconAddCamera.vue';
 import IconAddSmile from '../icons/IconAddSmile.vue';
 
+import PliziDialog from '../classes/PliziDialog.js';
+
 /**  TODO: Вставка файлов **/
 /** @link https://www.npmjs.com/package/vue-filepond **/
+
+/** @link https://www.npmjs.com/package/vue-textarea-autosize **/
 
 export default {
 name: 'ChatFooter',
 props: {
-    currentDialog: Object
+    currentDialog: {
+        type: PliziDialog | null,
+        required : true
+    }
 },
 components: { IconAddCamera, IconAddSmile, IconAddFile },
 data() {
@@ -68,7 +75,7 @@ data() {
 
 methods: {
     onMessageKeyDown(ev) {
-        if (13===ev.keyCode && ev.ctrlKey===true  &&  this.newMessage.trim()!=='') { //TODO не работает отправка
+        if (13===ev.keyCode &&  ev.ctrlKey===true  &&  this.newMessage.trim()!=='') {
             const newMsg = {
                 body: this.newMessage.trim(),
                 createdAt: Math.floor((new Date()).getTime() / 1000),
@@ -77,32 +84,45 @@ methods: {
                 isEdited: false
             };
 
-            this.sendMessage(newMsg);
+            this.addMessageToChat(newMsg);
         }
     },
 
 
-    async sendMessage(msg){
+    async addMessageToChat(msg){
         const chatId = (this.currentDialog) ? this.currentDialog.id : -1;
 
-        let response = null;
+        let apiResponse = null;
 
         try {
-            response = await this.$root.$api.chatSend(chatId, msg.body);
+            apiResponse = await this.$root.$api.chatSend(chatId, msg.body);
         }
         catch (e){
             window.console.warn(e.detailMessage);
             throw e;
         }
 
-        if (response != null &&  response.status.toUpperCase() === 'OK') {
-            this.$root.$emit('addNewChatMessageToList', msg);
+        if (apiResponse != null &&  apiResponse.status.toUpperCase() === 'OK') {
+            msg.id = -1;
+            msg.firstName = this.$root.$user.firstName;
+            msg.lastName = this.$root.$user.lastName;
+            msg.userPic =  this.$root.$user.userPic;
+
+            const eventData = {
+                dialogId : (this.currentDialog) ? this.currentDialog.id : -1,
+                message : msg
+            }
+
+            try {
+                this.$root.$emit('newMessageInDialog', eventData);
+            } catch (e){
+
+            }
             this.newMessage = ``;
         }
         else {
-            window.console.info(response);
+            window.console.info(apiResponse);
         }
-
     }
 },
 
@@ -114,9 +134,6 @@ computed : {
     userFullName() {
         return this.$root.$user.fullName;
     }
-},
-
-mounted() {
 }
 
 }

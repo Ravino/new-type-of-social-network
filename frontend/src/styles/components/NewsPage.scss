@@ -82,15 +82,19 @@ $transition-default: 0.25s ease-out 0.10s;
             width: $height * 2;
             background: $color-white;
             border-radius: $height;
-            border: 2px solid $color-peter-river;
-            transition: transform $transition-default;
+            transition: $transition-default;
             transform: translate(0, 0);
-            box-shadow: 0 .0625em .375em 0 $color-peter-river;
+
+            border: 2px solid $color-silver;
+            box-shadow: 0 .0625em .375em 0 $color-silver;
+
         }
 
         &:checked {
             &:after {
                 transform: translate($width - $height , 0);
+                border: 2px solid $color-peter-river;
+                box-shadow: 0 .0625em .375em 0 $color-peter-river;
             }
 
             & ~ .lbl-off {

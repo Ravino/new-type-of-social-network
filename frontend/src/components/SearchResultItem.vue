@@ -1,5 +1,5 @@
 <template>
-    <router-link :to="`/user-`+srItem.id" tag="li" class="plizi-sr-item-user media m-0 px-4 py-2" @click="">
+    <router-link :to="`/user-`+srItem.id" tag="li" class="plizi-sr-item-user media m-0 px-4 py-2">
         <div class="plizi-sr-item d-flex col-12">
             <div class="plizi-sr-item-pic mr-3 ">
                 <img class="plizi-sr-item-img rounded-circle overflow-hidden" v-bind:src="srItem.userPic" v-bind:alt="srItem.fullName" />
@@ -17,7 +17,7 @@
                 <div class="plizi-sr-item-body-bottom d-flex pr-5">
                     <p class="plizi-sr-item-desc p-0 my-0  d-inline ">
                         <time :datetime="srItem.lastActivity" class="">
-                            {{ srItem.lastActivity | lastMessageTime }}
+                            {{ srItem.lastActivity | lastEventTime }}
                         </time>
                     </p>
                 </div>
@@ -27,15 +27,14 @@
 </template>
 
 <script>
+import PliziUser from '../classes/PliziUser.js';
+
 export default {
 name : 'SearchResultItem',
 props : {
-    srItem : Object
-},
-
-mounted(){
-    //window.console.dir( JSON.parse( JSON.stringify(this.srItem) ), `SearchResultItem` );
+    srItem : PliziUser
 }
+
 }
 </script>
 

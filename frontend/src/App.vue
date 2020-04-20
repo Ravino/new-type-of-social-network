@@ -74,6 +74,7 @@ methods: {
             this.$store.dispatch('SET_CHAT_CHANNEL', evData.chatChannel);
 
             this.$root.$api.token = evData.token;
+            this.$root.$api.channel = evData.chatChannel;
 
             if (evData.redirect) {
                 this.$router.push({ path: '/profile' });
@@ -95,6 +96,7 @@ methods: {
 
         this.$root.$user.cleanData();
         this.$root.$api.token = ``;
+        this.$root.$api.channel = ``;
 
         window.localStorage.removeItem('pliziJWToken');
         window.localStorage.removeItem('pliziUser');
@@ -107,27 +109,23 @@ methods: {
     },
 
 
-    // TODO: @TGA тут времененно, для отладки
-    handlePersonalMessage(evData){
-        window.console.log(evData, `handlePersonalMessage`);
-    },
-
-
     afterUserLoad(evData) {
         if (evData.token !== ``  &&  evData.user) {
-            //window.console.log(`afterUserLoad`);
-
             this.$root.$isAuth = true;
-            this.$root.$api.token = evData.token;
-
             this.$root.$lastSearch = this.$store.getters.lastSearch;
 
+            this.$root.$api.token = evData.token;
+
             this.$root.$user.saveUserData( evData.user, evData.token );
+
+            this.$root.$api.connectToChannel( evData.user.channel );
 
             // TODO: перенести отсюда - слишком часто будет вызываться
             this.loadInvitations();
             this.loadNotifications();
             this.loadDialogs();
+
+            this.$root.$user.fm.load();
         }
     },
 
@@ -203,6 +201,9 @@ mounted() {
 },
 
 created(){
+    this.$root.$api = new PliziAPI(this.$root);
+    this.$root.$user = new PliziAuthUser({}, this.$root.$api);
+
     this.$root.$on('afterSuccessLogin',  this.afterSuccessLogin);
 
     this.$root.$on('afterSuccessLogout', this.afterSuccessLogout);
@@ -212,9 +213,6 @@ created(){
     this.$root.$on('searchStart', (evData) => {
         this.lastSearchText = evData.searchText;
     });
-
-    // TODO: @TGA тут времененно, для отладки
-    this.$root.$on('sendPersonalMessage', this.handlePersonalMessage);
 
     this.$root.$on('api:Unauthorized', (evData) => {
         window.console.warn(evData, `api:Unauthorized!`);
@@ -230,9 +228,6 @@ created(){
     this.$root.$on('hideAlertModal', () => {
         this.mainModalVisible = false;
     });
-
-    this.$root.$api = new PliziAPI(this.$root, ``);
-    this.$root.$user = new PliziAuthUser({});
 },
 
 beforeMount(){

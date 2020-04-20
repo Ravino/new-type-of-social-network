@@ -10,11 +10,13 @@
             </router-link>
 
             <div class="plizi-notification-item-body m-0 pr-5">
-                <div class="plizi-notification-item-top d-flex align-items-end justify-content-between">
-                    <router-link :to="`/user-`+notification.id" tag="h6" class="plizi-notification-item-name my-0" :title=" notification.senderFullName ">
+                <div class="plizi-notification-item-top d-flex align-items-start justify-content-between">
+                    <router-link :to="`/user-`+notification.id" tag="h6" class="plizi-notification-item-name my-0"
+                                 :title=" notification.senderFullName ">
                         {{ notification.senderFullName }}
                     </router-link>
                 </div>
+
 
                 <div class="plizi-notification-item-top d-flex align-items-end justify-content-between">
 <!--                    {{notification.notifMessage}}-->

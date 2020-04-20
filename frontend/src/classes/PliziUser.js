@@ -150,7 +150,7 @@ class PliziUser {
     _audiosNumber = 0;
 
     /**
-     *
+     * TODO: сделать это сущностью отдельного класса
      * @type {Object|null}
      * @private
      */
@@ -168,6 +168,9 @@ class PliziUser {
     __RELATIONSHIP_MARRIED = 1;
     __RELATIONSHIP_NOT_MARRIED = 2;
 
+    /**
+     * @param {object} usrData
+     */
     constructor(usrData){
        if (usrData  &&  typeof  usrData==='object'  &&  Object.keys(usrData).length>0) {
             this.saveUserData(usrData);
@@ -179,6 +182,12 @@ class PliziUser {
      * @param {Object} inputData
      */
     saveUserData(inputData){
+        if (typeof inputData.data === `undefined`) {
+            //window.console.log( JSON.parse( JSON.stringify(inputData) ), `inputData.data` );
+
+            inputData = { data : inputData };
+        }
+
         this._id = inputData.data.id >>> 0;
         this._isOnline = inputData.data.isOnline;
         this._lastActivity = new Date( inputData.data.lastActivity );
@@ -232,10 +241,12 @@ class PliziUser {
         this._lastName = ``;
         this._sex = ``;
         this._birthday = null;
+
         this._city = {
             id: null,
             title: null,
         };
+
         this._region = null;
         this._country = null;
         this._relationshipId = -1;
@@ -248,6 +259,7 @@ class PliziUser {
         this._photosNumber = -1;
         this._videosNumber = -1;
         this._audiosNumber = -1;
+
         this._privacySettings = {
             pageType: 1,
             writeMessagesPermissions: 1,
@@ -298,6 +310,10 @@ class PliziUser {
      */
     get lastActivity(){
         return this._lastActivity;
+    }
+
+    get lastActivityUnixTime(){
+        return (this._lastActivity.getTime() / 1000) >>> 0;
     }
 
     /**
@@ -466,10 +482,6 @@ class PliziUser {
         return this._friendsNumber;
     }
 
-    /**
-     *
-     * @returns {number}
-     */
     get photosNumber(){
         return this._photosNumber;
     }

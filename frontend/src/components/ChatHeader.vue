@@ -4,15 +4,15 @@
             <div class="col-6">
                 <div class="d-flex align-items-center h-100 ">
                     <div class="media-pic border rounded-circle  mr-3">
-                        <img :src="companionUserPic" v-bind:alt="companionName" />
+                        <img :src="companion.userPic" v-bind:alt="companion.firstName" />
                     </div>
 
                     <div class="media-body">
                         <h6 class="chatHeader-title w-75 align-self-start mt-2 pb-0 mb-0 pull-left text-body" style="line-height: 20px;">
-                            {{companionName}}
+                            {{companion.firstName}}
                         </h6>
                         <p class="chatHeader-subtitle p-0 mb-0 mt-1 w-100 d-block">
-                            {{ companionLastActivity  | lastMessageTime }}
+                            {{ companion.lastActivity  | lastMessageTime }}
                         </p>
                     </div>
                 </div>
@@ -38,10 +38,15 @@
 </template>
 
 <script>
+import PliziDialog from '../classes/PliziDialog.js';
+
 export default {
 name: 'ChatHeader',
 props: {
-    currentDialog: Object
+    currentDialog: {
+        type: PliziDialog | null,
+        required : true
+    }
 },
 
 data() {
@@ -50,43 +55,19 @@ data() {
 },
 
 computed: {
-    companionUserPic: function() {
-        let res = this.$defaultAvatarPath;
-
-        if (this.currentDialog  &&  this.currentDialog.attendees  &&  this.currentDialog.attendees[0]  &&  this.currentDialog.attendees[0].userPic) {
-            res = this.currentDialog.attendees[0].userPic;
+    companion(){
+        if (this.currentDialog  &&  this.currentDialog.companion) {
+            //window.console.log( JSON.parse( JSON.stringify(this.currentDialog.companion) ), `companion this.currentDialog`);
+            return this.currentDialog.companion;
         }
 
-        // TODO: @TGA выпилить когда перестанут сеять в БД lorempixel.com
-        const url = document.createElement('a');
-        url.href = res;
-
-        if (`lorempixel.com` === url.hostname.toLowerCase()) {
-            res = this.$defaultAvatarPath;
+        return {
+            userPic : this.$defaultAvatarPath,
+            firstName : `пользователь`,
+            lastActivity: (new Date()).getTime() / 1000
         }
-
-        return res;
-    },
-
-    companionName: function(){
-        if (this.currentDialog  &&  this.currentDialog.attendees  &&  this.currentDialog.attendees[0]  &&  this.currentDialog.attendees[0].firstName) {
-            return this.currentDialog.attendees[0].firstName;
-        }
-
-        return `Кто-то неизвестный`;
-    },
-
-    companionLastActivity: function(){
-        if (this.currentDialog  &&  this.currentDialog.attendees  &&  this.currentDialog.attendees[0]  &&  this.currentDialog.attendees[0].lastActivityDT) {
-            return this.currentDialog.attendees[0].lastActivityDT;
-        }
-
-        return `1970-01-01 00:00:00`;
     }
-},
-
-methods: {
-},
+}
 
 }
 </script>

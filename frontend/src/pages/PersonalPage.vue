@@ -60,18 +60,59 @@ methods: {
             profile = await this.$root.$api.infoUser(this.id >>> 0);
         }
         catch (e){
-            if (e.status  &&  e.status===401) {
-                this.$root.$emit('afterSuccessLogout', {});
-            }
-            else {
-                throw e;
-            }
+            window.console.warn(e.detailMessage);
+            throw e;
         }
 
         if (profile) {
             this.profileData = new PliziUser();
             this.profileData.saveUserData(profile);
             this.isDataReady = true;
+        }
+    },
+
+
+    // TODO: @TGA тут времененно, для отладки
+    handlePersonalMessage(evData){
+        //window.console.dir(evData, `handlePersonalMessage`);
+        this.sendMessageToUser(evData);
+    },
+
+    async sendMessageToUser(msg){
+        let apiResponse = null;
+
+        try {
+            apiResponse = await this.$root.$api.chatMessage(msg.receiverId, msg.message.body);
+        }
+        catch (e){
+            window.console.warn(e.detailMessage);
+            throw e;
+        }
+
+        // TODO: @TGA доделать тут когда API починят
+        window.console.log(apiResponse, `apiResponse`);
+        return;
+
+        if (apiResponse != null &&  apiResponse.status.toUpperCase() === 'OK') {
+            msg.id = -1;
+            msg.firstName = this.$root.$user.firstName;
+            msg.lastName = this.$root.$user.lastName;
+            msg.userPic =  this.$root.$user.userPic;
+
+            const eventData = {
+                dialogId : (this.currentDialog) ? this.currentDialog.id : -1,
+                message : msg
+            }
+
+            try {
+                this.$root.$emit('newMessageInDialog', eventData);
+            } catch (e){
+
+            }
+            this.newMessage = ``;
+        }
+        else {
+            window.console.info(apiResponse);
         }
     }
 },
@@ -86,6 +127,9 @@ mounted() {
     this.$root.$on('showPersonalMsgModal', ()=>{
         this.isShowMessageDialog = true;
     });
+
+    // TODO: @TGA тут времененно, для отладки
+    this.$root.$on('sendPersonalMessage', this.handlePersonalMessage);
 }
 
 }

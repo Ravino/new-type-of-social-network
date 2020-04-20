@@ -32,6 +32,11 @@ const store = new Vuex.Store({
             return state.activeDialog;
         },
 
+
+        /**
+         * @param state
+         * @returns {string}
+         */
         gwToken : state => {
             let gwt = state.gwToken;
 
@@ -62,40 +67,22 @@ const store = new Vuex.Store({
             return state.lastSearch;
         },
 
+
         chatChannel : state => {
-            let pc = state.chatChannel;
+            let cnl = state.chatChannel;
 
-            if (pc===null  ||  pc===``){
-                pc = window.localStorage.getItem('pliziChatChannel');
+            if (!cnl  ||  ``===cnl) {
+                cnl = window.localStorage.getItem('pliziChatChannel');
+            }
 
-                if (pc!==null  &&  pc!==``){
-                    return pc;
-                }
+            if (cnl !== ``) {
+                state.chatChannel = cnl;
+                return cnl;
             }
 
             return state.chatChannel;
-        },
+        }
 
-        /**
-         * @deprecated
-         * @param state
-         * @returns {null|{headers: {Authorization: string}}}
-         */
-        getHTTPConfig : state => {
-            const gwt = state.gwToken;
-            window.console.warn(`getHTTPConfig deprecated!!!`);
-
-            if (!gwt ||  ``===gwt) {
-                window.console.warn('store->getHTTPConfig: gwToken null or empty!');
-                return null;
-            }
-
-            return {
-                headers : {
-                    Authorization: `Bearer ${gwt}`
-                }
-            };
-        },
     },
 
     // setters
