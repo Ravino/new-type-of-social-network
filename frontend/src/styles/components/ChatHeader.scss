@@ -9,14 +9,23 @@
         border-radius: 20px;
         border-width: 0;
         padding: 0 30px;
-        background-image: url('../images/chat-search-loupe.png');
-        background-repeat: no-repeat;
-        background-position: 90% center;
+        line-height: 20px;
+        outline: none;
+        box-shadow: none;
 
         &::placeholder {
             font-size: 13px;
             color: #a3a8b9;
         }
+    }
+
+    .btn-search {
+        position: absolute;
+        top: 0;
+        bottom: 0;
+        right: 0;
+        z-index: 1;
+        padding-right: 1rem;
     }
 }
 .chatHeader-title {

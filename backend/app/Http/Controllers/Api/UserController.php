@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\User\AddToFriend;
+use App\Http\Requests\User\MarkNotificationsAsRead;
 use App\Http\Resources\Notification\NotificationCollection;
 use App\Http\Resources\User\UserCollection;
 use App\Http\Resources\User\UserSearchCollection;
@@ -120,7 +121,22 @@ class UserController extends Controller
     /**
      * @return NotificationCollection
      */
-    public function notifications() {
-        return new NotificationCollection(Auth::user()->notifications()->get());
+    public function notifications(Request $request) {
+        $notifications = Auth::user()->unreadNotifications()->limit($request->query('limit') ?? 10)->offset($request->query('offset') ?? 0)->get();
+        return new NotificationCollection($notifications);
+    }
+
+    /**
+     * @param MarkNotificationsAsRead $request
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function markNotificationsAsRead(MarkNotificationsAsRead $request)
+    {
+        $affected = Auth::user()->unreadNotifications()->whereIn('id', $request->get('ids'))->update(['read_at' => time()]);
+        return response()->json([
+            'data' => [
+                'affected' => $affected
+            ]
+        ]);
     }
 }

@@ -1,4 +1,7 @@
 import PliziUzer from './PliziUser.js';
+
+import PliziUserStats from './PliziUserStats.js';
+
 import PliziInvitation from './PliziInvitation.js';
 import PliziNotification from './PliziNotification.js';
 import PliziDialog from './PliziDialog.js';
@@ -68,6 +71,13 @@ class PliziAuthUser extends PliziUzer{
     _fm = null;
 
     /**
+     * статистика
+     * @type {PliziUserStats}
+     * @private
+     */
+    _stats = null;
+
+    /**
      * @param {object} usrData
      * @param {PliziAPI} apiObj
      */
@@ -77,6 +87,8 @@ class PliziAuthUser extends PliziUzer{
         this._api = apiObj;
 
         this._fm = new PliziFriendsManager(apiObj);
+
+        this._stats = new PliziUserStats();
     }
 
     /**
@@ -85,6 +97,14 @@ class PliziAuthUser extends PliziUzer{
      */
     get fm(){
         return this._fm;
+    }
+
+    /**
+     * ссылка на статистику
+     * @returns {PliziUserStats}
+     */
+    get stats(){
+        return this._stats;
     }
 
     /**
@@ -97,6 +117,8 @@ class PliziAuthUser extends PliziUzer{
 
         this._email = (inputData.data.email+``).trim();
         this._channel = (inputData.channel) ? (inputData.channel+``).trim() : ``;
+
+        this._stats.update( inputData.data.stats );
 
         if (token) {
             this._token = (token+'').trim();

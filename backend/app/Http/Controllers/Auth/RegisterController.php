@@ -112,7 +112,7 @@ class RegisterController extends Controller
             'email' => $data['email'],
             'first_name' => $data['firstName'],
             'last_name' => $data['lastName'],
-            'birthday' => $data['birthday'],
+            'birthday' => isset($data['birthday']) ? $data['birthday'] : null,
         ]);
 
         return $user;

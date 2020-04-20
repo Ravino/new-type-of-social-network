@@ -1,6 +1,8 @@
-#authHeader {
-    background-color: #f7f8fc;
-    box-shadow: 0 0 4px 0 rgba(0, 0, 0, .05);
+
+#profileHeader {
+    input[type="file"] {
+        display: none;
+    }
 }
 
 .plz-profile-userpic-container {
@@ -10,17 +12,9 @@
 }
 .plz-profile-userpic-wrapper {
     position: relative;
+    height: 100%;
+    max-height: 205px;
 
-    img {
-/**
-* TODO: @tga заремлено мной т.к. работает не корректно с большими аватарками
-        position: relative;
-        top: 0;
-        left: 50%;
-        transform: translateX(-50%);
-*/
-        max-width: 100%;
-    }
 }
 
 .plz-profile-userpic-footer {

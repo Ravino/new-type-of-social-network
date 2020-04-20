@@ -2,7 +2,7 @@
     <div id="chatMessagesBody" class="w-100 align-self-stretch position-relative">
         <vue-custom-scrollbar class="chat-messages-scroll py-4"  :settings="customScrollbarSettings" >
             <div class="d-flex flex-column --align-items-start">
-                <ChatMessageItem v-for="(message, messageIndex) in messages"
+                <ChatMessageItem v-for="(message, messageIndex) in filteredMessages"
                                  v-bind:message="message"
                                  v-bind:next="getNext(messageIndex)"
                                  v-bind:key="messageIndex">
@@ -40,12 +40,15 @@ import vueCustomScrollbar from 'vue-custom-scrollbar';
 /** TODO: переименовать в ForwardMessageModal **/
 import ResendMessageModal from './ResendMessageModal.vue';
 
+//import PliziMessage from "../classes/PliziMessage";
+
 
 export default {
 name: 'ChatMessages',
 props: {
-    messages: Array,
-    currentDialog : Object
+    messagesList: Array,
+    currentDialog : Object,
+    filterText: String
 },
 components: {
     IconBasket, IconShare, ChatMessageItem,
@@ -77,16 +80,25 @@ methods: {
     },
 
     getNext(currIndex) {
-        let ret = (currIndex < this.messages.length) ? this.messages[currIndex + 1] : null;
+        let ret = (currIndex < this.filteredMessages.length) ? this.filteredMessages[currIndex + 1] : null;
         return (typeof ret === 'undefined') ? null : ret;
     },
 
-    scrollToEnd () {
+    scrollToEnd() {
         return setTimeout(() => {
             const container = this.$el.querySelector('.ps-container'); // TODO: Проскролить каждый
             container.scrollTop = container.scrollHeight;
 
         }, 500);
+    }
+},
+
+computed: {
+    filteredMessages(){
+        if (this.filterText.length > 2)
+            return this.messagesList.filter((msgItem)=>{ return msgItem.body.includes(this.filterText); });
+
+        return this.messagesList;
     }
 },
 

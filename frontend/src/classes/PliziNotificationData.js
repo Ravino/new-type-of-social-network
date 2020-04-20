@@ -29,7 +29,8 @@ class PliziNotificationData {
     _types = [
         `friendships.sent`,
         `community.post.created`,
-        `user.post.created`
+        `user.post.created`,
+        `user.profile.image.updated`
     ];
 
     constructor(notifData){

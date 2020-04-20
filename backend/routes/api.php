@@ -34,12 +34,15 @@ Route::group(['middleware' => ['auth.jwt', 'track.activity']], function () {
         'middleware' => ['privacy.role:view_wall_permissions'],
         'uses' => 'Api\PostController@userPosts'
     ]);
+    Route::post('posts/share/wall', 'Api\PostController@addToMyPosts');
+
     Route::get('communities/{community_id}/posts', 'Api\PostController@communityPosts');
     Route::get('posts/{id}', 'Api\PostController@get');
     Route::post('posts', 'Api\PostController@storeByUser');
     Route::post('communities/{community_id}/posts', 'Api\PostController@storeByCommunity');
 
     Route::get('user/notifications', 'Api\UserController@notifications');
+    Route::patch('user/notifications/mark/read', 'Api\UserController@markNotificationsAsRead');
     Route::get('user/friendship', 'Api\UserController@getMyFriendsList');
     Route::get('user/friendship/pending', 'Api\UserController@getMyPendingFriendsList');
     Route::get('user/{id}/friendship', [

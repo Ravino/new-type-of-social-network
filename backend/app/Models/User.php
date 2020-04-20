@@ -127,6 +127,37 @@ class User extends Authenticatable implements JWTSubject
         return $this->hasMany(LinkedSocialAccount::class);
     }
 
+    /**
+     * @return int
+     */
+    public function getNotificationsCountAttribute()
+    {
+        return $this->unreadNotifications()->count();
+    }
+
+    /**
+     * @return int
+     */
+    public function getPendingFriendshipRequestsCountAttribute()
+    {
+        return $this->getFriendRequests()->count();
+    }
+
+    /**
+     * @return int
+     */
+    public function getTotalFriendsCountAttribute()
+    {
+        return $this->getFriends()->count();
+    }
+
+    /**
+     * @return int
+     */
+    public function getUnreadMessagesCountAttribute() {
+        return \DB::table('chat_message_status')->where('user_id', \Auth::user()->id)->where('is_read', false)->count();
+    }
+
     public function getDateFormat()
     {
         return 'U';

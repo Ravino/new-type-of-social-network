@@ -8,7 +8,9 @@ AdminSection::registerModel(\App\Models\User::class, function (\SleepingOwl\Admi
     // Display
     $model->onDisplay(function () {
         $display = AdminDisplay::table()->setColumns([
-            AdminColumn::link('id')->setLabel('ID')->setWidth('400px'),
+            AdminColumn::link('id')->setLabel('ID')->setWidth('100px'),
+            AdminColumn::text('profile.first_name')->setLabel('Name'),
+            AdminColumn::text('profile.last_name')->setLabel('Last Name'),
             AdminColumn::text('email')->setLabel('Email'),
             AdminColumn::custom('is_admin', function(\Illuminate\Database\Eloquent\Model $model) {
                 return (int) $model->is_admin === 1 ? 'Да' : 'Нет';

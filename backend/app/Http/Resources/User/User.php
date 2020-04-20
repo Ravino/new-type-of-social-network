@@ -23,7 +23,13 @@ class User extends JsonResource
                 'isOnline' => $this->isOnline(),
                 'lastActivity' => $this->last_activity_dt,
                 'profile' => new Profile($this->profile),
-                'privacySettings' => new PrivacySettings($this->privacySettings)
+                'privacySettings' => new PrivacySettings($this->privacySettings),
+                'stats' => [
+                    'notificationsCount' => $this->notificationsCount,
+                    'unreadMessagesCount' => $this->unreadMessagesCount,
+                    'pendingFriendshipRequestsCount' => $this->pendingFriendshipRequestsCount,
+                    'totalFriendsCount' => $this->totalFriendsCount,
+                ]
             ];
         } else {
             return [

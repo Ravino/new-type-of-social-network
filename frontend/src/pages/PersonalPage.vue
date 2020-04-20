@@ -89,19 +89,19 @@ methods: {
             throw e;
         }
 
-        // TODO: @TGA доделать тут когда API починят
         window.console.log(apiResponse, `apiResponse`);
-        return;
 
-        if (apiResponse != null &&  apiResponse.status.toUpperCase() === 'OK') {
-            msg.id = -1;
-            msg.firstName = this.$root.$user.firstName;
-            msg.lastName = this.$root.$user.lastName;
-            msg.userPic =  this.$root.$user.userPic;
+        if (apiResponse != null &&  apiResponse.data) {
+            //msg.id = -1;
+            //msg.firstName = this.$root.$user.firstName;
+            //msg.lastName = this.$root.$user.lastName;
+            //msg.userPic =  this.$root.$user.userPic;
+
+            let newMsg = apiResponse.data;
 
             const eventData = {
-                dialogId : (this.currentDialog) ? this.currentDialog.id : -1,
-                message : msg
+                dialogId : newMsg.chatId,
+                message : newMsg
             }
 
             try {
