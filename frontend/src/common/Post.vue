@@ -163,9 +163,12 @@
     }
 
     .post-images {
+        margin-left: -5px;
         img {
             max-height: 337px;
             border-radius: 3px;
+            margin-left: 5px;
+            margin-bottom: 5px;
         }
     }
 </style>
