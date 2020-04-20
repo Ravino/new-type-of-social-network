@@ -2,6 +2,8 @@
 
 namespace App\Providers;
 
+use App\Models\Profile;
+use App\Observers\ProfileObserver;
 use App\Services\SocialUserResolver;
 use Coderello\SocialGrant\Resolvers\SocialUserResolverInterface;
 use Illuminate\Support\ServiceProvider;
@@ -37,5 +39,7 @@ class AppServiceProvider extends ServiceProvider
     public function boot()
     {
         Schema::defaultStringLength(191);
+
+        Profile::observe(ProfileObserver::class);
     }
 }

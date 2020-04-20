@@ -5,11 +5,9 @@ namespace App\Models;
 use App\Models\Geo\City;
 use App\Models\Profile\Relationship;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Validation\Rule;
 
 class Profile extends Model
 {
-
     protected $casts = [
         'created_at' => 'timestamp',
         'updated_at' => 'timestamp',
@@ -56,5 +54,10 @@ class Profile extends Model
     public function city()
     {
         return $this->hasOne(City::class, 'id', 'geo_city_id');
+    }
+
+    public function user()
+    {
+        return $this->belongsTo(User::class);
     }
 }
