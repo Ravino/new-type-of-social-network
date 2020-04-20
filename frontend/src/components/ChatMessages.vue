@@ -95,8 +95,12 @@ methods: {
 
 computed: {
     filteredMessages(){
-        if (this.filterText.length > 2)
-            return this.messagesList.filter((msgItem)=>{ return msgItem.body.includes(this.filterText); });
+        const ft = this.filterText.toLocaleLowerCase();
+
+        if (ft.length > 2)
+            return this.messagesList.filter((msgItem)=>{ return msgItem.body.toLowerCase().includes(ft); });
+
+            //return this.messagesList.filter((msgItem)=>{ return msgItem.body.includes(this.filterText); });
 
         return this.messagesList;
     }

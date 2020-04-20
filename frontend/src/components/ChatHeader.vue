@@ -71,7 +71,7 @@ methods: {
     chatSearchKeyDownCheck(ev){
         const sText = this.chatFilterText.trim();
 
-        if (13 === ev.keyCode){
+        if (8===ev.keyCode  ||  13===ev.keyCode  ||  46===ev.keyCode){
             return this.startChatFilter(sText);
         }
     },

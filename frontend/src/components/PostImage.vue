@@ -1,15 +1,11 @@
 <template>
-    <img :src="src" :alt="alt" :class="classnames">
+    <img :src="src" :alt="alt">
 </template>
 
 <script>
     export default {
         name: "PostImage",
         props: {
-            classnames: {
-                type: String,
-                default: null,
-            },
             src: {
                 type: String,
                 default: null,
