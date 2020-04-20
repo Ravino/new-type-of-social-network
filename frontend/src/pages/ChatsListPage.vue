@@ -19,9 +19,14 @@
 
                 <div id="chatMessagesWrapper"
                      class="col-8 col-lg-8 col-xl-8 bg-light d-none d-lg-flex flex-column p-0 h-100">
-                    <ChatHeader v-if="currentDialog" v-bind:currentDialog="currentDialog" ref="ChatHeader"></ChatHeader>
+                    <ChatHeader v-if="currentDialog" v-bind:currentDialog="currentDialog"
+                                @chatFilter="updateFilterText"
+                                ref="ChatHeader"></ChatHeader>
 
-                    <ChatMessages v-if="isMessagesLoaded" v-bind:messages="messagesList" v-bind:currentDialog="currentDialog"></ChatMessages>
+                    <ChatMessages v-if="isMessagesLoaded" v-bind:messagesList="messagesList"
+                                  v-bind:filterText="filterText"
+                                  v-bind:currentDialog="currentDialog">
+                    </ChatMessages>
                     <Spinner v-else v-bind:message="`Сообщения загружаются,<br />можно выбрать другой диалог`"></Spinner>
 
                     <ChatFooter v-if="currentDialog" v-bind:currentDialog="currentDialog" ref="ChatFooter"></ChatFooter>
@@ -67,6 +72,7 @@ data() {
         isDialogsLoaded: false,
         currentDialog : {},
         messagesList  : [],
+        filterText  : '',
         isMessagesLoaded: false,
 
         customScrollBarSettings: {
@@ -78,6 +84,10 @@ data() {
 },
 
 methods: {
+
+    updateFilterText(evData){
+        this.filterText = (evData.filterText + ``).trim();
+    },
 
     /**
      *  для кратости записи
@@ -134,12 +144,11 @@ methods: {
         return true;
     },
 
-
     scrollHandle(evt) {
         //console.log(evt);
     },
 
-    addNewChatMessageToList(evData) {
+    addNewChatMessageToList(evData){
         this.addMessageToMessageList(evData.message);
         this.updateDialogsList(evData, 'mine');
     },
@@ -185,7 +194,6 @@ async mounted() {
     this.$root.$on('newMessageInDialog', this.addNewChatMessageToList);
 
     this.$root.$on('dialogsLoad', ()=>{
-        window.console.info(`dialogsLoad!!!`);
         this.$forceUpdate();
     });
 

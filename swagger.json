@@ -630,6 +630,55 @@
         ]
       }
     },
+    "/posts/share/wall": {
+      "post": {
+        "tags": [
+          "Posts"
+        ],
+        "summary": "",
+        "description": "Поделиться постом на своей странице",
+        "operationId": "shareToMyWall",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "body",
+            "name": "body",
+            "required": true,
+            "schema": {
+              "type": "object",
+              "properties": {
+                "id": {
+                  "type": "number"
+                }
+              }
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "data": {
+                  "$ref": "#/definitions/PostWithParent"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "Authorization": []
+          }
+        ]
+      }
+    },
     "/register": {
       "post": {
         "tags": [
@@ -2127,6 +2176,44 @@
         },
         "community": {
           "$ref": "#/definitions/Community"
+        }
+      }
+    },
+    "PostWithParent": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "number"
+        },
+        "name": {
+          "type": "string"
+        },
+        "body": {
+          "type": "string"
+        },
+        "primaryImage": {
+          "type": "string"
+        },
+        "likes": {
+          "type": "number"
+        },
+        "views": {
+          "type": "number"
+        },
+        "sharesCount": {
+          "type": "number"
+        },
+        "commentsCount": {
+          "type": "number"
+        },
+        "createdAt": {
+          "type": "number"
+        },
+        "user": {
+          "$ref": "#/definitions/User"
+        },
+        "sharedFrom": {
+          "$ref": "#/definitions/PostByCommunity"
         }
       }
     },

@@ -13,6 +13,7 @@ use App\Models\Post;
 use App\Models\User;
 use App\Notifications\UserSystemNotifications;
 use Illuminate\Support\Facades\Notification;
+use Illuminate\Http\Request;
 
 class PostController extends Controller
 {
@@ -122,5 +123,20 @@ class PostController extends Controller
             }
         }
         return response()->json(['message' => 'Сообщество не найдено'], 404);
+    }
+
+    /**
+     * @param Request $request
+     * @return PostResource
+     */
+    public function addToMyPosts(Request $request)
+    {
+        $post = Post::find($request->id);
+        $my_post = $post->replicate();
+        $my_post->postable_type = User::class;
+        $my_post->postable_id = \Auth::user()->id;
+        $my_post->parent_id = $post->id;
+        $my_post->save();
+        return new PostResource($my_post);
     }
 }
