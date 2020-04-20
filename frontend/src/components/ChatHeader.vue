@@ -9,7 +9,7 @@
 
                     <div class="media-body">
                         <router-link :to="`/user-`+companion.id" tag="h6"
-                                     class="chatHeader-title w-75 align-self-start mt-2 pb-0 mb-0 pull-left text-body cursor-pointer">
+                                 class="chatHeader-title w-75 align-self-start mt-2 pb-0 mb-0 pull-left text-body cursor-pointer">
                             {{companion.firstName}}
                         </router-link>
                         <p class="chatHeader-subtitle p-0 mb-0 mt-1 w-100 d-block">
@@ -24,7 +24,10 @@
                     <div class="form-row align-items-center mt-3 justify-content-end pr-3">
                         <div class="col-auto">
                             <label class="sr-only d-none" for="txtFindInChat">Поиск</label>
-                            <input type="text" class="chat-search-input form-control rounded-pill bg-light px-4" id="txtFindInChat" placeholder="Поиск" />
+                            <input v-model="chatFilterText" id="txtFindInChat" ref="txtFindInChat" type="text"
+                                   @keydown.stop="chatSearchKeyDownCheck($event)"
+                                   class="chat-search-input form-control rounded-pill bg-light px-4"
+                                   placeholder="Поиск" />
                         </div>
                         <div class="col-auto">
                             <button type="submit" class="btn btn-link text-body px-3 py-0 my-auto">
@@ -52,6 +55,21 @@ props: {
 
 data() {
     return {
+        chatFilterText : ``
+    }
+},
+
+methods: {
+    chatSearchKeyDownCheck(ev){
+        const sText = this.chatFilterText.trim();
+
+        if (13 === ev.keyCode){
+            return this.startChatFilter(sText);
+        }
+    },
+
+    startChatFilter(filterText){
+        this.$emit('chatFilter', { filterText : filterText });
     }
 },
 
