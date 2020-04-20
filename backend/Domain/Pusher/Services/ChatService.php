@@ -41,6 +41,7 @@ class ChatService extends BaseService
      * @param int|null $parent_id
      * @param int|null $parent_chat_id
      * @param array $attachment_ids
+     * @return \Domain\Pusher\Http\Resources\Message\Message
      */
     public function send(string $body, int $chat_id, int $author_id, int $parent_id = null, int $parent_chat_id = null, array $attachment_ids = [])
     {
@@ -102,5 +103,13 @@ class ChatService extends BaseService
             array_push($attachment_ids, $attachment->id);
         }
         return $attachment_ids;
+    }
+
+    public function getChatForUser($user_id) {
+        $chat_id = $this->chatRepository->getChatIdForCoupleUsers($user_id, \Auth::user()->id);
+        if(!$chat_id) {
+            $chat_id = $this->chatRepository->createChatForCoupleUsers($user_id, \Auth::user()->id);
+        }
+        return $this->chatRepository->getChatById($chat_id);
     }
 }
