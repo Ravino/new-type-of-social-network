@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
+use Domain\Pusher\Http\Requests\OpenChat;
 use Domain\Pusher\Http\Requests\SendMessageRequest;
 use Domain\Pusher\Http\Requests\SendMessageToUserRequest;
 use Domain\Pusher\Http\Requests\UploadFileRequest;
@@ -61,6 +62,16 @@ class ChatController extends Controller
     {
         $messages = $this->messageRepository->getAllOfChatById($chat_id, Auth::user()->id);
         return response()->json($messages);
+    }
+
+    /**
+     * @param OpenChat $request
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function open(OpenChat $request)
+    {
+        $chat = $this->chatService->getChatForUser($request->get('userId'));
+        return response()->json(['data' => $chat]);
     }
 
     /**

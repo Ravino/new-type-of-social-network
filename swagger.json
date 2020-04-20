@@ -117,7 +117,7 @@
         ]
       }
     },
-    "/send": {
+    "/chat/send": {
       "post": {
         "tags": [
           "Chats"
@@ -182,7 +182,7 @@
         ]
       }
     },
-    "/message/user": {
+    "/chat/message/user": {
       "post": {
         "tags": [
           "Chats"
@@ -247,7 +247,77 @@
         ]
       }
     },
-    "/message/attachments": {
+    "/chat/open": {
+      "post": {
+        "tags": [
+          "Chats"
+        ],
+        "summary": "",
+        "description": "Отдаст или создаст новый диалог с пользователем",
+        "operationId": "OpenOrCreateDialog",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "body",
+            "name": "body",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "userId": {
+                  "type": "number"
+                }
+              }
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "data": {
+                  "$ref": "#/definitions/Dialogs"
+                }
+              }
+            }
+          },
+          "402": {
+            "description": "",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "message": {
+                  "type": "string"
+                },
+                "errors": {
+                  "type": "object",
+                  "properties": {
+                    "field": {
+                      "type": "array",
+                      "items": {
+                        "example": "Here will be error of the field"
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "Authorization": []
+          }
+        ]
+      }
+    },
+    "/chat/message/attachments": {
       "post": {
         "tags": [
           "Chats"
@@ -1614,7 +1684,7 @@
     "CreateMessage": {
       "type": "object",
       "properties": {
-        "chat_id": {
+        "chatId": {
           "type": "number"
         },
         "body": {
@@ -1637,17 +1707,11 @@
     "CreateMessageToUser": {
       "type": "object",
       "properties": {
-        "chat_id": {
+        "userId": {
           "type": "number"
         },
         "body": {
           "type": "string"
-        },
-        "replyOnMessageId": {
-          "type": "number"
-        },
-        "forwardFromChatId": {
-          "type": "number"
         },
         "attachments": {
           "type": "array",

@@ -10,6 +10,7 @@ use Domain\Pusher\Helpers\ArrayUtils;
 use Domain\Pusher\DTOs\Dialog;
 use Domain\Pusher\Http\Resources\Chat\ChatCollection;
 use Domain\Pusher\Models\Chat;
+use Domain\Pusher\Http\Resources\Chat\Chat as ChatResource;
 
 class ChatRepository
 {
@@ -38,6 +39,33 @@ class ChatRepository
             ]);
 
         return new ChatCollection($items, $user_id);
+    }
+
+    /**
+     * Возвращает список чатов пользователя
+     *
+     * @param int $id
+     * @return ChatResource
+     */
+    public function getChatById(int $id)
+    {
+        $user_id = \Auth::user()->id;
+        $items = Chat::with(['attendees' => function($query) use ($user_id) {
+            $query->where('profiles.user_id', '<>', $user_id);
+        }])->where('id', $id)
+            ->join('profiles', 'profiles.user_id', '=', 'chat.user_id')
+            ->whereRaw("chat.id IN (SELECT chat_id FROM chat_party WHERE user_id = $user_id GROUP BY chat_id)")
+            ->orderBy('chat.last_message_time', 'desc')
+            ->first([
+                'chat.id',
+                'chat.name',
+                'chat.last_message_body',
+                'chat.last_is_read',
+                'chat.last_user_id',
+                'chat.last_message_time'
+            ]);
+
+        return new ChatResource($items, $user_id);
     }
 
     /**

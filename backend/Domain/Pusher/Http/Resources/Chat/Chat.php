@@ -1,6 +1,6 @@
 <?php
 
-namespace Domain\Pusher\Http\Resources\Message;
+namespace Domain\Pusher\Http\Resources\Chat;
 
 use App\Http\Resources\Community\Community;
 use App\Http\Resources\User\User;
