@@ -369,3 +369,24 @@ $radioWidth: 18px;
         }
     }
 }
+
+
+.picker {
+    box-shadow: 0 0 10px 0 rgba(0, 0, 0, .1);
+    border-radius: 10px;
+    width: 300px;
+    padding: 4px 8px;
+    text-align: left;
+
+    &-category {
+        font-size: 12px;
+        color: #333;
+        font-weight: 300;
+    }
+
+    span {
+        display: inline-block;
+        text-align: center;
+        width: 28px;
+    }
+}
