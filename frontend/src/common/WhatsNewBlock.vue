@@ -6,28 +6,31 @@
             </div>
         </div>
         <div class="col-9 py-0 px-0">
-            <textarea-autosize
-                class="form-control profileWhatsNew-textarea"
-                name="profileWhatsNew-textarea"
-                id="txtWhatsNew" cols="1" rows="1"
-                :min-height="10"
-                :max-height="200"
-                @input="textAreaAutoHeight"
-                placeholder="Что у Вас нового?"
-            />
+            <!--            <textarea-autosize-->
+            <!--                class="form-control profileWhatsNew-textarea"-->
+            <!--                name="profileWhatsNew-textarea"-->
+            <!--                id="txtWhatsNew" cols="1" rows="1"-->
+            <!--                :min-height="10"-->
+            <!--                :max-height="200"-->
+            <!--                @input="textAreaAutoHeight"-->
+            <!--                placeholder="Что у Вас нового?"-->
+            <!--            />-->
+            <Editor class="form-control p-0 h-100"
+                    ref="editor"/>
         </div>
         <div class="col-2 ml-auto py0 pr-0 d-flex align-items-center justify-content-end">
             <label class="attach-file btn btn-link my-0 ml-0 mr-2 px-1 btn-add-file position-relative">
-                <IconAddFile />
+                <IconAddFile/>
                 <input type="file">
             </label>
             <label class="attach-file btn btn-link my-0 ml-0 mr-2 px-1 btn-add-camera position-relative">
-                <IconAddCamera />
+                <IconAddCamera/>
                 <input type="file">
             </label>
 
             <button class="btn btn-link mx-0 px-1 btn-add-smile" type="button">
-                <IconAddSmile />
+                <EmojiPicker @addEmoji="addEmoji"
+                             :transform="'transform: translate(0, 18%)'"/>
             </button>
         </div>
     </div>
@@ -37,10 +40,18 @@
     import IconAddFile from '../icons/IconAddFile.vue';
     import IconAddCamera from '../icons/IconAddCamera.vue';
     import IconAddSmile from '../icons/IconAddSmile.vue';
+    import Editor from '../components/Editor.vue';
+    import EmojiPicker from '../components/EmojiPicker.vue';
 
     export default {
         name: 'WhatsNewBlock',
-        components: { IconAddCamera, IconAddSmile, IconAddFile },
+        components: {
+            IconAddCamera,
+            IconAddSmile,
+            IconAddFile,
+            Editor,
+            EmojiPicker,
+        },
         data() {
             return {}
         },
@@ -54,6 +65,9 @@
                 let textarea = document.querySelector('#txtWhatsNew');
                 textarea.style.height = "";
                 textarea.style.height = Math.min(textarea.scrollHeight, 300) + "px";
+            },
+            addEmoji(emoji) {
+                this.$refs.editor.addEmoji(emoji);
             },
         },
     }

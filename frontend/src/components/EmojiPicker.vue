@@ -8,7 +8,7 @@
                 <IconAddSmile/>
             </div>
             <div slot="emoji-picker" slot-scope="{ emojis, insert, display }">
-                <div class="picker">
+                <div class="picker" :style="transform">
                     <div v-for="(emojiGroup, category) in emojis" :key="category">
                         <h5 class="picker-category">{{ category }}</h5>
                         <div>
@@ -38,6 +38,12 @@
             Picker,
             IconAddSmile,
         },
+        props: {
+            transform: {
+                type: String,
+                default: null,
+            },
+        },
         methods: {
             insert(emoji) {
                 this.$emit('addEmoji', emoji);
@@ -59,7 +65,7 @@
         top: 0;
         left: 0;
         background: #fff;
-        transform: translate(-50%, -100%);
+        z-index: 999;
 
         .picker-category {
             margin: 10px 0;

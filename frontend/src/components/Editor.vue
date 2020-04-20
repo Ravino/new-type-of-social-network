@@ -73,6 +73,10 @@
 <style lang="scss">
     .menubar {
         .btn {
+            &.is-active {
+                border: 1px solid #1554F7;
+            }
+
             i {
                 color: #1554F7;
             }
