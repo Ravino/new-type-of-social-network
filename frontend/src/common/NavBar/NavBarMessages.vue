@@ -1,7 +1,7 @@
 <template>
     <div class="plz-top-watcher-item position-relative d-inline-block mr-2">
         <router-link to="/chats-list" tag="a" class="btn btn-link my-auto text-body btn-sm">
-            <IconMessage/>
+            <IconMessageShort />
         </router-link>
 
         <span v-if="messagesNumber>0" class="counter-info" id="dropdownMenuMessages" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
@@ -22,10 +22,11 @@
 <script>
 import IconMessage from '../../icons/IconMessage.vue';
 import MessageNotificationItem from '../../components/MessageNotificationItem.vue';
+import IconMessageShort from "../../icons/IconMessageShort.vue";
 
 export default {
 name : 'NavBarMessages',
-components : { IconMessage, MessageNotificationItem },
+components : {IconMessageShort, IconMessage, MessageNotificationItem },
 
 data(){
     return {

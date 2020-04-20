@@ -34,6 +34,8 @@ Route::group(['middleware' => ['auth.jwt', 'track.activity']], function () {
         'middleware' => ['privacy.role:view_wall_permissions'],
         'uses' => 'Api\PostController@userPosts'
     ]);
+    Route::post('posts/share/wall', 'Api\PostController@addToMyPosts');
+
     Route::get('communities/{community_id}/posts', 'Api\PostController@communityPosts');
     Route::get('posts/{id}', 'Api\PostController@get');
     Route::post('posts', 'Api\PostController@storeByUser');

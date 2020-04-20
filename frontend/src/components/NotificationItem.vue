@@ -19,8 +19,12 @@
 
 
                 <div class="plizi-notification-item-top d-flex align-items-end justify-content-between">
-<!--                    {{notification.notifMessage}}-->
-                    <p class="plizi-notification-item-desc mb-1"> оценила ваше <a class="link" href="/">фото</a></p>
+
+                    <p class="plizi-notification-item-desc mb-1">
+                        оценила ваше
+                        <!-- {{notification.notifMessage}}-->
+                        <a class="link" href="/">фото</a>
+                    </p>
                 </div>
 
                 <div class="plizi-notification-item-body-bottom">

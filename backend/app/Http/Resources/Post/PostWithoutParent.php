@@ -8,7 +8,7 @@ use App\Models\User as UserModel;
 use App\Models\Community as CommunityModel;
 use Illuminate\Http\Resources\Json\JsonResource;
 
-class Post extends JsonResource
+class PostWithoutParent extends JsonResource
 {
     /**
      * Transform the resource into an array.
@@ -29,7 +29,6 @@ class Post extends JsonResource
                 'sharesCount' => 25,
                 'commentsCount' => 48,
                 'user' => new User($this->postable),
-                'sharedFrom' => new PostWithoutParent($this->parent),
                 'createdAt' => $this->created_at
             ];
         } else if($this->postable instanceof CommunityModel) {
@@ -43,7 +42,6 @@ class Post extends JsonResource
                 'sharesCount' => 25,
                 'commentsCount' => 48,
                 'community' => new Community($this->postable),
-                'sharedFrom' => new PostWithoutParent($this->parent),
                 'createdAt' => $this->created_at
             ];
         }
