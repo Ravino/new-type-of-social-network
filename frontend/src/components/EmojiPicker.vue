@@ -28,6 +28,7 @@
 </template>
 
 <script>
+    // @link https://github.com/DCzajkowski/vue-emoji-picker
     import Picker from 'vue-emoji-picker';
     import IconAddSmile from '../icons/IconAddSmile.vue';
 
