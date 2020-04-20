@@ -1,32 +1,31 @@
 <template>
     <div id="profileHeader" class="row plz-profile-header mb-4">
         <div class="col-md-3 pl-0">
-            <div class="plz-profile-userpic-container h-100 bg-white-br20 overflow-hidden">
-                <div class="plz-profile-userpic-wrapper">
-                    <img ref="userAvatar" :src="userData.userPic" :alt="userData.fullName" class="plz-br20-top" />
+            <div class="plz-profile-userpic-container d-flex flex-column h-100 bg-white-br20 overflow-hidden">
+                <div class="plz-profile-userpic-wrapper position-relative d-flex align-items-center justify-content-center ">
+                    <img ref="userAvatar" :src="userData.userPic" :alt="userData.fullName"/>
+                </div> <div v-if="isOwner===true" class="plz-profile-userpic-footer mt-auto">
+                <div class="plz-profile-userpic-edit file-label d-flex align-items-center justify-content-between">
+                    <label for="userAvatarFile" class="btn align-items-center justify-content-center d-flex w-75 border-right m-0">Редактировать</label>
 
-                    <div v-if="isOwner===true" class="plz-profile-userpic-footer">
-                        <div class="plz-profile-userpic-edit file-label d-flex align-items-center justify-content-between">
-                            <label for="userAvatarFile" class="btn align-items-center justify-content-center d-flex w-75 border-right m-0">Редактировать</label>
+                    <button class="btn align-items-center justify-content-center d-flex w-25" @click="showProfileOptionsModal()" title="опции">
+                        <span class="ps-dot"></span>
+                        <span class="ps-dot"></span>
+                        <span class="ps-dot"></span>
+                    </button>
+                </div>
+                <input id="userAvatarFile" ref="userAvatarFile" type="file" @change="uploadUserAvatar()" class="d-none" />
+            </div>
 
-                            <button class="btn align-items-center justify-content-center d-flex w-25" @click="showProfileOptionsModal()" title="опции">
-                                <span class="ps-dot"></span>
-                                <span class="ps-dot"></span>
-                                <span class="ps-dot"></span>
-                            </button>
-                        </div>
-                        <input id="userAvatarFile" ref="userAvatarFile" type="file" @change="uploadUserAvatar()" class="d-none" />
-                    </div>
-
-                    <div v-else class="plz-profile-userpic-footer">
-                        <div class="plz-profile-userpic-edit d-flex align-items-center justify-content-between overflow-hidden d-flex m-0 p-0">
-                            <button class="btn align-items-center justify-content-center d-flex w-75 border-right" @click="showPersonalMsgDialog()">Написать</button>
-                            <button class="btn align-items-center justify-content-center d-flex w-25" @click="sendFriendshipInvitation()" title="добавить в друзья">
-                                <i class="fas fa-user-plus"></i>
-                            </button>
-                        </div>
+                <div v-else class="plz-profile-userpic-footer">
+                    <div class="plz-profile-userpic-edit d-flex align-items-center justify-content-between overflow-hidden d-flex m-0 p-0">
+                        <button class="btn align-items-center justify-content-center d-flex w-75 border-right" @click="showPersonalMsgDialog()">Написать</button>
+                        <button class="btn align-items-center justify-content-center d-flex w-25" @click="sendFriendshipInvitation()" title="добавить в друзья">
+                            <i class="fas fa-user-plus"></i>
+                        </button>
                     </div>
                 </div>
+
             </div>
         </div>
 
@@ -198,8 +197,5 @@ methods: {
 }
 </script>
 
-<style scoped lang="scss">
-input[type="file"] {
-    display: none;
-}
-</style>
+
+
