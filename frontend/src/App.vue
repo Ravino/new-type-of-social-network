@@ -77,7 +77,14 @@ methods: {
             this.$root.$api.channel = evData.chatChannel;
 
             if (evData.redirect) {
-                this.$router.push({ path: '/profile' });
+                const redirTo = window.localStorage.getItem('pliziRedirectTo');
+                if (redirTo &&  redirTo!=='') {
+                    window.localStorage.removeItem('pliziRedirectTo');
+                    this.$router.push({ path: redirTo });
+                }
+                else {
+                    this.$router.push({ path: '/profile' });
+                }
             }
         }
         else {

@@ -45,7 +45,9 @@ const router = new VueRouter({
 });
 
 
-function routerForcedLogout(next) {
+function routerForcedLogout(next, to) {
+    window.console.log(to.path, `routerForcedLogout`);
+
     store.dispatch('SET_GWT', ``);
     store.dispatch('SET_CHAT_CHANNEL', ``);
     store.dispatch('SET_LAST_SEARCH', ``);
@@ -54,6 +56,8 @@ function routerForcedLogout(next) {
     window.localStorage.removeItem('pliziUser');
     window.localStorage.removeItem('pliziChatChannel');
     window.localStorage.removeItem('pliziLastSearch');
+
+    window.localStorage.setItem('pliziRedirectTo', to.path);
 
     document.body.className = 'LoginPage';
 
@@ -84,7 +88,7 @@ router.beforeEach(async (to, from, next) => {
                     tryToLoadUser = await (new PliziAPI()).getUser(gwt);
                 }
                 catch (e) {
-                    routerForcedLogout(next);
+                    routerForcedLogout(next, to);
                 }
 
                 if (tryToLoadUser) {
@@ -95,12 +99,12 @@ router.beforeEach(async (to, from, next) => {
                     });
                 }
                 else {
-                    routerForcedLogout(next);
+                    routerForcedLogout(next, to);
                 }
             }
         }
         else {
-            routerForcedLogout(next);
+            routerForcedLogout(next, to);
         }
     }
 

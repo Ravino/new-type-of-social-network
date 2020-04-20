@@ -62,14 +62,20 @@ class PliziUserStats {
 
 
     update(inputData){
-        window.console.log(inputData, `inputData`);
-
         this.notifications = inputData.notificationsCount;
         this.unreadMessages = inputData.unreadMessagesCount;
         this.invitations = inputData.pendingFriendshipRequestsCount;
         this.friends = inputData.totalFriendsCount;
     }
 
+    toJSON(){
+        return {
+            notificationsCount : this.notifications,
+            unreadMessagesCount : this.unreadMessages,
+            pendingFriendshipRequestsCount : this.invitations,
+            totalFriendsCount : this.friends
+        };
+    }
 }
 
 export { PliziUserStats as default}
