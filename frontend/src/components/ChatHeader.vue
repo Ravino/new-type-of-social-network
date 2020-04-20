@@ -1,6 +1,6 @@
 <template>
     <div id="chatHeader" class="bg-white w-100 border-bottom">
-        <div class="row mx-0 py-2">
+        <div class="row mx-0 py-3">
             <div class="col-6">
                 <div class="d-flex align-items-center h-100 ">
                     <router-link :to="`/user-`+companion.id" tag="div" class="media-pic border rounded-circle mr-3 cursor-pointer">
@@ -21,13 +21,16 @@
 
             <div class="col-6">
                 <div class="d-flex align-items-center justify-content-end">
-                    <div class="form-row align-items-center mt-3 justify-content-end pr-3">
-                        <div class="col-auto">
+                    <div class="form-row align-items-center justify-content-end pr-3">
+                        <div class="col-auto position-relative">
                             <label class="sr-only d-none" for="txtFindInChat">Поиск</label>
                             <input v-model="chatFilterText" id="txtFindInChat" ref="txtFindInChat" type="text"
                                    @keydown.stop="chatSearchKeyDownCheck($event)"
                                    class="chat-search-input form-control rounded-pill bg-light px-4"
                                    placeholder="Поиск" />
+                            <button class="btn btn-search h-100 " type="submit"  @click="startChatFilter()">
+                                <IconSearch style="width: 15px; height: 15px;" />
+                            </button>
                         </div>
                         <div class="col-auto">
                             <button type="submit" class="btn btn-link text-body px-3 py-0 my-auto">
@@ -43,9 +46,14 @@
 
 <script>
 import PliziDialog from '../classes/PliziDialog.js';
+import IconSearch from '../icons/IconSearch.vue';
+
 
 export default {
 name: 'ChatHeader',
+components: {
+    IconSearch
+},
 props: {
     currentDialog: {
         type: PliziDialog | null,

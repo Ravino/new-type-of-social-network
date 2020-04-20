@@ -3,24 +3,24 @@
 
         <router-link to="/notifications" tag="a" class="btn btn-link my-auto text-body btn-sm" title="Уведомления">
             <IconBell />
+
+            <span v-if="notificationsNumber>0"
+                  class="counter-info" id="dropdownMenuLikes"
+                  type="button"
+                  data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                {{notificationsNumber}}
+            </span>
+
+            <div v-if="notificationsNumber>0"
+                class=" notifications-likes-dropdown dropdown-menu dropdown-menu-right py-3  dropdown-white w-auto"
+                 aria-labelledby="dropdownMenuLikes">
+                <ul class="list-unstyled mb-0">
+                    <NotificationItem v-for="(notifItem, notifIndex) in notificationsList"
+                                      v-bind:key="notifIndex" v-bind:notification="notifItem">
+                    </NotificationItem>
+                </ul>
+            </div>
         </router-link>
-
-        <span v-if="notificationsNumber>0"
-              class="counter-info" id="dropdownMenuLikes"
-              type="button"
-              data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-            {{notificationsNumber}}
-        </span>
-
-        <div v-if="notificationsNumber>0"
-            class=" notifications-likes-dropdown dropdown-menu dropdown-menu-right py-3  dropdown-white w-auto"
-             aria-labelledby="dropdownMenuLikes">
-            <ul class="list-unstyled mb-0">
-                <NotificationItem v-for="(notifItem, notifIndex) in notificationsList"
-                                  v-bind:key="notifIndex" v-bind:notification="notifItem">
-                </NotificationItem>
-            </ul>
-        </div>
     </div>
 </template>
 
