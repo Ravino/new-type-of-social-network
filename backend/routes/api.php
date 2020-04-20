@@ -40,6 +40,7 @@ Route::group(['middleware' => ['auth.jwt', 'track.activity']], function () {
     Route::post('communities/{community_id}/posts', 'Api\PostController@storeByCommunity');
 
     Route::get('user/notifications', 'Api\UserController@notifications');
+    Route::patch('user/notifications/mark/read', 'Api\UserController@markNotificationsAsRead');
     Route::get('user/friendship', 'Api\UserController@getMyFriendsList');
     Route::get('user/friendship/pending', 'Api\UserController@getMyPendingFriendsList');
     Route::get('user/{id}/friendship', [

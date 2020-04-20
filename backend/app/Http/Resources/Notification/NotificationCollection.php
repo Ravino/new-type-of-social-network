@@ -11,7 +11,6 @@ use Illuminate\Http\Resources\Json\ResourceCollection;
 class NotificationCollection extends ResourceCollection
 {
 
-
     public function __construct($resource)
     {
         parent::__construct($resource);
@@ -34,6 +33,7 @@ class NotificationCollection extends ResourceCollection
                     'createdAt' => $notification->created_at
                 ];
             }),
+            'total' => \Auth::user()->notificationsCount
         ];
     }
 }
