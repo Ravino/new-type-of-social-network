@@ -25,7 +25,7 @@
 
             <div v-else class="message-body d-flex">
                 <div class="message-text">
-                    <p class="mb-0">{{message.body}}</p>
+                    <div class="message-text-inner mb-0" v-html="message.body"></div>
 
                     <template v-if="message.isAttachments">
                         <img v-if="messageSendedImg" class="message-sended-image mt-1" src="../images/user-main-photo.png" alt="" />
