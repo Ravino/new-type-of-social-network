@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use Domain\Pusher\Models\ChatMessage;
 use Illuminate\Database\Eloquent\Model;
 
 class Post extends Model
@@ -23,6 +24,16 @@ class Post extends Model
         return $this->morphTo();
     }
 
+    /**
+     * @return \Illuminate\Database\Eloquent\Relations\HasOne
+     */
+    public function parent() {
+        return $this->hasOne( Post::class, 'id', 'parent_id' );
+    }
+
+    /**
+     * @return string
+     */
     public function getDateFormat()
     {
         return 'U';
