@@ -87,6 +87,7 @@ methods: {
 
     updateFilterText(evData){
         this.filterText = (evData.filterText + ``).trim();
+        this.$forceUpdate();
     },
 
     /**
