@@ -56,8 +56,12 @@
 
         <div class="col-12 plz-post-item-images">
             <div v-if="(postImages && postImages.length > 0)"
-                 :id="postImagesId"
                  class="post-images">
+                <PostImage v-for="(postImage, index) in postImages"
+                           class="post-image"
+                           :key="index"
+                           :src="postImage"
+                           :classnames="{'first-post-image': index === 0}"/>
             </div>
         </div>
 
@@ -97,10 +101,18 @@
     import IconMessage from '../icons/IconMessage.vue';
     import IconMessageUserPost from '../icons/IconMessageUserPost.vue';
     import IconShare from '../icons/IconShare.vue';
+    import PostImage from "../components/PostImage";
 
     export default {
         name: 'Post',
-        components: {IconShare, IconMessage, IconHeard, IconEye, IconMessageUserPost},
+        components: {
+            IconShare,
+            IconMessage,
+            IconHeard,
+            IconEye,
+            IconMessageUserPost,
+            PostImage,
+        },
         props: {
             post: Object
         },
@@ -140,7 +152,6 @@
         },
         data() {
             return {
-                postImagesId: 'postImages-' + Math.floor(Math.random() * 1000),
                 image: {
                     width: this.$router.currentRoute.name === 'NewsPage' ? 752 : 538,
                     height: 337,
@@ -215,9 +226,6 @@
                     post_images_div.append(parent_div);
                 }
             }
-        },
-        mounted() {
-            this.calcPic();
         },
     }
 </script>
