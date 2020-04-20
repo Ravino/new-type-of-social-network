@@ -1,5 +1,7 @@
 <template>
-    <div class="plz-short-friends-item d-flex align-items-center py-1 px-3">
+    <div class="plz-short-friends-item d-flex align-items-center py-2 px-3"
+         :class="{ active: chatWindowShown }"
+         @click="chatWindowShown = ! chatWindowShown">
 
         <router-link tag="a" class="plz-short-friend-userpic text-body" :to="`/user-`+friend.id">
             <img class="plz-short-userpic rounded-circle" :src="friend.userPic" :alt="friend.firstName"/>
@@ -30,7 +32,8 @@ export default {
 name : 'ShortFriendItem',
 components : { IconMessageShort },
 props : {
-    friend : Object
+    friend : Object,
+    chatWindowShown: false
 },
 
 methods: {

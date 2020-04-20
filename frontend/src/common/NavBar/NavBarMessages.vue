@@ -9,12 +9,15 @@
         </span>
 
         <div v-if="messagesNumber>0"
-            class="dropdown-menu dropdown-menu-right py-3  dropdown-white w-auto" aria-labelledby="dropdownMenuMessages">
+            class="dropdown-menu dropdown-menu-right pt-3 pb-0  dropdown-white w-auto" aria-labelledby="dropdownMenuMessages">
 
             <ul class="list-unstyled mb-0">
                 <MessageNotificationItem v-for="(msgItem, msgIndex) in messagesList"
                           v-bind:key="msgIndex" v-bind:message="msgItem"></MessageNotificationItem>
             </ul>
+            <div class="notifications-likes-dropdown-footer border-top">
+                <a href="#" class="notifications-link d-block text-center pt-1 pb-3" > Посмотреть все</a>
+            </div>
         </div>
     </div>
 </template>

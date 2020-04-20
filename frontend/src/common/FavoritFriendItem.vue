@@ -1,5 +1,7 @@
 <template>
-    <div class="plz-favorit-friends-item d-flex align-items-center align-items-center py-1 px-3" @click="showRelatedChat()">
+    <div class="plz-favorit-friends-item d-flex align-items-center align-items-center py-2 px-3"
+         :class="{ active: chatWindowShown }"
+         @click="showRelatedChat()">
 
         <div class="plz-favorit-friend-userpic">
             <img class="plz-favorit-userpic rounded-circle" :src="friend.userPic" :alt="friend.firstName" />
@@ -43,11 +45,13 @@ import PliziFriend from '../classes/PliziFriend.js';
 export default {
 name : 'FavoritFriendItem',
 props : {
-    friend : PliziFriend
+    friend : PliziFriend,
+    chatWindowShown: false
 },
 
 methods: {
     showRelatedChat(){
+        this.chatWindowShown = !this.chatWindowShown;
         this.$root.$alert(`По клику будем показывать привязанный чат`, 'bg-info', 5);
     },
 
