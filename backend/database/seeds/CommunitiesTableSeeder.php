@@ -41,7 +41,7 @@ class CommunitiesTableSeeder extends Seeder
             'name' => $faker->realText(15),
             'description' => $faker->realText(300),
             'notice' => $faker->realText(20),
-            'primary_image' => '',
+            'primary_image' => 'https://lorempixel.com/640/480/people/',
             'url' => '',
             'website' => $faker->url,
             'location' => $faker->city . ', ' . $faker->country,
