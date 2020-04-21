@@ -2,7 +2,7 @@
     <div :id="fieldId" class-x="row d-flex align-items-center mx-0 py-4"
          :class="blockClass">
 
-        <div v-if="showAvatar" class="col-1 align-items-center text-center ">
+        <div v-if="showAvatar" class="col-1 align-items-center text-center pt-2">
             <img class="chat-companion-user-pic rounded-circle my-0 mx-auto"
                  v-bind:src="userPic" v-bind:alt="userFullName" />
         </div>
@@ -11,7 +11,7 @@
             <div class="form pl-3">
                 <div class="form-row align-items-center">
                     <div class="col-12  p-0">
-                        <Editor class="form-control px-2 py-1 h-100"
+                        <Editor class="plz-text-editor-form form-control px-2 py-1 h-100"
                                 @editorPost="onEditorNewPost"
                                 placeholder="Написать сообщение..."
                                 ref="editor" />
@@ -20,7 +20,7 @@
             </div>
         </div>
 
-        <div class="col-2 d-flex justify-content-end pt-1">
+        <div class="col-2 d-flex justify-content-end pt-2">
 
             <label class="attach-file btn btn-link my-0 ml-0 mr-2 px-1 btn-add-file position-relative">
                 <IconAddFile />

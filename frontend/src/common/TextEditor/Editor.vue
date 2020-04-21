@@ -66,22 +66,3 @@ beforeDestroy() {
 }
 </script>
 
-<style lang="scss">
-.menubar {
-    .btn {
-        i {
-            color: #1554F7;
-        }
-    }
-}
-
-.editor-content {
-    height: 100%;
-
-    .ProseMirror {
-        height: 100%;
-        outline: none;
-    }
-}
-
-</style>
