@@ -88,6 +88,18 @@ class PliziUserPrivacySettings {
         this._twoFactorAuthEnabled = permissions.twoFactorAuthEnabled;
         this._smsConfirm = permissions.smsConfirm;
     }
+
+    toJSON() {
+        return {
+            pageType: this._pageType,
+            writeMessagesPermissions: this.writeMessagesPermissions,
+            postWallPermissions: this.postWallPermissions,
+            viewWallPermissions: this.viewWallPermissions,
+            viewFriendsPermissions: this.viewFriendsPermissions,
+            twoFactorAuthEnabled: this.twoFactorAuthEnabled,
+            smsConfirm: this.smsConfirm,
+        }
+    }
 }
 
 export default PliziUserPrivacySettings;

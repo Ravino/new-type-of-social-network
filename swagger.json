@@ -801,6 +801,52 @@
         ]
       }
     },
+    "/posts/rate": {
+      "post": {
+        "tags": [
+          "Posts"
+        ],
+        "description": "Лайкнуть или дизлайнуть пост (Повторный вызов на пост который был ранее лайнут - снимет данный лайк)",
+        "operationId": "LikeDislikePost",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "postId": {
+                    "type": "number"
+                  }
+                }
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "Authorization": []
+          }
+        ]
+      }
+    },
     "/register": {
       "post": {
         "tags": [
@@ -2200,6 +2246,9 @@
           "sharesCount": {
             "type": "number"
           },
+          "alreadyLiked": {
+            "type": "boolean"
+          },
           "commentsCount": {
             "type": "number"
           },
@@ -2207,7 +2256,15 @@
             "type": "number"
           },
           "attachments": {
-            "$ref": "#/components/schemas/PostAttachments"
+            "type": "object",
+            "properties": {
+              "list": {
+                "type": "array",
+                "items": {
+                  "$ref": "#/components/schemas/PostAttachments"
+                }
+              }
+            }
           },
           "user": {
             "$ref": "#/components/schemas/User"
@@ -2238,6 +2295,9 @@
           "sharesCount": {
             "type": "number"
           },
+          "alreadyLiked": {
+            "type": "boolean"
+          },
           "commentsCount": {
             "type": "number"
           },
@@ -2245,7 +2305,15 @@
             "type": "number"
           },
           "attachments": {
-            "$ref": "#/components/schemas/PostAttachments"
+            "type": "object",
+            "properties": {
+              "list": {
+                "type": "array",
+                "items": {
+                  "$ref": "#/components/schemas/PostAttachments"
+                }
+              }
+            }
           },
           "community": {
             "$ref": "#/components/schemas/Community"
@@ -2276,6 +2344,9 @@
           "sharesCount": {
             "type": "number"
           },
+          "alreadyLiked": {
+            "type": "boolean"
+          },
           "commentsCount": {
             "type": "number"
           },
@@ -2283,7 +2354,15 @@
             "type": "number"
           },
           "attachments": {
-            "$ref": "#/components/schemas/PostAttachments"
+            "type": "object",
+            "properties": {
+              "list": {
+                "type": "array",
+                "items": {
+                  "$ref": "#/components/schemas/PostAttachments"
+                }
+              }
+            }
           },
           "user": {
             "$ref": "#/components/schemas/User"
@@ -2320,11 +2399,22 @@
           "commentsCount": {
             "type": "number"
           },
+          "alreadyLiked": {
+            "type": "boolean"
+          },
           "createdAt": {
             "type": "number"
           },
           "attachments": {
-            "$ref": "#/components/schemas/PostAttachments"
+            "type": "object",
+            "properties": {
+              "list": {
+                "type": "array",
+                "items": {
+                  "$ref": "#/components/schemas/PostAttachments"
+                }
+              }
+            }
           },
           "user": {
             "$ref": "#/components/schemas/User"
