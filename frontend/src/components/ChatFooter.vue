@@ -4,7 +4,8 @@
     использовать события для получения инфы
     -->
 
-    <TextEditor :id="`chatFooter`" :showAvatar="false" :clazz="`bg-white w-100 border-top position-relative mt-auto`"
+    <TextEditor :id="`chatFooter`" :showAvatar="false"
+                :clazz="`bg-white w-100 border-top position-relative mt-auto d-flex align-items-start px-3 py-3 `"
         @editorPost="onTextPost" @editorFile="onFileChange" @editorImage="onImageChange">
     </TextEditor>
 </template>

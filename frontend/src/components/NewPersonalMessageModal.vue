@@ -34,44 +34,23 @@
                     </div>
 
                     <div class="form mt-3">
-                        <div class="form-group row border-bottom">
-                            <label for="privateMessage" class="col-12 col-form-label">Ваше сообщение</label>
-
-                            <div class="col-9 py-1">
-
-                                <textarea-autosize
-                                    class="form-control border-0"
-                                    placeholder="Начните печатать..."
-                                    id="privateMessage" ref="privateMessage"
-                                    v-model="privateMessage"
-                                    @keydown.native="personalMsgKeyDownCheck($event)"
-                                    :min-height="10"
-                                    :max-height="200"
-                                />
-                            </div>
-
-                            <div class="col-3 pt-2">
-                                <div class="btn-group ">
-                                    <button class="btn btn-link mx-0 px-1 btn-add-file" type="button">
-                                        <IconAddFile />
-                                    </button>
-                                    <button class="btn btn-link mx-0 px-1 btn-add-camera" type="button">
-                                        <IconAddCamera />
-                                    </button>
-                                    <button class="btn btn-link mx-0 px-1 btn-add-smile" type="button">
-                                        <IconAddSmile />
-                                    </button>
-                                </div>
-                            </div>
-                        </div>
-
-                        <div class="form-group row">
-                            <div class="col-12">
-                                <button type="button" class="btn plz-btn plz-btn-primary" @click.prevent="startPersonalMessage()">Отправить</button>
-                            </div>
-                        </div>
+                        <TextEditor :id="`messageToUserFromHisPage`"
+                                    :showAvatar="false"
+                                    :clazz="`row plz-text-editor mb-4 pl-2 h-auto  align-items-start`"
+                                    :inModal="true"
+                                    @editorPost="onTextPost"
+                                    @editorFile="onFileChange"
+                                    @editorImage="onImageChange">
+                        </TextEditor>
 
                     </div>
+
+                    <div class="form-group row mb-0 pt-3 border-top">
+                        <div class="col-12">
+                            <button type="button" class="btn plz-btn plz-btn-primary" @click.prevent="startPersonalMessage()">Отправить</button>
+                        </div>
+                    </div>
+
                 </div>
             </div>
         </div>
@@ -84,6 +63,7 @@ import IconAddCamera from '../icons/IconAddCamera.vue';
 import IconAddSmile from '../icons/IconAddSmile.vue';
 
 import PliziUser from '../classes/PliziUser.js';
+import TextEditor from '../common/TextEditor.vue';
 
 /** @link https://www.npmjs.com/package/vue-textarea-autosize **/
 
@@ -92,7 +72,9 @@ name: 'NewPersonalMessageModal',
 props: {
     user: PliziUser
 },
-components: { IconAddCamera, IconAddSmile, IconAddFile },
+components: { IconAddCamera, IconAddSmile, IconAddFile,
+    TextEditor
+},
 data() {
     return {
         privateMessage: ``
@@ -124,13 +106,66 @@ methods: {
         });
 
         this.$root.$emit('hidePersonalMsgModal', {});
+    },
+
+
+    onTextPost(evData){
+        window.console.log(evData.postText, `ChatFooter::onTextPost`);
+        if (evData.postText.trim() !== '') {
+            this.addMessageToChat( evData.postText.trim() );
+        }
+    },
+
+    onFileChange(evData){
+        window.console.log(evData, `ChatFooter::onFileChange`);
+    },
+
+    onImageChange(evData){
+        window.console.log(evData, `ChatFooter::onImageChange`);
+    },
+
+    async addMessageToChat( msgText ){
+        const chatId = (this.currentDialog) ? this.currentDialog.id : -1;
+
+        const newMsg = {
+            body : msgText,
+            createdAt : Math.floor( (new Date()).getTime() / 1000 ),
+            isMine : true,
+            isRead : false,
+            isEdited : false
+        };
+
+        let apiResponse = null;
+
+        try{
+            apiResponse = await this.$root.$api.chatSend( chatId, newMsg.body );
+        } catch (e){
+            window.console.warn( e.detailMessage );
+            throw e;
+        }
+
+        if ( apiResponse ){
+            window.console.dir( apiResponse.data, `apiResponse` );
+
+            const eventData = {
+                dialogId : (this.currentDialog) ? this.currentDialog.id : -1,
+                message : apiResponse.data
+            }
+
+            this.$root.$emit( 'newMessageInDialog', eventData );
+            this.newMessage = ``;
+        }
+        else{
+            window.console.info( apiResponse );
+        }
     }
+
 },
 
 mounted() {
-    setTimeout(() => {
+    /*setTimeout(() => {
         this.$refs.privateMessage.$el.focus();
-    }, 100);
+    }, 100);*/
 },
 }
 </script>

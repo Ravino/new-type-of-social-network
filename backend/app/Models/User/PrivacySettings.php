@@ -4,6 +4,7 @@ namespace App\Models\User;
 
 use App\Models\Rbac\Role;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Validation\Rule;
 
 class PrivacySettings extends Model
 {
@@ -37,11 +38,11 @@ class PrivacySettings extends Model
     {
         $rules = [
             'user_id' => 'required|integer',
-            'page_type' => 'integer|nullable',
-            'write_messages_permissions' => 'integer|nullable',
-            'post_wall_permissions' => 'integer|nullable',
-            'view_wall_permissions' => 'integer|nullable',
-            'view_friends_permissions' => 'integer|nullable',
+            'page_type' => Rule::exists('rbac_roles', 'id') . '|integer|nullable',
+            'write_messages_permissions' => Rule::exists('rbac_roles', 'id') . '|integer|nullable',
+            'post_wall_permissions' => Rule::exists('rbac_roles', 'id') . '|integer|nullable',
+            'view_wall_permissions' => Rule::exists('rbac_roles', 'id') . '|integer|nullable',
+            'view_friends_permissions' => Rule::exists('rbac_roles', 'id') . '|integer|nullable',
             'two_factor_auth_enabled' => 'integer|nullable|min:0|max:1',
             'sms_confirm' => 'integer|nullable|min:0|max:1',
         ];

@@ -1,0 +1,50 @@
+$EditorUserPicSize: 32px;
+
+.plz-text-editor {
+
+    .chat-companion-user-pic {
+        width: $EditorUserPicSize;
+        height: $EditorUserPicSize;
+        min-width: $EditorUserPicSize;
+    }
+
+    .editor-content {
+        padding: 6px 4px;
+
+        p {
+            margin-bottom: 0;
+        }
+    }
+
+    &-form {
+        border-color: var(--light);
+    }
+
+    .menubar {
+        .btn {
+            i {
+                color: #1554F7;
+            }
+        }
+    }
+}
+.editor-content {
+    height: 100%;
+
+    .ProseMirror {
+        height: 100%;
+        outline: none;
+        p {
+            margin-bottom: 0;
+        }
+    }
+}
+
+#messageToUserFromHisPage {
+    .col-10 {
+        max-width: calc(100% - 150px);
+    }
+    .col-2 {
+        min-width: 120px;
+    }
+}

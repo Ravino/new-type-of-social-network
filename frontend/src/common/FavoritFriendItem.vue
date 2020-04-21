@@ -45,10 +45,13 @@ import PliziFriend from '../classes/PliziFriend.js';
 export default {
 name : 'FavoritFriendItem',
 props : {
-    friend : PliziFriend,
-    chatWindowShown: false
+    friend : PliziFriend
 },
-
+data() {
+    return {
+        chatWindowShown: false
+    }
+},
 methods: {
     showRelatedChat(){
         this.chatWindowShown = !this.chatWindowShown;
