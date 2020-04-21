@@ -32,6 +32,13 @@ class Post extends Model
     }
 
     /**
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
+    public function attachments() {
+        return $this->hasMany(PostAttachment::class, 'post_id', 'id');
+    }
+
+    /**
      * @return string
      */
     public function getDateFormat()

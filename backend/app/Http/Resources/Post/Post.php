@@ -28,6 +28,7 @@ class Post extends JsonResource
                 'views' => $this->views,
                 'sharesCount' => 25,
                 'commentsCount' => 48,
+                'attachments' => new AttachmentsCollection($this->attachments),
                 'user' => new User($this->postable),
                 'sharedFrom' => $this->parent_id ? new PostWithoutParent($this->parent) : null,
                 'createdAt' => $this->created_at
@@ -42,6 +43,7 @@ class Post extends JsonResource
                 'views' => $this->views,
                 'sharesCount' => 25,
                 'commentsCount' => 48,
+                'attachments' => new AttachmentsCollection($this->attachments),
                 'community' => new Community($this->postable),
                 'sharedFrom' => $this->parent_id ? new PostWithoutParent($this->parent) : null,
                 'createdAt' => $this->created_at

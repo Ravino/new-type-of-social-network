@@ -26,6 +26,7 @@ class Post extends Request
         return [
             'name' => 'nullable|string|max:255',
             'body' => 'required|string',
+            'attachmentIds' => 'array'
         ];
     }
 }

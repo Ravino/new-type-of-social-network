@@ -34,7 +34,7 @@ class ImageUpload extends Model
         static::creating(function($image) {
             if($image->tag === self::TAG_PRIMARY) {
                 $affected = (new ImageUpload)->where('user_id', auth()->user()->id)->where('tag', self::TAG_PRIMARY)->update(['tag' => self::TAG_SECONDARY]);
-                Event::dispatch($affected ? 'user.profile.image.updated' : 'user.profile.image.created', \Auth::user()->id);
+                Event::dispatch($affected ? 'user.profile.image.updated' : 'user.profile.image.created', ['user_id' => \Auth::user()->id]);
             }
         });
         static::creating(function ($image) {

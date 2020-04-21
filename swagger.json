@@ -1,12 +1,18 @@
 {
-  "swagger": "2.0",
+  "openapi": "3.0.1",
   "info": {
+    "title": "Socnet Plizi",
     "description": "",
-    "version": "1.0.0",
-    "title": "Socnet Plizi"
+    "version": "1.0.0"
   },
-  "host": "vm1095330.hl.had.pm",
-  "basePath": "/api",
+  "servers": [
+    {
+      "url": "https://vm1095330.hl.had.pm/api"
+    },
+    {
+      "url": "http://vm1095330.hl.had.pm/api"
+    }
+  ],
   "tags": [
     {
       "name": "User",
@@ -29,35 +35,28 @@
       "description": "Все, что касается диалогов и сообщений"
     }
   ],
-  "schemes": [
-    "https",
-    "http"
-  ],
   "paths": {
     "/chat/dialogs": {
       "get": {
         "tags": [
           "Chats"
         ],
-        "summary": "",
         "description": "Список моих диалогов",
         "operationId": "getListOfDialogs",
-        "consumes": [
-          "application/json"
-        ],
-        "produces": [
-          "application/json"
-        ],
         "responses": {
           "200": {
             "description": "OK",
-            "schema": {
-              "type": "object",
-              "properties": {
-                "list": {
-                  "type": "array",
-                  "items": {
-                    "$ref": "#/definitions/Dialogs"
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "list": {
+                      "type": "array",
+                      "items": {
+                        "$ref": "#/components/schemas/Dialogs"
+                      }
+                    }
                   }
                 }
               }
@@ -76,34 +75,33 @@
         "tags": [
           "Chats"
         ],
-        "summary": "",
         "description": "Список сообщений в диалоге",
         "operationId": "getListOfDialogMessages",
-        "consumes": [
-          "application/json"
-        ],
-        "produces": [
-          "application/json"
-        ],
         "parameters": [
           {
-            "in": "path",
             "name": "dialog_id",
+            "in": "path",
             "description": "ID диалога",
             "required": true,
-            "type": "integer"
+            "schema": {
+              "type": "integer"
+            }
           }
         ],
         "responses": {
           "200": {
             "description": "OK",
-            "schema": {
-              "type": "object",
-              "properties": {
-                "list": {
-                  "type": "array",
-                  "items": {
-                    "$ref": "#/definitions/Messages"
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "list": {
+                      "type": "array",
+                      "items": {
+                        "$ref": "#/components/schemas/Messages"
+                      }
+                    }
                   }
                 }
               }
@@ -122,51 +120,54 @@
         "tags": [
           "Chats"
         ],
-        "summary": "",
         "description": "Отправить сообщение",
         "operationId": "sendMessage",
-        "consumes": [
-          "application/json"
-        ],
-        "produces": [
-          "application/json"
-        ],
-        "parameters": [
-          {
-            "in": "body",
-            "name": "body",
-            "schema": {
-              "$ref": "#/definitions/CreateMessage"
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateMessage"
+              }
             }
-          }
-        ],
+          },
+          "required": false
+        },
         "responses": {
           "200": {
             "description": "OK",
-            "schema": {
-              "type": "object",
-              "properties": {
-                "data": {
-                  "$ref": "#/definitions/PostByUser"
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "data": {
+                      "$ref": "#/components/schemas/PostByUser"
+                    }
+                  }
                 }
               }
             }
           },
           "402": {
             "description": "",
-            "schema": {
-              "type": "object",
-              "properties": {
-                "message": {
-                  "type": "string"
-                },
-                "errors": {
+            "content": {
+              "application/json": {
+                "schema": {
                   "type": "object",
                   "properties": {
-                    "field": {
-                      "type": "array",
-                      "items": {
-                        "example": "Here will be error of the field"
+                    "message": {
+                      "type": "string"
+                    },
+                    "errors": {
+                      "type": "object",
+                      "properties": {
+                        "field": {
+                          "type": "array",
+                          "items": {
+                            "type": "object",
+                            "example": "Here will be error of the field"
+                          }
+                        }
                       }
                     }
                   }
@@ -179,7 +180,8 @@
           {
             "Authorization": []
           }
-        ]
+        ],
+        "x-codegen-request-body-name": "body"
       }
     },
     "/chat/message/user": {
@@ -187,51 +189,54 @@
         "tags": [
           "Chats"
         ],
-        "summary": "",
         "description": "Отправить сообщение пользователю",
         "operationId": "sendMessageToUser",
-        "consumes": [
-          "application/json"
-        ],
-        "produces": [
-          "application/json"
-        ],
-        "parameters": [
-          {
-            "in": "body",
-            "name": "body",
-            "schema": {
-              "$ref": "#/definitions/CreateMessageToUser"
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateMessageToUser"
+              }
             }
-          }
-        ],
+          },
+          "required": false
+        },
         "responses": {
           "200": {
             "description": "OK",
-            "schema": {
-              "type": "object",
-              "properties": {
-                "data": {
-                  "$ref": "#/definitions/PostByUser"
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "data": {
+                      "$ref": "#/components/schemas/PostByUser"
+                    }
+                  }
                 }
               }
             }
           },
           "402": {
             "description": "",
-            "schema": {
-              "type": "object",
-              "properties": {
-                "message": {
-                  "type": "string"
-                },
-                "errors": {
+            "content": {
+              "application/json": {
+                "schema": {
                   "type": "object",
                   "properties": {
-                    "field": {
-                      "type": "array",
-                      "items": {
-                        "example": "Here will be error of the field"
+                    "message": {
+                      "type": "string"
+                    },
+                    "errors": {
+                      "type": "object",
+                      "properties": {
+                        "field": {
+                          "type": "array",
+                          "items": {
+                            "type": "object",
+                            "example": "Here will be error of the field"
+                          }
+                        }
                       }
                     }
                   }
@@ -244,7 +249,8 @@
           {
             "Authorization": []
           }
-        ]
+        ],
+        "x-codegen-request-body-name": "body"
       }
     },
     "/chat/open": {
@@ -252,56 +258,59 @@
         "tags": [
           "Chats"
         ],
-        "summary": "",
         "description": "Отдаст или создаст новый диалог с пользователем",
         "operationId": "OpenOrCreateDialog",
-        "consumes": [
-          "application/json"
-        ],
-        "produces": [
-          "application/json"
-        ],
-        "parameters": [
-          {
-            "in": "body",
-            "name": "body",
-            "schema": {
-              "type": "object",
-              "properties": {
-                "userId": {
-                  "type": "number"
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "userId": {
+                    "type": "number"
+                  }
                 }
               }
             }
-          }
-        ],
+          },
+          "required": false
+        },
         "responses": {
           "200": {
             "description": "OK",
-            "schema": {
-              "type": "object",
-              "properties": {
-                "data": {
-                  "$ref": "#/definitions/Dialogs"
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "data": {
+                      "$ref": "#/components/schemas/Dialogs"
+                    }
+                  }
                 }
               }
             }
           },
           "402": {
             "description": "",
-            "schema": {
-              "type": "object",
-              "properties": {
-                "message": {
-                  "type": "string"
-                },
-                "errors": {
+            "content": {
+              "application/json": {
+                "schema": {
                   "type": "object",
                   "properties": {
-                    "field": {
-                      "type": "array",
-                      "items": {
-                        "example": "Here will be error of the field"
+                    "message": {
+                      "type": "string"
+                    },
+                    "errors": {
+                      "type": "object",
+                      "properties": {
+                        "field": {
+                          "type": "array",
+                          "items": {
+                            "type": "object",
+                            "example": "Here will be error of the field"
+                          }
+                        }
                       }
                     }
                   }
@@ -314,7 +323,8 @@
           {
             "Authorization": []
           }
-        ]
+        ],
+        "x-codegen-request-body-name": "body"
       }
     },
     "/chat/message/attachments": {
@@ -322,51 +332,66 @@
         "tags": [
           "Chats"
         ],
-        "summary": "",
         "description": "Загрузить файлы",
         "operationId": "uploadMessageAttachments",
-        "consumes": [
-          "multipart/form-data"
-        ],
-        "produces": [
-          "application/json"
-        ],
-        "parameters": [
-          {
-            "name": "files",
-            "in": "formData",
-            "description": "file to upload",
-            "required": true,
-            "type": "file"
-          }
-        ],
+        "requestBody": {
+          "content": {
+            "multipart/form-data": {
+              "schema": {
+                "required": [
+                  "files"
+                ],
+                "properties": {
+                  "files": {
+                    "type": "string",
+                    "description": "file to upload",
+                    "format": "binary"
+                  }
+                }
+              }
+            }
+          },
+          "required": true
+        },
         "responses": {
           "200": {
             "description": "OK",
-            "schema": {
-              "type": "object",
-              "properties": {
-                "data": {
-                  "$ref": "#/definitions/PostByUser"
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "attachmentIds": {
+                      "type": "array",
+                      "items": {
+                        "type": "number"
+                      }
+                    }
+                  }
                 }
               }
             }
           },
           "402": {
             "description": "",
-            "schema": {
-              "type": "object",
-              "properties": {
-                "message": {
-                  "type": "string"
-                },
-                "errors": {
+            "content": {
+              "application/json": {
+                "schema": {
                   "type": "object",
                   "properties": {
-                    "field": {
-                      "type": "array",
-                      "items": {
-                        "example": "Here will be error of the field"
+                    "message": {
+                      "type": "string"
+                    },
+                    "errors": {
+                      "type": "object",
+                      "properties": {
+                        "field": {
+                          "type": "array",
+                          "items": {
+                            "type": "object",
+                            "example": "Here will be error of the field"
+                          }
+                        }
                       }
                     }
                   }
@@ -387,60 +412,69 @@
         "tags": [
           "Posts"
         ],
-        "summary": "",
         "description": "Создать пост",
         "operationId": "createPost",
-        "consumes": [
-          "application/json"
-        ],
-        "produces": [
-          "application/json"
-        ],
-        "parameters": [
-          {
-            "in": "body",
-            "name": "body",
-            "required": true,
-            "schema": {
-              "type": "object",
-              "properties": {
-                "name": {
-                  "type": "string"
-                },
-                "body": {
-                  "type": "string"
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "name": {
+                    "type": "string",
+                    "nullable": true
+                  },
+                  "body": {
+                    "type": "string"
+                  },
+                  "attachmentIds": {
+                    "type": "array",
+                    "items": {
+                      "type": "number"
+                    }
+                  }
                 }
               }
             }
-          }
-        ],
+          },
+          "required": true
+        },
         "responses": {
           "200": {
             "description": "OK",
-            "schema": {
-              "type": "object",
-              "properties": {
-                "data": {
-                  "$ref": "#/definitions/PostByUser"
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "data": {
+                      "$ref": "#/components/schemas/PostByUser"
+                    }
+                  }
                 }
               }
             }
           },
           "402": {
             "description": "",
-            "schema": {
-              "type": "object",
-              "properties": {
-                "message": {
-                  "type": "string"
-                },
-                "errors": {
+            "content": {
+              "application/json": {
+                "schema": {
                   "type": "object",
                   "properties": {
-                    "field": {
-                      "type": "array",
-                      "items": {
-                        "example": "Here will be error of the field"
+                    "message": {
+                      "type": "string"
+                    },
+                    "errors": {
+                      "type": "object",
+                      "properties": {
+                        "field": {
+                          "type": "array",
+                          "items": {
+                            "type": "object",
+                            "example": "Here will be error of the field"
+                          }
+                        }
                       }
                     }
                   }
@@ -453,7 +487,8 @@
           {
             "Authorization": []
           }
-        ]
+        ],
+        "x-codegen-request-body-name": "body"
       }
     },
     "/posts/{id}": {
@@ -461,32 +496,31 @@
         "tags": [
           "Posts"
         ],
-        "summary": "",
         "description": "Посты на моей стене",
         "operationId": "postsById",
-        "consumes": [
-          "application/json"
-        ],
-        "produces": [
-          "application/json"
-        ],
         "parameters": [
           {
-            "in": "path",
             "name": "id",
+            "in": "path",
             "description": "ID Поста",
             "required": true,
-            "type": "integer"
+            "schema": {
+              "type": "integer"
+            }
           }
         ],
         "responses": {
           "200": {
             "description": "OK",
-            "schema": {
-              "type": "object",
-              "properties": {
-                "data": {
-                  "$ref": "#/definitions/PostWithAll"
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "data": {
+                      "$ref": "#/components/schemas/PostWithAll"
+                    }
+                  }
                 }
               }
             }
@@ -504,53 +538,60 @@
         "tags": [
           "Posts"
         ],
-        "summary": "",
         "description": "Создать пост в группе",
         "operationId": "createPostFromCommunity",
-        "consumes": [
-          "application/json"
-        ],
-        "produces": [
-          "application/json"
-        ],
         "parameters": [
           {
-            "in": "path",
             "name": "id",
+            "in": "path",
             "description": "ID сообщества",
             "required": true,
-            "type": "integer"
-          },
-          {
-            "in": "body",
-            "name": "body",
-            "required": true,
             "schema": {
-              "type": "object",
-              "properties": {
-                "name": {
-                  "type": "string"
-                },
-                "body": {
-                  "type": "string"
-                }
-              }
+              "type": "integer"
             }
           }
         ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "name": {
+                    "type": "string"
+                  },
+                  "body": {
+                    "type": "string"
+                  },
+                  "attachmentIds": {
+                    "type": "array",
+                    "items": {
+                      "type": "number"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "required": true
+        },
         "responses": {
           "200": {
             "description": "OK",
-            "schema": {
-              "type": "object",
-              "properties": {
-                "data": {
+            "content": {
+              "application/json": {
+                "schema": {
                   "type": "object",
                   "properties": {
-                    "list": {
-                      "type": "array",
-                      "items": {
-                        "$ref": "#/definitions/PostByCommunity"
+                    "data": {
+                      "type": "object",
+                      "properties": {
+                        "list": {
+                          "type": "array",
+                          "items": {
+                            "$ref": "#/components/schemas/PostByCommunity"
+                          }
+                        }
                       }
                     }
                   }
@@ -560,19 +601,24 @@
           },
           "402": {
             "description": "",
-            "schema": {
-              "type": "object",
-              "properties": {
-                "message": {
-                  "type": "string"
-                },
-                "errors": {
+            "content": {
+              "application/json": {
+                "schema": {
                   "type": "object",
                   "properties": {
-                    "field": {
-                      "type": "array",
-                      "items": {
-                        "example": "Here will be error of the field"
+                    "message": {
+                      "type": "string"
+                    },
+                    "errors": {
+                      "type": "object",
+                      "properties": {
+                        "field": {
+                          "type": "array",
+                          "items": {
+                            "type": "object",
+                            "example": "Here will be error of the field"
+                          }
+                        }
                       }
                     }
                   }
@@ -585,7 +631,8 @@
           {
             "Authorization": []
           }
-        ]
+        ],
+        "x-codegen-request-body-name": "body"
       }
     },
     "/user/posts": {
@@ -593,28 +640,25 @@
         "tags": [
           "Posts"
         ],
-        "summary": "",
         "description": "Посты в ленте новостей",
         "operationId": "postsFromMyWall",
-        "consumes": [
-          "application/json"
-        ],
-        "produces": [
-          "application/json"
-        ],
         "responses": {
           "200": {
             "description": "OK",
-            "schema": {
-              "type": "object",
-              "properties": {
-                "data": {
+            "content": {
+              "application/json": {
+                "schema": {
                   "type": "object",
                   "properties": {
-                    "list": {
-                      "type": "array",
-                      "items": {
-                        "$ref": "#/definitions/PostWithAll"
+                    "data": {
+                      "type": "object",
+                      "properties": {
+                        "list": {
+                          "type": "array",
+                          "items": {
+                            "$ref": "#/components/schemas/PostWithAll"
+                          }
+                        }
                       }
                     }
                   }
@@ -635,38 +679,116 @@
         "tags": [
           "Posts"
         ],
-        "summary": "",
         "description": "Поделиться постом на своей странице",
         "operationId": "shareToMyWall",
-        "consumes": [
-          "application/json"
-        ],
-        "produces": [
-          "application/json"
-        ],
-        "parameters": [
-          {
-            "in": "body",
-            "name": "body",
-            "required": true,
-            "schema": {
-              "type": "object",
-              "properties": {
-                "id": {
-                  "type": "number"
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "id": {
+                    "type": "number"
+                  }
+                }
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "data": {
+                      "$ref": "#/components/schemas/PostWithParent"
+                    }
+                  }
                 }
               }
             }
           }
+        },
+        "security": [
+          {
+            "Authorization": []
+          }
         ],
+        "x-codegen-request-body-name": "body"
+      }
+    },
+    "/posts/attachments": {
+      "post": {
+        "tags": [
+          "Chats"
+        ],
+        "description": "Загрузить файлы",
+        "operationId": "uploadPostAttachments",
+        "requestBody": {
+          "content": {
+            "multipart/form-data": {
+              "schema": {
+                "required": [
+                  "files"
+                ],
+                "properties": {
+                  "files": {
+                    "type": "string",
+                    "description": "file to upload",
+                    "format": "binary"
+                  }
+                }
+              }
+            }
+          },
+          "required": true
+        },
         "responses": {
           "200": {
             "description": "OK",
-            "schema": {
-              "type": "object",
-              "properties": {
-                "data": {
-                  "$ref": "#/definitions/PostWithParent"
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "attachmentIds": {
+                      "type": "array",
+                      "items": {
+                        "type": "number"
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "402": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string"
+                    },
+                    "errors": {
+                      "type": "object",
+                      "properties": {
+                        "field": {
+                          "type": "array",
+                          "items": {
+                            "type": "object",
+                            "example": "Here will be error of the field"
+                          }
+                        }
+                      }
+                    }
+                  }
                 }
               }
             }
@@ -684,70 +806,72 @@
         "tags": [
           "User"
         ],
-        "summary": "",
         "description": "Отправить запрос на регистрацию",
         "operationId": "register",
-        "consumes": [
-          "application/json"
-        ],
-        "produces": [
-          "application/json"
-        ],
-        "parameters": [
-          {
-            "in": "body",
-            "name": "body",
-            "required": true,
-            "schema": {
-              "type": "object",
-              "properties": {
-                "email": {
-                  "type": "string"
-                },
-                "firstName": {
-                  "type": "string"
-                },
-                "lastName": {
-                  "type": "string"
-                },
-                "birthday": {
-                  "type": "string",
-                  "default": null
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "email": {
+                    "type": "string"
+                  },
+                  "firstName": {
+                    "type": "string"
+                  },
+                  "lastName": {
+                    "type": "string"
+                  },
+                  "birthday": {
+                    "type": "string",
+                    "default": null
+                  }
                 }
               }
             }
-          }
-        ],
+          },
+          "required": true
+        },
         "responses": {
           "201": {
             "description": "Успешно зарегистрирован",
-            "schema": {
-              "type": "object",
-              "properties": {
-                "message": {
-                  "type": "string"
-                },
-                "email": {
-                  "type": "string"
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string"
+                    },
+                    "email": {
+                      "type": "string"
+                    }
+                  }
                 }
               }
             }
           },
           "402": {
             "description": "",
-            "schema": {
-              "type": "object",
-              "properties": {
-                "message": {
-                  "type": "string"
-                },
-                "errors": {
+            "content": {
+              "application/json": {
+                "schema": {
                   "type": "object",
                   "properties": {
-                    "field": {
-                      "type": "array",
-                      "items": {
-                        "example": "Here will be error of the field"
+                    "message": {
+                      "type": "string"
+                    },
+                    "errors": {
+                      "type": "object",
+                      "properties": {
+                        "field": {
+                          "type": "array",
+                          "items": {
+                            "type": "object",
+                            "example": "Here will be error of the field"
+                          }
+                        }
                       }
                     }
                   }
@@ -755,7 +879,8 @@
               }
             }
           }
-        }
+        },
+        "x-codegen-request-body-name": "body"
       }
     },
     "/login": {
@@ -763,49 +888,47 @@
         "tags": [
           "User"
         ],
-        "summary": "",
         "description": "Отправить запрос на регистрацию",
         "operationId": "login",
-        "consumes": [
-          "application/json"
-        ],
-        "produces": [
-          "application/json"
-        ],
-        "parameters": [
-          {
-            "in": "body",
-            "name": "body",
-            "required": true,
-            "schema": {
-              "type": "object",
-              "properties": {
-                "email": {
-                  "type": "string"
-                },
-                "password": {
-                  "type": "string"
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "email": {
+                    "type": "string"
+                  },
+                  "password": {
+                    "type": "string"
+                  }
                 }
               }
             }
-          }
-        ],
+          },
+          "required": true
+        },
         "responses": {
           "200": {
             "description": "Успешно авторизован",
-            "schema": {
-              "type": "object",
-              "properties": {
-                "token": {
-                  "type": "string"
-                },
-                "chanel": {
-                  "type": "string"
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "token": {
+                      "type": "string"
+                    },
+                    "chanel": {
+                      "type": "string"
+                    }
+                  }
                 }
               }
             }
           }
-        }
+        },
+        "x-codegen-request-body-name": "body"
       }
     },
     "/user": {
@@ -813,20 +936,17 @@
         "tags": [
           "User"
         ],
-        "summary": "",
         "description": "Получить данные пользователя",
         "operationId": "getUser",
-        "consumes": [
-          "application/json"
-        ],
-        "produces": [
-          "application/json"
-        ],
         "responses": {
           "200": {
             "description": "Успешно получен",
-            "schema": {
-              "$ref": "#/definitions/User"
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/User"
+                }
+              }
             }
           }
         },
@@ -840,29 +960,31 @@
         "tags": [
           "User"
         ],
-        "summary": "",
-        "description": "",
-        "parameters": [
-          {
-            "in": "body",
-            "name": "body",
-            "required": true,
-            "schema": {
-              "type": "object",
-              "properties": {
-                "firstName": {
-                  "type": "string",
-                  "example": "new name"
+        "requestBody": {
+          "content": {
+            "*/*": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "firstName": {
+                    "type": "string",
+                    "example": "new name"
+                  }
                 }
               }
             }
-          }
-        ],
+          },
+          "required": true
+        },
         "responses": {
           "200": {
             "description": "OK",
-            "schema": {
-              "$ref": "#/definitions/User"
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/User"
+                }
+              }
             }
           }
         },
@@ -870,7 +992,8 @@
           {
             "Authorization": []
           }
-        ]
+        ],
+        "x-codegen-request-body-name": "body"
       }
     },
     "/user/{id}": {
@@ -878,29 +1001,28 @@
         "tags": [
           "User"
         ],
-        "summary": "",
         "description": "Получить данные пользователя",
         "operationId": "getUserById",
-        "consumes": [
-          "application/json"
-        ],
-        "produces": [
-          "application/json"
-        ],
         "parameters": [
           {
-            "in": "path",
             "name": "id",
+            "in": "path",
             "description": "ID пользователя",
             "required": true,
-            "type": "integer"
+            "schema": {
+              "type": "integer"
+            }
           }
         ],
         "responses": {
           "200": {
             "description": "Успешно получен",
-            "schema": {
-              "$ref": "#/definitions/User"
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/User"
+                }
+              }
             }
           }
         },
@@ -916,44 +1038,35 @@
         "tags": [
           "User"
         ],
-        "summary": "",
         "description": "Получить данные пользователя",
         "operationId": "searchUser",
-        "consumes": [
-          "application/json"
-        ],
-        "produces": [
-          "application/json"
-        ],
         "parameters": [
           {
-            "in": "body",
-            "name": "body",
-            "required": true,
+            "in": "query",
+            "name": "search",
             "schema": {
-              "type": "object",
-              "properties": {
-                "search": {
-                  "type": "string",
-                  "example": "Search string"
-                }
-              }
-            }
+              "type": "string"
+            },
+            "required": true
           }
         ],
         "responses": {
           "200": {
             "description": "OK",
-            "schema": {
-              "type": "object",
-              "properties": {
-                "data": {
+            "content": {
+              "application/json": {
+                "schema": {
                   "type": "object",
                   "properties": {
-                    "list": {
-                      "type": "array",
-                      "items": {
-                        "$ref": "#/definitions/User"
+                    "data": {
+                      "type": "object",
+                      "properties": {
+                        "list": {
+                          "type": "array",
+                          "items": {
+                            "$ref": "#/components/schemas/User"
+                          }
+                        }
                       }
                     }
                   }
@@ -966,7 +1079,8 @@
           {
             "Authorization": []
           }
-        ]
+        ],
+        "x-codegen-request-body-name": "body"
       }
     },
     "/user/profile/image": {
@@ -974,40 +1088,45 @@
         "tags": [
           "User"
         ],
-        "summary": "",
         "description": "Загрузить изображение для пользователя",
         "operationId": "uploadImage",
-        "consumes": [
-          "multipart/form-data"
-        ],
-        "produces": [
-          "application/json"
-        ],
-        "parameters": [
-          {
-            "name": "tag",
-            "in": "formData",
-            "description": "Additional data to pass to server",
-            "required": true,
-            "type": "string"
+        "requestBody": {
+          "content": {
+            "multipart/form-data": {
+              "schema": {
+                "required": [
+                  "file",
+                  "tag"
+                ],
+                "properties": {
+                  "tag": {
+                    "type": "string",
+                    "description": "Additional data to pass to server"
+                  },
+                  "file": {
+                    "type": "string",
+                    "description": "file to upload",
+                    "format": "binary"
+                  }
+                }
+              }
+            }
           },
-          {
-            "name": "file",
-            "in": "formData",
-            "description": "file to upload",
-            "required": true,
-            "type": "file"
-          }
-        ],
+          "required": true
+        },
         "responses": {
           "200": {
             "description": "Успешно получен",
-            "schema": {
-              "type": "object",
-              "properties": {
-                "path": {
-                  "type": "string",
-                  "example": "https://plizi.s3.eu-north-1.amazonaws.com/images/originals/WEP0464rMZ9J3j0QWmTTbX5oVyC46kJI6PZMtI56.png"
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "path": {
+                      "type": "string",
+                      "example": "https://plizi.s3.eu-north-1.amazonaws.com/images/originals/WEP0464rMZ9J3j0QWmTTbX5oVyC46kJI6PZMtI56.png"
+                    }
+                  }
                 }
               }
             }
@@ -1025,44 +1144,43 @@
         "tags": [
           "User"
         ],
-        "summary": "",
         "description": "Получить уведомления пользователя",
         "operationId": "getUserNotifications",
-        "consumes": [
-          "application/json"
-        ],
-        "produces": [
-          "application/json"
-        ],
         "parameters": [
           {
-            "in": "query",
             "name": "limit",
-            "required": false,
-            "type": "number",
-            "default": 10
+            "in": "query",
+            "schema": {
+              "type": "number",
+              "default": 10
+            }
           },
           {
-            "in": "query",
             "name": "offset",
-            "required": false,
-            "type": "number",
-            "default": 0
+            "in": "query",
+            "schema": {
+              "type": "number",
+              "default": 0
+            }
           }
         ],
         "responses": {
           "200": {
             "description": "OK",
-            "schema": {
-              "type": "object",
-              "properties": {
-                "data": {
+            "content": {
+              "application/json": {
+                "schema": {
                   "type": "object",
                   "properties": {
-                    "list": {
-                      "type": "array",
-                      "items": {
-                        "$ref": "#/definitions/NotificationRes"
+                    "data": {
+                      "type": "object",
+                      "properties": {
+                        "list": {
+                          "type": "array",
+                          "items": {
+                            "$ref": "#/components/schemas/NotificationRes"
+                          }
+                        }
                       }
                     }
                   }
@@ -1083,46 +1201,43 @@
         "tags": [
           "User"
         ],
-        "summary": "",
         "description": "Пометить уведомления как прочитанные",
         "operationId": "markNotificationsAsRead",
-        "consumes": [
-          "application/json"
-        ],
-        "produces": [
-          "application/json"
-        ],
-        "parameters": [
-          {
-            "in": "body",
-            "name": "body",
-            "required": true,
-            "schema": {
-              "type": "object",
-              "properties": {
-                "ids": {
-                  "type": "array",
-                  "items": {
-                    "type": "string"
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "ids": {
+                    "type": "array",
+                    "items": {
+                      "type": "string"
+                    }
                   }
                 }
               }
             }
-          }
-        ],
+          },
+          "required": true
+        },
         "responses": {
           "200": {
             "description": "OK",
-            "schema": {
-              "type": "object",
-              "properties": {
-                "data": {
+            "content": {
+              "application/json": {
+                "schema": {
                   "type": "object",
                   "properties": {
-                    "list": {
-                      "type": "array",
-                      "items": {
-                        "$ref": "#/definitions/NotificationRes"
+                    "data": {
+                      "type": "object",
+                      "properties": {
+                        "list": {
+                          "type": "array",
+                          "items": {
+                            "$ref": "#/components/schemas/NotificationRes"
+                          }
+                        }
                       }
                     }
                   }
@@ -1135,60 +1250,34 @@
           {
             "Authorization": []
           }
-        ]
+        ],
+        "x-codegen-request-body-name": "body"
       }
     },
     "/communities": {
-      "post": {
+      "get": {
         "tags": [
           "Communities"
         ],
-        "summary": "",
-        "description": "Создать сообщество",
-        "operationId": "createCommunity",
-        "consumes": [
-          "application/json"
-        ],
-        "produces": [
-          "application/json"
-        ],
-        "parameters": [
-          {
-            "in": "body",
-            "name": "body",
-            "required": true,
-            "schema": {
-              "$ref": "#/definitions/CommunityInput"
-            }
-          }
-        ],
+        "description": "Список сообществ",
+        "operationId": "getCommunities",
         "responses": {
           "200": {
             "description": "OK",
-            "schema": {
-              "type": "object",
-              "properties": {
-                "data": {
-                  "$ref": "#/definitions/Community"
-                }
-              }
-            }
-          },
-          "422": {
-            "description": "",
-            "schema": {
-              "type": "object",
-              "properties": {
-                "message": {
-                  "type": "string"
-                },
-                "errors": {
+            "content": {
+              "application/json": {
+                "schema": {
                   "type": "object",
                   "properties": {
-                    "field": {
-                      "type": "array",
-                      "items": {
-                        "example": "Here will be error of the field"
+                    "data": {
+                      "type": "object",
+                      "properties": {
+                        "list": {
+                          "type": "array",
+                          "items": {
+                            "$ref": "#/components/schemas/Community"
+                          }
+                        }
                       }
                     }
                   }
@@ -1203,32 +1292,58 @@
           }
         ]
       },
-      "get": {
+      "post": {
         "tags": [
           "Communities"
         ],
-        "summary": "",
-        "description": "Список сообществ",
-        "operationId": "getCommunities",
-        "consumes": [
-          "application/json"
-        ],
-        "produces": [
-          "application/json"
-        ],
+        "description": "Создать сообщество",
+        "operationId": "createCommunity",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CommunityInput"
+              }
+            }
+          },
+          "required": true
+        },
         "responses": {
           "200": {
             "description": "OK",
-            "schema": {
-              "type": "object",
-              "properties": {
-                "data": {
+            "content": {
+              "application/json": {
+                "schema": {
                   "type": "object",
                   "properties": {
-                    "list": {
-                      "type": "array",
-                      "items": {
-                        "$ref": "#/definitions/Community"
+                    "data": {
+                      "$ref": "#/components/schemas/Community"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string"
+                    },
+                    "errors": {
+                      "type": "object",
+                      "properties": {
+                        "field": {
+                          "type": "array",
+                          "items": {
+                            "type": "object",
+                            "example": "Here will be error of the field"
+                          }
+                        }
                       }
                     }
                   }
@@ -1241,7 +1356,8 @@
           {
             "Authorization": []
           }
-        ]
+        ],
+        "x-codegen-request-body-name": "body"
       }
     },
     "/communities/{id}": {
@@ -1249,32 +1365,31 @@
         "tags": [
           "Communities"
         ],
-        "summary": "",
         "description": "Список сообществ в которых я учавствую",
         "operationId": "getCommunityById",
-        "consumes": [
-          "application/json"
-        ],
-        "produces": [
-          "application/json"
-        ],
         "parameters": [
           {
-            "in": "path",
             "name": "id",
+            "in": "path",
             "description": "ID сообщества",
             "required": true,
-            "type": "integer"
+            "schema": {
+              "type": "integer"
+            }
           }
         ],
         "responses": {
           "200": {
             "description": "OK",
-            "schema": {
-              "type": "object",
-              "properties": {
-                "data": {
-                  "$ref": "#/definitions/Community"
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "data": {
+                      "$ref": "#/components/schemas/Community"
+                    }
+                  }
                 }
               }
             }
@@ -1290,59 +1405,65 @@
         "tags": [
           "Communities"
         ],
-        "summary": "",
         "description": "Обновить сообщество",
         "operationId": "updateCommunity",
-        "consumes": [
-          "application/json"
-        ],
-        "produces": [
-          "application/json"
-        ],
         "parameters": [
           {
-            "in": "path",
             "name": "id",
+            "in": "path",
             "description": "ID сообщества",
             "required": true,
-            "type": "integer"
-          },
-          {
-            "in": "body",
-            "name": "body",
-            "required": true,
             "schema": {
-              "$ref": "#/definitions/CommunityInput"
+              "type": "integer"
             }
           }
         ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CommunityInput"
+              }
+            }
+          },
+          "required": true
+        },
         "responses": {
           "200": {
             "description": "OK",
-            "schema": {
-              "type": "object",
-              "properties": {
-                "data": {
-                  "$ref": "#/definitions/Community"
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "data": {
+                      "$ref": "#/components/schemas/Community"
+                    }
+                  }
                 }
               }
             }
           },
           "422": {
             "description": "",
-            "schema": {
-              "type": "object",
-              "properties": {
-                "message": {
-                  "type": "string"
-                },
-                "errors": {
+            "content": {
+              "application/json": {
+                "schema": {
                   "type": "object",
                   "properties": {
-                    "field": {
-                      "type": "array",
-                      "items": {
-                        "example": "Here will be error of the field"
+                    "message": {
+                      "type": "string"
+                    },
+                    "errors": {
+                      "type": "object",
+                      "properties": {
+                        "field": {
+                          "type": "array",
+                          "items": {
+                            "type": "object",
+                            "example": "Here will be error of the field"
+                          }
+                        }
                       }
                     }
                   }
@@ -1355,7 +1476,8 @@
           {
             "Authorization": []
           }
-        ]
+        ],
+        "x-codegen-request-body-name": "body"
       }
     },
     "/communities/{id}/subscribe": {
@@ -1363,35 +1485,34 @@
         "tags": [
           "Communities"
         ],
-        "summary": "",
         "description": "Подписаться на сообщество",
         "operationId": "subscribeOnCommunity",
-        "consumes": [
-          "application/json"
-        ],
-        "produces": [
-          "application/json"
-        ],
         "parameters": [
           {
-            "in": "path",
             "name": "id",
+            "in": "path",
             "description": "ID сообщества",
             "required": true,
-            "type": "integer"
+            "schema": {
+              "type": "integer"
+            }
           }
         ],
         "responses": {
           "200": {
             "description": "OK",
-            "schema": {
-              "type": "object",
-              "properties": {
-                "message": {
-                  "type": "string"
-                },
-                "id": {
-                  "type": "number"
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string"
+                    },
+                    "id": {
+                      "type": "number"
+                    }
+                  }
                 }
               }
             }
@@ -1409,35 +1530,34 @@
         "tags": [
           "Communities"
         ],
-        "summary": "",
         "description": "Отписаться от сообщества",
         "operationId": "unsubscribeFromCommunity",
-        "consumes": [
-          "application/json"
-        ],
-        "produces": [
-          "application/json"
-        ],
         "parameters": [
           {
-            "in": "path",
             "name": "id",
+            "in": "path",
             "description": "ID сообщества",
             "required": true,
-            "type": "integer"
+            "schema": {
+              "type": "integer"
+            }
           }
         ],
         "responses": {
           "200": {
             "description": "OK",
-            "schema": {
-              "type": "object",
-              "properties": {
-                "message": {
-                  "type": "string"
-                },
-                "id": {
-                  "type": "number"
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string"
+                    },
+                    "id": {
+                      "type": "number"
+                    }
+                  }
                 }
               }
             }
@@ -1455,32 +1575,31 @@
         "tags": [
           "Communities"
         ],
-        "summary": "",
         "description": "Список сообществ в которых я учавствую",
         "operationId": "getUserCommunities",
-        "consumes": [
-          "application/json"
-        ],
-        "produces": [
-          "application/json"
-        ],
         "parameters": [
           {
-            "in": "path",
             "name": "id",
+            "in": "path",
             "description": "ID сообщества",
             "required": true,
-            "type": "integer"
+            "schema": {
+              "type": "integer"
+            }
           }
         ],
         "responses": {
           "200": {
             "description": "OK",
-            "schema": {
-              "type": "object",
-              "properties": {
-                "data": {
-                  "$ref": "#/definitions/UserWithCommunities"
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "data": {
+                      "$ref": "#/components/schemas/UserWithCommunities"
+                    }
+                  }
                 }
               }
             }
@@ -1494,51 +1613,35 @@
       }
     },
     "/user/friendship": {
-      "post": {
+      "get": {
         "tags": [
           "Friendships"
         ],
-        "summary": "",
-        "description": "Отправить запрос на добавление в друзья",
-        "operationId": "addToFriend",
-        "consumes": [
-          "application/json"
-        ],
-        "produces": [
-          "application/json"
-        ],
-        "parameters": [
-          {
-            "in": "body",
-            "name": "body",
-            "description": "ID пользователя которго требуется добавить в друзья",
-            "required": true,
-            "schema": {
-              "type": "object",
-              "properties": {
-                "userId": {
-                  "type": "integer",
-                  "format": "int64"
-                }
-              }
-            }
-          }
-        ],
+        "description": "Список моих друзей",
+        "operationId": "myFriendsList",
         "responses": {
           "200": {
             "description": "Успешно добавлен",
-            "schema": {
-              "type": "object",
-              "properties": {
-                "message": {
-                  "type": "string",
-                  "default": "Запрос на добавление в друзья отправлен"
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "data": {
+                      "type": "object",
+                      "properties": {
+                        "list": {
+                          "type": "array",
+                          "items": {
+                            "$ref": "#/components/schemas/User"
+                          }
+                        }
+                      }
+                    }
+                  }
                 }
               }
             }
-          },
-          "422": {
-            "description": "Вы уже отправляли запрос данному пользователю / Вы уже отправляли запрос данному пользователю"
           }
         },
         "security": [
@@ -1547,45 +1650,57 @@
           }
         ]
       },
-      "get": {
+      "post": {
         "tags": [
           "Friendships"
         ],
-        "summary": "",
-        "description": "Список моих друзей",
-        "operationId": "myFriendsList",
-        "consumes": [
-          "application/json"
-        ],
-        "produces": [
-          "application/json"
-        ],
+        "description": "Отправить запрос на добавление в друзья",
+        "operationId": "addToFriend",
+        "requestBody": {
+          "description": "ID пользователя которго требуется добавить в друзья",
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "userId": {
+                    "type": "integer",
+                    "format": "int64"
+                  }
+                }
+              }
+            }
+          },
+          "required": true
+        },
         "responses": {
           "200": {
             "description": "Успешно добавлен",
-            "schema": {
-              "type": "object",
-              "properties": {
-                "data": {
+            "content": {
+              "application/json": {
+                "schema": {
                   "type": "object",
                   "properties": {
-                    "list": {
-                      "type": "array",
-                      "items": {
-                        "$ref": "#/definitions/User"
-                      }
+                    "message": {
+                      "type": "string",
+                      "default": "Запрос на добавление в друзья отправлен"
                     }
                   }
                 }
               }
             }
+          },
+          "422": {
+            "description": "Вы уже отправляли запрос данному пользователю / Вы уже отправляли запрос данному пользователю",
+            "content": {}
           }
         },
         "security": [
           {
             "Authorization": []
           }
-        ]
+        ],
+        "x-codegen-request-body-name": "body"
       }
     },
     "/user/{id}/friendship": {
@@ -1593,37 +1708,36 @@
         "tags": [
           "Friendships"
         ],
-        "summary": "",
         "description": "Список друзей пользователя",
         "operationId": "userFriendsList",
-        "consumes": [
-          "application/json"
-        ],
-        "produces": [
-          "application/json"
-        ],
         "parameters": [
           {
-            "in": "path",
             "name": "id",
+            "in": "path",
             "description": "ID пользователя чей листинг необходимо показать",
             "required": true,
-            "type": "integer"
+            "schema": {
+              "type": "integer"
+            }
           }
         ],
         "responses": {
           "200": {
             "description": "Успешно добавлен",
-            "schema": {
-              "type": "object",
-              "properties": {
-                "data": {
+            "content": {
+              "application/json": {
+                "schema": {
                   "type": "object",
                   "properties": {
-                    "list": {
-                      "type": "array",
-                      "items": {
-                        "$ref": "#/definitions/User"
+                    "data": {
+                      "type": "object",
+                      "properties": {
+                        "list": {
+                          "type": "array",
+                          "items": {
+                            "$ref": "#/components/schemas/User"
+                          }
+                        }
                       }
                     }
                   }
@@ -1632,7 +1746,8 @@
             }
           },
           "403": {
-            "description": "Not allowed"
+            "description": "Not allowed",
+            "content": {}
           }
         },
         "security": [
@@ -1647,28 +1762,25 @@
         "tags": [
           "Friendships"
         ],
-        "summary": "",
         "description": "Список пользователей запросившых подтверждение на добавление в друзья",
         "operationId": "pendingFriendsRequests",
-        "consumes": [
-          "application/json"
-        ],
-        "produces": [
-          "application/json"
-        ],
         "responses": {
           "200": {
             "description": "ОК",
-            "schema": {
-              "type": "object",
-              "properties": {
-                "data": {
+            "content": {
+              "application/json": {
+                "schema": {
                   "type": "object",
                   "properties": {
-                    "list": {
-                      "type": "array",
-                      "items": {
-                        "$ref": "#/definitions/User"
+                    "data": {
+                      "type": "object",
+                      "properties": {
+                        "list": {
+                          "type": "array",
+                          "items": {
+                            "$ref": "#/components/schemas/User"
+                          }
+                        }
                       }
                     }
                   }
@@ -1677,7 +1789,8 @@
             }
           },
           "403": {
-            "description": "Not allowed"
+            "description": "Not allowed",
+            "content": {}
           }
         },
         "security": [
@@ -1692,54 +1805,53 @@
         "tags": [
           "Friendships"
         ],
-        "summary": "",
         "description": "Принять запрос на добавление в друзья",
         "operationId": "acceptFriend",
-        "consumes": [
-          "application/json"
-        ],
-        "produces": [
-          "application/json"
-        ],
-        "parameters": [
-          {
-            "in": "body",
-            "name": "body",
-            "description": "ID пользователя от которого требуется принять заявку",
-            "required": true,
-            "schema": {
-              "type": "object",
-              "properties": {
-                "userId": {
-                  "type": "integer",
-                  "format": "int64"
+        "requestBody": {
+          "description": "ID пользователя от которого требуется принять заявку",
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "userId": {
+                    "type": "integer",
+                    "format": "int64"
+                  }
                 }
               }
             }
-          }
-        ],
+          },
+          "required": true
+        },
         "responses": {
           "200": {
             "description": "Вы приняли пользователя в друзья",
-            "schema": {
-              "type": "object",
-              "properties": {
-                "message": {
-                  "type": "string",
-                  "default": "Вы приняли пользователя в друзья"
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string",
+                      "default": "Вы приняли пользователя в друзья"
+                    }
+                  }
                 }
               }
             }
           },
           "422": {
-            "description": "Данный пользователь не отправлял вам запрос в друзья"
+            "description": "Данный пользователь не отправлял вам запрос в друзья",
+            "content": {}
           }
         },
         "security": [
           {
             "Authorization": []
           }
-        ]
+        ],
+        "x-codegen-request-body-name": "body"
       }
     },
     "/user/friendship/decline": {
@@ -1747,625 +1859,658 @@
         "tags": [
           "Friendships"
         ],
-        "summary": "",
         "description": "Принять запрос на добавление в друзья",
         "operationId": "declineFriend",
-        "consumes": [
-          "application/json"
-        ],
-        "produces": [
-          "application/json"
-        ],
-        "parameters": [
-          {
-            "in": "body",
-            "name": "body",
-            "description": "ID пользователя от которого требуется отклонить заявку",
-            "required": true,
-            "schema": {
-              "type": "object",
-              "properties": {
-                "userId": {
-                  "type": "integer",
-                  "format": "int64"
+        "requestBody": {
+          "description": "ID пользователя от которого требуется отклонить заявку",
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "userId": {
+                    "type": "integer",
+                    "format": "int64"
+                  }
                 }
               }
             }
-          }
-        ],
+          },
+          "required": true
+        },
         "responses": {
           "200": {
             "description": "Вы отклонили запрос на добавление в друзья от пользователя",
-            "schema": {
-              "type": "object",
-              "properties": {
-                "message": {
-                  "type": "string",
-                  "default": "Вы отклонили запрос на добавление в друзья от пользователя"
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string",
+                      "default": "Вы отклонили запрос на добавление в друзья от пользователя"
+                    }
+                  }
                 }
               }
             }
           },
           "422": {
-            "description": "Данный пользователь не отправлял вам запрос в друзья"
+            "description": "Данный пользователь не отправлял вам запрос в друзья",
+            "content": {}
           }
         },
         "security": [
           {
             "Authorization": []
           }
-        ]
+        ],
+        "x-codegen-request-body-name": "body"
       }
     }
   },
-  "securityDefinitions": {
-    "Authorization": {
-      "type": "apiKey",
-      "name": "Authorization",
-      "in": "header"
-    }
-  },
-  "definitions": {
-    "CreateMessage": {
-      "type": "object",
-      "properties": {
-        "chatId": {
-          "type": "number"
-        },
-        "body": {
-          "type": "string"
-        },
-        "replyOnMessageId": {
-          "type": "number"
-        },
-        "forwardFromChatId": {
-          "type": "number"
-        },
-        "attachments": {
-          "type": "array",
-          "items": {
+  "components": {
+    "schemas": {
+      "CreateMessage": {
+        "type": "object",
+        "properties": {
+          "chatId": {
             "type": "number"
-          }
-        }
-      }
-    },
-    "CreateMessageToUser": {
-      "type": "object",
-      "properties": {
-        "userId": {
-          "type": "number"
-        },
-        "body": {
-          "type": "string"
-        },
-        "attachments": {
-          "type": "array",
-          "items": {
+          },
+          "body": {
+            "type": "string"
+          },
+          "replyOnMessageId": {
             "type": "number"
-          }
-        }
-      }
-    },
-    "Messages": {
-      "type": "object",
-      "properties": {
-        "id": {
-          "type": "number"
-        },
-        "firstName": {
-          "type": "string"
-        },
-        "lastName": {
-          "type": "string"
-        },
-        "userPic": {
-          "type": "string"
-        },
-        "sex": {
-          "type": "string"
-        },
-        "body": {
-          "type": "string"
-        },
-        "isMine": {
-          "type": "boolean"
-        },
-        "isRead": {
-          "type": "boolean"
-        },
-        "isEdited": {
-          "type": "boolean"
-        },
-        "createdAt": {
-          "type": "number"
-        },
-        "updatedAt": {
-          "type": "number"
-        },
-        "attachments": {
-          "type": "object",
-          "properties": {
-            "list": {
-              "type": "array",
-              "items": {
-                "$ref": "#/definitions/MessageAttachments"
-              }
-            }
-          }
-        },
-        "replyOn": {
-          "$ref": "#/definitions/MessagesWithoutRef"
-        },
-        "isForward": {
-          "type": "boolean"
-        }
-      }
-    },
-    "MessagesWithoutRef": {
-      "type": "object",
-      "properties": {
-        "id": {
-          "type": "number"
-        },
-        "firstName": {
-          "type": "string"
-        },
-        "lastName": {
-          "type": "string"
-        },
-        "userPic": {
-          "type": "string"
-        },
-        "sex": {
-          "type": "string"
-        },
-        "body": {
-          "type": "string"
-        },
-        "isMine": {
-          "type": "boolean"
-        },
-        "isRead": {
-          "type": "boolean"
-        },
-        "isEdited": {
-          "type": "boolean"
-        },
-        "createdAt": {
-          "type": "number"
-        },
-        "updatedAt": {
-          "type": "number"
-        },
-        "attachments": {
-          "type": "object",
-          "properties": {
-            "list": {
-              "type": "array",
-              "items": {
-                "$ref": "#/definitions/MessageAttachments"
-              }
-            }
-          }
-        },
-        "replyOn": {
-          "$ref": "#/definitions/Messages"
-        },
-        "isForward": {
-          "type": "boolean"
-        }
-      }
-    },
-    "MessageAttachments": {
-      "type": "object",
-      "properties": {
-        "id": {
-          "type": "string"
-        },
-        "originalName": {
-          "type": "string"
-        },
-        "url": {
-          "type": "string"
-        },
-        "mimeType": {
-          "type": "string"
-        },
-        "size": {
-          "type": "number"
-        }
-      }
-    },
-    "Dialogs": {
-      "type": "object",
-      "properties": {
-        "id": {
-          "type": "number"
-        },
-        "name": {
-          "type": "string"
-        },
-        "lastMessageText": {
-          "type": "string"
-        },
-        "lastMessageDT": {
-          "type": "string"
-        },
-        "isRead": {
-          "type": "boolean"
-        },
-        "isLastFromMe": {
-          "type": "boolean"
-        },
-        "attendees": {
-          "$ref": "#/definitions/Attendees"
-        }
-      }
-    },
-    "Attendees": {
-      "type": "object",
-      "properties": {
-        "id": {
-          "type": "number"
-        },
-        "lastActivity": {
-          "type": "string"
-        },
-        "userPic": {
-          "type": "string"
-        },
-        "firstName": {
-          "type": "string"
-        },
-        "lastName": {
-          "type": "string"
-        },
-        "isOnline": {
-          "type": "boolean"
-        },
-        "sex": {
-          "type": "string"
-        }
-      }
-    },
-    "NotificationRes": {
-      "type": "object",
-      "properties": {
-        "id": {
-          "type": "string"
-        },
-        "data": {
-          "type": "object",
-          "properties": {
-            "sender": {
-              "type": "object",
-              "properties": {
-                "firstName": {
-                  "type": "string"
-                },
-                "lastName": {
-                  "type": "string"
-                },
-                "id": {
-                  "type": "number"
-                },
-                "postId": {
-                  "type": "number"
-                }
-              }
-            },
-            "body": {
-              "type": "string"
-            },
-            "type": {
-              "type": "string",
-              "example": "user.post.created"
-            }
-          }
-        },
-        "readAt": {
-          "type": "string"
-        },
-        "createdAt": {
-          "type": "string"
-        }
-      }
-    },
-    "PostByUser": {
-      "type": "object",
-      "properties": {
-        "id": {
-          "type": "number"
-        },
-        "name": {
-          "type": "string"
-        },
-        "body": {
-          "type": "string"
-        },
-        "primaryImage": {
-          "type": "string"
-        },
-        "likes": {
-          "type": "number"
-        },
-        "views": {
-          "type": "number"
-        },
-        "sharesCount": {
-          "type": "number"
-        },
-        "commentsCount": {
-          "type": "number"
-        },
-        "createdAt": {
-          "type": "number"
-        },
-        "user": {
-          "$ref": "#/definitions/User"
-        }
-      }
-    },
-    "PostByCommunity": {
-      "type": "object",
-      "properties": {
-        "id": {
-          "type": "number"
-        },
-        "name": {
-          "type": "string"
-        },
-        "body": {
-          "type": "string"
-        },
-        "primaryImage": {
-          "type": "string"
-        },
-        "likes": {
-          "type": "number"
-        },
-        "views": {
-          "type": "number"
-        },
-        "sharesCount": {
-          "type": "number"
-        },
-        "commentsCount": {
-          "type": "number"
-        },
-        "createdAt": {
-          "type": "number"
-        },
-        "community": {
-          "$ref": "#/definitions/Community"
-        }
-      }
-    },
-    "PostWithAll": {
-      "type": "object",
-      "properties": {
-        "id": {
-          "type": "number"
-        },
-        "name": {
-          "type": "string"
-        },
-        "body": {
-          "type": "string"
-        },
-        "primaryImage": {
-          "type": "string"
-        },
-        "likes": {
-          "type": "number"
-        },
-        "views": {
-          "type": "number"
-        },
-        "sharesCount": {
-          "type": "number"
-        },
-        "commentsCount": {
-          "type": "number"
-        },
-        "createdAt": {
-          "type": "number"
-        },
-        "user": {
-          "$ref": "#/definitions/User"
-        },
-        "community": {
-          "$ref": "#/definitions/Community"
-        }
-      }
-    },
-    "PostWithParent": {
-      "type": "object",
-      "properties": {
-        "id": {
-          "type": "number"
-        },
-        "name": {
-          "type": "string"
-        },
-        "body": {
-          "type": "string"
-        },
-        "primaryImage": {
-          "type": "string"
-        },
-        "likes": {
-          "type": "number"
-        },
-        "views": {
-          "type": "number"
-        },
-        "sharesCount": {
-          "type": "number"
-        },
-        "commentsCount": {
-          "type": "number"
-        },
-        "createdAt": {
-          "type": "number"
-        },
-        "user": {
-          "$ref": "#/definitions/User"
-        },
-        "sharedFrom": {
-          "$ref": "#/definitions/PostByCommunity"
-        }
-      }
-    },
-    "CommunityInput": {
-      "type": "object",
-      "properties": {
-        "name": {
-          "type": "string"
-        },
-        "description": {
-          "type": "string"
-        },
-        "notice": {
-          "type": "string"
-        },
-        "url": {
-          "type": "string"
-        },
-        "website": {
-          "type": "string"
-        },
-        "location": {
-          "type": "string"
-        }
-      }
-    },
-    "Community": {
-      "type": "object",
-      "properties": {
-        "name": {
-          "type": "string"
-        },
-        "description": {
-          "type": "string"
-        },
-        "notice": {
-          "type": "string"
-        },
-        "primaryImage": {
-          "type": "string"
-        },
-        "url": {
-          "type": "string"
-        },
-        "website": {
-          "type": "string"
-        },
-        "location": {
-          "type": "string"
-        }
-      }
-    },
-    "UserWithCommunities": {
-      "type": "object",
-      "properties": {
-        "id": {
-          "type": "integer",
-          "format": "int64"
-        },
-        "email": {
-          "type": "string"
-        },
-        "isOnline": {
-          "type": "boolean"
-        },
-          "mutualFriendsCount": {
-              "type": "number"
           },
-        "communities": {
-          "type": "object",
-          "properties": {
-            "list": {
-              "type": "array",
-              "items": {
-                "$ref": "#/definitions/Community"
-              }
-            }
-          }
-        },
-        "profile": {
-          "type": "object",
-          "properties": {
-            "firstName": {
-              "type": "string"
-            },
-            "lastName": {
-              "type": "string"
-            },
-            "sex": {
-              "type": "string"
-            },
-            "birthday": {
-              "type": "string"
-            },
-            "city": {
-              "type": "string"
-            },
-            "relationshipId": {
-              "type": "number"
-            },
-            "userPic": {
-              "type": "string"
-            }
-          }
-        }
-      }
-    },
-    "User": {
-      "type": "object",
-      "properties": {
-        "id": {
-          "type": "integer",
-          "format": "int64"
-        },
-        "email": {
-          "type": "string"
-        },
-        "isOnline": {
-          "type": "boolean"
-        },
-          "mutualFriendsCount": {
-              "type": "number"
+          "forwardFromChatId": {
+            "type": "number"
           },
-        "profile": {
-          "type": "object",
-          "properties": {
-            "firstName": {
-              "type": "string"
-            },
-            "lastName": {
-              "type": "string"
-            },
-            "sex": {
-              "type": "string"
-            },
-            "birthday": {
-              "type": "string"
-            },
-            "city": {
-              "type": "string"
-            },
-            "relationshipId": {
+          "attachments": {
+            "type": "array",
+            "items": {
               "type": "number"
-            },
-            "userPic": {
-              "type": "string"
             }
           }
         }
       },
-      "xml": {
-        "name": "User"
+      "CreateMessageToUser": {
+        "type": "object",
+        "properties": {
+          "userId": {
+            "type": "number"
+          },
+          "body": {
+            "type": "string"
+          },
+          "attachments": {
+            "type": "array",
+            "items": {
+              "type": "number"
+            }
+          }
+        }
+      },
+      "Messages": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "number"
+          },
+          "firstName": {
+            "type": "string"
+          },
+          "lastName": {
+            "type": "string"
+          },
+          "userPic": {
+            "type": "string"
+          },
+          "sex": {
+            "type": "string"
+          },
+          "body": {
+            "type": "string"
+          },
+          "isMine": {
+            "type": "boolean"
+          },
+          "isRead": {
+            "type": "boolean"
+          },
+          "isEdited": {
+            "type": "boolean"
+          },
+          "createdAt": {
+            "type": "number"
+          },
+          "updatedAt": {
+            "type": "number"
+          },
+          "attachments": {
+            "type": "object",
+            "properties": {
+              "list": {
+                "type": "array",
+                "items": {
+                  "$ref": "#/components/schemas/MessageAttachments"
+                }
+              }
+            }
+          },
+          "replyOn": {
+            "$ref": "#/components/schemas/MessagesWithoutRef"
+          },
+          "isForward": {
+            "type": "boolean"
+          }
+        }
+      },
+      "MessagesWithoutRef": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "number"
+          },
+          "firstName": {
+            "type": "string"
+          },
+          "lastName": {
+            "type": "string"
+          },
+          "userPic": {
+            "type": "string"
+          },
+          "sex": {
+            "type": "string"
+          },
+          "body": {
+            "type": "string"
+          },
+          "isMine": {
+            "type": "boolean"
+          },
+          "isRead": {
+            "type": "boolean"
+          },
+          "isEdited": {
+            "type": "boolean"
+          },
+          "createdAt": {
+            "type": "number"
+          },
+          "updatedAt": {
+            "type": "number"
+          },
+          "attachments": {
+            "type": "object",
+            "properties": {
+              "list": {
+                "type": "array",
+                "items": {
+                  "$ref": "#/components/schemas/MessageAttachments"
+                }
+              }
+            }
+          },
+          "replyOn": {
+            "$ref": "#/components/schemas/Messages"
+          },
+          "isForward": {
+            "type": "boolean"
+          }
+        }
+      },
+      "MessageAttachments": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "originalName": {
+            "type": "string"
+          },
+          "url": {
+            "type": "string"
+          },
+          "mimeType": {
+            "type": "string"
+          },
+          "size": {
+            "type": "number"
+          }
+        }
+      },
+      "Dialogs": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "number"
+          },
+          "name": {
+            "type": "string"
+          },
+          "lastMessageText": {
+            "type": "string"
+          },
+          "lastMessageDT": {
+            "type": "string"
+          },
+          "isRead": {
+            "type": "boolean"
+          },
+          "isLastFromMe": {
+            "type": "boolean"
+          },
+          "attendees": {
+            "$ref": "#/components/schemas/Attendees"
+          }
+        }
+      },
+      "Attendees": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "number"
+          },
+          "lastActivity": {
+            "type": "string"
+          },
+          "userPic": {
+            "type": "string"
+          },
+          "firstName": {
+            "type": "string"
+          },
+          "lastName": {
+            "type": "string"
+          },
+          "isOnline": {
+            "type": "boolean"
+          },
+          "sex": {
+            "type": "string"
+          }
+        }
+      },
+      "NotificationRes": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "data": {
+            "type": "object",
+            "properties": {
+              "sender": {
+                "type": "object",
+                "properties": {
+                  "firstName": {
+                    "type": "string"
+                  },
+                  "lastName": {
+                    "type": "string"
+                  },
+                  "id": {
+                    "type": "number"
+                  },
+                  "postId": {
+                    "type": "number"
+                  }
+                }
+              },
+              "body": {
+                "type": "string"
+              },
+              "type": {
+                "type": "string",
+                "example": "user.post.created"
+              }
+            }
+          },
+          "readAt": {
+            "type": "string"
+          },
+          "createdAt": {
+            "type": "string"
+          }
+        }
+      },
+      "PostByUser": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "number"
+          },
+          "name": {
+            "type": "string"
+          },
+          "body": {
+            "type": "string"
+          },
+          "primaryImage": {
+            "type": "string"
+          },
+          "likes": {
+            "type": "number"
+          },
+          "views": {
+            "type": "number"
+          },
+          "sharesCount": {
+            "type": "number"
+          },
+          "commentsCount": {
+            "type": "number"
+          },
+          "createdAt": {
+            "type": "number"
+          },
+          "attachments": {
+            "$ref": "#/components/schemas/PostAttachments"
+          },
+          "user": {
+            "$ref": "#/components/schemas/User"
+          }
+        }
+      },
+      "PostByCommunity": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "number"
+          },
+          "name": {
+            "type": "string"
+          },
+          "body": {
+            "type": "string"
+          },
+          "primaryImage": {
+            "type": "string"
+          },
+          "likes": {
+            "type": "number"
+          },
+          "views": {
+            "type": "number"
+          },
+          "sharesCount": {
+            "type": "number"
+          },
+          "commentsCount": {
+            "type": "number"
+          },
+          "createdAt": {
+            "type": "number"
+          },
+          "attachments": {
+            "$ref": "#/components/schemas/PostAttachments"
+          },
+          "community": {
+            "$ref": "#/components/schemas/Community"
+          }
+        }
+      },
+      "PostWithAll": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "number"
+          },
+          "name": {
+            "type": "string"
+          },
+          "body": {
+            "type": "string"
+          },
+          "primaryImage": {
+            "type": "string"
+          },
+          "likes": {
+            "type": "number"
+          },
+          "views": {
+            "type": "number"
+          },
+          "sharesCount": {
+            "type": "number"
+          },
+          "commentsCount": {
+            "type": "number"
+          },
+          "createdAt": {
+            "type": "number"
+          },
+          "attachments": {
+            "$ref": "#/components/schemas/PostAttachments"
+          },
+          "user": {
+            "$ref": "#/components/schemas/User"
+          },
+          "community": {
+            "$ref": "#/components/schemas/Community"
+          }
+        }
+      },
+      "PostWithParent": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "number"
+          },
+          "name": {
+            "type": "string"
+          },
+          "body": {
+            "type": "string"
+          },
+          "primaryImage": {
+            "type": "string"
+          },
+          "likes": {
+            "type": "number"
+          },
+          "views": {
+            "type": "number"
+          },
+          "sharesCount": {
+            "type": "number"
+          },
+          "commentsCount": {
+            "type": "number"
+          },
+          "createdAt": {
+            "type": "number"
+          },
+          "attachments": {
+            "$ref": "#/components/schemas/PostAttachments"
+          },
+          "user": {
+            "$ref": "#/components/schemas/User"
+          },
+          "sharedFrom": {
+            "$ref": "#/components/schemas/PostByCommunity"
+          }
+        }
+      },
+      "PostAttachments": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "originalName": {
+            "type": "string"
+          },
+          "url": {
+            "type": "string"
+          },
+          "mimeType": {
+            "type": "string"
+          },
+          "size": {
+            "type": "number"
+          }
+        }
+      },
+      "CommunityInput": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string"
+          },
+          "description": {
+            "type": "string"
+          },
+          "notice": {
+            "type": "string"
+          },
+          "url": {
+            "type": "string"
+          },
+          "website": {
+            "type": "string"
+          },
+          "location": {
+            "type": "string"
+          }
+        }
+      },
+      "Community": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string"
+          },
+          "description": {
+            "type": "string"
+          },
+          "notice": {
+            "type": "string"
+          },
+          "primaryImage": {
+            "type": "string"
+          },
+          "url": {
+            "type": "string"
+          },
+          "website": {
+            "type": "string"
+          },
+          "location": {
+            "type": "string"
+          }
+        }
+      },
+      "UserWithCommunities": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "email": {
+            "type": "string"
+          },
+          "isOnline": {
+            "type": "boolean"
+          },
+          "mutualFriendsCount": {
+            "type": "number"
+          },
+          "communities": {
+            "type": "object",
+            "properties": {
+              "list": {
+                "type": "array",
+                "items": {
+                  "$ref": "#/components/schemas/Community"
+                }
+              }
+            }
+          },
+          "profile": {
+            "type": "object",
+            "properties": {
+              "firstName": {
+                "type": "string"
+              },
+              "lastName": {
+                "type": "string"
+              },
+              "sex": {
+                "type": "string"
+              },
+              "birthday": {
+                "type": "string"
+              },
+              "city": {
+                "type": "string"
+              },
+              "relationshipId": {
+                "type": "number"
+              },
+              "userPic": {
+                "type": "string"
+              }
+            }
+          }
+        }
+      },
+      "User": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "email": {
+            "type": "string"
+          },
+          "isOnline": {
+            "type": "boolean"
+          },
+          "mutualFriendsCount": {
+            "type": "number"
+          },
+          "profile": {
+            "type": "object",
+            "properties": {
+              "firstName": {
+                "type": "string"
+              },
+              "lastName": {
+                "type": "string"
+              },
+              "sex": {
+                "type": "string"
+              },
+              "birthday": {
+                "type": "string"
+              },
+              "city": {
+                "type": "string"
+              },
+              "relationshipId": {
+                "type": "number"
+              },
+              "userPic": {
+                "type": "string"
+              }
+            }
+          }
+        },
+        "xml": {
+          "name": "User"
+        }
+      }
+    },
+    "securitySchemes": {
+      "Authorization": {
+        "type": "apiKey",
+        "name": "Authorization",
+        "in": "header"
       }
     }
   }
