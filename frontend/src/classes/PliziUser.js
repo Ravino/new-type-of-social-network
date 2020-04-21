@@ -1,3 +1,5 @@
+import PliziUserPrivacySettings from "./PliziUserPrivacySettings.js";
+
 class PliziUser {
     /**
      * путь к дефолтной аватарке, которую показываем если нет своей
@@ -84,7 +86,7 @@ class PliziUser {
      * @type {Object[]|null}
      * @private
      */
-    _country =  null;
+    _country = null;
 
     /**
      *
@@ -151,18 +153,10 @@ class PliziUser {
 
     /**
      * TODO: сделать это сущностью отдельного класса
-     * @type {Object|null}
+     * @type {PliziUserPrivacySettings|null}
      * @private
      */
-    _privacySettings = {
-        pageType: 1,
-        writeMessagesPermissions: 1,
-        postWallPermissions: 1,
-        viewWallPermissions: 1,
-        viewFriendsPermissions: 1,
-        twoFactorAuthEnabled: 0,
-        smsConfirm: 0,
-    };
+    _privacySettings = null;
 
     // значения как в PHP
     __RELATIONSHIP_MARRIED = 1;
@@ -171,8 +165,8 @@ class PliziUser {
     /**
      * @param {object} usrData
      */
-    constructor(usrData){
-       if (usrData  &&  typeof  usrData==='object'  &&  Object.keys(usrData).length>0) {
+    constructor(usrData) {
+        if (usrData && typeof usrData === 'object' && Object.keys(usrData).length > 0) {
             this.saveUserData(usrData);
         }
     }
@@ -181,24 +175,22 @@ class PliziUser {
      * загружаем тут данные которые пришли от метода api/user
      * @param {Object} inputData
      */
-    saveUserData(inputData){
+    saveUserData(inputData) {
         if (typeof inputData.data === `undefined`) {
-            //window.console.log( JSON.parse( JSON.stringify(inputData) ), `inputData.data` );
-
-            inputData = { data : inputData };
+            inputData = {data: inputData};
         }
 
         this._id = inputData.data.id >>> 0;
         this._isOnline = inputData.data.isOnline;
-        this._lastActivity = new Date( inputData.data.lastActivity );
+        this._lastActivity = new Date(inputData.data.lastActivity);
 
         const prof = inputData.data.profile;
         const privacySettings = inputData.data.privacySettings;
 
-        this._firstName = (prof.firstName+``).trim();
-        this._lastName = (prof.lastName+``).trim();
-        this._sex = (prof.sex+``).trim();
-        this._birthday = new Date((prof.birthday+``).trim());
+        this._firstName = (prof.firstName + ``).trim();
+        this._lastName = (prof.lastName + ``).trim();
+        this._sex = (prof.sex + ``).trim();
+        this._birthday = new Date((prof.birthday + ``).trim());
         this._relationshipId = prof.relationshipId;
 
         if (prof.location) {
@@ -211,10 +203,12 @@ class PliziUser {
         }
 
         if (prof.userPic) {
-            this._userPic = (prof.userPic+``).trim();
+            this._userPic = (prof.userPic + ``).trim();
         }
 
-        this._privacySettings = privacySettings;
+        if (privacySettings) {
+            this._privacySettings = new PliziUserPrivacySettings(privacySettings);
+        }
 
         // TODO: @TGA переписать потом на загрузку реальных данных
         this._created = new Date();
@@ -232,7 +226,7 @@ class PliziUser {
     /**
      * очищает данные
      */
-    cleanData(){
+    cleanData() {
         this._id = -1;
         this._isOnline = false;
         this._lastActivity = null;
@@ -260,19 +254,10 @@ class PliziUser {
         this._videosNumber = -1;
         this._audiosNumber = -1;
 
-        this._privacySettings = {
-            pageType: 1,
-            writeMessagesPermissions: 1,
-            postWallPermissions: 1,
-            viewWallPermissions: 1,
-            viewFriendsPermissions: 1,
-            twoFactorAuthEnabled: 0,
-            smsConfirm: 0,
-        };
+        this._privacySettings = null;
 
         this.__isDataReady = false;
     }
-
 
     /**
      *
@@ -503,7 +488,7 @@ class PliziUser {
     }
 
     /**
-     * @returns {Object|null}
+     * @returns {PliziUserPrivacySettings|null}
      */
     get privacySettings() {
         return this._privacySettings;
@@ -523,11 +508,11 @@ class PliziUser {
      */
     toJSON() {
         /** @TGA чтобы momentJS не подключать **/
-        let month = (this._birthday.getMonth()+1)+``;
-        month = (month.length === 1) ? '0'+month : month;
+        let month = (this._birthday.getMonth() + 1) + ``;
+        month = (month.length === 1) ? '0' + month : month;
 
-        let day = this._birthday.getDay()+``;
-        day = (day.length === 1) ? '0'+day : day;
+        let day = this._birthday.getDay() + ``;
+        day = (day.length === 1) ? '0' + day : day;
 
         return {
             data: {
@@ -556,4 +541,4 @@ class PliziUser {
 
 }
 
-export { PliziUser as default}
+export {PliziUser as default}

@@ -264,7 +264,7 @@ class PliziAPI {
             });
 
         if (response.status === 200) {
-            return response.data;
+            return response.data.data;
         }
 
         return null;
