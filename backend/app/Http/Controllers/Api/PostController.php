@@ -10,6 +10,7 @@ use App\Http\Resources\Post\PostCollection;
 use App\Models\Community;
 use App\Models\Post;
 use App\Models\PostAttachment;
+use App\Models\PostLike;
 use App\Models\User;
 use App\Notifications\UserSystemNotifications;
 use App\Services\S3UploadService;
@@ -139,5 +140,22 @@ class PostController extends Controller
         return response()->json([
             'attachmentIds' => $attachment_ids
         ]);
+    }
+
+    /**
+     * @param $request
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function rate(Request $request) {
+        if(!PostLike::where('user_id', \Auth::user()->id)->where('post_id', $request->postId)->exists()) {
+            PostLike::create([
+                'user_id' => \Auth::user()->id,
+                'post_id' => $request->postId,
+            ]);
+            return response()->json(['message' => 'Вы успешно оценили данную запись'], 200);
+        } else {
+            PostLike::where('user_id', \Auth::user()->id)->where('post_id', $request->postId)->first()->delete();
+            return response()->json(['message' => 'Вы успешно сняли свою оценку с данной записи'], 200);
+        }
     }
 }

@@ -28,6 +28,7 @@ class PostWithoutParent extends JsonResource
                 'views' => $this->views,
                 'sharesCount' => 25,
                 'commentsCount' => 48,
+                'alreadyLiked' => $this->alreadyLiked,
                 'attachments' => new AttachmentsCollection($this->attachments),
                 'user' => new User($this->postable),
                 'createdAt' => $this->created_at
@@ -42,6 +43,7 @@ class PostWithoutParent extends JsonResource
                 'views' => $this->views,
                 'sharesCount' => 25,
                 'commentsCount' => 48,
+                'alreadyLiked' => $this->alreadyLiked,
                 'attachments' => new AttachmentsCollection($this->attachments),
                 'community' => new Community($this->postable),
                 'createdAt' => $this->created_at

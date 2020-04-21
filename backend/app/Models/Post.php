@@ -39,6 +39,13 @@ class Post extends Model
     }
 
     /**
+     * @return mixed
+     */
+    public function getAlreadyLikedAttribute() {
+        return PostLike::where('user_id', \Auth::user()->id)->where('post_id', $this->id)->exists();
+    }
+
+    /**
      * @return string
      */
     public function getDateFormat()
