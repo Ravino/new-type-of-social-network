@@ -41,6 +41,7 @@ Route::group(['middleware' => ['auth.jwt', 'track.activity']], function () {
     Route::post('posts', 'Api\PostController@storeByUser');
     Route::post('communities/{community_id}/posts', 'Api\PostController@storeByCommunity');
     Route::post('posts/attachments', 'Api\PostController@uploadAttachments');
+    Route::post('posts/rate', 'Api\PostController@rate');
 
     Route::get('user/notifications', 'Api\UserController@notifications');
     Route::patch('user/notifications/mark/read', 'Api\UserController@markNotificationsAsRead');
