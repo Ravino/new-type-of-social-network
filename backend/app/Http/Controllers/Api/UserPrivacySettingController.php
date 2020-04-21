@@ -37,7 +37,9 @@ class UserPrivacySettingController extends Controller
             'view_friends_permissions' => $request->viewFriendsPermissions,
             'two_factor_auth_enabled' => $request->twoFactorAuthEnabled,
             'sms_confirm' => $request->smsConfirm,
-        ]));
+        ], function ($var) {
+            return $var !== false && !is_null($var) && ($var != '' || $var == '0');
+        }));
 
         return new UserResource($user->fresh());
     }
