@@ -1,0 +1,108 @@
+<template>
+    <div :id="fieldId" class-x="row d-flex align-items-center mx-0 py-4" :class="blockClass">
+
+        <div v-if="showAvatar" class="col-1 align-items-center text-center">
+            <img class="chat-companion-user-pic rounded-circle my-0 mx-auto"
+                 v-bind:src="userPic" v-bind:alt="userFullName" />
+        </div>
+
+        <div class="pl-0" :class="{ 'col-9': showAvatar, 'col-10': !showAvatar }">
+            <div class="form pl-3">
+                <div class="form-row align-items-center">
+                    <div class="col-12  p-0">
+                        <Editor class="form-control px-2 py-1 h-100"
+                                @editorPost="onEditorNewPost"
+                                placeholder="Написать сообщение..."
+                                ref="editor" />
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-2 d-flex justify-content-end">
+
+            <label class="attach-file btn btn-link my-0 ml-0 mr-2 px-1 btn-add-file position-relative">
+                <IconAddFile />
+                <input type="file" @change="onSelectFile($event)" ref="editorFiler" />
+            </label>
+
+            <label class="attach-file btn btn-link my-0 ml-0 mr-2 px-1 btn-add-camera position-relative">
+                <IconAddCamera />
+                <input type="file" @change="onSelectImage($event)" ref="editorImager" />
+            </label>
+
+            <button class="btn btn-link mx-0 px-1 btn-add-smile" type="button">
+                <EmojiPicker @addEmoji="addEmoji" :transform="'transform: translate(-40%, -100%)'"/>
+            </button>
+        </div>
+    </div>
+</template>
+
+<script>
+import IconAddFile from '../icons/IconAddFile.vue';
+import IconAddCamera from '../icons/IconAddCamera.vue';
+import Editor from './TextEditor/Editor.vue';
+import EmojiPicker from './TextEditor/EmojiPicker.vue';
+
+/**  TODO: Вставка файлов **/
+/** @link https://www.npmjs.com/package/vue-filepond **/
+
+export default {
+name: 'TextEditor',
+props: {
+    fieldId : String,
+    showAvatar: Boolean,
+    clazz: String
+},
+components: {
+    IconAddCamera,
+    IconAddFile,
+    Editor,
+    EmojiPicker,
+},
+computed: {
+    userPic() {
+        return this.$root.$user.userPic;
+    },
+
+    userFullName() {
+        return this.$root.$user.fullName;
+    },
+
+    blockClass(){
+        return this.clazz || this.defaultClasses
+    }
+},
+
+data() {
+    return {
+        defaultClasses: `bg-white w-100 border-top position-relative mt-auto`,
+    }
+},
+
+methods: {
+    onEditorNewPost(evData){
+        this.$emit('editorPost', { postText : evData.postText });
+    },
+
+    onSelectFile(evData){
+        this.$emit('editorFile', {
+            event : evData,
+            path: this.$refs.editorFiler.value
+        });
+    },
+
+    onSelectImage(evData){
+        this.$emit('editorImage', {
+            event : evData,
+            path: this.$refs.editorImager.value
+        });
+    },
+
+    addEmoji(emoji) {
+        this.$refs.editor.addEmoji(emoji);
+    },
+}
+
+}
+</script>
