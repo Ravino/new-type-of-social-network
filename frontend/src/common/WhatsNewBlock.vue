@@ -3,6 +3,7 @@
                 :showAvatar="true"
                 :clazz="`row plz-text-editor mb-4 p-4 h-auto  align-items-start bg-white-br20`"
                 :editorPlaceholder="'Что у Вас нового?'"
+                :dropToDown="true"
                 @editorPost="onTextPost"
                 @editorFile="onFileChange"
                 @editorImage="onImageChange">
