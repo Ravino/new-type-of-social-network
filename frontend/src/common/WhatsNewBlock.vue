@@ -1,5 +1,6 @@
 <template>
     <TextEditor :id="`profileWhatsNew`"
+                :dropToDown="true"
                 :showAvatar="true" :clazz="`row plz-text-editor mb-4 p-4 h-auto  align-items-start bg-white-br20`"
                 @editorPost="onTextPost" @editorFile="onFileChange" @editorImage="onImageChange">
     </TextEditor>

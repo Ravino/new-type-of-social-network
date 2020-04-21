@@ -65,7 +65,6 @@ data() {
         customScrollbarSettings: {
             maxScrollbarLength: 60,
             suppressScrollX: true, // rm scroll x
-            scrollYMarginOffset: 600
         },
     }
 },

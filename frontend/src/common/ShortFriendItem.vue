@@ -33,7 +33,12 @@ name : 'ShortFriendItem',
 components : { IconMessageShort },
 props : {
     friend : Object,
-    chatWindowShown: false
+
+},
+data() {
+    return {
+        chatWindowShown: false
+    }
 },
 
 methods: {

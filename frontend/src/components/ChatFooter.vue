@@ -5,6 +5,7 @@
     -->
 
     <TextEditor :id="`chatFooter`" :showAvatar="false"
+                :dropToDown="false"
                 :clazz="`bg-white w-100 border-top position-relative mt-auto d-flex align-items-start px-3 py-3 `"
         @editorPost="onTextPost" @editorFile="onFileChange" @editorImage="onImageChange">
     </TextEditor>
