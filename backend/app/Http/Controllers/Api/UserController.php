@@ -118,6 +118,12 @@ class UserController extends Controller
         return new UserCollection($friends);
     }
 
+    public function getPossibleFriends()
+    {
+        $fof = Auth::user()->getFriendsOfFriends();
+        return new UserCollection($fof);
+    }
+
     /**
      * @return NotificationCollection
      */

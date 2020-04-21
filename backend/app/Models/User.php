@@ -154,6 +154,20 @@ class User extends Authenticatable implements JWTSubject
     /**
      * @return int
      */
+    public function getMutualFriendsCountAttribute()
+    {
+        return \Auth::user()->getMutualFriendsCount($this);
+    }
+
+    public function getIsOnlineAttribute()
+    {
+        $period = config('user_activity_margin');
+        return $this->last_activity_dt > strtotime("-$period minutes");
+    }
+
+    /**
+     * @return int
+     */
     public function getUnreadMessagesCountAttribute() {
         return \DB::table('chat_message_status')->where('user_id', \Auth::user()->id)->where('is_read', false)->count();
     }
