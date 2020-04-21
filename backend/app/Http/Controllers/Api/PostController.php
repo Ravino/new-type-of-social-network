@@ -3,18 +3,30 @@
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\Post\UploadFileRequest;
 use App\Http\Resources\Post\Post as PostResource;
 use App\Http\Requests\Post\Post as PostRequest;
 use App\Http\Resources\Post\PostCollection;
 use App\Models\Community;
 use App\Models\Post;
+use App\Models\PostAttachment;
 use App\Models\User;
 use App\Notifications\UserSystemNotifications;
+use App\Services\S3UploadService;
 use Illuminate\Support\Facades\Notification;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Event;
 
 class PostController extends Controller
 {
+
+    public $uploadService;
+
+    public function __construct(S3UploadService $uploadService)
+    {
+        $this->uploadService = $uploadService;
+    }
+
     /**
      * @return PostCollection
      */
@@ -71,22 +83,10 @@ class PostController extends Controller
             'name' => $request->name,
             'body' => $request->body,
         ]);
-        $friend_ids = \Auth::user()->getFriends()->pluck('id');
-        $friends = User::whereIn('id', $friend_ids)->get();
-        $details = [
-            'sender' => [
-                'firstName' => \Auth::user()->profile->first_name,
-                'lastName' => \Auth::user()->profile->last_name,
-                'sex' => \Auth::user()->profile->sex,
-                'userPic' => \Auth::user()->profile->user_pic,
-                'lastActivity' => \Auth::user()->last_activity_dt,
-                'id' => \Auth::user()->id,
-                'postId' => $post->id
-            ],
-            'body' => 'User {0, string} created new post',
-            'notificationType' => 'user.post.created',
-        ];
-        Notification::send($friends, new UserSystemNotifications($details));
+        if(count($request->atachmentIds)) {
+            PostAttachment::whereIn('id', $request->atachmentIds)->update(['post_id' => $post->id]);
+        }
+        Event::dispatch('user.post.created', ['user_id' => \Auth::user()->id, 'post' => $post]);
         return new PostResource($post);
     }
 
@@ -103,17 +103,10 @@ class PostController extends Controller
                     'name' => $request->name,
                     'body' => $request->body,
                 ]);
-                $details = [
-                    'community' => [
-                        'name' => $community->name,
-                        'primaryImage' => $community->primary_image,
-                        'id' => $community->id,
-                        'postId' => $post->id
-                    ],
-                    'body' => 'There is new post in community {0, string}',
-                    'notificationType' => 'community.post.created',
-                ];
-                Notification::send($community->users, new UserSystemNotifications($details));
+                if(count($request->atachmentIds)) {
+                    PostAttachment::whereIn('id', $request->atachmentIds)->update(['post_id' => $post->id]);
+                }
+                Event::dispatch('community.post.created', ['community' => $community, 'post' => $post]);
                 return new PostResource($post);
             } else {
                 return response()->json(['message' => 'Вы не являетесь участником данного сообщества'], 422);
@@ -135,5 +128,16 @@ class PostController extends Controller
         $my_post->parent_id = $post->id;
         $my_post->save();
         return new PostResource($my_post);
+    }
+
+    /**
+     * @param UploadFileRequest $request
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function uploadAttachments(UploadFileRequest $request) {
+        $attachment_ids = $this->uploadService->uploadFiles(new PostAttachment(), 'post/attachments/originals', $request->allFiles());
+        return response()->json([
+            'attachmentIds' => $attachment_ids
+        ]);
     }
 }
