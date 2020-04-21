@@ -33,7 +33,12 @@
             </label>
 
             <button class="btn btn-link mx-0 px-1 btn-add-smile" type="button">
-                <EmojiPicker @addEmoji="addEmoji" :transform="'transform: translate(-40%, -100%)'"/>
+
+                <EmojiPicker v-if="dropToDown " @addEmoji="addEmoji"
+                             :transform="'transform: translate(-40%, 40px)'"/>
+
+                <EmojiPicker v-else  @addEmoji="addEmoji"
+                             :transform="'transform: translate(-40%, -100%)'"/>
             </button>
         </div>
     </div>
@@ -53,7 +58,8 @@ name: 'TextEditor',
 props: {
     fieldId : String,
     showAvatar: Boolean,
-    clazz: String
+    clazz: String,
+    dropToDown: Boolean
 },
 components: {
     IconAddCamera,
