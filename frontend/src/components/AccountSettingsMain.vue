@@ -315,7 +315,7 @@
                 }
 
                 if (response !== null) {
-                    this.$root.$user.updateData(response.data);
+                    this.$root.$user.updateData(response);
 
                     if (fieldName === `firstName` || fieldName === `lastName`) {
                         this.$root.$emit('updateUserName', {
