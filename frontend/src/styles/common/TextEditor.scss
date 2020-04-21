@@ -39,3 +39,12 @@ $EditorUserPicSize: 32px;
         }
     }
 }
+
+#messageToUserFromHisPage {
+    .col-10 {
+        max-width: calc(100% - 150px);
+    }
+    .col-2 {
+        min-width: 120px;
+    }
+}
