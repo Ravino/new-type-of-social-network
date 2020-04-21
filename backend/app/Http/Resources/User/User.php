@@ -20,7 +20,7 @@ class User extends JsonResource
             return [
                 'id' => $this->id,
                 'email' => $this->email,
-                'isOnline' => $this->isOnline(),
+                'isOnline' => $this->isOnline,
                 'lastActivity' => $this->last_activity_dt,
                 'profile' => new Profile($this->profile),
                 'privacySettings' => new PrivacySettings($this->privacySettings),
@@ -34,17 +34,12 @@ class User extends JsonResource
         } else {
             return [
                 'id' => $this->id,
-                'isOnline' => $this->isOnline(),
+                'isOnline' => $this->isOnline,
                 'lastActivity' => $this->last_activity_dt,
                 'profile' => new Profile($this->profile),
+                'mutualFriendsCount' => $this->mutualFriendsCount
             ];
         }
-    }
-
-    public function isOnline() : bool
-    {
-        $period = config('user_activity_margin');
-        return $this->last_activity_dt > strtotime("-$period minutes");
     }
 }
 

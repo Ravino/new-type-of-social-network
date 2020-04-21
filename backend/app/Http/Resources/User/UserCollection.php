@@ -23,7 +23,7 @@ class UserCollection extends ResourceCollection
                     return [
                         'id' => $user->id,
                         'email' => $user->email,
-                        'isOnline' => $this->isOnline($user),
+                        'isOnline' => $user->isOnline,
                         'lastActivity' => $user->last_activity_dt,
                         'profile' => new Profile($user->profile),
                         'privacySettings' => new PrivacySettings($user->privacySettings)
@@ -31,19 +31,14 @@ class UserCollection extends ResourceCollection
                 } else {
                     return [
                         'id' => $user->id,
-                        'isOnline' => $this->isOnline($user),
+                        'isOnline' => $user->isOnline,
                         'lastActivity' => $user->last_activity_dt,
                         'profile' => new Profile($user->profile),
+                        'mutualFriendsCount' => $user->mutualFriendsCount
                     ];
                 }
             }),
         ];
-    }
-
-    public function isOnline($user): bool
-    {
-        $period = config('user_activity_margin');
-        return $user->last_activity_dt > strtotime("-$period minutes");
     }
 }
 
