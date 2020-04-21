@@ -1,13 +1,13 @@
 <template>
-    <router-link :to="`/user-`+srItem.id" tag="li" class="plizi-sr-item-user media m-0 px-4 py-2">
-        <div class="plizi-sr-item d-flex col-12">
+    <router-link :to="`/user-`+srItem.id" tag="li" class="plizi-sr-item-user media m-0 py-2  px-4 ">
+        <div class="plizi-sr-item d-flex ">
             <div class="plizi-sr-item-pic mr-3 ">
                 <img class="plizi-sr-item-img rounded-circle overflow-hidden" v-bind:src="srItem.userPic" v-bind:alt="srItem.fullName" />
                 <span v-if="srItem.isOnline" class="plizi-sr-item-isonline" title="онлайн"></span>
                 <span v-else class="plizi-sr-item-isoffline"></span>
             </div>
 
-            <div class="plizi-sr-item-body m-0 col-12 pr-5 ">
+            <div class="plizi-sr-item-body m-0 pr-5 ">
                 <div class="plizi-sr-item-top d-flex align-items-end justify-content-between">
                     <h6 class="plizi-sr-item-name my-0">
                         {{ srItem.fullName }}

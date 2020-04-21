@@ -1,5 +1,5 @@
 <template>
-    <div class="plz-potential-friends --overflow-hidden mb-5">
+    <div id="potentialFriends"  class="plz-potential-friends --overflow-hidden mb-5">
 
         <div class="d-flex flex-row justify-content-start pb-3 --pt-5">
             <h6 class="plz-sf-title w-auto mt-2 ml-3">{{blockName}}</h6>
