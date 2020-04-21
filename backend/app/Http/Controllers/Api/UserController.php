@@ -80,6 +80,10 @@ class UserController extends Controller
         return response()->json(['message' => 'Данный пользователь не отправлял вам запрос в друзья'], 200);
     }
 
+    /**
+     * @param AddToFriend $request
+     * @return \Illuminate\Http\JsonResponse
+     */
     public function blockFriendshipRequest(AddToFriend $request) {
         $sender = User::find($request->userId);
         if(Auth::user()->hasFriendRequestFrom($sender)) {
@@ -118,6 +122,9 @@ class UserController extends Controller
         return new UserCollection($friends);
     }
 
+    /**
+     * @return UserCollection
+     */
     public function getPossibleFriends()
     {
         $fof = Auth::user()->getFriendsOfFriends();

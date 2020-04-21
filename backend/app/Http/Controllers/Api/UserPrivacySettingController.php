@@ -6,29 +6,30 @@ use App\Http\Controllers\Controller;
 use App\Http\Resources\User\PrivacyRolesCollection;
 use App\Models\Rbac\Role;
 use App\Models\User;
-use Domain\Pusher\WampServer;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
-use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
+use App\Http\Resources\User\User as UserResource;
 
 class UserPrivacySettingController extends Controller
 {
 
     /**
      * Patch user privacy settings api method.
+     *
      * @param Request $request
-     * @return \Illuminate\Http\JsonResponse
+     * @return UserResource
      * @throws \Illuminate\Validation\ValidationException
      */
     public function patch(Request $request)
     {
         $this->validate($request, User\PrivacySettings::rules($request->keys()));
+        $user = User::find(Auth::user()->id);
 
-        if (!Auth::user()->privacySettings instanceof User\PrivacySettings) {
-            Auth::user()->privacySettings()->create(['user_id' => Auth::user()->id]);
+        if (!User\PrivacySettings::where('user_id', $user->id)->exists()) {
+            $user->privacySettings()->create(['user_id' => $user->id]);
         }
 
-        Auth::user()->privacySettings()->update(array_filter([
+        $user->privacySettings()->update(array_filter([
             'page_type' => $request->pageType,
             'write_messages_permissions' => $request->writeMessagesPermissions,
             'post_wall_permissions' => $request->postWallPermissions,
@@ -38,7 +39,7 @@ class UserPrivacySettingController extends Controller
             'sms_confirm' => $request->smsConfirm,
         ]));
 
-        return response()->json(['message' => 'updated'], 201);
+        return new UserResource($user->fresh());
     }
 
     public function roles()

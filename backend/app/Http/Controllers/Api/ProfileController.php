@@ -50,7 +50,8 @@ class ProfileController extends Controller
      */
     public function patch(ProfileRequest $request)
     {
-        Auth::user()->profile->update(array_filter([
+        $user = User::find(Auth::user()->id);
+        $user->profile->update(array_filter([
             'first_name' => $request->firstName,
             'last_name' => $request->lastName,
             'birthday' => $request->birthday,
@@ -59,11 +60,11 @@ class ProfileController extends Controller
             'relationship_user_id' => $request->relationshipUserId,
         ]));
         if(key_exists('relationshipId', $request->post())) {
-            Auth::user()->profile->update([
+            $user->profile->update([
                 'relationship_id' => $request->relationshipId,
             ]);
         }
-        $profile = User::find(Auth::user()->id)->profile;
+        $profile = $user->fresh()->profile;
         return new ProfileResource($profile);
     }
 }
