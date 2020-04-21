@@ -1,7 +1,11 @@
 <template>
     <TextEditor :id="`profileWhatsNew`"
-                :showAvatar="true" :clazz="`row plz-text-editor mb-4 p-4 h-auto  align-items-start bg-white-br20`"
-                @editorPost="onTextPost" @editorFile="onFileChange" @editorImage="onImageChange">
+                :showAvatar="true"
+                :clazz="`row plz-text-editor mb-4 p-4 h-auto  align-items-start bg-white-br20`"
+                :editorPlaceholder="'Что у Вас нового?'"
+                @editorPost="onTextPost"
+                @editorFile="onFileChange"
+                @editorImage="onImageChange">
     </TextEditor>
 </template>
 

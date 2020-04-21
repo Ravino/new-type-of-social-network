@@ -1,6 +1,12 @@
 <template>
     <div class="editor">
-        <editor-content class="editor-content" :editor="editor" @keydown.native="onEditorKeyDown" />
+        <editor-content class="editor-content"
+                        :editor="editor"
+                        @keydown.native="onEditorKeyDown"/>
+        <span v-if="!isFocusedEditor"
+              class="placeholder">
+            {{ placeholder }}
+        </span>
     </div>
 </template>
 
@@ -27,8 +33,11 @@ props: {
         type: String,
         default: null,
     },
+    placeholder: {
+        type: String,
+        default: null,
+    },
 },
-
 data() {
     return {
         editor: new Editor({
@@ -40,7 +49,10 @@ data() {
                 //new Italic(),
                 new History(),
             ],
+            onFocus: this.onFocus,
+            onBlur: this.onBlur,
         }),
+        isFocusedEditor: false,
     }
 },
 
@@ -59,10 +71,27 @@ methods: {
             this.$emit('editorPost', { postText : editorText });
         }
     },
+    onFocus(event) {
+        this.isFocusedEditor = true;
+    },
+    onBlur(event) {
+        // this.isFocusedEditor = false;
+    },
 },
 beforeDestroy() {
     this.editor.destroy()
 },
 }
 </script>
+
+<style lang="scss">
+    .editor {
+        position: relative;
+
+        .placeholder {
+            position: absolute;
+            top: 25%;
+        }
+    }
+</style>
 

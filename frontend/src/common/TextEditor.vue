@@ -13,7 +13,7 @@
                     <div class="col-12  p-0">
                         <Editor class="plz-text-editor-form form-control px-2 py-1 h-100"
                                 @editorPost="onEditorNewPost"
-                                placeholder="Написать сообщение..."
+                                :placeholder="editorPlaceholder"
                                 ref="editor" />
                     </div>
                 </div>
@@ -53,7 +53,8 @@ name: 'TextEditor',
 props: {
     fieldId : String,
     showAvatar: Boolean,
-    clazz: String
+    clazz: String,
+    editorPlaceholder: String,
 },
 components: {
     IconAddCamera,
