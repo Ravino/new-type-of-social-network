@@ -53,6 +53,10 @@ $chatMessagesBodyHeight: calc(100% - 206px);
         &.compact-message{
             margin-top: $chatMessageMargin/4;
         }
+
+        .message-text-inner > p {
+            margin: 0px;
+        }
     }
 
     &.my-message {
@@ -80,7 +84,7 @@ $chatMessagesBodyHeight: calc(100% - 206px);
         .message-text {
             margin-left: $chatTextSideMargin;
             display: block;
-            p {
+            .message-text-inner {
                 color: $chatMessageMyMsgTextColor;
                 font-size: $chatMessageFS;
             }

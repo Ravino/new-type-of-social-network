@@ -594,7 +594,7 @@
           "Posts"
         ],
         "summary": "",
-        "description": "Посты на моей стене",
+        "description": "Посты в ленте новостей",
         "operationId": "postsFromMyWall",
         "consumes": [
           "application/json"
@@ -2279,6 +2279,9 @@
         "isOnline": {
           "type": "boolean"
         },
+          "mutualFriendsCount": {
+              "type": "number"
+          },
         "communities": {
           "type": "object",
           "properties": {
@@ -2331,6 +2334,9 @@
         "isOnline": {
           "type": "boolean"
         },
+          "mutualFriendsCount": {
+              "type": "number"
+          },
         "profile": {
           "type": "object",
           "properties": {

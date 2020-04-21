@@ -591,6 +591,26 @@ class PliziAPI {
         return null;
     }
 
+    /**
+     * Создание постов.
+     * @param formData
+     * @returns {object[]|null}
+     * @throws PliziAPIError
+     */
+    async storePost(formData) {
+        let response = await this.__axios.post('api/posts', formData, this.__getAuthHeaders())
+            .catch((error) => {
+                this.__checkIsTokenExperis(error, `storePost`);
+                throw new PliziAPIError(`storePost`, error.response);
+            });
+
+        if (response.status === 201) {
+            return response.data.data;
+        }
+
+        return null;
+    }
+
 
     /**
      * Отправка запроса на восстановление пароля.

@@ -6,7 +6,8 @@
 
         <div class="col-sm-9 col-md-9 col-lg-10 col-xl-10">
             <div class="container">
-                <WhatsNewBlock></WhatsNewBlock>
+                <WhatsNewBlock @addNewPost="addNewPost"></WhatsNewBlock>
+
                 <div class="row mb-4 pt-0">
                     <div id="postFilter" class="col-9 ">
                         <div class="col-12 bg-white-br20 ml-n3 d-flex align-items-center justify-content-between">
@@ -103,6 +104,9 @@
                         this.news.push(new PliziPost(post));
                     });
                 }
+            },
+            addNewPost(post) {
+                this.news.unshift(new PliziPost(post));
             },
         },
         mounted() {
