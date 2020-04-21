@@ -1,7 +1,8 @@
 <template>
-    <div :id="fieldId" class-x="row d-flex align-items-center mx-0 py-4" :class="blockClass">
+    <div :id="fieldId" class-x="row d-flex align-items-center mx-0 py-4"
+         :class="blockClass">
 
-        <div v-if="showAvatar" class="col-1 align-items-center text-center">
+        <div v-if="showAvatar" class="col-1 align-items-center text-center ">
             <img class="chat-companion-user-pic rounded-circle my-0 mx-auto"
                  v-bind:src="userPic" v-bind:alt="userFullName" />
         </div>
@@ -19,7 +20,7 @@
             </div>
         </div>
 
-        <div class="col-2 d-flex justify-content-end">
+        <div class="col-2 d-flex justify-content-end pt-1">
 
             <label class="attach-file btn btn-link my-0 ml-0 mr-2 px-1 btn-add-file position-relative">
                 <IconAddFile />

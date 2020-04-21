@@ -1,0 +1,22 @@
+$EditorUserPicSize: 32px;
+
+.plz-text-editor {
+
+    .chat-companion-user-pic {
+        width: $EditorUserPicSize;
+        height: $EditorUserPicSize;
+        min-width: $EditorUserPicSize;
+    }
+
+    .editor-content {
+        padding: 6px 4px;
+
+        p {
+            margin-bottom: 0;
+        }
+    }
+
+    .form-control {
+        border-color: var(--light);
+    }
+}

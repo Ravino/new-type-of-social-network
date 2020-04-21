@@ -1,5 +1,5 @@
 <template>
-    <div id="rightToolbar" class="bg-white-br20 py-2 overflow-hidden">
+    <div id="rightToolbar" class="bg-white-br20 py-3 overflow-hidden">
 <!--        <div class="d-block w-50 mb-1 mt-2 mx-auto text-center m">-->
 <!--            <i class="fas fa-chevron-left"></i>-->
 <!--        </div>-->
