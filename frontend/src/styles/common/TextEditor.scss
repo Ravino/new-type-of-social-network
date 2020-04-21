@@ -16,7 +16,26 @@ $EditorUserPicSize: 32px;
         }
     }
 
-    .form-control {
+    &-form {
         border-color: var(--light);
+    }
+
+    .menubar {
+        .btn {
+            i {
+                color: #1554F7;
+            }
+        }
+    }
+}
+.editor-content {
+    height: 100%;
+
+    .ProseMirror {
+        height: 100%;
+        outline: none;
+        p {
+            margin-bottom: 0;
+        }
     }
 }
