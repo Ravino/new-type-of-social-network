@@ -724,7 +724,7 @@
     "/posts/attachments": {
       "post": {
         "tags": [
-          "Chats"
+          "Posts"
         ],
         "description": "Загрузить файлы",
         "operationId": "uploadPostAttachments",
@@ -738,7 +738,7 @@
                 "properties": {
                   "files": {
                     "type": "string",
-                    "description": "file to upload",
+                    "description": "files to upload",
                     "format": "binary"
                   }
                 }
