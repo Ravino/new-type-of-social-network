@@ -1,8 +1,6 @@
 <?php
 
-
 namespace App\Http\Controllers\Api;
-
 
 use App\Http\Controllers\Controller;
 use App\Http\Resources\Post\Post as PostResource;
@@ -17,7 +15,6 @@ use Illuminate\Http\Request;
 
 class PostController extends Controller
 {
-
     /**
      * @return PostCollection
      */

@@ -28,10 +28,19 @@ methods: {
         textarea.style.height = Math.min(textarea.scrollHeight, 300) + "px";
     },
 
-    onTextPost(evData){
-        window.console.log(evData.postText, `WhatsNewBlock::onTextPost`);
+    async onTextPost(evData){
         if (evData.postText.trim() !== '') {
-            // @TGA: и вот тут вызывать API для отправки поста
+            let response;
+
+            try {
+                response = await this.$root.$api.storePost({body: evData.postText.trim()});
+            } catch (e) {
+                console.warn(e.detailMessage);
+            }
+
+            if (response) {
+                this.$emit('addNewPost', response);
+            }
         }
     },
 

@@ -11,7 +11,7 @@
 
                 <ProfilePhotos v-bind:photos="userPhotos"></ProfilePhotos>
 
-                <ProfileWhatsNew></ProfileWhatsNew>
+                <WhatsNewBlock @addNewPost="addNewPost"></WhatsNewBlock>
 
                 <ProfileFilter @wallPostsSelect="wallPostsSelectHandler"></ProfileFilter>
 
@@ -36,7 +36,7 @@
 
     import ProfileHeader from '../components/ProfileHeader.vue';
     import ProfilePhotos from '../components/ProfilePhotos.vue';
-    import ProfileWhatsNew from '../common/WhatsNewBlock.vue';
+    import WhatsNewBlock from '../common/WhatsNewBlock.vue';
     import ProfileFilter from '../components/ProfileFilter.vue';
     import ProfilePost from '../common/Post.vue';
     import PliziPost from '../classes/PliziPost';
@@ -47,7 +47,7 @@
         name: 'ProfilePage',
         components: {
             AccountToolbarLeft, FavoritFriends, ShortFriends,
-            ProfileHeader, ProfilePhotos, ProfileWhatsNew, ProfileFilter, ProfilePost
+            ProfileHeader, ProfilePhotos, WhatsNewBlock, ProfileFilter, ProfilePost
         },
         data() {
             return {
@@ -105,15 +105,13 @@
                 if (response !== null) {
                     this.userPosts = [];
 
-                    // FIXME: так не работает
-                    //response.data.list.map((post) => {
-                    //    this.userPosts.push(new PliziPost(post));
-                    //});
-
                     response.map((post) => {
                         this.userPosts.push(new PliziPost(post));
                     });
                 }
+            },
+            addNewPost(post) {
+                this.userPosts.unshift(new PliziPost(post));
             },
         },
 
