@@ -91,8 +91,6 @@ methods: {
         }
 
         if ( apiResponse ){
-            window.console.dir( apiResponse.data, `apiResponse` );
-
             const eventData = {
                 dialogId : apiResponse.data.chatId,
                 message : apiResponse.data

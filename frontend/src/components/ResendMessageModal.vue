@@ -2,12 +2,14 @@
     <div class="modal" id="resendMessageModal" tabindex="-1" role="dialog" aria-labelledby="resendMessageModal"
           aria-hidden="true" style="display: block; background-color: rgba(0, 0, 0, .7);"
           @click.stop="hideMessageResendModal">
+
         <div class="modal-dialog modal-dialog-centered" role="document" @click.stop="">
             <div class="modal-content bg-white-br20">
 
                 <div id="resendMessageModalBody" class="modal-body p-4">
-                    <h5 class="resend-message-title text-left mb-3" >Переслать собщение</h5>
-                    <form id="resendMessageModalForm" novalidate="novalidate" >
+                    <h5 class="resend-message-title text-left mb-3">Переслать собщение</h5>
+
+                    <form id="resendMessageModalForm" novalidate="novalidate">
                         <div class="form-group">
                             <multiselect v-model="value"
                                          :options="options"
@@ -64,8 +66,8 @@
                                 <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Quis, sit!</p>
                             </div>
                         </div>
-
                     </form>
+
                     <button id="resendMessageSacces"
                             type="submit"
                             class="btn plz-btn plz-btn-primary mt-4">
@@ -80,51 +82,38 @@
 </template>
 
 <script>
-    import IconAddFile from '../icons/IconAddFile.vue';
-    import IconAddCamera from '../icons/IconAddCamera.vue';
-    import IconAddSmile from '../icons/IconAddSmile.vue';
+import IconAddFile from '../icons/IconAddFile.vue';
+import IconAddCamera from '../icons/IconAddCamera.vue';
+import IconAddSmile from '../icons/IconAddSmile.vue';
 
-
-    export default {
-        name: 'ResendMessageModal',
-        components: { IconAddCamera, IconAddSmile, IconAddFile },
-        props: {
-
-        },
-        data() {
-            return {
-                value: [
-                     'Pitter Pen'
-                ],
-                options: ['Vue.js', 'Javascript', 'Open Source', 'os' ],
-                textareaValue: ''
-            }
-        },
-        methods: {
-            hideMessageResendModal() {
-                this.$root.$emit('hideMessageResendModal', {});
-            },
-
-            addTag (newTag) {
-                const tag = {
-                    name: newTag,
-                    code: newTag.substring(0, 2) + Math.floor((Math.random() * 10000000))
-                };
-                this.options.push(tag);
-                this.value.push(tag);
-            }
-        }
+export default {
+name: 'ResendMessageModal',
+components: { IconAddCamera, IconAddSmile, IconAddFile },
+props: {
+    pickedID: Number,
+},
+data() {
+    return {
+        value: [
+             'Pitter Pen'
+        ],
+        options: ['Vue.js', 'Javascript', 'Open Source', 'os' ],
+        textareaValue: ''
     }
+},
+methods: {
+    hideMessageResendModal() {
+        this.$root.$emit('hideMessageResendModal', {});
+    },
+
+    addTag (newTag) {
+        const tag = {
+            name: newTag,
+            code: newTag.substring(0, 2) + Math.floor((Math.random() * 10000000))
+        };
+        this.options.push(tag);
+        this.value.push(tag);
+    }
+}
+}
 </script>
-
-
-
-<style lang="scss">
-
-    .successRegistration {
-        i {
-            font-size: 3rem;
-            color: #3D51DE;
-        }
-    }
-</style>

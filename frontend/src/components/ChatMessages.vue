@@ -3,36 +3,23 @@
         <vue-custom-scrollbar class="chat-messages-scroll py-4"  :settings="customScrollbarSettings" >
             <div class="d-flex flex-column --align-items-start">
                 <ChatMessageItem v-for="(message, messageIndex) in filteredMessages"
+                                 @ChatMessagePick="onChatMessagePick"
+                                 @ShowForwardMessageModal="onShowForwardMessageModal"
                                  v-bind:message="message"
                                  v-bind:next="getNext(messageIndex)"
-                                 v-bind:key="messageIndex">
+                                 v-bind:pickedID="pickedMessageID"
+                                 v-bind:key="message.id">
                 </ChatMessageItem>
             </div>
         </vue-custom-scrollbar>
 
-        <!-- TODO: показать при появлении чекбокса -->
-        <div v-if="isShowPopupMessageMenu" class="messages-edit-group btn-group bg-white-br20 d-flex overflow-hidden">
-            <button class="btn btn-message-share d-flex align-items-center justify-content-center border-right "
-                    @click="openResendMessageModal()">
-                <IconShare  />
-                Переслать
-            </button>
-            <button class="btn btn-message-basket d-flex align-items-center justify-content-center ">
-                <IconBasket  />
-                Удалить
-            </button>
-        </div>
-
-        <ResendMessageModal v-if="resendMessageModalShow" v-bind:reg-modal-visible="resendMessageModalShow">
-        </ResendMessageModal>
+        <ResendMessageModal v-if="resendMessageModalShow" v-bind:pickedID="pickedMessageID"></ResendMessageModal>
     </div>
 
 </template>
 
 <script>
 import ChatMessageItem from './ChatMessageItem.vue';
-import IconShare from '../icons/IconShare.vue';
-import IconBasket from '../icons/IconBasket.vue';
 
 /** @link https://binaryify.github.io/vue-custom-scrollbar/en/#why-custom-scrollbar **/
 import vueCustomScrollbar from 'vue-custom-scrollbar';
@@ -42,25 +29,25 @@ import ResendMessageModal from './ResendMessageModal.vue';
 
 //import PliziMessage from "../classes/PliziMessage";
 
-
 export default {
 name: 'ChatMessages',
+components: {
+    vueCustomScrollbar,
+    ChatMessageItem,
+    ResendMessageModal
+},
+
 props: {
     messagesList: Array,
     currentDialog : Object,
     filterText: String
 },
-components: {
-    IconBasket, IconShare, ChatMessageItem,
-    vueCustomScrollbar,
-    ResendMessageModal
-},
 
 data() {
     return {
+        pickedMessageID: -1,
         previousMsg: null,
         resendMessageModalShow: false,
-        isShowPopupMessageMenu: false,
 
         customScrollbarSettings: {
             maxScrollbarLength: 60,
@@ -70,12 +57,16 @@ data() {
 },
 
 methods: {
-    hideMessageResendModal() {
-        this.$root.$emit('hideMessageResendModal', {});
+    onChatMessagePick(evData){
+        this.pickedMessageID = evData.messageID
     },
 
-    openResendMessageModal() {
+    onShowForwardMessageModal(){
         this.resendMessageModalShow = true;
+    },
+
+    hideMessageResendModal() {
+        this.$root.$emit('hideMessageResendModal', {});
     },
 
     getNext(currIndex) {
@@ -99,9 +90,11 @@ computed: {
         if (ft.length > 2)
             return this.messagesList.filter((msgItem)=>{ return msgItem.body.toLowerCase().includes(ft); });
 
-            //return this.messagesList.filter((msgItem)=>{ return msgItem.body.includes(this.filterText); });
-
         return this.messagesList;
+    },
+
+    isShowPopupMessageMenu(){
+        return this.pickedMessageID !== -1;
     }
 },
 
