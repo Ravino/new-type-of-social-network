@@ -6,8 +6,12 @@
         <div class="plz-favorit-friend-userpic">
             <img class="plz-favorit-userpic rounded-circle" :src="friend.userPic" :alt="friend.firstName" />
 
-            <span v-if="friend.isOnline" class="plz-favorit-isonline" title="в сети"></span>
-            <span v-else class="plz-favorit-isoffline" :title="getSexTitle"></span>
+
+            <div v-if="messageWriting" class="writing"><span></span><span></span><span></span></div>
+            <div v-else class="">
+                <span v-if="friend.isOnline" class="plz-favorit-isonline" title="в сети"></span>
+                <span v-else class="plz-favorit-isoffline" :title="getSexTitle"></span>
+            </div>
         </div>
 
         <div class="plz-favorit-friend-title flex align-items-center mr-auto ">
@@ -49,7 +53,8 @@ props : {
 },
 data() {
     return {
-        chatWindowShown: false
+        chatWindowShown: false,
+        messageWriting: false  // TODO: используется, когда потльзователь печатает
     }
 },
 methods: {
@@ -67,7 +72,8 @@ methods: {
 
         return `был(а) давно`;
     }
-}
+},
+
 
 }
 </script>

@@ -98,3 +98,28 @@ $picSize: 42px;
         border-radius: 16px
     }
 }
+
+.friend-status {
+    &-isonline {
+        display: block;
+        position: absolute;
+        width: 10px;
+        height: 10px;
+        right: 0;
+        bottom: 0;
+        background-color: #9fcd48;
+        border: 1px solid #fff;
+        border-radius: 100%;
+    }
+    &-isoffline {
+        display: block;
+        position: absolute;
+        width: 10px;
+        height: 10px;
+        right: 0;
+        bottom: 0;
+        background-color: #cacac9;
+        border: 1px solid #fff;
+        border-radius: 100%;
+    }
+}
