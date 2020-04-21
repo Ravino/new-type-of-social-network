@@ -51,29 +51,3 @@ methods: {
 }
 </script>
 
-<style lang="scss">
-.picker-btn {
-    position: relative;
-}
-
-.picker {
-    position: absolute;
-    width: 200px;
-    height: 300px;
-    overflow-y: scroll;
-    top: 0;
-    left: 0;
-    background: #fff;
-    z-index: 999;
-
-    .picker-category {
-        margin: 10px 0;
-    }
-
-    .picker-emoji {
-        &:hover {
-            background-color: #1554F7;
-        }
-    }
-}
-</style>
