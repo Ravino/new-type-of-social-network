@@ -48,7 +48,6 @@ data() {
         profileData: {},
         isDataReady: false,
         isShowMessageDialog: false,
-
     }
 },
 
@@ -92,11 +91,6 @@ methods: {
         window.console.log(apiResponse, `apiResponse`);
 
         if (apiResponse != null &&  apiResponse.data) {
-            //msg.id = -1;
-            //msg.firstName = this.$root.$user.firstName;
-            //msg.lastName = this.$root.$user.lastName;
-            //msg.userPic =  this.$root.$user.userPic;
-
             let newMsg = apiResponse.data;
 
             const eventData = {
@@ -109,7 +103,6 @@ methods: {
             } catch (e){
 
             }
-            this.newMessage = ``;
         }
         else {
             window.console.info(apiResponse);

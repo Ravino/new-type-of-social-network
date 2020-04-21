@@ -34,10 +34,10 @@
 
             <button class="btn btn-link mx-0 px-1 btn-add-smile" type="button">
 
-                <EmojiPicker v-if="dropToDown " @addEmoji="addEmoji"
+                <EmojiPicker v-if="dropToDown" @addEmoji="onAddEmoji"
                              :transform="'transform: translate(-40%, 40px)'"/>
 
-                <EmojiPicker v-else  @addEmoji="addEmoji"
+                <EmojiPicker v-else  @addEmoji="onAddEmoji"
                              :transform="'transform: translate(-40%, -100%)'"/>
             </button>
         </div>
@@ -107,9 +107,26 @@ methods: {
         });
     },
 
-    addEmoji(emoji) {
-        this.$refs.editor.addEmoji(emoji);
+    onAddEmoji(evData) {
+        if (evData.keys.ctrlKey) { // бал нажат Ctrl
+            let txt = this.$refs.editor.getContent();
+
+            //this.$emit('editorPost', { postText : `<!--<p onclick="alert(11111)">Серега привет!!!</p>>-->` });
+            //this.$emit('editorPost', { postText : `<img src="https://steamuserimages-a.akamaihd.net/ugc/792010418808130585/980E17AA6CF29E06865DA40F9067B9164AB54BCD/" alt="" />` });
+
+            if (`<p></p>` === txt.toLowerCase()) { // поле ввода пустое - значит отправляем только увеличенный эмоджи
+                const sendSmile = `<p class="big-emoji">${evData.emoji}</p>`;
+                this.$emit('editorPost', { postText : sendSmile });
+            }
+            else { // просто добавляем эмоджи
+                this.$refs.editor.addEmoji(evData.emoji);
+            }
+        }
+        else { // просто добавляем эмоджи
+            this.$refs.editor.addEmoji(evData.emoji);
+        }
     },
+
 }
 
 }

@@ -14,7 +14,7 @@
                 <div class="user-friend-body-top d-flex align-items-end justify-content-between">
                     <h6 class="user-friend-name my-0">{{ dialog.companion.firstName }}</h6>
                     <small v-if="dialog.isRead " class="mr-1 ml-auto mb-1">
-                        <IconCheckedDouble :clazz="'mb-2'"/>
+                        <IconCheckedDouble :clazz="'mb-2'" />
                     </small>
                     <time :datetime="dialog.lastMessageDT" class="">
                         {{ dialog.lastMessageDT | lastMessageTime }}
@@ -23,9 +23,7 @@
 
                 <div class="user-friend-body-bottom d-flex pr-5">
                     <span class="user-friend-details mr-1" v-if="dialog.isLastFromMe">Вы:</span>
-                    <p class="user-friend-desc p-0 my-0  d-inline ">
-                        {{dialog.lastMessageText}}
-                    </p>
+                    <p class="user-friend-desc p-0 my-0 d-inline" v-html="lastMsgText"></p>
                 </div>
             </div>
         </div>
@@ -60,6 +58,15 @@ methods: {
         this.$root.$emit('switchToChat', {dialogId: this.dialog.id});
     }
 },
+
+computed: {
+    lastMsgText(){
+        let txt = this.dialog.lastMessageText;
+        txt = txt.replace(/<br\/>/g, '&nbsp;');
+
+        return this.$options.filters.stripTags(txt);
+    }
+}
 
 }
 </script>

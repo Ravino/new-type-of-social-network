@@ -1,143 +1,160 @@
+import PliziUzer from './PliziUser.js';
+import PliziCommunity from './PliziCommunity.js';
+
 class PliziPost {
     /**
-     * @type {number|null}
+     * путь к дефолтной аватарке, которую показываем если нет своей
+     * @type {string}
+     * @private
+     */
+    __defaultAvatarPath = `/images/noavatar-256.png`;
+
+    /**
+     * @type {number}
      * @private
      */
     _id = null;
 
     /**
-     * @type {string|null}
+     * @type {string}
      * @private
      */
     _name = null;
 
     /**
-     * @type {string|null}
+     * @type {string}
      * @private
      */
     _body = null;
 
     /**
-     * @type {array|null}
+     * @type {string[]}
      * @private
      */
     _primaryImage = null;
 
     /**
-     * @type {number|null}
+     * кол-во лайков
+     * @type {number}
      * @private
      */
     _likes = null;
 
     /**
-     * @type {number|null}
+     * кол-во просмотров
+     * @type {number}
      * @private
      */
     _views = null;
 
     /**
-     * @type {number|null}
+     * кол-во комментариев
+     * @type {number}
      * @private
      */
     _commentsCount = null;
 
     /**
-     * @type {number|null}
+     * кол-во репостов
+     * @type {number}
      * @private
      */
     _sharesCount = null;
 
     /**
-     * @type {object[]|null}
+     * автор-юзер
+     * @type {PliziUzer|null}
      * @private
      */
     _user = null;
 
     /**
-     * @type {object[]|null}
+     * автор-сообщество
+     * @type {PliziCommunity|null}
      * @private
      */
     _community = null;
 
     /**
-     * @type {date|null}
+     * @type {Date}
      * @private
      */
     _createdAt = null;
 
-    /**
-     * @returns {number}
-     */
     get id() {
         return this._id;
     }
 
-    /**
-     * @returns {string}
-     */
     get name() {
         return this._name
     }
 
-    /**
-     * @returns {string}
-     */
+    get posterName() {
+        if (this._user)
+            return this._user.firstName + ` ` + this._user.lastName;
+
+        if (this._community)
+            return this._community.name;
+
+        return ``;
+    }
+
+    get posterPic() {
+        if (this._user)
+            return this.user.userPic;
+
+        if (this._community)
+            return this.community.primaryImage;
+
+        return this.__defaultAvatarPath;
+    }
+
     get body() {
         return this._body;
     }
 
-    /**
-     * @returns {Array}
-     */
     get primaryImage() {
-        return this._primaryImage
+        return this._primaryImage;
     }
 
-    /**
-     * @returns {number}
-     */
+    get images() {
+        return this._primaryImage;
+    }
+
+    get isImages() {
+        return (this._primaryImage  &&  this._primaryImage.length>0);
+    }
+
     get likes() {
         return this._likes;
     }
 
-    /**
-     * @returns {number}
-     */
     get views() {
         return this._views
     }
 
     /**
-     * @returns {Object[]}
+     * @returns {PliziUzer}
      */
     get user() {
         return this._user;
     }
 
     /**
-     * @returns {Object[]}
+     * @returns {PliziCommunity}
      */
     get community() {
         return this._community;
     }
 
-    /**
-     * @returns {number}
-     */
     get commentsCount() {
         return this._commentsCount;
     }
 
-    /**
-     * @returns {number}
-     */
     get sharesCount() {
         return this._sharesCount;
     }
 
-    /**
-     * @returns {date}
-     */
     get createdAt() {
         return this._createdAt;
     }
@@ -183,16 +200,19 @@ class PliziPost {
     }
 
     set createdAt(value) {
-        this._createdAt = value;
+        this._createdAt = new Date(value);
     }
 
+    /**
+     * @param {object} post
+     */
     constructor(post) {
         this.update(post);
     }
 
     /**
-     * Обновление поста.
-     * @param post
+     * Обновление поста
+     * @param {object} post
      */
     update(post) {
         this.id = post.id;
@@ -203,10 +223,32 @@ class PliziPost {
         this.views = post.views;
         this.commentsCount = post.commentsCount;
         this.sharesCount = post.sharesCount;
-        this.user = post.user;
-        this.community = post.community;
+        this.user = post.user? new PliziUzer(post.user) : null;
+        this.community = post.community ? new PliziCommunity(post.community) : null;
         this.createdAt = post.createdAt;
     };
+
+    /**
+     * возвращает флаг - принадлежит или нет пост текущему юзеру
+     * TODO: @TGA - переделать потом на реальные данные
+     * @returns {boolean}
+     */
+    get isMinePost(){
+        return true;
+    }
+
+    /**
+     * возвращает флаг - является ли поста архивным (старше 7 дней)
+     * @returns {boolean}
+     */
+    get isArchivePost(){
+        const pDate = this.createdAt.getTime() / 1000;
+        const nDate = (new Date()).getTime() / 1000;
+
+        const diff = Math.ceil( (nDate - pDate)/ 86400 );
+
+        return (diff > 7);
+    }
 }
 
 export { PliziPost as default}

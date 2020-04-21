@@ -1,12 +1,31 @@
 import PliziUzer from './PliziUser.js';
 
 class PliziFriend extends PliziUzer{
+
     /**
-     * TODO: временно  - потом сделать настоящие данные
-     * @returns {number}
+     * кол-во общих друзей
+     * @type {number}
+     * @private
      */
-    get commonFriendsNumber(){
-        return Math.floor(Math.random() * 20);
+    _mutualFriendsCount = null;
+
+
+    constructor(usrData) {
+        super(usrData);
+
+        if (typeof usrData.data === `undefined`) {
+            usrData = { data : usrData };
+        }
+        this._mutualFriendsCount = +usrData.data.mutualFriendsCount;
+    }
+
+    get mutualFriendsCount(){
+        return this._mutualFriendsCount;
+    }
+
+    toJSON() {
+        let retData = super.toJSON();
+        retData.data.mutualFriendsCount = this._mutualFriendsCount;
     }
 }
 

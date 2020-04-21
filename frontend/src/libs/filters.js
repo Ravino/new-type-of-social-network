@@ -26,6 +26,9 @@ Vue.filter('toDMYHM', (dateValue) => {
     return moment(dateValue).format('DD.MM.YYYY HH:mm');
 });
 
+/**
+ * это  фильтр для юзеров
+ */
 Vue.filter('lastEventTime', (messageDT) => {
     let now = moment();
     let yesterday = moment().subtract(1, 'days');
@@ -46,6 +49,9 @@ Vue.filter('lastEventTime', (messageDT) => {
     return lmt.format('DD.MM.YY');
 });
 
+/**
+ * это фильтр для сообщений в чате
+ */
 Vue.filter('lastMessageTime', (messageDT) => {
     let now = moment();
     let yesterday = moment().subtract(1, 'days');
@@ -64,6 +70,29 @@ Vue.filter('lastMessageTime', (messageDT) => {
     }
 
     return lmt.format('DD.MM.YY');
+});
+
+/**
+ * это для постов
+ */
+Vue.filter('lastPostTime', (messageDT) => {
+    let now = moment();
+    let yesterday = moment().subtract(1, 'days');
+    let lmt = moment.unix(messageDT);
+
+    // если сообщение было сегодня или вчера
+    if (now.format('YYYY-MM-DD')===lmt.format('YYYY-MM-DD')  ||  yesterday.format('YYYY-MM-DD')===lmt.format('YYYY-MM-DD')) {
+        return lmt.format('HH:mm');
+    }
+
+    // сообщение было в течение последних 7 дней
+    let lastWeek = moment().subtract(7, 'days');
+    if ( +lmt.format('X') >= +lastWeek.format('X')) {
+        let dow = lmt.format('ddd');
+        return dow.charAt(0).toUpperCase() + dow.slice(1);
+    }
+
+    return lmt.format('DD.MM.YYYY');
 });
 
 /**
@@ -98,3 +127,79 @@ Vue.filter('toYMD', (value) => {
     return moment(value).format('YYYY-MM-DD');
 });
 
+Vue.filter('mutualFriendsText', (mfCount) => {
+    if (+mfCount === 0)
+        return `<span class="mutual-friends-number">нет</span> общих друзей`;
+
+    const lastNum = (mfCount+``).substr(-1, 1);
+
+    let ofText = `<span class="mutual-friends-number">есть</span> общие друзья`;
+
+    if (mfCount < 10) {
+        switch (mfCount){
+            case 1:
+                ofText = `<span class="mutual-friends-number">один</span> общий друг`; break;
+            case 2:
+            case 3:
+            case 4:
+                ofText = `<span class="mutual-friends-number">${mfCount}</span> общих друга`; break;
+            case 5:
+            case 6:
+            case 7:
+            case 8:
+            case 9:
+                ofText = `<span class="mutual-friends-number">${mfCount}</span> общих друзей`; break;
+        }
+
+        return ofText;
+    }
+
+    if (mfCount>=10 && mfCount<=20)
+        return `<span class="mutual-friends-number">${mfCount}</span> общих друзей`;
+
+    if (mfCount>=21) {
+        switch (lastNum){
+            case '1':
+                ofText = `<span class="mutual-friends-number">${mfCount}</span> общий друг`; break;
+            case '2':
+            case '3':
+            case '4':
+                ofText = `<span class="mutual-friends-number">${mfCount}</span> общих друга`; break;
+            case '5':
+            case '6':
+            case '7':
+            case '8':
+            case '9':
+            case '0':
+                ofText = `<span class="mutual-friends-number">${mfCount}</span> общих друзей`; break;
+        }
+
+        return ofText;
+    }
+
+    return ofText;
+
+});
+
+
+/** @see https://locutus.io/php/strings/strip_tags/ **/
+Vue.filter('stripTags', (text, allowed) => {
+    allowed = (((allowed || '') + '').toLowerCase().match(/<[a-z][a-z0-9]*>/g) || []).join('');
+
+    let tags = /<\/?([a-z0-9]*)\b[^>]*>?/gi;
+    let commentsAndPhpTags = /<!--[\s\S]*?-->|<\?(?:php)?[\s\S]*?\?>/gi;
+
+    let after = text + ``;
+    after = (after.substring(after.length - 1) === '<') ? after.substring(0, after.length - 1) : after;
+
+    while (true) {
+        let before = after
+        after = before.replace(commentsAndPhpTags, '').replace(tags, ($0, $1) => {
+            return allowed.indexOf('<' + $1.toLowerCase() + '>') > -1 ? $0 : '';
+        })
+
+        if (before === after)
+            return after
+    }
+
+});

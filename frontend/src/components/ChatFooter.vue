@@ -35,9 +35,39 @@ data() {
 methods: {
     onTextPost(evData){
         window.console.log(evData.postText, `ChatFooter::onTextPost`);
-        if (evData.postText.trim() !== '') {
-            this.addMessageToChat( evData.postText.trim() );
+
+        /** @type {string} **/
+        let msg = evData.postText.trim();
+        window.console.info(msg, `msg 1`);
+
+        if (msg !== '') {
+            const brExample = `<br/>`;
+            msg = msg.replace(/<p><\/p>/g, brExample);
+            msg = this.killBrTrail(msg);
+            window.console.info(msg, `msg 2`);
+
+            if (msg !== '') {
+                this.addMessageToChat( msg );
+            }
         }
+    },
+
+    killBrTrail(sText){
+        const brExample = `<br/>`;
+
+        while (true){
+            const pos = sText.length - brExample.length;
+            const trail = sText.substr(pos).toLowerCase();
+
+            if (trail === brExample) {
+                sText = sText.substr(0, pos);
+            }
+            else {
+                break;
+            }
+        }
+
+        return sText;
     },
 
     onFileChange(evData){
@@ -51,18 +81,10 @@ methods: {
     async addMessageToChat( msgText ){
         const chatId = (this.currentDialog) ? this.currentDialog.id : -1;
 
-        const newMsg = {
-            body : msgText,
-            createdAt : Math.floor( (new Date()).getTime() / 1000 ),
-            isMine : true,
-            isRead : false,
-            isEdited : false
-        };
-
         let apiResponse = null;
 
-        try{
-            apiResponse = await this.$root.$api.chatSend( chatId, newMsg.body );
+        try {
+            apiResponse = await this.$root.$api.chatSend( chatId, msgText );
         } catch (e){
             window.console.warn( e.detailMessage );
             throw e;
@@ -72,12 +94,11 @@ methods: {
             window.console.dir( apiResponse.data, `apiResponse` );
 
             const eventData = {
-                dialogId : (this.currentDialog) ? this.currentDialog.id : -1,
+                dialogId : apiResponse.data.chatId,
                 message : apiResponse.data
             }
 
             this.$root.$emit( 'newMessageInDialog', eventData );
-            this.newMessage = ``;
         }
         else{
             window.console.info( apiResponse );

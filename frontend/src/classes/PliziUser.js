@@ -86,7 +86,7 @@ class PliziUser {
      * @type {Object[]|null}
      * @private
      */
-    _country = null;
+    _country =  null;
 
     /**
      *
@@ -258,6 +258,7 @@ class PliziUser {
 
         this.__isDataReady = false;
     }
+
 
     /**
      *

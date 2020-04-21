@@ -1,7 +1,5 @@
 <template>
-    <div class="plz-short-friends-item d-flex align-items-center py-2 px-3"
-         :class="{ active: chatWindowShown }"
-         @click="chatWindowShown = ! chatWindowShown">
+    <div class="plz-short-friends-item d-flex align-items-center py-2 px-3">
 
         <router-link tag="a" class="plz-short-friend-userpic text-body" :to="`/user-`+friend.id">
             <img class="plz-short-userpic rounded-circle" :src="friend.userPic" :alt="friend.firstName"/>
@@ -16,28 +14,29 @@
             </router-link>
 
             <div class="plz-short-friend-status">
-                <p>{{friend.commonFriendsNumber}} общих друга</p>
+                <p v-html="$options.filters.mutualFriendsText(friend.mutualFriendsCount)"></p>
             </div>
         </div>
 
         <router-link to="/chats-list" tag="a" class="plz-short-friend-is-active text-body">
-            <IconMessageShort/>
+            <IconMessageShort />
         </router-link>
     </div>
 </template>
 <script>
-import IconMessageShort from '../icons/IconMessageShort.vue'
+import IconMessageShort from '../icons/IconMessageShort.vue';
+
+import PliziFriend from '../classes/PliziFriend.js';
 
 export default {
 name : 'ShortFriendItem',
 components : { IconMessageShort },
 props : {
-    friend : Object,
-
+    friend : PliziFriend
 },
-data() {
+
+data(){
     return {
-        chatWindowShown: false
     }
 },
 
@@ -51,6 +50,7 @@ methods: {
 
         return `был(а) давно`;
     }
-},
+}
+
 }
 </script>

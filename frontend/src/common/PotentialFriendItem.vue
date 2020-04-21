@@ -14,7 +14,7 @@
             </router-link>
 
             <div class="plz-potential-friend-status">
-                <p>{{friend.commonFriendsNumber}} общих друга</p>
+                <p v-html="$options.filters.mutualFriendsText(friend.mutualFriendsCount)"></p>
             </div>
         </div>
 

@@ -38,6 +38,7 @@ props: {
         default: null,
     },
 },
+
 data() {
     return {
         editor: new Editor({
@@ -58,8 +59,17 @@ data() {
 
 methods: {
     addEmoji(emoji) {
-        let data = document.querySelector('.ProseMirror p');
-        data.innerHTML += emoji;
+        let currText = this.editor.getHTML();
+        currText = (currText.toLowerCase() === `<p></p>`) ? '' : currText;
+
+        if  (`` === currText) {
+            this.editor.setContent(`<p class="big-emoji">${emoji}</p>`);
+            return;
+        }
+
+        currText = currText.substr(0, currText.length - 4) + `<span class="emoji">${emoji}</span>` + `</p>`;
+
+        this.editor.setContent(currText);
     },
 
     onEditorKeyDown(ev) {
@@ -71,16 +81,23 @@ methods: {
             this.$emit('editorPost', { postText : editorText });
         }
     },
+
     onFocus(event) {
         this.isFocusedEditor = true;
     },
+
     onBlur(event) {
         // this.isFocusedEditor = false;
     },
+
+    getContent(){
+        return this.editor.getHTML();
+    }
 },
+
 beforeDestroy() {
     this.editor.destroy()
-},
+}
 }
 </script>
 

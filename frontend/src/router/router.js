@@ -46,8 +46,6 @@ const router = new VueRouter({
 
 
 function routerForcedLogout(next, to) {
-    window.console.log(to.path, `routerForcedLogout`);
-
     store.dispatch('SET_GWT', ``);
     store.dispatch('SET_CHAT_CHANNEL', ``);
     store.dispatch('SET_LAST_SEARCH', ``);

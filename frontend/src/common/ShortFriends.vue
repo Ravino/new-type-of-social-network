@@ -26,9 +26,6 @@ import ShortFriendItem from './ShortFriendItem.vue';
 export default {
 name: 'ShortFriends',
 components : { ShortFriendItem},
-props: {
-user: Object
-},
 
 data () {
     return {

@@ -51,16 +51,18 @@ name : 'FavoritFriendItem',
 props : {
     friend : PliziFriend
 },
-data() {
+
+data(){
     return {
         chatWindowShown: false,
         messageWriting: false  // TODO: используется, когда потльзователь печатает
     }
 },
+
 methods: {
     showRelatedChat(){
         this.chatWindowShown = !this.chatWindowShown;
-        this.$root.$alert(`По клику будем показывать привязанный чат`, 'bg-info', 5);
+        //this.$root.$alert(`По клику будем показывать привязанный чат`, 'bg-info', 5);
     },
 
     getSexTitle(fItem){

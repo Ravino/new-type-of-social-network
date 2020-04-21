@@ -54,8 +54,18 @@ $chatMessagesBodyHeight: calc(100% - 145px);
             margin-top: $chatMessageMargin/4;
         }
 
-        .message-text-inner > p {
-            margin: 0;
+        .message-text-inner {
+            p {
+                margin: 0;
+
+                span.emoji{
+                    font-size: 20px;
+                }
+            }
+
+            p.big-emoji {
+                font-size: 40px;
+            }
         }
     }
 
@@ -66,7 +76,7 @@ $chatMessagesBodyHeight: calc(100% - 145px);
             }
         }
         .radio {
-            margin-left: 20px;
+            margin-left: 40px;
         }
 
         .message-body {
