@@ -35,7 +35,7 @@ class MessageCollection extends ResourceCollection
                     'lastName' => $message->last_name,
                     'userPic' => $message->user_pic,
                     'sex' => $message->sex,
-                    'body' => $message->body,
+                    'body' => strip_tags($message->body, '<span><p>'),
                     'isMine' => ($message->user_id === $this->user_id),
                     'isRead' => $message->is_read,
                     'isEdited' => false,

@@ -3,6 +3,8 @@
 namespace App\Providers;
 
 use App\Models\Profile;
+use App\Models\User\PrivacySettings;
+use App\Observers\PrivacySettingsObserver;
 use App\Observers\ProfileObserver;
 use App\Services\SocialUserResolver;
 use Coderello\SocialGrant\Resolvers\SocialUserResolverInterface;
@@ -41,5 +43,6 @@ class AppServiceProvider extends ServiceProvider
         Schema::defaultStringLength(191);
 
         Profile::observe(ProfileObserver::class);
+        PrivacySettings::observe(PrivacySettingsObserver::class);
     }
 }

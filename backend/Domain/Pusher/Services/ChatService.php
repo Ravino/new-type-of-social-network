@@ -105,10 +105,17 @@ class ChatService extends BaseService
         return $attachment_ids;
     }
 
-    public function getChatForUser($user_id) {
-        $chat_id = $this->chatRepository->getChatIdForCoupleUsers($user_id, \Auth::user()->id);
+    /**
+     * @param $user_ids
+     * @return \Domain\Pusher\Http\Resources\Chat\Chat
+     */
+    public function getChatForUsers($user_ids) {
+        $chat_id = null;
+        if(count($user_ids) === 1) {
+            $chat_id = $this->chatRepository->getChatIdForCoupleUsers($user_ids[0], \Auth::user()->id);
+        }
         if(!$chat_id) {
-            $chat_id = $this->chatRepository->createChatForCoupleUsers($user_id, \Auth::user()->id);
+            $chat_id = $this->chatRepository->createChatForUsers($user_ids, \Auth::user()->id);
         }
         return $this->chatRepository->getChatById($chat_id);
     }

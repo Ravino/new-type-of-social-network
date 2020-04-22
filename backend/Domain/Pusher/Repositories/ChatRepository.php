@@ -130,4 +130,24 @@ class ChatRepository
         ]);
         return $chat_id;
     }
+
+    /**
+     * Создает чат для нескольких пользователей
+     *
+     * @param $receiver_ids
+     * @param $author_id
+     * @return int
+     */
+    public function createChatForUsers($receiver_ids, $author_id) {
+        $chat_id = \DB::table('chat')->insertGetId(
+            ['user_id' => $author_id, 'created_at' => time(), 'updated_at' => time()]
+        );
+        $party = [];
+        foreach ($receiver_ids as $receiver_id) {
+            $party[] = ['chat_id' => $chat_id, 'user_id' => $receiver_id, 'created_at' => time()];
+        }
+        array_push($party, ['chat_id' => $chat_id, 'user_id' => $author_id, 'created_at' => time()]);
+        DB::table('chat_party')->insert($party);
+        return $chat_id;
+    }
 }

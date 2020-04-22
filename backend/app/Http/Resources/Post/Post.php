@@ -22,7 +22,7 @@ class Post extends JsonResource
             return [
                 'id' => $this->id,
                 'name' => $this->name,
-                'body' => $this->body,
+                'body' => strip_tags($this->body, '<span><p>'),
                 'primaryImage' => $this->primary_image,
                 'likes' => $this->likes,
                 'views' => $this->views,
@@ -38,7 +38,7 @@ class Post extends JsonResource
             return [
                 'id' => $this->id,
                 'name' => $this->name,
-                'body' => $this->body,
+                'body' => strip_tags($this->body, '<span><p>'),
                 'primaryImage' => $this->primary_image,
                 'likes' => $this->likes,
                 'views' => $this->views,

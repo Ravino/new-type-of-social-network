@@ -1,9 +1,14 @@
 <template>
-    <div id="accountSettingsSecurity" class="plz-account-settings plz-account-settings-security bg-white-br20 plz-mb20 container-fluid">
-        <form class="m-3 pb-2">
+    <div id="accountSettingsSecurity"
+         class="plz-account-settings plz-account-settings-security bg-white-br20 plz-mb20 container-fluid">
+        <form class="plz-account-settings-form m-3 pb-2">
             <div class="plz-account-settings-header plz-account-settings-security-header form-group row border-bottom">
-                <div class="col-12 d-sm-none d-md-none d-lg-flex d-xl-flex"><h6><b>Безопасность</b></h6></div>
-                <div class="col-12 d-sm-flex d-md-flex d-lg-none d-xl-none"><h6><b>Безопасность</b></h6></div>
+                <div class="col-12 d-sm-none d-md-none d-lg-flex d-xl-flex">
+                    <h6>Безопасность</h6>
+                </div>
+                <div class="col-12 d-sm-flex d-md-flex d-lg-none d-xl-none">
+                    <h6>Безопасность</h6>
+                </div>
             </div>
 
             <div class="plz-account-settings-body plz-account-settings-security-body">
@@ -12,7 +17,8 @@
                            class="plz-account-settings-body-label plz-account-settings-security-body-label col-sm-6 col-md-6 col-lg-4 col-xl-4">
                         Двухэтапная аутентификация
                     </label>
-                    <div class="plz-account-settings-body-field plz-account-settings-security-body-field col-sm-6 col-md-6 col-lg-6 col-xl-6">
+                    <div
+                        class="plz-account-settings-body-field plz-account-settings-security-body-field col-sm-6 col-md-6 col-lg-6 col-xl-6">
                         <div class="d-flex align-items-center w-75">
                             <i v-if="Number(form.twoFactorAuthEnabled) === 1" class="fas fa-check mr-2"></i>
                             <div class="w-100">
@@ -35,7 +41,8 @@
                            class="plz-account-settings-body-label plz-account-settings-security-body-label col-sm-6 col-md-6 col-lg-4 col-xl-4">
                         Подтверждение через SMS
                     </label>
-                    <div class="plz-account-settings-body-field plz-account-settings-security-body-field col-sm-6 col-md-6 col-lg-6 col-xl-6">
+                    <div
+                        class="plz-account-settings-body-field plz-account-settings-security-body-field col-sm-6 col-md-6 col-lg-6 col-xl-6">
                         <div class="d-flex align-items-center w-75">
                             <i v-if="Number(form.smsConfirm) === 1" class="fas fa-check mr-2"></i>
                             <div class="w-100">
@@ -56,10 +63,16 @@
                 <div class="form-group row border-bottom">
                     <label for="password"
                            class="plz-account-settings-body-label plz-account-settings-security-body-label col-sm-6 col-md-6 col-lg-4 col-xl-4">Пароль</label>
-                    <div class="plz-account-settings-body-field plz-account-settings-security-body-field col-sm-6 col-md-6 col-lg-6 col-xl-6">
+                    <div
+                        class="plz-account-settings-body-field plz-account-settings-security-body-field col-sm-6 col-md-6 col-lg-6 col-xl-6">
                         <div class="d-flex align-items-center w-75">
                             <div class="plz-account-settings-body-action w-100">
-                                <button type="button" id="password" class="btn btn-link">Изменить</button>
+                                <button type="button"
+                                        id="password"
+                                        class="btn btn-link"
+                                        data-toggle="modal"
+                                        :data-target="`#${modalID}`">Изменить
+                                </button>
                             </div>
                         </div>
                     </div>
@@ -67,18 +80,51 @@
                 </div>
             </div>
         </form>
+        <Modal :modalId="modalID"
+               :vertically="true"
+               class="modal">
+            <template v-slot:header>
+                <div class="modal-header">
+                    <h5 class="modal-title" :id="modalID">Обновление пароля</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+            </template>
+            <form>
+                <div class="form-group">
+                    <label for="old_password">Старый пароль</label>
+                    <input type="password" class="form-control" id="old_password">
+                </div>
+                <div class="form-group">
+                    <label for="new_password">Новый пароль</label>
+                    <input type="password" class="form-control" id="new_password">
+                </div>
+                <div class="form-group">
+                    <label for="new_password_confirmation">Подтвердите новый пароль</label>
+                    <input type="password" class="form-control" id="new_password_confirmation">
+                </div>
+                <button type="submit" class="btn btn-primary btn-submit">Обновить</button>
+            </form>
+        </Modal>
     </div>
 </template>
 
 <script>
+    import Modal from './Modal.vue';
+
     export default {
         name: 'AccountSettingsSecurity',
+        components: {
+            Modal,
+        },
         data() {
             return {
                 form: {
                     twoFactorAuthEnabled: this.$root.$user.privacySettings.twoFactorAuthEnabled,
                     smsConfirm: this.$root.$user.privacySettings.smsConfirm,
                 },
+                modalID: 'modal-' + Math.floor(Math.random() * 1000),
             }
         },
         methods: {
@@ -98,3 +144,11 @@
         },
     }
 </script>
+
+<style lang="scss">
+    .modal {
+        .btn-submit {
+            background-color: #1554F7 !important;
+        }
+    }
+</style>

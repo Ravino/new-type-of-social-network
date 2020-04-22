@@ -4,7 +4,8 @@
         <div class="plz-import-socnet-text">Импортируйте свой аккаунт из списка следующих социальных сетей
         </div>
         <div class="plz-import-socnet-btns d-flex justify-content-center">
-            <div class="mx-3">
+            <div class="mx-3 d-none">
+                <!-- TODO: @YZ доработать когда появятся api ключи -->
                 <a href="#twitter"
                    title="Twitter"
                    class="plz-socnet-btn"
@@ -28,7 +29,8 @@
                     <i class="fab fa-facebook-f fa-2x mt-2"></i>
                 </a>
             </div>
-            <div class="mx-3">
+            <div class="mx-3 d-none">
+                <!-- TODO: @YZ нужно много времени -->
                 <a href="#instagram"
                    title="Instagram"
                    class="plz-socnet-btn"
