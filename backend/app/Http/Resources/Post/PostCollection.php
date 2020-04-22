@@ -37,7 +37,7 @@ class PostCollection extends ResourceCollection
                         return [
                             'id' => $post->id,
                             'name' => $post->name,
-                            'body' => $post->body,
+                            'body' => strip_tags($post->body, '<span><p>'),
                             'primaryImage' => $post->primary_image,
                             'likes' => $post->likes,
                             'views' => $post->views,
@@ -53,7 +53,7 @@ class PostCollection extends ResourceCollection
                         return [
                             'id' => $post->id,
                             'name' => $post->name,
-                            'body' => $post->body,
+                            'body' => strip_tags($post->body, '<span><p>'),
                             'primaryImage' => $post->primary_image,
                             'likes' => $post->likes,
                             'views' => $post->views,
@@ -70,7 +70,7 @@ class PostCollection extends ResourceCollection
                     return [
                         'id' => $post->id,
                         'name' => $post->name,
-                        'body' => $post->body,
+                        'body' => strip_tags($post->body, '<span><p>'),
                         'primaryImage' => $post->primary_image,
                         'likes' => $post->likes,
                         'views' => $post->views,
