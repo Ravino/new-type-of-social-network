@@ -161,7 +161,7 @@ class User extends Authenticatable implements JWTSubject
 
     public function getIsOnlineAttribute()
     {
-        $period = config('user_activity_margin');
+        $period = config('app.user_activity_margin');
         return $this->last_activity_dt > strtotime("-$period minutes");
     }
 

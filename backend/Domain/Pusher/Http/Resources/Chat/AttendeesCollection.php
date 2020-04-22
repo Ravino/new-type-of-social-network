@@ -46,7 +46,7 @@ class AttendeesCollection extends ResourceCollection
     public function isOnline($last_activity_dt) : bool
     {
         // TODO: Need to remove it from here
-        $period = config('user_activity_margin');
+        $period = config('app.user_activity_margin');
         return $last_activity_dt > strtotime("-$period minutes");
     }
 }
