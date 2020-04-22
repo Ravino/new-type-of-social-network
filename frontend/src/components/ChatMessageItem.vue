@@ -23,9 +23,11 @@
                 </p>
             </div>
 
-            <div class="message-body d-flex">
+            <div class="message-body d-flex"
+                 :class="{'has-only-one-smile': detectSmiles}">
                 <div class="message-text">
-                    <div class="message-text-inner mb-0" v-html="message.body"></div>
+                    <div class="message-text-inner mb-0"
+                         v-html="message.body"></div>
 
                     <template v-if="message.isAttachments">
                         <img v-if="messageSendedImg" class="message-sended-image mt-1" src="../images/user-main-photo.png" alt="" />
@@ -107,6 +109,7 @@ props: {
     pickedID: Number,
     next : PliziMessage | null
 },
+
 data() {
     return {
         //messageReaded: true,
@@ -158,8 +161,29 @@ methods: {
 computed: {
     isPicked(){
         return this.message.id === this.pickedID;
-    }
-}
+    },
+    detectSmiles() {
+        let str = this.message.body.replace(/<\/?[^>]+>/g, '');
 
+        if (!(!!str.replace(/[\u{1F300}-\u{1F6FF}]/gu, '').trim())) {
+            return str.match(/[\u{1F300}-\u{1F6FF}]/gu).length === 1;
+        }
+
+        return false;
+    },
+}
 }
 </script>
+
+<style lang="scss">
+    .has-only-one-smile {
+        background-color: transparent !important;
+        box-shadow: none;
+
+        .message-text {
+            .message-text-inner {
+                font-size: 2.5rem !important;
+            }
+        }
+    }
+</style>
