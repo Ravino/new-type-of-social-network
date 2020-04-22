@@ -37,7 +37,7 @@ class Message extends JsonResource
             'userPic' => $this->user_pic,
             'chatId' => $this->chat_id,
             'sex' => $this->sex,
-            'body' => $this->body,
+            'body' => strip_tags($this->body, '<span><p>'),
             'isMine' => ($this->user_id == $this->userId),
             'isRead' => $this->is_read,
             'isEdited' => false,
