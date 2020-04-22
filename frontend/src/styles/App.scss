@@ -192,7 +192,8 @@ $dotsWidth: 4px;
         top: $dotsWidth * 2;
     }
 }
-
+// *--*
+$loadingDotsSize: 4px;
 .loading {
     display: inline-block;
     font-size: 6px;
@@ -201,8 +202,8 @@ $dotsWidth: 4px;
     span {
         display: inline-block;
         vertical-align: top;
-        width: 4px;
-        height: 4px;
+        width: $loadingDotsSize;
+        height: $loadingDotsSize;
         background-color: #0B2E13;
         margin: 1px;
         border-radius: 100%;
@@ -220,9 +221,39 @@ $dotsWidth: 4px;
 @keyframes dots {
     50% {
         opacity: 0;
-        transform: scale(.7) translateX(4px);
+        transform: scale(.7) ;
     }
 }
+
+.writing {
+    position: absolute;
+    bottom: 0;
+    right: -7px;
+    display: inline-block;
+    font-size: 6px;
+    background-color: #9fcd48;
+    border-radius: 6px;
+    padding: 1px;
+
+    span {
+        display: inline-block;
+        vertical-align: top;
+        width: $loadingDotsSize;
+        height: $loadingDotsSize;
+        background-color: #fff;
+        margin: 1px;
+        border-radius: 100%;
+        animation: dots 1s infinite ease-in-out;
+
+        &:nth-child(2) {
+            animation-delay: .2s;
+        }
+        &:nth-child(3) {
+            animation-delay: .4s;
+        }
+    }
+}
+
 
 .dropdown {
     &-menu {

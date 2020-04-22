@@ -19,25 +19,25 @@
 </template>
 
 <script>
-    import IconSearch from "../icons/IconSearch";
+import IconSearch from '../icons/IconSearch.vue';
 
-    export default {
-        name: 'ProfileFilter',
-        components: {
-            IconSearch
-        },
-        data() {
-            return {
-                wMode: `all`
-            }
-        },
-        methods: {
-            /** TODO: @TGA перевести потом на отправку события только родителю **/
-            wallPostsSelect(wMode) {
-                this.wMode = wMode;
-                this.$root.$emit('wallPostsSelect', {wMode: wMode});
-            },
+export default {
+    name: 'ProfileFilter',
+    components: {
+        IconSearch
+    },
+
+    data() {
+        return {
+            wMode: `all`
         }
+    },
 
+    methods: {
+        wallPostsSelect(wMode) {
+            this.wMode = wMode;
+            this.$emit('wallPostsSelect', {wMode: wMode});
+        },
     }
+}
 </script>

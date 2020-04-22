@@ -7,46 +7,50 @@
         background-color: #dae4ee;
     }
 
-    .plz-potential-friend-userpic {
-        position: relative;
-        display: inline-block;
-        vertical-align: top;
-        width: 42px;
-        min-width: 42px;
-        height: 42px;
-        margin-right: 20px;
-
-        img {
+    .plz-potential-friend{
+        &-userpic {
+            position: relative;
+            display: inline-block;
+            vertical-align: top;
             width: 42px;
+            min-width: 42px;
             height: 42px;
+            margin-right: 20px;
+
+            img {
+                width: 42px;
+                height: 42px;
+            }
+        }
+        &-is-active {
+            cursor: pointer;
+            font-size: 14px;
+            color: #c5c8d1;
+            transition: .4s;
+
+            &:hover {
+                color: #576df6;
+            }
+
+            .icon-message {
+                width: 17px;
+                height: 17px;
+            }
+        }
+
+        &-name {
+            font-size: 13px;
+            color: #50535e;
+        }
+        &-status {
+            display: flex;
+            align-items: center;
+        }
+        &-status p {
+            color: #acaeb7;
+            font-size: 13px;
+            margin-bottom: 0;
         }
     }
 
-    .plz-potential-friend-is-active {
-        cursor: pointer;
-    }
-    .plz-pf-title .plz-pf-subtitle {
-        display: inline-block;
-    }
-    .plz-pf-subtitle {
-        color: #9a9a9a;
-        font-size: 12px;
-    }
-
-    .plz-potential-friend-is-active {
-        font-size: 14px;
-        color: #c5c8d1;
-        transition: .4s;
-
-        &:hover {
-            color: #576df6;
-        }
-    }
-
-    .plz-potential-friend-is-active {
-        .icon-message {
-            width: 17px;
-            height: 17px;
-        }
-    }
 }

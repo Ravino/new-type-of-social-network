@@ -278,7 +278,7 @@ class PliziAPI {
             });
 
         if (response.status === 200) {
-            return response.data;
+            return response.data.data;
         }
 
         return null;
@@ -416,10 +416,10 @@ class PliziAPI {
 
 
     /**
-     *
-     * @param dialogID
-     * @param message
-     * @returns {object|}
+     * отправляет сообщение в чат
+     * @param {number} dialogID - ID чата (диалога)
+     * @param {string} message - текст сообщения
+     * @returns {object} - объект с данными как в PliziMessage
      * @throws PliziAPIError
      */
     async chatSend(dialogID, message) {
@@ -441,6 +441,13 @@ class PliziAPI {
     }
 
 
+    /**
+     * отправляет сообщение пользователю и создаёт новый чат (диалог)
+     * @param {number} userID - ID которому шлём
+     * @param {string} message - текст сообщения
+     * @returns {object} - объект с данными как в PliziMessage (также есть поле с chatId)
+     * @throws PliziAPIError
+     */
     async chatMessage(userID, message) {
         const sendData = {
             body: message,
@@ -557,6 +564,7 @@ class PliziAPI {
 
         return null;
     }
+
 
     async notificationsList() {
         let response = await this.__axios.get('api/user/notifications', this.__getAuthHeaders()).catch((error) => {
@@ -728,23 +736,17 @@ class PliziAPI {
                     message : data.data
                 });
             }
-
-            //if (this.currentDialog.id === data.data.chatId) {
-            //    this.addMessageToMessageList(data.data);
-            //    this.updateDialogsList({
-            //        message : data.data,
-            //        dialog: this.currentDialog
-            //    }, 'other')
-            //}
         });
     }
 
 
     __channelErrorHandler(code, reason, detail){
-        window.console.warn(`__channelErrorHandler`);
-        window.console.log(code, `code`);
-        window.console.log(reason, `reason`);
-        window.console.log(detail, `detail`);
+        //window.console.warn(`__channelErrorHandler`);
+        //window.console.log(code, `code`);
+        //window.console.log(reason, `reason`);
+        //window.console.log(detail, `detail`);
+
+        window.console.info(`${code}: ${reason} ${(detail || '')}`);
     }
 
 

@@ -101,13 +101,13 @@ class PliziManager {
      * @param {object[]} entities
      */
     load(entities){
-        this.clean();
-
-        entities.map( (invItem) => {
-            this._collection.push( invItem );
-        });
-
-        this._isLoad = true;
+        //this.clean();
+        //
+        //entities.map( (invItem) => {
+        //    this._collection.push( invItem );
+        //});
+        //
+        //this._isLoad = true;
     }
 
 }

@@ -85,9 +85,15 @@
             async accountStartSaveData(newValue, fieldName) {
                 let response = null;
 
-                response = await this.$root.$api.updateUserPrivacy({[fieldName]: newValue});
+                try {
+                    response = await this.$root.$api.updateUserPrivacy({[fieldName]: newValue});
+                } catch (e) {
+                    console.log(e.detailMessage);
+                }
 
-                // TODO: нужно получить и сохранить обновленные данные.
+                if (response) {
+                    this.$root.$user.updateData(response);
+                }
             },
         },
     }

@@ -1,6 +1,7 @@
 <template>
     <div>
         <Picker @emoji="insert">
+
             <div slot="emoji-invoker"
                  slot-scope="{ events: { click: clickEvent } }"
                  @click.stop="clickEvent"
@@ -13,12 +14,12 @@
                     <div v-for="(emojiGroup, category) in emojis" :key="category">
                         <h5 class="picker-category">{{ category }}</h5>
                         <div>
-                            <span v-for="(emoji, emojiName) in emojiGroup"
+                            <span v-for="(emojiItem, emojiName) in emojiGroup"
                                   :key="emojiName"
-                                  @click="insert(emoji)"
+                                  @click="insert({event: $event, emoji: emojiItem})"
                                   :title="emojiName"
                                   class="picker-emoji">
-                                {{ emoji }}
+                                {{ emojiItem }}
                             </span>
                         </div>
                     </div>
@@ -43,9 +44,17 @@ props: {
         default: null,
     },
 },
+
 methods: {
-    insert(emoji) {
-        this.$emit('addEmoji', emoji);
+    insert(eventData) {
+        this.$emit('addEmoji', {
+            emoji : eventData.emoji,
+            keys : {
+                altKey: eventData.event.altKey,
+                ctrlKey: eventData.event.ctrlKey,
+                shiftKey: eventData.event.shiftKey
+            }
+        });
     },
 },
 }

@@ -1,11 +1,10 @@
 <template>
-    <div class="w-100 d-flex px-5 " v-on:click="messageSettings = !messageSettings"
-         :class="{ 'checked-message': messageSettings }">
+    <div class="w-100 d-flex px-5 " @click.prevent="pickMessage()"
+         :class="{ 'checked-message': isPicked }">
         <div class="message-item d-flex w-100 justify-content-start"
                 :class="calcMessageItemClass()">
 
-            <!-- TODO: показать при клике на сообщение-->
-            <label v-if="messageSettings" class="radio position-relative">
+            <label v-if="isPicked" class="radio position-relative">
                 <input type="checkbox" name="dateTimeId" ref="dateTimeId" id="dateTimeId" checked />
                 <span></span>
             </label>
@@ -14,7 +13,8 @@
                 <img :src="message.userPic" :alt="message.firstName" class="message-user-img" />
             </div>
 
-            <div v-if="messageWriting" class="message-body py-2">
+            <!-- TODO: @TGA мы это перенесём отсюда -->
+            <div v-if="false" class="message-body py-2">
                 <p class="d-flex align-items-center mb-0">
                     <span class="loading ">
                         <span></span><span></span><span></span>
@@ -23,7 +23,7 @@
                 </p>
             </div>
 
-            <div v-else class="message-body d-flex">
+            <div class="message-body d-flex">
                 <div class="message-text">
                     <div class="message-text-inner mb-0" v-html="message.body"></div>
 
@@ -68,7 +68,21 @@
                 </div>
 
             </div>
+
+            <!-- TODO: показать при появлении чекбокса -->
+            <div v-if="isPicked" class="messages-edit-group btn-group bg-white-br20 d-flex overflow-hidden">
+                <button class="btn btn-message-share d-flex align-items-center justify-content-center border-right "
+                        @click="openResendMessageModal()">
+                    <IconShare  />
+                    Переслать
+                </button>
+                <button class="btn btn-message-basket d-flex align-items-center justify-content-center ">
+                    <IconBasket  />
+                    Удалить
+                </button>
+            </div>
         </div>
+
     </div>
 </template>
 
@@ -77,32 +91,42 @@ import IconPencilEdit from '../icons/IconPencilEdit.vue';
 import IconCheckedDouble from '../icons/IconCheckedDouble.vue';
 import IconZip from '../icons/IconZip.vue';
 
+import IconShare from '../icons/IconShare.vue';
+import IconBasket from '../icons/IconBasket.vue';
+
 import PliziMessage from '../classes/PliziMessage.js';
 
 export default {
 name: 'ChatMessageItem',
-components: {IconPencilEdit, IconCheckedDouble, IconZip},
+components: {IconBasket, IconShare, IconPencilEdit, IconCheckedDouble, IconZip},
 props: {
     message : {
         type: PliziMessage,
         required : true
     },
+    pickedID: Number,
     next : PliziMessage | null
 },
 data() {
     return {
-        messageReaded: true,
+        //messageReaded: true,
         messageEdited: true,
         messageSendedImg: true,
         messageSendedZip: false,
-        messageSettings: false,
-        messageChecked: true,
+        //messageSettings: false,
+        //messageChecked: true,
         messageResend: true,
         messageWriting: false,
     }
 },
 
 methods: {
+    pickMessage(){
+        this.$emit( 'ChatMessagePick', {
+            messageID: (this.pickedID !== this.message.id) ? this.message.id : -1
+        });
+    },
+
     isNextIsSamePerson() {
         if (null === this.next)
             return false;
@@ -122,10 +146,19 @@ methods: {
             'compact-message'    :  isNextSame,
             'fullsize-message'   : !isNextSame
         }
-    }
+    },
+
+    openResendMessageModal() {
+        this.$emit( 'ShowForwardMessageModal', {
+            messageID: this.message.id
+        });
+    },
 },
 
-mounted(){
+computed: {
+    isPicked(){
+        return this.message.id === this.pickedID;
+    }
 }
 
 }

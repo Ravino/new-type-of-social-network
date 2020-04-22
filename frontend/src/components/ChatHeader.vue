@@ -28,7 +28,7 @@
                                    @keydown.stop="chatSearchKeyDownCheck($event)"
                                    class="chat-search-input form-control rounded-pill bg-light px-4"
                                    placeholder="Поиск" />
-                            <button class="btn btn-search h-100 " type="submit"  @click="startChatFilter()">
+                            <button class="btn btn-search h-100 " type="submit"  @click="onClickStartChatFilter()">
                                 <IconSearch style="width: 15px; height: 15px;" />
                             </button>
                         </div>
@@ -74,6 +74,11 @@ methods: {
         if (8===ev.keyCode  ||  13===ev.keyCode  ||  46===ev.keyCode){
             return this.startChatFilter(sText);
         }
+    },
+
+    onClickStartChatFilter(){
+        const sText = this.chatFilterText.trim();
+        return this.startChatFilter(sText);
     },
 
     startChatFilter(filterText){

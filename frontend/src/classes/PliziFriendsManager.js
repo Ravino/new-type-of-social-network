@@ -23,9 +23,10 @@ class PliziFriendsManager extends PliziManager{
      * @returns {PliziFriend[]} - список buddies
      */
     get buddies(){
-        return this.list.map((a) => [Math.random(),a])
-            .sort((a,b) => a[0]-b[0])
-            .map((a) => a[1]).slice(0, 9);
+        //return this.list.map((a) => [Math.random(),a])
+        //    .sort((a,b) => a[0]-b[0])
+        //    .map((a) => a[1]).slice(0, 9);
+        return this.list.slice(0, 9);
     }
 
 
@@ -86,7 +87,6 @@ class PliziFriendsManager extends PliziManager{
             });
 
             this.isLoad = true;
-
             this.api.emit('friendsIsLoad', {});
         }
 

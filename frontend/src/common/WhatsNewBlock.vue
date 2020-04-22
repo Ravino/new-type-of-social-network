@@ -27,6 +27,10 @@ computed: {
     },
 },
 methods: {
+    /**
+     * TGA: устарело?
+     * @deprecated
+     */
     textAreaAutoHeight() {
         let textarea = document.querySelector('#txtWhatsNew');
         textarea.style.height = "";

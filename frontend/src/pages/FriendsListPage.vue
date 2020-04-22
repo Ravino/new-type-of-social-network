@@ -9,39 +9,33 @@
             <FriendsListHeader></FriendsListHeader>
 
             <div class="row">
-                <div class="col-12 py-3"></div>
-            </div>
-
-            <div class="row">
                 <div class="col-sm-8 col-md-8 col-lg-8 col-xl-8 bg-white-br20">
-                    <div class="p-4">
-                        <div id="friendsListFilter" class="row">
-                            <div class="col-12 d-flex align-items-center justify-content-between px-0 ">
-                                <nav class="nav profile-filter-links" role="tablist">
-                                    <span class="nav-link py-3 px-1 mr-4" :class="{ 'active': wMode==='all' }" id="tabAllFriends" role="tab" @click.stop="friendsListSelect(`all`)">Все друзья</span>
-                                    <span class="nav-link py-3 px-1 mr-4" :class="{ 'active': wMode==='online' }" id="tabOnlineFriends" role="tab" @click.stop="friendsListSelect(`online`)">Друзья онлайн</span>
-                                </nav>
-                            </div>
+                    <div id="friendsListFilter" class="row border-bottom px-4">
+                        <div class="col-12 d-flex align-items-center justify-content-between px-0 ">
+                            <nav class="nav profile-filter-links" role="tablist">
+                                <span class="nav-link position-relative py-3 px-1 mr-4" :class="{ 'active': wMode==='all' }" id="tabAllFriends" role="tab" @click.stop="friendsListSelect(`all`)">Все друзья</span>
+                                <span class="nav-link position-relative py-3 px-1 mr-4" :class="{ 'active': wMode==='online' }" id="tabOnlineFriends" role="tab" @click.stop="friendsListSelect(`online`)">Друзья онлайн</span>
+                            </nav>
                         </div>
-
-                        <div v-if="isFriendsLoaded" class="plizi-friends-list">
-                            <div v-if="friendsList  &&  friendsList.length>0" class="alert alert-light" >
-                                <SearchResultItem v-for="(friendItem, friendIndex) in friendsListFilter"
-                                                  v-bind:key="friendIndex" v-bind:srItem="friendItem">
-                                </SearchResultItem>
-                            </div>
-                            <div v-else class="alert alert-info">
-                                У Вас ещё нет друзей!<br />
-                                &quot;Молодой крАкодил хочет завести себе друзей&quot;?
-                            </div>
-                        </div>
-                        <Spinner v-else></Spinner>
                     </div>
+
+                    <div v-if="isFriendsLoaded" class="row plizi-friends-list py-4">
+                        <ul v-if="friendsList  &&  friendsList.length>0" class="d-block w-100 p-0" >
+                            <SearchResultItem v-for="(friendItem, friendIndex) in friendsListFilter"
+                                              v-bind:key="friendIndex" v-bind:srItem="friendItem">
+                            </SearchResultItem>
+                        </ul>
+                        <div v-else class="alert alert-info">
+                            У Вас ещё нет друзей!<br />
+                            &quot;Молодой крАкодил хочет завести себе друзей&quot;?
+                        </div>
+                    </div>
+                    <Spinner v-else></Spinner>
                 </div>
 
                 <div class="col-sm-4 col-md-4 col-lg-4 col-xl-4">
-                    <PotentialFriends :blockName="`Возможные друзья`" :friends="potentialList"></PotentialFriends>
-                    <PotentialFriends :blockName="`Рекомендуемые друзья`" :friends="potentialList"></PotentialFriends>
+                    <PotentialFriends :blockName="`Возможные друзья`" :friends="friendsList"></PotentialFriends>
+                    <PotentialFriends :blockName="`Рекомендуемые друзья`" :friends="friendsList"></PotentialFriends> <!-- TODO раньше использовалось значение :friends="potentialList" -->
                 </div>
             </div>
         </div>

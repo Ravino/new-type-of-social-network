@@ -6,8 +6,12 @@
         <div class="plz-favorit-friend-userpic">
             <img class="plz-favorit-userpic rounded-circle" :src="friend.userPic" :alt="friend.firstName" />
 
-            <span v-if="friend.isOnline" class="plz-favorit-isonline" title="в сети"></span>
-            <span v-else class="plz-favorit-isoffline" :title="getSexTitle"></span>
+
+            <div v-if="messageWriting" class="writing"><span></span><span></span><span></span></div>
+            <div v-else class="">
+                <span v-if="friend.isOnline" class="plz-favorit-isonline" title="в сети"></span>
+                <span v-else class="plz-favorit-isoffline" :title="getSexTitle"></span>
+            </div>
         </div>
 
         <div class="plz-favorit-friend-title flex align-items-center mr-auto ">
@@ -47,15 +51,18 @@ name : 'FavoritFriendItem',
 props : {
     friend : PliziFriend
 },
-data() {
+
+data(){
     return {
-        chatWindowShown: false
+        chatWindowShown: false,
+        messageWriting: false  // TODO: используется, когда потльзователь печатает
     }
 },
+
 methods: {
     showRelatedChat(){
         this.chatWindowShown = !this.chatWindowShown;
-        this.$root.$alert(`По клику будем показывать привязанный чат`, 'bg-info', 5);
+        //this.$root.$alert(`По клику будем показывать привязанный чат`, 'bg-info', 5);
     },
 
     getSexTitle(fItem){
@@ -67,7 +74,8 @@ methods: {
 
         return `был(а) давно`;
     }
-}
+},
+
 
 }
 </script>
