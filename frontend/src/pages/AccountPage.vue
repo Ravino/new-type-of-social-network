@@ -60,10 +60,8 @@
                 padding-bottom: 27px;
 
                 h6 {
-                    b {
-                        color: #363636;
-                        font-size: 14pt;
-                    }
+                    color: #363636;
+                    font-size: 14pt;
                 }
             }
 
