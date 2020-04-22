@@ -1,136 +1,82 @@
 <template>
-    <router-link :to="`/user-`+srItem.id" tag="li" class="plizi-sr-item-user media m-0 py-2  px-4 ">
-        <div class="plizi-sr-item d-flex ">
-            <div class="plizi-sr-item-pic mr-3 ">
+    <li class="plizi-sr-item-user media m-0 py-4 px-4">
+        <div class="plizi-sr-item d-flex w-100 align-items-center">
+            <router-link :to="`/user-`+srItem.id" tag="div" class="plizi-sr-item-pic mr-3 " >
                 <img class="plizi-sr-item-img rounded-circle overflow-hidden" v-bind:src="srItem.userPic" v-bind:alt="srItem.fullName" />
                 <span v-if="srItem.isOnline" class="plizi-sr-item-isonline" title="онлайн"></span>
                 <span v-else class="plizi-sr-item-isoffline"></span>
-            </div>
+            </router-link>
 
             <div class="plizi-sr-item-body m-0 pr-5 ">
-                <div class="plizi-sr-item-top d-flex align-items-end justify-content-between">
+                <router-link :to="`/user-`+srItem.id" tag="div"  class="plizi-sr-item-top d-flex align-items-end justify-content-between mb-2" >
                     <h6 class="plizi-sr-item-name my-0">
                         {{ srItem.fullName }}
                     </h6>
-                </div>
+                </router-link>
 
                 <div class="plizi-sr-item-body-bottom d-flex pr-5">
                     <p class="plizi-sr-item-desc p-0 my-0  d-inline ">
-                        <time :datetime="srItem.lastActivity" class="">
-                            {{ srItem.lastActivity | lastEventTime }}
-                        </time>
+
+                        <IconLocation style="height: 14px; "/>
+
+                        <span class="">
+                            {{ srItem.city.title +', '+  srItem.country }} <!-- TODO @YZ нужна проверка городов и страны -->
+                        </span>
                     </p>
                 </div>
             </div>
+
+            <IconMessageShort :clazz="'ml-auto'" />
+
+            <div class="plizi-sr-item-actions ml-3">
+                <button class="btn btn-link plizi-sr-item-settings"
+                        :id="`friend` + srItem.id"
+                        type="button"
+                        data-toggle="dropdown"
+                        aria-haspopup="true"
+                        aria-expanded="false">
+                    <i class="dots-vertical"></i>
+                </button>
+                <div class="dropdown-menu dropdown-menu-right py-3 "
+                     :aria-labelledby="`friend` + srItem.id">
+
+                    <div class="nav-item">
+                        <router-link tag="a" class="dropdown-item px-3 py-1" to="/editing">
+                            Редактировать
+                        </router-link>
+                    </div>
+
+                    <div class="nav-item">
+                        <router-link tag="a" class="dropdown-item px-3 py-1" to="/account">
+                            Настройки
+                        </router-link>
+                    </div>
+
+                    <div class="nav-item">
+                        <router-link tag="a" class="dropdown-item px-3 py-1" to="/help">
+                            Помощь
+                        </router-link>
+                    </div>
+                </div>
+            </div>
+
         </div>
-    </router-link>
+    </li>
 </template>
 
 <script>
-import PliziUser from '../classes/PliziUser.js';
+    import PliziUser from '../classes/PliziUser.js';
+    import IconLocation from "./IconLocation";
+    import IconMessage from "../icons/IconMessage";
+    import IconMessageShort from "../icons/IconMessageShort";
 
-export default {
+    export default {
 name : 'SearchResultItem',
-props : {
+    components: {IconMessageShort, IconMessage, IconLocation},
+    props : {
     srItem : PliziUser
 }
 
 }
 </script>
 
-<style lang="scss">
-$srUserPicSize: 48px;
-$srItemTimeColor: #9A9A9A;
-$srItemNameColor: #363636;
-$srItemOnlineColor: #9FCD48;
-$srItemOfflineColor: #CACAC9;
-
-
-.plizi-sr-item-user {
-    transition: .4s;
-    &:hover {
-        background-color: #e6e7eb !important;
-    }
-
-    .user-friend-desc {
-        overflow: hidden;
-        text-overflow: ellipsis;
-        white-space: nowrap;
-    }
-}
-
-.plizi-sr-item {
-    cursor: pointer;
-
-    &-pic {
-        display: inline-block;
-        position: relative;
-        height: $srUserPicSize;
-        width: $srUserPicSize;
-
-        img {
-            display: inline-block;
-            width: $srUserPicSize;
-            height: $srUserPicSize;
-        }
-    }
-
-    &-isonline {
-        display: block;
-        position: absolute;
-        width: 10px;
-        height: 10px;
-        right: 0px;
-        bottom: 0px;
-        background-color: $srItemOnlineColor;
-        border: 1px solid white;
-        border-radius: 100%;
-    }
-
-    &-isoffline {
-        display: block;
-        position: absolute;
-        width: 10px;
-        height: 10px;
-        right: 0px;
-        bottom: 0px;
-        background-color: $srItemOfflineColor;
-        border: 1px solid white;
-        border-radius: 100%;
-    }
-
-    &-body {
-        &-top {
-            time {
-                font-size: 11px;
-                color: $srItemTimeColor; // add color to var
-            }
-
-        }
-    }
-
-    &-name {
-        font-size: 13px;
-        font-weight: 600;
-        color: $srItemNameColor;
-        line-height: 20px;
-        cursor: pointer;
-
-        &:hover {
-            text-decoration: underline;
-            color: $srItemTimeColor;
-        }
-    }
-
-    &-desc {
-        font-size: 12px;
-        color: $srItemTimeColor;
-    }
-
-    &-details {
-        font-size: 12px;
-        color: $srItemNameColor;
-    }
-
-}
-</style>

@@ -19,11 +19,12 @@
                         </div>
                     </div>
 
-                    <div v-if="isFriendsLoaded" class="row plizi-friends-list py-4">
+                    <div v-if="isFriendsLoaded" class="row plizi-friends-list ">
                         <ul v-if="friendsList  &&  friendsList.length>0" class="d-block w-100 p-0" >
                             <SearchResultItem v-for="(friendItem, friendIndex) in friendsListFilter"
-                                              v-bind:key="friendIndex" v-bind:srItem="friendItem">
+                                              v-bind:key="friendIndex" v-bind:srItem="friendItem" >
                             </SearchResultItem>
+
                         </ul>
                         <div v-else class="alert alert-info">
                             У Вас ещё нет друзей!<br />
@@ -136,7 +137,7 @@ methods: {
 
 computed: {
     friendsListFilter(wm){
-        if (this.wMode === 'all')
+        if (this.wMode === 'all') {}
             return this.friendsList;
 
         let ret = [];
@@ -150,7 +151,9 @@ computed: {
         }
 
         return ret;
-    }
+    },
+
+
 },
 
 async mounted(){

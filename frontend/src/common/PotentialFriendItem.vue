@@ -1,5 +1,5 @@
 <template>
-    <div class="plz-potential-friends-item d-flex align-items-center py-1 px-3">
+    <div class="plz-potential-friends-item d-flex align-items-center py-2 px-3">
 
         <router-link tag="a" class="plz-potential-friend-userpic text-body" :to="`/user-`+friend.id">
             <img class="plz-potential-userpic rounded-circle" :src="friend.userPic" :alt="friend.firstName"/>
