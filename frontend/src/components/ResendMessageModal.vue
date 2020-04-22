@@ -20,51 +20,17 @@
                                          placeholder="Pick a value"></multiselect>
                         </div>
 
-                        <div class="form-group position-relative">
-                            <h5 class="title-h5 ml-1">Ваше сообщение</h5>
-                            <div class="d-flex resend-message-row mb-3">
-                                <div class="col-8 py-0 px-0">
-
-                                    <textarea-autosize
-                                        class="form-control profileWhatsNew-textarea pb-0 pl-2"
-                                        placeholder="Начните печатать текст..."
-                                        ref="myTextarea"
-                                        v-model="textareaValue"
-                                        :min-height="10"
-                                        :max-height="200"
-                                    />
-                                </div>
-                                <div class="col-4 ml-auto py0 pr-0 d-flex align-items-center justify-content-end">
-                                    <label class="attach-file btn btn-link my-0 ml-0 mr-2 px-1 btn-add-file position-relative">
-                                        <IconAddFile />
-                                        <input type="file">
-                                    </label>
-                                    <label class="attach-file btn btn-link my-0 ml-0 mr-2 px-1 btn-add-camera position-relative">
-                                        <IconAddCamera />
-                                        <input type="file">
-                                    </label>
-
-                                    <button class="btn btn-link mx-0 px-1 btn-add-smile" type="button">
-                                        <IconAddSmile />
-                                    </button>
-                                </div>
-                            </div>
+                        <div class="form-group">
+                            <TextEditor :id="`chatFooter`" :showAvatar="false"
+                                        :dropToDown="false"
+                                        :clazz="`row plz-text-editor mb-4 px-1 py-4 h-auto align-items-start`"
+                                        @editorPost="onTextPost" @editorFile="onFileChange" @editorImage="onImageChange">
+                            </TextEditor>
                         </div>
 
                         <div class="form-group mb-4">
-                            <div class="message-resend pl-3 ml-1 mt-3" >
-                                <div class="message-user-data  d-flex align-items-center mb-2 ">
-                                    <div class="media-pic border rounded-circle  mr-3">
-                                        <img src="/images/user-photos/user-photo-01.png" alt="Дарья">
-                                    </div>
-                                    <div class="media-body">
-                                        <h6 class="chatHeader-title w-75 align-self-start mt-2 pb-0 mb-0 pull-left text-body"
-                                            style="line-height: 20px;"> Дарья </h6>
-                                        <p class="chatHeader-subtitle p-0 mb-0 mt-1 w-100 d-block"> Понедельник </p>
-                                    </div>
-                                </div>
-                                <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Quis, sit!</p>
-                            </div>
+                            <ResendMessageItem v-if="pickedMessage"
+                                               v-bind:message="msgData"></ResendMessageItem>
                         </div>
                     </form>
 
@@ -82,18 +48,26 @@
 </template>
 
 <script>
-import IconAddFile from '../icons/IconAddFile.vue';
-import IconAddCamera from '../icons/IconAddCamera.vue';
-import IconAddSmile from '../icons/IconAddSmile.vue';
+import TextEditor from '../common/TextEditor.vue';
+
+import ChatMixin from '../mixins/ChatMixin.js';
+
+import ResendMessageItem from './ResendMessageItem.vue';
+
+//import PliziMessage from '../classes/PliziMessage.js';
 
 export default {
 name: 'ResendMessageModal',
-components: { IconAddCamera, IconAddSmile, IconAddFile },
+components: { ResendMessageItem, TextEditor },
+mixins : [ChatMixin],
 props: {
-    pickedID: Number,
+    pickedMessage: Object,
+    messageID: Number,
 },
 data() {
     return {
+        msgData : null,
+
         value: [
              'Pitter Pen'
         ],
@@ -106,6 +80,33 @@ methods: {
         this.$root.$emit('hideMessageResendModal', {});
     },
 
+    onTextPost(evData){
+        /** @type {string} **/
+        let msg = evData.postText.trim();
+
+        if (msg !== '') {
+            const brExample = `<br/>`;
+            msg = msg.replace(/<p><\/p>/g, brExample);
+            msg = this.killBrTrail(msg);
+
+            if (msg !== '') {
+                this.forwardChatMessage( );
+            }
+        }
+    },
+
+    onFileChange(evData){
+        window.console.log(evData, `ChatFooter::onFileChange`);
+    },
+
+    onImageChange(evData){
+        window.console.log(evData, `ChatFooter::onImageChange`);
+    },
+
+    forwardChatMessage(){
+        window.console.log(`forwardChatMessage`);
+    },
+
     addTag (newTag) {
         const tag = {
             name: newTag,
@@ -114,6 +115,14 @@ methods: {
         this.options.push(tag);
         this.value.push(tag);
     }
+},
+
+created(){
+    this.msgData = this.pickedMessage;
+    //window.console.log(`ResendMessageModal created`);
+},
+mounted(){
+    //window.console.log(`ResendMessageModal mounted`);
 }
 }
 </script>
