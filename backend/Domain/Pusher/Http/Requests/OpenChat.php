@@ -16,7 +16,7 @@ class OpenChat extends FormRequest
     public function rules()
     {
         return [
-            'userId' => 'required',
+            'userIds' => 'required|array',
         ];
     }
 }
