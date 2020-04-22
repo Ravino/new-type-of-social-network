@@ -21,7 +21,7 @@
                     <div class="plz-profile-userpic-edit d-flex align-items-center justify-content-between overflow-hidden d-flex m-0 p-0">
                         <button class="btn align-items-center justify-content-center d-flex w-75 border-right" @click="showPersonalMsgDialog()">Написать</button>
                         <button class="btn align-items-center justify-content-center d-flex w-25" @click="sendFriendshipInvitation()" title="добавить в друзья">
-                            <i class="fas fa-user-plus"></i>
+                            <IconAddUser/>
                         </button>
                     </div>
                 </div>
@@ -88,8 +88,11 @@
 </template>
 
 <script>
+import IconAddUser from "../icons/IconAddUser.vue";
+
 export default {
 name: 'ProfileHeader',
+components: {IconAddUser},
 props: {
     userData: Object,
     isOwner : Boolean
@@ -98,7 +101,6 @@ data() {
     return {
     }
 },
-
 methods: {
     sBeaty(param){
         return this.$options.filters.statsBeauty(param);

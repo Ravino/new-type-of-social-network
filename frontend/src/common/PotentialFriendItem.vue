@@ -19,16 +19,16 @@
         </div>
 
         <a class="plz-potential-friend-is-active text-body" @click="sendInvite()">
-            <i class="fas fa-user-plus"></i>
+            <IconAddUser/>
         </a>
     </div>
 </template>
 <script>
-import IconMessageShort from '../icons/IconMessageShort.vue'
+import IconAddUser from "../icons/IconAddUser.vue";
 
 export default {
 name : 'ShortFriendItem',
-components : { IconMessageShort },
+components : {IconAddUser},
 props : {
     friend : Object
 },
