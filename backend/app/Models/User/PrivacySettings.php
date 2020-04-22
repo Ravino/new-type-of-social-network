@@ -3,6 +3,7 @@
 namespace App\Models\User;
 
 use App\Models\Rbac\Role;
+use App\Models\User;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Validation\Rule;
 
@@ -65,5 +66,10 @@ class PrivacySettings extends Model
     public function role($field)
     {
         return $this->hasOne(Role::class, 'id', $field);
+    }
+
+    public function user()
+    {
+        return $this->belongsTo(User::class);
     }
 }
