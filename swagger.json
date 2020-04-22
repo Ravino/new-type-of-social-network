@@ -266,8 +266,11 @@
               "schema": {
                 "type": "object",
                 "properties": {
-                  "userId": {
-                    "type": "number"
+                  "userIds": {
+                    "type": "array",
+                    "items": {
+                      "type": "number"
+                    }
                   }
                 }
               }

@@ -70,7 +70,7 @@ class ChatController extends Controller
      */
     public function open(OpenChat $request)
     {
-        $chat = $this->chatService->getChatForUser($request->get('userId'));
+        $chat = $this->chatService->getChatForUsers($request->get('userIds'));
         return response()->json(['data' => $chat]);
     }
 
