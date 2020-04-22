@@ -15,6 +15,7 @@ use Illuminate\Validation\Rule;
 use Mail;
 use Illuminate\Http\Request;
 use Auth;
+use App\Events\UserCreated;
 
 use JWTAuth;
 
@@ -66,8 +67,10 @@ class RegisterController extends Controller
         }
 
         $user = $this->create($request->all());
+        $user = User::find($user->id);
 
         event(new Registered($user, $this->rawPassword));
+        event(new UserCreated($user));
 
         return response()->json([
             'message' => 'Please confirm email',

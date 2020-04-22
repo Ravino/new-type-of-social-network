@@ -2,6 +2,9 @@
 
 namespace App\Observers;
 
+use App\Events\Registered;
+use App\Events\UserCreated;
+use App\Events\UserUpdated;
 use App\Models\Profile;
 use Illuminate\Support\Facades\Cache;
 
@@ -29,6 +32,7 @@ class ProfileObserver
         if (Cache::has('id-' . $profile->user->id)) {
             Cache::forget('id-' . $profile->user->id);
         }
+        event(new UserUpdated($profile->user));
     }
 
     /**
