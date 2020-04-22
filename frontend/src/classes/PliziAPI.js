@@ -81,9 +81,9 @@ class PliziAPI {
      * @param {string} jwToken
      */
     set token(jwToken) {
-        if (jwToken === ``) {
-            window.console.warn(`API: try to set empty token!`);
-        }
+        //if (jwToken === ``) {
+        //    window.console.warn(`API: try to set empty token!`);
+        //}
 
         this.__token = (jwToken + '').trim();
     }
@@ -97,9 +97,9 @@ class PliziAPI {
 
 
     set channel(cnl){
-        if (cnl === ``) {
-            window.console.warn(`Try to set empty channel`);
-        }
+        //if (cnl === ``) {
+        //    window.console.warn(`Try to set empty channel`);
+        //}
 
         this.__channel = (cnl+'').trim();
     }

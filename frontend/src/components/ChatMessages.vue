@@ -17,7 +17,10 @@
             </div>
         </vue-custom-scrollbar>
 
-        <ResendMessageModal v-if="resendMessageModalShow" v-bind:pickedID="pickedMessageID"></ResendMessageModal>
+        <ResendMessageModal v-if="resendMessageModalShow"
+                            v-bind:pickedMessage="pickedMessage"
+                            v-bind:pickedID="pickedMessageID">
+        </ResendMessageModal>
     </div>
 </template>
 
@@ -30,7 +33,7 @@ import vueCustomScrollbar from 'vue-custom-scrollbar';
 /** TODO: переименовать в ForwardMessageModal **/
 import ResendMessageModal from './ResendMessageModal.vue';
 
-//import PliziMessage from "../classes/PliziMessage";
+import PliziMessage from '../classes/PliziMessage.js';
 
 export default {
 name: 'ChatMessages',
@@ -109,6 +112,21 @@ computed: {
             return this.messagesList.filter((msgItem)=>{ return msgItem.body.toLowerCase().includes(ft); });
 
         return this.messagesList;
+    },
+
+    pickedMessage(){
+        if (this.pickedMessageID < 0)
+            return {};
+
+        let lMsg = this.messagesList.find( (mItem)=>{ return mItem.id === this.pickedMessageID; } );
+        if (lMsg) {
+            lMsg = new PliziMessage(lMsg);
+        }
+        else {
+            window.console.warn(this.pickedMessageID + ` не найден`);
+        }
+
+        return lMsg;
     }
 },
 
@@ -118,7 +136,6 @@ mounted() {
     });
 
     this.scrollToEnd();
-
 },
 
 updated() {

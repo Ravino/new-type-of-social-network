@@ -10,6 +10,8 @@
 import TextEditor from '../common/TextEditor.vue';
 import PliziDialog from '../classes/PliziDialog.js';
 
+import ChatMixin from '../mixins/ChatMixin.js';
+
 export default {
 name: 'ChatFooter',
 props: {
@@ -21,6 +23,7 @@ props: {
 components: {
     TextEditor
 },
+mixins : [ChatMixin],
 
 data() {
     return {
@@ -41,24 +44,6 @@ methods: {
                 this.addMessageToChat( msg );
             }
         }
-    },
-
-    killBrTrail(sText){
-        const brExample = `<br/>`;
-
-        while (true){
-            const pos = sText.length - brExample.length;
-            const trail = sText.substr(pos).toLowerCase();
-
-            if (trail === brExample) {
-                sText = sText.substr(0, pos);
-            }
-            else {
-                break;
-            }
-        }
-
-        return sText;
     },
 
     onFileChange(evData){

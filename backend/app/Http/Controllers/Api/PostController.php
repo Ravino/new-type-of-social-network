@@ -83,6 +83,7 @@ class PostController extends Controller
         $post = \Auth::user()->posts()->create([
             'name' => $request->name,
             'body' => $request->body,
+            'author_id' => \Auth::user()->id
         ]);
         if(isset($request->atachmentIds) && count($request->atachmentIds)) {
             PostAttachment::whereIn('id', $request->atachmentIds)->update(['post_id' => $post->id]);
@@ -103,6 +104,7 @@ class PostController extends Controller
                 $post = $community->posts()->create([
                     'name' => $request->name,
                     'body' => $request->body,
+                    'author_id' => \Auth::user()->id
                 ]);
                 if(isset($request->atachmentIds) && count($request->atachmentIds)) {
                     PostAttachment::whereIn('id', $request->atachmentIds)->update(['post_id' => $post->id]);
@@ -152,6 +154,7 @@ class PostController extends Controller
                 'user_id' => \Auth::user()->id,
                 'post_id' => $request->postId,
             ]);
+            Event::dispatch('post.liked', ['post_id' => $request->postId, 'user_id' => \Auth::user()->id]);
             return response()->json(['message' => 'Вы успешно оценили данную запись'], 200);
         } else {
             PostLike::where('user_id', \Auth::user()->id)->where('post_id', $request->postId)->first()->delete();
