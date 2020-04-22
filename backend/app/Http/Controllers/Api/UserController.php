@@ -21,7 +21,7 @@ class UserController extends Controller
      */
     public function search(string $search)
     {
-        if (!empty($search)) {
+        if (!empty($search) || strlen($search) > 3) {
             $users = User::where(function($query) use ($search)  {
                 $query->whereHas('profile', function($profile) use ($search) {
                     $profile

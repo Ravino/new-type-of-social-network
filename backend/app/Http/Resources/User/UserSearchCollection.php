@@ -18,7 +18,7 @@ class UserSearchCollection extends UserCollection
                 return [
                     'id' => $user->id,
                     'lastActivity' => $user->last_activity_dt,
-                    'isOnline' => $this->isOnline,
+                    'isOnline' => $user->isOnline,
                     'profile' => new Profile($user->profile)
                 ];
             }),

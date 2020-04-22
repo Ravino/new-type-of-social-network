@@ -81,13 +81,16 @@ class UsersTableSeeder extends Seeder
 
     private function generateProfile() {
         $faker = Faker\Factory::create('ru_RU');
+        $rand = $faker->numberBetween(0, 1000);
         return [
             'first_name' => $faker->firstName,
             'last_name' => $faker->lastName,
-            'birthday' => $faker->dateTimeBetween('-70 years', '-20 years'),
+            'birthday' => $faker->dateTimeBetween('-70 years', '-20 years')->format('Y-m-d'),
             'geo_city_id' => null,
             'sex' => $faker->randomElement(['n', 'm', 'f']),
-            'user_pic' => $faker->imageUrl(640, 480, 'people', false),
+            'user_pic' => "https://i.picsum.photos/id/$rand/500/500.jpg",
+            'created_at' => time(),
+            'updated_at' => time()
         ];
     }
 }
