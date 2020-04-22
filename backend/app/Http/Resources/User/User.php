@@ -8,6 +8,15 @@ use Illuminate\Http\Resources\Json\JsonResource;
 
 class User extends JsonResource
 {
+
+    public $appendMutual;
+
+    public function __construct($resource, $appendMutual = true)
+    {
+        parent::__construct($resource);
+        $this->appendMutual = $appendMutual;
+    }
+
     /**
      * Transform the resource into an array.
      *
@@ -32,13 +41,22 @@ class User extends JsonResource
                 ]
             ];
         } else {
-            return [
-                'id' => $this->id,
-                'isOnline' => $this->isOnline,
-                'lastActivity' => $this->last_activity_dt,
-                'profile' => new Profile($this->profile),
-                'mutualFriendsCount' => $this->mutualFriendsCount
-            ];
+            if($this->appendMutual) {
+                return [
+                    'id' => $this->id,
+                    'isOnline' => $this->isOnline,
+                    'lastActivity' => $this->last_activity_dt,
+                    'profile' => new Profile($this->profile),
+                    'mutualFriendsCount' => $this->mutualFriendsCount
+                ];
+            } else {
+                return [
+                    'id' => $this->id,
+                    'isOnline' => $this->isOnline,
+                    'lastActivity' => $this->last_activity_dt,
+                    'profile' => new Profile($this->profile),
+                ];
+            }
         }
     }
 }

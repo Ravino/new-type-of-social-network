@@ -3,6 +3,7 @@
 namespace App\Http\Resources\Post;
 
 use App\Http\Resources\Community\Community;
+use App\Http\Resources\User\SimpleUser;
 use App\Http\Resources\User\User;
 use App\Models\User as UserModel;
 use App\Models\Community as CommunityModel;
@@ -30,7 +31,7 @@ class PostWithoutParent extends JsonResource
                 'commentsCount' => 48,
                 'alreadyLiked' => $this->alreadyLiked,
                 'attachments' => new AttachmentsCollection($this->attachments),
-                'user' => new User($this->postable),
+                'user' => new SimpleUser($this->postable),
                 'createdAt' => $this->created_at
             ];
         } else if($this->postable instanceof CommunityModel) {
