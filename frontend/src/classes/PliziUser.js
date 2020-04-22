@@ -152,7 +152,6 @@ class PliziUser {
     _audiosNumber = 0;
 
     /**
-     * TODO: сделать это сущностью отдельного класса
      * @type {PliziUserPrivacySettings|null}
      * @private
      */

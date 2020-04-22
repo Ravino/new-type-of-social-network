@@ -14,7 +14,7 @@ class AlterRelationshipInProfile extends Migration
     public function up()
     {
         Schema::table('profiles', function (Blueprint $table) {
-            if (Schema::hasColumn('prifiles', 'relationship')) {
+            if (Schema::hasColumn('profiles', 'relationship')) {
                 DB::statement('ALTER TABLE profiles CHANGE relationship relationship_id smallint(6)');
             }
         });
@@ -28,7 +28,7 @@ class AlterRelationshipInProfile extends Migration
     public function down()
     {
         Schema::table('profiles', function (Blueprint $table) {
-            if (Schema::hasColumn('prifiles', 'relationship_id')) {
+            if (Schema::hasColumn('profiles', 'relationship_id')) {
                 DB::statement('ALTER TABLE profiles CHANGE relationship_id relationship smallint(6)');
             }
         });

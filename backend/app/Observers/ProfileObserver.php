@@ -26,9 +26,9 @@ class ProfileObserver
      */
     public function updated(Profile $profile)
     {
-//        if (Cache::has('id-' . $profile->user->id)) {
-//            Cache::forget('id-' . $profile->user->id);
-//        }
+        if (Cache::has('id-' . $profile->user->id)) {
+            Cache::forget('id-' . $profile->user->id);
+        }
     }
 
     /**
