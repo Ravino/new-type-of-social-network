@@ -1,9 +1,4 @@
 <template>
-    <!--
-    @TGA: от внешнего вида не пугаться, потом починим
-    использовать события для получения инфы
-    -->
-
     <TextEditor :id="`chatFooter`" :showAvatar="false"
                 :dropToDown="false"
                 :clazz="`bg-white w-100 border-top position-relative mt-auto d-flex align-items-start px-3 py-3 `"
@@ -34,17 +29,13 @@ data() {
 
 methods: {
     onTextPost(evData){
-        window.console.log(evData.postText, `ChatFooter::onTextPost`);
-
         /** @type {string} **/
         let msg = evData.postText.trim();
-        window.console.info(msg, `msg 1`);
 
         if (msg !== '') {
             const brExample = `<br/>`;
             msg = msg.replace(/<p><\/p>/g, brExample);
             msg = this.killBrTrail(msg);
-            window.console.info(msg, `msg 2`);
 
             if (msg !== '') {
                 this.addMessageToChat( msg );
