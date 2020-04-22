@@ -1,5 +1,5 @@
 <template>
-    <div class="w-100 d-flex px-5 " @click.prevent="pickMessage()"
+    <div class="w-100 d-flex px-5" @click.prevent="pickMessage()"
          :class="{ 'checked-message': isPicked }">
         <div class="message-item d-flex w-100 justify-content-start"
                 :class="calcMessageItemClass()">
@@ -23,8 +23,7 @@
                 </p>
             </div>
 
-            <div class="message-body d-flex"
-                 :class="{'has-only-one-smile': detectSmiles}">
+            <div class="message-body d-flex">
                 <div class="message-text">
                     <div class="message-text-inner mb-0"
                          v-html="message.body"></div>
@@ -71,15 +70,15 @@
 
             </div>
 
-            <!-- TODO: показать при появлении чекбокса -->
             <div v-if="isPicked" class="messages-edit-group btn-group bg-white-br20 d-flex overflow-hidden">
                 <button class="btn btn-message-share d-flex align-items-center justify-content-center border-right "
-                        @click="openResendMessageModal()">
-                    <IconShare  />
+                        @click="onForwardBtnClick()">
+                    <IconShare />
                     Переслать
                 </button>
-                <button class="btn btn-message-basket d-flex align-items-center justify-content-center ">
-                    <IconBasket  />
+
+                <button class="btn btn-message-basket d-flex align-items-center justify-content-center" @click.prevent="onRemoveBtnClick()">
+                    <IconBasket />
                     Удалить
                 </button>
             </div>
@@ -146,13 +145,20 @@ methods: {
         return {
             'my-message ml-auto flex-row-reverse': this.message.isMine,
             'companion-message ' : !this.message.isMine,
-            'compact-message'    :  isNextSame,
-            'fullsize-message'   : !isNextSame
+            'compact-message'    : isNextSame,
+            'fullsize-message'   : !isNextSame,
+            'has-only-one-emoji' : this.detectEmoji
         }
     },
 
-    openResendMessageModal() {
+    onForwardBtnClick() {
         this.$emit( 'ShowForwardMessageModal', {
+            messageID: this.message.id
+        });
+    },
+
+    onRemoveBtnClick() {
+        this.$emit( 'RemoveMessage', {
             messageID: this.message.id
         });
     },
@@ -162,14 +168,17 @@ computed: {
     isPicked(){
         return this.message.id === this.pickedID;
     },
-    detectSmiles() {
-        let str = this.message.body.replace(/<\/?[^>]+>/g, '');
 
-        if (!(!!str.replace(/[\u{1F300}-\u{1F6FF}]/gu, '').trim())) {
-            return str.match(/[\u{1F300}-\u{1F6FF}]/gu).length === 1;
-        }
+    detectEmoji() {
+        /** @TGA когда в сообщении только один эмоджи он приходит в обёртке <p class="big-emoji">емоджа</p> **/
+        //let str = this.message.body.replace(/<\/?[^>]+>/g, '');
+        //window.console.log(this.message.body + ` :${str}:`);
+        //if (!(!!str.replace(/[\u{1F300}-\u{1F6FF}]/gu, '').trim())) {
+        //    return str.match(/[\u{1F300}-\u{1F6FF}]/gu).length === 1;
+        //}
+        //return false;
 
-        return false;
+        return this.message.body.includes('<p class="big-emoji">');
     },
 }
 }

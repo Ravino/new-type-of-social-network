@@ -15,21 +15,15 @@ class FriendshipTableSeeder extends Seeder
      */
     public function run()
     {
-        $user1 = User::where('email', 'test@gmail.com')->first();
-        $user2 = User::where('email', 'admin@mail.com')->first();
-
         $users = User::all();
-        for ($i = 0; $i <= count($users) / 2; $i++) {
-            if($user1->id !== $users[$i]->id) {
-                User::find($user1->id)->beFriend($users[$i]);
-                User::find($users[$i]->id)->acceptFriendRequest($user1);
-            }
-        }
-        for ($i = count($users) / 2; $i <= count($users); $i++) {
-            if($user2->id !== $users[$i]->id) {
-                User::find($user2->id)->beFriend($users[$i]);
-                User::find($users[$i]->id)->acceptFriendRequest($user2);
-            }
+        while ($users->count() > 1) {
+            $user1 = $users->random();
+            $users->pull($user1->getKey());
+
+            $user2 = $users->random();
+            $users->pull($user2->getKey());
+            $user1->beFriend($user2);
+            $user2->acceptFriendRequest($user1);
         }
     }
 }

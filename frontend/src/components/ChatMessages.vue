@@ -2,20 +2,23 @@
     <div id="chatMessagesBody" class="w-100 align-self-stretch position-relative">
         <vue-custom-scrollbar class="chat-messages-scroll py-4"  :settings="customScrollbarSettings" >
             <div class="d-flex flex-column --align-items-start">
-                <ChatMessageItem v-for="(message, messageIndex) in filteredMessages"
-                                 @ChatMessagePick="onChatMessagePick"
-                                 @ShowForwardMessageModal="onShowForwardMessageModal"
-                                 v-bind:message="message"
-                                 v-bind:next="getNext(messageIndex)"
-                                 v-bind:pickedID="pickedMessageID"
-                                 v-bind:key="message.id">
-                </ChatMessageItem>
+                <transition-group name="slide-fade" :duration="700">
+                    <ChatMessageItem v-for="(message, messageIndex) in filteredMessages"
+                                     v-if="message.id !== removeMessageID"
+                                     @ChatMessagePick="onChatMessagePick"
+                                     @ShowForwardMessageModal="onShowForwardMessageModal"
+                                     @RemoveMessage="onRemoveMessage"
+                                     v-bind:message="message"
+                                     v-bind:next="getNext(messageIndex)"
+                                     v-bind:pickedID="pickedMessageID"
+                                     v-bind:key="message.id">
+                    </ChatMessageItem>
+                </transition-group>
             </div>
         </vue-custom-scrollbar>
 
         <ResendMessageModal v-if="resendMessageModalShow" v-bind:pickedID="pickedMessageID"></ResendMessageModal>
     </div>
-
 </template>
 
 <script>
@@ -46,6 +49,7 @@ props: {
 data() {
     return {
         pickedMessageID: -1,
+        removeMessageID: -1,
         previousMsg: null,
         resendMessageModalShow: false,
 
@@ -58,7 +62,21 @@ data() {
 
 methods: {
     onChatMessagePick(evData){
-        this.pickedMessageID = evData.messageID
+        this.pickedMessageID = evData.messageID;
+    },
+
+    onRemoveMessage(evData){
+        this.removeMessageID = evData.messageID;
+
+        setTimeout(()=>{
+            this.removeMessageById(this.removeMessageID);
+            // TODO: сделать отправку удаления на бэкенд
+        }, 500);
+    },
+
+    removeMessageById(msgID){
+        const fIndex = this.messagesList.findIndex( (mItem)=>{ return mItem.id === msgID; } );
+        this.messagesList.splice(fIndex, 1);
     },
 
     onShowForwardMessageModal(){
@@ -91,10 +109,6 @@ computed: {
             return this.messagesList.filter((msgItem)=>{ return msgItem.body.toLowerCase().includes(ft); });
 
         return this.messagesList;
-    },
-
-    isShowPopupMessageMenu(){
-        return this.pickedMessageID !== -1;
     }
 },
 

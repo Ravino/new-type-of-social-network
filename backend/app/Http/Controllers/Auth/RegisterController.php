@@ -15,8 +15,10 @@ use Illuminate\Validation\Rule;
 use Mail;
 use Illuminate\Http\Request;
 use Auth;
+use App\Events\UserCreated;
 
 use JWTAuth;
+use Ramsey\Uuid\Uuid;
 
 class RegisterController extends Controller
 {
@@ -66,8 +68,10 @@ class RegisterController extends Controller
         }
 
         $user = $this->create($request->all());
+        $user = User::find($user->id);
 
         event(new Registered($user, $this->rawPassword));
+        event(new UserCreated($user));
 
         return response()->json([
             'message' => 'Please confirm email',
@@ -103,6 +107,7 @@ class RegisterController extends Controller
         $this->rawPassword = uniqid();
 
         $data['token'] = $token = bcrypt($this->rawPassword);
+        $data['uuid'] = Uuid::uuid4();
 
         $user = User::create($data);
         $user->password = $token; // password is not filable
