@@ -66,8 +66,8 @@
 
 <script>
     import PliziUser from '../classes/PliziUser.js';
-    import IconLocation from "./IconLocation";
-    import IconMessage from "../icons/IconMessage";
+    import IconLocation from "../icons/IconLocation.vue";
+    import IconMessage from "../icons/IconMessage.vue";
     import IconMessageShort from "../icons/IconMessageShort";
 
     export default {
