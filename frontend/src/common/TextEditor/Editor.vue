@@ -87,7 +87,11 @@ methods: {
     },
 
     onBlur(event) {
-        // this.isFocusedEditor = false;
+        let str = this.editor.getHTML().replace(/<\/?[^>]+>/g, '').trim();
+
+        if (!(!!str)) {
+            this.isFocusedEditor = false;
+        }
     },
 
     getContent(){
