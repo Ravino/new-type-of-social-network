@@ -3,7 +3,7 @@
 namespace App\Http\Resources\Post;
 
 use App\Http\Resources\Community\Community;
-use App\Http\Resources\User\User;
+use App\Http\Resources\User\SimpleUser;
 use App\Models\Community as CommunityModel;
 use App\Models\User as UserModel;
 use Illuminate\Http\Resources\Json\ResourceCollection;
@@ -43,9 +43,9 @@ class PostCollection extends ResourceCollection
                             'views' => $post->views,
                             'sharesCount' => 25,
                             'commentsCount' => 48,
-                            'alreadyLiked' => $post->alreadyLiked,
+                            'alreadyLiked' => (bool)count($post->like),
                             'attachments' => new AttachmentsCollection($post->attachments),
-                            'user' => new User($post->postable),
+                            'user' => new SimpleUser($post->postable),
                             'createdAt' => $post->created_at,
                             'sharedFrom' => $post->parent_id ? new PostWithoutParent($post->parent) : null,
                         ];
@@ -59,7 +59,7 @@ class PostCollection extends ResourceCollection
                             'views' => $post->views,
                             'sharesCount' => 25,
                             'commentsCount' => 48,
-                            'alreadyLiked' => $post->alreadyLiked,
+                            'alreadyLiked' => (bool)count($post->like),
                             'attachments' => new AttachmentsCollection($post->attachments),
                             'community' => new Community($post->postable),
                             'createdAt' => $post->created_at,
@@ -76,7 +76,7 @@ class PostCollection extends ResourceCollection
                         'views' => $post->views,
                         'sharesCount' => 25,
                         'commentsCount' => 48,
-                        'alreadyLiked' => $post->alreadyLiked,
+                        'alreadyLiked' => (bool)count($post->like),
                         'createdAt' => $post->created_at,
                         'attachments' => new AttachmentsCollection($post->attachments),
                         'sharedFrom' => $post->parent_id ? new PostWithoutParent($post->parent) : null,

@@ -39,10 +39,10 @@ class Post extends Model
     }
 
     /**
-     * @return mixed
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
      */
-    public function getAlreadyLikedAttribute() {
-        return PostLike::where('user_id', \Auth::user()->id)->where('post_id', $this->id)->exists();
+    public function like() {
+        return $this->hasMany(PostLike::class, 'post_id', 'id')->where('user_id', \Auth::user()->id);
     }
 
     /**
