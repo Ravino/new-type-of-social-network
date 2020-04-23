@@ -37,7 +37,7 @@
                 <EmojiPicker v-if="dropToDown" @addEmoji="onAddEmoji"
                              :transform="'transform: translate(-40%, 40px)'"/>
 
-                <EmojiPicker v-else  @addEmoji="onAddEmoji"
+                <EmojiPicker v-else @addEmoji="onAddEmoji"
                              :transform="'transform: translate(-40%, -100%)'"/>
             </button>
         </div>
@@ -100,14 +100,14 @@ methods: {
     onSelectFile(evData){
         this.$emit('editorFile', {
             event : evData,
-            path: this.$refs.editorFiler.value
+            files: this.$refs.editorImager.files
         });
     },
 
     onSelectImage(evData){
         this.$emit('editorImage', {
             event : evData,
-            path: this.$refs.editorImager.value
+            files: this.$refs.editorImager.files
         });
     },
 
@@ -129,14 +129,6 @@ methods: {
         else { // просто добавляем эмоджи
             this.$refs.editor.addEmoji(evData.emoji);
         }
-    },
-
-    getFormData(fName){
-        const formData = new FormData();
-        const imageFile = document.querySelector('#userAvatarFile');
-        formData.append('image', imageFile.files[0]);
-
-        return formData;
     }
 }
 

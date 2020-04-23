@@ -48,12 +48,10 @@ methods: {
 
     onFileChange(evData){
         window.console.log(evData, `ChatFooter::onFileChange`);
-
-
     },
 
     onImageChange(evData){
-        this.addImageToChat( evData.path );
+        this.addImageToChat( evData.files );
     },
 
     async addMessageToChat( msgText ){
@@ -82,13 +80,11 @@ methods: {
     },
 
 
-    async addImageToChat( picPath ){
-        window.console.log(picPath, `ChatFooter::addImageToChat`);
-
+    async addImageToChat( picsArr ){
         let apiResponse = null;
 
         try {
-            apiResponse = await this.$root.$api.chatAttachment( picPath );
+            apiResponse = await this.$root.$api.chatAttachment( picsArr );
         } catch (e){
             window.console.warn( e.detailMessage );
             throw e;
