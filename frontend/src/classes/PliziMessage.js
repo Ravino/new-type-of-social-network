@@ -192,6 +192,25 @@ class PliziMessage{
     get isAttachments(){
         return false;
     }
+
+    toJSON(){
+        return {
+            id: this.id,
+            firstName: this.firstName,
+            lastName: this.lastName,
+            userPic: this.userPic,
+            sex: this.sex,
+            body: this.body,
+            isMine: this.isMine,
+            isRead: this.isRead,
+            isEdited: this.isEdited,
+            createdAt: +(+this.createdAt / 1000).toFixed(0),
+            updatedAt: +(+this.updatedAt / 1000).toFixed(0),
+            attachments: { },
+            replyOn: this.replyOn,
+            isForward: this.isForward
+        };
+    }
 }
 
 export { PliziMessage as default}

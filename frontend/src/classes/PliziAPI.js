@@ -442,6 +442,26 @@ class PliziAPI {
 
 
     /**
+     * @link http://vm1095330.hl.had.pm:8082/docs/#/Chats/sendMessage
+     * @param {object} forwardData - объект с полями в соответствии с докой
+     * @returns {object} - объект с данными как в PliziMessage (также есть поле с chatId)
+     * @throws PliziAPIError
+     */
+    async chatForwardMessage(forwardData) {
+        let response = await this.__axios.post('api/chat/send', forwardData, this.__getAuthHeaders()).catch((error) => {
+            this.__checkIsTokenExperis(error, `chatForwardMessage`);
+            throw new PliziAPIError(`chatForwardMessage`, error.response);
+        });
+
+        if (response.status === 200) {
+            return response.data;
+        }
+
+        return null;
+    }
+
+
+    /**
      * отправляет сообщение пользователю и создаёт новый чат (диалог)
      * @param {number} userID - ID которому шлём
      * @param {string} message - текст сообщения
@@ -457,6 +477,30 @@ class PliziAPI {
         let response = await this.__axios.post('api/chat/message/user', sendData, this.__getAuthHeaders()).catch((error) => {
             this.__checkIsTokenExperis(error, `chatMessage`);
             throw new PliziAPIError(`chatMessage`, error.response);
+        });
+
+        if (response.status === 200) {
+            return response.data;
+        }
+
+        return null;
+    }
+
+
+    /**
+     * добавляет аттачмент к сообщению пользователя
+     * @param {string} file - текст сообщения
+     * @returns {object} - массив со списками ID-шников аттачментов
+     * @throws PliziAPIError
+     */
+    async chatAttachment(file) {
+        const sendData = {
+            files: [file],
+        };
+
+        let response = await this.__axios.post('api/chat/message/attachments', sendData, this.__getAuthHeaders()).catch((error) => {
+            this.__checkIsTokenExperis(error, `chatAttachment`);
+            throw new PliziAPIError(`chatAttachment`, error.response);
         });
 
         if (response.status === 200) {
@@ -536,7 +580,7 @@ class PliziAPI {
         };
 
         let response = await this.__axios.post('api/user/friendship/accept', sendData, this.__getAuthHeaders()).catch((error) => {
-            this.__checkIsTokenExperis(error);
+            this.__checkIsTokenExperis(error, `invitationAccept`);
             throw new PliziAPIError(`invitationAccept`, error.response);
         });
 
@@ -554,7 +598,7 @@ class PliziAPI {
         };
 
         let response = await this.__axios.post('api/user/friendship/decline', sendData, this.__getAuthHeaders()).catch((error) => {
-            this.__checkIsTokenExperis(error);
+            this.__checkIsTokenExperis(error, `invitationDecline`);
             throw new PliziAPIError(`invitationDecline`, error.response);
         });
 
@@ -568,7 +612,7 @@ class PliziAPI {
 
     async notificationsList() {
         let response = await this.__axios.get('api/user/notifications', this.__getAuthHeaders()).catch((error) => {
-            this.__checkIsTokenExperis(error);
+            this.__checkIsTokenExperis(error, `notificationsList`);
             throw new PliziAPIError(`notificationsList`, error.response);
         });
 
@@ -712,6 +756,8 @@ class PliziAPI {
 
 
     __wsRealConnect(){
+        window.console.info(`__wsRealConnect`);
+
         const channelOptions = {
             maxRetries: 10,
             retryDelay: 4000,
@@ -729,7 +775,11 @@ class PliziAPI {
 
 
     __channelReceiver(s) {
+        window.console.info(`__channelReceiver`);
+
         s.subscribe(this.__channel, (channelID, data) => {
+            window.console.dir(data, 'from WS');
+
             if (channelID=== this.channel  &&  `message.new`===data.event_type) {
                 this.emit('newMessageInDialog', {
                     dialogId :  data.data.chatId,
@@ -741,10 +791,10 @@ class PliziAPI {
 
 
     __channelErrorHandler(code, reason, detail){
-        //window.console.warn(`__channelErrorHandler`);
-        //window.console.log(code, `code`);
-        //window.console.log(reason, `reason`);
-        //window.console.log(detail, `detail`);
+        window.console.warn(`__channelErrorHandler`);
+        window.console.log(code, `code`);
+        window.console.log(reason, `reason`);
+        window.console.log(detail, `detail`);
 
         window.console.info(`${code}: ${reason} ${(detail || '')}`);
     }

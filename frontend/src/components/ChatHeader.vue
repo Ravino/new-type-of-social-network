@@ -10,7 +10,7 @@
                     <div class="media-body">
                         <router-link :to="`/user-`+companion.id" tag="h6"
                                  class="chatHeader-title w-75 align-self-start mt-2 pb-0 mb-0 pull-left text-body cursor-pointer">
-                            {{companion.firstName}}
+                            {{companion.fullName}}
                         </router-link>
                         <p class="chatHeader-subtitle p-0 mb-0 mt-1 w-100 d-block">
                             {{ companion.lastActivity  | lastMessageTime }}

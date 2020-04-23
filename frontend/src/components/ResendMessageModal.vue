@@ -11,19 +11,24 @@
 
                     <form id="resendMessageModalForm" novalidate="novalidate">
                         <div class="form-group">
-                            <multiselect v-model="value"
-                                         :options="options"
-                                         :searchable="false"
+                            <multiselect v-model="selectedFriend"
+                                         :options="getFriendsCombo"
+                                         label="fullName"
+                                         track-by="fullName"
+                                         :searchable="true"
                                          :close-on-select="true"
                                          :show-labels="false"
-                                         :multiple="true"
-                                         placeholder="Pick a value"></multiselect>
+                                         :multiple="false"
+                                         placeholder="Выберите друга">
+                            </multiselect>
                         </div>
 
                         <div class="form-group">
-                            <TextEditor :id="`chatFooter`" :showAvatar="false"
+                            <TextEditor id="forwardMessageEditor"
+                                        ref="forwardMessageEditor"
+                                        :showAvatar="false"
                                         :dropToDown="false"
-                                        :clazz="`row plz-text-editor mb-4 px-1 py-4 h-auto align-items-start`"
+                                        :clazz="`row plz-text-editor mb-4 px-1 py-4 align-items-start`"
                                         @editorPost="onTextPost" @editorFile="onFileChange" @editorImage="onImageChange">
                             </TextEditor>
                         </div>
@@ -34,9 +39,7 @@
                         </div>
                     </form>
 
-                    <button id="resendMessageSacces"
-                            type="submit"
-                            class="btn plz-btn plz-btn-primary mt-4">
+                    <button type="button" class="btn plz-btn plz-btn-primary mt-4" @click.prevent="startForwardMessage()">
                         Отправить
                     </button>
                 </div>
@@ -63,19 +66,41 @@ mixins : [ChatMixin],
 props: {
     pickedMessage: Object,
     messageID: Number,
+    currentDialog: Object
 },
 data() {
     return {
         msgData : null,
 
-        value: [
-             'Pitter Pen'
-        ],
-        options: ['Vue.js', 'Javascript', 'Open Source', 'os' ],
+        selectedFriend: null,
         textareaValue: ''
     }
 },
 methods: {
+    startForwardMessage(){
+        //window.console.log(`startForwardMessage`);
+        //window.console.dir( this.selectedFriend, `selectedFriend` );
+        //window.console.log(this.msgData.toJSON(), `pickedMessage`);
+
+        const dialog = this.$root.$user.getDialogByUser( this.selectedFriend.id );
+
+        if (!dialog) {
+            window.console.warn(`Диалог с ${this.selectedFriend.fullName} не найден!`);
+            return
+        }
+
+        //window.console.dir( dialog, `dialog` );
+
+        const fwdData = {
+            chatId : dialog.id,
+            body : this.$refs.forwardMessageEditor.getContent(),
+            replyOnMessageId : this.msgData.id,
+            forwardFromChatId : this.currentDialog.id,
+        };
+
+        this.forwardChatMessage(fwdData);
+    },
+
     hideMessageResendModal() {
         this.$root.$emit('hideMessageResendModal', {});
     },
@@ -90,7 +115,7 @@ methods: {
             msg = this.killBrTrail(msg);
 
             if (msg !== '') {
-                this.forwardChatMessage( );
+                this.forwardChatMessage();
             }
         }
     },
@@ -103,17 +128,35 @@ methods: {
         window.console.log(evData, `ChatFooter::onImageChange`);
     },
 
-    forwardChatMessage(){
-        window.console.log(`forwardChatMessage`);
-    },
+    async forwardChatMessage( msgData ){
+        window.console.log(`API forwardChatMessage`);
+        let apiResponse = null;
 
-    addTag (newTag) {
-        const tag = {
-            name: newTag,
-            code: newTag.substring(0, 2) + Math.floor((Math.random() * 10000000))
-        };
-        this.options.push(tag);
-        this.value.push(tag);
+        try {
+            apiResponse = await this.$root.$api.chatForwardMessage( msgData );
+        } catch (e){
+            window.console.warn( e.detailMessage );
+            throw e;
+        }
+
+        if ( apiResponse ){
+            const eventData = {
+                dialogId : apiResponse.data.chatId,
+                message : apiResponse.data
+            }
+
+            this.$root.$emit( 'newMessageInDialog', eventData );
+            this.hideMessageResendModal();
+        }
+        else{
+            window.console.info( apiResponse );
+        }
+    }
+},
+
+computed: {
+    getFriendsCombo(){
+        return this.$root.$user.fm.list;
     }
 },
 

@@ -10,6 +10,7 @@ Vue.use(Vuelidate);
 import TextareaAutosize from 'vue-textarea-autosize';
 Vue.use(TextareaAutosize);
 
+/** @link https://vue-multiselect.js.org/#sub-getting-started **/
 import Multiselect from 'vue-multiselect';
 Vue.component('multiselect', Multiselect);
 

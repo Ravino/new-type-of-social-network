@@ -160,12 +160,12 @@ methods: {
         this.messagesList.push( new PliziMessage(evData) );
     },
 
-    updateDialogsList(evData, wMode){
+    updateDialogsList(evData){
         const updatedFields = {
             lastMessageDT : evData.message.createdAt,
             lastMessageText : evData.message.body,
-            isLastFromMe : (`mine` === wMode),
-            isRead : (`mine` === wMode)
+            isLastFromMe : !!evData.message.isMine,
+            isRead : !!evData.message.isRead
         };
 
         this.$root.$user.dialogStateUpdated(+evData.dialogId, updatedFields);

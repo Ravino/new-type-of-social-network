@@ -89,6 +89,10 @@ data() {
 },
 
 methods: {
+    getContent(){
+        return this.$refs.editor.getContent();
+    },
+
     onEditorNewPost(evData){
         this.$emit('editorPost', { postText : evData.postText });
     },
@@ -127,6 +131,13 @@ methods: {
         }
     },
 
+    getFormData(fName){
+        const formData = new FormData();
+        const imageFile = document.querySelector('#userAvatarFile');
+        formData.append('image', imageFile.files[0]);
+
+        return formData;
+    }
 }
 
 }

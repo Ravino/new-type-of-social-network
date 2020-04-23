@@ -122,6 +122,10 @@
             this.$root.$on('hideRecoverPassModal', (evData) => {
                 this.isRecoverPassModalShow = false;
             });
+
+            if (this.$route.params) {
+                this.loginWithCredentialsFromRoute(this.$route.params);
+            }
         },
 
         methods: {
@@ -129,7 +133,6 @@
                 // обёртка, чтобы ошибка при 400-х не выпадал "наружу"
                 await this.startLogin().catch(()=>{ });
             },
-
             async startLogin() {
                 this.$v.$touch();
                 this.isServerError = false;
@@ -174,6 +177,14 @@
             successRecoverPass(user) {
                 this.model.email = user.email;
                 this.$refs.password.focus();
+            },
+            loginWithCredentialsFromRoute(params) {
+                if (params.email && params.password) {
+                    this.model.email = params.email;
+                    this.model.password = params.password;
+
+                    this.initLogin();
+                }
             },
         },
     }
