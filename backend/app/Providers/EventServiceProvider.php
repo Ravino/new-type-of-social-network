@@ -7,6 +7,7 @@ namespace App\Providers;
 use App\Listeners\Friendships\CommunityUsersNotification;
 use App\Listeners\Friendships\FriendshipNotification;
 use App\Listeners\Friendships\NotifyFriends;
+use App\Listeners\PostAuthorsNotification;
 use Domain\Pusher\Events\NewMessageEvent;
 use Domain\Pusher\Listeners\NewNotification;
 use Domain\PusherListeners\NewMessageNotification;
@@ -42,6 +43,9 @@ class EventServiceProvider extends ServiceProvider
         ],
         'community.*' => [
             CommunityUsersNotification::class
+        ],
+        'post.*' => [
+            PostAuthorsNotification::class
         ]
     ];
 

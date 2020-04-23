@@ -9,7 +9,7 @@ class Post extends Model
 {
 
     protected $fillable = [
-        'name', 'body', 'likes', 'views'
+        'name', 'body', 'likes', 'views', 'author_id'
     ];
 
     protected $casts = [
@@ -29,6 +29,13 @@ class Post extends Model
      */
     public function parent() {
         return $this->hasOne( Post::class, 'id', 'parent_id' );
+    }
+
+    /**
+     * @return \Illuminate\Database\Eloquent\Relations\HasOne
+     */
+    public function author() {
+        return $this->hasOne( User::class, 'id', 'author_id' );
     }
 
     /**

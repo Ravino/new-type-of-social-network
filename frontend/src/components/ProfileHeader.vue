@@ -46,7 +46,7 @@
                         <td class="">Город:</td>
                         <td class="">
                             <template v-if="userData.country && userData.city.title">
-                                <i class="fas fa-map-marker-alt"></i>
+                                <IconLocation />
                                 {{userData.country.title.ru}}, {{userData.city.title.ru}}
                             </template>
                             <template v-else>
@@ -89,10 +89,11 @@
 
 <script>
 import IconAddUser from "../icons/IconAddUser.vue";
+import IconLocation from "../icons/IconLocation";
 
 export default {
 name: 'ProfileHeader',
-components: {IconAddUser},
+components: {IconLocation, IconAddUser},
 props: {
     userData: Object,
     isOwner : Boolean
