@@ -117,4 +117,16 @@ class ChatController extends Controller
             'data' => $attachments
         ]);
     }
+
+    /**
+     * @param Request $request
+     * @param $id
+     * @return bool|\Domain\Pusher\Http\Resources\Message\Message|\Illuminate\Http\JsonResponse
+     */
+    public function destroyMessage(Request $request, $id) {
+        if($message = $this->chatService->destroyMessage($id)) {
+            return $message;
+        }
+        return response()->json(['message' => 'Вы не можете удалить чужое сообщение'], 422);
+    }
 }

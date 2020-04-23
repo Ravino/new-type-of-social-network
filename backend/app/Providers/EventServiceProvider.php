@@ -8,8 +8,10 @@ use App\Listeners\Friendships\CommunityUsersNotification;
 use App\Listeners\Friendships\FriendshipNotification;
 use App\Listeners\Friendships\NotifyFriends;
 use App\Listeners\PostAuthorsNotification;
+use Domain\Pusher\Events\DestroyMessageEvent;
 use Domain\Pusher\Events\NewMessageEvent;
 use Domain\Pusher\Listeners\NewNotification;
+use Domain\PusherListeners\DestroyMessageNotification;
 use Domain\PusherListeners\NewMessageNotification;
 use Illuminate\Foundation\Support\Providers\EventServiceProvider as ServiceProvider;
 
@@ -26,6 +28,9 @@ class EventServiceProvider extends ServiceProvider
         ],
         NewMessageEvent::class => [
             NewMessageNotification::class
+        ],
+        DestroyMessageEvent::class => [
+            DestroyMessageNotification::class
         ],
         'Illuminate\Notifications\Events\NotificationSent' => [
             NewNotification::class

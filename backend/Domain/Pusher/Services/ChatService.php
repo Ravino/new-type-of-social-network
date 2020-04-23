@@ -181,4 +181,22 @@ class ChatService extends BaseService
         }
         return $this->chatRepository->getChatById($chat_id);
     }
+
+    /**
+     * @param $id
+     * @return bool|\Domain\Pusher\Http\Resources\Message\Message
+     */
+    public function destroyMessage($id) {
+        $message = $this->repository->getMessageById($id);
+        if($message) {
+            $message = json_decode(json_encode($message), true);
+            if($message['userId'] === \Auth::user()->id) {
+                $this->repository->destroyMessage($id);
+                $users_list = $this->chatRepository->getUsersIdListFromChat($message['chatId'], \Auth::user()->id);
+                $this->dispatcher->dispatch(new NewMessageEvent($message, $users_list));
+                return $this->repository->getMessageByIdInclDeleted($id);
+            }
+        }
+        return false;
+    }
 }

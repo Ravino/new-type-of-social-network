@@ -35,6 +35,7 @@ class Message extends JsonResource
             'firstName' => $this->first_name,
             'lastName' => $this->last_name,
             'userPic' => $this->user_pic,
+            'userId' => $this->user_id,
             'chatId' => $this->chat_id,
             'sex' => $this->sex,
             'body' => strip_tags($this->body, '<span><p>'),
