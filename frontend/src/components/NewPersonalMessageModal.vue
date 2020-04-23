@@ -35,15 +35,13 @@
 
                     <div class="form mt-3">
                         <TextEditor :id="`messageToUserFromHisPage`"
+                                    ref="messageToUserFromHisPage"
                                     :showAvatar="false"
                                     :dropToDown="true"
                                     :clazz="`row plz-text-editor mb-4 pl-2 h-auto  align-items-start`"
                                     :inModal="true"
-                                    @editorPost="onTextPost"
-                                    @editorFile="onFileChange"
-                                    @editorImage="onImageChange">
+                                    @editorPost="onTextPost">
                         </TextEditor>
-
                     </div>
 
                     <div class="form-group row mb-0 pt-3 border-top">
@@ -59,26 +57,18 @@
 </template>
 
 <script>
-import IconAddFile from '../icons/IconAddFile.vue';
-import IconAddCamera from '../icons/IconAddCamera.vue';
-import IconAddSmile from '../icons/IconAddSmile.vue';
-
-import PliziUser from '../classes/PliziUser.js';
 import TextEditor from '../common/TextEditor.vue';
 
-/** @link https://www.npmjs.com/package/vue-textarea-autosize **/
+import PliziUser from '../classes/PliziUser.js';
 
 export default {
 name: 'NewPersonalMessageModal',
 props: {
     user: PliziUser
 },
-components: { IconAddCamera, IconAddSmile, IconAddFile,
-    TextEditor
-},
+components: { TextEditor },
 data() {
     return {
-        privateMessage: ``
     }
 },
 
@@ -87,86 +77,28 @@ methods: {
         this.$root.$emit('hidePersonalMsgModal', {});
     },
 
-    personalMsgKeyDownCheck(ev) {
-        if (13 === ev.keyCode  &&  ev.ctrlKey  &&  this.privateMessage.trim()!==``)
-            return this.startPersonalMessage();
-    },
-
     startPersonalMessage(){
-        const newMsg = {
-            body: this.privateMessage.trim(),
-            createdAt: Math.floor((new Date()).getTime() / 1000),
-            isMine: true,
-            isRead: false,
-            isEdited: false
-        };
-
         this.$root.$emit('sendPersonalMessage', {
-            message: newMsg,
+            message: this.$refs.messageToUserFromHisPage.getContent(),
             receiverId: this.user.id,
         });
 
         this.$root.$emit('hidePersonalMsgModal', {});
     },
 
-
     onTextPost(evData){
-        window.console.log(evData.postText, `ChatFooter::onTextPost`);
         if (evData.postText.trim() !== '') {
-            this.addMessageToChat( evData.postText.trim() );
-        }
-    },
 
-    onFileChange(evData){
-        window.console.log(evData, `ChatFooter::onFileChange`);
-    },
+            this.$root.$emit('sendPersonalMessage', {
+                message: this.$refs.messageToUserFromHisPage.getContent(),
+                receiverId: this.user.id,
+            });
 
-    onImageChange(evData){
-        window.console.log(evData, `ChatFooter::onImageChange`);
-    },
+            this.$root.$emit('hidePersonalMsgModal', {});
 
-    async addMessageToChat( msgText ){
-        const chatId = (this.currentDialog) ? this.currentDialog.id : -1;
-
-        const newMsg = {
-            body : msgText,
-            createdAt : Math.floor( (new Date()).getTime() / 1000 ),
-            isMine : true,
-            isRead : false,
-            isEdited : false
-        };
-
-        let apiResponse = null;
-
-        try{
-            apiResponse = await this.$root.$api.chatSend( chatId, newMsg.body );
-        } catch (e){
-            window.console.warn( e.detailMessage );
-            throw e;
-        }
-
-        if ( apiResponse ){
-            window.console.dir( apiResponse.data, `apiResponse` );
-
-            const eventData = {
-                dialogId : (this.currentDialog) ? this.currentDialog.id : -1,
-                message : apiResponse.data
-            }
-
-            this.$root.$emit( 'newMessageInDialog', eventData );
-            this.newMessage = ``;
-        }
-        else{
-            window.console.info( apiResponse );
         }
     }
+}
 
-},
-
-mounted() {
-    /*setTimeout(() => {
-        this.$refs.privateMessage.$el.focus();
-    }, 100);*/
-},
 }
 </script>

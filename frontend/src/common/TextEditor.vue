@@ -1,6 +1,5 @@
 <template>
-    <div :id="fieldId" class-x="row d-flex align-items-center mx-0 py-4"
-         :class="blockClass">
+    <div :id="fieldId" :class="blockClass">
 
         <div v-if="showAvatar" class="col-1 align-items-center text-center pt-2">
             <img class="chat-companion-user-pic rounded-circle my-0 mx-auto"
@@ -24,22 +23,33 @@
 
             <label class="attach-file btn btn-link my-0 ml-0 mr-2 px-1 btn-add-file position-relative">
                 <IconAddFile />
-                <input type="file" @change="onSelectFile($event)" ref="editorFiler" />
+                <input type="file" @change="onSelectFile($event)" ref="editorFiler" multiple />
             </label>
 
             <label class="attach-file btn btn-link my-0 ml-0 mr-2 px-1 btn-add-camera position-relative">
                 <IconAddCamera />
-                <input type="file" @change="onSelectImage($event)" ref="editorImager" />
+                <input type="file" @change="onSelectImage($event)" ref="editorImager" multiple />
             </label>
 
             <button class="btn btn-link mx-0 px-1 btn-add-smile" type="button">
-
-                <EmojiPicker v-if="dropToDown" @addEmoji="onAddEmoji"
-                             :transform="'transform: translate(-40%, 40px)'"/>
-
-                <EmojiPicker v-else @addEmoji="onAddEmoji"
-                             :transform="'transform: translate(-40%, -100%)'"/>
+                <EmojiPicker v-if="dropToDown" @addEmoji="onAddEmoji" :transform="'transform: translate(-40%, 40px)'"/>
+                <EmojiPicker v-else @addEmoji="onAddEmoji" :transform="'transform: translate(-40%, -100%)'"/>
             </button>
+        </div>
+
+        <!-- @TGA это чтобы блок с plz-attachment-images начался с новой строки -->
+        <div v-if="attachFiles  &&  attachFiles.length>0" class="w-100"></div>
+
+        <div v-if="attachFiles  &&  attachFiles.length>0" class="col-12 py-2">
+            <div class="plz-attachment-images" style="min-height: 80px;">
+                <ul class="plz-attachment-images-list list-unstyled d-flex flex-row">
+                    <AttachmentItem v-for="atFile in attachFiles"
+                        @RemoveAttachment="onRemoveAttachment"
+                        v-bind:attach="atFile"
+                        v-bind:key="atFile.id">
+                    </AttachmentItem>
+                </ul>
+            </div>
         </div>
     </div>
 </template>
@@ -47,14 +57,25 @@
 <script>
 import IconAddFile from '../icons/IconAddFile.vue';
 import IconAddCamera from '../icons/IconAddCamera.vue';
+
 import Editor from './TextEditor/Editor.vue';
 import EmojiPicker from './TextEditor/EmojiPicker.vue';
+import AttachmentItem from './TextEditor/AttachmentItem.vue';
+
+import PliziAttachment from '../classes/PliziAttachment.js';
 
 /**  TODO: Вставка файлов **/
 /** @link https://www.npmjs.com/package/vue-filepond **/
 
 export default {
 name: 'TextEditor',
+components: {
+    IconAddCamera,
+    IconAddFile,
+    Editor,
+    EmojiPicker,
+    AttachmentItem
+},
 props: {
     fieldId : String,
     showAvatar: Boolean,
@@ -62,12 +83,14 @@ props: {
     editorPlaceholder: String,
     dropToDown: Boolean,
 },
-components: {
-    IconAddCamera,
-    IconAddFile,
-    Editor,
-    EmojiPicker,
+
+data() {
+    return {
+        attachFiles: [],
+        defaultClasses: `bg-white w-100 border-top position-relative mt-auto`,
+    }
 },
+
 computed: {
     userPic() {
         return this.$root.$user.userPic;
@@ -78,37 +101,45 @@ computed: {
     },
 
     blockClass(){
-        return this.clazz || this.defaultClasses
+        return this.clazz || this.defaultClasses;
     }
 },
 
-data() {
-    return {
-        defaultClasses: `bg-white w-100 border-top position-relative mt-auto`,
-    }
-},
 
 methods: {
     getContent(){
-        return this.$refs.editor.getContent();
+        return {
+            postText : this.$refs.editor.getContent(),
+            attachments : this.getAttachmentsIDs()
+        }
+    },
+
+    getAttachmentsIDs(){
+        if (this.attachFiles  &&  this.attachFiles.length > 0)
+            return this.attachFiles.map((aItem)=>{ return aItem.id; });
+
+        return [];
+    },
+
+    onRemoveAttachment(evData){
+        this.attachFiles = this.attachFiles.filter( (aItem) => { return aItem.id !== evData.attach.id;});
     },
 
     onEditorNewPost(evData){
-        this.$emit('editorPost', { postText : evData.postText });
+        this.$emit('editorPost', {
+            postText : evData.postText,
+            attachments : this.getAttachmentsIDs()
+        });
+
+        this.attachFiles = [];
     },
 
     onSelectFile(evData){
-        this.$emit('editorFile', {
-            event : evData,
-            files: this.$refs.editorImager.files
-        });
+        this.addUploadAttachment(this.$refs.editorFiler.files);
     },
 
     onSelectImage(evData){
-        this.$emit('editorImage', {
-            event : evData,
-            files: this.$refs.editorImager.files
-        });
+        this.addUploadAttachment(this.$refs.editorImager.files);
     },
 
     onAddEmoji(evData) {
@@ -128,6 +159,26 @@ methods: {
         }
         else { // просто добавляем эмоджи
             this.$refs.editor.addEmoji(evData.emoji);
+        }
+    },
+
+    async addUploadAttachment( picsArr ){
+        let apiResponse = null;
+
+        try {
+            apiResponse = await this.$root.$api.chatAttachment( picsArr );
+        } catch (e){
+            window.console.warn( e.detailMessage );
+            throw e;
+        }
+
+        if ( apiResponse ) {
+            apiResponse.map( (attItem)=>{
+                this.attachFiles.push( new PliziAttachment(attItem) );
+            });
+        }
+        else {
+            window.console.info( apiResponse );
         }
     }
 }

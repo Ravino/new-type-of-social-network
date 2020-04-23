@@ -1,9 +1,11 @@
 <template>
-    <TextEditor :id="`chatFooter`" :showAvatar="false"
-                :dropToDown="false"
-                :clazz="`bg-white w-100 border-top position-relative mt-auto d-flex align-items-start px-3 py-3 `"
-        @editorPost="onTextPost" @editorFile="onFileChange" @editorImage="onImageChange">
-    </TextEditor>
+    <div id="chatFooter" class="">
+        <TextEditor :showAvatar="false"
+                    :dropToDown="false"
+                    :clazz="`row bg-white w-100 border-top position-relative mt-auto d-flex align-items-start px-3 py-3 ml-2`"
+            @editorPost="onTextPost">
+        </TextEditor>
+    </div>
 </template>
 
 <script>
@@ -20,9 +22,7 @@ props: {
         required: true
     }
 },
-components: {
-    TextEditor
-},
+components: { TextEditor },
 mixins : [ChatMixin],
 
 data() {
@@ -41,26 +41,23 @@ methods: {
             msg = this.killBrTrail(msg);
 
             if (msg !== '') {
-                this.addMessageToChat( msg );
+                this.addMessageToChat( msg, evData.attachments );
+            }
+        }
+        else { // сообщение пустое - проверяем есть ли аттачи
+            if (evData.attachments.length > 0) {
+                this.addMessageToChat( '', evData.attachments );
             }
         }
     },
 
-    onFileChange(evData){
-        window.console.log(evData, `ChatFooter::onFileChange`);
-    },
-
-    onImageChange(evData){
-        this.addImageToChat( evData.files );
-    },
-
-    async addMessageToChat( msgText ){
+    async addMessageToChat( msgText, attachments ){
         const chatId = (this.currentDialog) ? this.currentDialog.id : -1;
 
         let apiResponse = null;
 
         try {
-            apiResponse = await this.$root.$api.chatSend( chatId, msgText );
+            apiResponse = await this.$root.$api.chatSend( chatId, msgText, attachments );
         } catch (e){
             window.console.warn( e.detailMessage );
             throw e;
@@ -73,32 +70,6 @@ methods: {
             }
 
             this.$root.$emit( 'newMessageInDialog', eventData );
-        }
-        else{
-            window.console.info( apiResponse );
-        }
-    },
-
-
-    async addImageToChat( picsArr ){
-        let apiResponse = null;
-
-        try {
-            apiResponse = await this.$root.$api.chatAttachment( picsArr );
-        } catch (e){
-            window.console.warn( e.detailMessage );
-            throw e;
-        }
-
-        if ( apiResponse ){
-            window.console.log(apiResponse, `apiResponse`);
-
-            //const eventData = {
-            //    dialogId : apiResponse.data.chatId,
-            //    message : apiResponse.data
-            //}
-            //
-            //this.$root.$emit( 'newMessageInDialog', eventData );
         }
         else{
             window.console.info( apiResponse );

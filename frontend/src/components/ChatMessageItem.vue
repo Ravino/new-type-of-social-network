@@ -52,7 +52,7 @@
                                 <p class="chatHeader-subtitle p-0 mb-0 mt-1 w-100 d-block">{{message.replyOn.createdAt | lastMessageTime}}</p>
                             </div>
                         </div>
-                        <p>{{message.replyOn.body}}</p>
+                        <p v-html="message.replyOn.body"></p>
                     </div>
                 </div>
 
@@ -78,7 +78,7 @@
                     Переслать
                 </button>
 
-                <button class="btn btn-message-basket d-flex align-items-center justify-content-center" @click.prevent="onRemoveBtnClick()">
+                <button v-if="message.isMine" class="btn btn-message-basket d-flex align-items-center justify-content-center" @click.prevent="onRemoveBtnClick()">
                     <IconBasket />
                     Удалить
                 </button>
@@ -109,30 +109,6 @@ props: {
     pickedID: Number,
     next : PliziMessage | null
 },
-    computed: {
-        isPicked(){
-            return this.message.id === this.pickedID;
-        },
-
-        detectEmoji() {
-            /** @TGA когда в сообщении только один эмоджи он приходит в обёртке <p class="big-emoji">емоджа</p> **/
-            //let str = this.message.body.replace(/<\/?[^>]+>/g, '');
-            //window.console.log(this.message.body + ` :${str}:`);
-            //if (!(!!str.replace(/[\u{1F300}-\u{1F6FF}]/gu, '').trim())) {
-            //    return str.match(/[\u{1F300}-\u{1F6FF}]/gu).length === 1;
-            //}
-            //return false;
-
-            return this.message.body.includes('<p class="big-emoji">');
-        },
-        detectYoutubeLink() {
-            let str = this.message.body.replace(/<\/?[^>]+>/g, '').trim();
-            let regExp = /^.*((youtu.be\/)|(v\/)|(\/u\/\w\/)|(embed\/)|(watch\?))\??v?=?([^#&?]*).*/;
-            let match = str.match(regExp);
-
-            return (match && match[7].length === 11) ? match[7] : false;
-        },
-    },
 data() {
     return {
         //messageReaded: true,
@@ -145,6 +121,31 @@ data() {
         messageWriting: false,
         messageID: 'message-' + this.message.id,
     }
+},
+computed: {
+    isPicked(){
+        return this.message.id === this.pickedID;
+    },
+
+    detectEmoji() {
+        /** @TGA когда в сообщении только один эмоджи он приходит в обёртке <p class="big-emoji">емоджа</p> **/
+        //let str = this.message.body.replace(/<\/?[^>]+>/g, '');
+        //window.console.log(this.message.body + ` :${str}:`);
+        //if (!(!!str.replace(/[\u{1F300}-\u{1F6FF}]/gu, '').trim())) {
+        //    return str.match(/[\u{1F300}-\u{1F6FF}]/gu).length === 1;
+        //}
+        //return false;
+
+        return this.message.body.includes('<p class="big-emoji">');
+    },
+
+    detectYoutubeLink() {
+        let str = this.message.body.replace(/<\/?[^>]+>/g, '').trim();
+        let regExp = /^.*((youtu.be\/)|(v\/)|(\/u\/\w\/)|(embed\/)|(watch\?))\??v?=?([^#&?]*).*/;
+        let match = str.match(regExp);
+
+        return (match && match[7].length === 11) ? match[7] : false;
+    },
 },
 
 methods: {

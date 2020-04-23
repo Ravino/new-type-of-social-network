@@ -91,13 +91,21 @@ methods: {
 
         setTimeout(()=>{
             this.removeMessageById(this.removeMessageID);
-            // TODO: сделать отправку удаления на бэкенд
         }, 500);
     },
 
-    removeMessageById(msgID){
+    async removeMessageById(msgID){
         const fIndex = this.messagesList.findIndex( (mItem)=>{ return mItem.id === msgID; } );
         this.messagesList.splice(fIndex, 1);
+
+        let apiResponse = null;
+
+        try {
+            apiResponse = await this.$root.$api.chatMessageDelete(msgID);
+        } catch (e){
+            window.console.warn( e.detailMessage );
+            throw e;
+        }
     },
 
     onShowForwardMessageModal(){
@@ -161,7 +169,8 @@ mounted() {
 },
 
 updated() {
-    this.scrollToEnd();
+    // @TGA походу именно это вызывает прыжок чата
+    //this.scrollToEnd();
 }
 
 }

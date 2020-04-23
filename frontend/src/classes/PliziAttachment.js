@@ -88,6 +88,10 @@ class PliziAttachment{
         return this._image;
     }
 
+    get isImage(){
+        return !!this._image;
+    }
+
     /**
      * @returns {PliziAttachmentThumb}
      */

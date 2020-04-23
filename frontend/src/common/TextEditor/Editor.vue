@@ -74,23 +74,26 @@ methods: {
         this.editor.setContent(currText);
     },
 
-    getСhatFooterStartHeight(){
-        let chatFooterHeight = document.getElementById('chatFooter').offsetHeight;
-        this.editorH = chatFooterHeight; // TODO пересчитать высоту chatMessagesBody при изменении высоты chatFooter
+
+    getChatFooterStartHeight(){
+        // FIXME: @TGA не работает - падает с ошибкой - исправить
+        //let chatFooterHeight = document.getElementById('chatFooter').offsetHeight;
+        //this.editorH = chatFooterHeight; // TODO: пересчитать высоту chatMessagesBody при изменении высоты chatFooter
     },
 
     checkEditorHeight() {
-        const chatMessageBody = document.getElementById('chatMessagesBody');
-        let chatMessageBodyH = chatMessageBody.offsetHeight;
-        let getChatFooterChangedHeight = document.getElementById('chatFooter').offsetHeight;
-
-        if (this.editorH !== getChatFooterChangedHeight) {
-
-            let chatMessageBodyNewHeight = chatMessageBodyH - (getChatFooterChangedHeight - this.editorH);
-
-            chatMessageBody.style.height = chatMessageBodyNewHeight + 'px';
-            this.editorH = getChatFooterChangedHeight; // TODO проверить
-        }
+        // FIXME: @TGA падает с ошибкой
+        //const chatMessageBody = document.getElementById('chatMessagesBody');
+        //let chatMessageBodyH = chatMessageBody.offsetHeight;
+        //let getChatFooterChangedHeight = document.getElementById('chatFooter').offsetHeight;
+        //
+        //if (this.editorH !== getChatFooterChangedHeight) {
+        //
+        //    let chatMessageBodyNewHeight = chatMessageBodyH - (getChatFooterChangedHeight - this.editorH);
+        //
+        //    chatMessageBody.style.height = chatMessageBodyNewHeight + 'px';
+        //    this.editorH = getChatFooterChangedHeight; // TODO проверить
+        //}
     },
 
     onEditorKeyDown(ev) {
@@ -123,11 +126,12 @@ methods: {
         return this.editor.getHTML();
     }
 },
-    mounted() {
-        this.getСhatFooterStartHeight()
-    },
 
-    beforeDestroy() {
+mounted() {
+    this.getChatFooterStartHeight()
+},
+
+beforeDestroy() {
     this.editor.destroy()
 }
 }

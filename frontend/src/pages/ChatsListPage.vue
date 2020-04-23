@@ -156,7 +156,7 @@ methods: {
 
     addNewChatMessageToList(evData){
         this.addMessageToMessageList(evData.message);
-        this.updateDialogsList(evData, 'mine');
+        this.updateDialogsList(evData);
     },
 
     addMessageToMessageList(evData){

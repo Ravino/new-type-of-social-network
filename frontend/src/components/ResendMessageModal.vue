@@ -29,7 +29,7 @@
                                         :showAvatar="false"
                                         :dropToDown="false"
                                         :clazz="`row plz-text-editor mb-4 px-1 py-4 align-items-start`"
-                                        @editorPost="onTextPost" @editorFile="onFileChange" @editorImage="onImageChange">
+                                        @editorPost="onTextPost">
                             </TextEditor>
                         </div>
 
@@ -78,24 +78,23 @@ data() {
 },
 methods: {
     startForwardMessage(){
-        //window.console.log(`startForwardMessage`);
-        //window.console.dir( this.selectedFriend, `selectedFriend` );
-        //window.console.log(this.msgData.toJSON(), `pickedMessage`);
-
         const dialog = this.$root.$user.getDialogByUser( this.selectedFriend.id );
 
         if (!dialog) {
             window.console.warn(`Диалог с ${this.selectedFriend.fullName} не найден!`);
-            return
+            return;
         }
 
         //window.console.dir( dialog, `dialog` );
 
+        const msgData = this.$refs.forwardMessageEditor.getContent();
+
         const fwdData = {
             chatId : dialog.id,
-            body : this.$refs.forwardMessageEditor.getContent(),
+            body : msgData.postText,
             replyOnMessageId : this.msgData.id,
             forwardFromChatId : this.currentDialog.id,
+            attachments : msgData.attachments
         };
 
         this.forwardChatMessage(fwdData);
@@ -120,16 +119,7 @@ methods: {
         }
     },
 
-    onFileChange(evData){
-        window.console.log(evData, `ChatFooter::onFileChange`);
-    },
-
-    onImageChange(evData){
-        window.console.log(evData, `ChatFooter::onImageChange`);
-    },
-
     async forwardChatMessage( msgData ){
-        window.console.log(`API forwardChatMessage`);
         let apiResponse = null;
 
         try {

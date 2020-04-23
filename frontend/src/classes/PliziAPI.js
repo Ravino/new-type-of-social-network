@@ -430,23 +430,41 @@ class PliziAPI {
     }
 
 
+    async chatMessageDelete(messageID) {
+        let response = await this.__axios.delete(`api/chat/message/${messageID}`, this.__getAuthHeaders())
+            .catch((error) => {
+                this.__checkIsTokenExperis(error, `chatMessageDelete`);
+                throw new PliziAPIError(`chatMessageDelete`, error.response);
+            });
+
+        if (response.status === 200) {
+            return true;
+        }
+
+        return null;
+    }
+
+
     /**
      * отправляет сообщение в чат
      * @param {number} dialogID - ID чата (диалога)
      * @param {string} message - текст сообщения
+     * @param {number[]} attachments - ID-шники аттачментов
      * @returns {object} - объект с данными как в PliziMessage
      * @throws PliziAPIError
      */
-    async chatSend(dialogID, message) {
+    async chatSend(dialogID, message, attachments) {
         const sendData = {
+            chatId: dialogID,
             body: message,
-            chatId: dialogID
+            attachments: attachments
         };
 
-        let response = await this.__axios.post('api/chat/send', sendData, this.__getAuthHeaders()).catch((error) => {
-            this.__checkIsTokenExperis(error, `chatSend`);
-            throw new PliziAPIError(`chatSend`, error.response);
-        });
+        let response = await this.__axios.post('api/chat/send', sendData, this.__getAuthHeaders())
+            .catch((error) => {
+                this.__checkIsTokenExperis(error, `chatSend`);
+                throw new PliziAPIError(`chatSend`, error.response);
+            });
 
         if (response.status === 200) {
             return response.data;
@@ -480,13 +498,15 @@ class PliziAPI {
      * отправляет сообщение пользователю и создаёт новый чат (диалог)
      * @param {number} userID - ID которому шлём
      * @param {string} message - текст сообщения
+     * @param {number[]} attachments - ID-шники аттачментов
      * @returns {object} - объект с данными как в PliziMessage (также есть поле с chatId)
      * @throws PliziAPIError
      */
-    async chatMessage(userID, message) {
+    async chatMessage(userID, message, attachments) {
         const sendData = {
             body: message,
-            userId: userID
+            userId: userID,
+            attachments: attachments
         };
 
         let response = await this.__axios.post('api/chat/message/user', sendData, this.__getAuthHeaders()).catch((error) => {
@@ -523,7 +543,7 @@ class PliziAPI {
             });
 
         if (response.status === 200) {
-            return response.data.list;
+            return response.data.data.list;
         }
 
         return null;
