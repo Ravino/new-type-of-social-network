@@ -131,6 +131,13 @@ methods: {
         }
     },
 
+    getFormData(fName){
+        const formData = new FormData();
+        const imageFile = document.querySelector('#userAvatarFile');
+        formData.append('image', imageFile.files[0]);
+
+        return formData;
+    }
 }
 
 }

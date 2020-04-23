@@ -94,6 +94,7 @@ methods: {
         const fwdData = {
             chatId : dialog.id,
             body : this.$refs.forwardMessageEditor.getContent(),
+            replyOnMessageId : this.msgData.id,
             forwardFromChatId : this.currentDialog.id,
         };
 
@@ -128,10 +129,7 @@ methods: {
     },
 
     async forwardChatMessage( msgData ){
-        //window.console.log(`API forwardChatMessage`);
-
-        const chatId = (this.currentDialog) ? this.currentDialog.id : -1;
-
+        window.console.log(`API forwardChatMessage`);
         let apiResponse = null;
 
         try {
@@ -148,6 +146,7 @@ methods: {
             }
 
             this.$root.$emit( 'newMessageInDialog', eventData );
+            this.hideMessageResendModal();
         }
         else{
             window.console.info( apiResponse );

@@ -48,10 +48,12 @@ methods: {
 
     onFileChange(evData){
         window.console.log(evData, `ChatFooter::onFileChange`);
+
+
     },
 
     onImageChange(evData){
-        window.console.log(evData, `ChatFooter::onImageChange`);
+        this.addImageToChat( evData.path );
     },
 
     async addMessageToChat( msgText ){
@@ -77,7 +79,36 @@ methods: {
         else{
             window.console.info( apiResponse );
         }
+    },
+
+
+    async addImageToChat( picPath ){
+        window.console.log(picPath, `ChatFooter::addImageToChat`);
+
+        let apiResponse = null;
+
+        try {
+            apiResponse = await this.$root.$api.chatAttachment( picPath );
+        } catch (e){
+            window.console.warn( e.detailMessage );
+            throw e;
+        }
+
+        if ( apiResponse ){
+            window.console.log(apiResponse, `apiResponse`);
+
+            //const eventData = {
+            //    dialogId : apiResponse.data.chatId,
+            //    message : apiResponse.data
+            //}
+            //
+            //this.$root.$emit( 'newMessageInDialog', eventData );
+        }
+        else{
+            window.console.info( apiResponse );
+        }
     }
+
 }
 
 }
