@@ -4,24 +4,23 @@
             <AccountToolbarLeft></AccountToolbarLeft>
         </div>
 
-        <div class="col-sm-10 col-md-10 col-lg-10 col-xl-10">
-            <div class="row">
-                <div class="offset-2 col-8 bg-white-br20 p-4">
-                    <div v-if="isDataReady" class="plizi-search-results-list">
-                        <ul v-if="invitations  &&  (invitations.length > 0)" class="list-unstyled mb-0">
-                            <InvitationItem v-for="(invItem, invIndex) in invitations"
-                                              v-bind:key="invIndex" v-bind:invitation="invItem">
-                            </InvitationItem>
-                        </ul>
-                        <div v-else>
-                            <div class="alert alert-info">
-                                Нет приглашений подружиться.
-                            </div>
-                        </div>
+        <div class="col-sm-10 col-md-10 col-lg-10 col-xl-10 bg-white-br20 p-4">
+
+            <div v-if="isDataReady" class="plizi-search-results-list">
+                <ul v-if="invitations  &&  (invitations.length > 0)" class="list-unstyled mb-0">
+                    <InvitationItem v-for="(invItem, invIndex) in invitations"
+                                    v-bind:key="invIndex" v-bind:invitation="invItem">
+                    </InvitationItem>
+                </ul>
+                <div v-else>
+
+                    <div class="alert alert-info text-center">
+                        Нет приглашений подружиться.
                     </div>
-                    <Spinner v-else v-bind:clazz="`d-flex flex-row`"></Spinner>
                 </div>
             </div>
+            <Spinner v-else v-bind:clazz="`d-flex flex-row`"></Spinner>
+
         </div>
 
         <div class="col-sm-1 col-md-1 col-lg-1 col-xl-1">
