@@ -1,6 +1,7 @@
 <template>
     <div class="w-100 d-flex px-5" @click.prevent="pickMessage()"
-         :class="{ 'checked-message': isPicked }">
+         :class="{ 'checked-message': isPicked }"
+         :id="messageID">
         <div class="message-item d-flex w-100 justify-content-start"
                 :class="calcMessageItemClass()">
 
@@ -24,7 +25,7 @@
             </div>
 
             <div class="message-body d-flex">
-                <div class="message-text">
+                <div class="message-text" @click.stop="detectYoutubeLink ? openChatVideoModal() : null">
                     <div class="message-text-inner mb-0"
                          v-html="message.body"></div>
 
@@ -108,7 +109,30 @@ props: {
     pickedID: Number,
     next : PliziMessage | null
 },
+    computed: {
+        isPicked(){
+            return this.message.id === this.pickedID;
+        },
 
+        detectEmoji() {
+            /** @TGA когда в сообщении только один эмоджи он приходит в обёртке <p class="big-emoji">емоджа</p> **/
+            //let str = this.message.body.replace(/<\/?[^>]+>/g, '');
+            //window.console.log(this.message.body + ` :${str}:`);
+            //if (!(!!str.replace(/[\u{1F300}-\u{1F6FF}]/gu, '').trim())) {
+            //    return str.match(/[\u{1F300}-\u{1F6FF}]/gu).length === 1;
+            //}
+            //return false;
+
+            return this.message.body.includes('<p class="big-emoji">');
+        },
+        detectYoutubeLink() {
+            let str = this.message.body.replace(/<\/?[^>]+>/g, '').trim();
+            let regExp = /^.*((youtu.be\/)|(v\/)|(\/u\/\w\/)|(embed\/)|(watch\?))\??v?=?([^#&?]*).*/;
+            let match = str.match(regExp);
+
+            return (match && match[7].length === 11) ? match[7] : false;
+        },
+    },
 data() {
     return {
         //messageReaded: true,
@@ -119,14 +143,21 @@ data() {
         //messageChecked: true,
         messageResend: true,
         messageWriting: false,
+        messageID: 'message-' + this.message.id,
     }
 },
 
 methods: {
     pickMessage(){
         this.$emit( 'ChatMessagePick', {
-            messageID: (this.pickedID !== this.message.id) ? this.message.id : -1
+            messageID: (this.pickedID !== this.message.id) ? this.message.id : -1,
         });
+    },
+
+    openChatVideoModal() {
+        this.$emit( 'openChatVideoModal', {
+            youtubeID: this.detectYoutubeLink,
+        })
     },
 
     isNextIsSamePerson() {
@@ -147,7 +178,8 @@ methods: {
             'companion-message ' : !this.message.isMine,
             'compact-message'    : isNextSame,
             'fullsize-message'   : !isNextSame,
-            'has-only-one-emoji' : this.detectEmoji
+            'has-only-one-emoji' : this.detectEmoji,
+            'youtube-link'       : this.detectYoutubeLink,
         }
     },
 
@@ -162,25 +194,28 @@ methods: {
             messageID: this.message.id
         });
     },
+
+    livePreview() {
+        let result = this.detectYoutubeLink;
+
+        if (result) {
+            let msgBlock = document.querySelector(`#${this.messageID}`);
+            let msgContent = msgBlock.querySelector('.message-text-inner');
+            let elementImg = document.createElement('img');
+
+            elementImg.setAttribute('src', `//img.youtube.com/vi/${result}/0.jpg`);
+            msgContent.innerHTML = '';
+            msgContent.append(elementImg);
+        }
+    },
+
+    clickOnMsgBody() {
+        this.$emit('clickOnMsgBody', this.detectYoutubeLink);
+    },
 },
-
-computed: {
-    isPicked(){
-        return this.message.id === this.pickedID;
+    mounted() {
+        this.livePreview();
     },
-
-    detectEmoji() {
-        /** @TGA когда в сообщении только один эмоджи он приходит в обёртке <p class="big-emoji">емоджа</p> **/
-        //let str = this.message.body.replace(/<\/?[^>]+>/g, '');
-        //window.console.log(this.message.body + ` :${str}:`);
-        //if (!(!!str.replace(/[\u{1F300}-\u{1F6FF}]/gu, '').trim())) {
-        //    return str.match(/[\u{1F300}-\u{1F6FF}]/gu).length === 1;
-        //}
-        //return false;
-
-        return this.message.body.includes('<p class="big-emoji">');
-    },
-}
 }
 </script>
 

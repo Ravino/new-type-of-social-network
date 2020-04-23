@@ -31,7 +31,9 @@
                     </ChatMessages>
                     <Spinner v-else v-bind:message="`Сообщения загружаются,<br />можно выбрать другой диалог`"></Spinner>
 
-                    <ChatFooter v-if="currentDialog" v-bind:currentDialog="currentDialog" ref="ChatFooter"></ChatFooter>
+                    <ChatFooter v-if="currentDialog"
+                                v-bind:currentDialog="currentDialog"
+                                ref="ChatFooter"></ChatFooter>
                 </div>
             </div>
 
@@ -42,6 +44,7 @@
                 <Spinner v-else></Spinner>
             </div>
         </div>
+
     </div>
 </template>
 
@@ -64,7 +67,7 @@ name: 'ChatsListPage',
 components: {
     vueCustomScrollbar,
     AccountToolbarLeft, Spinner,
-    ChatListItem, ChatHeader, ChatMessages, ChatFooter
+    ChatListItem, ChatHeader, ChatMessages, ChatFooter,
 },
 
 data() {
@@ -81,7 +84,7 @@ data() {
             maxScrollbarLength: 60,
             useBothWheelAxes: false,
             suppressScrollX: true
-        }
+        },
     }
 },
 
