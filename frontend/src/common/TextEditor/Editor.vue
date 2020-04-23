@@ -2,6 +2,7 @@
     <div class="editor">
         <editor-content class="editor-content"
                         :editor="editor"
+                        ref="editor"
                         @keydown.native="onEditorKeyDown"/>
         <span v-if="!isFocusedEditor"
               class="placeholder">
@@ -80,6 +81,7 @@ methods: {
 
             this.$emit('editorPost', { postText : editorText });
         }
+
     },
 
     onFocus(event) {
