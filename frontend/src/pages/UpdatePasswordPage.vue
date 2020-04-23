@@ -2,9 +2,12 @@
     <div class="row">
         <div class="col-12">
             <div class="w-100 bg-white-br20 p-5">
-                <h4 class="update-password-title mb-4">Восстановление пароля</h4>
+                <h4 v-if="!successMessage" class="update-password-title mb-4">Восстановление пароля</h4>
 
-                <form  class="update-password-form w-100 mb-0" method="POST" @submit.prevent="send">
+                <form v-if="!successMessage"
+                      class="update-password-form w-100 mb-0"
+                      method="POST"
+                      @submit.prevent="send">
                     <div class="d-flex justify-content-center update-password-form-box row align-items-center mb-3">
                         <input type="hidden" name="token" v-model="form.token">
 
@@ -82,6 +85,18 @@
                         <p class="text-success">{{ successMessage }}</p>
                     </div>
                 </form>
+                <div v-else class="update-password-success text-center">
+                    <IconChecked class="update-password-success-icon-checked"/>
+                    <p class="update-password-success-message">
+                        Ваш пароль был сброшен!
+                    </p>
+                    <div class="d-flex justify-content-center">
+                        <router-link :to="{name: 'LoginPage', params: {email: form.email, password: form.password}}"
+                                     class="btn plz-btn-primary update-password-success-btn">
+                            Войти
+                        </router-link>
+                    </div>
+                </div>
             </div>
         </div>
     </div>
@@ -89,9 +104,14 @@
 
 <script>
     import IconMessage from "../icons/IconMessage";
+    import IconChecked from "../icons/IconChecked";
+
     export default {
         name: "UpdatePasswordPage",
-        components: {IconMessage},
+        components: {
+            IconMessage,
+            IconChecked,
+        },
         data() {
             return {
                 form: {
@@ -124,10 +144,6 @@
 
                 if (response) {
                     this.successMessage = response.message;
-
-                    setTimeout(() => {
-                        this.$router.push({name: 'LoginPage'});
-                    }, 3000);
                 }
             },
         },

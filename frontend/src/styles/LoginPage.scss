@@ -39,7 +39,7 @@ body.LoginPage .modal-body {
     color: #363636;
 }
 
-.update-password-form  {
+.update-password-form {
     input {
         border: 0;
         border-radius: 0;
@@ -53,12 +53,14 @@ body.LoginPage .modal-body {
             box-shadow: none;
         }
     }
+
     .icon {
         position: absolute;
         top: 50%;
         left: 10px;
         transform: translateY(-50%);
     }
+
     .btn-primary {
         border-radius: 34px;
         height: 40px;
@@ -72,10 +74,41 @@ body.LoginPage .modal-body {
             border-color: $linkHoverColor;
         }
     }
-
 }
 
+.update-password-success {
+    .update-password-success-icon-checked {
+        margin-bottom: 30px;
+        width: 52px;
+        height: 38px;
+        fill: #8dbc6b;
+    }
 
+    .update-password-success-message {
+        margin-bottom: 27px;
+        font-weight: bold;
+        font-size: 16px;
+        color: $postTextColor;
+    }
+
+    .update-password-success-btn {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        width: 278px;
+        height: 40px;
+        font-weight: bold;
+        font-size: 12px;
+        border-radius: 20px;
+        text-transform: uppercase;
+        transition: .4s;
+
+        &:hover {
+            background-color: $linkHoverColor;
+            border-color: $linkHoverColor;
+        }
+    }
+}
 
 
 
