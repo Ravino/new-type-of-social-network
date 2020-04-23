@@ -301,6 +301,10 @@ class PliziAuthUser extends PliziUzer{
         return this._dialogs;
     }
 
+    getDialogByUser(userID){
+        return this._dialogs.find(dItem => dItem.companion.id === userID);
+    }
+
     /**
      *
      * @param {PliziDialog} d1

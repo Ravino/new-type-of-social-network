@@ -19,6 +19,7 @@
 
         <ResendMessageModal v-if="resendMessageModalShow"
                             v-bind:pickedMessage="pickedMessage"
+                            v-bind:currentDialog="currentDialog"
                             v-bind:pickedID="pickedMessageID">
         </ResendMessageModal>
     </div>

@@ -89,6 +89,10 @@ data() {
 },
 
 methods: {
+    getContent(){
+        return this.$refs.editor.getContent();
+    },
+
     onEditorNewPost(evData){
         this.$emit('editorPost', { postText : evData.postText });
     },

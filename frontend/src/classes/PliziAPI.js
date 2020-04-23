@@ -441,6 +441,22 @@ class PliziAPI {
     }
 
 
+    async chatForwardMessage(forwardData) {
+        window.console.log(forwardData, forwardData);
+
+        let response = await this.__axios.post('api/chat/send', forwardData, this.__getAuthHeaders()).catch((error) => {
+            this.__checkIsTokenExperis(error, `chatForwardMessage`);
+            throw new PliziAPIError(`chatForwardMessage`, error.response);
+        });
+
+        if (response.status === 200) {
+            return response.data;
+        }
+
+        return null;
+    }
+
+
     /**
      * отправляет сообщение пользователю и создаёт новый чат (диалог)
      * @param {number} userID - ID которому шлём

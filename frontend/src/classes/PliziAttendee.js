@@ -94,6 +94,10 @@ class PliziAttendee{
         return this._lastName;
     }
 
+    get fullName(){
+        return this._firstName +` `+ this._lastName;
+    }
+
     get sex(){
         return this._sex;
     }
