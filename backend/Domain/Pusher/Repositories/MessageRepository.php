@@ -46,7 +46,7 @@ class MessageRepository
      */
     public function getAllOfChatById(int $chat_id, int $user_id = null)
     {
-        $items = ChatMessage::with('parent', 'attachments')->where('chat_id', $chat_id)
+        $items = ChatMessage::with('parent', 'attachments')->where('chat_id', $chat_id)->whereNull('deleted_at')
             ->join('profiles', 'profiles.user_id', '=', 'chat_messages.user_id')
             ->leftJoin('chat_message_status', 'chat_message_status.message_id', '=', 'chat_messages.id')
             ->orderBy('chat_messages.id')
@@ -67,6 +67,28 @@ class MessageRepository
      */
     public function getMessageById(int $message_id)
     {
+        $item = ChatMessage::with('parent', 'attachments')->where('id', $message_id)->whereNull('deleted_at')
+            ->join('profiles', 'profiles.user_id', '=', 'chat_messages.user_id')
+            ->leftJoin('chat_message_status', 'chat_message_status.message_id', '=', 'chat_messages.id')
+            ->orderBy('chat_messages.id')
+            ->get([
+                'profiles.*',
+                'chat_messages.*',
+            ])->first();
+        if($item) {
+            return new MessageResource($item, \Auth::user()->id);
+        }
+        return null;
+    }
+
+    /**
+     * Возвращает сообщение
+     *
+     * @param int $message_id
+     * @return MessageResource
+     */
+    public function getMessageByIdInclDeleted(int $message_id)
+    {
         $item = ChatMessage::with('parent', 'attachments')->where('id', $message_id)
             ->join('profiles', 'profiles.user_id', '=', 'chat_messages.user_id')
             ->leftJoin('chat_message_status', 'chat_message_status.message_id', '=', 'chat_messages.id')
@@ -77,5 +99,16 @@ class MessageRepository
             ])->first();
 
         return new MessageResource($item, \Auth::user()->id);
+    }
+
+    /**
+     * @param int $message_id
+     * @return mixed
+     */
+    public function destroyMessage(int $message_id) {
+        ChatMessage::where('id', $message_id)->update([
+            'deleted_at' => time()
+        ]);
+        return true;
     }
 }

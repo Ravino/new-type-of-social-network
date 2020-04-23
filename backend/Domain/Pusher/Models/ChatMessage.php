@@ -38,4 +38,9 @@ class ChatMessage extends Model
     public function attachments() {
         return $this->hasMany(ChatMessageAttachment::class, 'message_id', 'id');
     }
+
+    public function getDateFormat()
+    {
+        return 'U';
+    }
 }
