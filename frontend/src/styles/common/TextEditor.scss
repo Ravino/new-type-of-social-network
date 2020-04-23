@@ -17,7 +17,7 @@ $EditorUserPicSize: 32px;
     }
 
     &-form {
-        border-color: var(--light);
+        border-color: $borderColor;
     }
 
     .menubar {

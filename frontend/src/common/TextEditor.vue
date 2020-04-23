@@ -7,7 +7,7 @@
                  v-bind:src="userPic" v-bind:alt="userFullName" />
         </div>
 
-        <div class="pl-0" :class="{ 'col-9': showAvatar, 'col-10': !showAvatar }">
+        <div class="pl-0" :class="{ 'col-9': showAvatar, 'col-10 forward-message-width': !showAvatar }">
             <div class="form pl-3">
                 <div class="form-row align-items-center">
                     <div class="col-12  p-0">
@@ -20,7 +20,7 @@
             </div>
         </div>
 
-        <div class="col-2 d-flex justify-content-end pt-2">
+        <div class="forward-attach-width col-2 d-flex justify-content-end"  :class="{ 'pt-2': showAvatar } " >
 
             <label class="attach-file btn btn-link my-0 ml-0 mr-2 px-1 btn-add-file position-relative">
                 <IconAddFile />
