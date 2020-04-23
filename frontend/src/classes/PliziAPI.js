@@ -137,6 +137,21 @@ class PliziAPI {
 
 
     /**
+     * метод для упрощения получения заголовков для отправки файлов
+     * @returns {{headers: {Authorization: string, "Content-Type": string}}}
+     * @private
+     */
+    __getAuthFileHeaders() {
+        return {
+            headers: {
+                'Content-Type'  : 'multipart/form-data',
+                'Authorization' : this.__getBearer()
+            }
+        };
+    }
+
+
+    /**
      * геттер для получения header'а bearer
      * @returns {string} - Bearer вместе с токеном
      */
@@ -489,22 +504,26 @@ class PliziAPI {
 
     /**
      * добавляет аттачмент к сообщению пользователя
-     * @param {string} file - текст сообщения
+     * @param sendFiles - текст сообщения
      * @returns {object} - массив со списками ID-шников аттачментов
      * @throws PliziAPIError
      */
-    async chatAttachment(file) {
-        const sendData = {
-            files: [file],
-        };
+    async chatAttachment(sendFiles) {
+        const formData = new FormData();
 
-        let response = await this.__axios.post('api/chat/message/attachments', sendData, this.__getAuthHeaders()).catch((error) => {
-            this.__checkIsTokenExperis(error, `chatAttachment`);
-            throw new PliziAPIError(`chatAttachment`, error.response);
-        });
+        /**  @TGA: sendFiles.map не работает :( **/
+        for(let i=0; i< sendFiles.length; i++){
+            formData.append('files[]', sendFiles[i]);
+        }
+
+        let response = await this.__axios.post('api/chat/message/attachments', formData, this.__getAuthFileHeaders())
+            .catch((error) => {
+                this.__checkIsTokenExperis(error, `chatAttachment`);
+                throw new PliziAPIError(`chatAttachment`, error.response);
+            });
 
         if (response.status === 200) {
-            return response.data;
+            return response.data.list;
         }
 
         return null;
@@ -756,8 +775,6 @@ class PliziAPI {
 
 
     __wsRealConnect(){
-        window.console.info(`__wsRealConnect`);
-
         const channelOptions = {
             maxRetries: 10,
             retryDelay: 4000,
@@ -775,8 +792,6 @@ class PliziAPI {
 
 
     __channelReceiver(s) {
-        window.console.info(`__channelReceiver`);
-
         s.subscribe(this.__channel, (channelID, data) => {
             window.console.dir(data, 'from WS');
 
@@ -791,10 +806,10 @@ class PliziAPI {
 
 
     __channelErrorHandler(code, reason, detail){
-        window.console.warn(`__channelErrorHandler`);
-        window.console.log(code, `code`);
-        window.console.log(reason, `reason`);
-        window.console.log(detail, `detail`);
+        //window.console.warn(`__channelErrorHandler`);
+        //window.console.log(code, `code`);
+        //window.console.log(reason, `reason`);
+        //window.console.log(detail, `detail`);
 
         window.console.info(`${code}: ${reason} ${(detail || '')}`);
     }

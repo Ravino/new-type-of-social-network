@@ -201,11 +201,6 @@ methods: {
 
 },
 
-computed: {
-},
-
-mounted() {
-},
 
 created(){
     this.$root.$api = new PliziAPI(this.$root);
@@ -223,7 +218,7 @@ created(){
 
     this.$root.$on('api:Unauthorized', (evData) => {
         window.console.warn(evData, `api:Unauthorized!`);
-        this.afterSuccessLogout();
+        this.afterSuccessLogout( {redirect : true} );
     });
 
     this.$root.$on('alertModal', (evData) => {

@@ -66,6 +66,7 @@ $chatMessagesBodyHeight: calc(100% - 145px);
 
             p.big-emoji {
                 font-size: 40px;
+                line-height: 1.1;
             }
         }
     }
@@ -112,7 +113,11 @@ $chatMessagesBodyHeight: calc(100% - 145px);
         }
         .message-resend {
             border-left: 2px solid #5774F3;
+            p {
+                color: #FAFAFA;
+            }
         }
+
 
         .chatHeader-title {
             color: #ffffff;
@@ -202,7 +207,7 @@ $chatMessagesBodyHeight: calc(100% - 145px);
         min-height: $chatMessageUserPicSize;
         max-height: $chatMessageUserPicSize;
         border-radius: $chatMessageUserPicSize;
-        box-shadow: 0 0 2px 1px #fff;
+        box-shadow: 0 0 2px 1px #fff, 0 0 2px 0 #333;
         display: block;
         overflow: hidden;
 
@@ -234,7 +239,7 @@ $chatMessagesBodyHeight: calc(100% - 145px);
         //box-shadow: 0 0 4px 0 rgba(0, 0, 0, .15);
 
         /** https://css3gen.com/box-shadow/ **/
-        box-shadow: 0px 10px 30px 0px rgba(50, 50, 50, 0.75);
+        box-shadow: 0 10px 30px 0 rgba(50, 50, 50, 0.75);
 
         .icon {
             display: inline-block;
@@ -264,6 +269,14 @@ $chatMessagesBodyHeight: calc(100% - 145px);
                     fill: #FF4626;
                 }
             }
+        }
+    }
+
+    &.has-only-one-emoji {
+        .message-body {
+            padding: 0;
+            box-shadow: none;
+            background-color: transparent;
         }
     }
 }

@@ -145,8 +145,6 @@ methods: {
 
 
     async uploadUserAvatar(){
-        window.console.log(`uploadUserAvatar`);
-
         if (this.isOwner!==true)
             return;
 
@@ -189,8 +187,7 @@ methods: {
         }
 
         const formData = new FormData();
-        const imageFile = document.querySelector('#userAvatarFile');
-        formData.append('image', imageFile.files[0]);
+        formData.append('image', this.$refs.userAvatarFile.files[0]);
         formData.append('tag', 'primary');
 
         return formData;

@@ -4,7 +4,7 @@ $titleColor: #363636;
 
 #resendMessageModal .modal-dialog {
     width: 100%;
-    max-width: 402px;
+    max-width: 600px;
 }
 
 #resendMessageModal {
@@ -15,6 +15,10 @@ $titleColor: #363636;
     .title-h5 {
         font-size: 13px;
         color: $titleColor
+    }
+
+    .forward-attach-width {
+        padding-top: .5rem;
     }
 
     .message-resend {
@@ -59,5 +63,15 @@ $titleColor: #363636;
         }
     }
 
+}
+
+#forwardMessageEditor {
+    .forward-message-width {
+        flex: auto;
+        width: calc(100% - 120px);
+    }
+    .forward-attach-width {
+        min-width: 120px;
+    }
 }
 

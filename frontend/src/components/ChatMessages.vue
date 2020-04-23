@@ -8,6 +8,7 @@
                                      @ChatMessagePick="onChatMessagePick"
                                      @ShowForwardMessageModal="onShowForwardMessageModal"
                                      @RemoveMessage="onRemoveMessage"
+                                     @openChatVideoModal="openChatVideoModal"
                                      v-bind:message="message"
                                      v-bind:next="getNext(messageIndex)"
                                      v-bind:pickedID="pickedMessageID"
@@ -22,6 +23,9 @@
                             v-bind:currentDialog="currentDialog"
                             v-bind:pickedID="pickedMessageID">
         </ResendMessageModal>
+
+        <ChatVideoModal v-if="chatVideoModalShow"
+                        :youtube-id="chatVideoModalContent.youtubeId"></ChatVideoModal>
     </div>
 </template>
 
@@ -35,13 +39,15 @@ import vueCustomScrollbar from 'vue-custom-scrollbar';
 import ResendMessageModal from './ResendMessageModal.vue';
 
 import PliziMessage from '../classes/PliziMessage.js';
+import ChatVideoModal from '../components/ChatVideoModal.vue';
 
 export default {
 name: 'ChatMessages',
 components: {
     vueCustomScrollbar,
     ChatMessageItem,
-    ResendMessageModal
+    ResendMessageModal,
+    ChatVideoModal,
 },
 
 props: {
@@ -61,12 +67,23 @@ data() {
             maxScrollbarLength: 60,
             suppressScrollX: true, // rm scroll x
         },
+        chatVideoModalShow: false,
+        chatVideoModalContent: {
+            youtubeId: null,
+        },
     }
 },
 
 methods: {
     onChatMessagePick(evData){
         this.pickedMessageID = evData.messageID;
+    },
+
+    openChatVideoModal(evData) {
+        if (evData.youtubeID) {
+            this.chatVideoModalShow = true;
+            this.chatVideoModalContent.youtubeId = evData.youtubeID;
+        }
     },
 
     onRemoveMessage(evData){
@@ -134,6 +151,10 @@ computed: {
 mounted() {
     this.$root.$on('hideMessageResendModal', (evData) => {
         this.resendMessageModalShow = false;
+    });
+
+    this.$root.$on('hideChatVideoModal', () => {
+        this.chatVideoModalShow = false;
     });
 
     this.scrollToEnd();

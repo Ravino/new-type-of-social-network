@@ -1,4 +1,4 @@
-import PliziNotificationData from './PliziNotificationData.js';
+import PliziNotificationData from './Notification/PliziNotificationData.js';
 
 class PliziNotification {
     /**
