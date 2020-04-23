@@ -112,9 +112,9 @@ class ChatController extends Controller
      * @return \Illuminate\Http\JsonResponse
      */
     public function uploadAttachments(UploadFileRequest $request) {
-        $attachment_ids = $this->chatService->uploadFiles($request->allFiles());
+        $attachments = $this->chatService->uploadFiles($request->allFiles());
         return response()->json([
-            'attachmentIds' => $attachment_ids
+            'data' => $attachments
         ]);
     }
 }
