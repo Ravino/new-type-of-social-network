@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Post\UploadFileRequest;
+use App\Http\Resources\Post\AttachmentsCollection;
 use App\Http\Resources\Post\Post as PostResource;
 use App\Http\Requests\Post\Post as PostRequest;
 use App\Http\Resources\Post\PostCollection;
@@ -135,13 +136,12 @@ class PostController extends Controller
 
     /**
      * @param UploadFileRequest $request
-     * @return \Illuminate\Http\JsonResponse
+     * @return AttachmentsCollection
      */
     public function uploadAttachments(UploadFileRequest $request) {
-        $attachment_ids = $this->uploadService->uploadFiles(new PostAttachment(), 'post/attachments/originals', $request->allFiles());
-        return response()->json([
-            'attachmentIds' => $attachment_ids
-        ]);
+        $attachment_ids = $this->uploadService->uploadFiles(new PostAttachment(), 'post/attachments', $request->allFiles());
+        $attachments = PostAttachment::whereIn('id', $attachment_ids)->get();
+        return new AttachmentsCollection($attachments);
     }
 
     /**
