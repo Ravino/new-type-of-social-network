@@ -206,6 +206,8 @@ return [
          * RBAC
          */
         Laratrust\LaratrustServiceProvider::class,
+
+        Intervention\Image\ImageServiceProvider::class
     ],
 
     /*
@@ -262,6 +264,8 @@ return [
          * RBAC
          */
         'Laratrust'   => Laratrust\LaratrustFacade::class,
+
+        'Image' => Intervention\Image\Facades\Image::class
     ],
 
 ];
