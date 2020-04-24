@@ -17,6 +17,13 @@ class PliziMessage{
     _id = null;
 
     /**
+     * ID юзера автора
+     * @type {number}
+     * @private
+     */
+    _userId = null;
+
+    /**
      * имя отправителя сообщения
      * @type {string}
      * @private
@@ -116,6 +123,7 @@ class PliziMessage{
 
     constructor(msgData){
         this._id = msgData.id;
+        this._userId = msgData._userId;
         this._chatId = msgData._chatId;
         this._firstName = msgData.firstName;
         this._lastName = msgData.lastName;
@@ -138,6 +146,10 @@ class PliziMessage{
 
     get id(){
         return this._id;
+    }
+
+    get userId(){
+        return this._userId;
     }
 
     /**
@@ -218,6 +230,8 @@ class PliziMessage{
     toJSON(){
         return {
             id: this.id,
+            userId: this.userId,
+            chatId: this.chatId,
             firstName: this.firstName,
             lastName: this.lastName,
             userPic: this.userPic,
@@ -229,7 +243,7 @@ class PliziMessage{
             createdAt: +(+this.createdAt / 1000).toFixed(0),
             updatedAt: +(+this.updatedAt / 1000).toFixed(0),
             attachments: { },
-            replyOn: this.replyOn,
+            replyOn: this.isReply ? this.replyOn.toJSON() : null ,
             isForward: this.isForward
         };
     }

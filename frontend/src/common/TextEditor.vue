@@ -12,7 +12,9 @@
                         <div class="form-row align-items-center">
                             <div class="col-12  p-0">
                                 <Editor class="plz-text-editor-form form-control px-2 py-1 h-100"
+                                        :height="height"
                                         @editorPost="onEditorNewPost"
+                                        @editorKeyDown="onEditorKeyDown"
                                         :placeholder="editorPlaceholder"
                                         ref="editor" />
                             </div>
@@ -44,10 +46,8 @@
             </div>
 
             <!-- @TGA это чтобы блок с plz-attachment-images начался с новой строки -->
-            <div class="row">
-
-
-                <div v-if="attachFiles  &&  attachFiles.length>0" class="col-12 py-2">
+            <div v-if="attachFiles  &&  attachFiles.length  &&  attachFiles.length>0" class="row">
+                <div class="col-12 py-2">
                     <div class="plz-attachment-images" style="min-height: 80px;">
                         <ul class="plz-attachment-images-list list-unstyled d-flex flex-row">
                             <AttachmentItem v-for="atFile in attachFiles"
@@ -91,6 +91,11 @@ props: {
     clazz: String,
     editorPlaceholder: String,
     dropToDown: Boolean,
+    height: {
+        type: Number,
+        required: false,
+        default: 100
+    }
 },
 
 data() {
@@ -143,6 +148,10 @@ methods: {
         this.attachFiles = [];
     },
 
+    onEditorKeyDown(ev){
+        this.$emit('editorKeyDown', ev);
+    },
+
     onSelectFile(evData){
         this.addUploadAttachment(this.$refs.editorFiler.files);
     },
@@ -185,7 +194,9 @@ methods: {
 
         if ( apiResponse ) {
             apiResponse.map( (attItem)=>{
-                this.attachFiles.push( new PliziAttachment(attItem) );
+                let newAtt = new PliziAttachment(attItem);
+                this.attachFiles.push( newAtt );
+                this.$emit('newAttach', { attach : newAtt });
             });
         }
         else {
