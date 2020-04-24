@@ -54,11 +54,11 @@ import vueCustomScrollbar from 'vue-custom-scrollbar';
 import AccountToolbarLeft from '../common/AccountToolbarLeft.vue';
 import Spinner from '../common/Spinner.vue';
 
-import ChatListItem from '../components/ChatListItem.vue';
+import ChatListItem from '../common/Chat/ChatListItem.vue';
 
-import ChatHeader from '../components/ChatHeader.vue';
-import ChatMessages from '../components/ChatMessages.vue';
-import ChatFooter from '../components/ChatFooter.vue';
+import ChatHeader from '../common/Chat/ChatHeader.vue';
+import ChatMessages from '../common/Chat/ChatMessages.vue';
+import ChatFooter from '../common/Chat/ChatFooter.vue';
 
 import PliziMessage from '../classes/PliziMessage.js';
 

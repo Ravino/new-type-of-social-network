@@ -30,7 +30,7 @@
                          v-html="message.body"></div>
 
                     <template v-if="message.isAttachments">
-                        <img v-if="messageSendedImg" class="message-sended-image mt-1" src="../images/user-main-photo.png" alt="" />
+                        <img v-if="messageSendedImg" class="message-sended-image mt-1" src="../../images/user-main-photo.png" alt="" />
 
                         <!-- TODO: Показать архив -->
                         <span v-if="messageSendedZip" class="message-sended-zip d-flex align-items-center mt-1">
@@ -89,14 +89,14 @@
 </template>
 
 <script>
-import IconPencilEdit from '../icons/IconPencilEdit.vue';
-import IconCheckedDouble from '../icons/IconCheckedDouble.vue';
-import IconZip from '../icons/IconZip.vue';
+import IconPencilEdit from '../../icons/IconPencilEdit.vue';
+import IconCheckedDouble from '../../icons/IconCheckedDouble.vue';
+import IconZip from '../../icons/IconZip.vue';
 
-import IconShare from '../icons/IconShare.vue';
-import IconBasket from '../icons/IconBasket.vue';
+import IconShare from '../../icons/IconShare.vue';
+import IconBasket from '../../icons/IconBasket.vue';
 
-import PliziMessage from '../classes/PliziMessage.js';
+import PliziMessage from '../../classes/PliziMessage.js';
 
 export default {
 name: 'ChatMessageItem',
