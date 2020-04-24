@@ -205,12 +205,8 @@ class PliziMessage{
         return this._attachments;
     }
 
-    /**
-     * TODO: потом изменить с учётом реальных данных
-     * @returns {boolean}
-     */
     get isAttachments(){
-        return false;
+        return !!this._attachments;
     }
 
     toJSON(){
