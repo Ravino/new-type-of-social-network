@@ -102,6 +102,8 @@ class ChatController extends Controller
             $request->get('body'),
             $request->get('userId'),
             Auth::user()->id,
+            $request->get('replyOnMessageId'),
+            $request->get('forwardFromChatId'),
             $request->get('attachmentIds') ? $request->get('attachmentIds') : []
         );
         return response()->json(['data' => $message]);

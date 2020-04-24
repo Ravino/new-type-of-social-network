@@ -70,13 +70,13 @@ class ChatService extends BaseService
      * @param array $attachment_ids
      * @return int|mixed|null
      */
-    public function sendToUser(string $body, int $user_id, int $author_id, array $attachment_ids = [])
+    public function sendToUser(string $body, int $user_id, int $author_id, int $parent_id = null, int $parent_chat_id = null, array $attachment_ids = [])
     {
         $chat_id = $this->chatRepository->getChatIdForCoupleUsers($user_id, $author_id);
         if(!$chat_id) {
             $chat_id = $this->chatRepository->createChatForCoupleUsers($user_id, $author_id);
         }
-        $message_id = $this->repository->saveInChatById($chat_id, $body, $author_id);
+        $message_id = $this->repository->saveInChatById($chat_id, $body, $author_id, $parent_id, $parent_chat_id);
         $message = $this->repository->getMessageById($message_id);
         $users_list = $this->chatRepository->getUsersIdListFromChat($chat_id, $author_id);
         if(count($attachment_ids)) {
