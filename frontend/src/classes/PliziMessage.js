@@ -125,8 +125,8 @@ class PliziMessage{
         this._isMine = !! msgData.isMine;
         this._isRead = !! msgData.isRead;
         this._isEdited = !! msgData.isEdited;
-        this._createdAt = new Date(msgData.createdAt);
-        this._updatedAt = new Date(msgData.updatedAt);
+        this._createdAt = new Date(msgData.createdAt*1000);
+        this._updatedAt = new Date(msgData.updatedAt*1000);
         this._replyOn = (msgData.replyOn) ? new PliziMessage(msgData.replyOn): null;
         this._isForward = !! msgData.isForward;
 

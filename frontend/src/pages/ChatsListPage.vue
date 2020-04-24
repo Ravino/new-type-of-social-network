@@ -40,7 +40,7 @@
                                 ref="ChatHeader"></ChatHeader>
 
                     <ChatMessages v-if="isMessagesLoaded" v-bind:messagesList="messagesList"
-                                  v-bind:filterText="filterText"
+                                  v-bind:filter="filter"
                                   v-bind:currentDialog="currentDialog"
                                   ref="chatMessages">
                     </ChatMessages>
@@ -95,7 +95,10 @@ data() {
         isDialogsLoaded: false,
         currentDialog : {},
         messagesList  : [],
-        filterText  : '',
+        filter : {
+            text: null,
+            range: null,
+        },
         isMessagesLoaded: false,
 
         customScrollBarSettings: {
@@ -109,7 +112,8 @@ data() {
 methods: {
 
     updateFilterText(evData){
-        this.filterText = (evData.filterText + ``).trim();
+        this.filter.text = evData.text ? evData.text.trim() : null;
+        this.filter.range = evData.range && evData.range.start && evData.range.end ? evData.range : null;
         this.$forceUpdate();
     },
 
