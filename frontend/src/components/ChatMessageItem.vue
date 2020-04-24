@@ -157,7 +157,7 @@ methods: {
 
     openChatVideoModal() {
         this.$emit( 'openChatVideoModal', {
-            youtubeID: this.detectYoutubeLink,
+            videoLink: this.message.body.replace(/<\/?[^>]+>/g, '').trim(),
         })
     },
 
@@ -208,10 +208,6 @@ methods: {
             msgContent.innerHTML = '';
             msgContent.append(elementImg);
         }
-    },
-
-    clickOnMsgBody() {
-        this.$emit('clickOnMsgBody', this.detectYoutubeLink);
     },
 },
     mounted() {

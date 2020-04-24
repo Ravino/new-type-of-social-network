@@ -5,22 +5,25 @@
 
         <div class="modal-dialog modal-xl modal-dialog-centered" role="document" @click.stop="">
             <div class="modal-content bg-white-br20">
-                <iframe v-if="youtubeId" type="text/html"
-                        :src="`http://www.youtube.com/embed/${youtubeId}?enablejsapi=1`"
-                        frameborder="0" style="height: 640px;"></iframe>
+                <VideoPlayer :videoLink="videoLink"/>
             </div>
         </div>
     </div>
 </template>
 
 <script>
+    import VideoPlayer from "../common/VideoPlayer.vue";
+
     export default {
         name: "ChatVideoModal",
         props: {
-            youtubeId: {
+            videoLink: {
                 type: String,
                 default: null,
             },
+        },
+        components: {
+            VideoPlayer,
         },
         methods: {
             hideChatVideoModal() {

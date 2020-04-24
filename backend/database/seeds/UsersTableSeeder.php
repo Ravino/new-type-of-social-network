@@ -33,7 +33,8 @@ class UsersTableSeeder extends Seeder
                 'token' => bcrypt('secret'),
                 'last_activity_dt' => time(),
                 'created_at' => time(),
-                'updated_at' => time()
+                'updated_at' => time(),
+                'uuid' => \Ramsey\Uuid\Uuid::uuid4(),
             ]);
             $user1->profile()->create($this->generateProfile());
             $this->command->line("Generate user with email {$email1}");
@@ -50,7 +51,8 @@ class UsersTableSeeder extends Seeder
                 'last_activity_dt' => time(),
                 'is_admin' => true,
                 'created_at' => time(),
-                'updated_at' => time()
+                'updated_at' => time(),
+                'uuid' => \Ramsey\Uuid\Uuid::uuid4(),
             ]);
             $user2->profile()->create($this->generateProfile());
             $this->command->line("Generate user with email {$email2}");
@@ -69,7 +71,8 @@ class UsersTableSeeder extends Seeder
                     'token' => bcrypt('secret'),
                     'last_activity_dt' => time(),
                     'created_at' => time(),
-                    'updated_at' => time()
+                    'updated_at' => time(),
+                    'uuid' => \Ramsey\Uuid\Uuid::uuid4(),
                 ]);
                 $user->profile()->create($this->generateProfile());
                 $this->command->line("Generate user with email {$user->email}");
@@ -90,7 +93,7 @@ class UsersTableSeeder extends Seeder
             'sex' => $faker->randomElement(['n', 'm', 'f']),
             'user_pic' => "https://i.picsum.photos/id/$rand/500/500.jpg",
             'created_at' => time(),
-            'updated_at' => time()
+            'updated_at' => time(),
         ];
     }
 }

@@ -25,7 +25,7 @@
         </ResendMessageModal>
 
         <ChatVideoModal v-if="chatVideoModalShow"
-                        :youtube-id="chatVideoModalContent.youtubeId"></ChatVideoModal>
+                        :videoLink="chatVideoModalContent.videoLink"></ChatVideoModal>
     </div>
 </template>
 
@@ -69,7 +69,7 @@ data() {
         },
         chatVideoModalShow: false,
         chatVideoModalContent: {
-            youtubeId: null,
+            videoLink: null,
         },
     }
 },
@@ -80,9 +80,9 @@ methods: {
     },
 
     openChatVideoModal(evData) {
-        if (evData.youtubeID) {
+        if (evData.videoLink) {
             this.chatVideoModalShow = true;
-            this.chatVideoModalContent.youtubeId = evData.youtubeID;
+            this.chatVideoModalContent.videoLink = evData.videoLink;
         }
     },
 
