@@ -51,27 +51,26 @@
 </template>
 
 <script>
-import TextEditor from '../common/TextEditor.vue';
+import TextEditor from '../TextEditor.vue';
 
-import ChatMixin from '../mixins/ChatMixin.js';
+import ChatMixin from '../../mixins/ChatMixin.js';
 
 import ResendMessageItem from './ResendMessageItem.vue';
 
-//import PliziMessage from '../classes/PliziMessage.js';
+import PliziMessage from '../../classes/PliziMessage.js';
 
 export default {
 name: 'ResendMessageModal',
 components: { ResendMessageItem, TextEditor },
 mixins : [ChatMixin],
 props: {
-    pickedMessage: Object,
+    pickedMessage: PliziMessage | null,
     messageID: Number,
     currentDialog: Object
 },
 data() {
     return {
         msgData : null,
-
         selectedFriend: null,
         textareaValue: ''
     }
@@ -84,8 +83,6 @@ methods: {
             window.console.warn(`Диалог с ${this.selectedFriend.fullName} не найден!`);
             return;
         }
-
-        //window.console.dir( dialog, `dialog` );
 
         const msgData = this.$refs.forwardMessageEditor.getContent();
 
@@ -129,7 +126,7 @@ methods: {
             throw e;
         }
 
-        if ( apiResponse ){
+        if ( apiResponse ) {
             const eventData = {
                 dialogId : apiResponse.data.chatId,
                 message : apiResponse.data
@@ -152,10 +149,7 @@ computed: {
 
 created(){
     this.msgData = this.pickedMessage;
-    //window.console.log(`ResendMessageModal created`);
 },
-mounted(){
-    //window.console.log(`ResendMessageModal mounted`);
-}
+
 }
 </script>

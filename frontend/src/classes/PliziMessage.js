@@ -139,9 +139,14 @@ class PliziMessage{
         this._isForward = !! msgData.isForward;
 
         this._attachments = [];
-        msgData.attachments.list.map((aItem) => {
-            this._attachments.push( new PliziAttachment(aItem) );
-        });
+
+        if (msgData.attachments &&  msgData.attachments.list /*  &&  msgData.attachments.list>0*/) {
+            //window.console.warn(this._body, 'есть аттачи');
+
+            msgData.attachments.list.map((aItem) => {
+                this._attachments.push( new PliziAttachment(aItem) );
+            });
+        }
     }
 
     get id(){
@@ -228,6 +233,11 @@ class PliziMessage{
     }
 
     toJSON(){
+        let atts = [];
+        this._attachments.map( aItem => {
+            atts.push( aItem.toJSON() )
+        });
+
         return {
             id: this.id,
             userId: this.userId,
@@ -242,7 +252,7 @@ class PliziMessage{
             isEdited: this.isEdited,
             createdAt: +(+this.createdAt / 1000).toFixed(0),
             updatedAt: +(+this.updatedAt / 1000).toFixed(0),
-            attachments: { },
+            attachments: { list : atts },
             replyOn: this.isReply ? this.replyOn.toJSON() : null ,
             isForward: this.isForward
         };

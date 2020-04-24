@@ -36,7 +36,7 @@ import ChatMessageItem from './ChatMessageItem.vue';
 import vueCustomScrollbar from 'vue-custom-scrollbar';
 
 /** TODO: переименовать в ForwardMessageModal **/
-import ResendMessageModal from '../../components/ResendMessageModal.vue';
+import ResendMessageModal from './ResendMessageModal.vue';
 
 import PliziMessage from '../../classes/PliziMessage.js';
 import ChatVideoModal from './ChatVideoModal.vue';

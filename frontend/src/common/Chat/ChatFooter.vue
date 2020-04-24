@@ -39,7 +39,7 @@ methods: {
     },
 
     onEditorKeyDown(ev){
-        window.console.log(ev.key, `ChatFooter::onEditorKeyDown нажата кнопка`);
+        //window.console.log(ev.key, `ChatFooter::onEditorKeyDown нажата кнопка`);
     },
 
     onTextPost(evData){
