@@ -1,6 +1,21 @@
 
 $userPicSize: 32px;
 
+.find-in-chat-list {
+    &-btn {
+        position: absolute;
+        top: 0;
+        bottom: 0;
+        right: 0;
+    }
+}
+
+#chatMessagesUsersList {
+    .chat-list-scroll {
+        height: calc(100% - 67px);
+    }
+}
+
 .chat-list-user {
     transition: .4s;
     &:hover {

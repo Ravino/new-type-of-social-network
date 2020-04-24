@@ -9,8 +9,8 @@
                 <IconAddSmile />
             </div>
 
-            <div slot="emoji-picker" slot-scope="{ emojis, insert, display }">
-                <div class="picker" :style="transform">
+            <div slot="emoji-picker" slot-scope="{ emojis, insert, display}">
+                <div v-if="isVisible" class="picker" :style="transform">
                     <div v-for="(emojiGroup, category) in emojis" :key="category">
                         <h5 class="picker-category">{{ category }}</h5>
                         <div>
@@ -44,7 +44,11 @@ props: {
         default: null,
     },
 },
-
+data() {
+    return {
+        isVisible: true,
+    }
+},
 methods: {
     insert(eventData) {
         this.$emit('addEmoji', {
@@ -55,6 +59,14 @@ methods: {
                 shiftKey: eventData.event.shiftKey
             }
         });
+
+        if (eventData.event.ctrlKey) {
+            this.isVisible = false;
+
+            setTimeout(() => {
+                this.isVisible = true;
+            }, 100);
+        }
     },
 },
 }

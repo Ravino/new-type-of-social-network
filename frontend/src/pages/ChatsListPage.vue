@@ -6,8 +6,22 @@
 
         <div class="col-sm-12 col-md-9 col-lg-11 pr-3  chat-page-height">
             <div v-if="checkIsDialogsList()" id="chatMain" class="row bg-white-br20 overflow-hidden">
-                <div class="col-sm-12 col-md-12 col-lg-4 col-xl-4 col-auto px-sm-0 px-md-0 h-100 border-right">
-                    <vue-custom-scrollbar class="chat-list-scroll py-4 h-100"
+
+                <div id="chatMessagesUsersList" class="col-sm-12 col-md-12 col-lg-4 col-xl-4 col-auto px-sm-0 px-md-0 h-100 border-right">
+                    <div  class=" d-flex align-items-center justify-content-end w-100 border-bottom  pr-3 py-3">
+                        <div class="form-row w-100 align-items-center justify-content-end position-relative pl-4">
+                            <div class="find-in-chat-list w-100 position-relative pl-2">
+                                <label class="sr-only d-none" for="txtFindInChatList">Поиск</label>
+                                <input  id="txtFindInChatList" ref="txtFindInChatList" type="text"
+                                       class="chat-search-input form-control rounded-pill bg-light px-4"
+                                       placeholder="Поиск" /> <!-- TODO были здесь с чата @keydown.stop="chatSearchKeyDownCheck($event)"v-model="chatFilterText" -->
+                                <button class="find-in-chat-list-btn btn btn-search h-100 " type="submit"  @click="onClickStartChatFilter()"><!--TODO Fix: find in chat list -->
+                                    <IconSearch style="width: 15px; height: 15px;" />
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                    <vue-custom-scrollbar class="chat-list-scroll py-4"
                                           :settings="customScrollBarSettings"
                                           @ps-scroll-y="scrollHandle">
                         <ul id="chatFriends" class="list-unstyled mb-0">
@@ -60,6 +74,8 @@ import ChatHeader from '../common/Chat/ChatHeader.vue';
 import ChatMessages from '../common/Chat/ChatMessages.vue';
 import ChatFooter from '../common/Chat/ChatFooter.vue';
 
+import IconSearch from '../icons/IconSearch.vue';
+
 import PliziMessage from '../classes/PliziMessage.js';
 
 export default {
@@ -68,6 +84,7 @@ components: {
     vueCustomScrollbar,
     AccountToolbarLeft, Spinner,
     ChatListItem, ChatHeader, ChatMessages, ChatFooter,
+    IconSearch,
 },
 
 data() {

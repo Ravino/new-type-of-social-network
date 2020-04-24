@@ -1,4 +1,5 @@
 import PliziAttachment from './PliziAttachment.js';
+//import PliziReplyOn from './PliziReplyOn.js';
 
 class PliziMessage{
     /**
@@ -87,7 +88,7 @@ class PliziMessage{
 
     /**
      * ссылка на сообщение, которое было процитировано
-     * @type {object}
+     * @type {PliziMessage}
      * @private
      */
     _replyOn = null;
@@ -106,9 +107,16 @@ class PliziMessage{
      */
     _attachments = null;
 
+    /**
+     * ID чата-исходника (только для ReplyOn, тут потому что Babel падает из-за циклической связи
+     * @type {number}
+     * @private
+     */
+    _chatId = null;
 
     constructor(msgData){
-        this._id = msgData.id >>> 0;
+        this._id = msgData.id;
+        this._chatId = msgData._chatId;
         this._firstName = msgData.firstName;
         this._lastName = msgData.lastName;
         this._userPic = msgData.userPic;
@@ -119,31 +127,26 @@ class PliziMessage{
         this._isEdited = !! msgData.isEdited;
         this._createdAt = new Date(msgData.createdAt);
         this._updatedAt = new Date(msgData.updatedAt);
-        this._replyOn = msgData.replyOn;
+        this._replyOn = (msgData.replyOn) ? new PliziMessage(msgData.replyOn): null;
         this._isForward = !! msgData.isForward;
 
-        if (msgData.attachments) {
-            this._attachments = [];
-
-            if ( msgData.attachments.list ) {
-                msgData.attachments.list.map((aItem) => {
-                    this._attachments.push( new PliziAttachment(aItem) );
-                });
-            }
-            else {
-                msgData.attachments.map((aItem) => {
-                    this._attachments.push( new PliziAttachment(aItem) );
-                });
-
-            }
-        }
-        else {
-            this._attachments = null;
-        }
+        this._attachments = [];
+        msgData.attachments.list.map((aItem) => {
+            this._attachments.push( new PliziAttachment(aItem) );
+        });
     }
 
     get id(){
         return this._id;
+    }
+
+    /**
+     * ID чата-исходника
+     * только для ReplyOn
+     * @returns {number}
+     */
+    get chatId(){
+        return this._chatId;
     }
 
     get firstName(){
@@ -189,16 +192,19 @@ class PliziMessage{
         return this._updatedAt;
     }
 
+    /**
+     * @returns {PliziMessage|null}
+     */
     get replyOn(){
         return this._replyOn;
     }
 
-    get isForward(){
-        return this._isForward;
-    }
-
     get isReply(){
         return !!this._replyOn;
+    }
+
+    get isForward(){
+        return this._isForward;
     }
 
     get attachments(){
