@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Api;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\User\AddToFriend;
 use App\Http\Requests\User\MarkNotificationsAsRead;
+use App\Http\Requests\User\RemoveFromFriends;
 use App\Http\Resources\Notification\NotificationCollection;
 use App\Http\Resources\User\UserCollection;
 use App\Http\Resources\User\UserSearchCollection;
@@ -78,6 +79,19 @@ class UserController extends Controller
             return response()->json(['message' => 'Вы отклонили запрос на добавление в друзья от пользователя'], 200);
         }
         return response()->json(['message' => 'Данный пользователь не отправлял вам запрос в друзья'], 200);
+    }
+
+    /**
+     * @param RemoveFromFriends $request
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function removeFromFriends(RemoveFromFriends $request) {
+        $friend = User::find($request->userId);
+        if (Auth::user()->isFriendWith($friend)) {
+            Auth::user()->unfriend($friend);
+            return response()->json(['message' => 'Вы удалили пользователя из друзей'], 200);
+        }
+        return response()->json(['message' => 'Вы не являетесь другом данному пользователю'], 422);
     }
 
     /**

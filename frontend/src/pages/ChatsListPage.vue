@@ -12,11 +12,17 @@
                         <div class="form-row w-100 align-items-center justify-content-end position-relative pl-4">
                             <div class="find-in-chat-list w-100 position-relative pl-2">
                                 <label class="sr-only d-none" for="txtFindInChatList">Поиск</label>
-                                <input  id="txtFindInChatList" ref="txtFindInChatList" type="text"
+                                <input v-model="dialogFilter.text"
+                                       id="txtFindInChatList"
+                                       ref="txtFindInChatList"
+                                       type="text"
                                        class="chat-search-input form-control rounded-pill bg-light px-4"
-                                       placeholder="Поиск" /> <!-- TODO были здесь с чата @keydown.stop="chatSearchKeyDownCheck($event)"v-model="chatFilterText" -->
-                                <button class="find-in-chat-list-btn btn btn-search h-100 " type="submit"  @click="onClickStartChatFilter()"><!--TODO Fix: find in chat list -->
-                                    <IconSearch style="width: 15px; height: 15px;" />
+                                       @keydown.stop="dialogSearchKeyDownCheck($event)"
+                                       placeholder="Поиск"/>
+                                <button class="find-in-chat-list-btn btn btn-search h-100"
+                                        @click="onClickStartDialogFilter()"
+                                        type="submit">
+                                    <IconSearch style="width: 15px; height: 15px;"/>
                                 </button>
                             </div>
                         </div>
@@ -25,10 +31,18 @@
                                           :settings="customScrollBarSettings"
                                           @ps-scroll-y="scrollHandle">
                         <ul id="chatFriends" class="list-unstyled mb-0">
-                            <ChatListItem v-for="dialog in dialogsList"
-                                          v-bind:dialog="dialog" v-bind:currentDialogID="currentDialogID"
-                                          v-bind:key="dialog.id" :ref="`chatDialog-`+dialog.id">
-                            </ChatListItem>
+                            <template v-if="dialogsSearchedList">
+                                <ChatListItem v-for="dialog in dialogsSearchedList"
+                                              v-bind:dialog="dialog" v-bind:currentDialogID="currentDialogID"
+                                              v-bind:key="dialog.id" :ref="`chatDialog-`+dialog.id">
+                                </ChatListItem>
+                            </template>
+                            <template v-else>
+                                <ChatListItem v-for="dialog in dialogsList"
+                                              v-bind:dialog="dialog" v-bind:currentDialogID="currentDialogID"
+                                              v-bind:key="dialog.id" :ref="`chatDialog-`+dialog.id">
+                                </ChatListItem>
+                            </template>
                         </ul>
                     </vue-custom-scrollbar>
                 </div>
@@ -106,11 +120,14 @@ data() {
             useBothWheelAxes: false,
             suppressScrollX: true
         },
+        dialogFilter: {
+            text: null,
+        },
+        dialogsSearchedList: null,
     }
 },
 
 methods: {
-
     updateFilterText(evData){
         this.filter.text = evData.text ? evData.text.trim() : null;
         this.filter.range = evData.range && evData.range.start && evData.range.end ? evData.range : null;
@@ -149,7 +166,6 @@ methods: {
         this.isMessagesLoaded = true;
     },
 
-
     async loadDialogsList() {
         this.isDialogsLoaded = true;
 
@@ -179,7 +195,11 @@ methods: {
     addNewChatMessageToList(evData){
         this.addMessageToMessageList(evData.message);
         this.updateDialogsList(evData);
-        this.$refs.chatMessages.scrollToEnd();
+
+        /** @TGA вообще-то только для  **/
+        //if (this.$refs.chatMessages) {
+        //    this.$refs.chatMessages.scrollToEnd();
+        //}
     },
 
     addMessageToMessageList(evData){
@@ -199,6 +219,32 @@ methods: {
 
         this.$forceUpdate();
     },
+    async searchDialog() {
+        if (!this.dialogFilter.text) {
+            this.dialogsSearchedList = null;
+            return;
+        }
+
+        let response;
+
+        try {
+            response = await this.$root.$api.dialogSearchByName(this.dialogFilter.text);
+        } catch (e) {
+            console.warn(e.detailMessage);
+        }
+
+        if (response) {
+            this.dialogsSearchedList = response;
+        }
+    },
+    dialogSearchKeyDownCheck(ev) {
+        if (8===ev.keyCode  ||  13===ev.keyCode  ||  46===ev.keyCode){
+            this.searchDialog();
+        }
+    },
+    onClickStartDialogFilter() {
+        this.searchDialog();
+    }
 },
 
 
