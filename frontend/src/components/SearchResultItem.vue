@@ -17,10 +17,11 @@
                 <div class="plizi-sr-item-body-bottom d-flex pr-5">
                     <p class="plizi-sr-item-desc p-0 my-0  d-inline ">
 
-                        <IconLocation style="height: 14px; "/>
+                        <IconLocation style="height: 14px;" />
 
+                        <!-- TODO: @YZ нужна проверка городов и страны -->
                         <span class="">
-                            {{ srItem.city.title +', '+  srItem.country }} <!-- TODO @YZ нужна проверка городов и страны -->
+                            {{ srItem.city.title +', '+  srItem.country }}
                         </span>
                     </p>
                 </div>
@@ -65,12 +66,13 @@
 </template>
 
 <script>
-    import PliziUser from '../classes/PliziUser.js';
-    import IconLocation from "../icons/IconLocation.vue";
-    import IconMessage from "../icons/IconMessage.vue";
-    import IconMessageShort from "../icons/IconMessageShort";
+import IconLocation from '../icons/IconLocation.vue';
+import IconMessage from '../icons/IconMessage.vue';
+import IconMessageShort from '../icons/IconMessageShort';
 
-    export default {
+import PliziUser from '../classes/PliziUser.js';
+
+export default {
 name : 'SearchResultItem',
     components: {IconMessageShort, IconMessage, IconLocation},
     props : {
