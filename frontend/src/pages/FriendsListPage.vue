@@ -21,10 +21,10 @@
 
                     <div v-if="isFriendsLoaded" class="row plizi-friends-list ">
                         <ul v-if="friendsList  &&  friendsList.length>0" class="d-block w-100 p-0" >
-                            <SearchResultItem v-for="(friendItem, friendIndex) in friendsListFilter"
-                                              v-bind:key="friendIndex" v-bind:srItem="friendItem" >
-                            </SearchResultItem>
-
+                            <FriendListItem v-for="friendItem in friendsListFilter"
+                                            v-bind:key="friendItem.id"
+                                            v-bind:srItem="friendItem">
+                            </FriendListItem>
                         </ul>
                         <div v-else class="alert alert-info">
                             У Вас ещё нет друзей!<br />
@@ -49,12 +49,12 @@
 
 <script>
 import FriendsMixin from '../mixins/FriendsMixin.js';
-import SearchResultItem from '../components/SearchResultItem.vue';
+import FriendListItem from '../components/FriendListItem.vue';
 
 export default {
 name: 'FriendsListPage',
 components: {
-    SearchResultItem
+    FriendListItem
 },
 mixins : [FriendsMixin],
 data() {

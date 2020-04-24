@@ -24,7 +24,7 @@
     </div>
 </template>
 <script>
-import IconAddUser from "../icons/IconAddUser.vue";
+import IconAddUser from '../icons/IconAddUser.vue';
 
 export default {
 name : 'ShortFriendItem',
