@@ -1,6 +1,6 @@
 <template>
     <div :id="fieldId" :class="blockClass">
-        <div class="flex-column w-100">
+        <div class="flex-column w-100 ">
             <div class="row w-100 ml-0">
                 <div v-if="showAvatar" class="col-1 align-items-center text-center pt-2">
                     <img class="chat-companion-user-pic rounded-circle my-0 mx-auto"
@@ -42,21 +42,16 @@
                     </button>
                 </div>
             </div>
-
             <!-- @TGA это чтобы блок с plz-attachment-images начался с новой строки -->
-            <div class="row">
-
-
-                <div v-if="attachFiles  &&  attachFiles.length>0" class="col-12 py-2">
-                    <div class="plz-attachment-images" style="min-height: 80px;">
-                        <ul class="plz-attachment-images-list list-unstyled d-flex flex-row">
-                            <AttachmentItem v-for="atFile in attachFiles"
-                                @RemoveAttachment="onRemoveAttachment"
-                                v-bind:attach="atFile"
-                                v-bind:key="atFile.id">
-                            </AttachmentItem>
-                        </ul>
-                    </div>
+            <div v-if="attachFiles  &&  attachFiles.length>0" class="row mt-3">
+                <div class="plz-attachment-images col-10 offset-1 pl-4" >
+                    <ul class="plz-attachment-images-list list-unstyled d-flex flex-row mb-0">
+                        <AttachmentItem v-for="atFile in attachFiles"
+                            @RemoveAttachment="onRemoveAttachment"
+                            v-bind:attach="atFile"
+                            v-bind:key="atFile.id">
+                        </AttachmentItem>
+                    </ul>
                 </div>
             </div>
         </div>
