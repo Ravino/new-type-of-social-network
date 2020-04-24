@@ -1,5 +1,5 @@
 <template>
-    <div class="editor" ref="getHeight">
+    <div class="editor" ref="getHeight" :style="calcEditorH">
         <editor-content class="editor-content"
                         :editor="editor"
                         @keydown.native="onEditorKeyDown"/>
@@ -37,6 +37,11 @@ props: {
         type: String,
         default: null,
     },
+    height: {
+        type: Number,
+        required: false,
+        default: 100
+    }
 },
 
 data() {
@@ -57,6 +62,12 @@ data() {
         editorH: 32,
         editorChangedH: 0,
     }
+},
+
+computed: {
+    calcEditorH(){
+        return 'height: '+this.height+'px';
+    },
 },
 
 methods: {
@@ -96,6 +107,8 @@ methods: {
     },
 
     onEditorKeyDown(ev) {
+        this.$emit('editorKeyDown', ev);
+
         if (13 === ev.keyCode && ev.ctrlKey === true) {
             let editorText = this.editor.getHTML();
             let str = editorText.replace(/<p>|<\/p>/g, '').trim();
