@@ -86,7 +86,7 @@ class ChatController extends Controller
         $message = $this->chatService->send(
             $request->get('body'),
             $request->get('chatId'),
-            Auth::user()->id,
+            \Auth::user()->id,
             $request->get('replyOnMessageId'),
             $request->get('forwardFromChatId'),
             $request->get('attachments') ? $request->get('attachments') : []
@@ -103,7 +103,7 @@ class ChatController extends Controller
         $message = $this->chatService->sendToUser(
             $request->get('body'),
             $request->get('userId'),
-            Auth::user()->id,
+            \Auth::user()->id,
             $request->get('replyOnMessageId'),
             $request->get('forwardFromChatId'),
             $request->get('attachments') ? $request->get('attachments') : []

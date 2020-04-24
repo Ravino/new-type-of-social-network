@@ -4,6 +4,7 @@
 namespace Domain\Pusher\Services;
 
 
+use Domain\Pusher\Events\DestroyMessageEvent;
 use Domain\Pusher\Events\NewMessageEvent;
 use Domain\Pusher\Http\Resources\Message\AttachmentsCollection;
 use Domain\Pusher\Models\ChatMessageAttachment;
@@ -202,7 +203,7 @@ class ChatService extends BaseService
             if($message['userId'] === \Auth::user()->id) {
                 $this->repository->destroyMessage($id);
                 $users_list = $this->chatRepository->getUsersIdListFromChat($message['chatId'], \Auth::user()->id);
-                $this->dispatcher->dispatch(new NewMessageEvent($message, $users_list));
+                $this->dispatcher->dispatch(new DestroyMessageEvent(['messageId' => $id, 'chatId' => $message['chatId']], $users_list));
                 return $this->repository->getMessageByIdInclDeleted($id);
             }
         }
