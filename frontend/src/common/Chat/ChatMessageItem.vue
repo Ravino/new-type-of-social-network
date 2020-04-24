@@ -26,34 +26,9 @@
 
             <div class="message-body d-flex">
                 <div class="message-text" @click.stop="detectYoutubeLink ? openChatVideoModal() : null">
-                    <div class="message-text-inner mb-0"
-                         v-html="message.body"></div>
-
-                    <template v-if="message.isAttachments">
-                        <img v-if="messageSendedImg" class="message-sended-image mt-1" src="../images/user-main-photo.png" alt="" />
-
-                        <!-- TODO: Показать архив -->
-                        <span v-if="messageSendedZip" class="message-sended-zip d-flex align-items-center mt-1">
-                            <IconZip />
-                            <span class="message-sended-zip-info mx-2">
-                                <span class="message-sended-name m-0">Dixy.zip</span>
-                                <span class="message-sended-size m-0">15Mb</span>
-                            </span>
-                        </span>
-                    </template>
-
-                    <div v-if="message.isReply" class="message-resend pl-3 ml-3 mt-3">
-                        <div class="message-user-data  d-flex align-items-center mb-2 ">
-                            <div class="media-pic border rounded-circle mr-3">
-                                <img :src="message.replyOn.userPic" :alt="message.replyOn.firstName" />
-                            </div>
-                            <div class="media-body">
-                                <h6 class="chatHeader-title w-75 align-self-start mt-2 pb-0 mb-0 pull-left" style="line-height: 20px;">{{message.replyOn.firstName}}</h6>
-                                <p class="chatHeader-subtitle p-0 mb-0 mt-1 w-100 d-block">{{message.replyOn.createdAt | lastMessageTime}}</p>
-                            </div>
-                        </div>
-                        <p v-html="message.replyOn.body"></p>
-                    </div>
+                    <div class="message-text-inner mb-0" v-html="message.body"></div>
+                    <ChatMessageItemAttachments v-bind:message="message"></ChatMessageItemAttachments>
+                    <ChatMessageItemReplyContent v-bind:message="message"></ChatMessageItemReplyContent>
                 </div>
 
                 <time v-if="!isNextIsSamePerson()" class="message-time mx-2" :datetime="message.createdAt">
@@ -89,18 +64,20 @@
 </template>
 
 <script>
-import IconPencilEdit from '../icons/IconPencilEdit.vue';
-import IconCheckedDouble from '../icons/IconCheckedDouble.vue';
-import IconZip from '../icons/IconZip.vue';
+import IconPencilEdit from '../../icons/IconPencilEdit.vue';
+import IconCheckedDouble from '../../icons/IconCheckedDouble.vue';
 
-import IconShare from '../icons/IconShare.vue';
-import IconBasket from '../icons/IconBasket.vue';
+import IconShare from '../../icons/IconShare.vue';
+import IconBasket from '../../icons/IconBasket.vue';
 
-import PliziMessage from '../classes/PliziMessage.js';
+import ChatMessageItemReplyContent from './ChatMessageItemReplyContent.vue';
+import ChatMessageItemAttachments from './ChatMessageItemAttachments.vue';
+
+import PliziMessage from '../../classes/PliziMessage.js';
 
 export default {
 name: 'ChatMessageItem',
-components: {IconBasket, IconShare, IconPencilEdit, IconCheckedDouble, IconZip},
+components: { ChatMessageItemAttachments, ChatMessageItemReplyContent, IconBasket, IconShare, IconPencilEdit, IconCheckedDouble},
 props: {
     message : {
         type: PliziMessage,
@@ -111,12 +88,7 @@ props: {
 },
 data() {
     return {
-        //messageReaded: true,
         messageEdited: true,
-        messageSendedImg: true,
-        messageSendedZip: false,
-        //messageSettings: false,
-        //messageChecked: true,
         messageResend: true,
         messageWriting: false,
         messageID: 'message-' + this.message.id,

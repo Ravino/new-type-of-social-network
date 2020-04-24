@@ -27,39 +27,13 @@
                 </div>
             </div>
 
-            <IconMessageShort :clazz="'ml-auto'" />
+            <router-link to="/chats-list" tag="a" class="plz-short-friend-is-active text-body mr-2 ml-auto">
+                <IconMessageShort />
+            </router-link>
 
-            <div class="plizi-sr-item-actions ml-3">
-                <button class="btn btn-link plizi-sr-item-settings"
-                        :id="`friend` + srItem.id"
-                        type="button"
-                        data-toggle="dropdown"
-                        aria-haspopup="true"
-                        aria-expanded="false">
-                    <i class="dots-vertical"></i>
-                </button>
-                <div class="dropdown-menu dropdown-menu-right py-3 "
-                     :aria-labelledby="`friend` + srItem.id">
-
-                    <div class="nav-item">
-                        <router-link tag="a" class="dropdown-item px-3 py-1" to="/editing">
-                            Редактировать
-                        </router-link>
-                    </div>
-
-                    <div class="nav-item">
-                        <router-link tag="a" class="dropdown-item px-3 py-1" to="/account">
-                            Настройки
-                        </router-link>
-                    </div>
-
-                    <div class="nav-item">
-                        <router-link tag="a" class="dropdown-item px-3 py-1" to="/help">
-                            Помощь
-                        </router-link>
-                    </div>
-                </div>
-            </div>
+            <a class="text-body" @click="sendInvite()">
+                <IconAddUser style="width: 24px; height: 24px;" />
+            </a>
 
         </div>
     </li>
@@ -69,16 +43,23 @@
 import IconLocation from '../icons/IconLocation.vue';
 import IconMessage from '../icons/IconMessage.vue';
 import IconMessageShort from '../icons/IconMessageShort';
+import IconAddUser from '../icons/IconAddUser.vue';
 
 import PliziUser from '../classes/PliziUser.js';
 
 export default {
 name : 'SearchResultItem',
-    components: {IconMessageShort, IconMessage, IconLocation},
-    props : {
-    srItem : PliziUser
-}
+components: {IconMessageShort, IconAddUser, IconMessage, IconLocation},
 
+props : {
+    srItem : PliziUser
+},
+
+methods: {
+    sendInvite(){
+        this.$root.$alert('Отправка инвайта', 'bg-info', 3);
+    }
+}
 }
 </script>
 

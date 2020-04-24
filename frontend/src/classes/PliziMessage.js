@@ -1,3 +1,5 @@
+import PliziAttachment from './PliziAttachment.js';
+
 class PliziMessage{
     /**
      * путь к дефолтной аватарке, которую показываем если нет своей
@@ -119,7 +121,25 @@ class PliziMessage{
         this._updatedAt = new Date(msgData.updatedAt);
         this._replyOn = msgData.replyOn;
         this._isForward = !! msgData.isForward;
-        this._attachments = msgData.attachments;
+
+        if (msgData.attachments) {
+            this._attachments = [];
+
+            if ( msgData.attachments.list ) {
+                msgData.attachments.list.map((aItem) => {
+                    this._attachments.push( new PliziAttachment(aItem) );
+                });
+            }
+            else {
+                msgData.attachments.map((aItem) => {
+                    this._attachments.push( new PliziAttachment(aItem) );
+                });
+
+            }
+        }
+        else {
+            this._attachments = null;
+        }
     }
 
     get id(){
@@ -185,12 +205,8 @@ class PliziMessage{
         return this._attachments;
     }
 
-    /**
-     * TODO: потом изменить с учётом реальных данных
-     * @returns {boolean}
-     */
     get isAttachments(){
-        return false;
+        return !!this._attachments;
     }
 
     toJSON(){

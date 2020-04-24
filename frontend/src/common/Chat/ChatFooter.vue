@@ -9,10 +9,10 @@
 </template>
 
 <script>
-import TextEditor from '../common/TextEditor.vue';
-import PliziDialog from '../classes/PliziDialog.js';
+import TextEditor from '../TextEditor.vue';
+import PliziDialog from '../../classes/PliziDialog.js';
 
-import ChatMixin from '../mixins/ChatMixin.js';
+import ChatMixin from '../../mixins/ChatMixin.js';
 
 export default {
 name: 'ChatFooter',
