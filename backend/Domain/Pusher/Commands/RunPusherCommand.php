@@ -10,6 +10,7 @@ use Ratchet\Server\IoServer;
 use Ratchet\Wamp\WampServer;
 use Ratchet\WebSocket\WsServer;
 use React\EventLoop\Factory as ReactLoop;
+use React\Socket\SecureServer;
 use React\Socket\Server;
 use React\ZMQ\Context as ReactContext;
 
@@ -30,8 +31,16 @@ class RunPusherCommand extends Command
         $pull->bind("tcp://0.0.0.0:5555");
         $pull->on('message', [$pusher, 'broadcast']);
 
-
-        $webSock = new Server("0.0.0.0:7070",$loop);
+        $webSock = new SecureServer(
+            new Server('0.0.0.0:7070', $loop),
+            $loop,
+            [
+                'local_cert'        => '/etc/nginx/ssl/live/vm1095330.hl.had.pm/fullchain.pem',
+                'local_pk'          => '/etc/nginx/ssl/live/vm1095330.hl.had.pm/privkey.pem',
+                'allow_self_signed' => TRUE,
+                'verify_peer' => FALSE
+            ]
+        );
         $server = new IoServer(
             new HttpServer(
                 new WsServer(

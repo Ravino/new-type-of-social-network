@@ -53,6 +53,7 @@ services:
     working_dir: /app
     volumes:
       - ./backend:/app
+      - ./frontend/docker/certbot/conf/:/etc/nginx/ssl/
     depends_on:
       - mysql
 
