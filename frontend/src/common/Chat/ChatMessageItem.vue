@@ -28,7 +28,10 @@
                 <div class="message-text" @click.stop="detectYoutubeLink ? openChatVideoModal() : null">
                     <div class="message-text-inner mb-0" v-html="msgBody"></div>
                     <ChatMessageItemAttachments v-bind:message="message"></ChatMessageItemAttachments>
-                    <ChatMessageItemReplyContent v-bind:message="message"></ChatMessageItemReplyContent>
+                    <ChatMessageItemReplyContent v-if="message.isReply"
+                                                 v-bind:replyOn="message.replyOn"
+                                                 v-bind:isForward="message.isForward"
+                    ></ChatMessageItemReplyContent>
                 </div>
 
                 <time v-if="!isNextIsSamePerson()" class="message-time mx-2" :datetime="message.createdAt">

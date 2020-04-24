@@ -54,7 +54,6 @@ class MessageRepository
                 'profiles.*',
                 'chat_messages.*',
             ]);
-
         return new MessageCollection($items, $user_id);
     }
 
