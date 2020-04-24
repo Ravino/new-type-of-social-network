@@ -70,10 +70,7 @@ methods: {
         }
     },
 
-
-    // TODO: @TGA тут времененно, для отладки
     handlePersonalMessage(evData){
-        //window.console.dir(evData, `handlePersonalMessage`);
         this.sendMessageToUser(evData);
     },
 
@@ -81,14 +78,12 @@ methods: {
         let apiResponse = null;
 
         try {
-            apiResponse = await this.$root.$api.chatMessage(msg.receiverId, msg.message.body);
+            apiResponse = await this.$root.$api.chatMessage(msg.receiverId, msg.message.postText, msg.message.attachments);
         }
         catch (e){
             window.console.warn(e.detailMessage);
             throw e;
         }
-
-        window.console.log(apiResponse, `apiResponse`);
 
         if (apiResponse != null &&  apiResponse.data) {
             let newMsg = apiResponse.data;
@@ -121,7 +116,6 @@ mounted() {
         this.isShowMessageDialog = true;
     });
 
-    // TODO: @TGA тут времененно, для отладки
     this.$root.$on('sendPersonalMessage', this.handlePersonalMessage);
 }
 

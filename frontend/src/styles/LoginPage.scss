@@ -74,6 +74,10 @@ body.LoginPage .modal-body {
             border-color: $linkHoverColor;
         }
     }
+
+    .invalid-feedback {
+        position: absolute;
+    }
 }
 
 .update-password-success {

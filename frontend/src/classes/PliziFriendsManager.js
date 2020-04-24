@@ -4,16 +4,19 @@ import PliziManager from './PliziManager.js';
 class PliziFriendsManager extends PliziManager{
 
     /**
+     * коллекция сущностей
+     * @type {PliziFriend[]}
+     * @private
+     */
+    _collection = [];
+
+    /**
      * возвращает список избранных друзей
      * TODO: переписать на реальный возврат
      * @returns {PliziFriend[]} - список избранных друзей
      */
-    get favorits(){
+    get favorites(){
         return this.list.slice(0, 9);
-
-        //return this.list.map((a) => [Math.random(),a])
-        //    .sort((a,b) => a[0]-b[0])
-        //    .map((a) => a[1]).slice(0, 9);
     }
 
 
@@ -23,10 +26,30 @@ class PliziFriendsManager extends PliziManager{
      * @returns {PliziFriend[]} - список buddies
      */
     get buddies(){
-        //return this.list.map((a) => [Math.random(),a])
-        //    .sort((a,b) => a[0]-b[0])
-        //    .map((a) => a[1]).slice(0, 9);
-        return this.list.slice(0, 9);
+        if (this.list) {
+            return this.__shuffle(this.list).slice(0, 9);
+        }
+
+        return this.list;
+    }
+
+    /**
+     *
+     * @param a
+     * @returns {*}
+     * @private
+     */
+    __shuffle(a){
+        if (a) {
+            a = a.map( iA => iA);
+
+            for (let i = a.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [a[i], a[j]] = [a[j], a[i]];
+            }
+        }
+
+        return a;
     }
 
 
@@ -61,6 +84,17 @@ class PliziFriendsManager extends PliziManager{
         else {
             window.console.warn(`PliziFriendsManager->update: друг с ID ${friendID} не найден!`);
         }
+    }
+
+    /**
+     * проверяем есть юзер с userID ли во френдах
+     * @param {number} userID - проверяемый ID
+     * @returns {boolean} - true если userID есть во френдах
+     */
+    checkIsFriend(userID){
+        return !!this.list.find( (frItem) => {
+            return (frItem.id === userID);
+        });
     }
 
 

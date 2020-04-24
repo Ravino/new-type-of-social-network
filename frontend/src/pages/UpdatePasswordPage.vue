@@ -8,7 +8,7 @@
                       class="update-password-form w-100 mb-0"
                       method="POST"
                       @submit.prevent="send">
-                    <div class="d-flex justify-content-center update-password-form-box row align-items-center mb-3">
+                    <div class="d-flex justify-content-center update-password-form-box row align-items-center mb-4">
                         <input type="hidden" name="token" v-model="form.token">
 
                         <div class="form-group col-4 position-relative">
@@ -150,6 +150,4 @@
     }
 </script>
 
-<style scoped>
 
-</style>

@@ -10,16 +10,10 @@
 
             <div class="row">
                 <div class="col-sm-8 col-md-8 col-lg-8 col-xl-8 bg-white-br20">
-
                     <div v-if="isDataReady" class="plizi-search-results-list">
-                        <ul v-if="invitations  &&  (invitations.length > 0)" class="list-unstyled mb-0">
-                            <InvitationItem v-for="(invItem, invIndex) in invitations"
-                                            v-bind:key="invIndex" v-bind:invitation="invItem">
-                            </InvitationItem>
-                        </ul>
-                        <div class="p-3" v-else>
+                        <div class="p-3">
                             <div class="alert alert-info text-center">
-                                Нет приглашений подружиться.
+                                Тут будет красивый список тех, с кем мы недавно подружились.
                             </div>
                         </div>
                     </div>
@@ -45,39 +39,15 @@ import FriendsMixin from '../mixins/FriendsMixin.js';
 import InvitationItem from '../components/InvitationItem.vue';
 
 export default {
-name: 'InvitationsPage',
-components: { InvitationItem },
+name: 'FriendsRecentPage',
+components: {
+    InvitationItem
+},
 mixins : [FriendsMixin],
 data() {
     return {
-        isDataReady : true,
+        isDataReady : true
     }
-},
-
-computed: {
-    invitations() {
-        return this.$root.$user.invitations;
-    },
-},
-
-methods: {
-    removeFromInvitations(invit){
-        this.$root.$user.invitationRemove(invit);
-    }
-},
-
-mounted(){
-    this.$root.$on('invitationAccept', (evData)=>{
-        setTimeout(()=>{
-            this.removeFromInvitations(evData);
-        }, 3*1000);
-    });
-
-    this.$root.$on('invitationDecline', (evData)=>{
-        setTimeout(()=>{
-            this.removeFromInvitations(evData);
-        }, 3*1000);
-    });
 },
 
 }
