@@ -3,6 +3,7 @@
 
 namespace Domain\Pusher\Models;
 
+use App\Models\Profile;
 use Illuminate\Database\Eloquent\Model;
 
 /**
@@ -21,8 +22,7 @@ class ChatMessage extends Model
      */
     public function parent() {
         return $this->hasOne( ChatMessage::class, 'id', 'parent_id' )
-            ->join('profiles', 'profiles.user_id', '=', 'chat_messages.user_id')
-            ->leftJoin('chat_message_status', 'chat_message_status.message_id', '=', 'chat_messages.id');
+            ->join('profiles', 'profiles.user_id', '=', 'chat_messages.user_id');
     }
 
     /**
