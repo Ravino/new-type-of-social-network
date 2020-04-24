@@ -34,7 +34,7 @@
                         </div>
                         <div class="col-auto">
                             <button type="submit" class="btn btn-link text-body px-3 py-0 my-auto">
-                                <img class="" src="../images/chat-options-icon.png" alt="" />
+                                <img class="" src="../../images/chat-options-icon.png" alt="" />
                             </button>
                         </div>
                     </div>
@@ -45,8 +45,8 @@
 </template>
 
 <script>
-import PliziDialog from '../classes/PliziDialog.js';
-import IconSearch from '../icons/IconSearch.vue';
+import PliziDialog from '../../classes/PliziDialog.js';
+import IconSearch from '../../icons/IconSearch.vue';
 
 
 export default {

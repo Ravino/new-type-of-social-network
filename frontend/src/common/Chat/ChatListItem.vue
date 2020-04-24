@@ -31,8 +31,8 @@
 </template>
 
 <script>
-import IconCheckedDouble from '../icons/IconCheckedDouble.vue';
-import PliziDialog from '../classes/PliziDialog.js';
+import IconCheckedDouble from '../../icons/IconCheckedDouble.vue';
+import PliziDialog from '../../classes/PliziDialog.js';
 
 export default {
 name: 'ChatListItem',
