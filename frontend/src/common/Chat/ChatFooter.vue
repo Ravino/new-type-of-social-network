@@ -2,7 +2,7 @@
     <div id="chatFooter" class="">
         <TextEditor :showAvatar="false"
                     :dropToDown="false"
-                    :clazz="`row bg-white w-100 border-top position-relative mt-auto d-flex align-items-start px-3 py-3 ml-2`"
+                    :clazz="`d-flex bg-white w-100 border-top position-relative mt-auto align-items-start px-3 py-3`"
             @editorPost="onTextPost">
         </TextEditor>
     </div>
