@@ -41,7 +41,8 @@
 
                     <ChatMessages v-if="isMessagesLoaded" v-bind:messagesList="messagesList"
                                   v-bind:filterText="filterText"
-                                  v-bind:currentDialog="currentDialog">
+                                  v-bind:currentDialog="currentDialog"
+                                  ref="chatMessages">
                     </ChatMessages>
                     <Spinner v-else v-bind:message="`Сообщения загружаются,<br />можно выбрать другой диалог`"></Spinner>
 
@@ -174,6 +175,7 @@ methods: {
     addNewChatMessageToList(evData){
         this.addMessageToMessageList(evData.message);
         this.updateDialogsList(evData);
+        this.$refs.chatMessages.scrollToEnd();
     },
 
     addMessageToMessageList(evData){

@@ -66,7 +66,6 @@ methods: {
 
         if  (`` === currText) {
             this.editor.setContent(`<p class="big-emoji">${emoji}</p>`);
-            return;
         }
 
         currText = currText.substr(0, currText.length - 4) + `<span class="emoji">${emoji}</span>` + `</p>`;
@@ -98,10 +97,16 @@ methods: {
 
     onEditorKeyDown(ev) {
         if (13 === ev.keyCode && ev.ctrlKey === true) {
-            const editorText = this.editor.getHTML();
+            let editorText = this.editor.getHTML();
+            let str = editorText.replace(/<p>|<\/p>/g, '').trim();
+
+            if (!(!!str.replace(/[\u{1F300}-\u{1F6FF}]/gu, '').trim())) {
+                if (str.match(/[\u{1F300}-\u{1F6FF}]/gu).length === 1) {
+                    editorText = `<p class="big-emoji">${str}</p>`;
+                }
+            }
 
             this.editor.setContent(``);
-
             this.$emit('editorPost', { postText : editorText });
         }
 
@@ -124,6 +129,10 @@ methods: {
 
     getContent(){
         return this.editor.getHTML();
+    },
+
+    focus() {
+        this.editor.focus();
     }
 },
 
