@@ -1,6 +1,7 @@
 <template>
     <div class="message-attachments d-flex flex-wrap " v-if="message.isAttachments">
-        <div class="message-attachment-item mb-2" v-for="attach in message.attachments" v-bind:key="attach.id">
+        <div class="message-attachment-item mb-2"
+             v-for="attach in message.attachments" v-bind:key="attach.id">
 
             <img v-if="attach.isImage" class="message-sended-image" :src="attach.medium.path" :alt="attach.originalName" />
 
