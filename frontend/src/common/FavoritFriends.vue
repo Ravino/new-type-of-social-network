@@ -30,90 +30,6 @@ components : { Spinner, FavoritFriendItem },
 data () {
 return {
     isDataReady : false,
-    favoritFriendsOld : [
-        {
-            firstName : `Валерия`,
-            sex : `f`,
-            userPic: `images/chat/alexandra.png`,
-            isType : true,
-            isOnline : true,
-            lastVisit: `2020-04-03 15:04:00`,
-            messagesNumber: 12
-        },
-        {
-            firstName : `Максим`,
-            sex: `m`,
-            userPic: `images/chat/malunder.png`,
-            isType : false,
-            isOnline : true,
-            lastVisit: `2020-04-03 15:04:00`,
-            messagesNumber: 4
-        },
-        {
-            firstName : `Лера`,
-            sex: `f`,
-            userPic: `images/chat/alina.png`,
-            isType : false,
-            isOnline : true,
-            lastVisit: `2020-04-03 15:04:00`,
-            messagesNumber: 0
-        },
-        {
-            firstName : `Максим`,
-            sex: `m`,
-            userPic: `images/chat/malunder.png`,
-            isType : false,
-            isOnline : true,
-            lastVisit: `2020-04-03 15:04:00`,
-            messagesNumber: 4
-        },
-        {
-            firstName : `Лера`,
-            sex: `f`,
-            userPic: `images/chat/alina.png`,
-            isType : false,
-            isOnline : true,
-            lastVisit: `2020-04-03 15:04:00`,
-            messagesNumber: 0
-        },
-        {
-            firstName : `Анастасия`,
-            sex: `f`,
-            userPic: `images/chat/anna.png`,
-            isType : false,
-            isOnline : false,
-            lastVisit: `2020-04-03 12:04:00`,
-            messagesNumber: 0
-        },
-        {
-            firstName : `Анастасия`,
-            sex: `f`,
-            userPic: `images/chat/anna.png`,
-            isType : false,
-            isOnline : false,
-            lastVisit: `2020-04-03 12:04:00`,
-            messagesNumber: 0
-        },
-        {
-            firstName : `Анастасия`,
-            sex: `f`,
-            userPic: `images/chat/anna.png`,
-            isType : false,
-            isOnline : false,
-            lastVisit: `2020-04-03 12:04:00`,
-            messagesNumber: 0
-        },
-        {
-            firstName : `Екатерина`,
-            sex: `f`,
-            userPic: `images/chat/anna2.png`,
-            isType : false,
-            isOnline : false,
-            lastVisit: `2020-04-02 18:04:00`,
-            messagesNumber: 0
-        },
-
-    ]
 }
 },
 
@@ -123,7 +39,7 @@ methods : {
 
 computed: {
     favoritFriends(){
-        return (this.isDataReady ? this.$root.$user.fm.favorits : []);
+        return (this.isDataReady ? this.$root.$user.fm.favorites : []);
     }
 },
 
