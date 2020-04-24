@@ -12,7 +12,7 @@
 </template>
 
 <script>
-    import VideoPlayer from "../common/VideoPlayer.vue";
+    import VideoPlayer from "../../common/VideoPlayer.vue";
 
     export default {
         name: "ChatVideoModal",
