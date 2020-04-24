@@ -56,8 +56,8 @@ class ChatService extends BaseService
         if(count($attachment_ids)) {
             ChatMessageAttachment::whereIn('id', $attachment_ids)->update(["message_id" => $message_id]);
         }
-        $this->dispatcher->dispatch(new NewMessageEvent($message, $users_list));
         $message = $this->repository->getMessageById($message_id);
+        $this->dispatcher->dispatch(new NewMessageEvent($message, $users_list));
         return $message;
     }
 
@@ -85,8 +85,8 @@ class ChatService extends BaseService
         if(count($attachment_ids)) {
             ChatMessageAttachment::whereIn('id', $attachment_ids)->update(["message_id" => $message_id]);
         }
-        $this->dispatcher->dispatch(new NewMessageEvent($message, $users_list));
         $message = $this->repository->getMessageById($message_id);
+        $this->dispatcher->dispatch(new NewMessageEvent($message, $users_list));
         return $message;
     }
 
