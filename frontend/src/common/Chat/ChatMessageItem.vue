@@ -26,7 +26,7 @@
 
             <div class="message-body d-flex">
                 <div class="message-text" @click.stop="detectYoutubeLink ? openChatVideoModal() : null">
-                    <div class="message-text-inner mb-0" v-html="message.body"></div>
+                    <div class="message-text-inner mb-0" v-html="msgBody"></div>
                     <ChatMessageItemAttachments v-bind:message="message"></ChatMessageItemAttachments>
                     <ChatMessageItemReplyContent v-bind:message="message"></ChatMessageItemReplyContent>
                 </div>
@@ -92,6 +92,7 @@ data() {
         messageResend: true,
         messageWriting: false,
         messageID: 'message-' + this.message.id,
+        msgBody: this.message.body,
     }
 },
 computed: {
@@ -169,16 +170,8 @@ methods: {
     },
 
     livePreview() {
-        let result = this.detectYoutubeLink;
-
-        if (result) {
-            let msgBlock = document.querySelector(`#${this.messageID}`);
-            let msgContent = msgBlock.querySelector('.message-text-inner');
-            let elementImg = document.createElement('img');
-
-            elementImg.setAttribute('src', `//img.youtube.com/vi/${result}/0.jpg`);
-            msgContent.innerHTML = '';
-            msgContent.append(elementImg);
+        if (this.detectYoutubeLink) {
+            this.msgBody = `<img src="//img.youtube.com/vi/${this.detectYoutubeLink}/0.jpg" alt="">`;
         }
     },
 },
