@@ -20,7 +20,7 @@ class SendMessageRequest extends FormRequest
             'body' => 'required|string',
             'replyOnMessageId' => 'integer',
             'forwardFromChatId' => 'integer',
-            'attachmentIds' => 'array'
+            'attachments' => 'array'
         ];
     }
 }

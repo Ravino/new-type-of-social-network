@@ -87,7 +87,7 @@ class ChatController extends Controller
             Auth::user()->id,
             $request->get('replyOnMessageId'),
             $request->get('forwardFromChatId'),
-            $request->get('attachmentIds') ? $request->get('attachmentIds') : []
+            $request->get('attachments') ? $request->get('attachments') : []
         );
         return response()->json(['data' => $message]);
     }
@@ -104,7 +104,7 @@ class ChatController extends Controller
             Auth::user()->id,
             $request->get('replyOnMessageId'),
             $request->get('forwardFromChatId'),
-            $request->get('attachmentIds') ? $request->get('attachmentIds') : []
+            $request->get('attachments') ? $request->get('attachments') : []
         );
         return response()->json(['data' => $message]);
     }
