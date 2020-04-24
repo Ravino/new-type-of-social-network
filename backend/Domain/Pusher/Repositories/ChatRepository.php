@@ -19,25 +19,35 @@ class ChatRepository
      * Возвращает список чатов пользователя
      *
      * @param int $user_id
+     * @param $search
      * @return ChatCollection
      */
-    public function getChatsByUserId(int $user_id)
+    public function getChatsByUserId(int $user_id, $search = null)
     {
-        $items = Chat::with(['attendees' => function($query) use ($user_id) {
+        $query = Chat::with(['attendees' => function($query) use ($user_id) {
             $query->where('profiles.user_id', '<>', $user_id);
-        }])
-            ->join('profiles', 'profiles.user_id', '=', 'chat.user_id')
-            ->whereRaw("chat.id IN (SELECT chat_id FROM chat_party WHERE user_id = $user_id GROUP BY chat_id)")
-            ->orderBy('chat.last_message_time', 'desc')
-            ->get([
-                'chat.id',
-                'chat.name',
-                'chat.last_message_body',
-                'chat.last_is_read',
-                'chat.last_user_id',
-                'chat.last_message_time'
-            ]);
+        }]);
 
+        if(!empty($search) || strlen($search) > 3) {
+            $query->whereHas('attendees', function($profile) use ($search, $user_id) {
+                $profile
+                    ->where('profiles.first_name', 'LIKE', "%{$search}%")
+                    ->orWhere('profiles.last_name', 'LIKE', "%{$search}%")
+                    ->where('profiles.user_id', '<>', $user_id);
+            });
+        }
+
+        $items = $query->join('profiles', 'profiles.user_id', '=', 'chat.user_id')
+        ->whereRaw("chat.id IN (SELECT chat_id FROM chat_party WHERE user_id = $user_id GROUP BY chat_id)")
+        ->orderBy('chat.last_message_time', 'desc')
+        ->get([
+            'chat.id',
+            'chat.name',
+            'chat.last_message_body',
+            'chat.last_is_read',
+            'chat.last_user_id',
+            'chat.last_message_time'
+        ]);
         return new ChatCollection($items, $user_id);
     }
 
