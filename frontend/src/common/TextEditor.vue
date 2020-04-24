@@ -32,8 +32,12 @@
             </label>
 
             <button class="btn btn-link mx-0 px-1 btn-add-smile" type="button">
-                <EmojiPicker v-if="dropToDown" @addEmoji="onAddEmoji" :transform="'transform: translate(-40%, 40px)'"/>
-                <EmojiPicker v-else @addEmoji="onAddEmoji" :transform="'transform: translate(-40%, -100%)'"/>
+                <EmojiPicker v-if="dropToDown"
+                             @addEmoji="onAddEmoji"
+                             :transform="'transform: translate(-40%, 40px)'"/>
+                <EmojiPicker v-else
+                             @addEmoji="onAddEmoji"
+                             :transform="'transform: translate(-40%, -100%)'"/>
             </button>
         </div>
 
