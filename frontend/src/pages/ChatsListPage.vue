@@ -141,6 +141,7 @@ methods: {
     checkIsDialogsList(){
         return (this.$root.$user.dialogsNumber > 0);
     },
+
     async switchToChat(evData) {
         let msgsResponse = null;
         this.isMessagesLoaded = false;
@@ -164,6 +165,7 @@ methods: {
 
         this.isMessagesLoaded = true;
     },
+
     async loadDialogsList() {
         this.isDialogsLoaded = true;
 
@@ -185,17 +187,25 @@ methods: {
 
         return true;
     },
+
     scrollHandle(evt) {
         //console.log(evt);
     },
+
     addNewChatMessageToList(evData){
         this.addMessageToMessageList(evData.message);
         this.updateDialogsList(evData);
-        this.$refs.chatMessages.scrollToEnd();
+
+        /** @TGA вообще-то только для  **/
+        //if (this.$refs.chatMessages) {
+        //    this.$refs.chatMessages.scrollToEnd();
+        //}
     },
+
     addMessageToMessageList(evData){
         this.messagesList.push( new PliziMessage(evData) );
     },
+
     updateDialogsList(evData){
         const updatedFields = {
             lastMessageDT : evData.message.createdAt,
