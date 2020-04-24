@@ -110,6 +110,21 @@ class ChatController extends Controller
     }
 
     /**
+     * Добавление пользователя в чат
+     *
+     * @param Request $request
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function appendUserToChat(Request $request)
+    {
+        $chat = $this->chatService->appendUserToChat(
+            $request->get('userId'),
+            $request->get('chatId'),
+        );
+        return response()->json(['data' => $chat]);
+    }
+
+    /**
      * @param UploadFileRequest $request
      * @return \Illuminate\Http\JsonResponse
      */

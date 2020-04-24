@@ -68,8 +68,10 @@ class ChatService extends BaseService
      * @param string $body
      * @param int $user_id
      * @param int $author_id
+     * @param int|null $parent_id
+     * @param int|null $parent_chat_id
      * @param array $attachment_ids
-     * @return int|mixed|null
+     * @return \Domain\Pusher\Http\Resources\Message\Message
      */
     public function sendToUser(string $body, int $user_id, int $author_id, int $parent_id = null, int $parent_chat_id = null, array $attachment_ids = [])
     {
@@ -86,6 +88,11 @@ class ChatService extends BaseService
         $this->dispatcher->dispatch(new NewMessageEvent($message, $users_list));
         $message = $this->repository->getMessageById($message_id);
         return $message;
+    }
+
+    public function appendUserToChat(string $chat_id, int $user_id)
+    {
+        return $this->chatRepository->insertToChartParty($chat_id, $user_id);
     }
 
     /**

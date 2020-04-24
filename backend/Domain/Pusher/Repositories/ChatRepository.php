@@ -150,4 +150,16 @@ class ChatRepository
         DB::table('chat_party')->insert($party);
         return $chat_id;
     }
+
+    /**
+     * @param $chat_id
+     * @param $user_id
+     * @return ChatResource
+     */
+    public function insertToChartParty($chat_id, $user_id) {
+        DB::table('chat_party')->insert([
+            ['chat_id' => $chat_id, 'user_id' => $user_id, 'created_at' => time()]
+        ]);
+        return $this->getChatById($chat_id);
+    }
 }
