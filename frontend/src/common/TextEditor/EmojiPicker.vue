@@ -63,6 +63,7 @@ methods: {
         if (eventData.event.ctrlKey) {
             this.isVisible = false;
 
+            // TODO: @YZ исправить хак.
             setTimeout(() => {
                 this.isVisible = true;
             }, 100);

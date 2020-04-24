@@ -148,6 +148,8 @@ methods: {
 
     onAddEmoji(evData) {
         if (evData.keys.ctrlKey) { // бал нажат Ctrl
+            this.$refs.editor.focus();
+
             let txt = this.$refs.editor.getContent();
 
             //this.$emit('editorPost', { postText : `<!--<p onclick="alert(11111)">Серега привет!!!</p>>-->` });
@@ -184,8 +186,7 @@ methods: {
         else {
             window.console.info( apiResponse );
         }
-    }
-}
-
+    },
+},
 }
 </script>
