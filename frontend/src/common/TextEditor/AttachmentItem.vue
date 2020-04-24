@@ -1,9 +1,9 @@
 <template>
-    <li class="media mr-3">
-        <img v-if="attach.isImage" :src="attach.thumb.path" class="" :alt="attach.originalName" />
+    <li class="media position-relative pt-1 pr-1 mr-3">
+        <img v-if="attach.isImage" :src="attach.thumb.path" class="" :alt="attach.originalName" :title="attach.originalName" />
         <template v-else>
-            <i v-if="isArchive" class="fas fa-file-archive fa-3x d-inline-block" :alt="attach.originalName"></i>
-            <i class="fas fa-file-alt fa-3x d-inline-block" :alt="attach.originalName"></i>
+            <i v-if="isArchive" class="fas fa-file-archive fa-3x d-inline-block" :alt="attach.originalName" :title="attach.originalName" ></i>
+            <i v-else class="fas fa-file-alt fa-3x d-inline-block" :alt="attach.originalName"  :title="attach.originalName" ></i>
         </template>
 
         <button type="button"

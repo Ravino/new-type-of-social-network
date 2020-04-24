@@ -46,11 +46,13 @@ class ChatController extends Controller
 
     /**
      * Возвращает список диалогов
+     *
+     * @param Request $request
      * @return \Illuminate\Http\JsonResponse
      */
-    public function dialogs()
+    public function dialogs(Request $request)
     {
-        $dialogs = $this->repository->getChatsByUserId(Auth::user()->id);
+        $dialogs = $this->repository->getChatsByUserId(Auth::user()->id, $request->query('search'));
         return response()->json($dialogs);
     }
 

@@ -216,7 +216,11 @@ async mounted() {
     await this.loadDialogsList();
 
     if ( this.checkIsDialogsList()  &&  this.currentDialog ) {
+        window.console.info(`call to switchToChat`);
         await this.switchToChat( { dialogId : this.currentDialog.id })
+    }
+    else {
+        window.console.warn(`Условие не сработало!`);
     }
 
     this.$root.$on('switchToChat', this.switchToChat);
@@ -228,6 +232,8 @@ async mounted() {
 
     this.$forceUpdate();
 },
+
+
 
 }
 </script>
