@@ -4,6 +4,8 @@
 </template>
 
 <script>
+    // @link https://github.com/surmon-china/vue-video-player
+
     import 'video.js/dist/video-js.css';
     import {videoPlayer} from 'vue-video-player';
     import 'videojs-youtube/dist/Youtube.min';
