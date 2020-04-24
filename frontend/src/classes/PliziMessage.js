@@ -1,5 +1,4 @@
 import PliziAttachment from './PliziAttachment.js';
-//import PliziReplyOn from './PliziReplyOn.js';
 
 class PliziMessage{
     /**
@@ -230,6 +229,10 @@ class PliziMessage{
 
     get isAttachments(){
         return !!this._attachments;
+    }
+
+    get attachmentsNumber(){
+        return (!!this._attachments) ? this._attachments.length : 0;
     }
 
     toJSON(){
