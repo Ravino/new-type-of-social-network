@@ -6,7 +6,6 @@
         <div class="plz-favorit-friend-userpic">
             <img class="plz-favorit-userpic rounded-circle" :src="friend.userPic" :alt="friend.firstName" />
 
-
             <div v-if="messageWriting" class="writing"><span></span><span></span><span></span></div>
             <div v-else class="">
                 <span v-if="friend.isOnline" class="plz-favorit-isonline" title="в сети"></span>
@@ -14,7 +13,7 @@
             </div>
         </div>
 
-        <div class="plz-favorit-friend-title flex align-items-center mr-auto ">
+        <div v-if="!isNarrow" class="plz-favorit-friend-title flex align-items-center mr-auto ">
             <span class="plz-favorit-friend-name">{{friend.firstName}}</span>
 
             <div class="plz-favorit-friend-status">
@@ -35,7 +34,7 @@
             </div>
         </div>
 
-        <span class="plz-ff-messages-count">
+        <span v-if="!isNarrow" class="plz-ff-messages-count">
             <span v-if="(friend.messagesNumber > 0)" class="py-0 mr-2">
                 {{friend.messagesNumber}}
             </span>
@@ -49,13 +48,18 @@ import PliziFriend from '../classes/PliziFriend.js';
 export default {
 name : 'FavoritFriendItem',
 props : {
-    friend : PliziFriend
+    friend : PliziFriend,
+    isNarrow: {
+        type: Boolean,
+        required: false,
+        default: false
+    }
 },
 
 data(){
     return {
         chatWindowShown: false,
-        messageWriting: false  // TODO: используется, когда потльзователь печатает
+        messageWriting: false  // TODO: используется, когда пользователь печатает
     }
 },
 

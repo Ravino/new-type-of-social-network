@@ -23,7 +23,7 @@
         </div>
 
         <div class="col-sm-3 col-md-3 col-lg-3 col-xl-3 pr-0">
-            <FavoritFriends></FavoritFriends>
+            <FavoriteFriends :isNarrow="false"></FavoriteFriends>
             <ShortFriends></ShortFriends>
         </div>
     </div>
@@ -31,7 +31,7 @@
 
 <script>
 import AccountToolbarLeft from '../common/AccountToolbarLeft.vue';
-import FavoritFriends from '../common/FavoritFriends.vue';
+import FavoriteFriends from '../common/FavoriteFriends.vue';
 import ShortFriends from '../common/ShortFriends.vue';
 
 import Post from '../common/Post.vue';
@@ -46,7 +46,7 @@ import PliziPost from '../classes/PliziPost.js';
 export default {
 name: 'ProfilePage',
 components: {
-    AccountToolbarLeft, FavoritFriends, ShortFriends,
+    AccountToolbarLeft, FavoriteFriends, ShortFriends,
     ProfileHeader, ProfilePhotos, WhatsNewBlock, ProfileFilter, Post
 },
 data() {

@@ -21,10 +21,12 @@
 
                     <div v-if="isFriendsLoaded" class="row plizi-friends-list ">
                         <ul v-if="friendsList  &&  friendsList.length>0" class="d-block w-100 p-0" >
-                            <FriendListItem v-for="friendItem in friendsListFilter"
-                                            v-bind:key="friendItem.id"
-                                            v-bind:srItem="friendItem">
-                            </FriendListItem>
+                            <transition-group name="slide-fade" :duration="700">
+                                <FriendListItem v-for="friendItem in friendsListFilter"
+                                                v-bind:key="friendItem.id"
+                                                v-bind:friend="friendItem">
+                                </FriendListItem>
+                            </transition-group>
                         </ul>
                         <div v-else class="alert alert-info">
                             У Вас ещё нет друзей!<br />
@@ -42,7 +44,7 @@
         </div>
 
         <div class="col-sm-1 col-md-1 col-lg-1 col-xl-1">
-            <AccountToolbarRight></AccountToolbarRight>
+            <FavoriteFriends :isNarrow="true"></FavoriteFriends>
         </div>
     </div>
 </template>
@@ -60,14 +62,14 @@ mixins : [FriendsMixin],
 data() {
     return {
         wMode : `all`,
+        removedFriendID: -1
     }
 },
 
 methods: {
-
     friendsListSelect(wm){
         this.wMode = wm;
-    }
+    },
 },
 
 computed: {

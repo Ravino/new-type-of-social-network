@@ -1,5 +1,8 @@
 import PliziRecipient from './PliziRecipient.js';
 
+/**
+ * класс для работы со списком пересылаемых сообщений
+ */
 class PliziRecipientsCollection {
 
     /**

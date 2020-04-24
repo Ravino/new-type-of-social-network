@@ -588,6 +588,25 @@ class PliziAPI {
     }
 
 
+    async friendshipStop(friendID) {
+        const sendData = {
+            userId: friendID
+        };
+
+        let response = await this.__axios.post('/api/user/friendship/remove', sendData, this.__getAuthHeaders())
+            .catch((error) => {
+                this.__checkIsTokenExperis(error, `invitationDecline`);
+                throw new PliziAPIError(`invitationDecline`, error.response);
+            });
+
+        if (response.status === 200) {
+            return response.data;
+        }
+
+        return null;
+    }
+
+
     async friendsPotential() {
         const sData = `@`;
 

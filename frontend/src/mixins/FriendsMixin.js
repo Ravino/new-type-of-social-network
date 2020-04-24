@@ -1,6 +1,9 @@
 import AccountToolbarLeft from '../common/AccountToolbarLeft.vue';
 import AccountToolbarRight from '../common/AccountToolbarRight.vue';
 import Spinner from '../common/Spinner.vue';
+
+
+import FavoriteFriends from '../common/FavoriteFriends.vue';
 import IconSearch from '../icons/IconSearch.vue';
 
 import FriendsListHeader from '../components/FriendsListHeader.vue';
@@ -13,6 +16,7 @@ const FriendsMixin = {
 components: {
     IconSearch,
     AccountToolbarLeft, AccountToolbarRight,
+    FavoriteFriends,
     Spinner,
     FriendsListHeader, PotentialFriends,
 },
