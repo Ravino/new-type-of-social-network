@@ -772,6 +772,20 @@ class PliziAPI {
             return this.__$root.$emit(eventName, eventData || {});
     }
 
+    async dialogSearchByName(name) {
+        let response = await this.__axios.get(`api/chat/dialogs?search=` + name, this.__getAuthHeaders())
+            .catch((error) => {
+                this.__checkIsTokenExperis(error, `dialogSearchByName`);
+                throw new PliziAPIError(`dialogSearchByName`, error.response);
+            });
+
+        if (response.status === 200) {
+            return response.data.list;
+        }
+
+        return null;
+    }
+
 
     /**
      **************************************************************************

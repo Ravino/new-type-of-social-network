@@ -1,6 +1,6 @@
 <template>
     <div :id="fieldId" :class="blockClass">
-        <div class="flex-column w-100">
+        <div class="flex-column w-100 ">
             <div class="row w-100 ml-0">
                 <div v-if="showAvatar" class="col-1 align-items-center text-center pt-2">
                     <img class="chat-companion-user-pic rounded-circle my-0 mx-auto"
@@ -12,7 +12,9 @@
                         <div class="form-row align-items-center">
                             <div class="col-12  p-0">
                                 <Editor class="plz-text-editor-form form-control px-2 py-1 h-100"
+                                        :height="height"
                                         @editorPost="onEditorNewPost"
+                                        @editorKeyDown="onEditorKeyDown"
                                         :placeholder="editorPlaceholder"
                                         ref="editor" />
                             </div>
@@ -42,21 +44,16 @@
                     </button>
                 </div>
             </div>
-
             <!-- @TGA это чтобы блок с plz-attachment-images начался с новой строки -->
-            <div class="row">
-
-
-                <div v-if="attachFiles  &&  attachFiles.length>0" class="col-12 py-2">
-                    <div class="plz-attachment-images" style="min-height: 80px;">
-                        <ul class="plz-attachment-images-list list-unstyled d-flex flex-row">
-                            <AttachmentItem v-for="atFile in attachFiles"
-                                @RemoveAttachment="onRemoveAttachment"
-                                v-bind:attach="atFile"
-                                v-bind:key="atFile.id">
-                            </AttachmentItem>
-                        </ul>
-                    </div>
+            <div v-if="attachFiles  &&  attachFiles.length>0" class="row mt-3">
+                <div class="plz-attachment-images col-10 offset-1 pl-4" >
+                    <ul class="plz-attachment-images-list list-unstyled d-flex flex-row mb-0">
+                        <AttachmentItem v-for="atFile in attachFiles"
+                            @RemoveAttachment="onRemoveAttachment"
+                            v-bind:attach="atFile"
+                            v-bind:key="atFile.id">
+                        </AttachmentItem>
+                    </ul>
                 </div>
             </div>
         </div>
@@ -91,6 +88,11 @@ props: {
     clazz: String,
     editorPlaceholder: String,
     dropToDown: Boolean,
+    height: {
+        type: Number,
+        required: false,
+        default: 100
+    }
 },
 
 data() {
@@ -143,6 +145,10 @@ methods: {
         this.attachFiles = [];
     },
 
+    onEditorKeyDown(ev){
+        this.$emit('editorKeyDown', ev);
+    },
+
     onSelectFile(evData){
         this.addUploadAttachment(this.$refs.editorFiler.files);
     },
@@ -185,7 +191,9 @@ methods: {
 
         if ( apiResponse ) {
             apiResponse.map( (attItem)=>{
-                this.attachFiles.push( new PliziAttachment(attItem) );
+                let newAtt = new PliziAttachment(attItem);
+                this.attachFiles.push( newAtt );
+                this.$emit('newAttach', { attach : newAtt });
             });
         }
         else {

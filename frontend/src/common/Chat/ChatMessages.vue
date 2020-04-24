@@ -53,7 +53,7 @@ components: {
 props: {
     messagesList: Array,
     currentDialog : Object,
-    filterText: String
+    filter: Object,
 },
 
 data() {
@@ -132,10 +132,31 @@ methods: {
 
 computed: {
     filteredMessages(){
-        const ft = this.filterText.toLocaleLowerCase();
+        if (this.filter) {
+            if (this.filter.text && this.filter.range && this.filter.range.start && this.filter.range.end) {
+                const ft = this.filter.text.toLocaleLowerCase();
 
-        if (ft.length > 2)
-            return this.messagesList.filter((msgItem)=>{ return msgItem.body.toLowerCase().includes(ft); });
+                if (ft.length > 2) {
+                    return this.messagesList.filter((msgItem) => {
+                        return msgItem.body.toLowerCase().includes(ft) &&
+                            (msgItem.createdAt > this.filter.range.start) && (msgItem.createdAt < this.filter.range.end);
+                    });
+                }
+            }
+
+            if (this.filter.text) {
+                const ft = this.filter.text.toLocaleLowerCase();
+
+                if (ft.length > 2)
+                    return this.messagesList.filter((msgItem)=>{ return msgItem.body.toLowerCase().includes(ft); });
+            }
+
+            if (this.filter.range && this.filter.range.start && this.filter.range.end) {
+                return this.messagesList.filter((msgItem) => {
+                    return (msgItem.createdAt > this.filter.range.start) && (msgItem.createdAt < this.filter.range.end);
+                });
+            }
+        }
 
         return this.messagesList;
     },

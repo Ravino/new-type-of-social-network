@@ -25,12 +25,16 @@
                         <div class="col-auto position-relative">
                             <label class="sr-only d-none" for="txtFindInChat">Поиск</label>
                             <input v-model="chatFilterText" id="txtFindInChat" ref="txtFindInChat" type="text"
+                                   @focus="onFocusSearch"
                                    @keydown.stop="chatSearchKeyDownCheck($event)"
                                    class="chat-search-input form-control rounded-pill bg-light px-4"
                                    placeholder="Поиск" />
                             <button class="btn btn-search h-100 " type="submit"  @click="onClickStartChatFilter()">
                                 <IconSearch style="width: 15px; height: 15px;" />
                             </button>
+                        </div>
+                        <div v-if="showDatePicker" class="col-auto">
+                            <ChatDatePicker @dateSelected="dateSelected"/>
                         </div>
                         <div class="col-auto">
                             <button type="submit" class="btn btn-link text-body px-3 py-0 my-auto">
@@ -47,12 +51,13 @@
 <script>
 import PliziDialog from '../../classes/PliziDialog.js';
 import IconSearch from '../../icons/IconSearch.vue';
-
+import ChatDatePicker from "./ChatDatePicker";
 
 export default {
 name: 'ChatHeader',
 components: {
-    IconSearch
+    IconSearch,
+    ChatDatePicker,
 },
 props: {
     currentDialog: {
@@ -63,7 +68,9 @@ props: {
 
 data() {
     return {
-        chatFilterText : ``
+        chatFilterText : ``,
+        showDatePicker: false,
+        dateRange: null,
     }
 },
 
@@ -82,8 +89,18 @@ methods: {
     },
 
     startChatFilter(filterText){
-        this.$emit('chatFilter', { filterText : filterText });
-    }
+        this.$emit('chatFilter', {
+            text : filterText,
+            range: this.dateRange,
+        });
+    },
+    onFocusSearch() {
+        this.showDatePicker = true;
+    },
+    dateSelected(range) {
+        this.dateRange = range;
+        this.startChatFilter(null);
+    },
 },
 
 computed: {
