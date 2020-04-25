@@ -151,10 +151,12 @@ methods: {
 
     onSelectFile(evData){
         this.addUploadAttachment(this.$refs.editorFiler.files);
+        this.$refs.editor.focus();
     },
 
     onSelectImage(evData){
         this.addUploadAttachment(this.$refs.editorImager.files);
+        this.$refs.editor.focus();
     },
 
     onAddEmoji(evData) {
