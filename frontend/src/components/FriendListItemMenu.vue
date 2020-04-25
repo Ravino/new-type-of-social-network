@@ -35,7 +35,7 @@
 import Plizifriend from '../classes/PliziFriend.js';
 
 export default {
-name : 'friendListItemMenu',
+name : 'FriendListItemMenu',
 props : {
     friend : Plizifriend
 },

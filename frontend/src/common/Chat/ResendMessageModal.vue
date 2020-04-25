@@ -19,7 +19,7 @@
                                          :close-on-select="true"
                                          :show-labels="false"
                                          :multiple="false"
-                                         placeholder="Выберите друга">
+                                         placeholder="Выберите получателя">
                             </multiselect>
                         </div>
 

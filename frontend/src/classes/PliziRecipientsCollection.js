@@ -70,6 +70,11 @@ class PliziRecipientsCollection {
     }
 
 
+    removeByID(ID){
+        return this._collection.delete(ID);
+    }
+
+
     /**
      * @returns {PliziRecipient[]}
      */

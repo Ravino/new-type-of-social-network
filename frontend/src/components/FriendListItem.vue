@@ -30,8 +30,7 @@
                 <IconMessageShort v-else />
             </button>
 
-            <FriendListItemMenu v-bind:friend="friend"
-                                @friendShipStop="onFriendShipStop">
+            <FriendListItemMenu v-bind:friend="friend" @friendShipStop="onFriendShipStop">
             </FriendListItemMenu>
         </div>
     </li>

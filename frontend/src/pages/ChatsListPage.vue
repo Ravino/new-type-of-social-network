@@ -112,22 +112,23 @@ data() {
         isDialogsLoaded: false,
         currentDialog : {},
         messagesList  : [],
+        isMessagesLoaded: false,
+
         filter : {
             text: null,
             range: null,
         },
-        isMessagesLoaded: false,
 
-        customScrollBarSettings: {
-            maxScrollbarLength: 60,
-            useBothWheelAxes: false,
-            suppressScrollX: true
-        },
         dialogFilter: {
             text: null,
         },
         dialogsSearchedList: null,
-        changedHeight: ''
+        changedHeight: '',
+        customScrollBarSettings: {
+            maxScrollbarLength: 60,
+            useBothWheelAxes: false,
+            suppressScrollX: true
+        }
     }
 },
 

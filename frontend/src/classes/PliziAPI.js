@@ -536,13 +536,13 @@ class PliziAPI {
 
 
     /**
-     * создаёт новый пустой диалог с юзером, если диалог с ним уже есть - просто возвращает ID существующего диалога
-     * @param {number} userID - ID юзера с которым начинаем диалог
+     * создаёт новый пустой диалог с юзерами, если диалог с ними уже есть - просто возвращает ID существующего диалога
+     * @param {number[]} users - список ID-шников юзеров-собеседников
      * @returns {object} - ID диалога
      */
-    async openChatDialog(userID) {
+    async openChatDialog(users) {
         const sendData = {
-            userIds: [userID]
+            userIds: users
         };
 
         let response = await this.__axios.post('api/chat/open', sendData, this.__getAuthHeaders())

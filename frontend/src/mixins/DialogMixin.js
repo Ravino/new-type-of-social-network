@@ -11,7 +11,7 @@ methods: {
         let apiResponse = null;
 
         try {
-            apiResponse = await this.$root.$api.openChatDialog(userId);
+            apiResponse = await this.$root.$api.openChatDialog( [userId] );
         }
         catch (e){
             window.console.warn( e.detailMessage );

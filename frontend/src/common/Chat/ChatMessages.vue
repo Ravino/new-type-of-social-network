@@ -18,7 +18,8 @@
             </div>
             <div v-else class="d-flex flex-column">
                 <div v-if="currentDialog" class="alert alert-info mx-3">
-                    Сейчас Вы ещё ничего не написали для <b>{{currentDialog.companion.fullName}}</b>
+                    <p v-if="currentDialog.isPrivate">Сейчас Вы ещё ничего не написали для <b>{{currentDialog.companion.fullName}}</b>.</p>
+                    <p v-if="currentDialog.isGroup">Сейчас ещё никто ничего не написал в этом <b>групповом</b> чате.</p>
                 </div>
             </div>
         </vue-custom-scrollbar>
