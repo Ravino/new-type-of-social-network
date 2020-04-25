@@ -51,53 +51,58 @@
 </template>
 
 <script>
-import TextEditor from '../common/TextEditor.vue';
+import TextEditor from '../TextEditor.vue';
 
-import ChatMixin from '../mixins/ChatMixin.js';
+import ChatMixin from '../../mixins/ChatMixin.js';
 
 import ResendMessageItem from './ResendMessageItem.vue';
 
-//import PliziMessage from '../classes/PliziMessage.js';
+import PliziMessage from '../../classes/PliziMessage.js';
+import PliziRecipient from '../../classes/PliziRecipient.js';
+import PliziRecipientsCollection from '../../classes/PliziRecipientsCollection.js';
 
 export default {
 name: 'ResendMessageModal',
 components: { ResendMessageItem, TextEditor },
 mixins : [ChatMixin],
 props: {
-    pickedMessage: Object,
+    pickedMessage: PliziMessage | null,
     messageID: Number,
     currentDialog: Object
 },
 data() {
     return {
+        recipients : (new PliziRecipientsCollection()),
         msgData : null,
-
+        /** @var PliziRecipient */
         selectedFriend: null,
         textareaValue: ''
     }
 },
 methods: {
     startForwardMessage(){
-        const dialog = this.$root.$user.getDialogByUser( this.selectedFriend.id );
-
-        if (!dialog) {
-            window.console.warn(`Диалог с ${this.selectedFriend.fullName} не найден!`);
-            return;
-        }
-
-        //window.console.dir( dialog, `dialog` );
+        //const dialog = this.$root.$user.getDialogByUser( this.selectedFriend.id );
+        //
+        //if (!dialog) {
+        //    window.console.warn(`Диалог с ${this.selectedFriend.fullName} не найден!`);
+        //    return;
+        //}
 
         const msgData = this.$refs.forwardMessageEditor.getContent();
 
+        const config = {
+            chatId : this.selectedFriend.chatId,
+            userId : this.selectedFriend.id,
+        }
+
         const fwdData = {
-            chatId : dialog.id,
             body : msgData.postText,
             replyOnMessageId : this.msgData.id,
             forwardFromChatId : this.currentDialog.id,
             attachments : msgData.attachments
         };
 
-        this.forwardChatMessage(fwdData);
+        this.forwardChatMessage(config, fwdData);
     },
 
     hideMessageResendModal() {
@@ -119,17 +124,17 @@ methods: {
         }
     },
 
-    async forwardChatMessage( msgData ){
+    async forwardChatMessage( config, msgData ){
         let apiResponse = null;
 
         try {
-            apiResponse = await this.$root.$api.chatForwardMessage( msgData );
+            apiResponse = await this.$root.$api.chatForwardMessage( config, msgData );
         } catch (e){
             window.console.warn( e.detailMessage );
             throw e;
         }
 
-        if ( apiResponse ){
+        if ( apiResponse ) {
             const eventData = {
                 dialogId : apiResponse.data.chatId,
                 message : apiResponse.data
@@ -146,16 +151,22 @@ methods: {
 
 computed: {
     getFriendsCombo(){
-        return this.$root.$user.fm.list;
+        /** @TGA сначала диалоги - это важно **/
+        this.$root.$user.dialogs.map( (dItem) => {
+            this.recipients.add(dItem.companion, dItem.id);
+        });
+
+        this.$root.$user.fm.list.map( (frItem) => {
+            this.recipients.add(frItem, null);
+        });
+
+        return this.recipients.asArray();
     }
 },
 
 created(){
     this.msgData = this.pickedMessage;
-    //window.console.log(`ResendMessageModal created`);
 },
-mounted(){
-    //window.console.log(`ResendMessageModal mounted`);
-}
+
 }
 </script>

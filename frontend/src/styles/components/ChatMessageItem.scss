@@ -101,6 +101,26 @@ $chatMessagesBodyHeight: calc(100% - 139px);
                 font-size: $chatMessageFS;
             }
         }
+        .message-sended {
+            &-name,
+            &-size,
+            .fa,
+            .fas {
+                color: #FFFFFF;
+            }
+        }
+
+        .message-attachments {
+            justify-content: flex-end;
+        }
+
+        .message-attachment-item {
+            margin-left: 10px;
+
+            .icon {
+                fill: #FFFFFF;
+            }
+        }
 
         .message-time {
             font-size: $chatTimeFontSize;
@@ -117,7 +137,6 @@ $chatMessagesBodyHeight: calc(100% - 139px);
                 color: #FAFAFA;
             }
         }
-
 
         .chatHeader-title {
             color: #ffffff;
@@ -160,6 +179,27 @@ $chatMessagesBodyHeight: calc(100% - 139px);
         }
         .message-resend {
             border-left: 2px solid $grey;
+        }
+
+        .message-sended {
+            &-name,
+            &-size,
+            .fa,
+            .fas {
+                color: #363636;
+            }
+        }
+
+        .message-attachments {
+            justify-content: flex-start;
+        }
+
+        .message-attachment-item {
+            margin-left: 10px;
+
+            .icon {
+                fill: #363636;
+            }
         }
     }
 
@@ -281,17 +321,34 @@ $chatMessagesBodyHeight: calc(100% - 139px);
     }
 }
 
-.message-sended-image {
-    max-width: 200px;
-    max-height: 200px;
+.message-attachment-item {
+    display: inline-block;
+    vertical-align: top;
+    max-width: calc(50% - 20px);
 }
 
-.message-sended-zip {
+.message-sended-image {
+    display: inline-block;
+    vertical-align: top;
+    width: 200px;
+    height: auto;
+    max-width: 100%;
+}
+
+.message-sended-attach {
     .icon-zip {
          width: 28px;
          height: 28px;
          margin: 0 5px;
      }
+}
+.message-sended {
+    &-name {
+        font-size: 14px;
+    }
+    &-size {
+        font-size: 10px;
+    }
 }
 
 .is-chatPage {
@@ -314,3 +371,4 @@ $chatMessagesBodyHeight: calc(100% - 139px);
         height: $chatMessagesBodyHeight;
     }
 }
+

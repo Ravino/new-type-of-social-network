@@ -141,6 +141,7 @@ methods: {
     checkIsDialogsList(){
         return (this.$root.$user.dialogsNumber > 0);
     },
+
     async switchToChat(evData) {
         let msgsResponse = null;
         this.isMessagesLoaded = false;
@@ -164,6 +165,7 @@ methods: {
 
         this.isMessagesLoaded = true;
     },
+
     async loadDialogsList() {
         this.isDialogsLoaded = true;
 
@@ -185,17 +187,34 @@ methods: {
 
         return true;
     },
+
     scrollHandle(evt) {
         //console.log(evt);
     },
+
+    removeMessageInList(evData){
+        window.console.log(evData, `removeMessageInList`);
+        if (this.currentDialog.id !== evData.chatId)
+            return;
+
+        this.messagesList = this.messagesList.filter( mItem => (+evData.messageId !== mItem.id) );
+        this.$forceUpdate();
+    },
+
     addNewChatMessageToList(evData){
         this.addMessageToMessageList(evData.message);
         this.updateDialogsList(evData);
-        this.$refs.chatMessages.scrollToEnd();
+
+        /** @TGA вообще-то только для того диалога, который открыт **/
+        //if (this.$refs.chatMessages) {
+        //    this.$refs.chatMessages.scrollToEnd();
+        //}
     },
+
     addMessageToMessageList(evData){
         this.messagesList.push( new PliziMessage(evData) );
     },
+
     updateDialogsList(evData){
         const updatedFields = {
             lastMessageDT : evData.message.createdAt,
@@ -209,6 +228,7 @@ methods: {
 
         this.$forceUpdate();
     },
+
     async searchDialog() {
         if (!this.dialogFilter.text) {
             this.dialogsSearchedList = null;
@@ -227,11 +247,13 @@ methods: {
             this.dialogsSearchedList = response;
         }
     },
+
     dialogSearchKeyDownCheck(ev) {
         if (8===ev.keyCode  ||  13===ev.keyCode  ||  46===ev.keyCode){
             this.searchDialog();
         }
     },
+
     onClickStartDialogFilter() {
         this.searchDialog();
     }
@@ -261,6 +283,7 @@ async mounted() {
 
     this.$root.$on('switchToChat', this.switchToChat);
     this.$root.$on('newMessageInDialog', this.addNewChatMessageToList);
+    this.$root.$on('removeMessageInDialog', this.removeMessageInList);
 
     this.$root.$on('dialogsLoad', ()=>{
         this.$forceUpdate();

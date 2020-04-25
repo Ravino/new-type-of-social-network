@@ -29,7 +29,6 @@ class MessageCollection extends ResourceCollection
 
         return [
             'list' => $this->collection->map(function ($message) {
-                \Log::debug(\GuzzleHttp\json_encode($message->parent));
                 return [
                     'id' => $message->id,
                     'userId' => $message->user_id,

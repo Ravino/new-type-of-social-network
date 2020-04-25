@@ -476,14 +476,27 @@ class PliziAPI {
 
     /**
      * @link http://vm1095330.hl.had.pm:8082/docs/#/Chats/sendMessage
+     * @param {object} config - объект с полями в соответствии с докой
      * @param {object} forwardData - объект с полями в соответствии с докой
      * @returns {object} - объект с данными как в PliziMessage (также есть поле с chatId)
      * @throws PliziAPIError
      */
-    async chatForwardMessage(forwardData) {
-        let response = await this.__axios.post('api/chat/send', forwardData, this.__getAuthHeaders()).catch((error) => {
-            this.__checkIsTokenExperis(error, `chatForwardMessage`);
-            throw new PliziAPIError(`chatForwardMessage`, error.response);
+    async chatForwardMessage(config, forwardData) {
+        let apiPath;
+
+        if (config.chatId) {
+            forwardData.chatId = config.chatId;
+            apiPath = `api/chat/send`;
+        }
+        else {
+            forwardData.userId = config.userId;
+            apiPath = `api/chat/message/user`;
+        }
+
+        let response = await this.__axios.post(apiPath, forwardData, this.__getAuthHeaders())
+            .catch((error) => {
+                this.__checkIsTokenExperis(error, `chatForwardMessage`);
+                throw new PliziAPIError(`chatForwardMessage`, error.response);
         });
 
         if (response.status === 200) {
@@ -569,6 +582,25 @@ class PliziAPI {
 
         if (response.status === 200) {
             return response.data.data.list;
+        }
+
+        return null;
+    }
+
+
+    async friendshipStop(friendID) {
+        const sendData = {
+            userId: friendID
+        };
+
+        let response = await this.__axios.post('/api/user/friendship/remove', sendData, this.__getAuthHeaders())
+            .catch((error) => {
+                this.__checkIsTokenExperis(error, `invitationDecline`);
+                throw new PliziAPIError(`invitationDecline`, error.response);
+            });
+
+        if (response.status === 200) {
+            return response.data;
         }
 
         return null;
@@ -833,6 +865,14 @@ class PliziAPI {
                 this.emit('newMessageInDialog', {
                     dialogId :  data.data.chatId,
                     message : data.data
+                });
+            }
+
+            if (channelID=== this.channel  &&  `message.deleted`===data.event_type) {
+                this.emit('removeMessageInDialog', {
+                    dialogId :  data.data.chatId,
+                    messageId : +data.data.messageId,
+                    userId : +data.data.userId,
                 });
             }
         });
