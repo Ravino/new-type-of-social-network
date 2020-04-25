@@ -28,7 +28,8 @@
                             </div>
                         </div>
                     </div>
-                    <vue-custom-scrollbar class="chat-list-scroll py-4"
+
+                    <vue-custom-scrollbar class="chat-list-scroll pb-0 pb-5"
                                           :settings="customScrollBarSettings"
                                           @ps-scroll-y="scrollHandle">
                         <ul id="chatFriends" class="list-unstyled mb-0">
