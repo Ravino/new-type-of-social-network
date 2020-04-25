@@ -8,7 +8,8 @@
             <div v-if="checkIsDialogsList()" id="chatMain" class="row bg-white-br20 overflow-hidden">
 
                 <div id="chatMessagesUsersList" class="col-sm-12 col-md-12 col-lg-4 col-xl-4 col-auto px-sm-0 px-md-0 h-100 border-right">
-                    <div  class=" d-flex align-items-center justify-content-end w-100 border-bottom  pr-3 py-3">
+                    <div class=" d-flex align-items-center justify-content-end w-100 border-bottom  pr-3 py-3"
+                         style="height: 76px;">
                         <div class="form-row w-100 align-items-center justify-content-end position-relative pl-4">
                             <div class="find-in-chat-list w-100 position-relative pl-2">
                                 <label class="sr-only d-none" for="txtFindInChatList">Поиск</label>
