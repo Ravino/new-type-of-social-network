@@ -536,6 +536,30 @@ class PliziAPI {
 
 
     /**
+     * создаёт новый пустой диалог с юзером, если диалог с ним уже есть - просто возвращает ID существующего диалога
+     * @param {number} userID - ID юзера с которым начинаем диалог
+     * @returns {object} - ID диалога
+     */
+    async openChatDialog(userID) {
+        const sendData = {
+            userIds: [userID]
+        };
+
+        let response = await this.__axios.post('api/chat/open', sendData, this.__getAuthHeaders())
+            .catch((error) => {
+                this.__checkIsTokenExperis(error, `openChatDialog`);
+                throw new PliziAPIError(`openChatDialog`, error.response);
+            });
+
+        if (response.status === 200) {
+            return response.data.data;
+        }
+
+        return null;
+    }
+
+
+    /**
      * добавляет аттачмент к сообщению пользователя
      * @param sendFiles - текст сообщения
      * @returns {object} - массив со списками ID-шников аттачментов

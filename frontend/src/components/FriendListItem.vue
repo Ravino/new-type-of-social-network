@@ -9,13 +9,11 @@
 
             <div class="plizi-friend-item-body m-0 pr-5 ">
                 <router-link :to="`/user-`+friend.id" tag="div"  class="plizi-friend-item-top d-flex align-items-end justify-content-between mb-2" >
-                    <h6 class="plizi-friend-item-name my-0">
-                        {{ friend.fullName }}
-                    </h6>
+                    <h6 class="plizi-friend-item-name my-0">{{ friend.fullName }}</h6>
                 </router-link>
 
                 <div class="plizi-friend-item-body-bottom d-flex pr-5">
-                    <p class="plizi-friend-item-desc p-0 my-0  d-inline ">
+                    <p class="plizi-friend-item-desc p-0 my-0  d-inline">
 
                         <IconLocation style="height: 14px;" />
 
@@ -27,11 +25,14 @@
                 </div>
             </div>
 
-            <IconMessageShort :clazz="'ml-auto'" />
+            <button @click.prevent="goToDialogWithFriend()" type="button" class="btn btn-link ml-auto" :title="`Перейти к диалогу с ${friend.fullName}`">
+                <IconSpinner v-if="isInRedirecting" />
+                <IconMessageShort v-else />
+            </button>
 
             <FriendListItemMenu v-bind:friend="friend"
-                                @friendShipStop="onFriendShipStop"
-                ></FriendListItemMenu>
+                                @friendShipStop="onFriendShipStop">
+            </FriendListItemMenu>
         </div>
     </li>
 </template>
@@ -39,13 +40,18 @@
 <script>
 import IconLocation from '../icons/IconLocation.vue';
 import IconMessageShort from '../icons/IconMessageShort';
+import IconSpinner from '../icons/IconSpinner.vue';
+
+import DialogMixin from '../mixins/DialogMixin.js';
+import FriendItemMixin from '../mixins/FriendItemMixin.js';
 
 import FriendListItemMenu from './FriendListItemMenu.vue';
 import PliziFriend from '../classes/PliziFriend.js';
 
 export default {
 name : 'FriendListItem',
-components: { FriendListItemMenu, IconMessageShort, IconLocation},
+components: { FriendListItemMenu, IconMessageShort, IconSpinner, IconLocation},
+mixins : [DialogMixin, FriendItemMixin],
 props : {
     friend : PliziFriend
 },
@@ -57,10 +63,10 @@ data(){
 },
 methods: {
     onFriendShipStop(){
-        this.stopfriendship();
+        this.stopFriendship();
     },
 
-    async stopfriendship( ){
+    async stopFriendship(){
         let apiResponse = null;
 
         try {

@@ -34,7 +34,7 @@
 </template>
 
 <script>
-import FriendsMixin from '../mixins/FriendsMixin.js';
+import FriendsListMixin from '../mixins/FriendsListMixin.js';
 
 import InvitationItem from '../components/InvitationItem.vue';
 
@@ -43,7 +43,7 @@ name: 'FriendsRecentPage',
 components: {
     InvitationItem
 },
-mixins : [FriendsMixin],
+mixins : [FriendsListMixin],
 data() {
     return {
         isDataReady : true

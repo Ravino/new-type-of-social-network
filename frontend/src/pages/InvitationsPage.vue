@@ -40,14 +40,14 @@
 </template>
 
 <script>
-import FriendsMixin from '../mixins/FriendsMixin.js';
+import FriendsListMixin from '../mixins/FriendsListMixin.js';
 
 import InvitationItem from '../components/InvitationItem.vue';
 
 export default {
 name: 'InvitationsPage',
 components: { InvitationItem },
-mixins : [FriendsMixin],
+mixins : [FriendsListMixin],
 data() {
     return {
         isDataReady : true,

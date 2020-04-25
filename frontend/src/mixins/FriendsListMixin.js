@@ -11,7 +11,7 @@ import PotentialFriends from '../common/PotentialFriends.vue';
 
 import PliziUser from '../classes/PliziUser.js';
 
-const FriendsMixin = {
+const FriendsListMixin = {
 components: {
     IconSearch,
     AccountToolbarLeft,
@@ -83,4 +83,4 @@ created(){
 
 };
 
-export {FriendsMixin as default}
+export {FriendsListMixin as default}

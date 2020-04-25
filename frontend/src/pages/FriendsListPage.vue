@@ -50,7 +50,7 @@
 </template>
 
 <script>
-import FriendsMixin from '../mixins/FriendsMixin.js';
+import FriendsListMixin from '../mixins/FriendsListMixin.js';
 import FriendListItem from '../components/FriendListItem.vue';
 
 export default {
@@ -58,7 +58,7 @@ name: 'FriendsListPage',
 components: {
     FriendListItem
 },
-mixins : [FriendsMixin],
+mixins : [FriendsListMixin],
 data() {
     return {
         wMode : `all`,

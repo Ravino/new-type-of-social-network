@@ -2,8 +2,7 @@
     <li class="chat-list-user media m-0 px-4 py-2"
         :class="{ 'bg-light':  dialog.id === currentDialogID, 'bg-white': dialog.id !== currentDialogID  }">
 
-        <!--        TODO: @tga добавить .stop для @click после стилизации  -->
-        <div class="user-friend d-flex col-12" @click="switchToChat()">
+        <div class="user-friend d-flex col-12" @click.prevent="switchToChat()">
             <div class="user-friend-pic mr-3">
                 <img class="user-friend-img rounded-circle overflow-hidden" v-bind:src="dialog.companion.userPic" v-bind:alt="dialog.companion.firstName" />
                 <span v-if="dialog.companion.isOnline" class="user-friend-isonline" :title="dialog.companion.firstName + ' онлайн'"></span>
@@ -49,10 +48,6 @@ props: {
     },
 },
 
-data() {
-    return {}
-},
-
 methods: {
     switchToChat() {
         this.$root.$emit('switchToChat', {dialogId: this.dialog.id});
@@ -61,7 +56,11 @@ methods: {
 
 computed: {
     lastMsgText(){
-        let txt = this.dialog.lastMessageText;
+        if (!this.dialog.lastMessageText) {
+            return `<span class="text-black-50">вы ещё ничего на написали друг другу</span>`;
+        }
+
+        let txt = this.dialog.lastMessageText || ``;
         txt = txt.replace(/<br\/>/g, '&nbsp;');
 
         return this.$options.filters.stripTags(txt);
