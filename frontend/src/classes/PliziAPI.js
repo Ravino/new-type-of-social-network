@@ -867,6 +867,14 @@ class PliziAPI {
                     message : data.data
                 });
             }
+
+            if (channelID=== this.channel  &&  `message.deleted`===data.event_type) {
+                this.emit('removeMessageInDialog', {
+                    dialogId :  data.data.chatId,
+                    messageId : +data.data.messageId,
+                    userId : +data.data.userId,
+                });
+            }
         });
     }
 

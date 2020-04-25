@@ -192,11 +192,20 @@ methods: {
         //console.log(evt);
     },
 
+    removeMessageInList(evData){
+        window.console.log(evData, `removeMessageInList`);
+        if (this.currentDialog.id !== evData.chatId)
+            return;
+
+        this.messagesList = this.messagesList.filter( mItem => (+evData.messageId !== mItem.id) );
+        this.$forceUpdate();
+    },
+
     addNewChatMessageToList(evData){
         this.addMessageToMessageList(evData.message);
         this.updateDialogsList(evData);
 
-        /** @TGA вообще-то только для  **/
+        /** @TGA вообще-то только для того диалога, который открыт **/
         //if (this.$refs.chatMessages) {
         //    this.$refs.chatMessages.scrollToEnd();
         //}
@@ -219,6 +228,7 @@ methods: {
 
         this.$forceUpdate();
     },
+
     async searchDialog() {
         if (!this.dialogFilter.text) {
             this.dialogsSearchedList = null;
@@ -237,11 +247,13 @@ methods: {
             this.dialogsSearchedList = response;
         }
     },
+
     dialogSearchKeyDownCheck(ev) {
         if (8===ev.keyCode  ||  13===ev.keyCode  ||  46===ev.keyCode){
             this.searchDialog();
         }
     },
+
     onClickStartDialogFilter() {
         this.searchDialog();
     }
@@ -271,6 +283,7 @@ async mounted() {
 
     this.$root.$on('switchToChat', this.switchToChat);
     this.$root.$on('newMessageInDialog', this.addNewChatMessageToList);
+    this.$root.$on('removeMessageInDialog', this.removeMessageInList);
 
     this.$root.$on('dialogsLoad', ()=>{
         this.$forceUpdate();
