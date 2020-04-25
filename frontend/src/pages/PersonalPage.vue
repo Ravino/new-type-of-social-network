@@ -14,7 +14,7 @@
         </div>
 
         <div class="col-sm-3 col-md-3 col-lg-3 col-xl-3 pr-0">
-            <FavoritFriends></FavoritFriends>
+            <FavoriteFriends></FavoriteFriends>
             <ShortFriends v-bind:user="{}"></ShortFriends>
         </div>
     </div>
@@ -22,7 +22,7 @@
 
 <script>
 import AccountToolbarLeft from '../common/AccountToolbarLeft.vue';
-import FavoritFriends from '../common/FavoritFriends.vue';
+import FavoriteFriends from '../common/FavoriteFriends.vue';
 import ShortFriends from '../common/ShortFriends.vue';
 import Spinner from '../common/Spinner.vue';
 
@@ -39,7 +39,7 @@ props: {
 
 components: {
     Spinner,
-    AccountToolbarLeft, FavoritFriends, ShortFriends,
+    AccountToolbarLeft, FavoriteFriends, ShortFriends,
     ProfileHeader, NewPersonalMessageModal
 },
 

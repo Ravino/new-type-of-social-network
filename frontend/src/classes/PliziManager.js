@@ -82,6 +82,12 @@ class PliziManager {
     }
 
 
+    removeByID(ID){
+        this._collection = this._collection.filter( dItem => ID !== dItem.id);
+        return this._collection;
+    }
+
+
     reArrange(){
         this._collection = this._collection.slice().sort(this.__compare);
     }

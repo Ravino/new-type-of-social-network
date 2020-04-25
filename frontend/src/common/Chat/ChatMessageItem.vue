@@ -95,12 +95,15 @@ data() {
         messageResend: true,
         messageWriting: false,
         messageID: 'message-' + this.message.id,
-        msgBody: this.message.body,
     }
 },
 computed: {
     isPicked(){
         return this.message.id === this.pickedID;
+    },
+
+    msgBody(){
+        return this.message.body;
     },
 
     detectEmoji() {

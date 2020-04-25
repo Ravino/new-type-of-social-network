@@ -8,7 +8,8 @@
             <div v-if="checkIsDialogsList()" id="chatMain" class="row bg-white-br20 overflow-hidden">
 
                 <div id="chatMessagesUsersList" class="col-sm-12 col-md-12 col-lg-4 col-xl-4 col-auto px-sm-0 px-md-0 h-100 border-right">
-                    <div  class=" d-flex align-items-center justify-content-end w-100 border-bottom  pr-3 py-3">
+                    <div class=" d-flex align-items-center justify-content-end w-100 border-bottom  pr-3 py-3"
+                         style="height: 76px;">
                         <div class="form-row w-100 align-items-center justify-content-end position-relative pl-4">
                             <div class="find-in-chat-list w-100 position-relative pl-2">
                                 <label class="sr-only d-none" for="txtFindInChatList">Поиск</label>
@@ -18,8 +19,8 @@
                                        type="text"
                                        class="chat-search-input form-control rounded-pill bg-light px-4"
                                        @keydown.stop="dialogSearchKeyDownCheck($event)"
-                                       placeholder="Поиск"/>
-                                <button class="find-in-chat-list-btn btn btn-search h-100"
+                                       placeholder="Поиск в собеседниках"/>
+                                <button class="find-in-chat-list-btn btn btn-search h-100 shadow-none"
                                         @click="onClickStartDialogFilter()"
                                         type="submit">
                                     <IconSearch style="width: 15px; height: 15px;"/>
@@ -31,7 +32,7 @@
                                           :settings="customScrollBarSettings"
                                           @ps-scroll-y="scrollHandle">
                         <ul id="chatFriends" class="list-unstyled mb-0">
-                            <template v-if="dialogsSearchedList">
+                            <template v-if="dialogsSearchedList && dialogFilter.text.length > 2">
                                 <ChatListItem v-for="dialog in dialogsSearchedList"
                                               v-bind:dialog="dialog" v-bind:currentDialogID="currentDialogID"
                                               v-bind:key="dialog.id" :ref="`chatDialog-`+dialog.id">
@@ -200,11 +201,20 @@ methods: {
         //console.log(evt);
     },
 
+    removeMessageInList(evData){
+        window.console.log(evData, `removeMessageInList`);
+        if (this.currentDialog.id !== evData.chatId)
+            return;
+
+        this.messagesList = this.messagesList.filter( mItem => (+evData.messageId !== mItem.id) );
+        this.$forceUpdate();
+    },
+
     addNewChatMessageToList(evData){
         this.addMessageToMessageList(evData.message);
         this.updateDialogsList(evData);
 
-        /** @TGA вообще-то только для  **/
+        /** @TGA вообще-то только для того диалога, который открыт **/
         //if (this.$refs.chatMessages) {
         //    this.$refs.chatMessages.scrollToEnd();
         //}
@@ -227,6 +237,7 @@ methods: {
 
         this.$forceUpdate();
     },
+
     async searchDialog() {
         if (!this.dialogFilter.text) {
             this.dialogsSearchedList = null;
@@ -245,11 +256,13 @@ methods: {
             this.dialogsSearchedList = response;
         }
     },
+
     dialogSearchKeyDownCheck(ev) {
         if (8===ev.keyCode  ||  13===ev.keyCode  ||  46===ev.keyCode){
             this.searchDialog();
         }
     },
+
     onClickStartDialogFilter() {
         this.searchDialog();
     }
@@ -279,6 +292,7 @@ async mounted() {
 
     this.$root.$on('switchToChat', this.switchToChat);
     this.$root.$on('newMessageInDialog', this.addNewChatMessageToList);
+    this.$root.$on('removeMessageInDialog', this.removeMessageInList);
 
     this.$root.$on('dialogsLoad', ()=>{
         this.$forceUpdate();
@@ -291,4 +305,3 @@ async mounted() {
 
 }
 </script>
-

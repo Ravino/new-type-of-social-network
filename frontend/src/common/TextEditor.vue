@@ -187,6 +187,8 @@ methods: {
     },
 
     async addUploadAttachment( picsArr ){
+        this.$refs.editor.focus();
+
         let apiResponse = null;
 
         try {
