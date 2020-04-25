@@ -31,7 +31,7 @@
                                           :settings="customScrollBarSettings"
                                           @ps-scroll-y="scrollHandle">
                         <ul id="chatFriends" class="list-unstyled mb-0">
-                            <template v-if="dialogsSearchedList">
+                            <template v-if="dialogsSearchedList && dialogFilter.text.length > 2">
                                 <ChatListItem v-for="dialog in dialogsSearchedList"
                                               v-bind:dialog="dialog" v-bind:currentDialogID="currentDialogID"
                                               v-bind:key="dialog.id" :ref="`chatDialog-`+dialog.id">
