@@ -83,14 +83,11 @@ methods: {
 
         this.editor.setContent(currText);
     },
-
-
     getChatFooterStartHeight(){
         // FIXME: @TGA не работает - падает с ошибкой - исправить
         //let chatFooterHeight = document.getElementById('chatFooter').offsetHeight;
         //this.editorH = chatFooterHeight; // TODO: пересчитать высоту chatMessagesBody при изменении высоты chatFooter
     },
-
     checkEditorHeight() {
         // FIXME: @TGA падает с ошибкой
         //const chatMessageBody = document.getElementById('chatMessagesBody');
@@ -105,7 +102,6 @@ methods: {
         //    this.editorH = getChatFooterChangedHeight; // TODO проверить
         //}
     },
-
     onEditorKeyDown(ev) {
         this.$emit('editorKeyDown', ev);
 
@@ -114,7 +110,7 @@ methods: {
             let str = editorText.replace(/<p>|<\/p>/g, '').trim();
 
             if (!(!!str.replace(/[\u{1F300}-\u{1F6FF}]/gu, '').trim())) {
-                if (str.match(/[\u{1F300}-\u{1F6FF}]/gu).length === 1) {
+                if (str.length && str.match(/[\u{1F300}-\u{1F6FF}]/gu).length === 1) {
                     editorText = `<p class="big-emoji">${str}</p>`;
                 }
             }

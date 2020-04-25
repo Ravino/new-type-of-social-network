@@ -53,6 +53,8 @@ methods: {
 
             if (msg !== '') {
                 this.addMessageToChat( msg, evData.attachments );
+            } else if (evData.attachments.length > 0) {
+                this.addMessageToChat( '<p></p>', evData.attachments );
             }
         }
         else { // сообщение пустое - проверяем есть ли аттачи
