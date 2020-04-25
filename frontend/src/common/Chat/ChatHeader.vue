@@ -28,13 +28,20 @@
                                    @focus="onFocusSearch"
                                    @keydown.stop="chatSearchKeyDownCheck($event)"
                                    class="chat-search-input form-control rounded-pill bg-light px-4"
-                                   placeholder="Поиск" />
-                            <button class="btn btn-search h-100 " type="submit"  @click="onClickStartChatFilter()">
-                                <IconSearch style="width: 15px; height: 15px;" />
+                                   placeholder="Поиск в чате"/>
+                            <button class="btn btn-search h-100 shadow-none"
+                                    type="submit"
+                                    @click="onClickStartChatFilter()">
+                                <IconSearch style="width: 15px; height: 15px;"/>
                             </button>
                         </div>
                         <div v-if="showDatePicker" class="col-auto">
-                            <ChatDatePicker @dateSelected="dateSelected"/>
+                            <ChatDatePicker @dateSelected="dateSelected"
+                                            ref="chatDatePicker"/>
+                            <button class="btn bg-transparent shadow-none"
+                                    @click="clearFilters">
+                                <i class="far fa-times-circle"></i>
+                            </button>
                         </div>
                         <div class="col-auto">
                             <button type="submit" class="btn btn-link text-body px-3 py-0 my-auto">
@@ -100,6 +107,11 @@ methods: {
     dateSelected(range) {
         this.dateRange = range;
         this.startChatFilter(null);
+    },
+    clearFilters() {
+        this.chatFilterText = ``;
+        this.showDatePicker = false;
+        this.$refs.chatDatePicker.clearDateSelected();
     },
 },
 

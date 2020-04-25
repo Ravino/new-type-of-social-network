@@ -18,8 +18,8 @@
                                        type="text"
                                        class="chat-search-input form-control rounded-pill bg-light px-4"
                                        @keydown.stop="dialogSearchKeyDownCheck($event)"
-                                       placeholder="Поиск"/>
-                                <button class="find-in-chat-list-btn btn btn-search h-100"
+                                       placeholder="Поиск в собеседниках"/>
+                                <button class="find-in-chat-list-btn btn btn-search h-100 shadow-none"
                                         @click="onClickStartDialogFilter()"
                                         type="submit">
                                     <IconSearch style="width: 15px; height: 15px;"/>
@@ -296,4 +296,3 @@ async mounted() {
 
 }
 </script>
-
