@@ -1,5 +1,5 @@
 <template>
-    <div class="editor" ref="getHeight" :style="calcEditorH">
+    <div class="editor" ref="editor" >
         <editor-content class="editor-content"
                         :editor="editor"
                         @keydown.native="onEditorKeyDown"/>
@@ -40,8 +40,9 @@ props: {
     height: {
         type: Number,
         required: false,
-        default: 100
-    }
+        default: 32
+    },
+
 },
 
 data() {
@@ -59,15 +60,8 @@ data() {
             onBlur: this.onBlur,
         }),
         isFocusedEditor: false,
-        editorH: 32,
-        editorChangedH: 0,
+        editorH: 32, //TODO: @Veremey передать параметр наверх
     }
-},
-
-computed: {
-    calcEditorH(){
-        return 'height: '+this.height+'px';
-    },
 },
 
 methods: {
@@ -84,26 +78,13 @@ methods: {
         this.editor.setContent(currText);
     },
 
-
-    getChatFooterStartHeight(){
-        // FIXME: @TGA не работает - падает с ошибкой - исправить
-        //let chatFooterHeight = document.getElementById('chatFooter').offsetHeight;
-        //this.editorH = chatFooterHeight; // TODO: пересчитать высоту chatMessagesBody при изменении высоты chatFooter
-    },
-
     checkEditorHeight() {
-        // FIXME: @TGA падает с ошибкой
-        //const chatMessageBody = document.getElementById('chatMessagesBody');
-        //let chatMessageBodyH = chatMessageBody.offsetHeight;
-        //let getChatFooterChangedHeight = document.getElementById('chatFooter').offsetHeight;
-        //
-        //if (this.editorH !== getChatFooterChangedHeight) {
-        //
-        //    let chatMessageBodyNewHeight = chatMessageBodyH - (getChatFooterChangedHeight - this.editorH);
-        //
-        //    chatMessageBody.style.height = chatMessageBodyNewHeight + 'px';
-        //    this.editorH = getChatFooterChangedHeight; // TODO проверить
-        //}
+        const editorHeight = this.$refs.editor.offsetHeight;
+
+        if (this.editorH !== editorHeight) {
+            this.editorH = editorHeight;// TODO проверить @TGA
+        }
+        this.$parent.setEditorNewHeight( this.editorH );
     },
 
     onEditorKeyDown(ev) {
@@ -122,8 +103,6 @@ methods: {
             this.editor.setContent(``);
             this.$emit('editorPost', { postText : editorText });
         }
-
-        //this.editorH = this.$refs.getHeight.offsetHeight;
 
         this.checkEditorHeight();
     },
@@ -150,7 +129,7 @@ methods: {
 },
 
 mounted() {
-    this.getChatFooterStartHeight()
+    this.checkEditorHeight();
 },
 
 beforeDestroy() {

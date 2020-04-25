@@ -47,7 +47,8 @@
             <!-- @TGA это чтобы блок с plz-attachment-images начался с новой строки -->
             <div v-if="attachFiles  &&  attachFiles.length>0" class="row mt-3">
                 <div class="plz-attachment-images col-10 offset-1 pl-4" >
-                    <ul class="plz-attachment-images-list list-unstyled d-flex flex-row mb-0">
+                    <ul class="plz-attachment-images-list list-unstyled d-flex flex-row mb-0"
+                        ref="attachList">
                         <AttachmentItem v-for="atFile in attachFiles"
                             @RemoveAttachment="onRemoveAttachment"
                             v-bind:attach="atFile"
@@ -116,7 +117,6 @@ computed: {
     }
 },
 
-
 methods: {
     getContent(){
         return {
@@ -177,6 +177,13 @@ methods: {
         else { // просто добавляем эмоджи
             this.$refs.editor.addEmoji(evData.emoji);
         }
+    },
+
+    setEditorNewHeight (newEditorH) {
+        this.$emit('editorChangeHeight', {
+            newHeight: newEditorH
+        });
+        // console.log(newEditorH);
     },
 
     async addUploadAttachment( picsArr ){

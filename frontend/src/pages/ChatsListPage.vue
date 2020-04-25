@@ -62,6 +62,8 @@
 
                     <ChatFooter v-if="currentDialog"
                                 v-bind:currentDialog="currentDialog"
+                                @chatFooterEditorChangedHeight="onChatFooterEditorChangedHeight"
+                                :style="`height: ${changedHeight}`"
                                 ref="ChatFooter"></ChatFooter>
                 </div>
             </div>
@@ -124,6 +126,7 @@ data() {
             text: null,
         },
         dialogsSearchedList: null,
+        changedHeight: ''
     }
 },
 
@@ -132,6 +135,11 @@ methods: {
         this.filter.text = evData.text ? evData.text.trim() : null;
         this.filter.range = evData.range && evData.range.start && evData.range.end ? evData.range : null;
         this.$forceUpdate();
+    },
+
+    onChatFooterEditorChangedHeight(evData) {
+
+        this.changedHeigh = evData.changedHeight + 'px';
     },
 
     /**
