@@ -131,6 +131,16 @@ data() {
     }
 },
 
+computed: {
+    dialogsList(){
+        return this.$root.$user.dialogs;
+    },
+
+    currentDialogID(){
+        return (this.currentDialog) ? +this.currentDialog.id : -1;
+    }
+},
+
 methods: {
     updateFilterText(evData){
         this.filter.text = evData.text ? evData.text.trim() : null;
@@ -139,8 +149,7 @@ methods: {
     },
 
     onChatFooterEditorChangedHeight(evData) {
-
-        this.changedHeigh = evData.changedHeight + 'px';
+        this.changedHeight = evData.changedHeight + 'px';
     },
 
     /**
@@ -211,6 +220,12 @@ methods: {
     },
 
     addNewChatMessageToList(evData){
+        window.console.log( `в мессадже ${evData.message.userId} у текущего юзера ${this.$root.$user.id}` );
+
+        if (evData.message.isMine) {
+            evData.message.isMine = (evData.message.userId === this.$root.$user.id);
+        }
+
         this.addMessageToMessageList(evData.message);
         this.updateDialogsList(evData);
 
@@ -265,17 +280,6 @@ methods: {
 
     onClickStartDialogFilter() {
         this.searchDialog();
-    }
-},
-
-
-computed: {
-    dialogsList(){
-        return this.$root.$user.dialogs;
-    },
-
-    currentDialogID(){
-        return (this.currentDialog) ? +this.currentDialog.id : -1;
     }
 },
 

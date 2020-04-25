@@ -46,7 +46,6 @@
                         <IconCheckedDouble />
                     </span>
                 </div>
-
             </div>
 
             <div v-if="isPicked" class="messages-edit-group btn-group bg-white-br20 d-flex overflow-hidden">
@@ -177,13 +176,14 @@ methods: {
 
     livePreview() {
         if (this.detectYoutubeLink) {
-            this.msgBody = `<img src="//img.youtube.com/vi/${this.detectYoutubeLink}/0.jpg" alt="">`;
+            this.msgBody = `<img src="//img.youtube.com/vi/${this.detectYoutubeLink}/0.jpg" alt="" />`;
         }
     },
 },
-    mounted() {
-        this.livePreview();
-    },
+
+mounted() {
+    this.livePreview();
+},
 }
 </script>
 

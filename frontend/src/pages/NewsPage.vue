@@ -52,67 +52,68 @@
         </div>
 
         <div class="col-sm-2 col-md-2 col-lg-1 col-xl-1">
-            <AccountToolbarRight></AccountToolbarRight>
+            <FavoriteFriends :isNarrow="true"></FavoriteFriends>
         </div>
     </div>
 </template>
 
 <script>
-    import AccountToolbarLeft from '../common/AccountToolbarLeft.vue';
-    import AccountToolbarRight from '../common/AccountToolbarRight.vue';
-    import AccountSettingsSideMenu from '../components/AccountSettingsSideMenu.vue';
-    import WhatsNewBlock from "../common/WhatsNewBlock.vue";
-    import IconSearch from "../icons/IconSearch";
-    import IconSingleViewMode from "../icons/IconSingleViewMode";
-    import IconMultipleViewMode from "../icons/IconMultipleViewMode";
-    import IconFire from "../icons/IconFire";
-    import Post from "../common/Post.vue";
-    import PliziPost from '../classes/PliziPost.js';
+import AccountToolbarLeft from '../common/AccountToolbarLeft.vue';
+import FavoriteFriends from '../common/FavoriteFriends.vue';
 
-    export default {
-        name: "NewsPage",
-        components: {
-            AccountToolbarLeft,
-            AccountToolbarRight,
-            AccountSettingsSideMenu,
-            WhatsNewBlock,
-            IconSearch,
-            IconSingleViewMode,
-            IconMultipleViewMode,
-            IconFire,
-            Post,
-        },
-        data() {
-            return {
-                news: null,
+import AccountSettingsSideMenu from '../components/AccountSettingsSideMenu.vue';
+import WhatsNewBlock from "../common/WhatsNewBlock.vue";
+import IconSearch from "../icons/IconSearch";
+import IconSingleViewMode from "../icons/IconSingleViewMode";
+import IconMultipleViewMode from "../icons/IconMultipleViewMode";
+import IconFire from "../icons/IconFire";
+import Post from "../common/Post.vue";
+import PliziPost from '../classes/PliziPost.js';
+
+export default {
+    name: "NewsPage",
+    components: {
+        AccountToolbarLeft,
+        FavoriteFriends,
+        AccountSettingsSideMenu,
+        WhatsNewBlock,
+        IconSearch,
+        IconSingleViewMode,
+        IconMultipleViewMode,
+        IconFire,
+        Post,
+    },
+    data() {
+        return {
+            news: null,
+        }
+    },
+    methods: {
+        async getPosts() {
+            let response = null;
+
+            try {
+                response = await this.$root.$api.getPosts();
+            } catch (e) {
+                console.warn(e.message);
+            }
+
+            if (response !== null) {
+                this.news = [];
+
+                response.map((post) => {
+                    this.news.push(new PliziPost(post));
+                });
             }
         },
-        methods: {
-            async getPosts() {
-                let response = null;
-
-                try {
-                    response = await this.$root.$api.getPosts();
-                } catch (e) {
-                    console.warn(e.message);
-                }
-
-                if (response !== null) {
-                    this.news = [];
-
-                    response.map((post) => {
-                        this.news.push(new PliziPost(post));
-                    });
-                }
-            },
-            addNewPost(post) {
-                this.news.unshift(new PliziPost(post));
-            },
+        addNewPost(post) {
+            this.news.unshift(new PliziPost(post));
         },
-        mounted() {
-            this.getPosts();
-        },
-    }
+    },
+    mounted() {
+        this.getPosts();
+    },
+}
 </script>
 
 <style lang="scss">

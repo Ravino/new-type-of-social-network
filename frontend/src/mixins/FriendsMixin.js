@@ -1,5 +1,4 @@
 import AccountToolbarLeft from '../common/AccountToolbarLeft.vue';
-import AccountToolbarRight from '../common/AccountToolbarRight.vue';
 import Spinner from '../common/Spinner.vue';
 
 
@@ -15,7 +14,7 @@ import PliziUser from '../classes/PliziUser.js';
 const FriendsMixin = {
 components: {
     IconSearch,
-    AccountToolbarLeft, AccountToolbarRight,
+    AccountToolbarLeft,
     FavoriteFriends,
     Spinner,
     FriendsListHeader, PotentialFriends,
