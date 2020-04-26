@@ -327,7 +327,7 @@ $chatMessagesBodyHeight: calc(100% - 139px);
 
     &.message-attachment-item-image {
         max-width: calc(50% - 20px);
-    } // TODO @veremey сделать, когда картинок 2 и больше..
+    }
 }
 
 .message-sended-image {
@@ -370,8 +370,5 @@ $chatMessagesBodyHeight: calc(100% - 139px);
         }
     }
 
-    #chatMessagesBody {
-        height: $chatMessagesBodyHeight;
-    }
 }
 

@@ -1,5 +1,5 @@
 <template>
-    <li class="media position-relative pt-1 pr-1 mr-3">
+    <li class="media position-relative pt-1 pr-1 mr-3 mb-1">
         <img v-if="attach.isImage" :src="attach.thumb.path" class="" :alt="attach.originalName" :title="attach.originalName" />
         <template v-else>
             <i v-if="isArchive" class="fas fa-file-archive fa-3x d-inline-block" :alt="attach.originalName" :title="attach.originalName" ></i>

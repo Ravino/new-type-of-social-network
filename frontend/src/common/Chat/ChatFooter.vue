@@ -1,10 +1,9 @@
 <template>
-    <div id="chatFooter" class="" > <!-- // TODO Показать высоту футтера -->
+    <div id="chatFooter" class="" >
         <TextEditor :showAvatar="false"
                     :dropToDown="false"
-                    :height="32"
                     :clazz="`d-flex bg-white w-100 border-top position-relative mt-auto align-items-start px-3 py-3`"
-                    @editorChangeHeight="onEditorChangeHeight"
+                    @editorNewHeight="onEditorChangeHeight"
                     @newAttach="onAddAttachToTextEditor"
             @editorPost="onTextPost">
         </TextEditor>
@@ -36,6 +35,7 @@ data() {
 methods: {
     onAddAttachToTextEditor(evData){
         window.console.log( evData.attach , `ChatFooter::onAddAttachToTextEditor`);
+        //this.onEditorChangeHeight();
     },
 
     onEditorChangeHeight(evData) {

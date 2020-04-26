@@ -1,32 +1,30 @@
 <template>
-    <div>
-        <Picker @emoji="insert">
+    <Picker @emoji="insert">
 
-            <div slot="emoji-invoker"
-                 slot-scope="{ events: { click: clickEvent } }"
-                 @click.stop="clickEvent"
-                 class="picker-btn">
-                <IconAddSmile />
-            </div>
+        <div slot="emoji-invoker"
+             slot-scope="{ events: { click: clickEvent } }"
+             @click.stop="clickEvent"
+             class="picker-btn d-inline-block">
+            <IconAddSmile />
+        </div>
 
-            <div slot="emoji-picker" slot-scope="{ emojis, insert, display}">
-                <div v-if="isVisible" class="picker" :style="transform">
-                    <div v-for="(emojiGroup, category) in emojis" :key="category">
-                        <h5 class="picker-category">{{ category }}</h5>
-                        <div>
-                            <span v-for="(emojiItem, emojiName) in emojiGroup"
-                                  :key="emojiName"
-                                  @click="insert({event: $event, emoji: emojiItem})"
-                                  :title="emojiName"
-                                  class="picker-emoji">
-                                {{ emojiItem }}
-                            </span>
-                        </div>
+        <div slot="emoji-picker" slot-scope="{ emojis, insert, display}">
+            <div v-if="isVisible" class="picker" :style="transform">
+                <div v-for="(emojiGroup, category) in emojis" :key="category">
+                    <h5 class="picker-category">{{ category }}</h5>
+                    <div>
+                        <span v-for="(emojiItem, emojiName) in emojiGroup"
+                              :key="emojiName"
+                              @click="insert({event: $event, emoji: emojiItem})"
+                              :title="emojiName"
+                              class="picker-emoji">
+                            {{ emojiItem }}
+                        </span>
                     </div>
                 </div>
             </div>
-        </Picker>
-    </div>
+        </div>
+    </Picker>
 </template>
 
 <script>

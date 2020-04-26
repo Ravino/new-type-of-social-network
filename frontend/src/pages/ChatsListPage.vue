@@ -54,19 +54,26 @@
                     <ChatHeader v-if="currentDialog" v-bind:currentDialog="currentDialog"
                                 @chatFilter="updateFilterText"
                                 ref="ChatHeader"></ChatHeader>
+                    <div id="chatMessagesWrapperBody"
+                         class="position-relative">
 
-                    <ChatMessages v-if="isMessagesLoaded" v-bind:messagesList="messagesList"
-                                  v-bind:filter="filter"
-                                  v-bind:currentDialog="currentDialog"
-                                  ref="chatMessages">
-                    </ChatMessages>
-                    <Spinner v-else v-bind:message="`Сообщения загружаются,<br />можно выбрать другой диалог`"></Spinner>
+                        <!-- TODO @veremey @TGA При @ chatFooterEditorChangedHeight нужно проскроливать чат вниз -->
+                            <!-- функция проскролла в ChatMessages.vue | scrollToEnd -->
+                        <ChatMessages v-if="isMessagesLoaded" v-bind:messagesList="messagesList"
+                                      v-bind:filter="filter"
+                                      v-bind:currentDialog="currentDialog"
+                                      @chatFooterEditorChangedHeight="onChatFooterEditorChangedHeight"
+                                      :style="`padding-bottom: ${changedHeight}`"
+                                      ref="chatMessages">
+                        </ChatMessages>
+                        <Spinner v-else v-bind:message="`Сообщения загружаются,<br />можно выбрать другой диалог`"></Spinner>
 
-                    <ChatFooter v-if="currentDialog"
-                                v-bind:currentDialog="currentDialog"
-                                @chatFooterEditorChangedHeight="onChatFooterEditorChangedHeight"
-                                :style="`height: ${changedHeight}`"
-                                ref="ChatFooter"></ChatFooter>
+                        <ChatFooter v-if="currentDialog"
+                                    v-bind:currentDialog="currentDialog"
+                                    @chatFooterEditorChangedHeight="onChatFooterEditorChangedHeight"
+                                    :style="`height: ${changedHeight}`"
+                                    ref="ChatFooter"></ChatFooter>
+                    </div>
                 </div>
             </div>
 

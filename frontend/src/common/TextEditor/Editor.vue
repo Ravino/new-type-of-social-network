@@ -37,12 +37,6 @@ props: {
         type: String,
         default: null,
     },
-    height: {
-        type: Number,
-        required: false,
-        default: 32
-    },
-
 },
 
 data() {
@@ -60,7 +54,6 @@ data() {
             onBlur: this.onBlur,
         }),
         isFocusedEditor: false,
-        editorH: 32, //TODO: @Veremey передать параметр наверх
     }
 },
 
@@ -78,17 +71,9 @@ methods: {
         this.editor.setContent(currText);
     },
 
-    checkEditorHeight() {
-        const editorHeight = this.$refs.editor.offsetHeight;
-
-        if (this.editorH !== editorHeight) {
-            this.editorH = editorHeight;// TODO проверить @TGA
-        }
-        this.$parent.setEditorNewHeight( this.editorH );
-    },
-
     onEditorKeyDown(ev) {
         this.$emit('editorKeyDown', ev);
+        this.$parent.checkUpdatedChatContainerHeight();
 
         if (13 === ev.keyCode && ev.ctrlKey === true) {
             let editorText = this.editor.getHTML();
@@ -103,8 +88,6 @@ methods: {
             this.editor.setContent(``);
             this.$emit('editorPost', { postText : editorText });
         }
-
-        this.checkEditorHeight();
     },
 
     onFocus(event) {
@@ -126,10 +109,6 @@ methods: {
     focus() {
         this.editor.focus();
     }
-},
-
-mounted() {
-    this.checkEditorHeight();
 },
 
 beforeDestroy() {
