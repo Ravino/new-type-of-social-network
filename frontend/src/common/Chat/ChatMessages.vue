@@ -12,6 +12,7 @@
                                      v-bind:message="message"
                                      v-bind:next="getNext(messageIndex)"
                                      v-bind:pickedID="pickedMessageID"
+                                     v-bind:dialogID="currentDialog.id"
                                      v-bind:key="message.id">
                     </ChatMessageItem>
                 </transition-group>
@@ -76,7 +77,7 @@ data() {
         chatVideoModalShow: false,
         chatVideoModalContent: {
             videoLink: null,
-        },
+        }
     }
 },
 

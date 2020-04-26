@@ -8,8 +8,7 @@
             <div v-if="checkIsDialogsList()" id="chatMain" class="row bg-white-br20 overflow-hidden">
 
                 <div id="chatMessagesUsersList" class="col-sm-12 col-md-12 col-lg-4 col-xl-4 col-auto px-sm-0 px-md-0 h-100 border-right">
-                    <div class=" d-flex align-items-center justify-content-end w-100 border-bottom  pr-3 py-3"
-                         style="height: 76px;">
+                    <div class="find-in-dialogs-form d-flex align-items-center justify-content-end w-100 border-bottom pr-3 py-3">
                         <div class="form-row w-100 align-items-center justify-content-end position-relative pl-4">
                             <div class="find-in-chat-list w-100 position-relative pl-2">
                                 <label class="sr-only d-none" for="txtFindInChatList">Поиск</label>
@@ -19,11 +18,11 @@
                                        type="text"
                                        class="chat-search-input form-control rounded-pill bg-light px-4"
                                        @keydown.stop="dialogSearchKeyDownCheck($event)"
-                                       placeholder="Поиск в собеседниках"/>
+                                       placeholder="Поиск в собеседниках" />
                                 <button class="find-in-chat-list-btn btn btn-search h-100 shadow-none"
                                         @click="onClickStartDialogFilter()"
                                         type="submit">
-                                    <IconSearch style="width: 15px; height: 15px;"/>
+                                    <IconSearch />
                                 </button>
                             </div>
                         </div>
@@ -51,6 +50,7 @@
 
                 <div id="chatMessagesWrapper"
                      class="col-8 col-lg-8 col-xl-8 bg-light d-none d-lg-flex flex-column p-0 h-100">
+
                     <ChatHeader v-if="currentDialog" v-bind:currentDialog="currentDialog"
                                 @chatFilter="updateFilterText"
                                 ref="ChatHeader"></ChatHeader>
@@ -102,6 +102,7 @@ import ChatFooter from '../common/Chat/ChatFooter.vue';
 
 import IconSearch from '../icons/IconSearch.vue';
 
+import PliziDialog from '../classes/PliziDialog.js';
 import PliziMessage from '../classes/PliziMessage.js';
 
 export default {
@@ -277,7 +278,11 @@ methods: {
         }
 
         if (response) {
-            this.dialogsSearchedList = response;
+            this.dialogsSearchedList = [];
+
+            response.map( (dlgItem) => {
+                this.dialogsSearchedList.push( new PliziDialog(dlgItem) );
+            });
         }
     },
 

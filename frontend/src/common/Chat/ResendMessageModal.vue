@@ -81,13 +81,6 @@ data() {
 },
 methods: {
     startForwardMessage(){
-        //const dialog = this.$root.$user.getDialogByUser( this.selectedFriend.id );
-        //
-        //if (!dialog) {
-        //    window.console.warn(`Диалог с ${this.selectedFriend.fullName} не найден!`);
-        //    return;
-        //}
-
         const msgData = this.$refs.forwardMessageEditor.getContent();
 
         const config = {
@@ -99,7 +92,8 @@ methods: {
             body : msgData.postText,
             replyOnMessageId : this.msgData.id,
             forwardFromChatId : this.currentDialog.id,
-            attachments : msgData.attachments
+            attachments : msgData.attachments,
+            isForward: true
         };
 
         this.forwardChatMessage(config, fwdData);
