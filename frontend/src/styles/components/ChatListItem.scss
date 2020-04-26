@@ -14,6 +14,18 @@ $userPicSize: 32px;
     .chat-list-scroll {
         height: calc(100% - 67px);
     }
+
+    > .find-in-dialogs-form{
+        height: 76px;
+
+        .find-in-chat-list-btn {
+            .icon.icon-search
+            {
+                width: 15px;
+                height: 15px;
+            }
+        }
+    }
 }
 
 .chat-list-user {

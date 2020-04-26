@@ -44,7 +44,7 @@ name: 'ChatListItem',
 components: { IconCheckedDouble},
 props: {
     dialog: {
-        type: PliziDialog,
+        type: Object,
         required : true
     },
     currentDialogID: {
