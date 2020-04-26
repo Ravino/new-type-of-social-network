@@ -22,7 +22,7 @@ class NewMessageNotification implements ShouldQueue
         $body = $event->getMessage();
         foreach ($idsOfUsers as $user_id) {
             $body = json_decode(json_encode($body), true);
-            $body['userId'] = $user_id->user_id;
+            $body['isMine'] = false;
             Pusher::sentDataToServer(['data' => $body, 'topic_id' => Pusher::channelForUser($user_id->user_id), 'event_type' => 'message.new']);
         }
     }
