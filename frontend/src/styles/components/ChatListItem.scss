@@ -11,6 +11,7 @@ $userPicSize: 32px;
 
     .form-control {
         border: 0;
+        box-shadow: none;
 
         &::placeholder {
             font-size: 13px;
