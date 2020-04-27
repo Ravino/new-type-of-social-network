@@ -1956,6 +1956,167 @@
         ],
         "x-codegen-request-body-name": "body"
       }
+    },
+    "/user/friendship/possible": {
+      "get": {
+        "tags": [
+          "Friendships"
+        ],
+        "description": "Друзья друзей",
+        "operationId": "fofRequests",
+        "responses": {
+          "200": {
+            "description": "ОК",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "data": {
+                      "type": "object",
+                      "properties": {
+                        "list": {
+                          "type": "array",
+                          "items": {
+                            "$ref": "#/components/schemas/User"
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Not allowed",
+            "content": {}
+          }
+        },
+        "security": [
+          {
+            "Authorization": []
+          }
+        ]
+      }
+    },
+    "/user/friendship/group": {
+      "post": {
+        "tags": [
+          "Friendships"
+        ],
+        "description": "Добавить друга в группу",
+        "operationId": "addFriendToGroup",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "userId": {
+                    "type": "string",
+                    "format": "int64"
+                  },
+                  "group": {
+                    "type": "string",
+                    "enum": [
+                      "featured",
+                      "family"
+                    ]
+                  }
+                }
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Вы добавили пользователя в группу",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string",
+                      "default": "Вы добавили пользователя в группу"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Данный пользователь не в ваших друзьях",
+            "content": {}
+          }
+        },
+        "security": [
+          {
+            "Authorization": []
+          }
+        ],
+        "x-codegen-request-body-name": "body"
+      }
+    },
+    "/user/friendship/group/{group}": {
+      "get": {
+        "tags": [
+          "Friendships"
+        ],
+        "description": "Группированный список друзей",
+        "operationId": "getFriendsFromGroup",
+        "parameters": [
+          {
+            "name": "group",
+            "in": "path",
+            "description": "Группа",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "enum": [
+                "featured",
+                "family"
+              ]
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Успешно добавлен",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "data": {
+                      "type": "object",
+                      "properties": {
+                        "list": {
+                          "type": "array",
+                          "items": {
+                            "$ref": "#/components/schemas/User"
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Not allowed",
+            "content": {}
+          }
+        },
+        "security": [
+          {
+            "Authorization": []
+          }
+        ]
+      }
     }
   },
   "components": {
