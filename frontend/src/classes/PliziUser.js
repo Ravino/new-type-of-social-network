@@ -79,14 +79,20 @@ class PliziUser {
      * @type {Object[]|null}
      * @private
      */
-    _region = null;
+    _region = {
+        id: null,
+        title: null,
+    };
 
     /**
      *
      * @type {Object[]|null}
      * @private
      */
-    _country =  null;
+    _country = {
+        id: null,
+        title: null,
+    };
 
     /**
      *
@@ -195,10 +201,16 @@ class PliziUser {
         if (prof.location) {
             this._city = {
                 id: prof.location.id,
-                title: prof.location.title,
+                title: prof.location.title.ru,
             };
-            this._region = prof.location.region;
-            this._country = prof.location.country;
+            this._region = {
+                id: prof.location.region.id,
+                title: prof.location.region.title.ru,
+            };
+            this._country = {
+                id: prof.location.country.id,
+                title: prof.location.country.title.ru,
+            };
         }
 
         if (prof.userPic) {
@@ -240,8 +252,14 @@ class PliziUser {
             title: null,
         };
 
-        this._region = null;
-        this._country = null;
+        this._region = {
+            id: null,
+            title: null,
+        };
+        this._country = {
+            id: null,
+            title: null,
+        };
         this._relationshipId = -1;
         this._userPic = ``;
 

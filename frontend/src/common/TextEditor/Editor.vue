@@ -1,5 +1,5 @@
 <template>
-    <div class="editor" ref="editor" >
+    <div class="editor" ref="getHeight" :style="calcEditorH">
         <editor-content class="editor-content"
                         :editor="editor"
                         @keydown.native="onEditorKeyDown"/>
@@ -37,6 +37,11 @@ props: {
         type: String,
         default: null,
     },
+    height: {
+        type: Number,
+        required: false,
+        default: 100
+    }
 },
 
 data() {
@@ -54,7 +59,15 @@ data() {
             onBlur: this.onBlur,
         }),
         isFocusedEditor: false,
+        editorH: 32,
+        editorChangedH: 0,
     }
+},
+
+computed: {
+    calcEditorH(){
+        return 'height: '+this.height+'px';
+    },
 },
 
 methods: {
@@ -88,6 +101,8 @@ methods: {
             this.editor.setContent(``);
             this.$emit('editorPost', { postText : editorText });
         }
+
+        //this.editorH = this.$refs.getHeight.offsetHeight;
     },
 
     onFocus(event) {

@@ -34,12 +34,14 @@
                         <ul id="chatFriends" class="list-unstyled mb-0">
                             <template v-if="dialogsSearchedList && dialogFilter.text.length > 2">
                                 <ChatListItem v-for="dialog in dialogsSearchedList"
+                                              @switchToChat="onSwitchToChat"
                                               v-bind:dialog="dialog" v-bind:currentDialogID="currentDialogID"
                                               v-bind:key="dialog.id" :ref="`chatDialog-`+dialog.id">
                                 </ChatListItem>
                             </template>
                             <template v-else>
                                 <ChatListItem v-for="dialog in dialogsList"
+                                              @switchToChat="onSwitchToChat"
                                               v-bind:dialog="dialog" v-bind:currentDialogID="currentDialogID"
                                               v-bind:key="dialog.id" :ref="`chatDialog-`+dialog.id">
                                 </ChatListItem>
@@ -131,6 +133,7 @@ data() {
         dialogFilter: {
             text: null,
         },
+
         dialogsSearchedList: null,
         changedHeight: '',
         customScrollBarSettings: {
@@ -170,26 +173,78 @@ methods: {
         return (this.$root.$user.dialogsNumber > 0);
     },
 
-    async switchToChat(evData) {
+    scrollHandle(evt) {
+        //console.log(evt);
+    },
+
+    dialogSearchKeyDownCheck(ev) {
+        if (8===ev.keyCode  ||  13===ev.keyCode  ||  46===ev.keyCode){
+            this.searchDialog();
+        }
+    },
+
+    onClickStartDialogFilter() {
+        this.searchDialog();
+    },
+
+    removeMessageInList(evData){
+        if (this.currentDialog.id !== evData.chatId)
+            return;
+
+        this.messagesList = this.messagesList.filter( mItem => evData.messageId !== mItem.id );
+
+        /** @var PliziMessage **/
+        const lastMsg = this.messagesList[this.messagesList.length - 1];
+
+        this.updateDialogsList(evData.chatId, { message: lastMsg });
+    },
+
+    addNewChatMessageToList(evData){
+        this.addMessageToMessagesList(evData.message);
+        this.updateDialogsList(evData.chatId, evData);
+
+        /** @TGA вообще-то только для того диалога, который открыт **/
+        //if (this.$refs.chatMessages) {
+        //    this.$refs.chatMessages.scrollToEnd();
+        //}
+    },
+
+    addMessageToMessagesList(evData){
+        this.messagesList.push( new PliziMessage(evData) );
+    },
+
+    updateDialogsList(chatID, evData){
+        const updatedFields = {
+            lastMessageDT : evData.message.createdAt,
+            lastMessageText : evData.message.body,
+            isLastFromMe : !!evData.message.isMine,
+            isRead : !!evData.message.isRead
+        };
+
+        this.$root.$user.dialogStateUpdated(chatID, updatedFields);
+    },
+
+    async onSwitchToChat(evData) {
         let msgsResponse = null;
         this.isMessagesLoaded = false;
 
         try {
-            msgsResponse = await this.$root.$api.chatMessages(evData.dialogId);
+            msgsResponse = await this.$root.$api.chatMessages(evData.chatId);
         }
         catch (e){
             window.console.warn(e.detailMessage);
             throw e;
         }
 
-        await this.$store.dispatch('SET_ACTIVE_DIALOG', evData.dialogId);
+        await this.$store.dispatch('SET_ACTIVE_DIALOG', evData.chatId);
 
         this.messagesList = [];
         msgsResponse.map( (msg) => {
-            this.messagesList.push( new PliziMessage(msg) );
+            this.addMessageToMessagesList(msg);
+            //this.messagesList.push( new PliziMessage(msg) );
         });
 
-        this.currentDialog = this.$root.$user.dialogsSearch(+evData.dialogId);
+        this.currentDialog = this.$root.$user.dialogsSearch(+evData.chatId);
 
         this.isMessagesLoaded = true;
     },
@@ -216,53 +271,6 @@ methods: {
         return true;
     },
 
-    scrollHandle(evt) {
-        //console.log(evt);
-    },
-
-    removeMessageInList(evData){
-        window.console.log(evData, `removeMessageInList`);
-        if (this.currentDialog.id !== evData.chatId)
-            return;
-
-        this.messagesList = this.messagesList.filter( mItem => (+evData.messageId !== mItem.id) );
-        this.$forceUpdate();
-    },
-
-    addNewChatMessageToList(evData){
-        window.console.log( `в мессадже ${evData.message.userId} у текущего юзера ${this.$root.$user.id}` );
-
-        if (evData.message.isMine) {
-            evData.message.isMine = (evData.message.userId === this.$root.$user.id);
-        }
-
-        this.addMessageToMessageList(evData.message);
-        this.updateDialogsList(evData);
-
-        /** @TGA вообще-то только для того диалога, который открыт **/
-        //if (this.$refs.chatMessages) {
-        //    this.$refs.chatMessages.scrollToEnd();
-        //}
-    },
-
-    addMessageToMessageList(evData){
-        this.messagesList.push( new PliziMessage(evData) );
-    },
-
-    updateDialogsList(evData){
-        const updatedFields = {
-            lastMessageDT : evData.message.createdAt,
-            lastMessageText : evData.message.body,
-            isLastFromMe : !!evData.message.isMine,
-            isRead : !!evData.message.isRead
-        };
-
-        this.$root.$user.dialogStateUpdated(+evData.dialogId, updatedFields);
-        //this.$root.$user.dialogsRearrange();
-
-        this.$forceUpdate();
-    },
-
     async searchDialog() {
         if (!this.dialogFilter.text) {
             this.dialogsSearchedList = null;
@@ -285,16 +293,6 @@ methods: {
             });
         }
     },
-
-    dialogSearchKeyDownCheck(ev) {
-        if (8===ev.keyCode  ||  13===ev.keyCode  ||  46===ev.keyCode){
-            this.searchDialog();
-        }
-    },
-
-    onClickStartDialogFilter() {
-        this.searchDialog();
-    }
 },
 
 async mounted() {
@@ -308,7 +306,7 @@ async mounted() {
         window.console.warn(`Условие не сработало!`);
     }
 
-    this.$root.$on('switchToChat', this.switchToChat);
+    //this.$root.$on('switchToChat', this.switchToChat);
     this.$root.$on('newMessageInDialog', this.addNewChatMessageToList);
     this.$root.$on('removeMessageInDialog', this.removeMessageInList);
 
