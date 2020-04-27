@@ -54,7 +54,7 @@
 
                     <ChatHeader v-if="currentDialog" v-bind:currentDialog="currentDialog"
                                 @chatFilter="updateFilterText"
-                                ref="ChatHeader"></ChatHeader>
+                                ref="chatHeader"></ChatHeader>
                     <div id="chatMessagesWrapperBody"
                          class="position-relative">
 
@@ -62,6 +62,7 @@
                                       v-bind:filter="filter"
                                       v-bind:currentDialog="currentDialog"
                                       :style="`padding-bottom: ${changedHeight}`"
+                                      @clearFilters="clearChatMessagesFilters"
                                       ref="chatMessages">
                         </ChatMessages>
                         <Spinner v-else v-bind:message="`Сообщения загружаются,<br />можно выбрать другой диалог`"></Spinner>
@@ -216,6 +217,11 @@ methods: {
         };
 
         this.$root.$user.dialogStateUpdated(chatID, updatedFields);
+    },
+
+    clearChatMessagesFilters() {
+        // TODO: нужна прокрутка вниз
+        this.$refs.chatHeader.clearFilters();
     },
 
     async onSwitchToChat(evData) {
