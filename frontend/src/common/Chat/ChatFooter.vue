@@ -5,6 +5,7 @@
                     :clazz="`d-flex bg-white w-100 border-top position-relative mt-auto align-items-start px-3 py-3`"
                     work-mode="chat"
                     @editorNewHeight="onEditorChangeHeight"
+                    @editorKeyDown="onEditorKeyDown"
                     @newAttach="onAddAttachToTextEditor"
             @editorPost="onTextPost">
         </TextEditor>
@@ -30,10 +31,27 @@ mixins : [ChatMixin],
 
 data() {
     return {
+        /** @TGA временно - для теста **/
+        tmpSocket: null
     }
 },
 
 methods: {
+    onEditorKeyDown(){
+        /**
+         * @TGA пытаемся тут через сокеты отправить инфу о  том что печатаем
+         **/
+        const keyPressData = {
+            channel: this.$store.getters.chatChannel,
+            userId: this.$root.$user.id,
+            chatId: this.currentDialog.id
+        };
+        window.console.log(keyPressData, `keyPressData`);
+
+        //this.$root.$api.sendToChannel(keyPressData);
+        this.tmpSocket.send(keyPressData);
+    },
+
     onAddAttachToTextEditor(evData){
         //window.console.log( evData.attach , `ChatFooter::onAddAttachToTextEditor`);
         //this.onEditorChangeHeight();
@@ -92,6 +110,14 @@ methods: {
         }
     }
 
+},
+
+mounted(){
+    try{
+        this.tmpSocket = new WebSocket(wsUrl, ['wamp']);
+    } catch (e){
+        if ( window.console !== undefined && window.console.error ) window.console.warn( e.toString() );
+    }
 }
 
 }

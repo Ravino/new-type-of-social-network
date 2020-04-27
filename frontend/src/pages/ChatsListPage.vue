@@ -1,6 +1,6 @@
 <template>
     <div class="row" :class="{ 'is-chatPage' : ('ChatsListPage'===this.$root.$router.currentRoute.name) }" >
-        <div class="col-sm-1 col-md-1 col-lg-1 col-xl-1 chat-page-height overflow-hidden">
+        <div class="col-sm-1 col-md-1 col-lg-1 col-xl-1 chat-page-height overflow-hidden pl-0">
             <AccountToolbarLeft></AccountToolbarLeft>
         </div>
 
@@ -28,7 +28,7 @@
                         </div>
                     </div>
 
-                    <vue-custom-scrollbar class="chat-list-scroll pb-0 pb-5"
+                    <vue-custom-scrollbar class="chat-list-scroll pb-0 pb-4"
                                           :settings="customScrollBarSettings">
                         <ul id="chatFriends" class="list-unstyled mb-0">
                             <template v-if="dialogsSearchedList && dialogFilter.text.length > 2">
@@ -182,6 +182,10 @@ methods: {
     },
 
     removeMessageInList(evData){
+        /** @TGA не реагируем, если мы не на странице чата **/
+        if ('ChatsListPage'!==this.$root.$router.currentRoute.name)
+            return;
+
         if (this.currentDialog.id !== evData.chatId)
             return;
 
@@ -194,14 +198,12 @@ methods: {
     },
 
     addNewChatMessageToList(evData){
+        /** @TGA не реагируем, если мы не на странице чата **/
+        if ('ChatsListPage'!==this.$root.$router.currentRoute.name)
+            return;
+
         this.addMessageToMessagesList(evData.message);
         this.updateDialogsList(evData.chatId, evData);
-        this.$refs.chatMessages.scrollToEnd();
-
-        /** @TGA вообще-то только для того диалога, который открыт **/
-        //if (this.$refs.chatMessages) {
-        //    this.$refs.chatMessages.scrollToEnd();
-        //}
     },
 
     addMessageToMessagesList(evData){
@@ -306,7 +308,6 @@ async mounted() {
         window.console.warn(`Условие не сработало!`);
     }
 
-    //this.$root.$on('switchToChat', this.switchToChat);
     this.$root.$on('newMessageInDialog', this.addNewChatMessageToList);
     this.$root.$on('removeMessageInDialog', this.removeMessageInList);
 

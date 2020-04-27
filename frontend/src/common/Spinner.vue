@@ -1,9 +1,9 @@
 <template>
     <div :class="spinnerClazz">
-        <div class="w-50 text-right pr-3">
+        <div class="text-center pr-3">
             <i class="fas fa-spinner fa-3x fa-spin text-info"></i>
         </div>
-        <div class="w-50 pt-1 text-info">
+        <div class="pt-1 text-info text-center">
             <h3 v-html="spinnerMessage"></h3>
         </div>
     </div>
@@ -19,7 +19,7 @@ export default {
 
     data(){
         return {
-            defaultClazz: `col-sm-12 col-md-12 col-lg-4 col-xl-12 py-5 px-5 d-flex flex-row`,
+            defaultClazz: `col-sm-12 col-md-12 col-lg-4 col-xl-12 py-5 px-5 d-flex flex-column align-items-center`,
             defaultMessage: `Данные загружаются`,
         }
     },

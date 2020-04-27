@@ -40,7 +40,7 @@
                         </EmojiPicker>
                         <EmojiPicker v-else
                                      @addEmoji="onAddEmoji"
-                                     :transform="'transform: translate(-40%, -100%)'">
+                                     :transform="'transform: translate(-54%, -100%)'">
                         </EmojiPicker>
                     </button>
                 </div>

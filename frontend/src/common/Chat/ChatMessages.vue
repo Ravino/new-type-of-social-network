@@ -1,14 +1,8 @@
 <template>
     <div id="chatMessagesBody" class="w-100 align-self-stretch position-relative h-100">
-        <vue-custom-scrollbar class="chat-messages-scroll py-4"  :settings="customScrollbarSettings" ref="vueCustomScrollbar">
+        <vue-custom-scrollbar class="chat-messages-scroll py-5"  :settings="customScrollbarSettings" >
             <div v-if="messagesList  &&  messagesList.length>0" class="d-flex flex-column">
-                <div v-if="typeof filteredMessages === 'string'"
-                     class="text-center">
-                    <p>{{ filteredMessages }}</p>
-                    <button class="btn btn-filter-clear"
-                            @click="clearFilters">Очистить фильтр</button>
-                </div>
-                <transition-group v-else name="slide-fade" :duration="700">
+                <transition-group name="slide-fade" :duration="700">
                     <ChatMessageItem v-for="(message, messageIndex) in filteredMessages"
                                      v-if="message.id !== removeMessageID"
                                      @ChatMessagePick="onChatMessagePick"
@@ -83,7 +77,7 @@ data() {
         chatVideoModalShow: false,
         chatVideoModalContent: {
             videoLink: null,
-        },
+        }
     }
 },
 
@@ -139,30 +133,19 @@ methods: {
             const container = this.$el.querySelector('.ps-container');
             container.scrollTop = container.scrollHeight;
         }, 200);
-    },
-
-    clearFilters() {
-        this.$emit('clearFilters');
-    },
+    }
 },
 
 computed: {
     filteredMessages(){
         if (this.filter) {
-            let range_start, range_end;
-
-            if (this.filter.range && this.filter.range.start && this.filter.range.end) {
-                range_start = this.filter.range.start;
-                range_end = this.filter.range.end;
-            }
-
-            if (this.filter.text && this.filter.range && range_start && range_end) {
+            if (this.filter.text && this.filter.range && this.filter.range.start && this.filter.range.end) {
                 const ft = this.filter.text.toLocaleLowerCase();
 
                 if (ft.length > 2) {
                     return this.messagesList.filter((msgItem) => {
                         return msgItem.body.toLowerCase().includes(ft) &&
-                            (msgItem.createdAt > range_start) && (msgItem.createdAt < range_end);
+                            (msgItem.createdAt > this.filter.range.start) && (msgItem.createdAt < this.filter.range.end);
                     });
                 }
             }
@@ -174,23 +157,16 @@ computed: {
                     return this.messagesList.filter((msgItem)=>{ return msgItem.body.toLowerCase().includes(ft); });
             }
 
-            if (this.filter.range && range_start && range_end) {
-                let filteredMessages = this.messagesList.filter((msgItem) => {
-                    return (msgItem.createdAt > this.filter.range.start) && (msgItem.createdAt < range_end);
+            if (this.filter.range && this.filter.range.start && this.filter.range.end) {
+                return this.messagesList.filter((msgItem) => {
+                    return (msgItem.createdAt > this.filter.range.start) && (msgItem.createdAt < this.filter.range.end);
                 });
-
-                if (!filteredMessages.length) {
-                    if (this.filter.range.isSameDate) {
-                        return `Ничего не найдено за ${this.$options.filters.toLongDate(range_start)}`;
-                    }
-
-                    return `Ничего не найдено за период с ${this.$options.filters.toLongDate(range_start)} по ${this.$options.filters.toLongDate(range_end)}`;
-                }
             }
         }
 
         return this.messagesList;
     },
+
     pickedMessage(){
         if (this.pickedMessageID < 0)
             return {};
@@ -204,11 +180,11 @@ computed: {
         }
 
         return lMsg;
-    },
+    }
 },
 
 mounted() {
-    this.$root.$on('hideMessageResendModal', () => {
+    this.$root.$on('hideMessageResendModal', (evData) => {
         this.resendMessageModalShow = false;
     });
 
@@ -221,14 +197,3 @@ mounted() {
 
 }
 </script>
-
-<style lang="scss">
-    .btn-filter-clear {
-        color: #1554F7;
-        text-decoration: underline;
-
-        &:hover {
-            box-shadow: none;
-        }
-    }
-</style>

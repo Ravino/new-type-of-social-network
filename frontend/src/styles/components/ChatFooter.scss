@@ -24,9 +24,10 @@ $chatMessageUserPicSize: 32px;
         height: $chatMessageUserPicSize;
         min-width: $chatMessageUserPicSize;
     }
-
-    .btn {
-        height: 30px;
+    .forward-attach-width{
+        .btn {
+            height: 30px;
+        }
     }
 
 }

@@ -15,7 +15,7 @@
 
         <div class="col-sm-3 col-md-3 col-lg-3 col-xl-3 pr-0">
             <FavoriteFriends></FavoriteFriends>
-            <ShortFriends v-bind:user="{}"></ShortFriends>
+            <ShortFriends></ShortFriends>
         </div>
     </div>
 </template>

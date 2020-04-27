@@ -26,6 +26,7 @@
                         <div class="form-group">
                             <TextEditor id="forwardMessageEditor"
                                         ref="forwardMessageEditor"
+                                        workMode="chat"
                                         :showAvatar="false"
                                         :dropToDown="false"
                                         :clazz="`row plz-text-editor mb-4 px-1 py-4 align-items-start`"
