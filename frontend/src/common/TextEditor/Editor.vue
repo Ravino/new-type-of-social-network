@@ -1,8 +1,10 @@
 <template>
-    <div class="editor" ref="editor" >
+    <div class="editor" >
         <editor-content class="editor-content"
                         :editor="editor"
-                        @keydown.native="onEditorKeyDown"/>
+                        ref="editor"
+                        @keydown.native="onEditorKeyDown"
+                        @keyup.native="onEditorKeyUp"/>
         <span v-if="!isFocusedEditor"
               class="placeholder">
             {{ placeholder }}
@@ -88,6 +90,10 @@ methods: {
             this.editor.setContent(``);
             this.$emit('editorPost', { postText : editorText });
         }
+    },
+
+    onEditorKeyUp () {
+        this.$parent.checkUpdatedChatContainerHeight();
     },
 
     onFocus(event) {
