@@ -121,7 +121,6 @@ data() {
         messageEdited: true,
         messageResend: true,
         messageWriting: false,
-        messageID: 'message-' + this.message.id,
         isShowReplyBlock: false
     }
 },
@@ -129,6 +128,10 @@ data() {
 computed: {
     isPicked(){
         return this.message.id === this.pickedID;
+    },
+
+    messageID(){
+        return 'message-' + this.message.id;
     },
 
     msgBody(){

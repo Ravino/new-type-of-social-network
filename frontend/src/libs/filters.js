@@ -26,6 +26,10 @@ Vue.filter('toDMYHM', (dateValue) => {
     return moment(dateValue).format('DD.MM.YYYY HH:mm');
 });
 
+Vue.filter('toDMY', (dateValue) => {
+    return moment(dateValue).format('DD.MM.YYYY');
+});
+
 /**
  * это  фильтр для юзеров
  */

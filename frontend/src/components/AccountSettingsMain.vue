@@ -94,7 +94,7 @@
                             <select id="relationship" class="form-control border-0 pl-0"
                                     @change="accountStartSaveData(model.relationshipId, 'relationshipId')"
                                     v-model="model.relationshipId">
-                                <option value="null">В активном поиске</option>
+                                <option value="null" selected>В активном поиске</option>
                                 <option value="1">В браке</option>
                                 <option value="2">Не в браке</option>
                             </select>
@@ -111,22 +111,24 @@
                     </label>
                     <div
                         class="plz-account-settings-body-field plz-account-settings-main-body-field col-sm-6 col-md-6 col-lg-6 col-xl-6">
-                        <input id="birthday"
+                        <div v-if="!isEdit.birthday" class="form-control-plaintext">
+                            {{ model.birthday | toYMD }}
+                        </div>
+                        <input v-if="isEdit.birthday"
+                               id="birthday"
                                type="date"
-                               class="w-75"
+                               class="form-control w-75"
                                :value="model.birthday | toYMD"
-                               :class="[isEdit.birthday ? 'form-control' : 'form-control-plaintext']"
                                @keyup.enter="accountStartSaveData($event.target.value, `birthday`)"
                                @blur="finishFieldEdit(`birthday`)"
                                @input="model.birthday = $event.target.value"
-                               :readonly="!isEdit.birthday"
                                ref="birthday"/>
                     </div>
                     <div
                         class="plz-account-settings-body-action plz-account-settings-main-body-action col-2 d-sm-none d-md-none d-lg-flex d-xl-flex">
                         <button type="button"
                                 class="btn btn-link"
-                                :class="{'text-primary': isEdit.firstName}"
+                                :class="{'text-primary': isEdit.birthday}"
                                 @click="[isEdit.birthday ? finishFieldEdit('birthday') : startFieldEdit('birthday')]">
                             {{ isEdit.birthday ? 'Сохранить' : 'Изменить' }}
                         </button>
@@ -228,12 +230,20 @@
                     location: this.$root.$user.city.id ? {
                         id: this.$root.$user.city.id,
                         title: {
-                            ru: this.$root.$user.city.title.ru,
-                            ua: this.$root.$user.city.title.ua,
-                            en: this.$root.$user.city.title.en,
+                            ru: this.$root.$user.city.title,
                         },
-                        region: this.$root.$user.region,
-                        country: this.$root.$user.country,
+                        region: {
+                            id: this.$root.$user.region.id,
+                            title: {
+                                ru: this.$root.$user.region.title,
+                            },
+                        },
+                        country: {
+                            id: this.$root.$user.country.id,
+                            title: {
+                                ru: this.$root.$user.country.title,
+                            },
+                        },
                     } : null,
                 },
 

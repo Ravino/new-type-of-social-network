@@ -17,9 +17,11 @@
 
                         <IconLocation style="height: 14px;" />
 
-                        <!-- TODO: @YZ нужна проверка городов и страны -->
-                        <span class="">
-                            {{ friend.city.title +', '+  friend.country }}
+                        <span v-if="friend.city.title && friend.country.title">
+                            {{ friend.city.title +', '+  friend.country.title }}
+                        </span>
+                        <span v-else>
+                            Не указано
                         </span>
                     </p>
                 </div>

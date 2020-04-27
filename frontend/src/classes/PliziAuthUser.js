@@ -147,16 +147,18 @@ class PliziAuthUser extends PliziUzer{
     restoreData() {
         const sData = window.localStorage.getItem(this.localStorageKey);
 
-        if (typeof sData === 'undefined'  ||  sData===null  ||  sData===``) return null;
+        if (typeof sData === 'undefined'  ||  sData===null  ||  sData===``)
+            return null;
 
         let oData = null;
 
         try {
             oData = JSON.parse(sData);
 
-            if (oData  &&  oData.data &&  oData.data.email  &&  oData.data.profile  &&  oData.data.profile.firstName   &&  oData.data.profile.lastName) {
+            if (oData  &&  oData.data &&  oData.email  &&  oData.data.profile  &&  oData.data.profile.firstName   &&  oData.data.profile.lastName) {
                 this.saveUserData(oData, ``);
-            } else {
+            }
+            else {
                 return null;
             }
 

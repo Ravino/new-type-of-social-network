@@ -56,7 +56,7 @@ props: {
 
 methods: {
     switchToChat() {
-        this.$root.$emit('switchToChat', {dialogId: this.dialog.id});
+        this.$emit('switchToChat', {chatId: this.dialog.id});
     }
 },
 
