@@ -141,6 +141,10 @@ methods: {
     },
 
     dateSelected(range) {
+        if (range.start.getTime() === range.end.getTime()) {
+            range.end.setDate(range.end.getDate() + 1);
+        }
+
         this.dateRange = range;
         this.startChatFilter(null);
     },
