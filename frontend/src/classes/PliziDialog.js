@@ -116,6 +116,18 @@ class PliziDialog{
         return this._isLastFromMe;
     }
 
+    get isPrivate(){
+        return (this._attendees.length === 1);
+    }
+
+    get isGroup(){
+        return (this._attendees.length >= 2);
+    }
+
+    get attendeesName(){
+        return this._attendees.map( aItem => aItem.firstName );
+    }
+
     /**
      * @returns {PliziAttendee[]}
      */
@@ -123,6 +135,9 @@ class PliziDialog{
         return this._attendees;
     }
 
+    get attendeesIds(){
+        return this._attendees.map( aItem => aItem.id );
+    }
 
     /**
      * @returns {PliziAttendee}

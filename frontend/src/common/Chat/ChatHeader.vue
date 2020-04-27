@@ -2,20 +2,13 @@
     <div id="chatHeader" class="bg-white w-100 border-bottom">
         <div class="row mx-0 py-3">
             <div class="col-6">
-                <div class="d-flex align-items-center h-100 ">
-                    <router-link :to="`/user-`+companion.id" tag="div" class="media-pic border rounded-circle mr-3 cursor-pointer">
-                        <img :src="companion.userPic" v-bind:alt="companion.firstName" />
-                    </router-link>
+                <ChatHeaderCompanion v-if="currentDialog.isPrivate" v-bind:companion="companion"></ChatHeaderCompanion>
 
-                    <div class="media-body">
-                        <router-link :to="`/user-`+companion.id" tag="h6"
-                                 class="chatHeader-title w-75 align-self-start mt-2 pb-0 mb-0 pull-left text-body cursor-pointer">
-                            {{companion.fullName}}
-                        </router-link>
-                        <p class="chatHeader-subtitle p-0 mb-0 mt-1 w-100 d-block">
-                            {{ companion.lastActivity  | lastMessageTime }}
-                        </p>
-                    </div>
+                <div v-if="currentDialog.isGroup" class="d-flex align-items-center h-100">
+                    <ChatHeaderAttendeeItem v-for="attItem in currentDialog.attendees"
+                        v-bind:attendee="attItem"
+                        v-bind:key="attItem.id">
+                    </ChatHeaderAttendeeItem>
                 </div>
             </div>
 
@@ -32,39 +25,53 @@
                             <button class="btn btn-search h-100 shadow-none"
                                     type="submit"
                                     @click="onClickStartChatFilter()">
-                                <IconSearch style="width: 15px; height: 15px;"/>
+                                <IconSearch style="width: 15px; height: 15px;" />
                             </button>
                         </div>
                         <div v-if="showDatePicker" class="col-auto">
-                            <ChatDatePicker @dateSelected="dateSelected"
-                                            ref="chatDatePicker"/>
-                            <button class="btn bg-transparent shadow-none"
-                                    @click="clearFilters">
+                            <ChatDatePicker @dateSelected="dateSelected" ref="chatDatePicker"></ChatDatePicker>
+                            <button class="btn bg-transparent shadow-none" @click="clearFilters">
                                 <i class="far fa-times-circle"></i>
                             </button>
                         </div>
+
                         <div class="col-auto">
-                            <button type="submit" class="btn btn-link text-body px-3 py-0 my-auto">
-                                <img class="" src="../../images/chat-options-icon.png" alt="" />
-                            </button>
+                            <ChatHeaderMenu @showAddAttendeeToDialogModal="onShowAddAttendeeToDialogModal"></ChatHeaderMenu>
                         </div>
                     </div>
                 </div>
             </div>
         </div>
+
+        <ChatPickAttendeesDialogModal v-if="pickAttendeesDialogModalShow"
+            @hidePickAttendeesDialogModal="onHidePickAttendeesDialogModal"
+            v-bind:currentDialog="currentDialog">
+        </ChatPickAttendeesDialogModal>
+
     </div>
 </template>
 
 <script>
-import PliziDialog from '../../classes/PliziDialog.js';
 import IconSearch from '../../icons/IconSearch.vue';
-import ChatDatePicker from "./ChatDatePicker";
+
+import ChatDatePicker from './ChatDatePicker.vue';
+import ChatHeaderMenu from './ChatHeaderMenu.vue';
+import ChatPickAttendeesDialogModal from './ChatPickAttendeesDialogModal.vue';
+
+import ChatHeaderCompanion from './ChatHeaderCompanion.vue';
+import ChatHeaderAttendeeItem from './ChatHeaderAttendeeItem.vue';
+
+import PliziDialog from '../../classes/PliziDialog.js';
 
 export default {
 name: 'ChatHeader',
 components: {
     IconSearch,
+    ChatHeaderCompanion,
+    ChatHeaderAttendeeItem,
     ChatDatePicker,
+    ChatHeaderMenu,
+    ChatPickAttendeesDialogModal
 },
 props: {
     currentDialog: {
@@ -78,10 +85,37 @@ data() {
         chatFilterText : ``,
         showDatePicker: false,
         dateRange: null,
+        pickAttendeesDialogModalShow: false
+    }
+},
+
+computed: {
+    /**
+     * хак, чтобы не падало когда ещё нет данных
+     * @returns {object|PliziAttendee}
+     */
+    companion(){
+        if (this.currentDialog  &&  this.currentDialog.companion) {
+            return this.currentDialog.companion;
+        }
+
+        return {
+            userPic : this.$defaultAvatarPath,
+            firstName : `пользователь`,
+            lastActivity: (new Date()).getTime() / 1000
+        }
     }
 },
 
 methods: {
+    onShowAddAttendeeToDialogModal(){
+        this.pickAttendeesDialogModalShow = true;
+    },
+
+    onHidePickAttendeesDialogModal(){
+        this.pickAttendeesDialogModalShow = false;
+    },
+
     chatSearchKeyDownCheck(ev){
         const sText = this.chatFilterText.trim();
 
@@ -101,36 +135,20 @@ methods: {
             range: this.dateRange,
         });
     },
+
     onFocusSearch() {
         this.showDatePicker = true;
     },
+
     dateSelected(range) {
         this.dateRange = range;
         this.startChatFilter(null);
     },
+
     clearFilters() {
         this.chatFilterText = ``;
         this.showDatePicker = false;
         this.$refs.chatDatePicker.clearDateSelected();
-    },
-},
-
-computed: {
-
-    /**
-     * хак, чтобы не падало когда ещё нет данных
-     * @returns {object|PliziAttendee}
-     */
-    companion(){
-        if (this.currentDialog  &&  this.currentDialog.companion) {
-            return this.currentDialog.companion;
-        }
-
-        return {
-            userPic : this.$defaultAvatarPath,
-            firstName : `пользователь`,
-            lastActivity: (new Date()).getTime() / 1000
-        }
     }
 }
 

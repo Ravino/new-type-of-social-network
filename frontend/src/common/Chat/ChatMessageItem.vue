@@ -46,20 +46,36 @@
                         <IconCheckedDouble />
                     </span>
                 </div>
-
             </div>
 
-            <div v-if="isPicked" class="messages-edit-group btn-group bg-white-br20 d-flex overflow-hidden">
-                <button class="btn btn-message-share d-flex align-items-center justify-content-center border-right "
+            <div v-if="isPicked  &&  !isShowReplyBlock" class="messages-edit-group btn-group bg-white-br20 d-flex overflow-hidden">
+                <button class="btn btn-message-share d-flex align-items-center justify-content-center border-right"
                         @click="onForwardBtnClick()">
                     <IconShare />
                     Переслать
+                </button>
+
+                <button v-if="!message.isMine" class="btn btn-message-reply d-flex align-items-center justify-content-center border-right"
+                        @click="onReplyBtnClick()">
+                    <i class="far fa-comment-dots mr-2"></i>
+                    Ответить
                 </button>
 
                 <button v-if="message.isMine" class="btn btn-message-basket d-flex align-items-center justify-content-center" @click.prevent="onRemoveBtnClick()">
                     <IconBasket />
                     Удалить
                 </button>
+            </div>
+
+            <div v-if="isPicked  &&  isShowReplyBlock" class="messages-reply-group bg-white-br20">
+                <div class="text-editor-wrapper bg-white-br20" @click.stop="">
+                    <TextEditor :showAvatar="false"
+                                :dropToDown="false"
+                                :height="40"
+                                :clazz="`d-flex h-100 w-100 --border-top m-0 px-3 py-3`"
+                                @editorPost="onReplyPost">
+                    </TextEditor>
+                </div>
             </div>
         </div>
 
@@ -73,30 +89,43 @@ import IconCheckedDouble from '../../icons/IconCheckedDouble.vue';
 import IconShare from '../../icons/IconShare.vue';
 import IconBasket from '../../icons/IconBasket.vue';
 
+import TextEditor from '../TextEditor.vue';
+
 import ChatMessageItemReplyContent from './ChatMessageItemReplyContent.vue';
 import ChatMessageItemAttachments from './ChatMessageItemAttachments.vue';
+
+import ChatMixin from '../../mixins/ChatMixin.js';
 
 import PliziMessage from '../../classes/PliziMessage.js';
 
 export default {
 name: 'ChatMessageItem',
-components: { ChatMessageItemAttachments, ChatMessageItemReplyContent, IconBasket, IconShare, IconPencilEdit, IconCheckedDouble},
+components: {
+    ChatMessageItemAttachments, ChatMessageItemReplyContent,
+    TextEditor,
+    IconBasket, IconShare, IconPencilEdit, IconCheckedDouble
+},
+mixins : [ChatMixin],
 props: {
     message : {
         type: PliziMessage,
         required : true
     },
+    dialogID: Number,
     pickedID: Number,
     next : PliziMessage | null
 },
+
 data() {
     return {
         messageEdited: true,
         messageResend: true,
         messageWriting: false,
         messageID: 'message-' + this.message.id,
+        isShowReplyBlock: false
     }
 },
+
 computed: {
     isPicked(){
         return this.message.id === this.pickedID;
@@ -104,6 +133,10 @@ computed: {
 
     msgBody(){
         return this.message.body;
+    },
+
+    currentDialog(){
+        return this.$parent.currentDialog;
     },
 
     detectEmoji() {
@@ -128,6 +161,62 @@ computed: {
 },
 
 methods: {
+    onReplyPost(evData){
+        /** @type {string} **/
+        let msg = evData.postText.trim();
+
+        const config = {
+            chatId : this.dialogID,
+            userId : null // чтобы Reply получился
+        }
+
+        const fwdData = {
+            body : msg,
+            replyOnMessageId : this.message.id,
+            forwardFromChatId : this.dialogID,
+            attachments : evData.attachments,
+            isForward: true
+        };
+
+        if (msg !== '') {
+            const brExample = `<br/>`;
+            msg = msg.replace(/<p><\/p>/g, brExample);
+            msg = this.killBrTrail(msg);
+
+            if (msg !== '') {
+                this.replyOnMessage( config, fwdData );
+            }
+        }
+        else { // сообщение пустое - проверяем есть ли аттачи
+            if (evData.attachments.length > 0) {
+                this.replyOnMessage( config, fwdData );
+            }
+        }
+    },
+
+    async replyOnMessage( config, msgData ){
+        let apiResponse = null;
+
+        try {
+            apiResponse = await this.$root.$api.chatForwardMessage( config, msgData );
+        } catch (e){
+            window.console.warn( e.detailMessage );
+            throw e;
+        }
+
+        if ( apiResponse ){
+            const eventData = {
+                dialogId : apiResponse.data.chatId,
+                message : apiResponse.data
+            }
+
+            this.$root.$emit( 'newMessageInDialog', eventData );
+        }
+        else{
+            window.console.info( apiResponse );
+        }
+    },
+
     pickMessage(){
         this.$emit( 'ChatMessagePick', {
             messageID: (this.pickedID !== this.message.id) ? this.message.id : -1,
@@ -169,6 +258,10 @@ methods: {
         });
     },
 
+    onReplyBtnClick() {
+        this.isShowReplyBlock = true;
+    },
+
     onRemoveBtnClick() {
         this.$emit( 'RemoveMessage', {
             messageID: this.message.id
@@ -177,25 +270,13 @@ methods: {
 
     livePreview() {
         if (this.detectYoutubeLink) {
-            this.msgBody = `<img src="//img.youtube.com/vi/${this.detectYoutubeLink}/0.jpg" alt="">`;
+            this.msgBody = `<img src="//img.youtube.com/vi/${this.detectYoutubeLink}/0.jpg" alt="" />`;
         }
     },
 },
-    mounted() {
-        this.livePreview();
-    },
+
+mounted() {
+    this.livePreview();
+}
 }
 </script>
-
-<style lang="scss">
-    .has-only-one-smile {
-        background-color: transparent !important;
-        box-shadow: none;
-
-        .message-text {
-            .message-text-inner {
-                font-size: 2.5rem !important;
-            }
-        }
-    }
-</style>

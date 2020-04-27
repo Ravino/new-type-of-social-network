@@ -15,34 +15,34 @@
         </div>
 
         <div class="col-sm-2 col-md-2 col-lg-1 col-xl-1">
-            <AccountToolbarRight></AccountToolbarRight>
+            <FavoriteFriends :isNarrow="true"></FavoriteFriends>
         </div>
     </div>
 </template>
 
 <script>
-    import AccountToolbarLeft from '../common/AccountToolbarLeft.vue';
-    import AccountToolbarRight from '../common/AccountToolbarRight.vue';
+import AccountToolbarLeft from '../common/AccountToolbarLeft.vue';
+import FavoriteFriends from '../common/FavoriteFriends.vue';
 
-    import AccountSettingsMain from '../components/AccountSettingsMain.vue';
-    import AccountSettingsPrivacy from '../components/AccountSettingsPrivacy.vue';
-    import AccountSettingsSecurity from '../components/AccountSettingsSecurity.vue';
+import AccountSettingsMain from '../components/AccountSettingsMain.vue';
+import AccountSettingsPrivacy from '../components/AccountSettingsPrivacy.vue';
+import AccountSettingsSecurity from '../components/AccountSettingsSecurity.vue';
 
-    import AccountSettingsSideMenu from '../components/AccountSettingsSideMenu.vue';
+import AccountSettingsSideMenu from '../components/AccountSettingsSideMenu.vue';
 
-    export default {
-        name: 'AccountPage',
-        components: {
-            AccountToolbarLeft,
-            AccountSettingsMain, AccountSettingsPrivacy, AccountSettingsSecurity,
-            AccountSettingsSideMenu,
-            AccountToolbarRight
-        },
-        data() {
-            return {}
-        },
-        methods: {},
-    }
+export default {
+    name: 'AccountPage',
+    components: {
+        AccountToolbarLeft,
+        AccountSettingsMain, AccountSettingsPrivacy, AccountSettingsSecurity,
+        AccountSettingsSideMenu,
+        FavoriteFriends
+    },
+    data() {
+        return {}
+    },
+    methods: {},
+}
 </script>
 
 <style lang="scss">

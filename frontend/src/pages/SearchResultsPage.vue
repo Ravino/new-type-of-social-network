@@ -25,14 +25,14 @@
         </div>
 
         <div class="col-sm-1 col-md-1 col-lg-1 col-xl-1">
-            <AccountToolbarRight></AccountToolbarRight>
+            <FavoriteFriends :isNarrow="true"></FavoriteFriends>
         </div>
     </div>
 </template>
 
 <script>
 import AccountToolbarLeft from '../common/AccountToolbarLeft.vue';
-import AccountToolbarRight from '../common/AccountToolbarRight.vue';
+import FavoriteFriends from '../common/FavoriteFriends.vue';
 import Spinner from '../common/Spinner.vue';
 
 import SearchResultItem from '../components/SearchResultItem.vue';
@@ -43,7 +43,7 @@ export default {
 name: 'SearchResultsPage',
 components: {
     SearchResultItem,
-    AccountToolbarLeft, AccountToolbarRight,
+    AccountToolbarLeft, FavoriteFriends,
     Spinner
 },
 data() {

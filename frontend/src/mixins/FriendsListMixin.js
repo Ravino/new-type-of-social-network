@@ -1,5 +1,4 @@
 import AccountToolbarLeft from '../common/AccountToolbarLeft.vue';
-import AccountToolbarRight from '../common/AccountToolbarRight.vue';
 import Spinner from '../common/Spinner.vue';
 
 
@@ -12,10 +11,10 @@ import PotentialFriends from '../common/PotentialFriends.vue';
 
 import PliziUser from '../classes/PliziUser.js';
 
-const FriendsMixin = {
+const FriendsListMixin = {
 components: {
     IconSearch,
-    AccountToolbarLeft, AccountToolbarRight,
+    AccountToolbarLeft,
     FavoriteFriends,
     Spinner,
     FriendsListHeader, PotentialFriends,
@@ -84,4 +83,4 @@ created(){
 
 };
 
-export {FriendsMixin as default}
+export {FriendsListMixin as default}

@@ -1,7 +1,7 @@
 <template>
-    <div id="chatMessagesBody" class="w-100 align-self-stretch position-relative">
+    <div id="chatMessagesBody" class="w-100 align-self-stretch position-relative h-100">
         <vue-custom-scrollbar class="chat-messages-scroll py-4"  :settings="customScrollbarSettings" >
-            <div class="d-flex flex-column --align-items-start">
+            <div v-if="messagesList  &&  messagesList.length>0" class="d-flex flex-column">
                 <transition-group name="slide-fade" :duration="700">
                     <ChatMessageItem v-for="(message, messageIndex) in filteredMessages"
                                      v-if="message.id !== removeMessageID"
@@ -12,9 +12,16 @@
                                      v-bind:message="message"
                                      v-bind:next="getNext(messageIndex)"
                                      v-bind:pickedID="pickedMessageID"
+                                     v-bind:dialogID="currentDialog.id"
                                      v-bind:key="message.id">
                     </ChatMessageItem>
                 </transition-group>
+            </div>
+            <div v-else class="d-flex flex-column">
+                <div v-if="currentDialog" class="alert alert-info mx-3">
+                    <p v-if="currentDialog.isPrivate">Сейчас Вы ещё ничего не написали для <b>{{currentDialog.companion.fullName}}</b>.</p>
+                    <p v-if="currentDialog.isGroup">Сейчас ещё никто ничего не написал в этом <b>групповом</b> чате.</p>
+                </div>
             </div>
         </vue-custom-scrollbar>
 
@@ -37,9 +44,9 @@ import vueCustomScrollbar from 'vue-custom-scrollbar';
 
 /** TODO: переименовать в ForwardMessageModal **/
 import ResendMessageModal from './ResendMessageModal.vue';
+import ChatVideoModal from './ChatVideoModal.vue';
 
 import PliziMessage from '../../classes/PliziMessage.js';
-import ChatVideoModal from './ChatVideoModal.vue';
 
 export default {
 name: 'ChatMessages',
@@ -70,7 +77,7 @@ data() {
         chatVideoModalShow: false,
         chatVideoModalContent: {
             videoLink: null,
-        },
+        }
     }
 },
 
@@ -123,7 +130,8 @@ methods: {
 
     scrollToEnd() {
         return setTimeout(() => {
-            const container = this.$el.querySelector('.ps-container'); // TODO: Проскролить каждый
+            // TODO: Проскролить каждый
+            const container = this.$el.querySelector('.ps-container');
             container.scrollTop = container.scrollHeight;
 
         }, 500);

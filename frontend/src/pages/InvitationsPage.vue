@@ -34,20 +34,20 @@
         </div>
 
         <div class="col-sm-1 col-md-1 col-lg-1 col-xl-1">
-            <AccountToolbarRight></AccountToolbarRight>
+            <FavoriteFriends :isNarrow="true"></FavoriteFriends>
         </div>
     </div>
 </template>
 
 <script>
-import FriendsMixin from '../mixins/FriendsMixin.js';
+import FriendsListMixin from '../mixins/FriendsListMixin.js';
 
 import InvitationItem from '../components/InvitationItem.vue';
 
 export default {
 name: 'InvitationsPage',
 components: { InvitationItem },
-mixins : [FriendsMixin],
+mixins : [FriendsListMixin],
 data() {
     return {
         isDataReady : true,

@@ -83,34 +83,17 @@ methods: {
 
         this.editor.setContent(currText);
     },
-    getChatFooterStartHeight(){
-        // FIXME: @TGA не работает - падает с ошибкой - исправить
-        //let chatFooterHeight = document.getElementById('chatFooter').offsetHeight;
-        //this.editorH = chatFooterHeight; // TODO: пересчитать высоту chatMessagesBody при изменении высоты chatFooter
-    },
-    checkEditorHeight() {
-        // FIXME: @TGA падает с ошибкой
-        //const chatMessageBody = document.getElementById('chatMessagesBody');
-        //let chatMessageBodyH = chatMessageBody.offsetHeight;
-        //let getChatFooterChangedHeight = document.getElementById('chatFooter').offsetHeight;
-        //
-        //if (this.editorH !== getChatFooterChangedHeight) {
-        //
-        //    let chatMessageBodyNewHeight = chatMessageBodyH - (getChatFooterChangedHeight - this.editorH);
-        //
-        //    chatMessageBody.style.height = chatMessageBodyNewHeight + 'px';
-        //    this.editorH = getChatFooterChangedHeight; // TODO проверить
-        //}
-    },
+
     onEditorKeyDown(ev) {
         this.$emit('editorKeyDown', ev);
+        this.$parent.checkUpdatedChatContainerHeight();
 
         if (13 === ev.keyCode && ev.ctrlKey === true) {
             let editorText = this.editor.getHTML();
             let str = editorText.replace(/<p>|<\/p>/g, '').trim();
 
             if (!(!!str.replace(/[\u{1F300}-\u{1F6FF}]/gu, '').trim())) {
-                if (str.length && str.match(/[\u{1F300}-\u{1F6FF}]/gu).length === 1) {
+                if (str.match(/[\u{1F300}-\u{1F6FF}]/gu).length === 1) {
                     editorText = `<p class="big-emoji">${str}</p>`;
                 }
             }

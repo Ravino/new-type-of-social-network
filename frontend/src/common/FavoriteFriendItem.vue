@@ -43,12 +43,12 @@
 </template>
 
 <script>
-import PliziFriend from '../classes/PliziFriend.js';
+import FriendItemMixin from '../mixins/FriendItemMixin.js';
 
 export default {
 name : 'FavoritFriendItem',
+mixins : [FriendItemMixin],
 props : {
-    friend : PliziFriend,
     isNarrow: {
         type: Boolean,
         required: false,
@@ -68,16 +68,6 @@ methods: {
         this.chatWindowShown = !this.chatWindowShown;
         //this.$root.$alert(`По клику будем показывать привязанный чат`, 'bg-info', 5);
     },
-
-    getSexTitle(fItem){
-        if (`m` === fItem.sex)
-            return `был давно`;
-
-        if (`f` === fItem.sex)
-            return `была давно`;
-
-        return `был(а) давно`;
-    }
 },
 
 

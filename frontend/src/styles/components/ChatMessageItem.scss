@@ -270,7 +270,7 @@ $chatMessagesBodyHeight: calc(100% - 139px);
         }
     }
 
-    .messages-edit-group {
+    .messages-edit-group, .messages-reply-group {
         position: absolute;
         bottom: -32px;
         z-index: 1000;
@@ -312,6 +312,19 @@ $chatMessagesBodyHeight: calc(100% - 139px);
         }
     }
 
+    .messages-reply-group {
+        top: 46px;
+        //transform: translateY(50%);
+
+        box-shadow: none;
+
+        .text-editor-wrapper{
+            box-shadow: 0 10px 30px 0 rgba(50, 50, 50, 0.75);
+            min-width: 700px;
+            min-height: 60px;
+        }
+    }
+
     &.has-only-one-emoji {
         .message-body {
             padding: 0;
@@ -324,7 +337,10 @@ $chatMessagesBodyHeight: calc(100% - 139px);
 .message-attachment-item {
     display: inline-block;
     vertical-align: top;
-    max-width: calc(50% - 20px);
+
+    &.message-attachment-item-image {
+        max-width: calc(50% - 20px);
+    }
 }
 
 .message-sended-image {
@@ -367,8 +383,5 @@ $chatMessagesBodyHeight: calc(100% - 139px);
         }
     }
 
-    #chatMessagesBody {
-        height: $chatMessagesBodyHeight;
-    }
 }
 

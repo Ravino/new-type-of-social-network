@@ -88,6 +88,10 @@
 
 <script>
 export default {
+/**
+ * @TGA: компонент устарел, после того как возьмём отсюда вёрстку для <FavoriteFriends :isNarrow="true"></FavoriteFriends>
+ * это компонент удалить из проекта и репозитария
+ */
 name: 'AccountToolbarRight',
 data () {
     return {

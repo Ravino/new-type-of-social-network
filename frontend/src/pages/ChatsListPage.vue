@@ -8,8 +8,7 @@
             <div v-if="checkIsDialogsList()" id="chatMain" class="row bg-white-br20 overflow-hidden">
 
                 <div id="chatMessagesUsersList" class="col-sm-12 col-md-12 col-lg-4 col-xl-4 col-auto px-sm-0 px-md-0 h-100 border-right">
-                    <div class=" d-flex align-items-center justify-content-end w-100 border-bottom  pr-3 py-3"
-                         style="height: 76px;">
+                    <div class="find-in-dialogs-form d-flex align-items-center justify-content-end w-100 border-bottom pr-3 py-3">
                         <div class="form-row w-100 align-items-center justify-content-end position-relative pl-4">
                             <div class="find-in-chat-list w-100 position-relative pl-2">
                                 <label class="sr-only d-none" for="txtFindInChatList">Поиск</label>
@@ -19,16 +18,17 @@
                                        type="text"
                                        class="chat-search-input form-control rounded-pill bg-light px-4"
                                        @keydown.stop="dialogSearchKeyDownCheck($event)"
-                                       placeholder="Поиск в собеседниках"/>
+                                       placeholder="Поиск в собеседниках" />
                                 <button class="find-in-chat-list-btn btn btn-search h-100 shadow-none"
                                         @click="onClickStartDialogFilter()"
                                         type="submit">
-                                    <IconSearch style="width: 15px; height: 15px;"/>
+                                    <IconSearch />
                                 </button>
                             </div>
                         </div>
                     </div>
-                    <vue-custom-scrollbar class="chat-list-scroll py-4"
+
+                    <vue-custom-scrollbar class="chat-list-scroll pb-0 pb-5"
                                           :settings="customScrollBarSettings"
                                           @ps-scroll-y="scrollHandle">
                         <ul id="chatFriends" class="list-unstyled mb-0">
@@ -50,20 +50,30 @@
 
                 <div id="chatMessagesWrapper"
                      class="col-8 col-lg-8 col-xl-8 bg-light d-none d-lg-flex flex-column p-0 h-100">
+
                     <ChatHeader v-if="currentDialog" v-bind:currentDialog="currentDialog"
                                 @chatFilter="updateFilterText"
                                 ref="ChatHeader"></ChatHeader>
+                    <div id="chatMessagesWrapperBody"
+                         class="position-relative">
 
-                    <ChatMessages v-if="isMessagesLoaded" v-bind:messagesList="messagesList"
-                                  v-bind:filter="filter"
-                                  v-bind:currentDialog="currentDialog"
-                                  ref="chatMessages">
-                    </ChatMessages>
-                    <Spinner v-else v-bind:message="`Сообщения загружаются,<br />можно выбрать другой диалог`"></Spinner>
+                        <!-- TODO @veremey @TGA При @ chatFooterEditorChangedHeight нужно проскроливать чат вниз -->
+                            <!-- функция проскролла в ChatMessages.vue | scrollToEnd -->
+                        <ChatMessages v-if="isMessagesLoaded" v-bind:messagesList="messagesList"
+                                      v-bind:filter="filter"
+                                      v-bind:currentDialog="currentDialog"
+                                      @chatFooterEditorChangedHeight="onChatFooterEditorChangedHeight"
+                                      :style="`padding-bottom: ${changedHeight}`"
+                                      ref="chatMessages">
+                        </ChatMessages>
+                        <Spinner v-else v-bind:message="`Сообщения загружаются,<br />можно выбрать другой диалог`"></Spinner>
 
-                    <ChatFooter v-if="currentDialog"
-                                v-bind:currentDialog="currentDialog"
-                                ref="ChatFooter"></ChatFooter>
+                        <ChatFooter v-if="currentDialog"
+                                    v-bind:currentDialog="currentDialog"
+                                    @chatFooterEditorChangedHeight="onChatFooterEditorChangedHeight"
+                                    :style="`height: ${changedHeight}`"
+                                    ref="ChatFooter"></ChatFooter>
+                    </div>
                 </div>
             </div>
 
@@ -92,6 +102,7 @@ import ChatFooter from '../common/Chat/ChatFooter.vue';
 
 import IconSearch from '../icons/IconSearch.vue';
 
+import PliziDialog from '../classes/PliziDialog.js';
 import PliziMessage from '../classes/PliziMessage.js';
 
 export default {
@@ -110,21 +121,33 @@ data() {
         isDialogsLoaded: false,
         currentDialog : {},
         messagesList  : [],
+        isMessagesLoaded: false,
+
         filter : {
             text: null,
             range: null,
         },
-        isMessagesLoaded: false,
 
-        customScrollBarSettings: {
-            maxScrollbarLength: 60,
-            useBothWheelAxes: false,
-            suppressScrollX: true
-        },
         dialogFilter: {
             text: null,
         },
         dialogsSearchedList: null,
+        changedHeight: '',
+        customScrollBarSettings: {
+            maxScrollbarLength: 60,
+            useBothWheelAxes: false,
+            suppressScrollX: true
+        }
+    }
+},
+
+computed: {
+    dialogsList(){
+        return this.$root.$user.dialogs;
+    },
+
+    currentDialogID(){
+        return (this.currentDialog) ? +this.currentDialog.id : -1;
     }
 },
 
@@ -133,6 +156,10 @@ methods: {
         this.filter.text = evData.text ? evData.text.trim() : null;
         this.filter.range = evData.range && evData.range.start && evData.range.end ? evData.range : null;
         this.$forceUpdate();
+    },
+
+    onChatFooterEditorChangedHeight(evData) {
+        this.changedHeight = evData.changedHeight + 'px';
     },
 
     /**
@@ -203,6 +230,12 @@ methods: {
     },
 
     addNewChatMessageToList(evData){
+        window.console.log( `в мессадже ${evData.message.userId} у текущего юзера ${this.$root.$user.id}` );
+
+        if (evData.message.isMine) {
+            evData.message.isMine = (evData.message.userId === this.$root.$user.id);
+        }
+
         this.addMessageToMessageList(evData.message);
         this.updateDialogsList(evData);
 
@@ -245,7 +278,11 @@ methods: {
         }
 
         if (response) {
-            this.dialogsSearchedList = response;
+            this.dialogsSearchedList = [];
+
+            response.map( (dlgItem) => {
+                this.dialogsSearchedList.push( new PliziDialog(dlgItem) );
+            });
         }
     },
 
@@ -257,17 +294,6 @@ methods: {
 
     onClickStartDialogFilter() {
         this.searchDialog();
-    }
-},
-
-
-computed: {
-    dialogsList(){
-        return this.$root.$user.dialogs;
-    },
-
-    currentDialogID(){
-        return (this.currentDialog) ? +this.currentDialog.id : -1;
     }
 },
 
