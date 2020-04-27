@@ -103,8 +103,6 @@ methods: {
         }
 
         //this.editorH = this.$refs.getHeight.offsetHeight;
-
-        this.checkEditorHeight();
     },
 
     onFocus(event) {
@@ -126,10 +124,6 @@ methods: {
     focus() {
         this.editor.focus();
     }
-},
-
-mounted() {
-    this.getChatFooterStartHeight()
 },
 
 beforeDestroy() {
