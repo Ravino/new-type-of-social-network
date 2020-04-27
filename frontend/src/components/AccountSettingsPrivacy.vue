@@ -1,13 +1,12 @@
 <template>
-    <div id="accountSettingsPrivacy" class="plz-account-settings plz-account-settings-privacy bg-white-br20 plz-mb20 container-fluid">
-        <form class="plz-account-settings-form m-3 pb-2">
-            <div class="plz-account-settings-header plz-account-settings-privacy-header form-group row border-bottom">
-                <div class="col-12 d-sm-none d-md-none d-lg-flex d-xl-flex">
-                    <h6>Приватность</h6>
+    <div id="accountSettingsPrivacy"
+         class="plz-account-settings plz-account-settings-privacy bg-white-br20 plz-mb20 container-fluid">
+        <form class="plz-account-settings-form pb-2 px-3">
+            <div class="plz-account-settings-header plz-account-settings-privacy-header row border-bottom">
+                <div class="d-flex">
+                    <h6 class="title-settings mb-0">Приватность</h6>
                 </div>
-                <div class="col-12 d-sm-flex d-md-flex d-lg-none d-xl-none">
-                    <h6>Приватность</h6>
-                </div>
+
             </div>
 
             <div class="plz-account-settings-body plz-account-settings-privacy-body">
