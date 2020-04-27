@@ -1,7 +1,9 @@
 <template>
-    <div class="editor" ref="getHeight" :style="calcEditorH">
+    <div class="editor">
         <editor-content class="editor-content"
                         :editor="editor"
+                        ref="editor"
+                        @keyup.native="onEditorKeyUp"
                         @keydown.native="onEditorKeyDown"/>
         <span v-if="!isFocusedEditor"
               class="placeholder">
