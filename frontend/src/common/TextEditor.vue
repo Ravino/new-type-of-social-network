@@ -214,9 +214,13 @@ methods: {
                 case 'chat':
                     apiResponse = await this.$root.$api.chatAttachment(picsArr);
                     break;
+
                 case 'post':
                     apiResponse = await this.$root.$api.storePostAttachments(picsArr);
                     break;
+
+                default:
+                    console.warn('TextEditor::addUploadAttachment - No matches in switch.');
             }
         } catch (e) {
             window.console.warn(e.detailMessage);
