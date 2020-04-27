@@ -758,6 +758,31 @@ class PliziAPI {
         return null;
     }
 
+    /**
+     * Загружка файлов для постов.
+     * @param picsArr
+     * @returns {object[]|null}
+     */
+    async storePostAttachments(picsArr) {
+        const formData = new FormData();
+
+        for(let i=0; i< picsArr.length; i++){
+            formData.append('files[]', picsArr[i]);
+        }
+
+        let response = await this.__axios.post('api/posts/attachments', formData, this.__getAuthHeaders())
+            .catch((error) => {
+                this.__checkIsTokenExperis(error, `storePostAttachments`);
+                throw new PliziAPIError(`storePostAttachments`, error.response);
+            });
+
+        if (response.status === 200) {
+            return response.data.data.list;
+        }
+
+        return null;
+    }
+
 
     /**
      * Отправка запроса на восстановление пароля.

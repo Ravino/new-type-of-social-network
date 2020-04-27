@@ -5,8 +5,7 @@
                 :editorPlaceholder="'Что у Вас нового?'"
                 :dropToDown="true"
                 @editorPost="onTextPost"
-                @editorFile="onFileChange"
-                @editorImage="onImageChange">
+                work-mode="post">
     </TextEditor>
 </template>
 
@@ -27,39 +26,60 @@ computed: {
     },
 },
 methods: {
-    /**
-     * TGA: устарело?
-     * @deprecated
-     */
-    textAreaAutoHeight() {
-        let textarea = document.querySelector('#txtWhatsNew');
-        textarea.style.height = "";
-        textarea.style.height = Math.min(textarea.scrollHeight, 300) + "px";
+    killBrTrail(sText){
+        const brExample = `<br/>`;
+
+        while (true){
+            const pos = sText.length - brExample.length;
+            const trail = sText.substr(pos).toLowerCase();
+
+            if (trail === brExample) {
+                sText = sText.substr(0, pos);
+            }
+            else {
+                break;
+            }
+        }
+
+        return sText;
     },
 
     async onTextPost(evData){
-        if (evData.postText.trim() !== '') {
-            let response;
+        let msg = evData.postText.trim();
 
-            try {
-                response = await this.$root.$api.storePost({body: evData.postText.trim()});
-            } catch (e) {
-                console.warn(e.detailMessage);
+        if (msg !== '') {
+            const brExample = `<br/>`;
+            msg = msg.replace(/<p><\/p>/g, brExample);
+            msg = this.killBrTrail(msg);
+
+            if (msg !== '') {
+                this.savePost( msg, evData.attachments );
+            } else if (evData.attachments.length > 0) {
+                this.savePost( '<p></p>', evData.attachments );
             }
-
-            if (response) {
-                this.$emit('addNewPost', response);
+        }
+        else {
+            if (evData.attachments.length > 0) {
+                this.savePost( '', evData.attachments );
             }
         }
     },
+    async savePost(text, attachments) {
+        let response;
 
-    onFileChange(evData){
-        window.console.log(evData, `WhatsNewBlock::onFileChange`);
-    },
+        try {
+            response = await this.$root.$api.storePost({
+                body: text.trim(),
+                attachmentIds: attachments && attachments.length ? attachments : null,
+            });
+        } catch (e) {
+            console.warn(e.detailMessage);
+        }
 
-    onImageChange(evData){
-        window.console.log(evData, `WhatsNewBlock::onImageChange`);
-    },
+        if (response) {
+            this.$emit('addNewPost', response);
+        }
+    }
 },
 }
 </script>

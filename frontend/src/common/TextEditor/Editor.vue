@@ -59,6 +59,12 @@ data() {
     }
 },
 
+computed: {
+    calcEditorH(){
+        return 'height: '+this.height+'px';
+    },
+},
+
 methods: {
     addEmoji(emoji) {
         let currText = this.editor.getHTML();
@@ -82,8 +88,9 @@ methods: {
             let str = editorText.replace(/<p>|<\/p>/g, '').trim();
 
             if (!(!!str.replace(/[\u{1F300}-\u{1F6FF}]/gu, '').trim())) {
-                const reCheck = str.match(/[\u{1F300}-\u{1F6FF}]/gu);
-                if ( reCheck && reCheck.length === 1) {
+                let matches = str.match(/[\u{1F300}-\u{1F6FF}]/gu);
+
+                if (matches && matches.length === 1) {
                     editorText = `<p class="big-emoji">${str}</p>`;
                 }
             }
