@@ -147,7 +147,8 @@ class PliziAuthUser extends PliziUzer{
     restoreData() {
         const sData = window.localStorage.getItem(this.localStorageKey);
 
-        if (typeof sData === 'undefined'  ||  sData===null  ||  sData===``) return null;
+        if (typeof sData === 'undefined'  ||  sData===null  ||  sData===``)
+            return null;
 
         let oData = null;
 

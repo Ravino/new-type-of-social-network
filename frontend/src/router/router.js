@@ -80,8 +80,6 @@ async function checkRouteAuth(to, from, next) {
             const tstUser = new PliziAuthUser();
             const tstUserData = tstUser.restoreData();
 
-            window.console.log(tstUserData, `tstUserData`);
-
             if (tstUserData) {
                 window.app.$root.$emit('afterUserLoad', {
                     user: tstUserData,
