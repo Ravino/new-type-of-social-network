@@ -47,7 +47,7 @@
                         <td class="">
                             <template v-if="userData.country && userData.city.title">
                                 <IconLocation />
-                                {{userData.country.title.ru}}, {{userData.city.title.ru}}
+                                {{userData.country.title}}, {{userData.city.title}}
                             </template>
                             <template v-else>
                                 Не указано
