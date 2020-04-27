@@ -61,7 +61,8 @@
                     Ответить
                 </button>
 
-                <button v-if="message.isMine" class="btn btn-message-basket d-flex align-items-center justify-content-center" @click.prevent="onRemoveBtnClick()">
+                <button v-if="message.isMine" class="btn btn-message-basket d-flex align-items-center justify-content-center"
+                        @click.prevent="onRemoveBtnClick()">
                     <IconBasket />
                     Удалить
                 </button>

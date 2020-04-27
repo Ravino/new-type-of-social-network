@@ -98,6 +98,7 @@ methods: {
 
         setTimeout(()=>{
             this.removeMessageById(this.removeMessageID);
+            this.checkUpdatedChatContainerHeight();
         }, 500);
     },
 
