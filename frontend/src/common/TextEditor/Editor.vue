@@ -93,9 +93,7 @@ methods: {
             let str = editorText.replace(/<p>|<\/p>/g, '').trim();
 
             if (!(!!str.replace(/[\u{1F300}-\u{1F6FF}]/gu, '').trim())) {
-                let match = str.match(/[\u{1F300}-\u{1F6FF}]/gu);
-
-                if (match && match.length === 1) {
+                if (str.match(/[\u{1F300}-\u{1F6FF}]/gu).length === 1) {
                     editorText = `<p class="big-emoji">${str}</p>`;
                 }
             }
@@ -103,11 +101,10 @@ methods: {
             this.editor.setContent(``);
             this.$emit('editorPost', { postText : editorText });
         }
+    },
 
-        //this.editorH = this.$refs.getHeight.offsetHeight;
-
-        // TODO: @YZ нет такого метода, удалить?
-        // this.checkEditorHeight();
+    onEditorKeyUp () {
+        this.$parent.checkUpdatedChatContainerHeight();
     },
 
     onFocus(event) {
@@ -129,11 +126,6 @@ methods: {
     focus() {
         this.editor.focus();
     }
-},
-
-mounted() {
-    // TODO: @YZ нет такого метода, удалить?
-    // this.getChatFooterStartHeight()
 },
 
 beforeDestroy() {

@@ -82,11 +82,12 @@ class UserController extends Controller
     }
 
     /**
-     * @param RemoveFromFriends $request
+     * @param Request $request
+     * @param $id
      * @return \Illuminate\Http\JsonResponse
      */
-    public function removeFromFriends(RemoveFromFriends $request) {
-        $friend = User::find($request->userId);
+    public function removeFromFriends($id) {
+        $friend = User::find($id);
         if (Auth::user()->isFriendWith($friend)) {
             Auth::user()->unfriend($friend);
             return response()->json(['message' => 'Вы удалили пользователя из друзей'], 200);
@@ -139,13 +140,37 @@ class UserController extends Controller
     /**
      * @return UserCollection
      */
-    public function getPossibleFriends()
-    {
+    public function getPossibleFriends() {
         $fof = Auth::user()->getFriendsOfFriends();
         return new UserCollection($fof);
     }
 
     /**
+     * @param Request $request
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function addFriendToGroup(Request $request) {
+        $user = User::find($request->userId);
+        if (Auth::user()->isFriendWith($user)) {
+            Auth::user()->groupFriend($user, $request->group);
+            return response()->json(['message' => 'Вы добавили пользователя в группу'], 200);
+        } else {
+            return response()->json(['message' => 'Данный пользователь не в ваших друзьях'], 422);
+        }
+    }
+
+    /**
+     * @param $group
+     * @return UserCollection
+     */
+    public function getFriendsFromGroup($group) {
+        $friend_ids = Auth::user()->getAllFriendships($group)->pluck('friend_id');
+        $friends = User::whereIn('id', $friend_ids)->get();
+        return new UserCollection($friends);
+    }
+
+    /**
+     * @param Request $request
      * @return NotificationCollection
      */
     public function notifications(Request $request) {
