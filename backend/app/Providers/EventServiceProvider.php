@@ -10,9 +10,11 @@ use App\Listeners\Friendships\NotifyFriends;
 use App\Listeners\PostAuthorsNotification;
 use Domain\Pusher\Events\DestroyMessageEvent;
 use Domain\Pusher\Events\NewMessageEvent;
+use Domain\Pusher\Events\UserTypingEvent;
 use Domain\Pusher\Listeners\NewNotification;
 use Domain\PusherListeners\DestroyMessageNotification;
 use Domain\PusherListeners\NewMessageNotification;
+use Domain\PusherListeners\UserTypingNotification;
 use Illuminate\Foundation\Support\Providers\EventServiceProvider as ServiceProvider;
 
 class EventServiceProvider extends ServiceProvider
@@ -31,6 +33,9 @@ class EventServiceProvider extends ServiceProvider
         ],
         DestroyMessageEvent::class => [
             DestroyMessageNotification::class
+        ],
+        UserTypingEvent::class => [
+            UserTypingNotification::class
         ],
         'Illuminate\Notifications\Events\NotificationSent' => [
             NewNotification::class

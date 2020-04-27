@@ -44,6 +44,7 @@ class Message extends JsonResource
             'isEdited' => false,
             'createdAt' => $this->created_at,
             'updatedAt' => $this->updated_at,
+            'replyOn' => $this->parent ? new Message($this->parent, $this->userId) : null,
             'attachments' => new AttachmentsCollection($this->attachments),
         ];
     }

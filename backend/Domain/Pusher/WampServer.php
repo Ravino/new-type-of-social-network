@@ -4,9 +4,13 @@
 namespace Domain\Pusher;
 
 
+use Domain\Pusher\Events\UserTypingEvent;
+use Illuminate\Support\Facades\Log;
+use Mockery\Exception;
 use Ratchet\ConnectionInterface;
 use Ratchet\Wamp\Topic;
 use Ratchet\Wamp\WampServerInterface;
+use Tymon\JWTAuth\Facades\JWTAuth;
 
 class WampServer implements WampServerInterface
 {
@@ -33,6 +37,9 @@ class WampServer implements WampServerInterface
         return sha1(json_encode(['user_id' => $user_id, 'topic_id' => 'onNewMessage']));
     }
 
+    /**
+     * @param $jsonData
+     */
     public function broadcast($jsonData)
     {
         $aDataToSend = json_decode($jsonData, true);
@@ -58,12 +65,13 @@ class WampServer implements WampServerInterface
 
     public function onPublish(ConnectionInterface $conn, $topic, $event, array $exclude, array $eligible)
     {
-        $topic->broadcast($event);
+        $this->broadcast($event);
     }
 
     public function onCall(ConnectionInterface $conn, $id, $topic, array $params)
     {
-        $conn->callError($id, $topic, 'RPC not supported on this project');
+        $params = json_decode(json_encode($params), true);
+        event(new UserTypingEvent($params['userId'], $params['chatId']));
     }
 
     public function onSubscribe(ConnectionInterface $conn, $topic)
@@ -76,4 +84,5 @@ class WampServer implements WampServerInterface
     public function onOpen(ConnectionInterface $conn){}
     public function onClose(ConnectionInterface $conn) {}
     public function onError(ConnectionInterface $conn, \Exception $e) {}
+    public function onMessage() {}
 }

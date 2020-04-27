@@ -888,6 +888,7 @@ class PliziAPI {
         }, 500);
     }
 
+    __s = null;
 
     __wsRealConnect(){
         const channelOptions = {
@@ -897,7 +898,7 @@ class PliziAPI {
         };
 
         this.__wsChannelCarrier = new ab.connect(this.__baseWsURL,
-            (s)=>{this.__channelReceiver(s)},
+            (s)=>{this.__s = s; this.__channelReceiver(s)},
             (code, reason, detail)=>{this.__channelErrorHandler(code, reason, detail)},
             channelOptions
         );
@@ -905,13 +906,9 @@ class PliziAPI {
         this.__wsIsConnected = true;
     }
 
-    __s = null;
-
 
     __channelReceiver(s) {
-        this.__s = s;
-
-        this.__s.subscribe(this.__channel, (channelID, data) => {
+        s.subscribe(this.__channel, (channelID, data) => {
             window.console.dir(data, 'from WS');
 
             if (channelID=== this.channel  &&  `message.new`===data.event_type) {
@@ -927,26 +924,19 @@ class PliziAPI {
                     messageId : +data.data.messageId,
                 });
             }
+            if (channelID=== this.channel  &&  `user.typing`===data.event_type) {
+                this.emit('userIsTyping', {
+                    chatId :  data.chatId,
+                    user : data.data,
+                });
+            }
         });
-    }
-
-
-    /**
-     * это пример
-     * @private
-     */
-    __chanelSender() {
-        this.__s.publish(this.__channel, {'token': this.__token, 'userId': 142, 'chatId': 583});
     }
 
     /** @param {object} sendData **/
     sendToChannel(sendData) {
-        sendData.token = 'тут будет токен';
-        window.console.log( JSON.parse( JSON.stringify(sendData) ), `sendToChannel` );
-
         sendData.token = this.__token;
-
-        this.__s.publish(this.__channel, sendData);
+        this.__s.call('user.typing', sendData);
     }
 
     __channelErrorHandler(code, reason, detail){
