@@ -141,6 +141,12 @@ methods: {
     },
 
     dateSelected(range) {
+        if (range.start.getTime() === range.end.getTime()) {
+            range.isSameDate = true;
+        }
+
+        range.end.setDate(range.end.getDate() + 1);
+
         this.dateRange = range;
         this.startChatFilter(null);
     },
@@ -149,7 +155,7 @@ methods: {
         this.chatFilterText = ``;
         this.showDatePicker = false;
         this.$refs.chatDatePicker.clearDateSelected();
-    }
+    },
 }
 
 }

@@ -36,6 +36,7 @@
                     <div class="form mt-3">
                         <TextEditor :id="`messageToUserFromHisPage`"
                                     ref="messageToUserFromHisPage"
+                                    workMode="chat"
                                     :showAvatar="false"
                                     :dropToDown="true"
                                     :clazz="`row plz-text-editor mb-4 pl-2 h-auto  align-items-start`"

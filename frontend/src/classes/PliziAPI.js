@@ -905,9 +905,13 @@ class PliziAPI {
         this.__wsIsConnected = true;
     }
 
+    __s = null;
+
 
     __channelReceiver(s) {
-        s.subscribe(this.__channel, (channelID, data) => {
+        this.__s = s;
+
+        this.__s.subscribe(this.__channel, (channelID, data) => {
             window.console.dir(data, 'from WS');
 
             if (channelID=== this.channel  &&  `message.new`===data.event_type) {
@@ -926,6 +930,24 @@ class PliziAPI {
         });
     }
 
+
+    /**
+     * это пример
+     * @private
+     */
+    __chanelSender() {
+        this.__s.publish(this.__channel, {'token': this.__token, 'userId': 142, 'chatId': 583});
+    }
+
+    /** @param {object} sendData **/
+    sendToChannel(sendData) {
+        sendData.token = 'тут будет токен';
+        window.console.log( JSON.parse( JSON.stringify(sendData) ), `sendToChannel` );
+
+        sendData.token = this.__token;
+
+        this.__s.publish(this.__channel, sendData);
+    }
 
     __channelErrorHandler(code, reason, detail){
         //window.console.warn(`__channelErrorHandler`);
