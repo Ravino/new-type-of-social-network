@@ -1,5 +1,5 @@
 <template>
-    <div class="w-100 d-flex px-5" @click.prevent="pickMessage()"
+    <div class="w-100 d-flex px-5" @click.prevent="onPickMessage()"
          :class="{ 'checked-message': isPicked }"
          :id="messageID">
         <div class="message-item d-flex w-100 justify-content-start"
@@ -29,9 +29,8 @@
                     <div class="message-text-inner mb-0" v-html="msgBody"></div>
                     <ChatMessageItemAttachments v-bind:message="message"></ChatMessageItemAttachments>
                     <ChatMessageItemReplyContent v-if="message.isReply"
-                                                 v-bind:replyOn="message.replyOn"
-                                                 v-bind:isForward="message.isForward"
-                    ></ChatMessageItemReplyContent>
+                                 v-bind:replyOn="message.replyOn"
+                                 v-bind:isForward="message.isForward"></ChatMessageItemReplyContent>
                 </div>
 
                 <time v-if="!isNextIsSamePerson()" class="message-time mx-2" :datetime="message.createdAt">
@@ -48,7 +47,7 @@
                 </div>
             </div>
 
-            <div v-if="isPicked  &&  !isShowReplyBlock" class="messages-edit-group btn-group bg-white-br20 d-flex overflow-hidden">
+            <div v-if="isPicked" class="messages-edit-group btn-group bg-white-br20 d-flex overflow-hidden">
                 <button class="btn btn-message-share d-flex align-items-center justify-content-center border-right"
                         @click="onForwardBtnClick()">
                     <IconShare />
@@ -68,7 +67,7 @@
                 </button>
             </div>
 
-            <div v-if="isPicked  &&  isShowReplyBlock" class="messages-reply-group bg-white-br20">
+            <div v-if="isShowReplyBlock" class="messages-reply-group bg-white-br20">
                 <div class="text-editor-wrapper bg-white-br20" @click.stop="">
                     <TextEditor :showAvatar="false"
                                 :dropToDown="false"
@@ -115,21 +114,23 @@ props: {
     },
     dialogID: Number,
     pickedID: Number,
+    replyID: Number,
     next : PliziMessage | null
 },
 
 data() {
     return {
-        messageEdited: true,
-        messageResend: true,
-        messageWriting: false,
-        isShowReplyBlock: false
+        //messageWriting: false, // TODO: @TGA убрать это позже
     }
 },
 
 computed: {
     isPicked(){
         return this.message.id === this.pickedID;
+    },
+
+    isShowReplyBlock(){
+        return this.message.id === this.replyID;
     },
 
     messageID(){
@@ -166,6 +167,65 @@ computed: {
 },
 
 methods: {
+    isNextIsSamePerson() {
+        if (null === this.next)
+            return false;
+
+        let nextID = this.next.isMine ? 1 : 0;
+        let msgID = this.message.isMine ? 1 : 0;
+
+        return (nextID === msgID);
+    },
+
+    calcMessageItemClass(){
+        const isNextSame = this.isNextIsSamePerson();
+
+        return {
+            'my-message ml-auto flex-row-reverse': this.message.isMine,
+            'companion-message ' : !this.message.isMine,
+            'compact-message'    : isNextSame,
+            'fullsize-message'   : !isNextSame,
+            'has-only-one-emoji' : this.detectEmoji,
+            'youtube-link'       : this.detectYoutubeLink,
+        }
+    },
+
+    onForwardBtnClick() {
+        this.$emit( 'ShowForwardMessageModal', {
+            messageID: this.message.id
+        });
+    },
+
+    onRemoveBtnClick() {
+        this.$emit( 'RemoveMessage', {
+            messageID: this.message.id
+        });
+    },
+
+    onPickMessage(){
+        this.$emit( 'ChatMessagePick', {
+            messageID: (this.pickedID !== this.message.id) ? this.message.id : -1,
+        });
+    },
+
+    onReplyBtnClick(){
+        this.$emit( 'ChatMessageReply', {
+            messageID: this.message.id,
+        });
+    },
+
+    openChatVideoModal() {
+        this.$emit( 'openChatVideoModal', {
+            videoLink: this.message.body.replace(/<\/?[^>]+>/g, '').trim(),
+        })
+    },
+
+    livePreview() {
+        if (this.detectYoutubeLink) {
+            this.msgBody = `<img src="//img.youtube.com/vi/${this.detectYoutubeLink}/0.jpg" alt="" />`;
+        }
+    },
+
     onReplyPost(evData){
         /** @type {string} **/
         let msg = evData.postText.trim();
@@ -216,66 +276,12 @@ methods: {
             }
 
             this.$root.$emit( 'newMessageInDialog', eventData );
+
+            this.$emit( 'ChatMessagePick', { messageID: -1 }); // чтобы убрать выпадашку
+            this.$emit( 'ChatMessageReply', { messageID: -1 }); // чтобы убрать выпадашку цитирования
         }
         else{
             window.console.info( apiResponse );
-        }
-    },
-
-    pickMessage(){
-        this.$emit( 'ChatMessagePick', {
-            messageID: (this.pickedID !== this.message.id) ? this.message.id : -1,
-        });
-    },
-
-    openChatVideoModal() {
-        this.$emit( 'openChatVideoModal', {
-            videoLink: this.message.body.replace(/<\/?[^>]+>/g, '').trim(),
-        })
-    },
-
-    isNextIsSamePerson() {
-        if (null === this.next)
-            return false;
-
-        let nextID = this.next.isMine ? 1 : 0;
-        let msgID = this.message.isMine ? 1 : 0;
-
-        return (nextID === msgID);
-    },
-
-    calcMessageItemClass(){
-        const isNextSame = this.isNextIsSamePerson();
-
-        return {
-            'my-message ml-auto flex-row-reverse': this.message.isMine,
-            'companion-message ' : !this.message.isMine,
-            'compact-message'    : isNextSame,
-            'fullsize-message'   : !isNextSame,
-            'has-only-one-emoji' : this.detectEmoji,
-            'youtube-link'       : this.detectYoutubeLink,
-        }
-    },
-
-    onForwardBtnClick() {
-        this.$emit( 'ShowForwardMessageModal', {
-            messageID: this.message.id
-        });
-    },
-
-    onReplyBtnClick() {
-        this.isShowReplyBlock = true;
-    },
-
-    onRemoveBtnClick() {
-        this.$emit( 'RemoveMessage', {
-            messageID: this.message.id
-        });
-    },
-
-    livePreview() {
-        if (this.detectYoutubeLink) {
-            this.msgBody = `<img src="//img.youtube.com/vi/${this.detectYoutubeLink}/0.jpg" alt="" />`;
         }
     },
 },
