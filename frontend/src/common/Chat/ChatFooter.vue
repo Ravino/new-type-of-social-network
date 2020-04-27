@@ -49,7 +49,7 @@ methods: {
             userId: this.$root.$user.id,
             chatId: this.currentDialog.id
         };
-        window.console.log(keyPressData, `keyPressData`);
+        //window.console.log(keyPressData, `keyPressData`);
 
         this.$root.$api.sendToChannel(keyPressData);
         // this.tmpSocket.send(keyPressData);
@@ -102,7 +102,7 @@ methods: {
 
         if ( apiResponse ){
             const eventData = {
-                dialogId : apiResponse.data.chatId,
+                chatId : apiResponse.data.chatId,
                 message : apiResponse.data
             }
 

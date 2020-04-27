@@ -38,7 +38,7 @@
 <script>
 import PliziDialog from '../../classes/PliziDialog.js';
 import PliziRecipient from '../../classes/PliziRecipient.js';
-import PliziRecipientsCollection from '../../classes/PliziRecipientsCollection.js';
+import PliziRecipientsCollection from '../../classes/Collection/PliziRecipientsCollection.js';
 
 /**
  * TODO: @TGA потом переименовать этот компонент т.к. тут создаётся групповой чат
