@@ -64,8 +64,13 @@ function routerForcedLogout(next, to) {
     next({path: '/login', component: LoginPage, name: 'LoginPage'});
 }
 
-
-router.beforeEach(async (to, from, next) => {
+/**
+ * @param {Route} to
+ * @param {Route} from
+ * @param next
+ * @returns {Promise<void>}
+ */
+async function checkRouteAuth(to, from, next) {
     if (!to.meta.isGuest) {
         const gwt = store.getters.gwToken;
 
@@ -74,6 +79,8 @@ router.beforeEach(async (to, from, next) => {
         if ((gwt + '') !== 'null' && gwt !== '') {
             const tstUser = new PliziAuthUser();
             const tstUserData = tstUser.restoreData();
+
+            window.console.log(tstUserData, `tstUserData`);
 
             if (tstUserData) {
                 window.app.$root.$emit('afterUserLoad', {
@@ -112,6 +119,9 @@ router.beforeEach(async (to, from, next) => {
     next();
 
     document.body.className = to.name;
-});
+}
+
+
+router.beforeEach(checkRouteAuth);
 
 export default router;

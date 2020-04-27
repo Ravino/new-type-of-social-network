@@ -154,9 +154,10 @@ class PliziAuthUser extends PliziUzer{
         try {
             oData = JSON.parse(sData);
 
-            if (oData  &&  oData.data &&  oData.data.email  &&  oData.data.profile  &&  oData.data.profile.firstName   &&  oData.data.profile.lastName) {
+            if (oData  &&  oData.data &&  oData.email  &&  oData.data.profile  &&  oData.data.profile.firstName   &&  oData.data.profile.lastName) {
                 this.saveUserData(oData, ``);
-            } else {
+            }
+            else {
                 return null;
             }
 
