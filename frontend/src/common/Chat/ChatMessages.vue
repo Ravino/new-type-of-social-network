@@ -1,17 +1,27 @@
 <template>
     <div id="chatMessagesBody" class="w-100 align-self-stretch position-relative h-100">
-        <vue-custom-scrollbar class="chat-messages-scroll py-5"  :settings="customScrollbarSettings" >
+        <vue-custom-scrollbar class="chat-messages-scroll py-4" :settings="customScrollbarSettings"
+                              ref="vueCustomScrollbar">
             <div v-if="messagesList  &&  messagesList.length>0" class="d-flex flex-column">
-                <transition-group name="slide-fade" :duration="700">
+                <div v-if="typeof filteredMessages === 'string'" class="text-center">
+                    <p>{{ filteredMessages }}</p>
+                    <button class="btn btn-filter-clear"
+                            @click="clearFilters">Очистить фильтр
+                    </button>
+                </div>
+
+                <transition-group v-else name="slide-fade" :duration="700">
                     <ChatMessageItem v-for="(message, messageIndex) in filteredMessages"
                                      v-if="message.id !== removeMessageID"
                                      @ChatMessagePick="onChatMessagePick"
+                                     @ChatMessageReply="onChatMessageReply"
                                      @ShowForwardMessageModal="onShowForwardMessageModal"
                                      @RemoveMessage="onRemoveMessage"
                                      @openChatVideoModal="openChatVideoModal"
                                      v-bind:message="message"
                                      v-bind:next="getNext(messageIndex)"
                                      v-bind:pickedID="pickedMessageID"
+                                     v-bind:replyID="replyMessageID"
                                      v-bind:dialogID="currentDialog.id"
                                      v-bind:key="message.id">
                     </ChatMessageItem>
@@ -49,23 +59,24 @@ import ChatVideoModal from './ChatVideoModal.vue';
 import PliziMessage from '../../classes/PliziMessage.js';
 
 export default {
-name: 'ChatMessages',
-components: {
-    vueCustomScrollbar,
-    ChatMessageItem,
-    ResendMessageModal,
-    ChatVideoModal,
-},
+    name: 'ChatMessages',
+    components: {
+        vueCustomScrollbar,
+        ChatMessageItem,
+        ResendMessageModal,
+        ChatVideoModal,
+    },
 
-props: {
-    messagesList: Array,
-    currentDialog : Object,
-    filter: Object
-},
+    props: {
+        messagesList: Array,
+        currentDialog: Object,
+        filter: Object
+    },
 
 data() {
     return {
         pickedMessageID: -1,
+        replyMessageID: -1,
         removeMessageID: -1,
         previousMsg: null,
         resendMessageModalShow: false,
@@ -77,13 +88,17 @@ data() {
         chatVideoModalShow: false,
         chatVideoModalContent: {
             videoLink: null,
-        }
+        },
     }
 },
 
 methods: {
     onChatMessagePick(evData){
         this.pickedMessageID = evData.messageID;
+    },
+
+    onChatMessageReply(evData){
+        this.replyMessageID = evData.messageID;
     },
 
     openChatVideoModal(evData) {
@@ -98,24 +113,27 @@ methods: {
 
         setTimeout(()=>{
             this.removeMessageById(this.removeMessageID);
+            //this.checkUpdatedChatContainerHeight(); // FIXME: в этом компоненте нет такого метода
         }, 500);
     },
 
-    async removeMessageById(msgID){
-        const fIndex = this.messagesList.findIndex( (mItem)=>{ return mItem.id === msgID; } );
+    async removeMessageById(msgID) {
+        const fIndex = this.messagesList.findIndex((mItem) => {
+            return mItem.id === msgID;
+        });
         this.messagesList.splice(fIndex, 1);
 
         let apiResponse = null;
 
         try {
             apiResponse = await this.$root.$api.chatMessageDelete(msgID);
-        } catch (e){
-            window.console.warn( e.detailMessage );
+        } catch (e) {
+            window.console.warn(e.detailMessage);
             throw e;
         }
     },
 
-    onShowForwardMessageModal(){
+    onShowForwardMessageModal() {
         this.resendMessageModalShow = true;
     },
 
@@ -133,19 +151,30 @@ methods: {
             const container = this.$el.querySelector('.ps-container');
             container.scrollTop = container.scrollHeight;
         }, 200);
-    }
+    },
+
+    clearFilters() {
+        this.$emit('clearFilters');
+    },
 },
 
 computed: {
-    filteredMessages(){
+    filteredMessages() {
         if (this.filter) {
-            if (this.filter.text && this.filter.range && this.filter.range.start && this.filter.range.end) {
+            let range_start, range_end;
+
+            if (this.filter.range && this.filter.range.start && this.filter.range.end) {
+                range_start = this.filter.range.start;
+                range_end = this.filter.range.end;
+            }
+
+            if (this.filter.text && this.filter.range && range_start && range_end) {
                 const ft = this.filter.text.toLocaleLowerCase();
 
                 if (ft.length > 2) {
                     return this.messagesList.filter((msgItem) => {
                         return msgItem.body.toLowerCase().includes(ft) &&
-                            (msgItem.createdAt > this.filter.range.start) && (msgItem.createdAt < this.filter.range.end);
+                            (msgItem.createdAt > range_start) && (msgItem.createdAt < range_end);
                     });
                 }
             }
@@ -154,24 +183,37 @@ computed: {
                 const ft = this.filter.text.toLocaleLowerCase();
 
                 if (ft.length > 2)
-                    return this.messagesList.filter((msgItem)=>{ return msgItem.body.toLowerCase().includes(ft); });
+                    return this.messagesList.filter((msgItem) => {
+                        return msgItem.body.toLowerCase().includes(ft);
+                    });
             }
 
-            if (this.filter.range && this.filter.range.start && this.filter.range.end) {
-                return this.messagesList.filter((msgItem) => {
-                    return (msgItem.createdAt > this.filter.range.start) && (msgItem.createdAt < this.filter.range.end);
+            if (this.filter.range && range_start && range_end) {
+                let filteredMessages = this.messagesList.filter((msgItem) => {
+                    return (msgItem.createdAt > this.filter.range.start) && (msgItem.createdAt < range_end);
                 });
+
+                if (!filteredMessages.length) {
+                    if (this.filter.range.isSameDate) {
+                        return `Ничего не найдено за ${this.$options.filters.toLongDate(range_start)}`;
+                    }
+
+                    return `Ничего не найдено за период с ${this.$options.filters.toLongDate(range_start)} по ${this.$options.filters.toLongDate(range_end)}`;
+                }
             }
         }
 
         return this.messagesList;
     },
 
-    pickedMessage(){
+    pickedMessage() {
         if (this.pickedMessageID < 0)
             return {};
 
-        let lMsg = this.messagesList.find( (mItem)=>{ return mItem.id === this.pickedMessageID; } );
+        let lMsg = this.messagesList.find((mItem) => {
+            return mItem.id === this.pickedMessageID;
+        });
+
         if (lMsg) {
             lMsg = new PliziMessage(lMsg);
         }
@@ -180,11 +222,11 @@ computed: {
         }
 
         return lMsg;
-    }
+    },
 },
 
 mounted() {
-    this.$root.$on('hideMessageResendModal', (evData) => {
+    this.$root.$on('hideMessageResendModal', () => {
         this.resendMessageModalShow = false;
     });
 
@@ -197,3 +239,14 @@ mounted() {
 
 }
 </script>
+
+<style lang="scss">
+    .btn-filter-clear {
+        color: #1554F7;
+        text-decoration: underline;
+
+        &:hover {
+            box-shadow: none;
+        }
+    }
+</style>

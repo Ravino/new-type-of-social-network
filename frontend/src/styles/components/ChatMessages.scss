@@ -4,6 +4,10 @@ $minHeight: 200px;
     height: calc(100% - 76px);
 }
 
+#chatPickAttendeesDialogBody {
+    min-height: 240px;
+}
+
 #chatMessagesBody {
     padding-bottom: 63px; // потом регулируется vue
 
