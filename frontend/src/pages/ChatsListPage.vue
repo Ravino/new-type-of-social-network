@@ -181,6 +181,10 @@ methods: {
     },
 
     removeMessageInList(evData){
+        /** @TGA не реагируем, если мы не на странице чата **/
+        if ('ChatsListPage'!==this.$root.$router.currentRoute.name)
+            return;
+
         if (this.currentDialog.id !== evData.chatId)
             return;
 
@@ -193,14 +197,12 @@ methods: {
     },
 
     addNewChatMessageToList(evData){
+        /** @TGA не реагируем, если мы не на странице чата **/
+        if ('ChatsListPage'!==this.$root.$router.currentRoute.name)
+            return;
+
         this.addMessageToMessagesList(evData.message);
         this.updateDialogsList(evData.chatId, evData);
-        this.$refs.chatMessages.scrollToEnd();
-
-        /** @TGA вообще-то только для того диалога, который открыт **/
-        //if (this.$refs.chatMessages) {
-        //    this.$refs.chatMessages.scrollToEnd();
-        //}
     },
 
     addMessageToMessagesList(evData){
@@ -300,7 +302,6 @@ async mounted() {
         window.console.warn(`Условие не сработало!`);
     }
 
-    //this.$root.$on('switchToChat', this.switchToChat);
     this.$root.$on('newMessageInDialog', this.addNewChatMessageToList);
     this.$root.$on('removeMessageInDialog', this.removeMessageInList);
 

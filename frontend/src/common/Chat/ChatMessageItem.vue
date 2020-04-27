@@ -72,6 +72,7 @@
                     <TextEditor :showAvatar="false"
                                 :dropToDown="false"
                                 :height="40"
+                                workMode="chat"
                                 :clazz="`d-flex h-100 w-100 --border-top m-0 px-3 py-3`"
                                 @editorPost="onReplyPost">
                     </TextEditor>
