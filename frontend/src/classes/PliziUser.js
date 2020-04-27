@@ -252,8 +252,14 @@ class PliziUser {
             title: null,
         };
 
-        this._region = null;
-        this._country = null;
+        this._region = {
+            id: null,
+            title: null,
+        };
+        this._country = {
+            id: null,
+            title: null,
+        };
         this._relationshipId = -1;
         this._userPic = ``;
 
