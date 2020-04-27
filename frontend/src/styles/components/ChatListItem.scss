@@ -8,11 +8,21 @@ $userPicSize: 32px;
         bottom: 0;
         right: 0;
     }
+
+    .form-control {
+        border: 0;
+
+        &::placeholder {
+            font-size: 13px;
+            color: #a3a8b9;
+        }
+    }
+
 }
 
 #chatMessagesUsersList {
     .chat-list-scroll {
-        height: calc(100% - 67px);
+        height: calc(100% - 76px);
     }
 
     > .find-in-dialogs-form{

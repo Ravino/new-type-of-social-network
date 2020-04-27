@@ -1,6 +1,6 @@
 <template>
     <div class="row" :class="{ 'is-chatPage' : ('ChatsListPage'===this.$root.$router.currentRoute.name) }" >
-        <div class="col-sm-1 col-md-1 col-lg-1 col-xl-1 chat-page-height overflow-hidden">
+        <div class="col-sm-1 col-md-1 col-lg-1 col-xl-1 chat-page-height overflow-hidden pl-0">
             <AccountToolbarLeft></AccountToolbarLeft>
         </div>
 
@@ -28,7 +28,7 @@
                         </div>
                     </div>
 
-                    <vue-custom-scrollbar class="chat-list-scroll pb-0 pb-5"
+                    <vue-custom-scrollbar class="chat-list-scroll pb-0 pb-4"
                                           :settings="customScrollBarSettings">
                         <ul id="chatFriends" class="list-unstyled mb-0">
                             <template v-if="dialogsSearchedList && dialogFilter.text.length > 2">

@@ -5,7 +5,7 @@
         <div class="message-item d-flex w-100 justify-content-start"
                 :class="calcMessageItemClass()">
 
-            <label v-if="isPicked" class="radio position-relative">
+            <label v-if="isPicked" class="radio">
                 <input type="checkbox" name="dateTimeId" ref="dateTimeId" id="dateTimeId" checked />
                 <span></span>
             </label>

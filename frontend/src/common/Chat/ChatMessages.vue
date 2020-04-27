@@ -1,6 +1,6 @@
 <template>
     <div id="chatMessagesBody" class="w-100 align-self-stretch position-relative h-100">
-        <vue-custom-scrollbar class="chat-messages-scroll py-4"  :settings="customScrollbarSettings" >
+        <vue-custom-scrollbar class="chat-messages-scroll py-5"  :settings="customScrollbarSettings" >
             <div v-if="messagesList  &&  messagesList.length>0" class="d-flex flex-column">
                 <transition-group name="slide-fade" :duration="700">
                     <ChatMessageItem v-for="(message, messageIndex) in filteredMessages"
