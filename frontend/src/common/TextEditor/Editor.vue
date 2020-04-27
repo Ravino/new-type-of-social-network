@@ -1,10 +1,10 @@
 <template>
-    <div class="editor">
+    <div class="editor" >
         <editor-content class="editor-content"
                         :editor="editor"
                         ref="editor"
-                        @keyup.native="onEditorKeyUp"
-                        @keydown.native="onEditorKeyDown"/>
+                        @keydown.native="onEditorKeyDown"
+                        @keyup.native="onEditorKeyUp"/>
         <span v-if="!isFocusedEditor"
               class="placeholder">
             {{ placeholder }}
@@ -39,11 +39,6 @@ props: {
         type: String,
         default: null,
     },
-    height: {
-        type: Number,
-        required: false,
-        default: 100
-    }
 },
 
 data() {
@@ -61,8 +56,6 @@ data() {
             onBlur: this.onBlur,
         }),
         isFocusedEditor: false,
-        editorH: 32,
-        editorChangedH: 0,
     }
 },
 

@@ -35,7 +35,7 @@ data() {
 
 methods: {
     onAddAttachToTextEditor(evData){
-        window.console.log( evData.attach , `ChatFooter::onAddAttachToTextEditor`);
+        //window.console.log( evData.attach , `ChatFooter::onAddAttachToTextEditor`);
         //this.onEditorChangeHeight();
     },
 
