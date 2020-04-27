@@ -90,6 +90,10 @@ props: {
     clazz: String,
     editorPlaceholder: String,
     dropToDown: Boolean,
+    workMode: {
+        type: String,
+        required: true,
+    },
 },
 
 data() {
@@ -206,7 +210,14 @@ methods: {
         let apiResponse = null;
 
         try {
-            apiResponse = await this.$root.$api.chatAttachment(picsArr);
+            switch (this.workMode) {
+                case 'chat':
+                    apiResponse = await this.$root.$api.chatAttachment(picsArr);
+                    break;
+                case 'post':
+                    apiResponse = await this.$root.$api.storePostAttachments(picsArr);
+                    break;
+            }
         } catch (e) {
             window.console.warn(e.detailMessage);
             throw e;

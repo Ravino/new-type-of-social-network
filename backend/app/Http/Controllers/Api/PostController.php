@@ -86,8 +86,8 @@ class PostController extends Controller
             'body' => $request->body,
             'author_id' => \Auth::user()->id
         ]);
-        if(isset($request->atachmentIds) && count($request->atachmentIds)) {
-            PostAttachment::whereIn('id', $request->atachmentIds)->update(['post_id' => $post->id]);
+        if(isset($request->attachmentIds) && count($request->attachmentIds)) {
+            PostAttachment::whereIn('id', $request->attachmentIds)->update(['post_id' => $post->id]);
         }
         Event::dispatch('user.post.created', ['user_id' => \Auth::user()->id, 'post' => $post]);
         return new PostResource($post);
@@ -107,8 +107,8 @@ class PostController extends Controller
                     'body' => $request->body,
                     'author_id' => \Auth::user()->id
                 ]);
-                if(isset($request->atachmentIds) && count($request->atachmentIds)) {
-                    PostAttachment::whereIn('id', $request->atachmentIds)->update(['post_id' => $post->id]);
+                if(isset($request->attachmentIds) && count($request->attachmentIds)) {
+                    PostAttachment::whereIn('id', $request->attachmentIds)->update(['post_id' => $post->id]);
                 }
                 Event::dispatch('community.post.created', ['community' => $community, 'post' => $post]);
                 return new PostResource($post);
