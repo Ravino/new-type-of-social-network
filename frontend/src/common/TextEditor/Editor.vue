@@ -82,7 +82,8 @@ methods: {
             let str = editorText.replace(/<p>|<\/p>/g, '').trim();
 
             if (!(!!str.replace(/[\u{1F300}-\u{1F6FF}]/gu, '').trim())) {
-                if (str.match(/[\u{1F300}-\u{1F6FF}]/gu).length === 1) {
+                const reCheck = str.match(/[\u{1F300}-\u{1F6FF}]/gu);
+                if ( reCheck && reCheck.length === 1) {
                     editorText = `<p class="big-emoji">${str}</p>`;
                 }
             }

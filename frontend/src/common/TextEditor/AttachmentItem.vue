@@ -1,8 +1,11 @@
 <template>
     <li class="media position-relative pt-1 pr-1 mr-3 mb-1">
-        <img v-if="attach.isImage" :src="attach.thumb.path" class="" :alt="attach.originalName" :title="attach.originalName" />
-        <template v-else>
-            <i v-if="isArchive" class="fas fa-file-archive fa-3x d-inline-block" :alt="attach.originalName" :title="attach.originalName" ></i>
+        <img v-if="attach.isImage" :src="attach.thumb.path" class=""
+             v-on:load="onAttachmentLoaded"
+             :alt="attach.originalName" :title="attach.originalName" />
+        <template v-else v-on:show="onZipDisplayed">
+            <i v-if="isArchive" class="fas fa-file-archive fa-3x d-inline-block" :alt="attach.originalName"
+               :title="attach.originalName" ></i>
             <i v-else class="fas fa-file-alt fa-3x d-inline-block" :alt="attach.originalName"  :title="attach.originalName" ></i>
         </template>
 
@@ -36,6 +39,21 @@ methods: {
             event: ev,
             attach : this.attach
         });
+    },
+
+    onAttachmentLoaded(ev) {
+        this.$emit(`AttachmentLoaded`, {
+            event: ev,
+            attach : this.attach
+        });
+    },
+
+    onZipDisplayed () {
+        this.$emit(`ZipAttachmentDisplayed`, {
+            event: ev,
+            attach : this.attach
+        });
+
     }
 }
 }

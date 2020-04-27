@@ -60,7 +60,7 @@ components: {
 props: {
     messagesList: Array,
     currentDialog : Object,
-    filter: Object,
+    filter: Object
 },
 
 data() {
@@ -130,11 +130,9 @@ methods: {
 
     scrollToEnd() {
         return setTimeout(() => {
-            // TODO: Проскролить каждый
             const container = this.$el.querySelector('.ps-container');
             container.scrollTop = container.scrollHeight;
-
-        }, 500);
+        }, 200);
     }
 },
 
@@ -196,11 +194,6 @@ mounted() {
 
     this.scrollToEnd();
 },
-
-updated() {
-    // @TGA походу именно это вызывает прыжок чата
-    //this.scrollToEnd();
-}
 
 }
 </script>

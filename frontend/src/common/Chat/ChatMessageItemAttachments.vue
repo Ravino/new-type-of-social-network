@@ -3,7 +3,11 @@
         <div class="message-attachment-item mb-2"
              v-for="attach in message.attachments" v-bind:key="attach.id">
 
-            <img v-if="attach.isImage" class="message-sended-image" :src="attach.medium.path" :alt="attach.originalName" />
+            <img v-if="attach.isImage" class="message-sended-image"
+                 :width="attach.medium.width"
+                 :height="attach.medium.height"
+                 :src="attach.medium.path"
+                 :alt="attach.originalName" />
 
             <span v-else class="message-sended-attach d-flex align-items-center mb-2">
                 <IconZip/>

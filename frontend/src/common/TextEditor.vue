@@ -52,6 +52,8 @@
                         ref="attachList">
                         <AttachmentItem v-for="atFile in attachFiles"
                             @RemoveAttachment="onRemoveAttachment"
+                            @AttachmentLoaded="onAttachmentLoaded"
+                            @ZipAttachmentDisplayed="onAttachmentLoaded"
                             v-bind:attach="atFile"
                             v-bind:key="atFile.id">
                         </AttachmentItem>
@@ -137,6 +139,10 @@ methods: {
         });
     },
 
+    onAttachmentLoaded(evData) {
+        this.checkUpdatedChatContainerHeight();
+    },
+
     onEditorNewPost(evData) {
         this.$emit('editorPost', {
             postText: evData.postText,
@@ -197,7 +203,7 @@ methods: {
         }
 
         this.onEditorNewHeight(this.editorContainerHeight);
-        console.log('checkUpdatedChatContainerHeight', this.editorContainerHeight);
+       // console.log('checkUpdatedChatContainerHeight', this.editorContainerHeight);
     },
 
     async addUploadAttachment(picsArr) {
@@ -218,10 +224,10 @@ methods: {
                 this.attachFiles.push(newAtt);
                 this.$emit('newAttach', {attach: newAtt});
 
-                const $this = this;
-                setTimeout(function () {
-                    $this .checkUpdatedChatContainerHeight();
-                }, 1200); // TODO @TGA как узнать время, когда картинка загружена @veremey
+                // const $this = this;
+                // setTimeout(function () {
+                //     $this .checkUpdatedChatContainerHeight();
+                // }, 1200); // TODO @TGA как узнать время, когда картинка загружена @veremey
 
             });
         } else {

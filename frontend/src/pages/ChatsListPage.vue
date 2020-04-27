@@ -29,8 +29,7 @@
                     </div>
 
                     <vue-custom-scrollbar class="chat-list-scroll pb-0 pb-5"
-                                          :settings="customScrollBarSettings"
-                                          @ps-scroll-y="scrollHandle">
+                                          :settings="customScrollBarSettings">
                         <ul id="chatFriends" class="list-unstyled mb-0">
                             <template v-if="dialogsSearchedList && dialogFilter.text.length > 2">
                                 <ChatListItem v-for="dialog in dialogsSearchedList"
@@ -59,12 +58,9 @@
                     <div id="chatMessagesWrapperBody"
                          class="position-relative">
 
-                        <!-- TODO @veremey @TGA При @ chatFooterEditorChangedHeight нужно проскроливать чат вниз -->
-                            <!-- функция проскролла в ChatMessages.vue | scrollToEnd -->
                         <ChatMessages v-if="isMessagesLoaded" v-bind:messagesList="messagesList"
                                       v-bind:filter="filter"
                                       v-bind:currentDialog="currentDialog"
-                                      @chatFooterEditorChangedHeight="onChatFooterEditorChangedHeight"
                                       :style="`padding-bottom: ${changedHeight}`"
                                       ref="chatMessages">
                         </ChatMessages>
@@ -163,6 +159,7 @@ methods: {
 
     onChatFooterEditorChangedHeight(evData) {
         this.changedHeight = evData.changedHeight + 'px';
+        this.$refs.chatMessages.scrollToEnd();
     },
 
     /**
@@ -171,10 +168,6 @@ methods: {
      */
     checkIsDialogsList(){
         return (this.$root.$user.dialogsNumber > 0);
-    },
-
-    scrollHandle(evt) {
-        //console.log(evt);
     },
 
     dialogSearchKeyDownCheck(ev) {
@@ -202,6 +195,7 @@ methods: {
     addNewChatMessageToList(evData){
         this.addMessageToMessagesList(evData.message);
         this.updateDialogsList(evData.chatId, evData);
+        this.$refs.chatMessages.scrollToEnd();
 
         /** @TGA вообще-то только для того диалога, который открыт **/
         //if (this.$refs.chatMessages) {
@@ -300,7 +294,7 @@ async mounted() {
 
     if ( this.checkIsDialogsList()  &&  this.currentDialog ) {
         window.console.info(`call to switchToChat`);
-        await this.switchToChat( { dialogId : this.currentDialog.id })
+        await this.onSwitchToChat( { dialogId : this.currentDialog.id })
     }
     else {
         window.console.warn(`Условие не сработало!`);
@@ -316,8 +310,6 @@ async mounted() {
 
     this.$forceUpdate();
 },
-
-
 
 }
 </script>
