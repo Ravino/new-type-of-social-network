@@ -823,6 +823,25 @@ class PliziAPI {
     }
 
     /**
+     * Обновление пароля на странице профиля.
+     * @param formData
+     * @returns {object[]|null}
+     * @throws PliziAPIError
+     */
+    async changePassword(formData) {
+        let response = await this.__axios.post('api/user/password/change', formData, this.__getAuthHeaders())
+            .catch((error) => {
+                throw new PliziAPIError(`changePassword`, error.response);
+            });
+
+        if (response.status === 200) {
+            return response.data;
+        }
+
+        return null;
+    }
+
+    /**
      * Получение списка локаций по аргументу.
      * @param location
      * @returns {object[]|null}

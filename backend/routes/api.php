@@ -75,6 +75,7 @@ Route::group(['middleware' => ['auth.jwt', 'track.activity']], function () {
     Route::get('user/search/{search}', 'Api\UserController@search');
     Route::post('user/blacklist', 'Api\UserBlacklistController@post');
     Route::delete('user/blacklist', 'Api\UserBlacklistController@delete');
+    Route::post('/user/password/change', 'Auth\ChangePasswordController@changePassword');
 
     /**
      * Communities Resource
