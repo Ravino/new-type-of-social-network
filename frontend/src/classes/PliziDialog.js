@@ -108,6 +108,10 @@ class PliziDialog{
         return this._lastMessageDT;
     }
 
+    get lastMessageUnix(){
+        return this._lastMessageDT.getTime();
+    }
+
     get isRead(){
         return this._isRead;
     }

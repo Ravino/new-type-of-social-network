@@ -397,10 +397,11 @@ class PliziAPI {
      * @returns {object[]|null} - список диалогов юзера, или NULL если их нет
      */
     async chatDialogs() {
-        let response = await this.__axios.get('api/chat/dialogs', this.__getAuthHeaders()).catch((error) => {
-            this.__checkIsTokenExperis(error, `chatDialogs`);
-            throw new PliziAPIError(`chatDialogs`, error.response);
-        });
+        let response = await this.__axios.get('api/chat/dialogs', this.__getAuthHeaders())
+            .catch((error) => {
+                this.__checkIsTokenExperis(error, `chatDialogs`);
+                throw new PliziAPIError(`chatDialogs`, error.response);
+            });
 
         if (response.status === 200) {
             return response.data.list;

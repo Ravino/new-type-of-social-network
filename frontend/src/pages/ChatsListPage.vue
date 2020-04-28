@@ -31,20 +31,12 @@
                     <vue-custom-scrollbar class="chat-list-scroll pb-0 pb-4"
                                           :settings="customScrollBarSettings">
                         <ul id="chatFriends" class="list-unstyled mb-0">
-                            <template v-if="dialogsSearchedList && dialogFilter.text.length > 2">
-                                <ChatListItem v-for="dialog in dialogsSearchedList"
-                                              @switchToChat="onSwitchToChat"
-                                              v-bind:dialog="dialog" v-bind:currentDialogID="currentDialogID"
-                                              v-bind:key="dialog.id" :ref="`chatDialog-`+dialog.id">
-                                </ChatListItem>
-                            </template>
-                            <template v-else>
-                                <ChatListItem v-for="dialog in dialogsList"
-                                              @switchToChat="onSwitchToChat"
-                                              v-bind:dialog="dialog" v-bind:currentDialogID="currentDialogID"
-                                              v-bind:key="dialog.id" :ref="`chatDialog-`+dialog.id">
-                                </ChatListItem>
-                            </template>
+
+                            <ChatListItem v-for="dialog in dialogsList"
+                                          @switchToChat="onSwitchToChat"
+                                          v-bind:dialog="dialog" v-bind:currentDialogID="currentDialogID"
+                                          v-bind:key="dialog.id" :ref="`chatDialog-`+dialog.id">
+                            </ChatListItem>
                         </ul>
                     </vue-custom-scrollbar>
                 </div>
@@ -143,7 +135,8 @@ data() {
 
 computed: {
     dialogsList(){
-        return this.$root.$user.dialogs;
+        //return this.$root.$user.dialogs;
+        return this.$root.$user.dm.asArray();
     },
 
     currentDialogID(){
@@ -168,7 +161,7 @@ methods: {
      * @returns {boolean} - true если диалоги есть
      */
     checkIsDialogsList(){
-        return (this.$root.$user.dialogsNumber > 0);
+        return (this.$root.$user.dm.size > 0);
     },
 
     dialogSearchKeyDownCheck(ev) {
@@ -218,7 +211,7 @@ methods: {
             isRead : !!evData.message.isRead
         };
 
-        this.$root.$user.dialogStateUpdated(chatID, updatedFields);
+        this.$root.$user.dm.dialogStateUpdated(chatID, updatedFields);
     },
 
     clearChatMessagesFilters() {
@@ -229,6 +222,8 @@ methods: {
     async onSwitchToChat(evData) {
         let msgsResponse = null;
         this.isMessagesLoaded = false;
+
+        this.currentDialog =  window.app.$root.$user.dm.getByID(+evData.chatId);
 
         try {
             msgsResponse = await this.$root.$api.chatMessages(evData.chatId);
@@ -243,10 +238,7 @@ methods: {
         this.messagesList = [];
         msgsResponse.map( (msg) => {
             this.addMessageToMessagesList(msg);
-            //this.messagesList.push( new PliziMessage(msg) );
         });
-
-        this.currentDialog = this.$root.$user.dialogsSearch(+evData.chatId);
 
         this.isMessagesLoaded = true;
     },
@@ -255,19 +247,14 @@ methods: {
         this.isDialogsLoaded = true;
 
         const lastDialogID = this.$store.getters.activeDialog;
-
-        this.currentDialog = undefined;
-
-        if (this.checkIsDialogsList()) {
-            this.currentDialog = this.$root.$user.dialogsSearch(+lastDialogID);
-        }
+        this.currentDialog = this.$root.$user.dm.getByID(lastDialogID);
 
         if (typeof this.currentDialog === 'undefined') {
-            this.currentDialog = this.$root.$user.firstDialog;
+            this.currentDialog = this.$root.$user.dm.firstDialog;
+        }
 
-            if (this.currentDialog) {
-                await this.$store.dispatch('SET_ACTIVE_DIALOG', this.currentDialog.id);
-            }
+        if (this.currentDialog) {
+            await this.$store.dispatch('SET_ACTIVE_DIALOG', this.currentDialog.id);
         }
 
         return true;
@@ -295,27 +282,33 @@ methods: {
             });
         }
     },
+
+    async onDialogsListLoad(){
+        if (this.isDialogsLoaded)
+            return;
+
+        await this.loadDialogsList();
+
+        if ( this.currentDialog ) {
+            await this.onSwitchToChat( { chatId : this.currentDialog.id })
+        }
+        else {
+            window.console.warn(`Условие не сработало!`);
+        }
+    }
 },
 
-async mounted() {
-    await this.loadDialogsList();
-
-    if ( this.checkIsDialogsList()  &&  this.currentDialog ) {
-        window.console.info(`call to switchToChat`);
-        await this.onSwitchToChat( { dialogId : this.currentDialog.id })
-    }
-    else {
-        window.console.warn(`Условие не сработало!`);
-    }
+created(){
+    this.$root.$on('DialogsIsLoaded', this.onDialogsListLoad);
 
     this.$root.$on('newMessageInDialog', this.addNewChatMessageToList);
     this.$root.$on('removeMessageInDialog', this.removeMessageInList);
+},
 
-    this.$root.$on('dialogsLoad', ()=>{
-        this.$forceUpdate();
-    });
-
-    this.$forceUpdate();
+mounted() {
+    if (this.$root.$user.dm.isLoad) {
+        this.onDialogsListLoad();
+    }
 },
 
 }

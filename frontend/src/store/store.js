@@ -103,8 +103,10 @@ const store = new Vuex.Store({
         },
 
         SET_ACTIVE_DIALOG: (state, payload) => {
-            state.activeDialog = payload;
-            window.localStorage.setItem('pliziActiveDialog', payload);
+            if (payload) {
+                state.activeDialog = payload;
+                window.localStorage.setItem('pliziActiveDialog', payload);
+            }
         },
     },
 

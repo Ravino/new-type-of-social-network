@@ -116,7 +116,7 @@ methods: {
     },
 
 
-    afterUserLoad(evData) {
+    async afterUserLoad(evData) {
         if (evData.token !== ``  &&  evData.user) {
             this.$root.$isAuth = true;
             this.$root.$lastSearch = this.$store.getters.lastSearch;
@@ -130,9 +130,10 @@ methods: {
             // TODO: перенести отсюда - слишком часто будет вызываться
             this.loadInvitations();
             this.loadNotifications();
-            this.loadDialogs();
+            //this.loadDialogs();
 
-            this.$root.$user.fm.load();
+            await this.$root.$user.fm.load();
+            await this.$root.$user.dm.load();
         }
     },
 
@@ -176,7 +177,12 @@ methods: {
     },
 
 
+    /**
+     * @deprecated
+     * @returns {Promise<boolean>}
+     */
     async loadDialogs() {
+        window.console.warn(`App::loadDialogs`);
         let apiResponse = null;
 
         try {
