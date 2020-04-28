@@ -81,6 +81,13 @@ class PliziPost {
      */
     _createdAt = null;
 
+    /**
+     * Запись удалена, но только для отображения.
+     * @type {boolean}
+     * @private
+     */
+    _deleted = false;
+
     get id() {
         return this._id;
     }
@@ -159,6 +166,10 @@ class PliziPost {
         return this._createdAt;
     }
 
+    get deleted() {
+        return this._deleted;
+    }
+
     set id(value) {
         this._id = value;
     }
@@ -203,6 +214,10 @@ class PliziPost {
         this._createdAt = new Date(value);
     }
 
+    set deleted(value) {
+        this._deleted = Boolean(value);
+    }
+
     /**
      * @param {object} post
      */
@@ -226,6 +241,7 @@ class PliziPost {
         this.user = post.user? new PliziUzer(post.user) : null;
         this.community = post.community ? new PliziCommunity(post.community) : null;
         this.createdAt = post.createdAt;
+        this.deleted = false;
     };
 
     /**

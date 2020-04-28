@@ -18,7 +18,8 @@
                 <Post v-for="postItem in filteredPosts"
                       :key="postItem.id"
                       :post="postItem"
-                      @deletePost="deletePost">
+                      @deletePost="deletePost"
+                      @restorePost="restorePost">
                 </Post>
             </div>
 
@@ -120,13 +121,38 @@ methods: {
     }
 
     if (response) {
-      const fIndex = this.userPosts.findIndex((post) => {
+      const post = this.userPosts.find((post) => {
         return post.id === id;
       });
 
-      this.userPosts.splice(fIndex, 1);
+      post.deleted = true;
+
+      setTimeout(() => {
+        const postIndex = this.userPosts.find((post) => {
+          return post.id === id;
+        });
+
+        this.userPosts.splice(postIndex, 1);
+      }, 5000);
     }
   },
+  async restorePost(id) {
+    let response;
+
+    try {
+      response = await this.$root.$api.$post.restorePost(id);
+    } catch (e) {
+      console.warn(e.detailMessage);
+    }
+
+    if (response) {
+      const post = this.userPosts.find((post) => {
+        return post.id === id;
+      });
+
+      post.deleted = false;
+    }
+  }
 },
 
 mounted() {

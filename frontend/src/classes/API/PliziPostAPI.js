@@ -31,7 +31,7 @@ class PliziPostAPI extends PliziBaseAPI {
   async storePost(formData) {
     let response = await this.axios.post('api/posts', formData, this.authHeaders)
       .catch((error) => {
-        this.__checkIsTokenExperis(error, `storePost`);
+        this.checkIsTokenExperis(error, `storePost`);
         throw new PliziAPIError(`storePost`, error.response);
       });
 
@@ -57,7 +57,7 @@ class PliziPostAPI extends PliziBaseAPI {
 
     let response = await this.axios.post('api/posts/attachments', formData, this.authHeaders)
       .catch((error) => {
-        this.__checkIsTokenExperis(error, `storePostAttachments`);
+        this.checkIsTokenExperis(error, `storePostAttachments`);
         throw new PliziAPIError(`storePostAttachments`, error.response);
       });
 
@@ -77,8 +77,22 @@ class PliziPostAPI extends PliziBaseAPI {
   async deletePost(id) {
     let response = await this.axios.delete(`api/posts/${id}`, this.authHeaders)
       .catch((error) => {
-        this.__checkIsTokenExperis(error, `deletePost`);
+        this.checkIsTokenExperis(error, `deletePost`);
         throw new PliziAPIError(`deletePost`, error.response);
+      });
+
+    if (response.status === 200) {
+      return response.data;
+    }
+
+    return null;
+  }
+
+  async restorePost(id) {
+    let response = await this.axios.get(`api/posts/${id}/restore`, this.authHeaders)
+      .catch((error) => {
+        this.checkIsTokenExperis(error, `restorePost`);
+        throw new PliziAPIError(`restorePost`, error.response);
       });
 
     if (response.status === 200) {

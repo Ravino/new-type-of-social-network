@@ -178,4 +178,19 @@ class PostController extends Controller
             'message' => 'Запись не найдена.',
         ]);
     }
+
+    public function restore($id)
+    {
+        $user_post = \Auth::user()->posts()->where('id', $id)->restore();
+
+        if ($user_post) {
+            return response()->json([
+                'message' => 'Вы успешно восстановили запись.',
+            ]);
+        }
+
+        return response()->json([
+            'message' => 'Запись не найдена.',
+        ]);
+    }
 }
