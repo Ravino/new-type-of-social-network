@@ -91,17 +91,48 @@
             <form>
                 <div class="form-group">
                     <label for="old_password">Старый пароль</label>
-                    <input type="password" class="form-control" id="old_password">
+                    <input type="password"
+                           class="form-control"
+                           :class="{'is-invalid': oldPasswordError}"
+                           id="old_password"
+                           @input="oldPasswordError ? formErrors.oldPassword = null : null"
+                           v-model="passwords.oldPassword">
+                    <div v-if="oldPasswordError" class="invalid-feedback">
+                        {{ oldPasswordError }}
+                    </div>
                 </div>
                 <div class="form-group">
                     <label for="new_password">Новый пароль</label>
-                    <input type="password" class="form-control" id="new_password">
+                    <input type="password"
+                           class="form-control"
+                           :class="{'is-invalid': newPasswordError}"
+                           id="new_password"
+                           @input="newPasswordError ? formErrors.newPassword = null : null"
+                           v-model="passwords.newPassword">
+                    <div v-if="newPasswordError" class="invalid-feedback">
+                        {{ newPasswordError }}
+                    </div>
                 </div>
                 <div class="form-group">
                     <label for="new_password_confirmation">Подтвердите новый пароль</label>
-                    <input type="password" class="form-control" id="new_password_confirmation">
+                    <input type="password"
+                           class="form-control"
+                           :class="{'is-invalid': newPasswordConfirmationError}"
+                           id="new_password_confirmation"
+                           @input="newPasswordConfirmationError ? formErrors.newPasswordConfirmation = null : null"
+                           v-model="passwords.newPasswordConfirmation">
+                    <div v-if="newPasswordConfirmationError" class="invalid-feedback">
+                        {{ newPasswordConfirmationError }}
+                    </div>
                 </div>
-                <button type="submit" class="btn btn-primary btn-submit">Обновить</button>
+                <div v-if="isFormSuccess" class="text-success mb-3">
+                    {{ formSuccess }}
+                </div>
+                <button type="submit"
+                        class="btn btn-primary btn-submit"
+                        @click.prevent="changePassword">
+                    Обновить
+                </button>
             </form>
         </Modal>
     </div>
@@ -115,6 +146,21 @@
         components: {
             Modal,
         },
+      computed: {
+        oldPasswordError() {
+          return this.formErrors && this.formErrors.oldPassword ? this.formErrors.oldPassword[0] : null;
+        },
+        newPasswordError() {
+          return this.formErrors && this.formErrors.newPassword ? this.formErrors.newPassword[0] : null;
+        },
+        newPasswordConfirmationError() {
+          return this.formErrors && this.formErrors.newPasswordConfirmation ?
+            this.formErrors.newPasswordConfirmation[0] : null;
+        },
+        isFormSuccess() {
+          return !!this.formSuccess;
+        },
+      },
         data() {
             return {
                 form: {
@@ -122,6 +168,13 @@
                     smsConfirm: this.$root.$user.privacySettings.smsConfirm,
                 },
                 modalID: 'modal-' + Math.floor(Math.random() * 1000),
+                passwords: {
+                    oldPassword: null,
+                    newPassword: null,
+                    newPasswordConfirmation: null,
+                },
+              formErrors: null,
+              formSuccess: null,
             }
         },
         methods: {
@@ -138,6 +191,27 @@
                     this.$root.$user.updateData(response);
                 }
             },
+          async changePassword() {
+            this.formErrors = null;
+            this.formSuccess = null;
+
+            let response = null;
+
+            try {
+              response = await this.$root.$api.changePassword({
+                oldPassword: this.passwords.oldPassword,
+                newPassword: this.passwords.newPassword,
+                newPasswordConfirmation: this.passwords.newPasswordConfirmation,
+              });
+            } catch (e) {
+              this.formErrors =  e.data.errors;
+              console.log(e.detailMessage);
+            }
+
+            if (response) {
+              this.formSuccess = response.message;
+            }
+          },
         },
     }
 </script>
