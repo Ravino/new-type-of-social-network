@@ -35,6 +35,10 @@ class PliziBaseAPI {
         return this.__base.authHeaders;
     }
 
+    get authFileHeaders(){
+        return this.__base.authFileHeaders;
+    }
+
 
     /**
      * если в ответе сервер вернул, что `Token is expired`, то бросит событие `api:Unauthorized`

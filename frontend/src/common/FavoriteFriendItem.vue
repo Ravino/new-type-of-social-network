@@ -59,7 +59,6 @@ props : {
 data(){
     return {
         chatWindowShown: false,
-        messageWriting: false,  // TODO: используется, когда пользователь печатает
         typingTimeout: null,
         isTyper: false
     }

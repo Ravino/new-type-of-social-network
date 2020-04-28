@@ -5,8 +5,12 @@
         <div class="user-friend d-flex col-12" @click.prevent="switchToChat()">
             <div v-if="dialog.isPrivate" class="user-friend-pic mr-3">
                 <img class="user-friend-img rounded-circle overflow-hidden" v-bind:src="dialog.companion.userPic" v-bind:alt="dialog.companion.firstName" />
-                <span v-if="dialog.companion.isOnline" class="user-friend-isonline" :title="dialog.companion.firstName + ' онлайн'"></span>
-                <span v-else class="user-friend-isoffline"></span>
+
+                <div v-if="isTyper" class="writing"><span></span><span></span><span></span></div>
+                <div v-else class="">
+                    <span v-if="dialog.companion.isOnline" class="user-friend-isonline" :title="dialog.companion.firstName + ' онлайн'"></span>
+                    <span v-else class="user-friend-isoffline"></span>
+                </div>
             </div>
 
             <div v-if="dialog.isGroup" class="user-friend-pic mr-3">
@@ -54,9 +58,10 @@ props: {
     },
 },
 
-methods: {
-    switchToChat() {
-        this.$emit('switchToChat', {chatId: this.dialog.id});
+data(){
+    return {
+        typingTimeout: null,
+        isTyper: false
     }
 },
 
@@ -74,7 +79,38 @@ computed: {
 
     groupDialogName(){
         return 'Вы, '+ this.dialog.attendeesName.join(', ');
+    },
+},
+
+methods: {
+    switchToChat() {
+        this.$emit('switchToChat', {chatId: this.dialog.id});
+    },
+
+    /**
+     * @param {Object} evData
+     */
+    onCompanionTyping(evData) {
+        if (this.dialog.companion.id !== evData.user.id)
+            return;
+
+        if (this.dialog.id !== evData.chatId)
+            return;
+
+        if (this.typingTimeout) {
+            clearTimeout(this.typingTimeout);
+        }
+
+        this.isTyper = true;
+
+        this.typingTimeout = setTimeout(() => {
+            this.isTyper = false;
+        }, 1000);
     }
+},
+
+mounted(){
+    this.$root.$on('userIsTyping', this.onCompanionTyping);
 }
 
 }

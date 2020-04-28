@@ -138,7 +138,7 @@ methods: {
         let apiResponse = null;
 
         try {
-            apiResponse = await this.$root.$api.chatMessageDelete(msgID);
+            apiResponse = await this.$root.$api.$chat.messageDelete(msgID);
         } catch (e) {
             window.console.warn(e.detailMessage);
             throw e;

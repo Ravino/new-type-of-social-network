@@ -72,7 +72,7 @@ methods: {
         const newAttendees = this.selectedRecipients.map( rItem => rItem.id );
 
         try {
-            apiResponse = await this.$root.$api.openChatDialog(newAttendees);
+            apiResponse = await this.$root.$api.$chat.openDialog(newAttendees);
         } catch (e){
             window.console.warn( e.detailMessage );
             throw e;

@@ -194,6 +194,9 @@ class PliziAPI {
         };
     }
 
+    get authFileHeaders(){
+        return this.__getAuthFileHeaders();
+    }
 
     /**
      * геттер для получения header'а bearer
@@ -423,216 +426,6 @@ class PliziAPI {
 
 
     /**
-     * @public
-     * @param {string} provider
-     * @param {string} token
-     * @returns {Promise}
-     */
-    async socialLogin(provider, token) {
-        return this.__axios.post(`/api/sociallogin/${provider}`, {
-            token: token,
-        });
-    }
-
-
-    /**
-     * загружает список диалогов (чатов) у юзера
-     * @public
-     * @returns {object[]|null} - список диалогов юзера, или NULL если их нет
-     */
-    async chatDialogs() {
-        let response = await this.__axios.get('api/chat/dialogs', this.__getAuthHeaders())
-            .catch((error) => {
-                this.__checkIsTokenExperis(error, `chatDialogs`);
-                throw new PliziAPIError(`chatDialogs`, error.response);
-            });
-
-        if (response.status === 200) {
-            return response.data.list;
-        }
-
-        return null;
-    }
-
-
-    /**
-     * загружает список сообщений (переписку) в определённом диалоге чата
-     * @public
-     * @param {number} dialogID - ID диалога
-     * @returns {object[]|null} - список сообщений в диалоге, или NULL если была ошибка
-     */
-    async chatMessages(dialogID) {
-        let response = await this.__axios.get('api/chat/messages/' + (dialogID >>> 0), this.__getAuthHeaders()).catch((error) => {
-            this.__checkIsTokenExperis(error, `chatMessages`);
-            throw new PliziAPIError(`chatMessages`, error.response);
-        });
-
-        if (response.status === 200) {
-            return response.data.list;
-        }
-
-        return null;
-    }
-
-
-    async chatMessageDelete(messageID) {
-        let response = await this.__axios.delete(`api/chat/message/${messageID}`, this.__getAuthHeaders())
-            .catch((error) => {
-                this.__checkIsTokenExperis(error, `chatMessageDelete`);
-                throw new PliziAPIError(`chatMessageDelete`, error.response);
-            });
-
-        if (response.status === 200) {
-            return true;
-        }
-
-        return null;
-    }
-
-
-    /**
-     * отправляет сообщение в чат
-     * @param {number} dialogID - ID чата (диалога)
-     * @param {string} message - текст сообщения
-     * @param {number[]} attachments - ID-шники аттачментов
-     * @returns {object} - объект с данными как в PliziMessage
-     * @throws PliziAPIError
-     */
-    async chatSend(dialogID, message, attachments) {
-        const sendData = {
-            chatId: dialogID,
-            body: message,
-            attachments: attachments
-        };
-
-        let response = await this.__axios.post('api/chat/send', sendData, this.__getAuthHeaders())
-            .catch((error) => {
-                this.__checkIsTokenExperis(error, `chatSend`);
-                throw new PliziAPIError(`chatSend`, error.response);
-            });
-
-        if (response.status === 200) {
-            return response.data;
-        }
-
-        return null;
-    }
-
-
-    /**
-     * @link http://vm1095330.hl.had.pm:8082/docs/#/Chats/sendMessage
-     * @param {object} config - объект с полями в соответствии с докой
-     * @param {object} forwardData - объект с полями в соответствии с докой
-     * @returns {object} - объект с данными как в PliziMessage (также есть поле с chatId)
-     * @throws PliziAPIError
-     */
-    async chatForwardMessage(config, forwardData) {
-        let apiPath;
-
-        if (config.chatId) {
-            forwardData.chatId = config.chatId;
-            apiPath = `api/chat/send`;
-        }
-        else {
-            forwardData.userId = config.userId;
-            apiPath = `api/chat/message/user`;
-        }
-
-        let response = await this.__axios.post(apiPath, forwardData, this.__getAuthHeaders())
-            .catch((error) => {
-                this.__checkIsTokenExperis(error, `chatForwardMessage`);
-                throw new PliziAPIError(`chatForwardMessage`, error.response);
-        });
-
-        if (response.status === 200) {
-            return response.data;
-        }
-
-        return null;
-    }
-
-
-    /**
-     * отправляет сообщение пользователю и создаёт новый чат (диалог)
-     * @param {number} userID - ID которому шлём
-     * @param {string} message - текст сообщения
-     * @param {number[]} attachments - ID-шники аттачментов
-     * @returns {object} - объект с данными как в PliziMessage (также есть поле с chatId)
-     * @throws PliziAPIError
-     */
-    async chatMessage(userID, message, attachments) {
-        const sendData = {
-            body: message,
-            userId: userID,
-            attachments: attachments
-        };
-
-        let response = await this.__axios.post('api/chat/message/user', sendData, this.__getAuthHeaders()).catch((error) => {
-            this.__checkIsTokenExperis(error, `chatMessage`);
-            throw new PliziAPIError(`chatMessage`, error.response);
-        });
-
-        if (response.status === 200) {
-            return response.data;
-        }
-
-        return null;
-    }
-
-
-    /**
-     * создаёт новый пустой диалог с юзерами, если диалог с ними уже есть - просто возвращает ID существующего диалога
-     * @param {number[]} users - список ID-шников юзеров-собеседников
-     * @returns {object} - ID диалога
-     */
-    async openChatDialog(users) {
-        const sendData = {
-            userIds: users
-        };
-
-        let response = await this.__axios.post('api/chat/open', sendData, this.__getAuthHeaders())
-            .catch((error) => {
-                this.__checkIsTokenExperis(error, `openChatDialog`);
-                throw new PliziAPIError(`openChatDialog`, error.response);
-            });
-
-        if (response.status === 200) {
-            return response.data.data;
-        }
-
-        return null;
-    }
-
-
-    /**
-     * добавляет аттачмент к сообщению пользователя
-     * @param sendFiles - текст сообщения
-     * @returns {object} - массив со списками ID-шников аттачментов
-     * @throws PliziAPIError
-     */
-    async chatAttachment(sendFiles) {
-        const formData = new FormData();
-
-        /**  @TGA: sendFiles.map не работает :( **/
-        for(let i=0; i< sendFiles.length; i++){
-            formData.append('files[]', sendFiles[i]);
-        }
-
-        let response = await this.__axios.post('api/chat/message/attachments', formData, this.__getAuthFileHeaders())
-            .catch((error) => {
-                this.__checkIsTokenExperis(error, `chatAttachment`);
-                throw new PliziAPIError(`chatAttachment`, error.response);
-            });
-
-        if (response.status === 200) {
-            return response.data.data.list;
-        }
-
-        return null;
-    }
-
-
-    /**
      * получаем список френдов, свой или другого юзера
      * @param {number|null} userID - ID юзера чей список друзей хотим получить
      * @returns {object[]|null}
@@ -851,20 +644,6 @@ class PliziAPI {
             return this.__$root.$emit(eventName, eventData || {});
     }
 
-    async dialogSearchByName(name) {
-        let response = await this.__axios.get(`api/chat/dialogs?search=` + name, this.__getAuthHeaders())
-            .catch((error) => {
-                this.__checkIsTokenExperis(error, `dialogSearchByName`);
-                throw new PliziAPIError(`dialogSearchByName`, error.response);
-            });
-
-        if (response.status === 200) {
-            return response.data.list;
-        }
-
-        return null;
-    }
-
     /**
      **************************************************************************
      * Private section
@@ -985,7 +764,7 @@ class PliziAPI {
     }
 
 
-    checkIsTokenExperis(error, srcMethod) {
+    checkIsTokenExpires(error, srcMethod) {
         return this.__checkIsTokenExperis(error, srcMethod);
     }
 

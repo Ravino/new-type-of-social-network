@@ -78,7 +78,7 @@ methods: {
         let apiResponse = null;
 
         try {
-            apiResponse = await this.$root.$api.chatMessage(msg.receiverId, msg.message.postText, msg.message.attachments);
+            apiResponse = await this.$root.$api.$chat.privateMessageSend(msg.receiverId, msg.message.postText, msg.message.attachments);
         }
         catch (e){
             window.console.warn(e.detailMessage);

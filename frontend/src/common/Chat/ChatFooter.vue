@@ -91,7 +91,7 @@ methods: {
         let apiResponse = null;
 
         try {
-            apiResponse = await this.$root.$api.chatSend( chatId, msgText, attachments );
+            apiResponse = await this.$root.$api.$chat.messageSend( chatId, msgText, attachments );
         } catch (e){
             window.console.warn( e.detailMessage );
             throw e;

@@ -1,7 +1,7 @@
 <template>
     <div class="row" :class="{ 'is-chatPage' : ('ChatsListPage'===this.$root.$router.currentRoute.name) }" >
         <div class="col-sm-1 col-md-1 col-lg-1 col-xl-1 chat-page-height overflow-hidden pl-0">
-            <AccountToolbarRight></AccountToolbarRight>
+<!--            <AccountToolbarRight></AccountToolbarRight>-->
             <AccountToolbarLeft></AccountToolbarLeft>
         </div>
 
@@ -13,7 +13,7 @@
 
                     <vue-custom-scrollbar class="chat-list-scroll pb-0 pb-4"
                                           :settings="customScrollBarSettings">
-                        <ul id="chatFriends" class="list-unstyled mb-0">
+                        <ul id="chatDialogsList" class="list-unstyled mb-0">
 
                             <ChatListItem v-for="dialog in dialogsList"
                                           @switchToChat="onSwitchToChat"
@@ -208,15 +208,13 @@ methods: {
     },
 
     async onSwitchToChat(evData) {
-        window.console.log(`onSwitchToChat`);
         let msgsResponse = null;
         this.isMessagesLoaded = false;
 
         this.currentDialog =  window.app.$root.$user.dm.getByID(+evData.chatId);
 
         try {
-            msgsResponse = await this.$root.$api.chatMessages(evData.chatId);
-            //msgsResponse = await this.$root.$api.chat.messages(evData.chatId);
+            msgsResponse = await this.$root.$api.$chat.messages(evData.chatId);
         }
         catch (e){
             window.console.warn(e.detailMessage);
@@ -234,11 +232,9 @@ methods: {
     },
 
     async loadDialogsList() {
-        window.console.log(`loadDialogsList`);
         this.isDialogsLoaded = true;
 
         const lastDialogID = this.$store.getters.activeDialog;
-        window.console.log(lastDialogID, `lastDialogID`);
         this.currentDialog = this.$root.$user.dm.getByID(lastDialogID);
 
         if (typeof this.currentDialog === 'undefined') {
@@ -266,7 +262,7 @@ methods: {
         let response;
 
         try {
-            response = await this.$root.$api.dialogSearchByName(this.dialogFilter.text);
+            response = await this.$root.$api.$chat.dialogSearchByName(this.dialogFilter.text);
         } catch (e) {
             console.warn(e.detailMessage);
         }

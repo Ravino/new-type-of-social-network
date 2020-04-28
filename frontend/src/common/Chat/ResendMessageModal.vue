@@ -123,7 +123,7 @@ methods: {
         let apiResponse = null;
 
         try {
-            apiResponse = await this.$root.$api.chatForwardMessage( config, msgData );
+            apiResponse = await this.$root.$api.$chat.messageForward( config, msgData );
         } catch (e){
             window.console.warn( e.detailMessage );
             throw e;
@@ -149,7 +149,7 @@ computed: {
         this.recipients = new PliziRecipientsCollection();
 
         /** @TGA сначала диалоги - это важно **/
-        this.$root.$user.dialogs.map( (dItem) => {
+        this.$root.$user.dm.asArray().map( (dItem) => {
             this.recipients.add(dItem.companion, dItem.id);
         });
 

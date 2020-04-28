@@ -99,20 +99,18 @@ class PliziDialogsCollection extends PliziCollection {
     }
 
     dialogStateUpdated(dialogID, newData){
-        //window.console.dir(newData, `newData`);
-        //window.console.log(dialogID, `dialogID`);
-
         let dlg = this.getByID(dialogID);
-        //window.console.log(dlg, `dlg`);
 
-        dlg.isLastFromMe = newData.lastMessageDT;
-        dlg.isLastFromMe = newData.lastMessageText;
-        dlg.isLastFromMe = newData.isLastFromMe;
-        dlg.isLastFromMe = newData.isRead;
+        if (dlg) {
+            dlg.lastMessageDT = newData.lastMessageDT;
+            dlg.lastMessageText = newData.lastMessageText;
+            dlg.isLastFromMe = newData.isLastFromMe;
+            dlg.isRead = newData.isRead;
 
-        this.collection.set(dialogID, dlg);
+            this.collection.set(dialogID, dlg);
 
-        this.storeData();
+            this.storeData();
+        }
     }
 
 }

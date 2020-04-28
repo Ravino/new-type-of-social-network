@@ -263,7 +263,7 @@ methods: {
         let apiResponse = null;
 
         try {
-            apiResponse = await this.$root.$api.chatForwardMessage( config, msgData );
+            apiResponse = await this.$root.$api.$chat.messageForward( config, msgData );
         } catch (e){
             window.console.warn( e.detailMessage );
             throw e;

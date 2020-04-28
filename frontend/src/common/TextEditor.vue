@@ -224,7 +224,7 @@ methods: {
         try {
             switch (this.workMode) {
                 case 'chat':
-                    apiResponse = await this.$root.$api.chatAttachment(picsArr);
+                    apiResponse = await this.$root.$api.$chat.attachment(picsArr);
                     break;
 
                 case 'post':
