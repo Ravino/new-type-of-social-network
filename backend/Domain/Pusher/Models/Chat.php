@@ -30,4 +30,9 @@ class Chat extends Model
         return $this->belongsToMany(Profile::class, 'chat_party', 'chat_id', 'user_id')
             ->join('users', 'profiles.user_id', '=', 'users.id')->select('profiles.*', 'users.*');
     }
+
+    public function getDateFormat()
+    {
+        return 'U';
+    }
 }

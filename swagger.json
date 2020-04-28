@@ -410,6 +410,63 @@
         ]
       }
     },
+    "/chat/{id}": {
+      "delete": {
+        "tags": [
+          "Chats"
+        ],
+        "description": "Удалить чат",
+        "operationId": "deleteChat",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "ID диалога",
+            "required": true,
+            "schema": {
+              "type": "integer"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "data": {
+                      "type": "object",
+                      "properties": {
+                        "id": {
+                          "type": "number"
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/posts": {
       "post": {
         "tags": [
@@ -1964,6 +2021,49 @@
         ],
         "description": "Друзья друзей",
         "operationId": "fofRequests",
+        "responses": {
+          "200": {
+            "description": "ОК",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "data": {
+                      "type": "object",
+                      "properties": {
+                        "list": {
+                          "type": "array",
+                          "items": {
+                            "$ref": "#/components/schemas/User"
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Not allowed",
+            "content": {}
+          }
+        },
+        "security": [
+          {
+            "Authorization": []
+          }
+        ]
+      }
+    },
+    "/user/friendship/recommended": {
+      "get": {
+        "tags": [
+          "Friendships"
+        ],
+        "description": "Рекомендуемые друзья",
+        "operationId": "recommendedRequests",
         "responses": {
           "200": {
             "description": "ОК",

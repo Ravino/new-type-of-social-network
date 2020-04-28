@@ -26,7 +26,7 @@ class ChatRepository
     {
         $query = Chat::with(['attendees' => function($query) use ($user_id) {
             $query->where('profiles.user_id', '<>', $user_id);
-        }]);
+        }])->whereNull('deleted_at');
 
         if(!empty($search) || strlen($search) > 3) {
             $query->whereHas('attendees', function($profile) use ($search, $user_id) {
@@ -162,6 +162,15 @@ class ChatRepository
     }
 
     /**
+     * @param $user_id
+     * @param $chat_id
+     * @return bool
+     */
+    public function isUserInChat($user_id, $chat_id) {
+        return DB::table('chat_party')->where('user_id', $user_id)->where('chat_id', $chat_id)->exists();
+    }
+
+    /**
      * @param $chat_id
      * @param $user_id
      * @return ChatResource
@@ -171,5 +180,16 @@ class ChatRepository
             ['chat_id' => $chat_id, 'user_id' => $user_id, 'created_at' => time()]
         ]);
         return $this->getChatById($chat_id);
+    }
+
+    /**
+     * @param int $chat_id
+     * @return bool
+     */
+    public function destroyChat(int $chat_id) {
+        Chat::where('id', $chat_id)->update([
+            'deleted_at' => time()
+        ]);
+        return true;
     }
 }

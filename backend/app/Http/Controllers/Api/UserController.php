@@ -146,6 +146,14 @@ class UserController extends Controller
     }
 
     /**
+     * @return UserCollection
+     */
+    public function getRecommendedFriends() {
+        $users = Auth::user()->recommendedFriends;
+        return new UserCollection($users);
+    }
+
+    /**
      * @param Request $request
      * @return \Illuminate\Http\JsonResponse
      */

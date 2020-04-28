@@ -5,8 +5,6 @@ namespace Domain\PusherListeners;
 
 use Domain\Pusher\Events\UserTypingEvent;
 use Domain\Pusher\WampServer as Pusher;
-use Illuminate\Bus\Queueable;
-use Illuminate\Contracts\Queue\ShouldQueue;
 
 class UserTypingNotification
 {

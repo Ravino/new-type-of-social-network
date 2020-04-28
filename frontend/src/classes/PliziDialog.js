@@ -173,6 +173,19 @@ class PliziDialog{
         this._isLastFromMe = !!value;
     }
 
+    checkInAttendees(txt){
+        let isFound = false;
+        txt = txt.toLowerCase();
+
+        this._attendees.map( (aItem) => {
+            if (aItem.firstName.toLowerCase().includes(txt)  ||  aItem.lastName.toLowerCase().includes(txt)) {
+                isFound = true;
+            }
+        });
+
+        return isFound;
+    }
+
     stateUpdate(updatedData) {
         this.lastMessageDT = updatedData.lastMessageDT;
         this.lastMessageText = updatedData.lastMessageText;
