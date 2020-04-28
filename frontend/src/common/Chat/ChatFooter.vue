@@ -32,9 +32,7 @@ mixins : [ChatMixin],
 
 data() {
     return {
-        /** @TGA временно - для теста **/
-        tmpSocket: null,
-        placeholder: '',
+        placeholder: 'Написать сообщение...',
         timeout: 0
     }
 },
@@ -52,7 +50,6 @@ methods: {
         //window.console.log(keyPressData, `keyPressData`);
 
         this.$root.$api.sendToChannel(keyPressData);
-        // this.tmpSocket.send(keyPressData);
     },
 
     onAddAttachToTextEditor(evData){
@@ -112,20 +109,10 @@ methods: {
             window.console.info( apiResponse );
         }
     },
-
-    someoneTyping(evData) {
-        if(evData.chatId === this.currentDialog.id) {
-            this.placeholder = evData.user.profile.firstName + ' Печатает';
-            clearTimeout(this.timeout);
-            this.timeout = setTimeout(() => {
-                this.placeholder = '';
-            }, 500);
-        }
-    }
 },
 
 mounted(){
-    this.$root.$on('userIsTyping', this.someoneTyping);
+    //this.$root.$on('userIsTyping', this.someoneTyping);
 }
 
 }

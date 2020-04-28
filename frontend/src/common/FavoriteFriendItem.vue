@@ -6,7 +6,7 @@
         <div class="plz-favorit-friend-userpic">
             <img class="plz-favorit-userpic rounded-circle" :src="friend.userPic" :alt="friend.firstName" />
 
-            <div v-if="messageWriting" class="writing"><span></span><span></span><span></span></div>
+            <div v-if="isTyper" class="writing"><span></span><span></span><span></span></div>
             <div v-else class="">
                 <span v-if="friend.isOnline" class="plz-favorit-isonline" title="в сети"></span>
                 <span v-else class="plz-favorit-isoffline" :title="getSexTitle"></span>
@@ -17,7 +17,7 @@
             <span class="plz-favorit-friend-name">{{friend.firstName}}</span>
 
             <div class="plz-favorit-friend-status">
-                <p v-if="friend.isType">
+                <p v-if="isTyper">
                             <span class="loading">
                                 <span></span>
                                 <span></span>
@@ -59,7 +59,9 @@ props : {
 data(){
     return {
         chatWindowShown: false,
-        messageWriting: false  // TODO: используется, когда пользователь печатает
+        messageWriting: false,  // TODO: используется, когда пользователь печатает
+        typingTimeout: null,
+        isTyper: false
     }
 },
 
@@ -68,8 +70,29 @@ methods: {
         this.chatWindowShown = !this.chatWindowShown;
         //this.$root.$alert(`По клику будем показывать привязанный чат`, 'bg-info', 5);
     },
+
+    /**
+     * @param {Object} evData
+     */
+    onFriendTyping(evData) {
+        if (this.friend.id !== evData.user.id)
+            return;
+
+        if (this.typingTimeout) {
+            clearTimeout(this.typingTimeout);
+        }
+
+        this.isTyper = true;
+
+        this.typingTimeout = setTimeout(() => {
+            this.isTyper = false;
+        }, 2000);
+    }
 },
 
+mounted(){
+    this.$root.$on('userIsTyping', this.onFriendTyping);
+}
 
 }
 </script>

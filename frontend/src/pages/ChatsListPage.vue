@@ -1,6 +1,7 @@
 <template>
     <div class="row" :class="{ 'is-chatPage' : ('ChatsListPage'===this.$root.$router.currentRoute.name) }" >
         <div class="col-sm-1 col-md-1 col-lg-1 col-xl-1 chat-page-height overflow-hidden pl-0">
+            <AccountToolbarRight></AccountToolbarRight>
             <AccountToolbarLeft></AccountToolbarLeft>
         </div>
 
@@ -66,6 +67,7 @@
 import vueCustomScrollbar from 'vue-custom-scrollbar';
 
 import AccountToolbarLeft from '../common/AccountToolbarLeft.vue';
+import AccountToolbarRight from '../common/AccountToolbarRight.vue';
 import Spinner from '../common/Spinner.vue';
 
 import ChatDialogsFilter from './ChatDialogsFilter.vue';
@@ -82,7 +84,8 @@ export default {
 name: 'ChatsListPage',
 components: {
     vueCustomScrollbar,
-    AccountToolbarLeft, Spinner,
+    AccountToolbarLeft, AccountToolbarRight,
+    Spinner,
     ChatDialogsFilter, ChatListItem,
     ChatHeader, ChatMessages, ChatFooter,
 },
