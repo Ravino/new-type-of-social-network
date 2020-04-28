@@ -1,5 +1,6 @@
 import PliziUzer from './PliziUser.js';
 import PliziCommunity from './PliziCommunity.js';
+import PliziAttachment from "./PliziAttachment";
 
 class PliziPost {
     /**
@@ -88,6 +89,13 @@ class PliziPost {
      */
     _deleted = false;
 
+    /**
+     * объект с аттачментами
+     * @type {object[]}
+     * @private
+     */
+    _attachments = null;
+
     get id() {
         return this._id;
     }
@@ -170,6 +178,10 @@ class PliziPost {
         return this._deleted;
     }
 
+    get attachments(){
+        return this._attachments;
+    }
+
     set id(value) {
         this._id = value;
     }
@@ -218,6 +230,10 @@ class PliziPost {
         this._deleted = Boolean(value);
     }
 
+    set attachments(value) {
+        this._attachments = value;
+    }
+
     /**
      * @param {object} post
      */
@@ -242,6 +258,13 @@ class PliziPost {
         this.community = post.community ? new PliziCommunity(post.community) : null;
         this.createdAt = post.createdAt;
         this.deleted = false;
+        this.attachments = [];
+
+        if (post.attachments && post.attachments.list && post.attachments.list.length > 0) {
+            post.attachments.list.map((aItem) => {
+                this.attachments.push(new PliziAttachment(aItem));
+            });
+        }
     };
 
     /**

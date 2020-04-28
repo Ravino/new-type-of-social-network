@@ -63,11 +63,26 @@
             </div>
 
             <div class="col-12 plz-post-item-images">
-                <div v-if="post.isImages" class="post-images">
-                    <PostImage v-for="(postImageItem, postImageindex) in post.images"
-                               :class="['post-image', postImageindex === 0 ? 'first-post-image' : null]"
-                               :key="postImageindex"
-                               :src="postImageItem"/>
+                <div class="post-images">
+                    <template v-for="(postAttachment, postAttachmentIndex) in post.attachments">
+                        <PostImage v-if="postAttachment.isImage && postAttachmentIndex < 5"
+                                   :class="['post-image', postAttachmentIndex === 0 ? 'first-post-image' : null]"
+                                   :src="postAttachment.image.normal.path"/>
+                    </template>
+
+                    <template v-for="(postAttachment) in post.attachments">
+                        <template v-if="!postAttachment.isImage">
+                            <div>
+                                <i v-if="postAttachment.isArchive"
+                                   class="fas fa-file-archive fa-3x d-inline-block"
+                                   :alt="postAttachment.originalName"
+                                   :title="postAttachment.originalName" ></i>
+                                <i v-else class="fas fa-file-alt fa-3x d-inline-block"
+                                   :alt="postAttachment.originalName"
+                                   :title="postAttachment.originalName" ></i>
+                            </div>
+                        </template>
+                    </template>
                 </div>
             </div>
 
@@ -122,6 +137,7 @@
   import IconShare from '../icons/IconShare.vue';
 
   import PostImage from './PostImage.vue';
+  import AttachmentItem from "./TextEditor/AttachmentItem.vue";
 
   import PliziPost from '../classes/PliziPost.js';
 
@@ -134,6 +150,7 @@
       IconEye,
       IconMessageUserPost,
       PostImage,
+      AttachmentItem,
     },
     props: {
       post: PliziPost,
