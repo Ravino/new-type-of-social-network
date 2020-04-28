@@ -92,7 +92,7 @@ methods: {
 computed: {
     getFriendsCombo(){
         /** @TGA сначала диалоги - это важно **/
-        this.$root.$user.dialogs.map( (dItem) => {
+        this.$root.$user.dm.asArray().map( (dItem) => {
             this.recipients.add(dItem.companion, dItem.id);
         });
 

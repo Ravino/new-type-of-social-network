@@ -3,18 +3,18 @@
         <vue-custom-scrollbar class="chat-messages-scroll py-4" :settings="customScrollbarSettings"
                               ref="vueCustomScrollbar">
             <div v-if="messagesList  &&  messagesList.length>0" class="d-flex flex-column">
-                <div v-if="messagesList.length === 0" class="text-center">
-                    <p>{{ filteredMessages }}</p>
+                <div v-if="filteredMessages.length === 0" class="text-center">
+                    <p v-if="filter.range &&  filter.range.isSameDate">
+                        Ничего не найдено за <b>{{ rangeStart | toLongDate }}</b>
+                    </p>
+                    <p v-if="filter.range &&  !filter.range.isSameDate">
+                        Ничего не найдено за период с <b>{{rangeStart | toLongDate}}</b>  по <b>{{rangeEnd | toLongDate}}</b>
+                    </p>
+                    <p v-if="!filter.range &&  filter.text!==''">
+                        Не найдено сообщений с текстом <b>{{ filter.text }}</b>
+                    </p>
 
-<!--                    if (!filteredMessages.length) {-->
-<!--                    if (this.filter.range.isSameDate) {-->
-<!--                    return `Ничего не найдено за ${this.$options.filters.toLongDate(range_start)}`;-->
-<!--                    }-->
-
-<!--                    return `Ничего не найдено за период с ${this.$options.filters.toLongDate(range_start)} по ${this.$options.filters.toLongDate(range_end)}`;-->
-<!--                    }-->
-
-                    <button class="btn btn-filter-clear" @click="clearFilters">
+                    <button class="btn btn-link --btn-filter-clear" @click="clearFilters">
                         Очистить фильтр
                     </button>
                 </div>
@@ -98,6 +98,9 @@ data() {
         chatVideoModalContent: {
             videoLink: null,
         },
+
+        range_start : null,
+        range_end : null
     }
 },
 
@@ -179,6 +182,9 @@ computed: {
         if (this.filter.range && this.filter.range.start && this.filter.range.end) {
             range_start = this.filter.range.start;
             range_end = this.filter.range.end;
+
+            this.rangeStart = range_start;
+            this.rangeEnd = range_end;
         }
 
         // есть и текст и дата
@@ -248,12 +254,12 @@ mounted() {
 </script>
 
 <style lang="scss">
-    .btn-filter-clear {
-        color: #1554F7;
-        text-decoration: underline;
+.btn-filter-clear {
+    color: #1554F7;
+    text-decoration: underline;
 
-        &:hover {
-            box-shadow: none;
-        }
+    &:hover {
+        box-shadow: none;
     }
+}
 </style>
