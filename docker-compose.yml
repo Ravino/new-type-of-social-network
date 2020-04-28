@@ -62,6 +62,7 @@ services:
     container_name: "plizi_php_ws"
     working_dir: /app
     volumes:
+    - ./frontend/docker/certbot/conf/:/etc/nginx/ssl/
     - ./backend:/app
     ports:
     - "7070:7070"
