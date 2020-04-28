@@ -161,4 +161,21 @@ class PostController extends Controller
             return response()->json(['message' => 'Вы успешно сняли свою оценку с данной записи'], 200);
         }
     }
+
+    public function delete(Post $post)
+    {
+        $user_post = \Auth::user()->posts()->where('id', $post->id);
+
+        if ($user_post) {
+            $post->delete();
+
+            return response()->json([
+                'message' => 'Вы успешно удалили запись.',
+            ]);
+        }
+
+        return response()->json([
+            'message' => 'Запись не найдена.',
+        ]);
+    }
 }

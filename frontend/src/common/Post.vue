@@ -46,6 +46,12 @@
                                 Помощь
                             </router-link>
                         </div>
+                        <div class="nav-item">
+                            <button class="btn dropdown-item px-0 py-1"
+                                    @click="$emit('deletePost', post.id)">
+                                Удалить
+                            </button>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -60,7 +66,7 @@
                 <PostImage v-for="(postImageItem, postImageindex) in post.images"
                            :class="['post-image', postImageindex === 0 ? 'first-post-image' : null]"
                            :key="postImageindex"
-                           :src="postImageItem" />
+                           :src="postImageItem"/>
             </div>
         </div>
 
@@ -68,16 +74,16 @@
             <div class="d-flex">
                 <div class="d-flex">
                     <div class="post-watched-counter">
-                        <IconHeard />
+                        <IconHeard/>
                         <span>{{ post.likes | space1000 }}</span>
                     </div>
                     <div class="post-watched-counter ml-4">
-                        <IconMessage />
+                        <IconMessage/>
                         <span>{{ post.commentsCount | space1000 }}</span>
                     </div>
 
                     <div class="post-watched-counter ml-4">
-                        <IconShare />
+                        <IconShare/>
                         <span>{{ post.sharesCount | space1000 }}</span>
                     </div>
                 </div>
@@ -85,7 +91,7 @@
                 <div class="ml-auto d-flex align-items-center">
                     <div class="post-watched-counter">
                         <span>{{ post.views | space1000 }}</span>
-                        <IconEye />
+                        <IconEye/>
                     </div>
                 </div>
             </div>
@@ -95,49 +101,50 @@
 </template>
 
 <script>
-import IconEye from '../icons/IconEye.vue';
-import IconHeard from '../icons/IconHeard.vue';
-import IconMessage from '../icons/IconMessage.vue';
-import IconMessageUserPost from '../icons/IconMessageUserPost.vue';
-import IconShare from '../icons/IconShare.vue';
+  import IconEye from '../icons/IconEye.vue';
+  import IconHeard from '../icons/IconHeard.vue';
+  import IconMessage from '../icons/IconMessage.vue';
+  import IconMessageUserPost from '../icons/IconMessageUserPost.vue';
+  import IconShare from '../icons/IconShare.vue';
 
-import PostImage from './PostImage.vue';
+  import PostImage from './PostImage.vue';
 
-import PliziPost from '../classes/PliziPost.js';
+  import PliziPost from '../classes/PliziPost.js';
 
-export default {
-name: 'Post',
-components: {
-    IconShare,
-    IconMessage,
-    IconHeard,
-    IconEye,
-    IconMessageUserPost,
-    PostImage,
-},
-props: {
-    post: PliziPost
-},
-}
+  export default {
+    name: 'Post',
+    components: {
+      IconShare,
+      IconMessage,
+      IconHeard,
+      IconEye,
+      IconMessageUserPost,
+      PostImage,
+    },
+    props: {
+      post: PliziPost,
+    },
+  }
 </script>
 
 <style lang="scss">
-.plz-post-item {
-    .plz-post-item-header,
-    .plz-post-item-body,
-    .plz-post-item-images,
-    .plz-post-item-footer {
-        padding: 0 35px 0 39px;
+    .plz-post-item {
+        .plz-post-item-header,
+        .plz-post-item-body,
+        .plz-post-item-images,
+        .plz-post-item-footer {
+            padding: 0 35px 0 39px;
+        }
     }
-}
 
-.post-images {
-    margin-left: -5px;
-    img {
-        max-height: 337px;
-        border-radius: 3px;
-        margin-left: 5px;
-        margin-bottom: 5px;
+    .post-images {
+        margin-left: -5px;
+
+        img {
+            max-height: 337px;
+            border-radius: 3px;
+            margin-left: 5px;
+            margin-bottom: 5px;
+        }
     }
-}
 </style>

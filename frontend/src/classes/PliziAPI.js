@@ -887,6 +887,20 @@ class PliziAPI {
         return null;
     }
 
+    async deletePost(id) {
+        let response = await this.__axios.delete(`api/posts/${id}`, this.__getAuthHeaders())
+          .catch((error) => {
+              this.__checkIsTokenExperis(error, `deletePost`);
+              throw new PliziAPIError(`deletePost`, error.response);
+          });
+
+        if (response.status === 200) {
+            return response.data;
+        }
+
+        return null;
+    }
+
 
     /**
      **************************************************************************

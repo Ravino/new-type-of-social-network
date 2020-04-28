@@ -16,7 +16,9 @@
                 <ProfileFilter @wallPostsSelect="wallPostsSelectHandler"></ProfileFilter>
 
                 <Post v-for="postItem in filteredPosts"
-                             v-bind:key="postItem.id" v-bind:post="postItem">
+                      :key="postItem.id"
+                      :post="postItem"
+                      @deletePost="deletePost">
                 </Post>
             </div>
 
@@ -108,6 +110,25 @@ methods: {
     addNewPost(post) {
         this.userPosts.unshift(new PliziPost(post));
     },
+  async deletePost(id) {
+    const fIndex = this.userPosts.findIndex((post) => {
+      return post.id === id;
+    });
+
+    this.userPosts.splice(fIndex, 1);
+
+    let response;
+
+    try {
+      response = await this.$root.$api.deletePost(id);
+    } catch (e) {
+      console.warn(e.detailMessage);
+    }
+
+    if (response) {
+      console.log(response);
+    }
+  },
 },
 
 mounted() {

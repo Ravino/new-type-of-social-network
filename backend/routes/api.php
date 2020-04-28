@@ -89,6 +89,10 @@ Route::group(['middleware' => ['auth.jwt', 'track.activity']], function () {
         Route::get('{id}/unsubscribe', 'Api\CommunityController@unsubscribe');
     });
 
+    Route::prefix('posts')->group(function () {
+        Route::delete('{post}', 'Api\PostController@delete');
+    });
+
     /**
      * Geo data Resource
      */
