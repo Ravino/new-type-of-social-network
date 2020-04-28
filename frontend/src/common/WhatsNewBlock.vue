@@ -44,27 +44,26 @@ methods: {
         return sText;
     },
 
-    async onTextPost(evData){
-        let msg = evData.postText.trim();
+  async onTextPost(evData){
+    let msg = evData.postText.trim();
 
-        if (msg !== '') {
-            const brExample = `<br/>`;
-            msg = msg.replace(/<p><\/p>/g, brExample);
-            msg = this.killBrTrail(msg);
+    if (msg !== '') {
+      const brExample = `<br/>`;
+      msg = msg.replace(/<p><\/p>/g, brExample);
+      msg = this.killBrTrail(msg);
 
-            if (msg !== '') {
-                this.savePost( msg, evData.attachments );
-            } else if (evData.attachments.length > 0) {
-                this.savePost( '<p></p>', evData.attachments );
-            }
-        }
-        else {
-            if (evData.attachments.length > 0) {
-                this.savePost( '', evData.attachments );
-            }
-        }
+      if (msg !== '') {
+        this.savePost( msg, evData.attachments );
+      } else if (evData.attachments.length > 0) {
+        this.savePost( '<p></p>', evData.attachments );
+      }
+    } else {
+      if (evData.attachments.length > 0) {
+        this.savePost( '', evData.attachments );
+      }
+    }
     },
-    async savePost(text, attachments) {
+  async savePost(text, attachments) {
       let response;
       let formData = {};
 
@@ -75,7 +74,7 @@ methods: {
       }
 
       try {
-        response = await this.$root.$api.storePost(formData);
+        response = await this.$root.$api.$post.storePost(formData);
       } catch (e) {
         console.warn(e.detailMessage);
       }

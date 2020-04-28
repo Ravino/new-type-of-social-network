@@ -228,7 +228,7 @@ methods: {
                     break;
 
                 case 'post':
-                    apiResponse = await this.$root.$api.storePostAttachments(picsArr);
+                    apiResponse = await this.$root.$api.$post.storePostAttachments(picsArr);
                     break;
 
                 default:

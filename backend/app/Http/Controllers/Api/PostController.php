@@ -164,7 +164,7 @@ class PostController extends Controller
 
     public function delete(Post $post)
     {
-        $user_post = \Auth::user()->posts()->where('id', $post->id);
+        $user_post = \Auth::user()->posts()->where('id', $post->id)->get();
 
         if ($user_post) {
             $post->delete();

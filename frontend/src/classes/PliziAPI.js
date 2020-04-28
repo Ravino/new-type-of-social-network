@@ -2,6 +2,7 @@ import axios from 'axios';
 import PliziAPIError from './API/PliziAPIError.js';
 
 import PliziChatAPI from './API/PliziChatAPI.js';
+import PliziPostAPI from './API/PliziPostAPI.js';
 
 class PliziAPI {
 
@@ -66,6 +67,12 @@ class PliziAPI {
      */
     __chat = null;
 
+    /**
+     * @type {PliziPostAPI}
+     * @private
+     */
+    __post = null;
+
 
     /**
      * @param {Vue} $root - ссылка на Vue объект, который вызывает этот конструктор
@@ -84,6 +91,7 @@ class PliziAPI {
         });
 
         this.__chat = new PliziChatAPI(this);
+        this.__post = new PliziPostAPI(this);
     }
 
 
@@ -92,6 +100,13 @@ class PliziAPI {
      */
     get $chat() {
         return this.__chat;
+    }
+
+    /**
+     * @returns {PliziPostAPI}
+     */
+    get $post() {
+        return this.__post;
     }
 
 
@@ -749,72 +764,6 @@ class PliziAPI {
     }
 
     /**
-     * Получение пользовательских постов.
-     * @public
-     * @returns {object[]|null}
-     * @throws PliziAPIError
-     */
-    async getPosts() {
-        let response = await this.__axios.get('api/user/posts', this.__getAuthHeaders())
-            .catch((error) => {
-                this.__checkIsTokenExperis(error, `getPosts`);
-                throw new PliziAPIError(`getPosts`, error.response);
-            });
-
-        if (response.status === 200) {
-            return response.data.data.list;
-        }
-
-        return null;
-    }
-
-    /**
-     * Создание постов.
-     * @param formData
-     * @returns {object[]|null}
-     * @throws PliziAPIError
-     */
-    async storePost(formData) {
-        let response = await this.__axios.post('api/posts', formData, this.__getAuthHeaders())
-            .catch((error) => {
-                this.__checkIsTokenExperis(error, `storePost`);
-                throw new PliziAPIError(`storePost`, error.response);
-            });
-
-        if (response.status === 201) {
-            return response.data.data;
-        }
-
-        return null;
-    }
-
-    /**
-     * Загружка файлов для постов.
-     * @param picsArr
-     * @returns {object[]|null}
-     */
-    async storePostAttachments(picsArr) {
-        const formData = new FormData();
-
-        for(let i=0; i< picsArr.length; i++){
-            formData.append('files[]', picsArr[i]);
-        }
-
-        let response = await this.__axios.post('api/posts/attachments', formData, this.__getAuthHeaders())
-            .catch((error) => {
-                this.__checkIsTokenExperis(error, `storePostAttachments`);
-                throw new PliziAPIError(`storePostAttachments`, error.response);
-            });
-
-        if (response.status === 200) {
-            return response.data.data.list;
-        }
-
-        return null;
-    }
-
-
-    /**
      * Отправка запроса на восстановление пароля.
      * @param email
      * @returns {object[]|null}
@@ -915,21 +864,6 @@ class PliziAPI {
 
         return null;
     }
-
-    async deletePost(id) {
-        let response = await this.__axios.delete(`api/posts/${id}`, this.__getAuthHeaders())
-          .catch((error) => {
-              this.__checkIsTokenExperis(error, `deletePost`);
-              throw new PliziAPIError(`deletePost`, error.response);
-          });
-
-        if (response.status === 200) {
-            return response.data;
-        }
-
-        return null;
-    }
-
 
     /**
      **************************************************************************

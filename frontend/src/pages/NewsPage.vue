@@ -93,7 +93,7 @@ export default {
             let response = null;
 
             try {
-                response = await this.$root.$api.getPosts();
+                response = await this.$root.$api.$post.getPosts();
             } catch (e) {
                 console.warn(e.message);
             }

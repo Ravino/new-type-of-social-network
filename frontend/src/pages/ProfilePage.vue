@@ -96,7 +96,7 @@ methods: {
     async getPosts() {
         let response = null;
 
-        response = await this.$root.$api.getPosts();
+        response = await this.$root.$api.$post.getPosts();
 
         if (response !== null) {
             this.userPosts = [];
@@ -111,22 +111,20 @@ methods: {
         this.userPosts.unshift(new PliziPost(post));
     },
   async deletePost(id) {
-    const fIndex = this.userPosts.findIndex((post) => {
-      return post.id === id;
-    });
-
-    this.userPosts.splice(fIndex, 1);
-
     let response;
 
     try {
-      response = await this.$root.$api.deletePost(id);
+      response = await this.$root.$api.$post.deletePost(id);
     } catch (e) {
       console.warn(e.detailMessage);
     }
 
     if (response) {
-      console.log(response);
+      const fIndex = this.userPosts.findIndex((post) => {
+        return post.id === id;
+      });
+
+      this.userPosts.splice(fIndex, 1);
     }
   },
 },
