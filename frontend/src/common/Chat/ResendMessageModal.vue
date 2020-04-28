@@ -59,8 +59,7 @@ import ChatMixin from '../../mixins/ChatMixin.js';
 import ResendMessageItem from './ResendMessageItem.vue';
 
 import PliziMessage from '../../classes/PliziMessage.js';
-import PliziRecipient from '../../classes/PliziRecipient.js';
-import PliziRecipientsCollection from '../../classes/PliziRecipientsCollection.js';
+import PliziRecipientsCollection from '../../classes/Collection/PliziRecipientsCollection.js';
 
 export default {
 name: 'ResendMessageModal',
@@ -73,7 +72,8 @@ props: {
 },
 data() {
     return {
-        recipients : (new PliziRecipientsCollection()),
+        /** @var PliziRecipientsCollection **/
+        recipients :null,
         msgData : null,
         /** @var PliziRecipient */
         selectedFriend: null,
@@ -146,6 +146,8 @@ methods: {
 
 computed: {
     getFriendsCombo(){
+        this.recipients = new PliziRecipientsCollection();
+
         /** @TGA сначала диалоги - это важно **/
         this.$root.$user.dialogs.map( (dItem) => {
             this.recipients.add(dItem.companion, dItem.id);

@@ -1,0 +1,104 @@
+
+$textColor: #9a9a9a;
+$titleColor: #363636;
+
+#accountSettingsMain {
+    .title-settings {
+        font-size: 14px;
+        font-weight: 600;
+        color: $titleColor;
+    }
+}
+
+.plz-account-settings {
+    padding: 29px 30px;
+    box-shadow: 0 2px 5px 0 rgba(0, 0, 0, 0.05);
+
+    .plz-account-settings-form {
+        .form-group {
+            margin-bottom: 0;
+            padding: 15px 0;
+        }
+
+        .plz-account-settings-header {
+            padding-bottom: 27px;
+
+            h6 {
+                color: #363636;
+                font-size: 14px;
+            }
+        }
+
+        .plz-account-settings-body {
+
+            &-label {
+                margin-bottom: 0;
+                display: flex;
+                align-items: center;
+                color: #9a9a9a;
+                font-size: 13px;
+                padding-left: 0;
+            }
+
+            &-field {
+                display: flex;
+
+                i {
+                    margin-right: 7px;
+                }
+
+                .form-control,
+                .form-control-plaintext {
+                    color: #363636;
+                    font-size: 13px;
+                    box-shadow: none;
+                    border: 0;
+                    outline: none;
+                    border-bottom: 1px solid $borderColor;
+                    border-radius: 0;
+                    &[readonly="readonly"] {
+                        border-bottom: 1px solid transparent;
+                    }
+
+                    .multiselect__tags {
+                        border: none;
+                    }
+
+                    .multiselect__option--highlight {
+                        background: #576DF6;
+                    }
+                }
+
+                select {
+                    -webkit-appearance: none;
+                    -moz-appearance: none;
+                    -o-appearance: none;
+                    color: #212529 !important;
+                }
+
+                select + i {
+                    float: right;
+                    margin-top: -25px;
+                    margin-right: 5px;
+                    pointer-events: none;
+                    background-color: #fff;
+                    padding-right: 5px;
+                }
+            }
+
+            &-action {
+                text-align: right;
+                padding-right: 0;
+                justify-content: flex-end;
+
+                button {
+                    color: #9a9a9a!important;
+                    font-size: 13px;
+                    padding-right: 0;
+                    text-decoration: none;
+                }
+            }
+
+        }
+    }
+}

@@ -1,12 +1,14 @@
 <template>
     <div id="accountSettingsMain"
          class="plz-account-settings plz-account-settings-main bg-white-br20 plz-mb20 container-fluid">
-        <form class="plz-account-settings-form m-3 pb-2">
-            <div class="plz-account-settings-header plz-account-settings-main-header form-group row border-bottom">
-                <div class="col-12 d-sm-none d-md-none d-lg-flex d-xl-flex">
-                    <h6>Основные</h6>
+        <form class="plz-account-settings-form pb-2 px-3">
+            <div class="plz-account-settings-header row plz-account-settings-main-header border-bottom">
+                <div class="d-sm-none d-md-none d-lg-flex d-xl-flex">
+                    <h6 class="title-settings mb-0">Основные</h6>
                 </div>
-                <div class="col-12 d-sm-flex d-md-flex d-lg-none d-xl-none"><h6><b>Основная информация</b></h6></div>
+                <div class="d-sm-flex d-md-flex d-lg-none d-xl-none">
+                    <h6 class="title-settings"><b>Основная информация</b></h6>
+                </div>
             </div>
 
             <div class="plz-account-settings-body plz-account-settings-main-body">
@@ -110,8 +112,8 @@
                         Дата рождения
                     </label>
                     <div
-                        class="plz-account-settings-body-field plz-account-settings-main-body-field col-sm-6 col-md-6 col-lg-6 col-xl-6">
-                        <div v-if="!isEdit.birthday" class="form-control-plaintext">
+                        class="plz-account-settings-body-field plz-account-settings-main-body-field col-sm-6 col-md-6 col-lg-6 col-xl-6 ">
+                        <div v-if="!isEdit.birthday" class="form-control-plaintext border-bottom-0">
                             {{ model.birthday | toYMD }}
                         </div>
                         <input v-if="isEdit.birthday"

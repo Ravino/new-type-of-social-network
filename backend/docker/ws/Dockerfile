@@ -1,4 +1,4 @@
-FROM php:7.3-cli
+FROM kiliman6aro/php-fpm:7.3
 
 RUN apt-get update \
  && apt-get install -y build-essential libtool autoconf uuid-dev pkg-config git libsodium-dev wget bzip2 \

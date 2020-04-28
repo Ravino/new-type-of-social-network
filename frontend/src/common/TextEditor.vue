@@ -141,6 +141,12 @@ methods: {
         this.attachFiles = this.attachFiles.filter((aItem) => {
             return aItem.id !== evData.attach.id;
         });
+
+        const $this = this;
+        setTimeout(function() {
+            $this.checkUpdatedChatContainerHeight();
+        }, 200);
+
     },
 
     onAttachmentLoaded(evData) {
@@ -207,7 +213,7 @@ methods: {
         }
 
         this.onEditorNewHeight(this.editorContainerHeight);
-       // console.log('checkUpdatedChatContainerHeight', this.editorContainerHeight);
+        //console.log('checkUpdatedChatContainerHeight', this.editorContainerHeight);
     },
 
     async addUploadAttachment(picsArr) {

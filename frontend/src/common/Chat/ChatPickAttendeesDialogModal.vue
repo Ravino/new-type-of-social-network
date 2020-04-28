@@ -6,10 +6,10 @@
         <div class="modal-dialog modal-dialog-centered" role="document" @click.stop="">
             <div class="modal-content bg-white-br20">
 
-                <div id="chatPickAttendeesDialogBody" class="modal-body p-4">
-                    <h5 class="resend-message-title text-left mb-3">Выберите собеседников</h5>
+                <div id="chatPickAttendeesDialogBody" class="modal-body d-flex flex-column p-4">
+                    <h5 class="resend-message-title text-left mb-4">Выберите собеседников</h5>
 
-                    <form id="chatPickAttendeesForm" novalidate="novalidate">
+                    <form id="chatPickAttendeesForm" novalidate="novalidate" class="mb-4">
                         <div class="form-group">
                             <multiselect v-model="selectedRecipients"
                                          :options="getFriendsCombo"
@@ -24,7 +24,7 @@
                         </div>
                     </form>
 
-                    <button type="button" class="btn plz-btn plz-btn-primary mt-4" @click.prevent="addAttendeesAndClose()">
+                    <button type="button" class="btn plz-btn plz-btn-primary mt-auto" @click.prevent="addAttendeesAndClose()">
                         Создать чат с этими собеседниками
                     </button>
                 </div>
@@ -38,7 +38,7 @@
 <script>
 import PliziDialog from '../../classes/PliziDialog.js';
 import PliziRecipient from '../../classes/PliziRecipient.js';
-import PliziRecipientsCollection from '../../classes/PliziRecipientsCollection.js';
+import PliziRecipientsCollection from '../../classes/Collection/PliziRecipientsCollection.js';
 
 /**
  * TODO: @TGA потом переименовать этот компонент т.к. тут создаётся групповой чат
