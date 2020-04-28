@@ -20,6 +20,23 @@
                                          :show-labels="false"
                                          :multiple="false"
                                          placeholder="Выберите получателя">
+                                <template slot="option" slot-scope="props">
+                                    <div class="plz-receivers-item d-flex align-items-center py-2 px-3">
+
+                                        <span class="plz-receiver-userpic text-body">
+                                            <img class="plz-short-userpic rounded-circle" :src="props.option.userPic" :alt="props.option.firstName"/>
+
+                                            <span v-if="props.option.isOnline" class="plz-short-isonline" title="в сети"></span>
+                                            <span v-else class="plz-short-isoffline" title="не в сети"></span>
+                                        </span>
+
+                                        <div class="plz-receiver-title flex align-items-center mr-auto ">
+                                            <span class="plz-receiver-name">
+                                                {{props.option.fullName}}
+                                            </span>
+                                        </div>
+                                    </div>
+                                </template>
                             </multiselect>
                         </div>
 

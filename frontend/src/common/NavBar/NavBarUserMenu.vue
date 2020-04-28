@@ -1,6 +1,6 @@
 <template>
     <div class="col-sm-2 col-md-1 col-lg-2 px-0 profile-menu">
-        <router-link to="/account" tag="a" class="profile-menu-link">
+        <router-link to="/profile" tag="a" class="profile-menu-link">
             <span v-if="isShowName" ref="navbarUserName">{{userData.firstName}}</span>
         </router-link>
 
