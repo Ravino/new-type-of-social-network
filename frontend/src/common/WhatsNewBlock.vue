@@ -65,20 +65,24 @@ methods: {
         }
     },
     async savePost(text, attachments) {
-        let response;
+      let response;
+      let formData = {};
 
-        try {
-            response = await this.$root.$api.storePost({
-                body: text.trim(),
-                attachmentIds: attachments && attachments.length ? attachments : null,
-            });
-        } catch (e) {
-            console.warn(e.detailMessage);
-        }
+      formData.body = text.trim();
 
-        if (response) {
-            this.$emit('addNewPost', response);
-        }
+      if (attachments && attachments.length) {
+        formData.attachmentIds = attachments;
+      }
+
+      try {
+        response = await this.$root.$api.storePost(formData);
+      } catch (e) {
+        console.warn(e.detailMessage);
+      }
+
+      if (response) {
+        this.$emit('addNewPost', response);
+      }
     }
 },
 }
