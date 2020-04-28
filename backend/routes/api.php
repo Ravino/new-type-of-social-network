@@ -28,6 +28,7 @@ Route::group(['middleware' => ['auth.jwt', 'track.activity']], function () {
         Route::post('message/user', 'Api\ChatController@sendToUser');
         Route::post('message/attachments', 'Api\ChatController@uploadAttachments');
         Route::delete('message/{id}', 'Api\ChatController@destroyMessage');
+        Route::delete('{id}', 'Api\ChatController@destroyChat');
     });
 
     Route::get('posts', 'Api\PostController@index');

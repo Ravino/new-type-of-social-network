@@ -410,6 +410,63 @@
         ]
       }
     },
+    "/chat/{id}": {
+      "delete": {
+        "tags": [
+          "Chats"
+        ],
+        "description": "Удалить чат",
+        "operationId": "deleteChat",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "ID диалога",
+            "required": true,
+            "schema": {
+              "type": "integer"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "data": {
+                      "type": "object",
+                      "properties": {
+                        "id": {
+                          "type": "number"
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/posts": {
       "post": {
         "tags": [
