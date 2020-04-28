@@ -60,6 +60,7 @@ Route::group(['middleware' => ['auth.jwt', 'track.activity']], function () {
     Route::post('user/friendship/block', 'Api\UserController@blockFriendshipRequest');
     Route::delete('user/friendship/{id}', 'Api\UserController@removeFromFriends');
     Route::get('user/friendship/possible', 'Api\UserController@getPossibleFriends');
+    Route::get('user/friendship/recommended', 'Api\UserController@getRecommendedFriends');
 
     Route::post('user/friendship/group', 'Api\UserController@addFriendToGroup');
     Route::get('user/friendship/group/{group}', 'Api\UserController@getFriendsFromGroup');

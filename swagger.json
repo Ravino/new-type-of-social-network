@@ -2057,6 +2057,49 @@
         ]
       }
     },
+    "/user/friendship/recommended": {
+      "get": {
+        "tags": [
+          "Friendships"
+        ],
+        "description": "Рекомендуемые друзья",
+        "operationId": "recommendedRequests",
+        "responses": {
+          "200": {
+            "description": "ОК",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "data": {
+                      "type": "object",
+                      "properties": {
+                        "list": {
+                          "type": "array",
+                          "items": {
+                            "$ref": "#/components/schemas/User"
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Not allowed",
+            "content": {}
+          }
+        },
+        "security": [
+          {
+            "Authorization": []
+          }
+        ]
+      }
+    },
     "/user/friendship/group": {
       "post": {
         "tags": [
