@@ -156,7 +156,9 @@ methods: {
         this.showDatePicker = false;
         this.$refs.chatDatePicker.clearDateSelected();
     },
-}
+
+},
+
 
 }
 </script>
