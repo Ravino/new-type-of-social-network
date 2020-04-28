@@ -28,7 +28,9 @@
 
                     <ChatHeader v-if="currentDialog" v-bind:currentDialog="currentDialog"
                                 @ChatMessagesFilter="onUpdateMessagesFilterText"
-                                ref="chatHeader"></ChatHeader>
+                                ref="chatHeader">
+                    </ChatHeader>
+
                     <div id="chatMessagesWrapperBody" class="position-relative">
 
                         <ChatMessages v-if="isMessagesLoaded" v-bind:messagesList="messagesList"
@@ -144,6 +146,16 @@ methods: {
         this.$refs.chatMessages.scrollToEnd();
     },
 
+    clearChatMessagesFilters() {
+        // TODO: нужна прокрутка вниз
+        this.$refs.chatHeader.clearFilters();
+
+        this.onUpdateMessagesFilterText({
+            text : '',
+            range: null
+        });
+    },
+
     /**
      *  для кратости записи
      * @returns {boolean} - true если диалоги есть
@@ -190,11 +202,6 @@ methods: {
         };
 
         this.$root.$user.dm.dialogStateUpdated(chatID, updatedFields);
-    },
-
-    clearChatMessagesFilters() {
-        // TODO: нужна прокрутка вниз
-        this.$refs.chatHeader.clearFilters();
     },
 
     async onSwitchToChat(evData) {

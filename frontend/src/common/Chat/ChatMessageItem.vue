@@ -185,7 +185,7 @@ methods: {
             'companion-message ' : !this.message.isMine,
             'compact-message'    : isNextSame,
             'fullsize-message'   : !isNextSame,
-            'has-only-one-emoji' : this.detectEmoji,
+            'has-only-one-emoji' : this.detectEmoji &&  this.message.attachments.length===0,
             'youtube-link'       : this.detectYoutubeLink,
         }
     },
