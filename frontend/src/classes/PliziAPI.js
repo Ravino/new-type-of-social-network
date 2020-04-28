@@ -1,5 +1,7 @@
 import axios from 'axios';
-import PliziAPIError from './PliziAPIError.js';
+import PliziAPIError from './API/PliziAPIError.js';
+
+import PliziChatAPI from './API/PliziChatAPI.js';
 
 class PliziAPI {
 
@@ -58,6 +60,12 @@ class PliziAPI {
         skipSubprotocolCheck: true
     };
 
+    /**
+     * @type {PliziChatAPI}
+     * @private
+     */
+    __chat = null;
+
 
     /**
      * @param {Vue} $root - ссылка на Vue объект, который вызывает этот конструктор
@@ -74,7 +82,23 @@ class PliziAPI {
             baseURL: this.__baseURL,
             headers: this.__defaultHeaders
         });
+
+        this.__chat = new PliziChatAPI(this);
     }
+
+
+    /**
+     * @returns {PliziChatAPI}
+     */
+    get $chat() {
+        return this.__chat;
+    }
+
+
+    get axios() {
+        return this.__axios;
+    }
+
 
     /**
      * устанавливает токен для запросов
@@ -133,6 +157,11 @@ class PliziAPI {
                 Authorization: this.__getBearer()
             }
         };
+    }
+
+
+    get authHeaders() {
+        return this.__getAuthHeaders();
     }
 
 
@@ -1005,6 +1034,11 @@ class PliziAPI {
                 srcMethod: srcMethod || `pliziAPI`
             });
         }
+    }
+
+
+    checkIsTokenExperis(error, srcMethod) {
+        return this.__checkIsTokenExperis(error, srcMethod);
     }
 
 }
