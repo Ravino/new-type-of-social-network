@@ -130,7 +130,7 @@ methods: {
     },
 
     startChatFilter(filterText){
-        this.$emit('chatFilter', {
+        this.$emit('ChatMessagesFilter', {
             text : filterText,
             range: this.dateRange,
         });

@@ -57,6 +57,9 @@ class PliziCollection {
     }
 
 
+    /**
+     * @returns {PliziAPI}
+     */
     get api(){
         return this._api;
     }

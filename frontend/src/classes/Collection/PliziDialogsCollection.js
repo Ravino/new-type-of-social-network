@@ -77,7 +77,8 @@ class PliziDialogsCollection extends PliziCollection {
         let apiResponse = null;
 
         try {
-            apiResponse = await this.api.chatDialogs();
+            //apiResponse = await this.api.chatDialogs();
+            apiResponse = await this.api.$chat.dialogs();
         }
         catch (e){
             window.console.warn(e.detailMessage);

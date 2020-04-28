@@ -8,25 +8,7 @@
             <div v-if="checkIsDialogsList()" id="chatMain" class="row bg-white-br20 overflow-hidden">
 
                 <div id="chatMessagesUsersList" class="col-sm-12 col-md-12 col-lg-4 col-xl-4 col-auto px-sm-0 px-md-0 h-100 border-right">
-                    <div class="find-in-dialogs-form d-flex align-items-center justify-content-end w-100 border-bottom pr-3 py-3">
-                        <div class="form-row w-100 align-items-center justify-content-end position-relative pl-4">
-                            <div class="find-in-chat-list w-100 position-relative pl-2">
-                                <label class="sr-only d-none" for="txtFindInChatList">Поиск</label>
-                                <input v-model="dialogFilter.text"
-                                       id="txtFindInChatList"
-                                       ref="txtFindInChatList"
-                                       type="text"
-                                       class="chat-search-input form-control rounded-pill bg-light px-4"
-                                       @keydown.stop="dialogSearchKeyDownCheck($event)"
-                                       placeholder="Поиск в собеседниках" />
-                                <button class="find-in-chat-list-btn btn btn-search h-100 shadow-none"
-                                        @click="onClickStartDialogFilter()"
-                                        type="submit">
-                                    <IconSearch />
-                                </button>
-                            </div>
-                        </div>
-                    </div>
+                    <ChatDialogsFilter @ChatDialogsFilter="onUpdateDialogsFilterText"></ChatDialogsFilter>
 
                     <vue-custom-scrollbar class="chat-list-scroll pb-0 pb-4"
                                           :settings="customScrollBarSettings">
@@ -35,7 +17,7 @@
                             <ChatListItem v-for="dialog in dialogsList"
                                           @switchToChat="onSwitchToChat"
                                           v-bind:dialog="dialog" v-bind:currentDialogID="currentDialogID"
-                                          v-bind:key="dialog.id" :ref="`chatDialog-`+dialog.id">
+                                          v-bind:key="dialog.id">
                             </ChatListItem>
                         </ul>
                     </vue-custom-scrollbar>
@@ -45,10 +27,9 @@
                      class="col-8 col-lg-8 col-xl-8 bg-light d-none d-lg-flex flex-column p-0 h-100">
 
                     <ChatHeader v-if="currentDialog" v-bind:currentDialog="currentDialog"
-                                @chatFilter="updateFilterText"
+                                @ChatMessagesFilter="onUpdateMessagesFilterText"
                                 ref="chatHeader"></ChatHeader>
-                    <div id="chatMessagesWrapperBody"
-                         class="position-relative">
+                    <div id="chatMessagesWrapperBody" class="position-relative">
 
                         <ChatMessages v-if="isMessagesLoaded" v-bind:messagesList="messagesList"
                                       v-bind:filter="filter"
@@ -85,13 +66,12 @@ import vueCustomScrollbar from 'vue-custom-scrollbar';
 import AccountToolbarLeft from '../common/AccountToolbarLeft.vue';
 import Spinner from '../common/Spinner.vue';
 
+import ChatDialogsFilter from './ChatDialogsFilter.vue';
 import ChatListItem from '../common/Chat/ChatListItem.vue';
 
 import ChatHeader from '../common/Chat/ChatHeader.vue';
 import ChatMessages from '../common/Chat/ChatMessages.vue';
 import ChatFooter from '../common/Chat/ChatFooter.vue';
-
-import IconSearch from '../icons/IconSearch.vue';
 
 import PliziDialog from '../classes/PliziDialog.js';
 import PliziMessage from '../classes/PliziMessage.js';
@@ -101,8 +81,8 @@ name: 'ChatsListPage',
 components: {
     vueCustomScrollbar,
     AccountToolbarLeft, Spinner,
-    ChatListItem, ChatHeader, ChatMessages, ChatFooter,
-    IconSearch,
+    ChatDialogsFilter, ChatListItem,
+    ChatHeader, ChatMessages, ChatFooter,
 },
 
 data() {
@@ -115,12 +95,12 @@ data() {
         isMessagesLoaded: false,
 
         filter : {
-            text: null,
+            text: '',
             range: null,
         },
 
         dialogFilter: {
-            text: null,
+            text: ``,
         },
 
         dialogsSearchedList: null,
@@ -135,8 +115,12 @@ data() {
 
 computed: {
     dialogsList(){
-        //return this.$root.$user.dialogs;
-        return this.$root.$user.dm.asArray();
+        const dlgList = this.$root.$user.dm.asArray();
+
+        if ( this.dialogFilter.text.length < 3 )
+            return dlgList;
+
+        return dlgList.filter(dlgItem => dlgItem.checkInAttendees(this.dialogFilter.text) );
     },
 
     currentDialogID(){
@@ -145,10 +129,14 @@ computed: {
 },
 
 methods: {
-    updateFilterText(evData){
-        this.filter.text = evData.text ? evData.text.trim() : null;
+    onUpdateMessagesFilterText(evData){
+        this.filter.text = evData.text ? evData.text.trim() : '';
         this.filter.range = evData.range && evData.range.start && evData.range.end ? evData.range : null;
         this.$forceUpdate();
+    },
+
+    onUpdateDialogsFilterText(evData){
+        this.dialogFilter.text = evData.text ? evData.text.trim() : '';
     },
 
     onChatFooterEditorChangedHeight(evData) {
@@ -162,16 +150,6 @@ methods: {
      */
     checkIsDialogsList(){
         return (this.$root.$user.dm.size > 0);
-    },
-
-    dialogSearchKeyDownCheck(ev) {
-        if (8===ev.keyCode  ||  13===ev.keyCode  ||  46===ev.keyCode){
-            this.searchDialog();
-        }
-    },
-
-    onClickStartDialogFilter() {
-        this.searchDialog();
     },
 
     removeMessageInList(evData){
@@ -220,6 +198,7 @@ methods: {
     },
 
     async onSwitchToChat(evData) {
+        window.console.log(`onSwitchToChat`);
         let msgsResponse = null;
         this.isMessagesLoaded = false;
 
@@ -227,6 +206,7 @@ methods: {
 
         try {
             msgsResponse = await this.$root.$api.chatMessages(evData.chatId);
+            //msgsResponse = await this.$root.$api.chat.messages(evData.chatId);
         }
         catch (e){
             window.console.warn(e.detailMessage);
@@ -244,9 +224,11 @@ methods: {
     },
 
     async loadDialogsList() {
+        window.console.log(`loadDialogsList`);
         this.isDialogsLoaded = true;
 
         const lastDialogID = this.$store.getters.activeDialog;
+        window.console.log(lastDialogID, `lastDialogID`);
         this.currentDialog = this.$root.$user.dm.getByID(lastDialogID);
 
         if (typeof this.currentDialog === 'undefined') {
@@ -260,6 +242,11 @@ methods: {
         return true;
     },
 
+    /**
+     * @deprecated
+     * @TGA будет актуально когда бэкенд будет делать морфологический поиск
+     * @returns {Promise<void>}
+     */
     async searchDialog() {
         if (!this.dialogFilter.text) {
             this.dialogsSearchedList = null;
