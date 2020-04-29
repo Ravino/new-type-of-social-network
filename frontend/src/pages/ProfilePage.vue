@@ -111,6 +111,19 @@ methods: {
     addNewPost(post) {
         this.userPosts.unshift(new PliziPost(post));
     },
+
+  startTimer(post) {
+    setTimeout(() => {
+      const postIndex = this.userPosts.find((userPost) => {
+        return userPost.id === post.id;
+      });
+
+      if (post.deleted) {
+        this.userPosts.splice(postIndex, 1);
+      }
+    }, 5000);
+  },
+
   async deletePost(id) {
     let response;
 
@@ -127,13 +140,7 @@ methods: {
 
       post.deleted = true;
 
-      setTimeout(() => {
-        const postIndex = this.userPosts.find((post) => {
-          return post.id === id;
-        });
-
-        this.userPosts.splice(postIndex, 1);
-      }, 5000);
+      this.startTimer(post);
     }
   },
   async restorePost(id) {
