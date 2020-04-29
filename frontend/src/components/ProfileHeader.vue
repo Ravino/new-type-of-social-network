@@ -78,10 +78,12 @@
                     <span class="numbers-top" v-html="sBeaty(userData.videosNumber)"></span>
                     <span class="numbers-bottom">Видео</span>
                 </div>
+                <!--
                 <div class="plz-profile-userdetails-numbers text-center pt-4 px-4">
                     <span class="numbers-top" v-html="sBeaty(userData.audiosNumber)"></span>
                     <span class="numbers-bottom">Аудио</span>
                 </div>
+                -->
             </div>
         </div>
     </div>

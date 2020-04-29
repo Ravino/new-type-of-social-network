@@ -24,7 +24,7 @@
                     </div>
                 </div>
 
-                <div class="forward-attach-width col-2 d-flex justify-content-end"  >
+                <div class="forward-attach-width col-2 d-flex justify-content-between"  >
 
                     <label class="attach-file d-flex align-items-center btn btn-link my-0 ml-0 mr-2 px-1 btn-add-file position-relative">
                         <IconAddFile />
