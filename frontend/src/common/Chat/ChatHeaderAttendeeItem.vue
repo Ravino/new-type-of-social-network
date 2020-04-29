@@ -1,6 +1,7 @@
 <template>
     <div class="">
-        <router-link :to="`/user-`+attendee.id" tag="div" class="mr-3 cursor-pointer position-relative">
+        <router-link :to="`/user-`+attendee.id" tag="div"
+                     class="mr-3 cursor-pointer position-relative">
             <div class="media-pic border rounded-circle ">
                 <img :src="attendee.userPic" v-bind:alt="attendee.firstName" />
             </div>
