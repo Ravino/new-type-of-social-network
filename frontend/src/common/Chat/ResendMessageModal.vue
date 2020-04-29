@@ -93,8 +93,7 @@ data() {
         recipients :null,
         msgData : null,
         /** @var PliziRecipient */
-        selectedFriend: null,
-        textareaValue: ''
+        selectedFriend: null
     }
 },
 methods: {
