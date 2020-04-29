@@ -402,3 +402,20 @@ $radioWidth: 18px;
 }
 
 
+.editor {
+    position: relative;
+    width: calc(100% - 30px);
+    min-height: 50px;
+
+    .placeholder {
+        position: absolute;
+        top: .5rem;
+        color: $placeholderColor;
+        font-size: $placeholderSize;
+    }
+
+    + .btn {
+        height: 50px;
+    }
+}
+

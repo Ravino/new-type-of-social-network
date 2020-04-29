@@ -14,8 +14,8 @@
         box-shadow: none;
 
         &::placeholder {
-            font-size: 13px;
-            color: #a3a8b9;
+            font-size: $placeholderSize;
+            color: $placeholderColor;
         }
     }
 

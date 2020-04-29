@@ -131,14 +131,3 @@ beforeDestroy() {
 }
 </script>
 
-<style lang="scss">
-    .editor {
-        position: relative;
-
-        .placeholder {
-            position: absolute;
-            top: 25%;
-        }
-    }
-</style>
-

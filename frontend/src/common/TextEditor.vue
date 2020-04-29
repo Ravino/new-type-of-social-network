@@ -10,25 +10,28 @@
                 <div class="pl-0" :class="{ 'col-9': showAvatar, 'col-10 forward-message-width': !showAvatar }">
                     <div class="form pl-3">
                         <div class="form-row align-items-center">
-                            <div class="col-12  p-0">
+                            <div class="col-12 d-flex justify-content-between p-0">
                                 <Editor class="plz-text-editor-form form-control px-2 py-1 h-100"
                                         @editorPost="onEditorNewPost"
                                         @editorKeyDown="onEditorKeyDown"
                                         :placeholder="editorPlaceholder"
                                         ref="editor" />
+                                <button class="btn btn-link">
+                                    <IconSend style="height: 20px"/>
+                                </button>
                             </div>
                         </div>
                     </div>
                 </div>
 
-                <div class="forward-attach-width col-2 d-flex justify-content-end"  :class="{ 'pt-2': showAvatar } " >
+                <div class="forward-attach-width col-2 d-flex justify-content-end"  >
 
-                    <label class="attach-file btn btn-link my-0 ml-0 mr-2 px-1 btn-add-file position-relative">
+                    <label class="attach-file d-flex align-items-center btn btn-link my-0 ml-0 mr-2 px-1 btn-add-file position-relative">
                         <IconAddFile />
                         <input type="file" @change="onSelectFile($event)" ref="editorFiler" multiple />
                     </label>
 
-                    <label class="attach-file btn btn-link my-0 ml-0 mr-2 px-1 btn-add-camera position-relative">
+                    <label class="attach-file d-flex align-items-center  btn btn-link my-0 ml-0 mr-2 px-1 btn-add-camera position-relative">
                         <IconAddCamera />
                         <input type="file" @change="onSelectImage($event)" ref="editorImager" multiple />
                     </label>
@@ -67,6 +70,7 @@
 <script>
 import IconAddFile from '../icons/IconAddFile.vue';
 import IconAddCamera from '../icons/IconAddCamera.vue';
+import IconSend from "../icons/IconSend.vue";
 
 import Editor from './TextEditor/Editor.vue';
 import EmojiPicker from './TextEditor/EmojiPicker.vue';
@@ -80,6 +84,7 @@ import PliziAttachment from '../classes/PliziAttachment.js';
 export default {
 name: 'TextEditor',
 components: {
+    IconSend,
     IconAddCamera,
     IconAddFile,
     Editor,
