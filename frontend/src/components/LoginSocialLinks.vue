@@ -122,7 +122,9 @@
                     console.warn(e.detailMessage);
                 }
 
-                if (response && response && response.token) {
+              console.log(response);
+
+              if (response && response && response.token) {
                     this.$root.$emit('afterSuccessLogin', {
                         token: response.token,
                         chatChannel: response.channel,
