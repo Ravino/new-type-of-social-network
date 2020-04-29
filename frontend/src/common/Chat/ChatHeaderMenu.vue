@@ -16,9 +16,9 @@
                 </span>
             </div>
             <div class="nav-item">
-                <a href="#" class="dropdown-item px-3 py-1">
-                    Какое-то действие
-                </a>
+                <span class="dropdown-item px-3 py-1 cursor-pointer" @click.prevent="onRemoveCurrentChatClick">
+                    Удалить этот чат
+                </span>
             </div>
 
             <div class="nav-item">
@@ -37,6 +37,10 @@ name : 'ChatHeaderMenu',
 methods: {
     onAddAttendeeClick(){
         this.$emit(`showAddAttendeeToDialogModal`, {});
+    },
+
+    onRemoveCurrentChatClick(){
+        this.$emit(`showRemoveCurrentChatModal`, {});
     }
 }
 

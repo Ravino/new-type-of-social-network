@@ -64,7 +64,7 @@ class PliziDialog{
         this._id = dialogData.id;
         this._name = dialogData.name;
         this._lastMessageText = dialogData.lastMessageText;
-        this._lastMessageDT = new Date(dialogData.lastMessageDT);
+        this._lastMessageDT = this.__convertToDate(dialogData.lastMessageDT);
         this._isRead = dialogData.isRead;
         this._isLastFromMe = dialogData.isLastFromMe;
 
@@ -72,6 +72,20 @@ class PliziDialog{
         dialogData.attendees.map( (aItem) => {
             this._attendees.push( new PliziAttendee(aItem) );
         });
+    }
+
+    /**
+     * @param {Date|number} dValue
+     * @returns {Date}
+     * @private
+     */
+    __convertToDate(dValue){
+        /** @see https://developer.mozilla.org/ru/docs/Web/JavaScript/Reference/Global_Objects/Date **/
+        if (dValue instanceof Date) {
+            return new Date( dValue.valueOf() ); // чтобы вернуть по значению, а не по ссылке
+        }
+
+        return new Date(dValue*1000);  // умножаем на 1000 потому, что тут JS считает в миллисекундах
     }
 
     toJSON(){
@@ -85,7 +99,7 @@ class PliziDialog{
             id: this.id,
             name: this.name,
             lastMessageText: this.lastMessageText,
-            lastMessageDT: (this.lastMessageDT.getTime() / 1000) >>> 0,
+            lastMessageDT: +(+this.lastMessageDT.valueOf() / 1000).toFixed(0),
             isRead: this.isRead,
             isLastFromMe: this.isLastFromMe,
             attendees: atts

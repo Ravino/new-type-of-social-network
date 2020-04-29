@@ -78,8 +78,8 @@ class PliziAPI {
      * @param {Vue} $root - ссылка на Vue объект, который вызывает этот конструктор
      */
     constructor($root) {
-        this.__baseURL = (window.apiURL) ? window.apiURL + ``.trim() : ``;
-        this.__baseWsURL = (window.wsUrl) ? window.wsUrl + ``.trim() : ``;
+        this.__baseURL   = (window.apiURL) ? (window.apiURL + ``).trim() : ``;
+        this.__baseWsURL = (window.wsUrl) ? (window.wsUrl + ``).trim() : ``;
 
         if ($root) {
             this.__$root = $root;

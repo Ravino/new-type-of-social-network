@@ -1,5 +1,5 @@
 <template>
-    <div class="d-flex align-items-center h-100">
+    <div class="d-flex align-items-center --h-100">
         <router-link :to="`/user-`+companion.id" tag="div"
                      class="mr-3 cursor-pointer position-relative">
             <div class="media-pic border rounded-circle ">

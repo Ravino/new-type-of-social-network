@@ -119,6 +119,8 @@ methods: {
 
     async afterUserLoad(evData) {
         if (evData.token !== ``  &&  evData.user) {
+            window.console.log(`afterUserLoad`);
+
             this.$root.$isAuth = true;
             this.$root.$lastSearch = this.$store.getters.lastSearch;
 
@@ -131,7 +133,6 @@ methods: {
             // TODO: перенести отсюда - слишком часто будет вызываться
             this.loadInvitations();
             this.loadNotifications();
-            //this.loadDialogs();
 
             await this.$root.$user.fm.load();
             await this.$root.$user.dm.load();
@@ -178,30 +179,6 @@ methods: {
     },
 
 
-    /**
-     * @deprecated
-     * @returns {Promise<boolean>}
-     */
-    async loadDialogs() {
-        window.console.warn(`App::loadDialogs`);
-        let apiResponse = null;
-
-        try {
-            apiResponse = await this.$root.$api.chatDialogs();
-        }
-        catch (e){
-            window.console.warn(e.detailMessage);
-        }
-
-        if (apiResponse) {
-            this.$root.$user.dialogsLoad(apiResponse);
-            this.$root.$emit('dialogsLoad', {});
-        }
-
-        return true;
-    },
-
-
     isAuthorized(){
         return this.$root.$isAuth;
     },
@@ -237,10 +214,10 @@ created(){
     this.$root.$on('hideAlertModal', () => {
         this.mainModalVisible = false;
     });
-},
 
-beforeMount(){
-
+    this.$root.$on('NewChatDialog', (evData)=>{
+        this.$root.$user.dm.onAddNewDialog(evData);
+    });
 }
 
 }

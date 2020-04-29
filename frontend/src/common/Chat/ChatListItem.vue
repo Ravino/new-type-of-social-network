@@ -84,7 +84,7 @@ computed: {
 
 methods: {
     switchToChat() {
-        this.$emit('switchToChat', {chatId: this.dialog.id});
+        this.$emit('SwitchToChat', {chatId: this.dialog.id});
     },
 
     /**
