@@ -113,19 +113,19 @@
                     this.saveToken('vkontakte', access_token);
                 }
             },
-            saveToken(provider, token) {
+            async saveToken(provider, token) {
                 let response;
 
                 try {
-                    response = this.$root.$api.registerThroughSocialServices(provider, token);
+                    response = await this.$root.$api.registerThroughSocialServices(provider, token);
                 } catch (e) {
                     console.warn(e.detailMessage);
                 }
 
-                if (response && response.data && response.data.token && response.data.token !== '') {
+              if (response && response && response.token) {
                     this.$root.$emit('afterSuccessLogin', {
-                        token: response.data.token,
-                        chatChannel: response.data.channel,
+                        token: response.token,
+                        chatChannel: response.channel,
                         redirect: true
                     });
                 }
