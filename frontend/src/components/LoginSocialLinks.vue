@@ -122,10 +122,10 @@
                     console.warn(e.detailMessage);
                 }
 
-                if (response && response.data && response.data.token && response.data.token !== '') {
+                if (response && response && response.token) {
                     this.$root.$emit('afterSuccessLogin', {
-                        token: response.data.token,
-                        chatChannel: response.data.channel,
+                        token: response.token,
+                        chatChannel: response.channel,
                         redirect: true
                     });
                 }
