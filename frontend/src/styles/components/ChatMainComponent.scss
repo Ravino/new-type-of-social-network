@@ -24,3 +24,36 @@
 
 }
 
+
+.multiselect {
+    &__content {
+        padding-top: 2px;
+        padding-bottom: 2px;
+
+         &-wrapper {
+             max-height: 250%;
+         }
+    }
+    &__option {
+        padding: 0;
+        &--highlight {
+            background-color: $grey;
+        }
+        &--selected{
+            background-color: $grey!important;
+        }
+    }
+
+    &__tag {
+        background-color: $grey;
+        color: #000000;
+
+        &-icon{
+            &:after{
+                color: #fff;
+            }
+            &:hover {
+                background-color: #c3c3c3;
+            }}
+    }
+}
