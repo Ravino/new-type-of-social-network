@@ -113,16 +113,14 @@
                     this.saveToken('vkontakte', access_token);
                 }
             },
-            saveToken(provider, token) {
+            async saveToken(provider, token) {
                 let response;
 
                 try {
-                    response = this.$root.$api.registerThroughSocialServices(provider, token);
+                    response = await this.$root.$api.registerThroughSocialServices(provider, token);
                 } catch (e) {
                     console.warn(e.detailMessage);
                 }
-
-              console.log(response);
 
               if (response && response && response.token) {
                     this.$root.$emit('afterSuccessLogin', {
