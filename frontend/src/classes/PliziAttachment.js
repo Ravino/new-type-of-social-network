@@ -92,6 +92,12 @@ class PliziAttachment{
         return !!this._image;
     }
 
+    get isArchive() {
+        const ext = this.originalName.split('.').pop().toLowerCase();
+
+        return (`zip` ===  ext  || `rar` === ext);
+    }
+
     /**
      * @returns {PliziAttachmentThumb}
      */

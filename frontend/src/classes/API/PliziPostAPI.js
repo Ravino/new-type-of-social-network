@@ -1,5 +1,5 @@
 import PliziBaseAPI from './PliziBaseAPI.js'
-import PliziAPIError from "./PliziAPIError";
+import PliziAPIError from "./PliziAPIError.js";
 
 class PliziPostAPI extends PliziBaseAPI {
   /**

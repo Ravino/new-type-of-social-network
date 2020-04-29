@@ -4,9 +4,7 @@
              v-on:load="onAttachmentLoaded"
              :alt="attach.originalName" :title="attach.originalName" />
         <template v-else v-on:show="onZipDisplayed">
-            <i v-if="isArchive" class="fas fa-file-archive fa-3x d-inline-block" :alt="attach.originalName"
-               :title="attach.originalName" ></i>
-            <i v-else class="fas fa-file-alt fa-3x d-inline-block" :alt="attach.originalName"  :title="attach.originalName" ></i>
+            <AttachmentFile :attach="attach"/>
         </template>
 
         <button type="button"
@@ -18,21 +16,17 @@
 </template>
 
 <script>
+    import AttachmentFile from "../AttachmentFile";
 import PliziAttachment from '../../classes/PliziAttachment.js';
 
 export default {
 name : 'AttachmentItem',
+  components: {
+    AttachmentFile,
+  },
 props : {
     attach : PliziAttachment
 },
-
-computed:{
-    isArchive(){
-        const ext = this.attach.originalName.split('.').pop().toLowerCase();
-        return (`zip`===ext  || `rar`===ext);
-    }
-},
-
 methods: {
     onRemoveBtnClick(ev){
         this.$emit(`RemoveAttachment`, {

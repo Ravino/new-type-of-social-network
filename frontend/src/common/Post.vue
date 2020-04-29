@@ -72,15 +72,7 @@
 
                     <template v-for="(postAttachment) in post.attachments">
                         <template v-if="!postAttachment.isImage">
-                            <div>
-                                <i v-if="postAttachment.isArchive"
-                                   class="fas fa-file-archive fa-3x d-inline-block"
-                                   :alt="postAttachment.originalName"
-                                   :title="postAttachment.originalName" ></i>
-                                <i v-else class="fas fa-file-alt fa-3x d-inline-block"
-                                   :alt="postAttachment.originalName"
-                                   :title="postAttachment.originalName" ></i>
-                            </div>
+                                <AttachmentFile :attach="postAttachment"/>
                         </template>
                     </template>
                 </div>
@@ -137,7 +129,7 @@
   import IconShare from '../icons/IconShare.vue';
 
   import PostImage from './PostImage.vue';
-  import AttachmentItem from "./TextEditor/AttachmentItem.vue";
+  import AttachmentFile from "./AttachmentFile.vue";
 
   import PliziPost from '../classes/PliziPost.js';
 
@@ -150,7 +142,7 @@
       IconEye,
       IconMessageUserPost,
       PostImage,
-      AttachmentItem,
+      AttachmentFile,
     },
     props: {
       post: PliziPost,
