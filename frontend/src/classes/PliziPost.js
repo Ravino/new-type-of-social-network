@@ -268,25 +268,25 @@ class PliziPost {
     };
 
     /**
-     * возвращает флаг - принадлежит или нет пост текущему юзеру
-     * TODO: @TGA - переделать потом на реальные данные
-     * @returns {boolean}
-     */
-    get isMinePost(){
-        return true;
-    }
-
-    /**
      * возвращает флаг - является ли поста архивным (старше 7 дней)
      * @returns {boolean}
      */
     get isArchivePost(){
-        const pDate = this.createdAt.getTime() / 1000;
-        const nDate = (new Date()).getTime() / 1000;
+        const date1 = new Date(this.createdAt * 1000);
+        const date2 = new Date();
+        const diffTime = Math.abs(date2 - date1);
+        const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
 
-        const diff = Math.ceil( (nDate - pDate)/ 86400 );
+        return diffDays > 7;
+    }
 
-        return (diff > 7);
+    /**
+     * Возвращает флаг - принадлежит или нет пост текущему юзеру
+     * @param user_id
+     * @returns {boolean}
+     */
+    checkIsMinePost(user_id) {
+        return (this.user && this.user.id) === user_id;
     }
 }
 

@@ -91,11 +91,13 @@
 import IconAddUser from "../icons/IconAddUser.vue";
 import IconLocation from "../icons/IconLocation";
 
+import PliziUser from '../classes/PliziUser.js';
+
 export default {
 name: 'ProfileHeader',
 components: {IconLocation, IconAddUser},
 props: {
-    userData: Object,
+    userData: PliziUser,
     isOwner : Boolean
 },
 data() {

@@ -112,8 +112,8 @@ class ChatRepository
      */
     public function getChatIdForCoupleUsers($first_user, $second_user) {
         $chat = DB::table('chat_party')->select('chat_id')
-            ->whereRaw("chat.id IN (SELECT chat_id FROM chat_party WHERE user_id = $first_user)")
-            ->whereRaw("chat.id IN (SELECT chat_id FROM chat_party WHERE user_id = $second_user)")
+            ->whereRaw("chat_id IN (SELECT chat_id FROM chat_party WHERE user_id = $first_user)")
+            ->whereRaw("chat_id IN (SELECT chat_id FROM chat_party WHERE user_id = $second_user)")
             ->groupBy('chat_id')
             ->havingRaw('COUNT(chat_id) = 2')->first();
 
