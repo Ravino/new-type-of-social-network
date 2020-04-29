@@ -15,8 +15,8 @@
     border-radius: 4px;
 
     &::placeholder {
-        font-size: 13px;
-        color: #9a9a9a;
+        font-size: $placeholderSize;
+        color: $placeholderColor;
     }
     &:focus {
         border: 1px solid #ccc;

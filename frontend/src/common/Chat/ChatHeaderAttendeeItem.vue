@@ -1,7 +1,9 @@
 <template>
     <div class="">
-        <router-link :to="`/user-`+attendee.id" tag="div" class="media-pic border rounded-circle mr-3 cursor-pointer">
-            <img :src="attendee.userPic" v-bind:alt="attendee.firstName" />
+        <router-link :to="`/user-`+attendee.id" tag="div" class="mr-3 cursor-pointer position-relative">
+            <div class="media-pic border rounded-circle ">
+                <img :src="attendee.userPic" v-bind:alt="attendee.firstName" />
+            </div>
 
             <template v-if="isTyper">
                 <div class="writing"><span></span><span></span><span></span></div>

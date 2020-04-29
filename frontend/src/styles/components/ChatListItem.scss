@@ -14,8 +14,8 @@ $userPicSize: 32px;
         box-shadow: none;
 
         &::placeholder {
-            font-size: 13px;
-            color: #a3a8b9;
+            font-size: $placeholderSize;
+            color: $placeholderColor;
         }
     }
 
@@ -23,11 +23,11 @@ $userPicSize: 32px;
 
 #chatMessagesUsersList {
     .chat-list-scroll {
-        height: calc(100% - 76px);
+        height: calc(100% - 73px);
     }
 
     > .find-in-dialogs-form{
-        height: 76px;
+        height: 73px;
 
         .find-in-chat-list-btn {
             .icon.icon-search

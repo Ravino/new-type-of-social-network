@@ -3,7 +3,7 @@
          :class="{ active: chatWindowShown }"
          @click="showRelatedChat()">
 
-        <div class="plz-favorit-friend-userpic">
+        <div class="plz-favorit-friend-userpic"  :class="{'mx-auto' : isNarrow}" >
             <img class="plz-favorit-userpic rounded-circle" :src="friend.userPic" :alt="friend.firstName" />
 
             <div v-if="isTyper" class="writing"><span></span><span></span><span></span></div>
@@ -17,15 +17,7 @@
             <span class="plz-favorit-friend-name">{{friend.firstName}}</span>
 
             <div class="plz-favorit-friend-status">
-                <p v-if="isTyper">
-                            <span class="loading">
-                                <span></span>
-                                <span></span>
-                                <span></span>
-                            </span>
-                    Печатает
-                </p>
-                <p v-else-if="friend.isOnline">
+                <p v-if="friend.isOnline">
                     В сети
                 </p>
                 <p v-else>
