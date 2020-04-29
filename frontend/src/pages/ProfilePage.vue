@@ -77,9 +77,9 @@ computed: {
      * @returns {PliziPost[]}
      */
     filteredPosts(){
-        switch (this.filterMode) {
+      switch (this.filterMode) {
             case 'my':
-                return this.userPosts.filter(post => post.isMinePost);
+                return this.userPosts.filter(post => post.checkIsMinePost(this.$root.$user.id));
 
             case 'archive':
                 return this.userPosts.filter(post => post.isArchivePost);
