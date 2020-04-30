@@ -13,14 +13,18 @@
                     <div id="friendsListFilter" class="row border-bottom px-4">
                         <div class="col-12 d-flex align-items-center justify-content-between px-0 ">
                             <nav class="nav profile-filter-links" role="tablist">
-                                <span class="nav-link position-relative py-3 px-1 mr-4" :class="{ 'active': wMode==='all' }" id="tabAllFriends" role="tab" @click.stop="friendsListSelect(`all`)">Все друзья</span>
-                                <span class="nav-link position-relative py-3 px-1 mr-4" :class="{ 'active': wMode==='online' }" id="tabOnlineFriends" role="tab" @click.stop="friendsListSelect(`online`)">Друзья онлайн</span>
+                                <span class="nav-link position-relative py-3 px-1 mr-4"
+                                      :class="{ 'active': wMode==='all' }" id="tabAllFriends" role="tab"
+                                      @click.stop="friendsListSelect(`all`)">Все друзья</span>
+                                <span class="nav-link position-relative py-3 px-1 mr-4"
+                                      :class="{ 'active': wMode==='online' }" id="tabOnlineFriends" role="tab"
+                                      @click.stop="friendsListSelect(`online`)">Друзья онлайн</span>
                             </nav>
                         </div>
                     </div>
 
                     <div v-if="isFriendsLoaded" class="row plizi-friends-list ">
-                        <ul v-if="friendsList  &&  friendsList.length>0" class="d-block w-100 p-0" >
+                        <ul v-if="friendsList  &&  friendsList.length>0" class="d-block w-100 p-0">
                             <transition-group name="slide-fade" :duration="700">
                                 <FriendListItem v-for="friendItem in friendsListFilter"
                                                 v-bind:key="friendItem.id"
@@ -29,7 +33,7 @@
                             </transition-group>
                         </ul>
                         <div v-else class="alert alert-info">
-                            У Вас ещё нет друзей!<br />
+                            У Вас ещё нет друзей!<br/>
                             &quot;Молодой крАкодил хочет завести себе друзей&quot;?
                         </div>
                     </div>
@@ -37,8 +41,12 @@
                 </div>
 
                 <div class="col-sm-4 col-md-4 col-lg-4 col-xl-4">
-                    <PotentialFriends :blockName="`Возможные друзья`" :friends="shuffle(potentialList)"></PotentialFriends>
-                    <PotentialFriends :blockName="`Рекомендуемые друзья`" :friends="shuffle(potentialList)"></PotentialFriends>
+                    <PotentialFriends :blockName="`Возможные друзья`"
+                                      :friends="possibleFriends"></PotentialFriends>
+                    <!--                                      :friends="shuffle(possibleFriends)"></PotentialFriends>-->
+                    <PotentialFriends :blockName="`Рекомендуемые друзья`"
+                                      :friends="recommendedFriends"></PotentialFriends>
+<!--                                      :friends="shuffle(potentialList)"></PotentialFriends>-->
                 </div>
             </div>
         </div>
@@ -50,46 +58,89 @@
 </template>
 
 <script>
-import FriendsListMixin from '../mixins/FriendsListMixin.js';
-import FriendListItem from '../components/FriendListItem.vue';
+  import FriendsListMixin from '../mixins/FriendsListMixin.js';
+  import FriendListItem from '../components/FriendListItem.vue';
 
-export default {
-name: 'FriendsListPage',
-components: {
-    FriendListItem
-},
-mixins : [FriendsListMixin],
-data() {
-    return {
-        wMode : `all`,
-        removedFriendID: -1
-    }
-},
+  import PliziFriend from '../classes/PliziFriend.js';
 
-methods: {
-    friendsListSelect(wm){
-        this.wMode = wm;
+  export default {
+    name: 'FriendsListPage',
+    components: {
+      FriendListItem
     },
-},
+    mixins: [FriendsListMixin],
+    data() {
+      return {
+        wMode: `all`,
+        removedFriendID: -1,
+        possibleFriends: null,
+        recommendedFriends: null,
+      }
+    },
 
-computed: {
-    friendsListFilter(){
+    methods: {
+      friendsListSelect(wm) {
+        this.wMode = wm;
+      },
+
+      async getPossibleFriends() {
+        let response;
+
+        try {
+          response = await this.$root.$api.$friend.getPossibleFriends();
+        } catch (e) {
+          console.warn(e.detailMessage);
+        }
+
+        if (response) {
+          this.possibleFriends = [];
+
+          response.map((possibleFriend) => {
+            this.possibleFriends.push(new PliziFriend(possibleFriend));
+          });
+        }
+      },
+      async getRecommendedFriends() {
+        let response;
+
+        try {
+          response = await this.$root.$api.$friend.getRecommendedFriends();
+        } catch (e) {
+          console.warn(e.detailMessage);
+        }
+
+        if (response) {
+          this.recommendedFriends = [];
+
+          response.map((recommendedFriend) => {
+            this.recommendedFriends.push(new PliziFriend(recommendedFriend));
+          });
+        }
+      },
+    },
+
+    computed: {
+      friendsListFilter() {
         if (this.wMode === 'all')
-            return this.friendsList;
+          return this.friendsList;
 
         let ret = [];
 
-        if (this.wMode==='online') {
-            this.friendsList.map( frItem => {
-                if (frItem.isOnline === true) {
-                    ret.push(frItem);
-                }
-            });
+        if (this.wMode === 'online') {
+          this.friendsList.map(frItem => {
+            if (frItem.isOnline === true) {
+              ret.push(frItem);
+            }
+          });
         }
 
         return ret;
+      },
     },
-}
 
-}
+    mounted() {
+      this.getPossibleFriends();
+      this.getRecommendedFriends();
+    },
+  }
 </script>

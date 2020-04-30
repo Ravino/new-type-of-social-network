@@ -3,6 +3,7 @@ import PliziAPIError from './API/PliziAPIError.js';
 
 import PliziChatAPI from './API/PliziChatAPI.js';
 import PliziPostAPI from './API/PliziPostAPI.js';
+import PliziFriendAPI from './API/PliziFriendAPI.js';
 
 class PliziAPI {
 
@@ -73,6 +74,12 @@ class PliziAPI {
      */
     __post = null;
 
+    /**
+     * @type {PliziFriendAPI}
+     * @private
+     */
+    __friend = null;
+
 
     /**
      * @param {Vue} $root - ссылка на Vue объект, который вызывает этот конструктор
@@ -92,6 +99,7 @@ class PliziAPI {
 
         this.__chat = new PliziChatAPI(this);
         this.__post = new PliziPostAPI(this);
+        this.__friend = new PliziFriendAPI(this);
     }
 
 
@@ -109,6 +117,12 @@ class PliziAPI {
         return this.__post;
     }
 
+    /**
+     * @returns {PliziFriendAPI}
+     */
+    get $friend() {
+        return this.__friend;
+    }
 
     get axios() {
         return this.__axios;

@@ -122,7 +122,11 @@ methods: {
     async getPosts() {
         let response = null;
 
-        response = await this.$root.$api.$post.getPosts();
+        try {
+          response = await this.$root.$api.$post.getPosts();
+        } catch (e) {
+          console.warn(e.detailMessage);
+        }
 
         if (response !== null) {
             this.userPosts = [];
