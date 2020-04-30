@@ -4,15 +4,21 @@
             <AccountToolbarLeft></AccountToolbarLeft>
         </div>
 
-        <div class="col-sm-10 col-md-10 col-lg-8 col-xl-8">
+        <div class="col-sm-10 col-md-10 col-lg-10 col-xl-10">
             <div class="row">
                 <CommunitiesListHeader></CommunitiesListHeader>
+                <CommunityCreateBlock></CommunityCreateBlock>
+            </div>
 
-                <div class="col-sm-8 col-md-8 col-lg-12 col-xl-12 bg-white-br20">
+            <div class="row">
+                <div class="bg-white-br20 col-sm-10 col-md-10 col-lg-8 col-xl-8">
                     <div v-if="isPopularCommunitiesLoaded" class="row plizi-communities-list ">
                         <ul v-if="popularCommunities  &&  popularCommunities.length>0" class="d-block w-100 p-0">
                             <transition-group name="slide-fade" :duration="700">
-                                список популярных сообществ тут
+                                <CommunityItem v-for="(comItem, comIndex) in popularCommunities"
+                                               v-bind:community="comItem"
+                                               v-bind:key="comIndex">
+                                </CommunityItem>
                             </transition-group>
                         </ul>
                         <div v-else class="alert alert-success p-5 w-100 text-center">
@@ -21,11 +27,11 @@
                     </div>
                     <Spinner v-else></Spinner>
                 </div>
-            </div>
-        </div>
 
-        <div class="col-sm-2 col-md-2 col-lg-2 col-xl-2">
-            <RecommendedCommunities></RecommendedCommunities>
+                <div class="col-sm-4 col-md-4 col-lg-4 col-xl-4">
+                    <RecommendedCommunities></RecommendedCommunities>
+                </div>
+            </div>
         </div>
 
         <div class="col-sm-1 col-md-1 col-lg-1 col-xl-1">
@@ -36,6 +42,8 @@
 
 <script>
 import CommunitiesListMixin from '../mixins/CommunitiesListMixin.js';
+
+import PliziCommunity from '../classes/PliziCommunity.js';
 
 export default {
 name : 'CommunitiesPopularPage',
@@ -52,7 +60,35 @@ data(){
 
 methods : {
 
+    async loadPopularCommunitites() {
+        let apiResponse = null;
+
+        this.popularCommunities = null;
+
+        try {
+            apiResponse = await this.$root.$api.$communities.getCommunities();
+        }
+        catch (e){
+            window.console.warn(e.detailMessage);
+            throw e;
+        }
+
+        this.popularCommunities = [];
+
+        if (apiResponse) {
+            this.isPopularCommunitiesLoaded = true;
+            apiResponse.map( (pfItem)=> {
+                this.popularCommunities.push( new PliziCommunity(pfItem) );
+            });
+        }
+
+        return true;
+    },
 },
+
+mounted(){
+    this.loadPopularCommunitites();
+}
 
 }
 </script>

@@ -54,7 +54,7 @@ class PliziCommunity {
     }
 
     get primaryImage(){
-        if (this._primaryImage !== ``)
+        if (this._primaryImage)
             return this._primaryImage;
 
         return this.__defaultAvatarPath;

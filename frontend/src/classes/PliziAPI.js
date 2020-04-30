@@ -4,6 +4,7 @@ import PliziAPIError from './API/PliziAPIError.js';
 import PliziChatAPI from './API/PliziChatAPI.js';
 import PliziPostAPI from './API/PliziPostAPI.js';
 import PliziFriendAPI from './API/PliziFriendAPI.js';
+import PliziCommunitiesAPI from './API/PliziCommunitiesAPI.js';
 
 class PliziAPI {
 
@@ -80,6 +81,12 @@ class PliziAPI {
      */
     __friend = null;
 
+    /**
+     * @type {PliziCommunitiesAPI}
+     * @private
+     */
+    __communities = null;
+
 
     /**
      * @param {Vue} $root - ссылка на Vue объект, который вызывает этот конструктор
@@ -100,6 +107,7 @@ class PliziAPI {
         this.__chat = new PliziChatAPI(this);
         this.__post = new PliziPostAPI(this);
         this.__friend = new PliziFriendAPI(this);
+        this.__communities = new PliziCommunitiesAPI(this);
     }
 
 
@@ -122,6 +130,13 @@ class PliziAPI {
      */
     get $friend() {
         return this.__friend;
+    }
+
+    /**
+     * @returns {PliziCommunitiesAPI}
+     */
+    get $communities() {
+        return this.__communities;
     }
 
     get axios() {
@@ -730,7 +745,10 @@ class PliziAPI {
     /** @param {object} sendData **/
     sendToChannel(sendData) {
         sendData.token = this.__token;
-        this.__s.call('user.typing', sendData);
+
+        if (this.__s) {
+            this.__s.call('user.typing', sendData);
+        }
     }
 
     __channelErrorHandler(code, reason, detail){

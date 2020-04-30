@@ -1,16 +1,21 @@
 import AccountToolbarLeft from '../common/AccountToolbarLeft.vue';
 import Spinner from '../common/Spinner.vue';
 import FavoriteFriends from '../common/FavoriteFriends.vue';
-import RecommendedCommunities from '../common/RecommendedCommunities.vue';
-import CommunitiesListHeader from '../common/CommunitiesListHeader.vue';
+import RecommendedCommunities from '../common/Communities/RecommendedCommunities.vue';
+import CommunitiesListHeader from '../common/Communities/CommunitiesListHeader.vue';
+
+import CommunityItem from '../common/Communities/CommunityItem.vue';
+import CommunityCreateBlock from '../common/Communities/CommunityCreateBlock.vue';
 
 const CommunitiesListMixin = {
 components: {
     AccountToolbarLeft,
     Spinner,
     CommunitiesListHeader,
+    CommunityItem,
+    CommunityCreateBlock,
+    RecommendedCommunities,
     FavoriteFriends,
-    RecommendedCommunities
 },
 
 data() {
@@ -31,10 +36,6 @@ methods: {
 },
 
 created(){
-    this.$root.$on('friendsIsLoad', this.loadPotentialsList);
-
-    this.$root.$on('loadPossibleFriends', this.loadPossibleFriends);
-    this.$root.$on('loadRecommendedFriends', this.loadRecommendedFriends);
 },
 
 };

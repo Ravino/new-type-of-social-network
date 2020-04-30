@@ -4,11 +4,14 @@
             <AccountToolbarLeft></AccountToolbarLeft>
         </div>
 
-        <div class="col-sm-10 col-md-10 col-lg-8 col-xl-8">
+        <div class="col-sm-10 col-md-10 col-lg-10 col-xl-10">
             <div class="row">
                 <CommunitiesListHeader></CommunitiesListHeader>
+                <CommunityCreateBlock></CommunityCreateBlock>
+            </div>
 
-                <div class="col-sm-8 col-md-8 col-lg-12 col-xl-12 bg-white-br20">
+            <div class="row">
+                <div class="bg-white-br20 col-sm-10 col-md-10 col-lg-8 col-xl-8">
                     <div v-if="isManagedCommunitiesLoaded" class="row plizi-communities-list ">
                         <ul v-if="managedCommunities  &&  managedCommunities.length>0" class="d-block w-100 p-0">
                             <transition-group name="slide-fade" :duration="700">
@@ -21,11 +24,11 @@
                     </div>
                     <Spinner v-else></Spinner>
                 </div>
-            </div>
-        </div>
 
-        <div class="col-sm-2 col-md-2 col-lg-2 col-xl-2">
-            <RecommendedCommunities></RecommendedCommunities>
+                <div class="col-sm-4 col-md-4 col-lg-4 col-xl-4">
+                    <RecommendedCommunities></RecommendedCommunities>
+                </div>
+            </div>
         </div>
 
         <div class="col-sm-1 col-md-1 col-lg-1 col-xl-1">
