@@ -152,17 +152,21 @@ h1, h2, h3, h4, h5, h6 {
     }
 }
 
-.modal:before {
-    content: '';
-    position: absolute;
-    top: 50px;
-    right: 96px;
-    display: inline-block;
-    vertical-align: middle;
-    background: url("../images/icons/icon-modal-close.png") 50% 50% no-repeat;
-    width: 20px;
-    height: 20px;
-    cursor: pointer;
+.modal {
+    min-height: 600px;
+
+    &:before {
+        content: '';
+        position: absolute;
+        top: 50px;
+        right: 96px;
+        display: inline-block;
+        vertical-align: middle;
+        background: url("../images/icons/icon-modal-close.png") 50% 50% no-repeat;
+        width: 20px;
+        height: 20px;
+        cursor: pointer;
+    }
 }
 
 .fade:not(.show) {
@@ -403,7 +407,6 @@ $radioWidth: 18px;
     }
 }
 
-
 .editor {
     position: relative;
     width: calc(100% - 30px);
@@ -421,3 +424,16 @@ $radioWidth: 18px;
     }
 }
 
+
+
+input[type=number]::-webkit-inner-spin-button,
+input[type=number]::-webkit-outer-spin-button {
+    appearance: none;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    margin: 0;
+}
+
+input[type=number] {
+    -moz-appearance: textfield;
+}
