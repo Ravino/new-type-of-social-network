@@ -5,12 +5,12 @@ import Spinner from '../common/Spinner.vue';
 import FavoriteFriends from '../common/FavoriteFriends.vue';
 import IconSearch from '../icons/IconSearch.vue';
 
-import FriendsListHeader from '../components/FriendsListHeader.vue';
+import FriendsListHeader from '../common/FriendsListHeader.vue';
 
 import PotentialFriends from '../common/PotentialFriends.vue';
 
 import PliziUser from '../classes/PliziUser.js';
-import PliziFriend from "../classes/PliziFriend.js";
+import PliziFriend from '../classes/PliziFriend.js';
 
 const FriendsListMixin = {
 components: {
