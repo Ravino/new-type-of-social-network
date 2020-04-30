@@ -39,10 +39,23 @@ $plzNavBarProfileColor: #A6A7A9;
         }
     }
 
+    .isFocused {
+        box-shadow: 0 2px 5px 0 rgba(0, 0, 0, 0.1);
+
+        #topSearch  {
+            background-color: #FFFFFF;
+        }
+    }
+
     #topSearch {
         box-shadow: none;
         border: 0;
         outline: none;
+        transition: .4s;
+        &:focus {
+            background-color: #FFFFFF;
+            box-shadow: 0 2px 5px 0 rgba(0, 0, 0, 0.1);
+        }
     }
     .btn-search {
         position: absolute;
