@@ -15,6 +15,7 @@
                                         @editorPost="onEditorNewPost"
                                         @editorKeyDown="onEditorKeyDown"
                                         :placeholder="editorPlaceholder"
+                                        :inputEditorText="inputEditorText"
                                         ref="editor" />
                                 <button class="btn btn-link">
                                     <IconSend style="height: 20px"/>
@@ -101,11 +102,13 @@ props: {
         type: String,
         required: true,
     },
+  inputEditorText: String,
+  inputEditorAttachment: Array,
 },
 
 data() {
     return {
-        attachFiles: [],
+        attachFiles: this.inputEditorAttachment ? this.inputEditorAttachment : [],
         defaultClasses: `bg-white w-100 border-top position-relative mt-auto`,
         editorContainerHeight: 32,
     }

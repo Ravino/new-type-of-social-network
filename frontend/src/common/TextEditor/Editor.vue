@@ -39,6 +39,7 @@ props: {
         type: String,
         default: null,
     },
+  inputEditorText: String,
 },
 
 data() {
@@ -54,6 +55,7 @@ data() {
             ],
             onFocus: this.onFocus,
             onBlur: this.onBlur,
+          content: this.inputEditorText ? this.inputEditorText : null,
         }),
         isFocusedEditor: false,
     }

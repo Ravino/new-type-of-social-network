@@ -31,21 +31,10 @@
                              :aria-labelledby="`postSettings` + post.id">
 
                             <div class="nav-item">
-                                <router-link tag="a" class="dropdown-item px-0 py-1" to="/editing">
+                                <button class="btn dropdown-item px-0 py-1"
+                                        @click="$emit('onEditPost', post)">
                                     Редактировать
-                                </router-link>
-                            </div>
-
-                            <div class="nav-item">
-                                <router-link tag="a" class="dropdown-item px-0 py-1" to="/account">
-                                    Настройки
-                                </router-link>
-                            </div>
-
-                            <div class="nav-item">
-                                <router-link tag="a" class="dropdown-item px-0 py-1" to="/help">
-                                    Помощь
-                                </router-link>
+                                </button>
                             </div>
                             <div class="nav-item">
                                 <button class="btn dropdown-item px-0 py-1"

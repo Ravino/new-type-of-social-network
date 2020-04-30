@@ -88,11 +88,39 @@ class PliziPostAPI extends PliziBaseAPI {
     return null;
   }
 
+  /**
+   * Восстановление поста.
+   *
+   * @param id
+   * @returns {Pobject[]|null}
+   * @throws PliziAPIError
+   */
   async restorePost(id) {
     let response = await this.axios.get(`api/posts/${id}/restore`, this.authHeaders)
       .catch((error) => {
         this.checkIsTokenExperis(error, `restorePost`);
         throw new PliziAPIError(`restorePost`, error.response);
+      });
+
+    if (response.status === 200) {
+      return response.data;
+    }
+
+    return null;
+  }
+
+  /**
+   * Редактирование поста.
+   *
+   * @param formData
+   * @returns {object[]|null}
+   * @throws PliziAPIError
+   */
+  async updatePost(formData) {
+    let response = await this.axios.post(`api/posts/${id}/update`, formData, this.authHeaders)
+      .catch((error) => {
+        this.checkIsTokenExperis(error, `editPost`);
+        throw new PliziAPIError(`editPost`, error.response);
       });
 
     if (response.status === 200) {

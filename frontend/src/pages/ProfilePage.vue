@@ -19,7 +19,8 @@
                       :key="postItem.id"
                       :post="postItem"
                       @deletePost="deletePost"
-                      @restorePost="restorePost">
+                      @restorePost="restorePost"
+                      @onEditPost="onEditPost">
                 </Post>
             </div>
 
@@ -29,6 +30,23 @@
             <FavoriteFriends :isNarrow="false"></FavoriteFriends>
             <ShortFriends></ShortFriends>
         </div>
+        <Modal v-if="postForEdit"
+               :modal-id="modal.modalID"
+               :isVisible="modal.isVisible"
+               :vertically="true"
+               :clickable="true"
+               :size="'xl'"
+               @hideModal="hideModal">
+            <template v-slot:header>
+                <div class="modal-header">
+                    <h5 class="modal-title">Редактирование записи</h5>
+                </div>
+            </template>
+
+            <WhatsNewBlock :showAvatar="false"
+                           :inputEditorText="postForEdit.body"
+                           :inputEditorAttachment="postForEdit.attachments"></WhatsNewBlock>
+        </Modal>
     </div>
 </template>
 
@@ -43,6 +61,7 @@ import WhatsNewBlock from '../common/WhatsNewBlock.vue';
 import ProfileHeader from '../components/ProfileHeader.vue';
 import ProfilePhotos from '../components/ProfilePhotos.vue';
 import ProfileFilter from '../components/ProfileFilter.vue';
+import Modal from '../components/Modal.vue';
 
 import PliziPost from '../classes/PliziPost.js';
 
@@ -50,7 +69,8 @@ export default {
 name: 'ProfilePage',
 components: {
     AccountToolbarLeft, FavoriteFriends, ShortFriends,
-    ProfileHeader, ProfilePhotos, WhatsNewBlock, ProfileFilter, Post
+    ProfileHeader, ProfilePhotos, WhatsNewBlock, ProfileFilter, Post,
+  Modal,
 },
 data() {
     return {
@@ -65,6 +85,11 @@ data() {
             {path: '/images/user-photos/user-photo-01.png',},
             {path: '/images/user-photos/user-photo-03.png',},
         ],
+      modal: {
+        modalID: 'modal-' + Math.floor(Math.random() * 1000),
+        isVisible: false,
+      },
+      postForEdit: null,
     }
 },
 
@@ -123,6 +148,14 @@ methods: {
       }
     }, 5000);
   },
+  hideModal() {
+    this.modal.isVisible = false;
+    this.postForEdit = null;
+  },
+  onEditPost(post) {
+    this.modal.isVisible = true;
+    this.postForEdit = post;
+  },
 
   async deletePost(id) {
     let response;
@@ -159,7 +192,7 @@ methods: {
 
       post.deleted = false;
     }
-  }
+  },
 },
 
 mounted() {

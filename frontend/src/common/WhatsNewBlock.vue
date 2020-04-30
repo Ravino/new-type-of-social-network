@@ -1,9 +1,11 @@
 <template>
     <TextEditor :id="`profileWhatsNew`"
-                :showAvatar="true"
+                :showAvatar="showAvatar"
                 :clazz="`row plz-text-editor mb-4 p-4 h-auto  align-items-start bg-white-br20`"
                 :editorPlaceholder="'Что у Вас нового?'"
                 :dropToDown="true"
+                :inputEditorText="inputEditorText"
+                :inputEditorAttachment="inputEditorAttachment"
                 @editorPost="onTextPost"
                 work-mode="post">
     </TextEditor>
@@ -17,6 +19,14 @@ name: 'WhatsNewBlock',
 components: {
     TextEditor
 },
+  props: {
+    inputEditorText: String,
+    inputEditorAttachment: Array,
+    showAvatar: {
+      type: Boolean,
+      default: true,
+    },
+  },
 data() {
     return {}
 },
@@ -74,7 +84,11 @@ methods: {
       }
 
       try {
-        response = await this.$root.$api.$post.storePost(formData);
+        if (this.inputEditorText || this.inputEditorAttachment) {
+          response = await this.$root.$api.$post.updatePost(formData);
+        } else {
+          response = await this.$root.$api.$post.storePost(formData);
+        }
       } catch (e) {
         console.warn(e.detailMessage);
       }
