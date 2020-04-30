@@ -58,45 +58,46 @@
 </template>
 
 <script>
-  import FriendsListMixin from '../mixins/FriendsListMixin.js';
-  import FriendListItem from '../components/FriendListItem.vue';
+import FriendsListMixin from '../mixins/FriendsListMixin.js';
+import FriendListItem from '../components/FriendListItem.vue';
 
-  export default {
-    name: 'FriendsListPage',
-    components: {
-      FriendListItem
+export default {
+    name : 'FriendsListPage',
+    components : {
+        FriendListItem
     },
-    mixins: [FriendsListMixin],
-    data() {
-      return {
-        wMode: `all`,
-        removedFriendID: -1,
-      }
-    },
-
-    methods: {
-      friendsListSelect(wm) {
-        this.wMode = wm;
-      },
-    },
-
-    computed: {
-      friendsListFilter() {
-        if (this.wMode === 'all')
-          return this.friendsList;
-
-        let ret = [];
-
-        if (this.wMode === 'online') {
-          this.friendsList.map(frItem => {
-            if (frItem.isOnline === true) {
-              ret.push(frItem);
-            }
-          });
+    mixins : [FriendsListMixin],
+    data(){
+        return {
+            wMode : `all`,
+            removedFriendID : -1,
         }
-
-        return ret;
-      },
     },
-  }
+
+    methods : {
+        friendsListSelect( wm ){
+            this.wMode = wm;
+        },
+    },
+
+    computed : {
+        friendsListFilter(){
+            if ( this.wMode === 'all' ){
+                return this.friendsList;
+            }
+
+            let ret = [];
+
+            if ( this.wMode === 'online' ){
+                this.friendsList.map( frItem => {
+                    if ( frItem.isOnline === true ){
+                        ret.push( frItem );
+                    }
+                } );
+            }
+
+            return ret;
+        },
+    },
+}
 </script>

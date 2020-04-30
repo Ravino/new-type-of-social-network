@@ -18,6 +18,10 @@ import InvitationsPage from '../pages/InvitationsPage.vue';
 import FriendsRecentPage from '../pages/FriendsRecentPage.vue';
 import NotificationsPage from '../pages/NotificationsPage.vue';
 
+import CommunitiesListPage from '../pages/CommunitiesListPage.vue';
+import CommunitiesManagePage from '../pages/CommunitiesManagePage.vue';
+import CommunitiesPopularPage from '../pages/CommunitiesPopularPage.vue';
+
 import PliziAPI from '../classes/PliziAPI.js';
 import PliziAuthUser from '../classes/PliziAuthUser.js';
 
@@ -33,11 +37,15 @@ const routes = [
     {path: '/chats-list', component: ChatsListPage, name: 'ChatsListPage', meta: {title: 'Plizi: Чаты'}, props: true},
     {path: '/search-results', component: SearchResultsPage, name: 'SearchResultsPage', meta: {title: 'Plizi: Результаты поиска'}, props: true },
     {path: '/user-:id', component: PersonalPage, name: 'PersonalPage', meta: {title: 'Plizi:'}, props: true},
-    {path: '/friends', component: FriendsListPage, name: 'FriendsListPage', meta: {title: 'Plizi: Ваши друзья'}, props: true },
+    {path: '/friends', component: FriendsListPage, name: 'FriendsListPage', meta: {title: 'Plizi: мои друзья'}, props: true },
     {path: '/invitations', component: InvitationsPage, name: 'InvitationsPage', meta: {title: 'Plizi: приглашения дружбы'}, props: true },
     {path: '/friends-recent', component: FriendsRecentPage, name: 'FriendsRecentPage', meta: {title: 'Plizi: новые друзья'}, props: true },
     {path: '/notifications', component: NotificationsPage, name: 'NotificationsPage', meta: {title: 'Plizi: напоминания'}, props: true },
     {path: '/news', component: NewsPage, name: 'NewsPage', meta: {title: 'Plizi: Новости', props: true}},
+
+    {path: '/communities', component: CommunitiesListPage, name: 'CommunitiesListPage', meta: {title: 'Plizi: Мои сообщества'}, props: true },
+    {path: '/manage-communities', component: CommunitiesManagePage, name: 'CommunitiesManagePage', meta: {title: 'Plizi: Управление сообществами'}, props: true },
+    {path: '/popular-communities', component: CommunitiesPopularPage, name: 'CommunitiesPopularPage', meta: {title: 'Plizi: Популярные сообщества'}, props: true },
 ];
 
 const router = new VueRouter({
