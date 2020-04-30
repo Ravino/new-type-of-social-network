@@ -167,6 +167,9 @@ methods: {
         if ('<p></p>' === cont)
             return false;
 
+        this.$refs.editor.setContent('');
+        this.$refs.editor.focus();
+
         this.onEditorNewPost({
             postText: cont
         });
