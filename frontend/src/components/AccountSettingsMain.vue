@@ -1,7 +1,7 @@
 <template>
     <div id="accountSettingsMain"
          class="plz-account-settings plz-account-settings-main bg-white-br20 plz-mb20 container-fluid">
-        <form class="plz-account-settings-form pb-2 px-3">
+        <form class="plz-account-settings-form pb-0 px-3 mb-0">
             <div class="plz-account-settings-header row plz-account-settings-main-header border-bottom">
                 <div class="d-sm-none d-md-none d-lg-flex d-xl-flex">
                     <h6 class="title-settings mb-0">Основные</h6>
@@ -71,8 +71,8 @@
                            class="plz-account-settings-body-label plz-account-settings-main-label col-sm-6 col-md-6 col-lg-4 col-xl-4">Пол</label>
                     <div
                         class="plz-account-settings-body-field plz-account-settings-main-body-field col-sm-6 col-md-6 col-lg-6 col-xl-6">
-                        <div class="w-75">
-                            <select id="userSex" class="form-control border-0 pl-0"
+                        <div class="w-75 position-relative ml-n2">
+                            <select id="userSex" class="form-control border-0 pl-2"
                                     @change="accountStartSaveData(model.sex, 'sex')"
                                     v-model="model.sex">
                                 <option value="n">Не указано</option>
@@ -92,8 +92,8 @@
                     </label>
                     <div
                         class="plz-account-settings-body-field plz-account-settings-main-body-field col-sm-6 col-md-6 col-lg-6 col-xl-6">
-                        <div class="w-75">
-                            <select id="relationship" class="form-control border-0 pl-0"
+                        <div class="w-75 position-relative ml-n2">
+                            <select id="relationship" class="form-control border-0 pl-2"
                                     @change="accountStartSaveData(model.relationshipId, 'relationshipId')"
                                     v-model="model.relationshipId">
                                 <option value="null" selected>В активном поиске</option>
@@ -137,16 +137,16 @@
                     </div>
                 </div>
 
-                <div class="form-group row border-bottom d-sm-none d-md-none d-lg-flex d-xl-flex">
+                <div class="form-group row border-bottom d-sm-none d-md-none d-lg-flex d-xl-flex ">
                     <label for="location"
                            class="plz-account-settings-body-label plz-account-settings-main-label col-sm-6 col-md-6 col-lg-4 col-xl-4">
                         Месторасположение
                     </label>
                     <div
-                        class="plz-account-settings-body-field plz-account-settings-main-body-field col-sm-8 col-md-8 col-lg-8 col-xl-8 d-flex align-items-center">
+                        class="plz-account-settings-body-field plz-account-settings-main-body-field pl-4 col-lg-8 col-xl-8 d-flex align-items-center">
                         <i class="fas fa-map-marker-alt"></i>
                         <multiselect id="location"
-                                     class="w-75 ml-1 border-0 form-control p-0"
+                                     class="w-75 ml-1 border-0 form-control p-0 position-relative"
                                      v-model="model.location"
                                      :options="geoLocations"
                                      :showLabels="false"
@@ -181,6 +181,10 @@
                         <input type="text" readonly
                                class="form-control-plaintext d-inline-block w-50" id="city" ref="city"/>
                     </div>
+                </div>
+
+                <div class="form-group ml-n2 pt-4 pb-0">
+                    <button class="btn btn-save  btn-primary rounded-pill px-4 text-uppercase">сохранить</button>
                 </div>
             </div>
         </form>
