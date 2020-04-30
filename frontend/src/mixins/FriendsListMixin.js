@@ -135,6 +135,9 @@ methods: {
 
 created(){
     this.$root.$on('friendsIsLoad', this.loadPotentialsList);
+
+    this.$root.$on('loadPossibleFriends', this.loadPossibleFriends);
+    this.$root.$on('loadRecommendedFriends', this.loadRecommendedFriends);
 },
 
 };

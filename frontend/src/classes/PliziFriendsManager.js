@@ -102,6 +102,8 @@ class PliziFriendsManager extends PliziManager{
      * загружает список друзей через API
      * по завершении загрузки кидает event friendsIsLoad
      * @emits friendsIsLoad
+     * @emits loadPossibleFriends
+     * @emits loadRecommendedFriends
      */
     async load() {
         this.clean();
@@ -122,6 +124,9 @@ class PliziFriendsManager extends PliziManager{
 
             this.isLoad = true;
             this.api.emit('friendsIsLoad', {});
+
+            this.api.emit('loadPossibleFriends');
+            this.api.emit('loadRecommendedFriends');
         }
 
         return true;
