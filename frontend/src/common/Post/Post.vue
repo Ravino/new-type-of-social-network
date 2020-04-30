@@ -111,16 +111,16 @@
 </template>
 
 <script>
-  import IconEye from '../icons/IconEye.vue';
-  import IconHeard from '../icons/IconHeard.vue';
-  import IconMessage from '../icons/IconMessage.vue';
-  import IconMessageUserPost from '../icons/IconMessageUserPost.vue';
-  import IconShare from '../icons/IconShare.vue';
+  import IconEye from '../../icons/IconEye.vue';
+  import IconHeard from '../../icons/IconHeard.vue';
+  import IconMessage from '../../icons/IconMessage.vue';
+  import IconMessageUserPost from '../../icons/IconMessageUserPost.vue';
+  import IconShare from '../../icons/IconShare.vue';
 
   import PostImage from './PostImage.vue';
-  import AttachmentFile from "./AttachmentFile.vue";
+  import AttachmentFile from "../AttachmentFile.vue";
 
-  import PliziPost from '../classes/PliziPost.js';
+  import PliziPost from '../../classes/PliziPost.js';
 
   export default {
     name: 'Post',
