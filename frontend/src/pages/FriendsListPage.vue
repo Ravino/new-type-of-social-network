@@ -41,12 +41,12 @@
                 </div>
 
                 <div class="col-sm-4 col-md-4 col-lg-4 col-xl-4">
-                    <PotentialFriends :blockName="`Возможные друзья`"
-                                      :friends="possibleFriends"></PotentialFriends>
-                    <!--                                      :friends="shuffle(possibleFriends)"></PotentialFriends>-->
-                    <PotentialFriends :blockName="`Рекомендуемые друзья`"
-                                      :friends="recommendedFriends"></PotentialFriends>
-<!--                                      :friends="shuffle(potentialList)"></PotentialFriends>-->
+                    <PotentialFriends v-if="possibleFriends && possibleFriends.length"
+                                      :blockName="`Возможные друзья`"
+                                      :friends="shuffle(possibleFriends)"></PotentialFriends>
+                    <PotentialFriends v-if="recommendedFriends && recommendedFriends.length"
+                                      :blockName="`Рекомендуемые друзья`"
+                                      :friends="shuffle(recommendedFriends)"></PotentialFriends>
                 </div>
             </div>
         </div>
@@ -61,8 +61,6 @@
   import FriendsListMixin from '../mixins/FriendsListMixin.js';
   import FriendListItem from '../components/FriendListItem.vue';
 
-  import PliziFriend from '../classes/PliziFriend.js';
-
   export default {
     name: 'FriendsListPage',
     components: {
@@ -73,49 +71,12 @@
       return {
         wMode: `all`,
         removedFriendID: -1,
-        possibleFriends: null,
-        recommendedFriends: null,
       }
     },
 
     methods: {
       friendsListSelect(wm) {
         this.wMode = wm;
-      },
-
-      async getPossibleFriends() {
-        let response;
-
-        try {
-          response = await this.$root.$api.$friend.getPossibleFriends();
-        } catch (e) {
-          console.warn(e.detailMessage);
-        }
-
-        if (response) {
-          this.possibleFriends = [];
-
-          response.map((possibleFriend) => {
-            this.possibleFriends.push(new PliziFriend(possibleFriend));
-          });
-        }
-      },
-      async getRecommendedFriends() {
-        let response;
-
-        try {
-          response = await this.$root.$api.$friend.getRecommendedFriends();
-        } catch (e) {
-          console.warn(e.detailMessage);
-        }
-
-        if (response) {
-          this.recommendedFriends = [];
-
-          response.map((recommendedFriend) => {
-            this.recommendedFriends.push(new PliziFriend(recommendedFriend));
-          });
-        }
       },
     },
 
@@ -136,11 +97,6 @@
 
         return ret;
       },
-    },
-
-    mounted() {
-      this.getPossibleFriends();
-      this.getRecommendedFriends();
     },
   }
 </script>

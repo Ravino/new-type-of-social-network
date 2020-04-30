@@ -483,6 +483,10 @@ class PliziAPI {
     }
 
 
+    /**
+     * @deprecated
+     * @returns {Promise<null|*>}
+     */
     async friendsPotential() {
         const sData = `@`;
 
