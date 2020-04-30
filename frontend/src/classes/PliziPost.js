@@ -96,6 +96,13 @@ class PliziPost {
      */
     _attachments = null;
 
+    /**
+     * Пост который был переслан.
+     * @type {PliziPost}
+     * @private
+     */
+    _sharedFrom = null;
+
     get id() {
         return this._id;
     }
@@ -182,6 +189,10 @@ class PliziPost {
         return this._attachments;
     }
 
+    get sharedFrom() {
+        return this._sharedFrom;
+    }
+
     set id(value) {
         this._id = value;
     }
@@ -234,6 +245,10 @@ class PliziPost {
         this._attachments = value;
     }
 
+    set sharedFrom(value) {
+        this._sharedFrom = value;
+    }
+
     /**
      * @param {object} post
      */
@@ -264,6 +279,10 @@ class PliziPost {
             post.attachments.list.map((aItem) => {
                 this.attachments.push(new PliziAttachment(aItem));
             });
+        }
+
+        if (post.sharedFrom) {
+            this.sharedFrom = new PliziPost(post.sharedFrom);
         }
     };
 

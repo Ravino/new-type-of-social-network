@@ -47,23 +47,45 @@
                 </div>
             </div>
 
-            <div class="col-12 plz-post-item-body pt-4 pb-2">
-                <p v-if="post.body" class="post-main-text mb-2" v-html="this.$options.filters.toBR(post.body)"></p>
-            </div>
+            <div :class="{'px-5': post.sharedFrom}">
+                <div :class="{shared: post.sharedFrom}">
+                    <template v-if="post.sharedFrom">
+                        <div class="post-news-item d-flex flex-row align-content-center pb-4">
+                            <div class="post-poster-pic mr-3">
+                                <img :src="post.sharedFrom.posterPic" :alt="post.sharedFrom.posterName"/>
+                            </div>
 
-            <div class="col-12 plz-post-item-images">
-                <div class="post-images">
-                    <template v-for="(postAttachment, postAttachmentIndex) in post.attachments">
-                        <PostImage v-if="postAttachment.isImage && postAttachmentIndex < 5"
-                                   :class="['post-image', postAttachmentIndex === 0 ? 'first-post-image' : null]"
-                                   :src="postAttachment.image.normal.path"/>
+                            <div class="post-poster-name d-flex flex-column justify-content-center">
+                                <h6 class="post-poster-title mb-1">
+                                    <!-- TODO: @TGA странно что мы нигде не выводим название поста-->
+                                    <b>{{post.sharedFrom.posterName}}</b>
+                                </h6>
+                                <time :datetime="post.sharedFrom.createdAt" class="post-poster-time">
+                                    {{ post.sharedFrom.createdAt | lastPostTime }}
+                                </time>
+                            </div>
+                        </div>
                     </template>
 
-                    <template v-for="(postAttachment) in post.attachments">
-                        <template v-if="!postAttachment.isImage">
-                                <AttachmentFile :attach="postAttachment"/>
-                        </template>
-                    </template>
+                    <div class="col-12 plz-post-item-body pt-4 pb-2">
+                        <p v-if="post.body" class="post-main-text mb-2" v-html="this.$options.filters.toBR(post.body)"></p>
+                    </div>
+
+                    <div class="col-12 plz-post-item-images">
+                        <div class="post-images">
+                            <template v-for="(postAttachment, postAttachmentIndex) in post.attachments">
+                                <PostImage v-if="postAttachment.isImage && postAttachmentIndex < 5"
+                                           :class="['post-image', postAttachmentIndex === 0 ? 'first-post-image' : null]"
+                                           :src="postAttachment.image.normal.path"/>
+                            </template>
+
+                            <template v-for="(postAttachment) in post.attachments">
+                                <template v-if="!postAttachment.isImage">
+                                    <AttachmentFile :attach="postAttachment"/>
+                                </template>
+                            </template>
+                        </div>
+                    </div>
                 </div>
             </div>
 
@@ -79,7 +101,7 @@
                             <span>{{ post.commentsCount | space1000 }}</span>
                         </div>
 
-                        <div class="post-watched-counter ml-4">
+                        <div class="post-watched-counter ml-4" @click="$emit('onShare', post)">
                             <IconShare/>
                             <span>{{ post.sharesCount | space1000 }}</span>
                         </div>
@@ -158,5 +180,10 @@
             margin-left: 5px;
             margin-bottom: 5px;
         }
+    }
+
+    .shared {
+        padding: 10px;
+        border-left: 2px solid #cececf;
     }
 </style>

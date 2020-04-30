@@ -23,6 +23,26 @@ class PliziPostAPI extends PliziBaseAPI {
   }
 
   /**
+   * Получение постов на страницах других пользователей.
+   * @public
+   * @returns {object[]|null}
+   * @throws PliziAPIError
+   */
+  async getPostsByUserId(id) {
+    let response = await this.axios.get(`api/user/${id}/posts`, this.authHeaders)
+      .catch((error) => {
+        this.checkIsTokenExperis(error, `getPostsByUserId`);
+        throw new PliziAPIError(`getPostsByUserId`, error.response);
+      });
+
+    if (response.status === 200) {
+      return response.data.data.list;
+    }
+
+    return null;
+  }
+
+  /**
    * Создание постов.
    * @param formData
    * @returns {object[]|null}
@@ -127,6 +147,28 @@ class PliziPostAPI extends PliziBaseAPI {
 
     if (response.status === 200) {
       return response.data.data;
+    }
+
+    return null;
+  }
+
+  /**
+   * Репост чужой записи на свойю стену.
+   *
+   * @param id
+   * @returns {object[]|null}
+   * @throws PliziAPIError
+   */
+  async sharePostToWall(id) {
+    let response = await this.axios.post(`api/posts/share/wall`, { id }, this.authHeaders)
+      .catch((error) => {
+        this.checkIsTokenExperis(error, `sharePostToWall`);
+        throw new PliziAPIError(`sharePostToWall`, error.response);
+      });
+
+
+    if (response.status === 201) {
+      return response.data;
     }
 
     return null;
