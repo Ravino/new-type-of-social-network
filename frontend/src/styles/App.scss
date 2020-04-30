@@ -131,36 +131,42 @@ h1, h2, h3, h4, h5, h6 {
 }
 
 .top-search.form-control {
-    color: #A3A8B9;
-    /*width: 100%; !* 534px *!*/
     width: 534px;
+    margin-left: auto;
+    margin-right: auto;
+    color: #A3A8B9;
     height: 40px;
     min-height: 40px;
     max-height: 40px;
     background-color: #EEEFF4;
-
     border-radius: 20px;
-    margin-left: auto;
-    margin-right: auto;
     border-width: 0;
     padding: 0 30px;
+    line-height: 20px;
+    outline: none;
+    box-shadow: none;
 
-    //background-image: url("../images/top-search-icon.png");
-    background-repeat: no-repeat;
-    background-position: 97% center;
+    &::placeholder {
+        font-size: $placeholderSize;
+        color: $placeholderColor;
+    }
 }
 
-.modal:before {
-    content: '';
-    position: absolute;
-    top: 50px;
-    right: 96px;
-    display: inline-block;
-    vertical-align: middle;
-    background: url("../images/icons/icon-modal-close.png") 50% 50% no-repeat;
-    width: 20px;
-    height: 20px;
-    cursor: pointer;
+.modal {
+    min-height: 600px;
+
+    &:before {
+        content: '';
+        position: absolute;
+        top: 50px;
+        right: 96px;
+        display: inline-block;
+        vertical-align: middle;
+        background: url("../images/icons/icon-modal-close.png") 50% 50% no-repeat;
+        width: 20px;
+        height: 20px;
+        cursor: pointer;
+    }
 }
 
 .fade:not(.show) {
@@ -401,7 +407,6 @@ $radioWidth: 18px;
     }
 }
 
-
 .editor {
     position: relative;
     width: calc(100% - 30px);
@@ -419,3 +424,16 @@ $radioWidth: 18px;
     }
 }
 
+
+
+input[type=number]::-webkit-inner-spin-button,
+input[type=number]::-webkit-outer-spin-button {
+    appearance: none;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    margin: 0;
+}
+
+input[type=number] {
+    -moz-appearance: textfield;
+}

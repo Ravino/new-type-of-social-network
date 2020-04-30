@@ -30,23 +30,9 @@
             <FavoriteFriends :isNarrow="false"></FavoriteFriends>
             <ShortFriends></ShortFriends>
         </div>
-        <Modal v-if="postForEdit"
-               :modal-id="modal.modalID"
-               :isVisible="modal.isVisible"
-               :vertically="true"
-               :clickable="true"
-               :size="'xl'"
-               @hideModal="hideModal">
-            <template v-slot:header>
-                <div class="modal-header">
-                    <h5 class="modal-title">Редактирование записи</h5>
-                </div>
-            </template>
 
-            <WhatsNewBlock :showAvatar="false"
-                           :inputEditorText="postForEdit.body"
-                           :inputEditorAttachment="postForEdit.attachments"></WhatsNewBlock>
-        </Modal>
+        <PostEditModal v-if="postEditModal.isVisible"
+                       :post="postForEdit"/>
     </div>
 </template>
 
@@ -55,13 +41,13 @@ import AccountToolbarLeft from '../common/AccountToolbarLeft.vue';
 import FavoriteFriends from '../common/FavoriteFriends.vue';
 import ShortFriends from '../common/ShortFriends.vue';
 
-import Post from '../common/Post.vue';
+import Post from '../common/Post/Post.vue';
 import WhatsNewBlock from '../common/WhatsNewBlock.vue';
 
 import ProfileHeader from '../components/ProfileHeader.vue';
 import ProfilePhotos from '../components/ProfilePhotos.vue';
 import ProfileFilter from '../components/ProfileFilter.vue';
-import Modal from '../components/Modal.vue';
+import PostEditModal from "../common/Post/PostEditModal.vue";
 
 import PliziPost from '../classes/PliziPost.js';
 
@@ -70,7 +56,7 @@ name: 'ProfilePage',
 components: {
     AccountToolbarLeft, FavoriteFriends, ShortFriends,
     ProfileHeader, ProfilePhotos, WhatsNewBlock, ProfileFilter, Post,
-  Modal,
+    PostEditModal,
 },
 data() {
     return {
@@ -85,11 +71,10 @@ data() {
             {path: '/images/user-photos/user-photo-01.png',},
             {path: '/images/user-photos/user-photo-03.png',},
         ],
-      modal: {
-        modalID: 'modal-' + Math.floor(Math.random() * 1000),
-        isVisible: false,
-      },
-      postForEdit: null,
+        postEditModal: {
+            isVisible: false,
+        },
+        postForEdit: null,
     }
 },
 
@@ -152,14 +137,14 @@ methods: {
       }
     }, 5000);
   },
-  hideModal() {
-    this.modal.isVisible = false;
-    this.postForEdit = null;
-  },
-  onEditPost(post) {
-    this.modal.isVisible = true;
-    this.postForEdit = post;
-  },
+    onEditPost(post) {
+        this.postEditModal.isVisible = true;
+        this.postForEdit = post;
+    },
+    hidePostEditModal() {
+        this.postEditModal.isVisible = false;
+        this.postForEdit = null;
+    },
 
   async deletePost(id) {
     let response;
@@ -205,6 +190,7 @@ mounted() {
     });
 
     this.$root.$on('wallPostsSelect', this.wallPostsSelectHandler);
+    this.$root.$on('hidePostEditModal', this.hidePostEditModal);
     this.getPosts();
 }
 }

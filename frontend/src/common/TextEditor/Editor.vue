@@ -5,8 +5,7 @@
                         ref="editor"
                         @keydown.native="onEditorKeyDown"
                         @keyup.native="onEditorKeyUp"/>
-        <span v-if="!isFocusedEditor"
-              class="placeholder">
+        <span v-if="!isFocusedEditor" class="placeholder">
             {{ placeholder }}
         </span>
     </div>
@@ -116,6 +115,10 @@ methods: {
         if (!(!!str)) {
             this.isFocusedEditor = false;
         }
+    },
+
+    setContent(newContent){
+        this.editor.setContent(newContent);
     },
 
     getContent(){
