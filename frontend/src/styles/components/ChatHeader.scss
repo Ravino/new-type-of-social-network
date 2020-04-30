@@ -1,23 +1,5 @@
 #chatHeader {
-
-    .chat-search-input {
-        color: #A3A8B9;
-        height: 40px;
-        min-height: 40px;
-        max-height: 40px;
-        background-color: #EEEFF4;
-        border-radius: 20px;
-        border-width: 0;
-        padding: 0 30px;
-        line-height: 20px;
-        outline: none;
-        box-shadow: none;
-
-        &::placeholder {
-            font-size: $placeholderSize;
-            color: $placeholderColor;
-        }
-    }
+    height: 76px;
 
     .btn-search {
         position: absolute;
@@ -30,6 +12,26 @@
         border: 0;
     }
 }
+
+#txtFindInChat {
+    color: #A3A8B9;
+    height: 40px;
+    min-height: 40px;
+    max-height: 40px;
+    background-color: #EEEFF4;
+    border-radius: 20px;
+    border-width: 0;
+    padding: 0 30px;
+    line-height: 20px;
+    outline: none;
+    box-shadow: none;
+
+    &::placeholder {
+        font-size: $placeholderSize;
+        color: $placeholderColor;
+    }
+}
+
 .chatHeader-title {
     font-size: 13px;
     font-weight: 700;

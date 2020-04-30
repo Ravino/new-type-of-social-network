@@ -9,10 +9,7 @@ $minHeight: 200px;
 }
 
 #chatMessagesBody {
-    padding-bottom: 63px; // потом регулируется vue
-
-    //height: calc(100% - 85px - 81px); // chat footer
-    //min-height: 200px;
+    padding-bottom: 81px; // потом регулируется vue
 
     .chat-messages-scroll {
         height: 100%;
