@@ -23,14 +23,13 @@
                     <ChatMessageItem v-for="(message, messageIndex) in filteredMessages"
                                      v-if="message.id !== removeMessageID"
                                      @ChatMessagePick="onChatMessagePick"
-                                     @ChatMessageReply="onChatMessageReply"
                                      @ShowForwardMessageModal="onShowForwardMessageModal"
+                                     @ShowReplyMessageModal="onShowReplyMessageModal"
                                      @RemoveMessage="onRemoveMessage"
                                      @openChatVideoModal="openChatVideoModal"
                                      v-bind:message="message"
                                      v-bind:next="getNext(messageIndex)"
                                      v-bind:pickedID="pickedMessageID"
-                                     v-bind:replyID="replyMessageID"
                                      v-bind:dialogID="currentDialog.id"
                                      v-bind:key="message.id">
                     </ChatMessageItem>
@@ -50,6 +49,12 @@
                             v-bind:pickedID="pickedMessageID">
         </ResendMessageModal>
 
+        <ReplyMessageModal v-if="replyMessageModalShow"
+                            v-bind:pickedMessage="pickedMessage"
+                            v-bind:currentDialog="currentDialog"
+                            v-bind:pickedID="pickedMessageID">
+        </ReplyMessageModal>
+
         <ChatVideoModal v-if="chatVideoModalShow"
                         :videoLink="chatVideoModalContent.videoLink"></ChatVideoModal>
     </div>
@@ -63,6 +68,7 @@ import vueCustomScrollbar from 'vue-custom-scrollbar';
 
 /** TODO: переименовать в ForwardMessageModal **/
 import ResendMessageModal from './ResendMessageModal.vue';
+import ReplyMessageModal from './ReplyMessageModal.vue';
 import ChatVideoModal from './ChatVideoModal.vue';
 
 import PliziMessage from '../../classes/PliziMessage.js';
@@ -72,7 +78,7 @@ export default {
     components: {
         vueCustomScrollbar,
         ChatMessageItem,
-        ResendMessageModal,
+        ResendMessageModal, ReplyMessageModal,
         ChatVideoModal,
     },
 
@@ -89,6 +95,7 @@ data() {
         removeMessageID: -1,
         previousMsg: null,
         resendMessageModalShow: false,
+        replyMessageModalShow: false,
 
         customScrollbarSettings: {
             maxScrollbarLength: 60,
@@ -107,10 +114,6 @@ data() {
 methods: {
     onChatMessagePick(evData){
         this.pickedMessageID = evData.messageID;
-    },
-
-    onChatMessageReply(evData){
-        this.replyMessageID = evData.messageID;
     },
 
     openChatVideoModal(evData) {
@@ -151,6 +154,14 @@ methods: {
 
     hideMessageResendModal() {
         this.$root.$emit('hideMessageResendModal', {});
+    },
+
+    onShowReplyMessageModal() {
+        this.replyMessageModalShow = true;
+    },
+
+    hideReplyMessageModal() {
+        this.$root.$emit('hideReplyMessageModal', {});
     },
 
     getNext(currIndex) {
@@ -241,6 +252,10 @@ computed: {
 mounted() {
     this.$root.$on('hideMessageResendModal', () => {
         this.resendMessageModalShow = false;
+    });
+
+    this.$root.$on('hideReplyMessageModal', () => {
+        this.replyMessageModalShow = false;
     });
 
     this.$root.$on('hideChatVideoModal', () => {

@@ -68,6 +68,7 @@ components: {  },
 props: {
     currentDialog: PliziDialog | Object
 },
+
 data() {
     return {
         recipients : (new PliziRecipientsCollection()),
@@ -75,6 +76,7 @@ data() {
         selectedRecipients: null,
     }
 },
+
 methods: {
     addAttendeesAndClose(){
         window.console.log(`addAttendeesAndClose`);
@@ -91,14 +93,14 @@ methods: {
         const newAttendees = this.selectedRecipients.map( rItem => rItem.id );
 
         try {
-            apiResponse = await this.$root.$api.$chat.openDialog(newAttendees);
+            apiResponse = await this.$root.$api.$chat.dialogOpen(newAttendees);
         } catch (e){
             window.console.warn( e.detailMessage );
             throw e;
         }
 
         if ( apiResponse ) {
-            window.console.log(apiResponse, `apiResponse`);
+            this.$root.$emit('NewChatDialog', apiResponse);
 
             this.hidePickAttendeesDialogModal();
         }

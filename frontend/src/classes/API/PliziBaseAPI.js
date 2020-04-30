@@ -48,7 +48,7 @@ class PliziBaseAPI {
      * @throws {Event} - событие `api:Unauthorized`
      */
     checkIsTokenExpires(error, srcMethod){
-        this.__base.checkIsTokenExperis(error, srcMethod);
+        this.__base.checkIsTokenExpires(error, srcMethod);
     }
 }
 

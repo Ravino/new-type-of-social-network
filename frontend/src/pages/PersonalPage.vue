@@ -89,7 +89,7 @@ methods: {
             let newMsg = apiResponse.data;
 
             const eventData = {
-                dialogId : newMsg.chatId,
+                chatId : newMsg.chatId,
                 message : newMsg
             }
 

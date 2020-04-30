@@ -6,12 +6,14 @@ import PliziCollection from './PliziCollection.js';
  */
 class PliziDialogsCollection extends PliziCollection {
 
-    /**
-     * имя эвента, который мы кидаем когда данные загружены с сервера
-     * @type {string}
-     * @public
-     */
-    eventName = 'DialogsIsLoaded';
+    restoreEventName = 'DialogsIsRestored';
+    loadEventName = 'DialogsIsLoaded';
+    updateEventName = 'DialogsIsUpdated';
+
+    constructor(apiObj){
+        super(apiObj);
+        window.console.log(`PliziDialogsCollection constructor`);
+    }
 
     /**
      * метод сравнения для сортировки, диалоги сортируем по дате
@@ -27,6 +29,13 @@ class PliziDialogsCollection extends PliziCollection {
     }
 
 
+    onAddNewDialog(evData){
+        this.add(evData);
+        this.storeData();
+        this.emit(this.updateEventName);
+    }
+
+
     new(data){
         return new PliziDialog(data);
     }
@@ -37,17 +46,30 @@ class PliziDialogsCollection extends PliziCollection {
      * @param {number} ID - ID нужной сущности
      * @returns {PliziDialog} - нужная сущность, или UNDEFINED если не нашли
      */
-    getByID(ID){
+    get(ID){
         return this.collection.get(ID);
     }
 
 
     get firstDialog(){
+        window.console.log(this.collection.size, `firstDialog`);
         if (this.collection.size === 0)
             return null;
 
         return this.asArray()[0];
     }
+
+
+    shortList(){
+        let arr = [];
+
+        this.collection.forEach((item) => {
+            arr.push( item.id + ` `+item.companion.firstName );
+        });
+
+        return arr;
+    }
+
 
     /**
      * @returns {PliziDialog[]}
@@ -70,14 +92,14 @@ class PliziDialogsCollection extends PliziCollection {
         this.restoreData();
 
         if (this.collection.size > 0) {
-            this.emit();
+            this.isLoad = true;
+            this.emit(this.loadEventName);
             return true;
         }
 
         let apiResponse = null;
 
         try {
-            //apiResponse = await this.api.chatDialogs();
             apiResponse = await this.api.$chat.dialogs();
         }
         catch (e){
@@ -92,14 +114,17 @@ class PliziDialogsCollection extends PliziCollection {
             this.storeData();
 
             this.isLoad = true;
-            this.emit();
+
+            if (this.loadEventName) {
+                this.emit(this.loadEventName);
+            }
         }
 
         return true;
     }
 
     dialogStateUpdated(dialogID, newData){
-        let dlg = this.getByID(dialogID);
+        let dlg = this.get(dialogID);
 
         if (dlg) {
             dlg.lastMessageDT = newData.lastMessageDT;

@@ -11,7 +11,7 @@ methods: {
         let apiResponse = null;
 
         try {
-            apiResponse = await this.$root.$api.$chat.openDialog( [userId] );
+            apiResponse = await this.$root.$api.$chat.dialogOpen( [userId] );
         }
         catch (e){
             window.console.warn( e.detailMessage );
@@ -19,6 +19,9 @@ methods: {
         }
 
         if ( apiResponse ) {
+            this.$root.$emit('NewChatDialog', apiResponse);
+            window.console.log(apiResponse.id, `NewChatDialog`);
+
             await this.$store.dispatch('SET_ACTIVE_DIALOG', apiResponse.id);
         }
 
