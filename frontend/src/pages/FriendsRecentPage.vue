@@ -21,8 +21,12 @@
                 </div>
 
                 <div class="col-sm-4 col-md-4 col-lg-4 col-xl-4">
-                    <PotentialFriends :blockName="`Возможные друзья`" :friends="shuffle(potentialList)"></PotentialFriends>
-                    <PotentialFriends :blockName="`Рекомендуемые друзья`" :friends="shuffle(potentialList)"></PotentialFriends>
+                    <PotentialFriends v-if="possibleFriends && possibleFriends.length"
+                                      :blockName="`Возможные друзья`"
+                                      :friends="shuffle(possibleFriends)"></PotentialFriends>
+                    <PotentialFriends v-if="recommendedFriends && recommendedFriends.length"
+                                      :blockName="`Рекомендуемые друзья`"
+                                      :friends="shuffle(recommendedFriends)"></PotentialFriends>
                 </div>
             </div>
         </div>

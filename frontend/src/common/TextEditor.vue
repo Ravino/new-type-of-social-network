@@ -17,7 +17,7 @@
                                         :placeholder="editorPlaceholder"
                                         :inputEditorText="inputEditorText"
                                         ref="editor" />
-                                <button class="btn btn-link">
+                                <button @click.stop="onSendPostClick" class="btn btn-link">
                                     <IconSend style="height: 20px"/>
                                 </button>
                             </div>
@@ -49,7 +49,7 @@
                     </button>
                 </div>
             </div>
-            <!-- @TGA это чтобы блок с plz-attachment-images начался с новой строки -->
+
             <div v-if="attachFiles  &&  attachFiles.length>0" class="row mt-3">
                 <div class="plz-attachment-images col-9 pl-4" :class="{'offset-1 col-9 ' : showAvatar, 'col-10': !showAvatar }" >
                     <ul class="plz-attachment-images-list list-unstyled d-flex flex-row mb-0 flex-wrap"
@@ -161,6 +161,20 @@ methods: {
         this.checkUpdatedChatContainerHeight();
     },
 
+    onSendPostClick(){
+        const cont = this.$refs.editor.getContent();
+
+        if ('<p></p>' === cont)
+            return false;
+
+        this.$refs.editor.setContent('');
+        this.$refs.editor.focus();
+
+        this.onEditorNewPost({
+            postText: cont
+        });
+    },
+
     onEditorNewPost(evData) {
         this.$emit('editorPost', {
             postText: evData.postText,
@@ -230,6 +244,7 @@ methods: {
         let apiResponse = null;
 
         try {
+            /** TODO: @TGA надо потом перенести отсюда загрузку аттачей **/
             switch (this.workMode) {
                 case 'chat':
                     apiResponse = await this.$root.$api.$chat.attachment(picsArr);

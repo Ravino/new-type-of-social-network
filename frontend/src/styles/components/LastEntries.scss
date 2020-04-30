@@ -1,4 +1,4 @@
-$lastEntriesH: 270px;
+$lastEntriesH: 256px;
 $lastEntryW: 148px;
 $lastEntryH: 170px;
 $lastEntryRadius: 18px;
@@ -6,10 +6,9 @@ $lastEntryPicSize: 85px;
 
 .plz-latest-entries {
     min-height: $lastEntriesH;
-    height: 49%;
     margin-bottom: 2%;
 
-    > h6 {
+    h6 {
         text-align: left;
         font-size: 16pt;
         font-weight: bold;

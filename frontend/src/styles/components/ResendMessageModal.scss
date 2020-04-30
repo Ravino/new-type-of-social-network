@@ -2,9 +2,15 @@
 $titleColor: #363636;
 
 
-#resendMessageModal .modal-dialog {
-    width: 100%;
-    max-width: 600px;
+#resendMessageModal {
+    .modal-dialog {
+        width: 100%;
+        max-width: 600px;
+    }
+
+    .modal-content {
+        min-height: 420px;
+    }
 }
 
 #resendMessageModal {
