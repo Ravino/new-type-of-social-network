@@ -194,17 +194,15 @@ class PostController extends Controller
         ]);
     }
 
-    public function update(Request $request)
+    public function update(Request $request, $id)
     {
-        $user_post = \Auth::user()->posts()->where('id', $request->id)->get();
+        $user_post = \Auth::user()->posts()->where('id', $id)->first();
 
         if ($user_post) {
-//            $user_post->body = $request->body;
-//            PostAttachment::whereIn('id', $request->attachmentIds)->update(['post_id' => $user_post->id]);
+            $user_post->update(['body' => $request->body]);
+            PostAttachment::whereIn('id', $request->attachmentIds)->update(['post_id' => $user_post->id]);
 
-            return response()->json([
-                'message' => 'Вы успешно отредактировали запись.',
-            ]);
+            return new PostResource($user_post);
         }
 
         return response()->json([

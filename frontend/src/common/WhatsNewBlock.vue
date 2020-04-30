@@ -1,11 +1,8 @@
 <template>
     <TextEditor :id="`profileWhatsNew`"
-                :showAvatar="showAvatar"
                 :clazz="`row plz-text-editor mb-4 p-4 h-auto  align-items-start bg-white-br20`"
                 :editorPlaceholder="'Что у Вас нового?'"
                 :dropToDown="true"
-                :inputEditorText="inputEditorText"
-                :inputEditorAttachment="inputEditorAttachment"
                 @editorPost="onTextPost"
                 work-mode="post">
     </TextEditor>
@@ -14,19 +11,14 @@
 <script>
 import TextEditor from './TextEditor.vue';
 
+import ChatMixin from '../mixins/ChatMixin.js';
+
 export default {
 name: 'WhatsNewBlock',
 components: {
     TextEditor
 },
-  props: {
-    inputEditorText: String,
-    inputEditorAttachment: Array,
-    showAvatar: {
-      type: Boolean,
-      default: true,
-    },
-  },
+    mixins: [ChatMixin],
 data() {
     return {}
 },
@@ -36,24 +28,6 @@ computed: {
     },
 },
 methods: {
-    killBrTrail(sText){
-        const brExample = `<br/>`;
-
-        while (true){
-            const pos = sText.length - brExample.length;
-            const trail = sText.substr(pos).toLowerCase();
-
-            if (trail === brExample) {
-                sText = sText.substr(0, pos);
-            }
-            else {
-                break;
-            }
-        }
-
-        return sText;
-    },
-
   async onTextPost(evData){
     let msg = evData.postText.trim();
 
@@ -84,11 +58,7 @@ methods: {
       }
 
       try {
-        if (this.inputEditorText || this.inputEditorAttachment) {
-          response = await this.$root.$api.$post.updatePost(formData);
-        } else {
           response = await this.$root.$api.$post.storePost(formData);
-        }
       } catch (e) {
         console.warn(e.detailMessage);
       }
