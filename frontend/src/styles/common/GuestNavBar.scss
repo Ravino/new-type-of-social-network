@@ -1,14 +1,26 @@
 $plzGuestNavbarH: 56px;
 
-.navbar.plz-guest-navbar {
+.plz-guest-navbar {
     height: $plzGuestNavbarH;
     min-height: $plzGuestNavbarH;
     max-height: $plzGuestNavbarH;
     padding: 0;
-    margin-top: 153px;
+    //margin-top: 153px;
+
+    .form-inline {
+        width: 100%;
+    }
+
+    .btn-search {
+        position: absolute;
+        top: 50%;
+        right: 10px;
+        transform: translateY(-50%);
+    }
 
     .to-english.btn.btn-link {
         color: #AFB4C5;
+        font-size: 13px;
     }
 }
 

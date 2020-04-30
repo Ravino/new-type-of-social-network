@@ -85,3 +85,18 @@
     width: 16px;
     background-image: url('../images/icon-key.png');
 }
+.icon-user {
+    display: inline-block;
+    vertical-align: middle;
+    background: url("../images/icons/icon-user.png") 50% 50% no-repeat;
+    width: 16px;
+    height: 16px;
+}
+
+.icon-letter {
+    display: inline-block;
+    vertical-align: middle;
+    background: url("../images/icons/icon-letter.png") 50% 50% no-repeat;
+    width: 17px;
+    height: 12px;
+}

@@ -10,13 +10,8 @@
                         </svg>
                     </router-link>
                 </div>
-                <div class="col-7">
-                    <form class="form-inline my-0 h-100">
-                        <input id="topSearch" ref="topSearch" class="top-search form-control"
-                               type="text"
-                               placeholder="Поиск" aria-label="Поиск" />
-                        <button class="d-none btn btn-outline-success" type="submit">Search</button>
-                    </form>
+                <div class="col-7 d-flex align-items-center">
+                    <NavBarSearch></NavBarSearch>
                 </div>
                 <div class="col-3 px-0 mr-0">
                     <div class="w-100 h-100 d-flex align-items-center justify-content-end">
@@ -29,9 +24,11 @@
 </template>
 
 <script>
+import NavBarSearch from "./NavBar/NavBarSearch";
 export default {
 name: 'GuestNavBar',
-props: {
+    components: {NavBarSearch},
+    props: {
     isAuth: Boolean
 },
 data () {

@@ -1,8 +1,7 @@
 <template>
-    <div class="plz-import-socnet form-group text-center">
-        <h6 class="">Импорт аккаунта</h6>
-        <div class="plz-import-socnet-text">Импортируйте свой аккаунт из списка следующих социальных сетей
-        </div>
+    <div class="plz-import-socnet form-group text-center mt-4">
+        <h6 class="mb-3">Импорт аккаунта</h6>
+        <div class="plz-import-socnet-text  mb-3">Импортируйте свой аккаунт из списка следующих социальных сетей:</div>
         <div class="plz-import-socnet-btns d-flex justify-content-center">
             <div class="mx-3 d-none">
                 <!-- TODO: @YZ доработать когда появятся api ключи -->
@@ -153,6 +152,3 @@
     }
 </script>
 
-<style scoped>
-
-</style>

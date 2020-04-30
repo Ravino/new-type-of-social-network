@@ -131,23 +131,25 @@ h1, h2, h3, h4, h5, h6 {
 }
 
 .top-search.form-control {
-    color: #A3A8B9;
-    /*width: 100%; !* 534px *!*/
     width: 534px;
+    margin-left: auto;
+    margin-right: auto;
+    color: #A3A8B9;
     height: 40px;
     min-height: 40px;
     max-height: 40px;
     background-color: #EEEFF4;
-
     border-radius: 20px;
-    margin-left: auto;
-    margin-right: auto;
     border-width: 0;
     padding: 0 30px;
+    line-height: 20px;
+    outline: none;
+    box-shadow: none;
 
-    //background-image: url("../images/top-search-icon.png");
-    background-repeat: no-repeat;
-    background-position: 97% center;
+    &::placeholder {
+        font-size: $placeholderSize;
+        color: $placeholderColor;
+    }
 }
 
 .modal:before {
