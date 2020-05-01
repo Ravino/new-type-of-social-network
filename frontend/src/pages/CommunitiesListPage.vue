@@ -11,15 +11,14 @@
             </div>
 
             <div class="row">
-                <div class="bg-white-br20 col-sm-10 col-md-10 col-lg-8 col-xl-8">
-                    <div v-if="isCommunitiesLoaded" class="row plizi-communities-list ">
+                <div class="col-sm-10 col-md-10 col-lg-8 col-xl-8">
+                    <div v-if="isCommunitiesLoaded" class="plizi-communities-list ">
                         <ul v-if="communitiesList  &&  communitiesList.length>0" class="d-block w-100 p-0">
-                            <transition-group name="slide-fade" :duration="700">
-                                <CommunityItem v-for="(comItem, comIndex) in communitiesList"
-                                               v-bind:community="comItem"
-                                               v-bind:key="comIndex">
-                                </CommunityItem>
-                            </transition-group>
+                            <CommunityItem v-for="(comItem, comIndex) in communitiesList"
+                                           v-bind:community="comItem"
+                                           v-bind:canSubscribe="false"
+                                           v-bind:key="comIndex">
+                            </CommunityItem>
                         </ul>
                         <div v-else class="alert alert-info">
                             Вы ещё не присодинились ни к одному сообществу.
@@ -57,40 +56,10 @@ data(){
 },
 
 methods : {
-
-    async loadMyCommunitites() {
-        let apiResponse = null;
-
-        this.communitiesList = null;
-
-        try {
-            /** TODO: @TGA заменить на загрузку своих сообществ **/
-            apiResponse = await this.$root.$api.$communities.getCommunities();
-            //apiResponse = await this.$root.$api.$communities.userCommunities(this.$root.$user.id);
-        }
-        catch (e){
-            window.console.warn(e.detailMessage);
-            throw e;
-        }
-
-        this.communitiesList = [];
-
-        if (apiResponse) {
-            window.console.log(apiResponse, `apiResponse`);
-
-            this.isCommunitiesLoaded = true;
-
-            apiResponse.map( (pfItem)=> {
-                this.communitiesList.push( new PliziCommunity(pfItem) );
-            });
-        }
-
-        return true;
-    },
 },
 
 mounted(){
-    this.loadMyCommunitites();
+    this.loadCommunitites();
 }
 
 }

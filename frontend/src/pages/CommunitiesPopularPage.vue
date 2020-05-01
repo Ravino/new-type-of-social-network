@@ -11,15 +11,14 @@
             </div>
 
             <div class="row">
-                <div class="bg-white-br20 col-sm-10 col-md-10 col-lg-8 col-xl-8">
-                    <div v-if="isPopularCommunitiesLoaded" class="row plizi-communities-list ">
-                        <ul v-if="popularCommunities  &&  popularCommunities.length>0" class="d-block w-100 p-0">
-                            <transition-group name="slide-fade" :duration="700">
+                <div class="col-sm-10 col-md-10 col-lg-8 col-xl-8">
+                    <div v-if="isPopularCommunitiesLoaded" class="plizi-communities-list">
+                        <ul v-if="popularCommunities  &&  popularCommunities.length>0" class="d-flex flex-column --w-100 p-0">
                                 <CommunityItem v-for="(comItem, comIndex) in popularCommunities"
                                                v-bind:community="comItem"
+                                               v-bind:canSubscribe="isSubscribed(comItem.id)"
                                                v-bind:key="comIndex">
                                 </CommunityItem>
-                            </transition-group>
                         </ul>
                         <div v-else class="alert alert-success p-5 w-100 text-center">
                             Нет ни одного популярного сообщества.
@@ -53,40 +52,16 @@ mixins: [CommunitiesListMixin],
 
 data(){
     return {
-        isPopularCommunitiesLoaded: true,
-        popularCommunities: []
+
     }
 },
 
 methods : {
 
-    async loadPopularCommunitites() {
-        let apiResponse = null;
-
-        this.popularCommunities = null;
-
-        try {
-            apiResponse = await this.$root.$api.$communities.getCommunities();
-        }
-        catch (e){
-            window.console.warn(e.detailMessage);
-            throw e;
-        }
-
-        this.popularCommunities = [];
-
-        if (apiResponse) {
-            this.isPopularCommunitiesLoaded = true;
-            apiResponse.map( (pfItem)=> {
-                this.popularCommunities.push( new PliziCommunity(pfItem) );
-            });
-        }
-
-        return true;
-    },
 },
 
 mounted(){
+    this.loadCommunitites();
     this.loadPopularCommunitites();
 }
 

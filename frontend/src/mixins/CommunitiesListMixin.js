@@ -6,6 +6,7 @@ import CommunitiesListHeader from '../common/Communities/CommunitiesListHeader.v
 
 import CommunityItem from '../common/Communities/CommunityItem.vue';
 import CommunityCreateBlock from '../common/Communities/CommunityCreateBlock.vue';
+import PliziCommunity from "../classes/PliziCommunity";
 
 const CommunitiesListMixin = {
 components: {
@@ -23,19 +24,103 @@ data() {
         isCommunitiesLoaded: false,
         communitiesList: [],
 
+        isPopularCommunitiesLoaded: true,
+        popularCommunities: [],
+
         recommendedCommunities: null
     }
 },
 
 computed: {
+
 },
 
 methods: {
+    isSubscribed(commID){
+        if (! this.popularCommunities)
+            return true;
 
+        const ret = !!this.popularCommunities.find( (commItem) => {
+            //window.console.info(commItem.id, commItem.name);
+            return commItem.id===commID;
+        });
+        //window.console.log(ret, commID);
 
-},
+        return ret;
+    },
 
-created(){
+    async getCommunities() {
+        window.console.warn(`getCommunities`);
+
+        let apiResponse = null;
+
+        try {
+            apiResponse = await this.$root.$api.$communities.getCommunity(40);
+        }
+        catch (e){
+            window.console.warn(e.detailMessage);
+            throw e;
+        }
+
+        window.console.log(apiResponse);
+
+        if (apiResponse) {
+
+        }
+
+        return true;
+    },
+
+    async loadCommunitites() {
+        let apiResponse = null;
+
+        this.communitiesList = null;
+
+        try {
+            apiResponse = await this.$root.$api.$communities.userCommunities();
+        }
+        catch (e){
+            window.console.warn(e.detailMessage);
+            throw e;
+        }
+
+        this.communitiesList = [];
+
+        if (apiResponse) {
+            this.isCommunitiesLoaded = true;
+
+            apiResponse.map( (pfItem)=> {
+                this.communitiesList.push( new PliziCommunity(pfItem) );
+            });
+        }
+
+        return true;
+    },
+
+    async loadPopularCommunitites() {
+        let apiResponse = null;
+
+        this.popularCommunities = null;
+
+        try {
+            apiResponse = await this.$root.$api.$communities.loadCommunities();
+        }
+        catch (e){
+            window.console.warn(e.detailMessage);
+            throw e;
+        }
+
+        this.popularCommunities = [];
+
+        if (apiResponse) {
+            this.isPopularCommunitiesLoaded = true;
+            apiResponse.map( (pfItem)=> {
+                this.popularCommunities.push( new PliziCommunity(pfItem) );
+            });
+        }
+
+        return true;
+    },
 },
 
 };

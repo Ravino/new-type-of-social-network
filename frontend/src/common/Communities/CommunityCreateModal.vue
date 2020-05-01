@@ -78,7 +78,7 @@
                         </div>
 
                         <div class="form-group row">
-                            <label for="commPrivacy" class="col-4 col-form-label">Тип группы:</label>
+                            <label for="commPrivacy" class="col-4 col-form-label">Приватность:</label>
                             <div class="col-8">
                                 <select v-model="community.privacy" id="commPrivacy" ref="commPrivacy" class="form-control">
                                     <option value="public">Открытая</option>

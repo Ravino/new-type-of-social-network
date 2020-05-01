@@ -8,11 +8,11 @@ class PliziCommunitiesAPI extends PliziBaseAPI {
      * @returns {object[]|null}
      * @throws PliziAPIError
      */
-    async getCommunities(){
+    async loadCommunities(){
         let response = await this.axios.get( 'api/communities', this.authHeaders )
             .catch( ( error ) => {
-                this.checkIsTokenExpires( error, `$communities.getCommunities` );
-                throw new PliziAPIError( `$communities.getCommunities`, error.response );
+                this.checkIsTokenExpires( error, `$communities.loadCommunities` );
+                throw new PliziAPIError( `$communities.loadCommunities`, error.response );
             } );
 
         if ( response.status === 200 ){
@@ -23,25 +23,26 @@ class PliziCommunitiesAPI extends PliziBaseAPI {
     }
 
 
-    async myCommunities(){
+    async userCommunities(){
         let response = await this.axios.get( 'api/user/communities', this.authHeaders )
-            .catch( ( error ) => {
-                this.checkIsTokenExpires( error, `$communities.myCommunities` );
-                throw new PliziAPIError( `$communities.myCommunities`, error.response );
-            } );
-
-        if ( response.status === 200 ){
-            return response.data.data.list;
-        }
-
-        return null;
-    }
-
-    async userCommunities(userID){
-        let response = await this.axios.get( 'api/communities/'+userID, this.authHeaders )
             .catch( ( error ) => {
                 this.checkIsTokenExpires( error, `$communities.userCommunities` );
                 throw new PliziAPIError( `$communities.userCommunities`, error.response );
+            } );
+
+        if ( response.status === 200 ){
+            return response.data.data.communities.list;
+        }
+
+        return null;
+    }
+
+
+    async getCommunity(userID){
+        let response = await this.axios.get( 'api/communities/'+userID, this.authHeaders )
+            .catch( ( error ) => {
+                this.checkIsTokenExpires( error, `$communities.getCommunitiesById` );
+                throw new PliziAPIError( `$communities.getCommunitiesById`, error.response );
             } );
 
         if ( response.status === 200 ){
