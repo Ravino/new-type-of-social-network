@@ -70,8 +70,8 @@ methods: {
         if (evData.token  &&  (evData.token+'').trim() !== ``) {
             this.$root.$isAuth = true;
 
-            this.$store.dispatch('SET_GWT', evData.token);
-            this.$store.dispatch('SET_CHAT_CHANNEL', evData.chatChannel);
+            window.localStorage.setItem('pliziJWToken', evData.token);
+            window.localStorage.setItem('pliziChatChannel', evData.chatChannel);
 
             this.$root.$api.token = evData.token;
             this.$root.$api.channel = evData.chatChannel;
@@ -97,10 +97,6 @@ methods: {
     afterSuccessLogout(evData) {
         this.$root.$isAuth = false;
 
-        this.$store.dispatch('SET_GWT', ``);
-        this.$store.dispatch('SET_CHAT_CHANNEL', ``);
-        this.$store.dispatch('SET_LAST_SEARCH', ``);
-
         this.$root.$user.cleanData();
         this.$root.$api.token = ``;
         this.$root.$api.channel = ``;
@@ -122,7 +118,7 @@ methods: {
             window.console.log(`afterUserLoad`);
 
             this.$root.$isAuth = true;
-            this.$root.$lastSearch = this.$store.getters.lastSearch;
+            this.$root.$lastSearch = window.localStorage.getItem('pliziLastSearch');
 
             this.$root.$api.token = evData.token;
 
@@ -194,7 +190,8 @@ created(){
 
     this.$root.$on('afterSuccessLogout', this.afterSuccessLogout);
 
-    this.$root.$on('afterUserLoad', this.afterUserLoad);
+    this.$root.$on('AfterUserLoad', this.afterUserLoad);
+    this.$root.$on('AfterUserRestore', this.afterUserLoad);
 
     this.$root.$on('searchStart', (evData) => {
         this.lastSearchText = evData.searchText;

@@ -56,10 +56,6 @@ const router = new VueRouter({
 
 
 function routerForcedLogout(next, to) {
-    store.dispatch('SET_GWT', ``);
-    store.dispatch('SET_CHAT_CHANNEL', ``);
-    store.dispatch('SET_LAST_SEARCH', ``);
-
     window.localStorage.removeItem('pliziJWToken');
     window.localStorage.removeItem('pliziUser');
     window.localStorage.removeItem('pliziChatChannel');
@@ -98,14 +94,14 @@ async function checkRouteAuth(to, from, next) {
 
     await Vue.nextTick(); /** @TGA иначе загрузка из localStorage не срабатывает **/
 
-    const gwt = store.getters.gwToken;
+    const gwt = window.localStorage.getItem('pliziJWToken');
 
     if ((gwt + '') !== 'null' && gwt !== '') {
         const tstUser = new PliziAuthUser();
         const tstUserData = tstUser.restoreData();
 
         if (tstUserData) {
-            window.app.$root.$emit('afterUserLoad', {
+            window.app.$root.$emit('AfterUserRestore', {
                 user: tstUserData,
                 token: gwt,
                 save: true
@@ -121,7 +117,7 @@ async function checkRouteAuth(to, from, next) {
             }
 
             if (tryToLoadUser) {
-                window.app.$root.$emit('afterUserLoad', {
+                window.app.$root.$emit('AfterUserLoad', {
                     user: tryToLoadUser,
                     token: gwt,
                     save: true

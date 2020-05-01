@@ -175,7 +175,7 @@ methods: {
             throw e;
         }
 
-        await this.$store.dispatch('SET_ACTIVE_DIALOG', chatId);
+        window.localStorage.setItem('pliziActiveDialog', chatId);
 
         this.messagesList = [];
         msgsResponse.map( (msg) => {

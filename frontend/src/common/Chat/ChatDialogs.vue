@@ -103,7 +103,7 @@ methods: {
     async loadDialogsList() {
         this.isDialogsLoaded = true;
 
-        const lastDialogID = this.$store.getters.activeDialog;
+        const lastDialogID = window.localStorage.getItem('pliziActiveDialog');
         this.currentDialog = this.$root.$user.dm.get(lastDialogID);
 
         if (typeof this.currentDialog === 'undefined') {
@@ -111,7 +111,7 @@ methods: {
         }
 
         if (this.currentDialog) {
-            await this.$store.dispatch('SET_ACTIVE_DIALOG', this.currentDialog.id);
+            window.localStorage.setItem('pliziActiveDialog', this.currentDialog.id);
         }
 
         return true;
