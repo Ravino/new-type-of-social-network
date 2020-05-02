@@ -40,10 +40,10 @@ data(){
 
 methods : {
     updateMessages(){
-        //window.console.log(this.$root.$user.dialogsNumber, `updateMessages`);
+        //window.console.log(this.$root.$auth.dialogsNumber, `updateMessages`);
         this.messagesNumber = 0;
 
-        this.$root.$user.dialogs.map( (dItem) => {
+        this.$root.$auth.dialogs.map( (dItem) => {
             if (!dItem.isLastFromMe  && !dItem.isRead) {
                 this.messagesNumber++;
             }
@@ -56,7 +56,7 @@ methods : {
 
 computed: {
     messagesList(){
-        let messages = this.$root.$user.dialogs.filter((dItem)=>{
+        let messages = this.$root.$auth.dialogs.filter((dItem)=>{
             return (!dItem.isLastFromMe  && !dItem.isRead);
         });
 

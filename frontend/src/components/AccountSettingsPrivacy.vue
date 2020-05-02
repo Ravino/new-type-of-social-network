@@ -197,17 +197,17 @@
         name: 'AccountSettingsPrivacy',
         computed: {
             userData: function () {
-                return this.$root.$user;
+                return this.$root.$auth.user;
             },
         },
         data() {
             return {
                 form: {
-                    pageType: this.$root.$user.privacySettings.pageType,
-                    writeMessagesPermissions: this.$root.$user.privacySettings.writeMessagesPermissions,
-                    postWallPermissions: this.$root.$user.privacySettings.postWallPermissions,
-                    viewWallPermissions: this.$root.$user.privacySettings.viewWallPermissions,
-                    viewFriendsPermissions: this.$root.$user.privacySettings.viewFriendsPermissions,
+                    pageType: this.$root.$auth.user.privacySettings.pageType,
+                    writeMessagesPermissions: this.$root.$auth.user.privacySettings.writeMessagesPermissions,
+                    postWallPermissions: this.$root.$auth.user.privacySettings.postWallPermissions,
+                    viewWallPermissions: this.$root.$auth.user.privacySettings.viewWallPermissions,
+                    viewFriendsPermissions: this.$root.$auth.user.privacySettings.viewFriendsPermissions,
                 },
             }
         },
@@ -222,7 +222,7 @@
                 }
 
                 if (response) {
-                    this.$root.$user.updateData(response);
+                    this.$root.$auth.user.updateAuthUser(response);
                 }
             },
         },

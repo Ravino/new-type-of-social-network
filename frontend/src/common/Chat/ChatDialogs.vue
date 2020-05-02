@@ -50,7 +50,7 @@ data(){
 
 computed: {
     dialogsList(){
-        const dlgList = this.$root.$user.dm.asArray();
+        const dlgList = this.$root.$auth.dm.asArray();
 
         if ( this.dialogFilter.text.length < 3 )
             return dlgList;
@@ -71,13 +71,13 @@ methods: {
     onRemoveChatDialog(evData){
         window.console.log(evData.chatId, `onRemoveChatDialog`);
 
-        window.console.log(this.$root.$user.dm.shortList());
+        window.console.log(this.$root.$auth.dm.shortList());
 
-        this.$root.$user.dm.delete( evData.chatId );
+        this.$root.$auth.dm.delete( evData.chatId );
 
-        window.console.log(this.$root.$user.dm.shortList());
+        window.console.log(this.$root.$auth.dm.shortList());
 
-        const newPickedChat = (this.$root.$user.dm.size > 0) ? this.$root.$user.dm.firstDialog.id : -1;
+        const newPickedChat = (this.$root.$auth.dm.size > 0) ? this.$root.$auth.dm.firstDialog.id : -1;
 
         this.$emit('SwitchToChat', { chatId: newPickedChat });
 
@@ -97,17 +97,17 @@ methods: {
             isRead : !!evData.message.isRead
         };
 
-        this.$root.$user.dm.dialogStateUpdated(evData.chatId, updatedFields);
+        this.$root.$auth.dm.dialogStateUpdated(evData.chatId, updatedFields);
     },
 
     async loadDialogsList() {
         this.isDialogsLoaded = true;
 
         const lastDialogID = window.localStorage.getItem('pliziActiveDialog');
-        this.currentDialog = this.$root.$user.dm.get(lastDialogID);
+        this.currentDialog = this.$root.$auth.dm.get(lastDialogID);
 
         if (typeof this.currentDialog === 'undefined') {
-            this.currentDialog = this.$root.$user.dm.firstDialog;
+            this.currentDialog = this.$root.$auth.dm.firstDialog;
         }
 
         if (this.currentDialog) {
@@ -167,7 +167,7 @@ created(){
 },
 
 async mounted(){
-    await this.$root.$user.dm.load();
+    await this.$root.$auth.dm.load();
     this.onDialogsListLoad();
 }
 

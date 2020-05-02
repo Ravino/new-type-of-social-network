@@ -43,19 +43,19 @@ data(){
 
 methods : {
     updateNotifications(){
-        //window.console.log(this.$root.$user.notificationsNumber, `updateNotifications`);
+        //window.console.log(this.$root.$auth.notificationsNumber, `updateNotifications`);
         this.notificationsNumber = 0;
 
         // @TGA хак чтобы отображало актуальное кол-во
         setTimeout( () => {
-            this.notificationsNumber = this.$root.$user.notificationsNumber;
+            this.notificationsNumber = this.$root.$auth.notificationsNumber;
         }, 10 );
     }
 },
 
 computed: {
     notificationsList(){
-        return this.$root.$user.notifications;
+        return this.$root.$auth.notifications;
     }
 },
 

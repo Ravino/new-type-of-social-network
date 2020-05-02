@@ -44,7 +44,7 @@ methods: {
          **/
         const keyPressData = {
             channel: window.localStorage.getItem('pliziChatChannel'),
-            userId: this.$root.$user.id,
+            userId: this.$root.$auth.user.id,
             chatId: this.currentDialog.id
         };
         //window.console.log(keyPressData, `keyPressData`);

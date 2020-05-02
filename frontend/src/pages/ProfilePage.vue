@@ -80,7 +80,7 @@ data() {
 
 computed: {
     userData() {
-        return this.$root.$user;
+        return this.$root.$auth.user;
     },
 
     /**
@@ -89,7 +89,7 @@ computed: {
     filteredPosts(){
       switch (this.filterMode) {
             case 'my':
-                return this.userPosts.filter(post => post.checkIsMinePost(this.$root.$user.id));
+                return this.userPosts.filter(post => post.checkIsMinePost(this.$root.$auth.user.id));
 
             case 'archive':
                 return this.userPosts.filter(post => post.isArchivePost);

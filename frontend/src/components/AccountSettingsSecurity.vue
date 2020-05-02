@@ -164,8 +164,8 @@
         data() {
             return {
                 form: {
-                    twoFactorAuthEnabled: this.$root.$user.privacySettings.twoFactorAuthEnabled,
-                    smsConfirm: this.$root.$user.privacySettings.smsConfirm,
+                    twoFactorAuthEnabled: this.$root.$auth.user.privacySettings.twoFactorAuthEnabled,
+                    smsConfirm: this.$root.$auth.user.privacySettings.smsConfirm,
                 },
                 modalID: 'modal-' + Math.floor(Math.random() * 1000),
                 passwords: {
@@ -188,7 +188,7 @@
                 }
 
                 if (response) {
-                    this.$root.$user.updateData(response);
+                    this.$root.$auth.updateData(response);
                 }
             },
           async changePassword() {

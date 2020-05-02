@@ -60,6 +60,11 @@ class PliziUserStats {
         this._friends = value;
     }
 
+    constructor(inputData){
+        if (inputData) {
+            this.update(inputData);
+        }
+    }
 
     update(inputData){
         this.notifications = inputData.notificationsCount;

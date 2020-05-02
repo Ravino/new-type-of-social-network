@@ -47,7 +47,7 @@ methods : {
 
 computed: {
     favoritFriends(){
-        return (this.isDataReady ? this.$root.$user.fm.favorites : []);
+        return (this.isDataReady ? this.$root.$auth.fm.favorites : []);
     }
 },
 

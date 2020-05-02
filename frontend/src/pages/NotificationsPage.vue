@@ -50,7 +50,7 @@ data() {
 
 computed: {
     notificationsList(){
-        return this.$root.$user.notifications;
+        return this.$root.$auth.notifications;
     }
 },
 

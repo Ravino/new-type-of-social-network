@@ -47,7 +47,7 @@
                         <td class="">
                             <template v-if="userData.country && userData.city.title">
                                 <IconLocation />
-                                {{userData.country.title}}, {{userData.city.title}}
+                                {{userData.country.title.ru}}, {{userData.city.title.ru}}
                             </template>
                             <template v-else>
                                 Не указано
@@ -99,7 +99,7 @@ export default {
 name: 'ProfileHeader',
 components: {IconLocation, IconAddUser},
 props: {
-    userData: PliziUser,
+    userData: PliziUser|Object,
     isOwner : Boolean
 },
 data() {
@@ -167,9 +167,9 @@ methods: {
         }
 
         if (apiResponse !== null) {
-            this.$root.$user.userPic = apiResponse.data.path;
-            this.$refs.userAvatar.src = this.$root.$user.userPic;
-            this.$root.$emit('updateUserAvatar', {userPic: this.$root.$user.userPic});
+            this.$root.$auth.user.userPic = apiResponse.data.path;
+            this.$refs.userAvatar.src = this.$root.$auth.user.userPic;
+            this.$root.$emit('updateUserAvatar', {userPic: this.$root.$auth.user.userPic});
         }
     },
 
@@ -200,6 +200,3 @@ methods: {
 
 }
 </script>
-
-
-

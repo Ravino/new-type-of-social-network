@@ -78,7 +78,7 @@ methods: {
 
         const config = {
             chatId : this.dialogID,
-            userId : this.$root.$user.id // чтобы Reply получился
+            userId : this.$root.$auth.user.id // чтобы Reply получился
         }
 
         const fwdData = {

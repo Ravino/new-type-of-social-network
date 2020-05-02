@@ -27,11 +27,11 @@ Vue.prototype.$defaultAvatarPath = `/images/noavatar-256.png`;
 Vue.prototype.$isAuth = false;
 
 /**
- * ссылка на текущего авторизованного юзера
+ * ссылка на текущую авторизацию
  * добавляем глобально, на использовать будем только от this.$root
- * @type {PliziAuthUser}
+ * @type {PliziAuth}
  */
-Vue.prototype.$user = null;
+Vue.prototype.$auth = null;
 
 /**
  * текст последнего поиска

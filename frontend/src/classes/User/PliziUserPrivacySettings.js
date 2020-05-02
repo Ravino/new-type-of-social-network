@@ -80,6 +80,12 @@ class PliziUserPrivacySettings {
      * @param {object} permissions
      */
     constructor(permissions) {
+        if (permissions) {
+            this.update(permissions);
+        }
+    }
+
+    update(permissions){
         this._pageType = permissions.pageType;
         this._writeMessagesPermissions = permissions.writeMessagesPermissions;
         this._postWallPermissions = permissions.postWallPermissions;
@@ -91,7 +97,7 @@ class PliziUserPrivacySettings {
 
     toJSON() {
         return {
-            pageType: this._pageType,
+            pageType: this.pageType,
             writeMessagesPermissions: this.writeMessagesPermissions,
             postWallPermissions: this.postWallPermissions,
             viewWallPermissions: this.viewWallPermissions,

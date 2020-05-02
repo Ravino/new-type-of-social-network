@@ -95,7 +95,7 @@ computed: {
     },
 
     isDialogsLoaded(){
-        //return this.$root.$user.dm.isLoad;
+        //return this.$root.$auth.dm.isLoad;
         return true;
     }
 },
@@ -165,7 +165,7 @@ methods: {
         let msgsResponse = null;
         this.isMessagesLoaded = false;
 
-        this.currentDialog =  this.$root.$user.dm.get(+chatId);
+        this.currentDialog =  this.$root.$auth.dm.get(+chatId);
 
         try {
             msgsResponse = await this.$root.$api.$chat.messages(+chatId);

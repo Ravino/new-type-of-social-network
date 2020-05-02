@@ -3,7 +3,7 @@
 
         <div class="d-flex flex-row justify-content-start pb-3 pt-5">
             <h6 class="plz-sf-title w-auto mt-2 ml-3">Друзья
-                <span class="plz-sf-subtitle ml-2">{{this.$root.$user.fm.amount}}</span>
+                <span class="plz-sf-subtitle ml-2">{{this.$root.$auth.fm.amount}}</span>
             </h6>
 
             <router-link to="/friends" tag="a" class=" plz-sf-subtitle w-auto ml-auto --align-self-end mr-3 mt-2">
@@ -35,7 +35,7 @@ data () {
 
 computed : {
     shortFriends(){
-        return (this.isDataReady ? this.$root.$user.fm.buddies : []);
+        return (this.isDataReady ? this.$root.$auth.fm.buddies : []);
     }
 },
 

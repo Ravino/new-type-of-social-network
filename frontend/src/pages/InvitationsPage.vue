@@ -60,13 +60,13 @@ data() {
 
 computed: {
     invitations() {
-        return this.$root.$user.invitations;
+        return this.$root.$auth.invitations;
     },
 },
 
 methods: {
     removeFromInvitations(invit){
-        this.$root.$user.invitationRemove(invit);
+        this.$root.$auth.invitationRemove(invit);
     }
 },
 

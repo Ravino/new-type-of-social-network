@@ -1,7 +1,5 @@
 import VueRouter from 'vue-router';
 
-import store from '../store/store.js';
-
 import HomePage from '../pages/HomePage.vue';
 import LoginPage from '../pages/LoginPage.vue';
 import UpdatePasswordPage from '../pages/UpdatePasswordPage';
@@ -23,7 +21,7 @@ import CommunitiesManagePage from '../pages/CommunitiesManagePage.vue';
 import CommunitiesPopularPage from '../pages/CommunitiesPopularPage.vue';
 
 import PliziAPI from '../classes/PliziAPI.js';
-import PliziAuthUser from '../classes/PliziAuthUser.js';
+import PliziAuth from '../classes/PliziAuth.js';
 
 const routes = [
     {path: '/', redirect: '/login', isGuest: true},
@@ -97,7 +95,7 @@ async function checkRouteAuth(to, from, next) {
     const gwt = window.localStorage.getItem('pliziJWToken');
 
     if ((gwt + '') !== 'null' && gwt !== '') {
-        const tstUser = new PliziAuthUser();
+        const tstUser = new PliziAuth();
         const tstUserData = tstUser.restoreData();
 
         if (tstUserData) {
@@ -110,7 +108,7 @@ async function checkRouteAuth(to, from, next) {
         else {
             let tryToLoadUser = null;
             try {
-                tryToLoadUser = await (new PliziAPI()).getUser(gwt);
+                tryToLoadUser = await window.app.$root.$api.$users.getUser();
             }
             catch (e) {
                 routerForcedLogout(next, to);
