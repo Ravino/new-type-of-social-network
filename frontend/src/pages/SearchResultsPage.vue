@@ -98,7 +98,7 @@ beforeMount() {
 },
 
 mounted(){
-    const lst = this.$root.$store.getters.lastSearch;
+    const lst = window.localStorage.getItem('pliziLastSearch');
 
     if (lst  &&  lst!==``) {
         this.$root.$lastSearch = lst;

@@ -14,9 +14,6 @@ data() {
 beforeMount() {
     this.$root.$isAuth = false;
 
-    this.$store.dispatch('SET_GWT', ``);
-    this.$store.dispatch('SET_CHAT_CHANNEL', ``);
-
     window.localStorage.removeItem('pliziJWToken');
     window.localStorage.removeItem('pliziUser');
     window.localStorage.removeItem('pliziChatChannel');

@@ -3,7 +3,10 @@ import Vue from 'vue';
 
 Vue.use(Vuex);
 
-const store = new Vuex.Store({
+/**
+ * @TGA: 2020-05-01 пока мы Vuex не используем
+ */
+const store__ = new Vuex.Store({
     state: {
         gwToken : ``,
         chatChannel : ``,
@@ -129,4 +132,4 @@ const store = new Vuex.Store({
     },
 });
 
-export default store;
+export default store__;

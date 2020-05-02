@@ -111,7 +111,7 @@ class PliziFriendsManager extends PliziManager{
         let apiResponse = null;
 
         try {
-            apiResponse = await this.api.friendsList();
+            apiResponse = await this.api.$friend.friendsList();
         }
         catch (e){
             window.console.warn(e.detailMessage);
@@ -124,9 +124,6 @@ class PliziFriendsManager extends PliziManager{
 
             this.isLoad = true;
             this.api.emit('friendsIsLoad', {});
-
-            this.api.emit('loadPossibleFriends');
-            this.api.emit('loadRecommendedFriends');
         }
 
         return true;

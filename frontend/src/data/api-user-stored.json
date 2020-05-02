@@ -3,12 +3,12 @@
         "id": 40,
         "email": "targettius@ukr.net",
         "isOnline": true,
-        "lastActivity": 1588413710,
+        "lastActivity": 1588422999,
         "profile": {
             "firstName": "Alex",
             "lastName": "Dnipro Bashmakow",
             "sex": "n",
-            "birthday": "1976-02-02",
+            "birthday": "1976-02-01",
             "location": {
                 "id": 1509378,
                 "title": {

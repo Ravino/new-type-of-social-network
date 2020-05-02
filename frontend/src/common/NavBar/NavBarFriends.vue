@@ -39,13 +39,13 @@ data(){
 },
 methods : {
     updateInvitations(){
-        //window.console.log(this.$root.$user.invitationsNumber, `updateInvitations`);
+        //window.console.log(this.$root.$auth.invitationsNumber, `updateInvitations`);
 
         this.invitationsNumber = 0;
 
         // @TGA хак чтобы отображало актуальное кол-во
         setTimeout( () => {
-            this.invitationsNumber = this.$root.$user.invitationsNumber;
+            this.invitationsNumber = this.$root.$auth.invitationsNumber;
         }, 10 );
     }
 },
@@ -53,11 +53,11 @@ methods : {
 computed: {
     //invitationsNumber(){
     //    /** @TGA без этого тупого добавления 0 автообновление не работает :( **/
-    //    return (this.$root.$user.invitationsNumber + 1) - 1;
+    //    return (this.$root.$auth.invitationsNumber + 1) - 1;
     //},
     //
     invitationsList(){
-        return this.$root.$user.invitations;
+        return this.$root.$auth.invitations;
     }
 },
 

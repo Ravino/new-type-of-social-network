@@ -7,8 +7,8 @@ import Vuelidate from 'vuelidate';
 Vue.use(Vuelidate);
 
 /** @link https://www.npmjs.com/package/vue-textarea-autosize **/
-import TextareaAutosize from 'vue-textarea-autosize';
-Vue.use(TextareaAutosize);
+//import TextareaAutosize from 'vue-textarea-autosize';
+//Vue.use(TextareaAutosize);
 
 /** @link https://vue-multiselect.js.org/#sub-getting-started **/
 import Multiselect from 'vue-multiselect';
@@ -27,11 +27,11 @@ Vue.prototype.$defaultAvatarPath = `/images/noavatar-256.png`;
 Vue.prototype.$isAuth = false;
 
 /**
- * ссылка на текущего авторизованного юзера
+ * ссылка на текущую авторизацию
  * добавляем глобально, на использовать будем только от this.$root
- * @type {PliziAuthUser}
+ * @type {PliziAuth}
  */
-Vue.prototype.$user = null;
+Vue.prototype.$auth = null;
 
 /**
  * текст последнего поиска
@@ -65,7 +65,7 @@ Vue.prototype.$alert = function(message, clazz, timeOut){
 // Vue.use(VueResponsiveComponents);
 
 import router from './router/router.js';
-import store from './store/store.js'
+//import store from './store/store.js'
 import './libs/filters.js';
 
 import './libs/facebook.js';
@@ -82,6 +82,5 @@ import App from './App.vue';
 
 window.app = new Vue({
     router,
-    store,
     render: h => h(App),
 }).$mount('#app');

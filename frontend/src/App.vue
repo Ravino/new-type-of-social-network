@@ -45,7 +45,7 @@ import GuestFooter from './common/GuestFooter.vue';
 import AlertModal from './components/AlertModal.vue';
 
 import PliziAPI from './classes/PliziAPI.js';
-import PliziAuthUser from './classes/PliziAuthUser.js';
+import PliziAuth from './classes/PliziAuth.js';
 
 export default {
 name: 'App',
@@ -70,9 +70,6 @@ methods: {
         if (evData.token  &&  (evData.token+'').trim() !== ``) {
             this.$root.$isAuth = true;
 
-            this.$store.dispatch('SET_GWT', evData.token);
-            this.$store.dispatch('SET_CHAT_CHANNEL', evData.chatChannel);
-
             this.$root.$api.token = evData.token;
             this.$root.$api.channel = evData.chatChannel;
 
@@ -88,7 +85,6 @@ methods: {
             }
         }
         else {
-            window.console.warn('afterSuccessLogin: no token');
             this.$router.push({ path: '/login' });
         }
     },
@@ -97,11 +93,7 @@ methods: {
     afterSuccessLogout(evData) {
         this.$root.$isAuth = false;
 
-        this.$store.dispatch('SET_GWT', ``);
-        this.$store.dispatch('SET_CHAT_CHANNEL', ``);
-        this.$store.dispatch('SET_LAST_SEARCH', ``);
-
-        this.$root.$user.cleanData();
+        this.$root.$auth.cleanData();
         this.$root.$api.token = ``;
         this.$root.$api.channel = ``;
 
@@ -122,20 +114,43 @@ methods: {
             window.console.log(`afterUserLoad`);
 
             this.$root.$isAuth = true;
-            this.$root.$lastSearch = this.$store.getters.lastSearch;
+            this.$root.$lastSearch = window.localStorage.getItem('pliziLastSearch');
 
             this.$root.$api.token = evData.token;
+            this.$root.$api.channel = evData.user.channel;
 
-            this.$root.$user.saveUserData( evData.user, evData.token );
-
+            this.$root.$auth.updateAuthUserData( evData.user, evData.token );
             this.$root.$api.connectToChannel( evData.user.channel );
 
             // TODO: перенести отсюда - слишком часто будет вызываться
             this.loadInvitations();
             this.loadNotifications();
 
-            await this.$root.$user.fm.load();
-            await this.$root.$user.dm.load();
+            await this.$root.$auth.fm.load();
+            await this.$root.$auth.dm.load();
+        }
+    },
+
+
+    async afterUserRestore(evData) {
+        if (evData.token !== ``  &&  evData.user) {
+            window.console.log(`afterUserRestore`);
+
+            this.$root.$isAuth = true;
+            this.$root.$lastSearch = window.localStorage.getItem('pliziLastSearch');
+
+            this.$root.$api.token = evData.token;
+            this.$root.$api.channel = evData.user.channel;
+
+            this.$root.$auth.updateAuthUserData( evData.user, evData.token );
+            this.$root.$api.connectToChannel( evData.user.channel );
+
+            // TODO: перенести отсюда - слишком часто будет вызываться
+            this.loadInvitations(); // @TGA при восстановлении из LS инвайты тоже из LS будем грузить
+            this.loadNotifications(); // @TGA при восстановлении из LS нотификации тоже из LS будем грузить
+
+            await this.$root.$auth.fm.load(); // @TGA при восстановлении из LS френдов тоже из LS будем грузить
+            await this.$root.$auth.dm.load(); // @TGA при восстановлении из LS диалоги тоже из LS будем грузить
         }
     },
 
@@ -154,7 +169,7 @@ methods: {
         }
 
         if (apiResponse !== null) {
-            this.$root.$user.invitationsLoad(apiResponse);
+            this.$root.$auth.invitationsLoad(apiResponse);
             this.$root.$emit('invitationsLoad', {});
         }
     },
@@ -171,7 +186,7 @@ methods: {
         }
 
         if (apiResponse) {
-            this.$root.$user.notificationsLoad(apiResponse);
+            this.$root.$auth.notificationsLoad(apiResponse);
             this.$root.$emit('notificationsLoad', {});
         }
 
@@ -187,14 +202,15 @@ methods: {
 
 
 created(){
-    this.$root.$api = new PliziAPI(this.$root);
-    this.$root.$user = new PliziAuthUser({}, this.$root.$api);
+    this.$root.$api = new PliziAPI(this.$root, '');
+    this.$root.$auth = new PliziAuth(this.$root.$api);
 
     this.$root.$on('afterSuccessLogin',  this.afterSuccessLogin);
 
     this.$root.$on('afterSuccessLogout', this.afterSuccessLogout);
 
-    this.$root.$on('afterUserLoad', this.afterUserLoad);
+    this.$root.$on('AfterUserLoad', this.afterUserLoad);
+    this.$root.$on('AfterUserRestore', this.afterUserRestore);
 
     this.$root.$on('searchStart', (evData) => {
         this.lastSearchText = evData.searchText;
@@ -216,7 +232,7 @@ created(){
     });
 
     this.$root.$on('NewChatDialog', (evData)=>{
-        this.$root.$user.dm.onAddNewDialog(evData);
+        this.$root.$auth.dm.onAddNewDialog(evData);
     });
 }
 

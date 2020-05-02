@@ -43,8 +43,8 @@ methods: {
          * @TGA пытаемся тут через сокеты отправить инфу о  том что печатаем
          **/
         const keyPressData = {
-            channel: this.$store.getters.chatChannel,
-            userId: this.$root.$user.id,
+            channel: window.localStorage.getItem('pliziChatChannel'),
+            userId: this.$root.$auth.user.id,
             chatId: this.currentDialog.id
         };
         //window.console.log(keyPressData, `keyPressData`);

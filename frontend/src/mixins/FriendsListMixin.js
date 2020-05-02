@@ -23,7 +23,6 @@ components: {
 
 data() {
     return {
-        isFriendsLoaded : false,
         potentialList : [],
 
         possibleFriends: null,
@@ -33,7 +32,11 @@ data() {
 
 computed: {
     friendsList(){
-        return this.$root.$user.fm.list;
+        return this.$root.$auth.fm.list;
+    },
+
+    isFriendsLoaded(){
+        return true;
     }
 },
 
@@ -57,38 +60,6 @@ methods: {
     },
 
     /**
-     * @deprecated
-     * @returns {Promise<boolean>}
-     */
-    async loadPotentialsList() {
-        this.isFriendsLoaded = true;
-
-        let apiResponse = null;
-
-        this.potentialList = null;
-
-        try {
-            apiResponse = await this.$root.$api.friendsPotential();
-        }
-        catch (e){
-            window.console.warn(e.detailMessage);
-            throw e;
-        }
-
-        this.potentialList = [];
-
-        if (apiResponse) {
-            apiResponse.map( (pfItem)=> {
-                if (! this.$root.$user.fm.checkIsFriend(pfItem.id)) {
-                    this.potentialList.push( new PliziUser({ data : pfItem} ) );
-                }
-            });
-        }
-
-        return true;
-    },
-
-    /**
      * Получение возможных друзей.
      * @returns {object[]|null}
      */
@@ -107,8 +78,11 @@ methods: {
             response.map((possibleFriend) => {
                 this.possibleFriends.push(new PliziFriend(possibleFriend));
             });
+
+            this.api.emit('loadPossibleFriends');
         }
     },
+
 
     /**
      * Получение рекомендуемых друзей.
@@ -129,15 +103,15 @@ methods: {
             response.map((recommendedFriend) => {
                 this.recommendedFriends.push(new PliziFriend(recommendedFriend));
             });
+
+            this.api.emit('loadRecommendedFriends');
         }
     },
 },
 
 created(){
-    this.$root.$on('friendsIsLoad', this.loadPotentialsList);
-
-    this.$root.$on('loadPossibleFriends', this.loadPossibleFriends);
-    this.$root.$on('loadRecommendedFriends', this.loadRecommendedFriends);
+    this.loadPossibleFriends();
+    //this.loadRecommendedFriends();
 },
 
 };

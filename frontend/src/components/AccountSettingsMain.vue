@@ -192,14 +192,14 @@
     /**
      * @link https://vue-multiselect.js.org/#sub-getting-started
      */
-    import Multiselect from 'vue-multiselect'
+    import Multiselect from 'vue-multiselect'; // TODO: @TGA зачем? он уже подключён в APP
 
     export default {
         name: 'AccountSettingsMain',
         components: {Multiselect},
         computed: {
             userData: function () {
-                return this.$root.$user;
+                return this.$root.$auth.user;
             },
             geoLocations() {
                 let geolocation = [];
@@ -225,26 +225,26 @@
         data() {
             return {
                 model: {
-                    firstName: this.$root.$user.firstName,
-                    lastName: this.$root.$user.lastName,
-                    sex: this.$root.$user.sex,
-                    relationshipId: this.$root.$user.relationshipId,
-                    birthday: this.$root.$user.birthday,
-                    location: this.$root.$user.city.id ? {
-                        id: this.$root.$user.city.id,
+                    firstName: this.$root.$auth.user.firstName,
+                    lastName: this.$root.$auth.user.lastName,
+                    sex: this.$root.$auth.user.sex,
+                    relationshipId: this.$root.$auth.user.relationshipId,
+                    birthday: this.$root.$auth.user.birthday,
+                    location: this.$root.$auth.user.city.id ? {
+                        id: this.$root.$auth.user.city.id,
                         title: {
-                            ru: this.$root.$user.city.title,
+                            ru: this.$root.$auth.user.city.title,
                         },
                         region: {
-                            id: this.$root.$user.region.id,
+                            id: this.$root.$auth.user.region.id,
                             title: {
-                                ru: this.$root.$user.region.title,
+                                ru: this.$root.$auth.user.region.title,
                             },
                         },
                         country: {
-                            id: this.$root.$user.country.id,
+                            id: this.$root.$auth.user.country.id,
                             title: {
-                                ru: this.$root.$user.country.title,
+                                ru: this.$root.$auth.user.country.title,
                             },
                         },
                     } : null,
@@ -326,12 +326,12 @@
                 }
 
                 if (response !== null) {
-                    this.$root.$user.updateData(response);
+                    this.$root.$auth.user.updateAuthUser(response);
 
                     if (fieldName === `firstName` || fieldName === `lastName`) {
                         this.$root.$emit('updateUserName', {
-                            firstName: this.$root.$user.firstName,
-                            lastName: this.$root.$user.lastName
+                            firstName: this.$root.$auth.user.firstName,
+                            lastName: this.$root.$auth.user.lastName
                         });
                     }
                 }

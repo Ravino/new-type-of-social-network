@@ -1,7 +1,5 @@
 import VueRouter from 'vue-router';
 
-import store from '../store/store.js';
-
 import HomePage from '../pages/HomePage.vue';
 import LoginPage from '../pages/LoginPage.vue';
 import UpdatePasswordPage from '../pages/UpdatePasswordPage';
@@ -23,7 +21,7 @@ import CommunitiesManagePage from '../pages/CommunitiesManagePage.vue';
 import CommunitiesPopularPage from '../pages/CommunitiesPopularPage.vue';
 
 import PliziAPI from '../classes/PliziAPI.js';
-import PliziAuthUser from '../classes/PliziAuthUser.js';
+import PliziAuth from '../classes/PliziAuth.js';
 
 const routes = [
     {path: '/', redirect: '/login', isGuest: true},
@@ -56,10 +54,6 @@ const router = new VueRouter({
 
 
 function routerForcedLogout(next, to) {
-    store.dispatch('SET_GWT', ``);
-    store.dispatch('SET_CHAT_CHANNEL', ``);
-    store.dispatch('SET_LAST_SEARCH', ``);
-
     window.localStorage.removeItem('pliziJWToken');
     window.localStorage.removeItem('pliziUser');
     window.localStorage.removeItem('pliziChatChannel');
@@ -98,14 +92,14 @@ async function checkRouteAuth(to, from, next) {
 
     await Vue.nextTick(); /** @TGA иначе загрузка из localStorage не срабатывает **/
 
-    const gwt = store.getters.gwToken;
+    const gwt = window.localStorage.getItem('pliziJWToken');
 
     if ((gwt + '') !== 'null' && gwt !== '') {
-        const tstUser = new PliziAuthUser();
+        const tstUser = new PliziAuth();
         const tstUserData = tstUser.restoreData();
 
         if (tstUserData) {
-            window.app.$root.$emit('afterUserLoad', {
+            window.app.$root.$emit('AfterUserRestore', {
                 user: tstUserData,
                 token: gwt,
                 save: true
@@ -114,14 +108,14 @@ async function checkRouteAuth(to, from, next) {
         else {
             let tryToLoadUser = null;
             try {
-                tryToLoadUser = await (new PliziAPI()).getUser(gwt);
+                tryToLoadUser = await window.app.$root.$api.$users.getUser();
             }
             catch (e) {
                 routerForcedLogout(next, to);
             }
 
             if (tryToLoadUser) {
-                window.app.$root.$emit('afterUserLoad', {
+                window.app.$root.$emit('AfterUserLoad', {
                     user: tryToLoadUser,
                     token: gwt,
                     save: true

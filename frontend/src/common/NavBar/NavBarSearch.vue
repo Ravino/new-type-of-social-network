@@ -51,7 +51,7 @@ methods: {
 
     startSearch(sText){
         this.$root.$lastSearch = sText;
-        this.$store.dispatch('SET_LAST_SEARCH', sText);
+        window.localStorage.setItem('pliziLastSearch', sText);
 
         this.$root.$emit('searchStart', {
             searchText : sText,

@@ -90,9 +90,9 @@ class RegisterController extends Controller
     {
         return Validator::make($data, [
             'email' => 'required|string|email|max:255|unique:users',
-            'firstName' => 'required|string|min:1|max:255',
-            'lastName' => 'required|string|min:1|max:255',
-            'birthday' => 'date_format:Y-m-d|nullable',
+            'firstName' => 'required|string|min:1|max:25|regex:/^[A-Za-z-]+$/',
+            'lastName' => 'required|string|min:1|max:25|regex:/^[A-Za-z-]+$/',
+            'birthday' => 'date_format:Y-m-d|nullable|before:today',
         ]);
     }
 

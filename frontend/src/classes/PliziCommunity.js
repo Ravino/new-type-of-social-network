@@ -4,7 +4,7 @@ class PliziCommunity {
      * @type {string}
      * @private
      */
-    __defaultAvatarPath = `/images/noavatar-256.png`;
+    __defaultAvatarPath = '/images/plizi-noPrimaryImage-256.png';
 
     _id = null;
 
@@ -54,7 +54,7 @@ class PliziCommunity {
     }
 
     get primaryImage(){
-        if (this._primaryImage !== ``)
+        if (this._primaryImage)
             return this._primaryImage;
 
         return this.__defaultAvatarPath;

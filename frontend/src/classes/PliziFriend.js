@@ -12,11 +12,7 @@ class PliziFriend extends PliziUzer{
 
     constructor(usrData) {
         super(usrData);
-
-        if (typeof usrData.data === `undefined`) {
-            usrData = { data : usrData };
-        }
-        this._mutualFriendsCount = +usrData.data.mutualFriendsCount;
+        this._mutualFriendsCount = +usrData.mutualFriendsCount;
     }
 
     get mutualFriendsCount(){

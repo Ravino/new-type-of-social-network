@@ -7,7 +7,7 @@
                 <span v-else class="plizi-friend-item-isoffline"></span>
             </router-link>
 
-            <div class="plizi-friend-item-body m-0 pr-5 ">
+            <div class="plizi-friend-item-body m-0 pr-5">
                 <router-link :to="`/user-`+friend.id" tag="div"  class="plizi-friend-item-top d-flex align-items-end justify-content-between mb-2" >
                     <h6 class="plizi-friend-item-name my-0">{{ friend.fullName }}</h6>
                 </router-link>
@@ -17,8 +17,8 @@
 
                         <IconLocation style="height: 14px;" />
 
-                        <span v-if="friend.city.title && friend.country.title">
-                            {{ friend.city.title +', '+  friend.country.title }}
+                        <span v-if="friend.location && friend.city.title && friend.country.title">
+                            {{ friend.city.title.ru +', '+  friend.country.title.ru }}
                         </span>
                         <span v-else>
                             Не указано
@@ -71,7 +71,7 @@ methods: {
         let apiResponse = null;
 
         try {
-            apiResponse = await this.$root.$api.friendshipStop( this.friend.id );
+            apiResponse = await this.$root.$api.$friend.friendshipStop( this.friend.id );
         } catch (e){
             window.console.warn( e.detailMessage );
             throw e;
@@ -83,7 +83,7 @@ methods: {
             setTimeout(()=>{
                 this.isRemoved = true;
 
-                this.$root.$user.fm.removeByID(this.friend.id);
+                this.$root.$auth.fm.removeByID(this.friend.id);
 
                 this.$root.$emit( 'friendShipStop', {
                     friendId: this.friend.id

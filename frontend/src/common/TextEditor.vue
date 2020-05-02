@@ -116,11 +116,11 @@ data() {
 
 computed: {
     userPic() {
-        return this.$root.$user.userPic;
+        return this.$root.$auth.user.userPic;
     },
 
     userFullName() {
-        return this.$root.$user.fullName;
+        return this.$root.$auth.user.fullName;
     },
 
     blockClass(){

@@ -101,19 +101,18 @@ data() {
 
 methods: {
     async getUserInfo() {
-        let profile = null;
+        let apiResponse = null;
 
         try {
-            profile = await this.$root.$api.infoUser(this.id >>> 0);
+            apiResponse = await this.$root.$api.$users.getUser(this.id >>> 0);
         }
         catch (e){
             window.console.warn(e.detailMessage);
             throw e;
         }
 
-        if (profile) {
-            this.profileData = new PliziUser();
-            this.profileData.saveUserData(profile);
+        if (apiResponse) {
+            this.profileData = new PliziUser(apiResponse.data);
             this.isDataReady = true;
         }
     },

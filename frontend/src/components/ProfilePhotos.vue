@@ -38,7 +38,7 @@ data () {
 
 computed : {
     userData() {
-        return this.$root.$user;
+        return this.$root.$auth.user;
     },
 }
 

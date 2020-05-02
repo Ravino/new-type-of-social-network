@@ -4,6 +4,8 @@ import PliziAPIError from './API/PliziAPIError.js';
 import PliziChatAPI from './API/PliziChatAPI.js';
 import PliziPostAPI from './API/PliziPostAPI.js';
 import PliziFriendAPI from './API/PliziFriendAPI.js';
+import PliziCommunitiesAPI from './API/PliziCommunitiesAPI.js';
+import PliziUsersAPI from './API/PliziUsersAPI.js';
 
 class PliziAPI {
 
@@ -80,16 +82,33 @@ class PliziAPI {
      */
     __friend = null;
 
+    /**
+     * @type {PliziCommunitiesAPI}
+     * @private
+     */
+    __communities = null;
+
+    /**
+     * @type {PliziUsersAPI}
+     * @private
+     */
+    __users = null;
+
 
     /**
      * @param {Vue} $root - ссылка на Vue объект, который вызывает этот конструктор
+     * @param {string} token
      */
-    constructor($root) {
+    constructor($root, token) {
         this.__baseURL   = (window.apiURL) ? (window.apiURL + ``).trim() : ``;
         this.__baseWsURL = (window.wsUrl) ? (window.wsUrl + ``).trim() : ``;
 
         if ($root) {
             this.__$root = $root;
+        }
+
+        if (token) {
+            this.token = token;
         }
 
         this.__axios = axios.create({
@@ -100,6 +119,8 @@ class PliziAPI {
         this.__chat = new PliziChatAPI(this);
         this.__post = new PliziPostAPI(this);
         this.__friend = new PliziFriendAPI(this);
+        this.__communities = new PliziCommunitiesAPI(this);
+        this.__users = new PliziUsersAPI(this);
     }
 
 
@@ -124,6 +145,20 @@ class PliziAPI {
         return this.__friend;
     }
 
+    /**
+     * @returns {PliziCommunitiesAPI}
+     */
+    get $communities() {
+        return this.__communities;
+    }
+
+    /**
+     * @returns {PliziUsersAPI}
+     */
+    get $users() {
+        return this.__users;
+    }
+
     get axios() {
         return this.__axios;
     }
@@ -139,6 +174,7 @@ class PliziAPI {
         //}
 
         this.__token = (jwToken + '').trim();
+        localStorage.setItem('pliziJWToken', this.__token);
     }
 
     /**
@@ -155,6 +191,8 @@ class PliziAPI {
         //}
 
         this.__channel = (cnl+'').trim();
+
+        localStorage.setItem('pliziChatChannel', this.__channel);
     }
 
 
@@ -281,52 +319,6 @@ class PliziAPI {
 
 
     /**
-     * доступ к API методу api/user
-     * @public
-     * @param {string} jwt - токен авторизации, если не задан, используется тот что был определён ранее
-     * @returns {Promise|object}
-     */
-    async getUser(jwt) {
-        if (jwt && jwt !== ``) {
-            this.token = jwt;
-        }
-
-        let response = await this.__axios.get('api/user', this.__getAuthHeaders())
-            .catch((error) => {
-                this.__checkIsTokenExperis(error, `getUser`);
-                throw new PliziAPIError(`getUser`, error.response);
-            });
-
-        if (200 === response.status) {
-            return response.data;
-        }
-
-        return null;
-    }
-
-
-    /**
-     * получение детальной информации о юзере
-     * @public
-     * @param {number} id - числовой ID юзера
-     * @returns {Object|null} - объект с данными юзера
-     */
-    async infoUser(id) {
-        let response = await this.__axios.get('api/user/' + id, this.__getAuthHeaders())
-            .catch((error) => {
-                this.__checkIsTokenExperis(error, `infoUser`);
-                throw new PliziAPIError(`infoUser`, error.response);
-            });
-
-        if (200 === response.status) {
-            return response.data;
-        }
-
-        return null;
-    }
-
-
-    /**
      * обновление данных юзера
      * @public
      * @param {Object} userData - данные юзера
@@ -436,71 +428,6 @@ class PliziAPI {
                     throw new PliziAPIError(`sendFriendshipInvitation`, error.response);
                 }
             });
-    }
-
-
-    /**
-     * получаем список френдов, свой или другого юзера
-     * @param {number|null} userID - ID юзера чей список друзей хотим получить
-     * @returns {object[]|null}
-     * @throws PliziAPIError
-     */
-    async friendsList(userID) {
-        let path = 'api/user/friendship';
-        if (path && (userID >>> 0) !== 0) {
-            path = `api/user/${userID}/friendship`;
-        }
-
-        let response = await this.__axios.get(path, this.__getAuthHeaders()).catch((error) => {
-            this.__checkIsTokenExperis(error, `friendsList`);
-            throw new PliziAPIError(`friendsList`, error.response);
-        });
-
-        if (response.status === 200) {
-            return response.data.data.list;
-        }
-
-        return null;
-    }
-
-
-    async friendshipStop(friendID) {
-        const sendData = {
-            userId: friendID
-        };
-
-        let response = await this.__axios.post('/api/user/friendship/remove', sendData, this.__getAuthHeaders())
-            .catch((error) => {
-                this.__checkIsTokenExperis(error, `invitationDecline`);
-                throw new PliziAPIError(`invitationDecline`, error.response);
-            });
-
-        if (response.status === 200) {
-            return response.data;
-        }
-
-        return null;
-    }
-
-
-    /**
-     * @deprecated
-     * @returns {Promise<null|*>}
-     */
-    async friendsPotential() {
-        const sData = `@`;
-
-        let response = await this.__axios.get('/api/user/search/' + sData, this.__getAuthHeaders())
-            .catch((error) => {
-                this.__checkIsTokenExperis(error, `friendsPotential`);
-                throw new PliziAPIError(`friendsPotential`, error.response);
-            });
-
-        if (response.status === 200) {
-            return response.data.data.list;
-        }
-
-        return null;
     }
 
 
@@ -730,7 +657,10 @@ class PliziAPI {
     /** @param {object} sendData **/
     sendToChannel(sendData) {
         sendData.token = this.__token;
-        this.__s.call('user.typing', sendData);
+
+        if (this.__s) {
+            this.__s.call('user.typing', sendData);
+        }
     }
 
     __channelErrorHandler(code, reason, detail){

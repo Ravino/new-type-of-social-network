@@ -113,11 +113,11 @@ methods: {
 computed: {
     getFriendsCombo(){
         /** @TGA сначала диалоги - это важно **/
-        this.$root.$user.dm.asArray().map( (dItem) => {
+        this.$root.$auth.dm.asArray().map( (dItem) => {
             this.recipients.add(dItem.companion, dItem.id);
         });
 
-        this.$root.$user.fm.list.map( (frItem) => {
+        this.$root.$auth.fm.list.map( (frItem) => {
             this.recipients.add(frItem, null);
         });
 
