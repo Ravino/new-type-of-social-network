@@ -1,8 +1,7 @@
 <template>
-    <div class="plz-import-socnet form-group text-center">
-        <h6 class="">Импорт аккаунта</h6>
-        <div class="plz-import-socnet-text">Импортируйте свой аккаунт из списка следующих социальных сетей
-        </div>
+    <div class="plz-import-socnet form-group text-center mt-4">
+        <h6 class="mb-3">Импорт аккаунта</h6>
+        <div class="plz-import-socnet-text  mb-3">Импортируйте свой аккаунт из списка следующих социальных сетей:</div>
         <div class="plz-import-socnet-btns d-flex justify-content-center">
             <div class="mx-3 d-none">
                 <!-- TODO: @YZ доработать когда появятся api ключи -->
@@ -113,19 +112,19 @@
                     this.saveToken('vkontakte', access_token);
                 }
             },
-            saveToken(provider, token) {
+            async saveToken(provider, token) {
                 let response;
 
                 try {
-                    response = this.$root.$api.registerThroughSocialServices(provider, token);
+                    response = await this.$root.$api.registerThroughSocialServices(provider, token);
                 } catch (e) {
                     console.warn(e.detailMessage);
                 }
 
-                if (response && response.data && response.data.token && response.data.token !== '') {
+              if (response && response && response.token) {
                     this.$root.$emit('afterSuccessLogin', {
-                        token: response.data.token,
-                        chatChannel: response.data.channel,
+                        token: response.token,
+                        chatChannel: response.channel,
                         redirect: true
                     });
                 }
@@ -153,6 +152,3 @@
     }
 </script>
 
-<style scoped>
-
-</style>

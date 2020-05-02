@@ -1,7 +1,10 @@
 <template>
-    <div class="d-flex align-items-center h-100">
-        <router-link :to="`/user-`+companion.id" tag="div" class="media-pic border rounded-circle mr-3 cursor-pointer">
-            <img :src="companion.userPic" v-bind:alt="companion.firstName"/>
+    <div class="d-flex align-items-center --h-100">
+        <router-link :to="`/user-`+companion.id" tag="div"
+                     class="mr-3 cursor-pointer position-relative">
+            <div class="media-pic border rounded-circle ">
+                <img :src="companion.userPic" v-bind:alt="companion.firstName"/>
+            </div>
 
             <template v-if="isTyper">
                 <div class="writing"><span></span><span></span><span></span></div>

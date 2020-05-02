@@ -1,6 +1,6 @@
 <template>
     <div  id="pageWrapper">
-        <div v-if="!isAuthorized()" id="guestPageWrapper">
+        <div v-if="!isAuthorized()" id="guestPageWrapper" class="d-flex flex-column justify-content-center">
             <div class="--container-fluid container px-0 my-0 pt-3">
 
                 <GuestNavBar></GuestNavBar>
@@ -70,8 +70,8 @@ methods: {
         if (evData.token  &&  (evData.token+'').trim() !== ``) {
             this.$root.$isAuth = true;
 
-            this.$store.dispatch('SET_GWT', evData.token);
-            this.$store.dispatch('SET_CHAT_CHANNEL', evData.chatChannel);
+            window.localStorage.setItem('pliziJWToken', evData.token);
+            window.localStorage.setItem('pliziChatChannel', evData.chatChannel);
 
             this.$root.$api.token = evData.token;
             this.$root.$api.channel = evData.chatChannel;
@@ -97,10 +97,6 @@ methods: {
     afterSuccessLogout(evData) {
         this.$root.$isAuth = false;
 
-        this.$store.dispatch('SET_GWT', ``);
-        this.$store.dispatch('SET_CHAT_CHANNEL', ``);
-        this.$store.dispatch('SET_LAST_SEARCH', ``);
-
         this.$root.$user.cleanData();
         this.$root.$api.token = ``;
         this.$root.$api.channel = ``;
@@ -119,8 +115,10 @@ methods: {
 
     async afterUserLoad(evData) {
         if (evData.token !== ``  &&  evData.user) {
+            window.console.log(`afterUserLoad`);
+
             this.$root.$isAuth = true;
-            this.$root.$lastSearch = this.$store.getters.lastSearch;
+            this.$root.$lastSearch = window.localStorage.getItem('pliziLastSearch');
 
             this.$root.$api.token = evData.token;
 
@@ -131,7 +129,6 @@ methods: {
             // TODO: перенести отсюда - слишком часто будет вызываться
             this.loadInvitations();
             this.loadNotifications();
-            //this.loadDialogs();
 
             await this.$root.$user.fm.load();
             await this.$root.$user.dm.load();
@@ -178,30 +175,6 @@ methods: {
     },
 
 
-    /**
-     * @deprecated
-     * @returns {Promise<boolean>}
-     */
-    async loadDialogs() {
-        window.console.warn(`App::loadDialogs`);
-        let apiResponse = null;
-
-        try {
-            apiResponse = await this.$root.$api.chatDialogs();
-        }
-        catch (e){
-            window.console.warn(e.detailMessage);
-        }
-
-        if (apiResponse) {
-            this.$root.$user.dialogsLoad(apiResponse);
-            this.$root.$emit('dialogsLoad', {});
-        }
-
-        return true;
-    },
-
-
     isAuthorized(){
         return this.$root.$isAuth;
     },
@@ -217,7 +190,8 @@ created(){
 
     this.$root.$on('afterSuccessLogout', this.afterSuccessLogout);
 
-    this.$root.$on('afterUserLoad', this.afterUserLoad);
+    this.$root.$on('AfterUserLoad', this.afterUserLoad);
+    this.$root.$on('AfterUserRestore', this.afterUserLoad);
 
     this.$root.$on('searchStart', (evData) => {
         this.lastSearchText = evData.searchText;
@@ -237,10 +211,10 @@ created(){
     this.$root.$on('hideAlertModal', () => {
         this.mainModalVisible = false;
     });
-},
 
-beforeMount(){
-
+    this.$root.$on('NewChatDialog', (evData)=>{
+        this.$root.$user.dm.onAddNewDialog(evData);
+    });
 }
 
 }

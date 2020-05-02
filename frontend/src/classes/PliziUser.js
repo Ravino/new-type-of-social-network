@@ -431,7 +431,7 @@ class PliziUser {
             }
         }
 
-        return `Не указано`;
+        return `В активном поиске`;
     }
 
     /**

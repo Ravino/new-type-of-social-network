@@ -34,11 +34,33 @@ class PliziCollection {
     _collection = null;
 
     /**
-     * имя эвента, который мы кидаем когда данные загружены с сервера
+     * имя эвента, который мы кидаем когда данные в коллекцию загружены с сервера
      * @type {string}
      * @public
      */
-    eventName = '';
+    loadEventName = '';
+
+    /**
+     * имя эвента, который мы кидаем когда данные в коллекцию загружены с localStorage
+     * @type {string}
+     * @public
+     */
+    restoreEventName = '';
+
+    /**
+     * имя эвента, который мы кидаем когда из коллекции сохранены в localStorage
+     * @type {string}
+     * @public
+     */
+    storeEventName = '';
+
+    /**
+     * имя эвента, который мы кидаем когда данные в коллекции обновлены
+     * @type {string}
+     * @public
+     */
+    updateEventName = '';
+
 
     /**
      * @param {PliziAPI} apiObj
@@ -62,6 +84,10 @@ class PliziCollection {
      */
     get api(){
         return this._api;
+    }
+
+    get keys(){
+        return this._collection.keys();
     }
 
     get list(){
@@ -127,18 +153,13 @@ class PliziCollection {
      * @param {number} ID - ID нужной сущности
      * @returns {Object} - нужная сущность, или UNDEFINED если не нашли
      */
-    getByID(ID){
+    get(ID){
         return this._collection.get(ID);
     }
 
 
-    deleteByID(ID){
-        return this._collection.delete(ID);
-    }
-
-
-    removeByID(ID){
-        return this._collection.delete(ID);
+    delete(ID){
+        this._collection.delete(ID);
     }
 
 
@@ -172,19 +193,22 @@ class PliziCollection {
     }
 
     /**
-     * сохраняет в localStorage данные юзера
-     * @returns {string} - данные юзера в строком виде
+     * сохраняет в localStorage данные коллекции
+     * @returns {string} - данные коллекции в строком виде
      */
     storeData() {
         const sData = this.toString();
         window.localStorage.setItem( this.localStorageKey, sData );
+        if (this.storeEventName) {
+            this.emit(this.storeEventName);
+        }
 
         return sData;
     }
 
     /**
-     * пытается восстановить данные юзера localStorage
-     * @returns {object|null} - данные юзера в виде объекта, если данные из localStorage
+     * пытается восстановить данные коллекции из localStorage
+     * @returns {object|null} - данные коллекции в виде объекта, если данные из localStorage
      */
     restoreData() {
         const sData = window.localStorage.getItem(this.localStorageKey);
@@ -199,6 +223,9 @@ class PliziCollection {
 
             if (oData) {
                 oData.map((oItem)=>{ this.add( oItem ); });
+                if (this.restoreEventName) {
+                    this.emit(this.restoreEventName);
+                }
             }
         }
         catch (e){

@@ -63,11 +63,11 @@ import FavoriteFriends from '../common/FavoriteFriends.vue';
 
 import AccountSettingsSideMenu from '../components/AccountSettingsSideMenu.vue';
 import WhatsNewBlock from "../common/WhatsNewBlock.vue";
-import IconSearch from "../icons/IconSearch";
-import IconSingleViewMode from "../icons/IconSingleViewMode";
-import IconMultipleViewMode from "../icons/IconMultipleViewMode";
-import IconFire from "../icons/IconFire";
-import Post from "../common/Post.vue";
+import IconSearch from "../icons/IconSearch.vue";
+import IconSingleViewMode from "../icons/IconSingleViewMode.vue";
+import IconMultipleViewMode from "../icons/IconMultipleViewMode.vue";
+import IconFire from "../icons/IconFire.vue";
+import Post from "../common/Post/Post.vue";
 import PliziPost from '../classes/PliziPost.js';
 
 export default {

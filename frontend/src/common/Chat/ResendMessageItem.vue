@@ -16,17 +16,18 @@
 </template>
 
 <script>
-//import PliziMessage from '../classes/PliziMessage.js';
+import PliziMessage from '../../classes/PliziMessage.js';
 
 export default {
 name : 'ResendMessageItem',
-props: [`message`],
+props: {
+    message: PliziMessage | null,
+},
 
 computed: {
     messageData(){
         return this.message;
     }
 },
-
 }
 </script>

@@ -36,7 +36,9 @@
                         </div>
 
                         <div class="col-auto">
-                            <ChatHeaderMenu @showAddAttendeeToDialogModal="onShowAddAttendeeToDialogModal"></ChatHeaderMenu>
+                            <ChatHeaderMenu
+                                @showRemoveCurrentChatModal="onShowRemoveCurrentChatModal"
+                                @showAddAttendeeToDialogModal="onShowAddAttendeeToDialogModal"></ChatHeaderMenu>
                         </div>
                     </div>
                 </div>
@@ -48,6 +50,11 @@
             v-bind:currentDialog="currentDialog">
         </ChatPickAttendeesDialogModal>
 
+        <RemoveCurrentDialogModal v-if="removeDialogModalShow"
+            @hideRemoveDialogModal="onHideRemoveDialogModal"
+            v-bind:currentDialog="currentDialog">
+        </RemoveCurrentDialogModal>
+
     </div>
 </template>
 
@@ -57,6 +64,7 @@ import IconSearch from '../../icons/IconSearch.vue';
 import ChatDatePicker from './ChatDatePicker.vue';
 import ChatHeaderMenu from './ChatHeaderMenu.vue';
 import ChatPickAttendeesDialogModal from './ChatPickAttendeesDialogModal.vue';
+import RemoveCurrentDialogModal from './RemoveCurrentDialogModal.vue';
 
 import ChatHeaderCompanion from './ChatHeaderCompanion.vue';
 import ChatHeaderAttendeeItem from './ChatHeaderAttendeeItem.vue';
@@ -71,7 +79,8 @@ components: {
     ChatHeaderAttendeeItem,
     ChatDatePicker,
     ChatHeaderMenu,
-    ChatPickAttendeesDialogModal
+    ChatPickAttendeesDialogModal,
+    RemoveCurrentDialogModal
 },
 props: {
     currentDialog: {
@@ -85,7 +94,8 @@ data() {
         chatFilterText : ``,
         showDatePicker: false,
         dateRange: null,
-        pickAttendeesDialogModalShow: false
+        pickAttendeesDialogModalShow: false,
+        removeDialogModalShow : false
     }
 },
 
@@ -108,6 +118,14 @@ computed: {
 },
 
 methods: {
+    onShowRemoveCurrentChatModal(){
+        this.removeDialogModalShow = true;
+    },
+
+    onHideRemoveDialogModal(){
+        this.removeDialogModalShow = false;
+    },
+
     onShowAddAttendeeToDialogModal(){
         this.pickAttendeesDialogModalShow = true;
     },

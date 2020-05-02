@@ -1,7 +1,7 @@
 <template>
     <div id="accountSettingsSecurity"
          class="plz-account-settings plz-account-settings-security bg-white-br20 plz-mb20 container-fluid">
-        <form class="plz-account-settings-form m-3 pb-2">
+        <form class="plz-account-settings-form pb-0 px-3 mb-0">
             <div class="plz-account-settings-header plz-account-settings-security-header row border-bottom">
                 <div class="d-flex">
                     <h6>Безопасность</h6>
@@ -16,9 +16,9 @@
                     </label>
                     <div
                         class="plz-account-settings-body-field plz-account-settings-security-body-field col-sm-6 col-md-6 col-lg-6 col-xl-6">
-                        <div class="d-flex align-items-center w-75">
+                        <div class="d-flex align-items-center w-75 position-relative pl-4">
                             <i v-if="Number(form.twoFactorAuthEnabled) === 1" class="fas fa-check mr-2"></i>
-                            <div class="w-100">
+                            <div class="w-100 position-relative ml-n2">
                                 <select id="twoFactorAuthEnabled"
                                         class="form-control border-0 pl-0"
                                         @change="accountStartSaveData(form.twoFactorAuthEnabled, 'twoFactorAuthEnabled')"
@@ -40,9 +40,9 @@
                     </label>
                     <div
                         class="plz-account-settings-body-field plz-account-settings-security-body-field col-sm-6 col-md-6 col-lg-6 col-xl-6">
-                        <div class="d-flex align-items-center w-75">
+                        <div class="d-flex align-items-center w-75 position-relative pl-4">
                             <i v-if="Number(form.smsConfirm) === 1" class="fas fa-check mr-2"></i>
-                            <div class="w-100">
+                            <div class="w-100  position-relative ml-n2">
                                 <select id="smsConfirm"
                                         class="form-control border-0 pl-0"
                                         @change="accountStartSaveData(form.smsConfirm, 'smsConfirm')"
@@ -62,11 +62,11 @@
                            class="plz-account-settings-body-label plz-account-settings-security-body-label col-sm-6 col-md-6 col-lg-4 col-xl-4">Пароль</label>
                     <div
                         class="plz-account-settings-body-field plz-account-settings-security-body-field col-sm-6 col-md-6 col-lg-6 col-xl-6">
-                        <div class="d-flex align-items-center w-75">
-                            <div class="plz-account-settings-body-action w-100">
+                        <div class="d-flex align-items-center w-75 position-relative ">
+                            <div class="plz-account-settings-body-action ">
                                 <button type="button"
                                         id="password"
-                                        class="btn btn-link"
+                                        class="btn btn-link pl-0"
                                         data-toggle="modal"
                                         :data-target="`#${modalID}`">Изменить
                                 </button>

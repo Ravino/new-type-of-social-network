@@ -1,7 +1,7 @@
 <template>
     <div id="accountSettingsPrivacy"
          class="plz-account-settings plz-account-settings-privacy bg-white-br20 plz-mb20 container-fluid">
-        <form class="plz-account-settings-form pb-2 px-3">
+        <form class="plz-account-settings-form pb-2 px-3 mb-0">
             <div class="plz-account-settings-header plz-account-settings-privacy-header row border-bottom">
                 <div class="d-flex">
                     <h6 class="title-settings mb-0">Приватность</h6>
@@ -16,12 +16,12 @@
                         Тип страницы
                     </label>
                     <div class="plz-account-settings-body-field plz-account-settings-privacy-body-field col-sm-6 col-md-6 col-lg-6 col-xl-6">
-                        <div class="d-flex align-items-center w-75">
+                        <div class="d-flex align-items-center w-75 position-relative pl-4 ">
                             <i v-if="Number(form.pageType) !== 1" class="fas fa-lock mr-2"></i>
                             <i v-else class="fas fa-unlock mr-2"></i>
-                            <div class="w-100">
+                            <div class="w-100 position-relative ml-n2">
                                 <select id="pageType"
-                                        class="form-control border-0 pl-0"
+                                        class="form-control border-0 pl-2"
                                         @change="accountStartSaveData(form.pageType, 'pageType')"
                                         v-model="form.pageType">
                                     <option value="1">Открытая</option>
@@ -41,10 +41,10 @@
                         Кто может оставлять сообщения
                     </label>
                     <div class="plz-account-settings-body-field plz-account-settings-privacy-body-field col-sm-6 col-md-6 col-lg-6 col-xl-6">
-                        <div class="d-flex align-items-center w-75">
-                            <div class="w-100">
+                        <div class="d-flex align-items-center w-75 position-relative pl-4 ">
+                            <div class="w-100 position-relative ml-n2">
                                 <select id="writeMessagesPermissions"
-                                        class="form-control border-0 pl-0"
+                                        class="form-control border-0 pl-2"
                                         @change="accountStartSaveData(form.writeMessagesPermissions, 'writeMessagesPermissions')"
                                         v-model="form.writeMessagesPermissions">
                                     <option value="1">Все</option>
@@ -64,17 +64,17 @@
                         Вас могут
                     </label>
                     <div class="plz-account-settings-body-field plz-account-settings-privacy-body-field col-sm-6 col-md-6 col-lg-6 col-xl-6">
-                        <div class="d-flex align-items-center w-75">
+                        <div class="d-flex align-items-center w-75 position-relative pl-4 ">
                             <div class="w-100">
                                 <!--                            <select id="writeMessagesPermissions"-->
-                                <!--                                    class="form-control border-0 pl-0"-->
+                                <!--                                    class="form-control border-0 pl-2"-->
                                 <!--                                    @change="accountStartSaveData(form.writeMessagesPermissions, 'pageType')"-->
                                 <!--                                    v-model="form.writeMessagesPermissions">-->
                                 <!--                                <option value="1">Все</option>-->
                                 <!--                                <option value="2">Только друзья</option>-->
                                 <!--                            </select>-->
                                 <select id="writeMessagesPermissions"
-                                        class="form-control border-0 pl-0">
+                                        class="form-control border-0 pl-2">
                                     <option selected>Добавить в друзья</option>
                                 </select>
                                 <i class="fas fa-chevron-down ml-2 d-sm-none d-md-none d-lg-inline d-xl-inline"></i>
@@ -91,18 +91,18 @@
                         Раздел сообщества
                     </label>
                     <div class="plz-account-settings-body-field plz-account-settings-privacy-body-field col-sm-6 col-md-6 col-lg-6 col-xl-6">
-                        <div class="d-flex align-items-center w-75">
+                        <div class="d-flex align-items-center w-75 position-relative pl-4 ">
                             <i class="fas fa-lock d-inline-block mr-2"></i>
                             <div class="w-100">
                                 <!--                            <select id="writeMessagesPermissions"-->
-                                <!--                                    class="form-control border-0 pl-0"-->
+                                <!--                                    class="form-control border-0 pl-2"-->
                                 <!--                                    @change="accountStartSaveData(form.writeMessagesPermissions, 'pageType')"-->
                                 <!--                                    v-model="form.writeMessagesPermissions">-->
                                 <!--                                <option value="1">Все</option>-->
                                 <!--                                <option value="2">Только друзья</option>-->
                                 <!--                            </select>-->
                                 <select id="writeMessagesPermissions"
-                                        class="form-control border-0 pl-0">
+                                        class="form-control border-0 pl-2">
                                     <option selected>Закрыт</option>
                                 </select>
                                 <i class="fas fa-chevron-down ml-2 d-sm-none d-md-none d-lg-inline d-xl-inline"></i>
@@ -118,11 +118,11 @@
                         Кто может оставлять записи на стене
                     </label>
                     <div class="plz-account-settings-body-field plz-account-settings-privacy-body-field col-sm-6 col-md-6 col-lg-6 col-xl-6">
-                        <div class="d-flex align-items-center w-75">
+                        <div class="d-flex align-items-center w-75 position-relative pl-4 ">
                             <i class="fas fa-lock d-inline-block mr-2"></i>
-                            <div class="w-100">
+                            <div class="w-100 position-relative ml-n2">
                                 <select id="postWallPermissions"
-                                        class="form-control border-0 pl-0"
+                                        class="form-control border-0 pl-2"
                                         @change="accountStartSaveData(form.postWallPermissions, 'postWallPermissions')"
                                         v-model="form.postWallPermissions">
                                     <option value="1">Только друзья</option>
@@ -143,11 +143,11 @@
                         Кто может видеть записи на стене
                     </label>
                     <div class="plz-account-settings-body-field plz-account-settings-privacy-body-field col-sm-6 col-md-6 col-lg-6 col-xl-6">
-                        <div class="d-flex align-items-center w-75">
+                        <div class="d-flex align-items-center w-75 position-relative pl-4 ">
                             <i class="fas fa-lock d-inline-block mr-2"></i>
-                            <div class="w-100">
+                            <div class="w-100 position-relative ml-n2">
                                 <select id="viewWallPermissions"
-                                        class="form-control border-0 pl-0"
+                                        class="form-control border-0 pl-2"
                                         @change="accountStartSaveData(form.viewWallPermissions, 'viewWallPermissions')"
                                         v-model="form.viewWallPermissions">
                                     <option value="1">Все пользователи</option>
@@ -167,10 +167,10 @@
                         Кто может видеть мой список друзей
                     </label>
                     <div class="plz-account-settings-body-field plz-account-settings-privacy-body-field col-sm-6 col-md-6 col-lg-6 col-xl-6">
-                        <div class="d-flex align-items-center w-75">
-                            <div class="w-100">
+                        <div class="d-flex align-items-center w-75 position-relative pl-4 ">
+                            <div class="w-100 position-relative ml-n2">
                                 <select id="viewFriendsPermissions"
-                                        class="form-control border-0 pl-0"
+                                        class="form-control border-0 pl-2"
                                         @change="accountStartSaveData(form.viewFriendsPermissions, 'viewFriendsPermissions')"
                                         v-model="form.viewFriendsPermissions">
                                     <option value="1">Все пользователи</option>
@@ -182,6 +182,10 @@
                         </div>
                     </div>
                     <div class="col-3"></div>
+                </div>
+
+                <div class="form-group ml-n2 pt-4 pb-0">
+                    <button class="btn btn-save  btn-primary rounded-pill px-4 text-uppercase">сохранить</button>
                 </div>
             </div>
         </form>

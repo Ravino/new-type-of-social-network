@@ -8,20 +8,28 @@ $userPicSize: 32px;
         bottom: 0;
         right: 0;
     }
-
-    .form-control {
-        border: 0;
-        box-shadow: none;
-
-        &::placeholder {
-            font-size: 13px;
-            color: #a3a8b9;
-        }
-    }
-
 }
 
-#chatMessagesUsersList {
+#txtFindInChatList {
+    color: #A3A8B9;
+    height: 40px;
+    min-height: 40px;
+    max-height: 40px;
+    background-color: #EEEFF4;
+    border-radius: 20px;
+    border-width: 0;
+    padding: 0 30px;
+    line-height: 20px;
+    outline: none;
+    box-shadow: none;
+
+    &::placeholder {
+        font-size: $placeholderSize;
+        color: $placeholderColor;
+    }
+}
+
+.chat-dialogs-list {
     .chat-list-scroll {
         height: calc(100% - 76px);
     }

@@ -48,19 +48,40 @@ class PliziChatAPI extends PliziBaseAPI{
      * @param {number[]} users - список ID-шников юзеров-собеседников
      * @returns {object} - ID диалога
      */
-    async openDialog(users) {
+    async dialogOpen(users) {
         const sendData = {
             userIds: users
         };
 
         let response = await this.__axios.post('api/chat/open', sendData, this.authHeaders)
             .catch((error) => {
-                this.checkIsTokenExpires(error, `$chat.openDialog`);
-                throw new PliziAPIError(`$chat.openDialog`, error.response);
+                this.checkIsTokenExpires(error, `$chat.dialogOpen`);
+                throw new PliziAPIError(`$chat.dialogOpen`, error.response);
             });
 
         if (response.status === 200) {
             return response.data.data;
+        }
+
+        return null;
+    }
+
+
+    /**
+     * удаляет диалог
+     * @link http://vm1095330.hl.had.pm:8082/docs/#/Chats/deleteChat
+     * @param {number} chatId - ID-шников чата (диалога)
+     * @returns {object} - ID диалога
+     */
+    async dialogRemove(chatId) {
+        let response = await this.__axios.delete(`api/chat/${chatId}`, this.authHeaders)
+            .catch((error) => {
+                this.checkIsTokenExpires(error, `$chat.dialogRemove`);
+                throw new PliziAPIError(`$chat.dialogRemove`, error.response);
+            });
+
+        if (response.status === 200) {
+            return response.data;
         }
 
         return null;

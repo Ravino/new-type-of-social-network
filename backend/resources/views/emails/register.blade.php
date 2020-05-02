@@ -3,8 +3,6 @@
     <meta charset="utf-8" />
 
     <title>Plizi letter</title>
-
-    <link href="mail.css" rel="stylesheet" />
 </head>
 <body>
 

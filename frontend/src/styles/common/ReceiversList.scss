@@ -2,7 +2,7 @@
 * @TGA переделано из ShortFriends.scss
 * после напилинга этот камент удалить
  */
-$picSize: 42px;
+$picSize: 32px;
 
 .plz-receivers-item {
     cursor: pointer;
@@ -21,6 +21,10 @@ $picSize: 42px;
             width: $picSize;
             height: $picSize;
         }
+    }
+
+    .plz-receiver-name {
+        font-size: 14px;
     }
 
     //&.active {

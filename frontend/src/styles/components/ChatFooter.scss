@@ -11,8 +11,8 @@ $chatMessageUserPicSize: 32px;
         border: 0;
 
         &::placeholder {
-            font-size: 13px;
-            color: #9a9a9a;
+            font-size: $placeholderSize;
+            color: $placeholderColor;
         }
         &:focus {
             padding-top: 5px!important;

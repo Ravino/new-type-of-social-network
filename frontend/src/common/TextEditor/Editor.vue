@@ -5,8 +5,7 @@
                         ref="editor"
                         @keydown.native="onEditorKeyDown"
                         @keyup.native="onEditorKeyUp"/>
-        <span v-if="!isFocusedEditor"
-              class="placeholder">
+        <span v-if="!isFocusedEditor" class="placeholder">
             {{ placeholder }}
         </span>
     </div>
@@ -39,6 +38,7 @@ props: {
         type: String,
         default: null,
     },
+  inputEditorText: String,
 },
 
 data() {
@@ -54,6 +54,7 @@ data() {
             ],
             onFocus: this.onFocus,
             onBlur: this.onBlur,
+          content: this.inputEditorText ? this.inputEditorText : null,
         }),
         isFocusedEditor: false,
     }
@@ -116,6 +117,10 @@ methods: {
         }
     },
 
+    setContent(newContent){
+        this.editor.setContent(newContent);
+    },
+
     getContent(){
         return this.editor.getHTML();
     },
@@ -130,15 +135,4 @@ beforeDestroy() {
 }
 }
 </script>
-
-<style lang="scss">
-    .editor {
-        position: relative;
-
-        .placeholder {
-            position: absolute;
-            top: 25%;
-        }
-    }
-</style>
 

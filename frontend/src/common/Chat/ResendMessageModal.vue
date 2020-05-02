@@ -9,7 +9,7 @@
                 <div id="resendMessageModalBody" class="modal-body p-4">
                     <h5 class="resend-message-title text-left mb-3">Переслать собщение</h5>
 
-                    <form id="resendMessageModalForm" novalidate="novalidate">
+                    <div class="form" id="resendMessageModalForm">
                         <div class="form-group">
                             <multiselect v-model="selectedFriend"
                                          :options="getFriendsCombo"
@@ -21,7 +21,7 @@
                                          :multiple="false"
                                          placeholder="Выберите получателя">
                                 <template slot="option" slot-scope="props">
-                                    <div class="plz-receivers-item d-flex align-items-center py-2 px-3">
+                                    <div class="plz-receivers-item d-flex align-items-center py-1 px-3">
 
                                         <span class="plz-receiver-userpic text-body">
                                             <img class="plz-short-userpic rounded-circle" :src="props.option.userPic" :alt="props.option.firstName"/>
@@ -55,7 +55,7 @@
                             <ResendMessageItem v-if="pickedMessage"
                                                v-bind:message="msgData"></ResendMessageItem>
                         </div>
-                    </form>
+                    </div>
 
                     <button type="button" class="btn plz-btn plz-btn-primary mt-4" @click.prevent="startForwardMessage()">
                         Отправить
@@ -93,8 +93,7 @@ data() {
         recipients :null,
         msgData : null,
         /** @var PliziRecipient */
-        selectedFriend: null,
-        textareaValue: ''
+        selectedFriend: null
     }
 },
 methods: {
@@ -180,7 +179,7 @@ computed: {
 
 created(){
     this.msgData = this.pickedMessage;
-},
+}
 
 }
 </script>

@@ -132,8 +132,8 @@ class PliziMessage{
         this._isMine = !! msgData.isMine;
         this._isRead = !! msgData.isRead;
         this._isEdited = !! msgData.isEdited;
-        this._createdAt = new Date(msgData.createdAt*1000);
-        this._updatedAt = new Date(msgData.updatedAt*1000);
+        this._createdAt = this.__convertToDate(msgData.createdAt);
+        this._updatedAt = this.__convertToDate(msgData.updatedAt);
         this._replyOn = (msgData.replyOn) ? new PliziMessage(msgData.replyOn): null;
         this._isForward = !! msgData.isForward;
 
@@ -146,6 +146,20 @@ class PliziMessage{
                 this._attachments.push( new PliziAttachment(aItem) );
             });
         }
+    }
+
+    /**
+     * @param {Date|number} dValue
+     * @returns {Date}
+     * @private
+     */
+    __convertToDate(dValue){
+        /** @see https://developer.mozilla.org/ru/docs/Web/JavaScript/Reference/Global_Objects/Date **/
+        if (dValue instanceof Date) {
+            return new Date( dValue.valueOf() ); // чтобы вернуть по значению, а не по ссылке
+        }
+
+        return new Date(dValue*1000);  // умножаем на 1000 потому, что тут JS считает в миллисекундах
     }
 
     get id(){
@@ -253,8 +267,9 @@ class PliziMessage{
             isMine: this.isMine,
             isRead: this.isRead,
             isEdited: this.isEdited,
-            createdAt: +(+this.createdAt / 1000).toFixed(0),
-            updatedAt: +(+this.updatedAt / 1000).toFixed(0),
+            // делим на 1000 потому, что тут JS считает в миллисекундах
+            createdAt: +(+this.createdAt.valueOf() / 1000).toFixed(0),
+            updatedAt: +(+this.updatedAt.valueOf() / 1000).toFixed(0),
             attachments: { list : atts },
             replyOn: this.isReply ? this.replyOn.toJSON() : null ,
             isForward: this.isForward

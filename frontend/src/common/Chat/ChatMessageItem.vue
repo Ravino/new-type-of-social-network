@@ -14,16 +14,6 @@
                 <img :src="message.userPic" :alt="message.firstName" class="message-user-img" />
             </div>
 
-            <!-- TODO: @TGA мы это перенесём отсюда -->
-            <div v-if="false" class="message-body py-2">
-                <p class="d-flex align-items-center mb-0">
-                    <span class="loading ">
-                        <span></span><span></span><span></span>
-                    </span>
-                    Печатает
-                </p>
-            </div>
-
             <div class="message-body d-flex">
                 <div class="message-text" @click.stop="detectYoutubeLink ? openChatVideoModal() : null">
                     <div class="message-text-inner mb-0" v-html="msgBody"></div>
@@ -95,7 +85,7 @@ import TextEditor from '../TextEditor.vue';
 import ChatMessageItemReplyContent from './ChatMessageItemReplyContent.vue';
 import ChatMessageItemAttachments from './ChatMessageItemAttachments.vue';
 
-import ChatMixin from '../../mixins/ChatMixin.js';
+//import ChatMixin from '../../mixins/ChatMixin.js';
 
 import PliziMessage from '../../classes/PliziMessage.js';
 
@@ -106,7 +96,7 @@ components: {
     TextEditor,
     IconBasket, IconShare, IconPencilEdit, IconCheckedDouble
 },
-mixins : [ChatMixin],
+//mixins : [ChatMixin],
 props: {
     message : {
         type: PliziMessage,
@@ -209,7 +199,7 @@ methods: {
     },
 
     onReplyBtnClick(){
-        this.$emit( 'ChatMessageReply', {
+        this.$emit( 'ShowReplyMessageModal', {
             messageID: this.message.id,
         });
     },
@@ -226,64 +216,6 @@ methods: {
         }
     },
 
-    onReplyPost(evData){
-        /** @type {string} **/
-        let msg = evData.postText.trim();
-
-        const config = {
-            chatId : this.dialogID,
-            userId : null // чтобы Reply получился
-        }
-
-        const fwdData = {
-            body : msg,
-            replyOnMessageId : this.message.id,
-            forwardFromChatId : this.dialogID,
-            attachments : evData.attachments,
-            isForward: true
-        };
-
-        if (msg !== '') {
-            const brExample = `<br/>`;
-            msg = msg.replace(/<p><\/p>/g, brExample);
-            msg = this.killBrTrail(msg);
-
-            if (msg !== '') {
-                this.replyOnMessage( config, fwdData );
-            }
-        }
-        else { // сообщение пустое - проверяем есть ли аттачи
-            if (evData.attachments.length > 0) {
-                this.replyOnMessage( config, fwdData );
-            }
-        }
-    },
-
-    async replyOnMessage( config, msgData ){
-        let apiResponse = null;
-
-        try {
-            apiResponse = await this.$root.$api.$chat.messageForward( config, msgData );
-        } catch (e){
-            window.console.warn( e.detailMessage );
-            throw e;
-        }
-
-        if ( apiResponse ){
-            const eventData = {
-                dialogId : apiResponse.data.chatId,
-                message : apiResponse.data
-            }
-
-            this.$root.$emit( 'newMessageInDialog', eventData );
-
-            this.$emit( 'ChatMessagePick', { messageID: -1 }); // чтобы убрать выпадашку
-            this.$emit( 'ChatMessageReply', { messageID: -1 }); // чтобы убрать выпадашку цитирования
-        }
-        else{
-            window.console.info( apiResponse );
-        }
-    },
 },
 
 mounted() {

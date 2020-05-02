@@ -19,7 +19,8 @@
                       :key="postItem.id"
                       :post="postItem"
                       @deletePost="deletePost"
-                      @restorePost="restorePost">
+                      @restorePost="restorePost"
+                      @onEditPost="onEditPost">
                 </Post>
             </div>
 
@@ -29,6 +30,9 @@
             <FavoriteFriends :isNarrow="false"></FavoriteFriends>
             <ShortFriends></ShortFriends>
         </div>
+
+        <PostEditModal v-if="postEditModal.isVisible"
+                       :post="postForEdit"/>
     </div>
 </template>
 
@@ -37,12 +41,13 @@ import AccountToolbarLeft from '../common/AccountToolbarLeft.vue';
 import FavoriteFriends from '../common/FavoriteFriends.vue';
 import ShortFriends from '../common/ShortFriends.vue';
 
-import Post from '../common/Post.vue';
+import Post from '../common/Post/Post.vue';
 import WhatsNewBlock from '../common/WhatsNewBlock.vue';
 
 import ProfileHeader from '../components/ProfileHeader.vue';
 import ProfilePhotos from '../components/ProfilePhotos.vue';
 import ProfileFilter from '../components/ProfileFilter.vue';
+import PostEditModal from "../common/Post/PostEditModal.vue";
 
 import PliziPost from '../classes/PliziPost.js';
 
@@ -50,7 +55,8 @@ export default {
 name: 'ProfilePage',
 components: {
     AccountToolbarLeft, FavoriteFriends, ShortFriends,
-    ProfileHeader, ProfilePhotos, WhatsNewBlock, ProfileFilter, Post
+    ProfileHeader, ProfilePhotos, WhatsNewBlock, ProfileFilter, Post,
+    PostEditModal,
 },
 data() {
     return {
@@ -65,6 +71,10 @@ data() {
             {path: '/images/user-photos/user-photo-01.png',},
             {path: '/images/user-photos/user-photo-03.png',},
         ],
+        postEditModal: {
+            isVisible: false,
+        },
+        postForEdit: null,
     }
 },
 
@@ -77,9 +87,9 @@ computed: {
      * @returns {PliziPost[]}
      */
     filteredPosts(){
-        switch (this.filterMode) {
+      switch (this.filterMode) {
             case 'my':
-                return this.userPosts.filter(post => post.isMinePost);
+                return this.userPosts.filter(post => post.checkIsMinePost(this.$root.$user.id));
 
             case 'archive':
                 return this.userPosts.filter(post => post.isArchivePost);
@@ -97,7 +107,11 @@ methods: {
     async getPosts() {
         let response = null;
 
-        response = await this.$root.$api.$post.getPosts();
+        try {
+          response = await this.$root.$api.$post.getPosts();
+        } catch (e) {
+          console.warn(e.detailMessage);
+        }
 
         if (response !== null) {
             this.userPosts = [];
@@ -123,6 +137,14 @@ methods: {
       }
     }, 5000);
   },
+    onEditPost(post) {
+        this.postEditModal.isVisible = true;
+        this.postForEdit = post;
+    },
+    hidePostEditModal() {
+        this.postEditModal.isVisible = false;
+        this.postForEdit = null;
+    },
 
   async deletePost(id) {
     let response;
@@ -159,7 +181,7 @@ methods: {
 
       post.deleted = false;
     }
-  }
+  },
 },
 
 mounted() {
@@ -168,6 +190,7 @@ mounted() {
     });
 
     this.$root.$on('wallPostsSelect', this.wallPostsSelectHandler);
+    this.$root.$on('hidePostEditModal', this.hidePostEditModal);
     this.getPosts();
 }
 }

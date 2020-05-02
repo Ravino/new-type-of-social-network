@@ -4,10 +4,12 @@ namespace App\Providers;
 
 //use Illuminate\Auth\Events\Registered;
 //use Illuminate\Auth\Listeners\SendEmailVerificationNotification;
+use App\Events\ResetPassword;
 use App\Listeners\Friendships\CommunityUsersNotification;
 use App\Listeners\Friendships\FriendshipNotification;
 use App\Listeners\Friendships\NotifyFriends;
 use App\Listeners\PostAuthorsNotification;
+use App\Listeners\SendPassword;
 use Domain\Pusher\Events\DestroyMessageEvent;
 use Domain\Pusher\Events\NewMessageEvent;
 use Domain\Pusher\Events\UserTypingEvent;
@@ -56,7 +58,10 @@ class EventServiceProvider extends ServiceProvider
         ],
         'post.*' => [
             PostAuthorsNotification::class
-        ]
+        ],
+        ResetPassword::class => [
+            SendPassword::class,
+        ],
     ];
 
     /**

@@ -1,44 +1,21 @@
-.plz-plizi-mobile {
-    position: relative;
-    height: 49%; /* 183px */
-    min-height: 212px;
-}
+#pliziMobile {
+    .plizi-mobile {
+        min-height: 258px;
 
-.plz-plizi-mobile .plz-for-mobile {
-    margin-left: 39px; /* @TGA - иначе немного неровно если смотреть на верхний блок */
-    margin-top: 40px;
-    width: 120px;
-    max-width: 120px;
-}
+        h5 {
+            font-size: 18px;
+            color: #303030;
+            font-weight: 700;
+            line-height: 1.1;
+        }
 
-.plz-social-apps {
-    margin-top: 25px;
-}
-
-.plz-social-apps .btn-social-app {
-
-}
-
-.plz-plizi-mobile .bg-wrapper {
-    display: block;
-    position: absolute;
-    left: 252px;
-    bottom: 0;
-
-    background-image: url("../images/plizi-mobile-bg.png");
-    background-position: 100% 100%;
-    background-repeat: no-repeat;
-    width: 266px;
-    min-width: 266px;
-    max-width: 266px;
-    height: 149px;
-    min-height: 149px;
-    max-height: 149px;
-}
-
-@media (max-width: 1200px) {
-    .plz-plizi-mobile .bg-wrapper {
-        min-height: auto;
-        max-height: none;
+        .btn-social-app {
+            display: inline-block;
+            vertical-align: top;
+            img {
+                height: 36px;
+            }
+        }
     }
 }
+

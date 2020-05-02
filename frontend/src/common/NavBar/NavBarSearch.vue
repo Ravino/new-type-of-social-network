@@ -1,7 +1,10 @@
 <template>
-    <div class="form-inline mt-1 mt-md-1 position-relative overflow-hidden rounded-pill">
+    <div class="form-inline mt-1 mt-md-1 position-relative overflow-hidden rounded-pill"
+         :class="{'isFocused' : isFocused}">
         <input :value="lastSearch" id="topSearch" ref="topSearch"
                @keydown.stop="topSearchKeyDownCheck($event)"
+               @blur="onBlur"
+               @focus="onFocus"
                class="top-search form-control form-control  w-100"
                type="text" placeholder="Поиск" aria-label="Поиск" />
         <button class="btn btn-search h-100 " type="submit"  @click="initSearch()">
@@ -18,6 +21,7 @@ name : 'NavBarSearch',
     components: {IconSearch},
     data () {
     return {
+        isFocused: false
     }
 },
 
@@ -47,7 +51,7 @@ methods: {
 
     startSearch(sText){
         this.$root.$lastSearch = sText;
-        this.$store.dispatch('SET_LAST_SEARCH', sText);
+        window.localStorage.setItem('pliziLastSearch', sText);
 
         this.$root.$emit('searchStart', {
             searchText : sText,
@@ -57,6 +61,13 @@ methods: {
         if (this.$route.name !== `SearchResultsPage`) {
             this.$router.push({ path: '/search-results' });
         }
+    },
+
+    onFocus() {
+        this.isFocused = true
+    },
+    onBlur() {
+        this.isFocused = false
     }
 }
 }

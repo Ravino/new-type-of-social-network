@@ -193,4 +193,20 @@ class PostController extends Controller
             'message' => 'Запись не найдена.',
         ]);
     }
+
+    public function update(Request $request, $id)
+    {
+        $user_post = \Auth::user()->posts()->where('id', $id)->first();
+
+        if ($user_post) {
+            $user_post->update(['body' => $request->body]);
+            PostAttachment::whereIn('id', $request->attachmentIds)->update(['post_id' => $user_post->id]);
+
+            return new PostResource($user_post);
+        }
+
+        return response()->json([
+            'message' => 'Запись не найдена.',
+        ]);
+    }
 }
