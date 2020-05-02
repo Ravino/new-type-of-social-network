@@ -34,7 +34,7 @@
                         </div>
 
                         <div class="form-group col-4 position-relative">
-                            <label for="password" class="d-none col-form-label text-md-right">Ваш пароль</label>
+                            <label for="password" class="d-none col-form-label text-md-right">Ваш новый пароль</label>
 
                             <div class="position-relative">
                                 <i class="icon icon-key"></i>
@@ -56,7 +56,7 @@
 
                         <div class="form-group col-4 position-relative">
                             <label for="password-confirm" class="d-none col-form-label text-md-right">
-                                Подтвердите пароль
+                                Подтвердите новый пароль
                             </label>
 
                             <div class="position-relative">
