@@ -14,7 +14,7 @@ class CreateCommunitiesTable extends Migration
     public function up()
     {
         Schema::create('communities', function (Blueprint $table) {
-            $table->id();
+            $table->integer('id', true);
             $table->string('name');
             $table->text('description')->nullable();
             $table->string('notice')->nullable();

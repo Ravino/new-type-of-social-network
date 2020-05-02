@@ -23,7 +23,7 @@ class NewMessageNotification implements ShouldQueue
         foreach ($idsOfUsers as $user_id) {
             $body = json_decode(json_encode($body), true);
             $body['isMine'] = false;
-            Pusher::sentDataToServer(['data' => $body, 'topic_id' => Pusher::channelForUser($user_id->user_id), 'event_type' => 'message.new']);
+            Pusher::sentDataToServer(['data' => $body, 'topic_id' => Pusher::channelForUser($user_id), 'event_type' => 'message.new']);
         }
     }
 }

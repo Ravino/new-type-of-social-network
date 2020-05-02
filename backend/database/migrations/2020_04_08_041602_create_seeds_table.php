@@ -14,7 +14,7 @@ class CreateSeedsTable extends Migration
     public function up()
     {
         Schema::create('seeds', function (Blueprint $table) {
-            $table->id();
+            $table->integer('id', true);
             $table->string("seed_name");
             $table->timestamps();
         });

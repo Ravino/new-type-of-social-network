@@ -22,6 +22,7 @@ class FriendshipTableSeeder extends Seeder
 
             $user2 = $users->random();
             $users->pull($user2->getKey());
+
             $user1->beFriend($user2);
             $user2->acceptFriendRequest($user1);
         }

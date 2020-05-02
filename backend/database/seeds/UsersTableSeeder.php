@@ -34,7 +34,6 @@ class UsersTableSeeder extends Seeder
                 'last_activity_dt' => time(),
                 'created_at' => time(),
                 'updated_at' => time(),
-                'uuid' => \Ramsey\Uuid\Uuid::uuid4(),
             ]);
             $user1->profile()->create($this->generateProfile());
             $this->command->line("Generate user with email {$email1}");
@@ -52,7 +51,6 @@ class UsersTableSeeder extends Seeder
                 'is_admin' => true,
                 'created_at' => time(),
                 'updated_at' => time(),
-                'uuid' => \Ramsey\Uuid\Uuid::uuid4(),
             ]);
             $user2->profile()->create($this->generateProfile());
             $this->command->line("Generate user with email {$email2}");
@@ -72,7 +70,6 @@ class UsersTableSeeder extends Seeder
                     'last_activity_dt' => time(),
                     'created_at' => time(),
                     'updated_at' => time(),
-                    'uuid' => \Ramsey\Uuid\Uuid::uuid4(),
                 ]);
                 $user->profile()->create($this->generateProfile());
                 $this->command->line("Generate user with email {$user->email}");

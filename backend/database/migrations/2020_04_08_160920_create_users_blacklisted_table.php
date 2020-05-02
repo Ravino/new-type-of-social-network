@@ -14,8 +14,8 @@ class CreateUsersBlacklistedTable extends Migration
     public function up()
     {
         Schema::create('users_blacklisted', function (Blueprint $table) {
-            $table->id();
-            $table->integer('user_id', false, true);
+            $table->integer('id', true);
+            $table->string('user_id', 24);
             $table->integer('blacklisted_id', false, true);
             $table->integer('created_at', false, true);
             $table->integer('updated_at', false, true);

@@ -14,13 +14,13 @@ class CreatePostsTable extends Migration
     public function up()
     {
         Schema::create('posts', function (Blueprint $table) {
-            $table->id();
+            $table->integer('id', true);
             $table->string('name');
             $table->text('body');
             $table->string('primary_image')->nullable();
             $table->integer('likes')->default(0);
             $table->integer('views')->default(0);
-            $table->integer('postable_id');
+            $table->string('postable_id');
             $table->string('postable_type');
             $table->integer('created_at')->default(time());
             $table->integer('updated_at')->default(time());

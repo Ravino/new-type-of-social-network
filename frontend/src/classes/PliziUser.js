@@ -17,10 +17,10 @@ class PliziUser {
 
     /**
      *
-     * @type {number}
+     * @type {string}
      * @private
      */
-    _id = -1;
+    _id = ``;
 
     /**
      *
@@ -185,7 +185,7 @@ class PliziUser {
             inputData = {data: inputData};
         }
 
-        this._id = inputData.data.id >>> 0;
+        this._id = inputData.data.id;
         this._isOnline = inputData.data.isOnline;
         this._lastActivity = new Date(inputData.data.lastActivity);
 
@@ -238,7 +238,7 @@ class PliziUser {
      * очищает данные
      */
     cleanData() {
-        this._id = -1;
+        this._id = ``;
         this._isOnline = false;
         this._lastActivity = null;
 
@@ -295,7 +295,7 @@ class PliziUser {
 
     /**
      *
-     * @returns {number}
+     * @returns {string}
      */
     get id(){
         return this._id;

@@ -4,7 +4,7 @@ methods: {
 
     /**
      * делает переход к диалогу с юзером
-     * @param {number} userId -
+     * @param {string} userId -
      * @returns {null}
      */
     async openDialogWithFriend(userId){

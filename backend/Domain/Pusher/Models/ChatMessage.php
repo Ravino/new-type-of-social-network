@@ -4,7 +4,9 @@
 namespace Domain\Pusher\Models;
 
 use App\Models\Profile;
-use Illuminate\Database\Eloquent\Model;
+use Carbon\Carbon;
+use Jenssegers\Mongodb\Eloquent\Model;
+use Jenssegers\Mongodb\Eloquent\SoftDeletes;
 
 /**
  * Class ChatMessage
@@ -12,35 +14,66 @@ use Illuminate\Database\Eloquent\Model;
  */
 class ChatMessage extends Model
 {
-    protected $casts = [
-        'created_at' => 'timestamp',
-        'updated_at' => 'timestamp',
+
+    use SoftDeletes;
+
+    /**
+     * @var string
+     */
+    protected $connection = 'mongodb';
+
+    /**
+     * @var array
+     */
+    protected $fillable = [
+        'chat_id',
+        'body',
+        'user_id',
+        'parent_id',
+        'parent_chat_id',
     ];
 
     /**
-     * @return \Illuminate\Database\Eloquent\Relations\HasOne
+     * @var array
      */
-    public function parent() {
-        return $this->hasOne( ChatMessage::class, 'id', 'parent_id' )
-            ->join('profiles', 'profiles.user_id', '=', 'chat_messages.user_id');
+    protected $dates = ['created_at', 'updated_at', 'deleted_at'];
+
+    /**
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     */
+    public function user() {
+        return $this->belongsTo(User::class);
     }
 
     /**
-     * @return \Illuminate\Database\Eloquent\Relations\HasOne
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
      */
-    public function parent_chat() {
-        return $this->hasOne( Chat::class, 'id', 'parent_chat_id');
+    public function parent() {
+        return $this->belongsTo(self::class);
+    }
+
+    /**
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     */
+    public function chat() {
+        return $this->belongsTo(Chat::class);
     }
 
     /**
      * @return \Illuminate\Database\Eloquent\Relations\HasMany
      */
     public function attachments() {
-        return $this->hasMany(ChatMessageAttachment::class, 'message_id', 'id');
+        return $this->hasMany(\Domain\Pusher\Models\ChatMessageAttachment::class);
     }
 
-    public function getDateFormat()
+    public static function boot()
     {
-        return 'U';
+        parent::boot();
+        static::created(function ($message) {
+            $message->chat->last_message_body = $message->body;
+            $message->chat->last_user_id = $message->user_id;
+            $message->chat->last_message_time = $message->created_at;
+            $message->chat->save();
+        });
     }
 }

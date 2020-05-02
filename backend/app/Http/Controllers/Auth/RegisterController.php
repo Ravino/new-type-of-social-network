@@ -107,7 +107,6 @@ class RegisterController extends Controller
         $this->rawPassword = uniqid();
 
         $data['token'] = $token = bcrypt($this->rawPassword);
-        $data['uuid'] = Uuid::uuid4();
 
         $user = User::create($data);
         $user->password = $token; // password is not filable

@@ -33,7 +33,7 @@ class AlterNotificationsTable extends Migration
     {
         Schema::dropIfExists('notifications');
         Schema::create('notifications', function (Blueprint $table) {
-            $table->id();
+            $table->integer('id', true)->primary();
             $table->foreignId('sender_id');
             $table->foreignId('recipient_id');
             $table->string('action');

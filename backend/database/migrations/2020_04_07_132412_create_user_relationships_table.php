@@ -14,7 +14,7 @@ class CreateUserRelationshipsTable extends Migration
     public function up()
     {
         Schema::create('profile_relationships', function (Blueprint $table) {
-            $table->id();
+            $table->integer('id', true);
             $table->string('title');
             $table->timestamps();
         });

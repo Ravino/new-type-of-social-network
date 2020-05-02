@@ -207,7 +207,8 @@ return [
          */
         Laratrust\LaratrustServiceProvider::class,
 
-        Intervention\Image\ImageServiceProvider::class
+        Intervention\Image\ImageServiceProvider::class,
+        Jenssegers\Mongodb\MongodbServiceProvider::class
     ],
 
     /*

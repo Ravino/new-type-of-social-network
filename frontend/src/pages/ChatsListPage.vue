@@ -165,10 +165,10 @@ methods: {
         let msgsResponse = null;
         this.isMessagesLoaded = false;
 
-        this.currentDialog =  this.$root.$user.dm.get(+chatId);
+        this.currentDialog =  this.$root.$user.dm.get(chatId);
 
         try {
-            msgsResponse = await this.$root.$api.$chat.messages(+chatId);
+            msgsResponse = await this.$root.$api.$chat.messages(chatId);
         }
         catch (e){
             window.console.warn(e.detailMessage);

@@ -3,23 +3,16 @@
 
 namespace Domain\Pusher\Models;
 
-use App\Models\Profile;
-use Illuminate\Database\Eloquent\Model;
+use Jenssegers\Mongodb\Eloquent\Model;
 
 /**
  * Class ChatMessage
  * @package Domain\Pusher\Models
  */
-class ChatParty extends Model
+class ChatMessageStatus extends Model
 {
-    /**
-     * @var string
-     */
-    protected $table = 'chat_party';
+    protected $connection = 'mongodb';
 
-    /**
-     * @var array
-     */
     protected $casts = [
         'created_at' => 'timestamp',
         'updated_at' => 'timestamp',

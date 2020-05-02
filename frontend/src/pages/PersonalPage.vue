@@ -104,7 +104,7 @@ methods: {
         let profile = null;
 
         try {
-            profile = await this.$root.$api.infoUser(this.id >>> 0);
+            profile = await this.$root.$api.infoUser(this.id);
         }
         catch (e){
             window.console.warn(e.detailMessage);
