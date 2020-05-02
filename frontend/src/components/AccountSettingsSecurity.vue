@@ -63,10 +63,10 @@
                     <div
                         class="plz-account-settings-body-field plz-account-settings-security-body-field col-sm-6 col-md-6 col-lg-6 col-xl-6">
                         <div class="d-flex align-items-center w-75 position-relative ">
-                            <div class="plz-account-settings-body-action ">
+                            <div class="plz-account-settings-body-action pl-1 ">
                                 <button type="button"
                                         id="password"
-                                        class="btn btn-link pl-0"
+                                        class="btn btn-link"
                                         data-toggle="modal"
                                         :data-target="`#${modalID}`">Изменить
                                 </button>

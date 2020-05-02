@@ -183,9 +183,6 @@
                     </div>
                 </div>
 
-                <div class="form-group ml-n2 pt-4 pb-0">
-                    <button class="btn btn-save  btn-primary rounded-pill px-4 text-uppercase">сохранить</button>
-                </div>
             </div>
         </form>
     </div>
