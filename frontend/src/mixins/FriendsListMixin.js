@@ -79,7 +79,7 @@ methods: {
                 this.possibleFriends.push(new PliziFriend(possibleFriend));
             });
 
-            this.api.emit('loadPossibleFriends');
+            this.$root.$emit('loadPossibleFriends');
         }
     },
 
@@ -104,14 +104,14 @@ methods: {
                 this.recommendedFriends.push(new PliziFriend(recommendedFriend));
             });
 
-            this.api.emit('loadRecommendedFriends');
+            this.$root.$emit('loadRecommendedFriends');
         }
     },
 },
 
 created(){
     this.loadPossibleFriends();
-    //this.loadRecommendedFriends();
+    this.loadRecommendedFriends();
 },
 
 };

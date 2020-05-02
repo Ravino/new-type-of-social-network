@@ -1,5 +1,5 @@
 <template>
-    <div id="favoritFriends" class="plz-favorit-friends bg-white-br20 overflow-hidden">
+    <div v-if="favoritFriends.length>0" id="favoritFriends" class="plz-favorit-friends bg-white-br20 overflow-hidden">
 
         <div v-if="isDataReady" class="--d-flex --flex-row --justify-content-start pb-3 --border-bottom pt-3">
             <h6 v-if="!isNarrow" class="plz-ff-title w-100 mt-2 ml-3 d-block">Избранные</h6>

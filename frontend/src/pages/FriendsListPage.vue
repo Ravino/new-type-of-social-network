@@ -32,8 +32,8 @@
                                 </FriendListItem>
                             </transition-group>
                         </ul>
-                        <div v-else class="alert alert-info">
-                            Вы пока ещё ни с кем не подружилис.
+                        <div v-else class="alert alert-info w-100 p-5 text-center">
+                            Вы пока ещё ни с кем не подружились.
                         </div>
                     </div>
                     <Spinner v-else></Spinner>

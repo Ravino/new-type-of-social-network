@@ -61,7 +61,7 @@ methods: {
         let response = null;
 
         try {
-            response = await this.$root.$api.invitationAccept(this.invitation.id);
+            response = await this.$root.$api.$friend.invitationAccept(this.invitation.id);
         }
         catch (e){
             window.console.warn(e.detailMessage);
@@ -71,7 +71,9 @@ methods: {
         if (response != null) {
             this.isAccepted = true;
             this.$root.$alert(`Вы подтвердили заявку от ${this.invitation.fullName}`, `bg-success`, 5);
-            this.$root.$emit('invitationAccept', this.invitation);
+            this.$root.$emit('InvitationAccept', {
+                invitationId: this.invitation.id
+            });
         }
         else {
             window.console.info(response);
@@ -83,7 +85,7 @@ methods: {
         let response = null;
 
         try {
-            response = await this.$root.$api.invitationDecline(this.invitation.id);
+            response = await this.$root.$api.$friend.invitationDecline(this.invitation.id);
         }
         catch (e){
             window.console.warn(e.detailMessage);
@@ -93,7 +95,9 @@ methods: {
         if (response != null) {
             this.isDeclined = true;
             this.$root.$alert(`Вы отклонили заявку от ${this.invitation.fullName}`, `bg-warning`, 5);
-            this.$root.$emit('invitationDecline', this.invitation);
+            this.$root.$emit('InvitationDecline', {
+                invitationId: this.invitation.id
+            });
         }
         else {
             window.console.info(response);

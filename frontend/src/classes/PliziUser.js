@@ -27,6 +27,13 @@ class PliziUser {
     _profile = null;
 
     /**
+     * кол-во общих друзей
+     * @type {number}
+     * @private
+     */
+    _mutualFriendsCount = null;
+
+    /**
      * @type {number}
      * @private
      */
@@ -118,6 +125,10 @@ class PliziUser {
 
     get profile(){
         return this._profile;
+    }
+
+    get mutualFriendsCount(){
+        return this._mutualFriendsCount;
     }
 
     /**
@@ -250,8 +261,29 @@ class PliziUser {
             id: this._id,
             isOnline: this._isOnline,
             lastActivity: this._lastActivity.valueOf(),
-            profile: this.profile.toJSON()
+            profile: this.profile.toJSON(),
+            mutualFriendsCount: this.mutualFriendsCount
         };
+    }
+
+    get subscribersNumber(){
+        return this._subscribersNumber;
+    }
+
+    get friendsNumber(){
+        return this._friendsNumber;
+    }
+
+    get photosNumber(){
+        return this._photosNumber;
+    }
+
+    get videosNumber(){
+        return this._videosNumber;
+    }
+
+    get audiosNumber(){
+        return this._audiosNumber;
     }
 
 }

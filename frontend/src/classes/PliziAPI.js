@@ -6,6 +6,7 @@ import PliziPostAPI from './API/PliziPostAPI.js';
 import PliziFriendAPI from './API/PliziFriendAPI.js';
 import PliziCommunitiesAPI from './API/PliziCommunitiesAPI.js';
 import PliziUsersAPI from './API/PliziUsersAPI.js';
+import PliziNotificationsAPI  from './API/PliziNotificationsAPI.js';
 
 class PliziAPI {
 
@@ -94,6 +95,12 @@ class PliziAPI {
      */
     __users = null;
 
+    /**
+     * @type {PliziNotificationsAPI}
+     * @private
+     */
+    __notifications = null;
+
 
     /**
      * @param {Vue} $root - ссылка на Vue объект, который вызывает этот конструктор
@@ -121,6 +128,7 @@ class PliziAPI {
         this.__friend = new PliziFriendAPI(this);
         this.__communities = new PliziCommunitiesAPI(this);
         this.__users = new PliziUsersAPI(this);
+        this.__notifications = new PliziNotificationsAPI(this);
     }
 
 
@@ -157,6 +165,13 @@ class PliziAPI {
      */
     get $users() {
         return this.__users;
+    }
+
+    /**
+     * @returns {PliziNotificationsAPI}
+     */
+    get $notifications() {
+        return this.__notifications;
     }
 
     get axios() {
@@ -377,129 +392,6 @@ class PliziAPI {
         return null;
     }
 
-
-    /**
-     * поиск по юзерам
-     * @public
-     * @param sText - строка поиска
-     * @returns {object[]|null} - коллеция с найденными юзерами или null как ещё один признак ошибки
-     */
-    async userSearch(sText) {
-        const sData = (sText + '').trim();
-
-        let response = await this.__axios.get('/api/user/search/' + sData, this.__getAuthHeaders())
-            .catch((error) => {
-                this.__checkIsTokenExperis(error, `userSearch`);
-                throw new PliziAPIError(`userSearch`, error.response);
-            });
-
-        if (response.status === 200) {
-            return response.data.data.list;
-        }
-
-        return null;
-    }
-
-
-    /**
-     * отправляет приграшение дружбы
-     * поле status в ответе:
-     * 200 - инвайт отправили
-     * 422 - инвайт отправляли ранее
-     * @param {number} potentialFriendID - ID юзера с которым хотим подружиться
-     * @returns {{ status: number, message: string }}
-     * @throws PliziAPIError
-     */
-    async sendFriendshipInvitation(potentialFriendID) {
-        const data = {
-            userId: potentialFriendID
-        };
-
-        return await this.__axios.post('/api/user/friendship', data, this.__getAuthHeaders())
-            .catch((error) => {
-                /** @TGA так сервер ответчает, что инвайт уже отправлялся **/
-                if (error.response.status === 422) {
-                    return {
-                        status: 422,
-                        message: error.response.data.message
-                    }
-                } else {
-                    this.__checkIsTokenExperis(error, `sendFriendshipInvitation`);
-                    throw new PliziAPIError(`sendFriendshipInvitation`, error.response);
-                }
-            });
-    }
-
-
-    /**
-     * получаем список приглашений дружбы
-     * @returns {object[]|null} - список инвайтов или NULL
-     * @throws PliziAPIError
-     */
-    async invitationsList() {
-        let path = 'api/user/friendship/pending';
-
-        let response = await this.__axios.get(path, this.__getAuthHeaders()).catch((error) => {
-            this.__checkIsTokenExperis(error, `invitationsList`);
-            throw new PliziAPIError(`invitationsList`, error.response);
-        });
-
-        if (response.status === 200) {
-            return response.data.data.list;
-        }
-
-        return null;
-    }
-
-
-    async invitationAccept(friendID) {
-        const sendData = {
-            userId: friendID
-        };
-
-        let response = await this.__axios.post('api/user/friendship/accept', sendData, this.__getAuthHeaders()).catch((error) => {
-            this.__checkIsTokenExperis(error, `invitationAccept`);
-            throw new PliziAPIError(`invitationAccept`, error.response);
-        });
-
-        if (response.status === 200) {
-            return response.data;
-        }
-
-        return null;
-    }
-
-
-    async invitationDecline(friendID) {
-        const sendData = {
-            userId: friendID
-        };
-
-        let response = await this.__axios.post('api/user/friendship/decline', sendData, this.__getAuthHeaders()).catch((error) => {
-            this.__checkIsTokenExperis(error, `invitationDecline`);
-            throw new PliziAPIError(`invitationDecline`, error.response);
-        });
-
-        if (response.status === 200) {
-            return response.data;
-        }
-
-        return null;
-    }
-
-
-    async notificationsList() {
-        let response = await this.__axios.get('api/user/notifications', this.__getAuthHeaders()).catch((error) => {
-            this.__checkIsTokenExperis(error, `notificationsList`);
-            throw new PliziAPIError(`notificationsList`, error.response);
-        });
-
-        if (response.status === 200) {
-            return response.data.data.list;
-        }
-
-        return null;
-    }
 
     /**
      * Отправка запроса на восстановление пароля.

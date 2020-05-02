@@ -80,6 +80,7 @@ class PliziAuthUser extends PliziUzer{
 
     toJSON() {
         let res = super.toJSON();
+        delete res.mutualFriendsCount;
         res.email = this._email;
         res.privacySettings = this.privacySettings.toJSON();
         res.stats = this.stats.toJSON();
