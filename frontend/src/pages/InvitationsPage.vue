@@ -12,9 +12,10 @@
                 <div class="col-sm-8 col-md-8 col-lg-8 col-xl-8 bg-white-br20">
 
                     <div v-if="isDataReady" class="plizi-search-results-list">
-                        <ul v-if="invitations  &&  (invitations.length > 0)" class="list-unstyled mb-0">
-                            <InvitationItem v-for="(invItem, invIndex) in invitations"
-                                            v-bind:key="invIndex" v-bind:invitation="invItem">
+                        <ul v-if="invitations  &&  invitations.length > 0" class="list-unstyled mb-0">
+                            <InvitationItem v-for="invItem in invitations"
+                                            v-bind:invitation="invItem"
+                                            v-bind:key="invItem.id">
                             </InvitationItem>
                         </ul>
                         <div class="p-3" v-else>
@@ -60,24 +61,24 @@ data() {
 
 computed: {
     invitations() {
-        return this.$root.$auth.invitations;
+        return this.$root.$auth.im.asArray();
     },
 },
 
 methods: {
-    removeFromInvitations(invit){
-        this.$root.$auth.invitationRemove(invit);
+    removeFromInvitations(evData){
+        this.$root.$auth.im.delete(evData.invitationId);
     }
 },
 
 mounted(){
-    this.$root.$on('invitationAccept', (evData)=>{
+    this.$root.$on('InvitationAccept', (evData)=>{
         setTimeout(()=>{
             this.removeFromInvitations(evData);
         }, 3*1000);
     });
 
-    this.$root.$on('invitationDecline', (evData)=>{
+    this.$root.$on('InvitationDecline', (evData)=>{
         setTimeout(()=>{
             this.removeFromInvitations(evData);
         }, 3*1000);

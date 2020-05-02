@@ -20,8 +20,8 @@
                         <IconLocation style="height: 14px;" />
 
                         <!-- TODO: @YZ нужна проверка городов и страны -->
-                        <span v-if="srItem.city.title && srItem.country.title">
-                            {{ srItem.city.title +', '+  srItem.country.title }}
+                        <span v-if="srItem.location && srItem.city.title && srItem.country.title">
+                            {{ srItem.city.title.ru +', '+  srItem.country.title.ru }}
                         </span>
                         <span v-else>
                             Не указано

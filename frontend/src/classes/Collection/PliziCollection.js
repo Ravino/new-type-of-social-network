@@ -8,9 +8,8 @@ class PliziCollection {
     /**
      * ключ в localStorage куда сохраняем данные
      * @type {string}
-     * @private
      */
-    __localStorageKey = `pliziDialogs`;
+    localStorageKey = ``;
 
     /**
      * флаг, что данные были загружены из источника (серверное API)
@@ -69,15 +68,6 @@ class PliziCollection {
         this._api = apiObj;
         this._collection = new Map();
     }
-
-    /**
-     * ключ в localStorage куда сохраняем данные
-     * @returns {string}
-     */
-    get localStorageKey(){
-        return this.__localStorageKey;
-    }
-
 
     /**
      * @returns {PliziAPI}
@@ -211,7 +201,7 @@ class PliziCollection {
      * @returns {object|null} - данные коллекции в виде объекта, если данные из localStorage
      */
     restoreData() {
-        const sData = window.localStorage.getItem(this.localStorageKey);
+        const sData = localStorage.getItem(this.localStorageKey);
 
         if (typeof sData === 'undefined'  ||  sData===null  ||  sData===``)
             return null;

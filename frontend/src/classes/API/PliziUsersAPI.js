@@ -45,6 +45,29 @@ class PliziUsersAPI extends PliziBaseAPI{
         return null;
     }
 
+
+    /**
+     * поиск по юзерам
+     * @param sText - строка поиска
+     * @returns {object[]|null} - коллеция с найденными юзерами или null как признак ошибки
+     */
+    async search(sText) {
+        const sData = (sText + '').trim();
+
+        let response = await this.axios.get('/api/user/search/' + sData, this.authHeaders)
+            .catch((error) => {
+                this.checkIsTokenExpires(error, `$users.search`);
+                throw new PliziAPIError(`$users.search`, error.response);
+            });
+
+        if (response.status === 200) {
+            return response.data.data.list;
+        }
+
+        return null;
+    }
+
+
 }
 
 export { PliziUsersAPI as default}

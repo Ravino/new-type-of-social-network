@@ -1,13 +1,12 @@
 import PliziAPI from './PliziAPI.js';
-
 import PliziAuthUser from './PliziAuthUser.js';
 
-import PliziInvitation from './PliziInvitation.js';
 import PliziNotification from './PliziNotification.js';
 
 import PliziFriendsManager from './PliziFriendsManager.js';
 
 import PliziDialogsCollection from './Collection/PliziDialogsCollection.js';
+import PliziInvitationsCollection from './Collection/PliziInvitationsCollection.js';
 
 class PliziAuth {
     /**
@@ -42,13 +41,6 @@ class PliziAuth {
      */
     _api = null;
 
-     /**
-     * массивс полученными инвайтами
-     * @type {PliziInvitation[]}
-     * @private
-     */
-    _invitations = [];
-
     /**
      * @type {PliziNotification[]}
      * @private
@@ -56,18 +48,25 @@ class PliziAuth {
     _notifications = [];
 
     /**
-     * ссылка на PliziFriendsManager - менеджер френдов
+     * ссылка на менеджер френдов
      * @type {PliziFriendsManager}
      * @private
      */
     _fm = null;
 
     /**
-     * ссылка на PliziDialogsCollection - менеджер диалогов
+     * ссылка на менеджер диалогов
      * @type {PliziDialogsCollection}
      * @private
      */
     _dm = null;
+
+    /**
+     * ссылка на - менеджер инвайтов
+     * @type {PliziInvitationsCollection}
+     * @private
+     */
+    _im = null;
 
     /**
      * ссылка на менеджер френдов
@@ -86,6 +85,14 @@ class PliziAuth {
     }
 
     /**
+     * ссылка на менеджер инвайтов
+     * @returns {PliziInvitationsCollection}
+     */
+    get im(){
+        return this._im;
+    }
+
+    /**
      * @param {PliziAPI} apiObj
      */
     constructor(apiObj){
@@ -95,6 +102,7 @@ class PliziAuth {
 
         this._fm = new PliziFriendsManager(apiObj);
         this._dm = new PliziDialogsCollection(apiObj);
+        this._im = new PliziInvitationsCollection(apiObj);
     }
 
     /**
@@ -155,6 +163,8 @@ class PliziAuth {
         localStorage.removeItem( this.__localStorageKey );
         localStorage.removeItem( 'pliziJWToken' );
         localStorage.removeItem( 'pliziChatChannel' );
+        localStorage.removeItem( this.dm.localStorageKey );
+        localStorage.removeItem( this.im.localStorageKey );
     }
 
     get user(){
@@ -194,46 +204,6 @@ class PliziAuth {
 /** **************************************************************************************************************** **/
 /** **************************************************************************************************************** **/
 
-    /**
-     * @returns {PliziInvitation[]}
-     */
-    get invitations(){
-        return this._invitations;
-    }
-
-    /**
-     * кол-во полученные инвайтов
-     * @returns {number}
-     */
-    get invitationsNumber(){
-        return (this._invitations) ? this._invitations.length : 0;
-    }
-
-    invitationsClean(){
-        this._invitations = [];
-    }
-
-    /**
-     * должен получать респонс от сервера, сам преобразует в коллекцию PliziInvitation
-     * @param {object[]} invs
-     */
-    invitationsLoad(invs){
-        this.invitationsClean();
-
-        invs.map( (invItem) => {
-            this._invitations.push( new PliziInvitation({ data : invItem} ) );
-        });
-    }
-
-    /**
-     * объект который надо удалить
-     * @param {PliziInvitation|{id:number}} invit
-     */
-    invitationRemove(invit){
-        this._invitations = this._invitations.filter((invItem) => {
-            return invItem.id !== invit.id;
-        });
-    }
 
     /**
      * @returns {number}

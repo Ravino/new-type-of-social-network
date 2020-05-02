@@ -2,9 +2,11 @@ import PliziDialog from '../PliziDialog.js';
 import PliziCollection from './PliziCollection.js';
 
 /**
- * класс для работы со списком пересылаемых сообщений
+ * класс для работы со списком диалогов в чате
  */
 class PliziDialogsCollection extends PliziCollection {
+
+    localStorageKey = `pliziDialogs`;
 
     restoreEventName = 'DialogsIsRestored';
     loadEventName = 'DialogsIsLoaded';
@@ -93,7 +95,7 @@ class PliziDialogsCollection extends PliziCollection {
 
         if (this.collection.size > 0) {
             this.isLoad = true;
-            this.emit(this.loadEventName);
+            this.emit(this.restoreEventName);
             return true;
         }
 

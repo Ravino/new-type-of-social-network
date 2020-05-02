@@ -75,7 +75,7 @@ methods: {
         let apiResponse = null;
 
         try {
-            apiResponse = await this.$root.$api.userSearch(this.$root.$lastSearch);
+            apiResponse = await this.$root.$api.$users.search(this.$root.$lastSearch);
         }
         catch (e) {
             window.console.warn(e.detailMessage);
@@ -85,7 +85,7 @@ methods: {
             this.searchResultsList = [];
 
             apiResponse.map( (srItem)=> {
-                this.searchResultsList.push( new PliziUser({ data : srItem} ) );
+                this.searchResultsList.push( new PliziUser(srItem ) );
             });
 
             this.isDataReady = true;
@@ -98,7 +98,7 @@ beforeMount() {
 },
 
 mounted(){
-    const lst = window.localStorage.getItem('pliziLastSearch');
+    const lst = localStorage.getItem('pliziLastSearch');
 
     if (lst  &&  lst!==``) {
         this.$root.$lastSearch = lst;

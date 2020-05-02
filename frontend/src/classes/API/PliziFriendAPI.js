@@ -71,6 +71,37 @@ class PliziFriendAPI extends PliziBaseAPI {
 
 
     /**
+     * отправляет приграшение дружбы
+     * поле status в ответе:
+     * 200 - инвайт отправили
+     * 422 - инвайт отправляли ранее
+     * @param {number} futureFriendID - ID юзера с которым хотим подружиться
+     * @returns {{ status: number, message: string }}
+     * @throws PliziAPIError
+     */
+    async sendFriendshipInvitation(futureFriendID) {
+        const data = {
+            userId: futureFriendID
+        };
+
+        return await this.axios.post('/api/user/friendship', data, this.authHeaders)
+            .catch((error) => {
+                /** @TGA так сервер ответчает, что инвайт уже отправлялся **/
+                if (error.response.status === 422) {
+                    return {
+                        status: 422,
+                        message: error.response.data.message
+                    }
+                }
+                else {
+                    this.checkIsTokenExpires(error, '$friend.sendFriendshipInvitation');
+                    throw new PliziAPIError('$friend.sendFriendshipInvitation', error.response);
+                }
+            });
+    }
+
+
+    /**
      * удаляет френда из друзей
      * @param {number} userID - ID френда
      * @returns {object|null}
@@ -89,6 +120,78 @@ class PliziFriendAPI extends PliziBaseAPI {
 
         return null;
     }
+
+
+    /**
+     * получаем список приглашений дружбы
+     * @returns {object[]|null} - список инвайтов или NULL
+     * @throws PliziAPIError
+     */
+    async invitationsList() {
+        window.console.log(`invitationsList`);
+        let response = await this.axios.get('api/user/friendship/pending', this.authHeaders)
+            .catch((error) => {
+                this.checkIsTokenExpires(error, '$friends.invitationsList');
+                throw new PliziAPIError('$friends.invitationsList', error.response);
+            });
+
+        if (response.status === 200) {
+            return response.data.data.list;
+        }
+
+        return null;
+    }
+
+
+    /**
+     * принимаем приглашение дружбы
+     * @param friendID
+     * @returns {object|null}
+     * @throws PliziAPIError
+     */
+    async invitationAccept(friendID) {
+        const sendData = {
+            userId: friendID
+        };
+
+        let response = await this.axios.post('api/user/friendship/accept', sendData, this.authHeaders)
+            .catch((error) => {
+                this.checkIsTokenExpires(error, '$friends.invitationAccept');
+                throw new PliziAPIError('$friends.invitationAccept', error.response);
+            });
+
+        if (response.status === 200) {
+            return response.data;
+        }
+
+        return null;
+    }
+
+
+    /**
+     * отклоняем приглашение дружбы
+     * @param friendID
+     * @returns {object|null}
+     * @throws PliziAPIError
+     */
+    async invitationDecline(friendID) {
+        const sendData = {
+            userId: friendID
+        };
+
+        let response = await this.axios.post('api/user/friendship/decline', sendData, this.authHeaders)
+            .catch((error) => {
+                this.checkIsTokenExpires(error, '$friends.invitationDecline');
+                throw new PliziAPIError('$friends.invitationDecline', error.response);
+            });
+
+        if (response.status === 200) {
+            return response.data;
+        }
+
+        return null;
+    }
+
 
 }
 

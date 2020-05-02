@@ -123,11 +123,11 @@ methods: {
             this.$root.$api.connectToChannel( evData.user.channel );
 
             // TODO: перенести отсюда - слишком часто будет вызываться
-            this.loadInvitations();
             this.loadNotifications();
 
             await this.$root.$auth.fm.load();
             await this.$root.$auth.dm.load();
+            await this.$root.$auth.im.load();
         }
     },
 
@@ -146,31 +146,11 @@ methods: {
             this.$root.$api.connectToChannel( evData.user.channel );
 
             // TODO: перенести отсюда - слишком часто будет вызываться
-            this.loadInvitations(); // @TGA при восстановлении из LS инвайты тоже из LS будем грузить
             this.loadNotifications(); // @TGA при восстановлении из LS нотификации тоже из LS будем грузить
 
             await this.$root.$auth.fm.load(); // @TGA при восстановлении из LS френдов тоже из LS будем грузить
             await this.$root.$auth.dm.load(); // @TGA при восстановлении из LS диалоги тоже из LS будем грузить
-        }
-    },
-
-
-    /**
-     * загружает инвайты для навбара
-     */
-    async loadInvitations(){
-        let apiResponse = null;
-
-        try {
-            apiResponse = await this.$root.$api.invitationsList();
-        }
-        catch (e) {
-            window.console.warn(e.detailMessage);
-        }
-
-        if (apiResponse !== null) {
-            this.$root.$auth.invitationsLoad(apiResponse);
-            this.$root.$emit('invitationsLoad', {});
+            await this.$root.$auth.im.load(); // @TGA при восстановлении из LS диалоги тоже из LS будем грузить
         }
     },
 
@@ -179,7 +159,7 @@ methods: {
         let apiResponse = null;
 
         try {
-            apiResponse = await this.$root.$api.notificationsList();
+            apiResponse = await this.$root.$api.$notifications.list();
         }
         catch (e){
             window.console.warn(e.detailMessage);

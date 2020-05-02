@@ -126,7 +126,7 @@ methods: {
         let apiResponse = null;
 
         try {
-            apiResponse = await this.$root.$api.sendFriendshipInvitation(this.userData.id);
+            apiResponse = await this.$root.$api.$friend.sendFriendshipInvitation(this.userData.id);
         }
         catch (e) {
             window.console.warn(e.detailMessage);
