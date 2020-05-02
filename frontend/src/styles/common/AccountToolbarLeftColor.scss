@@ -55,3 +55,11 @@
         color: $iconHoverColor;
     }
 }
+
+#accountToolbarLeft {
+    .router-link-active {
+        .icon {
+            fill: $iconHoverColor;
+        }
+    }
+}
