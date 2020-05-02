@@ -81,20 +81,19 @@
                :vertically="true"
                class="modal">
             <template v-slot:header>
-                <div class="modal-header">
-                    <h5 class="modal-title" :id="modalID">Обновление пароля</h5>
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                        <span aria-hidden="true">&times;</span>
-                    </button>
+                <div class="modal-header border-0  justify-content-center pb-0">
+                    <h5 class="modal-title " :id="modalID">Обновление пароля</h5>
                 </div>
             </template>
-            <form>
+            <form id="refreshPassword" novalidate="novalidate">
                 <div class="form-group">
-                    <label for="old_password">Старый пароль</label>
+                    <i class="icon icon-key"></i>
+                    <label  class="d-none" for="old_password">Старый пароль</label>
                     <input type="password"
-                           class="form-control"
+                           class="lr-input form-control"
                            :class="{'is-invalid': oldPasswordError}"
                            id="old_password"
+                           placeholder="Старый пароль"
                            @input="oldPasswordError ? formErrors.oldPassword = null : null"
                            v-model="passwords.oldPassword">
                     <div v-if="oldPasswordError" class="invalid-feedback">
@@ -102,11 +101,13 @@
                     </div>
                 </div>
                 <div class="form-group">
-                    <label for="new_password">Новый пароль</label>
+                    <i class="icon icon-key"></i>
+                    <label  class="d-none" for="new_password">Новый пароль</label>
                     <input type="password"
-                           class="form-control"
+                           class="lr-input form-control"
                            :class="{'is-invalid': newPasswordError}"
                            id="new_password"
+                           placeholder="Новый пароль"
                            @input="newPasswordError ? formErrors.newPassword = null : null"
                            v-model="passwords.newPassword">
                     <div v-if="newPasswordError" class="invalid-feedback">
@@ -114,10 +115,12 @@
                     </div>
                 </div>
                 <div class="form-group">
-                    <label for="new_password_confirmation">Подтвердите новый пароль</label>
+                    <i class="icon icon-key"></i>
+                    <label  class="d-none" for="new_password_confirmation">Подтвердите новый пароль</label>
                     <input type="password"
-                           class="form-control"
+                           class="lr-input form-control"
                            :class="{'is-invalid': newPasswordConfirmationError}"
+                           placeholder="Подтвердите новый пароль"
                            id="new_password_confirmation"
                            @input="newPasswordConfirmationError ? formErrors.newPasswordConfirmation = null : null"
                            v-model="passwords.newPasswordConfirmation">
@@ -128,11 +131,13 @@
                 <div v-if="isFormSuccess" class="text-success mb-3">
                     {{ formSuccess }}
                 </div>
-                <button type="submit"
-                        class="btn btn-primary btn-submit"
-                        @click.prevent="changePassword">
-                    Обновить
-                </button>
+                <div class="form-group">
+                    <button type="submit"
+                            class="btn plz-btn btn-primary btn-submit"
+                            @click.prevent="changePassword">
+                        Обновить
+                    </button>
+                </div>
             </form>
         </Modal>
     </div>
