@@ -1,37 +1,37 @@
-import PliziInvitation from '../PliziInvitation.js';
+import PliziNotification from '../PliziNotification.js';
 import PliziCollection from './PliziCollection.js';
 
 /**
- * класс для работы со списком приглашений дружбы
+ * класс для работы со списком нотификаций
  */
-class PliziInvitationsCollection extends PliziCollection {
+class PliziNotificationsCollection extends PliziCollection {
 
-    localStorageKey = `pliziInvitations`;
+    localStorageKey = `pliziNotifications`;
 
-    restoreEventName = 'InvitationsIsRestored';
-    loadEventName = 'InvitationsIsLoaded';
-    updateEventName = 'InvitationsIsUpdated';
+    restoreEventName = 'NotificationsIsRestored';
+    loadEventName = 'NotificationsIsLoaded';
+    updateEventName = 'NotificationsIsUpdated';
 
     constructor(apiObj){
         super(apiObj);
-        window.console.log(`PliziInvitationsCollection constructor`);
+        window.console.log(`PliziNotificationsCollection constructor`);
     }
 
     /**
      * метод сравнения для сортировки
-     * @param {PliziInvitation} d1
-     * @param {PliziInvitation} d2
+     * @param {PliziNotification} d1
+     * @param {PliziNotification} d2
      * @returns {number}
      */
     compare(d1, d2){
-        if (d1.fullName === d2.fullName)
+        if (d1.createdAt.valueOf() === d2.createdAt.valueOf())
             return 0;
 
-        return d1.fullName > d2.fullName ? -1 : 1;
+        return d1.createdAt.valueOf() > d2.createdAt.valueOf() ? -1 : 1;
     }
 
 
-    onAddNewInvitation(evData){
+    onAddNewNotification(evData){
         this.add(evData);
         this.storeData();
         this.emit(this.updateEventName);
@@ -39,7 +39,7 @@ class PliziInvitationsCollection extends PliziCollection {
 
 
     new(data){
-        return new PliziInvitation(data);
+        return new PliziNotification(data);
     }
 
 
@@ -54,7 +54,7 @@ class PliziInvitationsCollection extends PliziCollection {
 
 
     /**
-     * @returns {PliziInvitation[]}
+     * @returns {PliziNotification[]}
      */
     asArray(){
         let arr = [];
@@ -70,7 +70,7 @@ class PliziInvitationsCollection extends PliziCollection {
 
 
     async load(){
-        window.console.log(`PliziInvitationsCollection::load`);
+        window.console.log(`PliziNotificationsCollection::load`);
         this.clean();
 
         //this.restoreData(); // заремлено временно
@@ -84,7 +84,7 @@ class PliziInvitationsCollection extends PliziCollection {
         let apiResponse = null;
 
         try {
-            apiResponse = await this.api.$friend.invitationsList();
+            apiResponse = await this.api.$notifications.list();
         }
         catch (e){
             window.console.warn(e.detailMessage);
@@ -107,8 +107,8 @@ class PliziInvitationsCollection extends PliziCollection {
         return true;
     }
 
-    invitationStateUpdated(invID, newData){
-        window.console.log(`invitationStateUpdated`);
+    notificationStateUpdated(invID, newData){
+        window.console.log(`notificationStateUpdated`);
         let invitation = this.get(invID);
 
         if (invitation) {
@@ -125,4 +125,4 @@ class PliziInvitationsCollection extends PliziCollection {
 
 }
 
-export { PliziInvitationsCollection as default }
+export { PliziNotificationsCollection as default }

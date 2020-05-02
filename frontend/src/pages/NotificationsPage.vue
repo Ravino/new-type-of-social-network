@@ -9,8 +9,9 @@
                 <div class="offset-2 col-8 bg-white-br20 p-4">
                     <div v-if="isNotificationsReady" class="plizi-notifications-list">
                         <ul v-if="notificationsList  &&  notificationsList.length>0" class="list-unstyled mb-0">
-                            <NotificationItem v-for="(notifItem, notifIndex) in notificationsList"
-                                              v-bind:key="notifIndex" v-bind:notification="notifItem">
+                            <NotificationItem v-for="notifItem in notificationsList"
+                                              v-bind:notification="notifItem"
+                                              v-bind:key="notifItem.id">
                             </NotificationItem>
                         </ul>
                         <div v-else class="">
@@ -50,7 +51,7 @@ data() {
 
 computed: {
     notificationsList(){
-        return this.$root.$auth.notifications;
+        return this.$root.$auth.nm.asArray();
     }
 },
 

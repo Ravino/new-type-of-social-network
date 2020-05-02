@@ -123,11 +123,10 @@ methods: {
             this.$root.$api.connectToChannel( evData.user.channel );
 
             // TODO: перенести отсюда - слишком часто будет вызываться
-            this.loadNotifications();
-
             await this.$root.$auth.fm.load();
             await this.$root.$auth.dm.load();
             await this.$root.$auth.im.load();
+            await this.$root.$auth.nm.load();
         }
     },
 
@@ -146,33 +145,12 @@ methods: {
             this.$root.$api.connectToChannel( evData.user.channel );
 
             // TODO: перенести отсюда - слишком часто будет вызываться
-            this.loadNotifications(); // @TGA при восстановлении из LS нотификации тоже из LS будем грузить
-
             await this.$root.$auth.fm.load(); // @TGA при восстановлении из LS френдов тоже из LS будем грузить
             await this.$root.$auth.dm.load(); // @TGA при восстановлении из LS диалоги тоже из LS будем грузить
             await this.$root.$auth.im.load(); // @TGA при восстановлении из LS диалоги тоже из LS будем грузить
+            await this.$root.$auth.nm.load(); // @TGA при восстановлении из LS диалоги тоже из LS будем грузить
         }
     },
-
-
-    async loadNotifications() {
-        let apiResponse = null;
-
-        try {
-            apiResponse = await this.$root.$api.$notifications.list();
-        }
-        catch (e){
-            window.console.warn(e.detailMessage);
-        }
-
-        if (apiResponse) {
-            this.$root.$auth.notificationsLoad(apiResponse);
-            this.$root.$emit('notificationsLoad', {});
-        }
-
-        return true;
-    },
-
 
     isAuthorized(){
         return this.$root.$isAuth;

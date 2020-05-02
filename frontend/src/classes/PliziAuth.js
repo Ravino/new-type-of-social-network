@@ -1,12 +1,14 @@
 import PliziAPI from './PliziAPI.js';
 import PliziAuthUser from './PliziAuthUser.js';
 
-import PliziNotification from './PliziNotification.js';
-
+/**
+ * TODO: @TGA - перепилить на коллецию
+ */
 import PliziFriendsManager from './PliziFriendsManager.js';
 
 import PliziDialogsCollection from './Collection/PliziDialogsCollection.js';
 import PliziInvitationsCollection from './Collection/PliziInvitationsCollection.js';
+import PliziNotificationsCollection from './Collection/PliziNotificationsCollection.js';
 
 class PliziAuth {
     /**
@@ -42,12 +44,6 @@ class PliziAuth {
     _api = null;
 
     /**
-     * @type {PliziNotification[]}
-     * @private
-     */
-    _notifications = [];
-
-    /**
      * ссылка на менеджер френдов
      * @type {PliziFriendsManager}
      * @private
@@ -67,6 +63,13 @@ class PliziAuth {
      * @private
      */
     _im = null;
+
+    /**
+     * ссылка на менеджер нотификаций
+     * @type {PliziNotificationsCollection}
+     * @private
+     */
+    _nm = null;
 
     /**
      * ссылка на менеджер френдов
@@ -93,6 +96,14 @@ class PliziAuth {
     }
 
     /**
+     * ссылка на менеджер нотификаций
+     * @returns {PliziNotificationsCollection}
+     */
+    get nm(){
+        return this._nm;
+    }
+
+    /**
      * @param {PliziAPI} apiObj
      */
     constructor(apiObj){
@@ -103,6 +114,7 @@ class PliziAuth {
         this._fm = new PliziFriendsManager(apiObj);
         this._dm = new PliziDialogsCollection(apiObj);
         this._im = new PliziInvitationsCollection(apiObj);
+        this._nm = new PliziNotificationsCollection(apiObj);
     }
 
     /**
@@ -199,43 +211,6 @@ class PliziAuth {
 
         localStorage.setItem('pliziChatChannel', this._channel);
     }
-
-/** **************************************************************************************************************** **/
-/** **************************************************************************************************************** **/
-/** **************************************************************************************************************** **/
-
-
-    /**
-     * @returns {number}
-     */
-    get notificationsNumber(){
-        return this._notifications.length;
-    }
-
-    /**
-     * @returns {PliziNotification[]}
-     */
-    get notifications(){
-        return this._notifications;
-    }
-
-    notificationsClean(){
-        this._notifications = [];
-    }
-
-
-    /**
-     * должен получать респонс от сервера, сам преобразует в коллекцию PliziNotification
-     * @param {object[]} notifs
-     */
-    notificationsLoad(notifs){
-        this.notificationsClean();
-
-        notifs.map( (invItem) => {
-            this._notifications.push( new PliziNotification(invItem) );
-        });
-    }
-
 }
 
 export { PliziAuth as default}
