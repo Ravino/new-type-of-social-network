@@ -1,6 +1,6 @@
 <template>
-    <div id="createCommunityBlock" class="col-4 pl-2">
-        <div class="bg-white-br20 h-100 py-3 px-3">
+    <div id="createCommunityBlock" class="bg-white-br20 col-4 mb-4 px-4 d-flex align-items-center ">
+        <div class="w-100">
             <button type="button"
                     @click="ShowCommunityCreateModal"
                     class="btn btn-block btn-primary rounded-pill py-3">

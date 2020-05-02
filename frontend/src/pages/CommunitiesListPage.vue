@@ -13,7 +13,7 @@
             <div class="row">
                 <div class="col-sm-10 col-md-10 col-lg-8 col-xl-8">
                     <div v-if="isCommunitiesLoaded" class="plizi-communities-list ">
-                        <ul v-if="communitiesList  &&  communitiesList.length>0" class="d-block w-100 p-0">
+                        <ul v-if="communitiesList  &&  communitiesList.length>0" class="d-flex flex-wrap w-100 p-0 ">
                             <CommunityItem v-for="(comItem, comIndex) in communitiesList"
                                            v-bind:community="comItem"
                                            v-bind:canSubscribe="false"

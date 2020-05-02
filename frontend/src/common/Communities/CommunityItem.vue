@@ -1,6 +1,6 @@
 <template>
-    <li class="plizi-community-item-wrp bg-white-br20 media m-0 py-4 px-4 w-50 mb-2">
-        <div class="plizi-community-item w-50 d-flex flex-row align-items-start">
+    <li class="plizi-community-item-wrp bg-white-br20 media  py-4 px-4  mb-2">
+        <div class="plizi-community-item d-flex flex-row align-items-start">
 
             <router-link :to="`/community-`+community.id" tag="a" class="plizi-sr-item-pic mr-3 d-">
                 <img class="plizi-community-item-img rounded-circle overflow-hidden"
