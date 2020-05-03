@@ -19,8 +19,7 @@ import NotificationsPage from '../pages/NotificationsPage.vue';
 import CommunitiesListPage from '../pages/CommunitiesListPage.vue';
 import CommunitiesManagePage from '../pages/CommunitiesManagePage.vue';
 import CommunitiesPopularPage from '../pages/CommunitiesPopularPage.vue';
-
-import PliziAuth from '../classes/PliziAuth.js';
+import CommunityPage from '../pages/CommunityPage.vue';
 
 const routes = [
     {path: '/', redirect: '/login', isGuest: true},
@@ -43,6 +42,7 @@ const routes = [
     {path: '/communities', component: CommunitiesListPage, name: 'CommunitiesListPage', meta: {title: 'Plizi: Мои сообщества'}, props: true },
     {path: '/manage-communities', component: CommunitiesManagePage, name: 'CommunitiesManagePage', meta: {title: 'Plizi: Управление сообществами'}, props: true },
     {path: '/popular-communities', component: CommunitiesPopularPage, name: 'CommunitiesPopularPage', meta: {title: 'Plizi: Популярные сообщества'}, props: true },
+    {path: '/community-:id', component: CommunityPage, name: 'CommunityPage', meta: {title: 'Plizi: Популярные сообщества'}, props: true },
 ];
 
 const router = new VueRouter({

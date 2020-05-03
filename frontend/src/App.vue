@@ -102,6 +102,9 @@ methods: {
         window.localStorage.removeItem('pliziChatChannel');
         window.localStorage.removeItem('pliziLastSearch');
         window.localStorage.removeItem('pliziDialogs');
+        window.localStorage.removeItem('pliziFriends');
+        window.localStorage.removeItem('pliziInvitations');
+        window.localStorage.removeItem('pliziNotifications');
 
         if (evData.redirect) {
             this.$router.push({path: '/login'});

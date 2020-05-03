@@ -44,6 +44,10 @@ methods: {
     }
 },
 
+created(){
+    this.$root.$isAuth = false;
+},
+
 mounted() {
     this.$root.$emit('afterSuccessLogout', {redirect: false});
 },

@@ -4,7 +4,7 @@
         <div class="w-100 ">
             <div class="row w-100 px-0 mr-0">
                 <div class="d-flex align-items-center col-sm-1 col-md-1 col-lg-1 col-xl-1 py-lg-0 p-xl-0 ">
-                    <router-link v-if="isGotoLogin" :to="`/login`" tag="a" class="navbar-brand w-100 d-block text-center mx-auto h-auto my-0">
+                    <router-link v-if="isGotoLogin" :to="`/logout`" tag="a" class="navbar-brand w-100 d-block text-center mx-auto h-auto my-0">
                         <IconPliziLogo />
                     </router-link>
                     <router-link v-else :to="{name: 'NewsPage'}" tag="a" class="navbar-brand w-100 d-block text-center mx-auto h-auto my-0">

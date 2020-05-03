@@ -38,15 +38,15 @@ class PliziCommunitiesAPI extends PliziBaseAPI {
     }
 
 
-    async getCommunity(userID){
-        let response = await this.axios.get( 'api/communities/'+userID, this.authHeaders )
+    async getCommunity(communityID){
+        let response = await this.axios.get( 'api/communities/'+communityID, this.authHeaders )
             .catch( ( error ) => {
                 this.checkIsTokenExpires( error, `$communities.getCommunity` );
                 throw new PliziAPIError( `$communities.getCommunity`, error.response );
-            } );
+            });
 
         if ( response.status === 200 ){
-            return response.data.data.list;
+            return response.data.data;
         }
 
         return null;
@@ -127,6 +127,28 @@ class PliziCommunitiesAPI extends PliziBaseAPI {
 
         return null;
     }
+
+
+    /**
+     * Получение постов сообщества
+     * @param {number} communityID - ID сообщества, посты которого пытаемся получить
+     * @returns {object[]|null}
+     * @throws PliziAPIError
+     */
+    async posts(communityID){
+        let response = await this.axios.get( `/communities/${communityID}/posts`, this.authHeaders )
+            .catch( ( error ) => {
+                this.checkIsTokenExpires( error, `$communities.posts` );
+                throw new PliziAPIError( `$communities.posts`, error.response );
+            } );
+
+        if ( response.status === 200 ){
+            return response.data.data.list;
+        }
+
+        return null;
+    }
+
 
 }
 
