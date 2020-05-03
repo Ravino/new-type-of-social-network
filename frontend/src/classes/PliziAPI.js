@@ -546,13 +546,11 @@ class PliziAPI {
             if (channelID=== this.channel  &&  `user.notification`===data.event_type) {
 
                 //window.console.log(JSON.stringify(data), `user.notification`);
-                /**
-                 * TODO: @TGA Ниже костыль, потому что ьэк не присылает все данные
-                 **/
                 let notifData = data.data;
-                notifData.id = new Date().valueOf();
-                notifData.createdAt = new Date().valueOf();
-                notifData.readAt = null;
+                /** TODO: @TGA Ниже костыль, потому что ьэк не присылает все данные **/
+                //notifData.id = new Date().valueOf();
+                //notifData.createdAt = new Date().valueOf();
+                //notifData.readAt = null;
 
                 this.emit('UserNotification', notifData);
             }

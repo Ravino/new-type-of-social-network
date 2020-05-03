@@ -32,7 +32,9 @@
                 <IconMessageShort v-else />
             </button>
 
-            <FriendListItemMenu v-bind:friend="friend" @friendShipStop="onFriendShipStop">
+            <FriendListItemMenu v-bind:friend="friend"
+                                @FriendAddToFavorites="onFriendAddToFavorites"
+                                @FriendshipStop="onFriendshipStop">
             </FriendListItemMenu>
         </div>
     </li>
@@ -63,7 +65,40 @@ data(){
     }
 },
 methods: {
-    onFriendShipStop(){
+    onFriendAddToFavorites(){
+        this.addFriendToFavorites();
+    },
+
+    async addFriendToFavorites(){
+        let apiResponse = null;
+
+        try {
+            apiResponse = await this.$root.$api.$friend.addToFavorites( this.friend.id );
+        } catch (e){
+            window.console.warn( e.detailMessage );
+            throw e;
+        }
+
+        this.isPrepareToRemoved = true;
+
+        if ( apiResponse ) {
+            window.console.log(apiResponse, `apiResponse`);
+
+            let successMsg = `Ваш друг <b>${this.friend.fullName}</b> добавлен в Избранные`;
+            switch(this.friend.sex) {
+                case 'f': successMsg = `<b>${this.friend.fullName}</b> добавлена в Избранные`; break;
+                case 'm': successMsg = `<b>${this.friend.fullName}</b> добавлен в Избранные`; break;
+            }
+
+            this.$root.$alert(successMsg, `bg-success`, 3);
+        }
+        else {
+            let errMsg = `Не получилось добавить <b>${this.friend.fullName}</b> в Избранные`;
+            this.$root.$alert(errMsg, `bg-warning`, 3);
+        }
+    },
+
+    onFriendshipStop(){
         this.stopFriendship();
     },
 

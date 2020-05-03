@@ -59,6 +59,7 @@
 <script>
 import FriendsListMixin from '../mixins/FriendsListMixin.js';
 import FriendListItem from '../components/FriendListItem.vue';
+import PliziFriend from "../classes/PliziFriend";
 
 export default {
 name : 'FriendsListPage',
@@ -76,6 +77,20 @@ data(){
 methods : {
     friendsListSelect( wm ){
         this.wMode = wm;
+    },
+
+    async loadFavorites() {
+        let apiResponse;
+
+        try {
+            apiResponse = await this.$root.$api.$friend.favorites();
+        } catch (e) {
+            console.warn(e.detailMessage);
+        }
+
+        if (apiResponse) {
+            window.console.log(apiResponse, `apiResponse`);
+        }
     },
 },
 
@@ -98,5 +113,9 @@ computed : {
         return ret;
     },
 },
+
+mounted(){
+    //this.loadFavorites();
+}
 }
 </script>

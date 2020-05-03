@@ -11,9 +11,15 @@
 
         <div class="dropdown-menu dropdown-menu-right py-3" :aria-labelledby="`friend${this.friend.id}`">
             <div class="nav-item">
-                <router-link tag="a" class="dropdown-item px-3 py-1" :to="`/user`+friend.id">
+                <router-link tag="a" class="dropdown-item px-3 py-1" :to="`/user-`+friend.id">
                     Смотреть профиль
                 </router-link>
+            </div>
+
+            <div class="nav-item">
+                <span class="dropdown-item px-3 py-1" @click.prevent="onAddToFavoritesClick">
+                    Добавить в Избранные
+                </span>
             </div>
 
             <div class="nav-item">
@@ -23,7 +29,7 @@
             </div>
 
             <div class="nav-item">
-                <span class="dropdown-item px-3 py-1" @click.prevent="onStopfriendClick">
+                <span class="dropdown-item px-3 py-1" @click.prevent="onStopFriendClick">
                     Не дружить
                 </span>
             </div>
@@ -41,11 +47,17 @@ props : {
 },
 
 methods: {
-    onStopfriendClick(){
-        this.$emit( 'friendShipStop', {
+    onStopFriendClick(){
+        this.$emit( 'FriendshipStop', {
             friendId: this.friend.id
         });
-    }
+    },
+
+    onAddToFavoritesClick(){
+        this.$emit( 'FriendAddToFavorites', {
+            friendId: this.friend.id
+        });
+    },
 }
 
 }
