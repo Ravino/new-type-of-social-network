@@ -73,7 +73,7 @@ class PliziInvitationsCollection extends PliziCollection {
         window.console.log(`PliziInvitationsCollection::load`);
         this.clean();
 
-        //this.restoreData(); // заремлено временно
+        this.restoreData(); // заремлено временно
 
         if (this.collection.size > 0) {
             this.isLoad = true;

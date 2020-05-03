@@ -44,7 +44,7 @@ class PliziNotificationsCollection extends PliziCollection {
 
 
     /**
-     * поиск приглашения по ID
+     * поиск нотификации по ID
      * @param {number} ID - ID нужной сущности
      * @returns {PliziInvitation} - нужная сущность, или UNDEFINED если не нашли
      */

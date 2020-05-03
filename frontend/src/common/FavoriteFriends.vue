@@ -26,7 +26,7 @@ import FavoriteFriendItem from './FavoriteFriendItem.vue';
 import Spinner from '../common/Spinner.vue';
 
 export default {
-name: 'FavoritFriends',
+name: 'FavoriteFriends',
 components : { Spinner, FavoriteFriendItem },
 props : {
     isNarrow: {
@@ -37,7 +37,7 @@ props : {
 },
 data () {
     return {
-        isDataReady : false,
+        isDataReady : true,
     }
 },
 
@@ -47,13 +47,19 @@ methods : {
 
 computed: {
     favoritFriends(){
-        return (this.isDataReady ? this.$root.$auth.fm.favorites : []);
+        return this.$root.$auth.fm.favorites;
     }
 },
 
 created(){
-    this.$root.$on('friendsIsLoad', ()=>{
-        this.isDataReady = true;
+    this.$root.$on(this.$root.$auth.fm.loadEventName, ()=>{
+        window.console.log(this.$root.$auth.fm.loadEventName, `FavoritFriends`);
+        this.$forceUpdate();
+    });
+
+    this.$root.$on(this.$root.$auth.fm.restoreEventName, ()=>{
+        window.console.log(this.$root.$auth.fm.restoreEventName, `FavoritFriends`);
+        this.$forceUpdate();
     });
 }
 

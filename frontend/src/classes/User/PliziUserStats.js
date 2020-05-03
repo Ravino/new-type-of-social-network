@@ -44,6 +44,10 @@ class PliziUserStats {
         return this._friends;
     }
 
+    get totalFriendsCount(){
+        return this._friends;
+    }
+
     set notifications( value ){
         this._notifications = value;
     }

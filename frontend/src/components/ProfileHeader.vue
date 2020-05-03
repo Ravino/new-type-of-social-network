@@ -67,7 +67,7 @@
                     <span class="numbers-bottom">Подписчиков</span>
                 </div>
                 <div class="plz-profile-userdetails-numbers text-center pt-4 px-4">
-                    <span class="numbers-top" v-html="sBeaty(userData.friendsNumber)"></span>
+                    <span class="numbers-top" v-html="sBeaty(usrFriendsNumber)"></span>
                     <span class="numbers-bottom">Друзей</span>
                 </div>
                 <div class="plz-profile-userdetails-numbers text-center pt-4 px-4">
@@ -90,20 +90,26 @@
 </template>
 
 <script>
-import IconAddUser from "../icons/IconAddUser.vue";
-import IconLocation from "../icons/IconLocation";
+import IconAddUser from '../icons/IconAddUser.vue';
+import IconLocation from '../icons/IconLocation';
 
 import PliziUser from '../classes/PliziUser.js';
+import PliziAuthUser from '../classes/PliziAuthUser.js';
 
 export default {
 name: 'ProfileHeader',
 components: {IconLocation, IconAddUser},
 props: {
-    userData: PliziUser|Object,
+    userData: PliziUser|PliziAuthUser,
     isOwner : Boolean
 },
 data() {
     return {
+    }
+},
+computed: {
+    usrFriendsNumber(){
+        return (this.isOwner) ? this.userData.stats.totalFriendsCount : this.userData.friendsNumber;
     }
 },
 methods: {

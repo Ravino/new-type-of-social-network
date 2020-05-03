@@ -83,7 +83,7 @@ methods: {
             setTimeout(()=>{
                 this.isRemoved = true;
 
-                this.$root.$auth.fm.removeByID(this.friend.id);
+                this.$root.$auth.fm.delete(this.friend.id);
 
                 this.$root.$emit( 'friendShipStop', {
                     friendId: this.friend.id
