@@ -80,7 +80,7 @@ class PliziUser {
         this._isOnline = inputData.isOnline;
         this._lastActivity = new Date(inputData.lastActivity);
 
-        this._profile = new PliziProfile(inputData.profile);
+        this._profile = (inputData.profile) ? new PliziProfile(inputData.profile) : null;
 
         // TODO: @TGA переписать потом на загрузку реальных данных
         this._subscribersNumber = Math.floor(Math.random() * 10000);
@@ -261,7 +261,7 @@ class PliziUser {
             id: this._id,
             isOnline: this._isOnline,
             lastActivity: this._lastActivity.valueOf(),
-            profile: this.profile.toJSON(),
+            profile: (this.profile) ? this.profile.toJSON() : null,
             mutualFriendsCount: this.mutualFriendsCount
         };
     }

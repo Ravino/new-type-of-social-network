@@ -32,6 +32,8 @@ class PliziInvitationsCollection extends PliziCollection {
 
 
     onAddNewInvitation(evData){
+        window.console.log(evData, `onAddNewInvitation`);
+
         this.add(evData);
         this.storeData();
         this.emit(this.updateEventName);

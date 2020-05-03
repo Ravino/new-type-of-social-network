@@ -20,7 +20,6 @@ import CommunitiesListPage from '../pages/CommunitiesListPage.vue';
 import CommunitiesManagePage from '../pages/CommunitiesManagePage.vue';
 import CommunitiesPopularPage from '../pages/CommunitiesPopularPage.vue';
 
-import PliziAPI from '../classes/PliziAPI.js';
 import PliziAuth from '../classes/PliziAuth.js';
 
 const routes = [
@@ -58,6 +57,10 @@ function routerForcedLogout(next, to) {
     window.localStorage.removeItem('pliziUser');
     window.localStorage.removeItem('pliziChatChannel');
     window.localStorage.removeItem('pliziLastSearch');
+    window.localStorage.removeItem('pliziFriends');
+    window.localStorage.removeItem('pliziDialogs');
+    window.localStorage.removeItem('pliziInvitations');
+    window.localStorage.removeItem('pliziNotifications');
 
     window.localStorage.setItem('pliziRedirectTo', to.path);
 
@@ -92,11 +95,16 @@ async function checkRouteAuth(to, from, next) {
 
     await Vue.nextTick(); /** @TGA иначе загрузка из localStorage не срабатывает **/
 
+    /** @TGA не уверен **/
+    if (window.app.$root.$isAuth === true) {
+        updateTitle(to, next);
+        return;
+    }
+
     const gwt = window.localStorage.getItem('pliziJWToken');
 
     if ((gwt + '') !== 'null' && gwt !== '') {
-        const tstUser = new PliziAuth();
-        const tstUserData = tstUser.restoreData();
+        const tstUserData = window.app.$root.$auth.restoreData()
 
         if (tstUserData) {
             window.app.$root.$emit('AfterUserRestore', {

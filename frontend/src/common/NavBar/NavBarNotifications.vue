@@ -51,14 +51,7 @@ methods : {
     },
 
     updateNotifications(){
-        window.console.log(`updateNotifications`);
         this.$forceUpdate();
-        //this.notificationsNumber = 0;
-        //
-        //// @TGA хак чтобы отображало актуальное кол-во
-        //setTimeout( () => {
-        //    this.notificationsNumber = this.$root.$auth.nm.size;
-        //}, 10 );
     }
 },
 

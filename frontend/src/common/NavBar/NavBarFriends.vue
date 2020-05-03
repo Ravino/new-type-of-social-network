@@ -20,6 +20,10 @@
                                   v-bind:key="invIndex" v-bind:invitation="invItem">
                 </InvitationItem>
             </ul>
+
+            <div class="invitations-dropdown-footer border-top">
+                <router-link to="/invitations" tag="a" class="invitations-link d-block text-center pt-1 pb-3">Посмотреть все</router-link>
+            </div>
         </div>
 
     </div>
@@ -34,35 +38,30 @@ name : 'NavBarFriends',
 components : { IconFriends, InvitationItem },
 data(){
     return {
-        invitationsNumber : 0
+
     }
 },
 methods : {
     updateInvitations(){
-        //window.console.log(this.$root.$auth.invitationsNumber, `updateInvitations`);
-
-        this.invitationsNumber = 0;
-
-        // @TGA хак чтобы отображало актуальное кол-во
-        setTimeout( () => {
-            this.invitationsNumber = this.$root.$auth.invitationsNumber;
-        }, 10 );
+        window.console.log(`updateInvitations`);
+        this.$forceUpdate();
     }
 },
 
 computed: {
-    //invitationsNumber(){
-    //    /** @TGA без этого тупого добавления 0 автообновление не работает :( **/
-    //    return (this.$root.$auth.invitationsNumber + 1) - 1;
-    //},
-    //
+    invitationsNumber(){
+        return this.$root.$auth.im.size;
+    },
+
     invitationsList(){
-        return this.$root.$auth.invitations;
+        return this.$root.$auth.im.asArray();
     }
 },
 
 created(){
-    this.$root.$on('invitationsLoad',  this.updateInvitations);
+    this.$root.$on(this.$root.$auth.im.restoreEventName,  this.updateInvitations);
+    this.$root.$on(this.$root.$auth.im.loadEventName,  this.updateInvitations);
+    this.$root.$on(this.$root.$auth.im.updateEventName,  this.updateInvitations);
 }
 
 }

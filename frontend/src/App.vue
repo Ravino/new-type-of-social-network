@@ -166,6 +166,7 @@ methods: {
 
 created(){
     this.$root.$api = new PliziAPI(this.$root, '');
+    window.console.log(`call to new PliziAuth`);
     this.$root.$auth = new PliziAuth(this.$root.$api);
 
     this.$root.$on('afterSuccessLogin',  this.afterSuccessLogin);
@@ -200,6 +201,10 @@ created(){
 
     this.$root.$on('UserNotification', (evData)=>{
         this.$root.$auth.nm.onAddNewNotification(evData);
+
+        if (evData.data.notificationType === `friendships.sent`) {
+            this.$root.$auth.im.onAddNewInvitation(evData);
+        }
     });
 }
 
