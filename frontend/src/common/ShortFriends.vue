@@ -1,5 +1,5 @@
 <template>
-    <div id="shortFriends" class="plz-short-friends overflow-hidden">
+    <div v-if="this.$root.$auth.fm.amount>0" id="shortFriends" class="plz-short-friends overflow-hidden">
 
         <div class="d-flex flex-row justify-content-start pb-3 pt-5">
             <h6 class="plz-sf-title w-auto mt-2 ml-3">Друзья

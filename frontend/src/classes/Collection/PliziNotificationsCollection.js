@@ -59,11 +59,22 @@ class PliziNotificationsCollection extends PliziCollection {
     asArray(){
         let arr = [];
 
-        this.collection.forEach((value) => {
-            arr.push( value );
+        this.collection.forEach((notifItem) => {
+            arr.push( notifItem );
         });
 
         arr.sort( this.compare );
+
+        return arr;
+    }
+
+
+    get idsList(){
+        let arr = [];
+
+        this.collection.forEach((notifItem) => {
+            arr.push( notifItem.id );
+        });
 
         return arr;
     }
@@ -73,13 +84,15 @@ class PliziNotificationsCollection extends PliziCollection {
         window.console.log(`PliziNotificationsCollection::load`);
         this.clean();
 
-        //this.restoreData(); // заремлено временно
+        this.restoreData(); // заремлено временно
 
         if (this.collection.size > 0) {
             this.isLoad = true;
             this.emit(this.restoreEventName);
             return true;
         }
+
+        window.console.log(`PliziNotificationsCollection::load 22`);
 
         let apiResponse = null;
 
@@ -91,8 +104,8 @@ class PliziNotificationsCollection extends PliziCollection {
         }
 
         if (apiResponse) {
-            apiResponse.map( (dialogItem) => {
-                this.add( dialogItem );
+            apiResponse.map( (notifItem) => {
+                this.add( notifItem );
             });
 
             this.storeData();

@@ -1,0 +1,174 @@
+[
+    {
+        "id": "e131902a-4773-44fb-a13c-f85c32a1762e",
+        "data": {
+            "sender": {
+                "firstName": "Виктория",
+                "lastName": "Мамонтовa",
+                "sex": "f",
+                "userPic": "https://plizi.s3.eu-north-1.amazonaws.com/images/originals/D1uFW6C2CC1OcBuAzqZfQanImBQNF6hdxzHrWpGN.png",
+                "lastActivity": 1588455069,
+                "id": 3
+            },
+            "body": "User {0, string} updated profile photo",
+            "notificationType": "user.profile.image.updated"
+        },
+        "readAt": null,
+        "createdAt": 1588455086
+    },
+    {
+        "id": "d2cab427-eb00-453f-bf9c-1fbdbf54ff9a",
+        "data": {
+            "sender": {
+                "firstName": "Евгения",
+                "lastName": "Ширяевa",
+                "sex": "f",
+                "userPic": "https://i.picsum.photos/id/204/500/500.jpg",
+                "lastActivity": 1588439489,
+                "id": 505
+            },
+            "body": "User {0, string} sent you friend request",
+            "notificationType": "friendships.sent"
+        },
+        "readAt": null,
+        "createdAt": 1588439500
+    },
+    {
+        "id": "cb57eddb-e293-4ceb-906d-4a8de664d305",
+        "data": {
+            "sender": {
+                "firstName": "Флорентина",
+                "lastName": "Красильников",
+                "sex": "m",
+                "userPic": "https://i.picsum.photos/id/356/500/500.jpg",
+                "lastActivity": 1588439452,
+                "id": 489
+            },
+            "body": "User {0, string} sent you friend request",
+            "notificationType": "friendships.sent"
+        },
+        "readAt": null,
+        "createdAt": 1588439462
+    },
+    {
+        "id": "6627aadb-6deb-45e5-84f6-e013b9165abb",
+        "data": {
+            "sender": {
+                "firstName": "Мирослав",
+                "lastName": "Куликовa",
+                "sex": "m",
+                "userPic": "https://i.picsum.photos/id/214/500/500.jpg",
+                "lastActivity": 1588438117,
+                "id": 504
+            },
+            "body": "User {0, string} sent you friend request",
+            "notificationType": "friendships.sent"
+        },
+        "readAt": null,
+        "createdAt": 1588438280
+    },
+    {
+        "id": "cb436924-7f0d-4650-b740-38a6642c59a9",
+        "data": {
+            "sender": {
+                "firstName": "Виктория",
+                "lastName": "Мамонтовa",
+                "sex": "f",
+                "userPic": "https://plizi.s3.eu-north-1.amazonaws.com/images/originals/D1uFW6C2CC1OcBuAzqZfQanImBQNF6hdxzHrWpGN.png",
+                "lastActivity": 1588143312,
+                "id": 3,
+                "postId": 37
+            },
+            "body": "User {0, string} created new post",
+            "notificationType": "user.post.created"
+        },
+        "readAt": null,
+        "createdAt": 1588143457
+    },
+    {
+        "id": "4a44853f-8ad2-4fc7-ab80-dac86fe43aa4",
+        "data": {
+            "sender": {
+                "firstName": "Виктория",
+                "lastName": "Мамонтовa",
+                "sex": "f",
+                "userPic": "https://plizi.s3.eu-north-1.amazonaws.com/images/originals/D1uFW6C2CC1OcBuAzqZfQanImBQNF6hdxzHrWpGN.png",
+                "lastActivity": 1588143312,
+                "id": 3,
+                "postId": 36
+            },
+            "body": "User {0, string} created new post",
+            "notificationType": "user.post.created"
+        },
+        "readAt": null,
+        "createdAt": 1588143331
+    },
+    {
+        "id": "06c08475-5b6b-42f7-beb4-1af450ed216a",
+        "data": {
+            "sender": {
+                "firstName": "Виктория",
+                "lastName": "Мамонтовa",
+                "sex": "f",
+                "userPic": "https://plizi.s3.eu-north-1.amazonaws.com/images/originals/fl4RKwKsutdGtaabWl6EXgTiSeQN2KLYrmZSVY2g.jpeg",
+                "lastActivity": 1588088609,
+                "id": 3
+            },
+            "body": "User {0, string} updated profile photo",
+            "notificationType": "user.profile.image.updated"
+        },
+        "readAt": null,
+        "createdAt": 1588088648
+    },
+    {
+        "id": "3a9cb5db-17ff-4124-b81d-7279554ce23a",
+        "data": {
+            "sender": {
+                "firstName": "Виктория",
+                "lastName": "Мамонтовa",
+                "sex": "f",
+                "userPic": "https://plizi.s3.eu-north-1.amazonaws.com/images/originals/B5Yz47lqoJZ6vYTJ331jQPitO9mBkugHmYkFvkzF.png",
+                "lastActivity": 1588088609,
+                "id": 3
+            },
+            "body": "User {0, string} updated profile photo",
+            "notificationType": "user.profile.image.updated"
+        },
+        "readAt": null,
+        "createdAt": 1588088635
+    },
+    {
+        "id": "424c5341-6135-4c81-aa2c-f6bb75b9e079",
+        "data": {
+            "sender": {
+                "firstName": "Евгений",
+                "lastName": "Комаров",
+                "sex": "m",
+                "userPic": "https://plizi.s3.eu-north-1.amazonaws.com/images/originals/jZ9CpVeI2kJ96EAwp6VZsQKWU0yO10dUsNGvo6WN.jpeg",
+                "lastActivity": 1587810152,
+                "id": 8
+            },
+            "body": "User {0, string} sent you friend request",
+            "notificationType": "friendships.accepted"
+        },
+        "readAt": null,
+        "createdAt": 1587810156
+    },
+    {
+        "id": "62a8f0da-c7d2-4232-832f-f76560b298ea",
+        "data": {
+            "sender": {
+                "firstName": "Виктория",
+                "lastName": "Мамонтовa",
+                "sex": "f",
+                "userPic": "https://plizi.s3.eu-north-1.amazonaws.com/images/originals/p4PKNUWBDI4NI6PB6FQmnyj2RcHWlVthXGKdxxnp.png",
+                "lastActivity": 1587739399,
+                "id": 3
+            },
+            "body": "User {0, string} updated profile photo",
+            "notificationType": "user.profile.image.updated"
+        },
+        "readAt": null,
+        "createdAt": 1587742350
+    }
+]

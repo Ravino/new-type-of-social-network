@@ -128,7 +128,6 @@ class PliziFriendAPI extends PliziBaseAPI {
      * @throws PliziAPIError
      */
     async invitationsList() {
-        window.console.log(`invitationsList`);
         let response = await this.axios.get('api/user/friendship/pending', this.authHeaders)
             .catch((error) => {
                 this.checkIsTokenExpires(error, '$friends.invitationsList');

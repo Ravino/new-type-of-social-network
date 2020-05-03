@@ -172,7 +172,9 @@ methods: {
     scrollToEnd() {
         return setTimeout(() => {
             const container = this.$el.querySelector('.ps-container');
-            container.scrollTop = container.scrollHeight;
+            if (container) {
+                container.scrollTop = container.scrollHeight;
+            }
         }, 200);
     },
 

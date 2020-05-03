@@ -51,6 +51,11 @@ data() {
         isFocused: false
     }
 },
+computed: {
+    lastSearch(){
+        return this.$root.$lastSearch;
+    }
+},
 methods: {
     onFocus() {
         this.isFocused = true

@@ -114,7 +114,7 @@ methods: {
             window.console.log(`afterUserLoad`);
 
             this.$root.$isAuth = true;
-            this.$root.$lastSearch = window.localStorage.getItem('pliziLastSearch');
+            this.restoreLastSearch();
 
             this.$root.$api.token = evData.token;
             this.$root.$api.channel = evData.user.channel;
@@ -136,7 +136,7 @@ methods: {
             window.console.log(`afterUserRestore`);
 
             this.$root.$isAuth = true;
-            this.$root.$lastSearch = window.localStorage.getItem('pliziLastSearch');
+            this.restoreLastSearch();
 
             this.$root.$api.token = evData.token;
             this.$root.$api.channel = evData.user.channel;
@@ -156,6 +156,11 @@ methods: {
         return this.$root.$isAuth;
     },
 
+    restoreLastSearch(){
+        const ls = localStorage.getItem('pliziLastSearch');
+        window.console.log(ls, 'restoreLastSearch');
+        this.$root.$lastSearch = (ls) ? ls : ``;
+    }
 },
 
 
@@ -191,6 +196,10 @@ created(){
 
     this.$root.$on('NewChatDialog', (evData)=>{
         this.$root.$auth.dm.onAddNewDialog(evData);
+    });
+
+    this.$root.$on('UserNotification', (evData)=>{
+        this.$root.$auth.nm.onAddNewNotification(evData);
     });
 }
 

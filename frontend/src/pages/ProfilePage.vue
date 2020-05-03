@@ -15,13 +15,19 @@
 
                 <ProfileFilter @wallPostsSelect="wallPostsSelectHandler"></ProfileFilter>
 
-                <Post v-for="postItem in filteredPosts"
+                <Post v-if="userPosts  &&  userPosts.length>0"  v-for="postItem in filteredPosts"
                       :key="postItem.id"
                       :post="postItem"
                       @deletePost="deletePost"
                       @restorePost="restorePost"
                       @onEditPost="onEditPost">
                 </Post>
+                <div v-else>
+                    <div class="alert alert-info w-100 p-5 text-center">
+                        Тут у Вас пока пусто.<br />
+                        Самое время написать что-то, подружиться с кем-то и вступить в сообщество.
+                    </div>
+                </div>
             </div>
 
         </div>

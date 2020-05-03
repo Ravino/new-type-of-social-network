@@ -25,7 +25,6 @@ class PliziCollection {
      */
     _api = null;
 
-
     /**
      * @type {Map}
      * @private
@@ -245,9 +244,9 @@ class PliziCollection {
         return ret;
     }
 
-    emit(){
-        if (this.eventName) {
-            this.api.emit(this.eventName, {});
+    emit(eventName, eventData){
+        if (eventName) {
+            this.api.emit(eventName, eventData);
         }
     }
 
