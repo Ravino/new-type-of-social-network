@@ -12,11 +12,6 @@ class PliziDialogsCollection extends PliziCollection {
     loadEventName = 'DialogsIsLoaded';
     updateEventName = 'DialogsIsUpdated';
 
-    constructor(apiObj){
-        super(apiObj);
-        window.console.log(`PliziDialogsCollection constructor`);
-    }
-
     /**
      * метод сравнения для сортировки, диалоги сортируем по дате
      * @param {PliziDialog} d1

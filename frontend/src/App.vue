@@ -111,9 +111,6 @@ methods: {
 
     async afterUserLoad(evData) {
         if (evData.token !== ``  &&  evData.user) {
-            window.console.log(`afterUserLoad`);
-
-            this.$root.$isAuth = true;
             this.restoreLastSearch();
 
             this.$root.$api.token = evData.token;
@@ -121,21 +118,15 @@ methods: {
 
             this.$root.$auth.updateAuthUserData( evData.user, evData.token );
             this.$root.$api.connectToChannel( evData.user.channel );
+            this.$root.$isAuth = true;
 
-            // TODO: перенести отсюда - слишком часто будет вызываться
-            await this.$root.$auth.fm.load();
-            await this.$root.$auth.dm.load();
-            await this.$root.$auth.im.load();
-            await this.$root.$auth.nm.load();
+            this.$root.$emit('PersistentCollectionsReload', { });
         }
     },
 
 
     async afterUserRestore(evData) {
         if (evData.token !== ``  &&  evData.user) {
-            window.console.log(`afterUserRestore`);
-
-            this.$root.$isAuth = true;
             this.restoreLastSearch();
 
             this.$root.$api.token = evData.token;
@@ -143,12 +134,9 @@ methods: {
 
             this.$root.$auth.updateAuthUserData( evData.user, evData.token );
             this.$root.$api.connectToChannel( evData.user.channel );
+            this.$root.$isAuth = true;
 
-            // TODO: перенести отсюда - слишком часто будет вызываться
-            await this.$root.$auth.fm.load(); // @TGA при восстановлении из LS френдов тоже из LS будем грузить
-            await this.$root.$auth.dm.load(); // @TGA при восстановлении из LS диалоги тоже из LS будем грузить
-            await this.$root.$auth.im.load(); // @TGA при восстановлении из LS диалоги тоже из LS будем грузить
-            await this.$root.$auth.nm.load(); // @TGA при восстановлении из LS диалоги тоже из LS будем грузить
+            this.$root.$emit('PersistentCollectionsReload', { });
         }
     },
 
@@ -158,23 +146,29 @@ methods: {
 
     restoreLastSearch(){
         const ls = localStorage.getItem('pliziLastSearch');
-        window.console.log(ls, 'restoreLastSearch');
         this.$root.$lastSearch = (ls) ? ls : ``;
+    },
+
+    async onPersistentCollectionsReload(){
+        await this.$root.$auth.fm.load();
+        await this.$root.$auth.dm.load();
+        await this.$root.$auth.im.load();
+        await this.$root.$auth.nm.load();
     }
 },
 
 
 created(){
     this.$root.$api = new PliziAPI(this.$root, '');
-    window.console.log(`call to new PliziAuth`);
     this.$root.$auth = new PliziAuth(this.$root.$api);
 
     this.$root.$on('afterSuccessLogin',  this.afterSuccessLogin);
-
     this.$root.$on('afterSuccessLogout', this.afterSuccessLogout);
 
     this.$root.$on('AfterUserLoad', this.afterUserLoad);
     this.$root.$on('AfterUserRestore', this.afterUserRestore);
+
+    this.$root.$on('PersistentCollectionsReload', this.onPersistentCollectionsReload);
 
     this.$root.$on('searchStart', (evData) => {
         this.lastSearchText = evData.searchText;

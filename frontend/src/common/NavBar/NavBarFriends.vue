@@ -43,7 +43,6 @@ data(){
 },
 methods : {
     updateInvitations(){
-        window.console.log(`updateInvitations`);
         this.$forceUpdate();
     }
 },

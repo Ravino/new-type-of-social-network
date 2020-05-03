@@ -12,11 +12,6 @@ class PliziFriendsCollection extends PliziCollection {
     loadEventName = 'FriendsIsLoaded';
     updateEventName = 'FriendsIsUpdated';
 
-    constructor(apiObj){
-        super(apiObj);
-        window.console.log(`PliziFriendsCollection constructor`);
-    }
-
     /**
      * метод сравнения для сортировки
      * @param {PliziFriend} d1
@@ -123,18 +118,15 @@ class PliziFriendsCollection extends PliziCollection {
 
 
     async load(){
-        window.console.log(`PliziFriendsCollection::load`);
         this.clean();
 
         this.restoreData();
 
-        if (this.collection.size > 0) {
+        if (this.size > 0) {
             this.isLoad = true;
             this.emit(this.restoreEventName);
             return true;
         }
-
-        window.console.log(`PliziFriendsCollection::load 22`);
 
         let apiResponse = null;
 

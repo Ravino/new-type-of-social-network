@@ -28,7 +28,7 @@ class PliziUser {
 
     /**
      * кол-во общих друзей
-     * @type {number}
+     * @type {number|null}
      * @private
      */
     _mutualFriendsCount = null;
@@ -81,6 +81,7 @@ class PliziUser {
         this._lastActivity = new Date(inputData.lastActivity);
 
         this._profile = (inputData.profile) ? new PliziProfile(inputData.profile) : null;
+        this._mutualFriendsCount = inputData.mutualFriendsCount || null;
 
         // TODO: @TGA переписать потом на загрузку реальных данных
         this._subscribersNumber = Math.floor(Math.random() * 10000);

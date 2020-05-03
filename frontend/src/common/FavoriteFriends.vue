@@ -1,5 +1,5 @@
 <template>
-    <div v-if="favoritFriends.length>0" id="favoritFriends" class="plz-favorit-friends bg-white-br20 overflow-hidden">
+    <div v-if="showFavoritsBlock" id="favoritFriends" class="plz-favorit-friends bg-white-br20 overflow-hidden">
 
         <div v-if="isDataReady" class="--d-flex --flex-row --justify-content-start pb-3 --border-bottom pt-3">
             <h6 v-if="!isNarrow" class="plz-ff-title w-100 mt-2 ml-3 d-block">Избранные</h6>
@@ -37,29 +37,36 @@ props : {
 },
 data () {
     return {
-        isDataReady : true,
+        showFavoritsBlock: true,
+        isDataReady : false
     }
 },
 
 methods : {
-
+    afterFavoritsLoad(){
+        this.showFavoritsBlock = (this.$root.$auth.fm.size > 0);
+        this.isDataReady = true;
+        this.$forceUpdate();
+    }
 },
 
 computed: {
     favoritFriends(){
-        return this.$root.$auth.fm.favorites;
+        return this.$root.$auth.fm.asArray();
     }
 },
 
 created(){
+    if (this.$root.$auth.fm.isLoad) {
+        this.afterFavoritsLoad();
+    }
+
     this.$root.$on(this.$root.$auth.fm.loadEventName, ()=>{
-        window.console.log(this.$root.$auth.fm.loadEventName, `FavoritFriends`);
-        this.$forceUpdate();
+        this.afterFavoritsLoad();
     });
 
     this.$root.$on(this.$root.$auth.fm.restoreEventName, ()=>{
-        window.console.log(this.$root.$auth.fm.restoreEventName, `FavoritFriends`);
-        this.$forceUpdate();
+        this.afterFavoritsLoad();
     });
 }
 

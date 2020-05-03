@@ -96,8 +96,9 @@ async function checkRouteAuth(to, from, next) {
     await Vue.nextTick(); /** @TGA иначе загрузка из localStorage не срабатывает **/
 
     /** @TGA не уверен **/
-    if (window.app.$root.$isAuth === true) {
+    if (window.app.$root.$isAuth  &&  window.app.$root.$auth.isLoaded) {
         updateTitle(to, next);
+        window.app.$root.$emit('PersistentCollectionsReload', { });
         return;
     }
 

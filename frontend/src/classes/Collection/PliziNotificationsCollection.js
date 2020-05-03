@@ -12,11 +12,6 @@ class PliziNotificationsCollection extends PliziCollection {
     loadEventName = 'NotificationsIsLoaded';
     updateEventName = 'NotificationsIsUpdated';
 
-    constructor(apiObj){
-        super(apiObj);
-        window.console.log(`PliziNotificationsCollection constructor`);
-    }
-
     /**
      * метод сравнения для сортировки
      * @param {PliziNotification} d1
@@ -81,18 +76,15 @@ class PliziNotificationsCollection extends PliziCollection {
 
 
     async load(){
-        window.console.log(`PliziNotificationsCollection::load`);
         this.clean();
 
-        this.restoreData(); // заремлено временно
+        this.restoreData();
 
         if (this.collection.size > 0) {
             this.isLoad = true;
             this.emit(this.restoreEventName);
             return true;
         }
-
-        window.console.log(`PliziNotificationsCollection::load 22`);
 
         let apiResponse = null;
 
