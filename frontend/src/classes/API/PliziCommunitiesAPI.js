@@ -41,8 +41,8 @@ class PliziCommunitiesAPI extends PliziBaseAPI {
     async getCommunity(userID){
         let response = await this.axios.get( 'api/communities/'+userID, this.authHeaders )
             .catch( ( error ) => {
-                this.checkIsTokenExpires( error, `$communities.getCommunitiesById` );
-                throw new PliziAPIError( `$communities.getCommunitiesById`, error.response );
+                this.checkIsTokenExpires( error, `$communities.getCommunity` );
+                throw new PliziAPIError( `$communities.getCommunity`, error.response );
             } );
 
         if ( response.status === 200 ){
@@ -51,6 +51,7 @@ class PliziCommunitiesAPI extends PliziBaseAPI {
 
         return null;
     }
+
 
     /**
      * создаёт новое сообщество
@@ -72,6 +73,61 @@ class PliziCommunitiesAPI extends PliziBaseAPI {
 
         return null;
     }
+
+
+    /**
+     * подписываемся на сообщество
+     * @see http://vm1095330.hl.had.pm:8082/docs/#/Communities/subscribeOnCommunity
+     * @param {number} communityID - ID сообщества, на которое собираемся подписаться
+     * @returns {object|null}
+     * @throws PliziAPIError
+     */
+    async subscribe(communityID){
+        let response = await this.axios.get( `api/communities/${communityID}/subscribe`, this.authHeaders )
+            .catch( ( error ) => {
+                window.console.log(error.response.status, `error.response.status`);
+                /** @TGA так сервер отвечает, что юзер уже в этом сообществе **/
+                if (error.response.status === 422) {
+                    return {
+                        status: 422,
+                        message: error.response.data.message
+                    }
+                }
+                else {
+                    this.checkIsTokenExpires( error, `$communities.subscribe` );
+                    throw new PliziAPIError( `$communities.subscribe`, error.response );
+                }
+            } );
+
+        if ( response.status === 200 ){
+            return response.data; // TODO: @TGA потом опять сделать data.data
+        }
+
+        return null;
+    }
+
+
+    /**
+     * отписываемся от сообщества
+     * @see http://vm1095330.hl.had.pm:8082/docs/#/Communities/unsubscribeFromCommunity
+     * @param {number} communityID - ID сообщества, на которое собираемся подписаться
+     * @returns {object|null}
+     * @throws PliziAPIError
+     */
+    async unsubscribe(communityID){
+        let response = await this.axios.get( `api/communities/${communityID}/unsubscribe`, this.authHeaders )
+            .catch( ( error ) => {
+                this.checkIsTokenExpires( error, `$communities.unsubscribe` );
+                throw new PliziAPIError( `$communities.unsubscribe`, error.response );
+            } );
+
+        if ( response.status === 200 ){
+            return response.data; // TODO: @TGA потом опять сделать data.data
+        }
+
+        return null;
+    }
+
 }
 
 export default PliziCommunitiesAPI;

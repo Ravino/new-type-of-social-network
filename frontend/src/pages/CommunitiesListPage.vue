@@ -59,7 +59,7 @@ methods : {
 },
 
 mounted(){
-    this.loadCommunitites();
+    this.loadCommunities();
 }
 
 }

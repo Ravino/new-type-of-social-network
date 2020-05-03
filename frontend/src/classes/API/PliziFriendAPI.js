@@ -106,7 +106,7 @@ class PliziFriendAPI extends PliziBaseAPI {
 
         return await this.axios.post('/api/user/friendship', data, this.authHeaders)
             .catch((error) => {
-                /** @TGA так сервер ответчает, что инвайт уже отправлялся **/
+                /** @TGA так сервер отвечает, что инвайт уже отправлялся **/
                 if (error.response.status === 422) {
                     return {
                         status: 422,

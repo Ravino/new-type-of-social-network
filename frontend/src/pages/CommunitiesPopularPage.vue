@@ -42,8 +42,6 @@
 <script>
 import CommunitiesListMixin from '../mixins/CommunitiesListMixin.js';
 
-import PliziCommunity from '../classes/PliziCommunity.js';
-
 export default {
 name : 'CommunitiesPopularPage',
 components : {
@@ -61,7 +59,7 @@ methods : {
 },
 
 mounted(){
-    this.loadCommunitites();
+    this.loadCommunities();
     this.loadPopularCommunitites();
 }
 
