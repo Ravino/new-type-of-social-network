@@ -2,12 +2,12 @@
     <div :id="fieldId" :class="blockClass" ref="editorContainer">
         <div class="flex-column w-100 ">
             <div class="row w-100 ml-0">
-                <div v-if="showAvatar" class="col-1 align-items-center text-center pt-2">
+                <div v-if="showAvatar" class="plz-editor-avatar col-1 align-items-center text-center pt-2">
                     <img class="chat-companion-user-pic rounded-circle my-0 mx-auto"
                          v-bind:src="userPic" v-bind:alt="userFullName" />
                 </div>
 
-                <div class="pl-0" :class="{ 'col-9': showAvatar, 'col-10 forward-message-width': !showAvatar }">
+                <div class="plz-editor-body pl-0" :class="{ 'plz-editor-body-wza': showAvatar, 'forward-message-width': !showAvatar }">
                     <div class="form pl-3">
                         <div class="form-row align-items-center">
                             <div class="col-12 d-flex justify-content-between p-0">
@@ -25,19 +25,19 @@
                     </div>
                 </div>
 
-                <div class="forward-attach-width col-2 d-flex justify-content-between"  >
+                <div class="plz-editor-btns d-flex justify-content-between"  >
 
-                    <label class="attach-file d-flex align-items-center btn btn-link my-0 ml-0 mr-2 px-1 btn-add-file position-relative">
+                    <label class="attach-file w-50 d-flex align-items-center btn btn-link my-0 ml-0 mr-2 px-1 btn-add-file position-relative">
                         <IconAddFile />
                         <input type="file" @change="onSelectFile($event)" ref="editorFiler" multiple />
                     </label>
 
-                    <label class="attach-file d-flex align-items-center  btn btn-link my-0 ml-0 mr-2 px-1 btn-add-camera position-relative">
+                    <!--<label class="attach-file d-flex align-items-center  btn btn-link my-0 ml-0 mr-2 px-1 btn-add-camera position-relative">
                         <IconAddCamera />
                         <input type="file" @change="onSelectImage($event)" ref="editorImager" multiple />
-                    </label>
+                    </label>-->
 
-                    <button class="btn btn-link mx-0 px-1 btn-add-smile" type="button">
+                    <button class="btn btn-link w-50 mx-0 px-1 btn-add-smile" type="button">
                         <EmojiPicker v-if="dropToDown"
                                      @addEmoji="onAddEmoji"
                                      :transform="'transform: translate(-40%, 40px)'">
@@ -51,7 +51,7 @@
             </div>
 
             <div v-if="attachFiles  &&  attachFiles.length>0" class="row mt-3">
-                <div class="plz-attachment-images col-9 pl-4" :class="{'offset-1 col-9 ' : showAvatar, 'col-10': !showAvatar }" >
+                <div class="plz-attachment-images pl-4" :class="{'offset-1 col-9 ' : showAvatar, 'col-10': !showAvatar }" >
                     <ul class="plz-attachment-images-list list-unstyled d-flex flex-row mb-0 flex-wrap"
                         ref="attachList">
                         <AttachmentItem v-for="atFile in attachFiles"
