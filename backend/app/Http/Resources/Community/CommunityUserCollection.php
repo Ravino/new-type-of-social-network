@@ -19,9 +19,9 @@ class CommunityUserCollection extends ResourceCollection
             'list' => $this->collection->map(function($user) {
                 return [
                     'id' => $user->id,
-                    'email' => $user->email,
+                    'isOnline' => $user->isOnline,
                     'role' => $user->pivot->role,
-                    'users' => new Profile($user->profile)
+                    'profile' => new Profile($user->profile)
                 ];
             }),
         ];

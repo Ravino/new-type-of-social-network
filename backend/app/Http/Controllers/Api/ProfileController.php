@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
+use App\Http\Resources\Community\CommunityCollection;
 use App\Http\Resources\User\UserWithCommunities;
 use App\Models\Profile;
 use App\Models\User;
@@ -40,15 +41,22 @@ class ProfileController extends Controller
     }
 
     /**
-     * @return UserWithCommunities
+     * @return CommunityCollection
      */
-    public function communities()
+    public function myCommunities()
     {
-        $user = User::with('profile', 'communities')->find(Auth::user()->id);
-        if(!$user) {
-            throw new NotFoundHttpException();
-        }
-        return new UserWithCommunities($user);
+        $user = User::with('communities')->find(Auth::user()->id);
+        return new CommunityCollection($user->communities);
+    }
+
+    /**
+     * @param $id
+     * @return CommunityCollection
+     */
+    public function userCommunities($id)
+    {
+        $user = User::with('communities')->find($id);
+        return new CommunityCollection($user->communities);
     }
 
     /**

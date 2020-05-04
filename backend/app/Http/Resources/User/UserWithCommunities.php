@@ -17,7 +17,6 @@ class UserWithCommunities extends JsonResource
     {
         return [
             'id' => $this->id,
-            'uuid' => $this->uuid,
             'isOnline' => $this->isOnline,
             'communities' => new CommunityCollection($this->communities),
             'profile' => new Profile($this->profile)

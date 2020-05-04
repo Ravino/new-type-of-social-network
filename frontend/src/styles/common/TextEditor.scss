@@ -44,6 +44,33 @@ $EditorUserPicSize: 32px;
     }
 }
 
+$editorSize: 48px;
+.plz-editor {
+    width: $editorSize;
+    height: $editorSize;
+    min-width: $editorSize;
+    border-radius: $editorSize;
+
+    img {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        width: 100%;
+        height: auto;
+        transform: translate(-50%, -50%);
+    }
+
+    &-body {
+        width: calc(100% - 95px);
+    }
+
+    &-btns {
+        width: 80px;
+        margin-left: 15px;
+    }
+}
+
+// TODO: @veremey Нужно перепроверить
 #messageToUserFromHisPage {
     .col-10 {
         max-width: calc(100% - 150px);
