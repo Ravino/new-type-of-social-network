@@ -68,10 +68,10 @@
 </template>
 
 <script>
-    import RegistrationModal from './RegistrationModal.vue';
-    import RecoverPassModal from './RecoverPassModal.vue';
+    import RegistrationModal from '../RegistrationModal.vue';
+    import RecoverPassModal from '../RecoverPassModal.vue';
     import {email, maxLength, minLength, required} from 'vuelidate/lib/validators';
-    import client_ids from '../libs/social_networks_client_ids';
+    import client_ids from '../../libs/social_networks_client_ids';
     import LoginSocialLinks from "./LoginSocialLinks";
 
     export default {

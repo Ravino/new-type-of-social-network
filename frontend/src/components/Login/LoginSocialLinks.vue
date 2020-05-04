@@ -42,7 +42,7 @@
 </template>
 
 <script>
-    import client_ids from "../libs/social_networks_client_ids";
+    import client_ids from "../../libs/social_networks_client_ids";
 
     export default {
         name: "LoginSocialLinks",
