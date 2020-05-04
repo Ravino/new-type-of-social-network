@@ -14,8 +14,8 @@ class CreateCommunityMembersTable extends Migration
     public function up()
     {
         Schema::create('community_members', function (Blueprint $table) {
-            $table->foreignId('community_id');
-            $table->foreignId('user_id');
+            $table->integer('community_id');
+            $table->string('user_id', 24);
             $table->enum('role', [
                 'author',
                 'admin',

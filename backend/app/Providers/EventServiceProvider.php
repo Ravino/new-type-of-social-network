@@ -5,6 +5,8 @@ namespace App\Providers;
 //use Illuminate\Auth\Events\Registered;
 //use Illuminate\Auth\Listeners\SendEmailVerificationNotification;
 use App\Events\ResetPassword;
+use App\Events\UserCreated;
+use App\Events\UserUpdated;
 use App\Listeners\Friendships\CommunityUsersNotification;
 use App\Listeners\Friendships\FriendshipNotification;
 use App\Listeners\Friendships\NotifyFriends;
@@ -14,6 +16,7 @@ use Domain\Pusher\Events\DestroyMessageEvent;
 use Domain\Pusher\Events\NewMessageEvent;
 use Domain\Pusher\Events\UserTypingEvent;
 use Domain\Pusher\Listeners\NewNotification;
+use Domain\Pusher\Listeners\UserUpdateListener;
 use Domain\PusherListeners\DestroyMessageNotification;
 use Domain\PusherListeners\NewMessageNotification;
 use Domain\PusherListeners\UserTypingNotification;
@@ -38,6 +41,12 @@ class EventServiceProvider extends ServiceProvider
         ],
         UserTypingEvent::class => [
             UserTypingNotification::class
+        ],
+        UserCreated::class => [
+          UserUpdateListener::class
+        ],
+        UserUpdated::class => [
+            UserUpdateListener::class
         ],
         'Illuminate\Notifications\Events\NotificationSent' => [
             NewNotification::class

@@ -17,6 +17,7 @@ class UsersTableSeeder extends Seeder
     {
         $email1 = 'test@gmail.com';
         $email2 = 'admin@mail.com';
+        $email3 = 'user@mail.com';
         $countOfUsers = App::environment() != 'testing' ? 10 : 1;
 
         if (App::environment() != 'testing') {
@@ -27,6 +28,7 @@ class UsersTableSeeder extends Seeder
 
         $user1 = User::where('email', $email1)->first();
         if (!$user1) {
+            /** @var User $user1 */
             $user1 = User::create([
                 'email' => $email1,
                 'password' => bcrypt('secret'),
@@ -34,9 +36,9 @@ class UsersTableSeeder extends Seeder
                 'last_activity_dt' => time(),
                 'created_at' => time(),
                 'updated_at' => time(),
-                'uuid' => \Ramsey\Uuid\Uuid::uuid4(),
             ]);
             $user1->profile()->create($this->generateProfile());
+            $user1->refresh();
             $this->command->line("Generate user with email {$email1}");
         } else {
             $this->command->line("User with email {$email1} already exists");
@@ -44,15 +46,15 @@ class UsersTableSeeder extends Seeder
 
         $user2 = User::where('email', $email2)->first();
         if (!$user2) {
+            /** @var User $user2 */
             $user2 = User::create([
                 'email' => $email2,
-                'password' => App::environment() != 'testing' ? bcrypt('hfj4675kf') : bcrypt('secret'),
-                'token' => bcrypt('hfj4675kf'),
+                'password' => bcrypt('secret'),
+                'token' => bcrypt('secret'),
                 'last_activity_dt' => time(),
                 'is_admin' => true,
                 'created_at' => time(),
                 'updated_at' => time(),
-                'uuid' => \Ramsey\Uuid\Uuid::uuid4(),
             ]);
             $user2->profile()->create($this->generateProfile());
             $this->command->line("Generate user with email {$email2}");
@@ -60,11 +62,30 @@ class UsersTableSeeder extends Seeder
             $this->command->line("User with email {$email2} already exists");
         }
 
+        $user3 = User::where('email', $email3)->first();
+        if (!$user3) {
+            /** @var User $user3 */
+            $user3 = User::create([
+                'email' => $email3,
+                'password' => bcrypt('secret'),
+                'token' => bcrypt('secret'),
+                'last_activity_dt' => time(),
+                'is_admin' => true,
+                'created_at' => time(),
+                'updated_at' => time(),
+            ]);
+            $user3->profile()->create($this->generateProfile());
+            $this->command->line("Generate user with email {$email3}");
+        } else {
+            $this->command->line("User with email {$email3} already exists");
+        }
+
         $faker = Faker\Factory::create();
         for ($i = 0; $i <= $countOfUsers; $i++) {
             $fakeEmail = $faker->email;
             $user = User::where('email', $fakeEmail)->first();
             if (!$user) {
+                /** @var User $user */
                 $user = User::create([
                     'email' => $faker->email,
                     'password' => bcrypt('secret'),
@@ -72,7 +93,6 @@ class UsersTableSeeder extends Seeder
                     'last_activity_dt' => time(),
                     'created_at' => time(),
                     'updated_at' => time(),
-                    'uuid' => \Ramsey\Uuid\Uuid::uuid4(),
                 ]);
                 $user->profile()->create($this->generateProfile());
                 $this->command->line("Generate user with email {$user->email}");

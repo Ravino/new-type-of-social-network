@@ -3,9 +3,8 @@
 
 namespace Domain\Pusher\Models;
 
-use App\Models\Profile;
-use App\Models\User;
-use Illuminate\Database\Eloquent\Model;
+use Jenssegers\Mongodb\Eloquent\SoftDeletes;
+use Jenssegers\Mongodb\Eloquent\Model;
 
 /**
  * Class ChatMessage
@@ -13,26 +12,43 @@ use Illuminate\Database\Eloquent\Model;
  */
 class Chat extends Model
 {
+
+    use SoftDeletes;
+
     /**
      * @var string
      */
-    protected $table = 'chat';
+    protected $connection = 'mongodb';
+
+    protected $casts = [
+        'last_message_time' => 'datetime'
+    ];
 
     /**
      * @var array
      */
-    protected $casts = [
-        'created_at' => 'timestamp',
-        'updated_at' => 'timestamp',
-    ];
+    protected $dates = ['deleted_at', 'created_at', 'updated_at', 'last_message_time'];
 
-    public function attendees() {
-        return $this->belongsToMany(Profile::class, 'chat_party', 'chat_id', 'user_id')
-            ->join('users', 'profiles.user_id', '=', 'users.id')->select('profiles.*', 'users.*');
+    /**
+     * @var array
+     */
+    protected $fillable = ['user_id', 'last_message_body', 'last_user_id', 'last_message_time', 'updated_at'];
+
+    /**
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany
+     */
+    public function attendees()
+    {
+        return $this->belongsToMany(
+            User::class, null, 'chat_ids', 'user_ids'
+        );
     }
 
-    public function getDateFormat()
+    /**
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
+    public function messages()
     {
-        return 'U';
+        return $this->hasMany(ChatMessage::class);
     }
 }

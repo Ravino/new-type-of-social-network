@@ -12,7 +12,6 @@ use Domain\Pusher\Repositories\MessageRepository;
 use Domain\Pusher\Services\ChatService;
 use Auth;
 use Illuminate\Http\Request;
-use Laravel\Passport\Bridge\UserRepository;
 
 class ChatController extends Controller
 {
@@ -34,6 +33,8 @@ class ChatController extends Controller
     /**
      * ChatController constructor.
      * @param ChatRepository $repository
+     * @param MessageRepository $messageRepository
+     * @param ChatService $chatService
      */
     public function __construct(ChatRepository $repository, MessageRepository $messageRepository, ChatService $chatService)
     {
@@ -57,10 +58,10 @@ class ChatController extends Controller
     }
 
     /**
-     * @param int $chat_id
+     * @param string $chat_id
      * @return \Illuminate\Http\JsonResponse
      */
-    public function messages(int $chat_id)
+    public function messages(string $chat_id)
     {
         $messages = $this->messageRepository->getAllOfChatById($chat_id, Auth::user()->id);
         return response()->json($messages);
@@ -129,6 +130,7 @@ class ChatController extends Controller
     /**
      * @param UploadFileRequest $request
      * @return \Illuminate\Http\JsonResponse
+     * @throws \Exception
      */
     public function uploadAttachments(UploadFileRequest $request) {
         $attachments = $this->chatService->uploadFiles($request->allFiles());
@@ -143,8 +145,8 @@ class ChatController extends Controller
      * @return bool|\Domain\Pusher\Http\Resources\Message\Message|\Illuminate\Http\JsonResponse
      */
     public function destroyMessage(Request $request, $id) {
-        if($message = $this->chatService->destroyMessage($id)) {
-            return $message;
+        if($data = $this->chatService->destroyMessage($id)) {
+            response()->json(['data' => $data], 200);
         }
         return response()->json(['message' => 'Вы не можете удалить чужое сообщение'], 422);
     }

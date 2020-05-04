@@ -26,6 +26,10 @@ class ProfileController extends Controller
         return ['data' => new UserResource(Auth::user()), 'channel' => $channel];
     }
 
+    /**
+     * @param $user
+     * @return UserResource
+     */
     public function show($user)
     {
         $user = User::with('profile')->find($user);
@@ -35,6 +39,9 @@ class ProfileController extends Controller
         return new UserResource($user);
     }
 
+    /**
+     * @return UserWithCommunities
+     */
     public function communities()
     {
         $user = User::with('profile', 'communities')->find(Auth::user()->id);

@@ -45,7 +45,7 @@ class PliziChatAPI extends PliziBaseAPI{
 
     /**
      * создаёт новый пустой диалог с юзерами, если диалог с ними уже есть - просто возвращает ID существующего диалога
-     * @param {number[]} users - список ID-шников юзеров-собеседников
+     * @param {string[]} users - список ID-шников юзеров-собеседников
      * @returns {object} - ID диалога
      */
     async dialogOpen(users) {
@@ -95,7 +95,7 @@ class PliziChatAPI extends PliziBaseAPI{
      * @returns {object[]|null} - список сообщений в диалоге, или NULL если была ошибка
      */
     async messages(dialogID) {
-        let response = await this.__axios.get('api/chat/messages/' + (dialogID >>> 0), this.authHeaders)
+        let response = await this.__axios.get('api/chat/messages/' + (dialogID), this.authHeaders)
             .catch((error) => {
                 this.checkIsTokenExpires(error, `$chat.messages`);
                 throw new PliziAPIError(`$chat.messages`, error.response);

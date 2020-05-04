@@ -2,10 +2,10 @@ import PliziProfile from './User/PliziProfile.js';
 
 class PliziUser {
     /**
-     * @type {number}
+     * @type {string}
      * @private
      */
-    _id = -1;
+    _id = ``;
 
     /**
      * @type {boolean}
@@ -93,7 +93,7 @@ class PliziUser {
 
     /**
      *
-     * @returns {number}
+     * @returns {string}
      */
     get id(){
         return this._id;

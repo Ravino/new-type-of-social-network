@@ -14,13 +14,13 @@ class CreatePostAttachmentsTable extends Migration
     public function up()
     {
         Schema::create('post_attachments', function (Blueprint $table) {
-            $table->id();
-            $table->foreignId('user_id');
-            $table->foreignId('post_id')->nullable();
+            $table->integer('id', true);
+            $table->string('user_id', 24);
+            $table->integer('post_id')->nullable();
             $table->string('original_name')->default('');
             $table->string('path')->default('');
             $table->string('mime_type')->default('');
-            $table->double('size', 8, 2)->default(0);
+            $table->integer('size')->default(0);
             $table->integer('updated_at');
             $table->integer('created_at');
 

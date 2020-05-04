@@ -11,6 +11,7 @@ use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Tymon\JWTAuth\Contracts\JWTSubject;
 use Laratrust\Traits\LaratrustUserTrait;
+use MongoDB\BSON\ObjectId;
 
 class User extends Authenticatable implements JWTSubject
 {
@@ -20,6 +21,8 @@ class User extends Authenticatable implements JWTSubject
     const PERMISSION_ROLE_FOF = 'friendOfFriend';//friend of friend
     const PERMISSION_ROLE_FRIEND = 'friend';
     const PERMISSION_ROLE_GUEST = 'guest';
+
+    public $incrementing = false;
 
     /**
      * The attributes that are mass assignable.
@@ -182,7 +185,7 @@ class User extends Authenticatable implements JWTSubject
      * @return int
      */
     public function getUnreadMessagesCountAttribute() {
-        return \DB::table('chat_message_status')->where('user_id', \Auth::user()->id)->where('is_read', false)->count();
+        return 0;
     }
 
     public function getDateFormat()
@@ -218,5 +221,13 @@ class User extends Authenticatable implements JWTSubject
             return Role::where('name', self::PERMISSION_ROLE_FRIEND)->get()->first();
         }
         return Role::where('name', self::PERMISSION_ROLE_GUEST)->get()->first();
+    }
+
+    public static function boot()
+    {
+        parent::boot();
+        self::creating(function($model){
+            $model->id = new ObjectId();
+        });
     }
 }

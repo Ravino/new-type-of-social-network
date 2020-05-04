@@ -13,7 +13,7 @@ class ChatCollection extends ResourceCollection
      */
     public $user_id;
 
-    public function __construct($resource, int $user_id)
+    public function __construct($resource, string $user_id)
     {
         $this->user_id = $user_id;
         parent::__construct($resource);
@@ -34,7 +34,7 @@ class ChatCollection extends ResourceCollection
                     'id' => $chat->id,
                     'name' => $chat->name,
                     'lastMessageText' => $chat->last_message_body,
-                    'lastMessageDT' => $chat->last_message_time,
+                    'lastMessageDT' => $chat->last_message_time ? $chat->last_message_time->timestamp : null,
                     'isRead' => (bool)$chat->last_is_read,
                     'isLastFromMe' => ($this->user_id == $chat->last_user_id),
                     'attendees' => new AttendeesCollection($chat->attendees, $this->user_id)

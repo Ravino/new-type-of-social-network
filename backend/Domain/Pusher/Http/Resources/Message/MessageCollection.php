@@ -12,7 +12,7 @@ class MessageCollection extends ResourceCollection
      */
     public $user_id;
 
-    public function __construct($resource, int $user_id)
+    public function __construct($resource, $user_id)
     {
         $this->user_id = $user_id;
         parent::__construct($resource);
@@ -31,17 +31,17 @@ class MessageCollection extends ResourceCollection
             'list' => $this->collection->map(function ($message) {
                 return [
                     'id' => $message->id,
-                    'userId' => $message->user_id,
-                    'firstName' => $message->first_name,
-                    'lastName' => $message->last_name,
-                    'userPic' => $message->user_pic,
-                    'sex' => $message->sex,
+                    'userId' => $message->user->id,
+                    'firstName' => $message->user->profile->first_name,
+                    'lastName' => $message->user->profile->last_name,
+                    'userPic' => $message->user->profile->user_pic,
+                    'sex' => $message->user->profile->sex,
                     'body' => strip_tags($message->body, '<span><p>'),
-                    'isMine' => ($message->user_id === $this->user_id),
+                    'isMine' => ($message->user->id === $this->user_id),
                     'isRead' => $message->is_read,
                     'isEdited' => false,
-                    'createdAt' => $message->created_at,
-                    'updatedAt' => $message->updated_at,
+                    'createdAt' => $message->created_at->timestamp,
+                    'updatedAt' => $message->updated_at->timestamp,
                     'attachments' => new AttachmentsCollection($message->attachments),
                     'replyOn' => $message->parent ? new Message($message->parent, $this->user_id) : null,
                     'isForward' => $message->parent_chat_id ? true : false,

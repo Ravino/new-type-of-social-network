@@ -14,13 +14,13 @@ class CreateImageUploadsTable extends Migration
     public function up()
     {
         Schema::create('image_uploads', function (Blueprint $table) {
-            $table->id();
-            $table->foreignId('user_id');
+            $table->integer('id', true);
+            $table->string('user_id', 24);
             $table->string('original_name')->default('');
             $table->string('path')->default('');
             $table->string('url')->default('');
             $table->string('mime_type')->default('');
-            $table->double('size', 8, 2)->default(0);
+            $table->integer('size')->default(0);
             $table->enum('tag', ['primary', 'secondary'])->default('secondary');
             $table->timestamps();
 

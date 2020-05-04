@@ -103,7 +103,7 @@ methods: {
         let apiResponse = null;
 
         try {
-            apiResponse = await this.$root.$api.$users.getUser(this.id >>> 0);
+            apiResponse = await this.$root.$api.$users.getUser(this.id);
         }
         catch (e){
             window.console.warn(e.detailMessage);
