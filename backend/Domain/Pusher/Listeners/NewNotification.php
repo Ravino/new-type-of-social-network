@@ -3,6 +3,7 @@
 
 namespace Domain\Pusher\Listeners;
 
+use App\Http\Resources\Notification\Notification;
 use App\Notifications\UserSystemNotifications;
 use Domain\Pusher\WampServer as Pusher;
 use Illuminate\Bus\Queueable;
@@ -21,7 +22,7 @@ class NewNotification implements ShouldQueue
     {
         if($event->response && $event->response->type === UserSystemNotifications::class) {
             Pusher::sentDataToServer([
-                'data' => $event->response->data,
+                'data' => new Notification($event->response),
                 'topic_id' => Pusher::channelForUser($event->response->notifiable_id),
                 'event_type' => 'user.notification']);
         }

@@ -61,6 +61,7 @@ Route::group(['middleware' => ['auth.jwt', 'track.activity']], function () {
     /**
      * User Resource
      */
+    Route::get('user/notifications', 'Api\UserController@notifications');
     Route::get('user/communities', 'Api\ProfileController@myCommunities');
     Route::get('user/{id}/communities', 'Api\ProfileController@userCommunities');
     Route::patch('user', 'Api\ProfileController@patch');
@@ -72,7 +73,6 @@ Route::group(['middleware' => ['auth.jwt', 'track.activity']], function () {
     Route::post('user/blacklist', 'Api\UserBlacklistController@post');
     Route::delete('user/blacklist', 'Api\UserBlacklistController@delete');
     Route::post('/user/password/change', 'Auth\ChangePasswordController@changePassword');
-    Route::get('user/notifications', 'Api\UserController@notifications');
     Route::patch('user/notifications/mark/read', 'Api\UserController@markNotificationsAsRead');
 
     /**

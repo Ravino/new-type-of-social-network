@@ -9,8 +9,6 @@ use Illuminate\Database\Eloquent\Model;
 class Community extends Model
 {
 
-    use NPerGroup;
-
     const ROLE_USER = 'user';
     const ROLE_ADMIN = 'admin';
     const ROLE_AUTHOR = 'author';
