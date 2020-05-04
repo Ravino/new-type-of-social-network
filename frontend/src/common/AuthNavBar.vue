@@ -4,13 +4,12 @@
         <div class="w-100 ">
             <div class="row w-100 px-0 mr-0">
                 <div class="d-flex align-items-center col-sm-1 col-md-1 col-lg-1 col-xl-1 py-lg-0 p-xl-0 ">
-                    <router-link v-if="isGotoLogin" :to="`/login`" tag="a" class="navbar-brand w-100 d-block text-center mx-auto h-auto my-0">
+                    <router-link v-if="isGotoLogin" :to="`/logout`" tag="a" class="navbar-brand w-100 d-block text-center mx-auto h-auto my-0">
                         <IconPliziLogo />
                     </router-link>
                     <router-link v-else :to="{name: 'NewsPage'}" tag="a" class="navbar-brand w-100 d-block text-center mx-auto h-auto my-0">
                         <IconPliziLogo />
                     </router-link>
-
                 </div>
 
                 <div class="col-sm-4 col-md-6 col-lg-5 offset-lg-1 d-sm-none d-md-block d-lg-block d-xl-block pl-0">
@@ -21,9 +20,14 @@
                     <NavBarPlayer></NavBarPlayer>
                 </div>
                 -->
-
                 <div id="watcherWrapper" class="plz-top-watcher col-sm-4 col-md-4 col-lg-2 w-auto ml-auto text-center">
-                    <NavBarWatcher></NavBarWatcher>
+                    <div class="--btn-block mt-2 d-inline-block">
+                        <NavBarNotifications></NavBarNotifications>
+
+                        <NavBarMessages></NavBarMessages>
+
+                        <NavBarFriends></NavBarFriends>
+                    </div>
                 </div>
 
                 <NavBarUserMenu></NavBarUserMenu>
@@ -38,12 +42,19 @@ import IconPliziLogo from '../icons/IconPliziLogo.vue';
 
 import NavBarSearch from './NavBar/NavBarSearch.vue';
 import NavBarPlayer from './NavBar/NavBarPlayer.vue';
-import NavBarWatcher from './NavBar/NavBarWatcher.vue';
+
+import NavBarNotifications from './NavBar/NavBarNotifications.vue';
+import NavBarMessages from './NavBar/NavBarMessages.vue';
+import NavBarFriends from './NavBar/NavBarFriends.vue';
+
 import NavBarUserMenu from './NavBar/NavBarUserMenu.vue';
 
 export default {
 name: 'AuthNavBar',
-components : { IconPliziLogo, NavBarSearch, NavBarPlayer, NavBarWatcher, NavBarUserMenu },
+components : { IconPliziLogo, NavBarSearch, NavBarPlayer,
+    NavBarNotifications, NavBarMessages, NavBarFriends,
+    NavBarUserMenu
+},
 props: {
 },
 computed : {

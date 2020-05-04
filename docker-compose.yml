@@ -11,6 +11,15 @@ services:
     ports:
       - "3306:3306"
 
+  mongodb:
+    image: mongo:latest
+    env_file:
+      - ./backend/docker/mongo/.env
+    ports:
+      - 27017:27017
+    volumes:
+      - mongodb_data_plizi:/data/db
+
   app_nginx:
     image: nginx
     container_name: "plizi_nginx_app"
@@ -56,6 +65,7 @@ services:
       - ./frontend/docker/certbot/conf/:/etc/nginx/ssl/
     depends_on:
       - mysql
+      - mongodb
 
   php_ws:
     build: ./backend/docker/ws
@@ -128,3 +138,4 @@ services:
 volumes:
   mysql_data_plizi:
   redis_data_plizi:
+  mongodb_data_plizi:

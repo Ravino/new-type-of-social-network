@@ -15,7 +15,7 @@
                 <Post v-for="postItem in filteredPosts"
                       :key="postItem.id"
                       :post="postItem"
-                      @onShare="onSharePost"/>
+                      @onShare="onSharePost"></Post>
             </div>
 
             <NewPersonalMessageModal v-if="isShowMessageDialog"
@@ -44,10 +44,10 @@ import ProfilePhotos from '../components/ProfilePhotos.vue';
 import ProfileFilter from '../components/ProfileFilter.vue';
 import Post from '../common/Post/Post.vue';
 import NewPersonalMessageModal from '../components/NewPersonalMessageModal.vue';
-import PostRepostModal from "../common/Post/PostRepostModal.vue";
+import PostRepostModal from '../common/Post/PostRepostModal.vue';
 
 import PliziUser from '../classes/PliziUser.js';
-import PliziPost from "../classes/PliziPost";
+import PliziPost from '../classes/PliziPost.js';
 
 export default {
 name: 'PersonalPage',
@@ -65,16 +65,16 @@ components: {
     PostRepostModal,
 },
 
-    computed: {
-        filteredPosts(){
-            switch (this.filterMode) {
-                case 'user':
-                    return this.userPosts.filter(post => post.checkIsMinePost(this.profileData.id));
-            }
+computed: {
+    filteredPosts(){
+        switch (this.filterMode) {
+            case 'user':
+                return this.userPosts.filter(post => post.checkIsMinePost(this.profileData.id));
+        }
 
-            return this.userPosts;
-        },
+        return this.userPosts;
     },
+},
 
 data() {
     return {
@@ -103,7 +103,7 @@ methods: {
         let apiResponse = null;
 
         try {
-            apiResponse = await this.$root.$api.$users.getUser(this.id >>> 0);
+            apiResponse = await this.$root.$api.$users.getUser(this.id);
         }
         catch (e){
             window.console.warn(e.detailMessage);

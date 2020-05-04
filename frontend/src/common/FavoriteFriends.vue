@@ -1,5 +1,5 @@
 <template>
-    <div v-if="favoritFriends.length>0" id="favoritFriends" class="plz-favorit-friends bg-white-br20 overflow-hidden">
+    <div v-if="showFavoritsBlock" id="favoritFriends" class="plz-favorit-friends bg-white-br20 overflow-hidden">
 
         <div v-if="isDataReady" class="--d-flex --flex-row --justify-content-start pb-3 --border-bottom pt-3">
             <h6 v-if="!isNarrow" class="plz-ff-title w-100 mt-2 ml-3 d-block">Избранные</h6>
@@ -26,7 +26,7 @@ import FavoriteFriendItem from './FavoriteFriendItem.vue';
 import Spinner from '../common/Spinner.vue';
 
 export default {
-name: 'FavoritFriends',
+name: 'FavoriteFriends',
 components : { Spinner, FavoriteFriendItem },
 props : {
     isNarrow: {
@@ -37,23 +37,36 @@ props : {
 },
 data () {
     return {
-        isDataReady : false,
+        showFavoritsBlock: true,
+        isDataReady : false
     }
 },
 
 methods : {
-
+    afterFavoritsLoad(){
+        this.showFavoritsBlock = (this.$root.$auth.fm.size > 0);
+        this.isDataReady = true;
+        this.$forceUpdate();
+    }
 },
 
 computed: {
     favoritFriends(){
-        return (this.isDataReady ? this.$root.$auth.fm.favorites : []);
+        return this.$root.$auth.fm.asArray();
     }
 },
 
 created(){
-    this.$root.$on('friendsIsLoad', ()=>{
-        this.isDataReady = true;
+    if (this.$root.$auth.fm.isLoad) {
+        this.afterFavoritsLoad();
+    }
+
+    this.$root.$on(this.$root.$auth.fm.loadEventName, ()=>{
+        this.afterFavoritsLoad();
+    });
+
+    this.$root.$on(this.$root.$auth.fm.restoreEventName, ()=>{
+        this.afterFavoritsLoad();
     });
 }
 

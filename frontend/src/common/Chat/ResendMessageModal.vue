@@ -169,7 +169,7 @@ computed: {
             this.recipients.add(dItem.companion, dItem.id);
         });
 
-        this.$root.$auth.fm.list.map( (frItem) => {
+        this.$root.$auth.fm.asArray().map( (frItem) => {
             this.recipients.add(frItem, null);
         });
 

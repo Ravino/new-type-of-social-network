@@ -17,6 +17,7 @@ class UserSearchCollection extends UserCollection
             'list' => $this->collection->map(function ($user) {
                 return [
                     'id' => $user->id,
+                    'uuid' => $user->uuid,
                     'lastActivity' => $user->last_activity_dt,
                     'isOnline' => $user->isOnline,
                     'profile' => new Profile($user->profile)

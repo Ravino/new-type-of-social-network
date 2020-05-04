@@ -11,6 +11,7 @@ use Domain\Pusher\DTOs\Dialog;
 use Domain\Pusher\Http\Resources\Chat\ChatCollection;
 use Domain\Pusher\Models\Chat;
 use Domain\Pusher\Http\Resources\Chat\Chat as ChatResource;
+use Domain\Pusher\Models\User;
 
 class ChatRepository
 {
@@ -22,58 +23,40 @@ class ChatRepository
      * @param $search
      * @return ChatCollection
      */
-    public function getChatsByUserId(int $user_id, $search = null)
+    public function getChatsByUserId(string $user_id, $search = null)
     {
         $query = Chat::with(['attendees' => function($query) use ($user_id) {
-            $query->where('profiles.user_id', '<>', $user_id);
-        }])->whereNull('deleted_at');
+            $query->where('id', '<>', $user_id);
+        }])->whereHas('attendees', function($user) use ($search, $user_id) {
+            $user->where('id', 'LIKE', $user_id);
+        });
 
-        if(!empty($search) || strlen($search) > 3) {
-            $query->whereHas('attendees', function($profile) use ($search, $user_id) {
-                $profile
-                    ->where('profiles.first_name', 'LIKE', "%{$search}%")
-                    ->orWhere('profiles.last_name', 'LIKE', "%{$search}%")
-                    ->where('profiles.user_id', '<>', $user_id);
+        if(!empty($search) && strlen($search) > 3) {
+            $query->whereHas('attendees', function($user) use ($search, $user_id) {
+                $user->where('profile.first_name', 'LIKE', "%{$search}%")
+                    ->orWhere('profile.last_name', 'LIKE', "%{$search}%")
+                    ->where('id', '<>', $user_id);
             });
         }
 
-        $items = $query->join('profiles', 'profiles.user_id', '=', 'chat.user_id')
-        ->whereRaw("chat.id IN (SELECT chat_id FROM chat_party WHERE user_id = $user_id GROUP BY chat_id)")
-        ->orderBy('chat.last_message_time', 'desc')
-        ->get([
-            'chat.id',
-            'chat.name',
-            'chat.last_message_body',
-            'chat.last_is_read',
-            'chat.last_user_id',
-            'chat.last_message_time'
-        ]);
+        $items = $query->orderBy('last_message_time', 'asc')->get();
         return new ChatCollection($items, $user_id);
     }
 
     /**
-     * Возвращает список чатов пользователя
+     * Получение чата по ID
      *
-     * @param int $id
+     * @param string $id
      * @return ChatResource
      */
-    public function getChatById(int $id)
+    public function getChatById(string $id)
     {
-        $user_id = \Auth::user()->id;
+        $user_id = \Auth::user()->uuid;
         $items = Chat::with(['attendees' => function($query) use ($user_id) {
-            $query->where('profiles.user_id', '<>', $user_id);
-        }])->where('id', $id)
-            ->join('profiles', 'profiles.user_id', '=', 'chat.user_id')
-            ->whereRaw("chat.id IN (SELECT chat_id FROM chat_party WHERE user_id = $user_id GROUP BY chat_id)")
-            ->orderBy('chat.last_message_time', 'desc')
-            ->first([
-                'chat.id',
-                'chat.name',
-                'chat.last_message_body',
-                'chat.last_is_read',
-                'chat.last_user_id',
-                'chat.last_message_time'
-            ]);
+            $query->where('uuid', '<>', $user_id);
+        }])->where('_id', $id)
+            ->orderBy('last_message_time', 'desc')
+            ->first();
 
         return new ChatResource($items, $user_id);
     }
@@ -84,21 +67,23 @@ class ChatRepository
      * $exclude_id, этот пользователь будет исключен из результатирующего
      * набора. Это может быть полезным, при оповещении всех участников
      * чата о новом сообщении, кроме самого автора.
-     * @param int $chat_id идентификатор чата
-     * @param int $exclude_id исключаемый пользователь
+     * @param string $chat_id идентификатор чата
+     * @param string $exclude_id исключаемый пользователь
      * @return array список ID пользователей участников
      */
-    public function getUsersIdListFromChat(int $chat_id, int $exclude_id = null): array
+    public function getUsersIdListFromChat(string $chat_id, string $exclude_id = null): array
     {
-        $query = \DB::table('chat_party')
-            ->join('profiles', 'profiles.user_id', '=', 'chat_party.user_id')
-            ->where('chat_party.chat_id', '=', $chat_id);
-
-        if ($exclude_id) {
-            $query->where('chat_party.user_id', '<>', $exclude_id);
+        $chat = Chat::with(['attendees' => function($query) use ($exclude_id) {
+            if($exclude_id) {
+                $query->where('uuid', '<>', $exclude_id);
+            }
+        }])->where('_id', $chat_id)->first();
+        $attendees = [];
+        foreach ($chat->attendees()->get(['uuid']) as $attendee) {
+           array_push($attendees, $attendee->id);
         }
 
-        return $query->get('profiles.user_id')->toArray();
+        return $attendees;
     }
 
     /**
@@ -111,14 +96,14 @@ class ChatRepository
      * @return mixed|null
      */
     public function getChatIdForCoupleUsers($first_user, $second_user) {
-        $chat = DB::table('chat_party')->select('chat_id')
-            ->whereRaw("chat_id IN (SELECT chat_id FROM chat_party WHERE user_id = $first_user)")
-            ->whereRaw("chat_id IN (SELECT chat_id FROM chat_party WHERE user_id = $second_user)")
-            ->groupBy('chat_id')
-            ->havingRaw('COUNT(chat_id) = 2')->first();
-
-        if($chat) {
-            return $chat->chat_id;
+        $chats = Chat::with('attendees')->whereHas('attendees', function($query) use($first_user, $second_user) {
+            $query->whereIn('id', [$first_user, $second_user]);
+        })->get();
+        $user_ids = User::whereIn('id', [$first_user, $second_user])->get()->pluck('id')->toArray();
+        foreach ($chats as $chat) {
+            if(!count(array_diff($chat->user_ids, $user_ids))) {
+                return $chat->id;
+            }
         }
         return null;
     }
@@ -126,18 +111,17 @@ class ChatRepository
     /**
      * Создает чат для двух пользователей
      *
-     * @param $reciever_id
+     * @param $receiver_id
      * @param $author_id
      * @return int
      */
-    public function createChatForCoupleUsers($reciever_id, $author_id) {
-        $chat_id = \DB::table('chat')->insertGetId(
-            ['user_id' => $author_id, 'created_at' => time(), 'updated_at' => time()]
-        );
-        DB::table('chat_party')->insert([
-            ['chat_id' => $chat_id, 'user_id' => $author_id, 'created_at' => time()],
-            ['chat_id' => $chat_id, 'user_id' => $reciever_id, 'created_at' => time()]
-        ]);
+    public function createChatForCoupleUsers($receiver_id, $author_id) {
+        $chat_id = Chat::insertGetId(['user_id' => $author_id]);
+        /** @var Chat $chat */
+        $chat = Chat::find($chat_id);
+        $chat->attendees()->attach($author_id);
+        $chat->attendees()->attach($receiver_id);
+
         return $chat_id;
     }
 
@@ -149,16 +133,15 @@ class ChatRepository
      * @return int
      */
     public function createChatForUsers($receiver_ids, $author_id) {
-        $chat_id = \DB::table('chat')->insertGetId(
-            ['user_id' => $author_id, 'created_at' => time(), 'updated_at' => time()]
-        );
-        $party = [];
+        /** @var Chat $chat */
+        $chat = Chat::create(['user_id' => $author_id]);
+        $author = User::where('uuid', $author_id)->first();
+        $chat->attendees()->attach($author->id);
+        $receiver_ids = User::whereIn('uuid', $receiver_ids)->get()->pluck('_id')->toArray();
         foreach ($receiver_ids as $receiver_id) {
-            $party[] = ['chat_id' => $chat_id, 'user_id' => $receiver_id, 'created_at' => time()];
+            $chat->attendees()->attach($receiver_id);
         }
-        array_push($party, ['chat_id' => $chat_id, 'user_id' => $author_id, 'created_at' => time()]);
-        DB::table('chat_party')->insert($party);
-        return $chat_id;
+        return $chat->refresh()->id;
     }
 
     /**
@@ -167,7 +150,9 @@ class ChatRepository
      * @return bool
      */
     public function isUserInChat($user_id, $chat_id) {
-        return DB::table('chat_party')->where('user_id', $user_id)->where('chat_id', $chat_id)->exists();
+        return Chat::whereHas(['attendees' => function($query) use ($user_id) {
+            $query->where('uuid', $user_id);
+        }])->where('id', $chat_id)->exists();
     }
 
     /**
@@ -176,9 +161,9 @@ class ChatRepository
      * @return ChatResource
      */
     public function insertToChartParty($chat_id, $user_id) {
-        DB::table('chat_party')->insert([
-            ['chat_id' => $chat_id, 'user_id' => $user_id, 'created_at' => time()]
-        ]);
+        /** @var Chat $chat */
+        $chat = Chat::find($chat_id);
+        $chat->attendees()->attach($user_id);
         return $this->getChatById($chat_id);
     }
 
@@ -187,9 +172,7 @@ class ChatRepository
      * @return bool
      */
     public function destroyChat(int $chat_id) {
-        Chat::where('id', $chat_id)->update([
-            'deleted_at' => time()
-        ]);
+        Chat::destroy($chat_id);
         return true;
     }
 }

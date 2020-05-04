@@ -4,7 +4,7 @@ methods: {
 
     /**
      * делает переход к диалогу с юзером
-     * @param {number} userId -
+     * @param {string} userId -
      * @returns {null}
      */
     async openDialogWithFriend(userId){
@@ -23,7 +23,7 @@ methods: {
             window.localStorage.setItem('pliziActiveDialog', apiResponse.id);
         }
 
-        this.$root.$router.push('/chats-list');
+        this.$root.$router.push('/chats');
     },
 }
 

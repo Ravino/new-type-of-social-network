@@ -1,6 +1,10 @@
-import PliziFriend from './PliziFriend.js';
-import PliziManager from './PliziManager.js';
+import PliziFriend from '../PliziFriend.js';
+import PliziManager from '../PliziManager.js';
 
+/**
+ * @deprecated
+ * @TGA: 2020-05-03 устарел, но пока пусть побудет тут
+ */
 class PliziFriendsManager extends PliziManager{
 
     /**
@@ -33,12 +37,7 @@ class PliziFriendsManager extends PliziManager{
         return this.list;
     }
 
-    /**
-     *
-     * @param a
-     * @returns {*}
-     * @private
-     */
+
     __shuffle(a){
         if (a) {
             a = a.map( iA => iA);

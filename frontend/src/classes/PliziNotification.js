@@ -3,13 +3,13 @@ import PliziNotificationData from './Notification/PliziNotificationData.js';
 class PliziNotification {
     /**
      * в формате UUID - ae62a84c-3d9c-4d52-8f71-ec0c1939e2ad
-     * @type {string|null}
+     * @type {string}
      * @private
      */
     _id = null;
 
     /**
-     * @type {Date|null}
+     * @type {Date}
      * @private
      */
     _createdAt = null;
@@ -22,7 +22,7 @@ class PliziNotification {
     _readAt = null;
 
     /**
-     * @type {PliziNotificationData|null}
+     * @type {PliziNotificationData}
      * @private
      */
     _data = null;
@@ -72,7 +72,7 @@ class PliziNotification {
     }
 
     get notifType(){
-        return this.data.type;
+        return this.data.notificationType;
     }
 
     get notifBody(){

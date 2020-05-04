@@ -9,7 +9,7 @@ import FriendsListHeader from '../common/FriendsListHeader.vue';
 
 import PotentialFriends from '../common/PotentialFriends.vue';
 
-import PliziUser from '../classes/PliziUser.js';
+import PliziUser from '../classes/PliziUser.js'; // @TGA не удалять - объявление PliziUser тут нужно
 import PliziFriend from '../classes/PliziFriend.js';
 
 const FriendsListMixin = {
@@ -32,7 +32,7 @@ data() {
 
 computed: {
     friendsList(){
-        return this.$root.$auth.fm.list;
+        return this.$root.$auth.fm.asArray();
     },
 
     isFriendsLoaded(){

@@ -31,6 +31,26 @@ class PliziFriendAPI extends PliziBaseAPI {
 
 
     /**
+     * получаем список избранных френдов
+     * @returns {object[]|null}
+     * @throws PliziAPIError
+     */
+    async favorites(){
+        let response = await this.axios.get('/user/friendship/group/featured', this.authHeaders)
+            .catch((error) => {
+                this.checkIsTokenExpires(error, '$friend.favorites');
+                throw new PliziAPIError('$friend.favorites', error.response);
+            });
+
+        if (response.status === 200) {
+            return response.data.data.list;
+        }
+
+        return null;
+    }
+
+
+    /**
      * Получение списка возможных друзей.
      * @returns {object[]|null}
      * @throws PliziAPIError
@@ -86,7 +106,7 @@ class PliziFriendAPI extends PliziBaseAPI {
 
         return await this.axios.post('/api/user/friendship', data, this.authHeaders)
             .catch((error) => {
-                /** @TGA так сервер ответчает, что инвайт уже отправлялся **/
+                /** @TGA так сервер отвечает, что инвайт уже отправлялся **/
                 if (error.response.status === 422) {
                     return {
                         status: 422,
@@ -128,7 +148,6 @@ class PliziFriendAPI extends PliziBaseAPI {
      * @throws PliziAPIError
      */
     async invitationsList() {
-        window.console.log(`invitationsList`);
         let response = await this.axios.get('api/user/friendship/pending', this.authHeaders)
             .catch((error) => {
                 this.checkIsTokenExpires(error, '$friends.invitationsList');
@@ -192,6 +211,31 @@ class PliziFriendAPI extends PliziBaseAPI {
         return null;
     }
 
+
+    /**
+     * добавляет френда в Избранные
+     * @param {number} userID - ID френда
+     * @returns {object|null}
+     * @throws PliziAPIError
+     */
+    async addToFavorites(userID) {
+        const sendData = {
+            userId: userID,
+            group: 'featured'
+        };
+
+        let response = await this.axios.post('/user/friendship/group', sendData, this.authHeaders)
+            .catch((error) => {
+                this.checkIsTokenExpires(error, '$friends.addToFavorites');
+                throw new PliziAPIError('$friends.addToFavorites', error.response);
+            });
+
+        if (response.status === 200) {
+            return response.data;
+        }
+
+        return null;
+    }
 
 }
 

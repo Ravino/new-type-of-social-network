@@ -1,5 +1,5 @@
 import PliziBaseAPI from './PliziBaseAPI.js'
-import PliziAPIError from "./PliziAPIError.js";
+import PliziAPIError from './PliziAPIError.js';
 
 class PliziPostAPI extends PliziBaseAPI {
     /**
@@ -11,7 +11,7 @@ class PliziPostAPI extends PliziBaseAPI {
     async getPosts(){
         let response = await this.axios.get( 'api/user/posts', this.authHeaders )
             .catch( ( error ) => {
-                this.checkIsTokenExperis( error, `getPosts` );
+                this.checkIsTokenExpires( error, `getPosts` );
                 throw new PliziAPIError( `getPosts`, error.response );
             } );
 
@@ -22,22 +22,22 @@ class PliziPostAPI extends PliziBaseAPI {
         return null;
     }
 
-  /**
-   * Получение постов на страницах других пользователей.
-   * @public
-   * @returns {object[]|null}
-   * @throws PliziAPIError
-   */
-  async getPostsByUserId(id) {
-    let response = await this.axios.get(`api/user/${id}/posts`, this.authHeaders)
-      .catch((error) => {
-        this.checkIsTokenExperis(error, `getPostsByUserId`);
-        throw new PliziAPIError(`getPostsByUserId`, error.response);
-      });
+    /**
+     * Получение постов на страницах других пользователей.
+     * @public
+     * @returns {object[]|null}
+     * @throws PliziAPIError
+     */
+    async getPostsByUserId( id ){
+        let response = await this.axios.get( `api/user/${id}/posts`, this.authHeaders )
+            .catch( ( error ) => {
+                this.checkIsTokenExpires( error, `getPostsByUserId` );
+                throw new PliziAPIError( `getPostsByUserId`, error.response );
+            } );
 
-    if (response.status === 200) {
-      return response.data.data.list;
-    }
+        if ( response.status === 200 ){
+            return response.data.data.list;
+        }
 
         return null;
     }
@@ -51,7 +51,7 @@ class PliziPostAPI extends PliziBaseAPI {
     async storePost( formData ){
         let response = await this.axios.post( 'api/posts', formData, this.authHeaders )
             .catch( ( error ) => {
-                this.checkIsTokenExperis( error, `storePost` );
+                this.checkIsTokenExpires( error, `storePost` );
                 throw new PliziAPIError( `storePost`, error.response );
             } );
 
@@ -59,8 +59,8 @@ class PliziPostAPI extends PliziBaseAPI {
             return response.data.data;
         }
 
-    return null;
-  }
+        return null;
+    }
 
     /**
      * Загружка файлов для постов.
@@ -77,7 +77,7 @@ class PliziPostAPI extends PliziBaseAPI {
 
         let response = await this.axios.post( 'api/posts/attachments', formData, this.authHeaders )
             .catch( ( error ) => {
-                this.checkIsTokenExperis( error, `storePostAttachments` );
+                this.checkIsTokenExpires( error, `storePostAttachments` );
                 throw new PliziAPIError( `storePostAttachments`, error.response );
             } );
 
@@ -97,7 +97,7 @@ class PliziPostAPI extends PliziBaseAPI {
     async deletePost( id ){
         let response = await this.axios.delete( `api/posts/${id}`, this.authHeaders )
             .catch( ( error ) => {
-                this.checkIsTokenExperis( error, `deletePost` );
+                this.checkIsTokenExpires( error, `deletePost` );
                 throw new PliziAPIError( `deletePost`, error.response );
             } );
 
@@ -112,13 +112,13 @@ class PliziPostAPI extends PliziBaseAPI {
      * Восстановление поста.
      *
      * @param id
-     * @returns {Pobject[]|null}
+     * @returns {object[]|null}
      * @throws PliziAPIError
      */
     async restorePost( id ){
         let response = await this.axios.get( `api/posts/${id}/restore`, this.authHeaders )
             .catch( ( error ) => {
-                this.checkIsTokenExperis( error, `restorePost` );
+                this.checkIsTokenExpires( error, `restorePost` );
                 throw new PliziAPIError( `restorePost`, error.response );
             } );
 
@@ -140,7 +140,7 @@ class PliziPostAPI extends PliziBaseAPI {
     async updatePost( id, formData ){
         let response = await this.axios.post( `api/posts/${id}/update`, formData, this.authHeaders )
             .catch( ( error ) => {
-                this.checkIsTokenExperis( error, `editPost` );
+                this.checkIsTokenExpires( error, `editPost` );
                 throw new PliziAPIError( `editPost`, error.response );
             } );
 
@@ -149,27 +149,27 @@ class PliziPostAPI extends PliziBaseAPI {
             return response.data.data;
         }
 
-    return null;
-  }
-
-  /**
-   * Репост чужой записи на свойю стену.
-   *
-   * @param id
-   * @returns {object[]|null}
-   * @throws PliziAPIError
-   */
-  async sharePostToWall(id) {
-    let response = await this.axios.post(`api/posts/share/wall`, { id }, this.authHeaders)
-      .catch((error) => {
-        this.checkIsTokenExperis(error, `sharePostToWall`);
-        throw new PliziAPIError(`sharePostToWall`, error.response);
-      });
-
-
-    if (response.status === 201) {
-      return response.data;
+        return null;
     }
+
+    /**
+     * Репост чужой записи на свойю стену.
+     *
+     * @param id
+     * @returns {object[]|null}
+     * @throws PliziAPIError
+     */
+    async sharePostToWall( id ){
+        let response = await this.axios.post( `api/posts/share/wall`, { id }, this.authHeaders )
+            .catch( ( error ) => {
+                this.checkIsTokenExpires( error, `sharePostToWall` );
+                throw new PliziAPIError( `sharePostToWall`, error.response );
+            } );
+
+
+        if ( response.status === 201 ){
+            return response.data;
+        }
 
         return null;
     }

@@ -12,11 +12,6 @@ class PliziInvitationsCollection extends PliziCollection {
     loadEventName = 'InvitationsIsLoaded';
     updateEventName = 'InvitationsIsUpdated';
 
-    constructor(apiObj){
-        super(apiObj);
-        window.console.log(`PliziInvitationsCollection constructor`);
-    }
-
     /**
      * метод сравнения для сортировки
      * @param {PliziInvitation} d1
@@ -32,6 +27,8 @@ class PliziInvitationsCollection extends PliziCollection {
 
 
     onAddNewInvitation(evData){
+        window.console.log(evData, `onAddNewInvitation`);
+
         this.add(evData);
         this.storeData();
         this.emit(this.updateEventName);
@@ -70,10 +67,9 @@ class PliziInvitationsCollection extends PliziCollection {
 
 
     async load(){
-        window.console.log(`PliziInvitationsCollection::load`);
         this.clean();
 
-        //this.restoreData(); // заремлено временно
+        this.restoreData();
 
         if (this.collection.size > 0) {
             this.isLoad = true;

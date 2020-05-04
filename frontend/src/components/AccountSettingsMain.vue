@@ -230,7 +230,7 @@
                     sex: this.$root.$auth.user.sex,
                     relationshipId: this.$root.$auth.user.relationshipId,
                     birthday: this.$root.$auth.user.birthday,
-                    location: this.$root.$auth.user.city.id ? {
+                    location: this.$root.$auth.user.city && this.$root.$auth.user.city.id ? {
                         id: this.$root.$auth.user.city.id,
                         title: {
                             ru: this.$root.$auth.user.city.title,

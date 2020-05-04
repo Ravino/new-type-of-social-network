@@ -17,7 +17,8 @@ class AlterNotificationsTable extends Migration
         Schema::create('notifications', function (Blueprint $table) {
             $table->uuid('id')->primary();
             $table->string('type');
-            $table->morphs('notifiable');
+            $table->string('notifiable_id', 24);
+            $table->string('notifiable_type');
             $table->text('data');
             $table->timestamp('read_at')->nullable();
             $table->timestamps();
@@ -33,9 +34,9 @@ class AlterNotificationsTable extends Migration
     {
         Schema::dropIfExists('notifications');
         Schema::create('notifications', function (Blueprint $table) {
-            $table->id();
-            $table->foreignId('sender_id');
-            $table->foreignId('recipient_id');
+            $table->integer('id', true)->primary();
+            $table->string('sender_id');
+            $table->string('recipient_id');
             $table->string('action');
             $table->boolean('is_read')->default(false);
             $table->integer('created_at')->default(time());

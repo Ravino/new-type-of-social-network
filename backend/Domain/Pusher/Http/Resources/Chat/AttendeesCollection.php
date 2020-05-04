@@ -12,7 +12,7 @@ class AttendeesCollection extends ResourceCollection
      */
     public $user_id;
 
-    public function __construct($resource, int $user_id)
+    public function __construct($resource, string $user_id)
     {
         $this->user_id = $user_id;
         parent::__construct($resource);
@@ -28,13 +28,13 @@ class AttendeesCollection extends ResourceCollection
     {
         return $this->collection->map(function ($attendee) {
             return [
-                'id' => $attendee->user_id,
-                'lastActivity' => $attendee->last_activity_dt,
-                'userPic' => $attendee->user_pic,
-                'firstName' => $attendee->first_name,
-                'lastName' => $attendee->last_name,
+                'id' => $attendee->id,
+                'lastActivity' => $attendee->profile->last_activity_dt,
+                'userPic' => $attendee->profile->user_pic,
+                'firstName' => $attendee->profile->first_name,
+                'lastName' => $attendee->profile->last_name,
                 'isOnline' => $this->isOnline($attendee->last_activity_dt),
-                'sex' => $attendee->sex,
+                'sex' => $attendee->profile->sex,
             ];
         });
     }

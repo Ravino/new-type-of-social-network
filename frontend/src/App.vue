@@ -102,6 +102,9 @@ methods: {
         window.localStorage.removeItem('pliziChatChannel');
         window.localStorage.removeItem('pliziLastSearch');
         window.localStorage.removeItem('pliziDialogs');
+        window.localStorage.removeItem('pliziFriends');
+        window.localStorage.removeItem('pliziInvitations');
+        window.localStorage.removeItem('pliziNotifications');
 
         if (evData.redirect) {
             this.$router.push({path: '/login'});
@@ -111,44 +114,32 @@ methods: {
 
     async afterUserLoad(evData) {
         if (evData.token !== ``  &&  evData.user) {
-            window.console.log(`afterUserLoad`);
-
-            this.$root.$isAuth = true;
-            this.$root.$lastSearch = window.localStorage.getItem('pliziLastSearch');
+            this.restoreLastSearch();
 
             this.$root.$api.token = evData.token;
             this.$root.$api.channel = evData.user.channel;
 
             this.$root.$auth.updateAuthUserData( evData.user, evData.token );
             this.$root.$api.connectToChannel( evData.user.channel );
+            this.$root.$isAuth = true;
 
-            // TODO: перенести отсюда - слишком часто будет вызываться
-            await this.$root.$auth.fm.load();
-            await this.$root.$auth.dm.load();
-            await this.$root.$auth.im.load();
-            await this.$root.$auth.nm.load();
+            this.$root.$emit('PersistentCollectionsReload', { });
         }
     },
 
 
     async afterUserRestore(evData) {
         if (evData.token !== ``  &&  evData.user) {
-            window.console.log(`afterUserRestore`);
-
-            this.$root.$isAuth = true;
-            this.$root.$lastSearch = window.localStorage.getItem('pliziLastSearch');
+            this.restoreLastSearch();
 
             this.$root.$api.token = evData.token;
             this.$root.$api.channel = evData.user.channel;
 
             this.$root.$auth.updateAuthUserData( evData.user, evData.token );
             this.$root.$api.connectToChannel( evData.user.channel );
+            this.$root.$isAuth = true;
 
-            // TODO: перенести отсюда - слишком часто будет вызываться
-            await this.$root.$auth.fm.load(); // @TGA при восстановлении из LS френдов тоже из LS будем грузить
-            await this.$root.$auth.dm.load(); // @TGA при восстановлении из LS диалоги тоже из LS будем грузить
-            await this.$root.$auth.im.load(); // @TGA при восстановлении из LS диалоги тоже из LS будем грузить
-            await this.$root.$auth.nm.load(); // @TGA при восстановлении из LS диалоги тоже из LS будем грузить
+            this.$root.$emit('PersistentCollectionsReload', { });
         }
     },
 
@@ -156,6 +147,17 @@ methods: {
         return this.$root.$isAuth;
     },
 
+    restoreLastSearch(){
+        const ls = localStorage.getItem('pliziLastSearch');
+        this.$root.$lastSearch = (ls) ? ls : ``;
+    },
+
+    async onPersistentCollectionsReload(){
+        await this.$root.$auth.fm.load();
+        await this.$root.$auth.dm.load();
+        await this.$root.$auth.im.load();
+        await this.$root.$auth.nm.load();
+    }
 },
 
 
@@ -164,11 +166,12 @@ created(){
     this.$root.$auth = new PliziAuth(this.$root.$api);
 
     this.$root.$on('afterSuccessLogin',  this.afterSuccessLogin);
-
     this.$root.$on('afterSuccessLogout', this.afterSuccessLogout);
 
     this.$root.$on('AfterUserLoad', this.afterUserLoad);
     this.$root.$on('AfterUserRestore', this.afterUserRestore);
+
+    this.$root.$on('PersistentCollectionsReload', this.onPersistentCollectionsReload);
 
     this.$root.$on('searchStart', (evData) => {
         this.lastSearchText = evData.searchText;
@@ -191,6 +194,14 @@ created(){
 
     this.$root.$on('NewChatDialog', (evData)=>{
         this.$root.$auth.dm.onAddNewDialog(evData);
+    });
+
+    this.$root.$on('UserNotification', (evData)=>{
+        this.$root.$auth.nm.onAddNewNotification(evData);
+
+        if (evData.data.notificationType === `friendships.sent`) {
+            this.$root.$auth.im.onAddNewInvitation(evData);
+        }
     });
 }
 

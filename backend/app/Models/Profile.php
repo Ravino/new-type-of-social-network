@@ -14,13 +14,11 @@ class Profile extends Model
     ];
 
     protected $primaryKey = 'user_id';
-
-    protected $hidden = [
-        'user_id'
-    ];
+    public $incrementing = false;
 
     const SEX_MALE = 'm';
     const SEX_FEMALE = 'f';
+
     const SEX_UNDEFINED = 'n';
 
     const SEX_VARIANTS = [

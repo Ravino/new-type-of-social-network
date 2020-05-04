@@ -1,14 +1,17 @@
 {
-    "id": "ae62a84c-3d9c-4d52-8f71-ec0c1939e2ad",
+    "id": "e131902a-4773-44fb-a13c-f85c32a1762e",
     "data": {
         "sender": {
-            "firstName": "Марианна",
-            "lastName": "Кабанова",
-            "id": 1
+            "firstName": "Виктория",
+            "lastName": "Мамонтовa",
+            "sex": "f",
+            "userPic": "https://plizi.s3.eu-north-1.amazonaws.com/images/originals/D1uFW6C2CC1OcBuAzqZfQanImBQNF6hdxzHrWpGN.png",
+            "lastActivity": 1588455069,
+            "id": 3
         },
-        "body": "User {0, string} sent you friend request",
-        "type": "friendships.sent"
+        "body": "User {0, string} updated profile photo",
+        "notificationType": "user.profile.image.updated"
     },
     "readAt": null,
-    "createdAt": "2020-04-15T18:10:56.000000Z"
+    "createdAt": 1588455086
 }

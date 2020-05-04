@@ -2,10 +2,10 @@ import PliziProfile from './User/PliziProfile.js';
 
 class PliziUser {
     /**
-     * @type {number}
+     * @type {string}
      * @private
      */
-    _id = -1;
+    _id = ``;
 
     /**
      * @type {boolean}
@@ -28,7 +28,7 @@ class PliziUser {
 
     /**
      * кол-во общих друзей
-     * @type {number}
+     * @type {number|null}
      * @private
      */
     _mutualFriendsCount = null;
@@ -80,7 +80,8 @@ class PliziUser {
         this._isOnline = inputData.isOnline;
         this._lastActivity = new Date(inputData.lastActivity);
 
-        this._profile = new PliziProfile(inputData.profile);
+        this._profile = (inputData.profile) ? new PliziProfile(inputData.profile) : null;
+        this._mutualFriendsCount = inputData.mutualFriendsCount || null;
 
         // TODO: @TGA переписать потом на загрузку реальных данных
         this._subscribersNumber = Math.floor(Math.random() * 10000);
@@ -92,7 +93,7 @@ class PliziUser {
 
     /**
      *
-     * @returns {number}
+     * @returns {string}
      */
     get id(){
         return this._id;
@@ -261,7 +262,7 @@ class PliziUser {
             id: this._id,
             isOnline: this._isOnline,
             lastActivity: this._lastActivity.valueOf(),
-            profile: this.profile.toJSON(),
+            profile: (this.profile) ? this.profile.toJSON() : null,
             mutualFriendsCount: this.mutualFriendsCount
         };
     }

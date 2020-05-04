@@ -522,7 +522,7 @@ class PliziAPI {
 
     __channelReceiver(s) {
         s.subscribe(this.__channel, (channelID, data) => {
-            window.console.dir(data, 'from WS');
+            window.console.dir(data, 'from WebSockets server');
 
             if (channelID=== this.channel  &&  `message.new`===data.event_type) {
                 this.emit('newMessageInDialog', {
@@ -542,6 +542,17 @@ class PliziAPI {
                     chatId :  data.chatId,
                     user : data.data,
                 });
+            }
+            if (channelID=== this.channel  &&  `user.notification`===data.event_type) {
+
+                //window.console.log(JSON.stringify(data), `user.notification`);
+                let notifData = data.data;
+                /** TODO: @TGA Ниже костыль, потому что ьэк не присылает все данные **/
+                //notifData.id = new Date().valueOf();
+                //notifData.createdAt = new Date().valueOf();
+                //notifData.readAt = null;
+
+                this.emit('UserNotification', notifData);
             }
         });
     }

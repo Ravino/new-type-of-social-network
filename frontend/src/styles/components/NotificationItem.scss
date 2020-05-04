@@ -11,6 +11,7 @@ $notificationPicSize: 50px;
 .plizi-notification-item-user,
 .plizi-invitation-item {
     transition: .4s;
+    min-width: 400px;
 
     .user-friend-desc {
         overflow: hidden;
@@ -96,7 +97,7 @@ $notificationPicSize: 50px;
         white-space: nowrap;
         overflow: hidden;
         text-overflow: ellipsis;
-        max-width: $maxTextWidth;
+        //max-width: $maxTextWidth; //@TGA зачем тут был max-width ?
 
         &:hover {
             text-decoration: underline;

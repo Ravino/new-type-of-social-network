@@ -49,6 +49,10 @@ methods: {
         return ret;
     },
 
+    /**
+     * @TEST
+     * @returns {Promise<boolean>}
+     */
     async getCommunities() {
         window.console.warn(`getCommunities`);
 
@@ -71,7 +75,7 @@ methods: {
         return true;
     },
 
-    async loadCommunitites() {
+    async loadCommunities() {
         let apiResponse = null;
 
         this.communitiesList = null;
@@ -96,6 +100,7 @@ methods: {
 
         return true;
     },
+
 
     async loadPopularCommunitites() {
         let apiResponse = null;

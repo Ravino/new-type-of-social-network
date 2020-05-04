@@ -1,11 +1,7 @@
 import PliziAPI from './PliziAPI.js';
 import PliziAuthUser from './PliziAuthUser.js';
 
-/**
- * TODO: @TGA - перепилить на коллецию
- */
-import PliziFriendsManager from './PliziFriendsManager.js';
-
+import PliziFriendsCollection from './Collection/PliziFriendsCollection.js';
 import PliziDialogsCollection from './Collection/PliziDialogsCollection.js';
 import PliziInvitationsCollection from './Collection/PliziInvitationsCollection.js';
 import PliziNotificationsCollection from './Collection/PliziNotificationsCollection.js';
@@ -45,7 +41,7 @@ class PliziAuth {
 
     /**
      * ссылка на менеджер френдов
-     * @type {PliziFriendsManager}
+     * @type {PliziFriendsCollection}
      * @private
      */
     _fm = null;
@@ -71,9 +67,11 @@ class PliziAuth {
      */
     _nm = null;
 
+    _isLoaded = false;
+
     /**
      * ссылка на менеджер френдов
-     * @returns {PliziFriendsManager}
+     * @returns {PliziFriendsCollection}
      */
     get fm(){
         return this._fm;
@@ -111,7 +109,8 @@ class PliziAuth {
 
         this._user = new PliziAuthUser(null);
 
-        this._fm = new PliziFriendsManager(apiObj);
+        //this._fm = new PliziFriendsCollection(apiObj);
+        this._fm = Vue.observable( new PliziFriendsCollection(apiObj) );
         this._dm = new PliziDialogsCollection(apiObj);
         this._im = new PliziInvitationsCollection(apiObj);
         this._nm = new PliziNotificationsCollection(apiObj);
@@ -127,6 +126,8 @@ class PliziAuth {
         this.channel = inputData.channel;
 
         this.user.updateAuthUser(inputData.data);
+
+        this._isLoaded = true;
 
         this.storeUserData();
     }
@@ -171,12 +172,19 @@ class PliziAuth {
      */
     cleanData(){
         this._user.cleanData();
+        this._isLoaded = false;
 
         localStorage.removeItem( this.__localStorageKey );
         localStorage.removeItem( 'pliziJWToken' );
         localStorage.removeItem( 'pliziChatChannel' );
+        localStorage.removeItem( this.fm.localStorageKey );
         localStorage.removeItem( this.dm.localStorageKey );
         localStorage.removeItem( this.im.localStorageKey );
+        localStorage.removeItem( this.nm.localStorageKey );
+    }
+
+    get isLoaded(){
+        return this._isLoaded;
     }
 
     get user(){

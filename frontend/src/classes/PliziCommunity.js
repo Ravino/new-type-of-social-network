@@ -6,20 +6,52 @@ class PliziCommunity {
      */
     __defaultAvatarPath = '/images/plizi-noPrimaryImage-256.png';
 
+    /**
+     * @type {number}
+     * @private
+     */
     _id = null;
 
+    /**
+     * @type {string}
+     * @private
+     */
     _name = null;
 
+    /**
+     * @type {string}
+     * @private
+     */
     _description = null;
 
+    /**
+     * @type {string}
+     * @private
+     */
     _location = null;
 
+    /**
+     * @type {string}
+     * @private
+     */
     _notice = null;
 
+    /**
+     * @type {string}
+     * @private
+     */
     _primaryImage = null;
 
+    /**
+     * @type {string}
+     * @private
+     */
     _url = null;
 
+    /**
+     * @type {string}
+     * @private
+     */
     _website = null;
 
     constructor(inputData){

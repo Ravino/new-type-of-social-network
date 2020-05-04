@@ -25,9 +25,6 @@ class PliziAuthUser extends PliziUzer{
 
     constructor(inputData){
         super(inputData);
-
-        //this._stats = new PliziUserStats(null);
-        //this._privacySettings = new PliziUserPrivacySettings(null);
     }
 
     /**

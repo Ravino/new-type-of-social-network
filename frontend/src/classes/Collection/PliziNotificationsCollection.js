@@ -12,11 +12,6 @@ class PliziNotificationsCollection extends PliziCollection {
     loadEventName = 'NotificationsIsLoaded';
     updateEventName = 'NotificationsIsUpdated';
 
-    constructor(apiObj){
-        super(apiObj);
-        window.console.log(`PliziNotificationsCollection constructor`);
-    }
-
     /**
      * метод сравнения для сортировки
      * @param {PliziNotification} d1
@@ -44,7 +39,7 @@ class PliziNotificationsCollection extends PliziCollection {
 
 
     /**
-     * поиск приглашения по ID
+     * поиск нотификации по ID
      * @param {number} ID - ID нужной сущности
      * @returns {PliziInvitation} - нужная сущность, или UNDEFINED если не нашли
      */
@@ -59,8 +54,8 @@ class PliziNotificationsCollection extends PliziCollection {
     asArray(){
         let arr = [];
 
-        this.collection.forEach((value) => {
-            arr.push( value );
+        this.collection.forEach((notifItem) => {
+            arr.push( notifItem );
         });
 
         arr.sort( this.compare );
@@ -69,11 +64,21 @@ class PliziNotificationsCollection extends PliziCollection {
     }
 
 
+    get idsList(){
+        let arr = [];
+
+        this.collection.forEach((notifItem) => {
+            arr.push( notifItem.id );
+        });
+
+        return arr;
+    }
+
+
     async load(){
-        window.console.log(`PliziNotificationsCollection::load`);
         this.clean();
 
-        //this.restoreData(); // заремлено временно
+        this.restoreData();
 
         if (this.collection.size > 0) {
             this.isLoad = true;
@@ -91,8 +96,8 @@ class PliziNotificationsCollection extends PliziCollection {
         }
 
         if (apiResponse) {
-            apiResponse.map( (dialogItem) => {
-                this.add( dialogItem );
+            apiResponse.map( (notifItem) => {
+                this.add( notifItem );
             });
 
             this.storeData();

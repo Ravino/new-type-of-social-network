@@ -14,7 +14,7 @@ class PliziDialogsCollection extends PliziCollection {
 
     constructor(apiObj){
         super(apiObj);
-        window.console.log(`PliziDialogsCollection constructor`);
+        window.console.log( (new Date).getMilliseconds(), `PliziDialogsCollection constructor`);
     }
 
     /**
@@ -32,6 +32,7 @@ class PliziDialogsCollection extends PliziCollection {
 
 
     onAddNewDialog(evData){
+        window.console.log(evData, `onAddNewDialog`);
         this.add(evData);
         this.storeData();
         this.emit(this.updateEventName);
