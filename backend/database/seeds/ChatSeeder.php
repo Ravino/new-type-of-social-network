@@ -48,10 +48,10 @@ class ChatSeeder extends Seeder
             foreach ($messages as $message) {
                 /** @var \Domain\Pusher\Models\ChatMessage $created */
                 $created = \Domain\Pusher\Models\ChatMessage::create(
-                    ['body' => $message]
+                    ['body' => $message, 'chat_id' => $chat->id]
                 );
                 $created->user()->associate($faker->randomElement($chat->attendees));
-                $chat->messages()->save($created);
+                // $chat->messages()->save($created);
             }
         }
     }

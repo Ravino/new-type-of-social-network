@@ -42,7 +42,7 @@ class DatabaseSeeder extends Seeder
             } catch (\Exception $e) {
                 $this->command->line("Error: " . $e->getMessage());
             }
-            // DB::table('seeds')->insertOrIgnore(array('seed_name' => $seedName));
+            DB::table('seeds')->insertOrIgnore(array('seed_name' => $seedName));
         } else {
             $this->command->line("Seed with name '" . $seedName . "' was executed earlier ");
         }

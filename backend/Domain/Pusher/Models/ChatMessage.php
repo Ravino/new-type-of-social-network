@@ -70,10 +70,12 @@ class ChatMessage extends Model
     {
         parent::boot();
         static::created(function ($message) {
-            $message->chat->last_message_body = $message->body;
-            $message->chat->last_user_id = $message->user_id;
-            $message->chat->last_message_time = $message->created_at;
-            $message->chat->save();
+            /** @var Chat $chat */
+            $chat = Chat::find($message->chat_id);
+            $chat->last_message_body = $message->body;
+            $chat->last_user_id = $message->user_id;
+            $chat->last_message_time = $message->created_at;
+            $chat->save();
         });
     }
 }
