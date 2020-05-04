@@ -109,9 +109,6 @@ $plzNavBarProfileColor: #A6A7A9;
         img {
             display: inline-block;
             vertical-align: top;
-            width: $plzNavBarAvatarSize;
-            height: $plzNavBarAvatarSize;
-            border-radius: $plzNavBarAvatarSize;
         }
 
         /* специально для индикации временного аватара */
@@ -119,6 +116,23 @@ $plzNavBarProfileColor: #A6A7A9;
             //border: 1px solid red;
         }
 
+    }
+
+    .profile-menu-pic {
+        position: relative;
+        width: $plzNavBarAvatarSize;
+        height: $plzNavBarAvatarSize;
+        border-radius: $plzNavBarAvatarSize;
+        overflow: hidden;
+
+        img {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            height: 100%;
+            width: auto;
+            transform: translate(-50%, -50%);
+        }
     }
 }
 

@@ -6,7 +6,7 @@
 
         <div class="profile-menu-item p-0 m-0 d-flex align-items-center position-relative">
 
-            <router-link to="/profile" tag="a" class="profile-menu-link d-block">
+            <router-link to="/profile" tag="a" class="profile-menu-link profile-menu-pic d-block ">
                 <img v-if="isShowAvatar" ref="navbarAvatar" :src="userData.userPic" :alt="userData.firstName"/>
             </router-link>
 
