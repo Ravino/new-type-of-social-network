@@ -91,7 +91,7 @@ data() {
 
 computed: {
     currentDialogID(){
-        return (this.currentDialog) ? this.currentDialog.id : -1;
+        return (this.currentDialog) ? this.currentDialog.id : 'unknown';
     },
 
     isDialogsLoaded(){
@@ -165,9 +165,10 @@ methods: {
         let msgsResponse = null;
         this.isMessagesLoaded = false;
 
-        this.currentDialog =  this.$root.$user.dm.get(chatId);
+        this.currentDialog =  this.$root.$auth.dm.get(chatId);
 
         try {
+            console.log('%c%s', 'color: red', `chatSelect call to chat.messages`);
             msgsResponse = await this.$root.$api.$chat.messages(chatId);
         }
         catch (e){

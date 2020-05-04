@@ -11,7 +11,7 @@ class PliziDialog{
 
     /**
      * ID диалога (чата)
-     * @type {number}
+     * @type {string}
      * @private
      */
     _id = null;

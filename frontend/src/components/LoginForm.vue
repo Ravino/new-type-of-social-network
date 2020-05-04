@@ -145,7 +145,7 @@
                 catch (e){
                     if (e.status >= 400) {
                         this.isServerError = true;
-                        this.serverErrorText = e.response.data.error;
+                        this.serverErrorText = e.data.message;
                         this.$refs.password.focus();
                     }
                 }

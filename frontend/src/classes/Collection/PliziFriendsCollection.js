@@ -39,7 +39,7 @@ class PliziFriendsCollection extends PliziCollection {
      * @returns {PliziFriend[]} - список избранных друзей
      */
     get favorites(){
-        return this.asArray().slice(0, 9);
+        return this.asArray().slice(0, 10);
     }
 
 
@@ -61,7 +61,7 @@ class PliziFriendsCollection extends PliziCollection {
      */
     get buddies(){
         if (this.size>0) {
-            return this.__shuffle(this.asArray()).slice(0, 9);
+            return this.__shuffle(this.asArray()).slice(0, 10);
         }
 
         return [];

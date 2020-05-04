@@ -45,7 +45,7 @@ import GuestFooter from './common/GuestFooter.vue';
 import AlertModal from './components/AlertModal.vue';
 
 import PliziAPI from './classes/PliziAPI.js';
-import PliziAuth from './classes/PliziAuth.js';
+import {PliziAuth} from './classes/PliziAuth.js';
 
 export default {
 name: 'App',
@@ -162,8 +162,11 @@ methods: {
 
 
 created(){
+    window.console.log('App created');
+
     this.$root.$api = new PliziAPI(this.$root, '');
-    this.$root.$auth = new PliziAuth(this.$root.$api);
+    this.$root.$auth = PliziAuth;
+    this.$root.$auth.init(this.$root.$api);
 
     this.$root.$on('afterSuccessLogin',  this.afterSuccessLogin);
     this.$root.$on('afterSuccessLogout', this.afterSuccessLogout);

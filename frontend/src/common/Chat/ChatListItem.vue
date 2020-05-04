@@ -48,13 +48,13 @@ name: 'ChatListItem',
 components: { IconCheckedDouble},
 props: {
     dialog: {
-        type: Object,
+        type: PliziDialog,
         required : true
     },
     currentDialogID: {
-        type: Number,
+        type: String,
         required: true,
-        default: -1
+        default: 'unknown'
     },
 },
 
@@ -84,6 +84,7 @@ computed: {
 
 methods: {
     switchToChat() {
+        window.console.log((new Date().getMilliseconds())+ ` ChatListItem emit SwitchToChat`);
         this.$emit('SwitchToChat', {chatId: this.dialog.id});
     },
 

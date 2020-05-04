@@ -29,7 +29,7 @@ Vue.prototype.$isAuth = false;
 /**
  * ссылка на текущую авторизацию
  * добавляем глобально, на использовать будем только от this.$root
- * @type {PliziAuth}
+ * @type {PliziAuth|PliziAuthClass}
  */
 Vue.prototype.$auth = null;
 
