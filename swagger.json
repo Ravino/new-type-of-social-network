@@ -1586,6 +1586,70 @@
         "x-codegen-request-body-name": "body"
       }
     },
+    "/communities/{id}/members": {
+      "get": {
+        "tags": [
+          "Communities"
+        ],
+        "description": "Список пользователей сообщества",
+        "operationId": "CommunityMembers",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "ID сообщества",
+            "required": true,
+            "schema": {
+              "type": "integer"
+            }
+          },
+          {
+            "name": "role",
+            "in": "query",
+            "description": "Фильтр по ролям",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "enum": [
+                "author",
+                "admin",
+                "user"
+              ]
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "data": {
+                      "type": "object",
+                      "properties": {
+                        "list": {
+                          "type": "array",
+                          "items": {
+                            "$ref": "#/components/schemas/CommunityUser"
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "Authorization": []
+          }
+        ]
+      }
+    },
     "/communities/{id}/subscribe": {
       "get": {
         "tags": [
@@ -1682,12 +1746,46 @@
           "Communities"
         ],
         "description": "Список сообществ в которых я учавствую",
+        "operationId": "getMyCommunities",
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "data": {
+                      "type": "object",
+                      "properties": {
+                        "list": {
+                          "type": "array",
+                          "items": {
+                            "$ref": "#/components/schemas/Community"
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/user/{id}/communities": {
+      "get": {
+        "tags": [
+          "Communities"
+        ],
+        "description": "Список сообществ в которых учавствует пользователь",
         "operationId": "getUserCommunities",
         "parameters": [
           {
             "name": "id",
             "in": "path",
-            "description": "ID сообщества",
+            "description": "ID пользователя",
             "required": true,
             "schema": {
               "type": "integer"
@@ -1703,7 +1801,15 @@
                   "type": "object",
                   "properties": {
                     "data": {
-                      "$ref": "#/components/schemas/UserWithCommunities"
+                      "type": "object",
+                      "properties": {
+                        "list": {
+                          "type": "array",
+                          "items": {
+                            "$ref": "#/components/schemas/Community"
+                          }
+                        }
+                      }
                     }
                   }
                 }
@@ -2754,61 +2860,12 @@
           },
           "location": {
             "type": "string"
-          }
-        }
-      },
-      "UserWithCommunities": {
-        "type": "object",
-        "properties": {
-          "id": {
-            "type": "integer",
-            "format": "int64"
           },
-          "email": {
-            "type": "string"
-          },
-          "isOnline": {
-            "type": "boolean"
-          },
-          "mutualFriendsCount": {
+          "totalUsers": {
             "type": "number"
           },
-          "communities": {
-            "type": "object",
-            "properties": {
-              "list": {
-                "type": "array",
-                "items": {
-                  "$ref": "#/components/schemas/Community"
-                }
-              }
-            }
-          },
-          "profile": {
-            "type": "object",
-            "properties": {
-              "firstName": {
-                "type": "string"
-              },
-              "lastName": {
-                "type": "string"
-              },
-              "sex": {
-                "type": "string"
-              },
-              "birthday": {
-                "type": "string"
-              },
-              "city": {
-                "type": "string"
-              },
-              "relationshipId": {
-                "type": "number"
-              },
-              "userPic": {
-                "type": "string"
-              }
-            }
+          "role": {
+            "type": "string"
           }
         }
       },
@@ -2857,6 +2914,50 @@
         },
         "xml": {
           "name": "User"
+        }
+      },
+      "CommunityUser": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "email": {
+            "type": "string"
+          },
+          "isOnline": {
+            "type": "boolean"
+          },
+          "role": {
+            "type": "string"
+          },
+          "profile": {
+            "type": "object",
+            "properties": {
+              "firstName": {
+                "type": "string"
+              },
+              "lastName": {
+                "type": "string"
+              },
+              "sex": {
+                "type": "string"
+              },
+              "birthday": {
+                "type": "string"
+              },
+              "city": {
+                "type": "string"
+              },
+              "relationshipId": {
+                "type": "number"
+              },
+              "userPic": {
+                "type": "string"
+              }
+            }
+          }
         }
       }
     },

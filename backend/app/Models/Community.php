@@ -3,10 +3,13 @@
 namespace App\Models;
 
 use App\CommunityMember;
+use App\Traits\NPerGroup;
 use Illuminate\Database\Eloquent\Model;
 
 class Community extends Model
 {
+
+    use NPerGroup;
 
     const ROLE_USER = 'user';
     const ROLE_ADMIN = 'admin';
@@ -24,6 +27,11 @@ class Community extends Model
     public function users()
     {
         return $this->belongsToMany(User::class, 'community_members')->withPivot(['role']);
+    }
+
+    public function onlyFiveMembers()
+    {
+        return $this->users()->take(5);
     }
 
     /**
