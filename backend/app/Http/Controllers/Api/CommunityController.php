@@ -6,8 +6,11 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\Community\Community as CommunityRequest;
 use App\Http\Resources\Community\CommunityCollection;
 use App\Http\Resources\Community\Community as CommunityResource;
+use App\Http\Resources\Community\CommunityUserCollection;
+use App\Http\Resources\User\UserCollection;
 use App\Models\Community;
 use App\Services\CommunityService;
+use Illuminate\Http\Request;
 
 class CommunityController extends Controller
 {
@@ -37,19 +40,40 @@ class CommunityController extends Controller
      * @return CommunityCollection
      */
     public function index() {
-        $communities = Community::all();
+        $communities = Community::with('role', 'members')->get();
         return new CommunityCollection($communities);
     }
 
     /**
      * @param int $id
-     * @return CommunityResource
+     * @return CommunityResource|\Illuminate\Http\JsonResponse
      */
     public function get(int $id) {
         $community = Community::with(['users' => function($u) {
             $u->limit(5);
-        }, 'users.profile'])->find($id);
-        return new CommunityResource($community);
+        }, 'users.profile', 'members'])->find($id);
+        if($community) {
+            return new CommunityResource($community);
+        }
+        return response()->json(['message' => 'Сообщество не найдено'], 404);
+    }
+
+    /**
+     * @param Request $request
+     * @param int $id
+     * @return CommunityUserCollection|\Illuminate\Http\JsonResponse
+     */
+    public function members(Request $request, int $id) {
+        $role = $request->query('role');
+        $community = Community::with(['users' => function($query) use ($role) {
+            if($role) {
+                $query->wherePivot('role', $role);
+            }
+        }])->find($id);
+        if($community) {
+            return new CommunityUserCollection($community->users);
+        }
+        return response()->json(['message' => 'Сообщество не найдено'], 404);
     }
 
     /**

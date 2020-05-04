@@ -14,7 +14,7 @@ class Community extends JsonResource
      */
     public function toArray($request)
     {
-        if($this->relationLoaded('users')) {
+        if($this && $this->relationLoaded('users')) {
             return [
                 'id' => $this->id,
                 'name' => $this->name,
@@ -24,6 +24,8 @@ class Community extends JsonResource
                 'url' => $this->url,
                 'website' => $this->website,
                 'location' => $this->location,
+                'role' => $this->role ? $this->role->role : null,
+                'totalUsers' => $this->members->count(),
                 'users' => new CommunityUserCollection($this->users)
             ];
         } else {
@@ -35,7 +37,9 @@ class Community extends JsonResource
                 'primaryImage' => $this->primary_image,
                 'url' => $this->url,
                 'website' => $this->website,
-                'location' => $this->location
+                'location' => $this->location,
+                'totalUsers' => $this->members->count(),
+                'role' => $this->role ? $this->role->role : null
             ];
         }
     }

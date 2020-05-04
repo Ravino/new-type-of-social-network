@@ -28,7 +28,6 @@ class User extends JsonResource
         if(\Auth::user()->id === $this->id) {
             return [
                 'id' => $this->id,
-                'uuid' => $this->uuid,
                 'email' => $this->email,
                 'isOnline' => $this->isOnline,
                 'lastActivity' => $this->last_activity_dt,

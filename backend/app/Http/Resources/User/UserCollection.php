@@ -22,7 +22,6 @@ class UserCollection extends ResourceCollection
                 if(\Auth::user()->id === $user->id) {
                     return [
                         'id' => $user->id,
-                        'uuid' => $user->uuid,
                         'email' => $user->email,
                         'isOnline' => $user->isOnline,
                         'lastActivity' => $user->last_activity_dt,
@@ -32,7 +31,6 @@ class UserCollection extends ResourceCollection
                 } else {
                     return [
                         'id' => $user->id,
-                        'uuid' => $user->uuid,
                         'isOnline' => $user->isOnline,
                         'lastActivity' => $user->last_activity_dt,
                         'profile' => new Profile($user->profile),

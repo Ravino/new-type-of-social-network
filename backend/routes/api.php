@@ -39,21 +39,15 @@ Route::group(['middleware' => ['auth.jwt', 'track.activity']], function () {
     ]);
     Route::post('posts/share/wall', 'Api\PostController@addToMyPosts');
 
-    Route::get('communities/{community_id}/posts', 'Api\PostController@communityPosts');
     Route::get('posts/{id}', 'Api\PostController@get');
     Route::post('posts', 'Api\PostController@storeByUser');
     Route::post('communities/{community_id}/posts', 'Api\PostController@storeByCommunity');
     Route::post('posts/attachments', 'Api\PostController@uploadAttachments');
     Route::post('posts/rate', 'Api\PostController@rate');
 
-    Route::get('user/notifications', 'Api\UserController@notifications');
-    Route::patch('user/notifications/mark/read', 'Api\UserController@markNotificationsAsRead');
     Route::get('user/friendship', 'Api\UserController@getMyFriendsList');
     Route::get('user/friendship/pending', 'Api\UserController@getMyPendingFriendsList');
-    Route::get('user/{id}/friendship', [
-        'middleware' => ['privacy.role:view_friends_permissions'],
-        'uses' => 'Api\UserController@getUserFriendsList'
-    ]);
+    Route::get('user/{id}/friendship', ['middleware' => ['privacy.role:view_friends_permissions'], 'uses' => 'Api\UserController@getUserFriendsList']);
     Route::post('user/friendship', 'Api\UserController@sendFriendshipRequest');
     Route::post('user/friendship/accept', 'Api\UserController@acceptFriendshipRequest');
     Route::post('user/friendship/decline', 'Api\UserController@declineFriendshipRequest');
@@ -61,14 +55,14 @@ Route::group(['middleware' => ['auth.jwt', 'track.activity']], function () {
     Route::delete('user/friendship/{id}', 'Api\UserController@removeFromFriends');
     Route::get('user/friendship/possible', 'Api\UserController@getPossibleFriends');
     Route::get('user/friendship/recommended', 'Api\UserController@getRecommendedFriends');
-
     Route::post('user/friendship/group', 'Api\UserController@addFriendToGroup');
     Route::get('user/friendship/group/{group}', 'Api\UserController@getFriendsFromGroup');
 
     /**
      * User Resource
      */
-    Route::get('user/communities', 'Api\ProfileController@communities');
+    Route::get('user/communities', 'Api\ProfileController@myCommunities');
+    Route::get('user/{id}/communities', 'Api\ProfileController@userCommunities');
     Route::patch('user', 'Api\ProfileController@patch');
     Route::resource('user', 'Api\ProfileController', ['only' => ['index', 'show']]);
     Route::post('user/profile/image', 'Api\ImageUploadController@upload');
@@ -78,6 +72,8 @@ Route::group(['middleware' => ['auth.jwt', 'track.activity']], function () {
     Route::post('user/blacklist', 'Api\UserBlacklistController@post');
     Route::delete('user/blacklist', 'Api\UserBlacklistController@delete');
     Route::post('/user/password/change', 'Auth\ChangePasswordController@changePassword');
+    Route::get('user/notifications', 'Api\UserController@notifications');
+    Route::patch('user/notifications/mark/read', 'Api\UserController@markNotificationsAsRead');
 
     /**
      * Communities Resource
@@ -89,7 +85,9 @@ Route::group(['middleware' => ['auth.jwt', 'track.activity']], function () {
         Route::get('{id}', 'Api\CommunityController@get');
         Route::get('{id}/subscribe', 'Api\CommunityController@subscribe');
         Route::get('{id}/unsubscribe', 'Api\CommunityController@unsubscribe');
+        Route::get('{id}/members', 'Api\CommunityController@members');
     });
+    Route::get('communities/{community_id}/posts', 'Api\PostController@communityPosts');
 
     Route::prefix('posts')->group(function () {
         Route::delete('{post}', 'Api\PostController@delete');

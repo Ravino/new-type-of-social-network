@@ -20,10 +20,12 @@ class CommunityCollection extends ResourceCollection
                     'id' => $community->id,
                     'name' => $community->name,
                     'notice' => $community->notice,
-                    'primary_image' => $community->primary_image,
+                    'primaryImage' => $community->primary_image,
                     'url' => $community->url,
                     'website' => $community->website,
                     'location' => $community->location,
+                    'totalUsers' => $community->members->count(),
+                    'role' => $community->role ? $community->role->role : null
                 ];
             }),
         ];
