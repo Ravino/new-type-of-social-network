@@ -95,6 +95,7 @@ Route::group(['middleware' => ['auth.jwt', 'track.activity']], function () {
         Route::delete('{post}', 'Api\PostController@delete');
         Route::get('{post}/restore', 'Api\PostController@restore');
         Route::post('{post}/update', 'Api\PostController@update');
+        Route::delete('{post}/attachment/{postAttachment}', 'Api\PostController@deleteImage');
     });
 
     /**

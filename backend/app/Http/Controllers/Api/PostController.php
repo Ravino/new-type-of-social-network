@@ -162,6 +162,11 @@ class PostController extends Controller
         }
     }
 
+    /**
+     * @param Post $post
+     * @return \Illuminate\Http\JsonResponse
+     * @throws \Exception
+     */
     public function delete(Post $post)
     {
         $user_post = \Auth::user()->posts()->where('id', $post->id)->get();
@@ -179,6 +184,30 @@ class PostController extends Controller
         ]);
     }
 
+    /**
+     * @param Post $post
+     * @param PostAttachment $postAttachment
+     * @return PostResource|\Illuminate\Http\JsonResponse
+     */
+    public function deleteImage(Post $post, PostAttachment $postAttachment)
+    {
+        $user_post = \Auth::user()->posts()->where('id', $post->id)->get();
+
+        if ($user_post) {
+            $post->attachments()->where('id', $postAttachment->id)->delete();
+
+            return new PostResource($post);
+        }
+
+        return response()->json([
+            'message' => 'Запись не найдена.',
+        ]);
+    }
+
+    /**
+     * @param $id
+     * @return \Illuminate\Http\JsonResponse
+     */
     public function restore($id)
     {
         $user_post = \Auth::user()->posts()->where('id', $id)->restore();
@@ -194,6 +223,11 @@ class PostController extends Controller
         ]);
     }
 
+    /**
+     * @param Request $request
+     * @param $id
+     * @return PostResource|\Illuminate\Http\JsonResponse
+     */
     public function update(Request $request, $id)
     {
         $user_post = \Auth::user()->posts()->where('id', $id)->first();

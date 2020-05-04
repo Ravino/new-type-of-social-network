@@ -155,6 +155,7 @@ methods: {
             $this.checkUpdatedChatContainerHeight();
         }, 200);
 
+        this.$emit('onRemoveAttachment', evData.attach.id);
     },
 
     onAttachmentLoaded(evData) {

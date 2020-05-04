@@ -173,6 +173,28 @@ class PliziPostAPI extends PliziBaseAPI {
 
         return null;
     }
+
+    /**
+     * Удаление атачментов из поста.
+     *
+     * @param id
+     * @returns {null}
+     * @throws PliziAPIError
+     */
+    async deletePostImage(postId, attachmentId) {
+        let response = await this.axios.delete( `api/posts/${postId}/attachment/${attachmentId}`, this.authHeaders )
+          .catch( ( error ) => {
+              this.checkIsTokenExpires( error, `deletePostImage` );
+              throw new PliziAPIError( `deletePostImage`, error.response );
+          } );
+
+
+        if ( response.status === 200 ){
+            return response.data.data;
+        }
+
+        return null;
+    }
 }
 
 export default PliziPostAPI;
