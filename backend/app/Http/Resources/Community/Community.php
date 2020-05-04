@@ -26,7 +26,7 @@ class Community extends JsonResource
                 'location' => $this->location,
                 'role' => $this->role ? $this->role->role : null,
                 'totalUsers' => $this->members->count(),
-                'users' => new CommunityUserCollection($this->users)
+                'members' => new CommunityUserCollection($this->users)
             ];
         } else {
             return [

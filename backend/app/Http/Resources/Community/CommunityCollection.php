@@ -16,17 +16,32 @@ class CommunityCollection extends ResourceCollection
     {
         return [
             'list' => $this->collection->map(function($community) {
-                return [
-                    'id' => $community->id,
-                    'name' => $community->name,
-                    'notice' => $community->notice,
-                    'primaryImage' => $community->primary_image,
-                    'url' => $community->url,
-                    'website' => $community->website,
-                    'location' => $community->location,
-                    'totalUsers' => $community->members->count(),
-                    'role' => $community->role ? $community->role->role : null
-                ];
+                if($community && $community->relationLoaded('onlyFiveMembers')) {
+                    return [
+                        'id' => $community->id,
+                        'name' => $community->name,
+                        'notice' => $community->notice,
+                        'primaryImage' => $community->primary_image,
+                        'url' => $community->url,
+                        'website' => $community->website,
+                        'location' => $community->location,
+                        'totalUsers' => $community->members->count(),
+                        'role' => $community->role ? $community->role->role : null,
+                        'members' => new CommunityUserCollection($community->onlyFiveMembers)
+                    ];
+                } else {
+                    return [
+                        'id' => $community->id,
+                        'name' => $community->name,
+                        'notice' => $community->notice,
+                        'primaryImage' => $community->primary_image,
+                        'url' => $community->url,
+                        'website' => $community->website,
+                        'location' => $community->location,
+                        'totalUsers' => $community->members->count(),
+                        'role' => $community->role ? $community->role->role : null
+                    ];
+                }
             }),
         ];
     }

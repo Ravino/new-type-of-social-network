@@ -47,7 +47,7 @@ class PostCollection extends ResourceCollection
                             'attachments' => new AttachmentsCollection($post->attachments),
                             'user' => new SimpleUser($post->postable),
                             'createdAt' => $post->created_at,
-                            'sharedFrom' => $post->parent_id ? new PostWithoutParent($post->parent) : null,
+                            'sharedFrom' => $post->parent_id ? new PostWithoutParent($post->parent()->withTrashed()->first()) : null,
                         ];
                     } else if($post->postable instanceof CommunityModel) {
                         return [

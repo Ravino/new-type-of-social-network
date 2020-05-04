@@ -40,7 +40,13 @@ class CommunityController extends Controller
      * @return CommunityCollection
      */
     public function index() {
+        /**
+         * TODO: Нужно будет что-то придумать с оптимизацией (дернормализовать таблицы или.... пока не ясно)
+         */
         $communities = Community::with('role', 'members')->get();
+        $communities->each(function($community) {
+            $community->load('onlyFiveMembers');
+        });
         return new CommunityCollection($communities);
     }
 
@@ -110,8 +116,10 @@ class CommunityController extends Controller
             if(!$community->users->contains(auth()->user()->id)) {
                 $community->users()->attach(auth()->user()->id, ['role' => Community::ROLE_USER]);
                 return response()->json([
-                    'message' => 'Вы были успешно добавлены в сообщество',
-                    'id' => $community->id
+                    'data' => [
+                        'message' => 'Вы были успешно добавлены в сообщество',
+                        'id' => $community->id
+                    ]
                 ], 200);
             } else {
                 return response()->json(['message' => 'Вы уже являетесь участником данного сообщества'], 422);
@@ -130,8 +138,10 @@ class CommunityController extends Controller
             if($community->users->contains(auth()->user()->id)) {
                 $community->users()->detach(auth()->user()->id);
                 return response()->json([
-                    'message' => 'Вы успешно отписались из данного сообщества',
-                    'id' => $community->id
+                    'data' => [
+                        'message' => 'Вы успешно отписались из данного сообщества',
+                        'id' => $community->id
+                    ]
                 ], 200);
             } else {
                 return response()->json(['message' => 'Вы не являетесь участником данного сообщества'], 422);

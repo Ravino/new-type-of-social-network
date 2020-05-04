@@ -14,7 +14,7 @@
                 <span class="nav-link py-3 px-1 mr-4" :class="{ 'active': wMode==='all' }" id="tabAllPosts" role="tab"
                       @click.stop="wallPostsSelect(`all`)">Все записи</span>
                 <span class="nav-link py-3 px-1 mr-4" :class="{ 'active': wMode==='user' }" id="tabMyPosts" role="tab"
-                      @click.stop="wallPostsSelect(`my`)">Записи {{ firstName }}</span>
+                      @click.stop="wallPostsSelect(`user`)">Записи {{ firstName }}</span>
             </nav>
 
             <button class="btn btn-link mx-1 px-1 btn-add-file" type="button">

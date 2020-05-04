@@ -11,7 +11,8 @@
                                 :showAvatar="textEditor.showAvatar"
                                 :inputEditorText="post.body"
                                 :inputEditorAttachment="post.attachments"
-                                @editorPost="onTextPost" />
+                                @editorPost="onTextPost"
+                                @onRemoveAttachment="onRemoveAttachment"/>
                 </div>
             </div>
         </div>
@@ -86,6 +87,19 @@ methods: {
         if (response) {
             this.post.update(response);
             this.hidePostEditModal();
+        }
+    },
+    async onRemoveAttachment(attachmentId) {
+        let response;
+
+        try {
+            response = await this.$root.$api.$post.deletePostImage(this.post.id, attachmentId);
+        } catch (e) {
+            console.warn(e.detailMessage);
+        }
+
+        if (response) {
+            this.post.update(response);
         }
     },
 },
