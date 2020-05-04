@@ -201,7 +201,7 @@ class PostController extends Controller
 
         return response()->json([
             'message' => 'Запись не найдена.',
-        ]);
+        ], 404);
     }
 
     /**
@@ -220,7 +220,7 @@ class PostController extends Controller
 
         return response()->json([
             'message' => 'Запись не найдена.',
-        ]);
+        ], 404);
     }
 
     /**
@@ -241,6 +241,6 @@ class PostController extends Controller
 
         return response()->json([
             'message' => 'Запись не найдена.',
-        ]);
+        ], 404);
     }
 }

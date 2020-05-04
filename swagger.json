@@ -552,6 +552,46 @@
       }
     },
     "/posts/{id}": {
+      "get": {
+        "tags": [
+          "Posts"
+        ],
+        "description": "Посты на моей стене",
+        "operationId": "postsById",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "ID Поста",
+            "required": true,
+            "schema": {
+              "type": "integer"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "data": {
+                      "$ref": "#/components/schemas/PostWithAll"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "Authorization": []
+          }
+        ]
+      },
       "delete": {
         "tags": [
           "Posts"
@@ -584,17 +624,94 @@
                 }
               }
             }
+          },
+          "404": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string"
+                    }
+                  }
+                }
+              }
+            }
           }
-        }
+        },
+        "security": [
+          {
+            "Authorization": []
+          }
+        ]
       }
     },
-    "/posts/{id}": {
+    "/posts/{id}/restore": {
       "get": {
         "tags": [
           "Posts"
         ],
-        "description": "Посты на моей стене",
-        "operationId": "postsById",
+        "description": "Восстановление поста",
+        "operationId": "restorePost",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "ID Поста",
+            "required": true,
+            "schema": {
+              "type": "integer"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "Authorization": []
+          }
+        ]
+      }
+    },
+    "/posts/{id}/update": {
+      "post": {
+        "tags": [
+          "Posts"
+        ],
+        "description": "Обновление поста",
+        "operationId": "updatePost",
         "parameters": [
           {
             "name": "id",
@@ -616,6 +733,21 @@
                   "properties": {
                     "data": {
                       "$ref": "#/components/schemas/PostWithAll"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string"
                     }
                   }
                 }
@@ -898,6 +1030,72 @@
         ]
       }
     },
+    "/posts/{id}/attachment/{postAttachmentId}": {
+      "delete": {
+        "tags": [
+          "Posts"
+        ],
+        "description": "Удаление атачментов поста",
+        "operationId": "deleteAttachmentPost",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "ID Поста",
+            "required": true,
+            "schema": {
+              "type": "integer"
+            }
+          },
+          {
+            "name": "postAttachmentId",
+            "in": "path",
+            "description": "ID атачмента",
+            "required": true,
+            "schema": {
+              "type": "integer"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "data": {
+                      "$ref": "#/components/schemas/PostWithAll"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "Authorization": []
+          }
+        ]
+      }
+    },
     "/posts/rate": {
       "post": {
         "tags": [
@@ -944,6 +1142,7 @@
         ]
       }
     },
+
     "/register": {
       "post": {
         "tags": [
