@@ -226,7 +226,6 @@ class PliziCollection {
         return this.toJSON();
     }
 
-
     toString(){
         return JSON.stringify( this.toJSON() );
     }

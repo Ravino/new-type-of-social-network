@@ -10,7 +10,7 @@
 
                 <div class="modal-body">
                     <div class="mb-2">
-                        <router-link to="/chats-list" tag="a" class="btn btn-link btn-block text-left p-3 bg-light text-black-50">
+                        <router-link to="/chats" tag="a" class="btn btn-link btn-block text-left p-3 bg-light text-black-50">
                             Перейти к диалогу с {{user.firstName}}
                         </router-link>
                     </div>

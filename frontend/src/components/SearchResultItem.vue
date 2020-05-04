@@ -30,7 +30,7 @@
                 </div>
             </div>
 
-            <router-link to="/chats-list" tag="a" class="plz-short-friend-is-active text-body mr-2 ml-auto">
+            <router-link to="/chats" tag="a" class="plz-short-friend-is-active text-body mr-2 ml-auto">
                 <IconMessageShort />
             </router-link>
 

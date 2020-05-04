@@ -23,7 +23,7 @@ methods: {
             window.localStorage.setItem('pliziActiveDialog', apiResponse.id);
         }
 
-        this.$root.$router.push('/chats-list');
+        this.$root.$router.push('/chats');
     },
 }
 

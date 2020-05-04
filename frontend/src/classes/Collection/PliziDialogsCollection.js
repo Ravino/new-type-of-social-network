@@ -12,6 +12,11 @@ class PliziDialogsCollection extends PliziCollection {
     loadEventName = 'DialogsIsLoaded';
     updateEventName = 'DialogsIsUpdated';
 
+    constructor(apiObj){
+        super(apiObj);
+        window.console.log( (new Date).getMilliseconds(), `PliziDialogsCollection constructor`);
+    }
+
     /**
      * метод сравнения для сортировки, диалоги сортируем по дате
      * @param {PliziDialog} d1
@@ -27,6 +32,7 @@ class PliziDialogsCollection extends PliziCollection {
 
 
     onAddNewDialog(evData){
+        window.console.log(evData, `onAddNewDialog`);
         this.add(evData);
         this.storeData();
         this.emit(this.updateEventName);
