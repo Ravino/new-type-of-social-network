@@ -20,7 +20,8 @@
                       :post="postItem"
                       @deletePost="deletePost"
                       @restorePost="restorePost"
-                      @onEditPost="onEditPost">
+                      @onEditPost="onEditPost"
+                      @openVideoModal="openVideoModal">
                 </Post>
                 <div v-else>
                     <div class="alert alert-info w-100 p-5 text-center">
@@ -39,6 +40,10 @@
 
         <PostEditModal v-if="postEditModal.isVisible"
                        :post="postForEdit"/>
+
+        <PostVideoModal v-if="postVideoModal.isVisible"
+                        :videoLink="postVideoModal.content.videoLink"
+                        @hideVideoModal="hideVideoModal"/>
     </div>
 </template>
 
@@ -54,6 +59,7 @@ import ProfileHeader from '../components/ProfileHeader.vue';
 import ProfilePhotos from '../components/ProfilePhotos.vue';
 import ProfileFilter from '../components/ProfileFilter.vue';
 import PostEditModal from "../common/Post/PostEditModal.vue";
+import PostVideoModal from "../common/Post/PostVideoModal.vue";
 
 import PliziPost from '../classes/PliziPost.js';
 
@@ -63,6 +69,7 @@ components: {
     AccountToolbarLeft, FavoriteFriends, ShortFriends,
     ProfileHeader, ProfilePhotos, WhatsNewBlock, ProfileFilter, Post,
     PostEditModal,
+    PostVideoModal,
 },
 data() {
     return {
@@ -81,6 +88,12 @@ data() {
             isVisible: false,
         },
         postForEdit: null,
+        postVideoModal: {
+            isVisible: false,
+            content: {
+                videoLink: null,
+            },
+        },
     }
 },
 
@@ -108,6 +121,15 @@ computed: {
 methods: {
     wallPostsSelectHandler(evData) {
         this.filterMode = evData.wMode;
+    },
+    openVideoModal(evData) {
+        if (evData.videoLink) {
+            this.postVideoModal.isVisible = true;
+            this.postVideoModal.content.videoLink = evData.videoLink;
+        }
+    },
+    hideVideoModal() {
+        this.postVideoModal.isVisible = false;
     },
 
     async getPosts() {
