@@ -114,7 +114,7 @@
                     <div
                         class="plz-account-settings-body-field plz-account-settings-main-body-field col-sm-6 col-md-6 col-lg-6 col-xl-6 ">
                         <div v-if="!isEdit.birthday" class="form-control-plaintext border-bottom-0">
-                            {{ model.birthday | toYMD }}
+                            {{ model.birthday | toDMY }}
                         </div>
                         <input v-if="isEdit.birthday"
                                id="birthday"
