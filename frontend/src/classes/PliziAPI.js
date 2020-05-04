@@ -375,13 +375,9 @@ class PliziAPI {
      * @throws PliziAPIError
      */
     async userProfileImage(formData) {
-        let config = this.__getAuthHeaders();
-
-        config.headers[`Content-Type`] = 'multipart/form-data';
-
-        let response = await this.__axios.post('/api/user/profile/image', formData, config)
+        let response = await this.__axios.post('/api/user/profile/image', formData, this.authFileHeaders)
             .catch((error) => {
-                this.__checkIsTokenExperis(error, `userProfileImage`);
+                this.checkIsTokenExpires(error, `userProfileImage`);
                 throw new PliziAPIError(`userProfileImage`, error.response);
             });
 

@@ -31,7 +31,7 @@ class PliziCommunitiesAPI extends PliziBaseAPI {
             } );
 
         if ( response.status === 200 ){
-            return response.data.data.communities.list;
+            return response.data.data.list;
         }
 
         return null;
