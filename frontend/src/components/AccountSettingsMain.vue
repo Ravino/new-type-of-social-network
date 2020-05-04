@@ -351,7 +351,11 @@
             },
             locationLabel({title, region, country}) {
                 if (title) {
-                    return `${country.title.ru}, ${region.title.ru}, ${title.ru}`;
+                    if (region) {
+                        return `${country.title.ru}, ${region ? region.title.ru : null}, ${title.ru}`;
+                    }
+
+                    return `${country.title.ru}, ${title.ru}`;
                 }
             },
         },
