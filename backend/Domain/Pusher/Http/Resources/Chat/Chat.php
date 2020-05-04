@@ -35,7 +35,7 @@ class Chat extends JsonResource
             'id' => $this->id,
             'name' => $this->name,
             'lastMessageText' => $this->last_message_body,
-            'lastMessageDT' => $this->last_message_time,
+            'lastMessageDT' => $this->last_message_time ? $this->last_message_time->timestamp : null,
             'isRead' => (bool)$this->last_is_read,
             'isLastFromMe' => ($this->userId == $this->last_user_id),
             'attendees' => new AttendeesCollection($this->attendees, $this->userId)

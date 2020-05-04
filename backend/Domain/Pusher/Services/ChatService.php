@@ -8,6 +8,7 @@ use Domain\Pusher\Events\DestroyMessageEvent;
 use Domain\Pusher\Events\NewMessageEvent;
 use Domain\Pusher\Http\Resources\Message\AttachmentsCollection;
 use Domain\Pusher\Models\ChatMessageAttachment;
+use Domain\Pusher\Models\User;
 use Domain\Pusher\Repositories\ChatRepository;
 use Domain\Pusher\Repositories\MessageRepository;
 use Illuminate\Contracts\Events\Dispatcher;
@@ -36,7 +37,6 @@ class ChatService extends BaseService
         parent::__construct($dispatcher, $logger);
     }
 
-
     /**
      * Отправка сообщения
      *
@@ -48,14 +48,12 @@ class ChatService extends BaseService
      * @param array $attachment_ids
      * @return \Domain\Pusher\Http\Resources\Message\Message
      */
-    public function send(string $body, int $chat_id, int $author_id, int $parent_id = null, int $parent_chat_id = null, array $attachment_ids = [])
+    public function send(string $body, string $chat_id, string $author_id, string $parent_id = null, string $parent_chat_id = null, array $attachment_ids = [])
     {
-        $chatRepo = new ChatRepository();
         $message_id = $this->repository->saveInChatById($chat_id, $body, $author_id, $parent_id, $parent_chat_id);
-        $message = $this->repository->getMessageById($message_id);
-        $users_list = $chatRepo->getUsersIdListFromChat($chat_id, $author_id);
+        $users_list = $this->chatRepository->getUsersIdListFromChat($chat_id, $author_id);
         if(count($attachment_ids)) {
-            ChatMessageAttachment::whereIn('id', $attachment_ids)->update(["message_id" => $message_id]);
+            ChatMessageAttachment::whereIn('_id', $attachment_ids)->update(["chat_message_id" => $message_id]);
         }
         $message = $this->repository->getMessageById($message_id);
         $this->dispatcher->dispatch(new NewMessageEvent($message, $users_list));
@@ -67,31 +65,35 @@ class ChatService extends BaseService
      * Создаст диалог, если диалога с данным пользователем не имеется
      *
      * @param string $body
-     * @param int $user_id
-     * @param int $author_id
-     * @param int|null $parent_id
-     * @param int|null $parent_chat_id
+     * @param string $user_id
+     * @param string $author_id
+     * @param string|null $parent_id
+     * @param string|null $parent_chat_id
      * @param array $attachment_ids
      * @return \Domain\Pusher\Http\Resources\Message\Message
      */
-    public function sendToUser(string $body, int $user_id, int $author_id, int $parent_id = null, int $parent_chat_id = null, array $attachment_ids = [])
+    public function sendToUser(string $body, string $user_id, string $author_id, string $parent_id = null, string $parent_chat_id = null, array $attachment_ids = [])
     {
         $chat_id = $this->chatRepository->getChatIdForCoupleUsers($user_id, $author_id);
         if(!$chat_id) {
             $chat_id = $this->chatRepository->createChatForCoupleUsers($user_id, $author_id);
         }
         $message_id = $this->repository->saveInChatById($chat_id, $body, $author_id, $parent_id, $parent_chat_id);
-        $message = $this->repository->getMessageById($message_id);
         $users_list = $this->chatRepository->getUsersIdListFromChat($chat_id, $author_id);
         if(count($attachment_ids)) {
-            ChatMessageAttachment::whereIn('id', $attachment_ids)->update(["message_id" => $message_id]);
+            ChatMessageAttachment::whereIn('_id', $attachment_ids)->update(["chat_message_id" => $message_id]);
         }
         $message = $this->repository->getMessageById($message_id);
         $this->dispatcher->dispatch(new NewMessageEvent($message, $users_list));
         return $message;
     }
 
-    public function appendUserToChat(string $chat_id, int $user_id)
+    /**
+     * @param string $chat_id
+     * @param int $user_id
+     * @return \Domain\Pusher\Http\Resources\Chat\Chat
+     */
+    public function appendUserToChat(string $chat_id, string $user_id)
     {
         return $this->chatRepository->insertToChartParty($chat_id, $user_id);
     }
@@ -101,6 +103,7 @@ class ChatService extends BaseService
      *
      * @param $files
      * @return AttachmentsCollection
+     * @throws \Exception
      */
     public function uploadFiles($files)
     {
@@ -158,7 +161,7 @@ class ChatService extends BaseService
             $attachment = ChatMessageAttachment::create($data);
             array_push($attachment_ids, $attachment->id);
         }
-        return new AttachmentsCollection(ChatMessageAttachment::whereIn('id', $attachment_ids)->get());
+        return new AttachmentsCollection(ChatMessageAttachment::whereIn('_id', $attachment_ids)->get());
     }
 
     public function prepareImage($image, $size) : InterventionImage {
@@ -194,7 +197,7 @@ class ChatService extends BaseService
 
     /**
      * @param $id
-     * @return bool|\Domain\Pusher\Http\Resources\Message\Message
+     * @return array|bool
      */
     public function destroyMessage($id) {
         $message = $this->repository->getMessageById($id);
@@ -204,7 +207,7 @@ class ChatService extends BaseService
                 $this->repository->destroyMessage($id);
                 $users_list = $this->chatRepository->getUsersIdListFromChat($message['chatId'], \Auth::user()->id);
                 $this->dispatcher->dispatch(new DestroyMessageEvent(['messageId' => $message['id'], 'chatId' => $message['chatId']], $users_list));
-                return $this->repository->getMessageByIdInclDeleted($id);
+                return ['id' => $message['id'], 'chatId' => $message['chatId']];
             }
         }
         return false;
@@ -215,8 +218,7 @@ class ChatService extends BaseService
      * @return bool|\Domain\Pusher\Http\Resources\Chat\Chat
      */
     public function destroyChat($id) {
-        $chat = $this->chatRepository->getChatById($id);
-        if($this->chatRepository->isUserInChat(\Auth::user()->id, $id)) {
+        if($this->chatRepository->isUserInChat(\Auth::user()->uuid, $id)) {
             $this->chatRepository->destroyChat($id);
             return $id;
         }

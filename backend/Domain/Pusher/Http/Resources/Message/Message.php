@@ -2,10 +2,6 @@
 
 namespace Domain\Pusher\Http\Resources\Message;
 
-use App\Http\Resources\Community\Community;
-use App\Http\Resources\User\User;
-use App\Models\User as UserModel;
-use App\Models\Community as CommunityModel;
 use Illuminate\Http\Resources\Json\JsonResource;
 
 class Message extends JsonResource
@@ -32,18 +28,18 @@ class Message extends JsonResource
     {
         return [
             'id' => $this->id,
-            'firstName' => $this->first_name,
-            'lastName' => $this->last_name,
-            'userPic' => $this->user_pic,
-            'userId' => $this->user_id,
+            'firstName' => $this->user->profile->first_name,
+            'lastName' => $this->user->profile->last_name,
+            'userPic' => $this->user->profile->user_pic,
+            'userId' => $this->user->uuid,
             'chatId' => $this->chat_id,
-            'sex' => $this->sex,
+            'sex' => $this->user->profile->sex,
             'body' => strip_tags($this->body, '<span><p>'),
-            'isMine' => ($this->user_id == $this->userId),
+            'isMine' => ($this->user->id == $this->userId),
             'isRead' => $this->is_read,
             'isEdited' => false,
-            'createdAt' => $this->created_at,
-            'updatedAt' => $this->updated_at,
+            'createdAt' => $this->created_at->timestamp,
+            'updatedAt' => $this->updated_at->timestamp,
             'replyOn' => $this->parent ? new Message($this->parent, $this->userId) : null,
             'attachments' => new AttachmentsCollection($this->attachments),
         ];

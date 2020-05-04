@@ -14,8 +14,8 @@ class CreateProfilePrivacySettingsTable extends Migration
     public function up()
     {
         Schema::create('users_privacy_settings', function (Blueprint $table) {
-            $table->id();
-            $table->integer('user_id', false, true);
+            $table->integer('id', true);
+            $table->string('user_id', 24);
             $table->smallInteger('page_type', false, true)->default(0);
             $table->smallInteger('write_messages_permissions', false, true)->default(0);
             $table->smallInteger('post_wall_permissions', false, true)->default(0);
@@ -28,7 +28,7 @@ class CreateProfilePrivacySettingsTable extends Migration
         });
     }
 
-    /**
+    /**2020_04_08_160920_create_users_blacklisted_table
      * Reverse the migrations.
      *
      * @return void

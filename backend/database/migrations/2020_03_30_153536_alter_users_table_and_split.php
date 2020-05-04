@@ -17,21 +17,20 @@ class AlterUsersTableAndSplit extends Migration
     {
         Schema::table('users', function (Blueprint $table) {
             $table->dropColumn(['firstname', 'lastname', 'birthday', 'city']);
-
-
-
         });
 
         Schema::create('profiles', function (Blueprint $table) {
-            $table->unsignedBigInteger('user_id');
-            $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
-
+            $table->string('user_id', 24);
             $table->string('firstname')->nullable();
             $table->string('lastname')->nullable();
             $table->enum('sex', array_keys(Profile::SEX_VARIANTS))->default(Profile::SEX_UNDEFINED);
             $table->date('birthday')->nullable();
             $table->string('city')->nullable();
             $table->timestamps();
+        });
+
+        Schema::table('profiles', function(Blueprint $table) {
+            $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
         });
     }
 

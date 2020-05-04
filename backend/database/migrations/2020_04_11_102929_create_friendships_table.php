@@ -10,8 +10,10 @@ class CreateFriendshipsTable extends Migration
 
         Schema::create(config('friendships.tables.fr_pivot'), function (Blueprint $table) {
             $table->increments('id');
-            $table->morphs('sender');
-            $table->morphs('recipient');
+            $table->string('sender_id');
+            $table->string('sender_type');
+            $table->string('recipient_id');
+            $table->string('recipient_type');
             $table->tinyInteger('status')->default(0);
             $table->timestamps();
         });

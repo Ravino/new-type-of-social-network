@@ -27,6 +27,7 @@ class UsersTableSeeder extends Seeder
 
         $user1 = User::where('email', $email1)->first();
         if (!$user1) {
+            /** @var User $user1 */
             $user1 = User::create([
                 'email' => $email1,
                 'password' => bcrypt('secret'),
@@ -34,9 +35,9 @@ class UsersTableSeeder extends Seeder
                 'last_activity_dt' => time(),
                 'created_at' => time(),
                 'updated_at' => time(),
-                'uuid' => \Ramsey\Uuid\Uuid::uuid4(),
             ]);
             $user1->profile()->create($this->generateProfile());
+            $user1->refresh();
             $this->command->line("Generate user with email {$email1}");
         } else {
             $this->command->line("User with email {$email1} already exists");
@@ -44,15 +45,15 @@ class UsersTableSeeder extends Seeder
 
         $user2 = User::where('email', $email2)->first();
         if (!$user2) {
+            /** @var User $user2 */
             $user2 = User::create([
                 'email' => $email2,
-                'password' => App::environment() != 'testing' ? bcrypt('hfj4675kf') : bcrypt('secret'),
+                'password' => bcrypt('secret'),
                 'token' => bcrypt('hfj4675kf'),
                 'last_activity_dt' => time(),
                 'is_admin' => true,
                 'created_at' => time(),
                 'updated_at' => time(),
-                'uuid' => \Ramsey\Uuid\Uuid::uuid4(),
             ]);
             $user2->profile()->create($this->generateProfile());
             $this->command->line("Generate user with email {$email2}");
@@ -65,6 +66,7 @@ class UsersTableSeeder extends Seeder
             $fakeEmail = $faker->email;
             $user = User::where('email', $fakeEmail)->first();
             if (!$user) {
+                /** @var User $user */
                 $user = User::create([
                     'email' => $faker->email,
                     'password' => bcrypt('secret'),
@@ -72,7 +74,6 @@ class UsersTableSeeder extends Seeder
                     'last_activity_dt' => time(),
                     'created_at' => time(),
                     'updated_at' => time(),
-                    'uuid' => \Ramsey\Uuid\Uuid::uuid4(),
                 ]);
                 $user->profile()->create($this->generateProfile());
                 $this->command->line("Generate user with email {$user->email}");
