@@ -7,6 +7,9 @@ RUN mkdir -p /usr/src/php/ext/redis \
     && echo 'redis' >> /usr/src/php-available-exts \
     && docker-php-ext-install redis
 
+RUN pecl install mongodb \
+    && docker-php-ext-enable mongodb
+
 WORKDIR /app
 
 COPY ./php/fpm_www.conf /usr/local/etc/php-fpm.d/www.conf
