@@ -10,12 +10,21 @@
                 <Spinner v-else></Spinner>
 
                 <ProfilePhotos v-bind:photos="userPhotos"/>
-                <ProfileFilter :first-name="profileData.firstName"
+                <ProfileFilter v-if="filteredPosts && filteredPosts.length > 1" :first-name="profileData.firstName"
                                @wallPostsSelect="wallPostsSelectHandler"/>
-                <Post v-for="postItem in filteredPosts"
-                      :key="postItem.id"
-                      :post="postItem"
-                      @onShare="onSharePost"></Post>
+
+                <template v-if="filteredPosts && filteredPosts.length > 0">
+                    <Post v-for="postItem in filteredPosts"
+                          :key="postItem.id"
+                          :post="postItem"
+                          @onShare="onSharePost"></Post>
+                </template>
+                <div v-else>
+                    <div class="alert alert-info w-100 p-5 text-center">
+                        Пользователь {{ profileData.firstName }} не создал ни одной записи.
+                    </div>
+                </div>
+
             </div>
 
             <NewPersonalMessageModal v-if="isShowMessageDialog"
