@@ -84,7 +84,7 @@ methods: {
         }
 
         if (response) {
-            // this.post.update(response);
+            this.post.update(response);
             this.hidePostEditModal();
         }
     },

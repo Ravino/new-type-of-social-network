@@ -128,7 +128,7 @@ computed: {
     },
 
     msgBody(){
-        return this.message.body;
+        return this.livePreview ? this.livePreview : this.message.body;
     },
 
     currentDialog(){
@@ -153,6 +153,12 @@ computed: {
         let match = str.match(regExp);
 
         return (match && match[7].length === 11) ? match[7] : false;
+    },
+
+    livePreview() {
+        if (this.detectYoutubeLink) {
+            return `<img src="//img.youtube.com/vi/${this.detectYoutubeLink}/0.jpg" alt="" />`;
+        }
     },
 },
 
@@ -209,17 +215,9 @@ methods: {
             videoLink: this.message.body.replace(/<\/?[^>]+>/g, '').trim(),
         })
     },
-
-    livePreview() {
-        if (this.detectYoutubeLink) {
-            this.msgBody = `<img src="//img.youtube.com/vi/${this.detectYoutubeLink}/0.jpg" alt="" />`;
-        }
-    },
-
 },
 
 mounted() {
-    this.livePreview();
 }
 }
 </script>

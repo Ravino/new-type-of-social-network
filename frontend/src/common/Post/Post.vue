@@ -68,7 +68,17 @@
                     </template>
 
                     <div class="col-12 plz-post-item-body pt-4 pb-2">
-                        <p v-if="post.body" class="post-main-text mb-2" v-html="this.$options.filters.toBR(post.body)"></p>
+                        <p v-if="livePreview"
+                           class="post-main-text mb-2"
+                            v-html="livePreview"
+                            @click.stop="detectYoutubeLink ? openVideoModal() : null">
+                        </p>
+
+                        <template v-else>
+                            <p v-if="post.body"
+                               class="post-main-text mb-2"
+                               v-html="this.$options.filters.toBR(post.body)"></p>
+                        </template>
                     </div>
 
                     <div class="col-12 plz-post-item-images">
@@ -133,32 +143,53 @@
 </template>
 
 <script>
-  import IconEye from '../../icons/IconEye.vue';
-  import IconHeard from '../../icons/IconHeard.vue';
-  import IconMessage from '../../icons/IconMessage.vue';
-  import IconMessageUserPost from '../../icons/IconMessageUserPost.vue';
-  import IconShare from '../../icons/IconShare.vue';
+    import IconEye from '../../icons/IconEye.vue';
+    import IconHeard from '../../icons/IconHeard.vue';
+    import IconMessage from '../../icons/IconMessage.vue';
+    import IconMessageUserPost from '../../icons/IconMessageUserPost.vue';
+    import IconShare from '../../icons/IconShare.vue';
 
-  import PostImage from './PostImage.vue';
-  import AttachmentFile from "../AttachmentFile.vue";
+    import PostImage from './PostImage.vue';
+    import AttachmentFile from "../AttachmentFile.vue";
 
-  import PliziPost from '../../classes/PliziPost.js';
+    import PliziPost from '../../classes/PliziPost.js';
 
-  export default {
-    name: 'Post',
-    components: {
-      IconShare,
-      IconMessage,
-      IconHeard,
-      IconEye,
-      IconMessageUserPost,
-      PostImage,
-      AttachmentFile,
-    },
-    props: {
-      post: PliziPost,
-    },
-  }
+    export default {
+        name: 'Post',
+        components: {
+            IconShare,
+            IconMessage,
+            IconHeard,
+            IconEye,
+            IconMessageUserPost,
+            PostImage,
+            AttachmentFile,
+        },
+        props: {
+            post: PliziPost,
+        },
+        computed: {
+            detectYoutubeLink() {
+                let str = this.post.body.replace(/<\/?[^>]+>/g, '').trim();
+                let regExp = /^.*((youtu.be\/)|(v\/)|(\/u\/\w\/)|(embed\/)|(watch\?))\??v?=?([^#&?]*).*/;
+                let match = str.match(regExp);
+
+                return (match && match[7].length === 11) ? match[7] : false;
+            },
+            livePreview() {
+                if (this.detectYoutubeLink) {
+                    return `<img src="//img.youtube.com/vi/${this.detectYoutubeLink}/0.jpg" alt="" />`;
+                }
+            },
+        },
+        methods: {
+            openVideoModal() {
+                this.$emit('openVideoModal', {
+                    videoLink: this.post.body.replace(/<\/?[^>]+>/g, '').trim(),
+                })
+            },
+        },
+    }
 </script>
 
 <style lang="scss">
