@@ -1,0 +1,135 @@
+![](https://www.imgacademy.com/themes/custom/imgacademy/images/helpbox-contact.jpg)
+[![GitHub CEO/SMI](https://img.shields.io/badge/CEO%2FSMI-Doman%20I.S%20%2F%20geminishkv-brightgreen)](https://github.com/geminishkv)
+[![GitHub TEAMLEADDEV](https://img.shields.io/badge/TeamLeadDev-Alexey%20Bashmakow%20%7C%20targettius-brightgreen)](https://github.com/targettius)
+[![GitHub CTO/CBO](https://img.shields.io/badge/CTO%2FCBO-Anastasia%20Black%20%7C%20-brightgreen)](https://github.com/korrik)
+![GitHub TEAMLEADDES](https://img.shields.io/badge/TeamLeadDes-Bratash%20V.%20%7C%20BraVL-brightgreen)
+[![Github author](https://img.shields.io/badge/author-Ildar%20Khairullin-green)](https://github.com/vacuumclean)
+![Passed tests](https://img.shields.io/badge/passed%20tests-6%2F6-success)
+[![Docker build](https://img.shields.io/badge/docker%20build%20-passing-success)](https://hub.docker.com/r/vacuumfull/bittraiderbot)
+[![MIT](https://img.shields.io/dub/l/vibe-d.svg)](https://github.com/jadebrrltd/ApiBitLocalBOT/blob/master/LICENSE.md)
+[![GitHub STRONGMIDDLEFULLSTACKWEBDEV](https://img.shields.io/badge/Strong%20Middle%20Fullstack%20Web%20Developer-Daniar%20Akhmetov%20%7C%20Fourxb-brightgreen)](https://github.com/Fourxb)
+[![GitHub MIDDLEFULLSTACKWEBDEV](https://img.shields.io/badge/Middle%20Fullstack%20Web%20Developer-Yusif%20Zourab%20%7C%20iLegion-brightgreen)](https://github.com/iLegion)
+[![GitHub STRONGJUNIORFRONTENDWEBDEV](https://img.shields.io/badge/Strong%20Frontend%20Web%20Developer-Sergey%20Veremiychuk%20%7C%20SergeyVeremiychuk-brightgreen)](https://github.com/SergeyVeremiychuk)
+
+### Цели проектной реализации
+***
+Создание социальной сети для компании "" на основе фреймворков Vue и Laravel.
+**(Заполнить)**
+
+### Заказчик
+***
+**(Заполнить)**
+
+### Состав команды разработчиков
+***
+- Elijah Doman - CEO/SMI, автор GitHub релиза; [![GitHub CEO/SMI](https://img.shields.io/badge/CEO%2FSMI-Doman%20I.S%20%2F%20geminishkv-brightgreen)](https://github.com/geminishkv)
+- Daniar Akhmetov - Strong Middle Fullstack Web Developer; [![GitHub STRONGMIDDLEFULLSTACKWEBDEV](https://img.shields.io/badge/Strong%20Middle%20Fullstack%20Web%20Developer-Daniar%20Akhmetov%20%7C%20Fourxb-brightgreen)](https://github.com/Fourxb)
+- Yusif Zourab - Middle Fullstack Web Developer; [![GitHub MIDDLEFULLSTACKWEBDEV](https://img.shields.io/badge/Middle%20Fullstack%20Web%20Developer-Yusif%20Zourab%20%7C%20iLegion-brightgreen)](https://github.com/iLegion)
+- Sergey Veremiychuk - Junior Frontend Web Developer; [![GitHub STRONGJUNIORFRONTENDWEBDEV](https://img.shields.io/badge/Strong%20Frontend%20Web%20Developer-Sergey%20Veremiychuk%20%7C%20SergeyVeremiychuk-brightgreen)](https://github.com/SergeyVeremiychuk)
+
+### Этапы реализации по содержанию проекта
+***
+1. Вёрстка шаблона из PSD макета:
+- [ ] concept-love.psd
+- [ ] concept-love2.psd
+- [ ] concept-love-chat.psd
+- [ ] concept-love-chat-mini.psd
+- [ ] concept-love-lk.psd
+- [ ] concept-love-lk2.psd
+- [ ] concept-love-lk-ow.psd
+- [ ] concept-love-lk-ow-albom.psd
+- [ ] concept-love-lk-ow-blacklist.psd
+- [ ] concept-love-lk-ow-close.psd
+- [ ] concept-love-lk-photo.psd
+- [ ] concept-love-v2.psd
+- [ ] concept-love-v2-2.psd
+- [ ] concept-love-v2-all-chat.psd
+- [ ] concept-love-v2-all-chat-prik.psd
+- [ ] concept-love-v2-all-chat-prik2.psd
+- [ ] concept-love-v2-hovers.psd
+- [ ] concept-love-v2-login-popup.psd
+- [ ] concept-love-v2-music.psd
+- [ ] concept-love-v2-mvp.psd
+- [ ] concept-love-v2-mvp123.psd
+- [ ] concept-love-v2-mvp-friends.psd
+- [ ] concept-love-v2-mvp-hovers.psd
+- [ ] concept-love-v2-mvp-hovhov.psd
+- [ ] concept-love-v2-mvp-music-mini.psd
+- [ ] concept-love-v2-mvp-news.psd
+- [ ] concept-love-v2-mvp-settings.psd
+- [ ] concept-love-v2-mvp-settings-group.psd
+- [ ] concept-love-v2-mvp-zakl.psd
+- [ ] concept-love-v2-soob.psd
+- [ ] concept-love-v2-soob-admin.psd
+- [ ] concept-love-v2-soob-stat.psd
+- [ ] concept-love-v2-soob-str.psd
+- [ ] concept-love-v2-video.psd
+- [ ] concept-love-v2-video-active.psd
+- [ ] concept-love-v2-login-vostanov.psd
+- [ ] concept-love-v2-login-vostanov2.psd
+- [ ] concept-love-v2-all-chat-prik2.psd
+- [ ] concept-love-v2-mvp-hovhov.psd
+
+**(Заполнить "Настройка")**
+**(Заполнить "Разработка функционала")**
+
+### Формализованные требования
+![Hackage-Deps](https://img.shields.io/badge/Code%20Size-55%20MB-brightgreen)
+![Hackage-Deps](https://img.shields.io/badge/dependencies-up%20--to--dategreen.svg)
+![GitHub issue completes](https://img.shields.io/badge/Complete-100%25-green.svg)
+***
+- ✔ Единый стиль кода.
+- ✔ Код должен быть читабельным и оформлен в едином стиле по стандартам
+организации.
+- ✔ Оформление `README.md` в соответствии с содержанием проекта, по
+стандартам организации.
+- ✔ Оформление `.gitignore` в соответствии с содержанием проекта.
+- ✔ Обеспечить размещение пакета проекта на сервисе **GitHub Release** при
+успешном слияние
+ветки `crossdev` и `master`.
+- ✔ Написать отчетную документацию-инструкцию по эксплуатации проекта и
+панели администрирования.
+- ✔ Оформить репозиторий проекта на `github` в соответствии с требованиями
+организации.
+- ✔ Оформить релиз проекта в соответствии с требованиями организации.
+- ✔ Оформить промежуточную отчетную документацию для клиента.
+- ✔ Произвести ввод в промышленную эксплуатацию проекта на срвере
+зказчика.
+- ✔ Закрыть договор с заказчиком по выполнению работ на оказание услуг.
+- ✔ Передать лицензию на использование реализованной проектной части.
+- ✔ Проконтролировать корректную эксплуатацию проекта.
+
+### Инструкции по запуску проекта
+![GitHub issue completes](https://img.shields.io/badge/Complete-100%25-green.svg)
+![PyPI - Status](https://img.shields.io/badge/status-stable-green.svg)
+***
+Сайт реализован на базе фреймворков Vue и Laravel и включает следующие
+необходимые материалы:
+**(Заполнить)**
+
+### Ресурсы проекта
+***
+* **Основное доменное имя:** http://vm1020511.had.pm/
+* **Разработка:** https://vm1095330.hl.had.pm/
+* **Хостинг:** **(Заполнить или удалить)**
+* **Дизайн макеты:**
+https://drive.google.com/file/d/1ikhDh9NEXX1GUeHEmvkF14oYAUyE88M_/view
+* **Репозиторий:** https://github.com/jadebrrltd/socnet_plizi
+* **Верстка gitgub pages/io:** **(Заполнить или удалить)**
+* **Отчетная документация**: [![Doc Stable](https://img.shields.io/badge/Отчет-brightgreen)](ttps://github.com/jadebrrltd/mastersleb/blob/crossdev/artifacts/отчет-plizi.pdf)
+* **Release**: **(Заполнить или удалить)**
+
+### Авторские права и использование проекта
+***
+* Supported platforms: **Chrome**, **Firefox**, **Opera**, **Safari**,
+**Yandex**, не поддерживается работа через **IE**.
+* Рейтинг реализованного проекта по SLA: (Заполнить или удалить)
+* Created by desdev at **Jade_Bear.ltd**.
+* Copyright © 2020 **Jade_Bear.ltd**. All rights
+reserved.[![DUB](https://img.shields.io/dub/l/vibed.svg)](https://github.com/jadebrrltd/mastersleb/blob/crossdev/LICENSE.md)
+
+### Результат разработки проектной части
+***
+Проект реализован и передана лицензия на использование продукта к Заказчику.
+Заказ считается закрытым на момент
+последнего коммита. Дата: **(Заполнить или удалить)**
