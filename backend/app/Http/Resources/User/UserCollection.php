@@ -19,6 +19,7 @@ class UserCollection extends ResourceCollection
     {
         return [
             'list' => $this->collection->map(function ($user) {
+                \Log::debug($user->profile);
                 if(\Auth::user()->id === $user->id) {
                     return [
                         'id' => $user->id,
@@ -34,7 +35,7 @@ class UserCollection extends ResourceCollection
                         'isOnline' => $user->isOnline,
                         'lastActivity' => $user->last_activity_dt,
                         'profile' => new Profile($user->profile),
-                        'mutualFriendsCount' => $user->mutualFriendsCount
+                        'mutualFriendsCount' => (int)$user->profile->mutual
                     ];
                 }
             }),
