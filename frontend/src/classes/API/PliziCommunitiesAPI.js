@@ -136,7 +136,7 @@ class PliziCommunitiesAPI extends PliziBaseAPI {
      * @throws PliziAPIError
      */
     async posts(communityID){
-        let response = await this.axios.get( `/communities/${communityID}/posts`, this.authHeaders )
+        let response = await this.axios.get( `api/communities/${communityID}/posts`, this.authHeaders )
             .catch( ( error ) => {
                 this.checkIsTokenExpires( error, `$communities.posts` );
                 throw new PliziAPIError( `$communities.posts`, error.response );

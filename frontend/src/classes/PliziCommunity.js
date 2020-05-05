@@ -1,3 +1,5 @@
+import PliziMember from './PliziMember.js';
+
 class PliziCommunity {
     /**
      * путь к дефолтной аватарке, которую показываем если нет своей
@@ -19,10 +21,18 @@ class PliziCommunity {
     _name = null;
 
     /**
+     * описание сообщества
      * @type {string}
      * @private
      */
     _description = null;
+
+    /**
+     * это кратенькая подсказка под название сообщества в списке сообществ
+     * @type {string}
+     * @private
+     */
+    _notice = null;
 
     /**
      * @type {string}
@@ -34,25 +44,44 @@ class PliziCommunity {
      * @type {string}
      * @private
      */
-    _notice = null;
-
-    /**
-     * @type {string}
-     * @private
-     */
     _primaryImage = null;
 
     /**
+     * это кусок URL'а внутри Plizi
+     * если тут значение "supergroup" то адрес сообщества будет https://plizi.com/supergroup
      * @type {string}
      * @private
      */
     _url = null;
 
     /**
+     * адрес сайта - https://supergroup.com/ или другая фигня
      * @type {string}
      * @private
      */
     _website = null;
+
+    /**
+     * кол-во участников сообщества
+     * @type {number}
+     * @private
+     */
+    _totalMembers = null;
+
+    /**
+     * роль текущего (залогиненного юзера в этом сообществе)
+     * user - если просто подписчик, author - если он создал сообщество, иначе null
+     * @type {null}
+     * @private
+     */
+    _role = null;
+
+    /**
+     * небольшой список участников
+     * @type {PliziMember[]}
+     * @private
+     */
+    _members = null;
 
     constructor(inputData){
         this._id = inputData.id;
@@ -63,6 +92,17 @@ class PliziCommunity {
         this._primaryImage = inputData.primaryImage;
         this._url = inputData.url;
         this._website = inputData.website;
+
+        this._role = inputData.role;
+        this._totalMembers = inputData.totalMembers;
+
+        if (inputData.members) {
+            this._members = [];
+
+            inputData.members.list.map( (mItem) => {
+                this._members.push(new PliziMember(mItem));
+            });
+        }
     }
 
     get id(){
@@ -98,6 +138,35 @@ class PliziCommunity {
 
     get website(){
         return this._website;
+    }
+
+    get totalMembers(){
+        return this._totalMembers;
+    }
+
+    get role(){
+        return this._role;
+    }
+
+    get members(){
+        return this._members;
+    }
+
+    toJSON(){
+        return {
+            id: this.id,
+            name: this.name,
+            notice: this.notice,
+            primaryImage: this._primaryImage,
+            url: this.url,
+            website: this.website,
+            location: this.location,
+            role: this.role,
+            totalMembers: this.totalMembers,
+            members: {
+                list: this.members.map( mItem => mItem.toJSON() )
+            }
+        };
     }
 }
 
