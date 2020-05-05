@@ -87,7 +87,7 @@ class ChatController extends Controller
         $message = $this->chatService->send(
             $request->get('body'),
             $request->get('chatId'),
-            \Auth::user()->id,
+            auth()->id(),
             $request->get('replyOnMessageId'),
             $request->get('forwardFromChatId'),
             $request->get('attachments') ? $request->get('attachments') : []
@@ -104,7 +104,7 @@ class ChatController extends Controller
         $message = $this->chatService->sendToUser(
             $request->get('body'),
             $request->get('userId'),
-            \Auth::user()->id,
+            auth()->id(),
             $request->get('replyOnMessageId'),
             $request->get('forwardFromChatId'),
             $request->get('attachments') ? $request->get('attachments') : []
@@ -146,7 +146,7 @@ class ChatController extends Controller
      */
     public function destroyMessage(Request $request, $id) {
         if($data = $this->chatService->destroyMessage($id)) {
-            response()->json(['data' => $data], 200);
+            return response()->json(['data' => $data], 200);
         }
         return response()->json(['message' => 'Вы не можете удалить чужое сообщение'], 422);
     }
