@@ -23,7 +23,13 @@
             </div>
 
             <div class="nav-item">
-                <router-link tag="a" class="dropdown-item px-3 py-1" to="/chat-list">
+                <span class="dropdown-item px-3 py-1" @click.prevent="onRemoveFromFavoritesClick">
+                    Удалить из Избранных
+                </span>
+            </div>
+
+            <div class="nav-item">
+                <router-link tag="a" class="dropdown-item px-3 py-1" to="/chats">
                     Начать общение
                 </router-link>
             </div>
@@ -55,6 +61,12 @@ methods: {
 
     onAddToFavoritesClick(){
         this.$emit( 'FriendAddToFavorites', {
+            friendId: this.friend.id
+        });
+    },
+
+    onRemoveFromFavoritesClick(){
+        this.$emit( 'FriendRemoveFromFavorites', {
             friendId: this.friend.id
         });
     },

@@ -78,20 +78,6 @@ methods : {
     friendsListSelect( wm ){
         this.wMode = wm;
     },
-
-    async loadFavorites() {
-        let apiResponse;
-
-        try {
-            apiResponse = await this.$root.$api.$friend.favorites();
-        } catch (e) {
-            console.warn(e.detailMessage);
-        }
-
-        if (apiResponse) {
-            window.console.log(apiResponse, `apiResponse`);
-        }
-    },
 },
 
 computed : {
@@ -114,8 +100,5 @@ computed : {
     },
 },
 
-mounted(){
-    //this.loadFavorites();
-}
 }
 </script>
