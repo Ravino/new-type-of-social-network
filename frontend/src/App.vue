@@ -155,6 +155,7 @@ methods: {
     async persistentCollectionsReload(){
         await this.$root.$auth.dm.load();
         await this.$root.$auth.fm.load();
+        await this.$root.$auth.cm.load();
         await this.$root.$auth.im.load();
         await this.$root.$auth.nm.load();
     },
@@ -162,6 +163,7 @@ methods: {
     async persistentCollectionsRestore(){
         this.$root.$auth.dm.restore();
         await this.$root.$auth.fm.load();
+        this.$root.$auth.cm.restore();
         await this.$root.$auth.im.load();
         await this.$root.$auth.nm.load();
     }

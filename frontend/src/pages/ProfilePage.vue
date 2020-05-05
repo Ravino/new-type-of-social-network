@@ -166,8 +166,6 @@ methods : {
         let response = null;
 
         try{
-            await this.$root.$api.$friend.favorites();
-
             response = await this.$root.$api.$post.getPosts();
         } catch (e){
             console.warn( e.detailMessage );
