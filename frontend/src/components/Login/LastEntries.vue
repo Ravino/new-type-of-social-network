@@ -52,9 +52,18 @@ methods: {
             {src: '/images/last-entries/ava-2.png', fullName: 'Мариана Кабанова', isUser: true, email: `test@gmail.com` },
             {src: '/images/last-entries/ava-1.png', fullName: 'Виктория Мамонтовa', isUser: true, email: `user@mail.com`},
             {src: '/images/last-entries/ava-3.png', fullName: 'Полина Дорожина', isUser: true, email: `admin@mail.com`},
+
             {src: '/images/last-entries/ava-6a.png', fullName: 'Никодим Соколов', isUser: true, email: `denesik.adeline@gmail.com`},
-            {src: '/images/last-entries/ava-4.png', fullName: 'Alexey Targa', isUser: true, email: `targa@arma3.in.ua`, password: `5eb004a84cf26`},
+            {src: '/images/last-entries/ava-4.png', fullName: 'Alex Targa', isUser: true, email: `targa@arma3.in.ua`, password: `5eb004a84cf26`},
             {src: '/images/last-entries/ava-7.png', fullName: 'Alex Dnipro', isUser: true, email: `targa@ua.fm`, password: `5eafbd21343ba`},
+
+            {src: '/images/last-entries/ava-8.png', fullName: 'Марат Большаков', isUser: true, email: `shawn48@hotmail.com`},
+            {src: '/images/last-entries/ava-9.png', fullName: 'Лада Никифорова', isUser: true, email: `karelle00@zulauf.biz`},
+            {src: '/images/last-entries/ava-10.png', fullName: 'Капитолина Быковa', isUser: true, email: `celine.kuhn@runte.info`},
+
+            {src: '/images/last-entries/ava-11.png', fullName: 'Дан Савин', isUser: true, email: `beer.muriel@gmail.com`},
+            {src: '/images/last-entries/ava-12.png', fullName: 'Мирослав Зыков', isUser: true, email: `mhoppe@okon.com`},
+            {src: '/images/last-entries/ava-14.png', fullName: 'Эльвира Гущинa', isUser: true, email: `kaitlyn.koch@zboncak.com`},
 
         ];
     }

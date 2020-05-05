@@ -41,7 +41,7 @@
                                     :dropToDown="true"
                                     :clazz="`row plz-text-editor mb-4 pl-2 h-auto  align-items-start`"
                                     :inModal="true"
-                                    @editorPost="onTextPost">
+                                    @editorPost="startPersonalMessage">
                         </TextEditor>
                     </div>
 
@@ -79,26 +79,39 @@ methods: {
     },
 
     startPersonalMessage(){
+        window.console.log(`startPersonalMessage`);
+
+        const msg = this.$refs.messageToUserFromHisPage.getContent();
+
+        if (msg===``  ||  msg==='<p></p>')
+            return;
+
         this.$root.$emit('sendPersonalMessage', {
-            message: this.$refs.messageToUserFromHisPage.getContent(),
+            message: msg,
             receiverId: this.user.id,
         });
 
         this.$root.$emit('hidePersonalMsgModal', {});
     },
 
-    onTextPost(evData){
-        if (evData.postText.trim() !== '') {
+    //onTextPost(evData){
+    //    if (evData.postText.trim() !== '') {
+    //
+    //        this.$root.$emit('sendPersonalMessage', {
+    //            message: this.$refs.messageToUserFromHisPage.getContent(),
+    //            receiverId: this.user.id,
+    //        });
+    //
+    //        this.$root.$emit('hidePersonalMsgModal', {});
+    //
+    //    }
+    //}
+},
 
-            this.$root.$emit('sendPersonalMessage', {
-                message: this.$refs.messageToUserFromHisPage.getContent(),
-                receiverId: this.user.id,
-            });
-
-            this.$root.$emit('hidePersonalMsgModal', {});
-
-        }
-    }
+mounted(){
+    setTimeout(()=>{
+        this.$refs.messageToUserFromHisPage.focus();
+    }, 100);
 }
 
 }
