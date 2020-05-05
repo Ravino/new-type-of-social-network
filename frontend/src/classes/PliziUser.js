@@ -196,7 +196,7 @@ class PliziUser {
     get region(){
         const loc = this.profile.location;
 
-        if (!loc)
+        if (!loc && !loc.region)
             return null;
 
         return {
