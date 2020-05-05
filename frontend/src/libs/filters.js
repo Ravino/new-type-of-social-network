@@ -30,6 +30,13 @@ Vue.filter('toDMY', (dateValue) => {
     return moment(dateValue).format('DD.MM.YYYY');
 });
 
+Vue.filter('calcAge', (bDate) => {
+    const now = moment();
+    const birthDate = moment(bDate);
+    return now.diff(birthDate, 'years');
+});
+
+
 /**
  * это  фильтр для юзеров
  */

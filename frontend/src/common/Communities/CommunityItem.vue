@@ -18,8 +18,10 @@
                         {{ community.description }}</p>
 <!--                    <p class="plizi-community-item-notice p-0 mb-1">-->
 <!--                        {{ community.notice }}</p>-->
-                    <p class="plizi-community-item-location p-0 my-0">
-                        {{ community.location }}</p>
+                    <p v-if="community.notice" class="plizi-community-item-notice p-0 my-0 text-secondary">{{ community.notice }}</p>
+                    <p v-else class="plizi-community-item-location p-0 my-0 text-secondary">{{ community.location }}</p>
+
+                    <p class="plizi-community-item-members-number p-0 my-0">участников <b>{{ community.totalUsers }}</b></p>
                 </div>
 
                 <div class="plizi-community-item-body-bottom mt-2">
