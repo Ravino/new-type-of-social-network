@@ -1,9 +1,6 @@
 import moment from 'moment';
 
 export function isCorrectFullName(value) {
-    if ((value+'') === '')
-        return true;
-
     return /^[0-8a-zа-яёїіи+\-\s]{2,100}$/i.test(value);
 }
 
@@ -12,6 +9,10 @@ export function isCorrectHumanName(value) {
         return true;
 
     return /^[0-8a-zа-яёїіи+\-\s]{1,100}$/i.test(value);
+}
+
+export function notHaveSpace(value) {
+    return !(/\s/.test(value));
 }
 
 export function isFirstNameAndLastName(value) {
@@ -26,8 +27,12 @@ export function isFirstNameAndLastName(value) {
 
 
 export function isValidRegistrationBirthDay(dateVal){
-    if ((dateVal+'') === '')
-        return true;
-    // return moment(dateVal, 'DD.MM.YYYY', true).isValid();
-    return moment(dateVal, 'YYYY-MM-DD', true).isValid();
+    let birthday = moment(dateVal, 'YYYY-MM-DD', true);
+    let now = moment();
+
+    if (birthday.isValid()) {
+        return birthday <= now;
+    }
+
+    return false;
 }
