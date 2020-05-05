@@ -145,10 +145,16 @@ h1, h2, h3, h4, h5, h6 {
     line-height: 20px;
     outline: none;
     box-shadow: none;
+    transition: .4s;
 
     &::placeholder {
         font-size: $placeholderSize;
         color: $placeholderColor;
+    }
+
+    &:focus {
+        background-color: #FFFFFF;
+        box-shadow: 0 2px 5px 0 rgba(0, 0, 0, 0.3);
     }
 }
 

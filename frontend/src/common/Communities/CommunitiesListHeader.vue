@@ -21,7 +21,7 @@
             </div>
 
             <div class="communities-search-block col-sm-6 col-md-6 col-lg-4 col-xl-4 d-flex align-items-center">
-                <div class="form-inline mt-1 mt-md-1 position-relative overflow-hidden rounded-pill"
+                <div class="form-inline mt-1 mt-md-1 position-relative "
                      :class="{'isFocused' : isFocused}">
                     <input :value="lastSearch" id="txtCommunitiesListSearch"
                            ref="txtCommunitiesListSearch"

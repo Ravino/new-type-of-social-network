@@ -5,7 +5,7 @@
                 <label class="sr-only d-none" for="txtFindInChatList">Поиск</label>
                 <input v-model="filterText" type="text"
                        id="txtFindInChatList" ref="txtFindInChatList"
-                       class="chat-search-input form-control rounded-pill bg-light px-4"
+                       class="chat-search-input form-control rounded-pill px-4"
                        @keydown.stop="dialogSearchKeyDownCheck"
                        placeholder="Поиск в собеседниках" />
 
