@@ -1,0 +1,111 @@
+$srUserPicSize: 80px;
+$friendItemTimeColor: #9A9A9A;
+$friendItemNameColor: #363636;
+$friendItemOnlineColor: #9FCD48;
+$friendItemOfflineColor: #CACAC9;
+
+.plizi-friend-item-user {
+    border-bottom: 1px solid #ebebeb;
+    transition: .4s;
+    &:hover {
+        background-color: #e6e7eb !important;
+    }
+    &:last-child {
+        border-bottom: 0;
+    }
+
+    .user-friend-desc {
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+    }
+}
+
+.plizi-friend-item {
+    cursor: pointer;
+
+    &-pic {
+        display: inline-block;
+        position: relative;
+        height: $srUserPicSize;
+        width: $srUserPicSize;
+
+        img {
+            display: inline-block;
+            width: $srUserPicSize;
+            height: $srUserPicSize;
+        }
+    }
+
+    &-isonline {
+        display: block;
+        position: absolute;
+        width: 10px;
+        height: 10px;
+        right: 10px;
+        bottom: 0px;
+        background-color: $friendItemOnlineColor;
+        border: 1px solid white;
+        border-radius: 100%;
+    }
+
+    &-isoffline {
+        display: block;
+        position: absolute;
+        width: 10px;
+        height: 10px;
+        right: 10px;
+        bottom: 0px;
+        background-color: $friendItemOfflineColor;
+        border: 1px solid white;
+        border-radius: 100%;
+    }
+
+    &-body {
+        &-top {
+            time {
+                font-size: 11px;
+                color: $friendItemTimeColor; // add color to var
+            }
+
+        }
+    }
+
+    &-name {
+        font-size: 16px;
+        font-weight: 600;
+        color: $friendItemNameColor;
+        line-height: 20px;
+        cursor: pointer;
+
+        &:hover {
+            text-decoration: underline;
+            color: $friendItemTimeColor;
+        }
+    }
+
+    &-desc {
+        font-size: 13px;
+        color: $friendItemTimeColor;
+    }
+
+    &-details {
+        font-size: 12px;
+        color: $friendItemNameColor;
+    }
+
+    &-actions {
+        &:hover {
+            .dots-vertical,
+            .dots-vertical:before,
+            .dots-vertical:after {
+                background-color: #363636;
+            }
+        }
+    }
+
+    .icon-message {
+        height: 20px;
+    }
+
+}

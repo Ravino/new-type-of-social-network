@@ -1,0 +1,61 @@
+<template>
+    <div class="">
+        <router-link :to="`/user-`+attendee.id" tag="div"
+                     class="mr-3 cursor-pointer position-relative">
+            <div class="media-pic border rounded-circle ">
+                <img :src="attendee.userPic" v-bind:alt="attendee.firstName" />
+            </div>
+
+            <template v-if="isTyper">
+                <div class="writing"><span></span><span></span><span></span></div>
+            </template>
+            <template v-else>
+                <span v-if="attendee.isOnline" class="user-friend-isonline" :title="attendee.firstName + ' онлайн'"></span>
+                <span v-else class="user-friend-isoffline"></span>
+            </template>
+        </router-link>
+    </div>
+</template>
+
+<script>
+import PliziAttendee from '../../classes/PliziAttendee.js';
+
+export default {
+name : 'ChatHeaderAttendeeItem',
+props : {
+    attendee : PliziAttendee
+},
+
+data(){
+    return {
+        typingTimeout: null,
+        isTyper: false
+    }
+},
+
+methods : {
+
+    /**
+     * @param {Object} evData
+     */
+    onCompanionTyping(evData) {
+        if (this.attendee.id !== evData.user.id)
+            return;
+
+        if (this.typingTimeout) {
+            clearTimeout(this.typingTimeout);
+        }
+
+        this.isTyper = true;
+
+        this.typingTimeout = setTimeout(() => {
+            this.isTyper = false;
+        }, 2000);
+    }
+},
+
+mounted(){
+    this.$root.$on('userIsTyping', this.onCompanionTyping);
+}
+}
+</script>

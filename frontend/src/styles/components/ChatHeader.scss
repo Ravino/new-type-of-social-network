@@ -1,0 +1,42 @@
+#chatHeader {
+    height: 76px;
+
+    .btn-search {
+        position: absolute;
+        top: 0;
+        bottom: 0;
+        right: 0;
+        z-index: 1;
+        padding-right: 1rem;
+        box-shadow: none;
+        border: 0;
+    }
+}
+
+#txtFindInChat {
+    color: #A3A8B9;
+    height: 40px;
+    min-height: 40px;
+    max-height: 40px;
+    background-color: #EEEFF4;
+    border-radius: 20px;
+    border-width: 0;
+    padding: 0 30px;
+    line-height: 20px;
+    outline: none;
+    box-shadow: none;
+
+    &::placeholder {
+        font-size: $placeholderSize;
+        color: $placeholderColor;
+    }
+}
+
+.chatHeader-title {
+    font-size: 13px;
+    font-weight: 700;
+}
+.chatHeader-subtitle {
+    font-size: 13px;
+    color: #9a9a9a;
+}

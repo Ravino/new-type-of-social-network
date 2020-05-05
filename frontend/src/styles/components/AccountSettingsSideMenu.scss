@@ -1,0 +1,21 @@
+
+$textColor: #9a9a9a;
+$titleColor: #363636;
+
+#accountSettingsSideMenu {
+    .list-group-item {
+        color: $textColor;
+        font-size: 13px;
+
+        &.active,
+        &:hover {
+            background-color: #dae4ee;
+            color: $titleColor;
+        }
+        &.active {
+            font-weight: 600;
+        }
+    }
+
+
+}

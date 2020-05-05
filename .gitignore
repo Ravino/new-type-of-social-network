@@ -1,25 +1,13 @@
-/node_modules
-/public/hot
-/public/storage
-/storage/*.key
-/vendor
-.env
-.env.backup
-.phpunit.result.cache
-Homestead.json
-Homestead.yaml
-npm-debug.log
-yarn-error.log
-
-/dist
-
 # Editor directories and files
 .idea
+.vs
 
 # windows thumbnail cache
 Thumbs.db
 
-#targa local settings
-#index.html
-/src/libs/
-/public/js/*.LICENSE.txt
+/*/*.bak
+/dev_deploy.sh
+
+
+mysql_data_plizi
+mongodb_data_plizi

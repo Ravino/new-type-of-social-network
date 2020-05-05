@@ -1,0 +1,93 @@
+<template>
+    <div class="modal" id="postEditModal" tabindex="-1" role="dialog" aria-labelledby="postEditModal"
+         aria-hidden="true" style="display: block; background-color: rgba(0, 0, 0, .7);"
+         @click.stop="hidePostRepostModal">
+
+        <div class="modal-dialog modal-xl modal-dialog-centered" role="document" @click.stop="">
+            <div class="modal-content bg-white-br20">
+                <div id="resendMessageModalBody" class="modal-body p-4">
+                    <div class="form-group">
+                        <multiselect v-model="selectedShareList"
+                                     :options="shareList"
+                                     :searchable="true"
+                                     trackBy="code"
+                                     label="title"
+                                     :close-on-select="true"
+                                     :show-labels="false"
+                                     :multiple="false"
+                                     placeholder="Выберите получателя">
+                        </multiselect>
+                    </div>
+                    <div class="form-group mb-4">
+                        <PostRepostItem :post="post"
+                                        :user="user"/>
+                    </div>
+                    <button type="button" class="btn plz-btn plz-btn-primary mt-4" @click.prevent="sharePostToWall">
+                        Отправить
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+</template>
+
+<script>
+    import PostRepostItem from "./PostRepostItem.vue";
+
+    import PliziUser from '../../classes/PliziUser.js';
+    import PliziPost from '../../classes/PliziPost.js';
+
+    export default {
+        name: "PostRepostModal",
+        components: {
+            PostRepostItem,
+        },
+        props: {
+            user: PliziUser,
+            post: PliziPost,
+        },
+        data() {
+            return {
+                selectedShareList: null,
+                shareList: [
+                   {
+                       code: 'myWall',
+                       title: 'На мою стену',
+                   },
+                ],
+            }
+        },
+        methods: {
+            hidePostRepostModal() {
+                this.$emit('hidePostRepostModal');
+            },
+
+            async sharePostToWall() {
+                if (!this.selectedShareList) return;
+
+                let response;
+
+                try {
+                    if (this.selectedShareList.code === 'myWall') {
+                        response = await this.$root.$api.$post.sharePostToWall(this.post.id);
+                    }
+                } catch (e) {
+                    console.warn(e.detailMessage);
+                }
+
+                console.log(response);
+
+                if (response) {
+                    this.hidePostRepostModal();
+                }
+            },
+        },
+    }
+</script>
+
+<style lang="scss">
+    .multiselect__option--selected {
+        color: #000 !important;
+        background-color: #fff !important;
+    }
+</style>

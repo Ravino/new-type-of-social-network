@@ -1,0 +1,25 @@
+
+#communitiesFilter {
+    .btn-search {
+        position: absolute;
+        top: 50%;
+        right: 0;
+        transform: translateY(-50%);
+        box-shadow: none;
+        border: 0;
+        outline: none;
+        &:hover {
+            svg {
+                fill: $iconHoverColor;
+            }
+        }
+    }
+}
+
+.plizi-communities-list {
+    margin-left: -15px;
+}
+.plizi-community-item-wrp {
+    width: calc(50% - 15px);
+    margin-left: 15px;
+}

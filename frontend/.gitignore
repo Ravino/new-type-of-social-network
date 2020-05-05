@@ -1,0 +1,42 @@
+/node_modules
+/public/hot
+/public/storage
+
+# Log files
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+#build folders
+/dist
+/images/
+/js/images
+
+# Editor directories and files
+.idea
+.vscode
+.vs
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+*.sw?
+
+
+# windows thumbnail cache
+Thumbs.db
+.DS_Store
+
+#targa local settings
+/public/js/*.LICENSE.txt
+/*/*.bak
+*.bak
+
+/public/apl.html
+/public/index.html
+/public/js/app.js
+/public/css/app.css
+
+*.js.map
+*.css.map
+mix-manifest.json
