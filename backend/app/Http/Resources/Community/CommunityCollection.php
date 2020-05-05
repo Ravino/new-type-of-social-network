@@ -25,7 +25,7 @@ class CommunityCollection extends ResourceCollection
                         'url' => $community->url,
                         'website' => $community->website,
                         'location' => $community->location,
-                        'totalUsers' => $community->members->count(),
+                        'totalMembers' => $community->members->count(),
                         'role' => $community->role ? $community->role->role : null,
                         'members' => new CommunityUserCollection($community->onlyFiveMembers)
                     ];
@@ -38,7 +38,7 @@ class CommunityCollection extends ResourceCollection
                         'url' => $community->url,
                         'website' => $community->website,
                         'location' => $community->location,
-                        'totalUsers' => $community->members->count(),
+                        'totalMembers' => $community->members->count(),
                         'role' => $community->role ? $community->role->role : null
                     ];
                 }
