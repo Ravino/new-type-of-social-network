@@ -40,6 +40,8 @@ class ImageUploadController extends Controller
             'mime_type' => $request->image->getClientMimeType()
         ]);
         $image_upload = $this->imageUpload->create($request->only('original_name', 'path', 'title', 'size', 'tag', 'mime_type'));
-        return response()->json(['path' => $image_upload->url]);
+        return response()->json(['data' => [
+            'path' => $image_upload->url
+        ]]);
     }
 }
