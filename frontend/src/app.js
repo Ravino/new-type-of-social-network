@@ -61,6 +61,7 @@ Vue.prototype.$alert = function(message, clazz, timeOut){
 };
 
 // @TGA пока не нужно
+//
 //import { VueResponsiveComponents } from 'vue-responsive-components';
 // Vue.use(VueResponsiveComponents);
 
