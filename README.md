@@ -11,6 +11,7 @@ $ php artisan db:seed # сгенерировать тестового польз
 ```
 $ php artisan jwt:secret
 
+
 ```
 
 
