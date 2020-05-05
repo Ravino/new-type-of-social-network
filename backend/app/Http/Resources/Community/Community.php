@@ -25,7 +25,7 @@ class Community extends JsonResource
                 'website' => $this->website,
                 'location' => $this->location,
                 'role' => $this->role ? $this->role->role : null,
-                'totalUsers' => $this->members->count(),
+                'totalMembers' => $this->members->count(),
                 'members' => new CommunityUserCollection($this->users)
             ];
         } else {
@@ -38,7 +38,7 @@ class Community extends JsonResource
                 'url' => $this->url,
                 'website' => $this->website,
                 'location' => $this->location,
-                'totalUsers' => $this->members->count(),
+                'totalMembers' => $this->members->count(),
                 'role' => $this->role ? $this->role->role : null
             ];
         }

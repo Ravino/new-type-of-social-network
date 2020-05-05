@@ -5,7 +5,7 @@ services:
     container_name: "plizi_mysql"
     command: mysqld --character-set-server=utf8 --collation-server=utf8_general_ci
     volumes:
-      - mysql_data_plizi:/var/lib/mysql
+      - ./mysql_data_plizi:/var/lib/mysql
     env_file:
       - ./backend/docker/mysql/.env
     ports:
@@ -18,7 +18,7 @@ services:
     ports:
       - 27017:27017
     volumes:
-      - mongodb_data_plizi:/data/db
+      - ./mongodb_data_plizi:/data/db
 
   app_nginx:
     image: nginx

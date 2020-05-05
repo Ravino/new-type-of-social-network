@@ -22,8 +22,8 @@ class GeoController extends Controller
                 ->where('title_ru', 'LIKE', "%{$search}%")
                 ->where('title_ua', 'LIKE', "%{$search}%")
                 ->where('title_en', 'LIKE', "%{$search}%")
-                ->limit(10)
-                ->orderBy('title_ru')
+                ->orderBy('important', 'desc')
+                ->limit(100)
                 ->get();
             if (count($result)) {
                 return new CitiesCollection($result);

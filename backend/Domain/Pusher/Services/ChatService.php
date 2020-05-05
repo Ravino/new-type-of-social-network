@@ -218,7 +218,7 @@ class ChatService extends BaseService
      * @return bool|\Domain\Pusher\Http\Resources\Chat\Chat
      */
     public function destroyChat($id) {
-        if($this->chatRepository->isUserInChat(\Auth::user()->uuid, $id)) {
+        if($this->chatRepository->isUserInChat(auth()->id(), $id)) {
             $this->chatRepository->destroyChat($id);
             return $id;
         }

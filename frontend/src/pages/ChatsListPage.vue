@@ -4,11 +4,20 @@
             <AccountToolbarLeft></AccountToolbarLeft>
         </div>
 
-        <div class="col-sm-12 col-md-9 col-lg-11 pr-3  chat-page-height">
+        <div v-if="isFreshUser" class="col-sm-12 col-md-9 col-lg-11 pr-3 chat-page-height">
+            <div class="jumbotron">
+                <p class="alert alert-info w-100 text-center p-5">
+                    Вы ещё ни с кем не общались, потому здесь пока никого нет.<br />
+                    Находите себе новых <router-link tag="a" to="/friends" class="btn btn-link mx-0 px-0">друзей</router-link>, вступайте в <router-link tag="a" to="/popular-communities" class="btn btn-link mx-0 px-0">сообщества</router-link>!
+                </p>
+            </div>
+        </div>
+        <div v-else class="col-sm-12 col-md-9 col-lg-11 pr-3 chat-page-height">
             <div v-if="isDialogsLoaded" id="chatMain" class="row bg-white-br20 overflow-hidden">
 
                 <ChatDialogs ref="chatMessagesUsersList"
-                             :currentDialogID="currentDialogID" @SwitchToChat="onSwitchToChat">
+                             :currentDialogID="currentDialogID"
+                             @SwitchToChat="onSwitchToChat">
                 </ChatDialogs>
 
                 <div id="chatMessagesWrapper"
@@ -95,8 +104,11 @@ computed: {
     },
 
     isDialogsLoaded(){
-        //return this.$root.$auth.dm.isLoad;
-        return true;
+        return this.$root.$auth.dm.isLoad;
+    },
+
+    isFreshUser(){
+        return (this.$root.$auth.fm.size===0  &&  this.$root.$auth.dm.size===0);
     }
 },
 
@@ -165,10 +177,9 @@ methods: {
         let msgsResponse = null;
         this.isMessagesLoaded = false;
 
-        this.currentDialog =  this.$root.$auth.dm.get(chatId);
+        this.currentDialog = this.$root.$auth.dm.get(chatId);
 
         try {
-            console.log('%c%s', 'color: red', `chatSelect call to chat.messages`);
             msgsResponse = await this.$root.$api.$chat.messages(chatId);
         }
         catch (e){
@@ -184,14 +195,17 @@ methods: {
         });
 
         this.isMessagesLoaded = true;
+    },
+
+    addListeners(){
+        this.$root.$on('newMessageInDialog', this.addNewChatMessageToList);
+        this.$root.$on('removeMessageInDialog', this.removeMessageInList);
     }
 },
 
 created(){
-    this.$root.$on('newMessageInDialog', this.addNewChatMessageToList);
-    this.$root.$on('removeMessageInDialog', this.removeMessageInList);
+    this.addListeners();
 },
-
 
 }
 </script>

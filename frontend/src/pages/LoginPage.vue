@@ -12,9 +12,9 @@
 </template>
 
 <script>
-import LoginForm from '../components/LoginForm.vue';
-import LastEntries from '../components/LastEntries.vue';
-import PliziMobile from '../components/PliziMobile.vue';
+import LoginForm from '../components/Login/LoginForm.vue';
+import LastEntries from '../components/Login/LastEntries.vue';
+import PliziMobile from '../components/Login/PliziMobile.vue';
 
 export default {
 name: 'LoginPage',

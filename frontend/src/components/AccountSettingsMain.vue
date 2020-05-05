@@ -114,7 +114,7 @@
                     <div
                         class="plz-account-settings-body-field plz-account-settings-main-body-field col-sm-6 col-md-6 col-lg-6 col-xl-6 ">
                         <div v-if="!isEdit.birthday" class="form-control-plaintext border-bottom-0">
-                            {{ model.birthday | toYMD }}
+                            {{ model.birthday | toDMY }}
                         </div>
                         <input v-if="isEdit.birthday"
                                id="birthday"
@@ -189,14 +189,8 @@
 </template>
 
 <script>
-    /**
-     * @link https://vue-multiselect.js.org/#sub-getting-started
-     */
-    import Multiselect from 'vue-multiselect'; // TODO: @TGA зачем? он уже подключён в APP
-
     export default {
         name: 'AccountSettingsMain',
-        components: {Multiselect},
         computed: {
             userData: function () {
                 return this.$root.$auth.user;
@@ -230,24 +224,7 @@
                     sex: this.$root.$auth.user.sex,
                     relationshipId: this.$root.$auth.user.relationshipId,
                     birthday: this.$root.$auth.user.birthday,
-                    location: this.$root.$auth.user.city && this.$root.$auth.user.city.id ? {
-                        id: this.$root.$auth.user.city.id,
-                        title: {
-                            ru: this.$root.$auth.user.city.title,
-                        },
-                        region: {
-                            id: this.$root.$auth.user.region.id,
-                            title: {
-                                ru: this.$root.$auth.user.region.title,
-                            },
-                        },
-                        country: {
-                            id: this.$root.$auth.user.country.id,
-                            title: {
-                                ru: this.$root.$auth.user.country.title,
-                            },
-                        },
-                    } : null,
+                    location: this.$root.$auth.user.location,
                 },
 
                 isEdit: {
@@ -351,7 +328,11 @@
             },
             locationLabel({title, region, country}) {
                 if (title) {
-                    return `${country.title.ru}, ${region.title.ru}, ${title.ru}`;
+                    if (region) {
+                        return `${country.title.ru}, ${region ? region.title.ru : null}, ${title.ru}`;
+                    }
+
+                    return `${country.title.ru}, ${title.ru}`;
                 }
             },
         },

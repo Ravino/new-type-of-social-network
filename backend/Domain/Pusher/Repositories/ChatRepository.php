@@ -27,8 +27,8 @@ class ChatRepository
     {
         $query = Chat::with(['attendees' => function($query) use ($user_id) {
             $query->where('id', '<>', $user_id);
-        }])->whereHas('attendees', function($user) use ($search, $user_id) {
-            $user->where('id', 'LIKE', $user_id);
+        }])->whereHas('attendees', function($user) use ($user_id) {
+            $user->where('id', '=', $user_id);
         });
 
         if(!empty($search) && strlen($search) > 3) {
@@ -53,7 +53,7 @@ class ChatRepository
     {
         $user_id = \Auth::user()->uuid;
         $items = Chat::with(['attendees' => function($query) use ($user_id) {
-            $query->where('uuid', '<>', $user_id);
+            $query->where('id', '<>', $user_id);
         }])->where('_id', $id)
             ->orderBy('last_message_time', 'desc')
             ->first();
@@ -73,17 +73,8 @@ class ChatRepository
      */
     public function getUsersIdListFromChat(string $chat_id, string $exclude_id = null): array
     {
-        $chat = Chat::with(['attendees' => function($query) use ($exclude_id) {
-            if($exclude_id) {
-                $query->where('uuid', '<>', $exclude_id);
-            }
-        }])->where('_id', $chat_id)->first();
-        $attendees = [];
-        foreach ($chat->attendees()->get(['uuid']) as $attendee) {
-           array_push($attendees, $attendee->id);
-        }
-
-        return $attendees;
+        $chat = Chat::where('_id', $chat_id)->first();
+        return array_filter($chat->user_ids, function ($element) use ($exclude_id) { return ($element != $exclude_id); } );
     }
 
     /**
@@ -150,9 +141,8 @@ class ChatRepository
      * @return bool
      */
     public function isUserInChat($user_id, $chat_id) {
-        return Chat::whereHas(['attendees' => function($query) use ($user_id) {
-            $query->where('uuid', $user_id);
-        }])->where('id', $chat_id)->exists();
+        $chat = Chat::where('_id', $chat_id)->first();
+        return in_array($user_id, $chat->user_ids);
     }
 
     /**
@@ -168,10 +158,10 @@ class ChatRepository
     }
 
     /**
-     * @param int $chat_id
+     * @param string $chat_id
      * @return bool
      */
-    public function destroyChat(int $chat_id) {
+    public function destroyChat(string $chat_id) {
         Chat::destroy($chat_id);
         return true;
     }

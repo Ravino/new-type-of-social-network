@@ -17,7 +17,7 @@ class UserTypingNotification
         $idsOfUsers = $event->getUsersListIds();
         $user = $event->getUserTyping();
         foreach ($idsOfUsers as $user_id) {
-            Pusher::sentDataToServer(['data' => $user, 'chatId' => $event->getChatId(), 'topic_id' => Pusher::channelForUser($user_id->user_id), 'event_type' => 'user.typing']);
+            Pusher::sentDataToServer(['data' => $user, 'chatId' => $event->getChatId(), 'topic_id' => Pusher::channelForUser($user_id), 'event_type' => 'user.typing']);
         }
     }
 }
