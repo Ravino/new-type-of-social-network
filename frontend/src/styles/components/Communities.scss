@@ -16,10 +16,93 @@
     }
 }
 
-.plizi-communities-list {
-    margin-left: -15px;
+$pictureSize: 98px;
+$friendspicSize: 20px;
+.plizi-community {
+    &-item {
+        &-pic {
+            position: relative;
+            width: 30%;
+            height: 0;
+            padding-bottom: 30%;
+        }
+        &-img {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+
+            display: inline-block;
+            width: 100%;
+            height: auto;
+        }
+        &-body {
+            width: calc( 70% - 15px );
+        }
+        &-name {
+            color: $postTextColor;
+            font-weight: 700;
+        }
+        &-desc,
+        &-notice,
+        &-location,
+        &-members-number {
+            font-size: 13px;
+            color: #9a9a9a;
+        }
+        &-body-bottom {
+            .btn {
+                height: 32px;
+                line-height: 16px;
+                font-size: 11px;
+                text-transform: uppercase;
+                color: $postTextColor;
+                font-weight: 700;
+                border: 2px solid $blueBtn;
+                transition: .4s;
+
+                &:hover {
+                    background-color: $blueBtn;
+                    color: #ffffff;
+                    box-shadow: 0 5px 18px rgba(61, 81, 222, .4);
+                }
+            }
+        }
+
+        &-body-friends{
+             width: 50%;
+             max-width: 110px;
+            &-pics {
+                position: relative;
+                width: 50px;
+                display: flex;
+                align-items: center;
+                justify-content: space-between;
+             }
+
+        }
+        &-body-friends-pic {
+            width: $friendspicSize;
+            height: $friendspicSize;
+            border: 1px solid #fff;
+            overflow: hidden;
+
+            img {
+                position: absolute;
+                top: 50%;
+                left: 50%;
+                transform: translate(-50%, -50%);
+
+                display: inline-block;
+                width: 100%;
+                height: auto;
+            }
+        }
+    }
+
 }
-.plizi-community-item-wrp {
-    width: calc(50% - 15px);
-    margin-left: 15px;
+#createCommunityBlock {
+    .btn-create {
+        min-height: 40px;
+    }
 }

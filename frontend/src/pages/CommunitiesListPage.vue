@@ -11,9 +11,10 @@
             </div>
 
             <div class="row">
-                <div class="col-sm-10 col-md-10 col-lg-8 col-xl-8">
-                    <div v-if="isCommunitiesLoaded" class="plizi-communities-list ">
-                        <ul v-if="communitiesList  &&  communitiesList.length>0" class="d-flex flex-wrap w-100 p-0 ">
+                <div class="col-sm-10 col-md-10 col-lg-8 col-xl-8 mb-4 px-4 py-0">
+                    <div class="row" v-if="isCommunitiesLoaded">
+                        <ul v-if="communitiesList  &&  communitiesList.length>0"
+                            class="plizi-communities-list w-100 d-flex justify-content-between flex-wrap p-0">
                             <CommunityItem v-for="(comItem, comIndex) in communitiesList"
                                            v-bind:community="comItem"
                                            v-bind:canSubscribe="false"
@@ -24,7 +25,10 @@
                             Вы ещё не присодинились ни к одному сообществу.
                         </div>
                     </div>
-                    <Spinner v-else></Spinner>
+
+                    <div  v-else class="row">
+                        <Spinner></Spinner>
+                    </div>
                 </div>
 
                 <div class="col-sm-4 col-md-4 col-lg-4 col-xl-4">

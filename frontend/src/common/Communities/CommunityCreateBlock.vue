@@ -3,7 +3,7 @@
         <div class="w-100">
             <button type="button"
                     @click="ShowCommunityCreateModal"
-                    class="btn btn-block btn-primary rounded-pill py-3">
+                    class="btn btn-create btn-block btn-primary rounded-pill ">
                 Создать сообщество
             </button>
         </div>
