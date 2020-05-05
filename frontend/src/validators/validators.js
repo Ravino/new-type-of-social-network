@@ -8,7 +8,7 @@ export function isCorrectHumanName(value) {
     if ((value+'') === '')
         return true;
 
-    return /^[0-8a-zа-яёїіи+\-\s]{1,100}$/i.test(value);
+    return /^[a-zа-яёїіи+\-\s]{1,100}$/i.test(value);
 }
 
 export function notHaveSpace(value) {
