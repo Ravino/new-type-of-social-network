@@ -189,14 +189,8 @@
 </template>
 
 <script>
-    /**
-     * @link https://vue-multiselect.js.org/#sub-getting-started
-     */
-    import Multiselect from 'vue-multiselect'; // TODO: @TGA зачем? он уже подключён в APP
-
     export default {
         name: 'AccountSettingsMain',
-        components: {Multiselect},
         computed: {
             userData: function () {
                 return this.$root.$auth.user;
@@ -230,24 +224,7 @@
                     sex: this.$root.$auth.user.sex,
                     relationshipId: this.$root.$auth.user.relationshipId,
                     birthday: this.$root.$auth.user.birthday,
-                    location: this.$root.$auth.user.city && this.$root.$auth.user.city.id ? {
-                        id: this.$root.$auth.user.city.id,
-                        title: {
-                            ru: this.$root.$auth.user.city.title,
-                        },
-                        region: {
-                            id: this.$root.$auth.user.region.id,
-                            title: {
-                                ru: this.$root.$auth.user.region.title,
-                            },
-                        },
-                        country: {
-                            id: this.$root.$auth.user.country.id,
-                            title: {
-                                ru: this.$root.$auth.user.country.title,
-                            },
-                        },
-                    } : null,
+                    location: this.$root.$auth.user.location,
                 },
 
                 isEdit: {

@@ -49,7 +49,7 @@ class PliziLocation {
     constructor( inputData ){
         this._id = inputData.id;
         this._title = inputData.title;
-        this._region = new PliziRegion( inputData.region );
+        this._region = inputData.region ? new PliziRegion( inputData.region ) : null;
         this._country = new PliziRegion( inputData.country );
     }
 
@@ -57,7 +57,7 @@ class PliziLocation {
         return {
             id: this.id,
             title: this.title,
-            region: this.region.toJSON(),
+            region: this._region ? this.region.toJSON() : null,
             country: this.country.toJSON()
         }
     }
