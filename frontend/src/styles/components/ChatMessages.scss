@@ -6,6 +6,15 @@ $minHeight: 200px;
 
 #chatPickAttendeesDialogBody {
     min-height: 440px;
+    .multiselect__tags {
+        overflow: auto;
+    }
+    .plz-btn {
+        max-width: 100%;
+        height: auto;
+        max-height: none;
+    }
+
 }
 
 #chatMessagesBody {

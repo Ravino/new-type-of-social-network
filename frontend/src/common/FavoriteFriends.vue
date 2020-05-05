@@ -16,7 +16,7 @@
                 </FavoriteFriendItem>
             </div>
         </div>
-        <Spinner v-else></Spinner>
+        <Spinner clazz="plz-favorit-friends-spinner d-flex flex-column align-items-center" v-else></Spinner>
 
     </div>
 </template>

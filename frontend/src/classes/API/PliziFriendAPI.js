@@ -36,7 +36,7 @@ class PliziFriendAPI extends PliziBaseAPI {
      * @throws PliziAPIError
      */
     async favorites(){
-        let response = await this.axios.get('/user/friendship/group/featured', this.authHeaders)
+        let response = await this.axios.get('api/user/friendship/group/featured', this.authHeaders)
             .catch((error) => {
                 this.checkIsTokenExpires(error, '$friend.favorites');
                 throw new PliziAPIError('$friend.favorites', error.response);
@@ -224,7 +224,7 @@ class PliziFriendAPI extends PliziBaseAPI {
             group: 'featured'
         };
 
-        let response = await this.axios.post('/user/friendship/group', sendData, this.authHeaders)
+        let response = await this.axios.post('api/user/friendship/group', sendData, this.authHeaders)
             .catch((error) => {
                 this.checkIsTokenExpires(error, '$friends.addToFavorites');
                 throw new PliziAPIError('$friends.addToFavorites', error.response);
