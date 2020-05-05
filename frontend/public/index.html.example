@@ -7,6 +7,7 @@
 
     <!-- Library JS -->
     <script src="./js/jquery-3.3.1.min.js" type="application/javascript"></script>
+    <script src="./js/popper-2.3.3.min.js" type="application/javascript"></script>
     <script src="./js/bootstrap-4.3.1.min.js" type="application/javascript"></script>
     <script src="./js/autobahn.min.js" type="application/javascript"></script>
 
@@ -18,7 +19,7 @@
         var wsUrl = 'ws://127.0.0.1:7070';
         // remote access
         // var apiURL = 'https://vm1095330.hl.had.pm';
-        // var wsUrl  = 'ws://80.89.235.173:7070';
+        // var wsUrl  = 'wss://vm1095330.hl.had.pm:7070';
     </script>
 </head>
 <body>

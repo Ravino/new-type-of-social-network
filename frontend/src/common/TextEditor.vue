@@ -129,6 +129,10 @@ computed: {
 },
 
 methods: {
+    focus(){
+        this.$refs.editor.focus();
+    },
+
     getContent() {
         return {
             postText: this.$refs.editor.getContent(),

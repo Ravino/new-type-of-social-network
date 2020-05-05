@@ -125,19 +125,22 @@ methods: {
         }
     },
 
-    handlePersonalMessage(evData){
-        this.sendMessageToUser(evData);
-    },
     wallPostsSelectHandler(evData) {
         this.filterMode = evData.wMode;
     },
+
     onSharePost(post) {
         this.postRepostModal.isVisible = true;
         this.postForRepost = post;
     },
+
     hidePostRepostModal() {
         this.postRepostModal.isVisible = false;
         this.postForRepost = null;
+    },
+
+    handlePersonalMessage(evData){
+        this.sendMessageToUser(evData);
     },
 
     async sendMessageToUser(msg){

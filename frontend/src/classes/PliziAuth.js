@@ -104,7 +104,7 @@ class PliziAuthClass {
     __isInit = false;
 
     /**
-     * @param {PliziAPI} apiObj
+     * @param {PliziAPI|PliziAPIClass} apiObj
      */
     init(apiObj){
         if (this.__isInit)

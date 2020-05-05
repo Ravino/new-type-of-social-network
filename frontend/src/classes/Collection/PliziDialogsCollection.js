@@ -8,13 +8,12 @@ class PliziDialogsCollection extends PliziCollection {
 
     localStorageKey = `pliziDialogs`;
 
-    restoreEventName = 'DialogsIsRestored';
-    loadEventName = 'DialogsIsLoaded';
+    restoreEventName= 'DialogsIsRestored';
+    loadEventName   = 'DialogsIsLoaded';
     updateEventName = 'DialogsIsUpdated';
 
     constructor(apiObj){
         super(apiObj);
-        window.console.log( (new Date).getMilliseconds(), `PliziDialogsCollection constructor`);
     }
 
     /**
@@ -46,7 +45,7 @@ class PliziDialogsCollection extends PliziCollection {
 
     /**
      * поиск диалога по его ID
-     * @param {number} ID - ID нужной сущности
+     * @param {string} ID - ID нужной сущности
      * @returns {PliziDialog} - нужная сущность, или UNDEFINED если не нашли
      */
     get(ID){
@@ -89,17 +88,24 @@ class PliziDialogsCollection extends PliziCollection {
         return arr;
     }
 
-    async load(){
+
+    restore(){
         this.clean();
 
         this.restoreData();
 
-        if (this.collection.size > 0) {
+        if (this.size > 0) {
             this.isLoad = true;
-            this.emit(this.restoreEventName);
+            if (this.restoreEventName) {
+                this.emit(this.restoreEventName);
+            }
+
             return true;
         }
+    }
 
+
+    async load(){
         let apiResponse = null;
 
         try {
@@ -110,6 +116,7 @@ class PliziDialogsCollection extends PliziCollection {
         }
 
         if (apiResponse) {
+            this.clean();
             apiResponse.map( (dialogItem) => {
                 this.add( dialogItem );
             });
@@ -125,6 +132,7 @@ class PliziDialogsCollection extends PliziCollection {
 
         return true;
     }
+
 
     dialogStateUpdated(dialogID, newData){
         let dlg = this.get(dialogID);

@@ -2,7 +2,7 @@
     <li class="chat-list-user media m-0 px-4 py-2"
         :class="{ 'bg-light':  dialog.id === currentDialogID, 'bg-white': dialog.id !== currentDialogID  }">
 
-        <div class="user-friend d-flex col-12" @click.prevent="switchToChat()">
+        <div class="user-friend d-flex col-12" @click.prevent="pickChat()">
             <div v-if="dialog.isPrivate" class="user-friend-pic mr-3">
                 <img class="user-friend-img rounded-circle overflow-hidden" v-bind:src="dialog.companion.userPic" v-bind:alt="dialog.companion.firstName" />
 
@@ -83,9 +83,9 @@ computed: {
 },
 
 methods: {
-    switchToChat() {
+    pickChat() {
         window.console.log((new Date().getMilliseconds())+ ` ChatListItem emit SwitchToChat`);
-        this.$emit('SwitchToChat', {chatId: this.dialog.id});
+        this.$emit('PickChat', {chatId: this.dialog.id});
     },
 
     /**

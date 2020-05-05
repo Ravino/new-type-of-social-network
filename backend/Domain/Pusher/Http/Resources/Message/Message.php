@@ -31,7 +31,7 @@ class Message extends JsonResource
             'firstName' => $this->user->profile->first_name,
             'lastName' => $this->user->profile->last_name,
             'userPic' => $this->user->profile->user_pic,
-            'userId' => $this->user->uuid,
+            'userId' => $this->user->id,
             'chatId' => $this->chat_id,
             'sex' => $this->user->profile->sex,
             'body' => strip_tags($this->body, '<span><p>'),

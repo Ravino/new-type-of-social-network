@@ -10,6 +10,10 @@ RUN mkdir -p /usr/src/php/ext/redis \
 RUN pecl install mongodb \
     && docker-php-ext-enable mongodb
 
+RUN wget https://getcomposer.org/installer --no-check-certificate \
+        && php installer \
+        && ln -s /composer.phar /usr/bin/composer
+
 WORKDIR /app
 
 COPY ./php/fpm_www.conf /usr/local/etc/php-fpm.d/www.conf
