@@ -17,7 +17,7 @@ class CitiesCollection extends ResourceCollection
                         'ua' => $city->title_ua,
                         'en' => $city->title_en,
                     ],
-                    'region' => new Region($city->region),
+                    'region' => $city->region ? new Region($city->region) : null,
                     'country' => new Country($city->country),
                 ];
             }),

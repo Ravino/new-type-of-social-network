@@ -68,7 +68,7 @@ class PliziAuthUser extends PliziUzer{
     }
 
     cleanData(){
-        window.console.warn(`PliziAuthUser::cleanData`);
+        window.console.warn(( (new Date()).getMilliseconds() )+` PliziAuthUser::cleanData`);
     }
 
     toString(){

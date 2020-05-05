@@ -52,7 +52,7 @@ methods : {
 
 computed: {
     favoritFriends(){
-        return this.$root.$auth.fm.asArray();
+        return this.$root.$auth.fm.favorites;
     }
 },
 
@@ -61,11 +61,7 @@ created(){
         this.afterFavoritsLoad();
     }
 
-    this.$root.$on(this.$root.$auth.fm.loadEventName, ()=>{
-        this.afterFavoritsLoad();
-    });
-
-    this.$root.$on(this.$root.$auth.fm.restoreEventName, ()=>{
+    this.$root.$on([this.$root.$auth.fm.loadEventName, this.$root.$auth.fm.restoreEventName], ()=>{
         this.afterFavoritsLoad();
     });
 }

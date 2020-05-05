@@ -44,8 +44,8 @@ import AuthFooter from './common/AuthFooter.vue';
 import GuestFooter from './common/GuestFooter.vue';
 import AlertModal from './components/AlertModal.vue';
 
-import PliziAPI from './classes/PliziAPI.js';
-import PliziAuth from './classes/PliziAuth.js';
+import {PliziAPI} from './classes/PliziAPI.js';
+import {PliziAuth} from './classes/PliziAuth.js';
 
 export default {
 name: 'App',
@@ -123,7 +123,7 @@ methods: {
             this.$root.$api.connectToChannel( evData.user.channel );
             this.$root.$isAuth = true;
 
-            this.$root.$emit('PersistentCollectionsReload', { });
+            await this.persistentCollectionsReload();
         }
     },
 
@@ -139,7 +139,7 @@ methods: {
             this.$root.$api.connectToChannel( evData.user.channel );
             this.$root.$isAuth = true;
 
-            this.$root.$emit('PersistentCollectionsReload', { });
+            await this.persistentCollectionsRestore();
         }
     },
 
@@ -152,9 +152,16 @@ methods: {
         this.$root.$lastSearch = (ls) ? ls : ``;
     },
 
-    async onPersistentCollectionsReload(){
-        await this.$root.$auth.fm.load();
+    async persistentCollectionsReload(){
         await this.$root.$auth.dm.load();
+        await this.$root.$auth.fm.load();
+        await this.$root.$auth.im.load();
+        await this.$root.$auth.nm.load();
+    },
+
+    async persistentCollectionsRestore(){
+        this.$root.$auth.dm.restore();
+        await this.$root.$auth.fm.load();
         await this.$root.$auth.im.load();
         await this.$root.$auth.nm.load();
     }
@@ -162,16 +169,19 @@ methods: {
 
 
 created(){
-    this.$root.$api = new PliziAPI(this.$root, '');
-    this.$root.$auth = new PliziAuth(this.$root.$api);
+    window.console.log('App created');
+
+    this.$root.$api = PliziAPI;
+    this.$root.$api.init(this.$root);
+
+    this.$root.$auth = PliziAuth;
+    this.$root.$auth.init(this.$root.$api);
 
     this.$root.$on('afterSuccessLogin',  this.afterSuccessLogin);
     this.$root.$on('afterSuccessLogout', this.afterSuccessLogout);
 
     this.$root.$on('AfterUserLoad', this.afterUserLoad);
     this.$root.$on('AfterUserRestore', this.afterUserRestore);
-
-    this.$root.$on('PersistentCollectionsReload', this.onPersistentCollectionsReload);
 
     this.$root.$on('searchStart', (evData) => {
         this.lastSearchText = evData.searchText;

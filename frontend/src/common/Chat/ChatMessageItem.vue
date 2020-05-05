@@ -102,9 +102,9 @@ props: {
         type: PliziMessage,
         required : true
     },
-    dialogID: Number,
-    pickedID: Number,
-    replyID: Number,
+    dialogID: String,
+    pickedID: String,
+    replyID: String,
     next : PliziMessage | null
 },
 

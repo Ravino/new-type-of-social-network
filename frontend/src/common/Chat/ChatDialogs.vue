@@ -7,7 +7,7 @@
                               :settings="customScrollBarSettings">
             <ul id="chatDialogsList" class="list-unstyled mb-0">
                 <ChatListItem v-for="dialog in dialogsList"
-                              @SwitchToChat="onSwitchToChat"
+                              @PickChat="onSwitchToChat"
                               :id="'dialogItem-'+dialog.id"
                               v-bind:dialog="dialog"
                               v-bind:currentDialogID="currentDialogID"
@@ -36,6 +36,8 @@ props : {
 
 data(){
     return {
+        listFilled: false,
+
         dialogFilter: {
             text: ``,
         },
@@ -146,29 +148,39 @@ methods: {
     },
 
     async onDialogsListLoad(){
+        if (this.listFilled)
+            return;
+
         await this.loadDialogsList();
 
+        this.listFilled = true;
+
         if ( this.currentDialog ) {
-            await this.onSwitchToChat( { chatId : this.currentDialog.id })
+            this.onSwitchToChat( { chatId : this.currentDialog.id })
         }
         else {
             window.console.warn(`Условие не сработало!`);
         }
     },
-
 },
 
 created(){
-    this.$root.$on('DialogsIsLoaded', this.onDialogsListLoad);
-    this.$root.$on('DialogsIsRestored', this.onDialogsListLoad);
+    this.$root.$on(this.$root.$auth.dm.loadEventName, ()=>{
+        this.onDialogsListLoad(this.$root.$auth.dm.loadEventName);
+    });
+
+    this.$root.$on(this.$root.$auth.dm.restoreEventName, ()=>{
+        this.onDialogsListLoad(this.$root.$auth.dm.restoreEventName);
+    });
 
     this.$root.$on('RemoveChatDialog', this.onRemoveChatDialog);
     this.$root.$on('UpdateChatDialog', this.onUpdateChatDialog);
 },
 
 async mounted(){
-    await this.$root.$auth.dm.load();
-    this.onDialogsListLoad();
+    if (! this.listFilled) {
+        this.onDialogsListLoad();
+    }
 }
 
 }

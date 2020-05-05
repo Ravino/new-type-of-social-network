@@ -90,9 +90,9 @@ export default {
 
 data() {
     return {
-        pickedMessageID: -1,
-        replyMessageID: -1,
-        removeMessageID: -1,
+        pickedMessageID: 'unknown',
+        replyMessageID: 'unknown',
+        removeMessageID: 'unknown',
         previousMsg: null,
         resendMessageModalShow: false,
         replyMessageModalShow: false,

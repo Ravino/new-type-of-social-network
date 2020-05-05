@@ -8,7 +8,8 @@
             <div v-if="isDialogsLoaded" id="chatMain" class="row bg-white-br20 overflow-hidden">
 
                 <ChatDialogs ref="chatMessagesUsersList"
-                             :currentDialogID="currentDialogID" @SwitchToChat="onSwitchToChat">
+                             :currentDialogID="currentDialogID"
+                             @SwitchToChat="onSwitchToChat">
                 </ChatDialogs>
 
                 <div id="chatMessagesWrapper"
@@ -91,12 +92,11 @@ data() {
 
 computed: {
     currentDialogID(){
-        return (this.currentDialog) ? this.currentDialog.id : -1;
+        return (this.currentDialog) ? this.currentDialog.id : 'unknown';
     },
 
     isDialogsLoaded(){
-        //return this.$root.$auth.dm.isLoad;
-        return true;
+        return this.$root.$auth.dm.isLoad;
     }
 },
 
@@ -165,7 +165,7 @@ methods: {
         let msgsResponse = null;
         this.isMessagesLoaded = false;
 
-        this.currentDialog =  this.$root.$user.dm.get(chatId);
+        this.currentDialog = this.$root.$auth.dm.get(chatId);
 
         try {
             msgsResponse = await this.$root.$api.$chat.messages(chatId);
@@ -183,14 +183,17 @@ methods: {
         });
 
         this.isMessagesLoaded = true;
+    },
+
+    addListeners(){
+        this.$root.$on('newMessageInDialog', this.addNewChatMessageToList);
+        this.$root.$on('removeMessageInDialog', this.removeMessageInList);
     }
 },
 
 created(){
-    this.$root.$on('newMessageInDialog', this.addNewChatMessageToList);
-    this.$root.$on('removeMessageInDialog', this.removeMessageInList);
+    this.addListeners();
 },
-
 
 }
 </script>

@@ -13,20 +13,22 @@
 
                 <WhatsNewBlock @addNewPost="addNewPost"></WhatsNewBlock>
 
-                <ProfileFilter @wallPostsSelect="wallPostsSelectHandler"></ProfileFilter>
+                <ProfileFilter v-if="userPosts && userPosts.length > 1" @wallPostsSelect="wallPostsSelectHandler"></ProfileFilter>
 
-                <Post v-if="userPosts  &&  userPosts.length>0"  v-for="postItem in filteredPosts"
-                      :key="postItem.id"
-                      :post="postItem"
-                      @deletePost="deletePost"
-                      @restorePost="restorePost"
-                      @onEditPost="onEditPost"
-                      @openVideoModal="openVideoModal">
-                </Post>
+                <template v-if="userPosts && userPosts.length > 0">
+                    <Post v-for="postItem in filteredPosts"
+                          :key="postItem.id"
+                          :post="postItem"
+                          @deletePost="deletePost"
+                          @restorePost="restorePost"
+                          @onEditPost="onEditPost"
+                          @openVideoModal="openVideoModal">
+                    </Post>
+                </template>
+
                 <div v-else>
                     <div class="alert alert-info w-100 p-5 text-center">
-                        Тут у Вас пока пусто.<br />
-                        Самое время написать что-то, подружиться с кем-то и вступить в сообщество.
+                        Вы не создали ни одной записи.
                     </div>
                 </div>
             </div>

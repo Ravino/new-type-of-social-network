@@ -8,7 +8,7 @@ import PliziCommunitiesAPI from './API/PliziCommunitiesAPI.js';
 import PliziUsersAPI from './API/PliziUsersAPI.js';
 import PliziNotificationsAPI  from './API/PliziNotificationsAPI.js';
 
-class PliziAPI {
+class PliziAPIClass {
 
     /**
      * @type {AxiosInstance}
@@ -101,12 +101,16 @@ class PliziAPI {
      */
     __notifications = null;
 
+    __isInit = false;
 
     /**
      * @param {Vue} $root - ссылка на Vue объект, который вызывает этот конструктор
      * @param {string} token
      */
-    constructor($root, token) {
+    init($root, token) {
+        if (this.__isInit)
+            return;
+
         this.__baseURL   = (window.apiURL) ? (window.apiURL + ``).trim() : ``;
         this.__baseWsURL = (window.wsUrl) ? (window.wsUrl + ``).trim() : ``;
 
@@ -129,6 +133,8 @@ class PliziAPI {
         this.__communities = new PliziCommunitiesAPI(this);
         this.__users = new PliziUsersAPI(this);
         this.__notifications = new PliziNotificationsAPI(this);
+
+        this.__isInit = true;
     }
 
 
@@ -375,13 +381,9 @@ class PliziAPI {
      * @throws PliziAPIError
      */
     async userProfileImage(formData) {
-        let config = this.__getAuthHeaders();
-
-        config.headers[`Content-Type`] = 'multipart/form-data';
-
-        let response = await this.__axios.post('/api/user/profile/image', formData, config)
+        let response = await this.__axios.post('/api/user/profile/image', formData, this.authFileHeaders)
             .catch((error) => {
-                this.__checkIsTokenExperis(error, `userProfileImage`);
+                this.checkIsTokenExpires(error, `userProfileImage`);
                 throw new PliziAPIError(`userProfileImage`, error.response);
             });
 
@@ -621,4 +623,5 @@ class PliziAPI {
 
 }
 
-export {PliziAPI as default}
+//export {PliziAPI as default}
+export const PliziAPI = new PliziAPIClass();

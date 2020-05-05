@@ -8,7 +8,8 @@ AdminSection::registerModel(\App\Models\User::class, function (\SleepingOwl\Admi
     // Display
     $model->onDisplay(function () {
         $display = AdminDisplay::table()->setColumns([
-            AdminColumn::link('id')->setLabel('ID')->setWidth('100px'),
+            AdminColumn::link('id')->setLabel('ID')->setWidth('250px'),
+            AdminColumn::image('profile.user_pic', 'User Pic')->setImageWidth('50px'),
             AdminColumn::text('profile.first_name')->setLabel('Name'),
             AdminColumn::text('profile.last_name')->setLabel('Last Name'),
             AdminColumn::text('email')->setLabel('Email'),

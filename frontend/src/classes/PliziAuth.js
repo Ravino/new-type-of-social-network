@@ -6,7 +6,7 @@ import PliziDialogsCollection from './Collection/PliziDialogsCollection.js';
 import PliziInvitationsCollection from './Collection/PliziInvitationsCollection.js';
 import PliziNotificationsCollection from './Collection/PliziNotificationsCollection.js';
 
-class PliziAuth {
+class PliziAuthClass {
     /**
      * ключ в localStorage куда сохраняем данные юзера
      * @type {string}
@@ -101,19 +101,25 @@ class PliziAuth {
         return this._nm;
     }
 
+    __isInit = false;
+
     /**
-     * @param {PliziAPI} apiObj
+     * @param {PliziAPI|PliziAPIClass} apiObj
      */
-    constructor(apiObj){
+    init(apiObj){
+        if (this.__isInit)
+            return;
+
         this._api = apiObj;
 
         this._user = new PliziAuthUser(null);
 
-        //this._fm = new PliziFriendsCollection(apiObj);
-        this._fm = Vue.observable( new PliziFriendsCollection(apiObj) );
+        this._fm = new PliziFriendsCollection(apiObj);
         this._dm = new PliziDialogsCollection(apiObj);
         this._im = new PliziInvitationsCollection(apiObj);
         this._nm = new PliziNotificationsCollection(apiObj);
+
+        this.__isInit = true;
     }
 
     /**
@@ -221,4 +227,5 @@ class PliziAuth {
     }
 }
 
-export { PliziAuth as default}
+//export { PliziAuth as default}
+export const PliziAuth = new PliziAuthClass();

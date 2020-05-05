@@ -18,7 +18,7 @@
                 </div>
             </div>
             <div class="col-6 position-relative align-self-end">
-                <img class="w-100" src="../images/plizi-mobile-bg.png" alt="image">
+                <img class="w-100" src="../../images/plizi-mobile-bg.png" alt="image">
             </div>
         </div>
     </div>

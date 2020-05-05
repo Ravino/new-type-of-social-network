@@ -29,7 +29,7 @@ Vue.prototype.$isAuth = false;
 /**
  * ссылка на текущую авторизацию
  * добавляем глобально, на использовать будем только от this.$root
- * @type {PliziAuth}
+ * @type {PliziAuth|PliziAuthClass}
  */
 Vue.prototype.$auth = null;
 
@@ -42,7 +42,7 @@ Vue.prototype.$lastSearch = ``;
 
 /**
  * добавляем глобально, на использовать будем только от this.$root
- * @type {PliziAPI}
+ * @type {PliziAPI|PliziAPIClass}
  */
 Vue.prototype.$api = null;
 
@@ -79,6 +79,8 @@ Vue.config.silent = false;
 Vue.config.devtools = true;
 
 import App from './App.vue';
+
+delete window.app;
 
 window.app = new Vue({
     router,
