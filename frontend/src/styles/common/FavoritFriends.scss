@@ -96,6 +96,15 @@ $picSize: 42px;
         color: #fff;
         border-radius: 16px
     }
+
+    &-spinner {
+        .text-center.pr-3 {
+            padding: 10px!important;
+        }
+        .text-info h3 {
+            display: none;
+        }
+    }
 }
 
 .friend-status {
