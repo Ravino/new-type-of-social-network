@@ -6,6 +6,7 @@ html,
 body {
     font-family: 'Open Sans', Arial, sans-serif;
     font-size: 15px;
+    height: 100%;
 }
 body {
     background-color: $plzBodyBG;
@@ -22,7 +23,7 @@ h1, h2, h3, h4, h5, h6 {
 }
 
 #contentContainer {
-    margin-top: 70px;
+    margin-top: 90px;
     min-height: 200px;
 }
 

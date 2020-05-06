@@ -6,7 +6,7 @@
         </div>
 
         <div class="plz-recommended-communities-list pb-2" >
-            <div class="alert alert-info">Тут будут <b>Рекомендуемые сообщества</b></div>
+            <div class="alert alert-info">Тут будут <br> <b>Рекомендуемые сообщества</b></div>
         </div>
     </div>
 </template>
