@@ -3,6 +3,7 @@
 
 namespace App\Services;
 
+use Exception;
 use Illuminate\Database\Eloquent\Model;
 use Intervention\Image\Facades\Image;
 use Intervention\Image\Image as InterventionImage;
@@ -16,65 +17,108 @@ class S3UploadService
      * @param $path
      * @param $files
      * @param string $visibility
+     * @param array $config
+     * @return array
+     * @throws Exception
+     */
+    public function uploadFiles(Model $model, $path, $files, $visibility = 'public', $config = [])
+    {
+        $config = $config ?: $this->getDefaultConfig();
+
+        $uploaded = $this->multiUpload($path, $files, $visibility, $config);
+
+        $attachment_ids = [];
+        foreach ($uploaded as $data) {
+            $attachment = $model::create($data);
+            $attachment_ids[] = $attachment->id;
+        }
+
+        return $attachment_ids;
+    }
+
+    /**
+     * @param $path
+     * @param $files
+     * @param string $visibility
+     * @param array $config
+     * @return array
+     * @throws Exception
+     */
+    public function multiUpload($path, $files, $visibility = 'public', $config = [])
+    {
+        $config = $config ?: $this->getDefaultConfig();
+
+        $result = [];
+        foreach ($files['files'] as $file) {
+            $result[] = $this->singleUpload($path, $file, $visibility, $config);
+        }
+        return $result;
+    }
+
+    /**
      * @return array
      */
-    public function uploadFiles(Model $model, $path, $files, $visibility = 'public')
+    private function getDefaultConfig()
     {
-        $attachment_ids = [];
-        foreach ($files['files'] as $file) {
-            $imageName = Uuid::uuid4() . '.' . $file->getClientOriginalExtension();
-            $original = Storage::disk('s3')->put("$path/originals", $file, $visibility);
+        return [
+            'normal' => [
+                'size' => 600,
+            ],
+            'medium' => [
+                'size' => 250,
+            ],
+            'thumb' => [
+                'size' => 60,
+            ],
+        ];
+    }
 
-            if(@is_array(getimagesize($file))) {
-                $original_img = Image::make($file);
-                $normal = $this->prepareImage($file, 600);
-                $medium = $this->prepareImage($file, 250);
-                $thumb = $this->prepareImage($file, 60);
-                Storage::disk('s3')->put("$path/normals/$imageName", $normal->stream(), $visibility);
-                Storage::disk('s3')->put("$path/mediums/$imageName", $medium->stream(), $visibility);
-                Storage::disk('s3')->put("$path/thumbs/$imageName", $thumb->stream(), $visibility);
-                $original_width = $original_img->getWidth();
-                $original_height = $original_img->getHeight();
+    /**
+     * @param $file
+     * @param $path
+     * @param $visibility
+     * @param array $config
+     * @return array
+     * @throws Exception
+     */
+    public function singleUpload($path, $file, $visibility = 'public', $config = [])
+    {
+        $config = $config ?: $this->getDefaultConfig();
 
-                $medium_width = $medium->getWidth();
-                $medium_height = $medium->getHeight();
+        $imageName = Uuid::uuid4() . '.' . $file->getClientOriginalExtension();
+        $original = Storage::disk('s3')->put("$path/originals", $file, $visibility);
 
-                $normal_width = $normal->getWidth();
-                $normal_height = $normal->getHeight();
+        $data = [
+            'size' => $file->getSize(),
+            'original_name' => $file->getClientOriginalName(),
+            'path' => $original,
+            'mime_type' => $file->getClientMimeType(),
+            'image_original_width' => null,
+            'image_original_height' => null,
+        ];
+        if (@is_array(getimagesize($file))) {
+            $original_img = Image::make($file);
 
-                $thumb_width = $thumb->getWidth();
-                $thumb_height = $thumb->getHeight();
-            } else {
-                $normal_width = null;
-                $normal_height = null;
-                $thumb_width = null;
-                $thumb_height = null;
-                $medium_width = null;
-                $medium_height = null;
-                $original_width = null;
-                $original_height = null;
+            $data['image_original_width'] = $original_img->getWidth();
+            $data['image_original_height'] = $original_img->getHeight();
+
+            foreach ($config as $name => $conf) {
+                $image = $this->prepareImage($file, $conf['size']);
+                $subPath = "{$path}/{$name}s/{$imageName}";
+                Storage::disk('s3')->put($subPath, $image->stream(), $visibility);
+                $data["image_{$name}_path"] = $subPath;
+                $data["image_{$name}_width"] = $image->getWidth();
+                $data["image_{$name}_height"] = $image->getHeight();
             }
-            $data = [
-                'size' => $file->getSize(),
-                'original_name' => $file->getClientOriginalName(),
-                'path' => $original,
-                'image_normal_path' => "$path/normals/$imageName",
-                'image_medium_path' => "$path/mediums/$imageName",
-                'image_thumb_path' => "$path/thumbs/$imageName",
-                'mime_type' => $file->getClientMimeType(),
-                'image_normal_width' => $normal_width,
-                'image_normal_height' => $normal_height,
-                'image_thumb_width' => $thumb_width,
-                'image_thumb_height' => $thumb_height,
-                'image_medium_width' => $medium_width,
-                'image_medium_height' => $medium_height,
-                'image_original_width' => $original_width,
-                'image_original_height' => $original_height,
-            ];
-            $attachment = $model::create($data);
-            array_push($attachment_ids, $attachment->id);
+        } else {
+            foreach ($config as $name => $conf) {
+                $subPath = "{$path}/{$name}s/{$imageName}";
+                $data["image_{$name}_path"] = $subPath;
+                $data["image_{$name}_width"] = null;
+                $data["image_{$name}_height"] = null;
+            }
         }
-        return $attachment_ids;
+        return $data;
     }
 
     /**
@@ -84,6 +128,16 @@ class S3UploadService
      */
     public function prepareImage($image, $size) : InterventionImage {
         $new_image = Image::make($image);
+        if (is_array($size)) {
+            [$width, $height] = $size;
+            if ($width && $height) {
+                $new_image->resize($width, $height, static function ($constraint) {
+                    $constraint->aspectRatio();
+                    $constraint->upsize();
+                });
+                return $new_image;
+            }
+        }
         if($new_image->width() > $new_image->height()) {
             $width = $size;
             $height = null;
@@ -94,7 +148,10 @@ class S3UploadService
             $width = $size;
             $height = $size;
         }
-        $new_image->resize($width, $height, function ($constraint) {$constraint->aspectRatio();$constraint->upsize();});
+        $new_image->resize($width, $height, static function ($constraint) {
+            $constraint->aspectRatio();
+            $constraint->upsize();
+        });
         return $new_image;
     }
 }
