@@ -21,6 +21,12 @@ h1, h2, h3, h4, h5, h6 {
     box-shadow: none;
 }
 
+a:active,
+a::-moz-focus-inner{
+    outline: none;
+    border-color: transparent;
+}
+
 #contentContainer {
     margin-top: 90px;
     min-height: 200px;
