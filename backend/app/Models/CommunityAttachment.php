@@ -18,6 +18,7 @@ class CommunityAttachment extends Model
         'path',
         'url',
         'user_id',
+        'community_id',
         'size',
         'mime_type',
         'image_normal_path',

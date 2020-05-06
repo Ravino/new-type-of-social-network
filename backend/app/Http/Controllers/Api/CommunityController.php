@@ -179,7 +179,9 @@ class CommunityController extends Controller
             ],
         ]);
 
-        $attachment = CommunityAttachment::updateOrCreate(['community_id' => request()->input('id')], $uploaded);
+        $community_id = request()->input('id');
+        $uploaded['community_id'] = $community_id;
+        $attachment = CommunityAttachment::updateOrCreate(['community_id' => $community_id], $uploaded);
         return new AttachmentsCollection([$attachment]);
     }
 }
