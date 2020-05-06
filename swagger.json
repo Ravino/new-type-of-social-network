@@ -1874,6 +1874,91 @@
         ]
       }
     },
+      "/communities/header": {
+          "post": {
+              "tags": [
+                  "Communities"
+              ],
+              "description": "Загрузить файлы",
+              "operationId": "uploadCommunityHeaders",
+              "requestBody": {
+                  "content": {
+                      "multipart/form-data": {
+                          "schema": {
+                              "required": [
+                                  "files",
+                                  "id"
+                              ],
+                              "properties": {
+                                  "files": {
+                                      "type": "string",
+                                      "description": "files to upload",
+                                      "format": "binary"
+                                  },
+                                  "id": {
+                                      "type": "string",
+                                      "description": "community id"
+                                  }
+                              }
+                          }
+                      }
+                  },
+                  "required": true
+              },
+              "responses": {
+                  "200": {
+                      "description": "OK",
+                      "content": {
+                          "application/json": {
+                              "schema": {
+                                  "type": "object",
+                                  "properties": {
+                                      "attachmentIds": {
+                                          "type": "array",
+                                          "items": {
+                                              "type": "number"
+                                          }
+                                      }
+                                  }
+                              }
+                          }
+                      }
+                  },
+                  "402": {
+                      "description": "",
+                      "content": {
+                          "application/json": {
+                              "schema": {
+                                  "type": "object",
+                                  "properties": {
+                                      "message": {
+                                          "type": "string"
+                                      },
+                                      "errors": {
+                                          "type": "object",
+                                          "properties": {
+                                              "field": {
+                                                  "type": "array",
+                                                  "items": {
+                                                      "type": "object",
+                                                      "example": "Here will be error of the field"
+                                                  }
+                                              }
+                                          }
+                                      }
+                                  }
+                              }
+                          }
+                      }
+                  }
+              },
+              "security": [
+                  {
+                      "Authorization": []
+                  }
+              ]
+          }
+      },
     "/communities/{id}": {
       "get": {
         "tags": [
