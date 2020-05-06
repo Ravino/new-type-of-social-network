@@ -122,6 +122,7 @@ methods: {
         if (apiResponse) {
             this.profileData = new PliziUser(apiResponse.data);
             this.isDataReady = true;
+            this.getPosts();
         }
     },
 
@@ -176,7 +177,7 @@ methods: {
         let response = null;
 
         try {
-            response = await this.$root.$api.$post.getPosts();
+            response = await this.$root.$api.$post.getPostsByUserId(this.profileData.id);
         } catch (e) {
             console.warn(e.detailMessage);
         }
@@ -193,7 +194,6 @@ methods: {
 
 mounted() {
     this.getUserInfo();
-    this.getPosts();
 
     this.$root.$on('hidePersonalMsgModal', ()=>{
         this.isShowMessageDialog = false;

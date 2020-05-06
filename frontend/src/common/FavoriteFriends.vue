@@ -44,7 +44,7 @@ data () {
 
 methods : {
     afterFavoritsLoad(){
-        this.showFavoritsBlock = (this.$root.$auth.fm.size > 0);
+        this.showFavoritsBlock = (this.$root.$auth.cm.size > 0);
         this.isDataReady = true;
         this.$forceUpdate();
     }
@@ -52,16 +52,16 @@ methods : {
 
 computed: {
     favoritFriends(){
-        return this.$root.$auth.fm.favorites;
+        return this.$root.$auth.cm.asArray();
     }
 },
 
 created(){
-    if (this.$root.$auth.fm.isLoad) {
+    if (this.$root.$auth.cm.isLoad) {
         this.afterFavoritsLoad();
     }
 
-    this.$root.$on([this.$root.$auth.fm.loadEventName, this.$root.$auth.fm.restoreEventName], ()=>{
+    this.$root.$on([this.$root.$auth.cm.loadEventName, this.$root.$auth.cm.restoreEventName], ()=>{
         this.afterFavoritsLoad();
     });
 }

@@ -1,7 +1,7 @@
 <template>
     <div  id="pageWrapper">
         <div v-if="!isAuthorized()" id="guestPageWrapper" class="d-flex flex-column justify-content-center">
-            <div class="--container-fluid container px-0 my-0 pt-3">
+            <div class="--container-fluid container px-0 my-0">
 
                 <GuestNavBar></GuestNavBar>
                 <main :id="containerID" role="main"
@@ -17,7 +17,7 @@
         <div v-else id="authPageWrapper">
             <AuthNavBar></AuthNavBar>
 
-            <div class="--container-fluid container my-0 pt-3 container-wide mx-auto mt-4">
+            <div class="--container-fluid container my-0 container-wide mx-auto">
                 <main :id="containerID" role="main"
                       class="container-fluid pb-sm-5 pb-md-5">
                     <transition>
@@ -155,6 +155,7 @@ methods: {
     async persistentCollectionsReload(){
         await this.$root.$auth.dm.load();
         await this.$root.$auth.fm.load();
+        await this.$root.$auth.cm.load();
         await this.$root.$auth.im.load();
         await this.$root.$auth.nm.load();
     },
@@ -162,6 +163,7 @@ methods: {
     async persistentCollectionsRestore(){
         this.$root.$auth.dm.restore();
         await this.$root.$auth.fm.load();
+        this.$root.$auth.cm.restore();
         await this.$root.$auth.im.load();
         await this.$root.$auth.nm.load();
     }

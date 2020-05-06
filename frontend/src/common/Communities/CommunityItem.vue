@@ -1,36 +1,57 @@
 <template>
-    <li class="plizi-community-item-wrp bg-white-br20 media  py-4 px-4  mb-2">
-        <div class="plizi-community-item d-flex flex-row align-items-start">
+    <li class="plizi-community-item-wrp col-6 media px-2 mb-2">
+        <div class="plizi-community-item d-flex flex-row align-items-start justify-content-between bg-white-br20 w-100 px-4 py-4 h-100">
 
-            <router-link :to="`/community-`+community.id" tag="a" class="plizi-sr-item-pic mr-3 d-">
-                <img class="plizi-community-item-img rounded-circle overflow-hidden"
+            <router-link :to="`/community-`+community.id" tag="a"
+                         class="plizi-community-item-pic mr-3 rounded-circle overflow-hidden">
+                <img class="plizi-community-item-img "
                      v-bind:src="community.primaryImage" v-bind:alt="community.name" />
             </router-link>
 
-            <div class="plizi-sr-item-body m-0 pr-5">
+            <div class="plizi-community-item-body">
                 <router-link :to="`/community-`+community.id" tag="a"
-                         class="plizi-community-item-top d-flex align-items-end justify-content-between mb-2" >
-                    <h6 class="plizi-community-item-name my-0 text-success">{{ community.name }}</h6>
+                         class="plizi-community-item-top d-flex align-items-end justify-content-between mb-2  " >
+                    <h6 class="plizi-community-item-name my-0">{{ community.name }}</h6>
                 </router-link>
 
-                <div class="plizi-community-item-body-middle">
-                    <p class="plizi-community-item-desc p-0 mb-1">
+                <div class="plizi-community-item-body-middle mb-2">
+                    <p v-if="community.description" class="plizi-community-item-desc p-0 mb-1"> <!--TODO @Veremey check this?-->
                         {{ community.description }}</p>
 <!--                    <p class="plizi-community-item-notice p-0 mb-1">-->
 <!--                        {{ community.notice }}</p>-->
-                    <p v-if="community.notice" class="plizi-community-item-notice p-0 my-0 text-secondary">{{ community.notice }}</p>
+                    <p v-else-if="community.notice" class="plizi-community-item-notice p-0 my-0 text-secondary">{{ community.notice }}</p>
                     <p v-else class="plizi-community-item-location p-0 my-0 text-secondary">{{ community.location }}</p>
 
-                    <p class="plizi-community-item-members-number p-0 my-0">участников <b>{{ community.totalUsers }}</b></p>
+                    <p class="plizi-community-item-members-number p-0 my-0">{{ community.members }} участников </p><!--TODO @Veremey check this?-->
                 </div>
 
-                <div class="plizi-community-item-body-bottom mt-2">
-                    <button v-if="canSubscribe" type="button" class="btn plz-btn-outline rounded-pill" @click="subscribeInvite()">
+                <div class="plizi-community-item-body-bottom d-flex align-items-center justify-content-between">
+                    <button v-if="canSubscribe" type="button" class="btn plz-btn-outline  plizi-community-btn rounded-pill" @click="subscribeInvite()">
                         Подписаться
                     </button>
-                    <button v-else type="button" class="btn btn-outline-danger rounded-pill" @click="unsubscribeInvite()">
+                    <button v-else type="button" class="btn btn-outline-danger plizi-community-btn  rounded-pill" @click="unsubscribeInvite()">
                         Отписаться
                     </button>
+                    <div class="plizi-community-item-body-friends d-flex flex-wrap align-items-center justify-content-between">
+                        <div class="plizi-community-item-body-friends-pics mr-3">
+                            <div class="plizi-community-item-body-friends-pic position-relative rounded-circle">
+                                <img src="https://plizi.s3.eu-north-1.amazonaws.com/images/originals/Sx3zRic44zm2mPiMUahypL3hlKw8SuwBsKtm11Jb.png" alt="image">
+                            </div>
+                            <div class="plizi-community-item-body-friends-pic position-relative rounded-circle">
+                                <img src="https://plizi.s3.eu-north-1.amazonaws.com/images/originals/Sx3zRic44zm2mPiMUahypL3hlKw8SuwBsKtm11Jb.png" alt="image">
+                            </div>
+                            <div class="plizi-community-item-body-friends-pic position-relative rounded-circle">
+                                <img src="https://plizi.s3.eu-north-1.amazonaws.com/images/originals/Sx3zRic44zm2mPiMUahypL3hlKw8SuwBsKtm11Jb.png" alt="image">
+                            </div>
+                            <div class="plizi-community-item-body-friends-pic position-relative rounded-circle">
+                                <img src="https://plizi.s3.eu-north-1.amazonaws.com/images/originals/Sx3zRic44zm2mPiMUahypL3hlKw8SuwBsKtm11Jb.png" alt="image">
+                            </div>
+                            <div class="plizi-community-item-body-friends-pic position-relative rounded-circle">
+                                <img src="https://plizi.s3.eu-north-1.amazonaws.com/images/originals/Sx3zRic44zm2mPiMUahypL3hlKw8SuwBsKtm11Jb.png" alt="image">
+                            </div>
+                        </div>
+                        <p class="plizi-community-item-desc">5 друзей</p>
+                    </div>
                 </div>
             </div>
 

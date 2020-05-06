@@ -15,6 +15,7 @@ class ProfileRelationshipsSeeder extends Seeder
         $titles = [
             'В браке',
             'Не в браке',
+            'В активном поиске',
         ];
 
         foreach ($titles as $title) {

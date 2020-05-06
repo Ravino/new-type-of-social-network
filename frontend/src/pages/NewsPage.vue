@@ -1,10 +1,10 @@
 <template>
     <div class="row">
-        <div class="col-sm-1 col-md-1 col-lg-1 col-xl-1">
+        <div class="col-sm-1 col-md-1 col-lg-1 col-xl-1 pl-0">
             <AccountToolbarLeft></AccountToolbarLeft>
         </div>
 
-        <div class="col-sm-9 col-md-9 col-lg-10 col-xl-10">
+        <div class="col-sm-9 col-md-9 col-lg-10 col-xl-10 pl-0">
             <div class="container">
                 <WhatsNewBlock @addNewPost="addNewPost"></WhatsNewBlock>
 
@@ -61,7 +61,7 @@
 import AccountToolbarLeft from '../common/AccountToolbarLeft.vue';
 import FavoriteFriends from '../common/FavoriteFriends.vue';
 
-import AccountSettingsSideMenu from '../components/AccountSettingsSideMenu.vue';
+import AccountSettingsSideMenu from '../components/AccountSettings/AccountSettingsSideMenu.vue';
 import WhatsNewBlock from "../common/WhatsNewBlock.vue";
 import IconSearch from "../icons/IconSearch.vue";
 import IconSingleViewMode from "../icons/IconSingleViewMode.vue";

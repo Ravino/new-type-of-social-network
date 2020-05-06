@@ -1,6 +1,6 @@
 <template>
     <div class="row">
-        <div class="col-sm-1 col-md-1 col-lg-1 col-xl-1">
+        <div class="col-sm-1 col-md-1 col-lg-1 col-xl-1 pl-0">
             <AccountToolbarLeft></AccountToolbarLeft>
         </div>
 
@@ -166,8 +166,6 @@ methods : {
         let response = null;
 
         try{
-            await this.$root.$api.$friend.favorites();
-
             response = await this.$root.$api.$post.getPosts();
         } catch (e){
             console.warn( e.detailMessage );

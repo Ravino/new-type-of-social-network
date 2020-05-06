@@ -2,6 +2,8 @@
 
 namespace App\Http\Resources\Community;
 
+use App\Http\Resources\Post\AttachmentsCollection;
+use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\ResourceCollection;
 
 class CommunityCollection extends ResourceCollection
@@ -9,39 +11,33 @@ class CommunityCollection extends ResourceCollection
     /**
      * Transform the resource collection into an array.
      *
-     * @param  \Illuminate\Http\Request  $request
+     * @param  Request  $request
      * @return array
      */
     public function toArray($request)
     {
         return [
-            'list' => $this->collection->map(function($community) {
+            'list' => $this->collection->map(static function($community) {
+                $data = [
+                    'id' => $community->id,
+                    'name' => $community->name,
+                    'notice' => $community->notice,
+                    'primaryImage' => $community->primary_image,
+                    'url' => $community->url,
+                    'website' => $community->website,
+                    'location' => $community->location,
+                    'totalMembers' => $community->members->count(),
+                    'role' => $community->role ? $community->role->role : null,
+                    'attachment' => $community->attachment
+                        ? new AttachmentsCollection([$community->attachment])
+                        : null,
+                ];
+
                 if($community && $community->relationLoaded('onlyFiveMembers')) {
-                    return [
-                        'id' => $community->id,
-                        'name' => $community->name,
-                        'notice' => $community->notice,
-                        'primaryImage' => $community->primary_image,
-                        'url' => $community->url,
-                        'website' => $community->website,
-                        'location' => $community->location,
-                        'totalMembers' => $community->members->count(),
-                        'role' => $community->role ? $community->role->role : null,
-                        'members' => new CommunityUserCollection($community->onlyFiveMembers)
-                    ];
-                } else {
-                    return [
-                        'id' => $community->id,
-                        'name' => $community->name,
-                        'notice' => $community->notice,
-                        'primaryImage' => $community->primary_image,
-                        'url' => $community->url,
-                        'website' => $community->website,
-                        'location' => $community->location,
-                        'totalMembers' => $community->members->count(),
-                        'role' => $community->role ? $community->role->role : null
-                    ];
+                    $data ['members'] = new CommunityUserCollection($community->onlyFiveMembers);
                 }
+
+                return $data;
             }),
         ];
     }

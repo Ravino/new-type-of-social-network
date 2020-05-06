@@ -105,9 +105,10 @@
                             <select id="relationship" class="form-control border-0 pl-2"
                                     @change="accountStartSaveData(model.relationshipId, 'relationshipId')"
                                     v-model="model.relationshipId">
-                                <option value="null" selected>В активном поиске</option>
+                                <option value="null" selected disabled>Выберите вариант</option>
                                 <option value="1">В браке</option>
                                 <option value="2">Не в браке</option>
+                                <option value="3">В активном поиске</option>
                             </select>
                             <i class="fas fa-chevron-down ml-2"></i>
                         </div>
@@ -204,7 +205,7 @@
 
 <script>
     import {required, minLength, maxLength} from 'vuelidate/lib/validators';
-    import {isCorrectHumanName, isValidRegistrationBirthDay, notHaveSpace} from '../validators/validators.js';
+    import {isCorrectHumanName, isValidRegistrationBirthDay, notHaveSpace} from '../../validators/validators.js';
 
     export default {
         name: 'AccountSettingsMain',
@@ -305,11 +306,18 @@
                     birthday: this.$root.$auth.user.profile.birthday,
                     location: this.$root.$auth.user.profile.location,
                 },
-
                 isEdit: {
                     firstName: false,
                     lastName: false,
                     birthday: false,
+                    location: false,
+                },
+                isSend: {
+                    firstName: false,
+                    lastName: false,
+                    sex: false,
+                    birthday: false,
+                    relationshipId: false,
                     location: false,
                 },
                 locations: [],
@@ -376,7 +384,9 @@
 
                     if (inpRef) {
                         inpRef.blur();
-                        this.accountStartSaveData(this.model[fieldName], fieldName);
+
+                        if (!this.isSend[fieldName])
+                            this.accountStartSaveData(this.model[fieldName], fieldName);
                     } else {
                         window.console.warn(`Ошибка редактирования поля`);
                     }
@@ -422,6 +432,8 @@
             },
 
             async accountStartSaveData(newValue, fieldName) {
+                this.isSend[fieldName] = true;
+
                 if (!!this[`${fieldName}Error`]) {
                     this.model[fieldName] = this.$root.$auth.user.profile[fieldName];
                     return;
@@ -440,6 +452,7 @@
 
                 if (response !== null) {
                     this.$root.$auth.user.updateAuthUser({profile: response});
+                    this.$root.$auth.storeUserData();
 
                     if (fieldName === `firstName` || fieldName === `lastName`) {
                         this.$root.$emit('updateUserName', {
@@ -447,6 +460,10 @@
                             lastName: this.$root.$auth.user.profile.lastName,
                         });
                     }
+
+                    setTimeout(() => {
+                        this.isSend[fieldName] = false;
+                    }, 2000);
                 }
             },
             async getLocations(location) {

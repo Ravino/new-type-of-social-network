@@ -219,7 +219,9 @@
                 }
 
                 if (response) {
-                    this.$root.$auth.user.updateAuthUser(response);
+                    this.$root.$auth.user.updateAuthUser({profile: response});
+                    this.$root.$auth.storeUserData();
+
                 }
             },
         },
