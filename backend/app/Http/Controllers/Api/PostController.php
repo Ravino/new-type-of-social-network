@@ -30,36 +30,56 @@ class PostController extends Controller
     }
 
     /**
+     * @param Request $request
      * @return PostCollection
      */
-    public function index() {
-        return new PostCollection(\Auth::user()->posts, false);
+    public function index(Request $request) {
+        $posts = \Auth::user()->posts()
+            ->limit($request->query('limit') ?? 50)
+            ->offset($request->query('offset') ?? 0)
+            ->get();
+        return new PostCollection($posts, false);
     }
 
     /**
+     * @param Request $request
      * @return PostCollection
      */
-    public function myPosts() {
-        return new PostCollection(\Auth::user()->allPosts);
+    public function myPosts(Request $request) {
+        $posts = \Auth::user()->allPosts()
+            ->limit($request->query('limit') ?? 50)
+            ->offset($request->query('offset') ?? 0)
+            ->get();
+        return new PostCollection($posts);
     }
 
     /**
      * @param $id
      * @return PostCollection|\Illuminate\Http\JsonResponse
      */
-    public function userPosts($id) {
+    public function userPosts(Request $request, $id) {
+        /** @var User $user */
         $user = User::find($id);
-        return new PostCollection($user->allPosts);
+        $posts = $user->allPosts()
+            ->limit($request->query('limit') ?? 50)
+            ->offset($request->query('offset') ?? 0)
+            ->get();
+        return new PostCollection($posts);
     }
 
     /**
      * @param $community_id
      * @return PostCollection|\Illuminate\Http\JsonResponse
      */
-    public function communityPosts($community_id) {
+    public function communityPosts(Request $request, $community_id) {
+        /** @var Community $community */
         $community = Community::find($community_id);
         if($community) {
-            return new PostCollection($community->posts, false);
+            $posts = $community->posts()
+                ->limit($request->query('limit') ?? 50)
+                ->offset($request->query('offset') ?? 0)
+                ->get();
+            return new PostCollection($posts, false);
         }
         return response()->json(['message' => 'Сообщество не найдено'], 404);
     }

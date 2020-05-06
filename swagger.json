@@ -869,8 +869,96 @@
         "tags": [
           "Posts"
         ],
-        "description": "Посты в ленте новостей",
+        "description": "Посты пользователя (включая сообщества и друзей)",
         "operationId": "postsFromMyWall",
+        "parameters": [
+          {
+            "name": "limit",
+            "in": "query",
+            "description": "Количество записей на страницу",
+            "required": true,
+            "schema": {
+              "type": "integer"
+            }
+          },
+          {
+            "name": "offset",
+            "in": "query",
+            "description": "Сдвиг записей",
+            "required": true,
+            "schema": {
+              "type": "integer"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "data": {
+                      "type": "object",
+                      "properties": {
+                        "list": {
+                          "type": "array",
+                          "items": {
+                            "$ref": "#/components/schemas/PostWithAll"
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "Authorization": []
+          }
+        ]
+      }
+    },
+    "/user/{id}/posts": {
+      "get": {
+        "tags": [
+          "Posts"
+        ],
+        "description": "Посты пользователя (включая его друзей и сообщества)",
+        "operationId": "userPosts",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "ID пользователя",
+            "required": true,
+            "schema": {
+              "type": "integer"
+            }
+          },
+          {
+            "name": "limit",
+            "in": "query",
+            "description": "Количество записей на страницу",
+            "required": true,
+            "schema": {
+              "type": "integer"
+            }
+          },
+          {
+            "name": "offset",
+            "in": "query",
+            "description": "Сдвиг записей",
+            "required": true,
+            "schema": {
+              "type": "integer"
+            }
+          }
+        ],
         "responses": {
           "200": {
             "description": "OK",
@@ -1142,7 +1230,6 @@
         ]
       }
     },
-
     "/register": {
       "post": {
         "tags": [
@@ -1700,6 +1787,91 @@
           }
         ],
         "x-codegen-request-body-name": "body"
+      }
+    },
+    "/communities/attachments": {
+      "post": {
+        "tags": [
+          "Communities"
+        ],
+        "description": "Загрузить файлы",
+        "operationId": "uploadCommunityAttachments",
+        "requestBody": {
+          "content": {
+            "multipart/form-data": {
+              "schema": {
+                "required": [
+                  "files",
+                  "id"
+                ],
+                "properties": {
+                  "files": {
+                    "type": "string",
+                    "description": "files to upload",
+                    "format": "binary"
+                  },
+                  "id": {
+                    "type": "string",
+                    "description": "community id"
+                  }
+                }
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "attachmentIds": {
+                      "type": "array",
+                      "items": {
+                        "type": "number"
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "402": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string"
+                    },
+                    "errors": {
+                      "type": "object",
+                      "properties": {
+                        "field": {
+                          "type": "array",
+                          "items": {
+                            "type": "object",
+                            "example": "Here will be error of the field"
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "Authorization": []
+          }
+        ]
       }
     },
     "/communities/{id}": {

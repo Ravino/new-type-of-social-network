@@ -4,13 +4,17 @@ namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Community\Community as CommunityRequest;
+use App\Http\Requests\Community\UploadFileRequest;
 use App\Http\Resources\Community\CommunityCollection;
 use App\Http\Resources\Community\Community as CommunityResource;
 use App\Http\Resources\Community\CommunityUserCollection;
-use App\Http\Resources\User\UserCollection;
 use App\Models\Community;
+use App\Models\CommunityAttachment;
 use App\Services\CommunityService;
+use App\Services\S3UploadService;
+use Exception;
 use Illuminate\Http\Request;
+use App\Http\Resources\Post\AttachmentsCollection;
 
 class CommunityController extends Controller
 {
@@ -26,14 +30,21 @@ class CommunityController extends Controller
     public $communityService;
 
     /**
+     * @var S3UploadService
+     */
+    public $uploadService;
+
+    /**
      * CommunityController constructor.
      * @param Community $community
      * @param CommunityService $communityService
+     * @param S3UploadService $uploadService
      */
-    public function __construct(Community $community, CommunityService $communityService)
+    public function __construct(Community $community, CommunityService $communityService, S3UploadService $uploadService)
     {
         $this->community = $community;
         $this->communityService = $communityService;
+        $this->uploadService = $uploadService;
     }
 
     /**
@@ -43,7 +54,7 @@ class CommunityController extends Controller
         /**
          * TODO: Нужно будет что-то придумать с оптимизацией (дернормализовать таблицы или.... пока не ясно)
          */
-        $communities = Community::with('role', 'members')->get();
+        $communities = Community::with('role', 'members', 'attachment')->get();
         $communities->each(function($community) {
             $community->load('onlyFiveMembers');
         });
@@ -148,5 +159,29 @@ class CommunityController extends Controller
             }
         }
         return response()->json(['message' => 'Сообщество не найдено'], 404);
+    }
+
+    /**
+     * @param UploadFileRequest $request
+     * @return AttachmentsCollection
+     * @throws Exception
+     */
+    public function uploadAttachments(UploadFileRequest $request) {
+        $uploaded = $this->uploadService->singleUpload('community/attachments', $request->file('file'), 'public', [
+            'normal' => [
+                'size' => 600,
+            ],
+            'medium' => [
+                'size' => 250,
+            ],
+            'thumb' => [
+                'size' => [80, 80],
+            ],
+        ]);
+
+        $community_id = request()->input('id');
+        $uploaded['community_id'] = $community_id;
+        $attachment = CommunityAttachment::updateOrCreate(['community_id' => $community_id], $uploaded);
+        return new AttachmentsCollection([$attachment]);
     }
 }

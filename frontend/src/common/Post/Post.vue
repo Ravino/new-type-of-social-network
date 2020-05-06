@@ -5,13 +5,24 @@
             <div class="col-12 border-bottom plz-post-item-header">
                 <div class="post-news-item d-flex flex-row align-content-center pb-4">
                     <div class="post-poster-pic mr-3">
-                        <img :src="post.posterPic" :alt="post.posterName"/>
+                        <router-link v-if="post.user" :to="{name: 'PersonalPage', params: {id: post.user.id}}">
+                            <img :src="post.posterPic" :alt="post.posterName"/>
+                        </router-link>
+                        <router-link v-else :to="{name: 'CommunityPage', params: {id: post.community.id}}">
+                            <img :src="post.posterPic" :alt="post.posterName"/>
+                        </router-link>
                     </div>
 
                     <div class="post-poster-name d-flex flex-column justify-content-center">
                         <h6 class="post-poster-title mb-1">
                             <!-- TODO: @TGA странно что мы нигде не выводим название поста-->
-                            <b>{{post.posterName}}</b>
+
+                            <router-link v-if="post.user" :to="{name: 'PersonalPage', params: {id: post.user.id}}">
+                                <b>{{post.posterName}}</b>
+                            </router-link>
+                            <router-link v-else :to="{name: 'CommunityPage', params: {id: post.community.id}}">
+                                <b>{{post.posterName}}</b>
+                            </router-link>
                         </h6>
                         <time :datetime="post.createdAt" class="post-poster-time">
                             {{ post.createdAt | lastPostTime }}
@@ -52,13 +63,24 @@
                     <template v-if="post.sharedFrom">
                         <div class="post-news-item d-flex flex-row align-content-center pb-4">
                             <div class="post-poster-pic mr-3">
-                                <img :src="post.sharedFrom.posterPic" :alt="post.sharedFrom.posterName"/>
+                                <router-link v-if="post.user" :to="{name: 'PersonalPage', params: {id: post.sharedFrom.user.id}}">
+                                    <img :src="post.sharedFrom.posterPic" :alt="post.sharedFrom.posterName"/>
+                                </router-link>
+                                <router-link v-else :to="{name: 'CommunityPage', params: {id: post.sharedFrom.community.id}}">
+                                    <img :src="post.sharedFrom.posterPic" :alt="post.sharedFrom.posterName"/>
+                                </router-link>
                             </div>
 
                             <div class="post-poster-name d-flex flex-column justify-content-center">
                                 <h6 class="post-poster-title mb-1">
                                     <!-- TODO: @TGA странно что мы нигде не выводим название поста-->
-                                    <b>{{post.sharedFrom.posterName}}</b>
+
+                                    <router-link v-if="post.user" :to="{name: 'PersonalPage', params: {id: post.sharedFrom.user.id}}">
+                                        <b>{{post.sharedFrom.posterName}}</b>
+                                    </router-link>
+                                    <router-link v-else :to="{name: 'CommunityPage', params: {id: post.sharedFrom.community.id}}">
+                                        <b>{{post.sharedFrom.posterName}}</b>
+                                    </router-link>
                                 </h6>
                                 <time :datetime="post.sharedFrom.createdAt" class="post-poster-time">
                                     {{ post.sharedFrom.createdAt | lastPostTime }}
