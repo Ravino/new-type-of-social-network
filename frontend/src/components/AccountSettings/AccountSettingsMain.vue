@@ -12,25 +12,29 @@
             </div>
 
             <div class="plz-account-settings-body plz-account-settings-main-body">
+
                 <div class="form-group row border-bottom">
                     <label for="firstName"
                            class="plz-account-settings-body-label plz-account-settings-main-label col-sm-6 col-md-6 col-lg-4 col-xl-4">
                         Имя
                     </label>
-                    <div
-                        class="plz-account-settings-body-field plz-account-settings-main-body-field col-sm-6 col-md-6 col-lg-6 col-xl-6">
+                    <div class="plz-account-settings-body-field plz-account-settings-main-body-field col-sm-6 col-md-6 col-lg-6 col-xl-6">
                         <input type="text"
                                id="firstName"
                                class="w-75"
                                v-model="model.firstName"
-                               :class="[isEdit.firstName ? 'form-control' : 'form-control-plaintext']"
+                               :class="[isEdit.firstName ? 'form-control' : 'form-control-plaintext', { 'is-invalid': !!firstNameError, 'is-valid': isSuccessFirstName }]"
+                               @input="inputFieldEdit($event, 'firstName')"
                                @keyup.enter="accountStartSaveData($event.target.value, `firstName`)"
                                @blur="finishFieldEdit(`firstName`)"
                                :readonly="!isEdit.firstName"
-                               ref="firstName"/>
+                               ref="firstName">
+
+                        <div class="invalid-feedback">
+                            <p class="text-danger">{{ firstNameError }}</p>
+                        </div>
                     </div>
-                    <div
-                        class="plz-account-settings-body-action plz-account-settings-main-body-action col-2 d-sm-none d-md-none d-lg-flex d-xl-flex">
+                    <div class="plz-account-settings-body-action plz-account-settings-main-body-action col-2 d-sm-none d-md-none d-lg-flex d-xl-flex">
                         <button type="button"
                                 class="btn btn-link"
                                 :class="{'text-primary': isEdit.firstName}"
@@ -49,11 +53,16 @@
                                type="text"
                                class="w-75"
                                v-model="model.lastName"
-                               :class="[isEdit.lastName ? 'form-control' : 'form-control-plaintext']"
+                               :class="[isEdit.lastName ? 'form-control' : 'form-control-plaintext', { 'is-invalid': !!lastNameError, 'is-valid': isSuccessLastName }]"
+                               @input="inputFieldEdit($event, 'lastName')"
                                @keyup.enter="accountStartSaveData($event.target.value, `lastName`)"
                                @blur="finishFieldEdit(`lastName`)"
                                :readonly="!isEdit.lastName"
-                               ref="lastName"/>
+                               ref="lastName">
+
+                        <div class="invalid-feedback">
+                            <p class="text-danger">{{ lastNameError }}</p>
+                        </div>
                     </div>
                     <div
                         class="plz-account-settings-body-action plz-account-settings-main-body-action col-2 d-sm-none d-md-none d-lg-flex d-xl-flex">
@@ -96,9 +105,10 @@
                             <select id="relationship" class="form-control border-0 pl-2"
                                     @change="accountStartSaveData(model.relationshipId, 'relationshipId')"
                                     v-model="model.relationshipId">
-                                <option value="null" selected>В активном поиске</option>
+                                <option value="null" selected disabled>Выберите вариант</option>
                                 <option value="1">В браке</option>
                                 <option value="2">Не в браке</option>
+                                <option value="3">В активном поиске</option>
                             </select>
                             <i class="fas fa-chevron-down ml-2"></i>
                         </div>
@@ -120,11 +130,16 @@
                                id="birthday"
                                type="date"
                                class="form-control w-75"
+                               :class="{ 'is-invalid': !!birthdayError, 'is-valid': isSuccessBirthday }"
                                :value="model.birthday | toYMD"
+                               @input="inputFieldEdit($event, 'birthday')"
                                @keyup.enter="accountStartSaveData($event.target.value, `birthday`)"
                                @blur="finishFieldEdit(`birthday`)"
-                               @input="model.birthday = $event.target.value"
                                ref="birthday"/>
+
+                        <div class="invalid-feedback">
+                            <p class="text-danger">{{ lastNameError }}</p>
+                        </div>
                     </div>
                     <div
                         class="plz-account-settings-body-action plz-account-settings-main-body-action col-2 d-sm-none d-md-none d-lg-flex d-xl-flex">
@@ -189,6 +204,9 @@
 </template>
 
 <script>
+    import {required, minLength, maxLength} from 'vuelidate/lib/validators';
+    import {isCorrectHumanName, isValidRegistrationBirthDay, notHaveSpace} from '../../validators/validators.js';
+
     export default {
         name: 'AccountSettingsMain',
         computed: {
@@ -215,26 +233,129 @@
 
                 return geolocation;
             },
+
+            isSuccessFirstName() {
+                return (!this.$v.model.firstName.$invalid || !(!!this.serverRegMessages.firstName)) && !
+                  !this.model.firstName;
+            },
+            firstNameError() {
+                if (this.$v.model.firstName.$error) {
+                    if (!this.$v.model.firstName.required) {
+                        return 'Укажите как Вас зовут.';
+                    } else if (!this.$v.model.firstName.minLength) {
+                        return 'Врядли у Вас такое короткое имя?';
+                    } else if (!this.$v.model.firstName.maxLength) {
+                        return 'Слишком длинное имя.';
+                    } else if (!this.$v.model.firstName.isCorrectHumanName) {
+                        return 'Только буквы в имени.';
+                    } else if (!this.$v.model.firstName.notHaveSpace) {
+                        return 'Не должно быть пробелов.';
+                    }
+                } else if (this.serverRegMessages.firstName) {
+                    return this.serverRegMessages.firstName;
+                }
+
+                return null;
+            },
+            isSuccessLastName() {
+                return (!this.$v.model.lastName.$invalid || !(!!this.serverRegMessages.lastName)) &&
+                  !!this.model.lastName;
+            },
+            lastNameError() {
+                if (this.$v.model.lastName.$error) {
+                    if (!this.$v.model.lastName.required) {
+                        return 'Укажите свою фамилию.';
+                    } else if (!this.$v.model.lastName.minLength) {
+                        return 'Врядли у Вас такая короткая фамилия.';
+                    } else if (!this.$v.model.lastName.maxLength) {
+                        return 'Слишком длинная фамилия.';
+                    } else if (!this.$v.model.lastName.isCorrectHumanName) {
+                        return 'Только буквы в фамилии.';
+                    } else if (!this.$v.model.lastName.notHaveSpace) {
+                        return 'Не должно быть пробелов.';
+                    }
+                } else if (this.serverRegMessages.lastName) {
+                    return this.serverRegMessages.lastName;
+                }
+
+                return null;
+            },
+            isSuccessBirthday() {
+                return (!this.$v.model.birthday.$invalid || !(!!this.serverRegMessages.birthday)) &&
+                  !!this.model.birthday;
+            },
+            birthdayError() {
+                if (this.$v.model.birthday.$error) {
+                    if (!this.$v.model.birthday.isValidBirthday) {
+                        return 'Укажите коррекнтую дату.';
+                    }
+                } else if (this.serverRegMessages.birthday) {
+                    return this.serverRegMessages.birthday;
+                }
+
+                return null;
+            },
         },
         data() {
             return {
                 model: {
-                    firstName: this.$root.$auth.user.firstName,
-                    lastName: this.$root.$auth.user.lastName,
-                    sex: this.$root.$auth.user.sex,
-                    relationshipId: this.$root.$auth.user.relationshipId,
-                    birthday: this.$root.$auth.user.birthday,
-                    location: this.$root.$auth.user.location,
+                    firstName: this.$root.$auth.user.profile.firstName,
+                    lastName: this.$root.$auth.user.profile.lastName,
+                    sex: this.$root.$auth.user.profile.sex,
+                    relationshipId: this.$root.$auth.user.profile.relationshipId,
+                    birthday: this.$root.$auth.user.profile.birthday,
+                    location: this.$root.$auth.user.profile.location,
                 },
-
                 isEdit: {
                     firstName: false,
                     lastName: false,
                     birthday: false,
                     location: false,
                 },
+                isSend: {
+                    firstName: false,
+                    lastName: false,
+                    sex: false,
+                    birthday: false,
+                    relationshipId: false,
+                    location: false,
+                },
                 locations: [],
+                serverRegMessages: {
+                    firstName: null,
+                    lastName: null,
+                    birthday: null,
+                },
             }
+        },
+        validations() {
+            return {
+                model: {
+                    firstName: {
+                        required,
+                        minLength: minLength(2),
+                        maxLength: maxLength(50),
+                        isCorrectHumanName,
+                        notHaveSpace,
+                    },
+                    lastName: {
+                        required,
+                        minLength: minLength(2),
+                        maxLength: maxLength(50),
+                        isCorrectHumanName,
+                        notHaveSpace,
+                    },
+                    birthday: {
+                        isValidBirthday: (value) => {
+                            if (!!value) {
+                                return isValidRegistrationBirthDay(value);
+                            }
+
+                            return true;
+                        },
+                    },
+                }
+            };
         },
         methods: {
             getRef(refKey) {
@@ -263,7 +384,9 @@
 
                     if (inpRef) {
                         inpRef.blur();
-                        this.accountStartSaveData(this.model[fieldName], fieldName);
+
+                        if (!this.isSend[fieldName])
+                            this.accountStartSaveData(this.model[fieldName], fieldName);
                     } else {
                         window.console.warn(`Ошибка редактирования поля`);
                     }
@@ -290,7 +413,32 @@
 
                 return formData;
             },
+            inputFieldEdit($event, fieldName) {
+                if (fieldName === 'birthday') {
+                    this.model.birthday = $event.target.value;
+                }
+
+                this.serverRegMessages[fieldName] = null;
+                this.$v.model[fieldName].$touch();
+            },
+            locationLabel({title, region, country}) {
+                if (title) {
+                    if (region) {
+                        return `${country.title.ru}, ${region ? region.title.ru : null}, ${title.ru}`;
+                    }
+
+                    return `${country.title.ru}, ${title.ru}`;
+                }
+            },
+
             async accountStartSaveData(newValue, fieldName) {
+                this.isSend[fieldName] = true;
+
+                if (!!this[`${fieldName}Error`]) {
+                    this.model[fieldName] = this.$root.$auth.user.profile[fieldName];
+                    return;
+                }
+
                 this.isEdit[fieldName] = false;
 
                 let formData = this.formatFormData(newValue, fieldName);
@@ -303,14 +451,19 @@
                 }
 
                 if (response !== null) {
-                    this.$root.$auth.user.updateAuthUser(response);
+                    this.$root.$auth.user.updateAuthUser({profile: response});
+                    this.$root.$auth.storeUserData();
 
                     if (fieldName === `firstName` || fieldName === `lastName`) {
                         this.$root.$emit('updateUserName', {
-                            firstName: this.$root.$auth.user.firstName,
-                            lastName: this.$root.$auth.user.lastName
+                            firstName: this.$root.$auth.user.profile.firstName,
+                            lastName: this.$root.$auth.user.profile.lastName,
                         });
                     }
+
+                    setTimeout(() => {
+                        this.isSend[fieldName] = false;
+                    }, 2000);
                 }
             },
             async getLocations(location) {
@@ -324,15 +477,6 @@
 
                 if (response) {
                     this.locations = response;
-                }
-            },
-            locationLabel({title, region, country}) {
-                if (title) {
-                    if (region) {
-                        return `${country.title.ru}, ${region ? region.title.ru : null}, ${title.ru}`;
-                    }
-
-                    return `${country.title.ru}, ${title.ru}`;
                 }
             },
         },

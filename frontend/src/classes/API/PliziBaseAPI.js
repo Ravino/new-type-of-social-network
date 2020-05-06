@@ -42,7 +42,6 @@ class PliziBaseAPI {
 
     /**
      * если в ответе сервер вернул, что `Token is expired`, то бросит событие `api:Unauthorized`
-     * @private
      * @param {Object} error - ответ сервера с ошибкой в том виде как возвращает axios
      * @param {string} srcMethod - имя API-метода, который вызвал ошибку
      * @throws {Event} - событие `api:Unauthorized`

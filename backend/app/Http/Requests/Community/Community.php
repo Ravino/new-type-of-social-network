@@ -26,10 +26,10 @@ class Community extends Request
     public function rules()
     {
         return [
-            'name' => 'required|string|max:255',
+            'name' => 'required|string|max:255|exists:App\Models\Community,name',
             'description' => 'required|string',
             'notice' => 'string|max:255',
-            'url' => 'string|max:255',
+            'url' => 'string|max:255|exists:App\Models\Community,url',
             'website' => 'url|nullable',
             'location' => 'string|max:255',
         ];

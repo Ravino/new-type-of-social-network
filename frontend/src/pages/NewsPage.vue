@@ -61,7 +61,7 @@
 import AccountToolbarLeft from '../common/AccountToolbarLeft.vue';
 import FavoriteFriends from '../common/FavoriteFriends.vue';
 
-import AccountSettingsSideMenu from '../components/AccountSettingsSideMenu.vue';
+import AccountSettingsSideMenu from '../components/AccountSettings/AccountSettingsSideMenu.vue';
 import WhatsNewBlock from "../common/WhatsNewBlock.vue";
 import IconSearch from "../icons/IconSearch.vue";
 import IconSingleViewMode from "../icons/IconSingleViewMode.vue";

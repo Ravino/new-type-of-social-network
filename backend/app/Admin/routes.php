@@ -2,17 +2,8 @@
 
 Route::post('login', 'App\Http\Controllers\Admin\LoginController@authenticate');
 
-Route::get('login', ['as' => 'admin.login', function () {
-    $content = view('admin/login')->toHtml();
-    return AdminSection::view($content, 'Login');
-}]);
+Route::get('login', ['as' => 'admin.login', 'uses' => 'App\Http\Controllers\Admin\LoginController@login']);
 
-Route::get('', ['as' => 'admin.dashboard', function () {
-	$content = 'Define your dashboard here.';
-	return AdminSection::view($content, 'Dashboard');
-}]);
+Route::get('', ['as' => 'admin.dashboard', 'uses' => 'App\Http\Controllers\Admin\LoginController@dashboard']);
 
-Route::get('information', ['as' => 'admin.information', function () {
-	$content = 'Define your information here.';
-	return AdminSection::view($content, 'Information');
-}]);
+Route::get('information', ['as' => 'admin.information', 'uses' => 'App\Http\Controllers\Admin\LoginController@information']);

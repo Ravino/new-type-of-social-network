@@ -5,9 +5,11 @@ namespace App\Models;
 use App\CommunityMember;
 use App\Traits\NPerGroup;
 use Illuminate\Database\Eloquent\Model;
+use Spiritix\LadaCache\Database\LadaCacheTrait;
 
 class Community extends Model
 {
+    use LadaCacheTrait;
 
     const ROLE_USER = 'user';
     const ROLE_ADMIN = 'admin';

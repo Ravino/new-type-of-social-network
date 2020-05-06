@@ -7,7 +7,7 @@
         <div class="col-sm-10 col-md-10 col-lg-10 col-xl-10">
             <div class="row">
                 <div class="col-sm-12 col-md-12 col-lg-12 col-xl-12">
-                    <div v-if="isDataReady" id="communityHeader" class="bg-white-br20 py-5 mb-5 text-center">
+                    <div v-if="isDataReady" id="communityHeader" class="bg-white-br20 py-5 mb-5 text-left pl-3">
                         <h1>{{communityData.name}}</h1>
                         <p class="alert alert-info">
                             {{communityData.description}}
@@ -19,8 +19,11 @@
 
             <div class="row">
                 <div class="col-sm-10 col-md-10 col-lg-8 col-xl-8">
-                    <div v-if="isDataReady" id="communityInfoBlock" class="bg-white-br20 py-5 mb-5 text-center">
-                        Информация
+                    <div v-if="isDataReady" id="communityInfoBlock" class="bg-white-br20 py-5 mb-5 text-left">
+                        <div class="post-poster-pic mr-3">
+                            <img :src="communityData.primaryImage" :alt="communityData.name" />
+                        </div>
+                        <p>{{communityData.description}}</p>
                     </div>
                     <Spinner v-else></Spinner>
 
@@ -34,17 +37,11 @@
                 </div>
 
                 <div class="col-sm-4 col-md-4 col-lg-4 col-xl-4">
-                    <div id="communityUserActions" class="bg-white-br20 py-5 mb-5">
-                        <button type="button" class="btn btn-primary btn-block w-auto mx-auto px-5 py-1 text-center rounded-pill">Написать сообщение</button>
-                    </div>
+                    <CommunityUserActionBlock v-bind:community="communityData"></CommunityUserActionBlock>
 
-                    <div id="communityMyFriends" class="bg-white-br20 py-5 text-center mb-5">
-                        сколько-то моих френдов
-                    </div>
+                    <CommunityFriendsInformer v-bind:community="communityData"></CommunityFriendsInformer>
 
-                    <div id="communityParticipants" class="bg-white-br20 py-5 text-center mb-5">
-                        участники
-                    </div>
+                    <CommunityShortMembers v-if="isDataReady" v-bind:community="communityData"></CommunityShortMembers>
 
                     <div id="communityVideos" class="bg-white-br20 py-5 text-center">
                         видосики
@@ -61,22 +58,28 @@
 </template>
 
 <script>
-import AccountToolbarLeft from '../common/AccountToolbarLeft.vue';
-import FavoriteFriends from '../common/FavoriteFriends.vue';
-import Spinner from '../common/Spinner.vue';
+    import AccountToolbarLeft from '../common/AccountToolbarLeft.vue';
+    import FavoriteFriends from '../common/FavoriteFriends.vue';
+    import Spinner from '../common/Spinner.vue';
 
-import Post from '../common/Post/Post.vue';
+    import Post from '../common/Post/Post.vue';
 
-import PliziCommunity from '../classes/PliziCommunity.js';
-import PliziPost from '../classes/PliziPost.js';
+    import PliziCommunity from '../classes/PliziCommunity.js';
+    import PliziPost from '../classes/PliziPost.js';
+    import CommunityUserActionBlock from "../common/Communities/CommunityUserActionBlock";
+    import CommunityFriendsInformer from "../common/Communities/CommunityFriendsInformer";
+    import CommunityShortMembers from "../common/Communities/CommunityShortMembers";
 
-export default {
+    export default {
 name: 'CommunityPage',
 props: {
     id : Number|String
 },
 
-components: {
+components : {
+    CommunityShortMembers,
+    CommunityFriendsInformer,
+    CommunityUserActionBlock,
     Spinner,
     AccountToolbarLeft, FavoriteFriends,
     Post,
@@ -98,7 +101,6 @@ data() {
 
 methods: {
     onSharePost(evData){
-        window.console.log(evData, `onSharePost`);
         this.$alert(`Тут будет шэйринг поста`, `bg-info`, 3);
     },
 
@@ -106,14 +108,12 @@ methods: {
         let apiResponse = null;
 
         try {
-            apiResponse = await this.$root.$api.$communities.getCommunity(this.id >>> 0);
+            apiResponse = await this.$root.$api.$communities.getCommunity(this.id);
         }
         catch (e){
             window.console.warn(e.detailMessage);
             throw e;
         }
-
-        window.console.log(apiResponse, `apiResponse`);
 
         if (apiResponse) {
             this.communityData = new PliziCommunity(apiResponse);

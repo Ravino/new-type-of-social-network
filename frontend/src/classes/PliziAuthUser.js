@@ -34,15 +34,10 @@ class PliziAuthUser extends PliziUzer{
     updateAuthUser(inputData){
         this.updateUserData(inputData);
 
-        this._email = (inputData.email) ? (inputData.email+``).trim() : ``;
-
-        if (inputData.stats) {
-            this._stats = new PliziUserStats(inputData.stats);
-        }
-
-        if (inputData.privacySettings) {
-            this._privacySettings = new PliziUserPrivacySettings(inputData.privacySettings);
-        }
+        this._email = (inputData.email) ? (inputData.email+``).trim() : this.email;
+        this._stats = inputData.stats ? new PliziUserStats(inputData.stats) : this.stats;
+        this._privacySettings = inputData.privacySettings ? new PliziUserPrivacySettings(inputData.privacySettings) :
+          this.privacySettings;
     }
 
     /**

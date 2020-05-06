@@ -48,7 +48,7 @@ class User extends JsonResource
                     'isOnline' => $this->isOnline,
                     'lastActivity' => $this->last_activity_dt,
                     'profile' => new Profile($this->profile),
-                    'mutualFriendsCount' => $this->mutualFriendsCount
+                    'mutualFriendsCount' => (int)$this->profile->mutual
                 ];
             } else {
                 return [

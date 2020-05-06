@@ -20,7 +20,7 @@
                             <input v-model="chatFilterText" id="txtFindInChat" ref="txtFindInChat" type="text"
                                    @focus="onFocusSearch"
                                    @keydown.stop="chatSearchKeyDownCheck($event)"
-                                   class="chat-search-input form-control rounded-pill bg-light px-4"
+                                   class="chat-search-input form-control rounded-pill px-4"
                                    placeholder="Поиск в чате"/>
                             <button class="btn btn-search h-100 shadow-none"
                                     type="submit"

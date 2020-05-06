@@ -34,6 +34,7 @@
 
             <FriendListItemMenu v-bind:friend="friend"
                                 @FriendAddToFavorites="onFriendAddToFavorites"
+                                @FriendRemoveFromFavorites="onFriendRemoveFromFavorites"
                                 @FriendshipStop="onFriendshipStop">
             </FriendListItemMenu>
         </div>
@@ -65,6 +66,37 @@ data(){
     }
 },
 methods: {
+    onFriendRemoveFromFavorites(){
+        this.removeFriendFromFavorites();
+    },
+
+    async removeFriendFromFavorites(){
+        let apiResponse = null;
+
+        try {
+            apiResponse = await this.$root.$api.$friend.removeFromFavorites( this.friend.id );
+        } catch (e){
+            window.console.warn( e.detailMessage );
+            throw e;
+        }
+
+        if ( apiResponse ) {
+            window.console.log(apiResponse, `apiResponse`);
+
+            let successMsg = `Ваш друг <b>${this.friend.fullName}</b> удалён из Избранных`;
+            switch(this.friend.sex) {
+                case 'f': successMsg = `<b>${this.friend.fullName}</b> удалена из Избранных`; break;
+                case 'm': successMsg = `<b>${this.friend.fullName}</b> удалён из Избранных`; break;
+            }
+
+            this.$root.$alert(successMsg, `bg-success`, 3);
+        }
+        else {
+            let errMsg = `Не получилось удалить <b>${this.friend.fullName}</b> из Избранных`;
+            this.$root.$alert(errMsg, `bg-warning`, 3);
+        }
+    },
+
     onFriendAddToFavorites(){
         this.addFriendToFavorites();
     },
@@ -78,8 +110,6 @@ methods: {
             window.console.warn( e.detailMessage );
             throw e;
         }
-
-        this.isPrepareToRemoved = true;
 
         if ( apiResponse ) {
             window.console.log(apiResponse, `apiResponse`);

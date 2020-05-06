@@ -37,7 +37,7 @@
                         <input type="file" @change="onSelectImage($event)" ref="editorImager" multiple />
                     </label>-->
 
-                    <button class="btn btn-link w-50 mx-0 px-1 btn-add-smile" type="button">
+                    <button class="btn btn-link w-50 mx-0 px-1 btn-add-smile position-relative" type="button">
                         <EmojiPicker v-if="dropToDown"
                                      @addEmoji="onAddEmoji"
                                      :transform="'transform: translate(-40%, 40px)'">

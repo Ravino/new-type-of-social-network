@@ -5,9 +5,11 @@ namespace App\Models;
 use App\Models\Geo\City;
 use App\Models\Profile\Relationship;
 use Illuminate\Database\Eloquent\Model;
+use Spiritix\LadaCache\Database\LadaCacheTrait;
 
 class Profile extends Model
 {
+    use LadaCacheTrait;
     protected $casts = [
         'created_at' => 'timestamp',
         'updated_at' => 'timestamp',

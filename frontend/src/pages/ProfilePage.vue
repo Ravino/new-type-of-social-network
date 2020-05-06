@@ -120,98 +120,103 @@ computed: {
     }
 },
 
-methods: {
-    wallPostsSelectHandler(evData) {
+methods : {
+    wallPostsSelectHandler( evData ){
         this.filterMode = evData.wMode;
     },
-    openVideoModal(evData) {
-        if (evData.videoLink) {
+
+    openVideoModal( evData ){
+        if ( evData.videoLink ){
             this.postVideoModal.isVisible = true;
             this.postVideoModal.content.videoLink = evData.videoLink;
         }
     },
-    hideVideoModal() {
+
+    hideVideoModal(){
         this.postVideoModal.isVisible = false;
     },
 
-    async getPosts() {
-        let response = null;
-
-        try {
-          response = await this.$root.$api.$post.getPosts();
-        } catch (e) {
-          console.warn(e.detailMessage);
-        }
-
-        if (response !== null) {
-            this.userPosts = [];
-
-            response.map((post) => {
-                this.userPosts.push(new PliziPost(post));
-            });
-        }
+    addNewPost( post ){
+        this.userPosts.unshift( new PliziPost( post ) );
     },
 
-    addNewPost(post) {
-        this.userPosts.unshift(new PliziPost(post));
+    startTimer( post ){
+        setTimeout( () => {
+            const postIndex = this.userPosts.find( ( userPost ) => {
+                return userPost.id === post.id;
+            } );
+
+            if ( post.deleted ){
+                this.userPosts.splice( postIndex, 1 );
+            }
+        }, 5000 );
     },
 
-  startTimer(post) {
-    setTimeout(() => {
-      const postIndex = this.userPosts.find((userPost) => {
-        return userPost.id === post.id;
-      });
-
-      if (post.deleted) {
-        this.userPosts.splice(postIndex, 1);
-      }
-    }, 5000);
-  },
-    onEditPost(post) {
+    onEditPost( post ){
         this.postEditModal.isVisible = true;
         this.postForEdit = post;
     },
-    hidePostEditModal() {
+
+    hidePostEditModal(){
         this.postEditModal.isVisible = false;
         this.postForEdit = null;
     },
 
-  async deletePost(id) {
-    let response;
+    async getPosts(){
+        let response = null;
 
-    try {
-      response = await this.$root.$api.$post.deletePost(id);
-    } catch (e) {
-      console.warn(e.detailMessage);
-    }
+        try{
+            response = await this.$root.$api.$post.getPosts();
+        } catch (e){
+            console.warn( e.detailMessage );
+        }
 
-    if (response) {
-      const post = this.userPosts.find((post) => {
-        return post.id === id;
-      });
+        if ( response !== null ){
+            this.userPosts = [];
 
-      post.deleted = true;
+            response.map( ( post ) => {
+                this.userPosts.push( new PliziPost( post ) );
+            } );
+        }
+    },
 
-      this.startTimer(post);
-    }
-  },
-  async restorePost(id) {
-    let response;
+    async deletePost( id ){
+        let response;
 
-    try {
-      response = await this.$root.$api.$post.restorePost(id);
-    } catch (e) {
-      console.warn(e.detailMessage);
-    }
+        try{
+            response = await this.$root.$api.$post.deletePost( id );
+        } catch (e){
+            console.warn( e.detailMessage );
+        }
 
-    if (response) {
-      const post = this.userPosts.find((post) => {
-        return post.id === id;
-      });
+        if ( response ){
+            const post = this.userPosts.find( ( post ) => {
+                return post.id === id;
+            } );
 
-      post.deleted = false;
-    }
-  },
+            post.deleted = true;
+
+            this.startTimer( post );
+        }
+    },
+
+    async restorePost( id ){
+        let response;
+
+        try{
+            response = await this.$root.$api.$post.restorePost( id );
+        } catch (e){
+            console.warn( e.detailMessage );
+        }
+
+        if ( response ){
+            const post = this.userPosts.find( ( post ) => {
+                return post.id === id;
+            } );
+
+            post.deleted = false;
+        }
+    },
 },
 
 mounted() {

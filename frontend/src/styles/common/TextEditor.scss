@@ -67,6 +67,11 @@ $editorSize: 48px;
     &-btns {
         width: 80px;
         margin-left: 15px;
+
+        .btn-add-file,
+        .btn-add-smile {
+            height: 50px;
+        }
     }
 }
 

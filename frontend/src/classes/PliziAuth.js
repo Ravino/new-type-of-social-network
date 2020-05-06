@@ -2,6 +2,7 @@ import PliziAPI from './PliziAPI.js';
 import PliziAuthUser from './PliziAuthUser.js';
 
 import PliziFriendsCollection from './Collection/PliziFriendsCollection.js';
+import PliziChosensCollection from './Collection/PliziChosensCollection.js';
 import PliziDialogsCollection from './Collection/PliziDialogsCollection.js';
 import PliziInvitationsCollection from './Collection/PliziInvitationsCollection.js';
 import PliziNotificationsCollection from './Collection/PliziNotificationsCollection.js';
@@ -47,6 +48,13 @@ class PliziAuthClass {
     _fm = null;
 
     /**
+     * ссылка на менеджер Избранных
+     * @type {PliziChosensCollection}
+     * @private
+     */
+    _cm = null;
+
+    /**
      * ссылка на менеджер диалогов
      * @type {PliziDialogsCollection}
      * @private
@@ -75,6 +83,14 @@ class PliziAuthClass {
      */
     get fm(){
         return this._fm;
+    }
+
+    /**
+     * ссылка на менеджер Избранных
+     * @returns {PliziChosensCollection}
+     */
+    get cm(){
+        return this._cm;
     }
 
     /**
@@ -115,6 +131,7 @@ class PliziAuthClass {
         this._user = new PliziAuthUser(null);
 
         this._fm = new PliziFriendsCollection(apiObj);
+        this._cm = new PliziChosensCollection(apiObj);
         this._dm = new PliziDialogsCollection(apiObj);
         this._im = new PliziInvitationsCollection(apiObj);
         this._nm = new PliziNotificationsCollection(apiObj);
@@ -184,6 +201,7 @@ class PliziAuthClass {
         localStorage.removeItem( 'pliziJWToken' );
         localStorage.removeItem( 'pliziChatChannel' );
         localStorage.removeItem( this.fm.localStorageKey );
+        localStorage.removeItem( this.cm.localStorageKey );
         localStorage.removeItem( this.dm.localStorageKey );
         localStorage.removeItem( this.im.localStorageKey );
         localStorage.removeItem( this.nm.localStorageKey );
