@@ -11,7 +11,7 @@ return [
     | This may be useful for debugging purposes.
     |
     */
-    'active' => false,
+    'active' => env('LADA_CACHE_ACTIVE', true),
 
     /*
     |--------------------------------------------------------------------------
