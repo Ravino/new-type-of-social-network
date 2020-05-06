@@ -144,7 +144,7 @@
 </template>
 
 <script>
-    import Modal from './Modal.vue';
+    import Modal from '../Modal.vue';
 
     export default {
         name: 'AccountSettingsSecurity',

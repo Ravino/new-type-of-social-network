@@ -76,12 +76,12 @@ class PliziUser {
      * @param {Object} inputData
      */
     updateUserData(inputData) {
-        this._id = inputData.id;
-        this._isOnline = inputData.isOnline;
-        this._lastActivity = new Date(inputData.lastActivity);
+        this._id = inputData.id ? inputData.id : this.id;
+        this._isOnline = inputData.isOnline ? inputData.isOnline : this.isOnline;
+        this._lastActivity = inputData.lastActivity ? new Date(inputData.lastActivity) : this.lastActivity;
 
-        this._profile = (inputData.profile) ? new PliziProfile(inputData.profile) : null;
-        this._mutualFriendsCount = inputData.mutualFriendsCount || null;
+        this._profile = inputData.profile ? new PliziProfile(inputData.profile) : this.profile;
+        this._mutualFriendsCount = inputData.mutualFriendsCount ? inputData.mutualFriendsCount : this.mutualFriendsCount;
 
         // TODO: @TGA переписать потом на загрузку реальных данных
         this._subscribersNumber = Math.floor(Math.random() * 10000);
