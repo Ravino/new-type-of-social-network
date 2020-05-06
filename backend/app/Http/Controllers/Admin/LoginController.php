@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Admin;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
 use Illuminate\Support\Facades\Auth;
+use AdminSection;
 
 class LoginController extends Controller
 {
@@ -19,5 +20,20 @@ class LoginController extends Controller
         }
 
         return redirect()->intended('admin/login');
+    }
+
+    public function login() {
+        $content = view('admin/login')->toHtml();
+        return AdminSection::view($content, 'Login');
+    }
+
+    public function dashboard() {
+        $content = 'Define your dashboard here.';
+        return AdminSection::view($content, 'Dashboard');
+    }
+
+    public function information() {
+        $content = 'Define your information here.';
+        return AdminSection::view($content, 'Information');
     }
 }

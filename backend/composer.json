@@ -33,6 +33,7 @@
         "socialiteproviders/instagram": "^3.0",
         "socialiteproviders/twitter": "^3.0",
         "socialiteproviders/vkontakte": "^4.0",
+        "spiritix/lada-cache": "4.x",
         "tymon/jwt-auth": "^1.0"
     },
     "require-dev": {

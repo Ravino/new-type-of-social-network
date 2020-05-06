@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "49f5cc7771423d8c147686e81da4a56f",
+    "content-hash": "137932099d2104e7a634f05bdafc8f7b",
     "packages": [
         {
             "name": "asm89/stack-cors",
@@ -5474,6 +5474,71 @@
             ],
             "description": "VKontakte OAuth2 Provider for Laravel Socialite",
             "time": "2019-12-08T14:15:15+00:00"
+        },
+        {
+            "name": "spiritix/lada-cache",
+            "version": "v4.0.2",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/spiritix/lada-cache.git",
+                "reference": "27482fcceb5ac8856f1fdf74c0c13ba8e54b255a"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/spiritix/lada-cache/zipball/27482fcceb5ac8856f1fdf74c0c13ba8e54b255a",
+                "reference": "27482fcceb5ac8856f1fdf74c0c13ba8e54b255a",
+                "shasum": ""
+            },
+            "require": {
+                "illuminate/database": "^6.0",
+                "illuminate/redis": "^6.0",
+                "illuminate/support": "^6.0",
+                "php": ">=7.2"
+            },
+            "require-dev": {
+                "barryvdh/laravel-debugbar": "^3.2",
+                "mockery/mockery": "^1.2",
+                "orchestra/testbench": "^4.0",
+                "phpunit/phpunit": "^8.0"
+            },
+            "suggest": {
+                "barryvdh/laravel-debugbar": "Provides debug information about the cache"
+            },
+            "type": "library",
+            "extra": {
+                "laravel": {
+                    "providers": [
+                        "Spiritix\\LadaCache\\LadaCacheServiceProvider"
+                    ]
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "Spiritix\\LadaCache\\": "src/Spiritix/LadaCache/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Matthias Isler",
+                    "email": "mi@matthias-isler.ch"
+                }
+            ],
+            "description": "A Redis based, automated and scalable database caching layer for Laravel",
+            "keywords": [
+                "cache",
+                "caching",
+                "database",
+                "eloquent",
+                "laravel",
+                "model",
+                "php",
+                "redis"
+            ],
+            "time": "2020-01-23T10:34:14+00:00"
         },
         {
             "name": "swiftmailer/swiftmailer",

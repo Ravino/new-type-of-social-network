@@ -10,6 +10,7 @@ use App\Traits\Friendable;
 use Illuminate\Database\Query\Builder;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
+use Spiritix\LadaCache\Database\LadaCacheTrait;
 use Tymon\JWTAuth\Contracts\JWTSubject;
 use Laratrust\Traits\LaratrustUserTrait;
 use MongoDB\BSON\ObjectId;
@@ -17,7 +18,7 @@ use MongoDB\BSON\ObjectId;
 class User extends Authenticatable implements JWTSubject
 {
 
-    use LaratrustUserTrait, Notifiable, Friendable;
+    use LaratrustUserTrait, Notifiable, Friendable, LadaCacheTrait;
 
     const PERMISSION_ROLE_FOF = 'friendOfFriend';//friend of friend
     const PERMISSION_ROLE_FRIEND = 'friend';
@@ -150,7 +151,7 @@ class User extends Authenticatable implements JWTSubject
     {
         return $this->morphMany(Post::class, 'postable')->with('postable', 'parent', 'attachments', 'like')
             ->orWhereIn( 'postable_id', self::communities()->allRelatedIds())
-            ->orWhereIn( 'postable_id', self::getFriends()->pluck('id'))->orderBy('posts.id', 'desc');
+            ->orWhereIn( 'postable_id', self::withoutRelations()->getFriends()->pluck('id'))->orderBy('posts.id', 'desc');
     }
 
     /**

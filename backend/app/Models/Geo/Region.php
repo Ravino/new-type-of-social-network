@@ -3,10 +3,12 @@
 namespace App\Models\Geo;
 
 use Illuminate\Database\Eloquent\Model;
+use Spiritix\LadaCache\Database\LadaCacheTrait;
 
 class Region extends Model
 {
 
+    use LadaCacheTrait;
     protected $table = 'geo_regions';
 
     /**
