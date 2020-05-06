@@ -1,6 +1,6 @@
 <template>
-    <div  id="pageWrapper" class="h-100">
-        <div v-if="!isAuthorized()" id="guestPageWrapper" class="d-flex flex-column justify-content-center pt-4">
+    <div  id="pageWrapper">
+        <div v-if="!isAuthorized()" id="guestPageWrapper" class="d-flex flex-column justify-content-center">
             <div class="--container-fluid container px-0 my-0">
 
                 <GuestNavBar></GuestNavBar>
