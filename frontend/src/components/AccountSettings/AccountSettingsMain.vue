@@ -306,11 +306,18 @@
                     birthday: this.$root.$auth.user.profile.birthday,
                     location: this.$root.$auth.user.profile.location,
                 },
-
                 isEdit: {
                     firstName: false,
                     lastName: false,
                     birthday: false,
+                    location: false,
+                },
+                isSend: {
+                    firstName: false,
+                    lastName: false,
+                    sex: false,
+                    birthday: false,
+                    relationshipId: false,
                     location: false,
                 },
                 locations: [],
@@ -377,7 +384,9 @@
 
                     if (inpRef) {
                         inpRef.blur();
-                        this.accountStartSaveData(this.model[fieldName], fieldName);
+
+                        if (!this.isSend[fieldName])
+                            this.accountStartSaveData(this.model[fieldName], fieldName);
                     } else {
                         window.console.warn(`Ошибка редактирования поля`);
                     }
@@ -423,6 +432,8 @@
             },
 
             async accountStartSaveData(newValue, fieldName) {
+                this.isSend[fieldName] = true;
+
                 if (!!this[`${fieldName}Error`]) {
                     this.model[fieldName] = this.$root.$auth.user.profile[fieldName];
                     return;
@@ -449,6 +460,10 @@
                             lastName: this.$root.$auth.user.profile.lastName,
                         });
                     }
+
+                    setTimeout(() => {
+                        this.isSend[fieldName] = false;
+                    }, 2000);
                 }
             },
             async getLocations(location) {
