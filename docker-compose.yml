@@ -116,15 +116,15 @@ services:
       - ./frontend/docker/certbot/logs/:/var/log/letsencrypt
       - ./frontend/docker/certbot/data:/usr/share/nginx/html/letsencrypt
 
-#  redis:
-#    image: redis
-#    container_name: "plizi_redis"
-#    env_file:
-#      - ./backend/docker/redis/.env
-#    volumes:
-#      - redis_data_plizi:/data
-#    ports:
-#    - "6379:6379"
+  redis:
+    image: redis
+    container_name: "plizi_redis"
+    env_file:
+      - ./backend/docker/redis/.env
+    volumes:
+      - redis_data_plizi:/data
+    ports:
+    - "6379:6379"
 
 #  node:
 #    build: ./backend/docker/node

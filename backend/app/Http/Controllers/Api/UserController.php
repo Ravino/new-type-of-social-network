@@ -113,7 +113,7 @@ class UserController extends Controller
      */
     public function getMyFriendsList() {
         $friend_ids = Auth::user()->getFriends()->pluck('id');
-        $friends = User::with('profile', 'privacySettings')->whereIn('id', $friend_ids)->get();
+        $friends = User::with( 'privacySettings')->whereIn('id', $friend_ids)->get();
         return new UserCollection($friends);
     }
 
@@ -133,7 +133,7 @@ class UserController extends Controller
     public function getUserFriendsList($id) {
         $user = User::find($id);
         $friend_ids = $user->getFriends()->pluck('id');
-        $friends = User::with('profile', 'privacySettings')->whereIn('id', $friend_ids)->get();
+        $friends = User::with( 'privacySettings')->whereIn('id', $friend_ids)->get();
         return new UserCollection($friends);
     }
 
