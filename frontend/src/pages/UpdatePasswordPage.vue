@@ -46,7 +46,7 @@
                                        :class="{'is-invalid': errors && errors['password']}"
                                        @input="errors && errors['password'] ? errors['password'] = null : null"
                                        autocomplete="new-password"
-                                       placeholder="Ваш пароль"
+                                       placeholder="Ваш новый пароль"
                                        required>
                                 <div v-if="errors && errors['password']" class="invalid-feedback">
                                     <p class="text-danger">{{ errors['password'][0] }}</p>
@@ -67,7 +67,7 @@
                                        name="password_confirmation"
                                        v-model="form.password_confirmation"
                                        autocomplete="new-password"
-                                       placeholder="Подтвердите пароль"
+                                       placeholder="Подтвердите новый пароль"
                                        required>
                             </div>
                         </div>
