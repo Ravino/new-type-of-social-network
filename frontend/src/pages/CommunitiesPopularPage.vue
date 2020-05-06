@@ -11,23 +11,26 @@
             </div>
 
             <div class="row">
-                <div class="col-sm-10 col-md-10 col-lg-8 col-xl-8">
-                    <div v-if="isPopularCommunitiesLoaded" class="plizi-communities-list">
-                        <ul v-if="popularCommunities  &&  popularCommunities.length>0" class="d-flex flex-column --w-100 p-0">
+                <div class="col-sm-10 col-md-10 col-lg-8 col-xl-9 mb-4 px-4 py-0">
+                    <div v-if="isPopularCommunitiesLoaded" class="row">
+                        <ul v-if="popularCommunities  &&  popularCommunities.length>0"
+                            class="plizi-communities-list w-100 d-flex justify-content-between flex-wrap p-0">
                                 <CommunityItem v-for="(comItem, comIndex) in popularCommunities"
                                                v-bind:community="comItem"
                                                v-bind:canSubscribe="isSubscribed(comItem.id)"
                                                v-bind:key="comIndex">
                                 </CommunityItem>
                         </ul>
-                        <div v-else class="alert alert-success p-5 w-100 text-center">
+                        <div v-else class="alert alert-info w-100 py-4 mx-2 text-center">
                             Нет ни одного популярного сообщества.
                         </div>
                     </div>
-                    <Spinner v-else></Spinner>
+                    <div  v-else class="row">
+                        <Spinner></Spinner>
+                    </div>
                 </div>
 
-                <div class="col-sm-4 col-md-4 col-lg-4 col-xl-4">
+                <div class="col-sm-4 col-md-4 col-lg-4 col-xl-3 pl-0">
                     <RecommendedCommunities></RecommendedCommunities>
                 </div>
             </div>
