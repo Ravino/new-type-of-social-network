@@ -51,7 +51,7 @@ class ChatRepository
      */
     public function getChatById(string $id)
     {
-        $user_id = \Auth::user()->uuid;
+        $user_id = \Auth::user()->id;
         $items = Chat::with(['attendees' => function($query) use ($user_id) {
             $query->where('id', '<>', $user_id);
         }])->where('_id', $id)
@@ -126,9 +126,9 @@ class ChatRepository
     public function createChatForUsers($receiver_ids, $author_id) {
         /** @var Chat $chat */
         $chat = Chat::create(['user_id' => $author_id]);
-        $author = User::where('uuid', $author_id)->first();
+        $author = User::find($author_id);
         $chat->attendees()->attach($author->id);
-        $receiver_ids = User::whereIn('uuid', $receiver_ids)->get()->pluck('_id')->toArray();
+        $receiver_ids = User::whereIn('id', $receiver_ids)->get()->pluck('id')->toArray();
         foreach ($receiver_ids as $receiver_id) {
             $chat->attendees()->attach($receiver_id);
         }

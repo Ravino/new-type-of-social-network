@@ -58,8 +58,9 @@ class PostController extends Controller
      * @return PostCollection|\Illuminate\Http\JsonResponse
      */
     public function userPosts(Request $request, $id) {
+        /** @var User $user */
         $user = User::find($id);
-        $posts = $user->allPosts()->allPosts()
+        $posts = $user->allPosts()
             ->limit($request->query('limit') ?? 50)
             ->offset($request->query('offset') ?? 0)
             ->get();
