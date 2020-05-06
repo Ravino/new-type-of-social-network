@@ -56,7 +56,7 @@
                             </template>
                         </td>
                     </tr>
-                    <tr>
+                    <tr v-if="userData.relationshipId !== null">
                         <td class="">Семейное положение:</td>
                         <td class="">{{userData.family}}</td>
                     </tr>

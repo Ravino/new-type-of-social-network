@@ -139,8 +139,8 @@ class PliziUser {
     }
 
     get family(){
-        if (0 === this._relationshipId)
-            return `Не указано`;
+        if (3 === this._relationshipId)
+            return `В активном поиске`;
 
         if (this.__RELATIONSHIP_MARRIED === this._relationshipId) {
             switch (this._sex) {
@@ -158,7 +158,7 @@ class PliziUser {
             }
         }
 
-        return `В активном поиске`;
+        return `Не указано`;
     }
 
     /**

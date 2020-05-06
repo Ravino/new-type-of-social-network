@@ -105,9 +105,10 @@
                             <select id="relationship" class="form-control border-0 pl-2"
                                     @change="accountStartSaveData(model.relationshipId, 'relationshipId')"
                                     v-model="model.relationshipId">
-                                <option value="null" selected>В активном поиске</option>
+                                <option value="null" selected disabled>Выберите вариант</option>
                                 <option value="1">В браке</option>
                                 <option value="2">Не в браке</option>
+                                <option value="3">В активном поиске</option>
                             </select>
                             <i class="fas fa-chevron-down ml-2"></i>
                         </div>
@@ -204,7 +205,7 @@
 
 <script>
     import {required, minLength, maxLength} from 'vuelidate/lib/validators';
-    import {isCorrectHumanName, isValidRegistrationBirthDay, notHaveSpace} from '../validators/validators.js';
+    import {isCorrectHumanName, isValidRegistrationBirthDay, notHaveSpace} from '../../validators/validators.js';
 
     export default {
         name: 'AccountSettingsMain',
@@ -440,6 +441,7 @@
 
                 if (response !== null) {
                     this.$root.$auth.user.updateAuthUser({profile: response});
+                    this.$root.$auth.storeUserData();
 
                     if (fieldName === `firstName` || fieldName === `lastName`) {
                         this.$root.$emit('updateUserName', {
