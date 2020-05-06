@@ -24,11 +24,11 @@
 import AccountToolbarLeft from '../common/AccountToolbarLeft.vue';
 import FavoriteFriends from '../common/FavoriteFriends.vue';
 
-import AccountSettingsMain from '../components/AccountSettingsMain.vue';
-import AccountSettingsPrivacy from '../components/AccountSettingsPrivacy.vue';
-import AccountSettingsSecurity from '../components/AccountSettingsSecurity.vue';
+import AccountSettingsMain from '../components/AccountSettings/AccountSettingsMain.vue';
+import AccountSettingsPrivacy from '../components/AccountSettings/AccountSettingsPrivacy.vue';
+import AccountSettingsSecurity from '../components/AccountSettings/AccountSettingsSecurity.vue';
 
-import AccountSettingsSideMenu from '../components/AccountSettingsSideMenu.vue';
+import AccountSettingsSideMenu from '../components/AccountSettings/AccountSettingsSideMenu.vue';
 
 export default {
     name: 'AccountPage',
