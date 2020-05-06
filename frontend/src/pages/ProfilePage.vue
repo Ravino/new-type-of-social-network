@@ -1,6 +1,6 @@
 <template>
     <div class="row">
-        <div class="col-sm-1 col-md-1 col-lg-1 col-xl-1">
+        <div class="col-sm-1 col-md-1 col-lg-1 col-xl-1 pl-0">
             <AccountToolbarLeft></AccountToolbarLeft>
         </div>
 

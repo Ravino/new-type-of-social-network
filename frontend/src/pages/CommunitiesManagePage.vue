@@ -11,21 +11,22 @@
             </div>
 
             <div class="row">
-                <div class="bg-white-br20 col-sm-10 col-md-10 col-lg-8 col-xl-8">
-                    <div v-if="isManagedCommunitiesLoaded" class="row plizi-communities-list ">
-                        <ul v-if="managedCommunities  &&  managedCommunities.length>0" class="d-block w-100 p-0">
+                <div class="col-sm-10 col-md-10 col-lg-8 col-xl-9 mb-4 px-4 py-0"">
+                    <div v-if="isManagedCommunitiesLoaded" class="row">
+                        <ul v-if="managedCommunities  &&  managedCommunities.length>0"
+                            class="plizi-communities-list w-100 d-flex justify-content-between flex-wrap p-0">
                             <transition-group name="slide-fade" :duration="700">
                                 список модерируемых сообществ тут
                             </transition-group>
                         </ul>
-                        <div v-else class="alert alert-info p-5 text-center w-100">
+                        <div v-else class="alert alert-info w-100 py-4 mx-2 text-center">
                             У Вас нет сообществ для модерации.
                         </div>
                     </div>
                     <Spinner v-else></Spinner>
                 </div>
 
-                <div class="col-sm-4 col-md-4 col-lg-4 col-xl-4">
+                <div class="col-sm-4 col-md-4 col-lg-4 col-xl-3 pl-0">
                     <RecommendedCommunities></RecommendedCommunities>
                 </div>
             </div>
