@@ -73,6 +73,13 @@ class Community extends Model
     }
 
     /**
+     * @return \Illuminate\Database\Eloquent\Relations\HasOne
+     */
+    public function attachment() {
+        return $this->hasOne(CommunityAttachment::class);
+    }
+
+    /**
      * @return string
      */
     public function getDateFormat()
