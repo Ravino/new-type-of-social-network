@@ -167,7 +167,17 @@ class CommunityController extends Controller
      * @throws Exception
      */
     public function uploadAttachments(UploadFileRequest $request) {
-        $uploaded = $this->uploadService->singleUpload('community/attachments', $request->file('file'));
+        $uploaded = $this->uploadService->singleUpload('community/attachments', $request->file('file'), 'public', [
+            'normal' => [
+                'size' => 600,
+            ],
+            'medium' => [
+                'size' => 250,
+            ],
+            'thumb' => [
+                'size' => [80, 80],
+            ],
+        ]);
 
         $attachment = CommunityAttachment::updateOrCreate(['community_id' => request()->input('id')], $uploaded);
         return new AttachmentsCollection([$attachment]);
