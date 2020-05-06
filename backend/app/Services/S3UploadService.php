@@ -131,7 +131,7 @@ class S3UploadService
         if (is_array($size)) {
             [$width, $height] = $size;
             if ($width && $height) {
-                $new_image->resize($width, $height, static function ($constraint) {
+                $new_image->fit($width, $height, static function ($constraint) {
                     $constraint->aspectRatio();
                     $constraint->upsize();
                 });
