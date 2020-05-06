@@ -31,10 +31,11 @@ class ImageUpload extends Model
     public static function boot()
     {
         parent::boot();
-        static::creating(function($image) {
+        static::created(function($image) {
             if($image->tag === self::TAG_PRIMARY) {
                 $affected = (new ImageUpload)->where('user_id', auth()->user()->id)->where('tag', self::TAG_PRIMARY)->update(['tag' => self::TAG_SECONDARY]);
-                Event::dispatch($affected ? 'user.profile.image.updated' : 'user.profile.image.created', ['user_id' => \Auth::user()->id]);
+                Profile::where('user_id', auth()->id())->update(['user_pic' => $image->url]);
+                Event::dispatch($affected ? 'user.profile.image.updated' : 'user.profile.image.created', ['user_id' => auth()->id()]);
             }
         });
         static::creating(function ($image) {

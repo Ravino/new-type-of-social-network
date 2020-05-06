@@ -6,10 +6,11 @@ use App\Models\Rbac\Role;
 use App\Models\User;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Validation\Rule;
+use Spiritix\LadaCache\Database\LadaCacheTrait;
 
 class PrivacySettings extends Model
 {
-
+    use LadaCacheTrait;
     const TWO_FACTOR_AUTH_ENABLED_DEFAULT = 0;
     const TWO_FACTOR_AUTH_ENABLED_FALSE = 0;
     const TWO_FACTOR_AUTH_ENABLED_TRUE = 0;
