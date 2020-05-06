@@ -75,7 +75,7 @@ methods: {
             this.editor.setContent(`<p class="big-emoji">${emoji}</p>`);
         }
 
-        currText = currText.substr(0, currText.length - 4) + `<span class="emoji">${emoji}</span>` + `</p>`;
+        currText = currText.substr(0, currText.length - 4) + `<span class="emoji">${emoji}</span>`;
 
         this.editor.setContent(currText);
     },
@@ -87,6 +87,9 @@ methods: {
         if (13 === ev.keyCode && ev.ctrlKey === true) {
             let editorText = this.editor.getHTML();
             let str = editorText.replace(/<p>|<\/p>/g, '').trim();
+
+            if (!str.length)
+                return;
 
             if (!(!!str.replace(/[\u{1F300}-\u{1F6FF}]/gu, '').trim())) {
                 let matches = str.match(/[\u{1F300}-\u{1F6FF}]/gu);

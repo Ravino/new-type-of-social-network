@@ -44,10 +44,10 @@ class PliziUser {
 
     /**
      *
-     * @type {number}
+     * @type {number|null}
      * @private
      */
-    _relationshipId = 0;
+    _relationshipId = null;
 
     /**
      *
@@ -132,16 +132,13 @@ class PliziUser {
     }
 
     /**
-     * @returns {number}
+     * @returns {number|null}
      */
     get relationshipId(){
         return this._relationshipId;
     }
 
     get family(){
-        if (3 === this._relationshipId)
-            return `В активном поиске`;
-
         if (this.__RELATIONSHIP_MARRIED === this._relationshipId) {
             switch (this._sex) {
                 case 'm': return `Женат`;
@@ -157,6 +154,9 @@ class PliziUser {
                 case 'n': return `В поиске`;
             }
         }
+
+        if (this.relationshipId === 3)
+            return `В активном поиске`;
 
         return `Не указано`;
     }

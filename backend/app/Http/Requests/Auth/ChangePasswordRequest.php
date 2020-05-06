@@ -41,6 +41,7 @@ class ChangePasswordRequest extends FormRequest
                         $fail('Поле Новый пароль совпадает со старым значением.');
                     }
                 },
+                'min:8',
             ],
             'newPasswordConfirmation' => ['required', 'same:newPassword'],
         ];
