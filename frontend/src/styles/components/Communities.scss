@@ -192,12 +192,16 @@ $labelColor: #9a9a9a;
     }
     .radio {
 
-        span:before {
-            content: "";
-            left: -30px;
-            bottom: auto;
-            top: 4px;
-            pointer-events: none;
+        span {
+            font-size: 13px;
+
+            &:before {
+                content: "";
+                left: -24px;
+                bottom: auto;
+                top: 4px;
+                pointer-events: none;
+            }
         }
         input {
             display: inline-block;
@@ -209,7 +213,7 @@ $labelColor: #9a9a9a;
             cursor: pointer;
 
             &:checked + span:after {
-                left: -30px;
+                left: -24px;
                 bottom: auto;
                 top: 4px;
                 pointer-events: none;
