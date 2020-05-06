@@ -1,6 +1,6 @@
 <template>
     <li class="plizi-community-item-wrp col-6 media px-2 mb-2">
-        <div class="plizi-community-item d-flex flex-row align-items-start justify-content-between bg-white-br20 w-100 px-5 py-4 h-100">
+        <div class="plizi-community-item d-flex flex-row align-items-start justify-content-between bg-white-br20 w-100 px-4 py-4 h-100">
 
             <router-link :to="`/community-`+community.id" tag="a"
                          class="plizi-community-item-pic mr-3 rounded-circle overflow-hidden">
@@ -33,7 +33,16 @@
                         Отписаться
                     </button>
                     <div class="plizi-community-item-body-friends d-flex flex-wrap align-items-center justify-content-between">
-                        <div class="plizi-community-item-body-friends-pics ">
+                        <div class="plizi-community-item-body-friends-pics mr-3">
+                            <div class="plizi-community-item-body-friends-pic position-relative rounded-circle">
+                                <img src="https://plizi.s3.eu-north-1.amazonaws.com/images/originals/Sx3zRic44zm2mPiMUahypL3hlKw8SuwBsKtm11Jb.png" alt="image">
+                            </div>
+                            <div class="plizi-community-item-body-friends-pic position-relative rounded-circle">
+                                <img src="https://plizi.s3.eu-north-1.amazonaws.com/images/originals/Sx3zRic44zm2mPiMUahypL3hlKw8SuwBsKtm11Jb.png" alt="image">
+                            </div>
+                            <div class="plizi-community-item-body-friends-pic position-relative rounded-circle">
+                                <img src="https://plizi.s3.eu-north-1.amazonaws.com/images/originals/Sx3zRic44zm2mPiMUahypL3hlKw8SuwBsKtm11Jb.png" alt="image">
+                            </div>
                             <div class="plizi-community-item-body-friends-pic position-relative rounded-circle">
                                 <img src="https://plizi.s3.eu-north-1.amazonaws.com/images/originals/Sx3zRic44zm2mPiMUahypL3hlKw8SuwBsKtm11Jb.png" alt="image">
                             </div>
@@ -41,7 +50,7 @@
                                 <img src="https://plizi.s3.eu-north-1.amazonaws.com/images/originals/Sx3zRic44zm2mPiMUahypL3hlKw8SuwBsKtm11Jb.png" alt="image">
                             </div>
                         </div>
-                        <p class="plizi-community-item-desc ml-1">5 друзей</p>
+                        <p class="plizi-community-item-desc">5 друзей</p>
                     </div>
                 </div>
             </div>

@@ -22,9 +22,9 @@ $friendspicSize: 20px;
     &-item {
         &-pic {
             position: relative;
-            width: 30%;
+            width: 25%;
             height: 0;
-            padding-bottom: 30%;
+            padding-bottom: 25%;
         }
         &-img {
             position: absolute;
@@ -37,7 +37,7 @@ $friendspicSize: 20px;
             height: auto;
         }
         &-body {
-            width: calc( 70% - 15px );
+            width: calc( 75% - 15px );
         }
         &-name {
             color: $postTextColor;
@@ -49,10 +49,12 @@ $friendspicSize: 20px;
         &-members-number {
             font-size: 13px;
             color: #9a9a9a;
+            margin-bottom: 0;
         }
         &-body-bottom {
             .btn {
                 height: 32px;
+                width: 120px;
                 line-height: 16px;
                 font-size: 11px;
                 text-transform: uppercase;
@@ -70,22 +72,39 @@ $friendspicSize: 20px;
         }
 
         &-body-friends{
-             width: 50%;
-             max-width: 110px;
+            width: 120px;
+             max-width: 120px;
             &-pics {
                 position: relative;
                 width: 50px;
                 display: flex;
                 align-items: center;
-                justify-content: space-between;
+
              }
 
         }
         &-body-friends-pic {
             width: $friendspicSize;
+            min-width: $friendspicSize;
             height: $friendspicSize;
             border: 1px solid #fff;
             overflow: hidden;
+
+            &:nth-child(1) {
+                left: 0px;
+            }
+            &:nth-child(2) {
+                left: -10px;
+            }
+            &:nth-child(3) {
+                left: -20px;
+            }
+            &:nth-child(4) {
+                left: -30px;
+            }
+            &:nth-child(5) {
+                left: -40px;
+            }
 
             img {
                 position: absolute;
