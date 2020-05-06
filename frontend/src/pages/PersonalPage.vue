@@ -10,7 +10,8 @@
                 <Spinner v-else></Spinner>
 
                 <ProfilePhotos v-bind:photos="userPhotos"/>
-                <ProfileFilter v-if="filteredPosts && filteredPosts.length > 1" :first-name="profileData.firstName"
+                <ProfileFilter v-if="(filteredPosts && filteredPosts.length > 1) || filterMode !== 'all'"
+                               :first-name="profileData.firstName"
                                @wallPostsSelect="wallPostsSelectHandler"/>
 
                 <template v-if="filteredPosts && filteredPosts.length > 0">
@@ -87,6 +88,7 @@ computed: {
 
 data() {
     return {
+        userId: this.id,
         profileData: {},
         isDataReady: false,
         isShowMessageDialog: false,
@@ -112,7 +114,7 @@ methods: {
         let apiResponse = null;
 
         try {
-            apiResponse = await this.$root.$api.$users.getUser(this.id);
+            apiResponse = await this.$root.$api.$users.getUser(this.userId);
         }
         catch (e){
             window.console.warn(e.detailMessage);
@@ -192,7 +194,7 @@ methods: {
     },
 },
 
-mounted() {
+    mounted() {
     this.getUserInfo();
 
     this.$root.$on('hidePersonalMsgModal', ()=>{
@@ -204,7 +206,12 @@ mounted() {
     });
 
     this.$root.$on('sendPersonalMessage', this.handlePersonalMessage);
-}
+},
+    beforeRouteUpdate (to, from, next) {
+        this.userId = to.params.id;
+        this.getUserInfo();
+        next();
+    },
 }
 </script>
 
