@@ -19,5 +19,19 @@
     #pliziMobile .plizi-mobile {
         min-height: 200px;
     }
+    .modal {
+        min-height: 600px;
 
+        &:before {
+            right: 15px;
+        }
+    }
+
+    .LoginPage,
+    .UpdatePasswordPage,
+    .HomePage {
+        .modal-body {
+            padding: 35px 20px 50px;
+        }
+    }
 }
