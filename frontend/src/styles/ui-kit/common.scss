@@ -34,9 +34,14 @@ a::-moz-focus-inner{
 }
 
 .page-logo {
+    max-height: 36px;
+
     &-bg {
         fill: #1554F7;
         transition: .4s;
+    }
+    svg {
+        min-height: 36px;
     }
 }
 
@@ -445,4 +450,11 @@ input[type=number]::-webkit-outer-spin-button {
 
 input[type=number] {
     -moz-appearance: textfield;
+}
+
+
+//modal
+.modal-content {
+    max-width: 96%;
+    max-height: 96vh;
 }

@@ -1,8 +1,8 @@
 <template>
     <div id="latestEntries" class="plz-latest-entries bg-white-br20" :style="calcStyle()">
-        <h6 class="">Вы недавно входили в аккаунт с этого компьютера</h6>
+        <h6 class="text-center text-sm-left">Вы недавно входили в аккаунт с этого компьютера</h6>
 
-        <div class="plz-last-entries-list d-flex justify-content-start flex-wrap">
+        <div class="plz-latest-entries-list d-flex justify-content-between justify-content-sm-start flex-wrap">
             <LastEntryItem v-for="(leItem, leKey) in lastEntriesList"
                            v-bind:entry-item="leItem"
                            v-bind:key="leKey"

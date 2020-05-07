@@ -14,37 +14,43 @@ $lastEntryPicSize: 85px;
         font-weight: bold;
         color: #363636;
         letter-spacing: -1px;
-        padding: 24px 0px 0px 40px;
+        padding: 24px 0 0 40px;
     }
 
-    .plz-last-entries-list {
+    &-list {
         padding-left: 40px;
         margin-top: 15px;
+    }
 
-        .plz-last-entry-item {
-            border: 1px solid #C9CBD9;
-            width: $lastEntryW;
-            min-width: $lastEntryW;
-            max-width: $lastEntryW;
-            height: $lastEntryH;
-            min-height: $lastEntryH;
-            max-height: $lastEntryH;
-            margin-right: $lastEntryRadius;
-            border-radius: $lastEntryRadius;
-            text-align: center;
-            cursor: pointer;
+    &-item {
+        border: 1px solid #C9CBD9;
+        width: $lastEntryW;
+        //min-width: $lastEntryW;
+        //max-width: $lastEntryW;
+        height: $lastEntryH;
+        min-height: $lastEntryH;
+        max-height: $lastEntryH;
+        margin-right: $lastEntryRadius;
+        border-radius: $lastEntryRadius;
+        text-align: center;
+        cursor: pointer;
 
-            .plz-last-entry-user-pic {
-                display: inline-block;
-                margin: $lastEntryRadius auto 10px auto;
-                width: $lastEntryPicSize;
-                min-width: $lastEntryPicSize;
-                max-width: $lastEntryPicSize;
-                height: $lastEntryPicSize;
-                min-height: $lastEntryPicSize;
-                max-height: $lastEntryPicSize;
-                border-radius: $lastEntryPicSize;
-            }
+        a {
+            color: $textColor;
+            text-decoration: none;
         }
     }
+
+     &-user-pic {
+        display: inline-block;
+        margin: $lastEntryRadius auto 10px auto;
+        width: $lastEntryPicSize;
+        //min-width: $lastEntryPicSize;
+        //max-width: $lastEntryPicSize;
+        height: $lastEntryPicSize;
+        min-height: $lastEntryPicSize;
+        max-height: $lastEntryPicSize;
+        border-radius: $lastEntryPicSize;
+    }
 }
+
