@@ -19,7 +19,6 @@ class UserCollection extends ResourceCollection
     {
         return [
             'list' => $this->collection->map(function ($user) {
-                \Log::debug($user->profile);
                 if(\Auth::user()->id === $user->id) {
                     return [
                         'id' => $user->id,
