@@ -32,7 +32,7 @@ class Chat extends Model
     /**
      * @var array
      */
-    protected $fillable = ['user_id', 'last_message_body', 'last_user_id', 'last_message_time', 'updated_at'];
+    protected $fillable = ['user_id', 'last_message_body', 'last_user_id', 'last_message_time', 'updated_at', 'name'];
 
     /**
      * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany

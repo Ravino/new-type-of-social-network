@@ -17,6 +17,7 @@ class OpenChat extends FormRequest
     {
         return [
             'userIds' => 'required|array',
+            'name' => 'string',
         ];
     }
 }
