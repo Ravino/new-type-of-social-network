@@ -4,11 +4,11 @@
 namespace Domain\Pusher\Services;
 
 
+use Auth;
 use Domain\Pusher\Events\DestroyMessageEvent;
 use Domain\Pusher\Events\NewMessageEvent;
 use Domain\Pusher\Http\Resources\Message\AttachmentsCollection;
 use Domain\Pusher\Models\ChatMessageAttachment;
-use Domain\Pusher\Models\User;
 use Domain\Pusher\Repositories\ChatRepository;
 use Domain\Pusher\Repositories\MessageRepository;
 use Illuminate\Contracts\Events\Dispatcher;
@@ -182,15 +182,16 @@ class ChatService extends BaseService
 
     /**
      * @param $user_ids
+     * @param string $name
      * @return \Domain\Pusher\Http\Resources\Chat\Chat
      */
-    public function getChatForUsers($user_ids) {
+    public function getChatForUsers($user_ids, $name = '') {
         $chat_id = null;
         if(count($user_ids) === 1) {
-            $chat_id = $this->chatRepository->getChatIdForCoupleUsers($user_ids[0], \Auth::user()->id);
+            $chat_id = $this->chatRepository->getChatIdForCoupleUsers($user_ids[0], Auth::user()->id);
         }
         if(!$chat_id) {
-            $chat_id = $this->chatRepository->createChatForUsers($user_ids, \Auth::user()->id);
+            $chat_id = $this->chatRepository->createChatForUsers($user_ids, Auth::user()->id, $name);
         }
         return $this->chatRepository->getChatById($chat_id);
     }
@@ -203,9 +204,9 @@ class ChatService extends BaseService
         $message = $this->repository->getMessageById($id);
         if($message) {
             $message = json_decode(json_encode($message), true);
-            if($message['userId'] === \Auth::user()->id) {
+            if($message['userId'] === Auth::user()->id) {
                 $this->repository->destroyMessage($id);
-                $users_list = $this->chatRepository->getUsersIdListFromChat($message['chatId'], \Auth::user()->id);
+                $users_list = $this->chatRepository->getUsersIdListFromChat($message['chatId'], Auth::user()->id);
                 $this->dispatcher->dispatch(new DestroyMessageEvent(['messageId' => $message['id'], 'chatId' => $message['chatId']], $users_list));
                 return ['id' => $message['id'], 'chatId' => $message['chatId']];
             }
