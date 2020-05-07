@@ -6,7 +6,7 @@
 
         <div class="col-sm-10 col-md-10 col-lg-10 col-xl-10">
 
-            <FriendsListHeader></FriendsListHeader>
+            <FriendsListHeader @filterSearch="filterSearch"></FriendsListHeader>
 
             <div class="row">
                 <div class="col-sm-8 col-md-8 col-lg-8 col-xl-8 bg-white-br20">
@@ -76,23 +76,28 @@ data(){
         isFriendsLoaded: false,
         wMode : `all`,
         removedFriendID : -1,
+        searchTerm: '',
     }
 },
 
 computed : {
     friendsListFilter(){
-        if ( this.wMode === 'all' ){
-            return this.allMyFriends.asArray();
-        }
-
         let ret = [];
 
-        if ( this.wMode === 'online' ){
-            this.allMyFriends.asArray().map( frItem => {
-                if ( frItem.isOnline === true ){
-                    ret.push( frItem );
+        if (this.wMode === 'all'){
+            ret = this.allMyFriends.asArray();
+        } else if (this.wMode === 'online'){
+            this.allMyFriends.asArray().map(frItem => {
+                if (frItem.isOnline === true){
+                    ret.push(frItem);
                 }
-            } );
+            });
+        }
+
+        if (this.searchTerm.length > 2) {
+            const searchTerm = this.searchTerm.toLocaleLowerCase();
+
+            ret = ret.filter(friend => friend.fullName.toLowerCase().includes(searchTerm));
         }
 
         return ret;
@@ -121,6 +126,10 @@ methods : {
             this.isFriendsLoaded = true;
         }
     },
+
+    filterSearch({ searchTerm }) {
+        this.searchTerm = searchTerm;
+    }
 },
 
 async mounted() {
