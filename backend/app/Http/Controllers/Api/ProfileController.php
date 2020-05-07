@@ -4,11 +4,8 @@ namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
 use App\Http\Resources\Community\CommunityCollection;
-use App\Http\Resources\User\UserWithCommunities;
-use App\Models\Profile;
 use App\Models\User;
 use Domain\Pusher\WampServer;
-use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use App\Http\Resources\User\User as UserResource;
