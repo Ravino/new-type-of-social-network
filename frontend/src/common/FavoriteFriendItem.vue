@@ -9,7 +9,7 @@
             <div v-if="isTyper" class="writing"><span></span><span></span><span></span></div>
             <div v-else class="">
                 <span v-if="friend.isOnline" class="plz-favorit-isonline" title="в сети"></span>
-                <span v-else class="plz-favorit-isoffline" :title="getSexTitle"></span>
+                <span v-else class="plz-favorit-isoffline" title="не в сети"></span>
             </div>
         </div>
 
@@ -17,12 +17,8 @@
             <span class="plz-favorit-friend-name">{{friend.firstName}}</span>
 
             <div class="plz-favorit-friend-status">
-                <p v-if="friend.isOnline">
-                    В сети
-                </p>
-                <p v-else>
-                    {{ getSexTitle(friend) }}
-                </p>
+                <p v-if="friend.isOnline">В сети</p>
+                <p v-else> {{ favoriteLastActivity }} </p>
             </div>
         </div>
 
@@ -38,7 +34,7 @@
 import FriendItemMixin from '../mixins/FriendItemMixin.js';
 
 export default {
-name : 'FavoritFriendItem',
+name : 'FavoriteFriendItem',
 mixins : [FriendItemMixin],
 props : {
     isNarrow: {
@@ -52,13 +48,32 @@ data(){
     return {
         chatWindowShown: false,
         typingTimeout: null,
-        isTyper: false
+        isTyper: false,
+        lastAct: ''
+    }
+},
+
+computed: {
+    favoriteLastActivity(){
+        return this.lastFriendActivity(this.friend);
     }
 },
 
 methods: {
     showRelatedChat(){
         this.chatWindowShown = !this.chatWindowShown;
+
+        if (this.chatWindowShown) {
+            this.$emit('PickFavorite', {
+                friendId : this.friend.id,
+            });
+        }
+        else {
+            this.$emit('UnPickFavorite', {
+                friendId : this.friend.id,
+            });
+        }
+
         //this.$root.$alert(`По клику будем показывать привязанный чат`, 'bg-info', 5);
     },
 

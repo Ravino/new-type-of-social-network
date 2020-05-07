@@ -24,10 +24,10 @@
                     </div>
 
                     <div v-if="isFriendsLoaded" class="row plizi-friends-list ">
-                        <ul v-if="friendsList  &&  friendsList.length>0" class="d-block w-100 p-0">
+                        <ul v-if="allMyFriends  &&  allMyFriends.length>0" class="d-block w-100 p-0">
                             <transition-group name="slide-fade" :duration="700">
-                                <FriendListItem v-for="friendItem in friendsListFilter"
-                                                v-bind:key="friendItem.id"
+                                <FriendListItem v-for="(friendItem, frIndex) in friendsListFilter"
+                                                v-bind:key="frIndex"
                                                 v-bind:friend="friendItem">
                                 </FriendListItem>
                             </transition-group>
@@ -59,37 +59,36 @@
 <script>
 import FriendsListMixin from '../mixins/FriendsListMixin.js';
 import FriendListItem from '../components/FriendListItem.vue';
-import PliziFriend from "../classes/PliziFriend";
+import PliziFriend from '../classes/PliziFriend.js';
+import PliziCollection from "../classes/PliziCollection";
 
 export default {
 name : 'FriendsListPage',
 components : {
     FriendListItem
 },
+
 mixins : [FriendsListMixin],
+
 data(){
     return {
+        allMyFriends: null,
+        isFriendsLoaded: false,
         wMode : `all`,
         removedFriendID : -1,
     }
 },
 
-methods : {
-    friendsListSelect( wm ){
-        this.wMode = wm;
-    },
-},
-
 computed : {
     friendsListFilter(){
         if ( this.wMode === 'all' ){
-            return this.friendsList;
+            return this.allMyFriends.asArray();
         }
 
         let ret = [];
 
         if ( this.wMode === 'online' ){
-            this.friendsList.map( frItem => {
+            this.allMyFriends.asArray().map( frItem => {
                 if ( frItem.isOnline === true ){
                     ret.push( frItem );
                 }
@@ -99,6 +98,34 @@ computed : {
         return ret;
     },
 },
+
+
+methods : {
+    friendsListSelect( wm ){
+        this.wMode = wm;
+    },
+
+    async loadMyFriends() {
+        window.console.log(`loadMyFriends`);
+
+        let apiResponse;
+
+        try {
+            apiResponse = await this.$root.$api.$friend.friendsList();
+        } catch (e) {
+            console.warn(e.detailMessage);
+        }
+
+        if (apiResponse) {
+            this.allMyFriends = new PliziCollection(apiResponse, PliziFriend);
+            this.isFriendsLoaded = true;
+        }
+    },
+},
+
+async mounted() {
+    await this.loadMyFriends();
+}
 
 }
 </script>

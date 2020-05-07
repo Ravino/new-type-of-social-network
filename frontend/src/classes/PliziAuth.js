@@ -1,8 +1,7 @@
 import PliziAPI from './PliziAPI.js';
 import PliziAuthUser from './PliziAuthUser.js';
 
-import PliziFriendsCollection from './Collection/PliziFriendsCollection.js';
-import PliziChosensCollection from './Collection/PliziChosensCollection.js';
+import PliziFavoritesCollection from './Collection/PliziFavoritesCollection.js';
 import PliziDialogsCollection from './Collection/PliziDialogsCollection.js';
 import PliziInvitationsCollection from './Collection/PliziInvitationsCollection.js';
 import PliziNotificationsCollection from './Collection/PliziNotificationsCollection.js';
@@ -34,6 +33,13 @@ class PliziAuthClass {
     _user = null;
 
     /**
+     * ID чисто для отладки, пока не удалять
+     * @type {string}
+     * @private
+     */
+    __lastUserID = null;
+
+    /**
      * ссылка на API
      * @type {PliziAPI}
      * @private
@@ -41,18 +47,11 @@ class PliziAuthClass {
     _api = null;
 
     /**
-     * ссылка на менеджер френдов
-     * @type {PliziFriendsCollection}
+     * ссылка на менеджер Избранных
+     * @type {PliziFavoritesCollection}
      * @private
      */
     _fm = null;
-
-    /**
-     * ссылка на менеджер Избранных
-     * @type {PliziChosensCollection}
-     * @private
-     */
-    _cm = null;
 
     /**
      * ссылка на менеджер диалогов
@@ -77,46 +76,6 @@ class PliziAuthClass {
 
     _isLoaded = false;
 
-    /**
-     * ссылка на менеджер френдов
-     * @returns {PliziFriendsCollection}
-     */
-    get fm(){
-        return this._fm;
-    }
-
-    /**
-     * ссылка на менеджер Избранных
-     * @returns {PliziChosensCollection}
-     */
-    get cm(){
-        return this._cm;
-    }
-
-    /**
-     * ссылка на менеджер диалогов
-     * @returns {PliziDialogsCollection}
-     */
-    get dm(){
-        return this._dm;
-    }
-
-    /**
-     * ссылка на менеджер инвайтов
-     * @returns {PliziInvitationsCollection}
-     */
-    get im(){
-        return this._im;
-    }
-
-    /**
-     * ссылка на менеджер нотификаций
-     * @returns {PliziNotificationsCollection}
-     */
-    get nm(){
-        return this._nm;
-    }
-
     __isInit = false;
 
     /**
@@ -130,8 +89,7 @@ class PliziAuthClass {
 
         this._user = new PliziAuthUser(null);
 
-        this._fm = new PliziFriendsCollection(apiObj);
-        this._cm = new PliziChosensCollection(apiObj);
+        this._fm = new PliziFavoritesCollection(apiObj);
         this._dm = new PliziDialogsCollection(apiObj);
         this._im = new PliziInvitationsCollection(apiObj);
         this._nm = new PliziNotificationsCollection(apiObj);
@@ -149,6 +107,7 @@ class PliziAuthClass {
         this.channel = inputData.channel;
 
         this.user.updateAuthUser(inputData.data);
+        this.__lastUserID = inputData.data.id;
 
         this._isLoaded = true;
 
@@ -194,17 +153,51 @@ class PliziAuthClass {
      * очищает данные
      */
     cleanData(){
-        this._user.cleanData();
+        window.console.warn(this.__lastUserID, `Auth: cleanData`);
+        delete this._user;
+        this._user = new PliziAuthUser(null);
+
         this._isLoaded = false;
 
         localStorage.removeItem( this.__localStorageKey );
         localStorage.removeItem( 'pliziJWToken' );
         localStorage.removeItem( 'pliziChatChannel' );
         localStorage.removeItem( this.fm.localStorageKey );
-        localStorage.removeItem( this.cm.localStorageKey );
         localStorage.removeItem( this.dm.localStorageKey );
         localStorage.removeItem( this.im.localStorageKey );
         localStorage.removeItem( this.nm.localStorageKey );
+    }
+
+    /**
+     * ссылка на менеджер Избранных
+     * @returns {PliziFavoritesCollection}
+     */
+    get fm(){
+        return this._fm;
+    }
+
+    /**
+     * ссылка на менеджер диалогов
+     * @returns {PliziDialogsCollection}
+     */
+    get dm(){
+        return this._dm;
+    }
+
+    /**
+     * ссылка на менеджер инвайтов
+     * @returns {PliziInvitationsCollection}
+     */
+    get im(){
+        return this._im;
+    }
+
+    /**
+     * ссылка на менеджер нотификаций
+     * @returns {PliziNotificationsCollection}
+     */
+    get nm(){
+        return this._nm;
     }
 
     get isLoaded(){

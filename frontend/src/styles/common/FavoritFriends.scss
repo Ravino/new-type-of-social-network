@@ -1,29 +1,56 @@
 $picSize: 42px;
 
+.plz-linked-chat-block{
+    position: relative;
+    display: none;
+    right: 300px;
+    top: 200px;
+    z-index: 900;
+
+    &.active-chat{
+        display: block;
+    }
+}
+
 .plz-favorit-friends {
     box-shadow: 0 2px 5px 0 rgba(0, 0, 0, 0.05);
+    position: relative;
+
+    &.is-pick-favorite {
+        box-shadow: none;
+    }
 
     .plz-favorit-friends-item {
         cursor: pointer;
         transition: .4s;
+
         &:hover {
             background-color: #dae4ee;
         }
 
         &.active {
+            /**
+            * @TGA старый вариант
             border-radius: 20px 20px 20px 0;
             margin-left: 3px!important;
             margin-right: 3px!important;
             box-shadow: 0 0 10px 0 rgba(0, 0, 0, .1);
+             */
+            border-radius: 20px 20px 20px 0;
+            margin-left: 3px!important;
+            margin-right: 3px!important;
+            background-color: white;
+            box-shadow: 0 2px 5px 0 rgba(0, 0, 0, 0.05);
         }
     }
 
-    .plz-favorit-friends .fa-chevron-right{
+    .fa-chevron-right{
         font-size: 10px;
-        color: #acacac;
+        color: #ACACAC;
         line-height: 27px;
     }
-    .plz-favorit-friends .border-bottom{
+
+    .border-bottom{
         border-color: #e9ecf6;
     }
 
@@ -85,6 +112,7 @@ $picSize: 42px;
             margin-bottom: 0;
         }
     }
+
     .plz-ff-messages-count span {
         display: inline-block;
         vertical-align: top;

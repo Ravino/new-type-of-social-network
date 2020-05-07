@@ -1,5 +1,5 @@
 import PliziRecipient from '../PliziRecipient.js';
-import PliziCollection from './PliziCollection.js';
+import PliziCollection from '../PliziCollection.js';
 
 /**
  * класс для работы со списком получателей пересылаемых сообщений
@@ -29,28 +29,10 @@ class PliziRecipientsCollection extends PliziCollection{
 
 
     /**
-     * поиск в коллекции по ID
-     * @param {number} ID - ID нужной сущности
-     * @returns {PliziRecipient} - нужная сущность, или UNDEFINED если не нашли
-     */
-    getByID(ID){
-        return this.collection.get(ID);
-    }
-
-
-    /**
      * @returns {PliziRecipient[]}
      */
     asArray(){
-        let arr = [];
-
-        this.collection.forEach((value) => {
-            arr.push( value );
-        });
-
-        arr.sort( this.compare );
-
-        return arr;
+        return super.asArray();
     }
 
 }

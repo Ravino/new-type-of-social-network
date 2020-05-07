@@ -1,12 +1,10 @@
 import AccountToolbarLeft from '../common/AccountToolbarLeft.vue';
 import Spinner from '../common/Spinner.vue';
 
-
 import FavoriteFriends from '../common/FavoriteFriends.vue';
 import IconSearch from '../icons/IconSearch.vue';
 
 import FriendsListHeader from '../common/FriendsListHeader.vue';
-
 import PotentialFriends from '../common/PotentialFriends.vue';
 
 import PliziUser from '../classes/PliziUser.js'; // @TGA не удалять - объявление PliziUser тут нужно
@@ -27,16 +25,6 @@ data() {
 
         possibleFriends: null,
         recommendedFriends: null,
-    }
-},
-
-computed: {
-    friendsList(){
-        return this.$root.$auth.fm.asArray();
-    },
-
-    isFriendsLoaded(){
-        return true;
     }
 },
 

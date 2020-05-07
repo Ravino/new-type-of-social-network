@@ -1,10 +1,10 @@
 import PliziNotification from '../PliziNotification.js';
-import PliziCollection from './PliziCollection.js';
+import PliziStoredCollection from './PliziStoredCollection.js';
 
 /**
  * класс для работы со списком нотификаций
  */
-class PliziNotificationsCollection extends PliziCollection {
+class PliziNotificationsCollection extends PliziStoredCollection {
 
     localStorageKey = `pliziNotifications`;
 
@@ -76,7 +76,7 @@ class PliziNotificationsCollection extends PliziCollection {
 
 
     async load(){
-        this.clean();
+        this.clear();
 
         this.restoreData();
 

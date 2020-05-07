@@ -101,8 +101,8 @@ methods: {
         window.localStorage.removeItem('pliziUser');
         window.localStorage.removeItem('pliziChatChannel');
         window.localStorage.removeItem('pliziLastSearch');
+        window.localStorage.removeItem('pliziFavorites');
         window.localStorage.removeItem('pliziDialogs');
-        window.localStorage.removeItem('pliziFriends');
         window.localStorage.removeItem('pliziInvitations');
         window.localStorage.removeItem('pliziNotifications');
 
@@ -155,15 +155,13 @@ methods: {
     async persistentCollectionsReload(){
         await this.$root.$auth.dm.load();
         await this.$root.$auth.fm.load();
-        await this.$root.$auth.cm.load();
         await this.$root.$auth.im.load();
         await this.$root.$auth.nm.load();
     },
 
     async persistentCollectionsRestore(){
         this.$root.$auth.dm.restore();
-        await this.$root.$auth.fm.load();
-        this.$root.$auth.cm.restore();
+        this.$root.$auth.fm.restore();
         await this.$root.$auth.im.load();
         await this.$root.$auth.nm.load();
     }

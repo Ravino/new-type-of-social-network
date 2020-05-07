@@ -35,7 +35,7 @@ class PliziFriendAPI extends PliziBaseAPI {
      * @returns {object[]|null}
      * @throws PliziAPIError
      */
-    async chosens(){
+    async Favorites(){
         let response = await this.axios.get('api/user/friendship/group/featured', this.authHeaders)
             .catch((error) => {
                 this.checkIsTokenExpires(error, '$friend.chosens');
