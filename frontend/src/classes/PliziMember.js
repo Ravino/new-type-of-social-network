@@ -14,10 +14,15 @@ class PliziMember extends PliziUzer{
      */
     constructor(usrData){
         super(usrData);
+        this.role = usrData.role;
     }
 
     get role(){
         return this._role;
+    }
+
+    set role(value) {
+        this._role = value;
     }
 
     toJSON(){

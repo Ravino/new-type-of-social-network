@@ -60,7 +60,7 @@ class PostController extends Controller
     public function userPosts(Request $request, $id) {
         /** @var User $user */
         $user = User::find($id);
-        $posts = $user->allPosts()
+        $posts = $user->allPosts()->with(['postable', 'author'])
             ->limit($request->query('limit') ?? 50)
             ->offset($request->query('offset') ?? 0)
             ->get();
@@ -75,7 +75,7 @@ class PostController extends Controller
         /** @var Community $community */
         $community = Community::find($community_id);
         if($community) {
-            $posts = $community->posts()
+            $posts = $community->posts()->with(['postable', 'author'])
                 ->limit($request->query('limit') ?? 50)
                 ->offset($request->query('offset') ?? 0)
                 ->get();

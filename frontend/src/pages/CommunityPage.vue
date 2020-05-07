@@ -27,7 +27,7 @@
                     </div>
                     <Spinner v-else></Spinner>
 
-                    <CommunityEditor :community-id="communityData.id"/>
+                    <CommunityEditor v-if="canPost" :community-id="communityData.id"/>
 
                     <div v-if="isDataReady" id="communityPostsBlock" class="bg-white-br20 py-5 mb-5 text-center">
                         <Post v-for="postItem in communityPosts"
@@ -94,6 +94,16 @@ components : {
 computed: {
     filteredPosts(){
         return [];
+    },
+    authUser() {
+        return this.$root.$auth.user;
+    },
+    canPost() {
+        if (this.communityData) {
+            return !!this.communityData.members.find((member) => {
+                return member.id === this.authUser.id && (member.role === 'user' || member.role === 'author');
+            });
+        }
     },
 },
 
