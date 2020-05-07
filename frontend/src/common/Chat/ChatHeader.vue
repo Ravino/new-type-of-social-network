@@ -159,12 +159,6 @@ methods: {
     },
 
     dateSelected(range) {
-        if (range.start.getTime() === range.end.getTime()) {
-            range.isSameDate = true;
-        }
-
-        range.end.setDate(range.end.getDate() + 1);
-
         this.dateRange = range;
         this.startChatFilter(null);
     },

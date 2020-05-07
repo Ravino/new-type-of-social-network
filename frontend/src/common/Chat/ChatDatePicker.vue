@@ -38,7 +38,15 @@
         },
         methods: {
             dateSelected(range) {
-                this.$emit('dateSelected', range);
+                let dateRange = range;
+
+                if (dateRange.start.getTime() === dateRange.end.getTime()) {
+                    dateRange.isSameDate = true;
+                }
+
+                dateRange.end.setHours(23, 59, 59);
+
+                this.$emit('dateSelected', dateRange);
             },
             clearDateSelected() {
                 this.range.start = this.range.end = null;
