@@ -22,7 +22,7 @@
                 <div v-else class="plz-profile-userpic-footer">
                     <div class="plz-profile-userpic-edit d-flex align-items-center justify-content-between overflow-hidden d-flex m-0 p-0">
                         <button class="btn align-items-center justify-content-center d-flex w-75 border-right" @click="showPersonalMsgDialog()">Написать</button>
-                        <button class="btn align-items-center justify-content-center d-flex w-25" @click="sendFriendshipInvitation()" title="добавить в друзья">
+                        <button class="btn align-items-center justify-content-center d-flex w-25" @click="sendFriendshipInvitation(userData.id, userData.fullName)" title="добавить в друзья">
                             <IconAddUser/>
                         </button>
                     </div>
@@ -97,10 +97,12 @@ import IconLocation from '../icons/IconLocation';
 
 import PliziUser from '../classes/PliziUser.js';
 import PliziAuthUser from '../classes/PliziAuthUser.js';
+import FriendshipInvitationMixin from '../mixins/FriendshipInvitationMixin';
 
 export default {
 name: 'ProfileHeader',
 components: {IconLocation, IconAddUser},
+mixins: [FriendshipInvitationMixin],
 props: {
     userData: PliziUser|PliziAuthUser,
     isOwner : Boolean
@@ -128,33 +130,6 @@ methods: {
     showPersonalMsgDialog(){
         this.$root.$emit('showPersonalMsgModal', { user: this.userData, src : this.$route.name });
     },
-
-
-    async sendFriendshipInvitation(){
-        let apiResponse = null;
-
-        try {
-            apiResponse = await this.$root.$api.$friend.sendFriendshipInvitation(this.userData.id);
-        }
-        catch (e) {
-            window.console.warn(e.detailMessage);
-            return;
-        }
-
-        if (apiResponse !== null) {
-            if (apiResponse.status === 200) {
-                this.$alert(`<h6>Приглашение дружить</h6>
-<div class="alert alert-info">
-    Приглашение дружбы для <b class="friend-name">${this.userData.fullName}</b> отправлено!
-</div>`, `bg-success`, 10);
-            }
-
-            if (apiResponse.status === 422) {
-                this.$alert(`<h6>Приглашение дружить</h6><div class="alert alert-info">${apiResponse.message}.</div>`, `bg-info`, 10);
-            }
-        }
-    },
-
 
     async uploadUserAvatar(){
         if (this.isOwner!==true)
