@@ -121,13 +121,16 @@ class ChatRepository
      *
      * @param $receiver_ids
      * @param $author_id
+     * @param string $name
      * @return int
      */
-    public function createChatForUsers($receiver_ids, $author_id) {
+    public function createChatForUsers($receiver_ids, $author_id, $name = '') {
         /** @var Chat $chat */
-        $chat = Chat::create(['user_id' => $author_id]);
-        $author = User::find($author_id);
-        $chat->attendees()->attach($author->id);
+        $chat = Chat::create([
+            'user_id' => $author_id,
+            'name' => $name,
+        ]);
+        $chat->attendees()->attach($author_id);
         $receiver_ids = User::whereIn('id', $receiver_ids)->get()->pluck('id')->toArray();
         foreach ($receiver_ids as $receiver_id) {
             $chat->attendees()->attach($receiver_id);
