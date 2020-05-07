@@ -1,10 +1,10 @@
 import PliziDialog from '../PliziDialog.js';
-import PliziCollection from './PliziCollection.js';
+import PliziStoredCollection from './PliziStoredCollection.js';
 
 /**
  * класс для работы со списком диалогов в чате
  */
-class PliziDialogsCollection extends PliziCollection {
+class PliziDialogsCollection extends PliziStoredCollection {
 
     localStorageKey = `pliziDialogs`;
 
@@ -89,22 +89,6 @@ class PliziDialogsCollection extends PliziCollection {
     }
 
 
-    restore(){
-        this.clean();
-
-        this.restoreData();
-
-        if (this.size > 0) {
-            this.isLoad = true;
-            if (this.restoreEventName) {
-                this.emit(this.restoreEventName);
-            }
-
-            return true;
-        }
-    }
-
-
     async load(){
         let apiResponse = null;
 
@@ -116,7 +100,7 @@ class PliziDialogsCollection extends PliziCollection {
         }
 
         if (apiResponse) {
-            this.clean();
+            this.clear();
             apiResponse.map( (dialogItem) => {
                 this.add( dialogItem );
             });

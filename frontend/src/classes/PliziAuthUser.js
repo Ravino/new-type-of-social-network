@@ -67,10 +67,6 @@ class PliziAuthUser extends PliziUzer{
         return this._privacySettings;
     }
 
-    cleanData(){
-        window.console.warn(( (new Date()).getMilliseconds() )+` PliziAuthUser::cleanData`);
-    }
-
     toString(){
         return JSON.stringify( this.toJSON() );
     }
