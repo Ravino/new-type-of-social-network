@@ -1,9 +1,8 @@
 version: "3.1"
 services:
   mysql:
-    image: mysql:5.7
+    image: mysql:8.0
     container_name: "plizi_mysql"
-    command: mysqld --character-set-server=utf8 --collation-server=utf8_general_ci
     volumes:
       - ./mysql_data_plizi:/var/lib/mysql
     env_file:

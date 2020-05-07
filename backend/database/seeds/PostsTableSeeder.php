@@ -18,7 +18,7 @@ class PostsTableSeeder extends Seeder
     public function run()
     {
         $users = User::all();
-        $communities = Community::all();
+        $communities = Community::without('role')->get();
         foreach ($users as $user) {
             //$post = Post::create($this->generatePost());
             $user->posts()->create($this->generatePost());

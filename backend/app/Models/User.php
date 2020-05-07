@@ -85,7 +85,7 @@ class User extends Authenticatable implements JWTSubject
                  ON friendships.sender_id = mutual.recipient_id OR friendships.recipient_id = mutual.sender_id OR
                     friendships.sender_id = mutual.sender_id OR friendships.recipient_id = mutual.recipient_id)
             "), function($join) {
-                $join->on('friendships.sender_id', '=', 'friendships.sender_id')->where('friendships.sender_id', '=', '5eaf9d8745b7e522f742cbf1')->orWhere('friendships.recipient_id','=','5eaf9d8745b7e522f742cbf1');
+                $join->on('friendships.sender_id', '=', 'friendships.sender_id')->where('friendships.sender_id', '=', auth()->id())->orWhere('friendships.recipient_id', '=', auth()->id());
             })->groupBy([
                 'profiles.user_id',
                 'profiles.first_name',
