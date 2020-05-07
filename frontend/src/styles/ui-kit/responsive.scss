@@ -1,0 +1,37 @@
+
+// rules for --px and low
+@media (max-width: 576px) {
+    .plz-latest-entries {
+        h6 {
+            padding-left: 0;
+        }
+        &-list {
+            padding: 0 10px;
+            display: flex;
+            justify-content: space-between;
+            flex-wrap: wrap;
+        }
+        &-item {
+            width: 48%;
+            margin-right: 0;
+        }
+    }
+    #pliziMobile .plizi-mobile {
+        min-height: 200px;
+    }
+    .modal {
+        min-height: 600px;
+
+        &:before {
+            right: 15px;
+        }
+    }
+
+    .LoginPage,
+    .UpdatePasswordPage,
+    .HomePage {
+        .modal-body {
+            padding: 35px 20px 50px;
+        }
+    }
+}
