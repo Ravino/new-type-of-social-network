@@ -3,7 +3,7 @@
         <div class="col-md-3 pl-0">
             <div class="plz-profile-userpic-container d-flex flex-column h-100 bg-white-br20 overflow-hidden">
                 <div class="plz-profile-userpic-wrapper overflow-hidden position-relative d-flex align-items-center justify-content-center ">
-                    <img ref="userAvatar" :src="userData.userPic" :alt="userData.fullName"/>
+                    <img ref="userAvatar" :src="avatar" :alt="userData.fullName"/>
                 </div>
 
                 <div v-if="isOwner===true" class="plz-profile-userpic-footer mt-auto">
@@ -114,6 +114,12 @@ data() {
 computed: {
     usrFriendsNumber(){
         return (this.isOwner) ? this.userData.stats.totalFriendsCount : this.userData.friendsNumber;
+    },
+    avatar() {
+        const profile = this.userData.profile;
+        return profile && profile.avatar
+            ? profile.avatar.medium.path
+            : this.userData.userPic;
     }
 },
 methods: {
