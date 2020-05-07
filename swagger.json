@@ -271,6 +271,9 @@
                     "items": {
                       "type": "number"
                     }
+                  },
+                  "name": {
+                      "type": "string"
                   }
                 }
               }
