@@ -1,4 +1,4 @@
-import PliziUzer from './PliziUser.js';
+import PliziUser from './PliziUser.js';
 import PliziCommunity from './PliziCommunity.js';
 import PliziAttachment from "./PliziAttachment";
 
@@ -77,6 +77,13 @@ class PliziPost {
     _community = null;
 
     /**
+     * Автор поста.
+     * @type {PliziUser|null}
+     * @private
+     */
+    _author = null;
+
+    /**
      * @type {Date}
      * @private
      */
@@ -118,6 +125,9 @@ class PliziPost {
         if (this._community)
             return this._community.name;
 
+        if (this.author)
+            return this.author.firstName + ` ` + this.author.lastName;
+
         return ``;
     }
 
@@ -127,6 +137,9 @@ class PliziPost {
 
         if (this._community)
             return this.community.primaryImage;
+
+        if (this.author)
+            return this.author.userPic;
 
         return this.__defaultAvatarPath;
     }
@@ -167,6 +180,13 @@ class PliziPost {
      */
     get community() {
         return this._community;
+    }
+
+    /**
+     * @returns {PliziUser}
+     */
+    get author() {
+        return this._author;
     }
 
     get commentsCount() {
@@ -233,6 +253,10 @@ class PliziPost {
         this._community = value;
     }
 
+    set author(value) {
+        this._author = value;
+    }
+
     set createdAt(value) {
         this._createdAt = new Date(value);
     }
@@ -269,7 +293,7 @@ class PliziPost {
         this.views = post.views;
         this.commentsCount = post.commentsCount;
         this.sharesCount = post.sharesCount;
-        this.user = post.user? new PliziUzer(post.user) : null;
+        this.user = post.user ? new PliziUser(post.user) : null;
         this.community = post.community ? new PliziCommunity(post.community) : null;
         this.createdAt = post.createdAt;
         this.deleted = false;
@@ -281,9 +305,8 @@ class PliziPost {
             });
         }
 
-        if (post.sharedFrom) {
-            this.sharedFrom = new PliziPost(post.sharedFrom);
-        }
+        this.sharedFrom = post.sharedFrom ? new PliziPost(post.sharedFrom) : null;
+        this.author = post.author ? new PliziUser(post.author) : null;
     };
 
     /**

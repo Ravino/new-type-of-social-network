@@ -80,6 +80,7 @@ class PostCollection extends ResourceCollection
                         'createdAt' => $post->created_at,
                         'attachments' => new AttachmentsCollection($post->attachments),
                         'sharedFrom' => $post->parent_id ? new PostWithoutParent($post->parent) : null,
+                        'author' => new SimpleUser($post->author),
                     ];
                 }
             }),

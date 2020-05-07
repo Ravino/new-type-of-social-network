@@ -5,7 +5,7 @@
             <div class="col-12 border-bottom plz-post-item-header">
                 <div class="post-news-item d-flex flex-row align-content-center pb-4">
                     <div class="post-poster-pic mr-3">
-                        <router-link v-if="post.user" :to="{name: 'PersonalPage', params: {id: post.user.id}}">
+                        <router-link v-if="postable" :to="{name: 'PersonalPage', params: {id: postable.id}}">
                             <img :src="post.posterPic" :alt="post.posterName"/>
                         </router-link>
                         <router-link v-else :to="{name: 'CommunityPage', params: {id: post.community.id}}">
@@ -17,7 +17,7 @@
                         <h6 class="post-poster-title mb-1">
                             <!-- TODO: @TGA странно что мы нигде не выводим название поста-->
 
-                            <router-link v-if="post.user" :to="{name: 'PersonalPage', params: {id: post.user.id}}">
+                            <router-link v-if="postable" :to="{name: 'PersonalPage', params: {id: postable.id}}">
                                 <b>{{post.posterName}}</b>
                             </router-link>
                             <router-link v-else :to="{name: 'CommunityPage', params: {id: post.community.id}}">
@@ -63,7 +63,7 @@
                     <template v-if="post.sharedFrom">
                         <div class="post-news-item d-flex flex-row align-content-center pb-4">
                             <div class="post-poster-pic mr-3">
-                                <router-link v-if="post.user" :to="{name: 'PersonalPage', params: {id: post.sharedFrom.user.id}}">
+                                <router-link v-if="post.sharedFrom.user" :to="{name: 'PersonalPage', params: {id: post.sharedFrom.user.id}}">
                                     <img :src="post.sharedFrom.posterPic" :alt="post.sharedFrom.posterName"/>
                                 </router-link>
                                 <router-link v-else :to="{name: 'CommunityPage', params: {id: post.sharedFrom.community.id}}">
@@ -75,7 +75,7 @@
                                 <h6 class="post-poster-title mb-1">
                                     <!-- TODO: @TGA странно что мы нигде не выводим название поста-->
 
-                                    <router-link v-if="post.user" :to="{name: 'PersonalPage', params: {id: post.sharedFrom.user.id}}">
+                                    <router-link v-if="post.sharedFrom.user" :to="{name: 'PersonalPage', params: {id: post.sharedFrom.user.id}}">
                                         <b>{{post.sharedFrom.posterName}}</b>
                                     </router-link>
                                     <router-link v-else :to="{name: 'CommunityPage', params: {id: post.sharedFrom.community.id}}">
@@ -189,6 +189,10 @@
         },
         props: {
             post: PliziPost,
+            isCommunity: {
+                type: Boolean,
+                default: false,
+            },
         },
         computed: {
             detectYoutubeLink() {
@@ -202,6 +206,13 @@
                 if (this.detectYoutubeLink) {
                     return `<img src="//img.youtube.com/vi/${this.detectYoutubeLink}/0.jpg" alt="" />`;
                 }
+            },
+            postable() {
+                if (this.isCommunity) {
+                    return this.post.author;
+                }
+
+                return this.post.user ? this.post.user : null;
             },
         },
         methods: {

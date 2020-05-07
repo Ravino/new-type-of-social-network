@@ -27,10 +27,13 @@
                     </div>
                     <Spinner v-else></Spinner>
 
+                    <CommunityEditor :community-id="communityData.id"/>
+
                     <div v-if="isDataReady" id="communityPostsBlock" class="bg-white-br20 py-5 mb-5 text-center">
                         <Post v-for="postItem in communityPosts"
                               :key="postItem.id"
                               :post="postItem"
+                              :is-community="true"
                               @onShare="onSharePost"></Post>
                     </div>
                     <Spinner v-else></Spinner>
@@ -69,6 +72,7 @@
     import CommunityUserActionBlock from "../common/Communities/CommunityUserActionBlock";
     import CommunityFriendsInformer from "../common/Communities/CommunityFriendsInformer";
     import CommunityShortMembers from "../common/Communities/CommunityShortMembers";
+    import CommunityEditor from "../common/Communities/CommunityEditor.vue";
 
     export default {
 name: 'CommunityPage',
@@ -81,8 +85,10 @@ components : {
     CommunityFriendsInformer,
     CommunityUserActionBlock,
     Spinner,
-    AccountToolbarLeft, FavoriteFriends,
+    AccountToolbarLeft,
+    FavoriteFriends,
     Post,
+    CommunityEditor,
 },
 
 computed: {

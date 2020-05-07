@@ -63,6 +63,27 @@ class PliziPostAPI extends PliziBaseAPI {
     }
 
     /**
+     * Создание постов в сообществе.
+     * @param communityId
+     * @param formData
+     * @returns {object[]|null}
+     * @throws PliziAPIError
+     */
+    async storePostByCommunity(communityId, formData) {
+        let response = await this.axios.post( `api/communities/${communityId}/posts`, formData, this.authHeaders )
+          .catch( ( error ) => {
+              this.checkIsTokenExpires( error, `storePostByCommunity` );
+              throw new PliziAPIError( `storePostByCommunity`, error.response );
+          } );
+
+        if ( response.status === 201 ){
+            return response.data.data;
+        }
+
+        return null;
+    }
+
+    /**
      * Загружка файлов для постов.
      * @param picsArr
      * @returns {object[]|null}
