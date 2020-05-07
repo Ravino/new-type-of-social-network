@@ -10,6 +10,7 @@ use App\Http\Resources\Community\Community as CommunityResource;
 use App\Http\Resources\Community\CommunityUserCollection;
 use App\Models\Community;
 use App\Models\CommunityAttachment;
+use App\Models\CommunityHeader;
 use App\Services\CommunityService;
 use App\Services\S3UploadService;
 use Exception;
@@ -182,6 +183,26 @@ class CommunityController extends Controller
         $community_id = request()->input('id');
         $uploaded['community_id'] = $community_id;
         $attachment = CommunityAttachment::updateOrCreate(['community_id' => $community_id], $uploaded);
+        return new AttachmentsCollection([$attachment]);
+    }
+
+    public function uploadHeader(UploadFileRequest $request)
+    {
+        $uploaded = $this->uploadService->singleUpload('community/headers', $request->file('file'), 'public', [
+            'normal' => [
+                'size' => 600,
+            ],
+            'medium' => [
+                'size' => 250,
+            ],
+            'thumb' => [
+                'size' => [80, 80],
+            ],
+        ]);
+
+        $community_id = request()->input('id');
+        $uploaded['community_id'] = $community_id;
+        $attachment = CommunityHeader::updateOrCreate(['community_id' => $community_id], $uploaded);
         return new AttachmentsCollection([$attachment]);
     }
 }
