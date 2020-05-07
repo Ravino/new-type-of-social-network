@@ -24,6 +24,7 @@
 import ShortFriendItem from './ShortFriendItem.vue';
 
 import PliziCollection from '../classes/PliziCollection.js';
+import { shuffle } from "../utils/ArrayUtils";
 
 export default {
 name: 'ShortFriends',
@@ -37,16 +38,15 @@ data () {
     }
 },
 
-computed : {
+computed: {
     shortFriends(){
-        if (this.friends){
-            return this.friends.filter( ( fItem ) => {
-                return !this.$root.$auth.fm.checkIsFavorite( fItem.id );
-            } );
-        }
-        else {
+        if (!this.friends){
             return [];
         }
+
+        const friends = this.friends.filter(fItem => !this.$root.$auth.fm.checkIsFavorite(fItem.id));
+
+        return shuffle(friends).slice(0, 10);
     }
 }
 
