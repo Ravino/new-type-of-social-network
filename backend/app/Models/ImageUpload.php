@@ -2,8 +2,6 @@
 
 namespace App\Models;
 
-use App\Notifications\ResetPassword as ResetPasswordNotification;
-use App\Notifications\UserSystemNotifications;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Event;
 use Storage;
@@ -15,12 +13,23 @@ class ImageUpload extends Model
     const TAG_SECONDARY = 'secondary';
 
     protected $fillable = [
-        'original_name', 'path', 'url', 'user_id', 'size', 'tag', 'mime_type'
+        'original_name', 'path', 'url', 'user_id', 'size', 'tag', 'mime_type',
+        'image_original_width',
+        'image_original_height',
+        'image_normal_path',
+        'image_normal_width',
+        'image_normal_height',
+        'image_medium_path',
+        'image_medium_width',
+        'image_medium_height',
+        'image_thumb_path',
+        'image_thumb_width',
+        'image_thumb_height',
     ];
 
     public function getS3UrlAttribute()
     {
-        return Storage::disk('s3')->url($this->path);
+        return Storage::disk('s3')->url($this->image_thumb_path);
     }
 
     public function user()
@@ -31,9 +40,13 @@ class ImageUpload extends Model
     public static function boot()
     {
         parent::boot();
-        static::created(function($image) {
+        static::created(static function($image) {
             if($image->tag === self::TAG_PRIMARY) {
-                $affected = (new ImageUpload)->where('user_id', auth()->user()->id)->where('tag', self::TAG_PRIMARY)->update(['tag' => self::TAG_SECONDARY]);
+                $affected = (new ImageUpload)
+                    ->where('user_id', auth()->user()->id)
+                    ->where('tag', self::TAG_PRIMARY)
+                    ->where('id', '!=', $image->id)
+                    ->update(['tag' => self::TAG_SECONDARY]);
                 Profile::where('user_id', auth()->id())->update(['user_pic' => $image->url]);
                 Event::dispatch($affected ? 'user.profile.image.updated' : 'user.profile.image.created', ['user_id' => auth()->id()]);
             }
