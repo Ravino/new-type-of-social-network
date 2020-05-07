@@ -169,6 +169,21 @@ class UserController extends Controller
 
     /**
      * @param $group
+     * @param $userId
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function deleteFriendFromGroup($group, $userId) {
+        $user = User::where('id', $userId)->first();
+        if (!Auth::user()->isFriendWith($user)) {
+            return response()->json(['message' => 'Данный пользователь не в ваших друзьях'], 422);
+        }
+
+        Auth::user()->ungroupFriend($user, $group);
+        return response()->json(['message' => 'Вы удалили пользователя из группы'], 200);
+    }
+
+    /**
+     * @param $group
      * @return UserCollection
      */
     public function getFriendsFromGroup($group) {

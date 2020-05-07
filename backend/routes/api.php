@@ -56,6 +56,7 @@ Route::group(['middleware' => ['auth.jwt', 'track.activity']], function () {
     Route::get('user/friendship/possible', 'Api\UserController@getPossibleFriends');
     Route::get('user/friendship/recommended', 'Api\UserController@getRecommendedFriends');
     Route::post('user/friendship/group', 'Api\UserController@addFriendToGroup');
+    Route::delete('user/friendship/group/{group}/{userId}', 'Api\UserController@deleteFriendFromGroup');
     Route::get('user/friendship/group/{group}', 'Api\UserController@getFriendsFromGroup');
 
     /**

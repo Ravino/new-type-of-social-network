@@ -2762,6 +2762,73 @@
         "x-codegen-request-body-name": "body"
       }
     },
+      "user/friendship/group/{group}/{userId}": {
+          "delete": {
+              "tags": [
+                  "Friendships"
+              ],
+              "description": "Удаление пользователя из избранных",
+              "operationId": "deleteFriendFromGroup",
+              "parameters": [
+                  {
+                      "name": "group",
+                      "in": "path",
+                      "description": "Группа",
+                      "required": true,
+                      "schema": {
+                          "type": "string",
+                          "enum": [
+                              "featured",
+                              "family"
+                          ]
+                      }
+                  },
+                  {
+                      "name": "userId",
+                      "in": "path",
+                      "description": "ID пользователя",
+                      "required": true,
+                      "schema": {
+                          "type": "string"
+                      }
+                  }
+              ],
+              "responses": {
+                  "200": {
+                      "description": "Успешно добавлен",
+                      "content": {
+                          "application/json": {
+                              "schema": {
+                                  "type": "object",
+                                  "properties": {
+                                      "data": {
+                                          "type": "object",
+                                          "properties": {
+                                              "list": {
+                                                  "type": "array",
+                                                  "items": {
+                                                      "$ref": "#/components/schemas/User"
+                                                  }
+                                              }
+                                          }
+                                      }
+                                  }
+                              }
+                          }
+                      }
+                  },
+                  "403": {
+                      "description": "Not allowed",
+                      "content": {}
+                  }
+              },
+              "security": [
+                  {
+                      "Authorization": []
+                  }
+              ]
+          }
+      },
     "/user/friendship/group/{group}": {
       "get": {
         "tags": [
