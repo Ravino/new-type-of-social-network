@@ -44,7 +44,7 @@ class ImageUploadController extends Controller
                 'size' => 600,
             ],
             'medium' => [
-                'size' => 250,
+                'size' => [211, 211],
             ],
             'thumb' => [
                 'size' => [80, 80],

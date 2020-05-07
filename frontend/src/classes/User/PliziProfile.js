@@ -1,4 +1,5 @@
 import PliziLocation from './PliziLocation.js';
+import PliziAttachmentThumbsObj from '../Attachment/PliziAttachmentThumbsObj.js';
 
 class PliziUser {
     /**
@@ -56,6 +57,13 @@ class PliziUser {
      */
     _userPic = ``;
 
+    /**
+     *
+     * @type {PliziAttachmentThumbsObj}
+     * @private
+     */
+    _avatar = null;
+
     // значения как в PHP
     __RELATIONSHIP_MARRIED = 1;
     __RELATIONSHIP_NOT_MARRIED = 2;
@@ -74,6 +82,10 @@ class PliziUser {
 
         if (prof.userPic) {
             this._userPic = (prof.userPic + ``).trim();
+        }
+
+        if (prof.avatar) {
+            this._avatar = new PliziAttachmentThumbsObj(prof.avatar.image);
         }
     }
 
@@ -169,6 +181,13 @@ class PliziUser {
             return this._userPic;
 
         return this.__defaultAvatarPath;
+    }
+
+    /**
+     * @returns {PliziAttachmentThumbsObj|null}
+     */
+    get avatar() {
+        return this._avatar;
     }
 
     /**
