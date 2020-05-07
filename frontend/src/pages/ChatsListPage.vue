@@ -56,6 +56,25 @@
             </div>
         </div>
 
+        <div id="plzNotification">
+            <div class="plz-notification d-flex justify-content-between align-items-start p-4 ">
+                <div class="plz-notification-pic mr-3">
+                    <img src="images/maria.png" alt="image">
+                </div>
+                <div class="plz-notification-body mr-3">
+                    <h6 class="plz-notification-name mb-2">Александр Лебовски</h6>
+                    <div class="plz-notification-text">
+                        <p>Где мои деньги?</p>
+                        <p>А это второе предложение</p>
+                        <p>А это длинные слова предложениепредложениепре sdscdsdsdsdsdsффффффффффффффффsdscdsdsdsdsds</p>
+                        <p>Непрерывное слово таааааааааffffssssssdsadsdasdadadasdasdasdasdasdaaaaaaaaaaaaaaaaaaaaaaaasdasdasdffааааааааааааакккоое</p>
+                    </div>
+                </div>
+                <button class="btn btn-close pt-0 pr-0">
+                    <i class="icon icon-close-notification"></i>
+                </button>
+            </div>
+        </div>
     </div>
 </template>
 
