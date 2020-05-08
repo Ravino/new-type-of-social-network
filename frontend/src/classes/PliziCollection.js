@@ -1,5 +1,3 @@
-import PliziFriend from "./PliziFriend";
-
 /**
  * класс упрощения работы с коллекциями
  */
@@ -52,11 +50,6 @@ class PliziCollection {
 
     get length(){
         return this._collection.size;
-    }
-
-    clean(){
-        window.console.warn(`Deprecated! clean`);
-        this._collection.clear();
     }
 
     clear(){

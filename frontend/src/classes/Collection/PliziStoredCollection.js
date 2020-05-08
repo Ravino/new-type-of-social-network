@@ -133,7 +133,7 @@ class PliziStoredCollection extends PliziCollection{
 
     emit(eventName, eventData){
         if (eventName) {
-            this.api.emit(eventName, eventData);
+            this.api.emit(eventName, eventData || {});
         }
     }
 

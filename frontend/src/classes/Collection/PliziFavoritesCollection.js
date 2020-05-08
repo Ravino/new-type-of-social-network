@@ -28,9 +28,18 @@ class PliziFavoritesCollection extends PliziStoredCollection {
 
     onAddToFavorites(evData){
         window.console.warn(evData,`onAddToFavorites`);
-        //this.add(evData);
-        //this.storeData();
-        //this.emit(this.updateEventName);
+        this.add(evData);
+        this.storeData();
+        this.restore();
+        this.emit(this.updateEventName);
+    }
+
+    onRemoveFromFavorites(removedFriendId){
+        window.console.warn(removedFriendId,`onRemoveFromFavorites`);
+        this.delete(removedFriendId.id);
+        this.storeData();
+        this.restore();
+        this.emit(this.updateEventName);
     }
 
     /**
@@ -79,7 +88,7 @@ class PliziFavoritesCollection extends PliziStoredCollection {
         let apiResponse = null;
 
         try {
-            apiResponse = await this.api.$friend.Favorites();
+            apiResponse = await this.api.$friend.favorites();
         }
         catch (e){
             window.console.warn(e.detailMessage);
