@@ -142,7 +142,7 @@ methods: {
             await this.persistentCollectionsRestore();
         }
     },
-///
+
     isAuthorized(){
         return this.$root.$isAuth;
     },
@@ -170,6 +170,8 @@ methods: {
 
 created(){
     window.console.log('App created');
+
+    //Vue.set(vm.someObject, 'b', 2)
 
     this.$root.$api = PliziAPI;
     this.$root.$api.init(this.$root);

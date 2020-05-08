@@ -4,6 +4,8 @@ $friendItemNameColor: #363636;
 $friendItemOnlineColor: #9FCD48;
 $friendItemOfflineColor: #CACAC9;
 
+$friendItemFavoriteColor: #F8D209;
+
 .plizi-friend-item-user {
     border-bottom: 1px solid #ebebeb;
     transition: .4s;
@@ -59,6 +61,16 @@ $friendItemOfflineColor: #CACAC9;
         background-color: $friendItemOfflineColor;
         border: 1px solid white;
         border-radius: 100%;
+    }
+
+    &-isfavorite{
+        display: block;
+        position: absolute;
+        width: 20px;
+        height: 20px;
+        left: 5px;
+        top: 5px;
+        color: $friendItemFavoriteColor;
     }
 
     &-body {

@@ -14,7 +14,7 @@
         </div>
 
         <div v-if="!isNarrow" class="plz-favorit-friend-title flex align-items-center mr-auto ">
-            <span class="plz-favorit-friend-name">{{friend.firstName}}</span>
+            <span class="plz-favorit-friend-name">{{friend.fullName}}</span>
 
             <div class="plz-favorit-friend-status">
                 <p v-if="friend.isOnline">В сети</p>
