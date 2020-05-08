@@ -39,4 +39,18 @@ class CommunityTheme extends Model
     {
         return $this->hasMany(__CLASS__, 'parent_id');
     }
+
+    /**
+     * @return mixed
+     */
+    public static function getTree()
+    {
+        $all = self::all();
+        return $all
+            ->filter(static function ($theme) {
+                return $theme->parent_id === 0;
+            })
+            ->load('children')
+            ->values();
+    }
 }
