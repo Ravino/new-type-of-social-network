@@ -56,25 +56,7 @@
             </div>
         </div>
 
-        <div id="plzNotification">
-            <div class="plz-notification d-flex justify-content-between align-items-start p-4 ">
-                <div class="plz-notification-pic mr-3">
-                    <img src="images/maria.png" alt="image">
-                </div>
-                <div class="plz-notification-body mr-3">
-                    <h6 class="plz-notification-name mb-2">Александр Лебовски</h6>
-                    <div class="plz-notification-text">
-                        <p>Где мои деньги?</p>
-                        <p>А это второе предложение</p>
-                        <p>А это длинные слова предложениепредложениепре sdscdsdsdsdsdsффффффффффффффффsdscdsdsdsdsds</p>
-                        <p>Непрерывное слово таааааааааffffssssssdsadsdasdadadasdasdasdasdasdaaaaaaaaaaaaaaaaaaaaaaaasdasdasdffааааааааааааакккоое</p>
-                    </div>
-                </div>
-                <button class="btn btn-close pt-0 pr-0">
-                    <i class="icon icon-close-notification"></i>
-                </button>
-            </div>
-        </div>
+        <ChatNotifications :notifications="notifications" @removeNotification="removeNotification"/>
     </div>
 </template>
 
@@ -89,15 +71,20 @@ import ChatFooter from '../common/Chat/ChatFooter.vue';
 
 import PliziDialog from '../classes/PliziDialog.js';
 import PliziMessage from '../classes/PliziMessage.js';
+import NotificationMixin from '../mixins/NotificationMixin';
+import ChatNotifications from "../common/Chat/ChatNotifications";
 
 export default {
 name: 'ChatsListPage',
 components: {
+    ChatNotifications,
     ChatDialogs,
     AccountToolbarLeft,
     Spinner,
     ChatHeader, ChatMessages, ChatFooter,
 },
+
+mixins: [NotificationMixin],
 
 data() {
     return {
@@ -178,6 +165,10 @@ methods: {
         this.updateDialogsList(evData.chatId, evData);
     },
 
+    addNewMessageNotification({ message }) {
+        this.addNotification(message);
+    },
+
     updateDialogsList(chatId, evData){
         evData.chatId = chatId;
 
@@ -218,6 +209,7 @@ methods: {
 
     addListeners(){
         this.$root.$on('newMessageInDialog', this.addNewChatMessageToList);
+        this.$root.$on('newMessageInDialog', this.addNewMessageNotification);
         this.$root.$on('removeMessageInDialog', this.removeMessageInList);
     }
 },
