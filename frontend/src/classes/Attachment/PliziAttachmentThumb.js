@@ -21,6 +21,27 @@ class PliziAttachmentThumb {
      */
     _path = null;
 
+    /**
+     * @returns {number}
+     */
+    get width() {
+        return this._width;
+    }
+
+    /**
+     * @returns {number}
+     */
+    get height() {
+        return this._height;
+    }
+
+    /**
+     * @returns {string}
+     */
+    get path() {
+        return this._path;
+    }
+
     constructor(inputData){
         this._width = inputData.width;
         this._height = inputData.height;
