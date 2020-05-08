@@ -166,6 +166,10 @@ methods: {
     },
 
     addNewMessageNotification({ message }) {
+        if (message.isMine) {
+            return;
+        }
+
         this.addNotification(message);
     },
 
