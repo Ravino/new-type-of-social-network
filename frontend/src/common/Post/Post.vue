@@ -38,17 +38,17 @@
                                 aria-expanded="false">
                             <i class="dots-vertical"></i>
                         </button>
-                        <div class="dropdown-menu dropdown-menu-right py-3 px-3"
+                        <div class="dropdown-menu dropdown-menu-right py-3 px-0"
                              :aria-labelledby="`postSettings` + post.id">
 
                             <div class="nav-item">
-                                <button class="btn dropdown-item px-0 py-1"
+                                <button class="btn dropdown-item px-3 py-1"
                                         @click="$emit('onEditPost', post)">
                                     Редактировать
                                 </button>
                             </div>
                             <div class="nav-item">
-                                <button class="btn dropdown-item px-0 py-1"
+                                <button class="btn dropdown-item px-3 py-1"
                                         @click="$emit('deletePost', post.id)">
                                     Удалить
                                 </button>

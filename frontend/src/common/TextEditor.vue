@@ -8,7 +8,7 @@
                 </div>
 
                 <div class="plz-editor-body pl-0" :class="{ 'plz-editor-body-wza': showAvatar, 'forward-message-width': !showAvatar }">
-                    <div class="form pl-3">
+                    <div class="form pl-2">
                         <div class="form-row align-items-center">
                             <div class="col-12 d-flex justify-content-between p-0">
                                 <Editor class="plz-text-editor-form form-control px-2 py-1 h-100"

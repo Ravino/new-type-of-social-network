@@ -1,22 +1,22 @@
 <template>
     <div id="accountSettingsSecurity"
-         class="plz-account-settings plz-account-settings-security bg-white-br20 plz-mb20 container-fluid">
+         class="plz-account-settings bg-white-br20 plz-mb20 container-fluid">
         <form class="plz-account-settings-form pb-0 px-3 mb-0">
-            <div class="plz-account-settings-header plz-account-settings-security-header row border-bottom">
+            <div class="plz-account-settings-header row border-bottom">
                 <div class="d-flex">
                     <h6>Безопасность</h6>
                 </div>
             </div>
 
-            <div class="plz-account-settings-body plz-account-settings-security-body">
+            <div class="plz-account-settings-body ">
                 <div class="form-group row border-bottom">
                     <label for="twoFactorAuthEnabled"
-                           class="plz-account-settings-body-label plz-account-settings-security-body-label col-sm-6 col-md-6 col-lg-4 col-xl-4">
+                           class="plz-account-settings-body-label col-sm-6 col-md-6 col-lg-4 col-xl-4">
                         Двухэтапная аутентификация
                     </label>
                     <div
-                        class="plz-account-settings-body-field plz-account-settings-security-body-field col-sm-6 col-md-6 col-lg-6 col-xl-6">
-                        <div class="d-flex align-items-center w-75 position-relative pl-4">
+                        class="plz-account-settings-body-field  col-sm-6 col-md-6 col-lg-6 col-xl-6">
+                        <div class="d-flex align-items-center w-100 position-relative pl-4">
                             <i v-if="Number(form.twoFactorAuthEnabled) === 1" class="fas fa-check mr-2"></i>
                             <div class="w-100 position-relative ml-n2">
                                 <select id="twoFactorAuthEnabled"
@@ -26,7 +26,7 @@
                                     <option value="0">Выключена</option>
                                     <option value="1">Включена</option>
                                 </select>
-                                <i class="fas fa-chevron-down ml-2 d-sm-none d-md-none d-lg-inline d-xl-inline"></i>
+                                <i class="fas fa-chevron-down px-2 d-flex align-items-center h-100 "></i>
                             </div>
                         </div>
                     </div>
@@ -35,12 +35,12 @@
 
                 <div class="form-group row border-bottom">
                     <label for="smsConfirm"
-                           class="plz-account-settings-body-label plz-account-settings-security-body-label col-sm-6 col-md-6 col-lg-4 col-xl-4">
+                           class="plz-account-settings-body-label col-sm-6 col-md-6 col-lg-4 col-xl-4">
                         Подтверждение через SMS
                     </label>
                     <div
-                        class="plz-account-settings-body-field plz-account-settings-security-body-field col-sm-6 col-md-6 col-lg-6 col-xl-6">
-                        <div class="d-flex align-items-center w-75 position-relative pl-4">
+                        class="plz-account-settings-body-field  col-sm-6 col-md-6 col-lg-6 col-xl-6">
+                        <div class="d-flex align-items-center w-100 position-relative pl-4">
                             <i v-if="Number(form.smsConfirm) === 1" class="fas fa-check mr-2"></i>
                             <div class="w-100  position-relative ml-n2">
                                 <select id="smsConfirm"
@@ -50,7 +50,7 @@
                                     <option value="0">Выключено</option>
                                     <option value="1">Включено</option>
                                 </select>
-                                <i class="fas fa-chevron-down ml-2 d-sm-none d-md-none d-lg-inline d-xl-inline"></i>
+                                <i class="fas fa-chevron-down px-2 d-flex align-items-center h-100 "></i>
                             </div>
                         </div>
                     </div>
@@ -59,10 +59,10 @@
 
                 <div class="form-group row border-bottom">
                     <label for="password"
-                           class="plz-account-settings-body-label plz-account-settings-security-body-label col-sm-6 col-md-6 col-lg-4 col-xl-4">Пароль</label>
+                           class="plz-account-settings-body-label col-sm-6 col-md-6 col-lg-4 col-xl-4">Пароль</label>
                     <div
-                        class="plz-account-settings-body-field plz-account-settings-security-body-field col-sm-6 col-md-6 col-lg-6 col-xl-6">
-                        <div class="d-flex align-items-center w-75 position-relative ">
+                        class="plz-account-settings-body-field  col-sm-6 col-md-6 col-lg-6 col-xl-6">
+                        <div class="d-flex align-items-center w-100 position-relative ">
                             <div class="plz-account-settings-body-action pl-1 ">
                                 <button type="button"
                                         id="password"
