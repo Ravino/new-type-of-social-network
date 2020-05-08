@@ -1,5 +1,5 @@
 <template>
-    <header id="authHeader" class="fixed-top">
+    <header id="authHeader" class="fixed-top page-has-offset-top">
         <nav class="auth-navbar navbar navbar-expand-lg container container-wide mx-auto">
             <div class="row w-100 px-0 mr-0">
                 <div class="d-flex align-items-center col-3 col-sm-2 col-md-1 pl-3 pr-0 px-lg-0  ">
