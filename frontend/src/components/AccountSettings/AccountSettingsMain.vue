@@ -1,27 +1,24 @@
 <template>
     <div id="accountSettingsMain"
-         class="plz-account-settings plz-account-settings-main bg-white-br20 plz-mb20 container-fluid">
+         class="plz-account-settings bg-white-br20 plz-mb20 container-fluid">
         <form class="plz-account-settings-form pb-0 px-3 mb-0">
-            <div class="plz-account-settings-header row plz-account-settings-main-header border-bottom">
-                <div class="d-sm-none d-md-none d-lg-flex d-xl-flex">
+            <div class="plz-account-settings-header row border-bottom">
+                <div class="d-flex">
                     <h6 class="title-settings mb-0">Основные</h6>
-                </div>
-                <div class="d-sm-flex d-md-flex d-lg-none d-xl-none">
-                    <h6 class="title-settings"><b>Основная информация</b></h6>
                 </div>
             </div>
 
-            <div class="plz-account-settings-body plz-account-settings-main-body">
+            <div class="plz-account-settings-body ">
 
                 <div class="form-group row border-bottom">
                     <label for="firstName"
-                           class="plz-account-settings-body-label plz-account-settings-main-label col-sm-6 col-md-6 col-lg-4 col-xl-4">
+                           class="plz-account-settings-body-label col-6 col-sm-4 col-lg-4 ">
                         Имя
                     </label>
-                    <div class="plz-account-settings-body-field plz-account-settings-main-body-field col-sm-6 col-md-6 col-lg-6 col-xl-6">
+                    <div class="plz-account-settings-body-field order-1 order-sm-0 col-12 col-sm-5 col-lg-6 ">
                         <input type="text"
                                id="firstName"
-                               class="w-75"
+                               class="w-100 w-sm-75"
                                v-model="model.firstName"
                                :class="[isEdit.firstName ? 'form-control' : 'form-control-plaintext', { 'is-invalid': !!firstNameError, 'is-valid': isSuccessFirstName }]"
                                @input="inputFieldEdit($event, 'firstName')"
@@ -34,7 +31,7 @@
                             <p class="text-danger">{{ firstNameError }}</p>
                         </div>
                     </div>
-                    <div class="plz-account-settings-body-action plz-account-settings-main-body-action col-2 d-sm-none d-md-none d-lg-flex d-xl-flex">
+                    <div class="plz-account-settings-body-action col-6 col-sm-3 col-lg-2 d-flex">
                         <button type="button"
                                 class="btn btn-link"
                                 :class="{'text-primary': isEdit.firstName}"
@@ -46,12 +43,12 @@
 
                 <div class="form-group row border-bottom">
                     <label for="lastName"
-                           class="plz-account-settings-body-label plz-account-settings-main-label col-sm-6 col-md-6 col-lg-4 col-xl-4">Фамилия</label>
+                           class="plz-account-settings-body-label col-6 col-sm-4 col-lg-4">Фамилия</label>
                     <div
-                        class="plz-account-settings-body-field plz-account-settings-main-body-field col-sm-6 col-md-6 col-lg-6 col-xl-6">
+                        class="plz-account-settings-body-field order-1 order-sm-0 col-12 col-sm-5 col-lg-6 ">
                         <input id="lastName"
                                type="text"
-                               class="w-75"
+                               class="w-100 w-sm-75"
                                v-model="model.lastName"
                                :class="[isEdit.lastName ? 'form-control' : 'form-control-plaintext', { 'is-invalid': !!lastNameError, 'is-valid': isSuccessLastName }]"
                                @input="inputFieldEdit($event, 'lastName')"
@@ -65,7 +62,7 @@
                         </div>
                     </div>
                     <div
-                        class="plz-account-settings-body-action plz-account-settings-main-body-action col-2 d-sm-none d-md-none d-lg-flex d-xl-flex">
+                        class="plz-account-settings-body-action col-6 col-sm-3 col-lg-2 d-flex">
                         <button type="button"
                                 class="btn btn-link"
                                 :class="{'text-primary': isEdit.firstName}"
@@ -77,10 +74,10 @@
 
                 <div class="form-group row border-bottom">
                     <label for="userSex"
-                           class="plz-account-settings-body-label plz-account-settings-main-label col-sm-6 col-md-6 col-lg-4 col-xl-4">Пол</label>
+                           class="plz-account-settings-body-label col-6 col-sm-4 col-lg-4 ">Пол</label>
                     <div
-                        class="plz-account-settings-body-field plz-account-settings-main-body-field col-sm-6 col-md-6 col-lg-6 col-xl-6">
-                        <div class="w-75 position-relative ml-n2">
+                        class="plz-account-settings-body-field order-1 order-sm-0 col-12 col-sm-5  col-lg-6 ">
+                        <div class="w-100 w-sm-75  position-relative ml-n2">
                             <select id="userSex" class="form-control border-0 pl-2"
                                     @change="accountStartSaveData(model.sex, 'sex')"
                                     v-model="model.sex">
@@ -88,7 +85,7 @@
                                 <option value="m">Мужской</option>
                                 <option value="f">Женский</option>
                             </select>
-                            <i class="fas fa-chevron-down ml-2 d-sm-none d-md-none d-lg-inline d-xl-inline"></i>
+                            <i class="fas fa-chevron-down px-2 d-flex align-items-center h-100 "></i>
                         </div>
                     </div>
                     <div class="col-3"></div>
@@ -96,12 +93,12 @@
 
                 <div class="form-group row border-bottom">
                     <label for="relationship"
-                           class="plz-account-settings-body-label plz-account-settings-main-label col-sm-6 col-md-6 col-lg-4 col-xl-4">
+                           class="plz-account-settings-body-label col-6 col-sm-4 col-lg-4">
                         Семейной положение
                     </label>
                     <div
-                        class="plz-account-settings-body-field plz-account-settings-main-body-field col-sm-6 col-md-6 col-lg-6 col-xl-6">
-                        <div class="w-75 position-relative ml-n2">
+                        class="plz-account-settings-body-field order-1 order-sm-0 col-12 col-sm-5 col-md-6 col-lg-6 col-xl-6">
+                        <div class="w-100 w-sm-75 position-relative ml-n2">
                             <select id="relationship" class="form-control border-0 pl-2"
                                     @change="accountStartSaveData(model.relationshipId, 'relationshipId')"
                                     v-model="model.relationshipId">
@@ -110,7 +107,7 @@
                                 <option value="2">Не в браке</option>
                                 <option value="3">В активном поиске</option>
                             </select>
-                            <i class="fas fa-chevron-down ml-2"></i>
+                            <i class="fas fa-chevron-down px-2 d-flex align-items-center h-100 "></i>
                         </div>
                     </div>
                     <div class="col-3 d-sm-none d-md-none"></div>
@@ -118,18 +115,18 @@
 
                 <div class="form-group row border-bottom">
                     <label for="birthday"
-                           class="plz-account-settings-body-label plz-account-settings-main-label col-sm-6 col-md-6 col-lg-4 col-xl-4">
+                           class="plz-account-settings-body-label col-6 col-sm-4 col-lg-4">
                         Дата рождения
                     </label>
                     <div
-                        class="plz-account-settings-body-field plz-account-settings-main-body-field col-sm-6 col-md-6 col-lg-6 col-xl-6 ">
+                        class="plz-account-settings-body-field order-1 order-sm-0 col-12 col-sm-5 col-md-6 col-lg-6 col-xl-6 ">
                         <div v-if="!isEdit.birthday" class="form-control-plaintext border-bottom-0">
                             {{ model.birthday | toDMY }}
                         </div>
                         <input v-if="isEdit.birthday"
                                id="birthday"
                                type="date"
-                               class="form-control w-75"
+                               class="form-control w-100 w-sm-75"
                                :class="{ 'is-invalid': !!birthdayError, 'is-valid': isSuccessBirthday }"
                                :value="model.birthday | toYMD"
                                @input="inputFieldEdit($event, 'birthday')"
@@ -142,7 +139,7 @@
                         </div>
                     </div>
                     <div
-                        class="plz-account-settings-body-action plz-account-settings-main-body-action col-2 d-sm-none d-md-none d-lg-flex d-xl-flex">
+                        class="plz-account-settings-body-action col-6 col-sm-3 col-lg-2 d-sm-none d-md-none d-lg-flex d-xl-flex">
                         <button type="button"
                                 class="btn btn-link"
                                 :class="{'text-primary': isEdit.birthday}"
@@ -152,16 +149,16 @@
                     </div>
                 </div>
 
-                <div class="form-group row border-bottom d-sm-none d-md-none d-lg-flex d-xl-flex ">
+                <div class="form-group row border-bottom d-flex ">
                     <label for="location"
-                           class="plz-account-settings-body-label plz-account-settings-main-label col-sm-6 col-md-6 col-lg-4 col-xl-4">
+                           class="plz-account-settings-body-label col-6 col-sm-4 col-lg-4">
                         Месторасположение
                     </label>
                     <div
-                        class="plz-account-settings-body-field plz-account-settings-main-body-field pl-4 col-lg-8 col-xl-8 d-flex align-items-center">
+                        class="plz-account-settings-body-field order-1 order-sm-0 col-12 pl-4 col-6 col-lg-8  d-flex align-items-center">
                         <i class="fas fa-map-marker-alt"></i>
                         <multiselect id="location"
-                                     class="w-75 ml-1 border-0 form-control p-0 position-relative"
+                                     class="w-100 w-sm-75 ml-1 border-0 form-control p-0 position-relative"
                                      v-model="model.location"
                                      :options="geoLocations"
                                      :showLabels="false"
@@ -177,7 +174,7 @@
                     </div>
                 </div>
 
-                <!--            location для мелких-->
+                <!--            location для мелких
                 <div class="form-group row mb-0 border-bottom d-sm-block d-md-block d-lg-none d-xl-none">
                     <label class="col-12 col-form-label text-secondary">Контакты</label>
                 </div>
@@ -197,6 +194,7 @@
                                class="form-control-plaintext d-inline-block w-50" id="city" ref="city"/>
                     </div>
                 </div>
+                -->
 
             </div>
         </form>
