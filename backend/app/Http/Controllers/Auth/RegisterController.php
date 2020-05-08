@@ -63,6 +63,7 @@ class RegisterController extends Controller
     public function register(Request $request)
     {
         $validator = $this->validator($request->all());
+
         if ($validator->fails()) {
             return response()->json(['errors' => $validator->errors()], 422);
         }
@@ -90,8 +91,8 @@ class RegisterController extends Controller
     {
         return Validator::make($data, [
             'email' => 'required|string|email|max:255|unique:users',
-            'firstName' => 'required|string|min:1|max:25|regex:/^[A-Za-z-]+$/',
-            'lastName' => 'required|string|min:1|max:25|regex:/^[A-Za-z-]+$/',
+            'firstName' => 'required|string|min:2|max:50|regex:/^[a-zA-Z\p{Cyrillic}\-]+$/u',
+            'lastName' => 'required|string|min:2|max:50|regex:/^[a-zA-Z\p{Cyrillic}\-]+$/u',
             'birthday' => 'date_format:Y-m-d|nullable|before:today',
         ]);
     }
