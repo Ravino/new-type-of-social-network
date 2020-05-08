@@ -387,7 +387,7 @@ class PliziAPIClass {
                 throw new PliziAPIError(`userProfileImage`, error.response);
             });
 
-        if (response.status === 200) {
+        if (response.status === 201) {
             return response.data;
         }
 
