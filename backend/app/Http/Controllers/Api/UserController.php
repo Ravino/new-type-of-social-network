@@ -5,11 +5,11 @@ namespace App\Http\Controllers\Api;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\User\AddToFriend;
 use App\Http\Requests\User\MarkNotificationsAsRead;
-use App\Http\Requests\User\RemoveFromFriends;
 use App\Http\Resources\Notification\NotificationCollection;
 use App\Http\Resources\User\UserCollection;
 use App\Http\Resources\User\UserSearchCollection;
 use App\Models\User;
+use DB;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
@@ -109,11 +109,16 @@ class UserController extends Controller
     }
 
     /**
+     * @param Request $request
      * @return UserCollection
      */
-    public function getMyFriendsList() {
+    public function getMyFriendsList(Request $request) {
         $friend_ids = Auth::user()->getFriends()->pluck('id');
-        $friends = User::with( 'privacySettings')->whereIn('id', $friend_ids)->get();
+        $friends = User::select(DB::raw("*, COUNT(*) OVER() as total"))
+            ->whereIn('id', $friend_ids)
+            ->limit($request->query('limit') ?? 50)
+            ->offset($request->query('offset') ?? 0)
+            ->get();
         return new UserCollection($friends);
     }
 
