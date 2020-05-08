@@ -25,6 +25,7 @@ class DatabaseSeeder extends Seeder
             $this->doSeed(CitiesGeoSeeder::class);
             $this->doSeed(FriendshipTableSeeder::class);
             $this->doSeed(BaseRBACSeeder::class);
+            $this->doSeed(CommunityThemeSeeder::class);
         }
         Model::reguard();
     }
