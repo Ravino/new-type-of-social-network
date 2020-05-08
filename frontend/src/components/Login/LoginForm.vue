@@ -1,5 +1,5 @@
 <template>
-    <div id="loginForm" class="bg-white-br20 plz-login-form h-100 pt-3">
+    <div id="loginForm" class="bg-white-br20 plz-login-form  pt-3">
         <div class="card-body">
             <form id="loginFormForm" novalidate="novalidate">
                 <div class="form-group"
