@@ -124,7 +124,7 @@ class PliziAuthClass {
         const jData = {
             data : this.user.toJSON(),
             channel : this.channel
-        }
+        };
 
         const sData = JSON.stringify(jData);
 
