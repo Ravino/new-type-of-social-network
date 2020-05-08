@@ -27,7 +27,7 @@
                         <ul v-if="allMyFriends  &&  allMyFriends.length>0" class="d-block w-100 p-0">
                             <transition-group name="slide-fade" :duration="700">
                                 <FriendListItem v-for="(friendItem, frIndex) in friendsListFilter"
-                                                v-bind:key="frIndex"
+                                                v-bind:key="friendItem.id"
                                                 v-bind:friend="friendItem">
                                 </FriendListItem>
                             </transition-group>
