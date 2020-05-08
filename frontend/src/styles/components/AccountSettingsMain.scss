@@ -19,7 +19,7 @@ $titleColor: #363636;
         padding: 8px 0;
     }
 
-    .plz-account-settings-header {
+    &-header {
         padding-bottom: 27px;
 
         h6 {
@@ -28,7 +28,7 @@ $titleColor: #363636;
         }
     }
 
-    .plz-account-settings-body {
+    &-body {
 
         &-label {
             margin-bottom: 0;
@@ -86,9 +86,9 @@ $titleColor: #363636;
                 right: 10px;
                 transform: translateY(-50%);
                 pointer-events: none;
-                padding-right: 5px;
                 font-size: 10px;
                 color: $placeholderColor;
+                background-color: #ffffff;
             }
 
             .fa-lock,
@@ -123,12 +123,15 @@ $titleColor: #363636;
                 margin: 0;
                 padding-top: .5rem;
                 font-size: $placeholderSize;
-                color: $placeholderColor
+                color: $placeholderColor;
+                white-space: nowrap;
+                width: 100%;
+                overflow: hidden;
             }
             &__input {
                 &::placeholder {
                     font-size: $placeholderSize;
-                    color: $placeholderColor
+                    color: $placeholderColor;
                 }
             }
             &__tags {

@@ -1,15 +1,15 @@
 <template>
-    <div class="plz-top-watcher-item position-relative d-inline-block mr-2">
+    <div class="plz-top-watcher-item position-relative d-inline-block mr-0 mr-sm-2">
 
         <div class="btn btn-link my-auto text-body btn-sm cursor-pointer" title="Уведомления">
             <span data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" id="dropdownMenuLikes" @click="onShowNotifications">
                 <IconBell />
-                <span v-if="$root.$auth.nm.size>0" class="counter-info">
-                    {{$root.$auth.nm.size}}
+                <span v-if="notificationsNumber > 0" class="counter-info">
+                    {{notificationsNumber}}
                 </span>
             </span>
 
-            <div v-if="notificationsNumber>0"
+            <div v-if="notificationsNumber > 0"
                 class="notifications-likes-dropdown dropdown-menu dropdown-menu-right pt-3 pb-0 dropdown-white w-auto"
                  aria-labelledby="dropdownMenuLikes">
                 <ul class="list-unstyled mb-0">
@@ -44,7 +44,7 @@ methods : {
     onShowNotifications(){
         window.console.info(`onShowNotifications`);
 
-        if (this.$root.$auth.nm.size <= 0)
+        if (this.notificationsNumber <= 0)
             return;
 
         window.console.dir(this.$root.$auth.nm.idsList, 'getIdsList'); // эти ID-шники помечаем как прочитанные
@@ -57,7 +57,7 @@ methods : {
 
 computed: {
     notificationsNumber(){
-        this.$root.$auth.nm.size;
+       return this.$root.$auth.nm.size;
     },
 
     notificationsList(){

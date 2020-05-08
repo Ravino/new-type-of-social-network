@@ -35,11 +35,11 @@ class PliziFriendAPI extends PliziBaseAPI {
      * @returns {object[]|null}
      * @throws PliziAPIError
      */
-    async Favorites(){
+    async favorites(){
         let response = await this.axios.get('api/user/friendship/group/featured', this.authHeaders)
             .catch((error) => {
-                this.checkIsTokenExpires(error, '$friend.chosens');
-                throw new PliziAPIError('$friend.chosens', error.response);
+                this.checkIsTokenExpires(error, '$friend.favorites');
+                throw new PliziAPIError('$friend.favorites', error.response);
             });
 
         if (response.status === 200) {
@@ -239,12 +239,7 @@ class PliziFriendAPI extends PliziBaseAPI {
 
 
     async removeFromFavorites(userID) {
-        const sendData = {
-            userId: userID,
-            group: 'featured'
-        };
-
-        let response = await this.axios.delete('api/user/friendship/group', sendData, this.authHeaders)
+        let response = await this.axios.delete('api/user/friendship/group/featured/'+userID, this.authHeaders)
             .catch((error) => {
                 this.checkIsTokenExpires(error, '$friends.removeFromFavorites');
                 throw new PliziAPIError('$friends.removeFromFavorites', error.response);

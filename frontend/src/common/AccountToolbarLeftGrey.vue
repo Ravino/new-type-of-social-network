@@ -1,5 +1,5 @@
 <template>
-    <div id="toolbarLeftGrey" class="pt-2 mb-5">
+    <div id="toolbarLeftGrey" class="pt-2 mb-5 d-none d-md-block">
 
         <router-link :to="{name: 'NewsPage'}"
                      :class="{ 'active': 'NewsPage'===this.$root.$router.currentRoute.name }"

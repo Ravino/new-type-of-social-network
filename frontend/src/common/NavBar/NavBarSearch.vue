@@ -1,5 +1,5 @@
 <template>
-    <div class="form-inline mt-1 mt-md-1 position-relative overflow-hidden rounded-pill"
+    <div class="form-inline mt-1 mt-md-1 position-relative overflow-hidden rounded-pill w-100"
          :class="{'isFocused' : isFocused}">
         <input :value="lastSearch" id="topSearch" ref="topSearch"
                @keydown.stop="topSearchKeyDownCheck($event)"
