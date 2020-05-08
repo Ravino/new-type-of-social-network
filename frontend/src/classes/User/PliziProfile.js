@@ -216,17 +216,19 @@ class PliziUser {
      */
     toJSON() {
         /** @TGA чтобы momentJS не подключать **/
-        let month = (this._birthday.getMonth() + 1) + ``;
-        month = (month.length === 1) ? '0' + month : month;
-
-        let day = this._birthday.getDay() + ``;
-        day = (day.length === 1) ? '0' + day : day;
+          // TODO: @YZ пересмотреть данное решение.
+        // let month = (this._birthday.getMonth() + 1) + ``;
+        // month = (month.length === 1) ? '0' + month : month;
+        //
+        // let day = this._birthday.getDay() + ``;
+        // day = (day.length === 1) ? '0' + day : day;
 
         return {
             firstName: this.firstName,
             lastName: this.lastName,
             sex: this.sex,
-            birthday: `${this._birthday.getFullYear()}-${month}-${day}`, // this._birthday - вернёт Date, а нам нужно в формате `YYYY-MM-DD`
+            // birthday: `${this._birthday.getFullYear()}-${month}-${day}`, // this._birthday - вернёт Date, а нам нужно в формате `YYYY-MM-DD`
+            birthday: this._birthday,
             location: (this._location) ? this.location.toJSON() : null,
             relationshipId: this.relationshipId,
             userPic: this._userPic, // реальный
