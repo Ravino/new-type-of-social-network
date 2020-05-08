@@ -101,6 +101,8 @@ Route::group(['middleware' => ['auth.jwt', 'track.activity']], function () {
      * Geo data Resource
      */
     Route::get('city/search', 'Api\GeoController@search');
+
+    Route::post('/neo/user', 'Api\NeoController@create');
 });
 
 Route::get('login/{provider}', 'Auth\LoginController@redirectToProvider');

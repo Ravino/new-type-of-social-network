@@ -19,17 +19,45 @@ class FriendshipTableSeeder extends Seeder
         $user2 = User::where('email', 'admin@mail.com')->first();
         $users = User::all();
         for ($i = 0; $i <= count($users) / 2; $i++) {
-            if($user1->id !== $users[$i]->id) {
-                User::find($user1->id)->beFriend($users[$i]);
-                User::find($users[$i]->id)->beFriend($user1);
-                User::find($users[$i]->id)->acceptFriendRequest($user1);
+            if(($user1->id && isset($users[$i])) && $user1->id !== $users[$i]->id) {
+                DB::table('friendships')->insert([
+                    'sender_id' => $user1->id,
+                    'sender_type' => 'App\Models\User',
+                    'recipient_id' => $users[$i]->id,
+                    'recipient_type' => 'App\Models\User',
+                    'status' => 1
+                ]);
             }
         }
         for ($i = count($users) / 2; $i <= count($users); $i++) {
-            if($user2->id !== $users[$i]->id) {
-                User::find($user2->id)->beFriend($users[$i]);
-                User::find($users[$i]->id)->beFriend($user2);
-                User::find($users[$i]->id)->acceptFriendRequest($user2);
+            if(($user2->id && isset($users[$i])) && $user2->id !== $users[$i]->id) {
+                DB::table('friendships')->insert([
+                    'sender_id' => $user2->id,
+                    'sender_type' => 'App\Models\User',
+                    'recipient_id' => $users[$i]->id,
+                    'recipient_type' => 'App\Models\User',
+                    'status' => 1
+                ]);
+            }
+        }
+        $users = $users->pluck('id')->toArray();
+        while (count($users) !== 0) {
+            $user1 = $users[array_rand($users)];
+            $users = array_filter($users, function($e) use ($user1) {
+                return ($e !== $user1);
+            });;
+            $user2 = $users[array_rand($users)];
+            $users = array_filter($users, function($e) use ($user2) {
+                return ($e !== $user2);
+            });
+            if($user1 && $user2) {
+                DB::table('friendships')->insert([
+                    'sender_id' => $user1,
+                    'sender_type' => 'App\Models\User',
+                    'recipient_id' => $user2,
+                    'recipient_type' => 'App\Models\User',
+                    'status' => 1
+                ]);
             }
         }
     }

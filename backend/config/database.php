@@ -103,6 +103,14 @@ return [
             ],
         ],
 
+        'neo4j' => [
+            'driver' => 'neo4j',
+            'host'   => env('NEO4_DB_HOST', 'localhost'),
+            'port'   => env('NEO4_DB_PORT', '7474'),
+            'database'   => env('NEO4_DB_DATABASE', 'plizi'),
+            'username' => env('NEO4_DB_USERNAME', 'neo4j'),
+            'password' => env('NEO4_DB_PASSWORD', 'plizi')
+        ]
     ],
 
     /*

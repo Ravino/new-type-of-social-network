@@ -25,6 +25,7 @@ class User extends Authenticatable implements JWTSubject
     const PERMISSION_ROLE_GUEST = 'guest';
 
     public $incrementing = false;
+    protected $keyType = 'string';
 
     /**
      * The attributes that are mass assignable.
