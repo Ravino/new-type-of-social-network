@@ -97,6 +97,7 @@ import IconLocation from '../icons/IconLocation';
 
 import PliziUser from '../classes/PliziUser.js';
 import PliziAuthUser from '../classes/PliziAuthUser.js';
+import PliziAvatar from '../classes/User/PliziAvatar';
 import FriendshipInvitationMixin from '../mixins/FriendshipInvitationMixin';
 
 export default {
@@ -116,10 +117,7 @@ computed: {
         return (this.isOwner) ? this.userData.stats.totalFriendsCount : this.userData.friendsNumber;
     },
     avatar() {
-        const profile = this.userData.profile;
-        return profile && profile.avatar
-            ? profile.avatar.medium.path
-            : this.userData.userPic;
+        return this.userData.avatar?.image?.medium.path || this.userData.userPic;
     }
 },
 methods: {
@@ -143,8 +141,9 @@ methods: {
 
         const formData = this.getFormData();
 
-        if (! formData)
+        if (!formData) {
             return;
+        }
 
         let apiResponse = null;
 
@@ -157,7 +156,9 @@ methods: {
 
         if (apiResponse !== null) {
             this.$root.$auth.user.userPic = apiResponse.data.path;
-            this.$refs.userAvatar.src = this.$root.$auth.user.userPic;
+            this.$root.$auth.user.avatar = new PliziAvatar(apiResponse.data);
+            this.$refs.userAvatar.src = this.$root.$auth.user.avatar?.image?.medium.path || this.$root.$auth.user.userPic;
+            this.$root.$auth.storeUserData();
             this.$root.$emit('updateUserAvatar', {userPic: this.$root.$auth.user.userPic});
         }
     },

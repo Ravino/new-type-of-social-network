@@ -1,7 +1,7 @@
 <template>
     <div  id="pageWrapper">
         <div v-if="!isAuthorized()" id="guestPageWrapper" class="d-flex flex-column justify-content-center">
-            <div class="--container-fluid container px-md-0 my-0">
+            <div class="--container-fluid container px-md-0 my-0 pt-4">
 
                 <GuestNavBar></GuestNavBar>
                 <main :id="containerID" role="main"
@@ -19,7 +19,7 @@
 
             <div class="--container-fluid container my-0 container-wide mx-auto">
                 <main :id="containerID" role="main"
-                      class="container-fluid pb-sm-5 pb-md-5">
+                      class="container-fluid pb-sm-5 px-0">
                     <transition>
                         <router-view></router-view>
                     </transition>
@@ -142,7 +142,7 @@ methods: {
             await this.persistentCollectionsRestore();
         }
     },
-///
+
     isAuthorized(){
         return this.$root.$isAuth;
     },
@@ -170,6 +170,8 @@ methods: {
 
 created(){
     window.console.log('App created');
+
+    //Vue.set(vm.someObject, 'b', 2)
 
     this.$root.$api = PliziAPI;
     this.$root.$api.init(this.$root);

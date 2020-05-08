@@ -26,8 +26,8 @@
                     </Post>
                 </template>
 
-                <div v-else>
-                    <div class="alert alert-info w-100 p-5 text-center">
+                <div v-else  class="row plz-post-item mb-4 bg-white-br20 p-4">
+                    <div class="alert alert-info w-100 p-5 text-center mb-0">
                         Вы не создали ни одной записи.
                     </div>
                 </div>

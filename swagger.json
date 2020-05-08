@@ -2327,6 +2327,26 @@
         ],
         "description": "Список моих друзей",
         "operationId": "myFriendsList",
+          "parameters": [
+              {
+                  "name": "limit",
+                  "in": "path",
+                  "description": "Кол-во записей",
+                  "required": false,
+                  "schema": {
+                      "type": "integer"
+                  }
+              },
+              {
+                  "name": "offset",
+                  "in": "path",
+                  "description": "Смещение",
+                  "required": false,
+                  "schema": {
+                      "type": "integer"
+                  }
+              }
+          ],
         "responses": {
           "200": {
             "description": "Успешно добавлен",

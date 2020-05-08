@@ -1,12 +1,13 @@
 <template>
-    <div class="col-sm-2 col-md-1 col-lg-2 px-0 profile-menu">
-        <router-link to="/profile" tag="a" class="profile-menu-link">
+    <div class="col-3 col-md-1 col-lg-3 col-xl-2 px-0 profile-menu">
+        <router-link to="/profile" tag="a" class="profile-menu-link d-none d-lg-block ">
             <span v-if="isShowName" ref="navbarUserName">{{userData.firstName}}</span>
         </router-link>
 
         <div class="profile-menu-item p-0 m-0 d-flex align-items-center position-relative">
 
-            <router-link to="/profile" tag="a" class="profile-menu-link profile-menu-pic d-block ">
+            <router-link to="/profile" tag="a"
+                         class="profile-menu-link profile-menu-pic d-block ">
                 <img v-if="isShowAvatar" ref="navbarAvatar" :src="userData.userPic" :alt="userData.firstName"/>
             </router-link>
 

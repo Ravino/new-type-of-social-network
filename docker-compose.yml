@@ -1,14 +1,27 @@
 version: "3.1"
 services:
   mysql:
-    image: mysql:8.0
+    image: mysql:5.7
     container_name: "plizi_mysql"
+    command: mysqld --character-set-server=utf8 --collation-server=utf8_general_ci
     volumes:
       - ./mysql_data_plizi:/var/lib/mysql
     env_file:
       - ./backend/docker/mysql/.env
     ports:
       - "3306:3306"
+
+  mysql8:
+    image: mysql:latest
+    container_name: "plizi_mysql8"
+    command:
+      - "--default-authentication-plugin=mysql_native_password"
+    volumes:
+      - ./mysql8_data_plizi:/var/lib/mysql
+    env_file:
+      - ./backend/docker/mysql/.env
+    ports:
+      - "3307:3306"
 
   mongodb:
     image: mongo:latest

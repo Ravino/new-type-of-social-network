@@ -1,5 +1,5 @@
 import PliziLocation from './PliziLocation.js';
-import PliziAttachmentThumbsObj from '../Attachment/PliziAttachmentThumbsObj.js';
+import PliziAvatar from './PliziAvatar.js';
 
 class PliziUser {
     /**
@@ -59,7 +59,7 @@ class PliziUser {
 
     /**
      *
-     * @type {PliziAttachmentThumbsObj}
+     * @type {PliziAvatar}
      * @private
      */
     _avatar = null;
@@ -84,9 +84,7 @@ class PliziUser {
             this._userPic = (prof.userPic + ``).trim();
         }
 
-        if (prof.avatar) {
-            this._avatar = new PliziAttachmentThumbsObj(prof.avatar.image);
-        }
+        this._avatar = prof.avatar ? new PliziAvatar(prof.avatar) : null;
     }
 
     /**
@@ -184,18 +182,25 @@ class PliziUser {
     }
 
     /**
-     * @returns {PliziAttachmentThumbsObj|null}
+     * устанавливает юзерский аватар
+     * @param {string} picPath
+     */
+    set userPic(picPath) {
+        this._userPic = picPath;
+    }
+
+    /**
+     * @returns {PliziAvatar|null}
      */
     get avatar() {
         return this._avatar;
     }
 
     /**
-     * устанавливает юзерский аватар
-     * @param {string} picPath
+     * @param {PliziAvatar} avatar
      */
-    set userPic(picPath) {
-        this._userPic = picPath;
+    set avatar(avatar) {
+        this._avatar = avatar;
     }
 
     /**
@@ -211,20 +216,23 @@ class PliziUser {
      */
     toJSON() {
         /** @TGA чтобы momentJS не подключать **/
-        let month = (this._birthday.getMonth() + 1) + ``;
-        month = (month.length === 1) ? '0' + month : month;
-
-        let day = this._birthday.getDay() + ``;
-        day = (day.length === 1) ? '0' + day : day;
+          // TODO: @YZ пересмотреть данное решение.
+        // let month = (this._birthday.getMonth() + 1) + ``;
+        // month = (month.length === 1) ? '0' + month : month;
+        //
+        // let day = this._birthday.getDay() + ``;
+        // day = (day.length === 1) ? '0' + day : day;
 
         return {
             firstName: this.firstName,
             lastName: this.lastName,
             sex: this.sex,
-            birthday: `${this._birthday.getFullYear()}-${month}-${day}`, // this._birthday - вернёт Date, а нам нужно в формате `YYYY-MM-DD`
+            // birthday: `${this._birthday.getFullYear()}-${month}-${day}`, // this._birthday - вернёт Date, а нам нужно в формате `YYYY-MM-DD`
+            birthday: this._birthday,
             location: (this._location) ? this.location.toJSON() : null,
             relationshipId: this.relationshipId,
-            userPic: this._userPic // реальный
+            userPic: this._userPic, // реальный
+            avatar: this._avatar ? this._avatar.toJSON() : null,
         };
     }
 

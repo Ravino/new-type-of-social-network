@@ -10,7 +10,7 @@
 
         <div class="plz-short-friend-title flex align-items-center mr-auto ">
             <router-link :to="`/user-`+friend.id" class="plz-short-friend-name">
-                {{friend.firstName}}
+                {{friend.fullName}}
             </router-link>
 
             <div class="plz-short-friend-status">

@@ -16,6 +16,9 @@ body {
 h1, h2, h3, h4, h5, h6 {
     font-weight: 600;
 }
+[type="button"] {
+    background-color: transparent;
+}
 
 .btn{
     max-width: 100%;
@@ -31,9 +34,6 @@ h1, h2, h3, h4, h5, h6 {
         color: white;
         transition: .4s
     }
-}
-[type="button"] {
-    background-color: transparent;
 }
 
 a:active,
@@ -57,11 +57,6 @@ a::-moz-focus-inner{
     svg {
         min-height: 36px;
     }
-}
-
-#authHeader {
-    background-color: #f7f8fc;
-    box-shadow: 0 0 4px 0 rgba(0, 0, 0, .05);
 }
 
 .btn.disabled, .btn:disabled {

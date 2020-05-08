@@ -21,8 +21,12 @@
                                            v-bind:key="comIndex">
                             </CommunityItem>
                         </ul>
-                        <div v-else class="alert alert-info w-100 py-4 mx-2 text-center">
-                            Вы ещё не присодинились ни к одному сообществу.
+                        <div v-else class="container px-2 ">
+                            <div  class=" bg-white-br20 p-3">
+                                <div  class="alert alert-info w-100 py-4 text-center m-0">
+                                    Вы ещё не присодинились ни к одному сообществу.
+                                </div>
+                            </div>
                         </div>
                     </div>
 
@@ -31,7 +35,7 @@
                     </div>
                 </div>
 
-                <div class="col-sm-4 col-md-4 col-lg-4 col-xl-3 pl-0">
+                <div class="col-3 mb-4  d-flex align-items-center pl-0">
                     <RecommendedCommunities></RecommendedCommunities>
                 </div>
             </div>

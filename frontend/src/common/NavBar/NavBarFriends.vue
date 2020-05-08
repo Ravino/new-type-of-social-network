@@ -22,7 +22,8 @@
             </ul>
 
             <div class="invitations-dropdown-footer border-top">
-                <router-link to="/invitations" tag="a" class="invitations-link d-block text-center pt-1 pb-3">Посмотреть все</router-link>
+                <router-link to="/invitations" tag="a"
+                             class="invitations-link d-block text-center pt-1 pb-3">Посмотреть все</router-link>
             </div>
         </div>
 

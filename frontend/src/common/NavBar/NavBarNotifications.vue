@@ -1,5 +1,5 @@
 <template>
-    <div class="plz-top-watcher-item position-relative d-inline-block mr-2">
+    <div class="plz-top-watcher-item position-relative d-inline-block mr-0 mr-sm-2">
 
         <div class="btn btn-link my-auto text-body btn-sm cursor-pointer" title="Уведомления">
             <span data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" id="dropdownMenuLikes" @click="onShowNotifications">
