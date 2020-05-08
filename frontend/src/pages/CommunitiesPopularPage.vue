@@ -1,10 +1,10 @@
 <template>
     <div class="row">
-        <div class="col-sm-1 col-md-1 col-lg-1 col-xl-1 pr-md-0">
+        <div class="col-sm-1 col-md-1 col-lg-1 col-xl-1 pl-0">
             <AccountToolbarLeft></AccountToolbarLeft>
         </div>
 
-        <div class="col-sm-10 col-md-10 col-lg-10 col-xl-10">
+        <div class="col-sm-12 col-md-10 col-lg-10 col-xl-10 px-0">
             <div class="row">
                 <CommunitiesListHeader></CommunitiesListHeader>
                 <CommunityCreateBlock></CommunityCreateBlock>
@@ -21,10 +21,15 @@
                                                v-bind:key="comIndex">
                                 </CommunityItem>
                         </ul>
-                        <div v-else class="alert alert-info w-100 py-4 mx-2 text-center">
-                            Нет ни одного популярного сообщества.
+                        <div v-else class="container px-2 ">
+                            <div  class=" bg-white-br20 p-3">
+                                <div  class="alert alert-info w-100 py-4 text-center m-0">
+                                    Нет ни одного популярного сообщества.
+                                </div>
+                            </div>
                         </div>
                     </div>
+
                     <div  v-else class="row">
                         <Spinner></Spinner>
                     </div>
