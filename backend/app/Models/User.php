@@ -72,33 +72,33 @@ class User extends Authenticatable implements JWTSubject
      */
     public function profile()
     {
-        $relation = $this->hasOne(Profile::class)
-            ->select('profiles.*', \DB::raw("
-                       SUM(IF(
-                       (profiles.user_id = mutual.recipient_id OR
-                        profiles.user_id = mutual.sender_id) AND
-                       (profiles.user_id <> friendships.sender_id) AND
-                       (profiles.user_id <> friendships.recipient_id), 1, 0)) As mutual
-            "))
-            ->leftJoin(\DB::raw("
-                (friendships LEFT JOIN friendships mutual
-                 ON friendships.sender_id = mutual.recipient_id OR friendships.recipient_id = mutual.sender_id OR
-                    friendships.sender_id = mutual.sender_id OR friendships.recipient_id = mutual.recipient_id)
-            "), function($join) {
-                $join->on('friendships.sender_id', '=', 'friendships.sender_id')->where('friendships.sender_id', '=', auth()->id())->orWhere('friendships.recipient_id', '=', auth()->id());
-            })->groupBy([
-                'profiles.user_id',
-                'profiles.first_name',
-                'profiles.last_name',
-                'profiles.sex',
-                'profiles.birthday',
-                'profiles.relationship_id',
-                'profiles.user_pic',
-                'profiles.geo_city_id',
-                'profiles.created_at',
-                'profiles.updated_at',
-                'profiles.relationship_user_id',
-            ]);
+        $relation = $this->hasOne(Profile::class);
+//            ->select('profiles.*', \DB::raw("
+//                       SUM(IF(
+//                       (profiles.user_id = mutual.recipient_id OR
+//                        profiles.user_id = mutual.sender_id) AND
+//                       (profiles.user_id <> friendships.sender_id) AND
+//                       (profiles.user_id <> friendships.recipient_id), 1, 0)) As mutual
+//            "))
+//            ->leftJoin(\DB::raw("
+//                (friendships LEFT JOIN friendships mutual
+//                 ON friendships.sender_id = mutual.recipient_id OR friendships.recipient_id = mutual.sender_id OR
+//                    friendships.sender_id = mutual.sender_id OR friendships.recipient_id = mutual.recipient_id)
+//            "), function($join) {
+//                $join->on('friendships.sender_id', '=', 'friendships.sender_id')->where('friendships.sender_id', '=', auth()->id())->orWhere('friendships.recipient_id', '=', auth()->id());
+//            })->groupBy([
+//                'profiles.user_id',
+//                'profiles.first_name',
+//                'profiles.last_name',
+//                'profiles.sex',
+//                'profiles.birthday',
+//                'profiles.relationship_id',
+//                'profiles.user_pic',
+//                'profiles.geo_city_id',
+//                'profiles.created_at',
+//                'profiles.updated_at',
+//                'profiles.relationship_user_id',
+//            ]);
         return $relation;
     }
 
