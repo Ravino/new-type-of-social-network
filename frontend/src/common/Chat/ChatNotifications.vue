@@ -1,0 +1,36 @@
+<template>
+    <div id="plzNotification">
+        <div
+            class="plz-notification d-flex justify-content-between align-items-start p-4"
+            v-for="notification in notifications"
+        >
+            <div class="plz-notification-pic mr-3">
+                <img :src="notification.userPic" alt="image">
+            </div>
+            <div class="plz-notification-body mr-3">
+                <h6 class="plz-notification-name mb-2">{{ notification.firstName }} {{ notification.lastName }}</h6>
+                <div class="plz-notification-text" v-html="notification.body"></div>
+            </div>
+            <button class="btn btn-close pt-0 pr-0" @click="removeNotification(notification)">
+                <i class="icon icon-close-notification"></i>
+            </button>
+        </div>
+    </div>
+</template>
+
+<script>
+    export default {
+        name: 'ChatNotifications',
+        props: {
+            notifications: {
+                type: Array,
+                default: () => [],
+            }
+        },
+        methods: {
+            removeNotification(notification) {
+                this.$emit('removeNotification', notification);
+            }
+        }
+    }
+</script>
