@@ -348,6 +348,7 @@ methods: {
                     if (foundFile.originalName === newAtt.originalName) {
                         foundFile.attachment = newAtt;
                         foundFile.isBlob = false;
+                        foundFile.fileBlob = null;
                     }
 
                     return foundFile;
