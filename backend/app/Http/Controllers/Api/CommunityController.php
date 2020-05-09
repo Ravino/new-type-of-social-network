@@ -11,6 +11,7 @@ use App\Http\Resources\Community\CommunityUserCollection;
 use App\Models\Community;
 use App\Models\CommunityAttachment;
 use App\Models\CommunityHeader;
+use App\Models\CommunityTheme;
 use App\Services\CommunityService;
 use App\Services\S3UploadService;
 use Exception;
@@ -204,5 +205,12 @@ class CommunityController extends Controller
         $uploaded['community_id'] = $community_id;
         $attachment = CommunityHeader::updateOrCreate(['community_id' => $community_id], $uploaded);
         return new AttachmentsCollection([$attachment]);
+    }
+
+    public function themeList()
+    {
+        return response()->json([
+            'data' => CommunityTheme::getTree(),
+        ]);
     }
 }
