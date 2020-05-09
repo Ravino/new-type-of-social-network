@@ -64,6 +64,7 @@ $minHeight: 200px;
             height: 38px;
             position: relative;
             overflow: hidden;
+            border-radius: 50%;
             img {
                 position: absolute;
                 top: 50%;
@@ -101,7 +102,7 @@ $minHeight: 200px;
     .icon-close-notification {
         display: inline-block;
         vertical-align: middle;
-        background: url(/img/icon-modal-close.3528df32.png) 50% 50% no-repeat;
+        background: url(/images/icons/close.svg) 50% 50% no-repeat;
         width: 20px;
         height: 20px;
         cursor: pointer;
