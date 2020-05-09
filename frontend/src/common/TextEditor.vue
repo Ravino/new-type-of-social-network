@@ -27,7 +27,10 @@
 
                 <div class="plz-editor-btns d-flex justify-content-between"  >
 
-                    <label class="attach-file w-50 d-flex align-items-center btn btn-link my-0 ml-0 mr-2 px-1 btn-add-file position-relative">
+                    <label
+                        :class="{'attach-file--disallow': isDisallowUpload}"
+                        class="attach-file w-50 d-flex align-items-center btn btn-link my-0 ml-0 mr-2 px-1 btn-add-file position-relative"
+                    >
                         <IconAddFile />
                         <input type="file" @change="onSelectFile($event)" ref="editorFiler" multiple />
                     </label>
@@ -104,6 +107,10 @@ props: {
     },
   inputEditorText: String,
   inputEditorAttachment: Array,
+  maxFilesCount: {
+      type: Number,
+      default: 5,
+  }
 },
 
 data() {
@@ -125,6 +132,9 @@ computed: {
 
     blockClass(){
         return this.clazz || this.defaultClasses;
+    },
+    isDisallowUpload() {
+        return this.attachFiles.length >= this.maxFilesCount;
     }
 },
 
@@ -245,6 +255,20 @@ methods: {
 
     async addUploadAttachment(picsArr) {
         this.$refs.editor.focus();
+
+        const filseCount = picsArr.length + this.attachFiles.length;
+
+        if (filseCount > this.maxFilesCount) {
+            this.$alert(`
+                <h4 class="text-white">Ошибка</h4>
+                <div class="alert alert-danger">
+                Превышен лимит загрузки файлов
+                <br />
+                Допустимый максимальный лимит файлов: <b class="text-success">${this.maxFilesCount}</b>
+                </div>`, `bg-danger`, 30
+            );
+            return;
+        }
 
         let apiResponse = null;
 
