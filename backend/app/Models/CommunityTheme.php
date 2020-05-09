@@ -53,4 +53,18 @@ class CommunityTheme extends Model
             ->load('children')
             ->values();
     }
+
+    /**
+     * @return \Illuminate\Support\Collection
+     */
+    public static function getParents()
+    {
+        $all = self::all();
+        return $all
+            ->filter(static function ($theme) {
+                return $theme->parent_id === 0;
+            })
+            ->pluck('name', 'id')
+            ->prepend('Root', 0);
+    }
 }
