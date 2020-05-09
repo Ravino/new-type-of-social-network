@@ -20,7 +20,7 @@ import CommunitiesListPage from '../pages/CommunitiesListPage.vue';
 import CommunitiesManagePage from '../pages/CommunitiesManagePage.vue';
 import CommunitiesPopularPage from '../pages/CommunitiesPopularPage.vue';
 import CommunityPage from '../pages/CommunityPage.vue';
-import Error404 from '../pages/Error404.vue';
+import Error404Page from '../pages/Error404Page.vue';
 
 const routes = [
     {path: '/', redirect: '/login', isGuest: true},
@@ -44,7 +44,7 @@ const routes = [
     {path: '/manage-communities', component: CommunitiesManagePage, name: 'CommunitiesManagePage', meta: {title: 'Plizi: Управление сообществами'}, props: true },
     {path: '/popular-communities', component: CommunitiesPopularPage, name: 'CommunitiesPopularPage', meta: {title: 'Plizi: Популярные сообщества'}, props: true },
     {path: '/community-:id', component: CommunityPage, name: 'CommunityPage', meta: {title: 'Plizi: Популярные сообщества'}, props: true },
-    {path: '*', component: Error404, name: 'Error404', meta: {title: 'Page not found', isNotFound: true} },
+    {path: '*', component: Error404Page, name: 'Error404Page', meta: {title: 'Page not found', isNotFound: true} },
 ];
 
 const router = new VueRouter({

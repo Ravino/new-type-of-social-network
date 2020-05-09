@@ -166,7 +166,7 @@ methods: {
     },
 
     addNewMessageNotification({ message }) {
-        if (message.isMine) {
+        if (message.isMine || this.currentDialog.id === message.chatId) {
             return;
         }
 
