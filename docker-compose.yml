@@ -72,6 +72,7 @@ services:
     build: ./backend/docker/
     container_name: "plizi_api"
     working_dir: /app
+    user: "www-data"
     volumes:
       - ./backend:/app
       - ./frontend/docker/certbot/conf/:/etc/nginx/ssl/
