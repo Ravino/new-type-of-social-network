@@ -426,7 +426,16 @@ $radioWidth: 18px;
 
     &:hover {
         svg {
-            fill: $iconHoverColor;
+            fill: #bfbfbf;
+        }
+    }
+
+    &--disallow {
+        pointer-events: none;
+        &:hover {
+            svg {
+                fill: $iconHoverColor;
+            }
         }
     }
 }
