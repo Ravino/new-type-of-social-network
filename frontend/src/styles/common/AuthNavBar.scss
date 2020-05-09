@@ -3,6 +3,13 @@ $plzNavBarAvatarSize: 40px;
 $plzNavBarProfileColor: #A6A7A9;
 
 #authHeader {
+    background-color: #f7f8fc;
+    box-shadow: 0 0 4px 0 rgba(0, 0, 0, .05);
+    transition: .3s;
+
+    &.page-has-offset-top {
+        box-shadow: 0 0 8px 0 rgba(0, 0, 0, 0.4);
+    }
     .profile-menu {
         .dropdown-item {
             font-size: 12px;

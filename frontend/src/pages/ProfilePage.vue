@@ -26,8 +26,8 @@
                     </Post>
                 </template>
 
-                <div v-else>
-                    <div class="alert alert-info w-100 p-5 text-center">
+                <div v-else  class="row plz-post-item mb-4 bg-white-br20 p-4">
+                    <div class="alert alert-info w-100 p-5 text-center mb-0">
                         Вы не создали ни одной записи.
                     </div>
                 </div>
@@ -63,8 +63,7 @@ import PostEditModal from '../common/Post/PostEditModal.vue';
 import PostVideoModal from '../common/Post/PostVideoModal.vue';
 
 import PliziPost from '../classes/PliziPost.js';
-import PliziFriend from '../classes/PliziFriend.js';
-import PliziCollection from '../classes/PliziCollection.js';
+import ShortFriendsMixin from "../mixins/ShortFriendsMixin";
 
 export default {
 name: 'ProfilePage',
@@ -74,6 +73,7 @@ components: {
     PostEditModal,
     PostVideoModal,
 },
+mixins: [ShortFriendsMixin],
 data() {
     return {
         userPosts: null,
@@ -217,20 +217,6 @@ methods : {
             } );
 
             post.deleted = false;
-        }
-    },
-
-    async loadMyFriends() {
-        let apiResponse;
-
-        try {
-            apiResponse = await this.$root.$api.$friend.friendsList();
-        } catch (e) {
-            console.warn(e.detailMessage);
-        }
-
-        if (apiResponse) {
-            this.allMyFriends = new PliziCollection(apiResponse, PliziFriend);
         }
     },
 },

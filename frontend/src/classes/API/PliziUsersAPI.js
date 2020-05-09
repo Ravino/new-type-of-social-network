@@ -32,6 +32,7 @@ class PliziUsersAPI extends PliziBaseAPI{
      * @returns {Object|null} - объект с данными юзера
      */
     async infoUser(id) {
+        window.console.warn(`$users.infoUser - DEPRECATED`);
         let response = await this.__axios.get('' + id, this.__getAuthHeaders())
             .catch((error) => {
                 this.__checkIsTokenExperis(error, `infoUser`);

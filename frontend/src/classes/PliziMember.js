@@ -26,10 +26,12 @@ class PliziMember extends PliziUzer{
     }
 
     toJSON(){
-        let res = super.toJSON();
-        res.role = this.role;
-
-        return res;
+        return {
+            id: this.id,
+            isOnline: this.isOnline,
+            role : this.role,
+            profile: (this.profile) ? this.profile.toJSON() : null,
+        };
     }
 }
 
