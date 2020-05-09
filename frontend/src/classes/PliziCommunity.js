@@ -153,6 +153,14 @@ class PliziCommunity {
     }
 
     toJSON(){
+        let mmbrs = null;
+
+        if (this.members) {
+            mmbrs = {
+                list: this.members.map( mItem => mItem.toJSON() )
+            };
+        }
+
         return {
             id: this.id,
             name: this.name,
@@ -163,9 +171,7 @@ class PliziCommunity {
             location: this.location,
             role: this.role,
             totalMembers: this.totalMembers,
-            members: {
-                list: this.members.map( mItem => mItem.toJSON() )
-            }
+            members: mmbrs
         };
     }
 }

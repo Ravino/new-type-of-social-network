@@ -22,7 +22,7 @@
                     <p v-else-if="community.notice" class="plizi-community-item-notice p-0 my-0 text-secondary">{{ community.notice }}</p>
                     <p v-else class="plizi-community-item-location p-0 my-0 text-secondary">{{ community.location }}</p>
 
-                    <p class="plizi-community-item-members-number p-0 my-0">{{ community.members }} участников </p><!--TODO @Veremey check this?-->
+                    <p class="plizi-community-item-members-number p-0 my-0">{{ community.totalMembers }} участников </p><!--TODO @Veremey check this?-->
                 </div>
 
                 <div class="plizi-community-item-body-bottom d-flex align-items-center justify-content-between">
