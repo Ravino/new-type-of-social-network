@@ -78,6 +78,8 @@ import EmojiPicker from './TextEditor/EmojiPicker.vue';
 import AttachmentItem from './TextEditor/AttachmentItem.vue';
 
 import PliziAttachment from '../classes/PliziAttachment.js';
+import { checkExtension } from '../utils/FileUtils.js';
+import { docsExtensions, imagesExtensions } from '../enums/FileExtensionEnums.js';
 
 /**  TODO: Вставка файлов **/
 /** @link https://www.npmjs.com/package/vue-filepond **/
@@ -245,6 +247,29 @@ methods: {
 
     async addUploadAttachment(picsArr) {
         this.$refs.editor.focus();
+
+        const allowExtensions = [...imagesExtensions, ...docsExtensions];
+
+        for (const file of picsArr) {
+            if (!checkExtension(file, allowExtensions)) {
+                this.$alert(`
+                    <h4 class="text-white">Ошибка</h4>
+                    <div class="alert alert-danger">
+                        Недопустимое расширение у файла <b>${file.name}</b>
+                        <br />
+                        Допустимые расширения файлов: <b class="text-success">${allowExtensions.join( ', ' )}</b>
+                    </div>`,
+                    `bg-danger`,
+                    30
+                );
+
+                picsArr = picsArr.filter(foundFile => foundFile.name !== file.name);
+            }
+        }
+
+        if (picsArr.length === 0) {
+            return;
+        }
 
         let apiResponse = null;
 
