@@ -3,9 +3,12 @@
 // PackageManager::load('admin-default')
 //    ->css('extend', public_path('packages/sleepingowl/default/css/extend.css'));
 
+use App\Models\CommunityTheme;
+use App\Models\User;
 use SleepingOwl\Admin\Contracts\Display\Extension\FilterInterface;
+use SleepingOwl\Admin\Model\ModelConfiguration;
 
-AdminSection::registerModel(\App\Models\User::class, function (\SleepingOwl\Admin\Model\ModelConfiguration $model) {
+AdminSection::registerModel(User::class, function (ModelConfiguration $model) {
     $model->setTitle('Users');
     // Display
     $model->onDisplay(function () {
@@ -47,14 +50,14 @@ AdminSection::registerModel(\App\Models\User::class, function (\SleepingOwl\Admi
         return $form;
     });
 })
-    ->addMenuPage(\App\Models\User::class, 0)
+    ->addMenuPage(User::class, 0)
     ->setIcon('fa fa-user')
     ->setAccessLogic(function() {
         $user = auth()->user();
-        return $user instanceof \App\Models\User && $user->isAdmin();
+        return $user instanceof User && $user->isAdmin();
     });
 
-AdminSection::registerModel(\App\Models\Profile\Relationship::class, function (\SleepingOwl\Admin\Model\ModelConfiguration $model) {
+AdminSection::registerModel(\App\Models\Profile\Relationship::class, function (ModelConfiguration $model) {
     $model->setTitle('Relationships');
     // Display
     $model->onDisplay(function () {
@@ -77,10 +80,10 @@ AdminSection::registerModel(\App\Models\Profile\Relationship::class, function (\
     ->setIcon('fa fa-user')
     ->setAccessLogic(function() {
         $user = auth()->user();
-        return $user instanceof \App\Models\User && $user->isAdmin();
+        return $user instanceof User && $user->isAdmin();
     });
 
-AdminSection::registerModel(\App\Models\Geo\Country::class, function (\SleepingOwl\Admin\Model\ModelConfiguration $model) {
+AdminSection::registerModel(\App\Models\Geo\Country::class, function (ModelConfiguration $model) {
     $model->setTitle('Countries');
     // Display
     $model->onDisplay(function () {
@@ -107,10 +110,10 @@ AdminSection::registerModel(\App\Models\Geo\Country::class, function (\SleepingO
     ->setIcon('fa fa-user')
     ->setAccessLogic(function() {
         $user = auth()->user();
-        return $user instanceof \App\Models\User && $user->isAdmin();
+        return $user instanceof User && $user->isAdmin();
     });
 
-AdminSection::registerModel(\App\Models\Geo\Region::class, function (\SleepingOwl\Admin\Model\ModelConfiguration $model) {
+AdminSection::registerModel(\App\Models\Geo\Region::class, function (ModelConfiguration $model) {
     $model->setTitle('Regions');
     // Display
     $model->onDisplay(function () {
@@ -138,10 +141,10 @@ AdminSection::registerModel(\App\Models\Geo\Region::class, function (\SleepingOw
     ->setIcon('fa fa-user')
     ->setAccessLogic(function() {
         $user = auth()->user();
-        return $user instanceof \App\Models\User && $user->isAdmin();
+        return $user instanceof User && $user->isAdmin();
     });
 
-AdminSection::registerModel(\App\Models\Geo\City::class, function (\SleepingOwl\Admin\Model\ModelConfiguration $model) {
+AdminSection::registerModel(\App\Models\Geo\City::class, function (ModelConfiguration $model) {
     $model->setTitle('Cities');
     // Display
     $model->onDisplay(function () {
@@ -170,13 +173,13 @@ AdminSection::registerModel(\App\Models\Geo\City::class, function (\SleepingOwl\
     ->setIcon('fa fa-user')
     ->setAccessLogic(function() {
         $user = auth()->user();
-        return $user instanceof \App\Models\User && $user->isAdmin();
+        return $user instanceof User && $user->isAdmin();
     });
 
 /**
  * RBAC
  */
-AdminSection::registerModel(\App\Models\Rbac\Permission::class, function (\SleepingOwl\Admin\Model\ModelConfiguration $model) {
+AdminSection::registerModel(\App\Models\Rbac\Permission::class, function (ModelConfiguration $model) {
     $model->setTitle('RBAC Permitions');
     // Display
     $model->onDisplay(function () {
@@ -203,10 +206,10 @@ AdminSection::registerModel(\App\Models\Rbac\Permission::class, function (\Sleep
     ->setIcon('fa fa-user')
     ->setAccessLogic(function() {
         $user = auth()->user();
-        return $user instanceof \App\Models\User && $user->isAdmin();
+        return $user instanceof User && $user->isAdmin();
     });
 
-AdminSection::registerModel(\App\Models\Rbac\Role::class, function (\SleepingOwl\Admin\Model\ModelConfiguration $model) {
+AdminSection::registerModel(\App\Models\Rbac\Role::class, function (ModelConfiguration $model) {
     $model->setTitle('RBAC Role');
     // Display
     $model->onDisplay(function () {
@@ -235,5 +238,29 @@ AdminSection::registerModel(\App\Models\Rbac\Role::class, function (\SleepingOwl
     ->setIcon('fa fa-user')
     ->setAccessLogic(function() {
         $user = auth()->user();
-        return $user instanceof \App\Models\User && $user->isAdmin();
+        return $user instanceof User && $user->isAdmin();
+    });
+
+AdminSection::registerModel(CommunityTheme::class, static function (ModelConfiguration $model) {
+    $model->setTitle('Community Themes');
+    // Display
+    $model->onDisplay(static function () {
+        return AdminDisplay::tree()
+            ->setValue('name')
+            ->setReorderable(false)
+            ->setOrderField('name');
+    });
+    // Create And Edit
+    $model->onCreateAndEdit(static function() {
+        return AdminForm::card()->addBody(
+            AdminFormElement::select('parent_id', 'Parent', CommunityTheme::getParents()->toArray()),
+            AdminFormElement::text('name', 'Title')
+        );
+    });
+})
+    ->addMenuPage(CommunityTheme::class, 0)
+    ->setIcon('fa fa-tree')
+    ->setAccessLogic(static function() {
+        $user = auth()->user();
+        return $user instanceof User && $user->isAdmin();
     });
