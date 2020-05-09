@@ -169,9 +169,14 @@ methods: {
 
 
 created(){
-    window.console.log('App created');
+    const style = ['padding: 1rem;',
+        'background: rgb(0, 123, 255);',
+        'font-size: 1.4/3 Verdana;',
+        'font-weight: bold;',
+        'border-radius: 5px 0px 5px 0px;',
+        'color: white;'];
 
-    //Vue.set(vm.someObject, 'b', 2)
+    console.info ( '%c%s', style.join(''), 'Plizi App created');
 
     this.$root.$api = PliziAPI;
     this.$root.$api.init(this.$root);
