@@ -89,8 +89,11 @@ $editorSize: 48px;
     img {
         height: auto;
         min-width: 55px;
+        max-width: 60px;
     }
     .media {
+        position: relative;
+
         &:hover {
             .btn-close {
                 opacity: 1;
@@ -100,6 +103,24 @@ $editorSize: 48px;
         .fa,
         .fas {
             color: #97a0ad;
+        }
+
+        &__spinner {
+            position: absolute;
+            height: 100%;
+            width: 100%;
+            padding: 0!important;
+            top: 55%;
+            left: 50%;
+            transform: translate(-50%,-50%);
+
+            .text-center {
+                position: absolute;
+                padding: 0!important;
+                top: 55%;
+                left: 50%;
+                transform: translate(-50%,-50%);
+            }
         }
     }
 
