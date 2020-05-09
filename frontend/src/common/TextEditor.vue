@@ -291,46 +291,46 @@ methods: {
             }
         }
 
-        if (picsArr.length === 0) {
-            return;
-        }
+     if (picsArr.length === 0) {
+      return;
+     }
 
-        let apiResponse = null;
+     for (const file of picsArr) {
+      let apiResponse = null;
 
-        try {
-            /** TODO: @TGA надо потом перенести отсюда загрузку аттачей **/
-            switch (this.workMode) {
-                case 'chat':
-                    apiResponse = await this.$root.$api.$chat.attachment(picsArr);
-                    break;
+      /** TODO: @TGA надо потом перенести отсюда загрузку аттачей **/
 
-                case 'post':
-                    apiResponse = await this.$root.$api.$post.storePostAttachments(picsArr);
-                    break;
+      switch (this.workMode) {
+       case 'chat':
+        apiResponse = this.$root.$api.$chat.attachment([file]);
+        break;
 
-                default:
-                    console.warn('TextEditor::addUploadAttachment - No matches in switch.');
-            }
-        } catch (e) {
-            window.console.warn(e.detailMessage);
-            throw e;
-        }
+       case 'post':
+        apiResponse = this.$root.$api.$post.storePostAttachments([file]);
+        break;
 
-        if (apiResponse) {
-            apiResponse.map((attItem) => {
-                let newAtt = new PliziAttachment(attItem);
-                this.attachFiles.push(newAtt);
-                this.$emit('newAttach', {attach: newAtt});
+       default:
+        console.warn('TextEditor::addUploadAttachment - No matches in switch.');
+      }
 
-                // const $this = this;
-                // setTimeout(function () {
-                //     $this .checkUpdatedChatContainerHeight();
-                // }, 1200); // TODO @TGA как узнать время, когда картинка загружена @veremey
+      apiResponse.then(response => {
+       response.map( attItem => {
+        let newAtt = new PliziAttachment(attItem);
 
-            });
-        } else {
-            window.console.info(apiResponse);
-        }
+        this.attachFiles.push(newAtt);
+        this.$emit('newAttach', { attach: newAtt } );
+
+        // const $this = this;
+        // setTimeout(function () {
+        //     $this .checkUpdatedChatContainerHeight();
+        // }, 1200); // TODO @TGA как узнать время, когда картинка загружена @veremey
+
+       });
+      }).catch(e => {
+       window.console.warn(e.detailMessage);
+       throw e;
+      });
+     }
     },
 },
 mounted() {
