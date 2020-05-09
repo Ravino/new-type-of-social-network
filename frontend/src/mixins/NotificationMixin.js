@@ -1,4 +1,4 @@
-import { uuidv4 } from '../utils/StringUtils';
+import { uuidv4 } from '../utils/StringUtils.js';
 
 export default {
 data() {
@@ -24,7 +24,6 @@ methods: {
         }
 
         if (this.timeoutNotification > 0) {
-            console.log(123123);
             setTimeout(() => {
                this.removeNotification({ uuid });
                 console.log('Delete');

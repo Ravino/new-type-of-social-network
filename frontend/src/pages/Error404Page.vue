@@ -1,7 +1,7 @@
 <template>
     <div class="row">
         <div class="col-sm-1 col-md-1 col-lg-1 col-xl-1 pl-0">
-            <AccountToolbarLeft/>
+            <AccountToolbarLeft></AccountToolbarLeft>
         </div>
 
         <div class="col-sm-10 col-md-9 col-lg-8 col-xl-8 pl-0">
@@ -23,13 +23,13 @@
 </template>
 
 <script>
-import AccountToolbarLeft from "../common/AccountToolbarLeft";
-import FavoriteFriends from "../common/FavoriteFriends";
-import ShortFriends from "../common/ShortFriends";
-import ShortFriendsMixin from '../mixins/ShortFriendsMixin';
+import AccountToolbarLeft from "../common/AccountToolbarLeft.vue";
+import FavoriteFriends from "../common/FavoriteFriends.vue";
+import ShortFriends from "../common/ShortFriends.vue";
+import ShortFriendsMixin from '../mixins/ShortFriendsMixin.js';
 
 export default {
-name: "Error404",
+name: "Error404Page",
 components: {
  ShortFriends,
  FavoriteFriends,

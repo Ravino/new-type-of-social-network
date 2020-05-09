@@ -65,7 +65,7 @@
 import FriendsListMixin from '../mixins/FriendsListMixin.js';
 import FriendListItem from '../components/FriendListItem.vue';
 import PliziFriend from '../classes/PliziFriend.js';
-import PliziCollection from "../classes/PliziCollection";
+import PliziCollection from "../classes/PliziCollection.js";
 
 export default {
 name : 'FriendsListPage',
