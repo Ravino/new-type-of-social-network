@@ -106,12 +106,12 @@ class PliziAvatar {
     toJSON() {
         return {
             id: this.id,
-            originalName: this._originalName,
-            url: this._url,
-            path: this._path,
-            mimeType: this._mimeType,
-            size: this._size,
-            image: this._image.toJSON(),
+            originalName: this.originalName,
+            url: this.url,
+            path: this.path,
+            mimeType: this.mimeType,
+            size: this.size,
+            image: this.image ? this.image.toJSON() : null
         }
     }
 }

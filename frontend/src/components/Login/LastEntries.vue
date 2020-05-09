@@ -54,7 +54,7 @@ methods: {
             {src: '/images/last-entries/ava-3.png', fullName: 'Полина Дорожина', isUser: true, email: `admin@mail.com`},
 
             {src: '/images/last-entries/ava-21.png', fullName: 'Иннокентий Савельев', isUser: true, email: `brandyn96@paucek.net`},
-            {src: '/images/last-entries/ava-2.png', fullName: 'Alex Targa', isUser: true, email: `targa@ua.fm`, password: `5eb415816486f`},
+            {src: '/images/last-entries/ava-4.png', fullName: 'Alex Targa', isUser: true, email: `targa@ua.fm`, password: `5eb415816486f`},
             {src: '/images/last-entries/ava-7.png', fullName: 'Alex Dnipro', isUser: true, email: `targettius@gmail.com`, password: `5eb595c40a762`},
 
             {src: '/images/last-entries/ava-22.png', fullName: 'Филипп Голубев', isUser: true, email: `homenick.amber@carroll.com`},
