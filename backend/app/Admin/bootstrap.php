@@ -245,10 +245,10 @@ AdminSection::registerModel(CommunityTheme::class, static function (ModelConfigu
     $model->setTitle('Community Themes');
     // Display
     $model->onDisplay(static function () {
-        $display = AdminDisplay::tree();
-        $display->setValue('name');
-        $display->setReorderable(false);
-        return $display;
+        return AdminDisplay::tree()
+            ->setValue('name')
+            ->setReorderable(false)
+            ->setOrderField('name');
     });
     // Create And Edit
     $model->onCreateAndEdit(static function() {
