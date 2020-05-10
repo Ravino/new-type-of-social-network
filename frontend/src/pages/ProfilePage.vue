@@ -36,7 +36,7 @@
 
         <div class="col-sm-3 col-md-3 col-lg-3 col-xl-3 pr-0">
             <FavoriteFriends :isNarrow="false"></FavoriteFriends>
-            <ShortFriends v-bind:friends="allMyFriends"></ShortFriends>
+            <ShortFriends v-bind:friends="allFriends"></ShortFriends>
         </div>
 
         <PostEditModal v-if="postEditModal.isVisible"
@@ -63,7 +63,7 @@ import PostEditModal from '../common/Post/PostEditModal.vue';
 import PostVideoModal from '../common/Post/PostVideoModal.vue';
 
 import PliziPost from '../classes/PliziPost.js';
-import ShortFriendsMixin from "../mixins/ShortFriendsMixin";
+import ShortFriendsMixin from '../mixins/ShortFriendsMixin.js';
 
 export default {
 name: 'ProfilePage',
@@ -77,7 +77,7 @@ mixins: [ShortFriendsMixin],
 data() {
     return {
         userPosts: null,
-        allMyFriends: null,
+        //allMyFriends: null,
         filterMode: `all`,
 
         userPhotos: [
@@ -101,21 +101,25 @@ data() {
     }
 },
 
-computed: {
-    userData() {
+computed : {
+    userData(){
         return this.$root.$auth.user;
+    },
+
+    allFriends(){
+        return this.$root.$auth.frm.asArray();
     },
 
     /**
      * @returns {PliziPost[]}
      */
     filteredPosts(){
-      switch (this.filterMode) {
+        switch ( this.filterMode ){
             case 'my':
-                return this.userPosts.filter(post => post.checkIsMinePost(this.$root.$auth.user.id));
+                return this.userPosts.filter( post => post.checkIsMinePost( this.$root.$auth.user.id ) );
 
             case 'archive':
-                return this.userPosts.filter(post => post.isArchivePost);
+                return this.userPosts.filter( post => post.isArchivePost );
         }
 
         return this.userPosts;
@@ -229,9 +233,9 @@ async mounted() {
 
     this.$root.$on('wallPostsSelect', this.wallPostsSelectHandler);
     this.$root.$on('hidePostEditModal', this.hidePostEditModal);
-    this.getPosts();
+    await this.getPosts();
 
-    await this.loadMyFriends();
+    //await this.loadMyFriends();
 }
 }
 </script>
