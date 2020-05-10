@@ -1,0 +1,26 @@
+$communityPrimaryImage: 70px;
+
+.plz-community-header {
+    background-image: url("/images/community-header-bg.jpg");
+
+    .community-primary-image{
+        width: $communityPrimaryImage;
+        height: $communityPrimaryImage;
+        max-width: $communityPrimaryImage;
+        max-height: $communityPrimaryImage;
+        text-align: center;
+
+        border-radius: $communityPrimaryImage/2;
+        overflow: hidden;
+        margin-left: 20px;
+
+        img {
+            width: 100%;
+            height: 100%;
+        }
+    }
+}
+
+.community-info-block{
+
+}
