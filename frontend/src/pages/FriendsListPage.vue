@@ -27,9 +27,9 @@
                     </div>
 
                     <div v-if="isFriendsLoaded" class="row plizi-friends-list ">
-                        <ul v-if="allMyFriends  &&  friendsListFilter.length>0" class="d-block w-100 p-0">
+                        <ul v-if="hasFriends" class="d-block w-100 p-0">
                             <transition-group name="slide-fade" :duration="700">
-                                <FriendListItem v-for="(friendItem, frIndex) in friendsListFilter"
+                                <FriendListItem v-for="friendItem in friendsListFilter"
                                                 v-bind:key="friendItem.id"
                                                 v-bind:friend="friendItem">
                                 </FriendListItem>
@@ -78,7 +78,7 @@ mixins : [FriendsListMixin],
 data(){
     return {
         allMyFriends: null,
-        isFriendsLoaded: false,
+        isFriendsLoaded: true,
         wMode : `all`,
         removedFriendID : -1,
         searchTerm: '',
@@ -86,15 +86,22 @@ data(){
 },
 
 computed : {
+    hasFriends(){
+        return (this.$root.$auth.frm.size > 0);
+    },
+
     friendsListFilter(){
         let ret = [];
 
         if (this.wMode === 'all'){
-            ret = this.allMyFriends.asArray();
+            //ret = this.allMyFriends.asArray();
+            ret = this.$root.$auth.frm.asArray();
         }
 
         if (this.wMode === 'online'){
-            this.allMyFriends.asArray().map(frItem => {
+            //this.allMyFriends.asArray()
+            this.$root.$auth.frm.asArray()
+            .map(frItem => {
                 if (frItem.isOnline === true){
                     ret.push(frItem);
                 }
@@ -102,8 +109,10 @@ computed : {
         }
 
         if (this.wMode === 'favorites'){
-            this.allMyFriends.asArray().map(frItem => {
-                if ( this.$root.$auth.fm.checkIsFavorite( frItem.id )){
+            //this.allMyFriends.asArray()
+            this.$root.$auth.frm.asArray()
+                .map(frItem => {
+                    if ( this.$root.$auth.fm.checkIsFavorite( frItem.id )){
                     ret.push(frItem);
                 }
             });
@@ -152,9 +161,9 @@ created(){
     }
 },
 
-    async mounted() {
-    await this.loadMyFriends();
-}
+//async mounted() {
+//    await this.loadMyFriends();
+//}
 
 }
 </script>

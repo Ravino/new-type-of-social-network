@@ -145,12 +145,23 @@ methods: {
             return;
         }
 
+        const { size } = formData.get('image');
+
+        if (size > 2000000) {
+            this.showErrorOnLargeFile();
+            return;
+        }
+
         let apiResponse = null;
 
         try {
             apiResponse = await this.$root.$api.userProfileImage(formData);
-        }
-        catch (e) {
+        } catch (e) {
+            if (e.status === 422) {
+                this.showErrorOnLargeFile();
+                return;
+            }
+
             window.console.warn(e.detailMessage);
         }
 
@@ -183,8 +194,22 @@ methods: {
         const formData = new FormData();
         formData.append('image', this.$refs.userAvatarFile.files[0]);
         formData.append('tag', 'primary');
+        this.$refs.userAvatarFile.value = '';
 
         return formData;
+    },
+
+    showErrorOnLargeFile() {
+        this.$alert(`<h4 class="text-white">Ошибка</h4>
+                <div class="alert alert-danger">
+                    Превышен максимальный размер файла.
+                    <br />
+                    Максимальный размер файла:
+                    <b class="text-success">2 MB</b>
+                </div>`,
+            `bg-danger`,
+            30
+        );
     }
 }
 

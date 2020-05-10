@@ -76,11 +76,20 @@ $userPicSize: 32px;
         width: $userPicSize;
         border-radius: $userPicSize;
         box-shadow: 0 0 2px 1px #fff, 0 0 3px 0 #333;
+
+        &.is-group-chat1{
+            margin-left: -10px;
+            display: block;
+            float: left;
+        }
+
         img {
             display: inline-block;
             width: $userPicSize;
             height: $userPicSize;
         }
+
+
     }
 
     &-isonline {

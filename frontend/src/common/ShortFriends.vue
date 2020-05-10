@@ -24,7 +24,7 @@
 import ShortFriendItem from './ShortFriendItem.vue';
 
 import PliziCollection from '../classes/PliziCollection.js';
-import { shuffle } from "../utils/ArrayUtils";
+import { shuffle } from '../utils/ArrayUtils.js';
 
 export default {
 name: 'ShortFriends',
@@ -32,6 +32,7 @@ components : { ShortFriendItem},
 props: {
     friends: Array | PliziCollection
 },
+
 data () {
     return {
         isDataReady : false,
@@ -48,7 +49,18 @@ computed: {
 
         return shuffle(friends).slice(0, 10);
     }
-}
+},
+
+created(){
+    this.$root.$on([ this.$root.$auth.frm.restoreEventName,
+        this.$root.$auth.frm.loadEventName,
+        this.$root.$auth.frm.updateEventName,
+        this.$root.$auth.fm.restoreEventName,
+        this.$root.$auth.fm.loadEventName,
+        this.$root.$auth.fm.updateEventName ], ()=>{
+        this.$forceUpdate();
+    });
+},
 
 }
 </script>

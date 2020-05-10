@@ -27,7 +27,10 @@
 
                 <div class="plz-editor-btns d-flex justify-content-between"  >
 
-                    <label class="attach-file w-50 d-flex align-items-center btn btn-link my-0 ml-0 mr-2 px-1 btn-add-file position-relative">
+                    <label
+                        :class="{'attach-file--disallow': isDisallowUpload}"
+                        class="attach-file w-50 d-flex align-items-center btn btn-link my-0 ml-0 mr-2 px-1 btn-add-file position-relative"
+                    >
                         <IconAddFile />
                         <input type="file" @change="onSelectFile($event)" ref="editorFiler" multiple />
                     </label>
@@ -78,6 +81,9 @@ import EmojiPicker from './TextEditor/EmojiPicker.vue';
 import AttachmentItem from './TextEditor/AttachmentItem.vue';
 
 import PliziAttachment from '../classes/PliziAttachment.js';
+import { checkExtension } from '../utils/FileUtils.js';
+import { docsExtensions, imagesExtensions } from '../enums/FileExtensionEnums.js';
+import PliziAttachmentItem from "../classes/PliziAttachmentItem.js";
 
 /**  TODO: Вставка файлов **/
 /** @link https://www.npmjs.com/package/vue-filepond **/
@@ -104,11 +110,26 @@ props: {
     },
   inputEditorText: String,
   inputEditorAttachment: Array,
+  maxFilesCount: {
+      type: Number,
+      default: 5,
+  }
 },
 
 data() {
+    let attachFiles = [];
+
+    if (this.inputEditorAttachment) {
+        attachFiles = attachFiles.map(file => {
+            const attachment = new PliziAttachmentItem(false, file.isImage, file.originalName);
+            attachment.attachment = file;
+
+            return attachment;
+        });
+    }
+
     return {
-        attachFiles: this.inputEditorAttachment ? this.inputEditorAttachment : [],
+        attachFiles,
         defaultClasses: `bg-white w-100 border-top position-relative mt-auto`,
         editorContainerHeight: 32,
     }
@@ -125,6 +146,9 @@ computed: {
 
     blockClass(){
         return this.clazz || this.defaultClasses;
+    },
+    isDisallowUpload() {
+        return this.attachFiles.length >= this.maxFilesCount;
     }
 },
 
@@ -143,7 +167,7 @@ methods: {
     getAttachmentsIDs() {
         if (this.attachFiles && this.attachFiles.length > 0)
             return this.attachFiles.map((aItem) => {
-                return aItem.id;
+                return aItem.attachment.id;
             });
 
         return [];
@@ -151,7 +175,7 @@ methods: {
 
     onRemoveAttachment(evData) {
         this.attachFiles = this.attachFiles.filter((aItem) => {
-            return aItem.id !== evData.attach.id;
+            return aItem.attachment.id !== evData.attach.id;
         });
 
         const $this = this;
@@ -246,7 +270,56 @@ methods: {
     async addUploadAttachment(picsArr) {
         this.$refs.editor.focus();
 
+        const filseCount = picsArr.length + this.attachFiles.length;
+
+        if (filseCount > this.maxFilesCount) {
+            this.$alert(`
+                <h4 class="text-white">Ошибка</h4>
+                <div class="alert alert-danger">
+                Превышен лимит загрузки файлов
+                <br />
+                Допустимый максимальный лимит файлов: <b class="text-success">${this.maxFilesCount}</b>
+                </div>`, `bg-danger`, 30
+            );
+            return;
+        }
+
+        const allowExtensions = [...imagesExtensions, ...docsExtensions];
+
+        for (const file of picsArr) {
+            if (!checkExtension(file, allowExtensions)) {
+                this.$alert(`
+                    <h4 class="text-white">Ошибка</h4>
+                    <div class="alert alert-danger">
+                        Недопустимое расширение у файла <b>${file.name}</b>
+                        <br />
+                        Допустимые расширения файлов: <b class="text-success">${allowExtensions.join( ', ' )}</b>
+                    </div>`,
+                    `bg-danger`,
+                    30
+                );
+
+                picsArr = picsArr.filter(foundFile => foundFile.name !== file.name);
+            }
+        }
+
+        if (picsArr.length === 0) {
+            return;
+        }
+
         let apiResponse = null;
+
+        for (const file of picsArr) {
+            const reader = new FileReader();
+            reader.onload = () => {
+                const attachment = new PliziAttachmentItem(true, checkExtension(file, imagesExtensions), file.name);
+                attachment.isBlob = true;
+                attachment.fileBlob = reader.result;
+                this.attachFiles.push(attachment);
+            };
+
+            reader.readAsDataURL(file);
+        }
 
         try {
             /** TODO: @TGA надо потом перенести отсюда загрузку аттачей **/
@@ -269,8 +342,18 @@ methods: {
 
         if (apiResponse) {
             apiResponse.map((attItem) => {
-                let newAtt = new PliziAttachment(attItem);
-                this.attachFiles.push(newAtt);
+                const newAtt = new PliziAttachment(attItem);
+
+                this.attachFiles = this.attachFiles.map(foundFile => {
+                    if (foundFile.originalName === newAtt.originalName) {
+                        foundFile.attachment = newAtt;
+                        foundFile.isBlob = false;
+                        foundFile.fileBlob = null;
+                    }
+
+                    return foundFile;
+                });
+
                 this.$emit('newAttach', {attach: newAtt});
 
                 // const $this = this;

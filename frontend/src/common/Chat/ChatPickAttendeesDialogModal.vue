@@ -10,8 +10,23 @@
                     <h5 class="resend-message-title text-left mb-4">Выберите собеседников</h5>
 
                     <form id="chatPickAttendeesForm" novalidate="novalidate" class="mb-4">
+
+                        <div class="form-group"
+                             :class="{ 'has-error': $v.model.chatName.$error, 'has-success': !$v.model.chatName.$invalid }">
+                            <label for="chatName" class="d-none">Название чата</label>
+                            <input v-model="model.chatName" ref="chatName"
+                                   :class="{ 'is-invalid': $v.model.chatName.$error, 'is-valid': !$v.model.chatName.$invalid }"
+                                   @blur="$v.model.chatName.$touch()"
+                                   type="text" class="form-control" id="chatName"
+                                   placeholder="" />
+
+                            <div v-show="$v.model.chatName.$error" class="invalid-feedback">
+                                <p v-if="!$v.model.chatName.required" class="text-danger">Укажите название чата</p>
+                            </div>
+                        </div>
+
                         <div class="form-group">
-                            <multiselect v-model="selectedRecipients"
+                            <multiselect v-model="model.selectedRecipients"
                                          :options="getFriendsCombo"
                                          label="fullName"
                                          track-by="fullName"
@@ -40,10 +55,15 @@
                                 </template>
 
                             </multiselect>
+
+                            <div v-show="hasNoAttendees" class="">
+                                <p class="text-danger">Выберите собеседников</p>
+                            </div>
                         </div>
                     </form>
 
-                    <button type="button" class="btn plz-btn btn-block plz-btn-primary mt-auto w-100" @click.prevent="addAttendeesAndClose()">
+                    <button type="button" class="btn plz-btn btn-block plz-btn-primary mt-auto w-100"
+                            @click.prevent="addAttendeesAndClose()">
                         Создать чат с этими собеседниками
                     </button>
                 </div>
@@ -55,8 +75,9 @@
 </template>
 
 <script>
+import { required } from 'vuelidate/lib/validators';
+
 import PliziDialog from '../../classes/PliziDialog.js';
-import PliziRecipient from '../../classes/PliziRecipient.js';
 import PliziRecipientsCollection from '../../classes/Collection/PliziRecipientsCollection.js';
 
 /**
@@ -72,14 +93,29 @@ props: {
 data() {
     return {
         recipients : (new PliziRecipientsCollection()),
-        /** @var PliziRecipient */
-        selectedRecipients: null,
+        model : {
+            chatName : '',
+            selectedRecipients: null
+        },
+        hasNoAttendees: false
     }
+},
+
+validations() {
+    return {
+        model: {
+            chatName: {
+                required
+            },
+        }
+    };
 },
 
 methods: {
     addAttendeesAndClose(){
-        window.console.log(`addAttendeesAndClose`);
+        if (!this.checkChatForm())
+            return;
+
         this.addToChatDialog();
     },
 
@@ -87,13 +123,31 @@ methods: {
         this.$emit('hidePickAttendeesDialogModal', {});
     },
 
+    checkChatForm(){
+        this.$v.$touch();
+
+        this.hasNoAttendees = false;
+
+        if (! this.model.selectedRecipients) {
+            this.hasNoAttendees = true;
+            return false;
+        }
+
+        if (this.model.selectedRecipients  &&  this.model.selectedRecipients.length===0) {
+            this.hasNoAttendees = true;
+            return false;
+        }
+
+        return (!this.$v.$invalid);
+    },
+
     async addToChatDialog(){
         let apiResponse = null;
 
-        const newAttendees = this.selectedRecipients.map( rItem => rItem.id );
+        const newAttendees = this.model.selectedRecipients.map( rItem => rItem.id );
 
         try {
-            apiResponse = await this.$root.$api.$chat.dialogOpen(newAttendees);
+            apiResponse = await this.$root.$api.$chat.dialogOpen(this.model.chatName, newAttendees);
         } catch (e){
             window.console.warn( e.detailMessage );
             throw e;

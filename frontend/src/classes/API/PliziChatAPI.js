@@ -45,11 +45,13 @@ class PliziChatAPI extends PliziBaseAPI{
 
     /**
      * создаёт новый пустой диалог с юзерами, если диалог с ними уже есть - просто возвращает ID существующего диалога
+     * @param {string} chatName - название чата
      * @param {string[]} users - список ID-шников юзеров-собеседников
      * @returns {object} - ID диалога
      */
-    async dialogOpen(users) {
+    async dialogOpen(chatName, users) {
         const sendData = {
+            name: chatName || ``,
             userIds: users
         };
 
