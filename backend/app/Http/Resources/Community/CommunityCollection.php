@@ -28,6 +28,9 @@ class CommunityCollection extends ResourceCollection
                     'location' => $community->location,
                     'totalMembers' => $community->members->count(),
                     'role' => $community->role ? $community->role->role : null,
+                    'type' => $community->type,
+                    'theme' => $community->theme_id ? $community->theme :null,
+                    'privacy' => $community->privacy,
                     'attachment' => $community->attachment
                         ? new AttachmentsCollection([$community->attachment])
                         : null,

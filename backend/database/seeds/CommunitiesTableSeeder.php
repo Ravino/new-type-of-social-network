@@ -1,6 +1,7 @@
 <?php
 
 use App\Models\Community;
+use App\Models\CommunityTheme;
 use Illuminate\Database\Seeder;
 
 use App\Models\Profile;
@@ -16,7 +17,6 @@ class CommunitiesTableSeeder extends Seeder
      */
     public function run()
     {
-
         $admin_user = User::where('email', 'admin@mail.com')->first();
         if ($admin_user) {
             $first_community = Community::create($this->generateCommunity());
@@ -46,6 +46,20 @@ class CommunitiesTableSeeder extends Seeder
             'website' => $faker->url,
             'location' => $faker->city . ', ' . $faker->country,
             'is_verified' => $faker->randomElement([false, true]),
+            'type' => $faker->randomElement([
+                Community::TYPE_BUSINESS,
+                Community::TYPE_THEMES,
+                Community::TYPE_BRAND,
+                Community::TYPE_INTEREST_GROUP,
+                Community::TYPE_PUBLIC_PAGE,
+                Community::TYPE_EVENT,
+            ]),
+            'theme_id' => CommunityTheme::getAllChildren()->pluck('id')->random(),
+            'privacy' => $faker->randomElement([
+                Community::PRIVACY_OPEN,
+                Community::PRIVACY_CLOSED,
+                Community::PRIVACY_PRIVATE,
+            ]),
         ];
     }
 }
