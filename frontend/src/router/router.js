@@ -60,6 +60,7 @@ function routerForcedLogout(next, to) {
     window.localStorage.removeItem('pliziChatChannel');
     window.localStorage.removeItem('pliziLastSearch');
     window.localStorage.removeItem('pliziFriends');
+    window.localStorage.removeItem('pliziFavorites');
     window.localStorage.removeItem('pliziDialogs');
     window.localStorage.removeItem('pliziInvitations');
     window.localStorage.removeItem('pliziNotifications');

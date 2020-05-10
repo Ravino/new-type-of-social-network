@@ -1,6 +1,7 @@
 import PliziAPI from './PliziAPI.js';
 import PliziAuthUser from './PliziAuthUser.js';
 
+import PliziFriendsCollection from './Collection/PliziFriendsCollection.js';
 import PliziFavoritesCollection from './Collection/PliziFavoritesCollection.js';
 import PliziDialogsCollection from './Collection/PliziDialogsCollection.js';
 import PliziInvitationsCollection from './Collection/PliziInvitationsCollection.js';
@@ -47,6 +48,13 @@ class PliziAuthClass {
     _api = null;
 
     /**
+     * ссылка на менеджер друзей
+     * @type {PliziFriendsCollection}
+     * @private
+     */
+    _frm = null;
+
+    /**
      * ссылка на менеджер Избранных
      * @type {PliziFavoritesCollection}
      * @private
@@ -89,6 +97,7 @@ class PliziAuthClass {
 
         this._user = new PliziAuthUser(null);
 
+        this._frm= new PliziFriendsCollection(apiObj);
         this._fm = new PliziFavoritesCollection(apiObj);
         this._dm = new PliziDialogsCollection(apiObj);
         this._im = new PliziInvitationsCollection(apiObj);
@@ -163,9 +172,18 @@ class PliziAuthClass {
         localStorage.removeItem( 'pliziJWToken' );
         localStorage.removeItem( 'pliziChatChannel' );
         localStorage.removeItem( this.fm.localStorageKey );
+        localStorage.removeItem( this.frm.localStorageKey );
         localStorage.removeItem( this.dm.localStorageKey );
         localStorage.removeItem( this.im.localStorageKey );
         localStorage.removeItem( this.nm.localStorageKey );
+    }
+
+    /**
+     * ссылка на менеджер друзей
+     * @returns {PliziFavoritesCollection}
+     */
+    get frm(){
+        return this._frm;
     }
 
     /**

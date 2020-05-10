@@ -103,7 +103,6 @@ computed: {
 
 methods: {
     pickChat() {
-        window.console.log((new Date().getMilliseconds())+ ` ChatListItem emit SwitchToChat`);
         this.$emit('PickChat', {chatId: this.dialog.id});
     },
 
