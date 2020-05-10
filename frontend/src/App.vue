@@ -162,8 +162,8 @@ methods: {
     async persistentCollectionsRestore(){
         this.$root.$auth.dm.restore();
         this.$root.$auth.fm.restore();
-        await this.$root.$auth.im.load();
-        await this.$root.$auth.nm.load();
+        this.$root.$auth.im.restore();
+        this.$root.$auth.nm.restore();
     }
 },
 

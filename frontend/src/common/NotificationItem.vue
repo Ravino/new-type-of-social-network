@@ -3,19 +3,38 @@
 
         <div class="plizi-notification-item d-flex">
 
-            <router-link :to="`/user-`+notification.senderID" tag="div" class="plizi-notification-item-pic mr-3">
+            <router-link v-if="notification.isHumanNotification"
+                         :to="{name: 'PersonalPage', params: {id: notification.senderId}}"
+                         tag="div" class="plizi-notification-item-pic mr-3">
                 <img class="plizi-notification-item-img rounded-circle overflow-hidden"
                      v-bind:src="notification.senderPic" v-bind:alt="notification.senderFullName" />
-                <div class="plizi-notification-item-pic-status status-like">
-                    <i class="fa fa-heart"></i>
-                </div>
+<!--                <div class="plizi-notification-item-pic-status status-like">-->
+<!--                    <i class="fa fa-heart"></i>-->
+<!--                </div>-->
+            </router-link>
+            <router-link v-else
+                         :to="{name: 'CommunityPage', params: {id: notification.communityId}}"
+                         tag="div" class="plizi-notification-item-pic mr-3">
+                <img class="plizi-notification-item-img rounded-circle overflow-hidden"
+                     v-bind:src="notification.communityPic" v-bind:alt="notification.communityName" />
+<!--                <div class="plizi-notification-item-pic-status status-like">-->
+<!--                    <i class="fa fa-heart"></i>-->
+<!--                </div>-->
             </router-link>
 
             <div class="plizi-notification-item-body m-0 pr-5">
                 <div class="plizi-notification-item-top d-flex align-items-start justify-content-between">
-                    <router-link :to="`/user-`+notification.id" tag="h6" class="plizi-notification-item-name my-0"
+                    <router-link v-if="notification.isHumanNotification"
+                                 :to="{name: 'PersonalPage', params: {id: notification.senderId}}"
+                                 tag="h6" class="plizi-notification-item-name my-0"
                                  :title="notification.senderFullName">
                         {{ notification.senderFullName }}
+                    </router-link>
+                    <router-link v-else
+                                 :to="{name: 'CommunityPage', params: {id: notification.communityId}}"
+                                 tag="h6" class="plizi-notification-item-name my-0"
+                                 :title="notification.communityName">
+                        {{ notification.communityName }}
                     </router-link>
                 </div>
 

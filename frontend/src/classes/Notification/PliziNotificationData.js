@@ -1,4 +1,5 @@
 import PliziNotificationSender from './PliziNotificationSender.js';
+import PliziNotificationCommunity from './PliziNotificationCommunity.js';
 
 class PliziNotificationData {
     /**
@@ -13,6 +14,12 @@ class PliziNotificationData {
      * @private
      */
     _sender = null;
+
+    /**
+     * @type {PliziNotificationCommunity}
+     * @private
+     */
+    _community = null;
 
     /**
      * тип нотификации
@@ -30,15 +37,33 @@ class PliziNotificationData {
         `friendships.sent`,
         `friendships.accepted`,
         `friendships.denied`,
-        `community.post.created`,
         `user.post.created`,
-        `user.profile.image.updated`
+        `user.profile.image.updated`,
+        `community.post.created`
     ];
 
     constructor(notifData){
         this._body = notifData.body;
-        this._sender = new PliziNotificationSender(notifData.sender);
+        this._sender = (notifData.sender) ? new PliziNotificationSender(notifData.sender) : notifData.sender;
+        this._community = (notifData.community) ? new PliziNotificationCommunity(notifData.community): notifData.community;
+
+        if (!notifData.sender &&  !notifData.community) {
+            window.console.error(`Нет ни notifData.sender ни notifData.community`);
+        }
+
         this._notificationType = notifData.notificationType;
+    }
+
+    isCommunity(){
+        return !! this._community;
+    }
+
+    isHuman(){
+        return !! this._sender;
+    }
+
+    isUser(){
+        return this.isHuman();
     }
 
     get body() {
@@ -47,6 +72,10 @@ class PliziNotificationData {
 
     get sender(){
         return this._sender;
+    }
+
+    get community(){
+        return this._community;
     }
 
     get notificationType(){
@@ -78,10 +107,6 @@ class PliziNotificationData {
             }
         }
 
-        if ('community.post.created' === this.notificationType) {
-            return `В сообществе ${this.sender.fullName} что-то опубликовано`;
-        }
-
         if ('user.post.created' === this.notificationType) {
             switch (this.sender.sex){
                 case 'f': return `Ваш друг ${this.sender.fullName} опубликовала новость`;
@@ -97,14 +122,29 @@ class PliziNotificationData {
                 case 'n': return `Ваш друг пользователь ${this.sender.fullName} обновил фото своего профиля`;
             }
         }
+
+        if ('community.post.created' === this.notificationType) {
+            return `В сообществе ${this.community.name} что-то опубликовано`;
+        }
+
+        return this.body;
     }
 
     toJSON(){
-        return {
+        let ret = {
             body : this.body,
-            sender : (this._sender) ? this._sender.toJSON() : null,
             notificationType : this.notificationType
+        };
+
+        if (this.isHuman()) {
+            ret.sender = this.sender.toJSON();
         }
+
+        if (this.isCommunity()) {
+            ret.community = this.community.toJSON();
+        }
+
+        return ret;
     }
 }
 
