@@ -2,16 +2,16 @@
     <div class="plz-top-watcher-item position-relative d-inline-block mr-0 mr-sm-2">
 
         <div class="btn btn-link my-auto text-body btn-sm cursor-pointer" title="Уведомления">
-            <span data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" id="dropdownMenuLikes" @click="onShowNotifications">
+            <span data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" id="dropdownMenuLikes"
+                  @click="onShowNotifications">
                 <IconBell />
                 <span v-if="notificationsNumber > 0" class="counter-info">
                     {{notificationsNumber}}
                 </span>
             </span>
 
-            <div v-if="notificationsNumber > 0"
-                class="notifications-likes-dropdown dropdown-menu dropdown-menu-right pt-3 pb-0 dropdown-white w-auto"
-                 aria-labelledby="dropdownMenuLikes">
+            <div v-if="notificationsNumber > 0" aria-labelledby="dropdownMenuLikes"
+                class="notifications-likes-dropdown dropdown-menu dropdown-menu-right pt-3 pb-0 dropdown-white w-auto">
                 <ul class="list-unstyled mb-0">
                     <NotificationItem v-for="notifItem in notificationsList"
                                       v-bind:notification="notifItem"
@@ -19,7 +19,10 @@
                     </NotificationItem>
                 </ul>
                 <div class="notifications-likes-dropdown-footer border-top">
-                    <router-link to="/notifications" tag="a" class="notifications-link d-block text-center pt-1 pb-3">Посмотреть все</router-link>
+                    <router-link to="/notifications" tag="a"
+                                 class="notifications-link d-block text-center pt-1 pb-3">
+                        Посмотреть все
+                    </router-link>
                 </div>
             </div>
         </div>

@@ -100,7 +100,7 @@ async function checkRouteAuth(to, from, next) {
     const gwt = window.localStorage.getItem('pliziJWToken');
 
     if ((gwt + '') !== 'null' && gwt !== '') {
-        const tstUserData = window.app.$root.$auth.restoreData()
+        const tstUserData = window.app.$root.$auth.restoreData();
 
         if (tstUserData) {
             window.app.$root.$emit('AfterUserRestore', {

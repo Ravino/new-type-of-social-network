@@ -25,6 +25,10 @@ class PliziMember extends PliziUzer{
         this._role = value;
     }
 
+    get birthDate(){
+        return (this.profile) ? this.profile.birthday : null;
+    }
+
     toJSON(){
         return {
             id: this.id,

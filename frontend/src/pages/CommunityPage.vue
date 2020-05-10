@@ -27,13 +27,13 @@
                     </div>
                     <Spinner v-else></Spinner>
 
-                    <CommunityEditor v-if="canPost" :community-id="communityData.id"/>
+                    <CommunityEditor v-if="canPost" :community-id="communityData.id"></CommunityEditor>
 
-                    <div v-if="isDataReady" id="communityPostsBlock" class="bg-white-br20 py-5 mb-5 text-center">
+                    <div v-if="isDataReady" id="communityPostsBlock" class="bg-white-br20 py-5 mb-5 --text-center">
                         <Post v-for="postItem in communityPosts"
                               :key="postItem.id"
                               :post="postItem"
-                              :is-community="true"
+                              :isCommunity="true"
                               @onShare="onSharePost"></Post>
                     </div>
                     <Spinner v-else></Spinner>

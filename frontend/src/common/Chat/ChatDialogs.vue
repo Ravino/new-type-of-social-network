@@ -52,7 +52,7 @@ data(){
 
 computed: {
     dialogsList(){
-        const dlgList = this.$root.$auth.dm.asArray();
+        const dlgList = this.$root.$auth.dm.asArray().slice();
 
         if ( this.dialogFilter.text.length < 3 )
             return dlgList;
@@ -73,11 +73,7 @@ methods: {
     onRemoveChatDialog(evData){
         window.console.log(evData.chatId, `onRemoveChatDialog`);
 
-        window.console.log(this.$root.$auth.dm.shortList());
-
         this.$root.$auth.dm.delete( evData.chatId );
-
-        window.console.log(this.$root.$auth.dm.shortList());
 
         const newPickedChat = (this.$root.$auth.dm.size > 0) ? this.$root.$auth.dm.firstDialog.id : -1;
 
@@ -119,6 +115,24 @@ methods: {
         return true;
     },
 
+    async onDialogsListLoad(wMode){
+        window.console.log();
+
+        if (this.listFilled)
+            return;
+
+        await this.loadDialogsList();
+
+        this.listFilled = true;
+
+        if ( this.currentDialog ) {
+            this.onSwitchToChat( { chatId : this.currentDialog.id })
+        }
+        else {
+            window.console.warn(`Условие не сработало!`);
+        }
+    },
+
     /**
      * @deprecated
      * @TGA будет актуально когда бэкенд будет делать морфологический поиск
@@ -146,22 +160,6 @@ methods: {
             });
         }
     },
-
-    async onDialogsListLoad(){
-        if (this.listFilled)
-            return;
-
-        await this.loadDialogsList();
-
-        this.listFilled = true;
-
-        if ( this.currentDialog ) {
-            this.onSwitchToChat( { chatId : this.currentDialog.id })
-        }
-        else {
-            window.console.warn(`Условие не сработало!`);
-        }
-    },
 },
 
 created(){
@@ -173,13 +171,17 @@ created(){
         this.onDialogsListLoad(this.$root.$auth.dm.restoreEventName);
     });
 
+    this.$root.$on(this.$root.$auth.dm.updateEventName, ()=>{
+        this.onDialogsListLoad(this.$root.$auth.dm.updateEventName);
+    });
+
     this.$root.$on('RemoveChatDialog', this.onRemoveChatDialog);
     this.$root.$on('UpdateChatDialog', this.onUpdateChatDialog);
 },
 
 async mounted(){
     if (! this.listFilled) {
-        this.onDialogsListLoad();
+        this.onDialogsListLoad(`mounted`);
     }
 }
 

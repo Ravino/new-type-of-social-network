@@ -56,7 +56,6 @@ data() {
 
 methods: {
     updateUserName(evData){
-        window.console.log(evData, `evData 1`);
         this.isShowName = false;
         setTimeout(()=>{ this.isShowName = true; }, 10);
     },
