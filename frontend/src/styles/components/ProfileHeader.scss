@@ -27,9 +27,6 @@
     padding: 9px;
 }
 
-
-$dotSize: 2px;
-
 .plz-profile-userpic-edit {
     border: 2px solid #f0f0f0;
     border-radius: 20px;
@@ -67,15 +64,7 @@ $dotSize: 2px;
         display: inline-block;
         height: 16px;
     }
-    .ps-dot {
-        display: inline-block;
-        width: $dotSize;
-        min-width: $dotSize;
-        height: $dotSize;
-        border-radius: $dotSize;
-        background-color: #6f7487;
-        margin: 0 3px;
-    }
+
 }
 
 .plz-profile-userdetails {

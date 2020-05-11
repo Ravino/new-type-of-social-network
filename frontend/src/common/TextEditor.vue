@@ -1,6 +1,6 @@
 <template>
     <div :id="fieldId" :class="blockClass" ref="editorContainer">
-        <div class="flex-column w-100 ">
+        <div class="flex-column w-100 position-relative">
             <div class="row w-100 ml-0">
                 <div v-if="showAvatar" class="plz-editor-avatar col-1 align-items-center text-center pt-2">
                     <img class="chat-companion-user-pic rounded-circle my-0 mx-auto"
@@ -25,12 +25,11 @@
                     </div>
                 </div>
 
-                <div class="plz-editor-btns d-flex justify-content-between"  >
+                <div class="plz-editor-btns d-flex flex-column flex-md-row justify-content-between"  >
 
                     <label
                         :class="{'attach-file--disallow': isDisallowUpload}"
-                        class="attach-file w-50 d-flex align-items-center btn btn-link my-0 ml-0 mr-2 px-1 btn-add-file position-relative"
-                    >
+                        class="attach-file w-100 d-flex align-items-center justify-content-center btn btn-link my-0 ml-0 mr-0 mr-md-2 px-1 btn-add-file position-relative" >
                         <IconAddFile />
                         <input type="file" @change="onSelectFile($event)" ref="editorFiler" multiple />
                     </label>
@@ -40,7 +39,7 @@
                         <input type="file" @change="onSelectImage($event)" ref="editorImager" multiple />
                     </label>-->
 
-                    <button class="btn btn-link w-50 mx-0 px-1 btn-add-smile position-relative" type="button">
+                    <button class="btn btn-link w-100 mx-0 px-1 btn-add-smile position-relative" type="button">
                         <EmojiPicker v-if="dropToDown"
                                      @addEmoji="onAddEmoji"
                                      :transform="'transform: translate(-40%, 40px)'">

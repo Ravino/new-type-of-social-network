@@ -53,6 +53,26 @@
             overflow: hidden;
         }
     }
+
+
+    .plz-editor-body {
+        width: 100%;
+    }
+
+    .plz-text-editor,
+    .plz-text-editor-form {
+        min-height: 180px;
+    }
+    .plz-text-editor-form {
+        width: calc(100% - 50px);
+    }
+    .plz-editor-btns {
+        position: absolute;
+        top: 10px;
+        right: 0;
+        margin-top: 40px;
+        width: 40px;
+    }
 }
 
 /*- sm -*/
@@ -111,6 +131,5 @@
     #toolbarLeftColor {
         overflow: auto;
     }
-
 
 }

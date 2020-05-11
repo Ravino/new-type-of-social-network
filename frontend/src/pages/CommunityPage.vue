@@ -1,30 +1,49 @@
 <template>
     <div class="row">
-        <div class="col-sm-1 col-md-1 col-lg-1 col-xl-1 pr-md-0">
+        <div class="col-12 col-md-1 ">
             <AccountToolbarLeft></AccountToolbarLeft>
         </div>
 
-        <div class="col-sm-10 col-md-10 col-lg-10 col-xl-10">
+        <div class="col-sm-12 col-md-11 col-lg-9 col-xl-10">
             <div class="row">
-                <div class="col-sm-12 col-md-12 col-lg-12 col-xl-12">
-                    <div v-if="isDataReady" id="communityHeader" class="plz-community-header bg-white-br20 py-5 mb-5 text-left pl-3">
-                        <h1 class="tx-3 text-white">{{communityData.name}}</h1>
-                        <p class="text-white">
-                            {{communityData.description}}
-                        </p>
+                <div class="col-12">
+                    <div v-if="isDataReady" id="communityHeader"
+                         class="plz-community-header bg-white-br20 mb-4 text-left overflow-hidden">
+                        <div class="plz-community-header-pic position-relative overflow-hidden">
+                            <img src="images/community-header-bg.jpg" alt="image">
+                        </div>
+                        <div class="plz-community-header-bottom d-flex align-items-start align-items-sm-center justify-content-between py-3 px-4">
+                            <div class="plz-community-header-details d-flex align-items-center">
+                                <template v-if="isAuthor">
+                                    <label for="communityPrimaryImage" class="community-primary-image mr-3 cursor-pointer">
+                                        <img ref="communityAvatar" :src="communityData.primaryImage" :alt="communityData.name" />
+                                    </label>
 
-                        <template v-if="isAuthor">
-                            <label for="communityPrimaryImage" class="community-primary-image mr-3 cursor-pointer">
-                                <img ref="communityAvatar" :src="communityData.primaryImage" :alt="communityData.name" />
-                            </label>
-
-                            <input id="communityPrimaryImage" ref="communityPrimaryImage" type="file" @change="uploadPrimaryImage()" class="d-none" />
-                        </template>
-                        <template v-else>
-                            <div class="community-primary-image mr-3">
-                                <img ref="communityAvatar" :src="communityData.primaryImage" :alt="communityData.name" />
+                                    <input id="communityPrimaryImage" ref="communityPrimaryImage" type="file"
+                                           @change="uploadPrimaryImage()"
+                                           class="d-none" />
+                                </template>
+                                <template v-else>
+                                    <div class="plz-community-header-logo position-relative mr-3">
+                                        <img ref="communityAvatar" :src="communityData.primaryImage" :alt="communityData.name" />
+                                    </div>
+                                </template>
+                                <div class="plz-community-header-details-text">
+                                    <h1 class="plz-community-header-title mb-1">{{communityData.name}}</h1>
+                                    <p class="plz-community-header-desc mb-0">
+                                        Скоро открытие 7-го сервера Sinatra!
+                                    </p>
+                                </div>
                             </div>
-                        </template>
+                            <div class="plz-community-subscribe file-label d-flex align-items-center justify-content-between">
+                                <button class="btn align-items-center justify-content-center d-flex w-75 border-right m-0">подписаться</button>
+                                <button title="подписаться" class="btn align-items-center justify-content-center d-flex w-25">
+                                    <span class="ps-dot"></span>
+                                    <span class="ps-dot"></span>
+                                    <span class="ps-dot"></span>
+                                </button>
+                            </div>
+                        </div>
 
                     </div>
                     <Spinner v-else></Spinner>
@@ -32,19 +51,23 @@
             </div>
 
             <div class="row">
-                <div class="col-sm-10 col-md-10 col-lg-8 col-xl-8">
-                    <div v-if="isDataReady" id="communityInfoBlock" class="community-info-block bg-white-br20 p-5 mb-5 text-left">
-                        <p>{{communityData.description}}</p>
-                        <p><a :href="communityData.website" target="_blank" class="text-dark">{{communityData.website}}</a></p>
+                <div class="col-12 col-sm-7 col-lg-8 col-xl-8 order-1 order-sm-0">
+                    <div v-if="isDataReady"
+                         id="communityInfoBlock"
+                         class="plz-community-info-block bg-white-br20 py-3 px-4 mb-4 text-left">
+                        <h4 class="plz-community-header-title">Информация</h4>
+
+                        <p class="plz-community-info-desc">{{communityData.description}}</p>
+                        <p><a :href="communityData.website" target="_blank" class="plz-community-info-desc">{{communityData.website}}</a></p>
                     </div>
                     <Spinner v-else></Spinner>
 
                     <CommunityEditor v-if="canPost"
                                      :community-id="communityData.id"
-                                     :class="'mx-0'"
+                                     :class="'mx-0 '"
                                      @addNewPost="addNewPost"/>
 
-                    <div v-if="isDataReady" id="communityPostsBlock" class="pb-5 mb-5 --text-center">
+                    <div v-if="isDataReady" id="communityPostsBlock" class="pb-5 mb-4 --text-center">
                         <Post v-for="postItem in communityPosts"
                               :key="postItem.id"
                               :post="postItem"
@@ -58,21 +81,61 @@
                     <Spinner v-else></Spinner>
                 </div>
 
-                <div class="col-sm-4 col-md-4 col-lg-4 col-xl-4">
+                <div class="col-12 col-sm-5 col-lg-4">
                     <CommunityUserActionBlock v-bind:community="communityData"></CommunityUserActionBlock>
 
                     <CommunityFriendsInformer v-bind:community="communityData"></CommunityFriendsInformer>
 
                     <CommunityShortMembers v-if="isDataReady" v-bind:community="communityData"></CommunityShortMembers>
 
-                    <div id="communityVideos" class="bg-white-br20 py-5 text-center">
-                        видосики
-                    </div>
+                    <div id="communityVideos" class="bg-white-br20 mb-5 mb-4 py-3 px-4">
+
+                        <h6 class="plz-community-participants-title w-auto mb-4">Видео
+                            <span class="plz-community-participants-subtitle ml-2">14</span>
+                        </h6>
+
+                        <div class="videos-item mb-4">
+                            <div class="video mb-3">
+                                <div class="video-wrap-pre">
+                                    <img  :src="communityData.primaryImage" alt="image">
+                                </div>
+                                <button class="video__button" type="button" aria-label="Запустить видео">
+                                    <svg width="68" height="48" viewBox="0 0 68 48"><path class="video__button-shape" d="M66.52,7.74c-0.78-2.93-2.49-5.41-5.42-6.19C55.79,.13,34,0,34,0S12.21,.13,6.9,1.55 C3.97,2.33,2.27,4.81,1.48,7.74C0.06,13.05,0,24,0,24s0.06,10.95,1.48,16.26c0.78,2.93,2.49,5.41,5.42,6.19 C12.21,47.87,34,48,34,48s21.79-0.13,27.1-1.55c2.93-0.78,4.64-3.26,5.42-6.19C67.94,34.95,68,24,68,24S67.94,13.05,66.52,7.74z"></path><path class="video__button-icon" d="M 45,24 27,14 27,34"></path></svg>
+                                </button>
+                            </div>
+                            <router-link tag="a"
+                                         :to="`/user-`+1"
+                                         class="video-desc mb-0">Эдвард Бил приглашает тебя на открытие 6 сервера Sunrise (GTA 5 RP / gta5rp.com)
+                            </router-link>
+                        </div>
+                        <div class="videos-item mb-4">
+                            <div class="video mb-3">
+                                <div class="video-wrap-pre">
+                                    <img  :src="communityData.primaryImage" alt="image">
+                                </div>
+                                <button class="video__button" type="button" aria-label="Запустить видео">
+                                    <svg width="68" height="48" viewBox="0 0 68 48"><path class="video__button-shape" d="M66.52,7.74c-0.78-2.93-2.49-5.41-5.42-6.19C55.79,.13,34,0,34,0S12.21,.13,6.9,1.55 C3.97,2.33,2.27,4.81,1.48,7.74C0.06,13.05,0,24,0,24s0.06,10.95,1.48,16.26c0.78,2.93,2.49,5.41,5.42,6.19 C12.21,47.87,34,48,34,48s21.79-0.13,27.1-1.55c2.93-0.78,4.64-3.26,5.42-6.19C67.94,34.95,68,24,68,24S67.94,13.05,66.52,7.74z"></path><path class="video__button-icon" d="M 45,24 27,14 27,34"></path></svg>
+                                </button>
+                            </div>
+                            <router-link tag="a"
+                                         :to="`/user-`+1"
+                                         class="video-desc mb-0">Эдвард Бил приглашает тебя на открытие 6 сервера Sunrise (GTA 5 RP / gta5rp.com)
+                            </router-link>
+                        </div>
+
+                        <div class="d-block text-center">
+                            <router-link tag="a"
+                                         class="plz-community-header-desc "
+                                        to="#">
+                                <small>Смотреть ещё</small>
+                            </router-link>
+                        </div>
+                      </div>
                 </div>
             </div>
         </div>
 
-        <div class="col-sm-1 col-md-1 col-lg-1 col-xl-1">
+        <div class="col-sm-2  col-lg-2 col-xl-1 d-none d-lg-block">
             <FavoriteFriends :isNarrow="true"></FavoriteFriends>
         </div>
 
@@ -171,6 +234,19 @@ methods: {
         this.postForEdit = null;
     },
 
+    ytInit(){
+        let video = document.getElementsByClassName('video');
+
+        let videoWrap;
+        for (let i = 0; i < video.length; i++) {
+            videoWrap = video[i].getElementsByClassName('video_wrap');
+            console.log(videoWrap);
+        }
+    },
+    ytShow() {
+
+    },
+
     async onDeletePost(id) {
         let response;
 
@@ -250,7 +326,6 @@ methods: {
         }
     },
 
-
     /**
      * @returns {boolean|FormData}
      */
@@ -310,7 +385,6 @@ methods: {
             this.isDataReady = true;
         }
     },
-
 
     async getCommunityPosts() {
         let response = null;
