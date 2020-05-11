@@ -10,6 +10,8 @@ RUN mkdir -p /usr/src/php/ext/redis \
 RUN pecl install mongodb \
     && docker-php-ext-enable mongodb
 
+RUN docker-php-ext-install bcmath
+
 RUN wget https://getcomposer.org/installer --no-check-certificate \
         && php installer \
         && ln -s /composer.phar /usr/bin/composer
