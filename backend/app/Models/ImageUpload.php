@@ -47,6 +47,10 @@ class ImageUpload extends Model
                     ->where('tag', self::TAG_PRIMARY)
                     ->where('id', '!=', $image->id)
                     ->update(['tag' => self::TAG_SECONDARY]);
+                /**
+                 * @todo For event
+                 */
+                Profile::where('user_id', auth()->id())->update(['user_pic' => $image->url]);
                 Event::dispatch($affected ? 'user.profile.image.updated' : 'user.profile.image.created', ['user_id' => auth()->id()]);
             }
         });
