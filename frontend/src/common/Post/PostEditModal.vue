@@ -43,7 +43,7 @@ data() {
 },
 methods: {
     hidePostEditModal() {
-        this.$root.$emit('hidePostEditModal');
+        this.$emit('hidePostEditModal');
     },
 
     async onTextPost(evData) {

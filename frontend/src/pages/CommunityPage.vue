@@ -39,14 +39,19 @@
                     </div>
                     <Spinner v-else></Spinner>
 
-                    <CommunityEditor v-if="canPost" :community-id="communityData.id"></CommunityEditor>
+                    <CommunityEditor v-if="canPost"
+                                     :community-id="communityData.id"
+                                     @addNewPost="addNewPost"/>
 
                     <div v-if="isDataReady" id="communityPostsBlock" class="bg-white-br20 py-5 mb-5 --text-center">
                         <Post v-for="postItem in communityPosts"
                               :key="postItem.id"
                               :post="postItem"
                               :isCommunity="true"
-                              @onShare="onSharePost"></Post>
+                              @onShare="onSharePost"
+                              @onDeletePost="onDeletePost"
+                              @onRestorePost="onRestorePost"
+                              @onEditPost="onEditPost"></Post>
                     </div>
                     <Spinner v-else></Spinner>
                 </div>
@@ -69,6 +74,9 @@
             <FavoriteFriends :isNarrow="true"></FavoriteFriends>
         </div>
 
+        <PostEditModal v-if="postEditModal.isVisible"
+                       :post="postForEdit"
+                       @hidePostEditModal="hidePostEditModal"/>
     </div>
 </template>
 
@@ -77,6 +85,7 @@ import AccountToolbarLeft from '../common/AccountToolbarLeft.vue';
 import FavoriteFriends from '../common/FavoriteFriends.vue';
 import Spinner from '../common/Spinner.vue';
 import Post from '../common/Post/Post.vue';
+import PostEditModal from '../common/Post/PostEditModal.vue';
 
 import CommunityUserActionBlock from '../common/Communities/CommunityUserActionBlock.vue';
 import CommunityFriendsInformer from '../common/Communities/CommunityFriendsInformer.vue';
@@ -100,6 +109,7 @@ components : {
     AccountToolbarLeft,
     FavoriteFriends,
     Post,
+    PostEditModal,
     CommunityEditor,
 },
 
@@ -108,6 +118,10 @@ data() {
         isDataReady: false,
         communityData: null,
         communityPosts: null,
+        postEditModal: {
+            isVisible: false,
+        },
+        postForEdit: null,
     }
 },
 
@@ -132,6 +146,66 @@ computed: {
 },
 
 methods: {
+    addNewPost(post) {
+        this.communityPosts.unshift( new PliziPost( post ) );
+    },
+    startTimer( post ){
+        setTimeout( () => {
+            const postIndex = this.communityPosts.find( ( userPost ) => {
+                return userPost.id === post.id;
+            } );
+
+            if ( post.deleted ){
+                this.communityPosts.splice( postIndex, 1 );
+            }
+        }, 5000 );
+    },
+    onEditPost( post ){
+        this.postEditModal.isVisible = true;
+        this.postForEdit = post;
+    },
+    hidePostEditModal(){
+        this.postEditModal.isVisible = false;
+        this.postForEdit = null;
+    },
+
+    async onDeletePost(id) {
+        let response;
+
+        try{
+            response = await this.$root.$api.$post.deletePost( id );
+        } catch (e){
+            console.warn( e.detailMessage );
+        }
+
+        if ( response ){
+            const post = this.communityPosts.find( ( post ) => {
+                return post.id === id;
+            } );
+
+            post.deleted = true;
+
+            this.startTimer( post );
+        }
+    },
+    async onRestorePost(id) {
+        let response;
+
+        try{
+            response = await this.$root.$api.$post.restorePost( id );
+        } catch (e){
+            console.warn( e.detailMessage );
+        }
+
+        if ( response ){
+            const post = this.communityPosts.find( ( post ) => {
+                return post.id === id;
+            } );
+
+            post.deleted = false;
+        }
+    },
+
     async uploadPrimaryImage(){
         if (!this.isAuthor)
             return;
