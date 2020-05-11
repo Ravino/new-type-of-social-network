@@ -12,6 +12,8 @@ class PliziFriendsCollection extends PliziStoredCollection {
     loadEventName = 'FriendsIsLoaded';
     updateEventName = 'FriendsIsUpdated';
 
+    pageSize = 10;
+
     /**
      * метод сравнения для сортировки
      * @param {PliziFriend} d1
@@ -19,10 +21,10 @@ class PliziFriendsCollection extends PliziStoredCollection {
      * @returns {number}
      */
     compare(d1, d2){
-        if (d1.fullName === d2.fullName)
+        if (d1.compareName === d2.compareName)
             return 0;
 
-        return d1.fullName > d2.fullName ? -1 : 1;
+        return d1.compareName < d2.compareName ? -1 : 1;
     }
 
 
@@ -32,6 +34,7 @@ class PliziFriendsCollection extends PliziStoredCollection {
         //this.storeData();
         //this.emit(this.updateEventName);
     }
+
 
     /**
      * возвращает список избранных друзей
@@ -51,25 +54,6 @@ class PliziFriendsCollection extends PliziStoredCollection {
     checkIsFriend(userID){
         const res = this.collection.get(userID);
         return !! res;
-    }
-
-
-    /**
-     * @param a
-     * @returns {*}
-     * @private
-     */
-    __shuffle(a){
-        if (a) {
-            a = a.map( iA => iA);
-
-            for (let i = a.length - 1; i > 0; i--) {
-                const j = Math.floor(Math.random() * (i + 1));
-                [a[i], a[j]] = [a[j], a[i]];
-            }
-        }
-
-        return a;
     }
 
 
@@ -132,6 +116,39 @@ class PliziFriendsCollection extends PliziStoredCollection {
 
         return true;
     }
+
+
+    async additionalLoad(){
+        let apiResponse = null;
+
+        try {
+            apiResponse = await this.api.$friend.friendsList(null, this.pageSize, this.size+1);
+        }
+        catch (e){
+            window.console.warn(e.detailMessage);
+        }
+
+        let addedNum = 0;
+
+        if (apiResponse) {
+            apiResponse.map( (notifItem) => {
+                this.add( notifItem );
+                this.collection.has( 'xxx' );
+                addedNum++;
+            });
+
+            this.storeData();
+
+            this.isLoad = true;
+
+            if (this.loadEventName) {
+                this.emit(this.loadEventName);
+            }
+        }
+
+        return addedNum;
+    }
+
 
     friendStateUpdated(invID, newData){
         window.console.log(`friendStateUpdated`);

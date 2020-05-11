@@ -116,8 +116,6 @@ methods: {
     },
 
     async onDialogsListLoad(wMode){
-        window.console.log();
-
         if (this.listFilled)
             return;
 
