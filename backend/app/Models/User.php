@@ -170,7 +170,7 @@ class User extends Authenticatable implements JWTSubject
      */
     public function getTotalFriendsCountAttribute()
     {
-        return 1; //$this->getFriends()->count();
+        return $this->getFriends()->count();
     }
 
     /**

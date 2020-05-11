@@ -5,7 +5,6 @@
         </div>
 
         <div class="col-sm-10 col-md-9 col-lg-8 col-xl-8 pl-0">
-
             <div class="container">
                 <ProfileHeader v-bind:userData="userData" v-bind:isOwner="true"></ProfileHeader>
 
@@ -13,7 +12,8 @@
 
                 <WhatsNewBlock @addNewPost="addNewPost"></WhatsNewBlock>
 
-                <ProfileFilter v-if="userPosts && userPosts.length > 1" @wallPostsSelect="wallPostsSelectHandler"></ProfileFilter>
+                <ProfileFilter v-if="userPosts && userPosts.length > 1"
+                               @wallPostsSelect="wallPostsSelectHandler"></ProfileFilter>
 
                 <template v-if="userPosts && userPosts.length > 0">
                     <Post v-for="postItem in filteredPosts"
@@ -26,18 +26,17 @@
                     </Post>
                 </template>
 
-                <div v-else>
-                    <div class="alert alert-info w-100 p-5 text-center">
+                <div v-else  class="row plz-post-item mb-4 bg-white-br20 p-4">
+                    <div class="alert alert-info w-100 p-5 text-center mb-0">
                         Вы не создали ни одной записи.
                     </div>
                 </div>
             </div>
-
         </div>
 
         <div class="col-sm-3 col-md-3 col-lg-3 col-xl-3 pr-0">
             <FavoriteFriends :isNarrow="false"></FavoriteFriends>
-            <ShortFriends></ShortFriends>
+            <ShortFriends v-bind:friends="allFriends"></ShortFriends>
         </div>
 
         <PostEditModal v-if="postEditModal.isVisible"
@@ -60,10 +59,11 @@ import WhatsNewBlock from '../common/WhatsNewBlock.vue';
 import ProfileHeader from '../components/ProfileHeader.vue';
 import ProfilePhotos from '../components/ProfilePhotos.vue';
 import ProfileFilter from '../components/ProfileFilter.vue';
-import PostEditModal from "../common/Post/PostEditModal.vue";
-import PostVideoModal from "../common/Post/PostVideoModal.vue";
+import PostEditModal from '../common/Post/PostEditModal.vue';
+import PostVideoModal from '../common/Post/PostVideoModal.vue';
 
 import PliziPost from '../classes/PliziPost.js';
+import ShortFriendsMixin from '../mixins/ShortFriendsMixin.js';
 
 export default {
 name: 'ProfilePage',
@@ -73,9 +73,11 @@ components: {
     PostEditModal,
     PostVideoModal,
 },
+mixins: [ShortFriendsMixin],
 data() {
     return {
         userPosts: null,
+        //allMyFriends: null,
         filterMode: `all`,
 
         userPhotos: [
@@ -99,21 +101,25 @@ data() {
     }
 },
 
-computed: {
-    userData() {
+computed : {
+    userData(){
         return this.$root.$auth.user;
+    },
+
+    allFriends(){
+        return this.$root.$auth.frm.asArray();
     },
 
     /**
      * @returns {PliziPost[]}
      */
     filteredPosts(){
-      switch (this.filterMode) {
+        switch ( this.filterMode ){
             case 'my':
-                return this.userPosts.filter(post => post.checkIsMinePost(this.$root.$auth.user.id));
+                return this.userPosts.filter( post => post.checkIsMinePost( this.$root.$auth.user.id ) );
 
             case 'archive':
-                return this.userPosts.filter(post => post.isArchivePost);
+                return this.userPosts.filter( post => post.isArchivePost );
         }
 
         return this.userPosts;
@@ -219,14 +225,17 @@ methods : {
     },
 },
 
-mounted() {
+
+async mounted() {
     this.$root.$on('showProfileOptionsModal', ()=>{
         this.$alert(`Какие-то опции пользователя`, 'bg-info', 10);
     });
 
     this.$root.$on('wallPostsSelect', this.wallPostsSelectHandler);
     this.$root.$on('hidePostEditModal', this.hidePostEditModal);
-    this.getPosts();
+    await this.getPosts();
+
+    //await this.loadMyFriends();
 }
 }
 </script>

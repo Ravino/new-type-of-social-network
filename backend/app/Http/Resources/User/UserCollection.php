@@ -26,7 +26,8 @@ class UserCollection extends ResourceCollection
                         'isOnline' => $user->isOnline,
                         'lastActivity' => $user->last_activity_dt,
                         'profile' => new Profile($user->profile),
-                        'privacySettings' => new PrivacySettings($user->privacySettings)
+                        'privacySettings' => new PrivacySettings($user->privacySettings),
+                        'total' => (int)$user->total,
                     ];
                 } else {
                     return [
@@ -34,7 +35,8 @@ class UserCollection extends ResourceCollection
                         'isOnline' => $user->isOnline,
                         'lastActivity' => $user->last_activity_dt,
                         'profile' => new Profile($user->profile),
-                        'mutualFriendsCount' => $user->mutual_count
+                        'mutualFriendsCount' => (int)$user->mutual_count,
+                        'total' => (int)$user->total,
                     ];
                 }
             }),

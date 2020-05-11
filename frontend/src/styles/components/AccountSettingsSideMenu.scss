@@ -1,10 +1,10 @@
 
-$textColor: #9a9a9a;
+
 $titleColor: #363636;
 
 #accountSettingsSideMenu {
     .list-group-item {
-        color: $textColor;
+        color: $textGreyColor;
         font-size: 13px;
 
         &.active,

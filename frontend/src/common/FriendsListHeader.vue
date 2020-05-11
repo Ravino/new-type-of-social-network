@@ -20,9 +20,16 @@
         </div>
 
         <div id="friendsListSearch" class="col-4 d-flex align-items-center form-inline pl-4 pr-0 position-relative overflow-hidden rounded-pill">
-            <input id="friendsListSearchinput" ref="friendsListSearchinput"
-                   class="top-search form-control form-control  w-100"
-                   type="search" placeholder="Поиск" aria-label="Поиск" />
+            <input
+                v-model="searchTerm"
+                id="friendsListSearchinput"
+                ref="friendsListSearchinput"
+                class="top-search form-control form-control  w-100"
+                type="search"
+                placeholder="Поиск"
+                aria-label="Поиск"
+                @keydown.stop="chatSearchKeyDownCheck($event)"
+            />
             <button class="btn btn-search h-100" type="button">
                 <IconSearch style="width: 15px; height: 15px;" />
             </button>
@@ -34,7 +41,25 @@
 import IconSearch from '../icons/IconSearch.vue';
 
 export default {
-name : 'FriendsListHeader',
-components: {IconSearch}
+    name : 'FriendsListHeader',
+    components: {IconSearch},
+    data() {
+        return {
+            searchTerm: '',
+        }
+    },
+    methods: {
+        chatSearchKeyDownCheck(ev){
+            //backspace, enter, delete
+            if (8 === ev.keyCode || 13 === ev.keyCode || 46 === ev.keyCode){
+                this.filterFriends();
+            }
+        },
+        filterFriends(){
+            this.$emit('filterSearch', {
+                searchTerm: this.searchTerm.trim(),
+            });
+        },
+    }
 }
 </script>

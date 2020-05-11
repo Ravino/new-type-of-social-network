@@ -6,12 +6,12 @@
 
         <div class="col-sm-10 col-md-10 col-lg-10 col-xl-10">
 
-            <FriendsListHeader></FriendsListHeader>
+            <FriendsListHeader @filterSearch="filterSearch"></FriendsListHeader>
 
             <div class="row">
                 <div class="col-sm-8 col-md-8 col-lg-8 col-xl-8 bg-white-br20">
                     <div id="friendsListFilter" class="row border-bottom px-4">
-                        <div class="col-12 d-flex align-items-center justify-content-between px-0 ">
+                        <div class="col-12 d-flex align-items-center justify-content-between px-0">
                             <nav class="nav profile-filter-links" role="tablist">
                                 <span class="nav-link position-relative py-3 px-1 mr-4"
                                       :class="{ 'active': wMode==='all' }" id="tabAllFriends" role="tab"
@@ -19,12 +19,15 @@
                                 <span class="nav-link position-relative py-3 px-1 mr-4"
                                       :class="{ 'active': wMode==='online' }" id="tabOnlineFriends" role="tab"
                                       @click.stop="friendsListSelect(`online`)">Друзья онлайн</span>
+                                <span class="nav-link position-relative py-3 px-1 mr-4"
+                                      :class="{ 'active': wMode==='favorites' }" id="tabFavoritesFriends" role="tab"
+                                      @click.stop="friendsListSelect(`favorites`)">Избранные</span>
                             </nav>
                         </div>
                     </div>
 
                     <div v-if="isFriendsLoaded" class="row plizi-friends-list ">
-                        <ul v-if="friendsList  &&  friendsList.length>0" class="d-block w-100 p-0">
+                        <ul v-if="hasFriends" class="d-block w-100 p-0">
                             <transition-group name="slide-fade" :duration="700">
                                 <FriendListItem v-for="friendItem in friendsListFilter"
                                                 v-bind:key="friendItem.id"
@@ -33,7 +36,9 @@
                             </transition-group>
                         </ul>
                         <div v-else class="alert alert-info w-100 p-5 text-center">
-                            Вы пока ещё ни с кем не подружились.
+                            <p v-if="wMode==='all'">Вы ещё ни с кем не подружились.</p>
+                            <p v-if="wMode==='online'">Сейчас все друзья оффлайн.</p>
+                            <p v-if="wMode==='favorites'">Вы никого не добавили в Избранные.</p>
                         </div>
                     </div>
                     <Spinner v-else></Spinner>
@@ -59,46 +64,106 @@
 <script>
 import FriendsListMixin from '../mixins/FriendsListMixin.js';
 import FriendListItem from '../components/FriendListItem.vue';
-import PliziFriend from "../classes/PliziFriend";
+import PliziFriend from '../classes/PliziFriend.js';
+import PliziCollection from "../classes/PliziCollection.js";
 
 export default {
 name : 'FriendsListPage',
 components : {
     FriendListItem
 },
+
 mixins : [FriendsListMixin],
+
 data(){
     return {
+        allMyFriends: null,
+        isFriendsLoaded: true,
         wMode : `all`,
         removedFriendID : -1,
+        searchTerm: '',
     }
 },
 
-methods : {
-    friendsListSelect( wm ){
-        this.wMode = wm;
-    },
-},
-
 computed : {
-    friendsListFilter(){
-        if ( this.wMode === 'all' ){
-            return this.friendsList;
-        }
+    hasFriends(){
+        return (this.$root.$auth.frm.size > 0);
+    },
 
+    friendsListFilter(){
         let ret = [];
 
-        if ( this.wMode === 'online' ){
-            this.friendsList.map( frItem => {
-                if ( frItem.isOnline === true ){
-                    ret.push( frItem );
+        if (this.wMode === 'all'){
+            //ret = this.allMyFriends.asArray();
+            ret = this.$root.$auth.frm.asArray();
+        }
+
+        if (this.wMode === 'online'){
+            //this.allMyFriends.asArray()
+            this.$root.$auth.frm.asArray()
+            .map(frItem => {
+                if (frItem.isOnline === true){
+                    ret.push(frItem);
                 }
-            } );
+            });
+        }
+
+        if (this.wMode === 'favorites'){
+            //this.allMyFriends.asArray()
+            this.$root.$auth.frm.asArray()
+                .map(frItem => {
+                    if ( this.$root.$auth.fm.checkIsFavorite( frItem.id )){
+                    ret.push(frItem);
+                }
+            });
+        }
+
+        /** @TGA как-то оно нелогично тут смотрится **/
+        if (this.searchTerm.length > 2) {
+            const searchTerm = this.searchTerm.toLocaleLowerCase();
+
+            ret = ret.filter(friend => friend.fullName.toLowerCase().includes(searchTerm));
         }
 
         return ret;
     },
 },
+
+
+methods : {
+    friendsListSelect( wm ){
+        this.wMode = wm;
+    },
+
+    async loadMyFriends() {
+        let apiResponse;
+
+        try {
+            apiResponse = await this.$root.$api.$friend.friendsList();
+        } catch (e) {
+            console.warn(e.detailMessage);
+        }
+
+        if (apiResponse) {
+            this.allMyFriends = new PliziCollection(apiResponse, PliziFriend);
+            this.isFriendsLoaded = true;
+        }
+    },
+
+    filterSearch({ searchTerm }) {
+        this.searchTerm = searchTerm;
+    }
+},
+
+created(){
+    if ('#favorites' === this.$route.hash) {
+        this.wMode = 'favorites';
+    }
+},
+
+//async mounted() {
+//    await this.loadMyFriends();
+//}
 
 }
 </script>

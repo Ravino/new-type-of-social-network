@@ -7,29 +7,25 @@ $bgImage: "/images/plizi-bg-exp.svg";
     min-height: 800px;
 }
 
-body.LoginPage,
-body.UpdatePasswordPage,
-body.HomePage {
+.LoginPage,
+.UpdatePasswordPage,
+.HomePage {
     background-image: url($bgImage);
     background-size: cover;
     background-repeat: no-repeat;
     background-position: center center;
     background-attachment: fixed;
-}
-
-body.LoginPage > .container-fluid,
-body.UpdatePasswordPage > .container-fluid,
-body.HomePage > .container-fluid {
-    max-width: 1008px;
-}
-
-body.LoginPage .modal-dialog-centered {
-    width: 100%;
-    max-width: 420px;
-}
-
-body.LoginPage .modal-body {
-    padding: 35px 60px 50px;
+    .container-fluid {
+        max-width: 1008px;
+    }
+    .modal-dialog-centered {
+        width: 100%;
+        max-width: 420px;
+        margin: 0 auto;
+    }
+    .modal-body {
+        padding: 35px 60px 50px;
+    }
 }
 
 #guestPageWrapper {
@@ -59,9 +55,8 @@ body.LoginPage .modal-body {
 
     .icon {
         position: absolute;
-        top: 50%;
+        top: 13px;
         left: 10px;
-        transform: translateY(-50%);
     }
 
     .btn-primary {
@@ -116,22 +111,5 @@ body.LoginPage .modal-body {
         }
     }
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 

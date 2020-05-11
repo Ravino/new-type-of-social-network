@@ -16,15 +16,14 @@
                 </router-link>
             </div>
 
-            <div class="nav-item">
-                <span class="dropdown-item px-3 py-1" @click.prevent="onAddToFavoritesClick">
-                    Добавить в Избранные
-                </span>
-            </div>
-
-            <div class="nav-item">
+            <div v-if="isFavorite" class="nav-item">
                 <span class="dropdown-item px-3 py-1" @click.prevent="onRemoveFromFavoritesClick">
                     Удалить из Избранных
+                </span>
+            </div>
+            <div v-else class="nav-item">
+                <span class="dropdown-item px-3 py-1" @click.prevent="onAddToFavoritesClick">
+                    Добавить в Избранные
                 </span>
             </div>
 
@@ -44,12 +43,13 @@
 </template>
 
 <script>
-import Plizifriend from '../classes/PliziFriend.js';
+import PliziFriend from '../classes/PliziFriend.js';
 
 export default {
 name : 'FriendListItemMenu',
 props : {
-    friend : Plizifriend
+    friend : PliziFriend,
+    isFavorite: Boolean
 },
 
 methods: {

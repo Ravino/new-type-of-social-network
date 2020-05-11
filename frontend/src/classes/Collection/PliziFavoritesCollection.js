@@ -1,17 +1,16 @@
 import PliziFriend from '../PliziFriend.js';
-import PliziCollection from './PliziCollection.js';
+import PliziStoredCollection from './PliziStoredCollection.js';
 
 /**
  * класс для работы со списком Избранных
- * Chosens, а не Favorites чтобы буква F с френдами не путалась
  */
-class PliziChosensCollection extends PliziCollection {
+class PliziFavoritesCollection extends PliziStoredCollection {
 
-    localStorageKey = `pliziChosens`;
+    localStorageKey = `pliziFavorites`;
 
-    restoreEventName = 'ChosensIsRestored';
-    loadEventName = 'ChosensIsLoaded';
-    updateEventName = 'ChosensIsUpdated';
+    restoreEventName = 'FavoritesIsRestored';
+    loadEventName = 'FavoritesIsLoaded';
+    updateEventName = 'FavoritesIsUpdated';
 
     /**
      * метод сравнения для сортировки
@@ -27,19 +26,28 @@ class PliziChosensCollection extends PliziCollection {
     }
 
 
-    onAddChosensToFavorites(evData){
-        window.console.warn(evData,`onAddFriendsToChosens`);
-        //this.add(evData);
-        //this.storeData();
-        //this.emit(this.updateEventName);
+    onAddToFavorites(evData){
+        window.console.warn(evData,`onAddToFavorites`);
+        this.add(evData);
+        this.storeData();
+        this.restore();
+        this.emit(this.updateEventName);
+    }
+
+    onRemoveFromFavorites(removedFriendId){
+        window.console.warn(removedFriendId,`onRemoveFromFavorites`);
+        this.delete(removedFriendId.id);
+        this.storeData();
+        this.restore();
+        this.emit(this.updateEventName);
     }
 
     /**
      * проверяем есть юзер с userID ли в Избранных
-     * @param {number} userID - проверяемый ID
+     * @param {string} userID - проверяемый ID
      * @returns {boolean} - true если userID есть во Избранных
      */
-    checkIsChosens(userID){
+    checkIsFavorite(userID){
         const res = this.collection.get(userID);
         return !! res;
     }
@@ -74,29 +82,13 @@ class PliziChosensCollection extends PliziCollection {
     }
 
 
-    restore(){
-        this.clean();
-
-        this.restoreData();
-
-        if (this.size > 0) {
-            this.isLoad = true;
-            if (this.restoreEventName) {
-                this.emit(this.restoreEventName);
-            }
-
-            return true;
-        }
-    }
-
-
     async load(){
-        this.clean();
+        this.clear();
 
         let apiResponse = null;
 
         try {
-            apiResponse = await this.api.$friend.chosens();
+            apiResponse = await this.api.$friend.favorites();
         }
         catch (e){
             window.console.warn(e.detailMessage);
@@ -120,8 +112,8 @@ class PliziChosensCollection extends PliziCollection {
     }
 
 
-    chosenStateUpdated(invID, newData){
-        window.console.log(`chosenStateUpdated`);
+    favoriteStateUpdated(invID, newData){
+        window.console.log(`favoriteStateUpdated`);
         let favorite = this.get(invID);
 
         if (favorite) {
@@ -131,4 +123,4 @@ class PliziChosensCollection extends PliziCollection {
 
 }
 
-export { PliziChosensCollection as default }
+export { PliziFavoritesCollection as default }

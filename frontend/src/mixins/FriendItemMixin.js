@@ -1,4 +1,5 @@
 import PliziFriend from '../classes/PliziFriend.js';
+import moment from "moment";
 
 const FriendItemMixin = {
 
@@ -18,14 +19,41 @@ methods: {
         this.openDialogWithFriend( this.friend.id );
     },
 
-    getSexTitle(fItem){
-        if (`m` === fItem.sex)
-            return `был давно`;
+    lastFriendActivity(fItem){
+        const sexTitle = this.getSexTitle(fItem.sex);
 
-        if (`f` === fItem.sex)
-            return `была давно`;
+        let now = moment();
+        let yesterday = moment().subtract(1, 'days');
+        let lmt = moment.unix(fItem.lastActivity);
 
-        return `был(а) давно`;
+        // если был сегодня
+        if (now.format('YYYY-MM-DD')===lmt.format('YYYY-MM-DD')) {
+            return sexTitle+' сегодня в '+lmt.format('HH:mm');
+        }
+
+        // если был вчера
+        if (yesterday.format('YYYY-MM-DD')===lmt.format('YYYY-MM-DD')) {
+            return sexTitle+' вчера в '+lmt.format('HH:mm');
+        }
+
+        // сообщение было в течение последних 7 дней
+        let lastWeek = moment().subtract(7, 'days');
+        if ( +lmt.format('X') >= +lastWeek.format('X')) {
+            let dow = lmt.format('dddd');
+            return sexTitle+' '+dow.charAt(0).toUpperCase() + dow.slice(1);
+        }
+
+        return sexTitle+' '+lmt.format('DD.MM.YY');
+    },
+
+    getSexTitle(sex){
+        if ( `m` === sex )
+            return `был`;
+
+        if ( `f` === sex )
+            return `была`;
+
+        return `был(а)`;
     }
 }
 

@@ -1,10 +1,10 @@
 import PliziFriend from '../PliziFriend.js';
-import PliziCollection from './PliziCollection.js';
+import PliziStoredCollection from './PliziStoredCollection.js';
 
 /**
  * класс для работы со списком друзей
  */
-class PliziFriendsCollection extends PliziCollection {
+class PliziFriendsCollection extends PliziStoredCollection {
 
     localStorageKey = `pliziFriends`;
 
@@ -55,20 +55,6 @@ class PliziFriendsCollection extends PliziCollection {
 
 
     /**
-     * возвращает список buddies
-     * TODO: переписать на реальный возврат
-     * @returns {PliziFriend[]} - список buddies
-     */
-    get buddies(){
-        if (this.size>0) {
-            return this.__shuffle(this.asArray()).slice(0, 10);
-        }
-
-        return [];
-    }
-
-
-    /**
      * @param a
      * @returns {*}
      * @private
@@ -86,6 +72,7 @@ class PliziFriendsCollection extends PliziCollection {
         return a;
     }
 
+
     new(data){
         return new PliziFriend(data);
     }
@@ -93,7 +80,7 @@ class PliziFriendsCollection extends PliziCollection {
 
     /**
      * поиск друга по ID
-     * @param {number} ID - ID нужной сущности
+     * @param {string} ID - ID нужной сущности
      * @returns {PliziFriend} - нужная сущность, или UNDEFINED если не нашли
      */
     get(ID){
@@ -118,15 +105,7 @@ class PliziFriendsCollection extends PliziCollection {
 
 
     async load(){
-        this.clean();
-
-        this.restoreData();
-
-        if (this.size > 0) {
-            this.isLoad = true;
-            this.emit(this.restoreEventName);
-            return true;
-        }
+        this.clear();
 
         let apiResponse = null;
 

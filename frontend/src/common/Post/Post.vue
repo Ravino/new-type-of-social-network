@@ -5,13 +5,24 @@
             <div class="col-12 border-bottom plz-post-item-header">
                 <div class="post-news-item d-flex flex-row align-content-center pb-4">
                     <div class="post-poster-pic mr-3">
-                        <img :src="post.posterPic" :alt="post.posterName"/>
+                        <router-link v-if="postable" :to="{name: 'PersonalPage', params: {id: postable.id}}">
+                            <img :src="post.posterPic" :alt="post.posterName"/>
+                        </router-link>
+                        <router-link v-else :to="{name: 'CommunityPage', params: {id: post.community.id}}">
+                            <img :src="post.posterPic" :alt="post.posterName"/>
+                        </router-link>
                     </div>
 
                     <div class="post-poster-name d-flex flex-column justify-content-center">
                         <h6 class="post-poster-title mb-1">
                             <!-- TODO: @TGA странно что мы нигде не выводим название поста-->
-                            <b>{{post.posterName}}</b>
+
+                            <router-link v-if="postable" :to="{name: 'PersonalPage', params: {id: postable.id}}">
+                                <b>{{post.posterName}}</b>
+                            </router-link>
+                            <router-link v-else :to="{name: 'CommunityPage', params: {id: post.community.id}}">
+                                <b>{{post.posterName}}</b>
+                            </router-link>
                         </h6>
                         <time :datetime="post.createdAt" class="post-poster-time">
                             {{ post.createdAt | lastPostTime }}
@@ -27,17 +38,17 @@
                                 aria-expanded="false">
                             <i class="dots-vertical"></i>
                         </button>
-                        <div class="dropdown-menu dropdown-menu-right py-3 px-3"
+                        <div class="dropdown-menu dropdown-menu-right py-3 px-0"
                              :aria-labelledby="`postSettings` + post.id">
 
                             <div class="nav-item">
-                                <button class="btn dropdown-item px-0 py-1"
+                                <button class="btn dropdown-item px-3 py-1"
                                         @click="$emit('onEditPost', post)">
                                     Редактировать
                                 </button>
                             </div>
                             <div class="nav-item">
-                                <button class="btn dropdown-item px-0 py-1"
+                                <button class="btn dropdown-item px-3 py-1"
                                         @click="$emit('deletePost', post.id)">
                                     Удалить
                                 </button>
@@ -52,13 +63,24 @@
                     <template v-if="post.sharedFrom">
                         <div class="post-news-item d-flex flex-row align-content-center pb-4">
                             <div class="post-poster-pic mr-3">
-                                <img :src="post.sharedFrom.posterPic" :alt="post.sharedFrom.posterName"/>
+                                <router-link v-if="post.sharedFrom.user" :to="{name: 'PersonalPage', params: {id: post.sharedFrom.user.id}}">
+                                    <img :src="post.sharedFrom.posterPic" :alt="post.sharedFrom.posterName"/>
+                                </router-link>
+                                <router-link v-else :to="{name: 'CommunityPage', params: {id: post.sharedFrom.community.id}}">
+                                    <img :src="post.sharedFrom.posterPic" :alt="post.sharedFrom.posterName"/>
+                                </router-link>
                             </div>
 
                             <div class="post-poster-name d-flex flex-column justify-content-center">
                                 <h6 class="post-poster-title mb-1">
                                     <!-- TODO: @TGA странно что мы нигде не выводим название поста-->
-                                    <b>{{post.sharedFrom.posterName}}</b>
+
+                                    <router-link v-if="post.sharedFrom.user" :to="{name: 'PersonalPage', params: {id: post.sharedFrom.user.id}}">
+                                        <b>{{post.sharedFrom.posterName}}</b>
+                                    </router-link>
+                                    <router-link v-else :to="{name: 'CommunityPage', params: {id: post.sharedFrom.community.id}}">
+                                        <b>{{post.sharedFrom.posterName}}</b>
+                                    </router-link>
                                 </h6>
                                 <time :datetime="post.sharedFrom.createdAt" class="post-poster-time">
                                     {{ post.sharedFrom.createdAt | lastPostTime }}
@@ -167,6 +189,10 @@
         },
         props: {
             post: PliziPost,
+            isCommunity: {
+                type: Boolean,
+                default: false,
+            },
         },
         computed: {
             detectYoutubeLink() {
@@ -180,6 +206,13 @@
                 if (this.detectYoutubeLink) {
                     return `<img src="//img.youtube.com/vi/${this.detectYoutubeLink}/0.jpg" alt="" />`;
                 }
+            },
+            postable() {
+                if (this.isCommunity) {
+                    return this.post.author;
+                }
+
+                return this.post.user ? this.post.user : null;
             },
         },
         methods: {

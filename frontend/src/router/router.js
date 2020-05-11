@@ -20,6 +20,7 @@ import CommunitiesListPage from '../pages/CommunitiesListPage.vue';
 import CommunitiesManagePage from '../pages/CommunitiesManagePage.vue';
 import CommunitiesPopularPage from '../pages/CommunitiesPopularPage.vue';
 import CommunityPage from '../pages/CommunityPage.vue';
+import Error404Page from '../pages/Error404Page.vue';
 
 const routes = [
     {path: '/', redirect: '/login', isGuest: true},
@@ -43,6 +44,7 @@ const routes = [
     {path: '/manage-communities', component: CommunitiesManagePage, name: 'CommunitiesManagePage', meta: {title: 'Plizi: Управление сообществами'}, props: true },
     {path: '/popular-communities', component: CommunitiesPopularPage, name: 'CommunitiesPopularPage', meta: {title: 'Plizi: Популярные сообщества'}, props: true },
     {path: '/community-:id', component: CommunityPage, name: 'CommunityPage', meta: {title: 'Plizi: Популярные сообщества'}, props: true },
+    {path: '*', component: Error404Page, name: 'Error404Page', meta: {title: 'Page not found', isNotFound: true} },
 ];
 
 const router = new VueRouter({
@@ -58,6 +60,7 @@ function routerForcedLogout(next, to) {
     window.localStorage.removeItem('pliziChatChannel');
     window.localStorage.removeItem('pliziLastSearch');
     window.localStorage.removeItem('pliziFriends');
+    window.localStorage.removeItem('pliziFavorites');
     window.localStorage.removeItem('pliziDialogs');
     window.localStorage.removeItem('pliziInvitations');
     window.localStorage.removeItem('pliziNotifications');
@@ -98,7 +101,7 @@ async function checkRouteAuth(to, from, next) {
     const gwt = window.localStorage.getItem('pliziJWToken');
 
     if ((gwt + '') !== 'null' && gwt !== '') {
-        const tstUserData = window.app.$root.$auth.restoreData()
+        const tstUserData = window.app.$root.$auth.restoreData();
 
         if (tstUserData) {
             window.app.$root.$emit('AfterUserRestore', {
@@ -128,7 +131,7 @@ async function checkRouteAuth(to, from, next) {
             }
         }
     }
-    else {
+    else if (!to.meta.isNotFound) {
         routerForcedLogout(next, to);
     }
 

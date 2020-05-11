@@ -1,16 +1,15 @@
 import AccountToolbarLeft from '../common/AccountToolbarLeft.vue';
 import Spinner from '../common/Spinner.vue';
 
-
 import FavoriteFriends from '../common/FavoriteFriends.vue';
 import IconSearch from '../icons/IconSearch.vue';
 
 import FriendsListHeader from '../common/FriendsListHeader.vue';
-
 import PotentialFriends from '../common/PotentialFriends.vue';
 
 import PliziUser from '../classes/PliziUser.js'; // @TGA не удалять - объявление PliziUser тут нужно
 import PliziFriend from '../classes/PliziFriend.js';
+import { shuffle } from "../utils/ArrayUtils";
 
 const FriendsListMixin = {
 components: {
@@ -30,34 +29,13 @@ data() {
     }
 },
 
-computed: {
-    friendsList(){
-        return this.$root.$auth.fm.asArray();
-    },
-
-    isFriendsLoaded(){
-        return true;
-    }
-},
-
 methods: {
 
     /**
      * @param a
      * @returns {*}
      */
-    shuffle(a){
-        if(a) {
-            a = a.map( iA => iA);
-
-            for (let i = a.length - 1; i > 0; i--) {
-                const j = Math.floor(Math.random() * (i + 1));
-                [a[i], a[j]] = [a[j], a[i]];
-            }
-        }
-
-        return a;
-    },
+    shuffle,
 
     /**
      * Получение возможных друзей.

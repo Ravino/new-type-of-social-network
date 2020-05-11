@@ -1,5 +1,5 @@
 <template>
-    <div class="plz-top-watcher-item position-relative d-inline-block mr-2">
+    <div class="plz-top-watcher-item position-relative d-inline-block  mr-0 mr-sm-2">
         <router-link to="/chats" tag="a" class="btn btn-link my-auto text-body btn-sm">
             <IconMessageShort />
         </router-link>

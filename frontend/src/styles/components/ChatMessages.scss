@@ -49,5 +49,65 @@ $minHeight: 200px;
 }
 
 
+#plzNotification {
+    position: fixed;
+    bottom: 50px;
+    left: 35px;
+    .plz-notification {
+        background-color: rgba(19, 19, 19, .94);
+        border-radius: 20px;
+        box-shadow: 0 2px 5px 0 rgba(0, 0, 0, 0.05);
+
+        &-pic {
+            width: 38px;
+            min-width: 38px;
+            height: 38px;
+            position: relative;
+            overflow: hidden;
+            border-radius: 50%;
+            img {
+                position: absolute;
+                top: 50%;
+                left: 50%;
+                transform: translate(-50%, -50%);
+                width: 100%;
+                height: auto;
+            }
+        }
+
+        &-name {
+            font-size: 12px;
+            color: #ffffff;
+        }
+        &-body {
+            max-width: 380px;
+            overflow: hidden;
+            &-text {
+                word-break: break-word;
+            }
+            p {
+                font-size: 12px;
+                color: $textGreyColor;
+                margin-bottom: 4px;
+                word-break: break-word;;
+            }
+        }
+
+        .btn {
+            height: 25px;
+        }
+    }
+
+
+    .icon-close-notification {
+        display: inline-block;
+        vertical-align: middle;
+        background: url(/images/icons/close.svg) 50% 50% no-repeat;
+        width: 20px;
+        height: 20px;
+        cursor: pointer;
+    }
+}
+
 
 

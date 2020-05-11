@@ -150,6 +150,26 @@ class PliziCommunitiesAPI extends PliziBaseAPI {
     }
 
 
+    /**
+     * загружает аватарку сообщества
+     * @param {formData} formData - данные для загрузки
+     * @returns {object|null} - ответ сервера
+     * @throws PliziAPIError
+     */
+    async updatePrimaryImage(formData) {
+        let response = await this.__axios.post('/api/communities/attachments', formData, this.authFileHeaders)
+            .catch((error) => {
+                this.checkIsTokenExpires(error, `$communities.updatePrimaryImage`);
+                throw new PliziAPIError(`$communities.updatePrimaryImage`, error.response);
+            });
+
+        if (response.status === 201) {
+            return response.data;
+        }
+
+        return null;
+    }
+
 }
 
 export default PliziCommunitiesAPI;

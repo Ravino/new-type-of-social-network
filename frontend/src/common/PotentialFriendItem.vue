@@ -18,17 +18,19 @@
             </div>
         </div>
 
-        <a class="plz-potential-friend-is-active text-body" @click="sendInvite()">
+        <a class="plz-potential-friend-is-active text-body" @click="sendFriendshipInvitation(friend.id, friend.fullName)">
             <IconAddUser/>
         </a>
     </div>
 </template>
 <script>
 import IconAddUser from '../icons/IconAddUser.vue';
+import FriendshipInvitationMixin from '../mixins/FriendshipInvitationMixin';
 
 export default {
 name : 'ShortFriendItem',
 components : {IconAddUser},
+mixins: [FriendshipInvitationMixin],
 props : {
     friend : Object
 },
@@ -43,10 +45,6 @@ methods: {
 
         return `был(а) давно`;
     },
-
-    sendInvite(){
-        this.$root.$alert('Отправка инвайта', 'bg-info', 3);
-    }
 },
 }
 </script>

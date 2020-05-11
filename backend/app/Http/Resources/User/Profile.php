@@ -18,6 +18,9 @@ class Profile extends JsonResource
             'location' => new CityResource($this->city),
             'relationshipId' => $this->relationship_id,
             'userPic' => $this->user_pic,
+            'avatar' => $this->avatar
+                ? new Image($this->avatar)
+                : null
         ];
     }
 }

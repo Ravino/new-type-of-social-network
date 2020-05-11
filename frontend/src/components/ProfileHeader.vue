@@ -3,7 +3,7 @@
         <div class="col-md-3 pl-0">
             <div class="plz-profile-userpic-container d-flex flex-column h-100 bg-white-br20 overflow-hidden">
                 <div class="plz-profile-userpic-wrapper overflow-hidden position-relative d-flex align-items-center justify-content-center ">
-                    <img ref="userAvatar" :src="userData.userPic" :alt="userData.fullName"/>
+                    <img ref="userAvatar" :src="userAvatar" :alt="userData.fullName" />
                 </div>
 
                 <div v-if="isOwner===true" class="plz-profile-userpic-footer mt-auto">
@@ -22,7 +22,7 @@
                 <div v-else class="plz-profile-userpic-footer">
                     <div class="plz-profile-userpic-edit d-flex align-items-center justify-content-between overflow-hidden d-flex m-0 p-0">
                         <button class="btn align-items-center justify-content-center d-flex w-75 border-right" @click="showPersonalMsgDialog()">Написать</button>
-                        <button class="btn align-items-center justify-content-center d-flex w-25" @click="sendFriendshipInvitation()" title="добавить в друзья">
+                        <button class="btn align-items-center justify-content-center d-flex w-25" @click="sendFriendshipInvitation(userData.id, userData.fullName)" title="добавить в друзья">
                             <IconAddUser/>
                         </button>
                     </div>
@@ -97,10 +97,13 @@ import IconLocation from '../icons/IconLocation';
 
 import PliziUser from '../classes/PliziUser.js';
 import PliziAuthUser from '../classes/PliziAuthUser.js';
+import PliziAvatar from '../classes/User/PliziAvatar';
+import FriendshipInvitationMixin from '../mixins/FriendshipInvitationMixin';
 
 export default {
 name: 'ProfileHeader',
 components: {IconLocation, IconAddUser},
+mixins: [FriendshipInvitationMixin],
 props: {
     userData: PliziUser|PliziAuthUser,
     isOwner : Boolean
@@ -112,6 +115,9 @@ data() {
 computed: {
     usrFriendsNumber(){
         return (this.isOwner) ? this.userData.stats.totalFriendsCount : this.userData.friendsNumber;
+    },
+    userAvatar() {
+        return this.userData.avatar?.image?.medium.path || this.userData.userPic;
     }
 },
 methods: {
@@ -129,54 +135,41 @@ methods: {
         this.$root.$emit('showPersonalMsgModal', { user: this.userData, src : this.$route.name });
     },
 
-
-    async sendFriendshipInvitation(){
-        let apiResponse = null;
-
-        try {
-            apiResponse = await this.$root.$api.$friend.sendFriendshipInvitation(this.userData.id);
-        }
-        catch (e) {
-            window.console.warn(e.detailMessage);
-            return;
-        }
-
-        if (apiResponse !== null) {
-            if (apiResponse.status === 200) {
-                this.$alert(`<h6>Приглашение дружить</h6>
-<div class="alert alert-info">
-    Приглашение дружбы для <b class="friend-name">${this.userData.fullName}</b> отправлено!
-</div>`, `bg-success`, 10);
-            }
-
-            if (apiResponse.status === 422) {
-                this.$alert(`<h6>Приглашение дружить</h6><div class="alert alert-info">${apiResponse.message}.</div>`, `bg-info`, 10);
-            }
-        }
-    },
-
-
     async uploadUserAvatar(){
         if (this.isOwner!==true)
             return;
 
         const formData = this.getFormData();
 
-        if (! formData)
+        if (!formData) {
             return;
+        }
+
+        const { size } = formData.get('image');
+
+        if (size > 2000000) {
+            this.showErrorOnLargeFile();
+            return;
+        }
 
         let apiResponse = null;
 
         try {
             apiResponse = await this.$root.$api.userProfileImage(formData);
-        }
-        catch (e) {
+        } catch (e) {
+            if (e.status === 422) {
+                this.showErrorOnLargeFile();
+                return;
+            }
+
             window.console.warn(e.detailMessage);
         }
 
         if (apiResponse !== null) {
             this.$root.$auth.user.userPic = apiResponse.data.path;
-            this.$refs.userAvatar.src = this.$root.$auth.user.userPic;
+            this.$root.$auth.user.avatar = new PliziAvatar(apiResponse.data);
+            this.$refs.userAvatar.src = this.$root.$auth.user.avatar?.image?.medium.path || this.$root.$auth.user.userPic;
+            this.$root.$auth.storeUserData();
             this.$root.$emit('updateUserAvatar', {userPic: this.$root.$auth.user.userPic});
         }
     },
@@ -201,8 +194,22 @@ methods: {
         const formData = new FormData();
         formData.append('image', this.$refs.userAvatarFile.files[0]);
         formData.append('tag', 'primary');
+        this.$refs.userAvatarFile.value = '';
 
         return formData;
+    },
+
+    showErrorOnLargeFile() {
+        this.$alert(`<h4 class="text-white">Ошибка</h4>
+                <div class="alert alert-danger">
+                    Превышен максимальный размер файла.
+                    <br />
+                    Максимальный размер файла:
+                    <b class="text-success">2 MB</b>
+                </div>`,
+            `bg-danger`,
+            30
+        );
     }
 }
 

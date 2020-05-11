@@ -56,6 +56,7 @@
             </div>
         </div>
 
+        <ChatNotifications :notifications="notifications" @removeNotification="removeNotification"/>
     </div>
 </template>
 
@@ -70,15 +71,20 @@ import ChatFooter from '../common/Chat/ChatFooter.vue';
 
 import PliziDialog from '../classes/PliziDialog.js';
 import PliziMessage from '../classes/PliziMessage.js';
+import NotificationMixin from '../mixins/NotificationMixin';
+import ChatNotifications from "../common/Chat/ChatNotifications";
 
 export default {
 name: 'ChatsListPage',
 components: {
+    ChatNotifications,
     ChatDialogs,
     AccountToolbarLeft,
     Spinner,
     ChatHeader, ChatMessages, ChatFooter,
 },
+
+mixins: [NotificationMixin],
 
 data() {
     return {
@@ -155,8 +161,19 @@ methods: {
         if ('ChatsListPage'!==this.$root.$router.currentRoute.name)
             return;
 
-        this.addMessageToMessagesList(evData.message);
+        if (this.currentDialog.id === evData.message.chatId) {
+         this.addMessageToMessagesList(evData.message);
+        }
+
         this.updateDialogsList(evData.chatId, evData);
+    },
+
+    addNewMessageNotification({ message }) {
+        if (message.isMine || this.currentDialog.id === message.chatId) {
+            return;
+        }
+
+        this.addNotification(message);
     },
 
     updateDialogsList(chatId, evData){
@@ -199,6 +216,7 @@ methods: {
 
     addListeners(){
         this.$root.$on('newMessageInDialog', this.addNewChatMessageToList);
+        this.$root.$on('newMessageInDialog', this.addNewMessageNotification);
         this.$root.$on('removeMessageInDialog', this.removeMessageInList);
     }
 },

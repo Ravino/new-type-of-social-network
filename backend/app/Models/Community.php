@@ -4,7 +4,13 @@ namespace App\Models;
 
 use App\CommunityMember;
 use App\Traits\NPerGroup;
+use Auth;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
+use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\HasOne;
+use Illuminate\Database\Eloquent\Relations\MorphMany;
 use Spiritix\LadaCache\Database\LadaCacheTrait;
 
 class Community extends Model
@@ -15,14 +21,25 @@ class Community extends Model
     const ROLE_ADMIN = 'admin';
     const ROLE_AUTHOR = 'author';
 
+    public const PRIVACY_OPEN = 1;
+    public const PRIVACY_CLOSED = 2;
+    public const PRIVACY_PRIVATE = 3;
+
+    public const TYPE_BUSINESS = 1;
+    public const TYPE_THEMES = 2;
+    public const TYPE_BRAND = 3;
+    public const TYPE_INTEREST_GROUP = 4;
+    public const TYPE_PUBLIC_PAGE = 5;
+    public const TYPE_EVENT = 6;
+
     protected $fillable = [
-        'name', 'description', 'notice', 'primary_image', 'url', 'website', 'location', 'is_verified'
+        'name', 'description', 'notice', 'primary_image', 'url', 'website', 'location', 'is_verified', 'type', 'theme_id', 'privacy',
     ];
 
     protected $with = ['role'];
 
     /**
-     * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany
+     * @return BelongsToMany
      */
     public function users()
     {
@@ -35,7 +52,7 @@ class Community extends Model
     }
 
     /**
-     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     * @return HasMany
      */
     public function members()
     {
@@ -43,31 +60,39 @@ class Community extends Model
     }
 
     /**
-     * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany
+     * @return BelongsToMany
      */
     public function authors()
     {
-        return $this->belongsToMany(User::class, 'community_members')->withPivot(['role'])->wherePivot('role', Community::ROLE_AUTHOR);
+        return $this->belongsToMany(User::class, 'community_members')->withPivot(['role'])->wherePivot('role', self::ROLE_AUTHOR);
     }
 
     /**
-     * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany
+     * @return BelongsToMany
      */
     public function admins()
     {
-        return $this->belongsToMany(User::class, 'community_members')->withPivot(['role'])->wherePivot('role', Community::ROLE_ADMIN);
+        return $this->belongsToMany(User::class, 'community_members')->withPivot(['role'])->wherePivot('role', self::ROLE_ADMIN);
     }
 
     /**
-     * @return \Illuminate\Database\Eloquent\Relations\HasOne
+     * @return HasOne
      */
     public function role()
     {
-        return $this->hasOne(CommunityMember::class)->where('community_members.user_id', \Auth::user()->id);
+        return $this->hasOne(CommunityMember::class)->where('community_members.user_id', Auth::user()->id);
     }
 
     /**
-     * @return \Illuminate\Database\Eloquent\Relations\MorphMany
+     * @return BelongsTo
+     */
+    public function theme()
+    {
+        return $this->belongsTo(CommunityTheme::class);
+    }
+
+    /**
+     * @return MorphMany
      */
     public function posts()
     {
@@ -75,7 +100,7 @@ class Community extends Model
     }
 
     /**
-     * @return \Illuminate\Database\Eloquent\Relations\HasOne
+     * @return HasOne
      */
     public function attachment() {
         return $this->hasOne(CommunityAttachment::class);

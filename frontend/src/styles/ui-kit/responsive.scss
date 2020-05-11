@@ -1,0 +1,116 @@
+
+// rules for --px and low
+
+
+/*- md -*/
+@media (max-width: 992px) {
+    .plz-account-settings-body .multiselect__content-wrapper {
+        transform: translateX(-55%);
+    }
+    .plz-account-settings-body-field .fa-map-marker-alt {
+        left: 0;
+    }
+
+    #toolbarLeftColor {
+        .add-new {
+            width: 32px;
+            min-width: 32px;
+            height: 32px;
+            .fa {
+                line-height: 32px;
+            }
+        }
+
+        img{
+            position: relative;
+            width: 32px;
+            height: 32px;
+            border-radius: 100%;
+            overflow: hidden;
+        }
+    }
+
+
+}
+
+/*- md -*/
+@media (max-width: 768px) {
+    #toolbarLeftColor {
+        .add-new {
+            width: 48px;
+            min-width: 48px;
+            height: 48px;
+            .fa {
+                line-height: 48px;
+            }
+        }
+
+        img{
+            position: relative;
+            width: 48px;
+            height: 48px;
+            border-radius: 100%;
+            overflow: hidden;
+        }
+    }
+}
+
+/*- sm -*/
+@media (max-width: 576px) {
+    .plz-latest-entries {
+        h6 {
+            padding-left: 0;
+        }
+        &-list {
+            padding: 0 10px;
+            display: flex;
+            justify-content: space-between;
+            flex-wrap: wrap;
+        }
+        &-item {
+            width: 48%;
+            margin-right: 0;
+        }
+    }
+    #pliziMobile .plizi-mobile {
+        min-height: 200px;
+    }
+    .modal {
+        min-height: 600px;
+
+        &:before {
+            right: 15px;
+        }
+    }
+
+    .LoginPage,
+    .UpdatePasswordPage,
+    .HomePage {
+        .modal-body {
+            padding: 35px 20px 50px;
+        }
+    }
+
+    #authHeader {
+        .plz-top-watcher {
+            .icon {
+                height: 20px;
+                width: 20px;
+            }
+        }
+        .counter-info {
+            left: 80%;
+            top: 2px;
+        }
+    }
+
+    .plz-account-settings-body-field {
+        padding: 0;
+    }
+
+    #toolbarLeftColor {
+        overflow: auto;
+    }
+
+
+}

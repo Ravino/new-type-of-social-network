@@ -56,6 +56,11 @@ class Profile extends Model
         return $this->hasOne(City::class, 'id', 'geo_city_id');
     }
 
+    public function avatar()
+    {
+        return $this->hasOne(ImageUpload::class, 'user_id', 'user_id')->where('tag', ImageUpload::TAG_PRIMARY);
+    }
+
     public function user()
     {
         return $this->belongsTo(User::class);

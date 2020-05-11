@@ -3,45 +3,68 @@
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
+use App\Http\Resources\User\Image;
 use App\Models\ImageUpload;
 use App\Http\Requests\ImageUpload\StoreImage;
-use Storage;
+use App\Services\S3UploadService;
+use Exception;
 
 class ImageUploadController extends Controller
 {
-
     /**
      * @var ImageUpload
      */
     private $imageUpload;
 
     /**
+     * @var S3UploadService
+     */
+    private $uploadService;
+
+    /**
      * ImageUploadController constructor.
      * @param ImageUpload $imageUpload
+     * @param S3UploadService $uploadService
      */
-    public function __construct(ImageUpload $imageUpload)
+    public function __construct(ImageUpload $imageUpload, S3UploadService $uploadService)
     {
         $this->imageUpload = $imageUpload;
+        $this->uploadService = $uploadService;
     }
-
 
     /**
      * @param StoreImage $request
-     * @param $tag
-     * @return \Illuminate\Http\JsonResponse
+     * @return Image
+     * @throws Exception
      */
     public function upload(StoreImage $request)
     {
-        $path = Storage::disk('s3')->put('images/originals', $request->image, 'public');
-        $request->merge([
-            'size' => $request->image->getSize(),
-            'original_name' => $request->image->getClientOriginalName(),
-            'path' => $path,
-            'mime_type' => $request->image->getClientMimeType()
+        $uploaded = $this->uploadService->singleUpload('images/originals', $request->image, 'public', [
+            'normal' => [
+                'size' => 600,
+            ],
+            'medium' => [
+                'size' => [211, 211],
+            ],
+            'thumb' => [
+                'size' => [80, 80],
+            ],
         ]);
-        $image_upload = $this->imageUpload->create($request->only('original_name', 'path', 'title', 'size', 'tag', 'mime_type'));
-        return response()->json(['data' => [
-            'path' => $image_upload->url
-        ]]);
+        $request->merge($uploaded);
+
+        $image_upload = $this->imageUpload->create($request->only('original_name', 'path', 'title', 'size', 'tag', 'mime_type',
+            'image_original_width',
+            'image_original_height',
+            'image_normal_path',
+            'image_normal_width',
+            'image_normal_height',
+            'image_medium_path',
+            'image_medium_width',
+            'image_medium_height',
+            'image_thumb_path',
+            'image_thumb_width',
+            'image_thumb_height'));
+
+        return new Image($image_upload);
     }
 }

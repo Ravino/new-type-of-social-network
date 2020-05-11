@@ -43,7 +43,7 @@ Vue.filter('calcAge', (bDate) => {
 Vue.filter('lastEventTime', (messageDT) => {
     let now = moment();
     let yesterday = moment().subtract(1, 'days');
-    let lmt = moment.unix(messageDT);
+    let lmt = moment(messageDT);
 
     // если сообщение было сегодня или вчера
     if (now.format('YYYY-MM-DD')===lmt.format('YYYY-MM-DD')  ||  yesterday.format('YYYY-MM-DD')===lmt.format('YYYY-MM-DD')) {
@@ -66,7 +66,7 @@ Vue.filter('lastEventTime', (messageDT) => {
 Vue.filter('lastMessageTime', (messageDT) => {
     let now = moment();
     let yesterday = moment().subtract(1, 'days');
-    let lmt = moment.unix(messageDT);
+    let lmt = moment(messageDT);
 
     // если сообщение было сегодня или вчера
     if (now.format('YYYY-MM-DD')===lmt.format('YYYY-MM-DD')  ||  yesterday.format('YYYY-MM-DD')===lmt.format('YYYY-MM-DD')) {
@@ -89,7 +89,7 @@ Vue.filter('lastMessageTime', (messageDT) => {
 Vue.filter('lastPostTime', (messageDT) => {
     let now = moment();
     let yesterday = moment().subtract(1, 'days');
-    let lmt = moment.unix(messageDT);
+    let lmt = moment(messageDT);
 
     // если сообщение было сегодня или вчера
     if (now.format('YYYY-MM-DD')===lmt.format('YYYY-MM-DD')  ||  yesterday.format('YYYY-MM-DD')===lmt.format('YYYY-MM-DD')) {

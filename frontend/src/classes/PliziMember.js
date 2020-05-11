@@ -14,17 +14,28 @@ class PliziMember extends PliziUzer{
      */
     constructor(usrData){
         super(usrData);
+        this.role = usrData.role;
     }
 
     get role(){
         return this._role;
     }
 
-    toJSON(){
-        let res = super.toJSON();
-        res.role = this.role;
+    set role(value) {
+        this._role = value;
+    }
 
-        return res;
+    get birthDate(){
+        return (this.profile) ? this.profile.birthday : null;
+    }
+
+    toJSON(){
+        return {
+            id: this.id,
+            isOnline: this.isOnline,
+            role : this.role,
+            profile: (this.profile) ? this.profile.toJSON() : null,
+        };
     }
 }
 

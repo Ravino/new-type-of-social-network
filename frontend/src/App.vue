@@ -1,7 +1,7 @@
 <template>
     <div  id="pageWrapper">
         <div v-if="!isAuthorized()" id="guestPageWrapper" class="d-flex flex-column justify-content-center">
-            <div class="--container-fluid container px-0 my-0">
+            <div class="--container-fluid container px-md-0 my-0 pt-4">
 
                 <GuestNavBar></GuestNavBar>
                 <main :id="containerID" role="main"
@@ -19,7 +19,7 @@
 
             <div class="--container-fluid container my-0 container-wide mx-auto">
                 <main :id="containerID" role="main"
-                      class="container-fluid pb-sm-5 pb-md-5">
+                      class="container-fluid pb-sm-5 px-0">
                     <transition>
                         <router-view></router-view>
                     </transition>
@@ -101,8 +101,9 @@ methods: {
         window.localStorage.removeItem('pliziUser');
         window.localStorage.removeItem('pliziChatChannel');
         window.localStorage.removeItem('pliziLastSearch');
-        window.localStorage.removeItem('pliziDialogs');
         window.localStorage.removeItem('pliziFriends');
+        window.localStorage.removeItem('pliziFavorites');
+        window.localStorage.removeItem('pliziDialogs');
         window.localStorage.removeItem('pliziInvitations');
         window.localStorage.removeItem('pliziNotifications');
 
@@ -142,7 +143,7 @@ methods: {
             await this.persistentCollectionsRestore();
         }
     },
-///
+
     isAuthorized(){
         return this.$root.$isAuth;
     },
@@ -153,25 +154,32 @@ methods: {
     },
 
     async persistentCollectionsReload(){
-        await this.$root.$auth.dm.load();
+        await this.$root.$auth.frm.load();
         await this.$root.$auth.fm.load();
-        await this.$root.$auth.cm.load();
+        await this.$root.$auth.dm.load();
         await this.$root.$auth.im.load();
         await this.$root.$auth.nm.load();
     },
 
     async persistentCollectionsRestore(){
+        this.$root.$auth.frm.restore();
+        this.$root.$auth.fm.restore();
         this.$root.$auth.dm.restore();
-        await this.$root.$auth.fm.load();
-        this.$root.$auth.cm.restore();
-        await this.$root.$auth.im.load();
-        await this.$root.$auth.nm.load();
+        this.$root.$auth.im.restore();
+        this.$root.$auth.nm.restore();
     }
 },
 
 
 created(){
-    window.console.log('App created');
+    const style = ['padding: 1rem;',
+        'background: rgb(0, 123, 255);',
+        'font-size: 1.4/3 Verdana;',
+        'font-weight: bold;',
+        'border-radius: 5px 0px 5px 0px;',
+        'color: white;'];
+
+    console.info ( '%c%s', style.join(''), 'Plizi App created');
 
     this.$root.$api = PliziAPI;
     this.$root.$api.init(this.$root);

@@ -15,7 +15,7 @@
                        placeholder="Ваше имя"
                        v-model="model.firstName"
                        :class="{ 'is-invalid': !!firstNameError, 'is-valid': isSuccessFirstName }"
-                       @input="serverRegMessages.firstName = null"
+                       @input="onInput('firstName')"
                        @blur="$v.model.firstName.$touch()"
                        @keydown="registrationKeyDownCheck($event)">
 
@@ -35,7 +35,7 @@
                        placeholder="Ваша фамилия"
                        v-model="model.lastName"
                        :class="{ 'is-invalid': !!lastNameError, 'is-valid': isSuccessLastName }"
-                       @input="serverRegMessages.lastName = null"
+                       @input="onInput('lastName')"
                        @blur="$v.model.lastName.$touch()"
                        @keydown="registrationKeyDownCheck($event)">
 
@@ -55,7 +55,7 @@
                        placeholder="Ваш E-mail"
                        v-model="model.email"
                        :class="{ 'is-invalid': !!emailError, 'is-valid': isSuccessEmail }"
-                       @input="serverRegMessages.email = null"
+                       @input="onInput('email')"
                        @blur="$v.model.email.$touch()"
                        @keydown="registrationKeyDownCheck($event)">
 
@@ -76,7 +76,7 @@
                        pattern="(0[1-9]|1[0-9]|2[0-9]|3[01]).(0[1-9]|1[012]).[0-9]{4}"
                        v-model="model.birthday"
                        :class="{ 'is-invalid': !!birthdayError, 'is-valid': isSuccessBirthday }"
-                       @input="serverRegMessages.birthday = null"
+                       @input="onInput('birthday')"
                        @blur="$v.model.birthday.$touch()"
                        @keydown="registrationKeyDownCheck($event)">
 
@@ -309,6 +309,11 @@
             registrationKeyDownCheck(ev) {
                 if (13 === ev.keyCode)
                     return this.startRegistration();
+            },
+
+            onInput(fieldName) {
+                this.serverRegMessages[fieldName] = null;
+                this.$v.model[fieldName].$touch();
             },
         },
 

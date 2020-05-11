@@ -5,11 +5,11 @@ namespace App\Http\Controllers\Api;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\User\AddToFriend;
 use App\Http\Requests\User\MarkNotificationsAsRead;
-use App\Http\Requests\User\RemoveFromFriends;
 use App\Http\Resources\Notification\NotificationCollection;
 use App\Http\Resources\User\UserCollection;
 use App\Http\Resources\User\UserSearchCollection;
 use App\Models\User;
+use DB;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
@@ -109,11 +109,16 @@ class UserController extends Controller
     }
 
     /**
+     * @param Request $request
      * @return UserCollection
      */
-    public function getMyFriendsList() {
+    public function getMyFriendsList(Request $request) {
         $friend_ids = Auth::user()->getFriends();
-        $friends = User::with( 'profile')->whereIn('id', array_column($friend_ids, 'id'))->get();
+        $friends = User::select(DB::raw("*, COUNT(*) OVER() as total"))
+            ->whereIn('id', array_column($friend_ids, 'id'))
+            ->limit($request->query('limit') ?? 50)
+            ->offset($request->query('offset') ?? 0)
+            ->get();
         foreach ($friends as $friend) {
             $friend->mutual_count = $friend_ids[array_search($friend->id, array_column($friend_ids, 'id'))]['mutual_count'];
         }
@@ -171,6 +176,21 @@ class UserController extends Controller
         } else {
             return response()->json(['message' => 'Данный пользователь не в ваших друзьях'], 422);
         }
+    }
+
+    /**
+     * @param $group
+     * @param $userId
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function deleteFriendFromGroup($group, $userId) {
+        $user = User::where('id', $userId)->first();
+        if (!Auth::user()->isFriendWith($user)) {
+            return response()->json(['message' => 'Данный пользователь не в ваших друзьях'], 422);
+        }
+
+        Auth::user()->ungroupFriend($user, $group);
+        return response()->json(['message' => 'Вы удалили пользователя из группы'], 200);
     }
 
     /**

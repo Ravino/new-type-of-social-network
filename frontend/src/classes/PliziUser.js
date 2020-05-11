@@ -247,6 +247,21 @@ class PliziUser {
     }
 
     /**
+     * @returns {PliziAvatar|null}
+     */
+    get avatar() {
+        return this.profile.avatar;
+    }
+
+    /**
+     * @param {PliziAvatar} avatar
+     */
+    set avatar(avatar)
+    {
+        this.profile.avatar = avatar;
+    }
+
+    /**
      * @returns {string}
      */
     toString(){

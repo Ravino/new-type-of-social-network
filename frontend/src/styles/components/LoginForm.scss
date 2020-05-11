@@ -1,7 +1,6 @@
 
 $plzLoginFormW: 100%;
 $plzSocNetBtnSize: 48px;
-$plzLoginBtnBlueColor: #3D51DE;
 
 #loginFormForm {
     .form-group {
@@ -22,8 +21,7 @@ $plzLoginBtnBlueColor: #3D51DE;
 }
 .plz-login-form {
     width: $plzLoginFormW;
-    max-width: $plzLoginFormW;
-    min-width: $plzLoginFormW;
+    max-width: 100%;
     margin-right: 24px;
 }
 
@@ -143,11 +141,7 @@ $plzLoginBtnBlueColor: #3D51DE;
     padding: 0;
 
     width: 278px;
-    max-width: 278px;
-    min-width: 278px;
     height: 40px;
-    min-height: 40px;
-    max-height: 40px;
     line-height: 34px;
     border-radius: 20px;
     text-align: center;
@@ -160,15 +154,15 @@ $plzLoginBtnBlueColor: #3D51DE;
 }
 
 .btn.plz-btn-primary {
-    background-color: $plzLoginBtnBlueColor;
+    background-color: $blueBtn;
     color: white;
 }
 
 .btn.plz-btn-outline {
-    color: $plzLoginBtnBlueColor;
+    color: $blueBtn;
     background-color: white;
     border-width: 2px;
-    border-color: $plzLoginBtnBlueColor;
+    border-color: $blueBtn;
 }
 
 #btnRecoverPass {

@@ -3,23 +3,39 @@
         :class="{ 'bg-light':  dialog.id === currentDialogID, 'bg-white': dialog.id !== currentDialogID  }">
 
         <div class="user-friend d-flex col-12" @click.prevent="pickChat()">
+
             <div v-if="dialog.isPrivate" class="user-friend-pic mr-3">
-                <img class="user-friend-img rounded-circle overflow-hidden" v-bind:src="dialog.companion.userPic" v-bind:alt="dialog.companion.firstName" />
+                <img class="user-friend-img rounded-circle overflow-hidden"
+                     v-bind:src="dialog.companion.userPic" v-bind:alt="dialog.companion.fullName" />
 
                 <div v-if="isTyper" class="writing"><span></span><span></span><span></span></div>
                 <div v-else class="">
-                    <span v-if="dialog.companion.isOnline" class="user-friend-isonline" :title="dialog.companion.firstName + ' онлайн'"></span>
+                    <span v-if="dialog.companion.isOnline" class="user-friend-isonline"
+                          :title="dialog.companion.firstName + ' онлайн'"></span>
                     <span v-else class="user-friend-isoffline"></span>
                 </div>
             </div>
 
-            <div v-if="dialog.isGroup" class="user-friend-pic mr-3">
-                <img class="user-friend-img rounded-circle overflow-hidden" v-bind:src="dialog.companion.userPic" v-bind:alt="dialog.companion.firstName" />
-            </div>
+            <template v-if="dialog.isGroup"> <!-- TODO: @TGA удалить когда Сергей сделает нормально -->
+                <div class="user-friend-pic mr-3">
+                    <img class="user-friend-img rounded-circle overflow-hidden"
+                         v-bind:src="dialog.companion.userPic" v-bind:alt="dialog.companion.fullName" />
+                </div>
+            </template>
+
+            <template v-if="false"> <!-- @TGA на самом деле "dialog.isGroup" -->
+                <div class="user-friend-pic is-group-chat mr-3">
+                    <img v-for="attende in dialog.attendees"
+                         v-bind:src="attende.userPic"
+                         v-bind:alt="attende.fullName"
+                         v-bind:key="attende.id"
+                         class="user-friend-img rounded-circle overflow-hidden" />
+                </div>/
+            </template>
 
             <div class=" user-friend-body m-0 col-12 pr-5">
                 <div class="user-friend-body-top d-flex align-items-end justify-content-between">
-                    <h6 v-if="dialog.isPrivate" class="user-friend-name my-0">{{ dialog.companion.firstName }}</h6>
+                    <h6 v-if="dialog.isPrivate" class="user-friend-name my-0">{{ dialog.companion.fullName }}</h6>
                     <h6 v-if="dialog.isGroup" class="user-friend-name my-0">{{ groupDialogName }}</h6>
 
                     <small v-if="dialog.isRead " class="mr-1 ml-auto mb-1">
@@ -78,13 +94,15 @@ computed: {
     },
 
     groupDialogName(){
+        if (this.dialog.name)
+            return this.dialog.name;
+
         return 'Вы, '+ this.dialog.attendeesName.join(', ');
     },
 },
 
 methods: {
     pickChat() {
-        window.console.log((new Date().getMilliseconds())+ ` ChatListItem emit SwitchToChat`);
         this.$emit('PickChat', {chatId: this.dialog.id});
     },
 

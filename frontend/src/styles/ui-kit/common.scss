@@ -16,10 +16,30 @@ body {
 h1, h2, h3, h4, h5, h6 {
     font-weight: 600;
 }
+[type="button"] {
+    background-color: transparent;
+}
 
-.btn:focus {
+.btn{
+    max-width: 100%;
+
+    &:focus {
+        outline: none;
+        box-shadow: none;
+    }
+
+    &-primary {
+        background-color: $blueBtn;
+        border-color: $blueBtn;
+        color: white;
+        transition: .4s
+    }
+}
+
+a:active,
+a::-moz-focus-inner{
     outline: none;
-    box-shadow: none;
+    border-color: transparent;
 }
 
 #contentContainer {
@@ -28,15 +48,15 @@ h1, h2, h3, h4, h5, h6 {
 }
 
 .page-logo {
+    max-height: 36px;
+
     &-bg {
         fill: #1554F7;
         transition: .4s;
     }
-}
-
-#authHeader {
-    background-color: #f7f8fc;
-    box-shadow: 0 0 4px 0 rgba(0, 0, 0, .05);
+    svg {
+        min-height: 36px;
+    }
 }
 
 .btn.disabled, .btn:disabled {
@@ -406,7 +426,16 @@ $radioWidth: 18px;
 
     &:hover {
         svg {
-            fill: $iconHoverColor;
+            fill: #bfbfbf;
+        }
+    }
+
+    &--disallow {
+        pointer-events: none;
+        &:hover {
+            svg {
+                fill: $iconHoverColor;
+            }
         }
     }
 }
@@ -439,4 +468,11 @@ input[type=number]::-webkit-outer-spin-button {
 
 input[type=number] {
     -moz-appearance: textfield;
+}
+
+
+//modal
+.modal-content {
+    max-width: 96%;
+    max-height: 96vh;
 }

@@ -34,7 +34,7 @@
                 <IconMessageShort />
             </router-link>
 
-            <a class="text-body" @click="sendInvite()">
+            <a class="text-body" @click="sendFriendshipInvitation(srItem.id, srItem.fullName)">
                 <IconAddUser style="width: 24px; height: 24px;" />
             </a>
 
@@ -49,19 +49,17 @@ import IconMessageShort from '../icons/IconMessageShort';
 import IconAddUser from '../icons/IconAddUser.vue';
 
 import PliziUser from '../classes/PliziUser.js';
+import FriendshipInvitationMixin from "../mixins/FriendshipInvitationMixin";
 
 export default {
 name : 'SearchResultItem',
 components: {IconMessageShort, IconAddUser, IconMessage, IconLocation},
-
+mixins: [FriendshipInvitationMixin],
 props : {
     srItem : PliziUser
 },
 
 methods: {
-    sendInvite(){
-        this.$root.$alert('Отправка инвайта', 'bg-info', 3);
-    }
 }
 }
 </script>

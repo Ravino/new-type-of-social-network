@@ -62,6 +62,7 @@ Route::group(['middleware' => ['auth.jwt', 'track.activity']], function () {
     Route::get('user/friendship/possible', 'Api\UserController@getPossibleFriends');
     Route::get('user/friendship/recommended', 'Api\UserController@getRecommendedFriends');
     Route::post('user/friendship/group', 'Api\UserController@addFriendToGroup');
+    Route::delete('user/friendship/group/{group}/{userId}', 'Api\UserController@deleteFriendFromGroup');
     Route::get('user/friendship/group/{group}', 'Api\UserController@getFriendsFromGroup');
 
     /**
@@ -93,6 +94,8 @@ Route::group(['middleware' => ['auth.jwt', 'track.activity']], function () {
         Route::get('{id}/unsubscribe', 'Api\CommunityController@unsubscribe');
         Route::get('{id}/members', 'Api\CommunityController@members');
         Route::post('attachments', 'Api\CommunityController@uploadAttachments');
+        Route::post('header', 'Api\CommunityController@uploadHeader');
+        Route::get('themes/list', 'Api\CommunityController@themeList');
     });
     Route::get('communities/{community_id}/posts', 'Api\PostController@communityPosts');
 

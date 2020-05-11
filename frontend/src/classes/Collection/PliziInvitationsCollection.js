@@ -1,10 +1,10 @@
 import PliziInvitation from '../PliziInvitation.js';
-import PliziCollection from './PliziCollection.js';
+import PliziStoredCollection from './PliziStoredCollection.js';
 
 /**
  * класс для работы со списком приглашений дружбы
  */
-class PliziInvitationsCollection extends PliziCollection {
+class PliziInvitationsCollection extends PliziStoredCollection {
 
     localStorageKey = `pliziInvitations`;
 
@@ -67,7 +67,7 @@ class PliziInvitationsCollection extends PliziCollection {
 
 
     async load(){
-        this.clean();
+        this.clear();
 
         this.restoreData();
 
