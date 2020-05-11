@@ -1,6 +1,6 @@
 <?php
 
-use Illuminate\Http\Request;
+use App\Http\Controllers\Api\CommunityController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -87,8 +87,8 @@ Route::group(['middleware' => ['auth.jwt', 'track.activity']], function () {
         Route::get('{id}/subscribe', 'Api\CommunityController@subscribe');
         Route::get('{id}/unsubscribe', 'Api\CommunityController@unsubscribe');
         Route::get('{id}/members', 'Api\CommunityController@members');
-        Route::post('attachments', 'Api\CommunityController@uploadAttachments');
-        Route::post('header', 'Api\CommunityController@uploadHeader');
+        Route::post('avatar', [CommunityController::class, 'uploadAvatar']);
+        Route::post('header-image', [CommunityController::class, 'uploadHeaderImage']);
         Route::get('themes/list', 'Api\CommunityController@themeList');
     });
     Route::get('communities/{community_id}/posts', 'Api\PostController@communityPosts');

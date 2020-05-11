@@ -148,9 +148,9 @@ computed: {
     },
 
     detectYoutubeLink() {
-        let str = this.message.body.replace(/<\/?[^>]+>/g, '').trim();
+        let msg = this.message.body.replace(/<\/?[^>]+>/g, '').trim();
         let regExp = /^.*((youtu.be\/)|(v\/)|(\/u\/\w\/)|(embed\/)|(watch\?))\??v?=?([^#&?]*).*/;
-        let match = str.match(regExp);
+        let match = msg.match(regExp);
 
         return (match && match[7].length === 11) ? match[7] : false;
     },
