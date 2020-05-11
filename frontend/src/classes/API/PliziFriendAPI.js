@@ -5,18 +5,25 @@ class PliziFriendAPI extends PliziBaseAPI {
 
     /**
      * получаем список френдов, свой или другого юзера
-     * @param {number|null} userID - ID юзера чей список друзей хотим получить
+     * @param {number} userID - ID юзера чей список друзей хотим получить
+     * @param {number} limit - лимит считывания
+     * @param {number} offset - смещение от начала
      * @returns {object[]|null}
      * @throws PliziAPIError
      */
-    async friendsList(userID){
+    async friendsList(userID, limit, offset){
         let path = 'api/user/friendship';
 
         if (userID) {
             path = `api/user/${userID}/friendship`;
         }
 
-        let response = await this.axios.get(path, this.authHeaders)
+        let qParams = '';
+        if (limit && offset) {
+            qParams = `?limit=${limit}&offset=${offset}`;
+        }
+
+        let response = await this.axios.get(path + qParams, this.authHeaders)
             .catch((error) => {
                 this.checkIsTokenExpires(error, '$friend.friendsList');
                 throw new PliziAPIError('$friend.friendsList', error.response);
