@@ -13,7 +13,6 @@ use Illuminate\Support\Facades\Route;
 | is assigned the "api" middleware group. Enjoy building your API!
 |
 */
-
 //Route::post('/auth/verify', 'Auth\RegisterController@verify')->firstName('verify_registration');
 Auth::routes();
 
@@ -104,6 +103,8 @@ Route::group(['middleware' => ['auth.jwt', 'track.activity']], function () {
      * Geo data Resource
      */
     Route::get('city/search', 'Api\GeoController@search');
+
+    Route::post('/neo/user', 'Api\NeoController@create');
 });
 
 Route::get('login/{provider}', 'Auth\LoginController@redirectToProvider');

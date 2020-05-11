@@ -1,10 +1,10 @@
 import PliziAPI from '../PliziAPI.js';
-import PliziCollection from '../PliziCollection.js';
+import PliziList from '../PliziList.js';
 
 /**
  * класс упрощения работы с коллекциями
  */
-class PliziStoredCollection extends PliziCollection{
+class PliziStoredList extends PliziList{
 
     /**
      * ключ в localStorage куда сохраняем данные
@@ -46,12 +46,6 @@ class PliziStoredCollection extends PliziCollection{
      * @public
      */
     updateEventName = '';
-
-    /**
-     * размер "страницы" для дозагрузки
-     * @type {number}
-     */
-    pageSize = 10;
 
 
     /**
@@ -145,4 +139,4 @@ class PliziStoredCollection extends PliziCollection{
 
 }
 
-export { PliziStoredCollection as default }
+export { PliziStoredList as default }

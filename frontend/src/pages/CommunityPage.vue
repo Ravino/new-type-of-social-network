@@ -410,6 +410,16 @@ async mounted() {
     await this.getCommunityInfo();
     await this.getCommunityPosts();
     this.isDataReady = true;
-}
+    window.scrollTo(0, 0);
+},
+    beforeRouteUpdate (to, from, next) {
+        this.communityData = null;
+        this.communityPosts = null;
+        this.id = to.params.id;
+        this.getCommunityInfo();
+        this.getCommunityPosts();
+        next();
+        window.scrollTo(0, 0);
+    },
 }
 </script>

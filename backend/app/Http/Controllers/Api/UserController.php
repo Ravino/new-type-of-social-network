@@ -113,13 +113,15 @@ class UserController extends Controller
      * @return UserCollection
      */
     public function getMyFriendsList(Request $request) {
-        $friend_ids = Auth::user()->getFriends()->pluck('id');
-        $friends = User::select(DB::raw("*, COUNT(*) OVER() as total"))
-            ->whereIn('id', $friend_ids)
-            ->limit($request->query('limit') ?? 50)
-            ->offset($request->query('offset') ?? 0)
+        $friend_ids = Auth::user()->getFriends($request->query('limit') ?? 50, $request->query('offset') ?? 0);
+        $friends = User::with('profile', 'profile.avatar')
+            ->whereIn('id', array_keys($friend_ids))
             ->get();
-        return new UserCollection($friends);
+        $total_count = $friend_ids[array_key_first($friend_ids)]['total_count'];
+        foreach ($friends as $friend) {
+            $friend->mutual_count = $friend_ids[$friend->id]['mutual_count'];
+        }
+        return new UserCollection($friends, $total_count);
     }
 
     /**
@@ -127,27 +129,38 @@ class UserController extends Controller
      */
     public function getMyPendingFriendsList() {
         $request_user_ids = Auth::user()->getFriendRequests()->pluck('sender_id');
-        $requests = User::whereIn('id', $request_user_ids)->get();
+        $requests = User::with('profile', 'profile.avatar')->whereIn('id', $request_user_ids)->get();
         return new UserCollection($requests);
     }
 
     /**
+     * @param Request $request
      * @param $id
-     * @return UserCollection|\Illuminate\Http\JsonResponse
+     * @return UserCollection
      */
-    public function getUserFriendsList($id) {
+    public function getUserFriendsList(Request $request, $id) {
         $user = User::find($id);
-        $friend_ids = $user->getFriends()->pluck('id');
-        $friends = User::with( 'privacySettings')->whereIn('id', $friend_ids)->get();
-        return new UserCollection($friends);
+        $friend_ids = $user->getFriends($request->query('limit') ?? 50, $request->query('offset') ?? 0);
+        $friends = User::with( 'profile', 'profile.avatar')->whereIn('id', array_keys($friend_ids))->get();
+        $total_count = $friend_ids[array_key_first($friend_ids)]['total_count'];
+        foreach ($friends as $friend) {
+            $friend->mutual_count = $friend_ids[$friend->id]['mutual_count'];
+        }
+        return new UserCollection($friends, $total_count);
     }
 
     /**
+     * @param Request $request
      * @return UserCollection
      */
-    public function getPossibleFriends() {
-        $fof = Auth::user()->getFriendsOfFriends();
-        return new UserCollection($fof);
+    public function getPossibleFriends(Request $request) {
+        $fof_ids = Auth::user()->getFriendsOfFriends($request->query('limit') ?? 50, $request->query('offset') ?? 0);
+        $fofs = User::with( 'profile', 'profile.avatar')->whereIn('id', array_keys($fof_ids))->get();
+        $total_count = $fof_ids[array_key_first($fof_ids)]['total_count'];
+        foreach ($fofs as $fof) {
+            $fof->mutual_count = $fof_ids[$fof->id]['mutual_count'];
+        }
+        return new UserCollection($fofs, $total_count);
     }
 
     /**

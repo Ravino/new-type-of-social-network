@@ -20,13 +20,6 @@
             </div>
         </div>
         <Spinner v-else clazz="plz-favorit-friends-spinner d-flex flex-column align-items-center"></Spinner>
-
-        <div id="linkedChatBlock" class="plz-linked-chat-block"
-             :class="{ 'active-chat': isPickFavorite }">
-            <div class="bg-danger">
-                здесь будет город-чат
-            </div>
-        </div>
     </div>
 </template>
 

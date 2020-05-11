@@ -191,9 +191,10 @@ methods: {
 
     onSendPostClick(){
         const cont = this.$refs.editor.getContent();
+        let str = cont.replace(/<p>|<\/p>/g, '').trim();
 
-        if ('<p></p>' === cont)
-            return false;
+        if (!str.length)
+            return;
 
         this.$refs.editor.setContent('');
         this.$refs.editor.focus();

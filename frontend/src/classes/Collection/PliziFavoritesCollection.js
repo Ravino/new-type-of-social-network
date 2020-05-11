@@ -1,5 +1,6 @@
 import PliziFriend from '../PliziFriend.js';
 import PliziStoredCollection from './PliziStoredCollection.js';
+//import PliziStoredList from './PliziStoredList.js';
 
 /**
  * класс для работы со списком Избранных
@@ -34,6 +35,7 @@ class PliziFavoritesCollection extends PliziStoredCollection {
         this.emit(this.updateEventName);
     }
 
+
     onRemoveFromFavorites(removedFriendId){
         window.console.warn(removedFriendId,`onRemoveFromFavorites`);
         this.delete(removedFriendId.id);
@@ -41,6 +43,7 @@ class PliziFavoritesCollection extends PliziStoredCollection {
         this.restore();
         this.emit(this.updateEventName);
     }
+
 
     /**
      * проверяем есть юзер с userID ли в Избранных

@@ -155,6 +155,14 @@ class PliziUser {
     }
 
     /**
+     * для вызова в функциях сравнения
+     * @returns {string}
+     */
+    get compareName(){
+        return `${this.profile.lastName.toLowerCase()}-${this.profile.firstName.toLowerCase()}`;
+    }
+
+    /**
      * @returns {string}
      */
     get sex() {

@@ -2,6 +2,7 @@
 
 namespace App\Traits;
 
+use Domain\Neo4j\Service\UserService;
 use Hootlex\Friendships\Models\Friendship;
 use Hootlex\Friendships\Models\FriendFriendshipGroups;
 use Hootlex\Friendships\Status;
@@ -114,4 +115,29 @@ trait Friendable
         return $deleted;
     }
 
+    /**
+     * @param int $limit
+     * @param int $offset
+     * @return array
+     */
+    public function getFriends($limit = 50, $offset = 0)
+    {
+        $neo4UserService = new UserService();
+        return $neo4UserService->getFriends($this->id, auth()->id(), $limit, $offset);
+    }
+
+    /**
+     * @param $user_id
+     * @return bool
+     */
+    public function isFriendOfFriendWith($user_id) {
+        $neo4UserService = new UserService();
+        return $neo4UserService->isFriendOfFriendWith($this->id, $user_id);
+    }
+
+    public function getFriendsOfFriends($limit = 50, $offset = 0)
+    {
+        $neo4UserService = new UserService();
+        return $neo4UserService->getFriendsOfFriends($this->id, $limit, $offset);
+    }
 }

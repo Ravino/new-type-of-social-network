@@ -12,6 +12,7 @@ use App\Listeners\Friendships\FriendshipNotification;
 use App\Listeners\Friendships\NotifyFriends;
 use App\Listeners\PostAuthorsNotification;
 use App\Listeners\SendPassword;
+use Domain\Neo4j\Listeners\UserRelationsListener;
 use Domain\Pusher\Events\DestroyMessageEvent;
 use Domain\Pusher\Events\NewMessageEvent;
 use Domain\Pusher\Events\UserTypingEvent;
@@ -43,7 +44,8 @@ class EventServiceProvider extends ServiceProvider
             UserTypingNotification::class
         ],
         UserCreated::class => [
-          UserUpdateListener::class
+            UserUpdateListener::class,
+            \Domain\Neo4j\Listeners\UserUpdateListener::class
         ],
         UserUpdated::class => [
             UserUpdateListener::class
@@ -57,7 +59,8 @@ class EventServiceProvider extends ServiceProvider
             'SocialiteProviders\VKontakte\VKontakteExtendSocialite@handle',
         ],
         'friendships.*' => [
-            FriendshipNotification::class
+            FriendshipNotification::class,
+            UserRelationsListener::class
         ],
         'user.*' => [
             NotifyFriends::class

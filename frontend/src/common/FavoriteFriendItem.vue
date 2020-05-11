@@ -1,6 +1,6 @@
 <template>
     <div class="plz-favorit-friends-item d-flex align-items-center align-items-center py-2 px-3"
-         :class="{ active: chatWindowShown }"
+         :class="{ 'active': chatWindowShown }"
          @click="showRelatedChat()">
 
         <div class="plz-favorit-friend-userpic"  :class="{'mx-auto' : isNarrow}" >
@@ -27,6 +27,12 @@
                 {{friend.messagesNumber}}
             </span>
         </span>
+
+        <div class="plz-linked-chat-block" :class="{ 'active-chat': chatWindowShown }">
+            <div class="bg-danger">
+                здесь будет город-чат
+            </div>
+        </div>
     </div>
 </template>
 
