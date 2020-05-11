@@ -35,11 +35,12 @@ $picSize: 42px;
         .plz-linked-chat-block{
             position: absolute;
             display: none;
-            right: 320px;
-            top: 0px;
+            right: 100%;
+            top: 0;
             //z-index: 900;
             min-width: 200px;
             min-height: 100px;
+
 
             &.active-chat{
                 display: block;
@@ -136,6 +137,10 @@ $picSize: 42px;
             display: none;
         }
     }
+
+    //.plz-linked-chat-block {
+    //    poas
+    //}
 }
 
 .friend-status {
