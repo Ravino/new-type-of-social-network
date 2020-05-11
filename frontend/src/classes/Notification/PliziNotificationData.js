@@ -123,6 +123,14 @@ class PliziNotificationData {
             }
         }
 
+        if ('user.profile.image.created' === this.notificationType) {
+            switch (this.sender.sex) {
+                case 'f': return `Ваш друг ${this.sender.fullName} добавила новое фото`;
+                case 'm': return `Ваш друг ${this.sender.fullName} добавил новое фото`;
+                case 'n': return `Ваш друг пользователь ${this.sender.fullName} добавил новое фото`;
+            }
+        }
+
         if ('community.post.created' === this.notificationType) {
             return `В сообществе ${this.community.name} что-то опубликовано`;
         }
