@@ -1,17 +1,5 @@
 $picSize: 42px;
 
-.plz-linked-chat-block{
-    position: relative;
-    display: none;
-    right: 300px;
-    top: 200px;
-    z-index: 900;
-
-    &.active-chat{
-        display: block;
-    }
-}
-
 .plz-favorit-friends {
     box-shadow: 0 2px 5px 0 rgba(0, 0, 0, 0.05);
     position: relative;
@@ -21,6 +9,7 @@ $picSize: 42px;
     }
 
     .plz-favorit-friends-item {
+        position: relative;
         cursor: pointer;
         transition: .4s;
 
@@ -41,6 +30,20 @@ $picSize: 42px;
             margin-right: 3px!important;
             background-color: white;
             box-shadow: 0 2px 5px 0 rgba(0, 0, 0, 0.05);
+        }
+
+        .plz-linked-chat-block{
+            position: absolute;
+            display: none;
+            right: 320px;
+            top: 0px;
+            //z-index: 900;
+            min-width: 200px;
+            min-height: 100px;
+
+            &.active-chat{
+                display: block;
+            }
         }
     }
 
