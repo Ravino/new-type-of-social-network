@@ -10,7 +10,7 @@
                 <p class="chatHeader-subtitle p-0 mb-0 mt-1 w-100 d-block">{{replyOn.createdAt | lastMessageTime}}</p>
             </div>
         </div>
-        <p v-html="replyOn.body"></p>
+        <p v-html="msgBody"></p>
 
         <ReplyMessageItemAttachments v-bind:message="replyOn"></ReplyMessageItemAttachments>
     </div>
@@ -25,6 +25,23 @@ name : 'ChatMessageItemReplyContent',
 props : {
     replyOn : PliziMessage,
 },
-components: {ReplyMessageItemAttachments}
+components: {ReplyMessageItemAttachments},
+    computed: {
+        detectYoutubeLink() {
+            let msg = this.replyOn.body.replace(/<\/?[^>]+>/g, '').trim();
+            let regExp = /^.*((youtu.be\/)|(v\/)|(\/u\/\w\/)|(embed\/)|(watch\?))\??v?=?([^#&?]*).*/;
+            let match = msg.match(regExp);
+
+            return (match && match[7].length === 11) ? match[7] : false;
+        },
+        livePreview() {
+            if (this.detectYoutubeLink) {
+                return `<img src="//img.youtube.com/vi/${this.detectYoutubeLink}/0.jpg" alt="" />`;
+            }
+        },
+        msgBody(){
+            return this.livePreview ? this.livePreview : this.replyOn.body;
+        },
+    },
 }
 </script>
