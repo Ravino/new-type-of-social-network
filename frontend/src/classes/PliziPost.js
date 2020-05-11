@@ -258,7 +258,7 @@ class PliziPost {
     }
 
     set createdAt(value) {
-        this._createdAt = new Date(value);
+        this._createdAt = new Date(value * 1000);
     }
 
     set deleted(value) {
