@@ -1,6 +1,6 @@
 <template>
     <li class="media position-relative pt-1 pr-1 mr-3 mb-1">
-        <Spinner v-if="attach.isBlob" clazz="media__spinner" :hide-text="true"></Spinner>
+        <SmallSpinner v-if="attach.isBlob" clazz="media__spinner" :hide-text="true"></SmallSpinner>
         <img v-if="attach.isImage" :src="imageSrc"
              v-on:load="onAttachmentLoaded"
              :alt="attach.originalName.originalName" :title="attach.originalName.originalName" />
@@ -19,13 +19,13 @@
 <script>
 import AttachmentFile from "../AttachmentFile.vue";
 import PliziAttachmentItem from '../../classes/PliziAttachmentItem.js';
-import Spinner from '../Spinner.vue';
+import SmallSpinner from "../SmallSpinner";
 
 export default {
 name : 'AttachmentItem',
   components: {
+    SmallSpinner,
     AttachmentFile,
-    Spinner
   },
 props : {
     attach : PliziAttachmentItem
