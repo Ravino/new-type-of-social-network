@@ -1,26 +1,220 @@
 $communityPrimaryImage: 70px;
 
-.plz-community-header {
-    background-image: url("/images/community-header-bg.jpg");
 
-    .community-primary-image{
-        width: $communityPrimaryImage;
-        height: $communityPrimaryImage;
-        max-width: $communityPrimaryImage;
-        max-height: $communityPrimaryImage;
-        text-align: center;
+.plz-community {
+    &-header {
+        min-height: 320px;
+        height: auto;
+        &-pic {
+            height: 210px;
+        }
+        &-img {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            min-width: 100%;
+            min-height: 100%;
+            transform: translate(-50%, -50%);
+        }
 
-        border-radius: $communityPrimaryImage/2;
+        &-logo{
+            position: relative;
+            width: $communityPrimaryImage;
+            height: $communityPrimaryImage;
+            min-width: $communityPrimaryImage;
+            text-align: center;
+
+            border-radius: $communityPrimaryImage/2;
+            overflow: hidden;
+            img {
+                position: absolute;
+                top: 50%;
+                left: 50%;
+                width: auto;
+                height: 100%;
+                transform: translate(-50%, -50%);
+            }
+        }
+        &-title {
+            font-size: 13px;
+            color: $textColor;
+            &[href] {
+                color: $textColor;
+            }
+        }
+        &-desc {
+            color: $textGreyColor;
+            &[href] {
+                color: $textGreyColor;
+            }
+        }
+        .btn {
+            text-transform: uppercase;
+            background-color: transparent;
+            height: 34px;
+            cursor: pointer;
+            font-size: 11px;
+            font-weight: 600;
+            color: #6f7487;
+            border-radius: 0;
+            border: 0;
+            box-shadow: none;
+            transition: .4s;
+
+            &:hover {
+                background-color: #a6a7a9;
+                color: #fff;
+                .ps-dot {
+                    background-color: #ffffff;
+                }
+                .icon-add-user  {
+                    fill: $iconHoverColor;
+                }
+            }
+        }
+        .icon-add-user {
+            display: inline-block;
+            height: 16px;
+        }
+    }
+
+    &-info {
+        &-desc {
+            font-size: 13px;
+            color: $textGreyColor;
+            &[href] {
+                color: $textColor;
+            }
+         }
+    }
+
+    &-subscribe {
+        width: 230px;
+        max-width: 100%;
+        border: 2px solid #f0f0f0;
+        border-radius: 20px;
         overflow: hidden;
-        margin-left: 20px;
+    }
+    &-members-item {
+        .plz-favorit-userpic {
+            width: 32px;
+            min-width: 32px;
+            height: 32px;
+        }
+    }
+    &.file-label{
+        cursor: pointer;
+    }
+    &-participants {
+        &-title {
+            font-size: 14px;
+             color: $textColor;
+            &[href] {
+                color: $textColor;
+            }
+        }
+        &-subtitle {
+            font-size: 12px;
+             color: $textGreyColor;
+            &[href] {
+                color: $textGreyColor;
+            }
+        }
+    }
 
-        img {
+}
+
+.videos {
+    &-item {
+        position: relative;
+    }
+}
+
+.video {
+    position: relative;
+    cursor: pointer;
+    border-radius: 8px;
+    overflow: hidden;
+    width: 100%;
+    height: 0;
+    padding-bottom: 56.25%;
+    background-color: #000;
+    z-index: 1;
+
+    &:hover .video__button-shape,
+    &:focus .video__button-shape {
+        fill: #ff0000;
+        fill-opacity: 1;
+    }
+
+    &__button {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        z-index: 1;
+        padding: 0;
+        width: 68px;
+        height: 48px;
+        border: none;
+        pointer-events: none;
+        background-color: transparent;
+        transform: translate(-50%, -50%);
+        cursor: pointer;
+
+        &:focus {
+            outline: none;
+        }
+
+        &-shape {
+            fill: #212121;
+            fill-opacity: 0.8;
+        }
+
+        &-icon {
+            fill: #ffffff;
+        }
+
+    }
+
+    &-wrap {
+        height: 0;
+        padding-bottom: 56.25%;
+        &-pre {
+            position: relative;
+            width: 100%;
+
+            border-radius: 8px;
+            overflow: hidden;
+            height: 0;
+            padding-bottom: 56.25%;
+
+            img {
+                position: absolute;
+                top: 50%;
+                left: 50%;
+                width: 100%;
+                height: auto;
+                transform: translate(-50%, -50%);
+            }
+        }
+
+        & + .video__button {
+            display: none;
+        }
+
+        iframe {
+            position: absolute;
+            top: 0;
+            left: 0;
             width: 100%;
             height: 100%;
         }
     }
-}
-
-.community-info-block{
-
+    &-desc {
+        font-size: 13px;
+        color: $textGreyColor;
+        &[href] {
+            color: $textGreyColor;
+        }
+    }
 }
