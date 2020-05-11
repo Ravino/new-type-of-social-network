@@ -33,7 +33,7 @@
 
             <div class="row">
                 <div class="col-sm-10 col-md-10 col-lg-8 col-xl-8">
-                    <div v-if="isDataReady" id="communityInfoBlock" class="community-info-block bg-white-br20 py-5 mb-5 text-left">
+                    <div v-if="isDataReady" id="communityInfoBlock" class="community-info-block bg-white-br20 p-5 mb-5 text-left">
                         <p>{{communityData.description}}</p>
                         <p><a :href="communityData.website" target="_blank" class="text-dark">{{communityData.website}}</a></p>
                     </div>
@@ -41,13 +41,15 @@
 
                     <CommunityEditor v-if="canPost"
                                      :community-id="communityData.id"
+                                     :class="'mx-0'"
                                      @addNewPost="addNewPost"/>
 
-                    <div v-if="isDataReady" id="communityPostsBlock" class="bg-white-br20 py-5 mb-5 --text-center">
+                    <div v-if="isDataReady" id="communityPostsBlock" class="pb-5 mb-5 --text-center">
                         <Post v-for="postItem in communityPosts"
                               :key="postItem.id"
                               :post="postItem"
                               :isCommunity="true"
+                              :class="'mx-0'"
                               @onShare="onSharePost"
                               @onDeletePost="onDeletePost"
                               @onRestorePost="onRestorePost"
