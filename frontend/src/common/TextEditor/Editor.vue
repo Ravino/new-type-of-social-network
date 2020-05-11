@@ -1,11 +1,11 @@
 <template>
-    <div class="editor" >
+    <div class="editor">
         <editor-content class="editor-content"
                         :editor="editor"
                         ref="editor"
                         @keydown.native="onEditorKeyDown"
                         @keyup.native="onEditorKeyUp"/>
-        <span v-if="!isFocusedEditor" class="placeholder">
+        <span v-if="!isFocusedEditor" @click="setFocusEditor" class="placeholder">
             {{ placeholder }}
         </span>
     </div>
@@ -67,6 +67,9 @@ computed: {
 },
 
 methods: {
+     setFocusEditor() {
+     this.$refs.editor.editor.focus();
+     },
     addEmoji(emoji) {
         let currText = this.editor.getHTML();
         currText = (currText.toLowerCase() === `<p></p>`) ? '' : currText;
