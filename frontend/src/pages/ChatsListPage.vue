@@ -1,5 +1,5 @@
 <template>
-    <div class="row" :class="{ 'is-chatPage' : ('ChatsListPage'===this.$root.$router.currentRoute.name) }" >
+    <div class="row" :class="{ 'is-chatPage mr-0' : ('ChatsListPage'===this.$root.$router.currentRoute.name) }" >
         <div class="col-sm-1 col-md-1 col-lg-1 col-xl-1 chat-page-height overflow-hidden pl-0">
             <AccountToolbarLeft></AccountToolbarLeft>
         </div>
