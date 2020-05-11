@@ -29,7 +29,6 @@ props: {
 },
 components: { TextEditor },
 mixins : [ChatMixin],
-
 data() {
     return {
         placeholder: 'Написать сообщение...',
@@ -63,6 +62,13 @@ methods: {
         });
     },
 
+    detectYoutubeLink(str) {
+        let msg = str.replace(/<\/?[^>]+>/g, '').trim();
+        let youtubeLinksRegExp = /https?:\/\/(?:[0-9A-Z-]+\.)?(?:youtu\.be\/|youtube(?:-nocookie)?\.com\S*?[^\w\s-])([\w-]{11})(?=[^\w-]|$)(?![?=&+%\w.-]*(?:['"][^<>]*>|<\/a>))[?=&+%\w.-]*/ig;
+
+        return msg.match(youtubeLinksRegExp);
+    },
+
     onTextPost(evData){
         /** @type {string} **/
         let msg = evData.postText.trim();
@@ -73,7 +79,20 @@ methods: {
             msg = this.killBrTrail(msg);
 
             if (msg !== '') {
-                this.addMessageToChat( msg, evData.attachments );
+                let youtubeIds = this.detectYoutubeLink(msg);
+
+                if (youtubeIds && youtubeIds.length) {
+                    youtubeIds.forEach((youtubeId) => {
+                        this.addMessageToChat(`${youtubeId} ${msg}`);
+                        msg = '';
+                    });
+
+                    if (evData.attachments && evData.attachments.length) {
+                        this.addMessageToChat( '<p></p>', evData.attachments );
+                    }
+                } else {
+                    this.addMessageToChat( msg, evData.attachments );
+                }
             } else if (evData.attachments.length > 0) {
                 this.addMessageToChat( '<p></p>', evData.attachments );
             }
