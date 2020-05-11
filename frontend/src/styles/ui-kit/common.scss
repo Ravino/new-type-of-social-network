@@ -410,6 +410,10 @@ $radioWidth: 18px;
     }
 }
 
+.cursor-non-drop {
+    cursor: no-drop !important;
+}
+
 .attach-file {
     display: inline-block;
     cursor: pointer;
@@ -426,16 +430,17 @@ $radioWidth: 18px;
 
     &:hover {
         svg {
-            fill: #bfbfbf;
+            fill: $iconHoverColor;
         }
+
     }
 
     &--disallow {
-        pointer-events: none;
         &:hover {
             svg {
-                fill: $iconHoverColor;
+                fill: #bfbfbf;
             }
+
         }
     }
 }
