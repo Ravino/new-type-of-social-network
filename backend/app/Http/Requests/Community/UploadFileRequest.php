@@ -16,7 +16,7 @@ class UploadFileRequest extends FormRequest
     {
         return [
             'id' => 'required',
-            'file' => ''
+            'file' => 'required|image'
         ];
     }
 }
