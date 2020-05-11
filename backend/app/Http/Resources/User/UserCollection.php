@@ -9,6 +9,18 @@ use Illuminate\Http\Resources\Json\ResourceCollection;
 
 class UserCollection extends ResourceCollection
 {
+
+    /**
+     * @var int
+     */
+    protected $totalCount;
+
+    public function __construct($resource, $total_count = 0)
+    {
+        $this->totalCount = $total_count;
+        parent::__construct($resource);
+    }
+
     /**
      * Transform the resource into an array.
      *
@@ -26,8 +38,7 @@ class UserCollection extends ResourceCollection
                         'isOnline' => $user->isOnline,
                         'lastActivity' => $user->last_activity_dt,
                         'profile' => new Profile($user->profile),
-                        'privacySettings' => new PrivacySettings($user->privacySettings),
-                        'total' => (int)$user->total,
+                        'privacySettings' => new PrivacySettings($user->privacySettings)
                     ];
                 } else {
                     return [
@@ -35,11 +46,11 @@ class UserCollection extends ResourceCollection
                         'isOnline' => $user->isOnline,
                         'lastActivity' => $user->last_activity_dt,
                         'profile' => new Profile($user->profile),
-                        'mutualFriendsCount' => (int)$user->profile->mutual,
-                        'total' => (int)$user->total,
+                        'mutualFriendsCount' => (int)$user->mutual_count
                     ];
                 }
             }),
+            'totalCount' => $this->totalCount
         ];
     }
 }

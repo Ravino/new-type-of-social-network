@@ -23,6 +23,17 @@ services:
     ports:
       - "3307:3306"
 
+  neo4j:
+    image: bitnami/neo4j:3
+    environment:
+      NEO4J_PASSWORD: 'plizi'
+    volumes:
+      - neo4j-persistence:/bitnami
+    ports:
+      - '7474:7474'
+      - '7473:7473'
+      - '7687:7687'
+
   mongodb:
     image: mongo:latest
     env_file:
@@ -152,3 +163,5 @@ volumes:
   mysql_data_plizi:
   redis_data_plizi:
   mongodb_data_plizi:
+  mysql8_data_plizi:
+  neo4j-persistence:
