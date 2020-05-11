@@ -44,7 +44,6 @@ class NotifyFriends implements ShouldQueue
     private function preparePayload($event, $user, $post)
     {
         if ($event === self::PROFILE_IMAGE_CREATE || $event === self::PROFILE_IMAGE_UPDATE) {
-            $user = $user->refresh();
             $user->profile->refresh();
             event(new UserUpdated($user));
             return [
