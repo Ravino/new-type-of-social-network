@@ -12,7 +12,8 @@
 }
 .plz-profile-userpic-wrapper {
     height: 100%;
-    max-height: 205px;
+    min-height: 205px;
+
     img {
         position: absolute;
         top: 50%;

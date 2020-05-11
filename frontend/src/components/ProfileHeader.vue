@@ -1,8 +1,8 @@
 <template>
     <div id="profileHeader" class="row plz-profile-header mb-4">
-        <div class="col-md-3 pl-0">
+        <div class="col-12 offset-sm-3 col-sm-6 offset-lg-0 col-lg-4 col-xl-3 pl-0 mb-4 mb-lg-0">
             <div class="plz-profile-userpic-container d-flex flex-column h-100 bg-white-br20 overflow-hidden">
-                <div class="plz-profile-userpic-wrapper overflow-hidden position-relative d-flex align-items-center justify-content-center ">
+                <div class="plz-profile-userpic-wrapper overflow-hidden position-relative d-flex align-items-center justify-content-center mx-auto m-lg-0">
                     <img ref="userAvatar" :src="userAvatar" :alt="userData.fullName" />
                 </div>
 
@@ -31,7 +31,7 @@
             </div>
         </div>
 
-        <div class="col-md-9 px-0 py-4 plz-profile-userdetails">
+        <div class="col-12  col-lg-8 col-xl-9 px-0 py-4 plz-profile-userdetails">
             <div class="w-100 bg-white-br20 px-5 pb-3">
                 <div class="d-flex justify-content-between align-items-center mb-2">
                     <h2 class="plz-user-name">{{userData.fullName}}</h2>
