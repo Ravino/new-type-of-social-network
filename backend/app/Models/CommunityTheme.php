@@ -22,7 +22,6 @@ class CommunityTheme extends Model
     protected $fillable = [
         'parent_id',
         'name',
-        'order',
     ];
 
     /**
@@ -66,7 +65,17 @@ class CommunityTheme extends Model
             ->filter(static function ($theme) {
                 return $theme->parent_id === 0;
             })
+            ->sortBy('name')
             ->pluck('name', 'id')
             ->prepend('Root', 0);
+    }
+
+    public static function getAllChildren()
+    {
+        $all = self::all();
+        return $all
+            ->reject(static function ($theme) {
+                return $theme->parent_id === 0;
+            });
     }
 }
