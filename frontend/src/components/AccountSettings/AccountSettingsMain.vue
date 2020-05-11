@@ -375,6 +375,7 @@
                 }
             },
             finishFieldEdit(fieldName) {
+                this.$v.model[fieldName].$touch();
                 const inpRef = this.getRef(fieldName);
 
                 setTimeout(() => {
