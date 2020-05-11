@@ -120,7 +120,7 @@ data() {
     let attachFiles = [];
 
     if (this.inputEditorAttachment) {
-        attachFiles = attachFiles.map(file => {
+        attachFiles = this.inputEditorAttachment.map(file => {
             const attachment = new PliziAttachmentItem(false, file.isImage, file.originalName);
             attachment.attachment = file;
 

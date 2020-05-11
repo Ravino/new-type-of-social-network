@@ -49,7 +49,7 @@
                             </div>
                             <div class="nav-item">
                                 <button class="btn dropdown-item px-3 py-1"
-                                        @click="$emit('deletePost', post.id)">
+                                        @click="$emit('onDeletePost', post.id)">
                                     Удалить
                                 </button>
                             </div>
@@ -154,7 +154,7 @@
                 <div class="post-deleted text-center">
                     <p>Запись удалена.</p>
                     <button class="btn btn-secondary"
-                            @click="$emit('restorePost', post.id)">
+                            @click="$emit('onRestorePost', post.id)">
                         Восстановить запись
                     </button>
                 </div>
