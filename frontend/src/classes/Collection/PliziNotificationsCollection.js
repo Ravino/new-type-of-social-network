@@ -78,14 +78,6 @@ class PliziNotificationsCollection extends PliziStoredCollection {
     async load(){
         this.clear();
 
-        this.restoreData();
-
-        if (this.collection.size > 0) {
-            this.isLoad = true;
-            this.emit(this.restoreEventName);
-            return true;
-        }
-
         let apiResponse = null;
 
         try {

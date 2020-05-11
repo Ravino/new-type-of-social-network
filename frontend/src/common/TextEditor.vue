@@ -83,6 +83,7 @@ import AttachmentItem from './TextEditor/AttachmentItem.vue';
 import PliziAttachment from '../classes/PliziAttachment.js';
 import { checkExtension } from '../utils/FileUtils.js';
 import { docsExtensions, imagesExtensions } from '../enums/FileExtensionEnums.js';
+import PliziAttachmentItem from "../classes/PliziAttachmentItem.js";
 
 /**  TODO: Вставка файлов **/
 /** @link https://www.npmjs.com/package/vue-filepond **/
@@ -116,8 +117,19 @@ props: {
 },
 
 data() {
+    let attachFiles = [];
+
+    if (this.inputEditorAttachment) {
+        attachFiles = this.inputEditorAttachment.map(file => {
+            const attachment = new PliziAttachmentItem(false, file.isImage, file.originalName);
+            attachment.attachment = file;
+
+            return attachment;
+        });
+    }
+
     return {
-        attachFiles: this.inputEditorAttachment ? this.inputEditorAttachment : [],
+        attachFiles,
         defaultClasses: `bg-white w-100 border-top position-relative mt-auto`,
         editorContainerHeight: 32,
     }
@@ -155,7 +167,7 @@ methods: {
     getAttachmentsIDs() {
         if (this.attachFiles && this.attachFiles.length > 0)
             return this.attachFiles.map((aItem) => {
-                return aItem.id;
+                return aItem.attachment.id;
             });
 
         return [];
@@ -163,7 +175,7 @@ methods: {
 
     onRemoveAttachment(evData) {
         this.attachFiles = this.attachFiles.filter((aItem) => {
-            return aItem.id !== evData.attach.id;
+            return aItem.attachment.id !== evData.attach.id;
         });
 
         const $this = this;
@@ -295,42 +307,64 @@ methods: {
       return;
      }
 
-     for (const file of picsArr) {
-      let apiResponse = null;
+        let apiResponse = null;
 
-      /** TODO: @TGA надо потом перенести отсюда загрузку аттачей **/
+        for (const file of picsArr) {
+            const reader = new FileReader();
+            reader.onload = () => {
+                const attachment = new PliziAttachmentItem(true, checkExtension(file, imagesExtensions), file.name);
+                attachment.isBlob = true;
+                attachment.fileBlob = reader.result;
+                this.attachFiles.push(attachment);
+            };
 
-      switch (this.workMode) {
-       case 'chat':
-        apiResponse = this.$root.$api.$chat.attachment([file]);
-        break;
+            reader.readAsDataURL(file);
+        }
 
-       case 'post':
-        apiResponse = this.$root.$api.$post.storePostAttachments([file]);
-        break;
+        try {
+            /** TODO: @TGA надо потом перенести отсюда загрузку аттачей **/
+            switch (this.workMode) {
+                case 'chat':
+                    apiResponse = await this.$root.$api.$chat.attachment(picsArr);
+                    break;
 
-       default:
-        console.warn('TextEditor::addUploadAttachment - No matches in switch.');
-      }
+                case 'post':
+                    apiResponse = await this.$root.$api.$post.storePostAttachments(picsArr);
+                    break;
 
-      apiResponse.then(response => {
-       response.map( attItem => {
-        let newAtt = new PliziAttachment(attItem);
+                default:
+                    console.warn('TextEditor::addUploadAttachment - No matches in switch.');
+            }
+        } catch (e) {
+            window.console.warn(e.detailMessage);
+            throw e;
+        }
 
-        this.attachFiles.push(newAtt);
-        this.$emit('newAttach', { attach: newAtt } );
+        if (apiResponse) {
+            apiResponse.map((attItem) => {
+                const newAtt = new PliziAttachment(attItem);
 
-        // const $this = this;
-        // setTimeout(function () {
-        //     $this .checkUpdatedChatContainerHeight();
-        // }, 1200); // TODO @TGA как узнать время, когда картинка загружена @veremey
+                this.attachFiles = this.attachFiles.map(foundFile => {
+                    if (foundFile.originalName === newAtt.originalName) {
+                        foundFile.attachment = newAtt;
+                        foundFile.isBlob = false;
+                        foundFile.fileBlob = null;
+                    }
 
-       });
-      }).catch(e => {
-       window.console.warn(e.detailMessage);
-       throw e;
-      });
-     }
+                    return foundFile;
+                });
+
+                this.$emit('newAttach', {attach: newAtt});
+
+                // const $this = this;
+                // setTimeout(function () {
+                //     $this .checkUpdatedChatContainerHeight();
+                // }, 1200); // TODO @TGA как узнать время, когда картинка загружена @veremey
+
+            });
+        } else {
+            window.console.info(apiResponse);
+        }
     },
 },
 mounted() {

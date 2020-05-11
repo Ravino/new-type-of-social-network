@@ -30,7 +30,7 @@ class PliziNotification {
 
     constructor(notif){
         this._id = notif.id || '';
-        this._createdAt = (notif.createdAt) ? (new Date(notif.createdAt)) : null;
+        this.createdAt = notif.createdAt;
         this._readAt = (notif.readAt) ? (new Date(notif.readAt)) : null;
         this._data = (notif.data) ? (new PliziNotificationData(notif.data)) : null;
     }
@@ -43,6 +43,22 @@ class PliziNotification {
         return this._createdAt;
     }
 
+    set createdAt(dValue) {
+        if ( !(!!dValue) ) {
+            this._createdAt = null;
+            return;
+        }
+
+        // Unixtime
+        if ( typeof dValue === 'number') {
+            this._createdAt = new Date(dValue * 1000);
+            return;
+        }
+
+        // String или Date
+        this._createdAt = new Date(dValue);
+    }
+
     get readAt() {
         return this._readAt;
     }
@@ -51,8 +67,16 @@ class PliziNotification {
         return this._data;
     }
 
-    get senderID(){
+    get senderId(){
         return this.data.sender.id;
+    }
+
+    get communityId(){
+        try{
+            return this.data.community.id;
+        } catch (e){
+            if ( console !== undefined && console.error ) console.error( e );
+        }
     }
 
     get senderFirstName(){
@@ -67,8 +91,24 @@ class PliziNotification {
         return this.data.sender.fullName;
     }
 
+    get communityName(){
+        try{
+            return this.data.community.name;
+        } catch (e){
+            if ( console !== undefined && console.error ) console.error( e );
+        }
+    }
+
     get senderPic(){
         return this.data.sender.userPic;
+    }
+
+    get communityPic(){
+        try{
+            return this.data.community.primaryImage;
+        } catch (e){
+            if ( console !== undefined && console.error ) console.error( e );
+        }
     }
 
     get notifType(){
@@ -81,6 +121,18 @@ class PliziNotification {
 
     get notifMessage(){
         return this.data.message;
+    }
+
+    get isCommunityNotification(){
+        try{
+            return !! this.data.community;
+        } catch (e){
+            if ( console !== undefined && console.error ) console.error( e );
+        }
+    }
+
+    get isHumanNotification(){
+        return !! this.data.sender;
     }
 
     toString(){

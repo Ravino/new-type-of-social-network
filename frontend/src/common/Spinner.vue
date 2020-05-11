@@ -3,7 +3,7 @@
         <div class="text-center pr-3">
             <i class="fas fa-spinner fa-3x fa-spin text-info"></i>
         </div>
-        <div class="pt-1 text-info text-center">
+        <div class="pt-1 text-info text-center" v-if="!hideText">
             <h3 v-html="spinnerMessage"></h3>
         </div>
     </div>
@@ -14,7 +14,11 @@ export default {
     name : 'Spinner',
     props : {
         clazz : String,
-        message: String
+        message: String,
+        hideText: {
+            type: Boolean,
+            default: false,
+        }
     },
 
     data(){

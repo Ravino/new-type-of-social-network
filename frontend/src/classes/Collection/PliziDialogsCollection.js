@@ -34,6 +34,15 @@ class PliziDialogsCollection extends PliziStoredCollection {
         window.console.log(evData, `onAddNewDialog`);
         this.add(evData);
         this.storeData();
+        this.restore();
+        this.emit(this.updateEventName);
+    }
+
+    onRemoveDialog(removedDialogId){
+        window.console.warn(removedDialogId,`onRemoveDialog`);
+        this.delete(removedDialogId.id);
+        this.storeData();
+        this.restore();
         this.emit(this.updateEventName);
     }
 

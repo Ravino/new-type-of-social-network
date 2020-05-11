@@ -196,6 +196,7 @@ methods: {
 
     mounted() {
     this.getUserInfo();
+    window.scrollTo(0, 0);
 
     this.$root.$on('hidePersonalMsgModal', ()=>{
         this.isShowMessageDialog = false;
@@ -208,9 +209,12 @@ methods: {
     this.$root.$on('sendPersonalMessage', this.handlePersonalMessage);
 },
     beforeRouteUpdate (to, from, next) {
+    this.profileData = null;
+    this.userPosts = null;
         this.userId = to.params.id;
         this.getUserInfo();
         next();
+        window.scrollTo(0, 0);
     },
 }
 </script>

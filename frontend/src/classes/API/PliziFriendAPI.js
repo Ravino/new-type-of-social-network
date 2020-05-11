@@ -12,7 +12,7 @@ class PliziFriendAPI extends PliziBaseAPI {
     async friendsList(userID){
         let path = 'api/user/friendship';
 
-        if (path && (userID >>> 0) !== 0) {
+        if (userID) {
             path = `api/user/${userID}/friendship`;
         }
 
