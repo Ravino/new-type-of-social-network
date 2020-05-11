@@ -3,6 +3,7 @@
 
 namespace App\Listeners\Friendships;
 
+use App\Events\UserUpdated;
 use App\Models\User;
 use App\Notifications\UserSystemNotifications;
 use Illuminate\Bus\Queueable;
@@ -34,9 +35,18 @@ class NotifyFriends implements ShouldQueue
         }
     }
 
+    /**
+     * @param $event
+     * @param User $user
+     * @param $post
+     * @return array|null
+     */
     private function preparePayload($event, $user, $post)
     {
-        if($event === self::PROFILE_IMAGE_CREATE || $event === self::PROFILE_IMAGE_UPDATE) {
+        if ($event === self::PROFILE_IMAGE_CREATE || $event === self::PROFILE_IMAGE_UPDATE) {
+            $user = $user->refresh();
+            $user->profile->refresh();
+            event(new UserUpdated($user));
             return [
                 'sender' => [
                     'firstName' => $user->profile->first_name,
@@ -49,7 +59,9 @@ class NotifyFriends implements ShouldQueue
                 'body' => $event === self::PROFILE_IMAGE_CREATE ? 'User {0, string} uploaded new photo' : 'User {0, string} updated profile photo',
                 'notificationType' => $event,
             ];
-        } elseif ($event === self::USER_POST_CREATE && $post) {
+        }
+
+        if($event === self::USER_POST_CREATE && $post) {
             return [
                 'sender' => [
                     'firstName' => $user->profile->first_name,
