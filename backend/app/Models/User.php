@@ -170,7 +170,8 @@ class User extends Authenticatable implements JWTSubject
      */
     public function getTotalFriendsCountAttribute()
     {
-        return $this->getFriends()->count();
+        $friends = $this->getFriends();
+        return isset($friends[array_key_first($friends)]) ? $friends[array_key_first($friends)]['total_count'] : 0;
     }
 
     /**
@@ -220,7 +221,7 @@ class User extends Authenticatable implements JWTSubject
      */
     public function getUserPrivacyRole(User $user)
     {
-        if ($this->getFriendsOfFriends()->contains($user)) {
+        if ($this->isFriendOfFriendWith($user)) {
             return Role::where('name', self::PERMISSION_ROLE_FOF)->get()->first();
         }
         if ($this->isFriendWith($user)) {

@@ -115,15 +115,29 @@ trait Friendable
         return $deleted;
     }
 
-    public function getMutualFriendsCount(Model $other, $perPage = 0) : int
+    /**
+     * @param int $limit
+     * @param int $offset
+     * @return array
+     */
+    public function getFriends($limit = 50, $offset = 0)
     {
         $neo4UserService = new UserService();
-        return $neo4UserService->getMutualFriendsCountBetween($this->id, $other->id);
+        return $neo4UserService->getFriends($this->id, auth()->id(), $limit, $offset);
     }
 
-    public function getFriends($perPage = 0, $groupSlug = '')
+    /**
+     * @param $user_id
+     * @return bool
+     */
+    public function isFriendOfFriendWith($user_id) {
+        $neo4UserService = new UserService();
+        return $neo4UserService->isFriendOfFriendWith($this->id, $user_id);
+    }
+
+    public function getFriendsOfFriends($limit = 50, $offset = 0)
     {
         $neo4UserService = new UserService();
-        return $neo4UserService->getFriends($this->id, auth()->id());
+        return $neo4UserService->getFriendsOfFriends($this->id, $limit, $offset);
     }
 }

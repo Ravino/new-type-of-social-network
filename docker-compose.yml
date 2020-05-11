@@ -23,6 +23,17 @@ services:
     ports:
       - "3307:3306"
 
+  neo4j:
+    image: bitnami/neo4j:3
+    environment:
+      NEO4J_PASSWORD: 'plizi'
+    volumes:
+      - neo4j-persistence:/bitnami
+    ports:
+      - '7474:7474'
+      - '7473:7473'
+      - '7687:7687'
+
   mongodb:
     image: mongo:latest
     env_file:
@@ -138,18 +149,6 @@ services:
       - redis_data_plizi:/data
     ports:
     - "6379:6379"
-
-  neo4j:
-    image: bitnami/neo4j:latest
-    environment:
-      NEO4J_PASSWORD: 'plizi'
-      NEO4J_HOST: localhost
-    volumes:
-      - neo4j-persistence:/bitnami
-    ports:
-      - '7474:7474'
-      - '7473:7473'
-      - '7687:7687'
 
 #  node:
 #    build: ./backend/docker/node

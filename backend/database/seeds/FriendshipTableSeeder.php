@@ -30,7 +30,7 @@ class FriendshipTableSeeder extends Seeder
             }
         }
         for ($i = count($users) / 2; $i <= count($users); $i++) {
-            if(($user2->id && isset($users[$i])) && $user2->id !== $users[$i]->id) {
+            if(($user2->id && $users[$i]) && $user2->id !== $users[$i]->id) {
                 DB::table('friendships')->insert([
                     'sender_id' => $user2->id,
                     'sender_type' => 'App\Models\User',
@@ -41,7 +41,7 @@ class FriendshipTableSeeder extends Seeder
             }
         }
         $users = $users->pluck('id')->toArray();
-        while (count($users) !== 0) {
+        while (count($users) > 1) {
             $user1 = $users[array_rand($users)];
             $users = array_filter($users, function($e) use ($user1) {
                 return ($e !== $user1);

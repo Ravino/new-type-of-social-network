@@ -24,26 +24,47 @@ class UserService
     /**
      * @param $user_oid
      * @param $my_oid
+     * @param $limit
+     * @param $offset
      * @return array
      */
-    public function getFriends($user_oid, $my_oid) {
-        $friends = $this->userRepository->getFriends($user_oid, $my_oid);
+    public function getFriends($user_oid, $my_oid, $limit, $offset) {
+        $friends = $this->userRepository->getFriends($user_oid, $my_oid, $limit, $offset);
         $result = [];
         foreach ($friends as $friend) {
-            array_push($result, [
-                'id' => $friend->get('oid'),
-                'mutual_count' => $friend->get('mutual_count')
-            ]);
+            $result[$friend->get('oid')] = [
+                'mutual_count' => $friend->get('mutual_count'),
+                'total_count' => $friend->get('total_count'),
+            ];
         }
         return $result;
     }
 
     /**
-     * @param $sender_oid
-     * @param $recipient_oid
+     * @param $first_user_oid
+     * @param $second_user_oid
      * @return bool
      */
-    public function beFriend($sender_oid, $recipient_oid) {
-        return $this->userRepository->beFriend($sender_oid, $recipient_oid);
+    public function isFriendOfFriendWith($first_user_oid, $second_user_oid) : bool {
+        $countMutual = $this->userRepository->isFriendOfFriendWith($first_user_oid, $second_user_oid);
+        return !!$countMutual->get('count_mutual');
+    }
+
+    /**
+     * @param $user_id
+     * @param $limit
+     * @param $offset
+     * @return array
+     */
+    public function getFriendsOfFriends($user_id, $limit, $offset) {
+        $fof = $this->userRepository->getFriendsOfFriends($user_id, $limit, $offset);
+        $result = [];
+        foreach ($fof as $friend) {
+            $result[$friend->get('oid')] = [
+                'mutual_count' => $friend->get('mutual_count'),
+                'total_count' => $friend->get('total_count'),
+            ];
+        }
+        return $result;
     }
 }
