@@ -1,10 +1,13 @@
 <template>
     <div class="row plizi-friends-list" v-bind:key="friendsKey">
 
-        <ul v-if="hasFriends" class="d-block w-100 p-0" v-bind:key="`friendsListKey`+frmSize">
+        <ul v-if="hasFriends" class="d-block w-100 p-0" v-bind:key="calcFriendsKey+frmSize">
             <transition-group name="slide-fade" :duration="700">
                 <FriendListItem v-for="friendItem in getFriends()"
-                                v-bind:key="friendItem.id+`-`+friendsKey"
+                                @FriendRemoveFromFavorites="changesInFriends"
+                                @FriendAddToFavorites="changesInFriends"
+                                @FriendshipStop="changesInFriends"
+                                v-bind:key="friendItem.id+`-`+calcFriendsKey"
                                 v-bind:friend="friendItem">
                 </FriendListItem>
             </transition-group>
@@ -33,16 +36,38 @@ props : {
     hasFriends : Boolean
 },
 
+data(){
+    return {
+        localUpdateKey: (new Date()).getMilliseconds(),
+    };
+},
+
 methods: {
     getFriends(){
-        return this.friends;
+        return this.friends.slice();
+    },
+
+    changesInFriends(){
+        this.localUpdateKey = (new Date()).getMilliseconds();
+    }
+},
+
+computed: {
+    calcFriendsKey(){
+        return this.friendsKey + '-' + this.localUpdateKey;
     }
 },
 
 created(){
-    this.$root.$on( this.$root.$auth.frm.loadEventName, ()=>{
-        this.$forceUpdate();
-    });
+    //this.$root.$on( this.$root.$auth.frm.loadEventName, ()=>{
+    //    window.console.log(`this.$root.$auth.frm loadEventName`);
+    //    this.$forceUpdate();
+    //});
+    //
+    //this.$root.$on( this.$root.$auth.frm.updateEventName,()=>{
+    //    window.console.log(`this.$root.$auth.frm updateEventName`);
+    //    this.$forceUpdate();
+    //});
 }
 
 }

@@ -1,8 +1,11 @@
 <template>
-    <li class="plizi-friend-item-user media m-0 py-4 px-4" :class="{ 'bg-danger': isPrepareToRemoved, 'd-none': isRemoved }">
+    <li class="plizi-friend-item-user media m-0 py-4 px-4"
+            :class="{ 'bg-danger': isPrepareToRemoved, 'd-none': isRemoved }">
+
         <div class="plizi-friend-item d-flex w-100 align-items-center">
             <router-link :to="`/user-`+friend.id" tag="div" class="plizi-friend-item-pic mr-3 " >
-                <img class="plizi-friend-item-img rounded-circle overflow-hidden" v-bind:src="friend.userPic" v-bind:alt="friend.fullName" />
+                <img class="plizi-friend-item-img rounded-circle overflow-hidden"
+                     v-bind:src="friend.userPic" v-bind:alt="friend.fullName" />
 
                 <span v-if="isFavorite" class="plizi-friend-item-isfavorite" :title="favoriteTitle">
                     <i class="fas fa-star"></i>
@@ -13,7 +16,8 @@
             </router-link>
 
             <div class="plizi-friend-item-body m-0 pr-5">
-                <router-link :to="`/user-`+friend.id" tag="div"  class="plizi-friend-item-top d-flex align-items-end justify-content-between mb-2" >
+                <router-link :to="`/user-`+friend.id" tag="div"
+                             class="plizi-friend-item-top d-flex align-items-end justify-content-between mb-2" >
                     <h6 class="plizi-friend-item-name my-0">{{ friend.fullName }}</h6>
                 </router-link>
 
@@ -32,7 +36,8 @@
                 </div>
             </div>
 
-            <button @click.prevent="goToDialogWithFriend()" type="button" class="btn btn-link ml-auto" :title="`Перейти к диалогу с ${friend.fullName}`">
+            <button @click.prevent="goToDialogWithFriend()" type="button" class="btn btn-link ml-auto"
+                    :title="`Перейти к диалогу с ${friend.fullName}`">
                 <IconSpinner v-if="isInRedirecting" />
                 <IconMessageShort v-else />
             </button>
@@ -81,7 +86,10 @@ computed: {
 
 methods: {
     checkIsFavorite(){
-        this.isFavorite = this.$root.$auth.fm.checkIsFavorite( this.friend.id );
+        //this.isFavorite = this.$root.$auth.fm.checkIsFavorite( this.friend.id );
+        this.isFavorite = !!this.$root.$auth.fm.asArray().find( (fItem)=>{
+            return fItem.id === this.friend.id;
+        });
     },
 
     onFriendRemoveFromFavorites(){
@@ -99,15 +107,12 @@ methods: {
         }
 
         if ( apiResponse ) {
-            let successMsg = `Ваш друг <b>${this.friend.fullName}</b> удалён из Избранных`;
-            switch(this.friend.sex) {
-                case 'f': successMsg = `<b>${this.friend.fullName}</b> удалена из Избранных`; break;
-                case 'm': successMsg = `<b>${this.friend.fullName}</b> удалён из Избранных`; break;
-            }
+            this.$root.$auth.fm.removeFromFavorites(this.friend.id);
+            //this.$forceUpdate();
 
-            this.$root.$auth.fm.onRemoveFromFavorites( this.friend.id );
-            this.$forceUpdate();
-            //this.$root.$alert(successMsg, `bg-success`, 3);
+            this.$emit( 'FriendRemoveFromFavorites', {
+                friendId: this.friend.id
+            });
         }
         else {
             let errMsg = `Не получилось удалить <b>${this.friend.fullName}</b> из Избранных`;
@@ -130,17 +135,13 @@ methods: {
         }
 
         if ( apiResponse ) {
-            let successMsg = `Ваш друг <b>${this.friend.fullName}</b> добавлен в Избранные`;
-            switch(this.friend.sex) {
-                case 'f': successMsg = `<b>${this.friend.fullName}</b> добавлена в Избранные`; break;
-                case 'm': successMsg = `<b>${this.friend.fullName}</b> добавлен в Избранные`; break;
-            }
-
             const jFriend = this.friend.toJSON();
             this.$root.$auth.fm.onAddToFavorites( jFriend );
-            this.$forceUpdate();
+            //this.$forceUpdate();
 
-            //this.$root.$alert(successMsg, `bg-success`, 3);
+            this.$emit( 'FriendAddToFavorites', {
+                friendId: this.friend.id
+            });
         }
         else {
             let errMsg = `Не получилось добавить <b>${this.friend.fullName}</b> в Избранные`;
@@ -165,15 +166,14 @@ methods: {
         this.isPrepareToRemoved = true;
 
         if ( apiResponse ) {
-            setTimeout(()=>{
-                this.isRemoved = true;
+            this.isRemoved = true;
 
-                this.$root.$auth.fm.delete(this.friend.id);
+            this.$root.$auth.fm.removeFromFavorites(this.friend.id);
+            this.$root.$auth.frm.stopFriendship(this.friend.id);
 
-                this.$root.$emit( 'friendShipStop', {
-                    friendId: this.friend.id
-                });
-            }, 1000)
+            this.$emit( 'FriendshipStop', {
+                friendId: this.friend.id
+            });
         }
     }
 },
