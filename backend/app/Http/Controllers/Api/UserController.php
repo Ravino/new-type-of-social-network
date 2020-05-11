@@ -114,8 +114,7 @@ class UserController extends Controller
      */
     public function getMyFriendsList(Request $request) {
         $friend_ids = Auth::user()->getFriends()->pluck('id');
-        $friends = User::select(DB::raw("*, COUNT(*) OVER() as total"))
-            ->whereIn('id', $friend_ids)
+        $friends = User::whereIn('id', $friend_ids)
             ->limit($request->query('limit') ?? 50)
             ->offset($request->query('offset') ?? 0)
             ->get();

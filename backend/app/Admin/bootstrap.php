@@ -5,6 +5,7 @@
 
 use App\Models\CommunityTheme;
 use App\Models\User;
+use Illuminate\Validation\Rule;
 use SleepingOwl\Admin\Contracts\Display\Extension\FilterInterface;
 use SleepingOwl\Admin\Model\ModelConfiguration;
 
@@ -253,8 +254,16 @@ AdminSection::registerModel(CommunityTheme::class, static function (ModelConfigu
     // Create And Edit
     $model->onCreateAndEdit(static function() {
         return AdminForm::card()->addBody(
-            AdminFormElement::select('parent_id', 'Parent', CommunityTheme::getParents()->toArray()),
-            AdminFormElement::text('name', 'Title')
+            AdminFormElement::select('parent_id', 'Parent', CommunityTheme::getParents()->toArray())
+                ->setValidationRules([
+                    'required'
+                ]),
+            AdminFormElement::text('name', 'Title')->setValidationRules([
+                'required',
+                Rule::unique('community_themes', 'name')->where(static function ($query) {
+                    return $query->where('parent_id', request()->post('parent_id'));
+                })
+            ])
         );
     });
 })
