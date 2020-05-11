@@ -1,5 +1,5 @@
 <template>
-    <div class="plz-favorit-friends-item d-flex align-items-center align-items-center py-2 px-3"
+    <div class="plz-favorit-friends-item d-flex align-items-center align-items-center py-2 px-3 position-relative"
          :class="{ 'active': chatWindowShown }"
          @click="showRelatedChat()">
 

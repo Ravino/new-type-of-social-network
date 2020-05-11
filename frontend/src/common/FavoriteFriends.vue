@@ -1,5 +1,5 @@
 <template>
-    <div v-if="showFavoritesBlock" id="favoritFriends" class="plz-favorit-friends overflow-hidden mb-5"
+    <div v-if="showFavoritesBlock" id="favoritFriends" class="plz-favorit-friends --overflow-hidden mb-5"
          :class="{ 'bg-white-br20' : !isPickFavorite, 'is-pick-favorite':isPickFavorite } ">
 
         <div v-if="isDataReady" class="--d-flex --flex-row --justify-content-start pb-3 --border-bottom pt-3">
