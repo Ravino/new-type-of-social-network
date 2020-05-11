@@ -27,6 +27,7 @@ class NotifyFriends implements ShouldQueue
         $post = isset($data['post']) && $data['post'] ? $data['post'] : null;
         $user = User::find($user_id);
         $friends = $user->getFriends();
+        $friends = User::with( 'profile')->whereIn('id', array_keys($friends))->get();
         $details = $this->preparePayload($event, $user, $post);
         if($details) {
             foreach ($friends as $friend) {

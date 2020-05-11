@@ -72,8 +72,7 @@ $friendspicSize: 20px;
         }
 
         &-body-friends{
-            width: 120px;
-             max-width: 120px;
+
             &-pics {
                 position: relative;
                 width: 50px;
@@ -117,6 +116,11 @@ $friendspicSize: 20px;
                 height: auto;
             }
         }
+    }
+
+    .plizi-community-body-friends {
+        width: 120px;
+        max-width: 120px;
     }
 
 }

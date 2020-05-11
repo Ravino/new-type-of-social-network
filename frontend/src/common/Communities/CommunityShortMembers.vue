@@ -1,9 +1,11 @@
 <template>
-    <div v-if="isFriendsInCommunity" id="communityParticipants" class="bg-white-br20 py-5 text-center mb-5">
+    <div v-if="isFriendsInCommunity"
+         id="communityParticipants"
+         class="bg-white-br20  mb-5 mb-4 py-3 px-4">
 
-        <div class="d-flex flex-row justify-content-start">
-            <h6 class="plz-sf-title w-auto pl-2">Участники
-                <span class="plz-sf-subtitle ml-2">{{community.totalMembers}}</span>
+        <div class="d-flex flex-row justify-content-start mb-1">
+            <h6 class="plz-community-participants-title w-auto ">Участники
+                <span class="plz-community-participants-subtitle ml-2">{{community.totalMembers}}</span>
             </h6>
         </div>
 
@@ -14,7 +16,9 @@
         </div>
 
         <div class="text-center">
-            <router-link tag="a" class="text-black-50" :to="`/members-`+community.id">Смотреть ещё</router-link>
+            <router-link tag="a"
+                         class="plz-community-header-desc "
+                         :to="`/members-`+community.id"><small>Смотреть ещё</small></router-link>
         </div>
 
     </div>

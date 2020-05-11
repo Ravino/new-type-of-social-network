@@ -208,7 +208,8 @@ return [
         Laratrust\LaratrustServiceProvider::class,
 
         Intervention\Image\ImageServiceProvider::class,
-        Jenssegers\Mongodb\MongodbServiceProvider::class
+        Jenssegers\Mongodb\MongodbServiceProvider::class,
+        Vinelab\NeoEloquent\NeoEloquentServiceProvider::class,
     ],
 
     /*

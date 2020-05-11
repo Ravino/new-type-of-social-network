@@ -35,7 +35,7 @@
                     </div>
                 </div>
 
-                <div class="col-3 mb-4  d-flex align-items-center pl-0">
+                <div class="col-3 mb-4  d-flex pl-0">
                     <RecommendedCommunities></RecommendedCommunities>
                 </div>
             </div>
