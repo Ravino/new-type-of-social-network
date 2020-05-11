@@ -28,10 +28,11 @@
                 <div class="plz-editor-btns d-flex flex-column flex-md-row justify-content-between"  >
 
                     <label
-                        :class="{'attach-file--disallow': isDisallowUpload}"
-                        class="attach-file w-100 d-flex align-items-center justify-content-center btn btn-link my-0 ml-0 mr-0 mr-md-2 px-1 btn-add-file position-relative" >
+                        :class="{'attach-file--disallow cursor-non-drop' : isDisallowUpload}"
+                        class="attach-file w-100 d-flex align-items-center justify-content-center btn btn-link my-0 ml-0 mr-0 mr-md-2 px-1 btn-add-file position-relative"
+                    >
                         <IconAddFile />
-                        <input type="file" @change="onSelectFile($event)" ref="editorFiler" multiple />
+                        <input type="file" :disabled="isDisallowUpload" @change="onSelectFile($event)" ref="editorFiler" multiple />
                     </label>
 
                     <!--<label class="attach-file d-flex align-items-center  btn btn-link my-0 ml-0 mr-2 px-1 btn-add-camera position-relative">
@@ -111,7 +112,7 @@ props: {
   inputEditorAttachment: Array,
   maxFilesCount: {
       type: Number,
-      default: 5,
+      default: 10,
   }
 },
 
