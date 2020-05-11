@@ -112,8 +112,11 @@ class UserController extends Controller
      * @return UserCollection
      */
     public function getMyFriendsList() {
-        $friend_ids = Auth::user()->getFriends()->pluck('id');
-        $friends = User::with( 'privacySettings')->whereIn('id', $friend_ids)->get();
+        $friend_ids = Auth::user()->getFriends();
+        $friends = User::with( 'profile')->whereIn('id', array_column($friend_ids, 'id'))->get();
+        foreach ($friends as $friend) {
+            $friend->mutual_count = $friend_ids[array_search($friend->id, array_column($friend_ids, 'id'))]['mutual_count'];
+        }
         return new UserCollection($friends);
     }
 
@@ -122,7 +125,7 @@ class UserController extends Controller
      */
     public function getMyPendingFriendsList() {
         $request_user_ids = Auth::user()->getFriendRequests()->pluck('sender_id');
-        $requests = User::whereIn('id', $request_user_ids)->get();
+        $requests = User::with('profile')->whereIn('id', $request_user_ids)->get();
         return new UserCollection($requests);
     }
 
@@ -132,8 +135,11 @@ class UserController extends Controller
      */
     public function getUserFriendsList($id) {
         $user = User::find($id);
-        $friend_ids = $user->getFriends()->pluck('id');
-        $friends = User::with( 'privacySettings')->whereIn('id', $friend_ids)->get();
+        $friend_ids = $user->getFriends();
+        $friends = User::with( 'profile')->whereIn('id', array_column($friend_ids, 'id'))->get();
+        foreach ($friends as $friend) {
+            $friend->mutual_count = $friend_ids[array_search($friend->id, array_column($friend_ids, 'id'))]['mutual_count'];
+        }
         return new UserCollection($friends);
     }
 

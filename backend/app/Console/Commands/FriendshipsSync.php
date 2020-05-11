@@ -44,10 +44,11 @@ class FriendshipsSync extends Command
      */
     public function handle()
     {
-        $mysql_users = User::all();
+        $mysql_users = User::with('profile')->get();
         foreach ($mysql_users as $user) {
             $user = $user->toArray();
             $user['oid'] = $user['id'];
+            $user['name'] = $user['profile']['first_name'];
             $user = array_diff_key($user, array_flip(['profile', 'id']));
             $user['created_at'] = new Carbon($user['created_at']);
             $user['updated_at'] = new Carbon($user['updated_at']);
@@ -65,7 +66,6 @@ class FriendshipsSync extends Command
             $sender = \Domain\Neo4j\Models\User::where('oid', $friendship->sender_id)->first();
             $receiver = \Domain\Neo4j\Models\User::where('oid', $friendship->recipient_id)->first();
             $sender->friends()->attach($receiver);
-            $receiver->friends()->attach($sender);
             $this->info("Friendship between {$friendship->sender_id} and {$friendship->recipient_id} created");
         }
     }

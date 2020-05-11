@@ -13,7 +13,13 @@ use Illuminate\Support\Facades\Route;
 | is assigned the "api" middleware group. Enjoy building your API!
 |
 */
-
+//\Event::listen(\Illuminate\Database\Events\QueryExecuted::class, function ($query) {
+//    \Log::debug([
+//        'sql' => $query->sql,
+//        'bindings' => $query->bindings,
+//        'time' => $query->time,
+//    ]);
+//});
 //Route::post('/auth/verify', 'Auth\RegisterController@verify')->firstName('verify_registration');
 Auth::routes();
 

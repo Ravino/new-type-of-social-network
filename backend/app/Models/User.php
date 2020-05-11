@@ -45,7 +45,7 @@ class User extends Authenticatable implements JWTSubject
         'password', 'remember_token',
     ];
 
-    protected $with = ['profile'];
+    // protected $with = ['profile'];
 
     /**
      * The attributes that should be cast to native types.
@@ -73,34 +73,7 @@ class User extends Authenticatable implements JWTSubject
      */
     public function profile()
     {
-        $relation = $this->hasOne(Profile::class)
-            ->select('profiles.*', \DB::raw("
-                       SUM(IF(
-                       (profiles.user_id = mutual.recipient_id OR
-                        profiles.user_id = mutual.sender_id) AND
-                       (profiles.user_id <> friendships.sender_id) AND
-                       (profiles.user_id <> friendships.recipient_id), 1, 0)) As mutual
-            "))
-            ->leftJoin(\DB::raw("
-                (friendships LEFT JOIN friendships mutual
-                 ON friendships.sender_id = mutual.recipient_id OR friendships.recipient_id = mutual.sender_id OR
-                    friendships.sender_id = mutual.sender_id OR friendships.recipient_id = mutual.recipient_id)
-            "), function($join) {
-                $join->on('friendships.sender_id', '=', 'friendships.sender_id')->where('friendships.sender_id', '=', auth()->id())->orWhere('friendships.recipient_id', '=', auth()->id());
-            })->groupBy([
-                'profiles.user_id',
-                'profiles.first_name',
-                'profiles.last_name',
-                'profiles.sex',
-                'profiles.birthday',
-                'profiles.relationship_id',
-                'profiles.user_pic',
-                'profiles.geo_city_id',
-                'profiles.created_at',
-                'profiles.updated_at',
-                'profiles.relationship_user_id',
-            ]);
-        return $relation;
+        return $this->hasOne(Profile::class);
     }
 
     public function privacySettings()
@@ -152,7 +125,7 @@ class User extends Authenticatable implements JWTSubject
     {
         return $this->morphMany(Post::class, 'postable')->with('postable', 'parent', 'attachments', 'like')
             ->orWhereIn( 'postable_id', self::communities()->allRelatedIds())
-            ->orWhereIn( 'postable_id', self::withoutRelations()->getFriends()->pluck('id'))->orderBy('posts.id', 'desc');
+            ->orWhereIn( 'postable_id', array_column(self::getFriends(), 'id'))->orderBy('posts.id', 'desc');
     }
 
     /**
@@ -163,7 +136,7 @@ class User extends Authenticatable implements JWTSubject
         $community_ids = $this->communities()->pluck('id');
         $user_ids = \DB::table('community_members')->whereIn('community_id', $community_ids)->where('user_id', '<>', $this->id)->pluck('user_id');
         $user_ids = array_count_values(json_decode(json_encode($user_ids)));
-        return self::whereIn('id', array_keys($user_ids))->whereNotIn('id', $this->getFriends()->pluck('user_id'))->get()->sortByDesc(function ($value) use ($user_ids) {
+        return self::whereIn('id', array_keys($user_ids))->whereNotIn('id', array_column($this->getFriends(), 'id'))->get()->sortByDesc(function ($value) use ($user_ids) {
             return $user_ids[$value['id']];
         })->values();
     }
@@ -197,7 +170,7 @@ class User extends Authenticatable implements JWTSubject
      */
     public function getTotalFriendsCountAttribute()
     {
-        return $this->getFriends()->count();
+        return 1; //$this->getFriends()->count();
     }
 
     /**

@@ -2,6 +2,7 @@
 
 namespace App\Traits;
 
+use Domain\Neo4j\Service\UserService;
 use Hootlex\Friendships\Models\Friendship;
 use Hootlex\Friendships\Models\FriendFriendshipGroups;
 use Hootlex\Friendships\Status;
@@ -114,4 +115,15 @@ trait Friendable
         return $deleted;
     }
 
+    public function getMutualFriendsCount(Model $other, $perPage = 0) : int
+    {
+        $neo4UserService = new UserService();
+        return $neo4UserService->getMutualFriendsCountBetween($this->id, $other->id);
+    }
+
+    public function getFriends($perPage = 0, $groupSlug = '')
+    {
+        $neo4UserService = new UserService();
+        return $neo4UserService->getFriends($this->id, auth()->id());
+    }
 }

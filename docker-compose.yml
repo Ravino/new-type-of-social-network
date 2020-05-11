@@ -20,7 +20,7 @@ services:
     env_file:
       - ./backend/docker/mysql/.env
     ports:
-      - "3307:3306"
+      - "3306:3306"
 
   mongodb:
     image: mongo:latest

@@ -47,9 +47,6 @@ class FriendshipTableSeeder extends Seeder
                 return ($e !== $user1);
             });;
             $user2 = $users[array_rand($users)];
-            $users = array_filter($users, function($e) use ($user2) {
-                return ($e !== $user2);
-            });
             if($user1 && $user2) {
                 DB::table('friendships')->insert([
                     'sender_id' => $user1,
