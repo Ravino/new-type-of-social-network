@@ -1,7 +1,7 @@
 /**
  * класс упрощения работы с коллекциями
  */
-class PliziCollection {
+class PliziList {
 
     /**
      * флаг, что данные были загружены из источника (серверное API)
@@ -11,22 +11,16 @@ class PliziCollection {
     _isLoad = false;
 
     /**
-     * @type {Map}
+     * @type {object[]}
      * @private
      */
-    _collection = null;
+    _collection = [];
 
     constructor(inputData, objClass){
-        //this._collection = new Map(); /** @TGA пока не удалять **/
-        Vue.set(this, '_collection', new Map()); /** https://ru.vuejs.org/v2/guide/reactivity.html#Для-объектов **/
 
         if(inputData  &&  objClass) {
             this.receive(inputData, objClass);
         }
-    }
-
-    get keys(){
-        return this._collection.keys();
     }
 
     get list(){
@@ -46,15 +40,15 @@ class PliziCollection {
     }
 
     get size(){
-        return this._collection.size;
+        return this._collection.length;
     }
 
     get length(){
-        return this._collection.size;
+        return this._collection.length;
     }
 
     clear(){
-        this._collection.clear();
+        this._collection = [];
     }
 
     /**
@@ -73,7 +67,16 @@ class PliziCollection {
     add(data){
         const conv = this.new(data);
 
-        this._collection.set(conv.id, conv);
+        const fIndex = this._collection.findIndex( ( item )=>{
+            return conv.id === item.id;
+        });
+
+        if (fIndex) {
+            this._collection[fIndex] = conv;
+        }
+        else {
+            this._collection.push(conv);
+        }
     }
 
     receive(inputArray, objClass){
@@ -101,12 +104,20 @@ class PliziCollection {
      * @returns {Object} - нужная сущность, или UNDEFINED если не нашли
      */
     get(ID){
-        return this._collection.get(ID);
+        return this._collection.find( ( item )=>{
+            return ID === item.id;
+        });
     }
 
 
     delete(ID){
-        this._collection.delete(ID);
+        const fIndex = this._collection.findIndex( ( item )=>{
+            return ID === item.id;
+        });
+
+        if (fIndex) {
+            delete this._collection[ID];
+        }
     }
 
 
@@ -167,4 +178,4 @@ class PliziCollection {
 
 }
 
-export { PliziCollection as default }
+export { PliziList as default }

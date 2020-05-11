@@ -19,8 +19,8 @@
                     <Post v-for="postItem in filteredPosts"
                           :key="postItem.id"
                           :post="postItem"
-                          @deletePost="deletePost"
-                          @restorePost="restorePost"
+                          @onDeletePost="onDeletePost"
+                          @onRestorePost="onRestorePost"
                           @onEditPost="onEditPost"
                           @openVideoModal="openVideoModal">
                     </Post>
@@ -40,7 +40,8 @@
         </div>
 
         <PostEditModal v-if="postEditModal.isVisible"
-                       :post="postForEdit"/>
+                       :post="postForEdit"
+                       @hidePostEditModal="hidePostEditModal"/>
 
         <PostVideoModal v-if="postVideoModal.isVisible"
                         :videoLink="postVideoModal.content.videoLink"
@@ -186,7 +187,7 @@ methods : {
         }
     },
 
-    async deletePost( id ){
+    async onDeletePost( id ){
         let response;
 
         try{
@@ -206,7 +207,7 @@ methods : {
         }
     },
 
-    async restorePost( id ){
+    async onRestorePost( id ){
         let response;
 
         try{
@@ -232,7 +233,6 @@ async mounted() {
     });
 
     this.$root.$on('wallPostsSelect', this.wallPostsSelectHandler);
-    this.$root.$on('hidePostEditModal', this.hidePostEditModal);
     await this.getPosts();
 
     //await this.loadMyFriends();

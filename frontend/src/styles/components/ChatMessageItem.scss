@@ -102,6 +102,11 @@ $chatMessagesBodyHeight: calc(100% - 139px);
             .message-text-inner {
                 color: $chatMessageMyMsgTextColor;
                 font-size: $chatMessageFS;
+
+                a {
+                    color: inherit;
+                    text-decoration: underline;
+                }
             }
         }
         .message-sended {

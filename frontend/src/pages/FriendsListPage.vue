@@ -26,21 +26,13 @@
                         </div>
                     </div>
 
-                    <div v-if="isFriendsLoaded" class="row plizi-friends-list ">
-                        <ul v-if="hasFriends" class="d-block w-100 p-0">
-                            <transition-group name="slide-fade" :duration="700">
-                                <FriendListItem v-for="friendItem in friendsListFilter"
-                                                v-bind:key="friendItem.id"
-                                                v-bind:friend="friendItem">
-                                </FriendListItem>
-                            </transition-group>
-                        </ul>
-                        <div v-else class="alert alert-info w-100 p-5 text-center">
-                            <p v-if="wMode==='all'">Вы ещё ни с кем не подружились.</p>
-                            <p v-if="wMode==='online'">Сейчас все друзья оффлайн.</p>
-                            <p v-if="wMode==='favorites'">Вы никого не добавили в Избранные.</p>
-                        </div>
-                    </div>
+                    <FriendsAllList v-if="isFriendsLoaded"
+                                    v-bind:friends="friendsListFilter()"
+                                    v-bind:friendsKey="friendsListKey"
+                                    v-bind:wMode="wMode"
+                                    v-bind:frmSize="frmSize"
+                                    v-bind:hasFriends="hasFriends">
+                    </FriendsAllList>
                     <Spinner v-else></Spinner>
                 </div>
 
@@ -62,15 +54,15 @@
 </template>
 
 <script>
-import FriendsListMixin from '../mixins/FriendsListMixin.js';
-import FriendListItem from '../components/FriendListItem.vue';
-import PliziFriend from '../classes/PliziFriend.js';
-import PliziCollection from "../classes/PliziCollection.js";
+    import FriendsListMixin from '../mixins/FriendsListMixin.js';
+    import PliziFriend from '../classes/PliziFriend.js';
+    import PliziCollection from '../classes/PliziCollection.js';
+    import FriendsAllList from "../components/FriendsAllList";
 
-export default {
+    export default {
 name : 'FriendsListPage',
 components : {
-    FriendListItem
+    FriendsAllList
 },
 
 mixins : [FriendsListMixin],
@@ -82,6 +74,9 @@ data(){
         wMode : `all`,
         removedFriendID : -1,
         searchTerm: '',
+        lazyLoadStarted: false,
+        noMoreFriends: false,
+        friendsListKey: 'friendsListKey'
     }
 },
 
@@ -90,6 +85,13 @@ computed : {
         return (this.$root.$auth.frm.size > 0);
     },
 
+    frmSize(){
+        return this.$root.$auth.frm.size;
+    },
+},
+
+
+methods : {
     friendsListFilter(){
         let ret = [];
 
@@ -101,11 +103,11 @@ computed : {
         if (this.wMode === 'online'){
             //this.allMyFriends.asArray()
             this.$root.$auth.frm.asArray()
-            .map(frItem => {
-                if (frItem.isOnline === true){
-                    ret.push(frItem);
-                }
-            });
+                .map(frItem => {
+                    if (frItem.isOnline === true){
+                        ret.push(frItem);
+                    }
+                });
         }
 
         if (this.wMode === 'favorites'){
@@ -113,9 +115,9 @@ computed : {
             this.$root.$auth.frm.asArray()
                 .map(frItem => {
                     if ( this.$root.$auth.fm.checkIsFavorite( frItem.id )){
-                    ret.push(frItem);
-                }
-            });
+                        ret.push(frItem);
+                    }
+                });
         }
 
         /** @TGA как-то оно нелогично тут смотрится **/
@@ -127,14 +129,15 @@ computed : {
 
         return ret;
     },
-},
 
-
-methods : {
     friendsListSelect( wm ){
         this.wMode = wm;
     },
 
+    /**
+     * @deprecated
+     * @returns {Promise<void>}
+     */
     async loadMyFriends() {
         let apiResponse;
 
@@ -152,10 +155,40 @@ methods : {
 
     filterSearch({ searchTerm }) {
         this.searchTerm = searchTerm;
+    },
+
+    onScrollYPage(){
+        if (window.scrollY >= (document.body.scrollHeight - document.documentElement.clientHeight - (document.documentElement.clientHeight/2) )){
+            this.friendsLazyLoad(); // Дозагрузка!
+        }
+    },
+
+    async friendsLazyLoad(){
+        if (this.lazyLoadStarted  ||  this.noMoreFriends)
+            return;
+
+        this.lazyLoadStarted = true;
+        const added = await this.$root.$auth.frm.additionalLoad();
+
+        this.$root.$auth.frm.collection.has( (new Date()).getMilliseconds()+``);
+
+        this.friendsListKey = 'friendsListKey-'+this.$root.$auth.frm.size+'-'+(new Date()).getMilliseconds();
+
+        this.$forceUpdate();
+
+        if (added === 0){
+            this.noMoreFriends = true;
+        }
+
+        this.lazyLoadStarted = false;
+
+        this.onScrollYPage();
     }
 },
 
 created(){
+    window.addEventListener('scroll', this.onScrollYPage);
+
     if ('#favorites' === this.$route.hash) {
         this.wMode = 'favorites';
     }

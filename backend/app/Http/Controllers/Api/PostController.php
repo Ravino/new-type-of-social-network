@@ -189,9 +189,7 @@ class PostController extends Controller
      */
     public function delete(Post $post)
     {
-        $user_post = \Auth::user()->posts()->where('id', $post->id)->get();
-
-        if ($user_post) {
+        if ($post->author->id === \Auth::user()->id) {
             $post->delete();
 
             return response()->json([
@@ -230,9 +228,11 @@ class PostController extends Controller
      */
     public function restore($id)
     {
-        $user_post = \Auth::user()->posts()->where('id', $id)->restore();
+        $post = Post::withTrashed()->where('id', $id)->first();
 
-        if ($user_post) {
+        if ($post->author->id === \Auth::user()->id) {
+            $post->restore();
+
             return response()->json([
                 'message' => 'Вы успешно восстановили запись.',
             ]);
@@ -245,18 +245,16 @@ class PostController extends Controller
 
     /**
      * @param Request $request
-     * @param $id
+     * @param Post $post
      * @return PostResource|\Illuminate\Http\JsonResponse
      */
-    public function update(Request $request, $id)
+    public function update(Request $request, Post $post)
     {
-        $user_post = \Auth::user()->posts()->where('id', $id)->first();
+        if ($post->author->id === \Auth::user()->id) {
+            $post->update(['body' => $request->body]);
+            PostAttachment::whereIn('id', $request->attachmentIds)->update(['post_id' => $post->id]);
 
-        if ($user_post) {
-            $user_post->update(['body' => $request->body]);
-            PostAttachment::whereIn('id', $request->attachmentIds)->update(['post_id' => $user_post->id]);
-
-            return new PostResource($user_post);
+            return new PostResource($post);
         }
 
         return response()->json([

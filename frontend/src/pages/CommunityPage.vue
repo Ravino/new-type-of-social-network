@@ -33,20 +33,27 @@
 
             <div class="row">
                 <div class="col-sm-10 col-md-10 col-lg-8 col-xl-8">
-                    <div v-if="isDataReady" id="communityInfoBlock" class="community-info-block bg-white-br20 py-5 mb-5 text-left">
+                    <div v-if="isDataReady" id="communityInfoBlock" class="community-info-block bg-white-br20 p-5 mb-5 text-left">
                         <p>{{communityData.description}}</p>
                         <p><a :href="communityData.website" target="_blank" class="text-dark">{{communityData.website}}</a></p>
                     </div>
                     <Spinner v-else></Spinner>
 
-                    <CommunityEditor v-if="canPost" :community-id="communityData.id"></CommunityEditor>
+                    <CommunityEditor v-if="canPost"
+                                     :community-id="communityData.id"
+                                     :class="'mx-0'"
+                                     @addNewPost="addNewPost"/>
 
-                    <div v-if="isDataReady" id="communityPostsBlock" class="bg-white-br20 py-5 mb-5 --text-center">
+                    <div v-if="isDataReady" id="communityPostsBlock" class="pb-5 mb-5 --text-center">
                         <Post v-for="postItem in communityPosts"
                               :key="postItem.id"
                               :post="postItem"
                               :isCommunity="true"
-                              @onShare="onSharePost"></Post>
+                              :class="'mx-0'"
+                              @onShare="onSharePost"
+                              @onDeletePost="onDeletePost"
+                              @onRestorePost="onRestorePost"
+                              @onEditPost="onEditPost"></Post>
                     </div>
                     <Spinner v-else></Spinner>
                 </div>
@@ -69,6 +76,9 @@
             <FavoriteFriends :isNarrow="true"></FavoriteFriends>
         </div>
 
+        <PostEditModal v-if="postEditModal.isVisible"
+                       :post="postForEdit"
+                       @hidePostEditModal="hidePostEditModal"/>
     </div>
 </template>
 
@@ -77,6 +87,7 @@ import AccountToolbarLeft from '../common/AccountToolbarLeft.vue';
 import FavoriteFriends from '../common/FavoriteFriends.vue';
 import Spinner from '../common/Spinner.vue';
 import Post from '../common/Post/Post.vue';
+import PostEditModal from '../common/Post/PostEditModal.vue';
 
 import CommunityUserActionBlock from '../common/Communities/CommunityUserActionBlock.vue';
 import CommunityFriendsInformer from '../common/Communities/CommunityFriendsInformer.vue';
@@ -100,6 +111,7 @@ components : {
     AccountToolbarLeft,
     FavoriteFriends,
     Post,
+    PostEditModal,
     CommunityEditor,
 },
 
@@ -108,6 +120,10 @@ data() {
         isDataReady: false,
         communityData: null,
         communityPosts: null,
+        postEditModal: {
+            isVisible: false,
+        },
+        postForEdit: null,
     }
 },
 
@@ -132,6 +148,66 @@ computed: {
 },
 
 methods: {
+    addNewPost(post) {
+        this.communityPosts.unshift( new PliziPost( post ) );
+    },
+    startTimer( post ){
+        setTimeout( () => {
+            const postIndex = this.communityPosts.find( ( userPost ) => {
+                return userPost.id === post.id;
+            } );
+
+            if ( post.deleted ){
+                this.communityPosts.splice( postIndex, 1 );
+            }
+        }, 5000 );
+    },
+    onEditPost( post ){
+        this.postEditModal.isVisible = true;
+        this.postForEdit = post;
+    },
+    hidePostEditModal(){
+        this.postEditModal.isVisible = false;
+        this.postForEdit = null;
+    },
+
+    async onDeletePost(id) {
+        let response;
+
+        try{
+            response = await this.$root.$api.$post.deletePost( id );
+        } catch (e){
+            console.warn( e.detailMessage );
+        }
+
+        if ( response ){
+            const post = this.communityPosts.find( ( post ) => {
+                return post.id === id;
+            } );
+
+            post.deleted = true;
+
+            this.startTimer( post );
+        }
+    },
+    async onRestorePost(id) {
+        let response;
+
+        try{
+            response = await this.$root.$api.$post.restorePost( id );
+        } catch (e){
+            console.warn( e.detailMessage );
+        }
+
+        if ( response ){
+            const post = this.communityPosts.find( ( post ) => {
+                return post.id === id;
+            } );
+
+            post.deleted = false;
+        }
+    },
+
     async uploadPrimaryImage(){
         if (!this.isAuthor)
             return;
@@ -260,6 +336,16 @@ async mounted() {
     await this.getCommunityInfo();
     await this.getCommunityPosts();
     this.isDataReady = true;
-}
+    window.scrollTo(0, 0);
+},
+    beforeRouteUpdate (to, from, next) {
+        this.communityData = null;
+        this.communityPosts = null;
+        this.id = to.params.id;
+        this.getCommunityInfo();
+        this.getCommunityPosts();
+        next();
+        window.scrollTo(0, 0);
+    },
 }
 </script>

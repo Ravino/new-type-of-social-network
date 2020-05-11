@@ -148,16 +148,43 @@ computed: {
     },
 
     detectYoutubeLink() {
-        let str = this.message.body.replace(/<\/?[^>]+>/g, '').trim();
-        let regExp = /^.*((youtu.be\/)|(v\/)|(\/u\/\w\/)|(embed\/)|(watch\?))\??v?=?([^#&?]*).*/;
-        let match = str.match(regExp);
+        let msg = this.message.body.replace(/<\/?[^>]+>/g, '').trim();
+        let youtubeLinksRegExp = /https?:\/\/(?:[0-9A-Z-]+\.)?(?:youtu\.be\/|youtube(?:-nocookie)?\.com\S*?[^\w\s-])([\w-]{11})(?=[^\w-]|$)(?![?=&+%\w.-]*(?:['"][^<>]*>|<\/a>))[?=&+%\w.-]*/ig;
+        let youtubeIdsRegExp = /^.*((youtu.be\/)|(v\/)|(\/u\/\w\/)|(embed\/)|(watch\?))\??v?=?([^#&?]*).*/;
+        let youtubeLinksMatch = msg.match(youtubeLinksRegExp);
+        let ids = [];
 
-        return (match && match[7].length === 11) ? match[7] : false;
+        if (youtubeLinksMatch && youtubeLinksMatch.length) {
+            youtubeLinksMatch.forEach((link) => {
+                let youtubeIdsMatch = link.match(youtubeIdsRegExp);
+                ids.push((youtubeIdsMatch && youtubeIdsMatch[7].length === 11) ? youtubeIdsMatch[7] : false);
+            });
+
+            return ids[0];
+        }
+
+        return null;
+    },
+
+    detectLink() {
+        let msg = this.message.body.replace(/<\/?[^>]+>/g, '').trim();
+        let urlRegex = /(https?:\/\/[^\s]+)/g;
+
+        return msg.replace(urlRegex, function(url) {
+            return '<a href="' + url + '">' + url + '</a>';
+        });
     },
 
     livePreview() {
         if (this.detectYoutubeLink) {
-            return `<img src="//img.youtube.com/vi/${this.detectYoutubeLink}/0.jpg" alt="" />`;
+            let youtubeLinksRegExp = /https?:\/\/(?:[0-9A-Z-]+\.)?(?:youtu\.be\/|youtube(?:-nocookie)?\.com\S*?[^\w\s-])([\w-]{11})(?=[^\w-]|$)(?![?=&+%\w.-]*(?:['"][^<>]*>|<\/a>))[?=&+%\w.-]*/ig;
+            let text = this.message.body.replace(youtubeLinksRegExp, '');
+
+            return `<img src="//img.youtube.com/vi/${this.detectYoutubeLink}/0.jpg" alt="" /> ${text}`;
+        }
+
+        if (this.detectLink) {
+            return this.detectLink;
         }
     },
 },

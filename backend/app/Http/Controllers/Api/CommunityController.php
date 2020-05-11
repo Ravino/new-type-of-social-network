@@ -168,7 +168,7 @@ class CommunityController extends Controller
      * @return AttachmentsCollection
      * @throws Exception
      */
-    public function uploadAttachments(UploadFileRequest $request) {
+    public function uploadAvatar(UploadFileRequest $request) {
         $uploaded = $this->uploadService->singleUpload('community/attachments', $request->file('file'), 'public', [
             'normal' => [
                 'size' => 600,
@@ -187,7 +187,7 @@ class CommunityController extends Controller
         return new AttachmentsCollection([$attachment]);
     }
 
-    public function uploadHeader(UploadFileRequest $request)
+    public function uploadHeaderImage(UploadFileRequest $request)
     {
         $uploaded = $this->uploadService->singleUpload('community/headers', $request->file('file'), 'public', [
             'normal' => [
