@@ -303,11 +303,9 @@ methods: {
             }
         }
 
-     if (picsArr.length === 0) {
-      return;
-     }
-
-        let apiResponse = null;
+        if (picsArr.length === 0) {
+          return;
+        }
 
         for (const file of picsArr) {
             const reader = new FileReader();
@@ -319,51 +317,49 @@ methods: {
             };
 
             reader.readAsDataURL(file);
-        }
 
-        try {
+            let apiResponse = null;
+
             /** TODO: @TGA надо потом перенести отсюда загрузку аттачей **/
             switch (this.workMode) {
                 case 'chat':
-                    apiResponse = await this.$root.$api.$chat.attachment(picsArr);
+                    apiResponse = this.$root.$api.$chat.attachment(picsArr);
                     break;
 
                 case 'post':
-                    apiResponse = await this.$root.$api.$post.storePostAttachments(picsArr);
+                    apiResponse = this.$root.$api.$post.storePostAttachments(picsArr);
                     break;
 
                 default:
                     console.warn('TextEditor::addUploadAttachment - No matches in switch.');
             }
-        } catch (e) {
-            window.console.warn(e.detailMessage);
-            throw e;
-        }
 
-        if (apiResponse) {
-            apiResponse.map((attItem) => {
-                const newAtt = new PliziAttachment(attItem);
+            apiResponse.then(response => {
+                response.map((attItem) => {
+                    const newAtt = new PliziAttachment(attItem);
 
-                this.attachFiles = this.attachFiles.map(foundFile => {
-                    if (foundFile.originalName === newAtt.originalName) {
-                        foundFile.attachment = newAtt;
-                        foundFile.isBlob = false;
-                        foundFile.fileBlob = null;
-                    }
+                    this.attachFiles = this.attachFiles.map(foundFile => {
+                        if (foundFile.originalName === newAtt.originalName) {
+                            foundFile.attachment = newAtt;
+                            foundFile.isBlob = false;
+                            foundFile.fileBlob = null;
+                        }
 
-                    return foundFile;
+                        return foundFile;
+                    });
+
+                    this.$emit('newAttach', {attach: newAtt});
+
+                    // const $this = this;
+                    // setTimeout(function () {
+                    //     $this .checkUpdatedChatContainerHeight();
+                    // }, 1200); // TODO @TGA как узнать время, когда картинка загружена @veremey
+
+                }).catch(e => {
+                    window.console.warn(e.detailMessage);
+                    throw e;
                 });
-
-                this.$emit('newAttach', {attach: newAtt});
-
-                // const $this = this;
-                // setTimeout(function () {
-                //     $this .checkUpdatedChatContainerHeight();
-                // }, 1200); // TODO @TGA как узнать время, когда картинка загружена @veremey
-
-            });
-        } else {
-            window.console.info(apiResponse);
+            })
         }
     },
 },
