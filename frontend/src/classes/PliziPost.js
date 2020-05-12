@@ -42,6 +42,13 @@ class PliziPost {
     _likes = null;
 
     /**
+     * Лайкнутый ли этот пост текущим пользователем.
+     * @type {boolean|null}
+     * @private
+     */
+    _alreadyLiked = null;
+
+    /**
      * кол-во просмотров
      * @type {number}
      * @private
@@ -164,6 +171,10 @@ class PliziPost {
         return this._likes;
     }
 
+    get alreadyLiked() {
+        return this._alreadyLiked;
+    }
+
     get views() {
         return this._views
     }
@@ -231,6 +242,10 @@ class PliziPost {
 
     set likes(value) {
         this._likes = value;
+    }
+
+    set alreadyLiked(value) {
+        this._alreadyLiked = value;
     }
 
     set views(value) {

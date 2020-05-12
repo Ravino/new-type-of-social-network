@@ -124,7 +124,8 @@
             <div class="plz-post-item-footer col-12 pt-4">
                 <div class="d-flex">
                     <div class="d-flex">
-                        <div class="post-watched-counter">
+                        <div class="post-watched-counter"
+                             @click="onLike">
                             <IconHeard/>
                             <span>{{ post.likes | space1000 }}</span>
                         </div>
@@ -220,6 +221,26 @@
                 this.$emit('openVideoModal', {
                     videoLink: this.post.body.replace(/<\/?[^>]+>/g, '').trim(),
                 })
+            },
+
+            async onLike() {
+                let response = null;
+
+                try{
+                    response = await this.$root.$api.$post.likePost(this.post.id);
+                } catch (e){
+                    console.warn( e.detailMessage );
+                }
+
+                if ( response !== null ){
+                    if (this.post.alreadyLiked) {
+                        this.post.alreadyLiked = false;
+                        this.post.likes--;
+                    } else {
+                        this.post.alreadyLiked = true;
+                        this.post.likes++;
+                    }
+                }
             },
         },
     }
