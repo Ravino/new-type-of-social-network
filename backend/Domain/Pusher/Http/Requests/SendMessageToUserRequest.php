@@ -17,7 +17,7 @@ class SendMessageToUserRequest extends FormRequest
     {
         return [
             'userId' => 'required',
-            'body' => 'required|string',
+            'body' => 'required|string|max:500',
             'replyOnMessageId' => 'string',
             'forwardFromChatId' => 'string',
             'attachments' => 'array'
