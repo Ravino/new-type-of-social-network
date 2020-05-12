@@ -10,3 +10,29 @@
 .post-settings {
     height: 30px;
 }
+
+.plz-post-item {
+    .plz-post-item-header,
+    .plz-post-item-body,
+    .plz-post-item-images,
+    .plz-post-item-footer {
+        padding: 0 35px 0 39px;
+    }
+}
+
+.post-images {
+    margin-left: -5px;
+
+    img {
+        max-height: 337px;
+        max-width: 100%;
+        border-radius: 3px;
+        margin-left: 5px;
+        margin-bottom: 5px;
+    }
+}
+
+.shared {
+    padding: 10px;
+    border-left: 2px solid #cececf;
+}
