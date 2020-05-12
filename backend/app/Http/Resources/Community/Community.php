@@ -2,6 +2,7 @@
 
 namespace App\Http\Resources\Community;
 
+use App\Http\Resources\User\Image;
 use Illuminate\Http\Resources\Json\JsonResource;
 
 class Community extends JsonResource
@@ -14,33 +15,23 @@ class Community extends JsonResource
      */
     public function toArray($request)
     {
+        $data = [
+            'id' => $this->id,
+            'name' => $this->name,
+            'description' => $this->description,
+            'notice' => $this->notice,
+            'primaryImage' => $this->primary_image,
+            'url' => $this->url,
+            'website' => $this->website,
+            'location' => $this->location,
+            'totalMembers' => $this->members->count(),
+            'role' => $this->role ? $this->role->role : null,
+            'avatar' => $this->avatar ? new Image($this->avatar) : null,
+        ];
         if($this && $this->relationLoaded('users')) {
-            return [
-                'id' => $this->id,
-                'name' => $this->name,
-                'description' => $this->description,
-                'notice' => $this->notice,
-                'primaryImage' => $this->primary_image,
-                'url' => $this->url,
-                'website' => $this->website,
-                'location' => $this->location,
-                'role' => $this->role ? $this->role->role : null,
-                'totalMembers' => $this->members->count(),
-                'members' => new CommunityUserCollection($this->users)
-            ];
-        } else {
-            return [
-                'id' => $this->id,
-                'name' => $this->name,
-                'description' => $this->description,
-                'notice' => $this->notice,
-                'primaryImage' => $this->primary_image,
-                'url' => $this->url,
-                'website' => $this->website,
-                'location' => $this->location,
-                'totalMembers' => $this->members->count(),
-                'role' => $this->role ? $this->role->role : null
-            ];
+            $data['members'] = new CommunityUserCollection($this->users);
         }
+
+        return $data;
     }
 }

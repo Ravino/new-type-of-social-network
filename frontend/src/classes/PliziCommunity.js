@@ -1,4 +1,5 @@
 import PliziMember from './PliziMember.js';
+import PliziCommunityAvatar from './Community/PliziCommunityAvatar';
 
 class PliziCommunity {
     /**
@@ -83,6 +84,13 @@ class PliziCommunity {
      */
     _members = null;
 
+    /**
+     * Аватарка
+     * @type {PliziCommunityAvatar|null}
+     * @private
+     */
+    _avatar = null;
+
     constructor(inputData){
         this._id = inputData.id;
         this._name = inputData.name;
@@ -92,6 +100,8 @@ class PliziCommunity {
         this._primaryImage = inputData.primaryImage;
         this._url = inputData.url;
         this._website = inputData.website;
+
+        this._avatar = inputData.avatar ? new PliziCommunityAvatar(inputData.avatar) : null;
 
         this._role = inputData.role;
         this._totalMembers = inputData.totalMembers;
@@ -152,6 +162,14 @@ class PliziCommunity {
         return this._members;
     }
 
+    get avatar() {
+        return this._avatar;
+    }
+
+    set avatar(value) {
+        this._avatar = value;
+    }
+
     toJSON(){
         let mmbrs = null;
 
@@ -171,6 +189,7 @@ class PliziCommunity {
             location: this.location,
             role: this.role,
             totalMembers: this.totalMembers,
+            avatar: this._avatar ? this._avatar.toJSON() : null,
             members: mmbrs
         };
     }
