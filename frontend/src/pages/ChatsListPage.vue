@@ -8,7 +8,10 @@
             <div class="jumbotron">
                 <p class="alert alert-info w-100 text-center p-5">
                     Вы ещё ни с кем не общались, потому здесь пока никого нет.<br />
-                    Находите себе новых <router-link tag="a" to="/friends" class="btn btn-link mx-0 px-0">друзей</router-link>, вступайте в <router-link tag="a" to="/popular-communities" class="btn btn-link mx-0 px-0">сообщества</router-link>!
+                    Находите себе новых
+                    <router-link tag="a" to="/friends" class="btn btn-link mx-0 px-0">друзей</router-link>,
+                    вступайте в <router-link tag="a" to="/popular-communities" class="btn btn-link mx-0 px-0">
+                    сообщества</router-link>!
                 </p>
             </div>
         </div>
@@ -37,7 +40,9 @@
                                       @clearFilters="clearChatMessagesFilters"
                                       ref="chatMessages">
                         </ChatMessages>
-                        <Spinner v-else v-bind:message="`Сообщения загружаются,<br />можно выбрать другой диалог`"></Spinner>
+                        <Spinner v-else v-bind:message="`Сообщения загружаются,<br />можно выбрать другой диалог`">
+
+                        </Spinner>
 
                         <ChatFooter v-if="currentDialog"
                                     v-bind:currentDialog="currentDialog"
@@ -69,10 +74,11 @@ import ChatHeader from '../common/Chat/ChatHeader.vue';
 import ChatMessages from '../common/Chat/ChatMessages.vue';
 import ChatFooter from '../common/Chat/ChatFooter.vue';
 
+import ChatNotifications from '../common/Chat/ChatNotifications.vue';
+
 import PliziDialog from '../classes/PliziDialog.js';
 import PliziMessage from '../classes/PliziMessage.js';
-import NotificationMixin from '../mixins/NotificationMixin';
-import ChatNotifications from "../common/Chat/ChatNotifications";
+import NotificationMixin from '../mixins/NotificationMixin.js';
 
 export default {
 name: 'ChatsListPage',

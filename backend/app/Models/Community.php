@@ -113,4 +113,25 @@ class Community extends Model
     {
         return 'U';
     }
+
+    public static function getPrivacyList()
+    {
+        return [
+            self::PRIVACY_OPEN => 'Открытое',
+            self::PRIVACY_CLOSED => 'Закрытое',
+            self::PRIVACY_PRIVATE => 'Приватное',
+        ];
+    }
+
+    public static function getTypeList()
+    {
+        return [
+            self::TYPE_BUSINESS => 'Бизнес',
+            self::TYPE_THEMES => 'Тематическое сообщество',
+            self::TYPE_BRAND => 'Бренд или организация',
+            self::TYPE_INTEREST_GROUP => 'Группа по интересам',
+            self::TYPE_PUBLIC_PAGE => 'Публичная страница',
+            self::TYPE_EVENT => 'Мероприятие',
+        ];
+    }
 }

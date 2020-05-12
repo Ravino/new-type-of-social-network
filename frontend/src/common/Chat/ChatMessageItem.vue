@@ -110,7 +110,7 @@ props: {
 
 data() {
     return {
-        //messageWriting: false, // TODO: @TGA убрать это позже
+
     }
 },
 
@@ -227,7 +227,7 @@ methods: {
 
     onPickMessage(){
         this.$emit( 'ChatMessagePick', {
-            messageID: (this.pickedID !== this.message.id) ? this.message.id : -1,
+            messageID: (this.pickedID !== this.message.id) ? this.message.id : 'none',
         });
     },
 

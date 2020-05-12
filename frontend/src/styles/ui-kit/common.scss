@@ -473,15 +473,16 @@ $radioWidth: 18px;
 }
 
 
-input[type=number]::-webkit-inner-spin-button,
-input[type=number]::-webkit-outer-spin-button {
+input[type='number']::-webkit-inner-spin-button,
+input[type='number']::-webkit-outer-spin-button {
     appearance: none;
     -webkit-appearance: none;
     -moz-appearance: none;
     margin: 0;
 }
 
-input[type=number] {
+input[type='number'],
+input[type='search']{
     -moz-appearance: textfield;
 }
 

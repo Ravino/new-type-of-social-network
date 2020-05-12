@@ -1,6 +1,7 @@
 <template>
-    <div v-if="showFavoritesBlock" id="favoritFriends" class="plz-favorit-friends --overflow-hidden mb-5"
-         :class="{ 'bg-white-br20' : !isPickFavorite, 'is-pick-favorite':isPickFavorite } ">
+    <div v-if="showFavoritesBlock" id="favoriteFriends" class="plz-favorit-friends --overflow-hidden mb-5"
+         :class="{ 'bg-white-br20' : !isPickFavorite, 'is-pick-favorite':isPickFavorite } "
+         :key="`favoriteFriends-`+favorUpdated">
 
         <div v-if="isDataReady" class="--d-flex --flex-row --justify-content-start pb-3 --border-bottom pt-3">
             <router-link tag="h6" to="/friends#favorites" v-if="!isNarrow" class="plz-ff-title mt-2 ml-3 d-block cursor-pointer">Избранные</router-link>
@@ -14,6 +15,7 @@
                                     @PickFavorite="onPickFavorite"
                                     @UnPickFavorite="onUnPickFavorite"
                                     v-bind:friend="friend"
+                                    v-bind:pickedFavoriteId="pickedFavoriteId"
                                     v-bind:isNarrow="isNarrow"
                                     v-bind:key="(friend.id+'-'+favorUpdated)">
                 </FavoriteFriendItem>
@@ -42,6 +44,7 @@ data () {
         showFavoritesBlock: true,
         isDataReady : false,
         isPickFavorite: false,
+        pickedFavoriteId: `none`,
         favorUpdated: 1
     }
 },
@@ -54,11 +57,13 @@ methods : {
     onPickFavorite(evData){
         window.console.log(evData, `onPickFavorite`);
         this.isPickFavorite = true;
+        this.pickedFavoriteId = evData.friendId;
     },
 
     onUnPickFavorite(evData){
         window.console.log(evData, `onUnPickFavorite`);
         this.isPickFavorite = false;
+        this.pickedFavoriteId = 'none';
     },
 
     afterFavoritsLoad(msg){
