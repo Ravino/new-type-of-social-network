@@ -38,6 +38,7 @@
 
                 <ChatLinkedHeader v-if="currentDialog" v-bind:currentDialog="currentDialog"
                             @ChatMessagesFilter="onUpdateMessagesFilterText"
+                                  @CloseLinkedChat="onCloseLinkedChat"
                             ref="chatHeader">
                 </ChatLinkedHeader>
 
@@ -71,8 +72,10 @@ import ChatMessages from '../common/Chat/ChatMessages.vue';
 import ChatFooter from '../common/Chat/ChatFooter.vue';
 
 import FriendItemMixin from '../mixins/FriendItemMixin.js';
+import DialogMixin from '../mixins/DialogMixin.js';
+
 import PliziFriend from '../classes/PliziFriend.js';
-import PliziMessage from "../classes/PliziMessage";
+import PliziMessage from '../classes/PliziMessage.js';
 
 export default {
 name : 'FavoriteFriendItem',
@@ -80,7 +83,7 @@ components: {
     Spinner,
     ChatLinkedHeader, ChatMessages, ChatFooter,
 },
-mixins : [FriendItemMixin],
+mixins : [FriendItemMixin, DialogMixin],
 props : {
     friend : {
         type: PliziFriend,
@@ -135,6 +138,11 @@ methods: {
         this.$forceUpdate();
     },
 
+    onCloseLinkedChat(){
+        this.isShowLinkedChat = false;
+        this.$emit('UnPickFavorite', { friendId : this.friend.id });
+    },
+
     clearChatMessagesFilters() {
         // TODO: нужна прокрутка вниз
         this.$refs.chatHeader.clearFilters();
@@ -151,7 +159,7 @@ methods: {
     },
 
 
-    showRelatedChat(ev){
+    async showRelatedChat(ev){
         /** @TGA надо придумать способ проверки поумнее **/
         if (! this.isSwitchedClass(ev.target.className) )
             return;
@@ -166,13 +174,18 @@ methods: {
             this.$emit('PickFavorite', evData);
             this.currentDialog = this.$root.$auth.dm.getDialogByCompanion(this.friend.id);
             if (this.currentDialog) {
-                window.console.log( this.currentDialog.companionName, `dialog` );
-                this.chatSelect( this.currentDialog.id );
+                await this.chatSelect( this.currentDialog.id );
                 this.isShowLinkedChat = true;
             }
             else {
-                window.console.warn( `Диалога с ${this.friend.fullName} нет - надо создавать`);
-                this.isShowLinkedChat = false;
+                await this.openDialogWithFriend( this.friend );
+
+                this.currentDialog = this.$root.$auth.dm.getDialogByCompanion(this.friend.id);
+                if (this.currentDialog) {
+                    await this.chatSelect( this.currentDialog.id );
+                    this.isShowLinkedChat = true;
+                }
+                this.isShowLinkedChat = true;
             }
         }
     },
@@ -197,6 +210,7 @@ methods: {
 
         return classesList.includes(className);
     },
+
 
     /**
      * @param {Object} evData

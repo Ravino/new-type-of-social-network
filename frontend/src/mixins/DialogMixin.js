@@ -24,8 +24,6 @@ methods: {
             this.$root.$emit('NewChatDialog', apiResponse);
             window.localStorage.setItem('pliziActiveDialog', apiResponse.id);
         }
-
-        this.$root.$router.push('/chats');
     },
 }
 
