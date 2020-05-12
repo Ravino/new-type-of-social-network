@@ -113,7 +113,9 @@ class UserController extends Controller
      * @return UserCollection
      */
     public function getMyFriendsList(Request $request) {
+        clock()->startEvent('get-friends', "");
         $friend_ids = Auth::user()->getFriends($request->query('limit') ?? 50, $request->query('offset') ?? 0);
+        clock()->endEvent('get-friends', "");
         $friends = User::with('profile', 'profile.avatar')
             ->whereIn('id', array_keys($friend_ids))
             ->get();
