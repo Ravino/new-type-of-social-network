@@ -1,7 +1,7 @@
 <template>
     <header id="authHeader" class="fixed-top"
             :class="{ 'page-has-offset-top' : isShowNavBarShadow }">
-        <nav class="auth-navbar navbar navbar-expand-lg container container-wide mx-auto">
+        <nav class="auth-navbar navbar navbar-expand-lg container container-wide mx-auto  pl-md-0 pl-lg-3">
             <div class="w-100 ">
                 <div class="row ">
                     <div class="d-flex align-items-center col-3 col-sm-2 col-md-1 pl-3 pr-0 px-lg-0 ">

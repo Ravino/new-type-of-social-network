@@ -1,11 +1,11 @@
 <template>
-    <div class="container-fluid pl-0">
+    <div class="container-fluid pl-md-0">
         <div class="row">
             <div class="col-12 col-md-1 ">
                 <AccountToolbarLeft></AccountToolbarLeft>
             </div>
 
-            <div class="col-12 col-md-11 col-xl-8 pl-0">
+            <div class="col-12 col-md-11 col-xl-8 pl-0 pr-0 pr-xl-3">
                 <div class="container">
                     <ProfileHeader v-bind:userData="userData" v-bind:isOwner="true"></ProfileHeader>
 

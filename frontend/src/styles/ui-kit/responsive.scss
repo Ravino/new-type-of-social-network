@@ -34,7 +34,10 @@
 }
 
 /*- md -*/
-@media (max-width: 768px) {
+@media (max-width: 767px) {
+    #contentContainer {
+        padding-top: 76px;
+    }
     #toolbarLeftColor {
         .add-new {
             width: 48px;
@@ -61,7 +64,7 @@
 
     .plz-text-editor,
     .plz-text-editor-form {
-        min-height: 180px;
+        min-height: 150px;
     }
     .plz-text-editor-form {
         width: calc(100% - 50px);
@@ -77,6 +80,7 @@
 
 /*- sm -*/
 @media (max-width: 576px) {
+
     .plz-latest-entries {
         h6 {
             padding-left: 0;
