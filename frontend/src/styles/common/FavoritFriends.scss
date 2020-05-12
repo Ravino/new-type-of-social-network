@@ -45,6 +45,11 @@ $picSize: 42px;
             &.active-chat{
                 display: block;
             }
+
+            .plz-linked-chat-body {
+                min-height: 520px;
+                min-width: 720px;
+            }
         }
     }
 
