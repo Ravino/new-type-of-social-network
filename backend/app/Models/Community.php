@@ -102,7 +102,7 @@ class Community extends Model
     /**
      * @return HasOne
      */
-    public function attachment() {
+    public function avatar() {
         return $this->hasOne(CommunityAttachment::class);
     }
 
