@@ -65,7 +65,6 @@ class UserNeo4jRepository extends BaseRepository
     public function isFriendOfFriendWith($first_user_oid, $second_user_oid) {
         $query = "MATCH (me:`User` {oid: '{$first_user_oid}'})-[:FRIEND_OF]-(mf)-[:FRIEND_OF]-(other: `User`{oid: '{$second_user_oid}'})
                   RETURN COUNT(mf) as count_mutual;";
-        \Log::debug($query);
         return $this->client->run($query)->firstRecord();
     }
 
