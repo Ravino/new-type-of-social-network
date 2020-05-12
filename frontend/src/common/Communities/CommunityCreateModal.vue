@@ -16,107 +16,118 @@
                         </div>
 
                         <p class="community-create-modal-desc text-center mb-4 mt-3">
-                            Публикуйте материалы разных форматов, общайтесь с читателями, изучайте статистику и подключайте монетизацию.<br />
+                            Публикуйте материалы разных форматов, общайтесь с читателями, изучайте статистику и
+                            подключайте монетизацию.<br/>
                             Для начала выберите тип сообщества.
                         </p>
                     </div>
 
                     <form class="form community-create-modal-form p-0"
-                          @submit.prevent="">
-                        <div class="form-group d-flex align-items-center px-5">
-                            <label for="commType" class="col-4 community-create-modal-label text-right">Тип сообщества:</label>
-                            <div class="col-8 position-relative">
-                                <select v-model="community.type"
-                                    id="commType" ref="commType" class="form-control  community-create-modal-select">
-                                    <option value="bussines">Бизнес</option>
-                                    <option value="tematic">Тематическое сообщество</option>
-                                    <option value="brand">Бренд или организация</option>
-                                    <option value="interest">Группа по интересам</option>
-                                    <option value="public">Публичная страница</option>
-                                    <option value="event">Мероприятие</option>
+                          @submit.prevent="" novalidate="novalidate">
+                        <div class="form-group d-flex align-items-center px-5 row">
+                            <label for="commType" class="col-4 community-create-modal-label text-right">Тип
+                                сообщества:</label>
+                            <div class="col-8">
+                                <select v-model="model.type"
+                                        id="commType" ref="commType" @click="$v.model.type.$touch()"
+                                        class="form-control  community-create-modal-select">
+                                    <option value="0" disabled>Выберите тип</option>
+                                    <option v-for="item in types" :key="item.value" :value="item.value">
+                                        {{item.title}}
+                                    </option>
                                 </select>
                                 <i class="fas fa-chevron-down"></i>
                             </div>
-                        </div>
-
-                        <div class="form-group d-flex align-items-center px-5">
-                            <label for="commName" class="col-4 community-create-modal-label  text-right">Название<b class="text-danger">*</b>:</label>
-                            <div class="col-8  position-relative">
-                                <input v-model="community.name" type="text" id="commName" ref="commName" class="form-control  community-create-modal-select" required />
+                            <div class="col-4"></div>
+                            <div class="col-8 invalid-feedback" v-if="$v.model.type.$error">
+                                <p v-if="!$v.model.type.required" class="text-danger">Укажите тип сообщества</p>
+                                <p v-if="!$v.model.type.isIn" class="text-danger">Выберите тип сообщества</p>
                             </div>
                         </div>
 
-                        <div class="form-group d-flex align-items-center px-5">
-                            <label for="commDescription" class="col-4 community-create-modal-label  text-right">Описание<b class="text-danger">*</b>:</label>
-                            <div class="col-8  position-relative">
-                                <input v-model="community.description" type="text" id="commDescription" ref="commDescription" class="form-control  community-create-modal-select"  required />
+                        <div class="form-group d-flex align-items-center px-5 row">
+                            <label for="commName" class="col-4 community-create-modal-label  text-right">Название<b
+                                class="text-danger">*</b>:</label>
+                            <div class="col-8">
+                                <input v-model="model.name" type="text" id="commName" ref="commName"
+                                       @blur="$v.model.name.$touch()"
+                                       class="form-control community-create-modal-select" required/>
+                            </div>
+                            <div class="col-4"></div>
+                            <div class="col-8 invalid-feedback" v-if="$v.model.name.$error">
+                                <p v-if="!$v.model.name.required" class="text-danger">Укажите название
+                                    сообщества</p>
+                                <p v-if="!$v.model.name.minLength" class="text-danger">Название не может быть короче
+                                    <b>четырёх</b> символов</p>
                             </div>
                         </div>
 
-                        <div class="form-group d-flex align-items-center px-5">
-                            <label for="commNotice" class="col-4 community-create-modal-label  text-right">Notice<b class="text-danger">*</b>:</label>
-                            <div class="col-8  position-relative">
-                                <input v-model="community.notice" type="text" id="commNotice" ref="commNotice" class="form-control  community-create-modal-select" required />
-                            </div>
-                        </div>
-
-                        <div class="form-group d-flex align-items-center px-5">
-                            <label for="commTema" class="col-4 community-create-modal-label  text-right">Тематика:</label>
-                            <div class="col-8  position-relative">
-                                <select v-model="community.tema" id="commTema" ref="commType" class="form-control  community-create-modal-select">
-                                    <option value="auto">Авто</option>
-                                    <option value="cities">Города</option>
-                                    <option value="games">Игры</option>
-                                    <option value="gardens">Садоводство</option>
+                        <div class="form-group d-flex align-items-center px-5 row">
+                            <label for="commTema"
+                                   class="col-4 community-create-modal-label  text-right">Тематика:</label>
+                            <div class="col-8">
+                                <select v-model="model.theme_id" id="commTema" ref="commType"
+                                        @click="$v.model.theme_id.$touch()"
+                                        class="form-control  community-create-modal-select">
+                                    <option value="0" disabled>Выберите тематику</option>
+                                    <optgroup v-for="theme in themes" :key="theme.id" :label="theme.name">
+                                        <option v-for="child in theme.children" :value="child.id">{{child.name}}
+                                        </option>
+                                    </optgroup>
                                 </select>
                                 <i class="fas fa-chevron-down"></i>
                             </div>
-                        </div>
-
-                        <div class="form-group d-flex align-items-center px-5">
-                            <label for="commURL" class="col-4 community-create-modal-label  text-right">Сайт (url)<b class="text-danger">*</b>:</label>
-                            <div class="col-8  position-relative">
-                                <input v-model="community.url" type="text" id="commURL" ref="commURL" class="form-control  community-create-modal-select" required />
+                            <div class="col-4"></div>
+                            <div class="col-8 invalid-feedback" v-if="$v.model.theme_id.$error">
+                                <p v-if="!$v.model.theme_id.required" class="text-danger">Укажите тематику
+                                    сообщества</p>
+                                <p v-if="!$v.model.theme_id.isIn" class="text-danger">Выберите тематику
+                                    сообщества</p>
                             </div>
                         </div>
 
-                        <div class="form-group d-flex align-items-center px-5">
-                            <label for="commWebSite" class="col-4 community-create-modal-label  text-right">URL (website)<b class="text-danger">*</b>:</label>
-                            <div class="col-8  position-relative">
-                                <input v-model="community.website" type="url" id="commWebSite" ref="commWebSite" class="form-control  community-create-modal-select" required />
-                            </div>
-                        </div>
-
-                        <div class="form-group d-flex align-items-center px-5">
-                            <label for="commPrivacy" class="col-4 community-create-modal-label  text-right">Приватность:</label>
-                            <div class="col-8  position-relative">
-                                <select v-model="community.privacy" id="commPrivacy"
-                                        ref="commPrivacy"
+                        <div class="form-group d-flex align-items-center px-5 row">
+                            <label for="commPrivacy"
+                                   class="col-4 community-create-modal-label  text-right">Приватность:</label>
+                            <div class="col-8">
+                                <select v-model="model.privacy" id="commPrivacy"
+                                        ref="commPrivacy" @click="$v.model.privacy.$touch()"
                                         class="form-control community-create-modal-select">
-                                    <option value="public">Открытая</option>
-                                    <option value="protected">Закрытая</option>
-                                    <option value="private">Частная</option>
+                                    <option value="0" disabled>Выберите уровень приватности</option>
+                                    <option v-for="item in privacyList" :key="item.value" :value="item.value">
+                                        {{item.title}}
+                                    </option>
                                 </select>
                                 <i class="fas fa-chevron-down"></i>
                             </div>
-                        </div>
-
-                        <div class="form-group d-flex align-items-center px-5">
-                            <label for="commLocation" class="col-4 community-create-modal-label  text-right">Адрес<b class="text-danger">*</b>:</label>
-                            <div class="col-8  position-relative">
-                                <input v-model="community.location" type="text" id="commLocation" ref="commLocation" class="form-control  community-create-modal-select" required />
+                            <div class="col-4"></div>
+                            <div class="col-8 invalid-feedback" v-if="$v.model.privacy.$error">
+                                <p v-if="!$v.model.privacy.required" class="text-danger">Укажите уровень приватности
+                                    сообщества</p>
+                                <p v-if="!$v.model.privacy.isIn" class="text-danger">Выберите уровень приватности
+                                    сообщества</p>
                             </div>
                         </div>
 
-                        <div class="form-group d-flex align-items-center px-5 py-4 community-create-modal-footer mb-0">
+                        <div
+                            class="form-group d-flex align-items-center px-5 py-4 community-create-modal-footer mb-0 row">
                             <label for="communityRules" class="col-7 radio mb-0">
                                 <input class="mb-0"
+                                       v-model="model.rule"
                                        type="checkbox" name="communityRules"
-                                 ref="communityRules" id="rules" checked />
-                                <span class="mb-0">Я прочитал и согласен с  <a class="text-link" href="#">правилами</a> </span>
+                                       ref="communityRules" id="communityRules"/>
+                                <span class="mb-0">Я прочитал и согласен с
+                                    <router-link class="text-link" :to="{name: 'CommunityRulesPage'}" target="_blank">правилами</router-link>
+                                </span>
                             </label>
                             <div class="col-5 d-flex align-items-center justify-content-end">
-                                <button @click.stop="startCreateCommunity()" type="button" class="btn w-100 btn-primary rounded-pill">Создать сообщество</button>
+                                <button @click.stop="startCreateCommunity()" type="button"
+                                        class="btn w-100 btn-primary rounded-pill">Создать сообщество
+                                </button>
+                            </div>
+                            <div class="col-7 invalid-feedback" v-if="$v.model.rule.$error">
+                                <p v-if="!$v.model.rule.selected" class="text-danger">Вы должны согласиться с
+                                    правилами</p>
                             </div>
                         </div>
                     </form>
@@ -128,64 +139,128 @@
 </template>
 
 <script>
-export default {
-name: 'CommunityCreateModal',
-components: {
-},
-props: {
-},
-data(){
-    return {
-        community: {
-            type: `interest`,
-            name: ``,
-            description: ``,
-            notice: ``,
-            tema: `games`,
-            url: ``,
-            website: ``,
-            privacy: `protected`,
-            location: ``,
-        }
+    import {minLength, required} from "vuelidate/lib/validators";
+
+    export default {
+        name: 'CommunityCreateModal',
+        components: {},
+        props: {},
+        data() {
+            return {
+                model: {
+                    type: 0,
+                    name: '',
+                    theme_id: 0,
+                    privacy: 0,
+                    rule: false,
+                },
+                themes: null,
+                privacyList: [
+                    {value: 1, title: 'Открытая'},
+                    {value: 2, title: 'Закрытая'},
+                    {value: 3, title: 'Частная'},
+                ],
+                types: [
+                    {value: 1, title: 'Бизнес'},
+                    {value: 2, title: 'Тематическое сообщество'},
+                    {value: 3, title: 'Бренд или организация'},
+                    {value: 4, title: 'Группа по интересам'},
+                    {value: 5, title: 'Публичная страница'},
+                    {value: 6, title: 'Мероприятие'},
+                ],
+            }
+        },
+        async mounted() {
+
+            let apiResponse = null;
+
+            this.popularCommunities = null;
+
+            try {
+                apiResponse = await this.$root.$api.$communities.getThemes();
+            } catch (e) {
+                window.console.warn(e.detailMessage);
+                throw e;
+            }
+
+            this.themes = apiResponse.data;
+        },
+        validations() {
+            return {
+                model: {
+                    name: {
+                        required,
+                        minLength: minLength(4)
+                    },
+                    type: {
+                        required,
+                        isIn(value) {
+                            return this.types.reduce((acc, current) => {
+                                return acc || current.value === value;
+                            }, false);
+                        },
+                    },
+                    theme_id: {
+                        required,
+                        isIn(value) {
+                            return value > 0;
+                        },
+                    },
+                    privacy: {
+                        required,
+                        isIn(value) {
+                            return this.privacyList.reduce((acc, current) => {
+                                return acc || current.value === value;
+                            }, false);
+                        },
+                    },
+                    rule: {
+                        selected(value) {
+                            return value;
+                        }
+                    }
+                }
+            };
+        },
+        methods: {
+            hideCommunityCreateModal() {
+                this.$emit('HideCommunityCreateModal', {});
+            },
+
+            startCreateCommunity() {
+                this.$v.$touch();
+                if (!this.$v.model.$invalid)
+                    this.createCommunity();
+            },
+
+            async createCommunity() {
+                let apiResponse = null;
+
+                let formData = {
+                    type: this.model.type,
+                    name: this.model.name.trim(),
+                    theme_id: this.model.theme_id,
+                    privacy: this.model.privacy,
+                };
+
+                try {
+                    apiResponse = await this.$root.$api.$communities.communityCreate(formData);
+                    this.hideCommunityCreateModal();
+                } catch (e) {
+                    console.warn(e.detailMessage);
+                }
+
+                if (apiResponse) {
+                    this.$emit('AddNewCommunity', apiResponse);
+                    this.$router.push({name: 'CommunityPage', params: {id: apiResponse.id}})
+                }
+            }
+        },
     }
-},
-methods: {
-    hideCommunityCreateModal() {
-        this.$emit('HideCommunityCreateModal', {});
-    },
-
-    startCreateCommunity(){
-        window.console.dir( JSON.parse( JSON.stringify(this.community) ) );
-
-        if (this.community.name &&  this.community.description  &&  this.community.notice  &&  this.community.url  &&  this.community.location) {
-            this.createCommunity();
-        }
-    },
-
-    async createCommunity() {
-        let apiResponse = null;
-
-        let formData = {
-            name: this.community.name.trim(),
-            description: this.community.description.trim(),
-            notice: this.community.notice.trim(),
-            url: this.community.url.trim(),
-            website: this.community.website.trim(),
-            location: this.community.location.trim()
-        };
-
-        try {
-            apiResponse = await this.$root.$api.$communities.communityCreate(formData);
-            this.hideCommunityCreateModal();
-        }
-        catch (e) {
-            console.warn(e.detailMessage);
-        }
-
-        if (apiResponse) {
-            this.$emit('AddNewCommunity', apiResponse);
-        }
-    }
-},
-}
 </script>
+
+<style scoped>
+    .invalid-feedback {
+        display: block;
+    }
+</style>

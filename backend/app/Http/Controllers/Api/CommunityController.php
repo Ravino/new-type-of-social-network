@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Community\Community as CommunityRequest;
+use App\Http\Requests\Community\CreateCommunity;
 use App\Http\Requests\Community\UploadFileRequest;
 use App\Http\Resources\Community\CommunityCollection;
 use App\Http\Resources\Community\Community as CommunityResource;
@@ -96,10 +97,10 @@ class CommunityController extends Controller
     }
 
     /**
-     * @param CommunityRequest $request
+     * @param CreateCommunity $request
      * @return CommunityResource
      */
-    public function store(CommunityRequest $request) {
+    public function store(CreateCommunity $request) {
         return new CommunityResource($this->communityService->createCommunity($request));
     }
 
