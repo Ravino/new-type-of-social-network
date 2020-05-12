@@ -16,7 +16,7 @@ data(){
 methods: {
     goToDialogWithFriend(){
         this.isInRedirecting = true;
-        this.openDialogWithFriend( this.friend.id );
+        this.openDialogWithFriend( this.friend );
     },
 
     lastFriendActivity(fItem){

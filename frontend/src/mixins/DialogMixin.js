@@ -1,17 +1,19 @@
+import PliziFriend from '../classes/PliziFriend.js';
+
 const DialogMixin = {
 
 methods: {
 
     /**
      * делает переход к диалогу с юзером
-     * @param {string} userId -
-     * @returns {null}
+     * @param {PliziFriend} user -
+     * @returns
      */
-    async openDialogWithFriend(userId){
+    async openDialogWithFriend(user){
         let apiResponse = null;
 
         try {
-            apiResponse = await this.$root.$api.$chat.dialogOpen( [userId] );
+            apiResponse = await this.$root.$api.$chat.dialogOpen( user.fullName,[user.id] );
         }
         catch (e){
             window.console.warn( e.detailMessage );

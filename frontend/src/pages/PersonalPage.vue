@@ -194,7 +194,7 @@ methods: {
     },
 },
 
-    mounted() {
+mounted() {
     this.getUserInfo();
     window.scrollTo(0, 0);
 
@@ -208,7 +208,8 @@ methods: {
 
     this.$root.$on('sendPersonalMessage', this.handlePersonalMessage);
 },
-    beforeRouteUpdate (to, from, next) {
+
+beforeRouteUpdate (to, from, next) {
     this.profileData = null;
     this.userPosts = null;
         this.userId = to.params.id;
