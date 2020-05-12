@@ -1,42 +1,41 @@
 <template>
-    <div id="communitiesFilter" class="col-sm-6 col-md-6 col-lg-8 col-xl-9 mb-4 py-0">
-        <div class="container">
-            <div class="row bg-white-br20">
-                <div class="col-sm-6 col-md-6 col-lg-8 col-xl-8">
-                    <nav class="profile-filter-links nav" role="tablist">
-                        <router-link to="/communities" tag="span" class="nav-link py-4 px-1 mr-4" role="tab"
-                                     :class="{ 'active': 'CommunitiesListPage'===this.$root.$router.currentRoute.name }">
-                            Мои сообщества
-                        </router-link>
+    <div id="communitiesFilter" class="col-12 col-lg-8 col-xl-9 py-0">
+        <div class="d-flex bg-white-br20 mb-4 pb-0 pt-3 pt-xl-0 px-4 flex-column-reverse flex-xl-row">
+            <div class="col-12 col-xl-8 d-flex align-items-center justify-content-between px-0">
+                <nav class="nav profile-filter-links mt-2 mt-md-0" role="tablist">
+                    <router-link to="/communities" tag="span" class="nav-link py-3 py-xl-4 px-1 mr-2 mr-xl-4" role="tab"
+                                 :class="{ 'active': 'CommunitiesListPage'===this.$root.$router.currentRoute.name }">
+                        Мои сообщества
+                    </router-link>
 
-                        <router-link to="/manage-communities" tag="span" class="nav-link py-4 px-1 mr-4"  role="tab"
-                                     :class="{ 'active': 'CommunitiesManagePage'===this.$root.$router.currentRoute.name }">
-                            Управление
-                        </router-link>
+                    <router-link to="/manage-communities" tag="span" class="nav-link py-3 py-xl-4 px-1 mr-2 mr-xl-4"  role="tab"
+                                 :class="{ 'active': 'CommunitiesManagePage'===this.$root.$router.currentRoute.name }">
+                        Управление
+                    </router-link>
 
-                        <router-link to="/popular-communities" tag="span" class="nav-link py-4 px-1 --mr-4" role="tab"
-                                     :class="{ 'active': 'CommunitiesPopularPage'===this.$root.$router.currentRoute.name }">
-                            Популярные сообщества
-                        </router-link>
-                    </nav>
+                    <router-link to="/popular-communities" tag="span" class="nav-link py-3 py-xl-4 px-1 mr-2 mr-xl-4" role="tab"
+                                 :class="{ 'active': 'CommunitiesPopularPage'===this.$root.$router.currentRoute.name }">
+                        Популярные сообщества
+                    </router-link>
+                </nav>
+            </div>
+
+            <div class="col-12 col-xl-4 d-flex align-items-center form-inline mb-3 mb-xl-0 pl-0 pl-xl-4 pr-0 position-relative overflow-hidden rounded-pill mt-4 mt-md-0 ">
+                <div class="form-inline  position-relative w-100"
+                     :class="{'isFocused' : isFocused}">
+                    <input :value="lastSearch"
+                           id="txtCommunitiesListSearch"
+                           ref="txtCommunitiesListSearch"
+
+                           @blur="onBlur"
+                           @focus="onFocus"
+                           class="top-search form-control form-control  w-100"
+                           type="text" placeholder="Поиск" aria-label="Поиск" />
+                    <button class="btn btn-search h-100 " type="submit"  >
+                        <IconSearch style="width: 15px; height: 15px;" />
+                    </button>
                 </div>
 
-                <div class="communities-search-block col-sm-6 col-md-6 col-lg-4 col-xl-4 d-flex align-items-center">
-                    <div class="form-inline mt-1 mt-md-1 position-relative w-100"
-                         :class="{'isFocused' : isFocused}">
-                        <input :value="lastSearch" id="txtCommunitiesListSearch"
-                               ref="txtCommunitiesListSearch"
-
-                               @blur="onBlur"
-                               @focus="onFocus"
-                               class="top-search form-control form-control  w-100"
-                               type="text" placeholder="Поиск" aria-label="Поиск" />
-                        <button class="btn btn-search h-100 " type="submit"  >
-                            <IconSearch style="width: 15px; height: 15px;" />
-                        </button>
-                    </div>
-
-                </div>
             </div>
         </div>
     </div>

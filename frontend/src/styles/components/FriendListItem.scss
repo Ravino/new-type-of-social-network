@@ -31,11 +31,15 @@ $friendItemFavoriteColor: #F8D209;
         position: relative;
         height: $srUserPicSize;
         width: $srUserPicSize;
+        border-radius: $srUserPicSize;
 
         img {
-            display: inline-block;
-            width: $srUserPicSize;
-            height: $srUserPicSize;
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            height: 100%;
+            width: auto;
         }
     }
 
@@ -68,8 +72,8 @@ $friendItemFavoriteColor: #F8D209;
         position: absolute;
         width: 20px;
         height: 20px;
-        left: 5px;
-        top: 5px;
+        left: 0;
+        top: 0;
         color: $friendItemFavoriteColor;
     }
 

@@ -1,58 +1,64 @@
 <template>
-    <div class="row">
-        <div class="col-sm-1 col-md-1 col-lg-1 col-xl-1 pl-0">
-            <AccountToolbarLeft></AccountToolbarLeft>
-        </div>
+    <div class="container-fluid pl-md-0">
+        <div class="row">
+            <div class="col-12 col-md-1 ">
+                <AccountToolbarLeft></AccountToolbarLeft>
+            </div>
 
-        <div class="col-sm-9 col-md-9 col-lg-10 col-xl-10 pl-0">
-            <div class="container">
-                <WhatsNewBlock @addNewPost="addNewPost"></WhatsNewBlock>
+            <div class="col-12 col-md-9 col-lg-9 col-xl-10 ">
+                <div class="container">
+                    <WhatsNewBlock @addNewPost="addNewPost"></WhatsNewBlock>
 
-                <div class="row mb-4 pt-0">
-                    <div id="postFilter" class="col-9 ">
-                        <div class="col-12 bg-white-br20 ml-n3 d-flex align-items-center justify-content-between">
-                            <nav class="nav profile-filter-links align-items-center" role="tablist">
-                            <span class="nav-link py-3 px-1 mr-4 active">Новости
-                                <i class="fas fa-chevron-down ml-2"></i></span>
-                                <span class="nav-link py-3 px-1 mr-4">Обновления</span>
-                                <span class="nav-link py-3 px-1 mr-4">Понравилось</span>
-                                <span class="nav-link py-3 px-1 mr-4 ml-4">
-                                <button class="btn px-2 py-0">
-                                    <IconSearch style="width: 15px; height: 16px;"/>
-                                </button>
-                            </span>
-                            </nav>
+                    <div class="row mb-4 pt-0">
+                        <div id="postFilter" class="col-12 col-xl-9 mb-4 mb-xl-0 ">
+                            <div class="row mr-xl-0 bg-white-br20 align-items-center justify-content-between">
 
-                            <div class="newsViewModes mx-1 px-1">
-                                <span>Вид:</span>
-                                <button class="btn bg-transparent p-0">
-                                    <IconMultipleViewMode style="width: 16px; height: 16px;"/>
-                                </button>
-                                <button class="btn bg-transparent p-0">
-                                    <IconSingleViewMode style="width: 16px; height: 16px;"/>
-                                </button>
+                                    <nav class="col-lg-8 nav profile-filter-links align-items-center pl-3  mb-lg-0" role="tablist">
+                                        <span class="nav-link py-3 px-1 mr-2 mr-lg-4 active">Новости
+                                        <i class="fas fa-chevron-down ml-2"></i></span>
+                                        <span class="nav-link py-3 px-1 mr-2 mr-lg-4">Обновления</span>
+                                        <span class="nav-link py-3 px-1 mr-2 mr-lg-4">Понравилось</span>
+                                        <span class="nav-link py-3 px-1 mr-2 mr-lg-4 ml-auto ml-lg-4">
+                                        <button class="btn px-2 py-0">
+                                            <IconSearch style="width: 15px; height: 16px;"/>
+                                        </button>
+                                    </span>
+                                    </nav>
+
+                                    <div class="newsViewModes col-lg-4 d-lg-flex justify-content-end d-none ">
+                                        <span>Вид:</span>
+                                        <button class="btn bg-transparent p-0">
+                                            <IconMultipleViewMode style="width: 16px; height: 16px;"/>
+                                        </button>
+                                        <button class="btn bg-transparent p-0">
+                                            <IconSingleViewMode style="width: 16px; height: 16px;"/>
+                                        </button>
+
+                                    </div>
 
                             </div>
                         </div>
-                    </div>
-                    <div id="postInterest" class="col-3 bg-white-br20 d-flex  align-items-center mr-n3">
-                        <IconFire class="mr-3" />
-                        <p class="my-0">Сначала Интересные</p>
-                        <div class="button-switch d-flex align-items-center">
-                            <input type="checkbox" id="switch-blue" class="switch" checked />
-                            <label for="switch-blue" class="lbl-off">Off</label>
-                            <label for="switch-blue" class="lbl-on">On</label>
+                        <div id="postInterest" class="col-12 col-xl-3 bg-white-br20 d-flex align-items-center mr-n3 py-2 py-xl-0" >
+                            <div class="d-flex align-items-center">
+                                <IconFire class="mr-3" />
+                                <p class="my-0">Сначала Интересные</p>
+                            </div>
+                            <div class="button-switch d-flex align-items-center justify-content-center ml-2 ml-lg-auto">
+                                <input type="checkbox" id="switch-blue" class="switch" checked />
+                                <label for="switch-blue" class="lbl-off">Off</label>
+                                <label for="switch-blue" class="lbl-on">On</label>
+                            </div>
                         </div>
                     </div>
+
+                    <Post v-for="(postData, postIndex) in news"
+                          v-bind:key="postIndex" v-bind:post="postData"></Post>
                 </div>
-
-                <Post v-for="(postData, postIndex) in news"
-                      v-bind:key="postIndex" v-bind:post="postData"></Post>
             </div>
-        </div>
 
-        <div class="col-sm-2 col-md-2 col-lg-1 col-xl-1">
-            <FavoriteFriends :isNarrow="true"></FavoriteFriends>
+            <div class="col-md-2 col-lg-2 col-xl-1 d-none d-md-block pr-0">
+                <FavoriteFriends :isNarrow="true"></FavoriteFriends>
+            </div>
         </div>
     </div>
 </template>
