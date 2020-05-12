@@ -221,7 +221,7 @@ class User extends Authenticatable implements JWTSubject
      */
     public function getUserPrivacyRole(User $user)
     {
-        if ($this->isFriendOfFriendWith($user)) {
+        if ($this->isFriendOfFriendWith($user->id)) {
             return Role::where('name', self::PERMISSION_ROLE_FOF)->get()->first();
         }
         if ($this->isFriendWith($user)) {

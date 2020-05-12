@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "2e029e202afc1019aceacb6d4232e07c",
+    "content-hash": "0ee7601c3564a5958382f0c1a0bcf21a",
     "packages": [
         {
             "name": "asm89/stack-cors",
@@ -2202,6 +2202,71 @@
                 "watermark"
             ],
             "time": "2019-11-02T09:15:47+00:00"
+        },
+        {
+            "name": "itsgoingd/clockwork",
+            "version": "v4.1.3",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/itsgoingd/clockwork.git",
+                "reference": "049a7dacfa8ee749bf792fcfb85515d09b0d94a6"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/itsgoingd/clockwork/zipball/049a7dacfa8ee749bf792fcfb85515d09b0d94a6",
+                "reference": "049a7dacfa8ee749bf792fcfb85515d09b0d94a6",
+                "shasum": ""
+            },
+            "require": {
+                "ext-json": "*",
+                "php": ">=5.5",
+                "psr/log": "1.*"
+            },
+            "type": "library",
+            "extra": {
+                "laravel": {
+                    "providers": [
+                        "Clockwork\\Support\\Laravel\\ClockworkServiceProvider"
+                    ],
+                    "aliases": {
+                        "Clockwork": "Clockwork\\Support\\Laravel\\Facade"
+                    }
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "Clockwork\\": "Clockwork/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "itsgoingd",
+                    "email": "itsgoingd@luzer.sk",
+                    "homepage": "https://twitter.com/itsgoingd"
+                }
+            ],
+            "description": "php dev tools integrated to your browser",
+            "homepage": "https://underground.works/clockwork",
+            "keywords": [
+                "Devtools",
+                "debugging",
+                "laravel",
+                "logging",
+                "lumen",
+                "profiling",
+                "slim"
+            ],
+            "funding": [
+                {
+                    "url": "https://github.com/itsgoingd",
+                    "type": "github"
+                }
+            ],
+            "time": "2020-05-02T21:02:52+00:00"
         },
         {
             "name": "jenssegers/mongodb",
@@ -8236,56 +8301,6 @@
             "time": "2019-10-24T08:53:34+00:00"
         },
         {
-            "name": "tsf/laravel-neo4j-php-client",
-            "version": "1.0.2",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/marianperca/laravel-neo4j-php-client.git",
-                "reference": "3963ba936974e1ffb53a4da5a774c141b332415d"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/marianperca/laravel-neo4j-php-client/zipball/3963ba936974e1ffb53a4da5a774c141b332415d",
-                "reference": "3963ba936974e1ffb53a4da5a774c141b332415d",
-                "shasum": ""
-            },
-            "require": {
-                "graphaware/neo4j-php-client": "^4.8",
-                "illuminate/support": "5.0 - 5.8 | ^6.0 | ^7.0",
-                "php": "^7.1"
-            },
-            "type": "library",
-            "extra": {
-                "branch-alias": {
-                    "dev-master": "1.0-dev"
-                }
-            },
-            "autoload": {
-                "psr-4": {
-                    "TSF\\Neo4jClient\\": "src"
-                }
-            },
-            "notification-url": "https://packagist.org/downloads/",
-            "license": [
-                "MIT"
-            ],
-            "authors": [
-                {
-                    "name": "Marian Perca",
-                    "email": "marian@thesoftwarefarm.co.uk"
-                }
-            ],
-            "description": "Laravel wrapper for Neo4j-PHP-Client",
-            "homepage": "https://github.com/tsf/laravel-neo4j-php-client",
-            "keywords": [
-                "laravel",
-                "neo4j",
-                "php",
-                "tsf"
-            ],
-            "time": "2020-03-17T13:01:19+00:00"
-        },
-        {
             "name": "tymon/jwt-auth",
             "version": "1.0.0",
             "source": {
@@ -10994,6 +11009,56 @@
             ],
             "description": "A small library for converting tokenized PHP source code into XML and potentially other formats",
             "time": "2019-06-13T22:48:21+00:00"
+        },
+        {
+            "name": "tsf/laravel-neo4j-php-client",
+            "version": "1.0.2",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/marianperca/laravel-neo4j-php-client.git",
+                "reference": "3963ba936974e1ffb53a4da5a774c141b332415d"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/marianperca/laravel-neo4j-php-client/zipball/3963ba936974e1ffb53a4da5a774c141b332415d",
+                "reference": "3963ba936974e1ffb53a4da5a774c141b332415d",
+                "shasum": ""
+            },
+            "require": {
+                "graphaware/neo4j-php-client": "^4.8",
+                "illuminate/support": "5.0 - 5.8 | ^6.0 | ^7.0",
+                "php": "^7.1"
+            },
+            "type": "library",
+            "extra": {
+                "branch-alias": {
+                    "dev-master": "1.0-dev"
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "TSF\\Neo4jClient\\": "src"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Marian Perca",
+                    "email": "marian@thesoftwarefarm.co.uk"
+                }
+            ],
+            "description": "Laravel wrapper for Neo4j-PHP-Client",
+            "homepage": "https://github.com/tsf/laravel-neo4j-php-client",
+            "keywords": [
+                "laravel",
+                "neo4j",
+                "php",
+                "tsf"
+            ],
+            "time": "2020-03-17T13:01:19+00:00"
         },
         {
             "name": "ulobby/neoeloquent",

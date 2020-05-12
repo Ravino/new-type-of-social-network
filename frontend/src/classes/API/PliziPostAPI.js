@@ -216,6 +216,28 @@ class PliziPostAPI extends PliziBaseAPI {
 
         return null;
     }
+
+    /**
+     * Лайк постов.
+     *
+     * @param postId
+     * @returns {object[]|null}
+     * @throws PliziAPIError
+     */
+    async likePost(postId) {
+        let response = await this.axios.post( `api/posts/rate`, { postId },this.authHeaders )
+          .catch( ( error ) => {
+              this.checkIsTokenExpires( error, `likePost` );
+              throw new PliziAPIError( `likePost`, error.response );
+          } );
+
+
+        if ( response.status === 200 ){
+            return response.data.data;
+        }
+
+        return null;
+    }
 }
 
 export default PliziPostAPI;
