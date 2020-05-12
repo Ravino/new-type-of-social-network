@@ -14,12 +14,18 @@
                                 <Editor class="plz-text-editor-form form-control px-2 py-1 h-100"
                                         @editorPost="onEditorNewPost"
                                         @editorKeyDown="onEditorKeyDown"
+                                        @onMaximumCharacterLimit="onMaximumCharacterLimit"
                                         :placeholder="editorPlaceholder"
                                         :inputEditorText="inputEditorText"
+                                        :maximumCharacterLimit="maximumCharacterLimit"
+                                        :isError="isMaximumCharacterLimit"
                                         ref="editor" />
                                 <button @click.stop="onSendPostClick" class="btn btn-link">
                                     <IconSend style="height: 20px"/>
                                 </button>
+                            </div>
+                            <div v-if="isMaximumCharacterLimit" class="col-12">
+                                <p class="text-danger">Превышено максимально допустимое количество символов.</p>
                             </div>
                         </div>
                     </div>
@@ -113,7 +119,11 @@ props: {
   maxFilesCount: {
       type: Number,
       default: 10,
-  }
+  },
+    maximumCharacterLimit: {
+        type: Number,
+        default: 10000,
+    }
 },
 
 data() {
@@ -132,6 +142,7 @@ data() {
         attachFiles,
         defaultClasses: `bg-white w-100 border-top position-relative mt-auto`,
         editorContainerHeight: 32,
+        isMaximumCharacterLimit: false,
     }
 },
 
@@ -206,6 +217,11 @@ methods: {
     },
 
     onEditorNewPost(evData) {
+        if (this.isMaximumCharacterLimit) {
+            this.isMaximumCharacterLimit = false;
+            return;
+        }
+
         this.$emit('editorPost', {
             postText: evData.postText,
             attachments: this.getAttachmentsIDs()
@@ -266,6 +282,10 @@ methods: {
 
         this.onEditorNewHeight(this.editorContainerHeight);
         //console.log('checkUpdatedChatContainerHeight', this.editorContainerHeight);
+    },
+
+    onMaximumCharacterLimit(str) {
+        this.isMaximumCharacterLimit = str.length > this.maximumCharacterLimit;
     },
 
     async addUploadAttachment(picsArr) {

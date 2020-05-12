@@ -5,6 +5,7 @@
                     :clazz="`d-flex bg-white w-100 border-top position-relative mt-auto align-items-start px-3 py-3`"
                     work-mode="chat"
                     :editorPlaceholder="placeholder"
+                    :maximumCharacterLimit="500"
                     @editorNewHeight="onEditorChangeHeight"
                     @editorKeyDown="onEditorKeyDown"
                     @newAttach="onAddAttachToTextEditor"
