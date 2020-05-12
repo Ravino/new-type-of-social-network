@@ -54,12 +54,15 @@
 </template>
 
 <script>
-    import FriendsListMixin from '../mixins/FriendsListMixin.js';
-    import PliziFriend from '../classes/PliziFriend.js';
-    import PliziCollection from '../classes/PliziCollection.js';
-    import FriendsAllList from "../components/FriendsAllList";
+import FriendsAllList from '../components/FriendsAllList.vue';
 
-    export default {
+import FriendsListMixin from '../mixins/FriendsListMixin.js';
+
+import PliziFriend from '../classes/PliziFriend.js';
+import PliziCollection from '../classes/PliziCollection.js';
+
+
+export default {
 name : 'FriendsListPage',
 components : {
     FriendsAllList
