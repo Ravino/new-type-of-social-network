@@ -1,5 +1,5 @@
 <template>
-    <div id="createCommunityBlock" class="col-3 mb-4  d-flex align-items-center pl-0">
+    <div id="createCommunityBlock" class="col-md-12 col-lg-4 col-xl-3 mb-4  d-flex align-items-center pl-0">
         <div class="col-12  d-flex align-items-center h-100  bg-white-br20 ">
             <div class=" bg-white-br20 w-100">
                 <button type="button"

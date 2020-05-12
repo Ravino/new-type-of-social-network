@@ -15,13 +15,13 @@
                 <span v-else class="plizi-friend-item-isoffline"></span>
             </router-link>
 
-            <div class="plizi-friend-item-body m-0 pr-5">
+            <div class="plizi-friend-item-body m-0 ">
                 <router-link :to="`/user-`+friend.id" tag="div"
                              class="plizi-friend-item-top d-flex align-items-end justify-content-between mb-2" >
                     <h6 class="plizi-friend-item-name my-0">{{ friend.fullName }}</h6>
                 </router-link>
 
-                <div class="plizi-friend-item-body-bottom d-flex pr-5">
+                <div class="plizi-friend-item-body-bottom d-flex ">
                     <p class="plizi-friend-item-desc p-0 my-0 d-inline">
 
                         <IconLocation style="height: 14px;" />
