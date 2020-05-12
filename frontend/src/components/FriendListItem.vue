@@ -86,7 +86,6 @@ computed: {
 
 methods: {
     checkIsFavorite(){
-        //this.isFavorite = this.$root.$auth.fm.checkIsFavorite( this.friend.id );
         this.isFavorite = !!this.$root.$auth.fm.asArray().find( (fItem)=>{
             return fItem.id === this.friend.id;
         });
@@ -108,7 +107,6 @@ methods: {
 
         if ( apiResponse ) {
             this.$root.$auth.fm.removeFromFavorites(this.friend.id);
-            //this.$forceUpdate();
 
             this.$emit( 'FriendRemoveFromFavorites', {
                 friendId: this.friend.id
@@ -137,7 +135,6 @@ methods: {
         if ( apiResponse ) {
             const jFriend = this.friend.toJSON();
             this.$root.$auth.fm.onAddToFavorites( jFriend );
-            //this.$forceUpdate();
 
             this.$emit( 'FriendAddToFavorites', {
                 friendId: this.friend.id
