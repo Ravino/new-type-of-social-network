@@ -1,35 +1,40 @@
 <template>
-    <div class="plz-favorit-friends-item d-flex align-items-center align-items-center py-2 px-3 position-relative"
+    <div class="plz-favorit-friends-item position-relative"
          :class="{ 'active': chatWindowShown }"
          @click.prevent="showRelatedChat($event)">
 
-        <div class="plz-favorit-friend-userpic"  :class="{'mx-auto' : isNarrow}">
-            <img class="plz-favorit-userpic rounded-circle" :src="friend.userPic" :alt="friend.firstName" />
+        <div class="plz-favorit-friends-item-wrap d-flex align-items-center align-items-center py-2 px-3 ">
 
-            <div v-if="isTyper" class="writing"><span></span><span></span><span></span></div>
-            <div v-else class="">
-                <span v-if="friend.isOnline" class="plz-favorit-isonline" title="в сети"></span>
-                <span v-else class="plz-favorit-isoffline" title="не в сети"></span>
+            <div class="plz-favorit-friend-userpic"  :class="{'mx-auto' : isNarrow}">
+                <img class="plz-favorit-userpic rounded-circle" :src="friend.userPic" :alt="friend.firstName" />
+
+                <div v-if="isTyper" class="writing"><span></span><span></span><span></span></div>
+                <div v-else class="">
+                    <span v-if="friend.isOnline" class="plz-favorit-isonline" title="в сети"></span>
+                    <span v-else class="plz-favorit-isoffline" title="не в сети"></span>
+                </div>
             </div>
-        </div>
 
-        <div v-if="!isNarrow" class="plz-favorit-friend-title flex align-items-center mr-auto">
-            <span class="plz-favorit-friend-name">{{friend.fullName}}</span>
+            <div v-if="!isNarrow" class="plz-favorit-friend-title flex align-items-center mr-auto">
+                <span class="plz-favorit-friend-name">{{friend.fullName}}</span>
 
-            <div class="plz-favorit-friend-status">
-                <p v-if="friend.isOnline" class="plz-favorit-friend-status-online">В сети</p>
-                <p v-else class="plz-favorit-friend-status-last-activity">{{ favoriteLastActivity }}</p>
+                <div class="plz-favorit-friend-status">
+                    <p v-if="friend.isOnline" class="plz-favorit-friend-status-online">В сети</p>
+                    <p v-else class="plz-favorit-friend-status-last-activity">{{ favoriteLastActivity }}</p>
+                </div>
             </div>
-        </div>
 
-        <span v-if="!isNarrow" class="plz-ff-messages-count">
-            <span v-if="(friend.messagesNumber > 0)" class="plz-ff-messages-count-number py-0 mr-2">
-                {{friend.messagesNumber}}
+            <span v-if="!isNarrow" class="plz-ff-messages-count">
+                <span v-if="(friend.messagesNumber > 0)" class="plz-ff-messages-count-number py-0 mr-2">
+                    {{friend.messagesNumber}}
+                </span>
             </span>
-        </span>
+        </div>
 
-        <div v-if="isShowLinkedChat" class="plz-linked-chat-block mr-3" :class="{ 'active-chat': chatWindowShown }">
-            <div id="chatMessagesWrapper" class="plz-linked-chat-body bg-light bg-white-br20 d-none d-lg-flex flex-column p-0">
+        <div v-if="isShowLinkedChat" class="plz-linked-chat-block mr-3 bg-white-br20 " :class="{ 'active-chat': chatWindowShown }">
+            <!--TODO @TRG class="is-pinned" когда чат прибит-->
+            <div id="chatMessagesWrapper" class="plz-linked-chat-body bg-light d-none d-lg-flex flex-column p-0"
+                 :class="{'is-pinned' : 'когда_чат_прибит'}">
 
                 <ChatLinkedHeader v-if="currentDialog" v-bind:currentDialog="currentDialog"
                             @ChatMessagesFilter="onUpdateMessagesFilterText"
