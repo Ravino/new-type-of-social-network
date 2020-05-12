@@ -42,6 +42,7 @@ class SocialAccountsService
                     'last_name' => isset($providerUser->user['last_name']) ? $providerUser->user['last_name'] : $providerUser->getName(),
                     'user_pic' => isset($providerUser->user['photo']) ? $providerUser->user['photo'] : $providerUser->getAvatar(),
                 ]);
+                $user->fresh();
             }
 
             $user->linkedSocialAccounts()->create([

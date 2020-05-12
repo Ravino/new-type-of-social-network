@@ -3,6 +3,7 @@
                 :clazz="`row plz-text-editor mb-4 p-4 h-auto  align-items-start bg-white-br20`"
                 :editorPlaceholder="'Что у Вас нового?'"
                 :dropToDown="true"
+                :maximumCharacterLimit="10000"
                 @editorPost="onTextPost"
                 work-mode="post">
     </TextEditor>

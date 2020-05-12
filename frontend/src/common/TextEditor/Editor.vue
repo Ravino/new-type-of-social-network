@@ -1,5 +1,6 @@
 <template>
-    <div class="editor">
+    <div class="editor"
+         :class="{'border-danger': isError}">
         <editor-content class="editor-content"
                         :editor="editor"
                         ref="editor"
@@ -38,7 +39,15 @@ props: {
         type: String,
         default: null,
     },
-  inputEditorText: String,
+    inputEditorText: String,
+    maximumCharacterLimit: {
+        type: Number,
+        default: 10000,
+    },
+    isError: {
+        type: Boolean,
+        default: false,
+    },
 },
 
 data() {
@@ -54,7 +63,8 @@ data() {
             ],
             onFocus: this.onFocus,
             onBlur: this.onBlur,
-          content: this.inputEditorText ? this.inputEditorText : null,
+            onUpdate: this.onUpdate,
+            content: this.inputEditorText ? this.inputEditorText : null,
         }),
         isFocusedEditor: false,
     }
@@ -121,6 +131,12 @@ methods: {
         if (!(!!str)) {
             this.isFocusedEditor = false;
         }
+    },
+
+    onUpdate(event) {
+        let str = this.editor.getHTML().replace(/<\/?[^>]+>/g, '').trim();
+
+        this.$emit('onMaximumCharacterLimit', str);
     },
 
     setContent(newContent){
