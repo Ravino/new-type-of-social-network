@@ -157,13 +157,13 @@ class PliziCommunitiesAPI extends PliziBaseAPI {
      * @throws PliziAPIError
      */
     async updatePrimaryImage(formData) {
-        let response = await this.__axios.post('/api/communities/attachments', formData, this.authFileHeaders)
+        let response = await this.__axios.post('/api/communities/avatar', formData, this.authFileHeaders)
             .catch((error) => {
                 this.checkIsTokenExpires(error, `$communities.updatePrimaryImage`);
                 throw new PliziAPIError(`$communities.updatePrimaryImage`, error.response);
             });
 
-        if (response.status === 201) {
+        if (response.status === 200) {
             return response.data;
         }
 
