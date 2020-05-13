@@ -36,21 +36,4 @@ class CommunityNeo4jRepository extends BaseRepository
         $member = User::where('oid', $member_oid)->first();
         return (bool) $community->members()->attach($member);
     }
-
-    /**
-     * @param $oid
-     * @param $community_oid
-     * @param int $limit
-     * @param int $offset
-     * @return Record[]
-     */
-    public function getFriends($oid, $community_oid, $limit = 5, $offset = 0) {
-        $query = "MATCH (me:`User` {oid: '{$oid}'})-[:FRIEND_OF]-(mf)-[:MEMBER_OF]-(n:Community {oid: {$community_oid}})
-                  WITH COUNT(mf) AS total_count
-                  MATCH (me:`User` {oid: '{$oid}'})-[:FRIEND_OF]-(mf)-[:MEMBER_OF]-(n:Community {oid: {$community_oid}})
-                  RETURN mf.oid AS oid, total_count
-                  SKIP {$offset}
-                  LIMIT {$limit}";
-        return $this->client->run($query)->records();
-    }
 }

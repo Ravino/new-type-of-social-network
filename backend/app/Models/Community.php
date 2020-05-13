@@ -6,6 +6,7 @@ use App\CommunityMember;
 use App\Traits\NPerGroup;
 use Auth;
 use Domain\Neo4j\Service\CommunityService;
+use Domain\Neo4j\Service\UserService;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
@@ -138,6 +139,6 @@ class Community extends Model
 
     public function friends($limit = 5, $offset = 0)
     {
-        return (new CommunityService())->getFriends(Auth::user()->id, $this->id, $limit, $offset);
+        return (new UserService())->getFriendsFromCommunity(Auth::user()->id, $this->id, $limit, $offset);
     }
 }
