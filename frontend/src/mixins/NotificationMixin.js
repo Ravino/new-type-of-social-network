@@ -26,14 +26,12 @@ methods: {
         if (this.timeoutNotification > 0) {
             setTimeout(() => {
                this.removeNotification({ uuid });
-                console.log('Delete');
             }, this.timeoutNotification * 1000);
         }
     },
+
     removeNotification({ uuid }) {
-        this.notifications = this
-            .notifications
-            .filter(foundNotification => foundNotification.uuid !== uuid);
+        this.notifications = this.notifications.filter(foundNotification => foundNotification.uuid !== uuid);
     }
 }
 }

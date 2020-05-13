@@ -1,5 +1,5 @@
 <template>
-    <div id="chatFooter" class="" >
+    <div id="chatFooter" class="chat-footer">
         <TextEditor :showAvatar="false"
                     :dropToDown="false"
                     :clazz="`d-flex bg-white w-100 border-top position-relative mt-auto align-items-start px-3 py-3`"
@@ -88,21 +88,24 @@ methods: {
                     });
 
                     if (evData.attachments && evData.attachments.length) {
-                        this.addMessageToChat( '<p></p>', evData.attachments );
+                        this.addMessageToChat( '', evData.attachments );
                     }
-                } else {
+                }
+                else {
                     this.addMessageToChat( msg, evData.attachments );
                 }
             } else if (evData.attachments.length > 0) {
-                this.addMessageToChat( '<p></p>', evData.attachments );
+                this.addMessageToChat( '', evData.attachments );
             }
         }
-        else { // сообщение пустое - проверяем есть ли аттачи
+        else {
+            // сообщение пустое - проверяем есть ли аттачи
             if (evData.attachments.length > 0) {
                 this.addMessageToChat( '', evData.attachments );
             }
         }
     },
+
 
     async addMessageToChat( msgText, attachments ){
         const chatId = (this.currentDialog) ? this.currentDialog.id : 'unknown';
@@ -117,9 +120,36 @@ methods: {
         }
 
         if ( apiResponse ){
+            // делим на 1000 потому, что тут JS считает в миллисекундах
+            const nowDT = +( (new Date()).valueOf() / 1000).toFixed(0);
+
+            const newMessage = {
+                id: apiResponse.data.id,
+                userId: this.$root.$auth.user.id,
+                chatId: chatId,
+                firstName: this.$root.$auth.user.firstName,
+                lastName: this.$root.$auth.user.lastName,
+                userPic: this.$root.$auth.user.userPic,
+                sex: this.$root.$auth.user.sex,
+                body: msgText,
+                isMine: true,
+                isRead: false,
+                isEdited: false,
+                createdAt: nowDT,
+                updatedAt: nowDT,
+                attachments: { list : attachments },
+                replyOn: null,
+                isForward: null
+            };
+
+            //const eventData = {
+            //    chatId : apiResponse.data.chatId,
+            //    message : apiResponse.data
+            //}
+
             const eventData = {
-                chatId : apiResponse.data.chatId,
-                message : apiResponse.data
+                chatId : chatId,
+                message : newMessage
             }
 
             this.$root.$emit( 'newMessageInDialog', eventData );
