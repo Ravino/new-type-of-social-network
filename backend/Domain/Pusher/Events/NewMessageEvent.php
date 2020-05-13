@@ -11,13 +11,18 @@ class NewMessageEvent
      * Тело сообщения
      * @var string
      */
-    protected $message;
+    protected $message_id;
 
     /**
      * Список индентификаторов получателей
-     * @var array
+     * @var int
      */
-    protected $usersListIds = [];
+    protected $author_id;
+
+    /**
+     * @var
+     */
+    protected $chat_id;
 
     /**
      * Create a new event instance.
@@ -25,25 +30,34 @@ class NewMessageEvent
      * @param array $ids
      * @return void
      */
-    public function __construct($message, array $ids)
+    public function __construct($message_id, $author_id, $chat_id)
     {
-        $this->message = $message;
-        $this->usersListIds = $ids;
+        $this->message_id = $message_id;
+        $this->author_id = $author_id;
+        $this->chat_id = $chat_id;
     }
 
     /**
      * @return mixed
      */
-    public function getMessage()
+    public function getMessageId()
     {
-        return $this->message;
+        return $this->message_id;
     }
 
     /**
-     * @return array
+     * @return int
      */
-    public function getUsersListIds(): array
+    public function getAuthorId()
     {
-        return $this->usersListIds;
+        return $this->author_id;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getChatId()
+    {
+        return $this->chat_id;
     }
 }

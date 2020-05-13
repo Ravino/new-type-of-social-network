@@ -55,13 +55,13 @@ methods : {
     },
 
     onPickFavorite(evData){
-        window.console.log(evData, `onPickFavorite`);
+        //window.console.log(evData, `onPickFavorite`);
         this.isPickFavorite = true;
         this.pickedFavoriteId = evData.friendId;
     },
 
     onUnPickFavorite(evData){
-        window.console.log(evData, `onUnPickFavorite`);
+        //window.console.log(evData, `onUnPickFavorite`);
         this.isPickFavorite = false;
         this.pickedFavoriteId = 'none';
     },

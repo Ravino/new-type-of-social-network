@@ -89,7 +89,7 @@ import AttachmentItem from './TextEditor/AttachmentItem.vue';
 import PliziAttachment from '../classes/PliziAttachment.js';
 import { checkExtension } from '../utils/FileUtils.js';
 import { docsExtensions, imagesExtensions } from '../enums/FileExtensionEnums.js';
-import PliziAttachmentItem from "../classes/PliziAttachmentItem.js";
+import PliziAttachmentItem from '../classes/PliziAttachmentItem.js';
 import LinkMixin from "../mixins/LinkMixin.js";
 
 /**  TODO: Вставка файлов **/
@@ -126,7 +126,7 @@ props: {
         default: 10000,
     }
 },
-mixins: [LinkMixin],
+
 data() {
     let attachFiles = [];
 
@@ -223,22 +223,10 @@ methods: {
             return;
         }
 
-        let str = evData.postText.replace(/<\/?[^>]+>/g, '').trim();
-        let youtubeLinksMatch = this.detectYoutubeLinks(str);
-
-        if (youtubeLinksMatch && youtubeLinksMatch.length) {
-            this.$emit('editorPost', {
-                postText: evData.postText,
-                attachments: this.getAttachmentsIDs(),
-                videoLink: youtubeLinksMatch[0],
-                workMode: this.workMode,
-            });
-        } else {
-            this.$emit('editorPost', {
-                postText: evData.postText,
-                attachments: this.getAttachmentsIDs()
-            });
-        }
+        this.$emit('editorPost', {
+            postText: evData.postText,
+            attachments: this.getAttachmentsIDs()
+        });
 
         this.attachFiles = [];
     },

@@ -1,67 +1,69 @@
 <template>
-    <div class="row" :class="{ 'is-chatPage mr-0' : ('ChatsListPage'===this.$root.$router.currentRoute.name) }" >
-        <div class="col-sm-1 col-md-1 col-lg-1 col-xl-1 chat-page-height overflow-hidden pl-0">
-            <AccountToolbarLeft></AccountToolbarLeft>
-        </div>
-
-        <div v-if="isFreshUser" class="col-sm-12 col-md-9 col-lg-11 pr-3 chat-page-height">
-            <div class="jumbotron">
-                <p class="alert alert-info w-100 text-center p-5">
-                    Вы ещё ни с кем не общались, потому здесь пока никого нет.<br />
-                    Находите себе новых
-                    <router-link tag="a" to="/friends" class="btn btn-link mx-0 px-0">друзей</router-link>,
-                    вступайте в <router-link tag="a" to="/popular-communities" class="btn btn-link mx-0 px-0">
-                    сообщества</router-link>!
-                </p>
+    <div class="container-fluid pl-md-0">
+        <div class="row" :class="{ 'is-chatPage' : ('ChatsListPage'===this.$root.$router.currentRoute.name) }" >
+            <div class="col-12 col-md-1 chat-page-height overflow-hidden">
+                <AccountToolbarLeft></AccountToolbarLeft>
             </div>
-        </div>
-        <div v-else class="col-sm-12 col-md-9 col-lg-11 pr-3 chat-page-height">
-            <div v-if="isDialogsLoaded" id="chatMain" class="d-flex bg-white-br20 overflow-hidden">
 
-                <ChatDialogs ref="chatMessagesUsersList"
-                             :currentDialogID="currentDialogID"
-                             @SwitchToChat="onSwitchToChat">
-                </ChatDialogs>
+            <div v-if="isFreshUser" class="col-12 col-md-11 pr-0  chat-page-height">
+                <div class="jumbotron">
+                    <p class="alert alert-info w-100 text-center p-5">
+                        Вы ещё ни с кем не общались, потому здесь пока никого нет.<br />
+                        Находите себе новых
+                        <router-link tag="a" to="/friends" class="btn btn-link mx-0 px-0">друзей</router-link>,
+                        вступайте в <router-link tag="a" to="/popular-communities" class="btn btn-link mx-0 px-0">
+                        сообщества</router-link>!
+                    </p>
+                </div>
+            </div>
+            <div v-else class="col-12 col-md-11 pr-0  chat-page-height">
+                <div v-if="isDialogsLoaded" id="chatMain" class="d-flex flex-column flex-lg-row flex bg-white-br20 overflow-hidden">
 
-                <div id="chatMessagesWrapper"
-                     class="col-8 col-lg-8 col-xl-8 bg-light d-none d-lg-flex flex-column p-0 h-100">
+                    <ChatDialogs ref="chatMessagesUsersList"
+                                 :currentDialogID="currentDialogID"
+                                 @SwitchToChat="onSwitchToChat">
+                    </ChatDialogs>
 
-                    <ChatHeader v-if="currentDialog" v-bind:currentDialog="currentDialog"
-                                @ChatMessagesFilter="onUpdateMessagesFilterText"
-                                ref="chatHeader">
-                    </ChatHeader>
+                    <div id="chatMessagesWrapper"
+                         class="col-12 col-lg-8 bg-light d-lg-flex flex-column p-0 ">
 
-                    <div id="chatMessagesWrapperBody" class="position-relative">
+                        <ChatHeader v-if="currentDialog" v-bind:currentDialog="currentDialog"
+                                    @ChatMessagesFilter="onUpdateMessagesFilterText"
+                                    ref="chatHeader">
+                        </ChatHeader>
 
-                        <ChatMessages v-if="isMessagesLoaded" v-bind:messagesList="messagesList"
-                                      v-bind:filter="filter"
-                                      v-bind:currentDialog="currentDialog"
-                                      :style="`padding-bottom: ${changedHeight}`"
-                                      @clearFilters="clearChatMessagesFilters"
-                                      ref="chatMessages">
-                        </ChatMessages>
-                        <Spinner v-else v-bind:message="`Сообщения загружаются,<br />можно выбрать другой диалог`">
+                        <div id="chatMessagesWrapperBody" class="position-relative">
 
-                        </Spinner>
+                            <ChatMessages v-if="isMessagesLoaded" v-bind:messagesList="messagesList"
+                                          v-bind:filter="filter"
+                                          v-bind:currentDialog="currentDialog"
+                                          :style="`padding-bottom: ${changedHeight}`"
+                                          @clearFilters="clearChatMessagesFilters"
+                                          ref="chatMessages">
+                            </ChatMessages>
+                            <Spinner v-else v-bind:message="`Сообщения загружаются,<br />можно выбрать другой диалог`">
 
-                        <ChatFooter v-if="currentDialog"
-                                    v-bind:currentDialog="currentDialog"
-                                    @chatFooterEditorChangedHeight="onChatFooterEditorChangedHeight"
-                                    :style="`height: ${changedHeight}`"
-                                    ref="ChatFooter"></ChatFooter>
+                            </Spinner>
+
+                            <ChatFooter v-if="currentDialog"
+                                        v-bind:currentDialog="currentDialog"
+                                        @chatFooterEditorChangedHeight="onChatFooterEditorChangedHeight"
+                                        :style="`height: ${changedHeight}`"
+                                        ref="ChatFooter"></ChatFooter>
+                        </div>
                     </div>
                 </div>
-            </div>
 
-            <div v-else class="row bg-white-br20">
-                <div v-if="isDialogsLoaded" class="col-sm-12 col-md-12 col-lg-4 col-xl-12 py-5 px-5 text-center">
-                    <h3 class="text-info">Вы ещё ни с кем не общались.</h3>
+                <div v-else class="row bg-white-br20">
+                    <div v-if="isDialogsLoaded" class="col-12  col-lg-4 py-5 px-5 text-center">
+                        <h3 class="text-info">Вы ещё ни с кем не общались.</h3>
+                    </div>
+                    <Spinner v-else></Spinner>
                 </div>
-                <Spinner v-else></Spinner>
             </div>
-        </div>
 
-        <ChatNotifications :notifications="notifications" @removeNotification="removeNotification"/>
+            <ChatNotifications :notifications="notifications" @removeNotification="removeNotification"/>
+        </div>
     </div>
 </template>
 

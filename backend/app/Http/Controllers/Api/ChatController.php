@@ -95,7 +95,9 @@ class ChatController extends Controller
             $request->get('forwardFromChatId'),
             $request->get('attachments') ? $request->get('attachments') : []
         );
-        return response()->json(['data' => $message]);
+        return response()->json(['data' => [
+            'id' => $message
+        ]]);
     }
 
     /**
@@ -112,7 +114,9 @@ class ChatController extends Controller
             $request->get('forwardFromChatId'),
             $request->get('attachments') ? $request->get('attachments') : []
         );
-        return response()->json(['data' => $message]);
+        return response()->json(['data' => [
+            'id' => $message
+        ]]);
     }
 
     /**
