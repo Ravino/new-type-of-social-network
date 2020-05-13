@@ -46,8 +46,7 @@
                         </div>
 
                         <div class="form-group d-flex align-items-center px-5 row">
-                            <label for="commName" class="col-4 community-create-modal-label  text-right">Название<b
-                                class="text-danger">*</b>:</label>
+                            <label for="commName" class="col-4 community-create-modal-label  text-right">Название:</label>
                             <div class="col-8">
                                 <input v-model="model.name" type="text" id="commName" ref="commName"
                                        @blur="$v.model.name.$touch()"
@@ -122,6 +121,7 @@
                             </label>
                             <div class="col-5 d-flex align-items-center justify-content-end">
                                 <button @click.stop="startCreateCommunity()" type="button"
+                                        :disabled="!model.rule"
                                         class="btn w-100 btn-primary rounded-pill">Создать сообщество
                                 </button>
                             </div>
