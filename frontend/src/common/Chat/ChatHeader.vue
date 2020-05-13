@@ -12,9 +12,9 @@
                 </div>
             </div>
 
-            <div class="col-1 col-md-auto d-flex p-0 px-md-3">
-                <div class="d-flex align-items-center justify-content-end">
-                    <div class="form-row align-items-center justify-content-end pr-3">
+            <div class="col-1 col-md-7 d-flex p-0 px-md-3">
+                <div class="d-flex align-items-center justify-content-end w-100">
+                    <div class="form-row align-items-center justify-content-end flex-nowrap">
                         <div class="col-auto d-none d-md-block position-relative">
                             <label class="sr-only d-none" for="txtFindInChat">Поиск</label>
                             <input v-model="chatFilterText" id="txtFindInChat" ref="txtFindInChat" type="text"
