@@ -79,7 +79,7 @@ components: {
 mixins: [ShortFriendsMixin],
 data() {
     return {
-        userPosts: null,
+        userPosts: [],
         //allMyFriends: null,
         filterMode: `all`,
 
@@ -101,6 +101,8 @@ data() {
                 videoLink: null,
             },
         },
+        lazyLoadStarted: false,
+        noMorePost: false,
     }
 },
 
@@ -171,22 +173,44 @@ methods : {
         this.postForEdit = null;
     },
 
-    async getPosts(){
+    onScrollYPage(){
+        if (window.scrollY >= (document.body.scrollHeight - document.documentElement.clientHeight - (document.documentElement.clientHeight/2) )){
+            this.lazyLoadPost();
+        }
+    },
+
+    async getPosts(limit = 50, offset = 0){
         let response = null;
 
         try{
-            response = await this.$root.$api.$post.getPosts();
+            response = await this.$root.$api.$post.getPosts(limit, offset);
         } catch (e){
             console.warn( e.detailMessage );
         }
 
         if ( response !== null ){
-            this.userPosts = [];
-
             response.map( ( post ) => {
                 this.userPosts.push( new PliziPost( post ) );
             } );
+
+            return response.length;
         }
+    },
+
+    async lazyLoadPost() {
+        if (this.lazyLoadStarted) return;
+        if (this.noMorePost) return;
+
+        this.lazyLoadStarted = true;
+        let oldSize = this.userPosts.length;
+        let added = await this.getPosts(10, oldSize++);
+
+        if (added === 0) {
+            this.noMorePost = true;
+        }
+
+        this.lazyLoadStarted = false;
+        this.onScrollYPage();
     },
 
     async onDeletePost( id ){
@@ -237,6 +261,7 @@ async mounted() {
     this.$root.$on('wallPostsSelect', this.wallPostsSelectHandler);
     await this.getPosts();
 
+    window.addEventListener('scroll', this.onScrollYPage);
     //await this.loadMyFriends();
 }
 }
