@@ -1,7 +1,7 @@
 <template>
-    <div id="chatHeader" class="bg-white w-100 border-bottom">
-        <div class="row mx-0 py-1 justify-content-between">
-            <div class="col-11 col-md-5">
+    <div id="chatHeader" class="bg-white w-100 border-bottom d-flex justify-content-between">
+<!--        <div class="row mx-0 py-1 justify-content-between">-->
+            <div class="col-11 col-md-5 d-flex">
                 <ChatHeaderCompanion v-if="currentDialog.isPrivate" v-bind:companion="companion"></ChatHeaderCompanion>
 
                 <div v-if="currentDialog.isGroup" class="d-flex align-items-center h-100">
@@ -43,7 +43,7 @@
                     </div>
                 </div>
             </div>
-        </div>
+<!--        </div>-->
 
         <ChatPickAttendeesDialogModal v-if="pickAttendeesDialogModalShow"
             @hidePickAttendeesDialogModal="onHidePickAttendeesDialogModal"
