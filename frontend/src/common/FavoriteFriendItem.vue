@@ -155,7 +155,32 @@ methods: {
 
     onChatFooterEditorChangedHeight(evData) {
         this.changedHeight = evData.changedHeight + 'px';
-        this.$refs.chatMessages.scrollToEnd();
+        try{
+            this.$refs.chatMessages.scrollToEnd();
+        } catch (e){
+
+        }
+    },
+
+
+    addMessageToMessagesList(evData){
+        this.currentDialog = this.$root.$auth.dm.getDialogByCompanion(this.friend.id);
+
+        if (this.currentDialog) {
+            if (this.currentDialog.id === evData.message.chatId){
+                this.messagesList.push( new PliziMessage( evData.message ) );
+
+                try{
+                    this.$refs.chatMessages.scrollToEnd();
+                } catch (e){
+                }
+
+//                this.updateDialogsList(evData.chatId, evData); // TODO: надо обновить диалоги
+            }
+        }
+        else {
+            window.console.warn('нулёвый диалог');
+        }
     },
 
 
@@ -254,10 +279,17 @@ methods: {
 
         this.isMessagesLoaded = true;
     },
+
+    addListeners(){
+        this.$root.$on('userIsTyping', this.onFriendTyping);
+
+        this.$root.$on('newMessageInDialog', this.addMessageToMessagesList);
+        this.$root.$on('removeMessageInDialog', this.removeMessageInList);
+    }
 },
 
-mounted(){
-    this.$root.$on('userIsTyping', this.onFriendTyping);
+created(){
+    this.addListeners();
 }
 
 }

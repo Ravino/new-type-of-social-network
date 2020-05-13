@@ -31,12 +31,11 @@
                     </div>
                 </div>
 
-                <div class="plz-editor-btns d-flex flex-column flex-md-row justify-content-between"  >
+                <div class="plz-editor-btns d-flex flex-column flex-md-row justify-content-between">
 
-                    <label
-                        :class="{'attach-file--disallow cursor-non-drop' : isDisallowUpload}"
-                        class="attach-file w-100 d-flex align-items-center justify-content-center btn btn-link my-0 ml-0 mr-0 mr-md-2 px-1 btn-add-file position-relative"
-                    >
+                    <label :class="{'attach-file--disallow cursor-non-drop' : isDisallowUpload}"
+                        :disabled="isDisallowUpload"
+                    class="attach-file w-100 d-flex align-items-center justify-content-center btn btn-link my-0 ml-0 mr-0 mr-md-2 px-1 btn-add-file position-relative">
                         <IconAddFile />
                         <input type="file" :disabled="isDisallowUpload" @change="onSelectFile($event)" ref="editorFiler" multiple />
                     </label>
@@ -80,7 +79,7 @@
 <script>
 import IconAddFile from '../icons/IconAddFile.vue';
 import IconAddCamera from '../icons/IconAddCamera.vue';
-import IconSend from "../icons/IconSend.vue";
+import IconSend from '../icons/IconSend.vue';
 
 import Editor from './TextEditor/Editor.vue';
 import EmojiPicker from './TextEditor/EmojiPicker.vue';
@@ -89,7 +88,7 @@ import AttachmentItem from './TextEditor/AttachmentItem.vue';
 import PliziAttachment from '../classes/PliziAttachment.js';
 import { checkExtension } from '../utils/FileUtils.js';
 import { docsExtensions, imagesExtensions } from '../enums/FileExtensionEnums.js';
-import PliziAttachmentItem from "../classes/PliziAttachmentItem.js";
+import PliziAttachmentItem from '../classes/PliziAttachmentItem.js';
 
 /**  TODO: Вставка файлов **/
 /** @link https://www.npmjs.com/package/vue-filepond **/
@@ -104,25 +103,25 @@ components: {
     EmojiPicker,
     AttachmentItem
 },
-props: {
+props : {
     fieldId : String,
-    showAvatar: Boolean,
-    clazz: String,
-    editorPlaceholder: String,
-    dropToDown: Boolean,
-    workMode: {
-        type: String,
-        required: true,
+    showAvatar : Boolean,
+    clazz : String,
+    editorPlaceholder : String,
+    dropToDown : Boolean,
+    workMode : {
+        type : String,
+        required : true,
     },
-  inputEditorText: String,
-  inputEditorAttachment: Array,
-  maxFilesCount: {
-      type: Number,
-      default: 10,
-  },
-    maximumCharacterLimit: {
-        type: Number,
-        default: 10000,
+    inputEditorText : String,
+    inputEditorAttachment : Array,
+    maxFilesCount : {
+        type : Number,
+        default : 10,
+    },
+    maximumCharacterLimit : {
+        type : Number,
+        default : 10000,
     }
 },
 
@@ -243,15 +242,14 @@ methods: {
     },
 
     onAddEmoji(evData) {
-        if (evData.keys.ctrlKey) { // бал нажат Ctrl
+        // был нажат Ctrl
+        if (evData.keys.ctrlKey) {
             this.$refs.editor.focus();
 
             let txt = this.$refs.editor.getContent();
 
-            //this.$emit('editorPost', { postText : `<!--<p onclick="alert(11111)">Серега привет!!!</p>>-->` });
-            //this.$emit('editorPost', { postText : `<img src="https://steamuserimages-a.akamaihd.net/ugc/792010418808130585/980E17AA6CF29E06865DA40F9067B9164AB54BCD/" alt="" />` });
-
             if (`<p></p>` === txt.toLowerCase()) { // поле ввода пустое - значит отправляем только увеличенный эмоджи
+                window.console.log(`Big emoji!`);
                 const sendSmile = `<p class="big-emoji">${evData.emoji}</p>`;
                 this.$emit('editorPost', {postText: sendSmile});
             } else { // просто добавляем эмоджи
@@ -269,8 +267,7 @@ methods: {
     },
 
     getStartContainerHeight () {
-        let startChatContainerHeight = this.$refs.editorContainer.offsetHeight;
-        this.editorContainerHeight = startChatContainerHeight;
+        this.editorContainerHeight = this.$refs.editorContainer.offsetHeight;
     },
 
     checkUpdatedChatContainerHeight() {

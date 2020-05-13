@@ -3,7 +3,7 @@
         <TextEditor :showAvatar="false"
                     :dropToDown="false"
                     :clazz="`d-flex bg-white w-100 border-top position-relative mt-auto align-items-start px-3 py-3`"
-                    work-mode="chat"
+                    workMode="chat"
                     :editorPlaceholder="placeholder"
                     :maximumCharacterLimit="500"
                     @editorNewHeight="onEditorChangeHeight"
@@ -47,7 +47,6 @@ methods: {
             userId: this.$root.$auth.user.id,
             chatId: this.currentDialog.id
         };
-        //window.console.log(keyPressData, `keyPressData`);
 
         this.$root.$api.sendToChannel(keyPressData);
     },
@@ -106,7 +105,7 @@ methods: {
     },
 
     async addMessageToChat( msgText, attachments ){
-        const chatId = (this.currentDialog) ? this.currentDialog.id : -1;
+        const chatId = (this.currentDialog) ? this.currentDialog.id : 'unknown';
 
         let apiResponse = null;
 

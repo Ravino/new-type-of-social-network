@@ -31,7 +31,7 @@
                                      v-bind:next="getNext(messageIndex)"
                                      v-bind:pickedID="pickedMessageID"
                                      v-bind:dialogID="currentDialog.id"
-                                     v-bind:key="message.id">
+                                     v-bind:key="message.id+`-`+messageIndex">
                     </ChatMessageItem>
                 </transition-group>
             </div>
@@ -190,24 +190,24 @@ computed: {
             return this.messagesList;
         }
 
-        let range_start, range_end;
+        let rangeStart, rangeEnd;
 
         if (this.filter.range && this.filter.range.start && this.filter.range.end) {
-            range_start = this.filter.range.start;
-            range_end = this.filter.range.end;
+            rangeStart = this.filter.range.start;
+            rangeEnd = this.filter.range.end;
 
-            this.rangeStart = range_start;
-            this.rangeEnd = range_end;
+            this.rangeStart = rangeStart;
+            this.rangeEnd = rangeEnd;
         }
 
         // есть и текст и дата
-        if (this.filter.text && this.filter.range && range_start && range_end) {
+        if (this.filter.text && this.filter.range && rangeStart && rangeEnd) {
             const ft = this.filter.text.toLocaleLowerCase();
 
             if (ft.length > 2) {
                 return this.messagesList.filter((msgItem) => {
                     return msgItem.body.toLowerCase().includes(ft) &&
-                        (msgItem.createdAt > range_start) && (msgItem.createdAt < range_end);
+                        (msgItem.createdAt > rangeStart) && (msgItem.createdAt < rangeEnd);
                 });
             }
         }
@@ -223,9 +223,9 @@ computed: {
         }
 
         // только дата
-        if (this.filter.range && range_start && range_end) {
+        if (this.filter.range && rangeStart && rangeEnd) {
             return this.messagesList.filter((msgItem) => {
-                return (msgItem.createdAt > this.filter.range.start) && (msgItem.createdAt < range_end);
+                return (msgItem.createdAt > this.filter.range.start) && (msgItem.createdAt < rangeEnd);
             });
         }
 
@@ -269,14 +269,3 @@ mounted() {
 
 }
 </script>
-
-<style lang="scss">
-.btn-filter-clear {
-    color: #1554F7;
-    text-decoration: underline;
-
-    &:hover {
-        box-shadow: none;
-    }
-}
-</style>
