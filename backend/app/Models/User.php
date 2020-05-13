@@ -136,7 +136,7 @@ class User extends Authenticatable implements JWTSubject
         $community_ids = $this->communities()->pluck('id');
         $user_ids = \DB::table('community_members')->whereIn('community_id', $community_ids)->where('user_id', '<>', $this->id)->pluck('user_id');
         $user_ids = array_count_values(json_decode(json_encode($user_ids)));
-        return self::whereIn('id', array_keys($user_ids))->whereNotIn('id', array_column($this->getFriends(), 'id'))->get()->sortByDesc(function ($value) use ($user_ids) {
+        return self::with('profile', 'profile.avatar')->whereIn('id', array_keys($user_ids))->whereNotIn('id', array_column($this->getFriends(), 'id'))->get()->sortByDesc(function ($value) use ($user_ids) {
             return $user_ids[$value['id']];
         })->values();
     }
@@ -221,7 +221,7 @@ class User extends Authenticatable implements JWTSubject
      */
     public function getUserPrivacyRole(User $user)
     {
-        if ($this->isFriendOfFriendWith($user)) {
+        if ($this->isFriendOfFriendWith($user->id)) {
             return Role::where('name', self::PERMISSION_ROLE_FOF)->get()->first();
         }
         if ($this->isFriendWith($user)) {

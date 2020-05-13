@@ -28,20 +28,18 @@ class PliziFavoritesCollection extends PliziStoredCollection {
 
 
     onAddToFavorites(evData){
-        window.console.warn(evData,`onAddToFavorites`);
         this.add(evData);
         this.storeData();
         this.restore();
-        this.emit(this.updateEventName);
+        this.emit(this.updateEventName, evData);
     }
 
 
-    onRemoveFromFavorites(removedFriendId){
-        window.console.warn(removedFriendId,`onRemoveFromFavorites`);
-        this.delete(removedFriendId.id);
+    removeFromFavorites(removedFriendId){
+        this.delete(removedFriendId);
         this.storeData();
         this.restore();
-        this.emit(this.updateEventName);
+        this.emit(this.updateEventName, { friendId : removedFriendId });
     }
 
 

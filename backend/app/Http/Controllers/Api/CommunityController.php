@@ -4,10 +4,12 @@ namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Community\Community as CommunityRequest;
+use App\Http\Requests\Community\CreateCommunity;
 use App\Http\Requests\Community\UploadFileRequest;
 use App\Http\Resources\Community\CommunityCollection;
 use App\Http\Resources\Community\Community as CommunityResource;
 use App\Http\Resources\Community\CommunityUserCollection;
+use App\Http\Resources\User\Image;
 use App\Models\Community;
 use App\Models\CommunityAttachment;
 use App\Models\CommunityHeader;
@@ -70,7 +72,7 @@ class CommunityController extends Controller
     public function get(int $id) {
         $community = Community::with(['users' => function($u) {
             $u->limit(5);
-        }, 'users.profile', 'members'])->find($id);
+        }, 'users.profile', 'members', 'avatar'])->find($id);
         if($community) {
             return new CommunityResource($community);
         }
@@ -96,10 +98,10 @@ class CommunityController extends Controller
     }
 
     /**
-     * @param CommunityRequest $request
+     * @param CreateCommunity $request
      * @return CommunityResource
      */
-    public function store(CommunityRequest $request) {
+    public function store(CreateCommunity $request) {
         return new CommunityResource($this->communityService->createCommunity($request));
     }
 
@@ -184,7 +186,7 @@ class CommunityController extends Controller
         $community_id = request()->input('id');
         $uploaded['community_id'] = $community_id;
         $attachment = CommunityAttachment::updateOrCreate(['community_id' => $community_id], $uploaded);
-        return new AttachmentsCollection([$attachment]);
+        return new Image($attachment);
     }
 
     public function uploadHeaderImage(UploadFileRequest $request)

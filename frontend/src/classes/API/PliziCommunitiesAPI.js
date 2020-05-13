@@ -157,19 +157,36 @@ class PliziCommunitiesAPI extends PliziBaseAPI {
      * @throws PliziAPIError
      */
     async updatePrimaryImage(formData) {
-        let response = await this.__axios.post('/api/communities/attachments', formData, this.authFileHeaders)
+        let response = await this.__axios.post('/api/communities/avatar', formData, this.authFileHeaders)
             .catch((error) => {
                 this.checkIsTokenExpires(error, `$communities.updatePrimaryImage`);
                 throw new PliziAPIError(`$communities.updatePrimaryImage`, error.response);
             });
 
-        if (response.status === 201) {
+        if (response.status === 200) {
             return response.data;
         }
 
         return null;
     }
 
+    /**
+     * загружает список тем
+     * @returns {Promise<null|any>}
+     */
+    async getThemes() {
+        let response = await this.axios.get('/api/communities/themes/list', this.authHeaders)
+            .catch((error) => {
+                this.checkIsTokenExpires(error, `$communities.getThemes`);
+                throw new PliziAPIError(`$communities.getThemes`, error.response);
+            });
+
+        if (response.status === 200) {
+            return response.data;
+        }
+
+        return null;
+    }
 }
 
 export default PliziCommunitiesAPI;

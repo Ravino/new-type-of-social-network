@@ -1,51 +1,53 @@
 <template>
-    <div class="row">
-        <div class="col-sm-1 col-md-1 col-lg-1 col-xl-1 pl-0">
-            <AccountToolbarLeft></AccountToolbarLeft>
-        </div>
+    <div class="container-fluid pl-md-0">
+        <div class="row">
+            <div class="col-12 col-md-1 ">
+                <AccountToolbarLeft></AccountToolbarLeft>
+            </div>
 
-        <div class="col-sm-10 col-md-9 col-lg-8 col-xl-8 pl-0">
-            <div class="container">
-                <ProfileHeader v-bind:userData="userData" v-bind:isOwner="true"></ProfileHeader>
+            <div class="col-12 col-md-11 col-xl-8 pr-0 pr-xl-3">
+                <div class="container">
+                    <ProfileHeader v-bind:userData="userData" v-bind:isOwner="true"></ProfileHeader>
 
-                <ProfilePhotos v-bind:photos="userPhotos"></ProfilePhotos>
+                    <ProfilePhotos v-bind:photos="userPhotos"></ProfilePhotos>
 
-                <WhatsNewBlock @addNewPost="addNewPost"></WhatsNewBlock>
+                    <WhatsNewBlock @addNewPost="addNewPost"></WhatsNewBlock>
 
-                <ProfileFilter v-if="userPosts && userPosts.length > 1"
-                               @wallPostsSelect="wallPostsSelectHandler"></ProfileFilter>
+                    <ProfileFilter v-if="userPosts && userPosts.length > 1"
+                                   @wallPostsSelect="wallPostsSelectHandler"></ProfileFilter>
 
-                <template v-if="userPosts && userPosts.length > 0">
-                    <Post v-for="postItem in filteredPosts"
-                          :key="postItem.id"
-                          :post="postItem"
-                          @onDeletePost="onDeletePost"
-                          @onRestorePost="onRestorePost"
-                          @onEditPost="onEditPost"
-                          @openVideoModal="openVideoModal">
-                    </Post>
-                </template>
+                    <template v-if="userPosts && userPosts.length > 0">
+                        <Post v-for="postItem in filteredPosts"
+                              :key="postItem.id"
+                              :post="postItem"
+                              @onDeletePost="onDeletePost"
+                              @onRestorePost="onRestorePost"
+                              @onEditPost="onEditPost"
+                              @openVideoModal="openVideoModal">
+                        </Post>
+                    </template>
 
-                <div v-else  class="row plz-post-item mb-4 bg-white-br20 p-4">
-                    <div class="alert alert-info w-100 p-5 text-center mb-0">
-                        Вы не создали ни одной записи.
+                    <div v-else  class="row plz-post-item mb-4 bg-white-br20 p-4">
+                        <div class="alert alert-info w-100 p-5 text-center mb-0">
+                            Вы не создали ни одной записи.
+                        </div>
                     </div>
                 </div>
             </div>
+
+            <div class="col-sm-3 col-md-3 col-lg-3 col-xl-3 pr-0 d-none d-lg-block">
+                <FavoriteFriends :isNarrow="false"></FavoriteFriends>
+                <ShortFriends v-bind:friends="allFriends"></ShortFriends>
+            </div>
+
+            <PostEditModal v-if="postEditModal.isVisible"
+                           :post="postForEdit"
+                           @hidePostEditModal="hidePostEditModal"/>
+
+            <PostVideoModal v-if="postVideoModal.isVisible"
+                            :videoLink="postVideoModal.content.videoLink"
+                            @hideVideoModal="hideVideoModal"/>
         </div>
-
-        <div class="col-sm-3 col-md-3 col-lg-3 col-xl-3 pr-0">
-            <FavoriteFriends :isNarrow="false"></FavoriteFriends>
-            <ShortFriends v-bind:friends="allFriends"></ShortFriends>
-        </div>
-
-        <PostEditModal v-if="postEditModal.isVisible"
-                       :post="postForEdit"
-                       @hidePostEditModal="hidePostEditModal"/>
-
-        <PostVideoModal v-if="postVideoModal.isVisible"
-                        :videoLink="postVideoModal.content.videoLink"
-                        @hideVideoModal="hideVideoModal"/>
     </div>
 </template>
 
@@ -77,7 +79,7 @@ components: {
 mixins: [ShortFriendsMixin],
 data() {
     return {
-        userPosts: null,
+        userPosts: [],
         //allMyFriends: null,
         filterMode: `all`,
 
@@ -99,6 +101,8 @@ data() {
                 videoLink: null,
             },
         },
+        lazyLoadStarted: false,
+        noMorePost: false,
     }
 },
 
@@ -169,22 +173,44 @@ methods : {
         this.postForEdit = null;
     },
 
-    async getPosts(){
+    onScrollYPage(){
+        if (window.scrollY >= (document.body.scrollHeight - document.documentElement.clientHeight - (document.documentElement.clientHeight/2) )){
+            this.lazyLoadPost();
+        }
+    },
+
+    async getPosts(limit = 50, offset = 0){
         let response = null;
 
         try{
-            response = await this.$root.$api.$post.getPosts();
+            response = await this.$root.$api.$post.getPosts(limit, offset);
         } catch (e){
             console.warn( e.detailMessage );
         }
 
         if ( response !== null ){
-            this.userPosts = [];
-
             response.map( ( post ) => {
                 this.userPosts.push( new PliziPost( post ) );
             } );
+
+            return response.length;
         }
+    },
+
+    async lazyLoadPost() {
+        if (this.lazyLoadStarted) return;
+        if (this.noMorePost) return;
+
+        this.lazyLoadStarted = true;
+        let oldSize = this.userPosts.length;
+        let added = await this.getPosts(10, oldSize++);
+
+        if (added === 0) {
+            this.noMorePost = true;
+        }
+
+        this.lazyLoadStarted = false;
+        this.onScrollYPage();
     },
 
     async onDeletePost( id ){
@@ -235,6 +261,7 @@ async mounted() {
     this.$root.$on('wallPostsSelect', this.wallPostsSelectHandler);
     await this.getPosts();
 
+    window.addEventListener('scroll', this.onScrollYPage);
     //await this.loadMyFriends();
 }
 }

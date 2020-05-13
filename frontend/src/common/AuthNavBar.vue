@@ -1,36 +1,38 @@
 <template>
     <header id="authHeader" class="fixed-top"
             :class="{ 'page-has-offset-top' : isShowNavBarShadow }">
-        <nav class="auth-navbar navbar navbar-expand-lg container container-wide mx-auto">
-            <div class="row w-100 px-0 mr-0">
-                <div class="d-flex align-items-center col-sm-1 col-md-1 col-lg-1 col-xl-1 py-lg-0 p-xl-0 ">
-                    <router-link v-if="isGotoLogin" :to="`/logout`" tag="a"
-                                 class="navbar-brand w-100 d-block text-center mx-auto h-auto my-0">
-                        <IconPliziLogo />
-                    </router-link>
-                    <router-link v-else :to="{name: 'NewsPage'}" tag="a"
-                                 class="navbar-brand w-100 d-block text-center mx-auto h-auto my-0">
-                        <IconPliziLogo />
-                    </router-link>
-                </div>
-
-                <div class="col-sm-4 col-md-6 col-lg-5 offset-xl-1 d-none d-md-flex align-items-center pl-xl-0">
-                    <NavBarSearch></NavBarSearch>
-                </div>
-                <!--<div id="playerWrapper" class="plz-top-player col-lg-2 col-xl-2 d-sm-none d-md-none d-lg-block d-xl-block text-center ">
-                    <NavBarPlayer></NavBarPlayer>
-                </div>-->
-                <div id="watcherWrapper" class="plz-top-watcher col-6 col-sm-4 col-lg-3 col-xl-2 w-auto m-auto ml-md-auto mr-md-0 text-center">
-                    <div class="--btn-block mt-2 d-inline-block">
-                        <NavBarNotifications></NavBarNotifications>
-
-                        <NavBarMessages></NavBarMessages>
-
-                        <NavBarFriends></NavBarFriends>
+        <nav class="auth-navbar navbar navbar-expand-lg container container-wide mx-auto  pl-md-0 pl-lg-3">
+            <div class="w-100 ">
+                <div class="row ">
+                    <div class="d-flex align-items-center col-3 col-sm-2 col-md-1 pl-3 pr-0 px-lg-0 ">
+                        <router-link v-if="isGotoLogin" :to="`/logout`" tag="a"
+                                     class="navbar-brand w-100 d-block text-center mx-auto h-auto my-0 py-0">
+                            <IconPliziLogo />
+                        </router-link>
+                        <router-link v-else :to="{name: 'NewsPage'}" tag="a"
+                                     class="navbar-brand w-100 d-block text-center mx-auto h-auto my-0 py-0">
+                            <IconPliziLogo />
+                        </router-link>
                     </div>
-                </div>
 
-                <NavBarUserMenu></NavBarUserMenu>
+                    <div class="col-sm-4 col-md-6 col-lg-5 offset-xl-1 d-none d-md-flex align-items-center pl-xl-0">
+                        <NavBarSearch></NavBarSearch>
+                    </div>
+                    <!--<div id="playerWrapper" class="plz-top-player col-lg-2 col-xl-2 d-sm-none d-md-none d-lg-block d-xl-block text-center ">
+                        <NavBarPlayer></NavBarPlayer>
+                    </div>-->
+                    <div id="watcherWrapper" class="plz-top-watcher col-6 col-sm-4 col-lg-3 col-xl-2 w-auto m-auto ml-md-auto mr-md-0 text-center">
+                        <div class="--btn-block mt-2 d-inline-block">
+                            <NavBarNotifications></NavBarNotifications>
+
+                            <NavBarMessages></NavBarMessages>
+
+                            <NavBarFriends></NavBarFriends>
+                        </div>
+                    </div>
+
+                    <NavBarUserMenu></NavBarUserMenu>
+                </div>
             </div>
         </nav>
     </header>

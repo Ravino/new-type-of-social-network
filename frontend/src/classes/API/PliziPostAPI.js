@@ -8,8 +8,15 @@ class PliziPostAPI extends PliziBaseAPI {
      * @returns {object[]|null}
      * @throws PliziAPIError
      */
-    async getPosts(){
-        let response = await this.axios.get( 'api/user/posts', this.authHeaders )
+    async getPosts(limit, offset){
+        let path = 'api/user/posts/';
+        let qParams = '';
+
+        if (limit && offset) {
+            qParams = `?limit=${limit}&offset=${offset}`;
+        }
+
+        let response = await this.axios.get( path + qParams, this.authHeaders )
             .catch( ( error ) => {
                 this.checkIsTokenExpires( error, `getPosts` );
                 throw new PliziAPIError( `getPosts`, error.response );
@@ -207,6 +214,28 @@ class PliziPostAPI extends PliziBaseAPI {
           .catch( ( error ) => {
               this.checkIsTokenExpires( error, `deletePostImage` );
               throw new PliziAPIError( `deletePostImage`, error.response );
+          } );
+
+
+        if ( response.status === 200 ){
+            return response.data.data;
+        }
+
+        return null;
+    }
+
+    /**
+     * Лайк постов.
+     *
+     * @param postId
+     * @returns {object[]|null}
+     * @throws PliziAPIError
+     */
+    async likePost(postId) {
+        let response = await this.axios.post( `api/posts/rate`, { postId },this.authHeaders )
+          .catch( ( error ) => {
+              this.checkIsTokenExpires( error, `likePost` );
+              throw new PliziAPIError( `likePost`, error.response );
           } );
 
 

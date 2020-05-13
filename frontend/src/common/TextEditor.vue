@@ -1,6 +1,6 @@
 <template>
     <div :id="fieldId" :class="blockClass" ref="editorContainer">
-        <div class="flex-column w-100 ">
+        <div class="flex-column w-100 position-relative">
             <div class="row w-100 ml-0">
                 <div v-if="showAvatar" class="plz-editor-avatar col-1 align-items-center text-center pt-2">
                     <img class="chat-companion-user-pic rounded-circle my-0 mx-auto"
@@ -14,22 +14,28 @@
                                 <Editor class="plz-text-editor-form form-control px-2 py-1 h-100"
                                         @editorPost="onEditorNewPost"
                                         @editorKeyDown="onEditorKeyDown"
+                                        @onMaximumCharacterLimit="onMaximumCharacterLimit"
                                         :placeholder="editorPlaceholder"
                                         :inputEditorText="inputEditorText"
+                                        :maximumCharacterLimit="maximumCharacterLimit"
+                                        :isError="isMaximumCharacterLimit"
                                         ref="editor" />
                                 <button @click.stop="onSendPostClick" class="btn btn-link">
                                     <IconSend style="height: 20px"/>
                                 </button>
                             </div>
+                            <div v-if="isMaximumCharacterLimit" class="col-12">
+                                <p class="text-danger">Превышено максимально допустимое количество символов.</p>
+                            </div>
                         </div>
                     </div>
                 </div>
 
-                <div class="plz-editor-btns d-flex justify-content-between"  >
+                <div class="plz-editor-btns d-flex flex-column flex-md-row justify-content-between"  >
 
                     <label
                         :class="{'attach-file--disallow cursor-non-drop' : isDisallowUpload}"
-                        class="attach-file w-50 d-flex align-items-center btn btn-link my-0 ml-0 mr-2 px-1 btn-add-file position-relative"
+                        class="attach-file w-100 d-flex align-items-center justify-content-center btn btn-link my-0 ml-0 mr-0 mr-md-2 px-1 btn-add-file position-relative"
                     >
                         <IconAddFile />
                         <input type="file" :disabled="isDisallowUpload" @change="onSelectFile($event)" ref="editorFiler" multiple />
@@ -40,7 +46,7 @@
                         <input type="file" @change="onSelectImage($event)" ref="editorImager" multiple />
                     </label>-->
 
-                    <button class="btn btn-link w-50 mx-0 px-1 btn-add-smile position-relative" type="button">
+                    <button class="btn btn-link w-100 mx-0 px-1 btn-add-smile position-relative" type="button">
                         <EmojiPicker v-if="dropToDown"
                                      @addEmoji="onAddEmoji"
                                      :transform="'transform: translate(-40%, 40px)'">
@@ -113,7 +119,11 @@ props: {
   maxFilesCount: {
       type: Number,
       default: 10,
-  }
+  },
+    maximumCharacterLimit: {
+        type: Number,
+        default: 10000,
+    }
 },
 
 data() {
@@ -132,6 +142,7 @@ data() {
         attachFiles,
         defaultClasses: `bg-white w-100 border-top position-relative mt-auto`,
         editorContainerHeight: 32,
+        isMaximumCharacterLimit: false,
     }
 },
 
@@ -206,6 +217,11 @@ methods: {
     },
 
     onEditorNewPost(evData) {
+        if (this.isMaximumCharacterLimit) {
+            this.isMaximumCharacterLimit = false;
+            return;
+        }
+
         this.$emit('editorPost', {
             postText: evData.postText,
             attachments: this.getAttachmentsIDs()
@@ -266,6 +282,10 @@ methods: {
 
         this.onEditorNewHeight(this.editorContainerHeight);
         //console.log('checkUpdatedChatContainerHeight', this.editorContainerHeight);
+    },
+
+    onMaximumCharacterLimit(str) {
+        this.isMaximumCharacterLimit = str.length > this.maximumCharacterLimit;
     },
 
     async addUploadAttachment(picsArr) {

@@ -25,10 +25,10 @@ services:
 
   neo4j:
     image: bitnami/neo4j:3
-    environment:
-      NEO4J_PASSWORD: 'plizi'
+    env_file:
+      - ./backend/docker/neo4j/.env
     volumes:
-      - neo4j-persistence:/bitnami
+      - ./neo4j-persistence:/bitnami
     ports:
       - '7474:7474'
       - '7473:7473'
@@ -146,7 +146,7 @@ services:
     env_file:
       - ./backend/docker/redis/.env
     volumes:
-      - redis_data_plizi:/data
+      - ./redis_data_plizi:/data
     ports:
     - "6379:6379"
 

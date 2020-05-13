@@ -35,6 +35,15 @@ class PliziFriendsCollection extends PliziStoredCollection {
         //this.emit(this.updateEventName);
     }
 
+    stopFriendship(removedFriendId){
+        window.console.log(`PliziFriendsCollection::stopFriendship`);
+
+        this.delete(removedFriendId);
+        this.storeData();
+        this.restore();
+        this.emit(this.updateEventName);
+    }
+
 
     /**
      * возвращает список избранных друзей

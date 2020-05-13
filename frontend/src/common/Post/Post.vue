@@ -49,7 +49,7 @@
                             </div>
                             <div class="nav-item">
                                 <button class="btn dropdown-item px-3 py-1"
-                                        @click="$emit('onDeletePost', post.id)">
+                                        @click="$emit('deletePost', post.id)">
                                     Удалить
                                 </button>
                             </div>
@@ -120,7 +120,8 @@
             <div class="plz-post-item-footer col-12 pt-4">
                 <div class="d-flex">
                     <div class="d-flex">
-                        <div class="post-watched-counter">
+                        <div class="post-watched-counter"
+                             @click="onLike">
                             <IconHeard/>
                             <span>{{ post.likes | space1000 }}</span>
                         </div>
@@ -150,7 +151,7 @@
                 <div class="post-deleted text-center">
                     <p>Запись удалена.</p>
                     <button class="btn btn-secondary"
-                            @click="$emit('onRestorePost', post.id)">
+                            @click="$emit('restorePost', post.id)">
                         Восстановить запись
                     </button>
                 </div>
@@ -222,33 +223,26 @@
                     videoLink: this.post.body.replace(/<\/?[^>]+>/g, '').trim(),
                 })
             },
+
+            async onLike() {
+                let response = null;
+
+                try{
+                    response = await this.$root.$api.$post.likePost(this.post.id);
+                } catch (e){
+                    console.warn( e.detailMessage );
+                }
+
+                if ( response !== null ){
+                    if (this.post.alreadyLiked) {
+                        this.post.alreadyLiked = false;
+                        this.post.likes--;
+                    } else {
+                        this.post.alreadyLiked = true;
+                        this.post.likes++;
+                    }
+                }
+            },
         },
     }
 </script>
-
-<style lang="scss">
-    .plz-post-item {
-        .plz-post-item-header,
-        .plz-post-item-body,
-        .plz-post-item-images,
-        .plz-post-item-footer {
-            padding: 0 35px 0 39px;
-        }
-    }
-
-    .post-images {
-        margin-left: -5px;
-
-        img {
-            max-height: 337px;
-            border-radius: 3px;
-            margin-left: 5px;
-            margin-bottom: 5px;
-        }
-    }
-
-    .shared {
-        padding: 10px;
-        border-left: 2px solid #cececf;
-    }
-</style>

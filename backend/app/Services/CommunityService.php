@@ -19,11 +19,10 @@ class CommunityService
     public function createCommunity($request) {
         $data = [
             'name' => $request->name,
-            'description' => $request->description,
-            'notice' => $request->notice,
             'url' => $request->url,
-            'website' => $request->website,
-            'location' => $request->location,
+            'type' => $request->type,
+            'theme_id' => $request->theme_id,
+            'privacy' => $request->privacy,
             'is_verified' => false,
             'created_at' => time(),
             'updated_at' => time(),

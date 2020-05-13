@@ -54,16 +54,34 @@ class PliziDialogsCollection extends PliziStoredCollection {
 
     /**
      * поиск диалога по его ID
-     * @param {string} ID - ID нужной сущности
-     * @returns {PliziDialog} - нужная сущность, или UNDEFINED если не нашли
+     * @param {string} ID - ID диалога
+     * @returns {PliziDialog} - диалог, или UNDEFINED если не нашли
      */
     get(ID){
         return this.collection.get(ID);
     }
 
 
+    /**
+     * поиск приватного чата по ID собеседника
+     * @param {string} userID - ID собеседника
+     * @returns {PliziDialog} - нужная сущность, или UNDEFINED если не нашли
+     */
+    getDialogByCompanion(userID){
+        let found = null;
+
+        this.collection.forEach((dItem) => {
+            if (dItem.isPrivate  &&  dItem.companion.id===userID){
+                window.console.log(dItem.companion.id, dItem.companion.fullName);
+                found = dItem.id;
+            }
+        });
+
+        return (found) ? this.collection.get(found) : undefined;
+    }
+
+
     get firstDialog(){
-        window.console.log(this.collection.size, `firstDialog`);
         if (this.collection.size === 0)
             return null;
 

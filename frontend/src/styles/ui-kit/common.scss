@@ -47,6 +47,14 @@ a::-moz-focus-inner{
     min-height: 200px;
 }
 
+.text-semibold {
+    font-weight: 600;
+}
+
+.text-bold {
+    font-weight: 700;
+}
+
 .page-logo {
     max-height: 36px;
 
@@ -94,6 +102,7 @@ a::-moz-focus-inner{
 }
 
 .btn-add-file {
+
     &:hover {
         svg {
             fill: $iconHoverColor;
@@ -103,6 +112,7 @@ a::-moz-focus-inner{
         display: inline-block;
         vertical-align: top;
         width: 18px;
+        min-width: 18px;
         height: 18px;
         fill: $iconDefaultColor;
     }
@@ -463,15 +473,16 @@ $radioWidth: 18px;
 }
 
 
-input[type=number]::-webkit-inner-spin-button,
-input[type=number]::-webkit-outer-spin-button {
+input[type='number']::-webkit-inner-spin-button,
+input[type='number']::-webkit-outer-spin-button {
     appearance: none;
     -webkit-appearance: none;
     -moz-appearance: none;
     margin: 0;
 }
 
-input[type=number] {
+input[type='number'],
+input[type='search']{
     -moz-appearance: textfield;
 }
 
@@ -480,4 +491,15 @@ input[type=number] {
 .modal-content {
     max-width: 96%;
     max-height: 96vh;
+}
+
+$dotSize: 2px;
+.ps-dot {
+    display: inline-block;
+    width: $dotSize;
+    min-width: $dotSize;
+    height: $dotSize;
+    border-radius: $dotSize;
+    background-color: #6f7487;
+    margin: 0 3px;
 }

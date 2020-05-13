@@ -7,12 +7,13 @@
 
 .plz-profile-userpic-container {
     width: 100%;
-    max-width: 245px;
     box-shadow: 0 2px 5px 0 rgba(0, 0, 0, 0.05);
 }
 .plz-profile-userpic-wrapper {
     height: 100%;
-    max-height: 205px;
+    width: 100%;
+    min-height: 205px;
+
     img {
         position: absolute;
         top: 50%;
@@ -20,15 +21,13 @@
         transform: translate(-50%, -50%);
         width: 100%;
         height: auto;
+        display: block;
     }
 }
 
 .plz-profile-userpic-footer {
     padding: 9px;
 }
-
-
-$dotSize: 2px;
 
 .plz-profile-userpic-edit {
     border: 2px solid #f0f0f0;
@@ -67,15 +66,7 @@ $dotSize: 2px;
         display: inline-block;
         height: 16px;
     }
-    .ps-dot {
-        display: inline-block;
-        width: $dotSize;
-        min-width: $dotSize;
-        height: $dotSize;
-        border-radius: $dotSize;
-        background-color: #6f7487;
-        margin: 0 3px;
-    }
+
 }
 
 .plz-profile-userdetails {
