@@ -16,7 +16,7 @@
             </div>
         </div>
         <div v-else class="col-sm-12 col-md-9 col-lg-11 pr-3 chat-page-height">
-            <div v-if="isDialogsLoaded" id="chatMain" class="row bg-white-br20 overflow-hidden">
+            <div v-if="isDialogsLoaded" id="chatMain" class="d-flex bg-white-br20 overflow-hidden">
 
                 <ChatDialogs ref="chatMessagesUsersList"
                              :currentDialogID="currentDialogID"

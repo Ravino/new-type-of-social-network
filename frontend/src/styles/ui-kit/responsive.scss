@@ -1,6 +1,14 @@
 
 // rules for --px and low
 
+@media (max-width: 1200px) {
+    .plizi-community-item-body {
+        width: 100%;
+    }
+    .plizi-community-item-body-bottom .btn {
+        width: 100%;
+    }
+}
 
 /*- md -*/
 @media (max-width: 992px) {
@@ -30,6 +38,17 @@
         }
     }
 
+    .plizi-friend-item-pic {
+        width: 60px;
+        min-width: 60px;
+        height: 60px;
+        img {
+            width: 60px;
+            min-width: 60px;
+            height: 60px;
+            border-radius: 60px;
+        }
+    }
 
 }
 

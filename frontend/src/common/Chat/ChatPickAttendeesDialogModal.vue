@@ -171,13 +171,9 @@ computed: {
             this.recipients.add(dItem.companion, dItem.id);
         });
 
-        this.$root.$auth.fm.asArray().map( (frItem) => {
+        this.$root.$auth.frm.asArray().map( (frItem) => {
             this.recipients.add(frItem, null);
         });
-
-        //this.currentDialog.attendeesIds.map((exAttID)=>{
-        //    this.recipients.removeByID(exAttID);
-        //});
 
         return this.recipients.asArray();
     }

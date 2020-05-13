@@ -93,19 +93,6 @@ methods: {
 
         this.$root.$emit('hidePersonalMsgModal', {});
     },
-
-    //onTextPost(evData){
-    //    if (evData.postText.trim() !== '') {
-    //
-    //        this.$root.$emit('sendPersonalMessage', {
-    //            message: this.$refs.messageToUserFromHisPage.getContent(),
-    //            receiverId: this.user.id,
-    //        });
-    //
-    //        this.$root.$emit('hidePersonalMsgModal', {});
-    //
-    //    }
-    //}
 },
 
 mounted(){

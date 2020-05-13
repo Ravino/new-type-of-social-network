@@ -9,7 +9,7 @@ class PliziChatAPI extends PliziBaseAPI{
      * @returns {object[]|null} - список диалогов юзера, или NULL если их нет
      */
     async dialogs() {
-        let response = await this.__axios.get('api/chat/dialogs', this.authHeaders)
+        let response = await this.axios.get('api/chat/dialogs', this.authHeaders)
             .catch((error) => {
                 this.checkIsTokenExpires(error, `$chat.dialogs`);
                 throw new PliziAPIError(`$chat.dialogs`, error.response);
@@ -29,7 +29,7 @@ class PliziChatAPI extends PliziBaseAPI{
      * @returns {object[]|null} - список диалогов, или NULL если не найдегл
      */
     async dialogSearchByName(sText) {
-        let response = await this.__axios.get(`api/chat/dialogs?search=` + sText, this.authHeaders)
+        let response = await this.axios.get(`api/chat/dialogs?search=` + sText, this.authHeaders)
             .catch((error) => {
                 this.checkIsTokenExpires(error, `$chat.dialogSearchByName`);
                 throw new PliziAPIError(`$chat.dialogSearchByName`, error.response);
@@ -55,7 +55,7 @@ class PliziChatAPI extends PliziBaseAPI{
             userIds: users
         };
 
-        let response = await this.__axios.post('api/chat/open', sendData, this.authHeaders)
+        let response = await this.axios.post('api/chat/open', sendData, this.authHeaders)
             .catch((error) => {
                 this.checkIsTokenExpires(error, `$chat.dialogOpen`);
                 throw new PliziAPIError(`$chat.dialogOpen`, error.response);
@@ -76,7 +76,7 @@ class PliziChatAPI extends PliziBaseAPI{
      * @returns {object} - ID диалога
      */
     async dialogRemove(chatId) {
-        let response = await this.__axios.delete(`api/chat/${chatId}`, this.authHeaders)
+        let response = await this.axios.delete(`api/chat/${chatId}`, this.authHeaders)
             .catch((error) => {
                 this.checkIsTokenExpires(error, `$chat.dialogRemove`);
                 throw new PliziAPIError(`$chat.dialogRemove`, error.response);
@@ -97,7 +97,7 @@ class PliziChatAPI extends PliziBaseAPI{
      * @returns {object[]|null} - список сообщений в диалоге, или NULL если была ошибка
      */
     async messages(dialogID) {
-        let response = await this.__axios.get('api/chat/messages/' + (dialogID), this.authHeaders)
+        let response = await this.axios.get('api/chat/messages/' + (dialogID), this.authHeaders)
             .catch((error) => {
                 this.checkIsTokenExpires(error, `$chat.messages`);
                 throw new PliziAPIError(`$chat.messages`, error.response);
@@ -155,7 +155,7 @@ class PliziChatAPI extends PliziBaseAPI{
             attachments: attachments
         };
 
-        let response = await this.__axios.post('api/chat/message/user', sendData, this.authHeaders)
+        let response = await this.axios.post('api/chat/message/user', sendData, this.authHeaders)
             .catch((error) => {
                 this.checkIsTokenExpires(error, `$chat.privateMessageSend`);
                 throw new PliziAPIError(`$chat.privateMessageSend`, error.response);
@@ -175,7 +175,7 @@ class PliziChatAPI extends PliziBaseAPI{
      * @returns {boolean} - true если удаление успешное
      */
     async messageDelete(messageID) {
-        let response = await this.__axios.delete(`api/chat/message/${messageID}`, this.authHeaders)
+        let response = await this.axios.delete(`api/chat/message/${messageID}`, this.authHeaders)
             .catch((error) => {
                 this.checkIsTokenExpires(error, `$chat.messageDelete`);
                 throw new PliziAPIError(`$chat.messageDelete`, error.response);
@@ -208,7 +208,7 @@ class PliziChatAPI extends PliziBaseAPI{
             apiPath = `api/chat/message/user`;
         }
 
-        let response = await this.__axios.post(apiPath, forwardData, this.authHeaders)
+        let response = await this.axios.post(apiPath, forwardData, this.authHeaders)
             .catch((error) => {
                 this.checkIsTokenExpires(error, `$chat.messageForward`);
                 throw new PliziAPIError(`$chat.messageForward`, error.response);
@@ -236,7 +236,7 @@ class PliziChatAPI extends PliziBaseAPI{
             formData.append('files[]', sendFiles[i]);
         }
 
-        let response = await this.__axios.post('api/chat/message/attachments', formData, this.authFileHeaders)
+        let response = await this.axios.post('api/chat/message/attachments', formData, this.authFileHeaders)
             .catch((error) => {
                 this.checkIsTokenExpires(error, `$chat.attachment`);
                 throw new PliziAPIError(`$chat.attachment`, error.response);

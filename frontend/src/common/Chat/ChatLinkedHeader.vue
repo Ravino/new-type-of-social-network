@@ -1,86 +1,43 @@
 <template>
-    <div id="chatHeader" class="bg-white w-100 border-bottom">
-        <div class="row mx-0 py-3">
-            <div class="col-6">
-                <ChatHeaderCompanion v-if="currentDialog.isPrivate" v-bind:companion="companion"></ChatHeaderCompanion>
-
-                <div v-if="currentDialog.isGroup" class="d-flex align-items-center h-100">
-                    <ChatHeaderAttendeeItem v-for="attItem in currentDialog.attendees"
-                        v-bind:attendee="attItem"
-                        v-bind:key="attItem.id">
-                    </ChatHeaderAttendeeItem>
-                </div>
+    <div id="chatHeader" class="bg-white w-100 border-bottom position-relative" >
+        <div class="row  align-items-center justify-content-between  mx-0 py-2">
+            <div class="col-auto position-relative pr-0">
+                <label class="sr-only d-none" for="txtFindInChat">Поиск</label>
+                <input v-model="chatFilterText" id="txtFindInChat" ref="txtFindInChat" type="text"
+                       data-change-focus="onFocusSearch"
+                       @keydown.stop="chatSearchKeyDownCheck($event)"
+                       class="chat-search-input form-control rounded-pill px-4"
+                       placeholder="Поиск в чате"/>
+                <button class="btn btn-search h-100 shadow-none"
+                        type="submit"
+                        @click="onClickStartChatFilter()">
+                    <IconSearch style="width: 15px; height: 15px;" />
+                </button>
             </div>
+            <div class="plz-linked-chat-btns d-flex align-items-center justify-content-between pr-3">
+                <button class="btn" @click="unPinChat()">
+                    <IconPin />
+                </button>
 
-            <div class="col-6">
-                <div class="d-flex align-items-center justify-content-end">
-                    <div class="form-row align-items-center justify-content-end pr-3">
-                        <div class="col-auto position-relative">
-                            <label class="sr-only d-none" for="txtFindInChat">Поиск</label>
-                            <input v-model="chatFilterText" id="txtFindInChat" ref="txtFindInChat" type="text"
-                                   @focus="onFocusSearch"
-                                   @keydown.stop="chatSearchKeyDownCheck($event)"
-                                   class="chat-search-input form-control rounded-pill px-4"
-                                   placeholder="Поиск в чате"/>
-                            <button class="btn btn-search h-100 shadow-none"
-                                    type="submit"
-                                    @click="onClickStartChatFilter()">
-                                <IconSearch style="width: 15px; height: 15px;" />
-                            </button>
-                        </div>
-                        <div v-if="showDatePicker" class="col-auto">
-                            <ChatDatePicker @dateSelected="dateSelected" ref="chatDatePicker"></ChatDatePicker>
-                            <button class="btn bg-transparent shadow-none" @click="clearFilters">
-                                <i class="far fa-times-circle"></i>
-                            </button>
-                        </div>
-
-                        <div class="col-auto">
-                            <ChatHeaderMenu
-                                @showRemoveCurrentChatModal="onShowRemoveCurrentChatModal"
-                                @showAddAttendeeToDialogModal="onShowAddAttendeeToDialogModal"></ChatHeaderMenu>
-                        </div>
-                    </div>
-                </div>
+                <button class="btn" @click="closeLinkedChat()">
+                    <i class="fa fa-times"></i>
+                </button>
             </div>
         </div>
-
-        <ChatPickAttendeesDialogModal v-if="pickAttendeesDialogModalShow"
-            @hidePickAttendeesDialogModal="onHidePickAttendeesDialogModal"
-            v-bind:currentDialog="currentDialog">
-        </ChatPickAttendeesDialogModal>
-
-        <RemoveCurrentDialogModal v-if="removeDialogModalShow"
-            @hideRemoveDialogModal="onHideRemoveDialogModal"
-            v-bind:currentDialog="currentDialog">
-        </RemoveCurrentDialogModal>
-
     </div>
 </template>
 
 <script>
 import IconSearch from '../../icons/IconSearch.vue';
-
-import ChatDatePicker from './ChatDatePicker.vue';
-import ChatHeaderMenu from './ChatHeaderMenu.vue';
-import ChatPickAttendeesDialogModal from './ChatPickAttendeesDialogModal.vue';
-import RemoveCurrentDialogModal from './RemoveCurrentDialogModal.vue';
-
-import ChatHeaderCompanion from './ChatHeaderCompanion.vue';
-import ChatHeaderAttendeeItem from './ChatHeaderAttendeeItem.vue';
+import IconPin from '../../icons/IconPin.vue';
 
 import PliziDialog from '../../classes/PliziDialog.js';
 
 export default {
 name: 'ChatLinkedHeader',
 components: {
+    IconPin,
     IconSearch,
-    ChatHeaderCompanion,
-    ChatHeaderAttendeeItem,
-    ChatDatePicker,
-    ChatHeaderMenu,
-    ChatPickAttendeesDialogModal,
-    RemoveCurrentDialogModal
 },
 props: {
     currentDialog: {
@@ -112,12 +69,23 @@ computed: {
         return {
             userPic : this.$defaultAvatarPath,
             firstName : `пользователь`,
+            fullName : `пользователь`,
             lastActivity: (new Date()).getTime() / 1000
         }
     }
 },
 
 methods: {
+    unPinChat(){
+        window.console.log(this.currentDialog.id, `Unpin chat!`);
+    },
+
+    closeLinkedChat(){
+        this.$emit('CloseLinkedChat', {
+            chatId: this.currentDialog.id
+        });
+    },
+
     onShowRemoveCurrentChatModal(){
         this.removeDialogModalShow = true;
     },

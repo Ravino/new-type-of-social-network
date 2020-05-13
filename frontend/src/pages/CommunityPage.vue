@@ -16,7 +16,7 @@
                             <div class="plz-community-header-details d-flex align-items-center">
                                 <template v-if="isAuthor">
                                     <label for="communityPrimaryImage" class="community-primary-image mr-3 cursor-pointer">
-                                        <img ref="communityAvatar" :src="communityData.primaryImage" :alt="communityData.name" />
+                                        <img ref="communityAvatar" :src="avatarForAuthor" :alt="communityData.name" />
                                     </label>
 
                                     <input id="communityPrimaryImage" ref="communityPrimaryImage" type="file"
@@ -25,7 +25,7 @@
                                 </template>
                                 <template v-else>
                                     <div class="plz-community-header-logo position-relative mr-3">
-                                        <img ref="communityAvatar" :src="communityData.primaryImage" :alt="communityData.name" />
+                                        <img ref="communityAvatar" :src="avatarForGuest" :alt="communityData.name" />
                                     </div>
                                 </template>
                                 <div class="plz-community-header-details-text">
@@ -159,6 +159,7 @@ import CommunityEditor from '../common/Communities/CommunityEditor.vue';
 
 import PliziCommunity from '../classes/PliziCommunity.js';
 import PliziPost from '../classes/PliziPost.js';
+import PliziCommunityAvatar from '../classes/Community/PliziCommunityAvatar';
 
 export default {
 name: 'CommunityPage',
@@ -207,6 +208,12 @@ computed: {
                 return member.id === this.authUser.id && (member.role === 'user' || member.role === 'author');
             });
         }
+    },
+    avatarForAuthor() {
+        return this.communityData?.avatar?.image.medium.path || this.communityData?.primaryImage;
+    },
+    avatarForGuest() {
+        return this.communityData?.avatar?.image.thumb.path || this.communityData?.primaryImage;
     },
 },
 
@@ -294,7 +301,7 @@ methods: {
             return;
         }
 
-        const { size } = formData.get('image');
+        const { size } = formData.get('file');
 
         if (size > 2000000) {
             this.showErrorOnLargeFile();
@@ -315,14 +322,7 @@ methods: {
         }
 
         if (apiResponse) {
-            window.console.log(apiResponse, `apiResponse`);
-
-            /** TODO: @TGA сохранить изменения **/
-            //this.$root.$auth.user.userPic = apiResponse.data.path;
-            //this.$root.$auth.user.avatar = new PliziAvatar(apiResponse.data);
-            //this.$refs.userAvatar.src = this.$root.$auth.user.avatar?.image?.medium.path || this.$root.$auth.user.userPic;
-            //this.$root.$auth.storeUserData();
-            //this.$root.$emit('UpdateCommunityAvatar', {userPic: this.$root.$auth.user.userPic});
+            this.communityData.avatar = new PliziCommunityAvatar(apiResponse.data);
         }
     },
 
@@ -344,8 +344,7 @@ methods: {
         }
 
         const formData = new FormData();
-        formData.append('image', this.$refs.communityPrimaryImage.files[0]);
-        formData.append('tag', 'primary');
+        formData.append('file', this.$refs.communityPrimaryImage.files[0]);
         formData.append('id', this.communityData.id);
         this.$refs.communityPrimaryImage.value = '';
 
@@ -409,7 +408,6 @@ methods: {
 async mounted() {
     await this.getCommunityInfo();
     await this.getCommunityPosts();
-    this.isDataReady = true;
     window.scrollTo(0, 0);
 },
     beforeRouteUpdate (to, from, next) {

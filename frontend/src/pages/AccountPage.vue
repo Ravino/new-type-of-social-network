@@ -1,21 +1,23 @@
 <template>
-    <div class="row">
-        <div class="col-12 col-md-1 ">
-            <AccountToolbarLeft></AccountToolbarLeft>
-        </div>
+    <div class="container-fluid pl-md-0">
+        <div class="row">
+            <div class="col-12 col-md-1 ">
+                <AccountToolbarLeft></AccountToolbarLeft>
+            </div>
 
-        <div class="col-12 col-md-9 col-xl-8 ">
-            <AccountSettingsMain></AccountSettingsMain>
-            <AccountSettingsPrivacy></AccountSettingsPrivacy>
-            <AccountSettingsSecurity></AccountSettingsSecurity>
-        </div>
+            <div class="col-12 col-md-9 col-xl-8 ">
+                <AccountSettingsMain></AccountSettingsMain>
+                <AccountSettingsPrivacy></AccountSettingsPrivacy>
+                <AccountSettingsSecurity></AccountSettingsSecurity>
+            </div>
 
-        <div class="d-none d-xl-block col-sm-2 col-md-2 col-lg-2 col-xl-2">
-            <AccountSettingsSideMenu></AccountSettingsSideMenu>
-        </div>
+            <div class="d-none d-xl-block col-sm-2 col-md-2 col-lg-2 col-xl-2">
+                <AccountSettingsSideMenu></AccountSettingsSideMenu>
+            </div>
 
-        <div class="col-sm-2 col-md-2 col-lg-2 col-xl-1 d-none d-md-block">
-            <FavoriteFriends :isNarrow="true"></FavoriteFriends>
+            <div class="col-md-2 col-lg-2 col-xl-1 d-none d-md-block pr-0">
+                <FavoriteFriends :isNarrow="true"></FavoriteFriends>
+            </div>
         </div>
     </div>
 </template>

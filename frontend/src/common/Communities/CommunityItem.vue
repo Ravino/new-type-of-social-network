@@ -1,9 +1,9 @@
 <template>
-    <li class="plizi-community-item-wrp col-6 media px-2 mb-2">
-        <div class="plizi-community-item d-flex flex-row align-items-start justify-content-between bg-white-br20 w-100 px-4 py-4 h-100">
+    <li class="plizi-community-item-wrp col-12 col-sm-6 media px-2 mb-3">
+        <div class="plizi-community-item d-flex flex-column flex-xl-row align-items-start justify-content-between bg-white-br20 w-100 px-4 py-4 h-100">
 
             <router-link :to="`/community-`+community.id" tag="a"
-                         class="plizi-community-item-pic mr-3 rounded-circle overflow-hidden">
+                         class="plizi-community-item-pic mr-auto ml-auto mr-xl-3 ml-xl-3 mb-3 mb-xl-0 rounded-circle overflow-hidden">
                 <img class="plizi-community-item-img "
                      v-bind:src="community.primaryImage" v-bind:alt="community.name" />
             </router-link>
@@ -25,14 +25,14 @@
                     <p class="plizi-community-item-members-number p-0 my-0">{{ community.totalMembers }} участников </p><!--TODO @Veremey check this?-->
                 </div>
 
-                <div class="plizi-community-item-body-bottom d-flex align-items-center justify-content-between">
+                <div class="plizi-community-item-body-bottom d-flex flex-column-reverse flex-xl-row align-items-center justify-content-between mt-3 mt-xl-0">
                     <button v-if="canSubscribe" type="button" class="btn plz-btn-outline  plizi-community-btn rounded-pill" @click="subscribeInvite()">
                         Подписаться
                     </button>
                     <button v-else type="button" class="btn btn-outline-danger plizi-community-btn  rounded-pill" @click="unsubscribeInvite()">
                         Отписаться
                     </button>
-                    <div class="plizi-community-item-body-friends d-flex flex-wrap align-items-center justify-content-between">
+                    <div class="plizi-community-item-body-friends d-flex flex-wrap align-items-center justify-content-between mb-2 mb-xl-0">
                         <div class="plizi-community-item-body-friends-pics mr-3">
                             <div class="plizi-community-item-body-friends-pic position-relative rounded-circle">
                                 <img src="https://plizi.s3.eu-north-1.amazonaws.com/images/originals/Sx3zRic44zm2mPiMUahypL3hlKw8SuwBsKtm11Jb.png" alt="image">
