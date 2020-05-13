@@ -20,7 +20,7 @@ h1, h2, h3, h4, h5, h6 {
     background-color: transparent;
 }
 
-.btn{
+.btn {
     max-width: 100%;
 
     &:focus {
@@ -32,7 +32,12 @@ h1, h2, h3, h4, h5, h6 {
         background-color: $blueBtn;
         border-color: $blueBtn;
         color: white;
-        transition: .4s
+        font-size: 13px;
+        transition: .4s;
+        &:hover {
+            background-color: $blueBtnHover;
+            border-color: $blueBtnHover;
+        }
     }
 }
 

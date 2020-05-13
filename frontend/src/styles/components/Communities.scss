@@ -183,6 +183,13 @@ $labelColor: #9a9a9a;
     &-footer {
         background-color: #f7f8fc;
     }
+
+    .invalid-feedback {
+        position: absolute;
+        bottom: -32px;
+        left: calc(33.3333% + 34px);
+        font-size: 10px;
+    }
     .fas,
     .fa {
         position: absolute;
@@ -226,16 +233,12 @@ $labelColor: #9a9a9a;
     }
 
     .btn {
-        color: #ffffff;
-        font-size: 13px;
-        background-color: #3d51de;
         box-shadow: 0 5px 8px rgba(61, 81, 222, 0.4);
         transition: .4s;
         text-transform: uppercase;
 
         &:hover {
             box-shadow: none;
-            color: $postTextColor;
         }
     }
 }
