@@ -3,14 +3,14 @@
         <router-link :to="`/user-`+companion.id" tag="div"
                      class="mr-3 cursor-pointer position-relative">
             <div class="media-pic border rounded-circle ">
-                <img :src="companion.userPic" v-bind:alt="companion.firstName"/>
+                <img :src="companion.userPic" v-bind:alt="companion.fullName" />
             </div>
 
             <template v-if="isTyper">
                 <div class="writing"><span></span><span></span><span></span></div>
             </template>
             <template v-else>
-                <span v-if="companion.isOnline" class="user-friend-isonline" :title="companion.firstName + ' онлайн'"></span>
+                <span v-if="companion.isOnline" class="user-friend-isonline" :title="companion.fullName + ' онлайн'"></span>
                 <span v-else class="user-friend-isoffline"></span>
             </template>
         </router-link>

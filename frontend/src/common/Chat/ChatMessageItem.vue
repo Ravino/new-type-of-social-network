@@ -56,20 +56,7 @@
                     Удалить
                 </button>
             </div>
-
-            <div v-if="isShowReplyBlock" class="messages-reply-group bg-white-br20">
-                <div class="text-editor-wrapper bg-white-br20" @click.stop="">
-                    <TextEditor :showAvatar="false"
-                                :dropToDown="false"
-                                :height="40"
-                                workMode="chat"
-                                :clazz="`d-flex h-100 w-100 --border-top m-0 px-3 py-3`"
-                                @editorPost="onReplyPost">
-                    </TextEditor>
-                </div>
-            </div>
         </div>
-
     </div>
 </template>
 
