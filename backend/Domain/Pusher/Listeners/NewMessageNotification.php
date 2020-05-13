@@ -26,7 +26,7 @@ class NewMessageNotification implements ShouldQueue
         $message_id = $event->getMessageId();
         $chat_id = $event->getChatId();
         $users_list = $chatRepo->getUsersIdListFromChat($chat_id, $author_id);
-        $message = $messageRepo->getMessageById($message_id);
+        $message = $messageRepo->getMessageById($message_id, $author_id);
         foreach ($users_list as $user_id) {
             $message = json_decode(json_encode($message), true);
             $message['isMine'] = false;
