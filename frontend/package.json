@@ -36,12 +36,17 @@
         "webpack": "^4.42.1"
     },
     "dependencies": {
+        "axios": "^0.19.2",
+        "bootstrap": "^4.4.1",
+        "emoji-vue": "^0.2.4",
+        "jquery": "^3.5.0",
         "moment": "^2.24.0",
         "numeral": "^2.0.6",
-        "axios": "^0.19.2",
-        "jquery": "^3.5.0",
         "popper.js": "^1.16.1",
-        "bootstrap": "^4.4.1",
+        "tiptap": "^1.27.0",
+        "tiptap-extensions": "^1.29.0",
+        "v-calendar": "^1.0.5",
+        "videojs-youtube": "^2.6.1",
         "vue": "^2.6.11",
         "vue-custom-scrollbar": "^1.1.0",
         "vue-emoji-picker": "^1.0.1",
@@ -50,13 +55,9 @@
         "vue-router": "^3.1.6",
         "vue-socket.io": "^3.0.7",
         "vue-textarea-autosize": "^1.1.1",
+        "vue-twemoji": "^1.0.1",
         "vue-video-player": "^5.0.2",
-        "vuelidate": "^0.7.5",
-        "emoji-vue": "^0.2.4",
-        "v-calendar": "^1.0.5",
-        "tiptap": "^1.27.0",
-        "tiptap-extensions": "^1.29.0",
-        "videojs-youtube": "^2.6.1"
+        "vuelidate": "^0.7.5"
     },
     "browserslist": [
         "> 1%",
