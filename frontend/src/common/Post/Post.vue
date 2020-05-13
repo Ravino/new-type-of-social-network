@@ -49,7 +49,7 @@
                             </div>
                             <div class="nav-item">
                                 <button class="btn dropdown-item px-3 py-1"
-                                        @click="$emit('deletePost', post.id)">
+                                        @click="$emit('onDeletePost', post.id)">
                                     Удалить
                                 </button>
                             </div>
@@ -90,11 +90,17 @@
                     </template>
 
                     <div class="col-12 plz-post-item-body pt-4 pb-2">
-                        <p v-if="livePreview"
-                           class="post-main-text mb-2"
-                            v-html="livePreview"
-                            @click.stop="detectYoutubeLink ? openVideoModal() : null">
-                        </p>
+                        <template v-if="livePreview && typeof livePreview === 'object'">
+                            <p v-if="livePreview.text"
+                               class="post-main-text mb-0"
+                               v-html="livePreview.text">
+                            </p>
+                            <p v-if="livePreview.videoLinks"
+                               class="post-main-text mt-2"
+                               v-html="livePreview.videoLinks"
+                               @click.stop="hasYoutubeLinks ? openVideoModal() : null">
+                            </p>
+                        </template>
 
                         <template v-else>
                             <p v-if="post.body"
@@ -176,6 +182,7 @@
     import AttachmentFile from "../AttachmentFile.vue";
 
     import PliziPost from '../../classes/PliziPost.js';
+    import LinkMixin from '../../mixins/LinkMixin.js';
 
     export default {
         name: 'Post',
@@ -195,18 +202,17 @@
                 default: false,
             },
         },
+        mixins: [LinkMixin],
         computed: {
-            detectYoutubeLink() {
+            hasYoutubeLinks() {
                 let str = this.post.body.replace(/<\/?[^>]+>/g, '').trim();
-                let regExp = /^.*((youtu.be\/)|(v\/)|(\/u\/\w\/)|(embed\/)|(watch\?))\??v?=?([^#&?]*).*/;
-                let match = str.match(regExp);
 
-                return (match && match[7].length === 11) ? match[7] : false;
+                return this.detectYoutubeLinks(str);
             },
             livePreview() {
-                if (this.detectYoutubeLink) {
-                    return `<img src="//img.youtube.com/vi/${this.detectYoutubeLink}/0.jpg" alt="" />`;
-                }
+                let str = this.post.body.replace(/<\/?[^>]+>/g, '').trim();
+
+                return this.transformStrWithLinks(str);
             },
             postable() {
                 if (this.isCommunity) {
@@ -219,7 +225,7 @@
         methods: {
             openVideoModal() {
                 this.$emit('openVideoModal', {
-                    videoLink: this.post.body.replace(/<\/?[^>]+>/g, '').trim(),
+                    videoLink: this.detectYoutubeLinks(this.post.body.replace(/<\/?[^>]+>/g, '').trim())[0],
                 })
             },
 
