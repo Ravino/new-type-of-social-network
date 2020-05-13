@@ -111,7 +111,7 @@
 
                     <div class="col-12 plz-post-item-images">
                         <div class="post-images">
-                            <Gallery :images="imageAttachments"></Gallery>
+                            <Gallery v-if="imageAttachments.length > 0" :images="imageAttachments"></Gallery>
 
                             <template v-for="(postAttachment) in post.attachments">
                                 <template v-if="!postAttachment.isImage">
