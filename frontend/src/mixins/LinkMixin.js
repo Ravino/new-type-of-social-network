@@ -71,7 +71,9 @@ const LinkMixin = {
                     text: `<p>${textTransformToLinks}</p>`,
                 };
             } else if (links && links.length) {
-                return this.replaceLink(str);
+                return {
+                    text: this.replaceLink(str),
+                };
             } else {
                 return str;
             }
