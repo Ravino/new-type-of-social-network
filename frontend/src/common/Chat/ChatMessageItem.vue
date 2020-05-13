@@ -52,19 +52,19 @@
 
             <div v-if="isPicked" class="messages-edit-group btn-group bg-white-br20 d-flex overflow-hidden">
                 <button class="btn btn-message-share d-flex align-items-center justify-content-center border-right"
-                        @click="onForwardBtnClick()">
+                        @click.stop.prevent="onForwardBtnClick()">
                     <IconShare />
                     Переслать
                 </button>
 
                 <button v-if="!message.isMine" class="btn btn-message-reply d-flex align-items-center justify-content-center border-right"
-                        @click="onReplyBtnClick()">
+                        @click.stop.prevent="onReplyBtnClick()">
                     <i class="far fa-comment-dots mr-2"></i>
                     Ответить
                 </button>
 
                 <button v-if="message.isMine" class="btn btn-message-basket d-flex align-items-center justify-content-center"
-                        @click.prevent="onRemoveBtnClick()">
+                        @click.stop.prevent="onRemoveBtnClick()">
                     <IconBasket />
                     Удалить
                 </button>
@@ -76,7 +76,6 @@
 <script>
 import IconPencilEdit from '../../icons/IconPencilEdit.vue';
 import IconCheckedDouble from '../../icons/IconCheckedDouble.vue';
-
 import IconShare from '../../icons/IconShare.vue';
 import IconBasket from '../../icons/IconBasket.vue';
 
@@ -85,10 +84,8 @@ import TextEditor from '../TextEditor.vue';
 import ChatMessageItemReplyContent from './ChatMessageItemReplyContent.vue';
 import ChatMessageItemAttachments from './ChatMessageItemAttachments.vue';
 
-//import ChatMixin from '../../mixins/ChatMixin.js';
-
+import LinkMixin from '../../mixins/LinkMixin.js';
 import PliziMessage from '../../classes/PliziMessage.js';
-import LinkMixin from "../../mixins/LinkMixin.js";
 
 export default {
 name: 'ChatMessageItem',
@@ -97,7 +94,6 @@ components: {
     TextEditor,
     IconBasket, IconShare, IconPencilEdit, IconCheckedDouble
 },
-//mixins : [ChatMixin],
 mixins : [LinkMixin],
 props: {
     message : {
@@ -121,10 +117,6 @@ computed: {
         return this.message.id === this.pickedID;
     },
 
-    isShowReplyBlock(){
-        return this.message.id === this.replyID;
-    },
-
     messageID(){
         return 'message-' + this.message.id;
     },
@@ -134,14 +126,6 @@ computed: {
     },
 
     detectEmoji() {
-        /** @TGA когда в сообщении только один эмоджи он приходит в обёртке <p class="big-emoji">емоджа</p> **/
-        //let str = this.message.body.replace(/<\/?[^>]+>/g, '');
-        //window.console.log(this.message.body + ` :${str}:`);
-        //if (!(!!str.replace(/[\u{1F300}-\u{1F6FF}]/gu, '').trim())) {
-        //    return str.match(/[\u{1F300}-\u{1F6FF}]/gu).length === 1;
-        //}
-        //return false;
-
         return this.message.body.includes('<p class="big-emoji">');
     },
 
@@ -183,13 +167,13 @@ methods: {
         }
     },
 
-    onForwardBtnClick() {
+    onForwardBtnClick(){
         this.$emit( 'ShowForwardMessageModal', {
             messageID: this.message.id
         });
     },
 
-    onRemoveBtnClick() {
+    onRemoveBtnClick(){
         this.$emit( 'RemoveMessage', {
             messageID: this.message.id
         });
@@ -207,7 +191,7 @@ methods: {
         });
     },
 
-    openChatVideoModal() {
+    openChatVideoModal(){
         this.$emit( 'openChatVideoModal', {
             videoLink: this.detectYoutubeLinks(this.message.body.replace(/<\/?[^>]+>/g, '').trim())[0],
         })

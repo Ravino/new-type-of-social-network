@@ -44,13 +44,13 @@
         </vue-custom-scrollbar>
 
         <ResendMessageModal v-if="resendMessageModalShow"
-                            v-bind:pickedMessage="pickedMessage"
+                            v-bind:pickedMessage="pickedMessage()"
                             v-bind:currentDialog="currentDialog"
                             v-bind:pickedID="pickedMessageID">
         </ResendMessageModal>
 
         <ReplyMessageModal v-if="replyMessageModalShow"
-                            v-bind:pickedMessage="pickedMessage"
+                            v-bind:pickedMessage="pickedMessage()"
                             v-bind:currentDialog="currentDialog"
                             v-bind:pickedID="pickedMessageID">
         </ReplyMessageModal>
@@ -74,19 +74,19 @@ import ChatVideoModal from './ChatVideoModal.vue';
 import PliziMessage from '../../classes/PliziMessage.js';
 
 export default {
-    name: 'ChatMessages',
-    components: {
-        vueCustomScrollbar,
-        ChatMessageItem,
-        ResendMessageModal, ReplyMessageModal,
-        ChatVideoModal,
-    },
+name: 'ChatMessages',
+components: {
+    vueCustomScrollbar,
+    ChatMessageItem,
+    ResendMessageModal, ReplyMessageModal,
+    ChatVideoModal,
+},
 
-    props: {
-        messagesList: Array,
-        currentDialog: Object,
-        filter: Object
-    },
+props: {
+    messagesList: Array,
+    currentDialog: Object,
+    filter: Object
+},
 
 data() {
     return {
@@ -112,6 +112,21 @@ data() {
 },
 
 methods: {
+    pickedMessage() {
+        let lMsg = this.messagesList.find((mItem) => {
+            return mItem.id === this.pickedMessageID;
+        });
+
+        if (lMsg) {
+            lMsg = new PliziMessage(lMsg);
+        }
+        else {
+            window.console.warn(this.pickedMessageID + ` не найден`);
+        }
+
+        return lMsg;
+    },
+
     onChatMessagePick(evData){
         this.pickedMessageID = evData.messageID;
     },
@@ -149,6 +164,7 @@ methods: {
     },
 
     onShowForwardMessageModal() {
+        window.console.log(`onShowForwardMessageModal`);
         this.resendMessageModalShow = true;
     },
 
@@ -230,25 +246,7 @@ computed: {
         }
 
         return this.messagesList;
-    },
-
-    pickedMessage() {
-        if (this.pickedMessageID < 0)
-            return {};
-
-        let lMsg = this.messagesList.find((mItem) => {
-            return mItem.id === this.pickedMessageID;
-        });
-
-        if (lMsg) {
-            lMsg = new PliziMessage(lMsg);
-        }
-        else {
-            window.console.warn(this.pickedMessageID + ` не найден`);
-        }
-
-        return lMsg;
-    },
+    }
 },
 
 mounted() {
