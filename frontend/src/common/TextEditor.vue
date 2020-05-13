@@ -344,11 +344,11 @@ methods: {
             /** TODO: @TGA надо потом перенести отсюда загрузку аттачей **/
             switch (this.workMode) {
                 case 'chat':
-                    apiResponse = this.$root.$api.$chat.attachment(picsArr);
+                    apiResponse = this.$root.$api.$chat.attachment([file]);
                     break;
 
                 case 'post':
-                    apiResponse = this.$root.$api.$post.storePostAttachments(picsArr);
+                    apiResponse = this.$root.$api.$post.storePostAttachments([file]);
                     break;
 
                 default:
