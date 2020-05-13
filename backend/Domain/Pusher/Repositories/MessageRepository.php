@@ -54,11 +54,11 @@ class MessageRepository
      * @param string $message_id
      * @return MessageResource
      */
-    public function getMessageById(string $message_id)
+    public function getMessageById(string $message_id, $user_id = null)
     {
         $item = ChatMessage::with('user')->find($message_id);
         if($item) {
-            return new MessageResource($item, \Auth::user()->id);
+            return new MessageResource($item, $user_id ? $user_id :\Auth::user()->id);
         }
         return null;
     }
