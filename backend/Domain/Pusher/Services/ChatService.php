@@ -41,23 +41,21 @@ class ChatService extends BaseService
      * Отправка сообщения
      *
      * @param string $body
-     * @param int $chat_id
-     * @param int $author_id
-     * @param int|null $parent_id
-     * @param int|null $parent_chat_id
+     * @param string $chat_id
+     * @param string $author_id
+     * @param string|null $parent_id
+     * @param string|null $parent_chat_id
      * @param array $attachment_ids
-     * @return \Domain\Pusher\Http\Resources\Message\Message
+     * @return string
      */
     public function send(string $body, string $chat_id, string $author_id, string $parent_id = null, string $parent_chat_id = null, array $attachment_ids = [])
     {
         $message_id = $this->repository->saveInChatById($chat_id, $body, $author_id, $parent_id, $parent_chat_id);
-        $users_list = $this->chatRepository->getUsersIdListFromChat($chat_id, $author_id);
         if(count($attachment_ids)) {
             ChatMessageAttachment::whereIn('_id', $attachment_ids)->update(["chat_message_id" => $message_id]);
         }
-        $message = $this->repository->getMessageById($message_id);
-        $this->dispatcher->dispatch(new NewMessageEvent($message, $users_list));
-        return $message;
+        $this->dispatcher->dispatch(new NewMessageEvent($message_id, $author_id, $chat_id));
+        return $message_id;
     }
 
     /**
@@ -70,7 +68,7 @@ class ChatService extends BaseService
      * @param string|null $parent_id
      * @param string|null $parent_chat_id
      * @param array $attachment_ids
-     * @return \Domain\Pusher\Http\Resources\Message\Message
+     * @return string
      */
     public function sendToUser(string $body, string $user_id, string $author_id, string $parent_id = null, string $parent_chat_id = null, array $attachment_ids = [])
     {
@@ -79,13 +77,11 @@ class ChatService extends BaseService
             $chat_id = $this->chatRepository->createChatForCoupleUsers($user_id, $author_id);
         }
         $message_id = $this->repository->saveInChatById($chat_id, $body, $author_id, $parent_id, $parent_chat_id);
-        $users_list = $this->chatRepository->getUsersIdListFromChat($chat_id, $author_id);
         if(count($attachment_ids)) {
             ChatMessageAttachment::whereIn('_id', $attachment_ids)->update(["chat_message_id" => $message_id]);
         }
-        $message = $this->repository->getMessageById($message_id);
-        $this->dispatcher->dispatch(new NewMessageEvent($message, $users_list));
-        return $message;
+        $this->dispatcher->dispatch(new NewMessageEvent($message_id, $author_id, $chat_id));
+        return $message_id;
     }
 
     /**
