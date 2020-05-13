@@ -105,11 +105,7 @@
 
                     <div class="col-12 plz-post-item-images">
                         <div class="post-images">
-                            <template v-for="(postAttachment, postAttachmentIndex) in post.attachments">
-                                <PostImage v-if="postAttachment.isImage && postAttachmentIndex < 5"
-                                           :class="['post-image', postAttachmentIndex === 0 ? 'first-post-image' : null]"
-                                           :src="postAttachment.image.normal.path"/>
-                            </template>
+                            <Gallery :images="imageAttachments"></Gallery>
 
                             <template v-for="(postAttachment) in post.attachments">
                                 <template v-if="!postAttachment.isImage">
@@ -175,10 +171,12 @@
     import AttachmentFile from "../AttachmentFile.vue";
 
     import PliziPost from '../../classes/PliziPost.js';
+    import Gallery from '../Gallery.vue';
 
     export default {
         name: 'Post',
         components: {
+            Gallery,
             IconShare,
             IconMessage,
             IconHeard,
@@ -214,6 +212,9 @@
 
                 return this.post.user ? this.post.user : null;
             },
+            imageAttachments() {
+                return this.post.attachments.filter(attachment => attachment.isImage);
+            }
         },
         methods: {
             openVideoModal() {
