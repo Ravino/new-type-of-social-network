@@ -46,8 +46,7 @@
                         </div>
 
                         <div class="form-group d-flex align-items-center px-5 row">
-                            <label for="commName" class="col-4 community-create-modal-label  text-right">Название<b
-                                class="text-danger">*</b>:</label>
+                            <label for="commName" class="col-4 community-create-modal-label  text-right">Название:</label>
                             <div class="col-8">
                                 <input v-model="model.name" type="text" id="commName" ref="commName"
                                        @blur="$v.model.name.$touch()"
@@ -66,8 +65,8 @@
                             <label for="commTema"
                                    class="col-4 community-create-modal-label  text-right">Тематика:</label>
                             <div class="col-8">
-                                <select v-model="model.theme_id" id="commTema" ref="commType"
-                                        @click="$v.model.theme_id.$touch()"
+                                <select v-model="model.themeId" id="commTema" ref="commType"
+                                        @click="$v.model.themeId.$touch()"
                                         class="form-control  community-create-modal-select">
                                     <option value="0" disabled>Выберите тематику</option>
                                     <optgroup v-for="theme in themes" :key="theme.id" :label="theme.name">
@@ -78,10 +77,10 @@
                                 <i class="fas fa-chevron-down"></i>
                             </div>
                             <div class="col-4"></div>
-                            <div class="col-8 invalid-feedback" v-if="$v.model.theme_id.$error">
-                                <p v-if="!$v.model.theme_id.required" class="text-danger">Укажите тематику
+                            <div class="col-8 invalid-feedback" v-if="$v.model.themeId.$error">
+                                <p v-if="!$v.model.themeId.required" class="text-danger">Укажите тематику
                                     сообщества</p>
-                                <p v-if="!$v.model.theme_id.isIn" class="text-danger">Выберите тематику
+                                <p v-if="!$v.model.themeId.isIn" class="text-danger">Выберите тематику
                                     сообщества</p>
                             </div>
                         </div>
@@ -122,6 +121,7 @@
                             </label>
                             <div class="col-5 d-flex align-items-center justify-content-end">
                                 <button @click.stop="startCreateCommunity()" type="button"
+                                        :disabled="!model.rule"
                                         class="btn w-100 btn-primary rounded-pill">Создать сообщество
                                 </button>
                             </div>
@@ -139,124 +139,113 @@
 </template>
 
 <script>
-    import {minLength, required} from "vuelidate/lib/validators";
+import {minLength, required} from "vuelidate/lib/validators";
+import communityUtils from "../../utils/CommunityUtils"
 
-    export default {
-        name: 'CommunityCreateModal',
-        components: {},
-        props: {},
-        data() {
-            return {
-                model: {
-                    type: 0,
-                    name: '',
-                    theme_id: 0,
-                    privacy: 0,
-                    rule: false,
+export default {
+    name: 'CommunityCreateModal',
+    components: {},
+    props: {},
+    data() {
+        return {
+            model: {
+                type: 0,
+                name: '',
+                themeId: 0,
+                privacy: 0,
+                rule: false,
+            },
+            themes: null,
+            privacyList: communityUtils.privacyList,
+            types: communityUtils.types,
+        }
+    },
+    async mounted() {
+        let apiResponse = null;
+
+        this.popularCommunities = null;
+
+        try {
+            apiResponse = await this.$root.$api.$communities.getThemes();
+        } catch (e) {
+            window.console.warn(e.detailMessage);
+            throw e;
+        }
+
+        this.themes = apiResponse.data;
+    },
+    validations() {
+        return {
+            model: {
+                name: {
+                    required,
+                    minLength: minLength(4)
                 },
-                themes: null,
-                privacyList: [
-                    {value: 1, title: 'Открытая'},
-                    {value: 2, title: 'Закрытая'},
-                    {value: 3, title: 'Частная'},
-                ],
-                types: [
-                    {value: 1, title: 'Бизнес'},
-                    {value: 2, title: 'Тематическое сообщество'},
-                    {value: 3, title: 'Бренд или организация'},
-                    {value: 4, title: 'Группа по интересам'},
-                    {value: 5, title: 'Публичная страница'},
-                    {value: 6, title: 'Мероприятие'},
-                ],
-            }
-        },
-        async mounted() {
-
-            let apiResponse = null;
-
-            this.popularCommunities = null;
-
-            try {
-                apiResponse = await this.$root.$api.$communities.getThemes();
-            } catch (e) {
-                window.console.warn(e.detailMessage);
-                throw e;
-            }
-
-            this.themes = apiResponse.data;
-        },
-        validations() {
-            return {
-                model: {
-                    name: {
-                        required,
-                        minLength: minLength(4)
+                type: {
+                    required,
+                    isIn(value) {
+                        return this.types.reduce((acc, current) => {
+                            return acc || current.value === value;
+                        }, false);
                     },
-                    type: {
-                        required,
-                        isIn(value) {
-                            return this.types.reduce((acc, current) => {
-                                return acc || current.value === value;
-                            }, false);
-                        },
+                },
+                themeId: {
+                    required,
+                    isIn(value) {
+                        return value > 0;
                     },
-                    theme_id: {
-                        required,
-                        isIn(value) {
-                            return value > 0;
-                        },
+                },
+                privacy: {
+                    required,
+                    isIn(value) {
+                        return this.privacyList.reduce((acc, current) => {
+                            return acc || current.value === value;
+                        }, false);
                     },
-                    privacy: {
-                        required,
-                        isIn(value) {
-                            return this.privacyList.reduce((acc, current) => {
-                                return acc || current.value === value;
-                            }, false);
-                        },
-                    },
-                    rule: {
-                        selected(value) {
-                            return value;
-                        }
+                },
+                rule: {
+                    selected(value) {
+                        return value;
                     }
                 }
-            };
-        },
-        methods: {
-            hideCommunityCreateModal() {
-                this.$emit('HideCommunityCreateModal', {});
-            },
-
-            startCreateCommunity() {
-                this.$v.$touch();
-                if (!this.$v.model.$invalid)
-                    this.createCommunity();
-            },
-
-            async createCommunity() {
-                let apiResponse = null;
-
-                let formData = {
-                    type: this.model.type,
-                    name: this.model.name.trim(),
-                    theme_id: this.model.theme_id,
-                    privacy: this.model.privacy,
-                };
-
-                try {
-                    apiResponse = await this.$root.$api.$communities.communityCreate(formData);
-                    this.hideCommunityCreateModal();
-                } catch (e) {
-                    console.warn(e.detailMessage);
-                }
-
-                if (apiResponse) {
-                    this.$emit('AddNewCommunity', apiResponse);
-                    this.$router.push({name: 'CommunityPage', params: {id: apiResponse.id}})
-                }
             }
+        };
+    },
+    methods: {
+        hideCommunityCreateModal() {
+            this.$emit('HideCommunityCreateModal', {});
         },
-    }
+
+        startCreateCommunity() {
+            this.$v.$touch();
+            if (!this.$v.model.$invalid)
+                this.createCommunity();
+        },
+
+        async createCommunity() {
+            let apiResponse = null;
+
+            let formData = {
+                type: this.model.type,
+                name: this.model.name.trim(),
+                theme_id: this.model.themeId,
+                privacy: this.model.privacy,
+            };
+
+            try {
+                apiResponse = await this.$root.$api.$communities.communityCreate(formData);
+                this.hideCommunityCreateModal();
+            } catch (e) {
+                console.warn(e.detailMessage);
+            }
+
+            if (apiResponse) {
+                this.$emit('AddNewCommunity', apiResponse);
+                this.$router.push({name: 'CommunityPage', params: {id: apiResponse.id}})
+            }
+        }
+    },
+}
 </script>
 
 <style scoped>
