@@ -45,15 +45,15 @@ class VideoController extends Controller
     public function store(Request $request)
     {
         $user = auth()->user();
-        $type_model = 'App\Models';
+        $type_model = null;
 
         switch ($request->workMode) {
             case 'post':
-                $type_model .= '\Post';
+                $type_model .= 'App\Models\Post';
                 break;
         }
 
-        Video::create([
+        $video = Video::create([
             'user_id' => $user->id,
             'link' => $request->link,
             'creatableby_id' => $request->id,
@@ -61,7 +61,9 @@ class VideoController extends Controller
         ]);
 
         return response()->json([
-            'message' => 'Видео успешно сохранено',
+            'data' => [
+                'id' => $video->id,
+            ],
         ]);
     }
 

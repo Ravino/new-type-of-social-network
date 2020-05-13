@@ -126,7 +126,7 @@ props: {
         default: 10000,
     }
 },
-
+mixins: [LinkMixin],
 data() {
     let attachFiles = [];
 
@@ -223,10 +223,22 @@ methods: {
             return;
         }
 
-        this.$emit('editorPost', {
-            postText: evData.postText,
-            attachments: this.getAttachmentsIDs()
-        });
+        let str = evData.postText.replace(/<\/?[^>]+>/g, '').trim();
+        let youtubeLinksMatch = this.detectYoutubeLinks(str);
+
+        if (youtubeLinksMatch && youtubeLinksMatch.length) {
+            this.$emit('editorPost', {
+                postText: evData.postText,
+                attachments: this.getAttachmentsIDs(),
+                videoLink: youtubeLinksMatch[0],
+                workMode: this.workMode,
+            });
+        } else {
+            this.$emit('editorPost', {
+                postText: evData.postText,
+                attachments: this.getAttachmentsIDs()
+            });
+        }
 
         this.attachFiles = [];
     },
