@@ -16,25 +16,12 @@
                                     <div class="card mb-4">
                                         <div class="card-body">
                                             <div class="row">
-                                                <div class="col-3">
-                                                    <img src="https://cdn.pixabay.com/photo/2019/06/27/06/49/plane-4301615_960_720.png"
+                                                <div v-for="(video, index) in userVideos" class="col-3 mb-4">
+                                                    <img v-if="video.isYoutubeLink"
+                                                         :src="`//img.youtube.com/vi/${video.youtubeId}/0.jpg`"
                                                          class="img-fluid"
-                                                         alt="">
-                                                </div>
-                                                <div class="col-3">
-                                                    <img src="https://cdn.pixabay.com/photo/2019/06/27/06/49/plane-4301615_960_720.png"
-                                                         class="img-fluid"
-                                                         alt="">
-                                                </div>
-                                                <div class="col-3">
-                                                    <img src="https://cdn.pixabay.com/photo/2019/06/27/06/49/plane-4301615_960_720.png"
-                                                         class="img-fluid"
-                                                         alt="">
-                                                </div>
-                                                <div class="col-3">
-                                                    <img src="https://cdn.pixabay.com/photo/2019/06/27/06/49/plane-4301615_960_720.png"
-                                                         class="img-fluid"
-                                                         alt="">
+                                                         alt=""
+                                                         @click.stop="openVideoModal(video.link)"/>
                                                 </div>
                                             </div>
                                         </div>
@@ -159,6 +146,9 @@
                 <FavoriteFriends :isNarrow="true"></FavoriteFriends>
             </div>
         </div>
+        <VideoPageModal v-if="videoModal.isVisible"
+                        :videoLink="videoModal.content.videoLink"
+                        @hideVideoModal="hideVideoModal"/>
     </div>
 </template>
 
@@ -166,6 +156,10 @@
     import AccountToolbarLeft from "../common/AccountToolbarLeft.vue";
     import FavoriteFriends from "../common/FavoriteFriends.vue";
     import VideosPageFilter from "../components/VideosPage/VideosPageFilter.vue";
+    import VideoPageModal from "../components/VideosPage/VideoPageModal.vue";
+
+    import LinkMixin from "../mixins/LinkMixin.js";
+    import PliziVideo from '../classes/PliziVideo.js';
 
     export default {
         name: "VideosPage",
@@ -173,30 +167,51 @@
             AccountToolbarLeft,
             FavoriteFriends,
             VideosPageFilter,
+            VideoPageModal,
         },
-        computed: {
-            filteredVideos() {
-                // switch (this.filterMode) {
-                //     case 'my':
-                //         return this.userPosts.filter( post => post.checkIsMinePost( this.$root.$auth.user.id ) );
-                //
-                //     case 'all':
-                //         return this.userPosts.filter( post => post.isArchivePost );
-                // }
-                //
-                // return this.userPosts;
-            }
-        },
+        mixins: [LinkMixin],
         data() {
             return {
                 filterMode: 'my',
-                videos: null,
+                userVideos: [],
+                videoModal: {
+                    isVisible: false,
+                    content: {
+                        videoLink: null,
+                    },
+                },
             }
         },
         methods: {
             wallPostsSelectHandler(evData) {
                 this.filterMode = evData.wMode;
             },
+            openVideoModal(id) {
+                this.videoModal.isVisible = true;
+                this.videoModal.content.videoLink = id;
+            },
+            hideVideoModal(){
+                this.videoModal.isVisible = false;
+            },
+
+            async getUserVideo() {
+                let response;
+
+                try {
+                    response = await this.$root.$api.$video.getUserVideo();
+                } catch (e) {
+                    console.log(e.detailMessage);
+                }
+
+                if (response) {
+                    response.map((video) => {
+                        this.userVideos.push(new PliziVideo(video));
+                    });
+                }
+            },
+        },
+        async mounted() {
+            await this.getUserVideo();
         },
     }
 </script>

@@ -65,6 +65,7 @@ Route::group(['middleware' => ['auth.jwt', 'track.activity']], function () {
     Route::get('user/communities', 'Api\ProfileController@myCommunities');
     Route::get('user/{id}/communities', 'Api\ProfileController@userCommunities');
     Route::patch('user', 'Api\ProfileController@patch');
+    Route::get('user/videos', 'Api\VideoController@getUserVideo');
     Route::resource('user', 'Api\ProfileController', ['only' => ['index', 'show']]);
     Route::post('user/profile/image', 'Api\ImageUploadController@upload');
     Route::patch('user/privacy', 'Api\UserPrivacySettingController@patch');
@@ -97,6 +98,10 @@ Route::group(['middleware' => ['auth.jwt', 'track.activity']], function () {
         Route::get('{post}/restore', 'Api\PostController@restore');
         Route::post('{post}/update', 'Api\PostController@update');
         Route::delete('{post}/attachment/{postAttachment}', 'Api\PostController@deleteImage');
+    });
+
+    Route::prefix('videos')->group(function () {
+        Route::resource('/', 'Api\VideoController');
     });
 
     /**

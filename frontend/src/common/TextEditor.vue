@@ -1,6 +1,6 @@
 <template>
     <div :id="fieldId" :class="blockClass" ref="editorContainer">
-        <div class="--flex-column w-100 position-relative">
+        <div class="flex-column w-100 position-relative">
             <div class="row w-100 ml-0">
                 <div v-if="showAvatar" class="plz-editor-avatar col-1 align-items-center text-center pt-2">
                     <img class="chat-companion-user-pic rounded-circle my-0 mx-auto"
@@ -10,8 +10,8 @@
                 <div class="plz-editor-body pl-0" :class="{ 'plz-editor-body-wza': showAvatar, 'forward-message-width': !showAvatar }">
                     <div class="form pl-2">
                         <div class="form-row align-items-center">
-                            <div class="col-12 d-flex justify-content-between p-0 ">
-                                <Editor class="plz-text-editor-form form-control px-2 py-1 "
+                            <div class="col-12 d-flex justify-content-between p-0">
+                                <Editor class="plz-text-editor-form form-control px-2 py-1 h-100"
                                         @editorPost="onEditorNewPost"
                                         @editorKeyDown="onEditorKeyDown"
                                         @onMaximumCharacterLimit="onMaximumCharacterLimit"
@@ -31,11 +31,12 @@
                     </div>
                 </div>
 
-                <div class="plz-editor-btns d-flex flex-column flex-md-row justify-content-between">
+                <div class="plz-editor-btns d-flex flex-column flex-md-row justify-content-between"  >
 
-                    <label :class="{'attach-file--disallow cursor-non-drop' : isDisallowUpload}"
-                        :disabled="isDisallowUpload"
-                    class="attach-file w-100 d-flex align-items-center justify-content-center btn btn-link my-0 ml-0 mr-0 mr-md-2 px-1 btn-add-file position-relative">
+                    <label
+                        :class="{'attach-file--disallow cursor-non-drop' : isDisallowUpload}"
+                        class="attach-file w-100 d-flex align-items-center justify-content-center btn btn-link my-0 ml-0 mr-0 mr-md-2 px-1 btn-add-file position-relative"
+                    >
                         <IconAddFile />
                         <input type="file" :disabled="isDisallowUpload" @change="onSelectFile($event)" ref="editorFiler" multiple />
                     </label>
@@ -79,7 +80,7 @@
 <script>
 import IconAddFile from '../icons/IconAddFile.vue';
 import IconAddCamera from '../icons/IconAddCamera.vue';
-import IconSend from '../icons/IconSend.vue';
+import IconSend from "../icons/IconSend.vue";
 
 import Editor from './TextEditor/Editor.vue';
 import EmojiPicker from './TextEditor/EmojiPicker.vue';
@@ -89,6 +90,7 @@ import PliziAttachment from '../classes/PliziAttachment.js';
 import { checkExtension } from '../utils/FileUtils.js';
 import { docsExtensions, imagesExtensions } from '../enums/FileExtensionEnums.js';
 import PliziAttachmentItem from '../classes/PliziAttachmentItem.js';
+import LinkMixin from "../mixins/LinkMixin.js";
 
 /**  TODO: Вставка файлов **/
 /** @link https://www.npmjs.com/package/vue-filepond **/
@@ -103,25 +105,25 @@ components: {
     EmojiPicker,
     AttachmentItem
 },
-props : {
+props: {
     fieldId : String,
-    showAvatar : Boolean,
-    clazz : String,
-    editorPlaceholder : String,
-    dropToDown : Boolean,
-    workMode : {
-        type : String,
-        required : true,
+    showAvatar: Boolean,
+    clazz: String,
+    editorPlaceholder: String,
+    dropToDown: Boolean,
+    workMode: {
+        type: String,
+        required: true,
     },
-    inputEditorText : String,
-    inputEditorAttachment : Array,
-    maxFilesCount : {
-        type : Number,
-        default : 10,
-    },
-    maximumCharacterLimit : {
-        type : Number,
-        default : 10000,
+  inputEditorText: String,
+  inputEditorAttachment: Array,
+  maxFilesCount: {
+      type: Number,
+      default: 10,
+  },
+    maximumCharacterLimit: {
+        type: Number,
+        default: 10000,
     }
 },
 
@@ -242,14 +244,15 @@ methods: {
     },
 
     onAddEmoji(evData) {
-        // был нажат Ctrl
-        if (evData.keys.ctrlKey) {
+        if (evData.keys.ctrlKey) { // бал нажат Ctrl
             this.$refs.editor.focus();
 
             let txt = this.$refs.editor.getContent();
 
+            //this.$emit('editorPost', { postText : `<!--<p onclick="alert(11111)">Серега привет!!!</p>>-->` });
+            //this.$emit('editorPost', { postText : `<img src="https://steamuserimages-a.akamaihd.net/ugc/792010418808130585/980E17AA6CF29E06865DA40F9067B9164AB54BCD/" alt="" />` });
+
             if (`<p></p>` === txt.toLowerCase()) { // поле ввода пустое - значит отправляем только увеличенный эмоджи
-                window.console.log(`Big emoji!`);
                 const sendSmile = `<p class="big-emoji">${evData.emoji}</p>`;
                 this.$emit('editorPost', {postText: sendSmile});
             } else { // просто добавляем эмоджи
@@ -267,7 +270,8 @@ methods: {
     },
 
     getStartContainerHeight () {
-        this.editorContainerHeight = this.$refs.editorContainer.offsetHeight;
+        let startChatContainerHeight = this.$refs.editorContainer.offsetHeight;
+        this.editorContainerHeight = startChatContainerHeight;
     },
 
     checkUpdatedChatContainerHeight() {
@@ -341,11 +345,11 @@ methods: {
             /** TODO: @TGA надо потом перенести отсюда загрузку аттачей **/
             switch (this.workMode) {
                 case 'chat':
-                    apiResponse = this.$root.$api.$chat.attachment([file]);
+                    apiResponse = this.$root.$api.$chat.attachment(picsArr);
                     break;
 
                 case 'post':
-                    apiResponse = this.$root.$api.$post.storePostAttachments([file]);
+                    apiResponse = this.$root.$api.$post.storePostAttachments(picsArr);
                     break;
 
                 default:
