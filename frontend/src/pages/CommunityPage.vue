@@ -16,7 +16,7 @@
                             <div class="plz-community-header-details d-flex align-items-center">
                                 <template v-if="isAuthor">
                                     <label for="communityPrimaryImage" class="community-primary-image mr-3 cursor-pointer">
-                                        <img ref="communityAvatar" :src="avatarForAuthor" :alt="communityData.name" />
+                                        <img ref="communityAvatar" :src="avatarMedium" :alt="communityData.name" />
                                     </label>
 
                                     <input id="communityPrimaryImage" ref="communityPrimaryImage" type="file"
@@ -25,7 +25,7 @@
                                 </template>
                                 <template v-else>
                                     <div class="plz-community-header-logo position-relative mr-3">
-                                        <img ref="communityAvatar" :src="avatarForGuest" :alt="communityData.name" />
+                                        <img ref="communityAvatar" :src="avatarThumb" :alt="communityData.name" />
                                     </div>
                                 </template>
                                 <div class="plz-community-header-details-text">
@@ -97,7 +97,7 @@
                         <div class="videos-item mb-4">
                             <div class="video mb-3">
                                 <div class="video-wrap-pre">
-                                    <img  :src="communityData.primaryImage" alt="image">
+                                    <img :src="avatarMedium" alt="image">
                                 </div>
                                 <button class="video__button" type="button" aria-label="Запустить видео">
                                     <svg width="68" height="48" viewBox="0 0 68 48"><path class="video__button-shape" d="M66.52,7.74c-0.78-2.93-2.49-5.41-5.42-6.19C55.79,.13,34,0,34,0S12.21,.13,6.9,1.55 C3.97,2.33,2.27,4.81,1.48,7.74C0.06,13.05,0,24,0,24s0.06,10.95,1.48,16.26c0.78,2.93,2.49,5.41,5.42,6.19 C12.21,47.87,34,48,34,48s21.79-0.13,27.1-1.55c2.93-0.78,4.64-3.26,5.42-6.19C67.94,34.95,68,24,68,24S67.94,13.05,66.52,7.74z"></path><path class="video__button-icon" d="M 45,24 27,14 27,34"></path></svg>
@@ -111,7 +111,7 @@
                         <div class="videos-item mb-4">
                             <div class="video mb-3">
                                 <div class="video-wrap-pre">
-                                    <img  :src="communityData.primaryImage" alt="image">
+                                    <img :src="avatarMedium" alt="image">
                                 </div>
                                 <button class="video__button" type="button" aria-label="Запустить видео">
                                     <svg width="68" height="48" viewBox="0 0 68 48"><path class="video__button-shape" d="M66.52,7.74c-0.78-2.93-2.49-5.41-5.42-6.19C55.79,.13,34,0,34,0S12.21,.13,6.9,1.55 C3.97,2.33,2.27,4.81,1.48,7.74C0.06,13.05,0,24,0,24s0.06,10.95,1.48,16.26c0.78,2.93,2.49,5.41,5.42,6.19 C12.21,47.87,34,48,34,48s21.79-0.13,27.1-1.55c2.93-0.78,4.64-3.26,5.42-6.19C67.94,34.95,68,24,68,24S67.94,13.05,66.52,7.74z"></path><path class="video__button-icon" d="M 45,24 27,14 27,34"></path></svg>
@@ -209,10 +209,10 @@ computed: {
             });
         }
     },
-    avatarForAuthor() {
+    avatarMedium() {
         return this.communityData?.avatar?.image.medium.path || this.communityData?.primaryImage;
     },
-    avatarForGuest() {
+    avatarThumb() {
         return this.communityData?.avatar?.image.thumb.path || this.communityData?.primaryImage;
     },
 },
