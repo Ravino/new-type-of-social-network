@@ -5,6 +5,7 @@ namespace App\Models;
 use App\CommunityMember;
 use App\Traits\NPerGroup;
 use Auth;
+use Domain\Neo4j\Service\CommunityService;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
@@ -80,7 +81,7 @@ class Community extends Model
      */
     public function role()
     {
-        return $this->hasOne(CommunityMember::class)->where('community_members.user_id', Auth::user()->id);
+        return $this->hasOne(CommunityMember::class)->where('community_members.user_id', Auth::user() ? Auth::user()->id : 0);
     }
 
     /**
@@ -133,5 +134,10 @@ class Community extends Model
             self::TYPE_PUBLIC_PAGE => 'Публичная страница',
             self::TYPE_EVENT => 'Мероприятие',
         ];
+    }
+
+    public function friends($limit = 5, $offset = 0)
+    {
+        return (new CommunityService())->getFriends(Auth::user()->id, $this->id, $limit, $offset);
     }
 }
