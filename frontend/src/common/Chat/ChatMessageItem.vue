@@ -16,7 +16,7 @@
 
             <div class="message-body d-flex">
                 <div class="message-text" @click.stop="">
-                    <template v-if="livePreview && typeof livePreview === 'object'">
+                    <template v-if="typeof livePreview === 'object'">
                         <p v-if="livePreview.text"
                            class="message-text-inner mb-0"
                            v-html="livePreview.text">
@@ -28,7 +28,7 @@
                         </p>
                     </template>
 
-                    <div v-else class="message-text-inner mb-0" v-html="msgBody"></div>
+                    <div v-else class="message-text-inner mb-0" v-html="livePreview"></div>
 
                     <ChatMessageItemAttachments v-bind:message="message"></ChatMessageItemAttachments>
                     <ChatMessageItemReplyContent v-if="message.isReply"
@@ -129,10 +129,6 @@ computed: {
         return 'message-' + this.message.id;
     },
 
-    msgBody(){
-        return this.livePreview ? this.livePreview : this.message.body;
-    },
-
     currentDialog(){
         return this.$parent.currentDialog;
     },
@@ -157,8 +153,9 @@ computed: {
 
     livePreview() {
         let str = this.message.body.replace(/<\/?[^>]+>/g, '').trim();
+        let returnedStr = this.transformStrWithLinks(str);
 
-        return this.transformStrWithLinks(str);
+        return str === returnedStr ? this.message.body : this.transformStrWithLinks(str);
     },
 },
 
