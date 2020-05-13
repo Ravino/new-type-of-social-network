@@ -15,8 +15,21 @@
             </div>
 
             <div class="message-body d-flex">
-                <div class="message-text" @click.stop="detectYoutubeLink ? openChatVideoModal() : null">
-                    <div class="message-text-inner mb-0" v-html="msgBody"></div>
+                <div class="message-text" @click.stop="">
+                    <template v-if="livePreview && typeof livePreview === 'object'">
+                        <p v-if="livePreview.text"
+                           class="message-text-inner mb-0"
+                           v-html="livePreview.text">
+                        </p>
+                        <p v-if="livePreview.videoLinks"
+                           class="message-text-inner mt-2"
+                           v-html="livePreview.videoLinks"
+                           @click.stop="hasYoutubeLinks ? openChatVideoModal() : null">
+                        </p>
+                    </template>
+
+                    <div v-else class="message-text-inner mb-0" v-html="msgBody"></div>
+
                     <ChatMessageItemAttachments v-bind:message="message"></ChatMessageItemAttachments>
                     <ChatMessageItemReplyContent v-if="message.isReply"
                                  v-bind:replyOn="message.replyOn"
@@ -88,6 +101,7 @@ import ChatMessageItemAttachments from './ChatMessageItemAttachments.vue';
 //import ChatMixin from '../../mixins/ChatMixin.js';
 
 import PliziMessage from '../../classes/PliziMessage.js';
+import LinkMixin from "../../mixins/LinkMixin.js";
 
 export default {
 name: 'ChatMessageItem',
@@ -97,6 +111,7 @@ components: {
     IconBasket, IconShare, IconPencilEdit, IconCheckedDouble
 },
 //mixins : [ChatMixin],
+mixins : [LinkMixin],
 props: {
     message : {
         type: PliziMessage,
@@ -147,45 +162,16 @@ computed: {
         return this.message.body.includes('<p class="big-emoji">');
     },
 
-    detectYoutubeLink() {
-        let msg = this.message.body.replace(/<\/?[^>]+>/g, '').trim();
-        let youtubeLinksRegExp = /https?:\/\/(?:[0-9A-Z-]+\.)?(?:youtu\.be\/|youtube(?:-nocookie)?\.com\S*?[^\w\s-])([\w-]{11})(?=[^\w-]|$)(?![?=&+%\w.-]*(?:['"][^<>]*>|<\/a>))[?=&+%\w.-]*/ig;
-        let youtubeIdsRegExp = /^.*((youtu.be\/)|(v\/)|(\/u\/\w\/)|(embed\/)|(watch\?))\??v?=?([^#&?]*).*/;
-        let youtubeLinksMatch = msg.match(youtubeLinksRegExp);
-        let ids = [];
+    hasYoutubeLinks() {
+        let str = this.message.body.replace(/<\/?[^>]+>/g, '').trim();
 
-        if (youtubeLinksMatch && youtubeLinksMatch.length) {
-            youtubeLinksMatch.forEach((link) => {
-                let youtubeIdsMatch = link.match(youtubeIdsRegExp);
-                ids.push((youtubeIdsMatch && youtubeIdsMatch[7].length === 11) ? youtubeIdsMatch[7] : false);
-            });
-
-            return ids[0];
-        }
-
-        return null;
-    },
-
-    detectLink() {
-        let msg = this.message.body.replace(/<\/?[^>]+>/g, '').trim();
-        let urlRegex = /(https?:\/\/[^\s]+)/g;
-
-        return msg.replace(urlRegex, function(url) {
-            return '<a href="' + url + '">' + url + '</a>';
-        });
+        return this.detectYoutubeLinks(str);
     },
 
     livePreview() {
-        if (this.detectYoutubeLink) {
-            let youtubeLinksRegExp = /https?:\/\/(?:[0-9A-Z-]+\.)?(?:youtu\.be\/|youtube(?:-nocookie)?\.com\S*?[^\w\s-])([\w-]{11})(?=[^\w-]|$)(?![?=&+%\w.-]*(?:['"][^<>]*>|<\/a>))[?=&+%\w.-]*/ig;
-            let text = this.message.body.replace(youtubeLinksRegExp, '');
+        let str = this.message.body.replace(/<\/?[^>]+>/g, '').trim();
 
-            return `<img src="//img.youtube.com/vi/${this.detectYoutubeLink}/0.jpg" alt="" /> ${text}`;
-        }
-
-        if (this.detectLink) {
-            return this.detectLink;
-        }
+        return this.transformStrWithLinks(str);
     },
 },
 
@@ -209,7 +195,7 @@ methods: {
             'compact-message'    : isNextSame,
             'fullsize-message'   : !isNextSame,
             'has-only-one-emoji' : this.detectEmoji &&  this.message.attachments.length===0,
-            'youtube-link'       : this.detectYoutubeLink,
+            'youtube-link'       : this.hasYoutubeLinks,
         }
     },
 
@@ -239,7 +225,7 @@ methods: {
 
     openChatVideoModal() {
         this.$emit( 'openChatVideoModal', {
-            videoLink: this.message.body.replace(/<\/?[^>]+>/g, '').trim(),
+            videoLink: this.detectYoutubeLinks(this.message.body.replace(/<\/?[^>]+>/g, '').trim())[0],
         })
     },
 },

@@ -15,50 +15,29 @@
                 </button>
             </div>
             <div class="plz-linked-chat-btns d-flex align-items-center justify-content-between pr-3">
-                <button class="btn ">
-                    <IconPin/>
+                <button class="btn" @click="unPinChat()">
+                    <IconPin />
                 </button>
-                <div class="col-auto p-0">
-                    <ChatHeaderMenu
-                        @showRemoveCurrentChatModal="onShowRemoveCurrentChatModal"
-                        @showAddAttendeeToDialogModal="onShowAddAttendeeToDialogModal"></ChatHeaderMenu>
-                </div>
-                <button class="btn">
+
+                <button class="btn" @click="closeLinkedChat()">
                     <i class="fa fa-times"></i>
                 </button>
             </div>
         </div>
-
-        <ChatPickAttendeesDialogModal v-if="pickAttendeesDialogModalShow"
-            @hidePickAttendeesDialogModal="onHidePickAttendeesDialogModal"
-            v-bind:currentDialog="currentDialog">
-        </ChatPickAttendeesDialogModal>
-
-        <RemoveCurrentDialogModal v-if="removeDialogModalShow"
-            @hideRemoveDialogModal="onHideRemoveDialogModal"
-            v-bind:currentDialog="currentDialog">
-        </RemoveCurrentDialogModal>
-
     </div>
 </template>
 
 <script>
-    import IconSearch from '../../icons/IconSearch.vue';
-    import IconPin from "../../icons/IconPin.vue";
-    import ChatHeaderMenu from './ChatHeaderMenu.vue';
-    import ChatPickAttendeesDialogModal from './ChatPickAttendeesDialogModal.vue';
-    import RemoveCurrentDialogModal from './RemoveCurrentDialogModal.vue';
+import IconSearch from '../../icons/IconSearch.vue';
+import IconPin from '../../icons/IconPin.vue';
 
-    import PliziDialog from '../../classes/PliziDialog.js';
+import PliziDialog from '../../classes/PliziDialog.js';
 
-    export default {
+export default {
 name: 'ChatLinkedHeader',
 components: {
     IconPin,
     IconSearch,
-    ChatHeaderMenu,
-    ChatPickAttendeesDialogModal,
-    RemoveCurrentDialogModal
 },
 props: {
     currentDialog: {
@@ -90,12 +69,23 @@ computed: {
         return {
             userPic : this.$defaultAvatarPath,
             firstName : `пользователь`,
+            fullName : `пользователь`,
             lastActivity: (new Date()).getTime() / 1000
         }
     }
 },
 
 methods: {
+    unPinChat(){
+        window.console.log(this.currentDialog.id, `Unpin chat!`);
+    },
+
+    closeLinkedChat(){
+        this.$emit('CloseLinkedChat', {
+            chatId: this.currentDialog.id
+        });
+    },
+
     onShowRemoveCurrentChatModal(){
         this.removeDialogModalShow = true;
     },

@@ -163,7 +163,7 @@ class PliziCommunitiesAPI extends PliziBaseAPI {
                 throw new PliziAPIError(`$communities.updatePrimaryImage`, error.response);
             });
 
-        if (response.status === 200) {
+        if (response.status === 200 || response.status === 201) {
             return response.data;
         }
 
