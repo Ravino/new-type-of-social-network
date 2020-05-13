@@ -1,6 +1,6 @@
 <template>
     <div :id="fieldId" :class="blockClass" ref="editorContainer">
-        <div class="flex-column w-100 position-relative">
+        <div class="--flex-column w-100 position-relative">
             <div class="row w-100 ml-0">
                 <div v-if="showAvatar" class="plz-editor-avatar col-1 align-items-center text-center pt-2">
                     <img class="chat-companion-user-pic rounded-circle my-0 mx-auto"
@@ -10,8 +10,8 @@
                 <div class="plz-editor-body pl-0" :class="{ 'plz-editor-body-wza': showAvatar, 'forward-message-width': !showAvatar }">
                     <div class="form pl-2">
                         <div class="form-row align-items-center">
-                            <div class="col-12 d-flex justify-content-between p-0">
-                                <Editor class="plz-text-editor-form form-control px-2 py-1 h-100"
+                            <div class="col-12 d-flex justify-content-between p-0 ">
+                                <Editor class="plz-text-editor-form form-control px-2 py-1 "
                                         @editorPost="onEditorNewPost"
                                         @editorKeyDown="onEditorKeyDown"
                                         @onMaximumCharacterLimit="onMaximumCharacterLimit"

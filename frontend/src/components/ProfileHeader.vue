@@ -1,7 +1,7 @@
 <template>
     <div id="profileHeader" class="row plz-profile-header mb-4">
         <div class="offset-1 col-10 offset-sm-3 col-sm-6 offset-md-4 col-md-4 offset-lg-0 col-lg-4 col-xl-3 pl-lg-0 mb-4 mb-lg-0">
-            <div class="plz-profile-userpic-container d-flex flex-column h-100 bg-white-br20 overflow-hidden">
+            <div class="plz-profile-userpic-container d-flex flex-column  bg-white-br20 overflow-hidden">
                 <div class="plz-profile-userpic-wrapper overflow-hidden position-relative d-flex align-items-center justify-content-center mx-auto m-lg-0">
                     <img ref="userAvatar" :src="userAvatar" :alt="userData.fullName" />
                 </div>

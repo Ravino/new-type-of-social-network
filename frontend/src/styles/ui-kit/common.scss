@@ -459,6 +459,7 @@ $radioWidth: 18px;
     position: relative;
     width: calc(100% - 30px);
     min-height: 50px;
+    height: auto;
 
     .placeholder {
         position: absolute;
@@ -502,4 +503,12 @@ $dotSize: 2px;
     border-radius: $dotSize;
     background-color: #6f7487;
     margin: 0 3px;
+}
+
+
+//.flex-column,
+.flex-column-reverse {
+    * {
+        flex: none;
+    }
 }
