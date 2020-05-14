@@ -4,6 +4,7 @@
 namespace App\Services;
 
 
+use App\Events\CommunityCreated;
 use App\Models\Community;
 
 class CommunityService
@@ -29,6 +30,7 @@ class CommunityService
         ];
         $community = Community::create($data);
         $community->users()->attach(auth()->user()->id, ['role' => Community::ROLE_AUTHOR]);
+        event(new CommunityCreated($community));
         return $community;
     }
 

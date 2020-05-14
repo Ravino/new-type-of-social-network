@@ -8,7 +8,7 @@ class Community extends BaseModel
     protected $table = 'Community';
     protected $connectionName = 'neo4j';
 
-    protected $fillable = ['name', 'id'];
+    protected $fillable = ['name', 'oid'];
 
     public function members()
     {
