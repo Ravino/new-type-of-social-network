@@ -93,6 +93,9 @@
                         class="btn plz-btn plz-btn-primary">
                     Регистрация
                 </button>
+                <p v-if="isServerError && serverErrorText" class="text-danger text-center mt-3">
+                    {{ serverErrorText }}
+                </p>
             </div>
         </form>
     </div>
@@ -196,7 +199,7 @@
                 },
 
                 isServerError: false,
-                serverErrorText: '',
+                serverErrorText: null,
 
                 duplicateEmail: ``,
 
@@ -205,6 +208,7 @@
                     lastName: ``,
                     email: ``,
                     birthday: ``,
+                    other: ``,
                 }
             }
         },
@@ -253,6 +257,7 @@
             async startRegistration() {
                 this.$v.$touch();
                 this.isServerError = false;
+                this.serverErrorText = null;
 
                 for (let [key, value] of Object.entries(this.serverRegMessages)) {
                     this.serverRegMessages[key] = ``;
@@ -271,6 +276,9 @@
                 } catch (e) {
                     if (e.status === 422) {
                         this.processServerErrors(e, regData);
+                    } else if (e.status >= 500) {
+                        this.isServerError = true;
+                        this.serverErrorText = 'Извините у нас возникла ошибка, попробуйте позже ещё раз.';
                     } else {
                         window.console.warn(e.message);
                     }
