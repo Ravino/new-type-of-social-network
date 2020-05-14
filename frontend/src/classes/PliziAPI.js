@@ -551,7 +551,7 @@ class PliziAPIClass {
             if (channelID=== this.channel  &&  `message.deleted`===data.event_type) {
                 this.emit('removeMessageInDialog', {
                     chatId :  data.data.chatId,
-                    messageId : +data.data.messageId,
+                    messageId : data.data.messageId,
                 });
             }
             if (channelID=== this.channel  &&  `user.typing`===data.event_type) {
