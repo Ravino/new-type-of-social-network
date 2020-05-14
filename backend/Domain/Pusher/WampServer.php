@@ -5,6 +5,7 @@ namespace Domain\Pusher;
 
 
 use Domain\Pusher\Events\UserTypingEvent;
+use Domain\Pusher\Listeners\UserTypingNotification;
 use Illuminate\Support\Facades\Log;
 use Mockery\Exception;
 use Ratchet\ConnectionInterface;
