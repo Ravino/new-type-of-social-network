@@ -1,6 +1,6 @@
 <template>
-    <div class="plz-gallery" :class="[`plz-gallery-${galleryType}`]">
-        <div v-if="galleryType === 'album'">
+    <div class="plz-gallery mx-auto" :class="[`plz-gallery-${galleryType}`]">
+        <div class="plz-gallery-wrap" v-if="galleryType === 'album'">
             <template v-for="image in imagesWithClasses">
                 <img
                     :class="image.classes"
