@@ -10,7 +10,7 @@
             </div>
         </div>
         <div class="plz-gallery-viewer-current">
-            <img :src="activeImage.original.path" :alt="activeImage.originalName">
+            <img :src="activeImage.image.original.path" :alt="activeImage.originalName">
         </div>
     </div>
 </template>
@@ -129,6 +129,8 @@ export default {
             height: 100%;
             img {
                 z-index: 2;
+                max-height: 100%!important;
+                width: calc(100% - 100px)!important;
             }
         }
     }
