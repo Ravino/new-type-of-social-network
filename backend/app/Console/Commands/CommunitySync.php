@@ -7,9 +7,8 @@ use App\Models\User;
 use Carbon\Carbon;
 use Domain\Neo4j\Models\Community as Neo4jCommunity;
 use Domain\Neo4j\Models\User as Neo4jUser;
-use Domain\Neo4j\Repositories\BaseRepository;
+use Domain\Neo4j\Repositories\CommunityNeo4jRepository;
 use Exception;
-use GraphAware\Neo4j\Client\ClientInterface;
 use Illuminate\Console\Command;
 
 class CommunitySync extends Command
@@ -29,31 +28,13 @@ class CommunitySync extends Command
     protected $description = 'Push community to Neo4j';
 
     /**
-     * @var ClientInterface
-     */
-    protected $client;
-
-    /**
-     * Create a new command instance.
-     *
-     * @return void
-     */
-    public function __construct()
-    {
-        parent::__construct();
-
-        $this->client = (new BaseRepository())->getClient();
-    }
-
-    /**
      * Execute the console command.
      *
      * @throws Exception
      */
     public function handle()
     {
-        $sql = 'match (a:Community)-[r]-() delete r';
-        $this->client->run($sql)->records();
+        (new CommunityNeo4jRepository())->clearAllRelations();
 
         $mysql_community = Community::all();
         /** @var Community $community */

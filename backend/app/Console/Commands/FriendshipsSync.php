@@ -5,8 +5,7 @@ namespace App\Console\Commands;
 use App\Models\User;
 use Carbon\Carbon;
 use Domain\Neo4j\Models\User as Neo4jUser;
-use Domain\Neo4j\Repositories\BaseRepository;
-use GraphAware\Neo4j\Client\ClientInterface;
+use Domain\Neo4j\Repositories\UserNeo4jRepository;
 use Hootlex\Friendships\Models\Friendship;
 use Illuminate\Console\Command;
 
@@ -25,23 +24,6 @@ class FriendshipsSync extends Command
      * @var string
      */
     protected $description = 'Set or unset user as admin by ID or email';
-
-    /**
-     * @var ClientInterface
-     */
-    protected $client;
-
-    /**
-     * Create a new command instance.
-     *
-     * @return void
-     */
-    public function __construct()
-    {
-        parent::__construct();
-
-        $this->client = (new BaseRepository())->getClient();
-    }
 
     /**
      * Execute the console command.
@@ -72,8 +54,7 @@ class FriendshipsSync extends Command
 
     private function friendship()
     {
-        $sql = 'match (a:User)-[r]-() delete r';
-        $this->client->run($sql)->records();
+        (new UserNeo4jRepository())->clearAllRelations();
 
         $friendships = Friendship::where([
             'status' => 1

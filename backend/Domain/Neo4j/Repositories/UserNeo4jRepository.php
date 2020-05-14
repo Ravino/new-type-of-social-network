@@ -104,4 +104,9 @@ class UserNeo4jRepository extends BaseRepository
                   LIMIT {$limit}";
         return $this->client->run($query)->records();
     }
+
+    public function clearAllRelations()
+    {
+        $this->_clearAllRelations('User');
+    }
 }

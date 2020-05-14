@@ -36,4 +36,9 @@ class CommunityNeo4jRepository extends BaseRepository
         $member = User::where('oid', $member_oid)->first();
         return (bool) $community->members()->attach($member);
     }
+
+    public function clearAllRelations()
+    {
+        $this->_clearAllRelations('Community');
+    }
 }

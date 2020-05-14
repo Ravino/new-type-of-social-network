@@ -37,4 +37,10 @@ class BaseRepository
     {
         return $this->client;
     }
+
+    protected function _clearAllRelations($type)
+    {
+        $sql = "match (a:{$type})-[r]-() delete r";
+        $this->client->run($sql)->records();
+    }
 }
