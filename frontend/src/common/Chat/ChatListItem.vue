@@ -42,7 +42,7 @@
                         <IconCheckedDouble :clazz="'mb-2'" />
                     </small>
                     <time :datetime="dialog.lastMessageDT" class="">
-                        {{ dialog.lastMessageDT | lastMessageTime }}
+                        {{ showDialogTime }}
                     </time>
                 </div>
 
@@ -90,10 +90,7 @@ computed: {
         let txt = this.dialog.lastMessageText || ``;
         txt = txt.replace(/<br\/>/g, '&nbsp;');
 
-        const ret = this.$options.filters.stripTags(txt);
-
-        window.console.log(ret, `lastMsgText`);
-        return ret;
+        return this.$options.filters.stripTags(txt);
     },
 
     groupDialogName(){
@@ -102,6 +99,13 @@ computed: {
 
         return 'Вы, '+ this.dialog.attendeesName.join(', ');
     },
+
+    showDialogTime(){
+        if (this.dialog.lastMessageDT===null  ||  this.dialog.lastMessageDT.valueOf()===0)
+            return '';
+
+        return this.$options.filters.lastMessageTime(this.dialog.lastMessageDT);
+    }
 },
 
 methods: {
