@@ -1,8 +1,9 @@
 <template>
-    <div class="plz-gallery mx-auto" :class="[`plz-gallery-${galleryType}`]">
-        <div class="plz-gallery-wrap" v-if="galleryType === 'album'">
+    <div class="plz-gallery" :class="[`plz-gallery-${galleryType}`]">
+        <div v-if="galleryType === 'album'" class="plz-gallery-wrap plz-gallery-wrap-album">
             <template v-for="image in imagesWithClasses">
                 <img
+                    @click="showImage(image.id)"
                     :class="image.classes"
                     class="plz-gallery-image"
                     :src="image.path"
@@ -14,6 +15,7 @@
            <div v-for="block in portraitBlocks" :class="block.classes">
                <template v-for="image in block.images">
                    <img
+                       @click="showImage(image.id)"
                        :class="image.classes"
                        class="plz-gallery-image"
                        :src="image.path"
@@ -22,20 +24,33 @@
                </template>
            </div>
         </template>
-
+    <GalleryViewer
+        v-if="activeImageId"
+        :images="images"
+        :active-id="activeImageId"
+        @close="activeImageId = null"
+    ></GalleryViewer>
     </div>
 </template>
 
 <script>
+
+import GalleryViewer from './GalleryViewer.vue';
 const MORE_COUNT = 5;
 
 export default {
 name: 'Gallery',
-props: {
+    components: {GalleryViewer},
+    props: {
     images: {
         type: Array,
         default: () => [],
     }
+},
+data() {
+    return {
+        activeImageId: null,
+    };
 },
 computed: {
     countImages() {
@@ -84,7 +99,8 @@ computed: {
                 path: image.medium.path,
                 name: image.originalName,
                 classes,
-                isMore
+                isMore,
+                id: image.id,
             };
         });
     },
@@ -167,6 +183,9 @@ computed: {
     },
 },
 methods: {
+    showImage(id) {
+        this.activeImageId = id;
+    },
     isAlbum(image) {
         return (image.original.width / image.original.height) > 1.2;
     },
@@ -260,13 +279,12 @@ methods: {
 <style lang="scss">
     .plz-gallery {
         position: relative;
-        width: 500px;
+        &-wrap-album {
+            overflow: hidden;
+        }
         &-image {
-            img {
-                object-fit: cover;
-                width: 100%;
-                height: 100%;
-            }
+            object-fit: cover;
+            cursor: pointer;
 
             &-album {
                 &-full {
@@ -278,14 +296,18 @@ methods: {
                 }
 
                 &-third {
-                    width: calc(100% / 3 - 10px);
+                    width: calc(100% / 3 - 5px);
+                    height: 150px;
                 }
             }
 
             &-portrait {
+                height: 100%;
+                width: 100%;
 
                 &-block-1 {
                    width: 50%;
+                    margin-right: 5px;
                 }
 
                 &-block-2 {
@@ -294,6 +316,21 @@ methods: {
 
                 &-block-3 {
                     width: 100%;
+                }
+
+                &-full {
+                    height: 100%;
+                    min-height: 500px;
+                }
+
+                &-half {
+                    height: calc(100% / 2);
+                    min-height: calc(500px / 2 - 5px);
+                }
+
+                &-third {
+                    height: calc(100% / 3);
+                    min-height: calc(500px / 3 - 5px);
                 }
             }
         }
