@@ -7,8 +7,6 @@ namespace Domain\Neo4j\Repositories;
 
 use GraphAware\Neo4j\Client\ClientBuilder;
 use GraphAware\Neo4j\Client\ClientInterface;
-use GraphAware\Neo4j\Client\HttpDriver\Configuration;
-use Everyman\Neo4j\Client;
 
 class BaseRepository
 {
@@ -30,5 +28,13 @@ class BaseRepository
         $this->client = ClientBuilder::create()
             ->addConnection('bolt', "bolt://{$username}:{$password}@{$host}:{$port}")
             ->build();
+    }
+
+    /**
+     * @return ClientInterface
+     */
+    public function getClient(): ClientInterface
+    {
+        return $this->client;
     }
 }

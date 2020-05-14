@@ -5,7 +5,7 @@ namespace App\Console\Commands;
 use App\Models\User;
 use Carbon\Carbon;
 use Domain\Neo4j\Models\User as Neo4jUser;
-use GraphAware\Neo4j\Client\ClientBuilder;
+use Domain\Neo4j\Repositories\BaseRepository;
 use GraphAware\Neo4j\Client\ClientInterface;
 use Hootlex\Friendships\Models\Friendship;
 use Illuminate\Console\Command;
@@ -40,13 +40,7 @@ class FriendshipsSync extends Command
     {
         parent::__construct();
 
-        $host = config('database.connections.neo4j.host');
-        $username = config('database.connections.neo4j.username');
-        $password = config('database.connections.neo4j.password');
-        $port = config('database.connections.neo4j.bolt_port');
-        $this->client = ClientBuilder::create()
-            ->addConnection('bolt', "bolt://{$username}:{$password}@{$host}:{$port}")
-            ->build();
+        $this->client = (new BaseRepository())->getClient();
     }
 
     /**

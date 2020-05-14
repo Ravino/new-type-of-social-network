@@ -7,8 +7,8 @@ use App\Models\User;
 use Carbon\Carbon;
 use Domain\Neo4j\Models\Community as Neo4jCommunity;
 use Domain\Neo4j\Models\User as Neo4jUser;
+use Domain\Neo4j\Repositories\BaseRepository;
 use Exception;
-use GraphAware\Neo4j\Client\ClientBuilder;
 use GraphAware\Neo4j\Client\ClientInterface;
 use Illuminate\Console\Command;
 
@@ -42,13 +42,7 @@ class CommunitySync extends Command
     {
         parent::__construct();
 
-        $host = config('database.connections.neo4j.host');
-        $username = config('database.connections.neo4j.username');
-        $password = config('database.connections.neo4j.password');
-        $port = config('database.connections.neo4j.bolt_port');
-        $this->client = ClientBuilder::create()
-            ->addConnection('bolt', "bolt://{$username}:{$password}@{$host}:{$port}")
-            ->build();
+        $this->client = (new BaseRepository())->getClient();
     }
 
     /**
