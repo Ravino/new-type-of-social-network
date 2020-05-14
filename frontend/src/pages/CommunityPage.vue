@@ -142,6 +142,11 @@
         <PostEditModal v-if="postEditModal.isVisible"
                        :post="postForEdit"
                        @hidePostEditModal="hidePostEditModal"/>
+
+        <PostRepostModal v-if="postRepostModal.isVisible"
+                         :community="communityData"
+                         :post="postForRepost"
+                         @hidePostRepostModal="hidePostRepostModal"/>
     </div>
 </template>
 
@@ -156,10 +161,11 @@ import CommunityUserActionBlock from '../common/Communities/CommunityUserActionB
 import CommunityFriendsInformer from '../common/Communities/CommunityFriendsInformer.vue';
 import CommunityShortMembers from '../common/Communities/CommunityShortMembers.vue';
 import CommunityEditor from '../common/Communities/CommunityEditor.vue';
+import PostRepostModal from '../common/Post/PostRepostModal.vue';
 
 import PliziCommunity from '../classes/PliziCommunity.js';
 import PliziPost from '../classes/PliziPost.js';
-import PliziCommunityAvatar from '../classes/Community/PliziCommunityAvatar';
+import PliziCommunityAvatar from '../classes/Community/PliziCommunityAvatar.js';
 
 export default {
 name: 'CommunityPage',
@@ -177,6 +183,7 @@ components : {
     Post,
     PostEditModal,
     CommunityEditor,
+    PostRepostModal,
 },
 
 data() {
@@ -188,6 +195,10 @@ data() {
             isVisible: false,
         },
         postForEdit: null,
+        postRepostModal: {
+            isVisible: false,
+        },
+        postForRepost: null,
     }
 },
 
@@ -364,8 +375,13 @@ methods: {
         );
     },
 
-    onSharePost(evData){
-        this.$alert(`Тут будет шэйринг поста`, `bg-info`, 3);
+    onSharePost(post){
+        this.postRepostModal.isVisible = true;
+        this.postForRepost = post;
+    },
+    hidePostRepostModal() {
+        this.postRepostModal.isVisible = false;
+        this.postForRepost = null;
     },
 
     async getCommunityInfo() {
