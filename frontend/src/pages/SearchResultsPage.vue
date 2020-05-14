@@ -15,7 +15,7 @@
                         </ul>
                         <div v-else>
                             <div class="alert alert-info">
-                                По Вашему запросу &quot;<b>{{searchText}}</b>&quot; ничего не найдено
+                                По Вашему запросу &quot;<b>{{$root.$lastSearch}}</b>&quot; ничего не найдено
                             </div>
                         </div>
                     </div>
@@ -56,10 +56,6 @@ data() {
 computed: {
     searchResults() {
         return this.searchResultsList;
-    },
-
-    searchText(){
-        return this.$root.$lastSearch;
     }
 },
 
