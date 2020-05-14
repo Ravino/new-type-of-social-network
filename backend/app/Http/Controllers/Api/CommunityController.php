@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers\Api;
 
+use App\Events\CommunitySubscribe;
+use App\Events\CommunityUnsubscribe;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Community\Community as CommunityRequest;
 use App\Http\Requests\Community\CreateCommunity;
@@ -17,6 +19,7 @@ use App\Models\CommunityTheme;
 use App\Services\CommunityService;
 use App\Services\S3UploadService;
 use Exception;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use App\Http\Resources\Post\AttachmentsCollection;
 
@@ -67,7 +70,7 @@ class CommunityController extends Controller
 
     /**
      * @param int $id
-     * @return CommunityResource|\Illuminate\Http\JsonResponse
+     * @return CommunityResource|JsonResponse
      */
     public function get(int $id) {
         $community = Community::with(['users' => function($u) {
@@ -82,7 +85,7 @@ class CommunityController extends Controller
     /**
      * @param Request $request
      * @param int $id
-     * @return CommunityUserCollection|\Illuminate\Http\JsonResponse
+     * @return CommunityUserCollection|JsonResponse
      */
     public function members(Request $request, int $id) {
         $role = $request->query('role');
@@ -108,7 +111,7 @@ class CommunityController extends Controller
     /**
      * @param CommunityRequest $request
      * @param int $id
-     * @return CommunityResource|\Illuminate\Http\JsonResponse
+     * @return CommunityResource|JsonResponse
      */
     public function update(CommunityRequest $request, int $id) {
         $community = Community::find($id);
@@ -123,44 +126,46 @@ class CommunityController extends Controller
 
     /**
      * @param int $id
-     * @return \Illuminate\Http\JsonResponse
+     * @return JsonResponse
      */
     public function subscribe(int $id) {
         $community = Community::find($id);
         if($community) {
             if(!$community->users->contains(auth()->user()->id)) {
                 $community->users()->attach(auth()->user()->id, ['role' => Community::ROLE_USER]);
+                event(new CommunitySubscribe($community->id, auth()->user()->id));
                 return response()->json([
                     'data' => [
                         'message' => 'Вы были успешно добавлены в сообщество',
                         'id' => $community->id
                     ]
                 ], 200);
-            } else {
-                return response()->json(['message' => 'Вы уже являетесь участником данного сообщества'], 422);
             }
+
+            return response()->json(['message' => 'Вы уже являетесь участником данного сообщества'], 422);
         }
         return response()->json(['message' => 'Сообщество не найдено'], 404);
     }
 
     /**
      * @param int $id
-     * @return \Illuminate\Http\JsonResponse
+     * @return JsonResponse
      */
     public function unsubscribe(int $id) {
         $community = Community::find($id);
         if($community) {
             if($community->users->contains(auth()->user()->id)) {
                 $community->users()->detach(auth()->user()->id);
+                event(new CommunityUnsubscribe($community->id, auth()->user()->id));
                 return response()->json([
                     'data' => [
                         'message' => 'Вы успешно отписались из данного сообщества',
                         'id' => $community->id
                     ]
                 ], 200);
-            } else {
-                return response()->json(['message' => 'Вы не являетесь участником данного сообщества'], 422);
             }
+
+            return response()->json(['message' => 'Вы не являетесь участником данного сообщества'], 422);
         }
         return response()->json(['message' => 'Сообщество не найдено'], 404);
     }
