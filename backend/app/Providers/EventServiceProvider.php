@@ -2,8 +2,9 @@
 
 namespace App\Providers;
 
-//use Illuminate\Auth\Events\Registered;
-//use Illuminate\Auth\Listeners\SendEmailVerificationNotification;
+use App\Events\CommunityCreated;
+use App\Events\CommunitySubscribe;
+use App\Events\CommunityUnsubscribe;
 use App\Events\ResetPassword;
 use App\Events\UserCreated;
 use App\Events\UserUpdated;
@@ -12,6 +13,9 @@ use App\Listeners\Friendships\FriendshipNotification;
 use App\Listeners\Friendships\NotifyFriends;
 use App\Listeners\PostAuthorsNotification;
 use App\Listeners\SendPassword;
+use Domain\Neo4j\Listeners\CommunityListener;
+use Domain\Neo4j\Listeners\CommunitySubscribeListener;
+use Domain\Neo4j\Listeners\CommunityUnsubscribeListener;
 use Domain\Neo4j\Listeners\UserRelationsListener;
 use Domain\Pusher\Events\DestroyMessageEvent;
 use Domain\Pusher\Events\NewMessageEvent;
@@ -49,6 +53,15 @@ class EventServiceProvider extends ServiceProvider
         ],
         UserUpdated::class => [
             UserUpdateListener::class
+        ],
+        CommunityCreated::class => [
+            CommunityListener::class,
+        ],
+        CommunitySubscribe::class => [
+            CommunitySubscribeListener::class,
+        ],
+        CommunityUnsubscribe::class => [
+            CommunityUnsubscribeListener::class,
         ],
         'Illuminate\Notifications\Events\NotificationSent' => [
             NewNotification::class
