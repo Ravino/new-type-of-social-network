@@ -46,7 +46,7 @@ class PostController extends Controller
      * @return PostCollection
      */
     public function myPosts(Request $request) {
-        $posts = \Auth::user()->allPosts()
+        $posts = \Auth::user()->allPosts()->with(['postable', 'author'])
             ->limit($request->query('limit') ?? 50)
             ->offset($request->query('offset') ?? 0)
             ->get();
