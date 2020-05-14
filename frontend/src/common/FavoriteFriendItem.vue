@@ -164,6 +164,9 @@ methods: {
 
 
     addMessageToMessagesList(evData){
+        if (! this.isShowLinkedChat)
+            return;
+
         this.currentDialog = this.$root.$auth.dm.getDialogByCompanion(this.friend.id);
 
         if (this.currentDialog) {
@@ -256,6 +259,33 @@ methods: {
     },
 
 
+    removeMessageInLinkedChat(evData){
+        if (! this.isShowLinkedChat)
+            return;
+
+        this.currentDialog = this.$root.$auth.dm.getDialogByCompanion(this.friend.id);
+
+        if (this.currentDialog) {
+            if (this.currentDialog.id !== evData.chatId)
+                return;
+
+            this.messagesList = this.messagesList.filter( mItem => evData.messageId !== mItem.id );
+
+            /** @var PliziMessage **/
+            const lastMsg = this.messagesList[this.messagesList.length - 1];
+
+            this.updateDialogsList(evData.chatId, { message: lastMsg });
+        }
+    },
+
+
+    updateDialogsList(chatId, evData){
+        evData.chatId = chatId;
+
+        this.$root.$emit('UpdateChatDialog', evData);
+    },
+
+
     async chatSelect(chatId){
         let msgsResponse = null;
         this.isMessagesLoaded = false;
@@ -280,11 +310,12 @@ methods: {
         this.isMessagesLoaded = true;
     },
 
+
     addListeners(){
         this.$root.$on('userIsTyping', this.onFriendTyping);
 
         this.$root.$on('newMessageInDialog', this.addMessageToMessagesList);
-        this.$root.$on('removeMessageInDialog', this.removeMessageInList);
+        this.$root.$on('removeMessageInDialog', this.removeMessageInLinkedChat);
     }
 },
 

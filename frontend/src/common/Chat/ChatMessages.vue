@@ -164,7 +164,6 @@ methods: {
     },
 
     onShowForwardMessageModal() {
-        window.console.log(`onShowForwardMessageModal`);
         this.resendMessageModalShow = true;
     },
 

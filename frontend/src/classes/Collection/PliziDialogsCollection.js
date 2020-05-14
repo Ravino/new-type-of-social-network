@@ -38,9 +38,10 @@ class PliziDialogsCollection extends PliziStoredCollection {
         this.emit(this.updateEventName);
     }
 
+
     onRemoveDialog(removedDialogId){
         window.console.warn(removedDialogId,`onRemoveDialog`);
-        this.delete(removedDialogId.id);
+        this.delete(removedDialogId);
         this.storeData();
         this.restore();
         this.emit(this.updateEventName);
@@ -85,17 +86,6 @@ class PliziDialogsCollection extends PliziStoredCollection {
             return null;
 
         return this.asArray()[0];
-    }
-
-
-    shortList(){
-        let arr = [];
-
-        this.collection.forEach((item) => {
-            arr.push( item.id + ` `+item.companion.firstName );
-        });
-
-        return arr;
     }
 
 
@@ -148,14 +138,20 @@ class PliziDialogsCollection extends PliziStoredCollection {
         let dlg = this.get(dialogID);
 
         if (dlg) {
+            dlg = dlg.toJSON();
+
             dlg.lastMessageDT = newData.lastMessageDT;
             dlg.lastMessageText = newData.lastMessageText;
             dlg.isLastFromMe = newData.isLastFromMe;
             dlg.isRead = newData.isRead;
 
-            this.collection.set(dialogID, dlg);
-
+            this.add(dlg);
             this.storeData();
+            this.restore();
+            this.emit(this.updateEventName);
+        }
+        else {
+            window.console.warn(dialogID + ` диалог не найден`);
         }
     }
 
