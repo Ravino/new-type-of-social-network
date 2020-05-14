@@ -130,7 +130,7 @@ export default {
             img {
                 z-index: 2;
                 max-height: 100%!important;
-                width: calc(100% - 100px)!important;
+                max-width: calc(100% - 100px)!important;
             }
         }
     }
