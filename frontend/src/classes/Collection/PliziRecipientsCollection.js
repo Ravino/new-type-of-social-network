@@ -22,9 +22,11 @@ class PliziRecipientsCollection extends PliziCollection{
      * @param {number|null} chatId
      */
     add(data, chatId){
-        const newRecip = new PliziRecipient(data, chatId);
+        if (data) {
+            const newRecip = new PliziRecipient(data, chatId);
 
-        this.collection.set(newRecip.id, newRecip);
+            this.collection.set(newRecip.id, newRecip);
+        }
     }
 
 

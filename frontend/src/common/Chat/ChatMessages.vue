@@ -31,7 +31,7 @@
                                      v-bind:next="getNext(messageIndex)"
                                      v-bind:pickedID="pickedMessageID"
                                      v-bind:dialogID="currentDialog.id"
-                                     v-bind:key="message.id">
+                                     v-bind:key="message.id+`-`+messageIndex">
                     </ChatMessageItem>
                 </transition-group>
             </div>
@@ -44,13 +44,13 @@
         </vue-custom-scrollbar>
 
         <ResendMessageModal v-if="resendMessageModalShow"
-                            v-bind:pickedMessage="pickedMessage"
+                            v-bind:pickedMessage="pickedMessage()"
                             v-bind:currentDialog="currentDialog"
                             v-bind:pickedID="pickedMessageID">
         </ResendMessageModal>
 
         <ReplyMessageModal v-if="replyMessageModalShow"
-                            v-bind:pickedMessage="pickedMessage"
+                            v-bind:pickedMessage="pickedMessage()"
                             v-bind:currentDialog="currentDialog"
                             v-bind:pickedID="pickedMessageID">
         </ReplyMessageModal>
@@ -74,19 +74,19 @@ import ChatVideoModal from './ChatVideoModal.vue';
 import PliziMessage from '../../classes/PliziMessage.js';
 
 export default {
-    name: 'ChatMessages',
-    components: {
-        vueCustomScrollbar,
-        ChatMessageItem,
-        ResendMessageModal, ReplyMessageModal,
-        ChatVideoModal,
-    },
+name: 'ChatMessages',
+components: {
+    vueCustomScrollbar,
+    ChatMessageItem,
+    ResendMessageModal, ReplyMessageModal,
+    ChatVideoModal,
+},
 
-    props: {
-        messagesList: Array,
-        currentDialog: Object,
-        filter: Object
-    },
+props: {
+    messagesList: Array,
+    currentDialog: Object,
+    filter: Object
+},
 
 data() {
     return {
@@ -112,6 +112,21 @@ data() {
 },
 
 methods: {
+    pickedMessage() {
+        let lMsg = this.messagesList.find((mItem) => {
+            return mItem.id === this.pickedMessageID;
+        });
+
+        if (lMsg) {
+            lMsg = new PliziMessage(lMsg);
+        }
+        else {
+            window.console.warn(this.pickedMessageID + ` не найден`);
+        }
+
+        return lMsg;
+    },
+
     onChatMessagePick(evData){
         this.pickedMessageID = evData.messageID;
     },
@@ -149,6 +164,7 @@ methods: {
     },
 
     onShowForwardMessageModal() {
+        window.console.log(`onShowForwardMessageModal`);
         this.resendMessageModalShow = true;
     },
 
@@ -190,24 +206,24 @@ computed: {
             return this.messagesList;
         }
 
-        let range_start, range_end;
+        let rangeStart, rangeEnd;
 
         if (this.filter.range && this.filter.range.start && this.filter.range.end) {
-            range_start = this.filter.range.start;
-            range_end = this.filter.range.end;
+            rangeStart = this.filter.range.start;
+            rangeEnd = this.filter.range.end;
 
-            this.rangeStart = range_start;
-            this.rangeEnd = range_end;
+            this.rangeStart = rangeStart;
+            this.rangeEnd = rangeEnd;
         }
 
         // есть и текст и дата
-        if (this.filter.text && this.filter.range && range_start && range_end) {
+        if (this.filter.text && this.filter.range && rangeStart && rangeEnd) {
             const ft = this.filter.text.toLocaleLowerCase();
 
             if (ft.length > 2) {
                 return this.messagesList.filter((msgItem) => {
                     return msgItem.body.toLowerCase().includes(ft) &&
-                        (msgItem.createdAt > range_start) && (msgItem.createdAt < range_end);
+                        (msgItem.createdAt > rangeStart) && (msgItem.createdAt < rangeEnd);
                 });
             }
         }
@@ -223,32 +239,14 @@ computed: {
         }
 
         // только дата
-        if (this.filter.range && range_start && range_end) {
+        if (this.filter.range && rangeStart && rangeEnd) {
             return this.messagesList.filter((msgItem) => {
-                return (msgItem.createdAt > this.filter.range.start) && (msgItem.createdAt < range_end);
+                return (msgItem.createdAt > this.filter.range.start) && (msgItem.createdAt < rangeEnd);
             });
         }
 
         return this.messagesList;
-    },
-
-    pickedMessage() {
-        if (this.pickedMessageID < 0)
-            return {};
-
-        let lMsg = this.messagesList.find((mItem) => {
-            return mItem.id === this.pickedMessageID;
-        });
-
-        if (lMsg) {
-            lMsg = new PliziMessage(lMsg);
-        }
-        else {
-            window.console.warn(this.pickedMessageID + ` не найден`);
-        }
-
-        return lMsg;
-    },
+    }
 },
 
 mounted() {
@@ -269,14 +267,3 @@ mounted() {
 
 }
 </script>
-
-<style lang="scss">
-.btn-filter-clear {
-    color: #1554F7;
-    text-decoration: underline;
-
-    &:hover {
-        box-shadow: none;
-    }
-}
-</style>

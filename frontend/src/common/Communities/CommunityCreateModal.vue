@@ -24,7 +24,7 @@
 
                     <form class="form community-create-modal-form p-0"
                           @submit.prevent="" novalidate="novalidate">
-                        <div class="form-group d-flex align-items-center px-5 row">
+                        <div class="form-group d-flex align-items-center mb-4 px-5 row position-relative">
                             <label for="commType" class="col-4 community-create-modal-label text-right">Тип
                                 сообщества:</label>
                             <div class="col-8">
@@ -45,7 +45,7 @@
                             </div>
                         </div>
 
-                        <div class="form-group d-flex align-items-center px-5 row">
+                        <div class="form-group d-flex align-items-center mb-4 px-5 row position-relative">
                             <label for="commName" class="col-4 community-create-modal-label  text-right">Название:</label>
                             <div class="col-8">
                                 <input v-model="model.name" type="text" id="commName" ref="commName"
@@ -61,7 +61,7 @@
                             </div>
                         </div>
 
-                        <div class="form-group d-flex align-items-center px-5 row">
+                        <div class="form-group d-flex align-items-center mb-4 px-5 row position-relative">
                             <label for="commTema"
                                    class="col-4 community-create-modal-label  text-right">Тематика:</label>
                             <div class="col-8">
@@ -85,7 +85,7 @@
                             </div>
                         </div>
 
-                        <div class="form-group d-flex align-items-center px-5 row">
+                        <div class="form-group d-flex align-items-center mb-5 px-5 row position-relative">
                             <label for="commPrivacy"
                                    class="col-4 community-create-modal-label  text-right">Приватность:</label>
                             <div class="col-8">

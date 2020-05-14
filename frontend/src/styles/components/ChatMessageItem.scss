@@ -68,6 +68,17 @@ $chatMessagesBodyHeight: calc(100% - 139px);
                 font-size: 40px;
                 line-height: 1.1;
             }
+            a {
+                color: inherit;
+                text-decoration: underline;
+                &:hover {
+                    text-decoration: none;
+                }
+            }
+
+            img {
+                width: 100%;
+            }
         }
     }
 
@@ -102,11 +113,6 @@ $chatMessagesBodyHeight: calc(100% - 139px);
             .message-text-inner {
                 color: $chatMessageMyMsgTextColor;
                 font-size: $chatMessageFS;
-
-                a {
-                    color: inherit;
-                    text-decoration: underline;
-                }
             }
         }
         .message-sended {

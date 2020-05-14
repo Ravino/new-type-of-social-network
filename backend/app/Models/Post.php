@@ -56,6 +56,11 @@ class Post extends Model
         return $this->hasMany(PostLike::class, 'post_id', 'id')->where('user_id', \Auth::user()->id);
     }
 
+    public function video()
+    {
+        return $this->morphOne(Video::class, 'creatableby');
+    }
+
     /**
      * @return string
      */

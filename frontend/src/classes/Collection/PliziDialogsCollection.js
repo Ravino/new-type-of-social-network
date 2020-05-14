@@ -72,7 +72,6 @@ class PliziDialogsCollection extends PliziStoredCollection {
 
         this.collection.forEach((dItem) => {
             if (dItem.isPrivate  &&  dItem.companion.id===userID){
-                window.console.log(dItem.companion.id, dItem.companion.fullName);
                 found = dItem.id;
             }
         });

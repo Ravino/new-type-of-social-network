@@ -4,6 +4,8 @@
 namespace Domain\PusherListeners;
 
 use Domain\Pusher\Events\NewMessageEvent;
+use Domain\Pusher\Repositories\ChatRepository;
+use Domain\Pusher\Repositories\MessageRepository;
 use Domain\Pusher\WampServer as Pusher;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
@@ -18,12 +20,17 @@ class NewMessageNotification implements ShouldQueue
      */
     public function handle(NewMessageEvent $event)
     {
-        $idsOfUsers = $event->getUsersListIds();
-        $body = $event->getMessage();
-        foreach ($idsOfUsers as $user_id) {
-            $body = json_decode(json_encode($body), true);
-            $body['isMine'] = false;
-            Pusher::sentDataToServer(['data' => $body, 'topic_id' => Pusher::channelForUser($user_id), 'event_type' => 'message.new']);
+        $chatRepo = new ChatRepository();
+        $messageRepo = new MessageRepository();
+        $author_id = $event->getAuthorId();
+        $message_id = $event->getMessageId();
+        $chat_id = $event->getChatId();
+        $users_list = $chatRepo->getUsersIdListFromChat($chat_id, $author_id);
+        $message = $messageRepo->getMessageById($message_id, $author_id);
+        foreach ($users_list as $user_id) {
+            $message = json_decode(json_encode($message), true);
+            $message['isMine'] = false;
+            Pusher::sentDataToServer(['data' => $message, 'topic_id' => Pusher::channelForUser($user_id), 'event_type' => 'message.new']);
         }
     }
 }

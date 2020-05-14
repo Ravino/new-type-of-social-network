@@ -36,6 +36,8 @@ $userPicSize: 32px;
 }
 
 .chat-dialogs-list {
+    border-right: 1px solid $borderColor;
+
     .chat-list-scroll {
         height: calc(100% - 76px);
     }

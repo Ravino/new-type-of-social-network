@@ -20,7 +20,7 @@ h1, h2, h3, h4, h5, h6 {
     background-color: transparent;
 }
 
-.btn{
+.btn {
     max-width: 100%;
 
     &:focus {
@@ -32,7 +32,12 @@ h1, h2, h3, h4, h5, h6 {
         background-color: $blueBtn;
         border-color: $blueBtn;
         color: white;
-        transition: .4s
+        font-size: 13px;
+        transition: .4s;
+        &:hover {
+            background-color: $blueBtnHover;
+            border-color: $blueBtnHover;
+        }
     }
 }
 
@@ -459,6 +464,7 @@ $radioWidth: 18px;
     position: relative;
     width: calc(100% - 30px);
     min-height: 50px;
+    height: auto;
 
     .placeholder {
         position: absolute;
@@ -502,4 +508,12 @@ $dotSize: 2px;
     border-radius: $dotSize;
     background-color: #6f7487;
     margin: 0 3px;
+}
+
+
+//.flex-column,
+.flex-column-reverse {
+    * {
+        flex: none;
+    }
 }

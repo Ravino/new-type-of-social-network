@@ -13,9 +13,11 @@
             <IconAtom/>
         </router-link>
 
-        <a class="w-100 d-block text-center mx-auto mb-4" href="#">
+        <router-link :to="{name: 'VideosPage'}"
+                     tag="a"
+                     class="w-100 d-block text-center mx-auto mb-4">
             <IconPlay/>
-        </a>
+        </router-link>
 
         <a class="w-100 d-block text-center mx-auto mb-4" href="#">
             <IconPaper/>

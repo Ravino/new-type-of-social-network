@@ -7,6 +7,7 @@ import PliziFriendAPI from './API/PliziFriendAPI.js';
 import PliziCommunitiesAPI from './API/PliziCommunitiesAPI.js';
 import PliziUsersAPI from './API/PliziUsersAPI.js';
 import PliziNotificationsAPI  from './API/PliziNotificationsAPI.js';
+import PliziVideoAPI from "./API/PliziVideoAPI.js";
 
 class PliziAPIClass {
 
@@ -101,6 +102,12 @@ class PliziAPIClass {
      */
     __notifications = null;
 
+    /**
+     * @type {PliziVideoAPI}
+     * @private
+     */
+    __video = null;
+
     __isInit = false;
 
     /**
@@ -133,6 +140,7 @@ class PliziAPIClass {
         this.__communities = new PliziCommunitiesAPI(this);
         this.__users = new PliziUsersAPI(this);
         this.__notifications = new PliziNotificationsAPI(this);
+        this.__video = new PliziVideoAPI(this);
 
         this.__isInit = true;
     }
@@ -178,6 +186,13 @@ class PliziAPIClass {
      */
     get $notifications() {
         return this.__notifications;
+    }
+
+    /**
+     * @return {PliziVideoAPI}
+     */
+    get $video() {
+       return this.__video;
     }
 
     get axios() {

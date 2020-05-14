@@ -1,7 +1,7 @@
 <template>
-    <div id="chatHeader" class="bg-white w-100 border-bottom">
-        <div class="row mx-0 py-3">
-            <div class="col-6">
+    <div id="chatHeader" class="bg-white w-100 border-bottom d-flex justify-content-between">
+<!--        <div class="row mx-0 py-1 justify-content-between">-->
+            <div class="col-11 col-md-5 d-flex">
                 <ChatHeaderCompanion v-if="currentDialog.isPrivate" v-bind:companion="companion"></ChatHeaderCompanion>
 
                 <div v-if="currentDialog.isGroup" class="d-flex align-items-center h-100">
@@ -12,10 +12,10 @@
                 </div>
             </div>
 
-            <div class="col-6">
-                <div class="d-flex align-items-center justify-content-end">
-                    <div class="form-row align-items-center justify-content-end pr-3">
-                        <div class="col-auto position-relative">
+            <div class="col-1 col-md-7 d-flex p-0 px-md-3">
+                <div class="d-flex align-items-center justify-content-end w-100">
+                    <div class="form-row align-items-center justify-content-end flex-nowrap">
+                        <div class="col-auto d-none d-md-block position-relative">
                             <label class="sr-only d-none" for="txtFindInChat">Поиск</label>
                             <input v-model="chatFilterText" id="txtFindInChat" ref="txtFindInChat" type="text"
                                    @focus="onFocusSearch"
@@ -35,7 +35,7 @@
                             </button>
                         </div>
 
-                        <div class="col-auto">
+                        <div class="col-md-auto">
                             <ChatHeaderMenu
                                 @showRemoveCurrentChatModal="onShowRemoveCurrentChatModal"
                                 @showAddAttendeeToDialogModal="onShowAddAttendeeToDialogModal"></ChatHeaderMenu>
@@ -43,7 +43,7 @@
                     </div>
                 </div>
             </div>
-        </div>
+<!--        </div>-->
 
         <ChatPickAttendeesDialogModal v-if="pickAttendeesDialogModalShow"
             @hidePickAttendeesDialogModal="onHidePickAttendeesDialogModal"
