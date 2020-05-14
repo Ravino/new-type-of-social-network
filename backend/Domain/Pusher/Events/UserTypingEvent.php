@@ -25,12 +25,11 @@ class UserTypingEvent
 
     /**
      * UserTypingEvent constructor.
-     * @param int $userId
-     * @param int $chatId
+     * @param string $userId
+     * @param string $chatId
      */
-    public function __construct(int $userId, int $chatId)
+    public function __construct(string $userId, string $chatId)
     {
-        \Log::debug($userId);
         $this->userId = $userId;
         $this->chatId = $chatId;
     }
@@ -54,9 +53,9 @@ class UserTypingEvent
     }
 
     /**
-     * @return int
+     * @return string
      */
-    public function getChatId(): int
+    public function getChatId(): string
     {
         return $this->chatId;
     }
