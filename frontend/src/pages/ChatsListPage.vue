@@ -17,12 +17,12 @@
                 </div>
             </div>
             <div v-else class="col-12 col-md-11 pr-0  chat-page-height">
-                <div v-if="isDialogsLoaded" id="chatMain" class="d-flex flex-column flex-lg-row flex bg-white-br20 overflow-hidden">
+                <div v-if="isDialogsLoaded" id="chatMain"
+                     class="d-flex flex-column flex-lg-row flex bg-white-br20 overflow-hidden">
 
                     <ChatDialogs ref="chatMessagesUsersList"
                                  :currentDialogID="currentDialogID"
-                                 @SwitchToChat="onSwitchToChat">
-                    </ChatDialogs>
+                                 @SwitchToChat="onSwitchToChat"></ChatDialogs>
 
                     <div id="chatMessagesWrapper"
                          class="col-12 col-lg-8 bg-light d-lg-flex flex-column p-0 ">
@@ -41,9 +41,9 @@
                                           @clearFilters="clearChatMessagesFilters"
                                           ref="chatMessages">
                             </ChatMessages>
-                            <Spinner v-else v-bind:message="`Сообщения загружаются,<br />можно выбрать другой диалог`">
-
-                            </Spinner>
+                            <Spinner v-else
+                                     v-bind:message="`Сообщения загружаются,<br />можно выбрать другой диалог`">
+                                </Spinner>
 
                             <ChatFooter v-if="currentDialog"
                                         v-bind:currentDialog="currentDialog"
@@ -62,7 +62,8 @@
                 </div>
             </div>
 
-            <ChatNotifications :notifications="notifications" @removeNotification="removeNotification"/>
+            <ChatNotifications :notifications="notifications"
+                               @removeNotification="removeNotification"></ChatNotifications>
         </div>
     </div>
 </template>
@@ -225,7 +226,12 @@ methods: {
     addListeners(){
         this.$root.$on('newMessageInDialog', this.addNewChatMessageToList);
         this.$root.$on('newMessageInDialog', this.addNewMessageNotification);
-        this.$root.$on('removeMessageInDialog', this.removeMessageInList);
+
+        this.$root.$on('removeMessageInDialog', (evData)=>{
+            if (this.removeMessageInList) {
+                this.removeMessageInList(evData);
+            }
+        });
     }
 },
 

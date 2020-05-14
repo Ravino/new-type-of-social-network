@@ -90,7 +90,10 @@ computed: {
         let txt = this.dialog.lastMessageText || ``;
         txt = txt.replace(/<br\/>/g, '&nbsp;');
 
-        return this.$options.filters.stripTags(txt);
+        const ret = this.$options.filters.stripTags(txt);
+
+        window.console.log(ret, `lastMsgText`);
+        return ret;
     },
 
     groupDialogName(){

@@ -1,7 +1,7 @@
 <template>
-    <div class="modal" id="chatPickAttendeesDialogModal" tabindex="-1" role="dialog" aria-labelledby="chatPickAttendeesDialogModal"
-          aria-hidden="true" style="display: block; background-color: rgba(0, 0, 0, .7);"
-          @click.stop="hidePickAttendeesDialogModal">
+    <div class="modal" id="chatPickAttendeesDialogModal" tabindex="-1"
+         role="dialog" aria-labelledby="chatPickAttendeesDialogModal" @click.stop="hidePickAttendeesDialogModal"
+         aria-hidden="true" style="display: block; background-color: rgba(0, 0, 0, .7);">
 
         <div class="modal-dialog modal-dialog-centered" role="document" @click.stop="">
             <div class="modal-content bg-white-br20">
@@ -154,6 +154,8 @@ methods: {
         }
 
         if ( apiResponse ) {
+            window.console.log( JSON.stringify(apiResponse) , `apiResponse`);
+
             this.$root.$emit('NewChatDialog', apiResponse);
 
             this.hidePickAttendeesDialogModal();
@@ -177,10 +179,6 @@ computed: {
 
         return this.recipients.asArray();
     }
-},
-
-created(){
-    this.msgData = this.pickedMessage;
 },
 
 }
