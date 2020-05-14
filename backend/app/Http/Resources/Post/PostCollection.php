@@ -48,6 +48,7 @@ class PostCollection extends ResourceCollection
                             'user' => new SimpleUser($post->postable),
                             'createdAt' => $post->created_at,
                             'sharedFrom' => $post->parent_id ? new PostWithoutParent($post->parent()->withTrashed()->first()) : null,
+                            'author' => new SimpleUser($post->author),
                         ];
                     } else if($post->postable instanceof CommunityModel) {
                         return [
@@ -64,6 +65,7 @@ class PostCollection extends ResourceCollection
                             'community' => new Community($post->postable),
                             'createdAt' => $post->created_at,
                             'sharedFrom' => $post->parent_id ? new PostWithoutParent($post->parent) : null,
+                            'author' => new SimpleUser($post->author),
                         ];
                     }
                 } else {

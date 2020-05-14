@@ -41,13 +41,13 @@
                         <div class="dropdown-menu dropdown-menu-right py-3 px-0"
                              :aria-labelledby="`postSettings` + post.id">
 
-                            <div class="nav-item">
+                            <div v-if="post.author.id === user.id" class="nav-item">
                                 <button class="btn dropdown-item px-3 py-1"
                                         @click="$emit('onEditPost', post)">
                                     Редактировать
                                 </button>
                             </div>
-                            <div class="nav-item">
+                            <div v-if="post.author.id === user.id" class="nav-item">
                                 <button class="btn dropdown-item px-3 py-1"
                                         @click="$emit('onDeletePost', post.id)">
                                     Удалить
@@ -221,7 +221,10 @@
             },
             imageAttachments() {
                 return this.post.attachments.filter(attachment => attachment.isImage);
-            }
+            },
+            user() {
+                return this.$root.$auth.user;
+            },
         },
         methods: {
             openVideoModal() {

@@ -32,7 +32,8 @@ class Post extends JsonResource
                 'attachments' => new AttachmentsCollection($this->attachments),
                 'user' => new SimpleUser($this->postable),
                 'sharedFrom' => $this->parent_id ? new PostWithoutParent($this->parent) : null,
-                'createdAt' => $this->created_at
+                'createdAt' => $this->created_at,
+                'author' => new SimpleUser($this->author),
             ];
         } else if($this->postable instanceof CommunityModel) {
             return [
@@ -48,7 +49,8 @@ class Post extends JsonResource
                 'attachments' => new AttachmentsCollection($this->attachments),
                 'community' => new Community($this->postable),
                 'sharedFrom' => $this->parent_id ? new PostWithoutParent($this->parent) : null,
-                'createdAt' => $this->created_at
+                'createdAt' => $this->created_at,
+                'author' => new SimpleUser($this->author),
             ];
         }
     }

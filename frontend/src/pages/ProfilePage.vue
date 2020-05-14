@@ -151,15 +151,9 @@ methods : {
         this.userPosts.unshift( new PliziPost( post ) );
     },
 
-    startTimer( post ){
+    startTimer( postIndex ){
         setTimeout( () => {
-            const postIndex = this.userPosts.find( ( userPost ) => {
-                return userPost.id === post.id;
-            } );
-
-            if ( post.deleted ){
-                this.userPosts.splice( postIndex, 1 );
-            }
+            this.userPosts.splice( postIndex, 1 );
         }, 5000 );
     },
 
@@ -223,13 +217,13 @@ methods : {
         }
 
         if ( response ){
-            const post = this.userPosts.find( ( post ) => {
+            const postIndex = this.userPosts.findIndex( ( post ) => {
                 return post.id === id;
             } );
+            let post = this.userPosts[postIndex].deleted = true;
+            console.log(post);
 
-            post.deleted = true;
-
-            this.startTimer( post );
+            this.startTimer( postIndex );
         }
     },
 

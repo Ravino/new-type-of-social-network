@@ -21,15 +21,15 @@ class PostsTableSeeder extends Seeder
         $communities = Community::without('role')->get();
         foreach ($users as $user) {
             //$post = Post::create($this->generatePost());
-            $user->posts()->create($this->generatePost());
+            $user->posts()->create($this->generatePost($user->id));
         }
         foreach ($communities as $community) {
             //$post = Post::create($this->generatePost());
-            $community->posts()->create($this->generatePost());
+            $community->posts()->create($this->generatePost($community->id));
         }
     }
 
-    private function generatePost() {
+    private function generatePost($id) {
         $faker = Faker\Factory::create('ru_RU');
         return [
             'name' => $faker->realText(15),
@@ -37,6 +37,7 @@ class PostsTableSeeder extends Seeder
             'primary_image' => '',
             'likes' => $faker->numberBetween(0, 1000),
             'views' => $faker->numberBetween(0, 1000),
+            'author_id' => $id,
         ];
     }
 }
