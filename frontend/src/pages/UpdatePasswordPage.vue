@@ -88,7 +88,7 @@
                 <div v-else class="update-password-success text-center">
                     <IconChecked class="update-password-success-icon-checked"/>
                     <p class="update-password-success-message">
-                        Ваш пароль был сброшен!
+                        Ваш пароль изменен.
                     </p>
                     <div class="d-flex justify-content-center">
                         <router-link :to="{name: 'LoginPage', params: {email: form.email, password: form.password}}"

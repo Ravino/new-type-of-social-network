@@ -90,8 +90,14 @@
                         type="button"
                         :disabled="$v.$invalid"
                         @click="startRegistration()"
-                        class="btn plz-btn plz-btn-primary">
-                    Регистрация
+                        class="btn plz-btn plz-btn-primary text-center"
+                        :class="{disabled: isLoad}">
+                    <template v-if="isLoad">
+                        <i class="fas fa-spinner fa-3x fa-spin text-white"></i>
+                    </template>
+                    <template v-else>
+                        Регистрация
+                    </template>
                 </button>
                 <p v-if="isServerError && serverErrorText" class="text-danger text-center mt-3">
                     {{ serverErrorText }}
@@ -209,7 +215,8 @@
                     email: ``,
                     birthday: ``,
                     other: ``,
-                }
+                },
+                isLoad: false,
             }
         },
 
@@ -255,6 +262,7 @@
 
         methods: {
             async startRegistration() {
+                this.isLoad = true;
                 this.$v.$touch();
                 this.isServerError = false;
                 this.serverErrorText = null;
@@ -277,6 +285,7 @@
                     if (e.status === 422) {
                         this.processServerErrors(e, regData);
                     } else if (e.status >= 500) {
+                        this.isLoad = false;
                         this.isServerError = true;
                         this.serverErrorText = 'Извините у нас возникла ошибка, попробуйте позже ещё раз.';
                     } else {
@@ -285,6 +294,7 @@
                 }
 
                 if (regResponse && regResponse.status === 201) {
+                    this.isLoad = false;
                     this.$emit('successRegistration', this.model);
                 }
             },
