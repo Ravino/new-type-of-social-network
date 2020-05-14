@@ -59,7 +59,7 @@ export default {
         prevImage() {
             const prevImageIndex = this.currentImageIndex - 1;
 
-            if (this.images[prevImageIndex]) {
+            if (prevImageIndex >= 0 && this.images[prevImageIndex]) {
                 this.activeImage = this.images[prevImageIndex];
             } else {
                 this.activeImage = [...this.images].pop();
@@ -68,7 +68,7 @@ export default {
         nextImage() {
             const nextImageIndex = this.currentImageIndex + 1;
 
-            if (this.images[nextImageIndex]) {
+            if (nextImageIndex >= 0 && this.images[nextImageIndex]) {
                 this.activeImage = this.images[nextImageIndex];
             } else {
                 this.activeImage = [...this.images].shift();
