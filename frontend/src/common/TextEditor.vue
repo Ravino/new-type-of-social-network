@@ -15,6 +15,7 @@
                                         @editorPost="onEditorNewPost"
                                         @editorKeyDown="onEditorKeyDown"
                                         @onMaximumCharacterLimit="onMaximumCharacterLimit"
+                                        @onUpdate="onUpdate"
                                         :placeholder="editorPlaceholder"
                                         :inputEditorText="inputEditorText"
                                         :maximumCharacterLimit="maximumCharacterLimit"
@@ -26,6 +27,9 @@
                             </div>
                             <div v-if="isMaximumCharacterLimit" class="col-12">
                                 <p class="text-danger">Превышено максимально допустимое количество символов.</p>
+                            </div>
+                            <div v-if="bodyError" class="col-12">
+                                <p class="text-danger">{{ bodyError[0] }}</p>
                             </div>
                         </div>
                     </div>
@@ -124,7 +128,11 @@ props: {
     maximumCharacterLimit: {
         type: Number,
         default: 10000,
-    }
+    },
+    errors: {
+      type: Object,
+      default: null,
+    },
 },
 mixins: [LinkMixin],
 data() {
@@ -161,7 +169,10 @@ computed: {
     },
     isDisallowUpload() {
         return this.attachFiles.length >= this.maxFilesCount;
-    }
+    },
+    bodyError() {
+        return this.errors && this.errors.body ? this.errors.body : null;
+    },
 },
 
 methods: {
@@ -299,6 +310,10 @@ methods: {
 
     onMaximumCharacterLimit(str) {
         this.isMaximumCharacterLimit = str.length > this.maximumCharacterLimit;
+    },
+
+    onUpdate() {
+        this.$emit('onUpdateEditor');
     },
 
     async addUploadAttachment(picsArr) {

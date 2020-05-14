@@ -6,10 +6,12 @@
                     workMode="chat"
                     :editorPlaceholder="placeholder"
                     :maximumCharacterLimit="500"
+                    :errors="errors"
                     @editorNewHeight="onEditorChangeHeight"
                     @editorKeyDown="onEditorKeyDown"
                     @newAttach="onAddAttachToTextEditor"
-            @editorPost="onTextPost">
+                    @editorPost="onTextPost"
+                    @onUpdateEditor="onUpdateEditor">
         </TextEditor>
     </div>
 </template>
@@ -19,6 +21,7 @@ import TextEditor from '../TextEditor.vue';
 import PliziDialog from '../../classes/PliziDialog.js';
 
 import ChatMixin from '../../mixins/ChatMixin.js';
+import LinkMixin from "../../mixins/LinkMixin.js";
 
 export default {
 name: 'ChatFooter',
@@ -29,11 +32,12 @@ props: {
     }
 },
 components: { TextEditor },
-mixins : [ChatMixin],
+mixins : [ChatMixin, LinkMixin],
 data() {
     return {
         placeholder: 'Написать сообщение...',
-        timeout: 0
+        timeout: 0,
+        errors: null,
     }
 },
 
@@ -62,13 +66,6 @@ methods: {
         });
     },
 
-    detectYoutubeLink(str) {
-        let msg = str.replace(/<\/?[^>]+>/g, '').trim();
-        let youtubeLinksRegExp = /https?:\/\/(?:[0-9A-Z-]+\.)?(?:youtu\.be\/|youtube(?:-nocookie)?\.com\S*?[^\w\s-])([\w-]{11})(?=[^\w-]|$)(?![?=&+%\w.-]*(?:['"][^<>]*>|<\/a>))[?=&+%\w.-]*/ig;
-
-        return msg.match(youtubeLinksRegExp);
-    },
-
     onTextPost(evData){
         /** @type {string} **/
         let msg = evData.postText.trim();
@@ -79,7 +76,7 @@ methods: {
             msg = this.killBrTrail(msg);
 
             if (msg !== '') {
-                let youtubeIds = this.detectYoutubeLink(msg);
+                let youtubeIds = this.detectYoutubeLinks(msg);
 
                 if (youtubeIds && youtubeIds.length) {
                     youtubeIds.forEach((youtubeId) => {
@@ -106,6 +103,9 @@ methods: {
         }
     },
 
+    onUpdateEditor() {
+        this.errors = null;
+    },
 
     async addMessageToChat( msgText, attachments ){
         const chatId = (this.currentDialog) ? this.currentDialog.id : 'unknown';
@@ -115,6 +115,7 @@ methods: {
         try {
             apiResponse = await this.$root.$api.$chat.messageSend( chatId, msgText, attachments );
         } catch (e){
+            this.errors = e.data.errors;
             window.console.warn( e.detailMessage );
             throw e;
         }
@@ -150,7 +151,7 @@ methods: {
             const eventData = {
                 chatId : chatId,
                 message : newMessage
-            }
+            };
 
             this.$root.$emit( 'newMessageInDialog', eventData );
         }
