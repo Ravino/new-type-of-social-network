@@ -58,8 +58,8 @@
                 </div>
             </div>
 
-            <div :class="{'px-5': post.sharedFrom}">
-                <div :class="{shared: post.sharedFrom}">
+            <div class="w-100" :class="{'px-5': post.sharedFrom}">
+                <div class="row" :class="{shared: post.sharedFrom}">
                     <template v-if="post.sharedFrom">
                         <div class="post-news-item d-flex flex-row align-content-center pb-4">
                             <div class="post-poster-pic mr-3">

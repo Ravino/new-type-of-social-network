@@ -1,7 +1,7 @@
 <template>
     <div class="form-inline mt-1 mt-md-1 position-relative overflow-hidden rounded-pill w-100"
          :class="{'isFocused' : isFocused}">
-        <input :value="lastSearch" id="topSearch" ref="topSearch"
+        <input v-model="$root.$lastSearch" id="topSearch" ref="topSearch"
                @keydown.stop="topSearchKeyDownCheck($event)"
                @blur="onBlur"
                @focus="onFocus"
@@ -25,12 +25,6 @@ name : 'NavBarSearch',
     }
 },
 
-computed: {
-    lastSearch(){
-        return (this.$root.$lastSearch+``).trim();
-    }
-},
-
 methods: {
     topSearchKeyDownCheck(ev) {
         const sText = this.$refs.topSearch.value.trim();
@@ -50,7 +44,6 @@ methods: {
     },
 
     startSearch(sText){
-        this.$root.$lastSearch = sText;
         window.localStorage.setItem('pliziLastSearch', sText);
 
         this.$root.$emit('searchStart', {
