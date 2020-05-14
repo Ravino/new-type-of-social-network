@@ -20,7 +20,7 @@ class CommunityUserCollection extends ResourceCollection
                 return [
                     'id' => $user->id,
                     'isOnline' => $user->isOnline,
-                    'role' => $user->pivot->role,
+                    'role' => $user->pivot ? $user->pivot->role : null,
                     'profile' => new Profile($user->profile)
                 ];
             }),
