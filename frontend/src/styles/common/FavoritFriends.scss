@@ -59,8 +59,9 @@ $picSize: 42px;
             .plz-linked-chat-body {
                 width: 100%;
                 height: 720px;
-                max-height: 720px;
+                max-height: 70vh;
             }
+
             .is-pinned {
                 .icon-pin {
                     transform: rotate(-45deg);
