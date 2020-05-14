@@ -75,7 +75,7 @@ class PliziUser {
         this._firstName = (prof.firstName + ``).trim();
         this._lastName = (prof.lastName + ``).trim();
         this._sex = (prof.sex + ``).trim();
-        this._birthday = new Date((prof.birthday + ``).trim());
+        this._birthday = prof.birthday ? new Date((prof.birthday + ``).trim()) : null;
         this._relationshipId = prof.relationshipId;
 
         this._location = (prof.location) ? new PliziLocation(prof.location) : null;
