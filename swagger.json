@@ -1693,6 +1693,26 @@
                 ],
                 "description": "Список сообществ",
                 "operationId": "getCommunities",
+                "parameters": [
+                    {
+                        "name": "limit",
+                        "in": "query",
+                        "default": 10,
+                        "required": false,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    },
+                    {
+                        "name": "offset",
+                        "in": "query",
+                        "default": 0,
+                        "required": false,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
                 "responses": {
                     "200": {
                         "description": "OK",
