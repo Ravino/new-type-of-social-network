@@ -3,8 +3,10 @@
 namespace App\Http\Resources\Community;
 
 use App\Http\Resources\User\Image;
+use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\ResourceCollection;
+use Illuminate\Support\Arr;
 
 class CommunityCollection extends ResourceCollection
 {
@@ -17,7 +19,7 @@ class CommunityCollection extends ResourceCollection
     public function toArray($request)
     {
         return [
-            'list' => $this->collection->map(static function($community) {
+            'list' => $this->collection->map(function($community) use ($request) {
                 $data = [
                     'id' => $community->id,
                     'name' => $community->name,
@@ -31,6 +33,7 @@ class CommunityCollection extends ResourceCollection
                     'type' => $community->type,
                     'theme' => $community->theme_id ? $community->theme :null,
                     'privacy' => $community->privacy,
+                    'friends' => $this->getFriends($community, $request),
                     'avatar' => $community->avatar
                         ? new Image($community->avatar)
                         : null,
@@ -42,6 +45,21 @@ class CommunityCollection extends ResourceCollection
 
                 return $data;
             }),
+        ];
+    }
+
+    private function getFriends($community, $request)
+    {
+        if (!$friends = $community->friends()) {
+            return null;
+        }
+        $collection = collect($friends);
+        $users = User::whereIn('id', $collection->pluck('oid'))
+            ->with('profile', 'profile.avatar')
+            ->get();
+        return [
+            'total' => Arr::get($collection->first(), 'total_count'),
+            'list' => Arr::get((new CommunityUserCollection($users))->toArray($request), 'list'),
         ];
     }
 }

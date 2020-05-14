@@ -57,11 +57,14 @@ class CommunityController extends Controller
     /**
      * @return CommunityCollection
      */
-    public function index() {
+    public function index(Request $request) {
         /**
          * TODO: Нужно будет что-то придумать с оптимизацией (дернормализовать таблицы или.... пока не ясно)
          */
-        $communities = Community::with('role', 'members', 'attachment')->get();
+        $communities = Community::with('role', 'members', 'avatar')
+            ->limit($request->query('limit', 10))
+            ->offset($request->query('offset', 0))
+            ->get();
         $communities->each(function($community) {
             $community->load('onlyFiveMembers');
         });
