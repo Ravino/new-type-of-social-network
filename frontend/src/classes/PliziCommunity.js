@@ -70,6 +70,13 @@ class PliziCommunity {
     _totalMembers = null;
 
     /**
+     * кол-во друзей в сообществе
+     * @type {number}
+     * @private
+     */
+    _totalFriends = null;
+
+    /**
      * роль текущего (залогиненного юзера в этом сообществе)
      * user - если просто подписчик, author - если он создал сообщество, иначе null
      * @type {null}
@@ -83,6 +90,13 @@ class PliziCommunity {
      * @private
      */
     _members = null;
+
+    /**
+     * небольшой список друзей в сообществе
+     * @type {PliziMember[]}
+     * @private
+     */
+    _friends = null;
 
     /**
      * Аватарка
@@ -105,6 +119,15 @@ class PliziCommunity {
 
         this._role = inputData.role;
         this._totalMembers = inputData.totalMembers;
+
+        if (inputData.friends) {
+            this._friends = [];
+
+            this._totalFriends = inputData.friends.total;
+            inputData.friends.list.map((mItem) => {
+                this._friends.push(new PliziMember(mItem));
+            })
+        }
 
         if (inputData.members) {
             this._members = [];
@@ -162,6 +185,14 @@ class PliziCommunity {
         return this._members;
     }
 
+    get totalFriends(){
+        return this._totalFriends;
+    }
+
+    get friends(){
+        return this._friends;
+    }
+
     get avatar() {
         return this._avatar;
     }
@@ -172,10 +203,18 @@ class PliziCommunity {
 
     toJSON(){
         let mmbrs = null;
+        let friends = null;
 
         if (this.members) {
             mmbrs = {
                 list: this.members.map( mItem => mItem.toJSON() )
+            };
+        }
+
+        if (this.friends) {
+            friends = {
+                total: this.totalFriends,
+                list: this.friends.map(mItem => mItem.toJSON()),
             };
         }
 
@@ -190,7 +229,8 @@ class PliziCommunity {
             role: this.role,
             totalMembers: this.totalMembers,
             avatar: this._avatar ? this._avatar.toJSON() : null,
-            members: mmbrs
+            members: mmbrs,
+            friends: friends
         };
     }
 }
