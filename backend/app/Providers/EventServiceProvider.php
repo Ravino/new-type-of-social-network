@@ -7,7 +7,7 @@ namespace App\Providers;
 use App\Events\ResetPassword;
 use App\Events\UserCreated;
 use App\Events\UserUpdated;
-use App\Listeners\Friendships\CommunityUsersNotification;
+use App\Listeners\CommunityUsersNotification;
 use App\Listeners\Friendships\FriendshipNotification;
 use App\Listeners\Friendships\NotifyFriends;
 use App\Listeners\PostAuthorsNotification;
@@ -18,9 +18,9 @@ use Domain\Pusher\Events\NewMessageEvent;
 use Domain\Pusher\Events\UserTypingEvent;
 use Domain\Pusher\Listeners\NewNotification;
 use Domain\Pusher\Listeners\UserUpdateListener;
-use Domain\PusherListeners\DestroyMessageNotification;
-use Domain\PusherListeners\NewMessageNotification;
-use Domain\PusherListeners\UserTypingNotification;
+use Domain\Pusher\Listeners\DestroyMessageNotification;
+use Domain\Pusher\Listeners\NewMessageNotification;
+use Domain\Pusher\Listeners\UserTypingNotification;
 use Illuminate\Foundation\Support\Providers\EventServiceProvider as ServiceProvider;
 
 class EventServiceProvider extends ServiceProvider
