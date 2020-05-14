@@ -1,6 +1,6 @@
 <template>
     <div class="plz-gallery" :class="[`plz-gallery-${galleryType}`]">
-        <div v-if="galleryType === 'album'" class="plz-gallery-wrap-album">
+        <div v-if="galleryType === 'album'" class="plz-gallery-wrap plz-gallery-wrap-album">
             <template v-for="image in imagesWithClasses">
                 <img
                     @click="showImage(image.id)"

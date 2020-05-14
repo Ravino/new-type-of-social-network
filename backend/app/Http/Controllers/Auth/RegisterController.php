@@ -72,7 +72,7 @@ class RegisterController extends Controller
         $user = User::find($user->id);
 
         event(new Registered($user, $this->rawPassword));
-        event(new UserCreated($user));
+        event(new UserCreated($user->with('profile')->first()));
 
         return response()->json([
             'message' => 'Please confirm email',

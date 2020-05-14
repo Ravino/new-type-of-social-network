@@ -10,6 +10,10 @@
                     <h5 class="resend-message-title text-left mb-3">Переслать собщение</h5>
 
                     <div class="form" id="resendMessageModalForm">
+                        <div class="form-group mb-4">
+                            <ResendMessageItem v-bind:message="pickedMessage"></ResendMessageItem>
+                        </div>
+
                         <div class="form-group">
                             <multiselect v-model="selectedFriend"
                                          :options="getFriendsCombo"
@@ -50,11 +54,6 @@
                                         @editorPost="onTextPost">
                             </TextEditor>
                         </div>
-
-                        <div class="form-group mb-4">
-                            <ResendMessageItem v-if="pickedMessage"
-                                               v-bind:message="msgData"></ResendMessageItem>
-                        </div>
                     </div>
 
                     <button type="button" class="btn plz-btn plz-btn-primary mt-4" @click.prevent="startForwardMessage()">
@@ -83,7 +82,7 @@ name: 'ResendMessageModal',
 components: { ResendMessageItem, TextEditor },
 mixins : [ChatMixin],
 props: {
-    pickedMessage: PliziMessage | null,
+    pickedMessage: PliziMessage,
     messageID: Number,
     currentDialog: Object
 },
@@ -154,7 +153,7 @@ methods: {
             this.$root.$emit( 'newMessageInDialog', eventData );
             this.hideMessageResendModal();
         }
-        else{
+        else {
             window.console.info( apiResponse );
         }
     }

@@ -137,6 +137,7 @@ methods: {
         let str = this.editor.getHTML().replace(/<\/?[^>]+>/g, '').trim();
 
         this.$emit('onMaximumCharacterLimit', str);
+        this.$emit('onUpdate');
     },
 
     setContent(newContent){

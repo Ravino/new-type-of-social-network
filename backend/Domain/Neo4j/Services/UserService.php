@@ -3,6 +3,7 @@
 namespace Domain\Neo4j\Service;
 
 use Domain\Neo4j\Models\User;
+use Domain\Neo4j\Repositories\CommunityNeo4jRepository;
 use Domain\Neo4j\Repositories\UserNeo4jRepository;
 use Monolog\Logger;
 
@@ -62,6 +63,25 @@ class UserService
         foreach ($fof as $friend) {
             $result[$friend->get('oid')] = [
                 'mutual_count' => $friend->get('mutual_count'),
+                'total_count' => $friend->get('total_count'),
+            ];
+        }
+        return $result;
+    }
+
+    /**
+     * @param $user_oid
+     * @param $community_oid
+     * @param $limit
+     * @param $offset
+     * @return array
+     */
+    public function getFriendsFromCommunity($user_oid, $community_oid, $limit, $offset) {
+        $friends = $this->userRepository->getFriendsFromCommunity($user_oid, $community_oid, $limit, $offset);
+        $result = [];
+        foreach ($friends as $friend) {
+            $result[] = [
+                'oid' => $friend->get('oid'),
                 'total_count' => $friend->get('total_count'),
             ];
         }

@@ -42,7 +42,14 @@
                     <tbody>
                     <tr>
                         <td class="">Дата рождения:</td>
-                        <td class="">{{userData.birthday | toLongDate}}</td>
+                        <td class="">
+                            <template v-if="userData.profile.birthday">
+                                {{ userData.profile.birthday | toLongDate }}
+                            </template>
+                            <template v-else>
+                                Не указано
+                            </template>
+                        </td>
                     </tr>
                     <tr>
                         <td class="">Город:</td>
