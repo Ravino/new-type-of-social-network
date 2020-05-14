@@ -5,7 +5,7 @@
             <router-link :to="`/community-`+community.id" tag="a"
                          class="plizi-community-item-pic mr-auto ml-auto mr-xl-3 ml-xl-3 mb-3 mb-xl-0 rounded-circle overflow-hidden">
                 <img class="plizi-community-item-img "
-                     v-bind:src="community.primaryImage" v-bind:alt="community.name" />
+                     :src="avatar" :alt="community.name" :title="community.name"/>
             </router-link>
 
             <div class="plizi-community-item-body">
@@ -64,7 +64,11 @@ props : {
     community : PliziCommunity,
     canSubscribe: Boolean
 },
-
+computed: {
+    avatar() {
+        return this.community.avatar?.image.thumb.path || this.community.primaryImage;
+    }
+},
 methods: {
     subscribeInvite(){
         this.subscribeOnCommunity(this.community);

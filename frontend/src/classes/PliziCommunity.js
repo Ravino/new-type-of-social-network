@@ -193,6 +193,9 @@ class PliziCommunity {
         return this._friends;
     }
 
+    /**
+     * @returns {PliziCommunityAvatar|null}
+     */
     get avatar() {
         return this._avatar;
     }
