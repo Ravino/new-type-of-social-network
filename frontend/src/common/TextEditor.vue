@@ -238,11 +238,13 @@ methods: {
         let youtubeLinksMatch = this.detectYoutubeLinks(str);
 
         if (youtubeLinksMatch && youtubeLinksMatch.length) {
-            this.$emit('editorPost', {
-                postText: evData.postText,
-                attachments: this.getAttachmentsIDs(),
-                videoLink: youtubeLinksMatch[0],
-                workMode: this.workMode,
+            youtubeLinksMatch.forEach((youtubeLink) => {
+                this.$emit('editorPost', {
+                    postText: evData.postText,
+                    attachments: this.getAttachmentsIDs(),
+                    videoLink: youtubeLink,
+                    workMode: this.workMode,
+                });
             });
         } else {
             this.$emit('editorPost', {
