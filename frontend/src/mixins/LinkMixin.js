@@ -1,7 +1,7 @@
 const LinkMixin = {
     data() {
         return {
-            youtubeLinksRegExp: /https?:\/\/(?:[0-9A-Z-]+\.)?(?:youtu\.be\/|youtube(?:-nocookie)?\.com\S*?[^\w\s-])([\w-]{11})(?=[^\w-]|$)(?![?=&+%\w.-]*(?:['"][^<>]*>|<\/a>))[?=&+%\w.-]*/ig,
+            youtubeLinksRegExp: /https?:\/\/(?:[0-9A-Z-]+\.)?(?:youtu\.be\/|www.youtube(?:-nocookie)?\.com\S*?[^\w\s-])([\w-]{11})(?=[^\w-]|$)(?![?=&+%\w.-]*(?:['"][^<>]*>|<\/a>))[?=&+%\w.-]*/ig,
             youtubeIdRegExp: /^.*((youtu.be\/)|(v\/)|(\/u\/\w\/)|(embed\/)|(watch\?))\??v?=?([^#&?]*).*/,
             urlRegExp: /(https?:\/\/[^\s]+)/g,
         }
