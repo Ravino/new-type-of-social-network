@@ -18,25 +18,26 @@ class UserController extends Controller
 
     /**
      * @param string $search
-     * @return UserSearchCollection|\Illuminate\Http\JsonResponse
+     * @return UserSearchCollection
      */
     public function search(string $search)
     {
-        if (!empty($search) || strlen($search) > 3) {
-            $users = User::where(function($query) use ($search)  {
-                $query->whereHas('profile', function($profile) use ($search) {
-                    $profile
-                        ->where('first_name', 'LIKE', "%{$search}%")
-                        ->orWhere('last_name', 'LIKE', "%{$search}%")
-                        ->orderBy('last_name');
-                })
-                ->orWhere('email', 'LIKE', "%{$search}%");
-            })->where('id', '<>', Auth::user()->id)
-                ->limit(10)
-                ->get();
-            return new UserSearchCollection($users);
+        if (mb_strlen($search) < 3) {
+            return new UserSearchCollection([]);
         }
-        return response()->json(['message' => 'No found'], 200);
+
+        $users = User::where(static function($query) use ($search)  {
+            $query->whereHas('profile', static function($profile) use ($search) {
+                $profile
+                    ->where('first_name', 'LIKE', "%{$search}%")
+                    ->orWhere('last_name', 'LIKE', "%{$search}%")
+                    ->orderBy('last_name');
+            })
+                ->orWhere('email', 'LIKE', "%{$search}%");
+        })->where('id', '<>', Auth::user()->id)
+            ->limit(10)
+            ->get();
+        return new UserSearchCollection($users);
     }
 
     /**
