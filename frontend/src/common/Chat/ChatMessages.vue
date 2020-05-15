@@ -52,7 +52,8 @@
         <ReplyMessageModal v-if="replyMessageModalShow"
                             v-bind:pickedMessage="pickedMessage()"
                             v-bind:currentDialog="currentDialog"
-                            v-bind:pickedID="pickedMessageID">
+                            v-bind:pickedID="pickedMessageID"
+                           :attendees="currentDialog.attendees">
         </ReplyMessageModal>
 
         <ChatVideoModal v-if="chatVideoModalShow"

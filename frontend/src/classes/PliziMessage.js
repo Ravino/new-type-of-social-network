@@ -122,8 +122,8 @@ class PliziMessage{
 
     constructor(msgData){
         this._id = msgData.id;
-        this._userId = msgData._userId;
-        this._chatId = msgData._chatId;
+        this._userId = msgData.userId;
+        this._chatId = msgData.chatId;
         this._firstName = msgData.firstName;
         this._lastName = msgData.lastName;
         this._userPic = msgData.userPic;

@@ -54,7 +54,11 @@ mixins : [ChatMixin],
 props: {
     pickedMessage: PliziMessage | null,
     messageID: Number,
-    currentDialog: Object
+    currentDialog: Object,
+    attendees: {
+        type: Array,
+        default: null,
+    },
 },
 data() {
     return {
@@ -73,13 +77,14 @@ methods: {
     },
 
     onReplyPost(evData){
+        console.log(evData);
         /** @type {string} **/
         let msg = evData.postText.trim();
 
         const config = {
             chatId : this.dialogID,
-            userId : this.$root.$auth.user.id // чтобы Reply получился
-        }
+            userId : this.pickedMessage.userId // чтобы Reply получился
+        };
 
         const fwdData = {
             body : msg,
@@ -116,10 +121,28 @@ methods: {
         }
 
         if ( apiResponse ){
+            let ownerMessage = this.attendees.find((attendee) => {
+                return attendee.id === msgData.userId;
+            });
+
             const eventData = {
-                chatId : apiResponse.data.chatId,
-                message : apiResponse.data
-            }
+                id : apiResponse.data.id,
+                userId: ownerMessage.id,
+                chatId: msgData.forwardFromChatId,
+                firstName: ownerMessage.firstName,
+                lastName: ownerMessage.lastName,
+                userPic: ownerMessage.userPic,
+                sex: ownerMessage.sex,
+                body : msgData.body,
+                attachments: msgData.attachments,
+                isMine: true,
+                isRead: false,
+                isEdited: false,
+                createdAt: Math.floor(Date.now() / 1000),
+                updatedAt: Math.floor(Date.now() / 1000),
+                replyOn: this.pickedMessage,
+                isForward: msgData.isForward,
+            };
 
             this.$root.$emit( 'newMessageInDialog', eventData );
             this.hideReplyMessageModal();

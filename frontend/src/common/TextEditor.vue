@@ -216,8 +216,9 @@ methods: {
     onSendPostClick(){
         const cont = this.$refs.editor.getContent();
         let str = cont.replace(/<p>|<\/p>/g, '').trim();
+        let attachmentsIds = this.getAttachmentsIDs();
 
-        if (!str.length)
+        if (!str.length && !(attachmentsIds && attachmentsIds.length))
             return;
 
         this.$refs.editor.setContent('');

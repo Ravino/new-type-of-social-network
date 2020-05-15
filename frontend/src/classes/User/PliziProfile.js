@@ -75,7 +75,7 @@ class PliziUser {
         this._firstName = (prof.firstName + ``).trim();
         this._lastName = (prof.lastName + ``).trim();
         this._sex = (prof.sex + ``).trim();
-        this._birthday = prof.birthday ? new Date((prof.birthday + ``).trim()) : null;
+        this._birthday = prof.birthday;
         this._relationshipId = prof.relationshipId;
 
         this._location = (prof.location) ? new PliziLocation(prof.location) : null;
@@ -131,7 +131,7 @@ class PliziUser {
      * @returns {Date}
      */
     get birthday(){
-        return this._birthday;
+        return new Date(this._birthday);
     }
 
     /**
@@ -216,18 +216,12 @@ class PliziUser {
      */
     toJSON() {
         /** @TGA чтобы momentJS не подключать **/
-          // TODO: @YZ пересмотреть данное решение.
-        // let month = (this._birthday.getMonth() + 1) + ``;
-        // month = (month.length === 1) ? '0' + month : month;
-        //
-        // let day = this._birthday.getDay() + ``;
-        // day = (day.length === 1) ? '0' + day : day;
+        // TODO: @YZ пересмотреть данное решение.
 
         return {
             firstName: this.firstName,
             lastName: this.lastName,
             sex: this.sex,
-            // birthday: `${this._birthday.getFullYear()}-${month}-${day}`, // this._birthday - вернёт Date, а нам нужно в формате `YYYY-MM-DD`
             birthday: this._birthday,
             location: (this._location) ? this.location.toJSON() : null,
             relationshipId: this.relationshipId,

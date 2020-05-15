@@ -103,10 +103,10 @@ methods: {
 
     onUpdateChatDialog(evData){
         const updatedFields = {
-            lastMessageDT : evData.message.createdAt,
-            lastMessageText : evData.message.body,
-            isLastFromMe : !!evData.message.isMine,
-            isRead : !!evData.message.isRead
+            lastMessageDT : evData.createdAt,
+            lastMessageText : evData.body,
+            isLastFromMe : !!evData.isMine,
+            isRead : !!evData.isRead
         };
 
         this.$root.$auth.dm.dialogStateUpdated(evData.chatId, updatedFields);
