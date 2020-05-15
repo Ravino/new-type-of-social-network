@@ -1,0 +1,148 @@
+
+$portraitFullHeight: 750px;
+
+.plz-gallery {
+    position: relative;
+    &-wrap {
+        overflow: hidden;
+        height: $portraitFullHeight;
+        //width: 100%;
+    }
+    &-pic {
+        //padding: 5px;
+    }
+    &-image {
+        object-fit: cover;
+        cursor: pointer;
+        padding: 5px;
+
+        &-album {
+            &-full {
+                width: 100%;
+            }
+
+            &-half {
+                width: calc(100% / 2 - 5px);
+            }
+
+            &-third {
+                width: calc(100% / 3 - 5px);
+                //height: 150px;
+            }
+
+            &-2 {
+                height: $portraitFullHeight / 2;
+            }
+            &-3 {
+                height: $portraitFullHeight / 2;
+            }
+
+        }
+
+        &-portrait {
+            height: 100%;
+            width: 100%;
+
+            &-block-1 {
+                width: 100%;
+                //margin-right: 5px;
+            }
+
+            &-block-one {
+                img {
+                    width: auto;
+                    max-width: 100%;
+                    //margin-right: 5px;
+                }
+            }
+
+            &-block-2 {
+                width: 100%;
+            }
+
+            &-block-3 {
+                width: 100%;
+            }
+
+            &-full {
+                height: $portraitFullHeight;
+                //width: auto;
+                //min-height: 500px;
+
+            }
+
+            &-half {
+                height: $portraitFullHeight/ 2;
+                //min-height: calc(500px / 2 - 5px);
+            }
+
+            &-third {
+                height: $portraitFullHeight/ 3;
+                //min-height: calc(500px / 3 - 5px);
+            }
+        }
+    }
+
+    &-portrait {
+        display: flex;
+    }
+}
+
+
+.plz-gallery-viewer {
+    position: fixed;
+    width: 100vw;
+    height: 100vh;
+    z-index: 10000;
+    top: 0;
+    left: 0;
+
+    &-overflow {
+        background: #000;
+        height: 100%;
+        width: 100%;
+        opacity: 0.7;
+        position: absolute;
+        z-index: 1;
+        cursor: pointer;
+    }
+
+    &-nav {
+        width: 100vw;
+        height: 100vh;
+        position: absolute;
+
+        &-btn {
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+            color: #ffffff;
+            border: 1px solid #fff3cd;
+            padding: 3px 6px;
+            cursor: pointer;
+            z-index: 5;
+            &:active {
+                background-color: #cccccc;
+            }
+            &-prev {
+                left: 20px;
+            }
+            &-next {
+                right: 20px;
+            }
+        }
+    }
+
+    &-current {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        height: 80%;
+        img {
+            z-index: 2;
+            max-height: 100%!important;
+            max-width: calc(100% - 100px)!important;
+        }
+    }
+}
+
