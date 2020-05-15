@@ -6,9 +6,11 @@ namespace Domain\Pusher\Events;
 use App\Models\User;
 use Domain\Pusher\Repositories\ChatRepository;
 use App\Http\Resources\User\SimpleUser;
+use Illuminate\Queue\SerializesModels;
 
 class UserTypingEvent
 {
+
     /**
      * Тело сообщения
      * @var string
@@ -22,12 +24,11 @@ class UserTypingEvent
     protected $chatId;
 
     /**
-     * Create a new event instance.
-     * @param string $body
-     * @param array $ids
-     * @return void
+     * UserTypingEvent constructor.
+     * @param string $userId
+     * @param string $chatId
      */
-    public function __construct(int $userId, int $chatId)
+    public function __construct(string $userId, string $chatId)
     {
         $this->userId = $userId;
         $this->chatId = $chatId;
@@ -52,9 +53,9 @@ class UserTypingEvent
     }
 
     /**
-     * @return int
+     * @return string
      */
-    public function getChatId(): int
+    public function getChatId(): string
     {
         return $this->chatId;
     }

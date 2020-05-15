@@ -5,7 +5,7 @@
             <router-link :to="`/community-`+community.id" tag="a"
                          class="plizi-community-item-pic mr-auto ml-auto mr-xl-3 ml-xl-3 mb-3 mb-xl-0 rounded-circle overflow-hidden">
                 <img class="plizi-community-item-img "
-                     v-bind:src="community.primaryImage" v-bind:alt="community.name" />
+                     :src="avatar" :alt="community.name" :title="community.name"/>
             </router-link>
 
             <div class="plizi-community-item-body">
@@ -32,25 +32,14 @@
                     <button v-else type="button" class="btn btn-outline-danger plizi-community-btn  rounded-pill" @click="unsubscribeInvite()">
                         Отписаться
                     </button>
-                    <div class="plizi-community-item-body-friends d-flex flex-wrap align-items-center justify-content-between mb-2 mb-xl-0">
+                    <div class="plizi-community-item-body-friends d-flex flex-wrap align-items-center justify-content-between mb-2 mb-xl-0" v-if="community.totalFriends">
                         <div class="plizi-community-item-body-friends-pics mr-3">
-                            <div class="plizi-community-item-body-friends-pic position-relative rounded-circle">
-                                <img src="https://plizi.s3.eu-north-1.amazonaws.com/images/originals/Sx3zRic44zm2mPiMUahypL3hlKw8SuwBsKtm11Jb.png" alt="image">
-                            </div>
-                            <div class="plizi-community-item-body-friends-pic position-relative rounded-circle">
-                                <img src="https://plizi.s3.eu-north-1.amazonaws.com/images/originals/Sx3zRic44zm2mPiMUahypL3hlKw8SuwBsKtm11Jb.png" alt="image">
-                            </div>
-                            <div class="plizi-community-item-body-friends-pic position-relative rounded-circle">
-                                <img src="https://plizi.s3.eu-north-1.amazonaws.com/images/originals/Sx3zRic44zm2mPiMUahypL3hlKw8SuwBsKtm11Jb.png" alt="image">
-                            </div>
-                            <div class="plizi-community-item-body-friends-pic position-relative rounded-circle">
-                                <img src="https://plizi.s3.eu-north-1.amazonaws.com/images/originals/Sx3zRic44zm2mPiMUahypL3hlKw8SuwBsKtm11Jb.png" alt="image">
-                            </div>
-                            <div class="plizi-community-item-body-friends-pic position-relative rounded-circle">
-                                <img src="https://plizi.s3.eu-north-1.amazonaws.com/images/originals/Sx3zRic44zm2mPiMUahypL3hlKw8SuwBsKtm11Jb.png" alt="image">
+                            <div class="plizi-community-item-body-friends-pic position-relative rounded-circle"
+                                v-for="friend in community.friends" :key="friend.id">
+                                <img :src="getAvatar(friend)" :alt="friend.profile.fullName" :title="friend.profile.fullName"/>
                             </div>
                         </div>
-                        <p class="plizi-community-item-desc">5 друзей</p>
+                        <p class="plizi-community-item-desc">{{community.totalFriends}} друзей</p>
                     </div>
                 </div>
             </div>
@@ -75,12 +64,21 @@ props : {
     community : PliziCommunity,
     canSubscribe: Boolean
 },
-
+computed: {
+    avatar() {
+        return this.community.avatar?.image.thumb.path || this.community.primaryImage;
+    }
+},
 methods: {
     subscribeInvite(){
         this.subscribeOnCommunity(this.community);
     },
-
+    /**
+     * @param {PliziMember} user
+     */
+    getAvatar(user) {
+        return user.profile.avatar?.image.thumb.path || user.profile.userPic;
+    },
     unsubscribeInvite(){
         this.unsubscribeCommunity(this.community);
     },

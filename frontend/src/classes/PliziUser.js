@@ -124,6 +124,9 @@ class PliziUser {
         this._lastActivity = new Date(lastActivityDT);
     }
 
+    /**
+     * @returns {PliziProfile}
+     */
     get profile(){
         return this._profile;
     }

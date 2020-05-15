@@ -1,7 +1,7 @@
 <?php
 
 
-namespace Domain\PusherListeners;
+namespace Domain\Pusher\Listeners;
 
 use Domain\Pusher\Events\NewMessageEvent;
 use Domain\Pusher\Repositories\ChatRepository;

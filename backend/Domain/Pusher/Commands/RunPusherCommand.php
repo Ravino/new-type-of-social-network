@@ -32,7 +32,7 @@ class RunPusherCommand extends Command
         $pull->on('message', [$pusher, 'broadcast']);
 
         $webSock = new SecureServer(
-            new Server('0.0.0.0:7070', $loop),
+        new Server('0.0.0.0:7070', $loop),
             $loop,
             [
                 'local_cert'        => '/etc/nginx/ssl/live/vm1095330.hl.had.pm/fullchain.pem',
