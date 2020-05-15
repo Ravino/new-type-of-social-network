@@ -2263,6 +2263,90 @@
                 ],
                 "description": "Список сообществ в которых я учавствую",
                 "operationId": "getMyCommunities",
+                "parameters": [
+                    {
+                        "name": "limit",
+                        "in": "query",
+                        "default": 10,
+                        "required": false,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    },
+                    {
+                        "name": "offset",
+                        "in": "query",
+                        "default": 0,
+                        "required": false,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "security": [
+                    {
+                        "Authorization": []
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "data": {
+                                            "type": "object",
+                                            "properties": {
+                                                "list": {
+                                                    "type": "array",
+                                                    "items": {
+                                                        "$ref": "#/components/schemas/Community"
+                                                    }
+                                                }
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/owner/communities": {
+            "get": {
+                "tags": [
+                    "Communities"
+                ],
+                "description": "Список сообществ в которых я автор",
+                "operationId": "getOwnerCommunities",
+                "parameters": [
+                    {
+                        "name": "limit",
+                        "in": "query",
+                        "default": 10,
+                        "required": false,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    },
+                    {
+                        "name": "offset",
+                        "in": "query",
+                        "default": 0,
+                        "required": false,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "security": [
+                    {
+                        "Authorization": []
+                    }
+                ],
                 "responses": {
                     "200": {
                         "description": "OK",

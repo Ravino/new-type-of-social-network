@@ -4,8 +4,11 @@ namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
 use App\Http\Resources\Community\CommunityCollection;
+use App\Models\Community;
 use App\Models\User;
 use Domain\Pusher\WampServer;
+use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use App\Http\Resources\User\User as UserResource;
@@ -38,12 +41,51 @@ class ProfileController extends Controller
     }
 
     /**
+     * @param Request $request
      * @return CommunityCollection
      */
-    public function myCommunities()
+    public function myCommunities(Request $request)
     {
-        $user = User::with('communities')->find(Auth::user()->id);
-        return new CommunityCollection($user->communities);
+        $communities = Community::with('role', 'members', 'avatar')
+            ->limit($request->query('limit', 10))
+            ->offset($request->query('offset', 0))
+            ->whereHas('role', static function (Builder $query) {
+                $query->where([
+                    'user_id' => Auth::user()->id,
+                ]);
+            })
+            ->get();
+
+        return new CommunityCollection($communities);
+    }
+
+    /**
+     * @param Request $request
+     * @return CommunityCollection
+     */
+    public function ownerCommunities(Request $request)
+    {
+        $communities = Community::with('role', 'members', 'avatar')
+            ->limit($request->query('limit', 10))
+            ->offset($request->query('offset', 0))
+            ->whereHas('role', static function (Builder $query) {
+                $query
+                    ->where([
+                        'user_id' => Auth::user()->id,
+                    ])
+                    ->where(static function (Builder $query) {
+                        $query
+                            ->where([
+                                'role' => Community::ROLE_ADMIN,
+                            ])
+                            ->orWhere([
+                                'role' => Community::ROLE_AUTHOR,
+                            ]);
+                    });
+            })
+            ->get();
+
+        return new CommunityCollection($communities);
     }
 
     /**
