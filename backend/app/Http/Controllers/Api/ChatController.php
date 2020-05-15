@@ -64,7 +64,15 @@ class ChatController extends Controller
      */
     public function messages(Request $request, string $chat_id)
     {
-        $messages = $this->messageRepository->getAllOfChatById($chat_id, Auth::user()->id, $request->query('limit') ?? 50, $request->query('offset') ?? 0);
+        $messages = $this->messageRepository->getAllOfChatById(
+            $chat_id,
+            Auth::user()->id,
+            $request->query('limit') ?? 50,
+            $request->query('offset') ?? 0,
+            $request->query('search') ?? null,
+            $request->query('dateStart') ?? null,
+            $request->query('dateEnd') ?? null
+        );
         return response()->json($messages);
     }
 
