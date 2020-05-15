@@ -4,6 +4,8 @@
 namespace Domain\Pusher\Repositories;
 
 
+use Carbon\Carbon;
+use Clockwork\Request\Log;
 use Domain\Pusher\Http\Resources\Message\MessageCollection;
 use Domain\Pusher\Models\ChatMessage;
 use Domain\Pusher\Http\Resources\Message\Message as MessageResource;
@@ -33,17 +35,29 @@ class MessageRepository
     }
 
     /**
-     * Возвращает список сообщений в чате.
-     *
      * @param string $chat_id
      * @param string|null $user_id
+     * @param int $limit
+     * @param int $offset
+     * @param null $search
+     * @param null $date_start
+     * @param null $date_end
      * @return MessageCollection
      */
-    public function getAllOfChatById(string $chat_id, string $user_id = null)
+    public function getAllOfChatById(string $chat_id, string $user_id = null, $limit = 50, $offset = 0, $search = null, $date_start = null, $date_end = null)
     {
         $items = ChatMessage::with('user', 'attachments')->where('chat_id', $chat_id)
-            ->orderBy('created_at', 'asc')
-            ->get();
+            ->orderBy('created_at', 'desc')
+            ->limit($limit)
+            ->offset($offset);
+
+        if($search) {
+            $items->where('body', 'LIKE', "%{$search}%");
+        }
+        if($date_start && $date_end) {
+            $items = $items->whereBetween('created_at', [Carbon::createFromTimestamp($date_start), Carbon::createFromTimestamp($date_end)]);
+        }
+        $items = $items->get();
         return new MessageCollection($items, $user_id);
     }
 
