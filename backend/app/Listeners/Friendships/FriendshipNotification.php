@@ -25,6 +25,7 @@ class FriendshipNotification
                 'lastActivity' => $sender->last_activity_dt,
                 'id' => $sender->id
             ],
+            'user' => $sender,
             'body' => 'User {0, string} sent you friend request',
             'notificationType' => $event,
         ];
