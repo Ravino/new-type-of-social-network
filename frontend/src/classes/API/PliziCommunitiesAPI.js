@@ -22,6 +22,25 @@ class PliziCommunitiesAPI extends PliziBaseAPI {
         return null;
     }
 
+    /**
+     * Получение списка сообществ для управления
+     * @returns {object[]|null}
+     * @throws PliziAPIError
+     */
+    async loadManagedCommunities() {
+        let response = await this.axios.get('api/owner/communities', this.authHeaders)
+            .catch((error) => {
+                this.checkIsTokenExpires(error, `$communities.loadManagedCommunities`);
+                throw new PliziAPIError(`$communities.loadManagedCommunities`, error.response);
+            });
+
+        if (response.status === 200) {
+            return response.data.data.list;
+        }
+
+        return null;
+    }
+
 
     async userCommunities(){
         let response = await this.axios.get( 'api/user/communities', this.authHeaders )
