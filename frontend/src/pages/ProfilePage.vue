@@ -27,11 +27,19 @@
                         </Post>
                     </template>
 
-                    <div v-else  class="row plz-post-item mb-4 bg-white-br20 p-4">
+                    <div v-else-if="!enabledPostLoader"  class="row plz-post-item mb-4 bg-white-br20 p-4">
                         <div class="alert alert-info w-100 p-5 text-center mb-0">
-                            Вы не создали ни одной записи.
+                            Извините, но сейчас нечего показывать.
                         </div>
                     </div>
+
+                    <template v-if="enabledPostLoader">
+                        <div class="row plz-post-item mb-4 bg-white-br20 p-4">
+                            <div class="w-100 p-5 text-center mb-0">
+                                <SmallSpinner/>
+                            </div>
+                        </div>
+                    </template>
                 </div>
             </div>
 
@@ -64,6 +72,7 @@ import ProfilePhotos from '../components/ProfilePhotos.vue';
 import ProfileFilter from '../components/ProfileFilter.vue';
 import PostEditModal from '../common/Post/PostEditModal.vue';
 import PostVideoModal from '../common/Post/PostVideoModal.vue';
+import SmallSpinner from "../common/SmallSpinner.vue";
 
 import PliziPost from '../classes/PliziPost.js';
 import ShortFriendsMixin from '../mixins/ShortFriendsMixin.js';
@@ -75,6 +84,7 @@ components: {
     ProfileHeader, ProfilePhotos, WhatsNewBlock, ProfileFilter, Post,
     PostEditModal,
     PostVideoModal,
+    SmallSpinner,
 },
 mixins: [ShortFriendsMixin],
 data() {
@@ -103,6 +113,7 @@ data() {
         },
         lazyLoadStarted: false,
         noMorePost: false,
+        enabledPostLoader: true,
     }
 },
 
@@ -179,10 +190,12 @@ methods : {
         try{
             response = await this.$root.$api.$post.getPosts(limit, offset);
         } catch (e){
+            this.enabledPostLoader = false;
             console.warn( e.detailMessage );
         }
 
         if ( response !== null ){
+            this.enabledPostLoader = false;
             response.map( ( post ) => {
                 this.userPosts.push( new PliziPost( post ) );
             } );
@@ -195,6 +208,7 @@ methods : {
         if (this.lazyLoadStarted) return;
         if (this.noMorePost) return;
 
+        this.enabledPostLoader = true;
         this.lazyLoadStarted = true;
         let oldSize = this.userPosts.length;
         let added = await this.getPosts(10, oldSize++);
