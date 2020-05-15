@@ -5,20 +5,21 @@
             <IconFriends />
         </router-link>
 
-        <span v-if="invitationsNumber>0" class="counter-info" id="dropdownMenuFriends"
-              type="button"
-              data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-            {{invitationsNumber}}
+        <span v-if="getInvitationsNumber()>0" class="counter-info" id="dropdownMenuFriends"
+                type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+            {{getInvitationsNumber()}}
         </span>
 
-        <div  v-if="invitationsNumber>0"
+        <div  v-if="getInvitationsNumber()>0"
               class="invitations-dropdown dropdown-menu dropdown-menu-right py-3  dropdown-white w-auto"
               aria-labelledby="dropdownMenuFriends">
 
             <ul class="list-unstyled mb-0">
-                <InvitationItem v-for="(invItem, invIndex) in invitationsList"
-                                  v-bind:key="invIndex" v-bind:invitation="invItem">
-                </InvitationItem>
+                <InvitationsList v-bind:key="'invitationsList-'+getInvitationsNumber()+'-'+invitationsKeyUpdater"
+                                 @InvitationDecline="onInvitationAction"
+                                 @InvitationAccept="onInvitationAction"
+                                 v-bind:invitations="getInvitations()"
+                                 v-bind:invitationsNumber="getInvitationsNumber()"></InvitationsList>
             </ul>
 
             <div class="invitations-dropdown-footer border-top">
@@ -33,29 +34,33 @@
 <script>
 import IconFriends from '../../icons/IconFriends.vue';
 import InvitationItem from '../../components/InvitationItem.vue';
+import InvitationsList from '../../components/InvitationsList.vue';
 
 export default {
 name : 'NavBarFriends',
-components : { IconFriends, InvitationItem },
+components : { IconFriends, InvitationItem, InvitationsList },
 data(){
     return {
-
+        invitationsKeyUpdater: 1,
     }
 },
 methods : {
+    onInvitationAction(){
+        this.invitationsKeyUpdater += 1;
+    },
+
     updateInvitations(){
         this.$forceUpdate();
-    }
-},
+    },
 
-computed: {
-    invitationsNumber(){
+    getInvitations(){
+        return this.$root.$auth.im.asArray();
+    },
+
+    getInvitationsNumber(){
         return this.$root.$auth.im.size;
     },
 
-    invitationsList(){
-        return this.$root.$auth.im.asArray();
-    }
 },
 
 created(){

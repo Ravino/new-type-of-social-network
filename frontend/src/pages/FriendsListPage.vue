@@ -77,7 +77,6 @@ data(){
         allMyFriends: null,
         isFriendsLoaded: true,
         wMode : `all`,
-        removedFriendID : -1,
         searchTerm: '',
         lazyLoadStarted: false,
         noMoreFriends: false,
@@ -101,12 +100,10 @@ methods : {
         let ret = [];
 
         if (this.wMode === 'all'){
-            //ret = this.allMyFriends.asArray();
             ret = this.$root.$auth.frm.asArray();
         }
 
         if (this.wMode === 'online'){
-            //this.allMyFriends.asArray()
             this.$root.$auth.frm.asArray()
                 .map(frItem => {
                     if (frItem.isOnline === true){
@@ -116,7 +113,6 @@ methods : {
         }
 
         if (this.wMode === 'favorites'){
-            //this.allMyFriends.asArray()
             this.$root.$auth.frm.asArray()
                 .map(frItem => {
                     if ( this.$root.$auth.fm.checkIsFavorite( frItem.id )){
@@ -197,11 +193,11 @@ created(){
     if ('#favorites' === this.$route.hash) {
         this.wMode = 'favorites';
     }
-},
 
-//async mounted() {
-//    await this.loadMyFriends();
-//}
+    this.$root.$on( this.$root.$auth.frm.updateEventName,()=>{
+        this.friendsListKey = 'friendsListKey-'+this.$root.$auth.frm.size+'-'+(new Date()).getMilliseconds();
+    });
+}
 
 }
 </script>

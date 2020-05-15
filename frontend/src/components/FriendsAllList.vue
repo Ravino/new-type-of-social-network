@@ -38,6 +38,7 @@ props : {
 
 data(){
     return {
+        friendsKeyCounter: 0,
         localUpdateKey: (new Date()).getMilliseconds(),
     };
 },
@@ -48,7 +49,8 @@ methods: {
     },
 
     changesInFriends(){
-        this.localUpdateKey = (new Date()).getMilliseconds();
+        this.friendsKeyCounter += 1;
+        this.localUpdateKey = this.friendsKeyCounter+'-'+(new Date()).getMilliseconds();
     }
 },
 
@@ -59,15 +61,9 @@ computed: {
 },
 
 created(){
-    //this.$root.$on( this.$root.$auth.frm.loadEventName, ()=>{
-    //    window.console.log(`this.$root.$auth.frm loadEventName`);
-    //    this.$forceUpdate();
-    //});
-    //
-    //this.$root.$on( this.$root.$auth.frm.updateEventName,()=>{
-    //    window.console.log(`this.$root.$auth.frm updateEventName`);
-    //    this.$forceUpdate();
-    //});
+    this.$root.$on( this.$root.$auth.frm.updateEventName,()=>{
+        this.changesInFriends();
+    });
 }
 
 }
