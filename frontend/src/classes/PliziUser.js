@@ -1,4 +1,5 @@
 import PliziProfile from './User/PliziProfile.js';
+import { convertToDate } from '../utils/DateUtils.js';
 
 class PliziUser {
     /**
@@ -78,7 +79,7 @@ class PliziUser {
     updateUserData(inputData) {
         this._id = inputData.id ? inputData.id : this.id;
         this._isOnline = inputData.isOnline ? inputData.isOnline : this.isOnline;
-        this._lastActivity = inputData.lastActivity ? new Date(inputData.lastActivity) : this.lastActivity;
+        this._lastActivity = inputData.lastActivity ? convertToDate(inputData.lastActivity) : this.lastActivity;
 
         this._profile = inputData.profile ? new PliziProfile(inputData.profile) : this.profile;
         this._mutualFriendsCount = inputData.mutualFriendsCount ? inputData.mutualFriendsCount : this.mutualFriendsCount;
@@ -121,7 +122,7 @@ class PliziUser {
      * @param {number|string|Date} lastActivityDT
      */
     set lastActivity(lastActivityDT){
-        this._lastActivity = new Date(lastActivityDT);
+        this._lastActivity = convertToDate(lastActivityDT);
     }
 
     /**
@@ -285,9 +286,9 @@ class PliziUser {
      */
     toJSON() {
         return {
-            id: this._id,
-            isOnline: this._isOnline,
-            lastActivity: this._lastActivity.valueOf(),
+            id: this.id,
+            isOnline: this.isOnline,
+            lastActivity: (this.lastActivity) ? this.lastActivity.valueOf() / 1000 : this.lastActivity,
             profile: (this.profile) ? this.profile.toJSON() : null,
             mutualFriendsCount: this.mutualFriendsCount
         };

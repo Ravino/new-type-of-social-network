@@ -1,6 +1,6 @@
 <template>
     <li class="plizi-invitation-item-user --media m-0 px-4 py-2" :class="calcClazz()">
-        <div class="plizi-invitation-item d-flex ">
+        <div class="plizi-invitation-item d-flex">
             <router-link :to="`/user-`+invitation.id" tag="div" class="plizi-invitation-item-pic mr-3">
                 <img class="plizi-invitation-item-img rounded-circle overflow-hidden" v-bind:src="invitation.userPic" v-bind:alt="invitation.fullName" />
                 <span v-if="invitation.isOnline" class="plizi-invitation-item-isonline" title="онлайн"></span>
@@ -16,14 +16,13 @@
                 </div>
 
                 <div class="plizi-invitation-item-top d-flex align-items-end justify-content-between">
-                    <!--                    {{invitation.notifMessage}}-->
                     <p class="plizi-invitation-item-desc mb-1"> хочет к Вам в друзья</p>
                 </div>
 
                 <div class="plizi-invitation-item-body-bottom d-flex pr-5">
                     <p class="plizi-invitation-item-subdesc p-0 my-0  d-inline-block ">
                         <time :datetime="invitation.lastActivity" class="">
-                            {{ invitation.lastActivity | lastMessageTime }}
+                            {{ invitation.lastActivity | lastEventTime }}
                         </time>
                     </p>
                 </div>
@@ -44,10 +43,15 @@
 </template>
 
 <script>
+import PliziInvitation from '../classes/PliziInvitation.js';
+
 export default {
 name : 'InvitationItem',
 props : {
-    invitation : Object,
+    invitation : {
+        type: PliziInvitation,
+        required: true
+    }
 },
 data(){
     return {
@@ -70,10 +74,10 @@ methods: {
 
         if (response != null) {
             this.isAccepted = true;
-            this.$root.$alert(`Вы подтвердили заявку от ${this.invitation.fullName}`, `bg-success`, 5);
-            this.$root.$emit('InvitationAccept', {
-                invitationId: this.invitation.id
-            });
+
+            const newFriend = this.invitation.toJSON();
+            this.$root.$auth.im.removeInvitation( this.invitation.id );
+            this.$root.$auth.frm.onAddAcceptFriendsShip(newFriend);
         }
         else {
             window.console.info(response);
@@ -94,8 +98,9 @@ methods: {
 
         if (response != null) {
             this.isDeclined = true;
-            this.$root.$alert(`Вы отклонили заявку от ${this.invitation.fullName}`, `bg-warning`, 5);
-            this.$root.$emit('InvitationDecline', {
+            this.$root.$auth.im.removeInvitation( this.invitation.id );
+
+            this.$emit('InvitationDecline', {
                 invitationId: this.invitation.id
             });
         }
@@ -111,11 +116,6 @@ methods: {
             'bg-danger'  : this.isDeclined
         };
     }
-
-},
-
-mounted(){
-    //window.console.dir( JSON.parse( JSON.stringify(this.invitation) ), `InvitationItem` );
 }
 
 }
