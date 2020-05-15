@@ -58,12 +58,13 @@ class ChatController extends Controller
     }
 
     /**
+     * @param Request $request
      * @param string $chat_id
      * @return \Illuminate\Http\JsonResponse
      */
-    public function messages(string $chat_id)
+    public function messages(Request $request, string $chat_id)
     {
-        $messages = $this->messageRepository->getAllOfChatById($chat_id, Auth::user()->id);
+        $messages = $this->messageRepository->getAllOfChatById($chat_id, Auth::user()->id, $request->query('limit') ?? 50, $request->query('offset') ?? 0);
         return response()->json($messages);
     }
 
