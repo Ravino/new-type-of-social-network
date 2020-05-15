@@ -27,6 +27,9 @@ data() {
         isPopularCommunitiesLoaded: true,
         popularCommunities: [],
 
+        isManagedCommunitiesLoaded: false,
+        managedCommunities: [],
+
         recommendedCommunities: null
     }
 },
@@ -121,6 +124,31 @@ methods: {
             this.isPopularCommunitiesLoaded = true;
             apiResponse.map( (pfItem)=> {
                 this.popularCommunities.push( new PliziCommunity(pfItem) );
+            });
+        }
+
+        return true;
+    },
+
+    async loadManagedCommunities() {
+        let apiResponse = null;
+        this.isManagedCommunitiesLoaded = false;
+
+        this.managedCommunities = null;
+
+        try {
+            apiResponse = await this.$root.$api.$communities.loadManagedCommunities();
+        } catch (e) {
+            window.console.warn(e.detailMessage);
+            throw e;
+        }
+
+        this.managedCommunities = [];
+
+        if (apiResponse) {
+            this.isManagedCommunitiesLoaded = true;
+            apiResponse.map((pfItem) => {
+                this.managedCommunities.push(new PliziCommunity(pfItem));
             });
         }
 
