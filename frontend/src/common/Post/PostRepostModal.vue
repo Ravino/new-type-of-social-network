@@ -20,7 +20,8 @@
                     </div>
                     <div class="form-group mb-4">
                         <PostRepostItem :post="post"
-                                        :user="user"/>
+                                        :user="user"
+                                        :community="community"/>
                     </div>
                     <button type="button" class="btn plz-btn plz-btn-primary mt-4" @click.prevent="sharePostToWall">
                         Отправить
@@ -35,6 +36,7 @@
     import PostRepostItem from "./PostRepostItem.vue";
 
     import PliziUser from '../../classes/PliziUser.js';
+    import PliziCommunity from '../../classes/PliziCommunity.js';
     import PliziPost from '../../classes/PliziPost.js';
 
     export default {
@@ -44,6 +46,7 @@
         },
         props: {
             user: PliziUser,
+            community: PliziCommunity,
             post: PliziPost,
         },
         data() {
@@ -74,8 +77,6 @@
                 } catch (e) {
                     console.warn(e.detailMessage);
                 }
-
-                console.log(response);
 
                 if (response) {
                     this.hidePostRepostModal();
