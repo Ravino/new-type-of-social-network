@@ -4,6 +4,7 @@
 namespace Domain\Pusher\Repositories;
 
 
+use Clockwork\Request\Log;
 use Domain\Pusher\Http\Resources\Message\MessageCollection;
 use Domain\Pusher\Models\ChatMessage;
 use Domain\Pusher\Http\Resources\Message\Message as MessageResource;
@@ -33,16 +34,18 @@ class MessageRepository
     }
 
     /**
-     * Возвращает список сообщений в чате.
-     *
      * @param string $chat_id
      * @param string|null $user_id
+     * @param int $limit
+     * @param int $offset
      * @return MessageCollection
      */
-    public function getAllOfChatById(string $chat_id, string $user_id = null)
+    public function getAllOfChatById(string $chat_id, string $user_id = null, $limit = 50, $offset = 0)
     {
         $items = ChatMessage::with('user', 'attachments')->where('chat_id', $chat_id)
-            ->orderBy('created_at', 'asc')
+            ->orderBy('created_at', 'desc')
+            ->limit($limit)
+            ->offset($offset)
             ->get();
         return new MessageCollection($items, $user_id);
     }
