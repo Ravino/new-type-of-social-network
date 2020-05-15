@@ -3,6 +3,7 @@
 
 namespace App\Listeners\Friendships;
 
+use App\Http\Resources\User\SimpleUser;
 use App\Notifications\UserSystemNotifications;
 
 class FriendshipNotification
@@ -25,7 +26,7 @@ class FriendshipNotification
                 'lastActivity' => $sender->last_activity_dt,
                 'id' => $sender->id
             ],
-            'user' => $sender,
+            'user' => new SimpleUser($sender),
             'body' => 'User {0, string} sent you friend request',
             'notificationType' => $event,
         ];
