@@ -2,7 +2,7 @@
 
 namespace Domain\Pusher\Http\Resources\Chat;
 
-use App\Http\Resources\Community\Comment;
+use App\Http\Resources\Community\Community;
 use App\Http\Resources\User\User;
 use App\Models\User as UserModel;
 use App\Models\Community as CommunityModel;

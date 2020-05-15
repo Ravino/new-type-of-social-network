@@ -8,8 +8,8 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\Community\Community as CommunityRequest;
 use App\Http\Requests\Community\CreateCommunity;
 use App\Http\Requests\Community\UploadFileRequest;
-use App\Http\Resources\Community\CommentCollection;
-use App\Http\Resources\Community\Comment as CommunityResource;
+use App\Http\Resources\Community\CommunityCollection;
+use App\Http\Resources\Community\Community as CommunityResource;
 use App\Http\Resources\Community\CommunityUserCollection;
 use App\Http\Resources\User\Image;
 use App\Models\Community;
@@ -55,7 +55,7 @@ class CommunityController extends Controller
     }
 
     /**
-     * @return CommentCollection
+     * @return CommunityCollection
      */
     public function index(Request $request) {
         /**
@@ -68,7 +68,7 @@ class CommunityController extends Controller
         $communities->each(function($community) {
             $community->load('onlyFiveMembers');
         });
-        return new CommentCollection($communities);
+        return new CommunityCollection($communities);
     }
 
     /**

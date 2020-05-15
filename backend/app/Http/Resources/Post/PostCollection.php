@@ -2,7 +2,7 @@
 
 namespace App\Http\Resources\Post;
 
-use App\Http\Resources\Community\Comment;
+use App\Http\Resources\Community\Community;
 use App\Http\Resources\User\SimpleUser;
 use App\Models\Community as CommunityModel;
 use App\Models\User as UserModel;
@@ -62,7 +62,7 @@ class PostCollection extends ResourceCollection
                             'commentsCount' => 48,
                             'alreadyLiked' => (bool)count($post->like),
                             'attachments' => new AttachmentsCollection($post->attachments),
-                            'community' => new Comment($post->postable),
+                            'community' => new Community($post->postable),
                             'createdAt' => $post->created_at,
                             'sharedFrom' => $post->parent_id ? new PostWithoutParent($post->parent) : null,
                             'author' => new SimpleUser($post->author),

@@ -3,7 +3,7 @@
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
-use App\Http\Resources\Community\CommentCollection;
+use App\Http\Resources\Community\CommunityCollection;
 use App\Models\Community;
 use App\Models\User;
 use Domain\Pusher\WampServer;
@@ -42,7 +42,7 @@ class ProfileController extends Controller
 
     /**
      * @param Request $request
-     * @return CommentCollection
+     * @return CommunityCollection
      */
     public function myCommunities(Request $request)
     {
@@ -56,12 +56,12 @@ class ProfileController extends Controller
             })
             ->get();
 
-        return new CommentCollection($communities);
+        return new CommunityCollection($communities);
     }
 
     /**
      * @param Request $request
-     * @return CommentCollection
+     * @return CommunityCollection
      */
     public function ownerCommunities(Request $request)
     {
@@ -85,17 +85,17 @@ class ProfileController extends Controller
             })
             ->get();
 
-        return new CommentCollection($communities);
+        return new CommunityCollection($communities);
     }
 
     /**
      * @param $id
-     * @return CommentCollection
+     * @return CommunityCollection
      */
     public function userCommunities($id)
     {
         $user = User::with('communities')->find($id);
-        return new CommentCollection($user->communities);
+        return new CommunityCollection($user->communities);
     }
 
     /**
