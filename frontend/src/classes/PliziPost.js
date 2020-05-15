@@ -304,6 +304,7 @@ class PliziPost {
         this.name = post.name;
         this.body = post.body;
         this.primaryImage = post.primaryImage;
+        this.alreadyLiked = post.alreadyLiked;
         this.likes = post.likes;
         this.views = post.views;
         this.commentsCount = post.commentsCount;

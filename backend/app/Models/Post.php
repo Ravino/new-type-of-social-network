@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Traits\Likeable;
 use Domain\Pusher\Models\ChatMessage;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
@@ -9,7 +10,7 @@ use Spiritix\LadaCache\Database\LadaCacheTrait;
 
 class Post extends Model
 {
-    use SoftDeletes, LadaCacheTrait;
+    use SoftDeletes, LadaCacheTrait, Likeable;
 
     protected $fillable = [
         'name', 'body', 'likes', 'views', 'author_id'
@@ -55,6 +56,17 @@ class Post extends Model
     public function like() {
         return $this->hasMany(PostLike::class, 'post_id', 'id')->where('user_id', \Auth::user()->id);
     }
+
+//    public function users()
+//    {
+//        return $this->hasManyThrough(
+//            User::class,
+//            PostLike::class,
+//            'post_id', 'id',
+//            'id',
+//            'user_id'
+//        );
+//    }
 
     public function video()
     {

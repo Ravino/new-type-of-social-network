@@ -4,6 +4,7 @@ namespace App\Http\Resources\Post;
 
 use App\Http\Resources\Community\Community;
 use App\Http\Resources\User\SimpleUser;
+use App\Http\Resources\User\SimpleUsers;
 use App\Models\Community as CommunityModel;
 use App\Models\User as UserModel;
 use Illuminate\Http\Resources\Json\ResourceCollection;
@@ -32,6 +33,8 @@ class PostCollection extends ResourceCollection
     {
         return [
             'list' => $this->collection->map(function ($post) {
+//                \Log::debug(json_encode($post->likess));
+//                return;
                 if($this->injectRelation) {
                     if($post->postable instanceof UserModel) {
                         return [
@@ -40,6 +43,7 @@ class PostCollection extends ResourceCollection
                             'body' => strip_tags($post->body, '<span><p>'),
                             'primaryImage' => $post->primary_image,
                             'likes' => $post->likes,
+                            'usersLike' => new SimpleUsers($post->likesRow),
                             'views' => $post->views,
                             'sharesCount' => 25,
                             'commentsCount' => 48,
@@ -57,6 +61,7 @@ class PostCollection extends ResourceCollection
                             'body' => strip_tags($post->body, '<span><p>'),
                             'primaryImage' => $post->primary_image,
                             'likes' => $post->likes,
+                            'usersLike' => new SimpleUsers($post->likesRow),
                             'views' => $post->views,
                             'sharesCount' => 25,
                             'commentsCount' => 48,
@@ -75,6 +80,7 @@ class PostCollection extends ResourceCollection
                         'body' => strip_tags($post->body, '<span><p>'),
                         'primaryImage' => $post->primary_image,
                         'likes' => $post->likes,
+                        'usersLike' => new SimpleUsers($post->likesRow),
                         'views' => $post->views,
                         'sharesCount' => 25,
                         'commentsCount' => 48,
