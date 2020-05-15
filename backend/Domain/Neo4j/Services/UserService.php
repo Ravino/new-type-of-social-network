@@ -70,6 +70,24 @@ class UserService
     }
 
     /**
+     * @param $user_id
+     * @param $limit
+     * @param $offset
+     * @return array
+     */
+    public function getRecommendedFriends($user_id, $limit, $offset) {
+        $recommended = $this->userRepository->getRecommendedFriends($user_id, $limit, $offset);
+        $result = [];
+        foreach ($recommended as $user) {
+            $result[$user->get('oid')] = [
+                'mutual_count' => $user->get('mutual_count'),
+                'total_count' => $user->get('total_count'),
+            ];
+        }
+        return $result;
+    }
+
+    /**
      * @param $user_oid
      * @param $community_oid
      * @param $limit

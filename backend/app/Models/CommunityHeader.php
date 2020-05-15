@@ -4,10 +4,13 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Spiritix\LadaCache\Database\LadaCacheTrait;
 use Storage;
 
 class CommunityHeader extends Model
 {
+    use LadaCacheTrait;
+
     protected $casts = [
         'created_at' => 'timestamp',
         'updated_at' => 'timestamp',

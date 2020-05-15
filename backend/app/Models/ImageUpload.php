@@ -4,10 +4,12 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Event;
+use Spiritix\LadaCache\Database\LadaCacheTrait;
 use Storage;
 
 class ImageUpload extends Model
 {
+    use LadaCacheTrait;
 
     const TAG_PRIMARY = 'primary';
     const TAG_SECONDARY = 'secondary';
