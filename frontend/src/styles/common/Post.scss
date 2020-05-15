@@ -36,3 +36,16 @@
     padding: 10px;
     border-left: 2px solid #cececf;
 }
+
+.youtube-video-link {
+    .post-main-text {
+        &:hover,
+        &:focus {
+            cursor: pointer;
+            & + .video__button .video__button-shape {
+                fill: #ff0000;
+                fill-opacity: 1;
+            }
+        }
+    }
+}
