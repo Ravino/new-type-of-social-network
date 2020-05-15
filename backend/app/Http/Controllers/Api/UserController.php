@@ -165,11 +165,17 @@ class UserController extends Controller
     }
 
     /**
+     * @param Request $request
      * @return UserCollection
      */
-    public function getRecommendedFriends() {
-        $users = Auth::user()->recommendedFriends;
-        return new UserCollection($users);
+    public function getRecommendedFriends(Request $request) {
+        $recommended_ids = Auth::user()->getRecommendedFriends($request->query('limit') ?? 50, $request->query('offset') ?? 0);
+        $recommended = User::with( 'profile', 'profile.avatar')->whereIn('id', array_keys($recommended_ids))->get();
+        $total_count = $recommended_ids[array_key_first($recommended_ids)]['total_count'];
+        foreach ($recommended as $user) {
+            $user->mutual_count = $recommended_ids[$user->id]['mutual_count'];
+        }
+        return new UserCollection($recommended, $total_count);
     }
 
     /**
