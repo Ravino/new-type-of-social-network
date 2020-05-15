@@ -13,16 +13,13 @@ class AddListToCommunity extends Migration
      */
     public function up()
     {
-        Schema::table('communities', static function (Blueprint $table) {
-            $table->smallInteger('type');
-            $table->integer('theme_id');
-            $table->smallInteger('privacy');
-
-            $table->foreign('theme_id')
-                ->references('id')
-                ->on('community_themes')
-                ->onDelete('cascade');
-        });
+        if(!Schema::hasColumn('communities', 'type')) {
+            Schema::table('communities', static function (Blueprint $table) {
+                $table->smallInteger('type');
+                $table->integer('theme_id');
+                $table->smallInteger('privacy');
+            });
+        }
     }
 
     /**

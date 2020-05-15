@@ -2,7 +2,7 @@
 
 namespace App\Http\Resources\Notification;
 
-use App\Http\Resources\Community\Community;
+use App\Http\Resources\Community\Comment;
 use App\Http\Resources\User\User;
 use App\Models\Community as CommunityModel;
 use App\Models\User as UserModel;

@@ -2,7 +2,7 @@
 
 namespace App\Http\Resources\User;
 
-use App\Http\Resources\Community\CommunityCollection;
+use App\Http\Resources\Community\CommentCollection;
 use Illuminate\Http\Resources\Json\JsonResource;
 
 class UserWithCommunities extends JsonResource
@@ -18,7 +18,7 @@ class UserWithCommunities extends JsonResource
         return [
             'id' => $this->id,
             'isOnline' => $this->isOnline,
-            'communities' => new CommunityCollection($this->communities),
+            'communities' => new CommentCollection($this->communities),
             'profile' => new Profile($this->profile)
         ];
     }

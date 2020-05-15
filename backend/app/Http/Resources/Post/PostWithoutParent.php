@@ -2,7 +2,7 @@
 
 namespace App\Http\Resources\Post;
 
-use App\Http\Resources\Community\Community;
+use App\Http\Resources\Community\Comment;
 use App\Http\Resources\User\SimpleUser;
 use App\Http\Resources\User\User;
 use App\Models\User as UserModel;
@@ -46,7 +46,7 @@ class PostWithoutParent extends JsonResource
                 'commentsCount' => 48,
                 'alreadyLiked' => $this->alreadyLiked,
                 'attachments' => new AttachmentsCollection($this->attachments),
-                'community' => new Community($this->postable),
+                'community' => new Comment($this->postable),
                 'createdAt' => $this->created_at
             ];
         }

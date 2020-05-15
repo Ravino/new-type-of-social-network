@@ -105,6 +105,11 @@ Route::group(['middleware' => ['auth.jwt', 'track.activity']], function () {
         Route::resource('/', 'Api\VideoController');
     });
 
+    Route::prefix('comment')->group(function () {
+        Route::post('post', 'Api\CommentController@commentPost');
+        Route::get('post/{id}', 'Api\CommentController@getPostComments');
+    });
+
     /**
      * Geo data Resource
      */
