@@ -406,11 +406,11 @@ methods: {
                     //     $this .checkUpdatedChatContainerHeight();
                     // }, 1200); // TODO @TGA как узнать время, когда картинка загружена @veremey
 
-                }).catch(e => {
-                    window.console.warn(e.detailMessage);
-                    throw e;
-                });
-            })
+                })
+            }).catch((e) => {
+                window.console.warn(e.detailMessage);
+                throw e;
+            });
         }
     },
 },
