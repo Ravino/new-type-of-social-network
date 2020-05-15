@@ -8,7 +8,9 @@
                     <i class="icon icon-letter"></i>
                     <input v-model="model.email" ref="email"
                            :class="{ '--is-invalid': $v.model.email.$error, '--is-valid': !$v.model.email.$invalid }"
-                           @blur="$v.model.email.$touch()" @keydown="loginKeyDownCheck($event)"
+                           @blur="$v.model.email.$touch()"
+                           @keydown="loginKeyDownCheck($event)"
+                           @input="onInput('email')"
                            type="text" class="lr-input lr-input-email form-control" id="userEmail"
                            placeholder="Ваш E-mail"/>
 
@@ -185,6 +187,10 @@
 
                     this.initLogin();
                 }
+            },
+            onInput(fieldName) {
+                if (fieldName === 'email')
+                    this.model[fieldName] = this.model[fieldName].trim();
             },
         },
     }
