@@ -137,7 +137,7 @@
                 <div class="d-flex">
                     <div class="d-flex">
                         <div class="post-watched-counter"
-                             :class="{'is-liked': post.alreadyLiked}"
+                             :class="{'is-active': post.alreadyLiked}"
                              @click="onLike">
                             <IconHeard/>
                             <span>{{ post.likes | space1000 }}</span>
