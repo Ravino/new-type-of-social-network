@@ -114,7 +114,8 @@ methods: {
 
         try {
             apiResponse = await this.$root.$api.$chat.messageSend( chatId, msgText, attachments );
-        } catch (e){
+        }
+        catch (e){
             this.errors = e.data.errors;
             window.console.warn( e.detailMessage );
             throw e;
@@ -152,6 +153,8 @@ methods: {
                 chatId : chatId,
                 message : newMessage
             };
+
+            window.console.log( JSON.parse( JSON.stringify(newMessage) ), `newMessage` );
 
             this.$root.$emit( 'newMessageInDialog', eventData );
         }

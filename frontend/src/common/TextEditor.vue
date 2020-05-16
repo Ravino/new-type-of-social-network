@@ -37,13 +37,12 @@
 
                 <div class="plz-editor-btns d-flex flex-column flex-md-row justify-content-between"  >
 
-                    <label
+                    <button type="button" @click.stop="onAttachBtnClick($event)"
                         :class="{'attach-file--disallow cursor-non-drop' : isDisallowUpload}"
-                        class="attach-file w-100 d-flex align-items-center justify-content-center btn btn-link my-0 ml-0 mr-0 mr-md-2 px-1 btn-add-file position-relative"
-                    >
+    class="attach-file btn-add-file w-100 d-flex align-items-center justify-content-center btn btn-link my-0 mx-0 mr-md-2 px-1 position-relative">
                         <IconAddFile />
-                        <input type="file" :disabled="isDisallowUpload" @change="onSelectFile($event)" ref="editorFiler" multiple />
-                    </label>
+                        <input type="file" class="plz-text-editor-file-picker" :disabled="isDisallowUpload" @change="onSelectFile()" ref="editorFiler" multiple />
+                    </button>
 
                     <!--<label class="attach-file d-flex align-items-center  btn btn-link my-0 ml-0 mr-2 px-1 btn-add-camera position-relative">
                         <IconAddCamera />
@@ -51,14 +50,7 @@
                     </label>-->
 
                     <button class="btn btn-link w-100 mx-0 px-1 btn-add-smile position-relative" type="button">
-                        <EmojiPicker v-if="dropToDown"
-                                     @addEmoji="onAddEmoji"
-                                     :transform="'transform: translate(-40%, 40px)'">
-                        </EmojiPicker>
-                        <EmojiPicker v-else
-                                     @addEmoji="onAddEmoji"
-                                     :transform="'transform: translate(-54%, -100%)'">
-                        </EmojiPicker>
+                        <EmojiPicker @addEmoji="onAddEmoji" v-bind:transform="emojiTransform"></EmojiPicker>
                     </button>
                 </div>
             </div>
@@ -94,7 +86,7 @@ import PliziAttachment from '../classes/PliziAttachment.js';
 import { checkExtension } from '../utils/FileUtils.js';
 import { docsExtensions, imagesExtensions } from '../enums/FileExtensionEnums.js';
 import PliziAttachmentItem from '../classes/PliziAttachmentItem.js';
-import LinkMixin from "../mixins/LinkMixin.js";
+import LinkMixin from '../mixins/LinkMixin.js';
 
 /**  TODO: Вставка файлов **/
 /** @link https://www.npmjs.com/package/vue-filepond **/
@@ -134,7 +126,9 @@ props: {
       default: null,
     },
 },
+
 mixins: [LinkMixin],
+
 data() {
     let attachFiles = [];
 
@@ -156,6 +150,13 @@ data() {
 },
 
 computed: {
+    emojiTransform(){
+        if (this.dropToDown)
+            return 'transform: translate(-40%, 40px)';
+
+        return 'transform: translate(-54%, -100%)';
+    },
+
     userPic() {
         return this.$root.$auth.user.userPic;
     },
@@ -247,7 +248,8 @@ methods: {
                     workMode: this.workMode,
                 });
             });
-        } else {
+        }
+        else {
             this.$emit('editorPost', {
                 postText: evData.postText,
                 attachments: this.getAttachmentsIDs()
@@ -261,30 +263,30 @@ methods: {
         this.$emit('editorKeyDown', ev);
     },
 
-    onSelectFile(evData) {
+    onSelectFile(ev) {
+        window.console.log(ev, `onSelectFile`);
         this.addUploadAttachment(this.$refs.editorFiler.files);
     },
 
-    onSelectImage(evData) {
+    onSelectImage(ev) {
         this.addUploadAttachment(this.$refs.editorImager.files);
     },
 
     onAddEmoji(evData) {
-        if (evData.keys.ctrlKey) { // бал нажат Ctrl
+        if (evData.keys.ctrlKey) { // был нажат Ctrl
             this.$refs.editor.focus();
 
             let txt = this.$refs.editor.getContent();
 
-            //this.$emit('editorPost', { postText : `<!--<p onclick="alert(11111)">Серега привет!!!</p>>-->` });
-            //this.$emit('editorPost', { postText : `<img src="https://steamuserimages-a.akamaihd.net/ugc/792010418808130585/980E17AA6CF29E06865DA40F9067B9164AB54BCD/" alt="" />` });
-
             if (`<p></p>` === txt.toLowerCase()) { // поле ввода пустое - значит отправляем только увеличенный эмоджи
                 const sendSmile = `<p class="big-emoji">${evData.emoji}</p>`;
                 this.$emit('editorPost', {postText: sendSmile});
-            } else { // просто добавляем эмоджи
+            }
+            else { // просто добавляем эмоджи
                 this.$refs.editor.addEmoji(evData.emoji);
             }
-        } else { // просто добавляем эмоджи
+        }
+        else { // просто добавляем эмоджи
             this.$refs.editor.addEmoji(evData.emoji);
         }
     },
@@ -296,8 +298,7 @@ methods: {
     },
 
     getStartContainerHeight () {
-        let startChatContainerHeight = this.$refs.editorContainer.offsetHeight;
-        this.editorContainerHeight = startChatContainerHeight;
+        this.editorContainerHeight = this.$refs.editorContainer.offsetHeight;
     },
 
     checkUpdatedChatContainerHeight() {
@@ -308,7 +309,6 @@ methods: {
         }
 
         this.onEditorNewHeight(this.editorContainerHeight);
-        //console.log('checkUpdatedChatContainerHeight', this.editorContainerHeight);
     },
 
     onMaximumCharacterLimit(str) {
@@ -317,6 +317,21 @@ methods: {
 
     onUpdate() {
         this.$emit('onUpdateEditor');
+    },
+
+    onAttachBtnClick(ev){
+        /** FIXME: @TGA после MVP тут надо переделать
+         * иначе не получается открыть диалог выбора файлов в "привязанном" чате PLZ-420 **/
+        let $btn = null;
+        if (ev.target.tagName.toUpperCase() === 'BUTTON') {
+            $btn = $(ev.target);
+        }
+        else {
+            $btn = $(ev.target).closest('button.attach-file');
+        }
+
+        const $file = $btn.find('input.plz-text-editor-file-picker');
+        $file.click();
     },
 
     async addUploadAttachment(picsArr) {
@@ -355,11 +370,10 @@ methods: {
             }
         }
 
-        if (picsArr.length === 0) {
+        if (picsArr.length === 0)
           return;
-        }
 
-        for (const file of picsArr) {
+        for (let file of picsArr) {
             const reader = new FileReader();
             reader.onload = () => {
                 const attachment = new PliziAttachmentItem(true, checkExtension(file, imagesExtensions), file.name);
@@ -401,12 +415,6 @@ methods: {
                     });
 
                     this.$emit('newAttach', {attach: newAtt});
-
-                    // const $this = this;
-                    // setTimeout(function () {
-                    //     $this .checkUpdatedChatContainerHeight();
-                    // }, 1200); // TODO @TGA как узнать время, когда картинка загружена @veremey
-
                 })
             }).catch((e) => {
                 window.console.warn(e.detailMessage);
