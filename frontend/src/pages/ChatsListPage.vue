@@ -171,7 +171,7 @@ methods: {
             return;
 
         if (this.currentDialog.id === evData.chatId) {
-         this.addMessageToMessagesList(evData);
+            this.addMessageToMessagesList(evData.message);
         }
 
         this.updateDialogsList(evData.chatId, evData);
