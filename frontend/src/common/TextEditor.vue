@@ -82,11 +82,13 @@ import Editor from './TextEditor/Editor.vue';
 import EmojiPicker from './TextEditor/EmojiPicker.vue';
 import AttachmentItem from './TextEditor/AttachmentItem.vue';
 
-import PliziAttachment from '../classes/PliziAttachment.js';
 import { checkExtension } from '../utils/FileUtils.js';
 import { docsExtensions, imagesExtensions } from '../enums/FileExtensionEnums.js';
 import PliziAttachmentItem from '../classes/PliziAttachmentItem.js';
 import LinkMixin from '../mixins/LinkMixin.js';
+
+import PliziAttachment from '../classes/PliziAttachment.js';
+import PliziCollection from '../classes/PliziCollection.js';
 
 /**  TODO: Вставка файлов **/
 /** @link https://www.npmjs.com/package/vue-filepond **/
@@ -101,39 +103,40 @@ components: {
     EmojiPicker,
     AttachmentItem
 },
-props: {
+props : {
     fieldId : String,
-    showAvatar: Boolean,
-    clazz: String,
-    editorPlaceholder: String,
-    dropToDown: Boolean,
-    workMode: {
-        type: String,
-        required: true,
+    showAvatar : Boolean,
+    clazz : String,
+    editorPlaceholder : String,
+    dropToDown : Boolean,
+    workMode : {
+        type : String,
+        required : true,
     },
-  inputEditorText: String,
-  inputEditorAttachment: Array,
-  maxFilesCount: {
-      type: Number,
-      default: 10,
-  },
-    maximumCharacterLimit: {
-        type: Number,
-        default: 10000,
+    inputEditorText : String,
+    inputEditorAttachment : Array,
+    maxFilesCount : {
+        type : Number,
+        default : 10,
     },
-    errors: {
-      type: Object,
-      default: null,
+    maximumCharacterLimit : {
+        type : Number,
+        default : 10000,
+    },
+    errors : {
+        type : Object,
+        default : null,
     },
 },
 
 mixins: [LinkMixin],
 
 data() {
-    let attachFiles = [];
+    /** @TGA и почему инициализация этого тут, а не в created() ?? **/
+    let inputFiles = [];
 
     if (this.inputEditorAttachment) {
-        attachFiles = this.inputEditorAttachment.map(file => {
+        inputFiles = this.inputEditorAttachment.map((file) => {
             const attachment = new PliziAttachmentItem(false, file.isImage, file.originalName);
             attachment.attachment = file;
 
@@ -142,7 +145,8 @@ data() {
     }
 
     return {
-        attachFiles,
+        attachFiles : inputFiles,
+        attachmentsData: (new PliziCollection()),
         defaultClasses: `bg-white w-100 border-top position-relative mt-auto`,
         editorContainerHeight: 32,
         isMaximumCharacterLimit: false,
@@ -168,9 +172,11 @@ computed: {
     blockClass(){
         return this.clazz || this.defaultClasses;
     },
+
     isDisallowUpload() {
         return this.attachFiles.length >= this.maxFilesCount;
     },
+
     bodyError() {
         return this.errors && this.errors.body ? this.errors.body : null;
     },
@@ -184,7 +190,10 @@ methods: {
     getContent() {
         return {
             postText: this.$refs.editor.getContent(),
-            attachments: this.getAttachmentsIDs()
+            attachments: this.getAttachmentsIDs(),
+            attachmentsData: this.attachmentsData.asArray(),
+            videoLink: null,
+            workMode: this.workMode,
         }
     },
 
@@ -202,15 +211,16 @@ methods: {
             return aItem.attachment.id !== evData.attach.id;
         });
 
-        const $this = this;
-        setTimeout(function() {
-            $this.checkUpdatedChatContainerHeight();
+        this.attachmentsData.delete(evData.attach.id);
+
+        setTimeout(() => {
+            this.checkUpdatedChatContainerHeight();
         }, 200);
 
         this.$emit('onRemoveAttachment', evData.attach.id);
     },
 
-    onAttachmentLoaded(evData) {
+    onAttachmentLoaded() {
         this.checkUpdatedChatContainerHeight();
     },
 
@@ -241,9 +251,11 @@ methods: {
 
         if (youtubeLinksMatch && youtubeLinksMatch.length) {
             youtubeLinksMatch.forEach((youtubeLink) => {
+
                 this.$emit('editorPost', {
                     postText: evData.postText,
                     attachments: this.getAttachmentsIDs(),
+                    attachmentsData: this.attachmentsData.asArray(),
                     videoLink: youtubeLink,
                     workMode: this.workMode,
                 });
@@ -252,11 +264,15 @@ methods: {
         else {
             this.$emit('editorPost', {
                 postText: evData.postText,
-                attachments: this.getAttachmentsIDs()
+                attachments: this.getAttachmentsIDs(),
+                attachmentsData: this.attachmentsData.asArray(),
+                videoLink: null,
+                workMode: this.workMode,
             });
         }
 
         this.attachFiles = [];
+        this.attachmentsData.clear();
     },
 
     onEditorKeyDown(ev) {
@@ -264,7 +280,6 @@ methods: {
     },
 
     onSelectFile(ev) {
-        window.console.log(ev, `onSelectFile`);
         this.addUploadAttachment(this.$refs.editorFiler.files);
     },
 
@@ -337,9 +352,9 @@ methods: {
     async addUploadAttachment(picsArr) {
         this.$refs.editor.focus();
 
-        const filseCount = picsArr.length + this.attachFiles.length;
+        const filesCount = picsArr.length + this.attachFiles.length;
 
-        if (filseCount > this.maxFilesCount) {
+        if (filesCount > this.maxFilesCount) {
             this.$alert(`
                 <h4 class="text-white">Ошибка</h4>
                 <div class="alert alert-danger">
@@ -371,7 +386,7 @@ methods: {
         }
 
         if (picsArr.length === 0)
-          return;
+            return;
 
         for (let file of picsArr) {
             const reader = new FileReader();
@@ -389,11 +404,11 @@ methods: {
             /** TODO: @TGA надо потом перенести отсюда загрузку аттачей **/
             switch (this.workMode) {
                 case 'chat':
-                    apiResponse = this.$root.$api.$chat.attachment(picsArr);
+                    apiResponse = this.$root.$api.$chat.attachment([file]);
                     break;
 
                 case 'post':
-                    apiResponse = this.$root.$api.$post.storePostAttachments(picsArr);
+                    apiResponse = this.$root.$api.$post.storePostAttachments([file]);
                     break;
 
                 default:
@@ -413,6 +428,8 @@ methods: {
 
                         return foundFile;
                     });
+
+                    this.attachmentsData.add(attItem);
 
                     this.$emit('newAttach', {attach: newAtt});
                 })
