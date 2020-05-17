@@ -1,51 +1,53 @@
 <template>
     <div class="plz-gallery" :class="[`plz-gallery-${galleryType}`]">
         <div v-if="galleryType === 'album'" class="plz-gallery-wrap plz-gallery-wrap-album">
-            <template v-for="image in imagesWithClasses">
-                <img
-                    @click="showImage(image.id)"
-                    :class="image.classes"
-                    class="plz-gallery-image"
-                    :src="image.path"
-                    :alt="image.name"
-                >
-            </template>
+            <GalleryItem
+                v-for="image in imagesWithClasses"
+                :image="image"
+                :countImagesMore="countImagesMore"
+                type="album"
+                @showImage="showImage"
+            ></GalleryItem>
         </div>
         <template v-else>
            <div v-for="block in portraitBlocks" :class="block.classes">
-               <template v-for="image in block.images">
-                   <img
-                       @click="showImage(image.id)"
-                       :class="image.classes"
-                       class="plz-gallery-image"
-                       :src="image.path"
-                       :alt="image.name"
-                   >
-               </template>
+               <GalleryItem
+                   v-for="image in block.images"
+                   :image="image"
+                   :countImagesMore="countImagesMore"
+                   type="portrait"
+                   @showImage="showImage"
+               ></GalleryItem>
            </div>
         </template>
-    <GalleryViewer
-        v-if="activeImageId"
-        :images="images"
-        :active-id="activeImageId"
-        @close="activeImageId = null"
-    ></GalleryViewer>
+     <div class="plz-gallery__show"  v-if="activeImageId">
+        <GalleryViewer
+            :images="images"
+            :active-id="activeImageId"
+            @close="activeImageId = null">
+        </GalleryViewer>
+        <GalleryDescription :post="post"></GalleryDescription>
+     </div>
     </div>
 </template>
 
 <script>
 
 import GalleryViewer from './GalleryViewer.vue';
-const MORE_COUNT = 5;
+import GalleryDescription from "./GalleryDescription";
+import GalleryItem from "./GalleryItem";
 
 export default {
 name: 'Gallery',
-    components: {GalleryViewer},
+    components: {GalleryItem, GalleryDescription, GalleryViewer},
     props: {
     images: {
         type: Array,
         default: () => [],
-    }
+    },
+     post: {
+        type: Object,
+     },
 },
 data() {
     return {
@@ -56,20 +58,26 @@ computed: {
     countImages() {
         return this.images.length;
     },
+    countImagesMore() {
+        return this.countImages - this.moreCount;
+    },
     viewImages() {
-        return this.images.slice(0, MORE_COUNT);
+        return this.images.slice(0, this.moreCount);
     },
     firstImageView() {
-        return this.viewImages.slice(0, 1).pop();
+        return this.images.slice(0, 1).pop();
     },
     lastImageView() {
         return this.viewImages.slice(-1).pop();
     },
     isMore() {
-        return this.countImages > MORE_COUNT;
+        return this.countImages > this.moreCount;
     },
     galleryType() {
         return this.imageType(this.firstImageView);
+    },
+    moreCount() {
+        return this.galleryType === 'album' ? 5 : 4;
     },
     imagesWithClasses() {
         let index = 0;
@@ -77,10 +85,10 @@ computed: {
 
         return this.viewImages.map(image => {
             index++;
-            const type = this.imageType(image);
+            const type = this.galleryType;
 
             const classes = [
-                `plz-gallery-image-${type}`,
+                `plz-gallery-image-${type}-wrap`,
             ];
 
             const isMore = this.isMore && this.lastImageView.id === image.id;
@@ -96,7 +104,7 @@ computed: {
             }
 
             return {
-                path: image.medium.path,
+                path: image.normal.path,
                 name: image.originalName,
                 classes,
                 isMore,
@@ -109,32 +117,21 @@ computed: {
 
         const first = [];
         const second = [];
-        const third = [];
         let index = 1;
 
         for (const image of this.imagesWithClasses) {
             if (index === 1) {
                 first.push(image);
             } else if (index === 2) {
-                if (countImages === 5) {
+                if (countImages === 4) {
                     first.push(image);
                 } else {
                     second.push(image);
                 }
             } else if (index === 3) {
-                if (countImages === 5) {
-                    third.push(image);
-                } else {
-                    second.push(image);
-                }
+                second.push(image);
             } else if (index === 4) {
-                if (countImages === 5) {
-                    third.push(image);
-                } else {
-                    second.push(image);
-                }
-            } else if (index === 5) {
-                third.push(image);
+                second.push(image);
             }
 
             index++;
@@ -162,18 +159,6 @@ computed: {
                     'plz-gallery-image-portrait',
                     `plz-gallery-image-portrait-block-${indexBlock}`,
                 ]
-            });
-
-            indexBlock++;
-        }
-
-        if (third.length > 0) {
-            blocks.push({
-                images: third,
-                classes: [
-                    'plz-gallery-image-portrait',
-                    `plz-gallery-image-portrait-block-${indexBlock}`,
-                ],
             });
 
             indexBlock++;
@@ -239,7 +224,7 @@ methods: {
     },
     getPortraitImageClass(index, countImages) {
         if (index === 1) {
-            if (countImages === 5) {
+            if (countImages === 4) {
                 return `plz-gallery-image-portrait-half`;
             } else {
                 return `plz-gallery-image-portrait-full`;
@@ -250,26 +235,16 @@ methods: {
             } else if (countImages === 3) {
                 return `plz-gallery-image-portrait-half`;
             } else if (countImages === 4) {
-                return `plz-gallery-image-portrait-third`;
-            } else if (countImages === 5) {
                 return `plz-gallery-image-portrait-half`;
             }
         } else if (index === 3) {
             if (countImages === 3) {
                 return `plz-gallery-image-portrait-half`;
             } else if (countImages === 4) {
-                return `plz-gallery-image-portrait-third`;
-            } else if (countImages === 5) {
-                return `plz-gallery-image-portrait-third`;
+                return `plz-gallery-image-portrait-half`;
             }
         } else if (index === 4) {
-            if (countImages === 4) {
-                return `plz-gallery-image-portrait-third`;
-            } else if (countImages === 5) {
-                return `plz-gallery-image-portrait-third`;
-            }
-        } else if (index === 5) {
-            return `plz-gallery-image-portrait-third`;
+            return `plz-gallery-image-portrait-half`;
         }
     }
 }
@@ -281,62 +256,6 @@ methods: {
         position: relative;
         &-wrap-album {
             overflow: hidden;
-        }
-        &-image {
-            object-fit: cover;
-            cursor: pointer;
-
-            &-album {
-                &-full {
-                    width: 100%;
-                }
-
-                &-half {
-                    width: calc(100% / 2 - 5px);
-                }
-
-                &-third {
-                    width: calc(100% / 3 - 5px);
-                    height: 150px;
-                }
-            }
-
-            &-portrait {
-                height: 100%;
-                width: 100%;
-
-                &-block-1 {
-                   width: 50%;
-                    margin-right: 5px;
-                }
-
-                &-block-2 {
-                    width: 50%;
-                }
-
-                &-block-3 {
-                    width: 100%;
-                }
-
-                &-full {
-                    height: 100%;
-                    min-height: 500px;
-                }
-
-                &-half {
-                    height: calc(100% / 2);
-                    min-height: calc(500px / 2 - 5px);
-                }
-
-                &-third {
-                    height: calc(100% / 3);
-                    min-height: calc(500px / 3 - 5px);
-                }
-            }
-        }
-
-        &-portrait {
-            display: flex;
         }
     }
 </style>
