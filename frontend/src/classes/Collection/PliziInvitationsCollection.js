@@ -1,16 +1,18 @@
-import PliziInvitation from '../PliziInvitation.js';
 import PliziStoredCollection from './PliziStoredCollection.js';
+
+import PliziInvitation from '../PliziInvitation.js';
+import PliziNotification from '../PliziNotification.js';
 
 /**
  * класс для работы со списком приглашений дружбы
  */
 class PliziInvitationsCollection extends PliziStoredCollection {
 
-    localStorageKey = `pliziInvitations`;
+    localStorageKey  = `pliziInvitations`;
 
     restoreEventName = 'InvitationsIsRestored';
-    loadEventName = 'InvitationsIsLoaded';
-    updateEventName = 'InvitationsIsUpdated';
+    loadEventName    = 'InvitationsIsLoaded';
+    updateEventName  = 'InvitationsIsUpdated';
 
     /**
      * метод сравнения для сортировки
@@ -26,12 +28,43 @@ class PliziInvitationsCollection extends PliziStoredCollection {
     }
 
 
-    onAddNewInvitation(evData){
-        window.console.log(evData, `onAddNewInvitation`);
+    /**
+     * обработка прилетевшей нотификации, что кто-то хочет подружиться
+     * @param {PliziNotification} evData - тут данные в виде объекта-нотификации
+     * @throws PliziAPIError
+     * @emits InvitationsIsUpdated
+     */
+    async onAddNewInvitation(evData){
+        const userId = evData.data.sender.id;
 
-        this.add(evData);
+        let apiResponse = null;
+
+        try {
+            apiResponse = await this.api.$users.getUser(userId);
+        }
+        catch (e){
+            window.console.warn(e.detailMessage);
+            throw e;
+        }
+
+        if (apiResponse) {
+            this.add(apiResponse.data);
+
+            this.storeData();
+            this.restore();
+            this.emit(this.updateEventName, { invitationId : userId });
+            return true;
+        }
+
+        return false;
+    }
+
+
+    removeInvitation(invitationId){
+        this.delete(invitationId);
         this.storeData();
-        this.emit(this.updateEventName);
+        this.restore();
+        this.emit(this.updateEventName, { invitationId : invitationId });
     }
 
 
@@ -69,14 +102,6 @@ class PliziInvitationsCollection extends PliziStoredCollection {
     async load(){
         this.clear();
 
-        this.restoreData();
-
-        if (this.collection.size > 0) {
-            this.isLoad = true;
-            this.emit(this.restoreEventName);
-            return true;
-        }
-
         let apiResponse = null;
 
         try {
@@ -101,22 +126,6 @@ class PliziInvitationsCollection extends PliziStoredCollection {
         }
 
         return true;
-    }
-
-    invitationStateUpdated(invID, newData){
-        window.console.log(`invitationStateUpdated`);
-        let invitation = this.get(invID);
-
-        if (invitation) {
-            //invitation.lastMessageDT = newData.lastMessageDT;
-            //invitation.lastMessageText = newData.lastMessageText;
-            //invitation.isLastFromMe = newData.isLastFromMe;
-            //invitation.isRead = newData.isRead;
-
-            //this.collection.set(invID, invitation);
-
-            this.storeData();
-        }
     }
 
 }

@@ -45,7 +45,7 @@ methods: {
       msg = msg.replace(/<p><\/p>/g, brExample);
       msg = this.killBrTrail(msg);
 
-      if (msg !== '') {
+        if (msg !== '') {
         this.savePost( msg, evData.attachments, evData.videoLink, evData.workMode );
       } else if (evData.attachments.length > 0) {
         this.savePost( '<p></p>', evData.attachments, evData.videoLink, evData.workMode );
@@ -79,6 +79,8 @@ methods: {
       }
     },
     async storeVideo(youtubeLink, workMode, id) {
+        if (!(youtubeLink && workMode && id)) return;
+
         let response;
 
         try {

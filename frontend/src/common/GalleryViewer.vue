@@ -1,5 +1,5 @@
 <template>
-    <div class="plz-gallery-viewer">
+    <div class="plz-gallery-viewer d-flex align-items-center justify-content-center">
         <div class="plz-gallery-viewer-overflow" @click="close"></div>
         <div class="plz-gallery-viewer-nav">
             <div class="plz-gallery-viewer-nav-btn plz-gallery-viewer-nav-btn-prev" @click="prevImage">
@@ -84,54 +84,3 @@ export default {
 }
 </script>
 
-<style lang="scss">
-    .plz-gallery-viewer {
-        position: fixed;
-        width: 100vw;
-        height: 100vh;
-        z-index: 10000;
-        top: 0;
-        left: 0;
-
-        &-overflow {
-            background: #000;
-            height: 100%;
-            width: 100%;
-            opacity: 0.7;
-            position: absolute;
-            z-index: 1;
-            cursor: pointer;
-        }
-
-        &-nav {
-            width: 100vw;
-            height: 100vh;
-            position: absolute;
-
-            &-btn {
-                position: absolute;
-                top: 50%;
-                transform: translateY(-50%);
-                z-index: 5;
-                &-prev {
-                    left: 5px;
-                }
-                &-next {
-                    right: 5px;
-                }
-            }
-        }
-
-        &-current {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            height: 100%;
-            img {
-                z-index: 2;
-                max-height: 100%!important;
-                max-width: calc(100% - 100px)!important;
-            }
-        }
-    }
-</style>

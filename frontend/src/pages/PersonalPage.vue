@@ -124,7 +124,7 @@ methods: {
         if (apiResponse) {
             this.profileData = new PliziUser(apiResponse.data);
             this.isDataReady = true;
-            this.getPosts();
+            await this.getPosts();
         }
     },
 
@@ -175,6 +175,7 @@ methods: {
             window.console.info(apiResponse);
         }
     },
+
     async getPosts() {
         let response = null;
 
@@ -209,14 +210,14 @@ mounted() {
     this.$root.$on('sendPersonalMessage', this.handlePersonalMessage);
 },
 
-beforeRouteUpdate (to, from, next) {
+beforeRouteUpdate( to, from, next ){
     this.profileData = null;
     this.userPosts = null;
-        this.userId = to.params.id;
-        this.getUserInfo();
-        next();
-        window.scrollTo(0, 0);
-    },
+    this.userId = to.params.id;
+    this.getUserInfo();
+    next();
+    window.scrollTo( 0, 0 );
+},
 }
 </script>
 

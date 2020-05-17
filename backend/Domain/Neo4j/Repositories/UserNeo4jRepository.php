@@ -84,7 +84,25 @@ class UserNeo4jRepository extends BaseRepository
                   ORDER BY mutual_count DESC
                   SKIP {$offset}
                   LIMIT {$limit}";
-        \Log::debug($query);
+        return $this->client->run($query)->records();
+    }
+
+    /**
+     * @param $oid
+     * @param $limit
+     * @param $offset
+     * @return Record[]
+     */
+    public function getRecommendedFriends($oid, $limit, $offset) {
+        $query = "MATCH (me: User {oid: '{$oid}'})-[:MEMBER_OF]-(community:Community)-[:MEMBER_OF]-(user:User)
+                  WITH COUNT(distinct user) AS total_count
+                  MATCH (me: User {oid: '{$oid}'})-[:MEMBER_OF]-(community:Community)-[:MEMBER_OF]-(user:User)
+                  OPTIONAL MATCH (me:`User` {oid: '{$oid}'})-[:FRIEND_OF]-(mf)-[:FRIEND_OF]-(user)
+                  WHERE NOT (me)-[:FRIEND_OF]-(user) AND me <> user
+                  RETURN DISTINCT user.oid as oid, COUNT(community) as frequency, COUNT(mf) as mutual_count, total_count
+                  ORDER BY mutual_count DESC
+                  SKIP {$offset}
+                  LIMIT {$limit}";
         return $this->client->run($query)->records();
     }
 

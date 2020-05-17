@@ -6,11 +6,11 @@ import PliziStoredCollection from './PliziStoredCollection.js';
  */
 class PliziFriendsCollection extends PliziStoredCollection {
 
-    localStorageKey = `pliziFriends`;
+    localStorageKey  = `pliziFriends`;
 
     restoreEventName = 'FriendsIsRestored';
-    loadEventName = 'FriendsIsLoaded';
-    updateEventName = 'FriendsIsUpdated';
+    loadEventName    = 'FriendsIsLoaded';
+    updateEventName  = 'FriendsIsUpdated';
 
     pageSize = 10;
 
@@ -30,18 +30,16 @@ class PliziFriendsCollection extends PliziStoredCollection {
 
     onAddAcceptFriendsShip(evData){
         window.console.warn(evData,`onAddAcceptFriendsShip`);
-        //this.add(evData);
-        //this.storeData();
-        //this.emit(this.updateEventName);
+        this.add(evData);
+        this.storeData();
+        this.emit(this.updateEventName);
     }
 
     stopFriendship(removedFriendId){
-        window.console.log(`PliziFriendsCollection::stopFriendship`);
-
         this.delete(removedFriendId);
         this.storeData();
         this.restore();
-        this.emit(this.updateEventName);
+        this.emit(this.updateEventName, { friendId : removedFriendId });
     }
 
 

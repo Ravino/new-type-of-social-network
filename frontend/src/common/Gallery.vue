@@ -1,6 +1,6 @@
 <template>
-    <div class="plz-gallery" :class="[`plz-gallery-${galleryType}`]">
-        <div v-if="galleryType === 'album'" class="plz-gallery-wrap plz-gallery-wrap-album">
+    <div class="plz-gallery d-flex justify-content-center" :class="[`plz-gallery-${galleryType}`]">
+        <div v-if="galleryType === 'album'" class="plz-gallery-wrap d-flex flex-wrap w-100">
             <template v-for="image in imagesWithClasses">
                 <img
                     @click="showImage(image.id)"
@@ -12,7 +12,7 @@
             </template>
         </div>
         <template v-else>
-           <div v-for="block in portraitBlocks" :class="block.classes">
+           <div v-for="block in portraitBlocks" class="plz-gallery-pic" :class="block.classes">
                <template v-for="image in block.images">
                    <img
                        @click="showImage(image.id)"
@@ -143,23 +143,33 @@ computed: {
         const blocks = [];
         let indexBlock = 1;
 
-        if (first.length > 0) {
-            blocks.push({
-                images: first,
-                classes: [
-                    'plz-gallery-image-portrait',
-                    `plz-gallery-image-portrait-block-${indexBlock}`,
-                ]
-            });
 
-            indexBlock++;
+
+        if (first.length > 0) {
+            if (first.length <= 1) {
+                blocks.push({
+                    images: first,
+                    classes: [
+                        `plz-gallery-image-portrait-block-${indexBlock} plz-gallery-image-portrait-block-one`,
+                    ]
+                });
+
+            } else {
+                blocks.push({
+                    images: first,
+                    classes: [
+                        `plz-gallery-image-portrait-block-${indexBlock}`,
+                    ]
+                });
+
+                indexBlock++;
+            }
         }
 
         if (second.length > 0) {
             blocks.push({
                 images: second,
                 classes: [
-                    'plz-gallery-image-portrait',
                     `plz-gallery-image-portrait-block-${indexBlock}`,
                 ]
             });
@@ -171,7 +181,6 @@ computed: {
             blocks.push({
                 images: third,
                 classes: [
-                    'plz-gallery-image-portrait',
                     `plz-gallery-image-portrait-block-${indexBlock}`,
                 ],
             });
@@ -201,35 +210,35 @@ methods: {
             if (countImages === 1) {
                 return `plz-gallery-image-album-full`;
             } else if (countImages === 2) {
-                return `plz-gallery-image-album-full`;
+                return `plz-gallery-image-album-full plz-gallery-image-album-${countImages}`;
             } else if (countImages === 3) {
-                return `plz-gallery-image-album-full`;
+                return `plz-gallery-image-album-full plz-gallery-image-album-${countImages}`;
             } else if (countImages === 4) {
-                return `plz-gallery-image-album-full`;
+                return `plz-gallery-image-album-full plz-gallery-image-album-${countImages}`;
             } else if (countImages === 5) {
-                return `plz-gallery-image-album-half`;
+                return `plz-gallery-image-album-half plz-gallery-image-album-${countImages}`;
             }
         } else if (index === 2) {
             if (countImages === 2) {
-                return `plz-gallery-image-album-full`;
+                return `plz-gallery-image-album-full plz-gallery-image-album-${countImages}`;
             } else if (countImages === 3) {
-                return `plz-gallery-image-album-half`;
+                return `plz-gallery-image-album-half plz-gallery-image-album-${countImages}`;
             } else if (countImages === 4) {
-                return `plz-gallery-image-album-third`;
+                return `plz-gallery-image-album-third plz-gallery-image-album-${countImages}`;
             } else if (countImages === 5) {
-                return `plz-gallery-image-album-half`;
+                return `plz-gallery-image-album-half plz-gallery-image-album-${countImages}`;
             }
         } else if (index === 3) {
             if (countImages === 3) {
-                return `plz-gallery-image-album-half`;
+                return `plz-gallery-image-album-half plz-gallery-image-album-${countImages}`;
             } else if (countImages === 4) {
-                return `plz-gallery-image-album-third`;
+                return `plz-gallery-image-album-third plz-gallery-image-album-${countImages}`;
             } else if (countImages === 5) {
-                return `plz-gallery-image-album-third`;
+                return `plz-gallery-image-album-third plz-gallery-image-album-${countImages}`;
             }
         } else if (index === 4) {
             if (countImages === 4) {
-                return `plz-gallery-image-album-third`;
+                return `plz-gallery-image-album-third `;
             } else if (countImages === 5) {
                 return `plz-gallery-image-album-third`;
             }
@@ -242,7 +251,7 @@ methods: {
             if (countImages === 5) {
                 return `plz-gallery-image-portrait-half`;
             } else {
-                return `plz-gallery-image-portrait-full`;
+                return `plz-gallery-image-portrait-full d-block mx-auto`;
             }
         } else if (index === 2) {
             if (countImages === 2) {
@@ -275,68 +284,3 @@ methods: {
 }
 }
 </script>
-
-<style lang="scss">
-    .plz-gallery {
-        position: relative;
-        &-wrap-album {
-            overflow: hidden;
-        }
-        &-image {
-            object-fit: cover;
-            cursor: pointer;
-
-            &-album {
-                &-full {
-                    width: 100%;
-                }
-
-                &-half {
-                    width: calc(100% / 2 - 5px);
-                }
-
-                &-third {
-                    width: calc(100% / 3 - 5px);
-                    height: 150px;
-                }
-            }
-
-            &-portrait {
-                height: 100%;
-                width: 100%;
-
-                &-block-1 {
-                   width: 50%;
-                    margin-right: 5px;
-                }
-
-                &-block-2 {
-                    width: 50%;
-                }
-
-                &-block-3 {
-                    width: 100%;
-                }
-
-                &-full {
-                    height: 100%;
-                    min-height: 500px;
-                }
-
-                &-half {
-                    height: calc(100% / 2);
-                    min-height: calc(500px / 2 - 5px);
-                }
-
-                &-third {
-                    height: calc(100% / 3);
-                    min-height: calc(500px / 3 - 5px);
-                }
-            }
-        }
-
-        &-portrait {
-            display: flex;
-        }
-    }
-</style>
