@@ -5,7 +5,6 @@ $portraitFullHeight: 750px;
     position: relative;
     &-wrap {
         overflow: hidden;
-        height: $portraitFullHeight;
         //width: 100%;
     }
     &-pic {
@@ -15,6 +14,18 @@ $portraitFullHeight: 750px;
         object-fit: cover;
         cursor: pointer;
         padding: 5px;
+        width: 100%;
+
+        &-more {
+            position: relative;
+            &:before {
+                content: attr(data-more);
+                z-index: 3000;
+                position: absolute;
+                height: 100%;
+                width: 100%;
+            }
+        }
 
         &-album {
             &-full {
@@ -22,21 +33,17 @@ $portraitFullHeight: 750px;
             }
 
             &-half {
-                width: calc(100% / 2 - 5px);
+                width: calc(100% / 2);
             }
 
             &-third {
-                width: calc(100% / 3 - 5px);
-                //height: 150px;
+                width: calc(100% / 3);
+                height: 150px;
             }
 
             &-2 {
                 height: $portraitFullHeight / 2;
             }
-            &-3 {
-                height: $portraitFullHeight / 2;
-            }
-
         }
 
         &-portrait {
@@ -91,24 +98,22 @@ $portraitFullHeight: 750px;
 
 .plz-gallery-viewer {
     position: fixed;
-    width: 100vw;
+    width: 70vw;
     height: 100vh;
     z-index: 10000;
     top: 0;
     left: 0;
 
     &-overflow {
-        background: #000;
         height: 100%;
         width: 100%;
-        opacity: 0.7;
         position: absolute;
         z-index: 1;
         cursor: pointer;
     }
 
     &-nav {
-        width: 100vw;
+        width: 70vw;
         height: 100vh;
         position: absolute;
 
@@ -137,7 +142,7 @@ $portraitFullHeight: 750px;
         display: flex;
         align-items: center;
         justify-content: center;
-        height: 80%;
+        height: 100%;
         img {
             z-index: 2;
             max-height: 100%!important;
