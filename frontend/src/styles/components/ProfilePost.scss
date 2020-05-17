@@ -91,6 +91,17 @@ $postPosterPicSize: 48px;
                 fill: $iconHoverColor;
             }
         }
+
+        &.is-active {
+            .icon-message,
+            .icon-heard,
+            .icon-share {
+                fill: $iconHoverColor;
+            }
+            span {
+                color: $iconHoverColor;
+            }
+        }
     }
 
     .plz-post-item-footer {

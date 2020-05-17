@@ -2,6 +2,7 @@
 
 namespace Domain\Pusher\Http\Resources\Message;
 
+use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Http\Resources\Json\ResourceCollection;
 
 class MessageCollection extends ResourceCollection
@@ -12,7 +13,7 @@ class MessageCollection extends ResourceCollection
      */
     public $user_id;
 
-    public function __construct($resource, $user_id)
+    public function __construct(Collection $resource, $user_id)
     {
         $this->user_id = $user_id;
         parent::__construct($resource);
@@ -46,7 +47,7 @@ class MessageCollection extends ResourceCollection
                     'replyOn' => $message->parent ? new Message($message->parent, $this->user_id) : null,
                     'isForward' => $message->parent_chat_id ? true : false,
                 ];
-            })
+            })->reverse()->toArray()
         ];
     }
 }

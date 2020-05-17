@@ -126,7 +126,10 @@ computed: {
     },
 
     detectEmoji() {
-        return this.message.body.includes('<p class="big-emoji">');
+        if (this.message.body)
+            return this.message.body.includes('<p class="big-emoji">');
+
+        return false;
     },
 
     hasYoutubeLinks() {
@@ -196,9 +199,7 @@ methods: {
             videoLink: this.detectYoutubeLinks(this.message.body.replace(/<\/?[^>]+>/g, '').trim())[0],
         })
     },
-},
-
-mounted() {
 }
+
 }
 </script>

@@ -170,14 +170,14 @@ methods: {
         if ('ChatsListPage'!==this.$root.$router.currentRoute.name)
             return;
 
-        if (this.currentDialog.id === evData.message.chatId) {
-         this.addMessageToMessagesList(evData.message);
+        if (this.currentDialog.id === evData.chatId) {
+            this.addMessageToMessagesList(evData.message);
         }
 
         this.updateDialogsList(evData.chatId, evData);
     },
 
-    addNewMessageNotification({ message }) {
+    addNewMessageNotification(message) {
         if (message.isMine || this.currentDialog.id === message.chatId) {
             return;
         }

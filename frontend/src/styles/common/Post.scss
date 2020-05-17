@@ -21,18 +21,28 @@
 }
 
 .post-images {
-    margin-left: -5px;
 
     img {
-        max-height: 337px;
         max-width: 100%;
         border-radius: 3px;
-        margin-left: 5px;
-        margin-bottom: 5px;
+
     }
 }
 
 .shared {
     padding: 10px;
     border-left: 2px solid #cececf;
+}
+
+.youtube-video-link {
+    .post-main-text {
+        &:hover,
+        &:focus {
+            cursor: pointer;
+            & + .video__button .video__button-shape {
+                fill: #ff0000;
+                fill-opacity: 1;
+            }
+        }
+    }
 }

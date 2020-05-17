@@ -13,12 +13,14 @@
 
                 <div class="row">
                     <div class="col-12 col-lg-8 col-xl-9 mb-4 px-4 py-0">
-                        <div v-if="isManagedCommunitiesLoaded" class="row">
+                        <div class="row" v-if="isManagedCommunitiesLoaded">
                             <ul v-if="managedCommunities  &&  managedCommunities.length>0"
                                 class="plizi-communities-list w-100 d-flex justify-content-between flex-wrap p-0">
-                                <transition-group name="slide-fade" :duration="700">
-                                    список модерируемых сообществ тут
-                                </transition-group>
+                                <CommunityItem v-for="(comItem, comIndex) in managedCommunities"
+                                               :community="comItem"
+                                               :canSubscribe="false"
+                                               :key="comIndex">
+                                </CommunityItem>
                             </ul>
                             <div v-else class="container px-2 ">
                                 <div  class=" bg-white-br20 p-3">
@@ -47,24 +49,19 @@
 </template>
 
 <script>
-import CommunitiesListMixin from '../mixins/CommunitiesListMixin.js';
+    import CommunitiesListMixin from '../mixins/CommunitiesListMixin.js';
 
-export default {
-name : 'CommunitiesManagePage',
-components : {
-},
-mixins: [CommunitiesListMixin],
+    export default {
+        name: 'CommunitiesManagePage',
+        components: {},
+        mixins: [CommunitiesListMixin],
 
-data(){
-    return {
-        isManagedCommunitiesLoaded: true,
-        managedCommunities: []
+        data() {
+            return {}
+        },
+        methods: {},
+        mounted() {
+            this.loadManagedCommunities();
+        }
     }
-},
-
-methods : {
-
-},
-
-}
 </script>

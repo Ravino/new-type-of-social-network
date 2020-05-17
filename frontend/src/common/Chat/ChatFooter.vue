@@ -21,7 +21,7 @@ import TextEditor from '../TextEditor.vue';
 import PliziDialog from '../../classes/PliziDialog.js';
 
 import ChatMixin from '../../mixins/ChatMixin.js';
-import LinkMixin from "../../mixins/LinkMixin.js";
+import LinkMixin from '../../mixins/LinkMixin.js';
 
 export default {
 name: 'ChatFooter',
@@ -85,20 +85,20 @@ methods: {
                     });
 
                     if (evData.attachments && evData.attachments.length) {
-                        this.addMessageToChat( '', evData.attachments );
+                        this.addMessageToChat( '', evData.attachments, evData.attachmentsData );
                     }
                 }
                 else {
-                    this.addMessageToChat( msg, evData.attachments );
+                    this.addMessageToChat( msg, evData.attachments, evData.attachmentsData );
                 }
             } else if (evData.attachments.length > 0) {
-                this.addMessageToChat( '', evData.attachments );
+                this.addMessageToChat( '', evData.attachments, evData.attachmentsData );
             }
         }
         else {
             // сообщение пустое - проверяем есть ли аттачи
             if (evData.attachments.length > 0) {
-                this.addMessageToChat( '', evData.attachments );
+                this.addMessageToChat( '', evData.attachments, evData.attachmentsData );
             }
         }
     },
@@ -107,14 +107,15 @@ methods: {
         this.errors = null;
     },
 
-    async addMessageToChat( msgText, attachments ){
+    async addMessageToChat( msgText, attachmentsIds, attachmentsFiles ){
         const chatId = (this.currentDialog) ? this.currentDialog.id : 'unknown';
 
         let apiResponse = null;
 
         try {
-            apiResponse = await this.$root.$api.$chat.messageSend( chatId, msgText, attachments );
-        } catch (e){
+            apiResponse = await this.$root.$api.$chat.messageSend( chatId, msgText, attachmentsIds );
+        }
+        catch (e){
             this.errors = e.data.errors;
             window.console.warn( e.detailMessage );
             throw e;
@@ -138,11 +139,12 @@ methods: {
                 isEdited: false,
                 createdAt: nowDT,
                 updatedAt: nowDT,
-                attachments: { list : attachments },
+                attachments: { list : attachmentsFiles },
                 replyOn: null,
                 isForward: null
             };
 
+            // @TGA так было когда бэк присылал все данные на сообщение
             //const eventData = {
             //    chatId : apiResponse.data.chatId,
             //    message : apiResponse.data
@@ -152,6 +154,9 @@ methods: {
                 chatId : chatId,
                 message : newMessage
             };
+
+            //window.console.log( JSON.parse( JSON.stringify(attachmentsFiles) ) , `attachmentsFiles`);
+            //window.console.log( JSON.parse( JSON.stringify(newMessage) ), `newMessage` );
 
             this.$root.$emit( 'newMessageInDialog', eventData );
         }
