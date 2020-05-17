@@ -4,6 +4,7 @@
 namespace Domain\Pusher;
 
 
+use Domain\Pusher\Events\NewMessageEvent;
 use Domain\Pusher\Events\UserTypingEvent;
 use Domain\Pusher\Listeners\UserTypingNotification;
 use Illuminate\Support\Facades\Log;
@@ -72,7 +73,9 @@ class WampServer implements WampServerInterface
     public function onCall(ConnectionInterface $conn, $id, $topic, array $params)
     {
         $params = json_decode(json_encode($params), true);
-        event(new UserTypingEvent($params['userId'], $params['chatId']));
+        if($params['event'] === 'user.typing') {
+            event(new UserTypingEvent($params['userId'], $params['chatId']));
+        }
     }
 
     public function onSubscribe(ConnectionInterface $conn, $topic)
