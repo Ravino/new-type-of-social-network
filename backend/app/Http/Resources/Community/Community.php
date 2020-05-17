@@ -2,6 +2,7 @@
 
 namespace App\Http\Resources\Community;
 
+use App\Http\Resources\Geo\City as CityResource;
 use App\Http\Resources\User\Image;
 use App\Models\User;
 use Illuminate\Http\Request;
@@ -26,10 +27,14 @@ class Community extends JsonResource
             'primaryImage' => $this->primary_image,
             'url' => $this->url,
             'website' => $this->website,
-            'location' => $this->location,
+            'privacy' => $this->privacy,
+            'type' => $this->type,
+            'themeId' => $this->theme_id,
+            'location' => $this->city ? new CityResource($this->city) : null,
             'totalMembers' => $this->members->count(),
             'role' => $this->role ? $this->role->role : null,
             'avatar' => $this->avatar ? new Image($this->avatar) : null,
+            'headerImage' => $this->headerImage ? new Image($this->headerImage) : null,
             'friends' => $this->getFriends($request),
         ];
         if ($this && $this->relationLoaded('users')) {

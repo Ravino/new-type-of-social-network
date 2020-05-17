@@ -10,7 +10,7 @@
                     <div v-if="isDataReady" id="communityHeader"
                          class="plz-community-header bg-white-br20 mb-4 text-left overflow-hidden">
                         <div class="plz-community-header-pic position-relative overflow-hidden">
-                            <img src="images/community-header-bg.jpg" alt="image">
+                            <img :src="headerImage" alt="image">
                         </div>
                         <div class="plz-community-header-bottom d-flex align-items-start align-items-sm-center justify-content-between py-3 px-4">
                             <div class="plz-community-header-details d-flex align-items-center">
@@ -31,7 +31,7 @@
                                 <div class="plz-community-header-details-text">
                                     <h1 class="plz-community-header-title mb-1">{{communityData.name}}</h1>
                                     <p class="plz-community-header-desc mb-0">
-                                        Скоро открытие 7-го сервера Sinatra!
+                                        {{communityData.description}}
                                     </p>
                                 </div>
                             </div>
@@ -82,6 +82,8 @@
                 </div>
 
                 <div class="col-12 col-sm-5 col-lg-4">
+                    <CommunityManagedActionBlock :community="communityData" v-if="isAuthor"></CommunityManagedActionBlock>
+
                     <CommunityUserActionBlock v-bind:community="communityData"></CommunityUserActionBlock>
 
                     <CommunityFriendsInformer v-bind:community="communityData"></CommunityFriendsInformer>
@@ -166,6 +168,7 @@ import PostRepostModal from '../common/Post/PostRepostModal.vue';
 import PliziCommunity from '../classes/PliziCommunity.js';
 import PliziPost from '../classes/PliziPost.js';
 import PliziCommunityAvatar from '../classes/Community/PliziCommunityAvatar.js';
+import CommunityManagedActionBlock from "../common/Communities/CommunityManagedActionBlock";
 
 export default {
 name: 'CommunityPage',
@@ -174,6 +177,7 @@ props: {
 },
 
 components : {
+    CommunityManagedActionBlock,
     CommunityShortMembers,
     CommunityFriendsInformer,
     CommunityUserActionBlock,
@@ -204,7 +208,7 @@ data() {
 
 computed: {
     isAuthor(){
-        return this.communityData.role === 'author';
+        return this.communityData?.role === 'author';
     },
 
     filteredPosts(){
@@ -226,6 +230,9 @@ computed: {
     avatarThumb() {
         return this.communityData?.avatar?.image.thumb.path || this.communityData?.primaryImage;
     },
+    headerImage() {
+        return this.communityData?.headerImage.image.normal.path || 'images/community-header-bg.jpg';
+    }
 },
 
 methods: {
