@@ -11,6 +11,13 @@ export function isCorrectHumanName(value) {
     return /^[a-zа-яёїіи+\-\s]{1,100}$/i.test(value);
 }
 
+export function isCorrectSlug(value) {
+    if ((value+'') === '')
+        return true;
+
+    return /^[a-z\-\_\d]{2,50}$/i.test(value);
+}
+
 export function notHaveSpace(value) {
     return !(/\s/.test(value));
 }

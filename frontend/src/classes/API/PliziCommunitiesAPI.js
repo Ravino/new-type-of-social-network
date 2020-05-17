@@ -168,6 +168,27 @@ class PliziCommunitiesAPI extends PliziBaseAPI {
         return null;
     }
 
+    /**
+     * Обновление данных сообщества
+     * @param {string} id
+     * @param {formData} formData - данные для загрузки
+     * @returns {object|null} - ответ сервера
+     * @throws PliziAPIError
+     */
+    async update(id, formData) {
+        let response = await this.__axios.patch('/api/communities/' + id, formData, this.authHeaders)
+            .catch((error) => {
+                this.checkIsTokenExpires(error, `$communities.update`);
+                throw new PliziAPIError(`$communities.update`, error.response);
+            });
+
+        if (response.status === 200 || response.status === 201) {
+            return response.data;
+        }
+
+        return null;
+    }
+
 
     /**
      * загружает аватарку сообщества
@@ -180,6 +201,26 @@ class PliziCommunitiesAPI extends PliziBaseAPI {
             .catch((error) => {
                 this.checkIsTokenExpires(error, `$communities.updatePrimaryImage`);
                 throw new PliziAPIError(`$communities.updatePrimaryImage`, error.response);
+            });
+
+        if (response.status === 200 || response.status === 201) {
+            return response.data;
+        }
+
+        return null;
+    }
+
+    /**
+     * загружает аватарку сообщества
+     * @param {formData} formData - данные для загрузки
+     * @returns {object|null} - ответ сервера
+     * @throws PliziAPIError
+     */
+    async updateHeaderImage(formData) {
+        let response = await this.__axios.post('/api/communities/header-image', formData, this.authFileHeaders)
+            .catch((error) => {
+                this.checkIsTokenExpires(error, `$communities.updateHeaderImage`);
+                throw new PliziAPIError(`$communities.updateHeaderImage`, error.response);
             });
 
         if (response.status === 200 || response.status === 201) {

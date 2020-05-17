@@ -78,7 +78,7 @@ class CommunityController extends Controller
     public function get(int $id) {
         $community = Community::with(['users' => function($u) {
             $u->limit(5);
-        }, 'users.profile', 'members', 'avatar'])->find($id);
+        }, 'users.profile', 'members', 'avatar', 'city', 'headerImage'])->find($id);
         if($community) {
             return new CommunityResource($community);
         }
@@ -201,20 +201,20 @@ class CommunityController extends Controller
     {
         $uploaded = $this->uploadService->singleUpload('community/headers', $request->file('file'), 'public', [
             'normal' => [
-                'size' => 600,
+                'size' => [1145, 210],
             ],
             'medium' => [
-                'size' => 250,
+                'size' => 100,
             ],
             'thumb' => [
-                'size' => [80, 80],
+                'size' => [228, 42],
             ],
         ]);
 
         $community_id = request()->input('id');
         $uploaded['community_id'] = $community_id;
         $attachment = CommunityHeader::updateOrCreate(['community_id' => $community_id], $uploaded);
-        return new AttachmentsCollection([$attachment]);
+        return new Image($attachment);
     }
 
     public function themeList()
