@@ -12,6 +12,12 @@
                 </main>
                 <GuestFooter></GuestFooter>
             </div>
+
+            <AlertModal v-if="mainModalVisible"
+                        v-bind:alertMessage="mainModalMessage"
+                        v-bind:alertClass="mainModalClass"
+                        v-bind:alertTimeout="mainModalTimeOut"
+            ></AlertModal>
         </div>
 
         <div v-else id="authPageWrapper">

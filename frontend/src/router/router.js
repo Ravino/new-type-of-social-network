@@ -124,10 +124,16 @@ async function checkRouteAuth(to, from, next) {
                 tryToLoadUser = await window.app.$root.$api.$users.getUser();
             }
             catch (e) {
-                routerForcedLogout(next, to);
+                window.app.$root.$alert(`<p class="text-white">Извините, но на сервере произошла ошибка и войти не получится.<br />Попробуйте через некоторое время.</p>`, 'bg-danger', 10);
+
+                return routerForcedLogout(next, to);
             }
 
+            window.console.log(tryToLoadUser, `tryToLoadUser`);
+
             if (tryToLoadUser) {
+                window.console.warn(`emit AfterUserLoad`);
+
                 window.app.$root.$emit('AfterUserLoad', {
                     user: tryToLoadUser,
                     token: gwt,
@@ -135,12 +141,14 @@ async function checkRouteAuth(to, from, next) {
                 });
             }
             else {
-                routerForcedLogout(next, to);
+                return routerForcedLogout(next, to);
             }
         }
     }
-    else if (!to.meta.isNotFound) {
-        routerForcedLogout(next, to);
+    else {
+        if (!to.meta.isNotFound) {
+            return routerForcedLogout(next, to);
+        }
     }
 
     updateTitle(to, next);
