@@ -8,8 +8,12 @@ class PliziCommunitiesAPI extends PliziBaseAPI {
      * @returns {object[]|null}
      * @throws PliziAPIError
      */
-    async loadCommunities(){
-        let response = await this.axios.get( 'api/communities', this.authHeaders )
+    async loadCommunities(searchText = ''){
+        const search = searchText
+            ? `?search=${searchText}`
+            : '';
+        const url = 'api/communities' + search;
+        let response = await this.axios.get( url, this.authHeaders )
             .catch( ( error ) => {
                 this.checkIsTokenExpires( error, `$communities.loadCommunities` );
                 throw new PliziAPIError( `$communities.loadCommunities`, error.response );
@@ -27,8 +31,12 @@ class PliziCommunitiesAPI extends PliziBaseAPI {
      * @returns {object[]|null}
      * @throws PliziAPIError
      */
-    async loadManagedCommunities() {
-        let response = await this.axios.get('api/communities?list=owner', this.authHeaders)
+    async loadManagedCommunities(searchText = '') {
+        const search = searchText
+            ? `&search=${searchText}`
+            : '';
+        const url = 'api/communities?list=owner' + search;
+        let response = await this.axios.get(url, this.authHeaders)
             .catch((error) => {
                 this.checkIsTokenExpires(error, `$communities.loadManagedCommunities`);
                 throw new PliziAPIError(`$communities.loadManagedCommunities`, error.response);
@@ -42,8 +50,12 @@ class PliziCommunitiesAPI extends PliziBaseAPI {
     }
 
 
-    async userCommunities(){
-        let response = await this.axios.get( 'api/communities?list=my', this.authHeaders )
+    async userCommunities(searchText = ''){
+        const search = searchText
+            ? `&search=${searchText}`
+            : '';
+        const url = 'api/communities?list=my' + search;
+        let response = await this.axios.get(url, this.authHeaders )
             .catch( ( error ) => {
                 this.checkIsTokenExpires( error, `$communities.userCommunities` );
                 throw new PliziAPIError( `$communities.userCommunities`, error.response );

@@ -6,7 +6,7 @@ import CommunitiesListHeader from '../common/Communities/CommunitiesListHeader.v
 
 import CommunityItem from '../common/Communities/CommunityItem.vue';
 import CommunityCreateBlock from '../common/Communities/CommunityCreateBlock.vue';
-import PliziCommunity from "../classes/PliziCommunity";
+import PliziCommunity from "../classes/PliziCommunity.js";
 
 const CommunitiesListMixin = {
 components: {
@@ -33,12 +33,26 @@ data() {
         recommendedCommunities: null
     }
 },
-
+mounted() {
+    this.$root.$on('communitySearchStart', this.searchProcess);
+},
+beforeDestroy() {
+    this.$root.$off('communitySearchStart', this.searchProcess);
+},
 computed: {
 
 },
 
 methods: {
+    async searchProcess(e) {
+        if (e.list === 'my') {
+            return this.loadCommunities(e.searchText);
+        }
+        if (e.list === 'owner') {
+            return this.loadManagedCommunities(e.searchText);
+        }
+        return this.loadPopularCommunitites(e.searchText);
+    },
     isSubscribed(commID){
         if (! this.popularCommunities)
             return true;
@@ -79,12 +93,13 @@ methods: {
     },
 
     async loadCommunities() {
+        const searchText = this.$root.$lastCommunitiesSearch.my;
         let apiResponse = null;
 
         this.communitiesList = null;
 
         try {
-            apiResponse = await this.$root.$api.$communities.userCommunities();
+            apiResponse = await this.$root.$api.$communities.userCommunities(searchText);
         }
         catch (e){
             window.console.warn(e.detailMessage);
@@ -104,14 +119,14 @@ methods: {
         return true;
     },
 
-
     async loadPopularCommunitites() {
+        const searchText = this.$root.$lastCommunitiesSearch.popular;
         let apiResponse = null;
 
         this.popularCommunities = null;
 
         try {
-            apiResponse = await this.$root.$api.$communities.loadCommunities();
+            apiResponse = await this.$root.$api.$communities.loadCommunities(searchText);
         }
         catch (e){
             window.console.warn(e.detailMessage);
@@ -131,13 +146,14 @@ methods: {
     },
 
     async loadManagedCommunities() {
+        const searchText = this.$root.$lastCommunitiesSearch.owner;
         let apiResponse = null;
         this.isManagedCommunitiesLoaded = false;
 
         this.managedCommunities = null;
 
         try {
-            apiResponse = await this.$root.$api.$communities.loadManagedCommunities();
+            apiResponse = await this.$root.$api.$communities.loadManagedCommunities(searchText);
         } catch (e) {
             window.console.warn(e.detailMessage);
             throw e;
