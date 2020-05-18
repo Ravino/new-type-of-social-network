@@ -50,12 +50,12 @@ computed: {
 methods: {
     async searchProcess(e) {
         if (e.list === 'my') {
-            return this.loadCommunities(e.searchText);
+            return this.loadCommunities();
         }
         if (e.list === 'owner') {
-            return this.loadManagedCommunities(e.searchText);
+            return this.loadManagedCommunities();
         }
-        return this.loadPopularCommunitites(e.searchText);
+        return this.loadPopularCommunitites();
     },
     isSubscribed(commID){
         if (! this.popularCommunities)
