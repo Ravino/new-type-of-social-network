@@ -76,8 +76,14 @@
         border-top: 1px solid $borderColor;
     }
 
+    .plz-gallery-viewer-nav-btn {
+        height: 40px;
+    }
 
-
+    .plz-gallery-viewer-current  {
+        max-width: calc(100vw - 90px);
+        max-height: calc(100vh - 100px);
+    }
 }
 
 /*- md -*/
