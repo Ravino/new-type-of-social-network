@@ -4,11 +4,8 @@ namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
 use App\Http\Resources\Community\CommunityCollection;
-use App\Models\Community;
 use App\Models\User;
 use Domain\Pusher\WampServer;
-use Illuminate\Database\Eloquent\Builder;
-use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use App\Http\Resources\User\User as UserResource;
@@ -38,72 +35,6 @@ class ProfileController extends Controller
             throw new NotFoundHttpException();
         }
         return new UserResource($user);
-    }
-
-    /**
-     * @param Request $request
-     * @return CommunityCollection
-     */
-    public function myCommunities(Request $request)
-    {
-        $communities = Community::with('role', 'members', 'avatar')
-            ->limit($request->query('limit', 10))
-            ->offset($request->query('offset', 0))
-            ->whereHas('role', static function (Builder $query) {
-                $query->where([
-                    'user_id' => Auth::user()->id,
-                ]);
-            });
-
-        $search = $request->search;
-        if (mb_strlen($search) < 3) {
-            return new CommunityCollection($communities->get());
-        }
-
-        $communities->where('name', 'LIKE', "%{$search}%")
-            ->orWhere('description', 'LIKE', "%{$search}%")
-            ->orWhere('url', 'LIKE', "%{$search}%")
-            ->orWhere('website', 'LIKE', "%{$search}%");
-
-        return new CommunityCollection($communities->get());
-    }
-
-    /**
-     * @param Request $request
-     * @return CommunityCollection
-     */
-    public function ownerCommunities(Request $request)
-    {
-        $communities = Community::with('role', 'members', 'avatar')
-            ->limit($request->query('limit', 10))
-            ->offset($request->query('offset', 0))
-            ->whereHas('role', static function (Builder $query) {
-                $query
-                    ->where([
-                        'user_id' => Auth::user()->id,
-                    ])
-                    ->where(static function (Builder $query) {
-                        $query
-                            ->where([
-                                'role' => Community::ROLE_ADMIN,
-                            ])
-                            ->orWhere([
-                                'role' => Community::ROLE_AUTHOR,
-                            ]);
-                    });
-            });
-
-        $search = $request->search;
-        if (mb_strlen($search) < 3) {
-            return new CommunityCollection($communities->get());
-        }
-
-        $communities->where('name', 'LIKE', "%{$search}%")
-            ->orWhere('description', 'LIKE', "%{$search}%")
-            ->orWhere('url', 'LIKE', "%{$search}%")
-            ->orWhere('website', 'LIKE', "%{$search}%");
-
-        return new CommunityCollection($communities->get());
     }
 
     /**
