@@ -23,7 +23,8 @@
             <div class="col-12 col-xl-4 d-flex align-items-center form-inline mb-3 mb-xl-0 pl-0 pl-xl-4 pr-0 position-relative overflow-hidden rounded-pill mt-4 mt-md-0 ">
                 <div class="form-inline  position-relative w-100"
                      :class="{'isFocused' : isFocused}">
-                    <input :value="lastSearch"
+                    <input v-model="$root.$lastCommunitiesSearch[list]"
+                           @keydown.stop="communitySearchKeyDownCheck($event)"
                            id="txtCommunitiesListSearch"
                            ref="txtCommunitiesListSearch"
 
@@ -31,7 +32,7 @@
                            @focus="onFocus"
                            class="top-search form-control form-control  w-100"
                            type="text" placeholder="Поиск" aria-label="Поиск" />
-                    <button class="btn btn-search h-100 " type="submit"  >
+                    <button class="btn btn-search h-100 " type="submit"  @click="initSearch()" >
                         <IconSearch style="width: 15px; height: 15px;" />
                     </button>
                 </div>
@@ -43,21 +44,42 @@
 
 <script>
 import IconSearch from '../../icons/IconSearch.vue';
+import lodash from "lodash";
 
 export default {
 name : 'CommunitiesListHeader',
 components: {IconSearch},
+props: {
+    list: String,
+},
 data() {
     return {
-        isFocused: false
+        isFocused: false,
     }
 },
 computed: {
-    lastSearch(){
-        return this.$root.$lastSearch;
-    }
 },
 methods: {
+    communitySearchKeyDownCheck: lodash.debounce(function (ev) {
+        const sText = this.$refs.txtCommunitiesListSearch.value.trim();
+        if (13 === ev.keyCode) {
+            return this.startSearch(sText);
+        }
+    }, 100),
+
+    initSearch: lodash.debounce(function () {
+        const sText = this.$refs.txtCommunitiesListSearch.value.trim();
+        return this.startSearch(sText);
+    }, 100),
+
+    startSearch(sText) {
+        this.$root.$emit('communitySearchStart', {
+            searchText: sText,
+            source: 'communitySearch',
+            list: this.list,
+        });
+    },
+
     onFocus() {
         this.isFocused = true
     },
