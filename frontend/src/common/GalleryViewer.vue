@@ -1,6 +1,6 @@
 <template>
     <div class="plz-gallery-viewer">
-        <button class="plz-gallery-viewer__close" @click="close"></button>
+        <button class="plz-gallery-viewer-close" @click="close"></button>
         <div class="plz-gallery-viewer-overflow" :style="{'background-image': `linear-gradient(to right, rgba(0, 0, 0, .85) 0%, rgba(0, 0, 0, .85) 100%),url('${activeImage.image.normal.path}')`}" @click="close"></div>
         <div class="plz-gallery-viewer-nav">
             <div class="plz-gallery-viewer-nav-btn plz-gallery-viewer-nav-btn-prev" @click="prevImage">
@@ -142,7 +142,7 @@ export default {
             }
         }
 
-        &__close {
+        &-close {
             position: absolute;
             right: 32px;
             top: 32px;
@@ -158,10 +158,10 @@ export default {
                 outline: none;
             }
         }
-        &__close:hover {
+        &-close:hover {
             opacity: 1;
         }
-        &__close:before, .plz-gallery-viewer__close:after {
+        &-close:before, .plz-gallery-viewer-close:after {
             position: absolute;
             left: 15px;
             content: ' ';
@@ -169,10 +169,10 @@ export default {
             width: 2px;
             background-color: #ffffff;
         }
-        &__close:before {
+        &-close:before {
             transform: rotate(45deg);
         }
-        &__close:after {
+        &-close:after {
             transform: rotate(-45deg);
         }
 
