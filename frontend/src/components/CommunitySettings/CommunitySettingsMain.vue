@@ -50,8 +50,10 @@
                         <textarea type="text"
                                   id="description"
                                   class="w-100 w-sm-75"
+                                  :class="[isEdit.description ? 'form-control' : 'form-control-plaintext', { 'is-invalid': !!descriptionError,
+                                                                                                                'is-valid': isSuccessDescription }]"
                                   v-model="model.description"
-                                  :class="[isEdit.description ? 'form-control' : 'form-control-plaintext', { 'is-invalid': !!descriptionError, 'is-valid': isSuccessDescription }]"
+                                  placeholder="Добавьте описание"
                                   @blur="finishFieldEdit(`description`)"
                                   :readonly="!isEdit.description"
                                   ref="description">

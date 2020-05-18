@@ -82,6 +82,19 @@ $titleColor: #363636;
                 }
             }
 
+            textarea.form-control-plaintext[readonly="readonly"] {
+                height: 32px;
+                border-color: $borderColor;
+                border-bottom: 1px solid $borderColor;
+            }
+            textarea.form-control{
+                padding-left: 10px;
+                border: 1px solid $borderColor;
+                &.is-valid{
+                    box-shadow: none;
+                }
+            }
+
             select {
                 -webkit-appearance: none;
                 -moz-appearance: none;
