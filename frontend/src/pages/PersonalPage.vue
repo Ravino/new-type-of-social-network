@@ -256,8 +256,12 @@ beforeRouteUpdate( to, from, next ){
     this.getUserInfo();
     next();
     window.scrollTo( 0, 0 );
-    window.addEventListener('scroll', this.onScrollYPage);
+
 },
+    beforeRouteLeave(to, from, next) {
+        window.removeEventListener('scroll', this.onScrollYPage);
+        next();
+    },
 }
 </script>
 
