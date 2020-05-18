@@ -79,7 +79,7 @@ export default {
         },
         goToImage(image) {
             this.activeImage = image;
-        }
+        },
        setBodyOverflow(overflow) {
           document.querySelector('body').style.overflow = overflow;
       }
