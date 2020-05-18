@@ -438,9 +438,12 @@ $radioWidth: 18px;
     &--disallow {
         &:hover {
             svg {
-                fill: #bfbfbf;
+                fill: #dcdcdc;
             }
+        }
 
+        svg {
+            fill: #dcdcdc;
         }
     }
 }
