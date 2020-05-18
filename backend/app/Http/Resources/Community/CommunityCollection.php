@@ -2,6 +2,7 @@
 
 namespace App\Http\Resources\Community;
 
+use App\Http\Resources\Geo\City as CityResource;
 use App\Http\Resources\User\Image;
 use App\Models\User;
 use Illuminate\Http\Request;
@@ -27,7 +28,7 @@ class CommunityCollection extends ResourceCollection
                     'primaryImage' => $community->primary_image,
                     'url' => $community->url,
                     'website' => $community->website,
-                    'location' => $community->location,
+                    'location' => $community->city ? new CityResource($community->city) : null,
                     'totalMembers' => $community->members->count(),
                     'role' => $community->role ? $community->role->role : null,
                     'type' => $community->type,
