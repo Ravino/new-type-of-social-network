@@ -17,18 +17,30 @@ class CommunitiesTableSeeder extends Seeder
      */
     public function run()
     {
+        $countOfCommunities = (App::environment() == 'testing')
+            ? 10
+            : $this->command->ask('How many communities are you want to generate?', 10);
+
         $admin_user = User::where('email', 'admin@mail.com')->first();
+
         if ($admin_user) {
-            $first_community = Community::create($this->generateCommunity());
-            $second_community = Community::create($this->generateCommunity());
+            $communities = [];
+
+            for ($i = 0; $i <= $countOfCommunities; $i++) {
+                $communities[] = Community::create($this->generateCommunity());
+            }
+
             $users = User::where('id', '<>', $admin_user->id)->get();
             $relations = [];
             $relations[$admin_user->id] = ['role' => 'author'];
+
             foreach ($users as $user) {
                 $relations[$user->id] = ['role' => 'user'];
             }
-            $first_community->users()->attach($relations);
-            $second_community->users()->attach($relations);
+
+            foreach ($communities as $community) {
+                $community->users()->attach($relations);
+            }
         } else {
             $this->command->line("User with email admin@mail.com not found");
         }
@@ -44,7 +56,7 @@ class CommunitiesTableSeeder extends Seeder
             'primary_image' => 'https://lorempixel.com/640/480/people/',
             'url' => '',
             'website' => $faker->url,
-            'location' => $faker->city . ', ' . $faker->country,
+            'geo_city_id' => \App\Models\Geo\City::inRandomOrder()->first()->id,
             'is_verified' => $faker->randomElement([false, true]),
             'type' => $faker->randomElement([
                 Community::TYPE_BUSINESS,
