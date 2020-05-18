@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use App\Traits\Likeable;
+use App\Traits\Commentable;
 use Domain\Pusher\Models\ChatMessage;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
@@ -11,6 +12,7 @@ use Spiritix\LadaCache\Database\LadaCacheTrait;
 class Post extends Model
 {
     use SoftDeletes, LadaCacheTrait, Likeable;
+    use SoftDeletes, LadaCacheTrait, Commentable;
 
     protected $fillable = [
         'name', 'body', 'likes', 'views', 'author_id'

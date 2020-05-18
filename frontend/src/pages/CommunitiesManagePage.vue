@@ -13,14 +13,17 @@
 
                 <div class="row">
                     <div class="col-12 col-lg-8 col-xl-9 mb-4 px-4 py-0">
-                        <div v-if="isManagedCommunitiesLoaded" class="row">
+                        <div class="row" v-if="isManagedCommunitiesLoaded">
                             <ul v-if="managedCommunities  &&  managedCommunities.length>0"
                                 class="plizi-communities-list w-100 d-flex justify-content-between flex-wrap p-0">
-                                <transition-group name="slide-fade" :duration="700">
-                                    список модерируемых сообществ тут
-                                </transition-group>
+                                <CommunityItem v-for="(comItem, comIndex) in managedCommunities"
+                                               :community="comItem"
+                                               :canSubscribe="false"
+                                               :key="comIndex">
+                                </CommunityItem>
                             </ul>
-                            <div v-else class="container px-2 ">
+
+                            <div v-else-if="!enabledLoader" class="container px-2 ">
                                 <div  class=" bg-white-br20 p-3">
                                     <div  class="alert alert-info w-100 py-4 text-center m-0">
                                         У Вас нет сообществ для модерации.
@@ -28,9 +31,14 @@
                                 </div>
                             </div>
                         </div>
-                        <div  v-else class="row">
-                            <Spinner></Spinner>
-                        </div>
+
+                        <template v-if="enabledLoader">
+                            <div class="row plz-post-item mb-4 bg-white-br20 p-4">
+                                <div class="w-100 p-5 text-center mb-0">
+                                    <SmallSpinner/>
+                                </div>
+                            </div>
+                        </template>
                     </div>
 
                     <div class="col-12 col-lg-4 col-xl-3  mb-4  d-flex pl-3 pl-lg-0 ">
@@ -47,24 +55,27 @@
 </template>
 
 <script>
-import CommunitiesListMixin from '../mixins/CommunitiesListMixin.js';
+    import CommunitiesListMixin from '../mixins/CommunitiesListMixin.js';
+    import SmallSpinner from "../common/SmallSpinner.vue";
 
-export default {
-name : 'CommunitiesManagePage',
-components : {
-},
-mixins: [CommunitiesListMixin],
+    export default {
+        name: 'CommunitiesManagePage',
+        components: {
+            SmallSpinner,
+        },
+        mixins: [CommunitiesListMixin],
 
-data(){
-    return {
-        isManagedCommunitiesLoaded: true,
-        managedCommunities: []
+        data() {
+            return {}
+        },
+        methods: {},
+        mounted() {
+            this.loadManagedCommunities();
+            window.addEventListener('scroll', this.onScrollYPage);
+        },
+        beforeRouteLeave(to, from, next) {
+            window.removeEventListener('scroll', this.onScrollYPage);
+            next();
+        },
     }
-},
-
-methods : {
-
-},
-
-}
 </script>

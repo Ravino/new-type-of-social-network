@@ -62,8 +62,6 @@ Route::group(['middleware' => ['auth.jwt', 'track.activity']], function () {
      * User Resource
      */
     Route::get('user/notifications', 'Api\UserController@notifications');
-    Route::get('user/communities', 'Api\ProfileController@myCommunities');
-    Route::get('owner/communities', 'Api\ProfileController@ownerCommunities');
     Route::get('user/{id}/communities', 'Api\ProfileController@userCommunities');
     Route::patch('user', 'Api\ProfileController@patch');
     Route::get('user/videos', 'Api\VideoController@getUserVideo');
@@ -103,6 +101,11 @@ Route::group(['middleware' => ['auth.jwt', 'track.activity']], function () {
 
     Route::prefix('videos')->group(function () {
         Route::resource('/', 'Api\VideoController');
+    });
+
+    Route::prefix('comment')->group(function () {
+        Route::post('post', 'Api\CommentController@commentPost');
+        Route::get('post/{id}', 'Api\CommentController@getPostComments');
     });
 
     /**

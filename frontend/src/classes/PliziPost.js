@@ -43,10 +43,10 @@ class PliziPost {
 
     /**
      * Лайкнутый ли этот пост текущим пользователем.
-     * @type {boolean|null}
+     * @type {boolean}
      * @private
      */
-    _alreadyLiked = null;
+    _alreadyLiked = false;
 
     /**
      * кол-во просмотров
@@ -306,6 +306,7 @@ class PliziPost {
         this.primaryImage = post.primaryImage;
         this.alreadyLiked = post.alreadyLiked;
         this.likes = post.likes;
+        this.alreadyLiked = post.alreadyLiked;
         this.views = post.views;
         this.commentsCount = post.commentsCount;
         this.sharesCount = post.sharesCount;

@@ -24,6 +24,7 @@ import Error404Page from '../pages/Error404Page.vue';
 import CommunityRulesPage from "../pages/CommunityRulesPage.vue";
 import VideosPage from "../pages/VideosPage.vue";
 import CommunityFriendsPage from "../pages/CommunityFriendsPage";
+import CommunitySettingsPage from "../pages/CommunitySettingsPage";
 
 const routes = [
     {path: '/', redirect: '/login', isGuest: true},
@@ -46,6 +47,7 @@ const routes = [
     {path: '/communities', component: CommunitiesListPage, name: 'CommunitiesListPage', meta: {title: 'Plizi: Мои сообщества'}, props: true },
     {path: '/community-rules', component: CommunityRulesPage, name: 'CommunityRulesPage', meta: {title: 'Plizi: Правила сообществ'}, props: true },
     {path: '/manage-communities', component: CommunitiesManagePage, name: 'CommunitiesManagePage', meta: {title: 'Plizi: Управление сообществами'}, props: true },
+    {path: '/community-settings-:id', component: CommunitySettingsPage, name: 'CommunitySettingsPage', meta: {title: 'Plizi: Управление сообществом'}, props: true },
     {path: '/popular-communities', component: CommunitiesPopularPage, name: 'CommunitiesPopularPage', meta: {title: 'Plizi: Популярные сообщества'}, props: true },
     {path: '/community-friends-:id', component: CommunityFriendsPage, name: 'CommunityFriendsPage', meta: {title: 'Plizi: Популярные сообщества'}, props: true },
     {path: '/community-:id', component: CommunityPage, name: 'CommunityPage', meta: {title: 'Plizi: Популярные сообщества'}, props: true },
@@ -122,10 +124,16 @@ async function checkRouteAuth(to, from, next) {
                 tryToLoadUser = await window.app.$root.$api.$users.getUser();
             }
             catch (e) {
-                routerForcedLogout(next, to);
+                window.app.$root.$alert(`<p class="text-white">Извините, но на сервере произошла ошибка и войти не получится.<br />Попробуйте через некоторое время.</p>`, 'bg-danger', 10);
+
+                return routerForcedLogout(next, to);
             }
 
+            window.console.log(tryToLoadUser, `tryToLoadUser`);
+
             if (tryToLoadUser) {
+                window.console.warn(`emit AfterUserLoad`);
+
                 window.app.$root.$emit('AfterUserLoad', {
                     user: tryToLoadUser,
                     token: gwt,
@@ -133,12 +141,14 @@ async function checkRouteAuth(to, from, next) {
                 });
             }
             else {
-                routerForcedLogout(next, to);
+                return routerForcedLogout(next, to);
             }
         }
     }
-    else if (!to.meta.isNotFound) {
-        routerForcedLogout(next, to);
+    else {
+        if (!to.meta.isNotFound) {
+            return routerForcedLogout(next, to);
+        }
     }
 
     updateTitle(to, next);

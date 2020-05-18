@@ -8,6 +8,9 @@ Thumbs.db
 /*/*.bak
 /dev_deploy.sh
 
+# local dicker file
+/docker-compose.local.yml
+
 
 mysql_data_plizi
 mysql8_data_plizi
