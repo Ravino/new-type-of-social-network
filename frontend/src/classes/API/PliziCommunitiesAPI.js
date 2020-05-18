@@ -28,7 +28,7 @@ class PliziCommunitiesAPI extends PliziBaseAPI {
      * @throws PliziAPIError
      */
     async loadManagedCommunities() {
-        let response = await this.axios.get('api/owner/communities', this.authHeaders)
+        let response = await this.axios.get('api/communities?list=owner', this.authHeaders)
             .catch((error) => {
                 this.checkIsTokenExpires(error, `$communities.loadManagedCommunities`);
                 throw new PliziAPIError(`$communities.loadManagedCommunities`, error.response);
@@ -43,7 +43,7 @@ class PliziCommunitiesAPI extends PliziBaseAPI {
 
 
     async userCommunities(){
-        let response = await this.axios.get( 'api/user/communities', this.authHeaders )
+        let response = await this.axios.get( 'api/communities?list=my', this.authHeaders )
             .catch( ( error ) => {
                 this.checkIsTokenExpires( error, `$communities.userCommunities` );
                 throw new PliziAPIError( `$communities.userCommunities`, error.response );
