@@ -17,6 +17,20 @@ $titleColor: #363636;
     .form-group {
         margin-bottom: 0;
         padding: 8px 0;
+
+        .invalid-feedback {
+            margin-left: 15px;
+            width: 50%;
+            align-items: center;
+
+            .text-danger {
+                margin-bottom: 0;
+            }
+        }
+
+        .is-invalid ~ .invalid-feedback {
+            display: flex;
+        }
     }
 
     &-header {
