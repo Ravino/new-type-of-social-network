@@ -5,13 +5,16 @@ class PliziCommunitiesAPI extends PliziBaseAPI {
 
     /**
      * Получение списка сообществ
+     * @param {string} searchText
+     * @param {number} limit
+     * @param {number} offset
      * @returns {object[]|null}
      * @throws PliziAPIError
      */
-    async loadCommunities(searchText = ''){
+    async loadCommunities(searchText = '', limit = 20, offset = 0){
         const search = searchText
-            ? `?search=${searchText}`
-            : '';
+            ? `?search=${searchText}&limit=${limit}&offset=${offset}`
+            : `?limit=${limit}&offset=${offset}`;
         const url = 'api/communities' + search;
         let response = await this.axios.get( url, this.authHeaders )
             .catch( ( error ) => {
@@ -28,13 +31,16 @@ class PliziCommunitiesAPI extends PliziBaseAPI {
 
     /**
      * Получение списка сообществ для управления
+     * @param {string} searchText
+     * @param {number} limit
+     * @param {number} offset
      * @returns {object[]|null}
      * @throws PliziAPIError
      */
-    async loadManagedCommunities(searchText = '') {
+    async loadManagedCommunities(searchText = '', limit = 20, offset = 0) {
         const search = searchText
-            ? `&search=${searchText}`
-            : '';
+            ? `&search=${searchText}&limit=${limit}&offset=${offset}`
+            : `&limit=${limit}&offset=${offset}`;
         const url = 'api/communities?list=owner' + search;
         let response = await this.axios.get(url, this.authHeaders)
             .catch((error) => {
@@ -49,11 +55,18 @@ class PliziCommunitiesAPI extends PliziBaseAPI {
         return null;
     }
 
-
-    async userCommunities(searchText = ''){
+    /**
+     * Получение списка сообществ пользователя.
+     * @param {string} searchText
+     * @param {number} limit
+     * @param {number} offset
+     * @returns {object[]|null}
+     * @throws PliziAPIError
+     */
+    async userCommunities(searchText = '', limit = 20, offset = 0) {
         const search = searchText
-            ? `&search=${searchText}`
-            : '';
+            ? `&search=${searchText}&limit=${limit}&offset=${offset}`
+            : `&limit=${limit}&offset=${offset}`;
         const url = 'api/communities?list=my' + search;
         let response = await this.axios.get(url, this.authHeaders )
             .catch( ( error ) => {

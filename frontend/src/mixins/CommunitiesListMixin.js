@@ -30,7 +30,11 @@ data() {
         isManagedCommunitiesLoaded: false,
         managedCommunities: [],
 
-        recommendedCommunities: null
+        recommendedCommunities: null,
+
+        lazyLoadStarted: false,
+        noMore: false,
+        enabledLoader: true,
     }
 },
 mounted() {
@@ -66,6 +70,18 @@ methods: {
         return ret;
     },
 
+    onScrollYPage(){
+        if (window.scrollY >= (document.body.scrollHeight - document.documentElement.clientHeight - (document.documentElement.clientHeight/2) )){
+            if (this.$route.name === 'CommunitiesManagePage') {
+                this.lazyLoad('manage');
+            } else if (this.$route.name === 'CommunitiesPopularPage') {
+                this.lazyLoad('popular');
+            } else {
+                this.lazyLoad();
+            }
+        }
+    },
+
     /**
      * @TEST
      * @returns {Promise<boolean>}
@@ -92,14 +108,12 @@ methods: {
         return true;
     },
 
-    async loadCommunities() {
+    async loadCommunities(limit = 10, offset = 0) {
         const searchText = this.$root.$lastCommunitiesSearch.my;
         let apiResponse = null;
 
-        this.communitiesList = null;
-
         try {
-            apiResponse = await this.$root.$api.$communities.userCommunities(searchText);
+            apiResponse = await this.$root.$api.$communities.userCommunities(searchText, limit, offset);
         }
         catch (e){
             window.console.warn(e.detailMessage);
@@ -109,24 +123,25 @@ methods: {
         this.communitiesList = [];
 
         if (apiResponse) {
+            this.enabledLoader = false;
             this.isCommunitiesLoaded = true;
 
             apiResponse.map( (pfItem)=> {
                 this.communitiesList.push( new PliziCommunity(pfItem) );
             });
+
+            return apiResponse.length;
         }
 
         return true;
     },
 
-    async loadPopularCommunitites() {
+    async loadPopularCommunitites(limit = 10, offset = 0) {
         const searchText = this.$root.$lastCommunitiesSearch.popular;
         let apiResponse = null;
 
-        this.popularCommunities = null;
-
         try {
-            apiResponse = await this.$root.$api.$communities.loadCommunities(searchText);
+            apiResponse = await this.$root.$api.$communities.loadCommunities(searchText, limit, offset);
         }
         catch (e){
             window.console.warn(e.detailMessage);
@@ -136,24 +151,26 @@ methods: {
         this.popularCommunities = [];
 
         if (apiResponse) {
+            this.enabledLoader = false;
             this.isPopularCommunitiesLoaded = true;
+
             apiResponse.map( (pfItem)=> {
                 this.popularCommunities.push( new PliziCommunity(pfItem) );
             });
+
+            return apiResponse.length;
         }
 
         return true;
     },
 
-    async loadManagedCommunities() {
+    async loadManagedCommunities(limit = 10, offset = 0) {
         const searchText = this.$root.$lastCommunitiesSearch.owner;
         let apiResponse = null;
         this.isManagedCommunitiesLoaded = false;
 
-        this.managedCommunities = null;
-
         try {
-            apiResponse = await this.$root.$api.$communities.loadManagedCommunities(searchText);
+            apiResponse = await this.$root.$api.$communities.loadManagedCommunities(searchText, limit, offset);
         } catch (e) {
             window.console.warn(e.detailMessage);
             throw e;
@@ -162,13 +179,45 @@ methods: {
         this.managedCommunities = [];
 
         if (apiResponse) {
+            this.enabledLoader = false;
             this.isManagedCommunitiesLoaded = true;
+
             apiResponse.map((pfItem) => {
                 this.managedCommunities.push(new PliziCommunity(pfItem));
             });
+
+            return apiResponse.length;
         }
 
         return true;
+    },
+
+    async lazyLoad(listName = null) {
+        if (this.lazyLoadStarted) return;
+        if (this.noMore) return;
+
+        this.enabledLoader = true;
+        this.lazyLoadStarted = true;
+
+        let oldSize, added;
+
+        if (listName === 'manage') {
+            oldSize = this.managedCommunities.length;
+            added = await this.loadPopularCommunitites(10, oldSize++);
+        } else if (listName === 'popular') {
+            oldSize = this.popularCommunities.length;
+            added = await this.loadManagedCommunities(10, oldSize++);
+        } else {
+            oldSize = this.communitiesList.length;
+            added = await this.loadCommunities(10, oldSize++);
+        }
+
+        if (added === 0) {
+            this.noMore = true;
+        }
+
+        this.lazyLoadStarted = false;
+        this.onScrollYPage();
     },
 },
 
