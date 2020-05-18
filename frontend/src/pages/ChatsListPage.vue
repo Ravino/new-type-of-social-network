@@ -16,7 +16,7 @@
                     </p>
                 </div>
             </div>
-            <div v-else class="col-12 col-md-11 pr-0  chat-page-height">
+            <div v-else class="col-12 col-md-11 pr-0 mb-4 mb-md-0 chat-page-height">
                 <div v-if="isDialogsLoaded" id="chatMain"
                      class="d-flex flex-column flex-lg-row flex bg-white-br20 overflow-hidden">
 
