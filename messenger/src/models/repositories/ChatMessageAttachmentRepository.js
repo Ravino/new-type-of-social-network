@@ -1,4 +1,4 @@
-import ChatMessageAttachment from '../ChatMessageAttachment';
+import ChatMessageAttachment from '../ChatMessageAttachment.js';
 
 class ChatMessageAttachmentRepository {
 

@@ -123,8 +123,10 @@ class User extends Authenticatable implements JWTSubject
      */
     public function allPosts()
     {
+        $communities = self::communities();
+        \Log::debug(\GuzzleHttp\json_encode($communities->get()));
         return $this->morphMany(Post::class, 'postable')->with('postable', 'parent', 'attachments', 'like')
-            ->orWhereIn( 'postable_id', self::communities()->allRelatedIds())
+            ->orWhereIn( 'postable_id', $communities->allRelatedIds())
             ->orWhereIn( 'postable_id', array_keys(self::getFriends()))->orderBy('posts.id', 'desc');
     }
 

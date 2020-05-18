@@ -1,5 +1,5 @@
-import ChatMessageRepository from '../models/repositories/ChatMessageRepository';
-import ChatMessageAttachmentRepository from "../models/repositories/ChatMessageAttachmentRepository";
+import ChatMessageRepository from '../models/repositories/ChatMessageRepository.js';
+import ChatMessageAttachmentRepository from "../models/repositories/ChatMessageAttachmentRepository.js";
 
 async function sendMessage(req, res) {
     let payload = {
@@ -9,13 +9,13 @@ async function sendMessage(req, res) {
         parent_id: req.body.parent_id,
         parent_chat_id: req.body.parent_chat_id,
     }
-    ChatMessageRepository.create(payload);
+    let message = await ChatMessageRepository.create(payload);
     if(req.body.attachments && req.body.attachments.length) {
         ChatMessageAttachmentRepository.attachToMessage(req.body.attachments, message.id)
     }
-    res.json({
+    res.send({
         data: {
-            success: true
+            success: message.id
         }
     })
 }
