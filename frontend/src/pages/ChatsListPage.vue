@@ -1,11 +1,11 @@
 <template>
-    <div class="container-fluid pl-md-0">
+    <div class="container-fluid pl-md-0 ">
         <div class="row" :class="{ 'is-chatPage' : ('ChatsListPage'===this.$root.$router.currentRoute.name) }" >
-            <div class="col-12 col-md-1 chat-page-height overflow-hidden">
+            <div class="col-12 col-md-1 chat-page-height overflow-hidden px-0 px-md-3 ">
                 <AccountToolbarLeft></AccountToolbarLeft>
             </div>
 
-            <div v-if="isFreshUser" class="col-12 col-md-11 pr-0  chat-page-height">
+            <div v-if="isFreshUser" class="col-12 col-md-11 pr-0  chat-page-height px-0 px-md-3 ">
                 <div class="jumbotron">
                     <p class="alert alert-info w-100 text-center p-5">
                         Вы ещё ни с кем не общались, потому здесь пока никого нет.<br />
@@ -16,7 +16,7 @@
                     </p>
                 </div>
             </div>
-            <div v-else class="col-12 col-md-11 pr-0  chat-page-height">
+            <div v-else class="col-12 col-md-11 pr-0  chat-page-height px-0 px-md-3 ">
                 <div v-if="isDialogsLoaded" id="chatMain"
                      class="d-flex flex-column flex-lg-row flex bg-white-br20 overflow-hidden">
 

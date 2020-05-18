@@ -50,6 +50,15 @@ $postPosterPicSize: 48px;
         color: $postTextColor;
         font-weight: 300;
         word-break: break-all;
+
+        a {
+            color: $postTextColor;
+            text-decoration: underline;
+
+            &:hover {
+                text-decoration: none;
+            }
+        }
     }
 
     .post-pictures-list {

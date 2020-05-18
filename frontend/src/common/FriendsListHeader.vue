@@ -1,18 +1,18 @@
 <template>
-    <div id="FriendsFilter" class="d-flex bg-white-br20 mb-4 py-0 px-4 flex-column-reverse flex-lg-row mr-n3">
+    <div id="FriendsFilter" class="d-flex bg-white-br20 mb-4 py-0 px-4 flex-column-reverse flex-lg-row">
         <div class="col-12 col-lg-8 d-flex align-items-center justify-content-between px-0">
             <nav class="nav profile-filter-links mt-2 mt-lg-0" role="tablist">
-                <router-link to="/friends" tag="span" class="nav-link py-3 py-lg-4 px-1 mr-2 mr-lg-4" role="tab"
+                <router-link to="/friends" tag="span" class="nav-link py-2 py-sm-3 py-lg-4 px-1 mr-2 mr-lg-4" role="tab"
                              :class="{ 'active': 'FriendsListPage'===this.$root.$router.currentRoute.name }">
                     Мои друзья
                 </router-link>
 
-                <router-link to="/invitations" tag="span" class="nav-link py-3 py-lg-4 px-1 mr-2 mr-lg-4"  role="tab"
+                <router-link to="/invitations" tag="span" class="nav-link py-2 py-sm-3 py-lg-4 px-1 mr-2 mr-lg-4"  role="tab"
                              :class="{ 'active': 'InvitationsPage'===this.$root.$router.currentRoute.name }">
                     Заявки в друзья
                 </router-link>
 
-                <router-link to="/friends-recent" tag="span" class="nav-link py-3 py-lg-4 px-1 mr-2 mr-lg-4" role="tab"
+                <router-link to="/friends-recent" tag="span" class="nav-link py-2 py-sm-3 py-lg-4 px-1 mr-2 mr-lg-4" role="tab"
                              :class="{ 'active': 'FriendsRecentPage'===this.$root.$router.currentRoute.name }">
                     Новые друзья
                 </router-link>
