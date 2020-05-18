@@ -1740,20 +1740,10 @@
                 "operationId": "getCommunities",
                 "parameters": [
                     {
-                        "name": "limit",
-                        "in": "query",
-                        "required": false,
-                        "schema": {
-                            "type": "integer"
-                        }
+                        "$ref": "#/components/parameters/offsetParam"
                     },
                     {
-                        "name": "offset",
-                        "in": "query",
-                        "required": false,
-                        "schema": {
-                            "type": "integer"
-                        }
+                        "$ref": "#/components/parameters/limitParam"
                     },
                     {
                         "name": "search",
@@ -1761,6 +1751,19 @@
                         "required": false,
                         "schema": {
                             "type": "string"
+                        }
+                    },
+                    {
+                        "name": "list",
+                        "in": "query",
+                        "required": false,
+                        "schema": {
+                            "type": "string",
+                            "enum": [
+                                "popular",
+                                "my",
+                                "owner"
+                            ]
                         }
                     }
                 ],
@@ -2312,39 +2315,8 @@
                 "tags": [
                     "Communities"
                 ],
-                "description": "Список сообществ в которых я учавствую",
-                "operationId": "getMyCommunities",
-                "parameters": [
-                    {
-                        "name": "limit",
-                        "in": "query",
-                        "required": false,
-                        "schema": {
-                            "type": "integer"
-                        }
-                    },
-                    {
-                        "name": "offset",
-                        "in": "query",
-                        "required": false,
-                        "schema": {
-                            "type": "integer"
-                        }
-                    },
-                    {
-                        "name": "search",
-                        "in": "query",
-                        "required": false,
-                        "schema": {
-                            "type": "string"
-                        }
-                    }
-                ],
-                "security": [
-                    {
-                        "Authorization": []
-                    }
-                ],
+                "deprecated": true,
+                "description": "See GET /communities",
                 "responses": {
                     "200": {
                         "description": "OK",
@@ -2377,39 +2349,8 @@
                 "tags": [
                     "Communities"
                 ],
-                "description": "Список сообществ в которых я автор",
-                "operationId": "getOwnerCommunities",
-                "parameters": [
-                    {
-                        "name": "limit",
-                        "in": "query",
-                        "required": false,
-                        "schema": {
-                            "type": "integer"
-                        }
-                    },
-                    {
-                        "name": "offset",
-                        "in": "query",
-                        "required": false,
-                        "schema": {
-                            "type": "integer"
-                        }
-                    },
-                    {
-                        "name": "search",
-                        "in": "query",
-                        "required": false,
-                        "schema": {
-                            "type": "string"
-                        }
-                    }
-                ],
-                "security": [
-                    {
-                        "Authorization": []
-                    }
-                ],
+                "deprecated": true,
+                "description": "See GET /communities",
                 "responses": {
                     "200": {
                         "description": "OK",
@@ -3076,6 +3017,30 @@
         }
     },
     "components": {
+        "parameters": {
+            "offsetParam": {
+                "in": "query",
+                "name": "offset",
+                "required": false,
+                "schema": {
+                    "type": "integer",
+                    "minimum": 0
+                },
+                "description": "The number of items to skip before starting to collect the result set."
+            },
+            "limitParam": {
+                "in": "query",
+                "name": "limit",
+                "required": false,
+                "schema": {
+                    "type": "integer",
+                    "minimum": 1,
+                    "maximum": 50,
+                    "default": 20
+                },
+                "description": "The numbers of items to return."
+            }
+        },
         "schemas": {
             "CreateMessage": {
                 "type": "object",
