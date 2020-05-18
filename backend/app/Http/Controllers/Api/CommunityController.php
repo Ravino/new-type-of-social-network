@@ -19,9 +19,11 @@ use App\Models\CommunityTheme;
 use App\Services\CommunityService;
 use App\Services\S3UploadService;
 use Exception;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use App\Http\Resources\Post\AttachmentsCollection;
+use Illuminate\Support\Facades\Auth;
 
 class CommunityController extends Controller
 {
@@ -61,13 +63,60 @@ class CommunityController extends Controller
         /**
          * TODO: Нужно будет что-то придумать с оптимизацией (дернормализовать таблицы или.... пока не ясно)
          */
-        $communities = Community::with('role', 'members', 'avatar')
+        $query = Community::with('role', 'members', 'avatar', 'city');
+
+        $search = $request->search;
+        if (mb_strlen($search) >= 3) {
+            $query
+                ->where('name', 'LIKE', "%{$search}%")
+                ->orWhere('description', 'LIKE', "%{$search}%")
+                ->orWhere('url', 'LIKE', "%{$search}%")
+                ->orWhere('website', 'LIKE', "%{$search}%");
+        }
+
+        $list = $request->list;
+        $list = in_array($list, ['popular', 'my', 'owner'])
+            ? $list
+            : 'popular';
+
+        switch ($list) {
+            case 'my':
+                $query->whereHas('role', static function (Builder $query) {
+                    $query->where([
+                        'user_id' => Auth::user()->id,
+                    ]);
+                });
+                break;
+            case 'owner':
+                $query->whereHas('role', static function (Builder $query) {
+                    $query
+                        ->where([
+                            'user_id' => Auth::user()->id,
+                        ])
+                        ->where(static function (Builder $query) {
+                            $query
+                                ->where([
+                                    'role' => Community::ROLE_ADMIN,
+                                ])
+                                ->orWhere([
+                                    'role' => Community::ROLE_AUTHOR,
+                                ]);
+                        });
+                });
+                break;
+            default:
+                break;
+        }
+
+        $communities = $query
             ->limit($request->query('limit', 10))
             ->offset($request->query('offset', 0))
             ->get();
+
         $communities->each(function($community) {
             $community->load('onlyFiveMembers');
         });
+
         return new CommunityCollection($communities);
     }
 
