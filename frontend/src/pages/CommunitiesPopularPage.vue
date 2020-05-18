@@ -17,9 +17,8 @@
                             <ul v-if="popularCommunities  &&  popularCommunities.length>0"
                                 class="plizi-communities-list w-100 d-flex justify-content-between flex-wrap p-0">
                                     <CommunityItem v-for="(comItem, comIndex) in popularCommunities"
-                                                   v-bind:community="comItem"
-                                                   v-bind:canSubscribe="isSubscribed(comItem.id)"
-                                                   v-bind:key="comIndex">
+                                                   :community="comItem"
+                                                   :key="comIndex">
                                     </CommunityItem>
                             </ul>
                             <div v-else-if="enabledLoader" class="container px-2">

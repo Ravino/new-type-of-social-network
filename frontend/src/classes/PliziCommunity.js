@@ -212,6 +212,10 @@ class PliziCommunity {
         return this._role;
     }
 
+    set role(value){
+        this._role = value;
+    }
+
     get members(){
         return this._members;
     }
