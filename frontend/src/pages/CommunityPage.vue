@@ -231,7 +231,7 @@ computed: {
         return this.communityData?.avatar?.image.thumb.path || this.communityData?.primaryImage;
     },
     headerImage() {
-        return this.communityData?.headerImage.image.normal.path || 'images/community-header-bg.jpg';
+        return this.communityData?.headerImage?.image.normal.path || 'images/community-header-bg.jpg';
     }
 },
 

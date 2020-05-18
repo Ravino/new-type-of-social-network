@@ -61,7 +61,7 @@ class CommunityController extends Controller
         /**
          * TODO: Нужно будет что-то придумать с оптимизацией (дернормализовать таблицы или.... пока не ясно)
          */
-        $communities = Community::with('role', 'members', 'avatar')
+        $communities = Community::with('role', 'members', 'avatar', 'city')
             ->limit($request->query('limit', 10))
             ->offset($request->query('offset', 0))
             ->get();
