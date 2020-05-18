@@ -88,6 +88,7 @@ Route::group(['middleware' => ['auth.jwt', 'track.activity']], function () {
         Route::get('{id}/subscribe', 'Api\CommunityController@subscribe');
         Route::get('{id}/unsubscribe', 'Api\CommunityController@unsubscribe');
         Route::get('{id}/members', 'Api\CommunityController@members');
+        Route::get('search/{search}', [CommunityController::class, 'search']);
         Route::post('avatar', [CommunityController::class, 'uploadAvatar']);
         Route::post('header-image', [CommunityController::class, 'uploadHeaderImage']);
         Route::get('themes/list', 'Api\CommunityController@themeList');

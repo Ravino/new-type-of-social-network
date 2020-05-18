@@ -223,4 +223,21 @@ class CommunityController extends Controller
             'data' => CommunityTheme::getTree(),
         ]);
     }
+
+    public function search(string $search, Request $request)
+    {
+        if (mb_strlen($search) < 3) {
+            return new CommunityCollection([]);
+        }
+
+        $list = Community::where('name', 'LIKE', "%{$search}%")
+            ->orWhere('description', 'LIKE', "%{$search}%")
+            ->orWhere('url', 'LIKE', "%{$search}%")
+            ->orWhere('website', 'LIKE', "%{$search}%")
+            ->limit($request->query('limit', 10))
+            ->offset($request->query('offset', 0))
+            ->get();
+
+        return new CommunityCollection($list);
+    }
 }
