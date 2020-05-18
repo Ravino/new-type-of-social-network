@@ -36,7 +36,22 @@
                                 </div>
                             </div>
                             <div class="plz-community-subscribe file-label d-flex align-items-center justify-content-between">
-                                <button class="btn align-items-center justify-content-center d-flex w-75 border-right m-0">подписаться</button>
+
+                                <button v-if="subscribeType === 'new'"
+                                        class="btn align-items-center justify-content-center d-flex w-75 border-right m-0"
+                                        @click="subscribeInvite(communityData)">
+                                    подписаться
+                                </button>
+                                <button v-else-if="subscribeType === 'exists'"
+                                        class="btn align-items-center justify-content-center d-flex w-75 border-right m-0"
+                                        @click="unsubscribeInvite(communityData)">
+                                    отписаться
+                                </button>
+                                <router-link :to="{name: 'CommunitySettingsPage', params: {id: communityData.id}}" v-else
+                                             class="btn align-items-center justify-content-center d-flex w-75 border-right m-0">
+                                    управление
+                                </router-link>
+
                                 <button title="подписаться" class="btn align-items-center justify-content-center d-flex w-25">
                                     <span class="ps-dot"></span>
                                     <span class="ps-dot"></span>
@@ -169,13 +184,14 @@ import PliziCommunity from '../classes/PliziCommunity.js';
 import PliziPost from '../classes/PliziPost.js';
 import PliziCommunityAvatar from '../classes/Community/PliziCommunityAvatar.js';
 import CommunityManagedActionBlock from "../common/Communities/CommunityManagedActionBlock";
+import CommunitiesSubscribeMixin from "../mixins/CommunitiesSubscribeMixin";
 
 export default {
 name: 'CommunityPage',
 props: {
     id : Number|String
 },
-
+mixins: [CommunitiesSubscribeMixin],
 components : {
     CommunityManagedActionBlock,
     CommunityShortMembers,
@@ -210,7 +226,9 @@ computed: {
     isAuthor(){
         return this.communityData?.role === 'author';
     },
-
+    subscribeType() {
+        return this.getSubscribeType(this.communityData);
+    },
     filteredPosts(){
         return [];
     },
