@@ -33,7 +33,7 @@ class PostCollection extends ResourceCollection
     {
         return [
             'list' => $this->collection->map(function ($post) {
-//                \Log::debug(json_encode($post->likess));
+//                \Log::debug(json_encode($post->usersLikes));
 //                return;
                 if($this->injectRelation) {
                     if($post->postable instanceof UserModel) {
@@ -43,7 +43,7 @@ class PostCollection extends ResourceCollection
                             'body' => strip_tags($post->body, '<span><p>'),
                             'primaryImage' => $post->primary_image,
                             'likes' => $post->likes,
-                            'usersLike' => new SimpleUsers($post->likesRow),
+                            'usersLikes' => new SimpleUsers($post->usersLikes),
                             'views' => $post->views,
                             'sharesCount' => 25,
                             'commentsCount' => 48,
@@ -61,7 +61,7 @@ class PostCollection extends ResourceCollection
                             'body' => strip_tags($post->body, '<span><p>'),
                             'primaryImage' => $post->primary_image,
                             'likes' => $post->likes,
-                            'usersLike' => new SimpleUsers($post->likesRow),
+                            'usersLikes' => new SimpleUsers($post->usersLikes),
                             'views' => $post->views,
                             'sharesCount' => 25,
                             'commentsCount' => 48,
@@ -80,7 +80,7 @@ class PostCollection extends ResourceCollection
                         'body' => strip_tags($post->body, '<span><p>'),
                         'primaryImage' => $post->primary_image,
                         'likes' => $post->likes,
-                        'usersLike' => new SimpleUsers($post->likesRow),
+                        'usersLikes' => new SimpleUsers($post->usersLikes),
                         'views' => $post->views,
                         'sharesCount' => 25,
                         'commentsCount' => 48,

@@ -8,6 +8,6 @@ trait Likeable
 {
     public function likess()
     {
-        return $this->morphMany(Like::class, 'likeable');
+        return $this->morphMany(Like::class, 'likeable')->with(['user', 'user.profile', 'user.profile.avatar']);
     }
 }

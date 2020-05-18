@@ -11,8 +11,7 @@ use Spiritix\LadaCache\Database\LadaCacheTrait;
 
 class Post extends Model
 {
-    use SoftDeletes, LadaCacheTrait, Likeable;
-    use SoftDeletes, LadaCacheTrait, Commentable;
+    use SoftDeletes, LadaCacheTrait, Likeable, Commentable;
 
     protected $fillable = [
         'name', 'body', 'likes', 'views', 'author_id'
@@ -59,16 +58,16 @@ class Post extends Model
         return $this->hasMany(PostLike::class, 'post_id', 'id')->where('user_id', \Auth::user()->id);
     }
 
-//    public function users()
-//    {
-//        return $this->hasManyThrough(
-//            User::class,
-//            PostLike::class,
-//            'post_id', 'id',
-//            'id',
-//            'user_id'
-//        );
-//    }
+    public function usersLikes()
+    {
+        return $this->hasManyThrough(
+            User::class,
+            PostLike::class,
+            'post_id', 'id',
+            'id',
+            'user_id'
+        );
+    }
 
     public function video()
     {

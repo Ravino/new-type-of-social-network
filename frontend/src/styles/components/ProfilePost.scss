@@ -76,10 +76,12 @@ $postPosterPicSize: 48px;
     }
 
     .post-watched-counter {
+        position: relative;
         font-size: 13px;
         line-height: 17px;
         color: $postCounterColor;
         transition: .4s;
+
         &:hover {
             color: $iconHoverColor;
             cursor: pointer;
@@ -89,6 +91,12 @@ $postPosterPicSize: 48px;
             .icon-heard,
             .icon-share{
                 fill: $iconHoverColor;
+            }
+
+            .usersLikes {
+                opacity: 1;
+                z-index: 999;
+                transition: 0s;
             }
         }
 
@@ -100,6 +108,26 @@ $postPosterPicSize: 48px;
             }
             span {
                 color: $iconHoverColor;
+            }
+        }
+
+        .usersLikes {
+            position: absolute;
+            top: 0;
+            width: 275px;
+            height: 77px;
+            opacity: 0;
+            background-color: rgba(0, 0, 0, 0.5);
+            transform: translate(0%, -110%);
+            border-radius: 20px;
+            z-index: -1;
+            transition: 0s 1s;
+            cursor: auto;
+            color: #fff;
+
+            img {
+                width: 30px;
+                height: 30px;
             }
         }
     }

@@ -141,6 +141,19 @@
                              @click="onLike">
                             <IconHeard/>
                             <span>{{ post.likes | space1000 }}</span>
+                            <div v-if="post.usersLikes.length" class="usersLikes p-3" @click.stop="">
+                                <p class="mb-0">
+                                    <b>Понравилось</b> {{ post.likes }} пользователю(-ям)
+                                </p>
+                               <p v-for="(user, index) in shortUsersLikes" class="d-flex">
+                                   <router-link :to="{ name: 'PersonalPage', params: { id: user.id } }">
+                                       <img :src="user.profile.userPic"
+                                            :alt="user.profile.firstName + ' ' + user.profile.lastName"
+                                            :title="user.profile.firstName + ' ' + user.profile.lastName"
+                                            class="rounded-circle">
+                                   </router-link>
+                               </p>
+                            </div>
                         </div>
                         <div class="post-watched-counter ml-4">
                             <IconMessage/>
@@ -235,6 +248,9 @@
             },
             user() {
                 return this.$root.$auth.user;
+            },
+            shortUsersLikes() {
+                return this.post.usersLikes && this.post.usersLikes.length ? this.post.usersLikes.slice(0, 5) : null;
             },
         },
         methods: {
