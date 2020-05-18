@@ -15,7 +15,7 @@
                         <div class="plz-community-header-bottom d-flex align-items-start align-items-sm-center justify-content-between py-3 px-4">
                             <div class="plz-community-header-details d-flex align-items-center">
                                 <template v-if="isAuthor">
-                                    <label for="communityPrimaryImage" class="community-primary-image mr-3 cursor-pointer">
+                                    <label for="communityPrimaryImage" class="community-primary-image mr-3 cursor-pointer plz-community-header-logo position-relative mr-3">
                                         <img ref="communityAvatar" :src="avatarMedium" :alt="communityData.name" />
                                     </label>
 
