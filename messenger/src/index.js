@@ -1,32 +1,51 @@
-import express from 'express';
 import mongoose from 'mongoose';
-import jwt from 'express-jwt';
 import dotenv from 'dotenv';
-import redis from 'redis';
-import routes from './routes';
-mongoose.Promise = global.Promise;
-const app = express();
-dotenv.config();
+import ChatController from "./controllers/ChatController.js";
+import ff from "fastify";
+import fastifyJWT from "fastify-jwt";
+import os from 'os';
+import cluster from 'cluster';
+const fastify = ff();
 
-// const client = redis.createClient({
-//     host: process.env.REDIS_HOST,
-//     port: process.env.REDIS_PORT,
-//     password: process.env.REDIS_PASSWORD,
-// });
-// console.log(process.env)
-// client.publish('test-channel', 'as');
+if (cluster.isMaster) {
+    let cpuCount = os.cpus().length;
+    for (let i = 0; i < cpuCount; i += 1) {
+        cluster.fork();
+    }
+} else {
+    mongoose.Promise = global.Promise;
+    dotenv.config();
 
-app.use(jwt({ secret: process.env.JWT_SECRET}));
-app.use('/', routes);
+    fastify.register(fastifyJWT, {
+        secret: process.env.JWT_SECRET
+    });
 
-mongoose.connect(`mongodb://${process.env.MONGO_DB_USERNAME}:${process.env.MONGO_DB_PASSWORD}@${process.env.MONGO_DB_HOST}:${process.env.MONGO_DB_PORT}/${process.env.MONGO_DB_DATABASE}`, {
-    useNewUrlParser: true,
-    useUnifiedTopology: true
-}).then(() => {
-        console.log('mongodb started.');
-        app.listen(process.env.APP_PORT, () => {
-            console.log(`Server started on ${process.env.APP_PORT}`);
-        });
-    }).catch(() => {
-    console.log('Mongodb connection failed.');
-})
+    fastify.addHook("onRequest", async (request, reply) => {
+        try {
+            await request.jwtVerify()
+        } catch (err) {
+            reply.send(err)
+        }
+    });
+
+    fastify.post('/api/chat/send', ChatController.sendMessage)
+
+    const start = async () => {
+        try {
+            await fastify.listen(process.env.APP_PORT, '0.0.0.0');
+            fastify.log.info(`server listening on ${fastify.server.address().port}`)
+        } catch (err) {
+            fastify.log.error(err)
+            process.exit(1)
+        }
+    };
+    mongoose.connect(`mongodb://${process.env.MONGO_DB_USERNAME}:${process.env.MONGO_DB_PASSWORD}@${process.env.MONGO_DB_HOST}:${process.env.MONGO_DB_PORT}/${process.env.MONGO_DB_DATABASE}`, {
+        useNewUrlParser: true,
+        useUnifiedTopology: true
+    }).then(() => {
+        console.log('connected')
+        start()
+    }).catch((ex) => {
+        console.error('Exception ' + ex)
+    });
+}
