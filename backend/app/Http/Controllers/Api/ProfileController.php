@@ -53,10 +53,19 @@ class ProfileController extends Controller
                 $query->where([
                     'user_id' => Auth::user()->id,
                 ]);
-            })
-            ->get();
+            });
 
-        return new CommunityCollection($communities);
+        $search = $request->search;
+        if (mb_strlen($search) < 3) {
+            return new CommunityCollection($communities->get());
+        }
+
+        $communities->where('name', 'LIKE', "%{$search}%")
+            ->orWhere('description', 'LIKE', "%{$search}%")
+            ->orWhere('url', 'LIKE', "%{$search}%")
+            ->orWhere('website', 'LIKE', "%{$search}%");
+
+        return new CommunityCollection($communities->get());
     }
 
     /**
@@ -82,10 +91,19 @@ class ProfileController extends Controller
                                 'role' => Community::ROLE_AUTHOR,
                             ]);
                     });
-            })
-            ->get();
+            });
 
-        return new CommunityCollection($communities);
+        $search = $request->search;
+        if (mb_strlen($search) < 3) {
+            return new CommunityCollection($communities->get());
+        }
+
+        $communities->where('name', 'LIKE', "%{$search}%")
+            ->orWhere('description', 'LIKE', "%{$search}%")
+            ->orWhere('url', 'LIKE', "%{$search}%")
+            ->orWhere('website', 'LIKE', "%{$search}%");
+
+        return new CommunityCollection($communities->get());
     }
 
     /**
