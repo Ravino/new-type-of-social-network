@@ -29,10 +29,19 @@ class Community extends Request
     public function rules()
     {
         return [
-            'name' => 'string|min:2|max:255|unique:App\Models\Community,name',
+            'name' => [
+                'string',
+                'min:2',
+                'max:255',
+                Rule::unique('communities')->ignore($this->id, 'id'),
+            ],
             'description' => 'string',
             'notice' => 'string|max:255',
-            'url' => 'string|max:255|unique:App\Models\Community,url',
+            'url' => [
+                'string',
+                'max:255',
+                Rule::unique('communities')->ignore($this->id, 'id'),
+            ],
             'website' => 'url|nullable',
             'location' => 'exists:geo_cities,id',
             'privacy' => [

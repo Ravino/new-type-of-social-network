@@ -383,6 +383,15 @@
                     response = await this.$root.$api.$communities.update(this.community.id, formData);
                 } catch (e) {
                     console.warn(e.detailMessage);
+                    if (e.status === 422) {
+                        const inpRef = this.getRef(fieldName);
+
+                        if (inpRef) {
+                            inpRef.focus();
+                        }
+                        this.isEdit[fieldName] = true;
+                        this.serverRegMessages[fieldName] = e.data?.errors[fieldName][0];
+                    }
                 }
 
                 if (response !== null) {
