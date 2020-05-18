@@ -96,7 +96,7 @@ computed: {
             }
 
             return {
-                path: image.medium.path,
+                path: image.original.path,
                 name: image.originalName,
                 classes,
                 isMore,
