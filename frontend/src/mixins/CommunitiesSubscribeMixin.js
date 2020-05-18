@@ -48,6 +48,7 @@ const CommunitiesSubscribeMixin = {
                 if (apiResponse.status && apiResponse.status === 422) {
                     this.$root.$alert(`Вы уже подписаны на ${community.name}`, 'bg-info', 3);
                 } else {
+                    community.role = 'user';
                     this.$root.$alert(`Вы успешно подписались на сообщество ${community.name}`, 'bg-success', 3);
                 }
             } else {
@@ -73,6 +74,7 @@ const CommunitiesSubscribeMixin = {
             }
 
             if (apiResponse) {
+                community.role = null;
                 this.$root.$alert(`Вы успешно отписались от ${community.name}`, 'bg-success', 3);
             } else {
                 this.$root.$alert(`Не получилось отписаться от ${community.name}`, 'bg-warning', 3);
