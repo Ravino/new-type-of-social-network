@@ -18,7 +18,7 @@
                     <div class="plz-account-settings-body-field order-1 order-sm-0 col-12 col-sm-5 col-lg-6 ">
                         <input type="text"
                                id="firstName"
-                               class="w-100 w-sm-75"
+                               class="w-50 w-sm-75"
                                v-model="model.firstName"
                                :class="[isEdit.firstName ? 'form-control' : 'form-control-plaintext', { 'is-invalid': !!firstNameError, 'is-valid': isSuccessFirstName }]"
                                @input="inputFieldEdit($event, 'firstName')"
@@ -48,7 +48,7 @@
                         class="plz-account-settings-body-field order-1 order-sm-0 col-12 col-sm-5 col-lg-6 ">
                         <input id="lastName"
                                type="text"
-                               class="w-100 w-sm-75"
+                               class="w-50 w-sm-75"
                                v-model="model.lastName"
                                :class="[isEdit.lastName ? 'form-control' : 'form-control-plaintext', { 'is-invalid': !!lastNameError, 'is-valid': isSuccessLastName }]"
                                @input="inputFieldEdit($event, 'lastName')"
@@ -126,7 +126,7 @@
                         <input v-if="isEdit.birthday"
                                id="birthday"
                                type="date"
-                               class="form-control w-100 w-sm-75"
+                               class="form-control w-50 w-sm-75"
                                :class="{ 'is-invalid': !!birthdayError, 'is-valid': isSuccessBirthday }"
                                :value="model.birthday | toYMD"
                                @input="inputFieldEdit($event, 'birthday')"
@@ -135,7 +135,7 @@
                                ref="birthday"/>
 
                         <div class="invalid-feedback">
-                            <p class="text-danger">{{ lastNameError }}</p>
+                            <p class="text-danger">{{ birthdayError }}</p>
                         </div>
                     </div>
                     <div
@@ -285,7 +285,7 @@
             birthdayError() {
                 if (this.$v.model.birthday.$error) {
                     if (!this.$v.model.birthday.isValidBirthday) {
-                        return 'Укажите коррекнтую дату.';
+                        return 'Укажите корректную дату.';
                     }
                 } else if (this.serverRegMessages.birthday) {
                     return this.serverRegMessages.birthday;
