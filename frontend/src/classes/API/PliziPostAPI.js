@@ -35,8 +35,15 @@ class PliziPostAPI extends PliziBaseAPI {
      * @returns {object[]|null}
      * @throws PliziAPIError
      */
-    async getPostsByUserId( id ){
-        let response = await this.axios.get( `api/user/${id}/posts`, this.authHeaders )
+    async getPostsByUserId( id, limit, offset ){
+        let path = `api/user/${id}/posts/`;
+        let qParams = '';
+
+        if (limit && offset) {
+            qParams = `?limit=${limit}&offset=${offset}`;
+        }
+
+        let response = await this.axios.get( path + qParams, this.authHeaders )
             .catch( ( error ) => {
                 this.checkIsTokenExpires( error, `getPostsByUserId` );
                 throw new PliziAPIError( `getPostsByUserId`, error.response );

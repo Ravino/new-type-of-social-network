@@ -20,7 +20,7 @@
 <!--                    <p class="plizi-community-item-notice p-0 mb-1">-->
 <!--                        {{ community.notice }}</p>-->
                     <p v-else-if="community.notice" class="plizi-community-item-notice p-0 my-0 text-secondary">{{ community.notice }}</p>
-                    <p v-else class="plizi-community-item-location p-0 my-0 text-secondary">{{ community.location }}</p>
+                    <p v-else class="plizi-community-item-location p-0 my-0 text-secondary">{{ locationLabel }}</p>
 
                     <p class="plizi-community-item-members-number p-0 my-0">{{ community.totalMembers }} участников </p><!--TODO @Veremey check this?-->
                 </div>
@@ -79,6 +79,22 @@ computed: {
     subscribeType() {
         return this.getSubscribeType(this.community);
     },
+    locationLabel() {
+        const location = [];
+        const country = this.community.location?.country.title.ru;
+        if (country) {
+            location.push(country);
+        }
+        const region = this.community.location?.region.title.ru;
+        if (region) {
+            location.push(region);
+        }
+        const city = this.community.location?.title.ru;
+        if (city) {
+            location.push(city);
+        }
+        return location.join(', ');
+    }
 },
 methods: {
     /**

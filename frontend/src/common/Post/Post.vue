@@ -168,7 +168,7 @@
                 <div class="post-deleted text-center">
                     <p>Запись удалена.</p>
                     <button class="btn btn-secondary"
-                            @click="$emit('restorePost', post.id)">
+                            @click="$emit('onRestorePost', post.id)">
                         Восстановить запись
                     </button>
                 </div>
