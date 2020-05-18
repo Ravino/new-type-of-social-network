@@ -1,19 +1,19 @@
 <template>
     <div class="plz-top-watcher-item position-relative d-inline-block mr-0 mr-sm-2">
 
-        <div class="btn btn-link my-auto text-body btn-sm cursor-pointer" title="Уведомления">
+        <div class="btn btn-link my-auto text-body btn-sm cursor-pointer" title="Уведомления" ref="dropdown">
             <span data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" id="dropdownMenuLikes"
                   @click="onShowNotifications">
                 <IconBell />
-                <span v-if="notificationsNumber > 0" class="counter-info">
-                    {{notificationsNumber}}
+                <span v-if="notificationsNumber() > 0" class="counter-info">
+                    {{notificationsNumber()}}
                 </span>
             </span>
 
-            <div v-if="notificationsNumber > 0" aria-labelledby="dropdownMenuLikes"
+            <div v-if="notificationsNumber() > 0" aria-labelledby="dropdownMenuLikes"
                 class="notifications-likes-dropdown dropdown-menu dropdown-menu-right pt-3 pb-0 dropdown-white w-auto">
                 <ul class="list-unstyled mb-0">
-                    <NotificationItem v-for="notifItem in notificationsList"
+                    <NotificationItem v-for="notifItem in notificationsList()"
                                       v-bind:notification="notifItem"
                                       v-bind:key="notifItem.id">
                     </NotificationItem>
@@ -37,41 +37,51 @@ export default {
 name : 'NavBarNotifications',
 components : { IconBell, NotificationItem },
 
-data(){
-    return {
-        //notificationsNumber : 0
-    }
-},
-
 methods : {
-    onShowNotifications(){
+    async onShowNotifications(){
         window.console.info(`onShowNotifications`);
 
-        if (this.notificationsNumber <= 0)
-            return;
+        const idList = this.$root.$auth.nm.idsList;
 
-        window.console.dir(this.$root.$auth.nm.idsList, 'getIdsList'); // эти ID-шники помечаем как прочитанные
+        if (idList.length === 0) {
+         return;
+        }
+
+        await this.$root.$api.$notifications.markAsRead(idList);
     },
 
     updateNotifications(){
         this.$forceUpdate();
-    }
-},
-
-computed: {
-    notificationsNumber(){
-       return this.$root.$auth.nm.size;
     },
 
-    notificationsList(){
-        return this.$root.$auth.nm.asArray();
-    }
-},
+    eventOnHideDropdown() {
+     $(this.$refs.dropdown).off('hidden.bs.dropdown').on('hidden.bs.dropdown', () => {
+       this.$root.$auth.nm.clear();
+      console.log(this.$root.$auth.nm);
+      this.$root.$auth.nm.storeData();
+      console.log( this.$root.$auth.nm);
+       this.updateNotifications();
+     });
+    },
+     notificationsNumber(){
+      return this.$root.$auth.nm.size;
+     },
 
+     notificationsList(){
+      return this.$root.$auth.nm.asArray();
+     }
+},
 created(){
     this.$root.$on(this.$root.$auth.nm.restoreEventName,  this.updateNotifications);
     this.$root.$on(this.$root.$auth.nm.loadEventName,  this.updateNotifications);
     this.$root.$on(this.$root.$auth.nm.updateEventName,  this.updateNotifications);
+},
+mounted() {
+ this.eventOnHideDropdown();
+},
+updated() {
+ this.eventOnHideDropdown();
 }
+
 }
 </script>
