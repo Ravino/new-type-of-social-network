@@ -56,10 +56,6 @@ $titleColor: #363636;
         &-field {
             display: flex;
 
-            //i {
-            //    margin-right: 7px;
-            //}
-
             .form-control,
             .form-control-plaintext {
                 color: #363636;
@@ -146,6 +142,8 @@ $titleColor: #363636;
 
         .multiselect{
             min-height: $height;
+            height: auto;
+
             &__placeholder {
                 margin: 0;
                 padding-top: .5rem;

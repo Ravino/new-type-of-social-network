@@ -29,10 +29,10 @@ class PliziFriendsCollection extends PliziStoredCollection {
 
 
     onAddAcceptFriendsShip(evData){
-        window.console.warn(evData,`onAddAcceptFriendsShip`);
         this.add(evData);
         this.storeData();
-        this.emit(this.updateEventName);
+        this.restore();
+        this.emit(this.updateEventName, evData);
     }
 
     stopFriendship(removedFriendId){
