@@ -63,12 +63,22 @@ class CommunityController extends Controller
          */
         $communities = Community::with('role', 'members', 'avatar')
             ->limit($request->query('limit', 10))
-            ->offset($request->query('offset', 0))
-            ->get();
+            ->offset($request->query('offset', 0));
         $communities->each(function($community) {
             $community->load('onlyFiveMembers');
         });
-        return new CommunityCollection($communities);
+
+        $search = $request->search;
+        if (mb_strlen($search) < 3) {
+            return new CommunityCollection($communities->get());
+        }
+
+        $communities->where('name', 'LIKE', "%{$search}%")
+            ->orWhere('description', 'LIKE', "%{$search}%")
+            ->orWhere('url', 'LIKE', "%{$search}%")
+            ->orWhere('website', 'LIKE', "%{$search}%");
+
+        return new CommunityCollection($communities->get());
     }
 
     /**
@@ -222,22 +232,5 @@ class CommunityController extends Controller
         return response()->json([
             'data' => CommunityTheme::getTree(),
         ]);
-    }
-
-    public function search(string $search, Request $request)
-    {
-        if (mb_strlen($search) < 3) {
-            return new CommunityCollection([]);
-        }
-
-        $list = Community::where('name', 'LIKE', "%{$search}%")
-            ->orWhere('description', 'LIKE', "%{$search}%")
-            ->orWhere('url', 'LIKE', "%{$search}%")
-            ->orWhere('website', 'LIKE', "%{$search}%")
-            ->limit($request->query('limit', 10))
-            ->offset($request->query('offset', 0))
-            ->get();
-
-        return new CommunityCollection($list);
     }
 }
