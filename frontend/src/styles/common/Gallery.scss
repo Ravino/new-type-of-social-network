@@ -6,6 +6,7 @@ $portraitFullHeight: 750px;
     &-wrap {
         overflow: hidden;
         //width: 100%;
+        height: $portraitFullHeight;
     }
     &-pic {
         //padding: 5px;
@@ -33,6 +34,7 @@ $portraitFullHeight: 750px;
             }
 
             &-half {
+                height: 50%;
                 width: calc(100% / 2);
             }
 
@@ -42,6 +44,9 @@ $portraitFullHeight: 750px;
             }
 
             &-2 {
+                height: $portraitFullHeight / 2;
+            }
+            &-3 {
                 height: $portraitFullHeight / 2;
             }
         }
@@ -79,12 +84,12 @@ $portraitFullHeight: 750px;
             }
 
             &-half {
-                height: $portraitFullHeight/ 2;
+                height: $portraitFullHeight / 2;
                 //min-height: calc(500px / 2 - 5px);
             }
 
             &-third {
-                height: $portraitFullHeight/ 3;
+                height: $portraitFullHeight / 3;
                 //min-height: calc(500px / 3 - 5px);
             }
         }
@@ -108,6 +113,8 @@ $portraitFullHeight: 750px;
         height: 100%;
         width: 100%;
         position: absolute;
+        left: 0;
+        top: 0;
         z-index: 1;
         cursor: pointer;
     }
@@ -119,6 +126,7 @@ $portraitFullHeight: 750px;
 
         &-btn {
             position: absolute;
+            display: inline-block;
             top: 50%;
             transform: translateY(-50%);
             color: #ffffff;
