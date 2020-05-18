@@ -196,9 +196,9 @@ methods : {
 
         if ( response !== null ){
             this.enabledPostLoader = false;
-            response.map( ( post ) => {
-                this.userPosts.push( new PliziPost( post ) );
-            } );
+            response.map((post) => {
+                this.userPosts.push(new PliziPost(post));
+            });
 
             return response.length;
         }
