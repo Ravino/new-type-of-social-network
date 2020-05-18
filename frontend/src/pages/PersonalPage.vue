@@ -20,11 +20,20 @@
                           :post="postItem"
                           @onShare="onSharePost"></Post>
                 </template>
-                <div v-else>
-                    <div class="alert alert-info w-100 p-5 text-center">
+
+                <div v-else-if="!enabledPostLoader"  class="row plz-post-item mb-4 bg-white-br20 p-4">
+                    <div class="alert alert-info w-100 p-5 text-center mb-0">
                         Пользователь {{ profileData.firstName }} не создал ни одной записи.
                     </div>
                 </div>
+
+                <template v-if="enabledPostLoader">
+                    <div class="row plz-post-item mb-4 bg-white-br20 p-4">
+                        <div class="w-100 p-5 text-center mb-0">
+                            <SmallSpinner/>
+                        </div>
+                    </div>
+                </template>
 
             </div>
 
@@ -55,6 +64,7 @@ import ProfileFilter from '../components/ProfileFilter.vue';
 import Post from '../common/Post/Post.vue';
 import NewPersonalMessageModal from '../components/NewPersonalMessageModal.vue';
 import PostRepostModal from '../common/Post/PostRepostModal.vue';
+import SmallSpinner from "../common/SmallSpinner.vue";
 
 import PliziUser from '../classes/PliziUser.js';
 import PliziPost from '../classes/PliziPost.js';
@@ -73,6 +83,7 @@ components: {
     ProfilePhotos,
     ProfileFilter,
     PostRepostModal,
+    SmallSpinner,
 },
 
 computed: {
@@ -92,7 +103,7 @@ data() {
         profileData: {},
         isDataReady: false,
         isShowMessageDialog: false,
-        userPosts: null,
+        userPosts: [],
         userPhotos: [
             {path: '/images/user-photos/user-photo-01.png',},
             {path: '/images/user-photos/user-photo-02.png',},
@@ -106,28 +117,13 @@ data() {
             isVisible: false,
         },
         postForRepost: null,
+        lazyLoadStarted: false,
+        noMorePost: false,
+        enabledPostLoader: true,
     }
 },
 
 methods: {
-    async getUserInfo() {
-        let apiResponse = null;
-
-        try {
-            apiResponse = await this.$root.$api.$users.getUser(this.userId);
-        }
-        catch (e){
-            window.console.warn(e.detailMessage);
-            throw e;
-        }
-
-        if (apiResponse) {
-            this.profileData = new PliziUser(apiResponse.data);
-            this.isDataReady = true;
-            await this.getPosts();
-        }
-    },
-
     wallPostsSelectHandler(evData) {
         this.filterMode = evData.wMode;
     },
@@ -144,6 +140,30 @@ methods: {
 
     handlePersonalMessage(evData){
         this.sendMessageToUser(evData);
+    },
+
+    onScrollYPage(){
+        if (window.scrollY >= (document.body.scrollHeight - document.documentElement.clientHeight - (document.documentElement.clientHeight/2) )){
+            this.lazyLoadPost();
+        }
+    },
+
+    async getUserInfo() {
+        let apiResponse = null;
+
+        try {
+            apiResponse = await this.$root.$api.$users.getUser(this.userId);
+        }
+        catch (e){
+            window.console.warn(e.detailMessage);
+            throw e;
+        }
+
+        if (apiResponse) {
+            this.profileData = new PliziUser(apiResponse.data);
+            this.isDataReady = true;
+            await this.getPosts();
+        }
     },
 
     async sendMessageToUser(msg){
@@ -176,22 +196,40 @@ methods: {
         }
     },
 
-    async getPosts() {
+    async getPosts(limit = 50, offset = 0) {
         let response = null;
 
         try {
-            response = await this.$root.$api.$post.getPostsByUserId(this.profileData.id);
+            response = await this.$root.$api.$post.getPostsByUserId(this.profileData.id, limit, offset);
         } catch (e) {
             console.warn(e.detailMessage);
         }
 
         if (response !== null) {
-            this.userPosts = [];
+            this.enabledPostLoader = false;
 
             response.map((post) => {
                 this.userPosts.push(new PliziPost(post));
             });
+
+            return response.length;
         }
+    },
+    async lazyLoadPost() {
+        if (this.lazyLoadStarted) return;
+        if (this.noMorePost) return;
+
+        this.enabledPostLoader = true;
+        this.lazyLoadStarted = true;
+        let oldSize = this.userPosts.length;
+        let added = await this.getPosts(10, oldSize++);
+
+        if (added === 0) {
+            this.noMorePost = true;
+        }
+
+        this.lazyLoadStarted = false;
+        this.onScrollYPage();
     },
 },
 
@@ -208,6 +246,7 @@ mounted() {
     });
 
     this.$root.$on('sendPersonalMessage', this.handlePersonalMessage);
+    window.addEventListener('scroll', this.onScrollYPage);
 },
 
 beforeRouteUpdate( to, from, next ){
@@ -217,7 +256,12 @@ beforeRouteUpdate( to, from, next ){
     this.getUserInfo();
     next();
     window.scrollTo( 0, 0 );
+
 },
+    beforeRouteLeave(to, from, next) {
+        window.removeEventListener('scroll', this.onScrollYPage);
+        next();
+    },
 }
 </script>
 

@@ -5,6 +5,9 @@ namespace App\Http\Requests\Community;
 
 
 use App\Http\Requests\Request;
+use App\Models\Community as CommunityModel;
+use App\Models\CommunityTheme;
+use Illuminate\Validation\Rule;
 
 class Community extends Request
 {
@@ -26,12 +29,30 @@ class Community extends Request
     public function rules()
     {
         return [
-            'name' => 'required|string|max:255|unique:App\Models\Community,name',
-            'description' => 'required|string',
+            'name' => [
+                'string',
+                'min:2',
+                'max:255',
+                Rule::unique('communities')->ignore($this->id, 'id'),
+            ],
+            'description' => 'string',
             'notice' => 'string|max:255',
-            'url' => 'string|max:255|unique:App\Models\Community,url',
+            'url' => [
+                'string',
+                'max:255',
+                Rule::unique('communities')->ignore($this->id, 'id'),
+            ],
             'website' => 'url|nullable',
-            'location' => 'string|max:255',
+            'location' => 'exists:geo_cities,id',
+            'privacy' => [
+                Rule::in(array_keys(CommunityModel::getPrivacyList())),
+            ],
+            'type' => [
+                Rule::in(array_keys(CommunityModel::getTypeList())),
+            ],
+            'themeId' => [
+                Rule::in(CommunityTheme::getAllChildren()->pluck('id')->toArray()),
+            ],
         ];
     }
 }

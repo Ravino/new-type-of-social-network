@@ -40,17 +40,19 @@ class CommunityService
      * @return mixed
      */
     public function updateCommunity($request, $community) {
-        $data = [
+        return tap($community)->update(array_filter([
             'name' => $request->name,
             'description' => $request->description,
             'notice' => $request->notice,
             'url' => $request->url,
+            'privacy' => $request->privacy,
+            'type' => $request->type,
+            'theme_id' => $request->themeId,
             'website' => $request->website,
-            'location' => $request->location,
+            'geo_city_id' => $request->location,
             'is_verified' => false,
             'updated_at' => time(),
-        ];
-        return tap($community)->update($data);
+        ]));
     }
 
 }

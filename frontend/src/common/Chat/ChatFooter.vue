@@ -49,7 +49,8 @@ methods: {
         const keyPressData = {
             channel: window.localStorage.getItem('pliziChatChannel'),
             userId: this.$root.$auth.user.id,
-            chatId: this.currentDialog.id
+            chatId: this.currentDialog.id,
+            event: 'user.typing'
         };
 
         this.$root.$api.sendToChannel(keyPressData);

@@ -77,34 +77,12 @@ methods : {
         catch (e){
             window.console.warn(e.detailMessage  || e);
         }
-
-        /**
-         * @see http://vm1095330.hl.had.pm:8082/docs/#/User/markNotificationsAsRead
-         * TODO: метод api/user/notifications/mark/read НЕ возвращает список нотификаций как описано в доке
-         */
-        if (apiResponse) {
-            window.console.log(apiResponse, `apiResponse`);
-
-            idsList.map((remId)=>{
-                this.$root.$auth.nm.delete(remId);
-            });
-
-            //apiResponse.map( (notifItem) => {
-            //    this.$root.$auth.nm.add( notifItem );
-            //});
-
-            this.storeData();
-
-            if (this.$root.$auth.nm.updateEventName) {
-                this.$root.$emit(this.$root.$auth.nm.updateEventName);
-            }
-        }
     }
 },
 
-mounted(){
-    this.$root.$once(this.$root.$auth.nm.loadEventName, this.markNotificationsAsRead);
-    this.$root.$once(this.$root.$auth.nm.restoreEventName, this.markNotificationsAsRead);
+async mounted(){
+    await this.$root.$auth.nm.load();
+    this.markNotificationsAsRead();
 }
 }
 </script>

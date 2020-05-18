@@ -45,7 +45,11 @@ export default {
         if (!this.activeImage && this.images.length > 0) {
             this.activeImage = this.images.slice(0, 1).pop();
         }
+        this.setBodyOverflow('hidden');
     },
+ destroyed() {
+  this.setBodyOverflow('auto');
+ },
     computed: {
         currentImageIndex() {
             return this.images.findIndex(image => image.id === this.activeImage.id);
@@ -76,6 +80,9 @@ export default {
         goToImage(image) {
             this.activeImage = image;
         }
+       setBodyOverflow(overflow) {
+          document.querySelector('body').style.overflow = overflow;
+      }
     }
 }
 </script>

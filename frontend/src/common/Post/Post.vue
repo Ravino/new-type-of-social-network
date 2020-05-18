@@ -58,10 +58,10 @@
                 </div>
             </div>
 
-            <div class="w-100" :class="{'px-5': post.sharedFrom}">
-                <div class="row" :class="{shared: post.sharedFrom}">
+            <!--<div class="w-100" :class="{'px-5': post.sharedFrom}">-->
+                <!--<div class="w-100" >-->
                     <template v-if="post.sharedFrom">
-                        <div class="post-news-item d-flex flex-row align-content-center pb-4">
+                        <div class="post-news-item d-flex flex-row align-content-center pb-4" :class="{'shared px-5': post.sharedFrom}">
                             <div class="post-poster-pic mr-3">
                                 <router-link v-if="post.sharedFrom.user" :to="{name: 'PersonalPage', params: {id: post.sharedFrom.user.id}}">
                                     <img :src="post.sharedFrom.posterPic" :alt="post.sharedFrom.posterName"/>
@@ -130,8 +130,8 @@
                             </template>
                         </div>
                     </div>
-                </div>
-            </div>
+                <!--</div>-->
+            <!--</div>-->
 
             <div class="plz-post-item-footer col-12 pt-4">
                 <div class="d-flex">
@@ -168,7 +168,7 @@
                 <div class="post-deleted text-center">
                     <p>Запись удалена.</p>
                     <button class="btn btn-secondary"
-                            @click="$emit('restorePost', post.id)">
+                            @click="$emit('onRestorePost', post.id)">
                         Восстановить запись
                     </button>
                 </div>

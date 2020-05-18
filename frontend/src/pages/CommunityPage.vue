@@ -10,12 +10,12 @@
                     <div v-if="isDataReady" id="communityHeader"
                          class="plz-community-header bg-white-br20 mb-4 text-left overflow-hidden">
                         <div class="plz-community-header-pic position-relative overflow-hidden">
-                            <img src="images/community-header-bg.jpg" alt="image">
+                            <img :src="headerImage" alt="image">
                         </div>
                         <div class="plz-community-header-bottom d-flex align-items-start align-items-sm-center justify-content-between py-3 px-4">
                             <div class="plz-community-header-details d-flex align-items-center">
                                 <template v-if="isAuthor">
-                                    <label for="communityPrimaryImage" class="community-primary-image mr-3 cursor-pointer">
+                                    <label for="communityPrimaryImage" class="community-primary-image mr-3 cursor-pointer plz-community-header-logo position-relative mr-3">
                                         <img ref="communityAvatar" :src="avatarMedium" :alt="communityData.name" />
                                     </label>
 
@@ -31,12 +31,27 @@
                                 <div class="plz-community-header-details-text">
                                     <h1 class="plz-community-header-title mb-1">{{communityData.name}}</h1>
                                     <p class="plz-community-header-desc mb-0">
-                                        Скоро открытие 7-го сервера Sinatra!
+                                        {{communityData.description}}
                                     </p>
                                 </div>
                             </div>
                             <div class="plz-community-subscribe file-label d-flex align-items-center justify-content-between">
-                                <button class="btn align-items-center justify-content-center d-flex w-75 border-right m-0">подписаться</button>
+
+                                <button v-if="subscribeType === 'new'"
+                                        class="btn align-items-center justify-content-center d-flex w-75 border-right m-0"
+                                        @click="subscribeInvite(communityData)">
+                                    подписаться
+                                </button>
+                                <button v-else-if="subscribeType === 'exists'"
+                                        class="btn align-items-center justify-content-center d-flex w-75 border-right m-0"
+                                        @click="unsubscribeInvite(communityData)">
+                                    отписаться
+                                </button>
+                                <router-link :to="{name: 'CommunitySettingsPage', params: {id: communityData.id}}" v-else
+                                             class="btn align-items-center justify-content-center d-flex w-75 border-right m-0">
+                                    управление
+                                </router-link>
+
                                 <button title="подписаться" class="btn align-items-center justify-content-center d-flex w-25">
                                     <span class="ps-dot"></span>
                                     <span class="ps-dot"></span>
@@ -67,7 +82,7 @@
                                      :class="'mx-0 '"
                                      @addNewPost="addNewPost"/>
 
-                    <div v-if="isDataReady" id="communityPostsBlock" class="pb-5 mb-4 --text-center">
+                    <div v-if="communityPosts && communityPosts.length > 0" id="communityPostsBlock" class="pb-5 mb-4 --text-center">
                         <Post v-for="postItem in communityPosts"
                               :key="postItem.id"
                               :post="postItem"
@@ -78,10 +93,25 @@
                               @onRestorePost="onRestorePost"
                               @onEditPost="onEditPost"></Post>
                     </div>
-                    <Spinner v-else></Spinner>
+
+                    <div v-else-if="!enabledPostLoader"  class="row plz-post-item mb-4 bg-white-br20 p-4">
+                        <div class="alert alert-info w-100 p-5 text-center mb-0">
+                            Извините, но сейчас нечего показывать.
+                        </div>
+                    </div>
+
+                    <template v-if="enabledPostLoader">
+                        <div class="row plz-post-item mb-4 bg-white-br20 p-4">
+                            <div class="w-100 p-5 text-center mb-0">
+                                <SmallSpinner/>
+                            </div>
+                        </div>
+                    </template>
                 </div>
 
                 <div class="col-12 col-sm-5 col-lg-4">
+                    <CommunityManagedActionBlock :community="communityData" v-if="isAuthor"></CommunityManagedActionBlock>
+
                     <CommunityUserActionBlock v-bind:community="communityData"></CommunityUserActionBlock>
 
                     <CommunityFriendsInformer v-bind:community="communityData"></CommunityFriendsInformer>
@@ -162,18 +192,22 @@ import CommunityFriendsInformer from '../common/Communities/CommunityFriendsInfo
 import CommunityShortMembers from '../common/Communities/CommunityShortMembers.vue';
 import CommunityEditor from '../common/Communities/CommunityEditor.vue';
 import PostRepostModal from '../common/Post/PostRepostModal.vue';
+import SmallSpinner from "../common/SmallSpinner.vue";
 
 import PliziCommunity from '../classes/PliziCommunity.js';
 import PliziPost from '../classes/PliziPost.js';
 import PliziCommunityAvatar from '../classes/Community/PliziCommunityAvatar.js';
+import CommunitiesSubscribeMixin from "../mixins/CommunitiesSubscribeMixin";
+import CommunityManagedActionBlock from "../common/Communities/CommunityManagedActionBlock.vue";
 
 export default {
 name: 'CommunityPage',
 props: {
     id : Number|String
 },
-
+mixins: [CommunitiesSubscribeMixin],
 components : {
+    CommunityManagedActionBlock,
     CommunityShortMembers,
     CommunityFriendsInformer,
     CommunityUserActionBlock,
@@ -184,13 +218,14 @@ components : {
     PostEditModal,
     CommunityEditor,
     PostRepostModal,
+    SmallSpinner,
 },
 
 data() {
     return {
         isDataReady: false,
         communityData: null,
-        communityPosts: null,
+        communityPosts: [],
         postEditModal: {
             isVisible: false,
         },
@@ -199,14 +234,19 @@ data() {
             isVisible: false,
         },
         postForRepost: null,
+        lazyLoadStarted: false,
+        noMorePost: false,
+        enabledPostLoader: true,
     }
 },
 
 computed: {
     isAuthor(){
-        return this.communityData.role === 'author';
+        return this.communityData?.role === 'author';
     },
-
+    subscribeType() {
+        return this.getSubscribeType(this.communityData);
+    },
     filteredPosts(){
         return [];
     },
@@ -226,6 +266,9 @@ computed: {
     avatarThumb() {
         return this.communityData?.avatar?.image.thumb.path || this.communityData?.primaryImage;
     },
+    headerImage() {
+        return this.communityData?.headerImage?.image.normal.path || 'images/community-header-bg.jpg';
+    }
 },
 
 methods: {
@@ -251,7 +294,6 @@ methods: {
         this.postEditModal.isVisible = false;
         this.postForEdit = null;
     },
-
     ytInit(){
         let video = document.getElementsByClassName('video');
 
@@ -263,6 +305,55 @@ methods: {
     },
     ytShow() {
 
+    },
+    /**
+     * @returns {boolean|FormData}
+     */
+    getFormData(){
+        const fName = this.$refs.communityPrimaryImage.value;
+        const fExt = fName.split('.').pop().toLowerCase();
+        const allowExts = ['png', 'jpg', 'jpeg', 'bmp', 'webp', 'gif'];
+
+        if ( ! allowExts.includes(fExt) ) {
+            this.$alert(`<h4 class="text-white">Ошибка</h4>
+<div class="alert alert-danger">
+Недопустимое расширение у файла <b>${fName}</b><br />
+Допустимы только: <b class="text-success">${allowExts.join( ', ' )}</b>
+</div>`, `bg-danger`, 30);
+            return false;
+        }
+
+        const formData = new FormData();
+        formData.append('file', this.$refs.communityPrimaryImage.files[0]);
+        formData.append('id', this.communityData.id);
+        this.$refs.communityPrimaryImage.value = '';
+
+        return formData;
+    },
+    showErrorOnLargeFile() {
+        this.$alert(`<h4 class="text-white">Ошибка</h4>
+                <div class="alert alert-danger">
+                    Превышен максимальный размер файла.
+                    <br />
+                    Максимальный размер файла:
+                    <b class="text-success">2 MB</b>
+                </div>`,
+          `bg-danger`,
+          30
+        );
+    },
+    onSharePost(post){
+        this.postRepostModal.isVisible = true;
+        this.postForRepost = post;
+    },
+    hidePostRepostModal() {
+        this.postRepostModal.isVisible = false;
+        this.postForRepost = null;
+    },
+    onScrollYPage(){
+        if (window.scrollY >= (document.body.scrollHeight - document.documentElement.clientHeight - (document.documentElement.clientHeight/2) )){
+            this.lazyLoadPost();
+        }
     },
 
     async onDeletePost(id) {
@@ -301,7 +392,6 @@ methods: {
             post.deleted = false;
         }
     },
-
     async uploadPrimaryImage(){
         if (!this.isAuthor)
             return;
@@ -336,54 +426,6 @@ methods: {
             this.communityData.avatar = new PliziCommunityAvatar(apiResponse.data);
         }
     },
-
-    /**
-     * @returns {boolean|FormData}
-     */
-    getFormData(){
-        const fName = this.$refs.communityPrimaryImage.value;
-        const fExt = fName.split('.').pop().toLowerCase();
-        const allowExts = ['png', 'jpg', 'jpeg', 'bmp', 'webp', 'gif'];
-
-        if ( ! allowExts.includes(fExt) ) {
-            this.$alert(`<h4 class="text-white">Ошибка</h4>
-<div class="alert alert-danger">
-Недопустимое расширение у файла <b>${fName}</b><br />
-Допустимы только: <b class="text-success">${allowExts.join( ', ' )}</b>
-</div>`, `bg-danger`, 30);
-            return false;
-        }
-
-        const formData = new FormData();
-        formData.append('file', this.$refs.communityPrimaryImage.files[0]);
-        formData.append('id', this.communityData.id);
-        this.$refs.communityPrimaryImage.value = '';
-
-        return formData;
-    },
-
-    showErrorOnLargeFile() {
-        this.$alert(`<h4 class="text-white">Ошибка</h4>
-                <div class="alert alert-danger">
-                    Превышен максимальный размер файла.
-                    <br />
-                    Максимальный размер файла:
-                    <b class="text-success">2 MB</b>
-                </div>`,
-            `bg-danger`,
-            30
-        );
-    },
-
-    onSharePost(post){
-        this.postRepostModal.isVisible = true;
-        this.postForRepost = post;
-    },
-    hidePostRepostModal() {
-        this.postRepostModal.isVisible = false;
-        this.postForRepost = null;
-    },
-
     async getCommunityInfo() {
         let apiResponse = null;
 
@@ -400,24 +442,41 @@ methods: {
             this.isDataReady = true;
         }
     },
-
-    async getCommunityPosts() {
+    async getCommunityPosts(limit = 50, offset = 0) {
         let response = null;
 
         try {
             // TODO: тут нужно получать посты сообщества
-            response = await this.$root.$api.$communities.posts(this.id);
+            response = await this.$root.$api.$communities.posts(this.id, limit, offset);
         } catch (e) {
+            this.enabledPostLoader = false;
             console.warn(e.detailMessage);
         }
 
         if (response !== null) {
-            this.communityPosts = [];
-
+            this.enabledPostLoader = false;
             response.map((post) => {
                 this.communityPosts.push(new PliziPost(post));
             });
+
+            return response.length;
         }
+    },
+    async lazyLoadPost() {
+        if (this.lazyLoadStarted) return;
+        if (this.noMorePost) return;
+
+        this.enabledPostLoader = true;
+        this.lazyLoadStarted = true;
+        let oldSize = this.communityPosts.length;
+        let added = await this.getCommunityPosts(10, oldSize++);
+
+        if (added === 0) {
+            this.noMorePost = true;
+        }
+
+        this.lazyLoadStarted = false;
+        this.onScrollYPage();
     },
 },
 
@@ -425,6 +484,7 @@ async mounted() {
     await this.getCommunityInfo();
     await this.getCommunityPosts();
     window.scrollTo(0, 0);
+    window.addEventListener('scroll', this.onScrollYPage);
 },
     beforeRouteUpdate (to, from, next) {
         this.communityData = null;
@@ -434,6 +494,10 @@ async mounted() {
         this.getCommunityPosts();
         next();
         window.scrollTo(0, 0);
+    },
+    beforeRouteLeave(to, from, next) {
+        window.removeEventListener('scroll', this.onScrollYPage);
+        next();
     },
 }
 </script>

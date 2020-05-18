@@ -1,5 +1,7 @@
 import PliziMember from './PliziMember.js';
 import PliziCommunityAvatar from './Community/PliziCommunityAvatar';
+import PliziCommunityHeaderImage from './Community/PliziCommunityHeaderImage';
+import PliziLocation from "./User/PliziLocation";
 
 class PliziCommunity {
     /**
@@ -36,7 +38,7 @@ class PliziCommunity {
     _notice = null;
 
     /**
-     * @type {string}
+     * @type {PliziLocation|null}
      * @private
      */
     _location = null;
@@ -105,17 +107,46 @@ class PliziCommunity {
      */
     _avatar = null;
 
+    /**
+     * Картинка для хеадера
+     * @type {PliziCommunityHeaderImage|null}
+     * @private
+     */
+    _headerImage = null;
+
+    /**
+     * @type {number|null}
+     * @private
+     */
+    _privacy = null;
+
+    /**
+     * @type {number|null}
+     * @private
+     */
+    _type = null;
+
+    /**
+     * @type {number|null}
+     * @private
+     */
+    _themeId = null;
+
     constructor(inputData){
         this._id = inputData.id;
         this._name = inputData.name;
         this._description = inputData.description;
-        this._location = inputData.location;
+        this._location = inputData.location ? new PliziLocation(inputData.location) : null;
         this._notice = inputData.notice;
         this._primaryImage = inputData.primaryImage;
         this._url = inputData.url;
         this._website = inputData.website;
+        this._privacy = inputData.privacy;
+        this._type = inputData.type;
+        this._themeId = inputData.themeId;
 
         this._avatar = inputData.avatar ? new PliziCommunityAvatar(inputData.avatar) : null;
+        this._headerImage = inputData.headerImage ? new PliziCommunityHeaderImage(inputData.headerImage) : null;
 
         this._role = inputData.role;
         this._totalMembers = inputData.totalMembers;
@@ -181,6 +212,10 @@ class PliziCommunity {
         return this._role;
     }
 
+    set role(value){
+        this._role = value;
+    }
+
     get members(){
         return this._members;
     }
@@ -202,6 +237,42 @@ class PliziCommunity {
 
     set avatar(value) {
         this._avatar = value;
+    }
+
+    /**
+     * @returns {PliziCommunityHeaderImage|null}
+     */
+    get headerImage() {
+        return this._headerImage;
+    }
+
+    /**
+     *
+     * @param {PliziCommunityHeaderImage} image
+     */
+    set headerImage(image) {
+        this._headerImage = image;
+    }
+
+    get privacy() {
+        return this._privacy;
+    }
+    set privacy(value) {
+        this._privacy = value;
+    }
+
+    get type() {
+        return this._type;
+    }
+    set type(value) {
+        this._type = value;
+    }
+
+    get themeId() {
+        return this._themeId;
+    }
+    set themeId(value) {
+        this._themeId = value;
     }
 
     toJSON(){
@@ -228,10 +299,14 @@ class PliziCommunity {
             primaryImage: this._primaryImage,
             url: this.url,
             website: this.website,
-            location: this.location,
+            location: (this._location) ? this.location.toJSON() : null,
             role: this.role,
+            privacy: this.privacy,
+            type: this.type,
+            themeId: this.themeId,
             totalMembers: this.totalMembers,
             avatar: this._avatar ? this._avatar.toJSON() : null,
+            headerImage: this._headerImage ? this._headerImage.toJSON() : null,
             members: mmbrs,
             friends: friends
         };
