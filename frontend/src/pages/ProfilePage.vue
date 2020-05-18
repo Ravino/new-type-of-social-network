@@ -268,10 +268,14 @@ async mounted() {
 
     this.$root.$on('wallPostsSelect', this.wallPostsSelectHandler);
     await this.getPosts();
-
     window.addEventListener('scroll', this.onScrollYPage);
+
     //await this.loadMyFriends();
-}
+},
+    beforeRouteLeave(to, from, next) {
+        window.removeEventListener('scroll', this.onScrollYPage);
+        next();
+    },
 }
 </script>
 
