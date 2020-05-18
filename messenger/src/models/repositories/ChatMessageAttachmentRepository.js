@@ -6,7 +6,7 @@ class ChatMessageAttachmentRepository {
         this.model = model;
     }
 
-    async attachToMessage(attachment_ids, message_id) {
+    attachToMessage(attachment_ids, message_id) {
         return this.model.find().where('_id').in(attachment_ids).update({chat_message_id: message_id});
     }
 }

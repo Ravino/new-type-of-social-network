@@ -61,10 +61,18 @@ class CommunityController extends Controller
         /**
          * TODO: Нужно будет что-то придумать с оптимизацией (дернормализовать таблицы или.... пока не ясно)
          */
-        $communities = Community::with('role', 'members', 'avatar')
-            ->limit($request->query('limit', 10))
-            ->offset($request->query('offset', 0))
-            ->get();
+        $query = Community::with('role', 'members', 'avatar');
+
+        if($request->query('isMine')) {
+            $query->where('name', 'LIKE', "%{$request->query('search')}%")
+                ->orWhere('description', 'LIKE', "%{$request->query('search')}%")
+                ->orWhere('url', 'LIKE', "%{$request->query('search')}%")
+                ->orWhere('website', 'LIKE', "%{$request->query('search')}%");
+        }
+
+        $communities = $query->limit($request->query('limit', 10))
+            ->offset($request->query('offset', 0))->get();
+
         $communities->each(function($community) {
             $community->load('onlyFiveMembers');
         });

@@ -9,13 +9,13 @@ async function sendMessage(req, res) {
         parent_id: req.body.parent_id,
         parent_chat_id: req.body.parent_chat_id,
     }
-    let message = await ChatMessageRepository.create(payload);
+    ChatMessageRepository.create(payload);
     if(req.body.attachments && req.body.attachments.length) {
         ChatMessageAttachmentRepository.attachToMessage(req.body.attachments, message.id)
     }
     res.json({
         data: {
-            id: message.id
+            success: true
         }
     })
 }
