@@ -49,6 +49,15 @@ $postPosterPicSize: 48px;
     .post-main-text {
         color: $postTextColor;
         font-weight: 300;
+
+        a {
+            color: $postTextColor;
+            text-decoration: underline;
+
+            &:hover {
+                text-decoration: none;
+            }
+        }
     }
 
     .post-pictures-list {

@@ -58,10 +58,10 @@
                 </div>
             </div>
 
-            <div class="w-100" :class="{'px-5': post.sharedFrom}">
+            <div class="w-100" :class="{'px-5 pt-4': post.sharedFrom}">
                 <div class="row" :class="{shared: post.sharedFrom}">
                     <template v-if="post.sharedFrom">
-                        <div class="post-news-item d-flex flex-row align-content-center pb-4">
+                        <div class="post-news-item d-flex flex-row align-content-center " :class="{'pb-4': !post.sharedFrom}">
                             <div class="post-poster-pic mr-3">
                                 <router-link v-if="post.sharedFrom.user" :to="{name: 'PersonalPage', params: {id: post.sharedFrom.user.id}}">
                                     <img :src="post.sharedFrom.posterPic" :alt="post.sharedFrom.posterName"/>
@@ -89,7 +89,7 @@
                         </div>
                     </template>
 
-                    <div class="col-12 plz-post-item-body pt-4 pb-2">
+                    <div class="col-12 plz-post-item-body pb-2" :class="{'px-2 pt-2': post.sharedFrom, 'pt-4': !post.sharedFrom}">
                         <template v-if="livePreview && typeof livePreview === 'object'">
                             <p v-if="livePreview.text"
                                class="post-main-text mb-0"

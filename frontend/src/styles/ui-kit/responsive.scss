@@ -123,7 +123,15 @@
         margin-top: 40px;
         width: 40px;
     }
-}
+
+    #toolbarLeftGrey::after {
+        content: none;
+    }
+
+
+}/*- max-width: 767px -*/
+
+
 
 /*- sm -*/
 @media (max-width: 576px) {
@@ -181,6 +189,11 @@
 
     #toolbarLeftColor {
         overflow: auto;
+    }
+
+    .profile-filter-links {
+        display: block;
+        width: 100%;
     }
 
 }

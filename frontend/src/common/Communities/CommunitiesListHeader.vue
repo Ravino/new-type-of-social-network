@@ -3,17 +3,17 @@
         <div class="d-flex bg-white-br20 mb-4 pb-0 pt-3 pt-xl-0 px-4 flex-column-reverse flex-xl-row">
             <div class="col-12 col-xl-8 d-flex align-items-center justify-content-between px-0">
                 <nav class="nav profile-filter-links mt-2 mt-md-0" role="tablist">
-                    <router-link to="/communities" tag="span" class="nav-link py-3 py-xl-4 px-1 mr-2 mr-xl-4" role="tab"
+                    <router-link to="/communities" tag="span" class="nav-link py-2 py-sm-3 py-xl-4 px-1 mr-2 mr-xl-4" role="tab"
                                  :class="{ 'active': 'CommunitiesListPage'===this.$root.$router.currentRoute.name }">
                         Мои сообщества
                     </router-link>
 
-                    <router-link to="/manage-communities" tag="span" class="nav-link py-3 py-xl-4 px-1 mr-2 mr-xl-4"  role="tab"
+                    <router-link to="/manage-communities" tag="span" class="nav-link py-2 py-sm-3 py-xl-4 px-1 mr-2 mr-xl-4"  role="tab"
                                  :class="{ 'active': 'CommunitiesManagePage'===this.$root.$router.currentRoute.name }">
                         Управление
                     </router-link>
 
-                    <router-link to="/popular-communities" tag="span" class="nav-link py-3 py-xl-4 px-1 mr-2 mr-xl-4" role="tab"
+                    <router-link to="/popular-communities" tag="span" class="nav-link py-2 py-sm-3 py-xl-4 px-1 mr-2 mr-xl-4" role="tab"
                                  :class="{ 'active': 'CommunitiesPopularPage'===this.$root.$router.currentRoute.name }">
                         Популярные сообщества
                     </router-link>

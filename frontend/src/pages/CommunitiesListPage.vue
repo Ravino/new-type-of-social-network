@@ -1,11 +1,11 @@
 <template>
     <div class="container-fluid pl-md-0">
         <div class="row">
-            <div class="col-12 col-md-1 ">
+            <div class="col-12 col-md-1 px-0 px-md-3  ">
                 <AccountToolbarLeft></AccountToolbarLeft>
             </div>
 
-            <div class="col-12 col-md-11 col-lg-9 col-xl-10 ">
+            <div class="col-12 col-md-11 col-lg-9 col-xl-10 px-0 px-md-3  ">
                 <div class="row">
                     <CommunitiesListHeader></CommunitiesListHeader>
                     <CommunityCreateBlock></CommunityCreateBlock>
@@ -47,7 +47,7 @@
                 </div>
             </div>
 
-            <div class="col-lg-2 col-xl-1 d-none d-lg-block pr-0">
+            <div class="col-lg-2 col-xl-1 d-none d-lg-block pr-0 px-0 px-md-3 ">
                 <FavoriteFriends :isNarrow="true"></FavoriteFriends>
             </div>
         </div>
