@@ -2,18 +2,18 @@
     <div id="postFilter" class="col-12 col-xl-9 mb-4 mb-xl-0 ">
         <div class="row mr-xl-0 bg-white-br20 align-items-center justify-content-between">
 
-            <nav class="col-lg-8 nav profile-filter-links align-items-center pl-3  mb-lg-0" role="tablist">
-                                        <span class="nav-link py-2 py-sm-3 px-1 mr-2 mr-lg-4 active">Новости
-                                            <i class="fas fa-chevron-down ml-2"></i>
-                                        </span>
+            <nav class="col-lg-8 nav profile-filter-links align-items-center  pl-3 mb-lg-0" role="tablist">
+                <span class="nav-link py-2 py-sm-3 px-1 mr-2 mr-lg-4 active">Новости
+                    <i class="fas fa-chevron-down ml-2"></i>
+                </span>
                 <span class="nav-link py-2 py-sm-3 px-1 mr-2 mr-lg-4">Обновления</span>
                 <span class="nav-link py-2 py-sm-3 px-1 mr-2 mr-lg-4">Понравилось</span>
                 <span class="nav-link py-3 px-1 mr-2 mr-lg-4 ml-auto ml-lg-4 d-none d-md-block">
-                                            <button class="btn px-2 py-0 ">
-                                                <IconSearch style="width: 15px; height: 16px;"/>
-                                            </button>
-                                        </span>
-                <div class="col-12 d-flex align-items-center form-inline mb-3 pl-0 pr-0 position-relative overflow-hidden rounded-pill mt-4">
+                    <button class="btn px-2 py-0 ">
+                        <IconSearch style="width: 15px; height: 16px;"/>
+                    </button>
+                </span>
+                <div class="col-12 d-flex d-md-none align-items-center form-inline mb-3 pl-0 pr-0 position-relative overflow-hidden rounded-pill mt-4">
                     <div class="form-inline  position-relative w-100"
                          :class="{'isFocused' : isFocused}">
                         <input :value="lastSearch"
@@ -74,26 +74,3 @@ methods: {
 }
 </script>
 
-<style lang="scss">
-.newsViewModes {
-    color: #939292;
-
-    span:first-child {
-        margin-right: 11px;
-    }
-
-    button:nth-child(2) {
-        margin-right: 7px;
-    }
-
-    button {
-        svg {
-            fill: #939292;
-
-            &:hover {
-                fill: #204af4;
-            }
-        }
-    }
-}
-</style>
