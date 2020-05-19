@@ -32,7 +32,7 @@
                 :active-id="activeImageId"
                 @close="activeImageId = null">
             </GalleryViewer>
-            <GalleryDescription :post="post"></GalleryDescription>
+            <GalleryDescription :post="post">sd</GalleryDescription>
         </div>
     </div>
 </template>
@@ -64,7 +64,6 @@ computed: {
     return this.images.length;
    },
    countImagesMore() {
-    console.log(123123)
     return this.countImages - this.moreCount;
    },
    viewImages() {

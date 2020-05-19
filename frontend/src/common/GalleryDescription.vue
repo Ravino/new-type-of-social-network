@@ -35,7 +35,6 @@
                         :editorPlaceholder="'Оставить комментарий...'"
                         :dropToDown="true"
                         :maximumCharacterLimit="10000"
-                        :errors="errors"
                         workMode="post">
             </TextEditor>
         </div>
