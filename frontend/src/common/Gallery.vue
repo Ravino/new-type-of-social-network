@@ -55,10 +55,10 @@ export default {
    },
   },
 data() {
-   return {
-    activeImageId: null,
-   };
-  },
+    return {
+        activeImageId: null,
+    };
+},
 computed: {
    countImages() {
     return this.images.length;

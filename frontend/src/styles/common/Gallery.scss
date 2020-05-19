@@ -1,11 +1,11 @@
 
 $portraitFullHeight: 750px;
 
+
 .plz-gallery {
     position: relative;
     &-wrap {
         overflow: hidden;
-        //width: 100%;
         height: $portraitFullHeight;
     }
     &-pic {
@@ -57,14 +57,12 @@ $portraitFullHeight: 750px;
 
             &-block-1 {
                 width: 100%;
-                //margin-right: 5px;
             }
 
             &-block-one {
                 img {
                     width: auto;
                     max-width: 100%;
-                    //margin-right: 5px;
                 }
             }
 
@@ -78,19 +76,14 @@ $portraitFullHeight: 750px;
 
             &-full {
                 height: $portraitFullHeight;
-                //width: auto;
-                //min-height: 500px;
-
             }
 
             &-half {
                 height: $portraitFullHeight / 2;
-                //min-height: calc(500px / 2 - 5px);
             }
 
             &-third {
                 height: $portraitFullHeight / 3;
-                //min-height: calc(500px / 3 - 5px);
             }
         }
     }
@@ -99,3 +92,72 @@ $portraitFullHeight: 750px;
         display: flex;
     }
 }
+
+
+.plz-gallery-viewer {
+    position: fixed;
+    width: 100vw;
+    height: 100vh;
+    z-index: 10000;
+    top: 0;
+    left: 0;
+
+    &-overflow {
+        position: absolute;
+        top: 0;
+        left: 0;
+        height: 100%;
+        width: 100%;
+        background: #000;
+        opacity: 0.7;
+        cursor: pointer;
+
+        &:before {
+            content: '';
+            position: absolute;
+            top: 50px;
+            right: 20px;
+            display: inline-block;
+            vertical-align: middle;
+            background: url("../images/icons/icon-modal-close.png") 50% 50% no-repeat;
+            width: 20px;
+            height: 20px;
+            cursor: pointer;
+        }
+    }
+
+    &-nav {
+        position: absolute;
+        top: 50%;
+        left: 0;
+        right: 0;
+        transform: translateY(-50%);
+        //z-index: 2;
+
+        &-btn {
+            display: inline-block;
+            color: #ffffff;
+            padding: 3px 6px;
+            cursor: pointer;
+            transition: .4s;
+
+            &:active {
+                background-color: rgba(0, 0, 0, .3);
+            }
+        }
+    }
+
+    &-current {
+        position: relative;
+        width: auto;
+        height: auto;
+        max-width: calc(100vw - 200px);
+        max-height: calc(100vh - 200px);
+        img {
+            max-width: 100%;
+            max-height: calc(100vh - 200px);
+            user-select: none;
+        }
+    }
+}
+
