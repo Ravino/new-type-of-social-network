@@ -52,6 +52,9 @@ data() {
         activeImageId: null,
     };
 },
+ mounted() {
+  console.log(this.images)
+ },
 computed: {
     countImages() {
         return this.images.length;
