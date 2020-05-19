@@ -38,6 +38,7 @@ class PostController extends Controller
             ->limit($request->query('limit') ?? 50)
             ->offset($request->query('offset') ?? 0)
             ->get();
+
         return new PostCollection($posts, false);
     }
 
@@ -46,24 +47,20 @@ class PostController extends Controller
      * @return PostCollection
      */
     public function myPosts(Request $request) {
-        $posts = \Auth::user()->allPosts()->with(['postable', 'author'])
-            ->limit($request->query('limit') ?? 50)
-            ->offset($request->query('offset') ?? 0)
-            ->get();
+        $posts = Post::getWithoutOldPosts(\Auth::user(), $request->query('limit'), $request->query('offset'));
+
         return new PostCollection($posts);
     }
 
     /**
+     * @param Request $request
      * @param $id
      * @return PostCollection|\Illuminate\Http\JsonResponse
      */
     public function userPosts(Request $request, $id) {
-        /** @var User $user */
         $user = User::find($id);
-        $posts = $user->allPosts()->with(['postable', 'author'])
-            ->limit($request->query('limit') ?? 50)
-            ->offset($request->query('offset') ?? 0)
-            ->get();
+        $posts = Post::getWithoutOldPosts($user, $request->query('limit'), $request->query('offset'));
+
         return new PostCollection($posts);
     }
 

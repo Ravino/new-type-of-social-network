@@ -93,11 +93,9 @@ services:
 
   js_api:
     build: ./messenger
-    command: npm run dev
+    command: npm run serve
     ports:
       - "3000:3000"
-    volumes:
-      - ./messenger:/app
     depends_on:
       - mongodb
 

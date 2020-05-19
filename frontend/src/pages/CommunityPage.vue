@@ -15,7 +15,7 @@
                         <div class="plz-community-header-bottom d-flex align-items-start align-items-sm-center justify-content-between py-3 px-4">
                             <div class="plz-community-header-details d-flex align-items-center">
                                 <template v-if="isAuthor">
-                                    <label for="communityPrimaryImage" class="community-primary-image mr-3 cursor-pointer">
+                                    <label for="communityPrimaryImage" class="community-primary-image mr-3 cursor-pointer plz-community-header-logo position-relative mr-3">
                                         <img ref="communityAvatar" :src="avatarMedium" :alt="communityData.name" />
                                     </label>
 
@@ -36,7 +36,22 @@
                                 </div>
                             </div>
                             <div class="plz-community-subscribe file-label d-flex align-items-center justify-content-between">
-                                <button class="btn align-items-center justify-content-center d-flex w-75 border-right m-0">подписаться</button>
+
+                                <button v-if="subscribeType === 'new'"
+                                        class="btn align-items-center justify-content-center d-flex w-75 border-right m-0"
+                                        @click="subscribeInvite(communityData)">
+                                    подписаться
+                                </button>
+                                <button v-else-if="subscribeType === 'exists'"
+                                        class="btn align-items-center justify-content-center d-flex w-75 border-right m-0"
+                                        @click="unsubscribeInvite(communityData)">
+                                    отписаться
+                                </button>
+                                <router-link :to="{name: 'CommunitySettingsPage', params: {id: communityData.id}}" v-else
+                                             class="btn align-items-center justify-content-center d-flex w-75 border-right m-0">
+                                    управление
+                                </router-link>
+
                                 <button title="подписаться" class="btn align-items-center justify-content-center d-flex w-25">
                                     <span class="ps-dot"></span>
                                     <span class="ps-dot"></span>
@@ -182,6 +197,7 @@ import SmallSpinner from "../common/SmallSpinner.vue";
 import PliziCommunity from '../classes/PliziCommunity.js';
 import PliziPost from '../classes/PliziPost.js';
 import PliziCommunityAvatar from '../classes/Community/PliziCommunityAvatar.js';
+import CommunitiesSubscribeMixin from "../mixins/CommunitiesSubscribeMixin";
 import CommunityManagedActionBlock from "../common/Communities/CommunityManagedActionBlock.vue";
 
 export default {
@@ -189,7 +205,7 @@ name: 'CommunityPage',
 props: {
     id : Number|String
 },
-
+mixins: [CommunitiesSubscribeMixin],
 components : {
     CommunityManagedActionBlock,
     CommunityShortMembers,
@@ -228,7 +244,9 @@ computed: {
     isAuthor(){
         return this.communityData?.role === 'author';
     },
-
+    subscribeType() {
+        return this.getSubscribeType(this.communityData);
+    },
     filteredPosts(){
         return [];
     },

@@ -6,7 +6,7 @@ import CommunitiesListHeader from '../common/Communities/CommunitiesListHeader.v
 
 import CommunityItem from '../common/Communities/CommunityItem.vue';
 import CommunityCreateBlock from '../common/Communities/CommunityCreateBlock.vue';
-import PliziCommunity from "../classes/PliziCommunity";
+import PliziCommunity from "../classes/PliziCommunity.js";
 
 const CommunitiesListMixin = {
 components: {
@@ -37,12 +37,26 @@ data() {
         enabledLoader: true,
     }
 },
-
+mounted() {
+    this.$root.$on('communitySearchStart', this.searchProcess);
+},
+beforeDestroy() {
+    this.$root.$off('communitySearchStart', this.searchProcess);
+},
 computed: {
 
 },
 
 methods: {
+    async searchProcess(e) {
+        if (e.list === 'my') {
+            return this.loadCommunities();
+        }
+        if (e.list === 'owner') {
+            return this.loadManagedCommunities();
+        }
+        return this.loadPopularCommunitites();
+    },
     isSubscribed(commID){
         if (! this.popularCommunities)
             return true;
@@ -95,15 +109,18 @@ methods: {
     },
 
     async loadCommunities(limit = 10, offset = 0) {
+        const searchText = this.$root.$lastCommunitiesSearch.my;
         let apiResponse = null;
 
         try {
-            apiResponse = await this.$root.$api.$communities.userCommunities(limit, offset);
+            apiResponse = await this.$root.$api.$communities.userCommunities(searchText, limit, offset);
         }
         catch (e){
             window.console.warn(e.detailMessage);
             throw e;
         }
+
+        this.communitiesList = [];
 
         if (apiResponse) {
             this.enabledLoader = false;
@@ -120,15 +137,18 @@ methods: {
     },
 
     async loadPopularCommunitites(limit = 10, offset = 0) {
+        const searchText = this.$root.$lastCommunitiesSearch.popular;
         let apiResponse = null;
 
         try {
-            apiResponse = await this.$root.$api.$communities.loadCommunities(limit, offset);
+            apiResponse = await this.$root.$api.$communities.loadCommunities(searchText, limit, offset);
         }
         catch (e){
             window.console.warn(e.detailMessage);
             throw e;
         }
+
+        this.popularCommunities = [];
 
         if (apiResponse) {
             this.enabledLoader = false;
@@ -145,15 +165,18 @@ methods: {
     },
 
     async loadManagedCommunities(limit = 10, offset = 0) {
+        const searchText = this.$root.$lastCommunitiesSearch.owner;
         let apiResponse = null;
         this.isManagedCommunitiesLoaded = false;
 
         try {
-            apiResponse = await this.$root.$api.$communities.loadManagedCommunities(limit, offset);
+            apiResponse = await this.$root.$api.$communities.loadManagedCommunities(searchText, limit, offset);
         } catch (e) {
             window.console.warn(e.detailMessage);
             throw e;
         }
+
+        this.managedCommunities = [];
 
         if (apiResponse) {
             this.enabledLoader = false;

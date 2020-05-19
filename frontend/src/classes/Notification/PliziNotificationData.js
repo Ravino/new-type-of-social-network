@@ -131,6 +131,22 @@ class PliziNotificationData {
             }
         }
 
+        if ('friendships.cancelled' === this.notificationType) {
+            switch (this.sender.sex) {
+                case 'f' : return `${this.sender.fullName} отклонила Ваш запрос на дружбу`;
+                case 'm' : return `${this.sender.fullName} отклонил Ваш запрос на дружбу`;
+                case 'n' : return `Пользователь ${this.sender.fullName} отклонил Ваш запрос на дружбу`;
+            }
+        }
+
+        if ('post.liked' === this.notificationType) {
+            switch (this.sender.sex) {
+                case 'f' : return `${this.sender.fullName} лайкнула Ваш пост`;
+                case 'm' : return `${this.sender.fullName} лайкнул Ваш пост`;
+                case 'n' : return `Пользователь ${this.sender.fullName} лайкнул Ваш пост`;
+            }
+        }
+
         if ('community.post.created' === this.notificationType) {
             return `В сообществе ${this.community.name} что-то опубликовано`;
         }
