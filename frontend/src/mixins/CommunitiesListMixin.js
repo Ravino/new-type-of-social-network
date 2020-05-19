@@ -23,12 +23,15 @@ data() {
     return {
         isCommunitiesLoaded: false,
         communitiesList: [],
+        communitiesListSearch: [],
 
         isPopularCommunitiesLoaded: true,
         popularCommunities: [],
+        popularCommunitiesSearch: [],
 
         isManagedCommunitiesLoaded: false,
         managedCommunities: [],
+        managedCommunitiesSearch: [],
 
         recommendedCommunities: null,
 
@@ -39,7 +42,12 @@ data() {
 },
 mounted() {
     this.$root.$on('communitySearchStart', this.searchProcess);
+    window.addEventListener('scroll', this.onScrollYPage);
 },
+    beforeRouteLeave(to, from, next) {
+        window.removeEventListener('scroll', this.onScrollYPage);
+        next();
+    },
 beforeDestroy() {
     this.$root.$off('communitySearchStart', this.searchProcess);
 },
@@ -120,15 +128,20 @@ methods: {
             throw e;
         }
 
-        this.communitiesList = [];
-
         if (apiResponse) {
             this.enabledLoader = false;
             this.isCommunitiesLoaded = true;
 
-            apiResponse.map( (pfItem)=> {
-                this.communitiesList.push( new PliziCommunity(pfItem) );
-            });
+            if (searchText) {
+                this.communitiesListSearch = [];
+                apiResponse.map( (pfItem)=> {
+                    this.communitiesListSearch.push( new PliziCommunity(pfItem) );
+                });
+            } else {
+                apiResponse.map( (pfItem)=> {
+                    this.communitiesList.push( new PliziCommunity(pfItem) );
+                });
+            }
 
             return apiResponse.length;
         }
@@ -148,15 +161,21 @@ methods: {
             throw e;
         }
 
-        this.popularCommunities = [];
-
         if (apiResponse) {
             this.enabledLoader = false;
             this.isPopularCommunitiesLoaded = true;
 
-            apiResponse.map( (pfItem)=> {
-                this.popularCommunities.push( new PliziCommunity(pfItem) );
-            });
+            if (searchText) {
+                this.popularCommunitiesSearch = [];
+                apiResponse.map( (pfItem)=> {
+                    this.popularCommunitiesSearch.push( new PliziCommunity(pfItem) );
+                });
+
+            } else {
+                apiResponse.map( (pfItem)=> {
+                    this.popularCommunities.push( new PliziCommunity(pfItem) );
+                });
+            }
 
             return apiResponse.length;
         }
@@ -176,15 +195,20 @@ methods: {
             throw e;
         }
 
-        this.managedCommunities = [];
-
         if (apiResponse) {
             this.enabledLoader = false;
             this.isManagedCommunitiesLoaded = true;
 
-            apiResponse.map((pfItem) => {
-                this.managedCommunities.push(new PliziCommunity(pfItem));
-            });
+            if (searchText) {
+                this.managedCommunitiesSearch = [];
+                apiResponse.map((pfItem) => {
+                    this.managedCommunitiesSearch.push(new PliziCommunity(pfItem));
+                });
+            } else {
+                apiResponse.map((pfItem) => {
+                    this.managedCommunities.push(new PliziCommunity(pfItem));
+                });
+            }
 
             return apiResponse.length;
         }
