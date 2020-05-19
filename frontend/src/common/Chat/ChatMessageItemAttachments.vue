@@ -1,8 +1,7 @@
 <template>
     <div class="message-attachments d-flex flex-wrap " v-if="message.isAttachments">
-        <div class="message-attachment-item mb-2"
-             v-for="attach in message.attachments" v-bind:key="attach.id">
-            <Gallery v-if="attach.isImage"
+        <div class="message-attachment-item mb-2">
+            <Gallery v-if="attachItem"
                      :images="imageList"
                      class="message-sended-image"
             >
@@ -37,7 +36,11 @@ computed:{
         return (`zip`===ext  || `rar`===ext);
     },
     imageList() {
+     console.log(this.message.attachments);
      return this.message.attachments
+    },
+    attachItem() {
+    return this.imageList.map(attach => attach.isImage)
     },
 },
 }
