@@ -1,6 +1,5 @@
 <template>
     <div class="plz-top-watcher-item position-relative d-inline-block mr-0 mr-sm-2">
-
         <div class="btn btn-link my-auto text-body btn-sm cursor-pointer" title="Уведомления" ref="dropdown">
             <span data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" id="dropdownMenuLikes"
                   @click="onShowNotifications">
@@ -39,9 +38,7 @@ components : { IconBell, NotificationItem },
 
 methods : {
     async onShowNotifications(){
-        window.console.info(`onShowNotifications`);
-
-        const idList = this.$root.$auth.nm.idsList;
+      const idList = this.$root.$auth.nm.idsList;
 
         if (idList.length === 0) {
          return;
@@ -56,11 +53,9 @@ methods : {
 
     eventOnHideDropdown() {
      $(this.$refs.dropdown).off('hidden.bs.dropdown').on('hidden.bs.dropdown', () => {
-       this.$root.$auth.nm.clear();
-      console.log(this.$root.$auth.nm);
-      this.$root.$auth.nm.storeData();
-      console.log( this.$root.$auth.nm);
-       this.updateNotifications();
+     this.$root.$auth.nm.clear();
+     this.$root.$auth.nm.storeData();
+     this.updateNotifications();
      });
     },
      notificationsNumber(){
