@@ -15,7 +15,6 @@ use App\Models\PostLike;
 use App\Models\User;
 use App\Notifications\UserSystemNotifications;
 use App\Services\S3UploadService;
-use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Notification;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Event;
@@ -48,45 +47,20 @@ class PostController extends Controller
      * @return PostCollection
      */
     public function myPosts(Request $request) {
-        $posts = \Auth::user()->allPosts()->with(['postable', 'author'])
-            ->limit($request->query('limit') ?? 50)
-            ->offset($request->query('offset') ?? 0)
-            ->get();
-        $communities = \Auth::user()->communities;
-        $filtered = [];
+        $posts = Post::getWithoutOldPosts(\Auth::user(), $request->query('limit'), $request->query('offset'));
 
-        foreach ($posts as $post) {
-            $postablePost = $post->postable;
-
-            if ($postablePost instanceof Community) {
-                $community = $communities->first(function ($com) use ($postablePost) {
-                    return $com->id === $postablePost->id;
-                });
-
-                \Log::debug(json_encode(Carbon::parse($post->created_at) > Carbon::parse($community->pivot->created_at)));
-
-                if (!(Carbon::parse($post->created_at) > Carbon::parse($community->pivot->created_at))) {
-                    continue;
-                }
-            }
-
-            $filtered[] = $post;
-        }
-
-        return new PostCollection($filtered);
+        return new PostCollection($posts);
     }
 
     /**
+     * @param Request $request
      * @param $id
      * @return PostCollection|\Illuminate\Http\JsonResponse
      */
     public function userPosts(Request $request, $id) {
-        /** @var User $user */
         $user = User::find($id);
-        $posts = $user->allPosts()->with(['postable', 'author'])
-            ->limit($request->query('limit') ?? 50)
-            ->offset($request->query('offset') ?? 0)
-            ->get();
+        $posts = Post::getWithoutOldPosts($user, $request->query('limit'), $request->query('offset'));
+
         return new PostCollection($posts);
     }
 
