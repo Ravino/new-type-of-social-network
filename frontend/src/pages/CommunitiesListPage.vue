@@ -14,7 +14,15 @@
                 <div class="row">
                     <div class="col-12 col-lg-8 col-xl-9 mb-4 px-4 py-0">
                         <div class="row" v-if="isCommunitiesLoaded">
-                            <ul v-if="communitiesList  &&  communitiesList.length>0"
+                            <ul v-if="communitiesListSearch && communitiesListSearch.length > 0"
+                                class="plizi-communities-list w-100 d-flex justify-content-between flex-wrap p-0">
+                                <CommunityItem v-for="(comItem, comIndex) in communitiesListSearch"
+                                               :community="comItem"
+                                               :key="comIndex">
+                                </CommunityItem>
+                            </ul>
+
+                            <ul v-else-if="communitiesList  &&  communitiesList.length > 0"
                                 class="plizi-communities-list w-100 d-flex justify-content-between flex-wrap p-0">
                                 <CommunityItem v-for="(comItem, comIndex) in communitiesList"
                                                :community="comItem"
@@ -78,12 +86,6 @@ methods : {
 
 mounted(){
     this.loadCommunities();
-    window.addEventListener('scroll', this.onScrollYPage);
 },
-    beforeRouteLeave(to, from, next) {
-        window.removeEventListener('scroll', this.onScrollYPage);
-        next();
-    },
-
 }
 </script>

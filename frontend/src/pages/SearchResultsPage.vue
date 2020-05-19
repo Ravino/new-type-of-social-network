@@ -8,10 +8,28 @@
             <div class="row">
                 <div class="offset-2 col-8 bg-white-br20 p-4">
                     <div v-if="isDataReady" class="plizi-search-results-list">
+                        <h4>Люди</h4>
+                        <hr>
                         <ul v-if="searchResults  &&  (searchResults.length > 0)" class="list-unstyled mb-0">
                             <SearchResultItem v-for="(srItem, srIndex) in searchResults"
-                                              v-bind:key="srIndex" v-bind:srItem="srItem">
+                                              :key="srIndex" :srItem="srItem">
                             </SearchResultItem>
+                        </ul>
+                        <div v-else>
+                            <div class="alert alert-info">
+                                По Вашему запросу &quot;<b>{{$root.$lastSearch}}</b>&quot; ничего не найдено
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="offset-2 col-8 bg-white-br20 p-4 mt-4">
+                    <div v-if="isCommunityDataReady" class="plizi-search-results-list">
+                        <h4>Сообщества</h4>
+                        <hr>
+                        <ul v-if="communitySearchResults  &&  (communitySearchResults.length > 0)" class="list-unstyled mb-0">
+                            <CommunitySearchResultItem v-for="(srItem, srIndex) in communitySearchResults"
+                                              :key="srIndex" :community="srItem">
+                            </CommunitySearchResultItem>
                         </ul>
                         <div v-else>
                             <div class="alert alert-info">
@@ -38,10 +56,13 @@ import Spinner from '../common/Spinner.vue';
 import SearchResultItem from '../components/SearchResultItem.vue';
 
 import PliziUser from '../classes/PliziUser.js';
+import PliziCommunity from "../classes/PliziCommunity.js";
+import CommunitySearchResultItem from "../common/Communities/CommunitySearchResultItem.vue";
 
 export default {
 name: 'SearchResultsPage',
 components: {
+    CommunitySearchResultItem,
     SearchResultItem,
     AccountToolbarLeft, FavoriteFriends,
     Spinner
@@ -49,18 +70,28 @@ components: {
 data() {
     return {
         searchResultsList: [],
-        isDataReady : false
+        isDataReady : false,
+
+        communitySearchResultsList: [],
+        isCommunityDataReady : false,
     }
 },
 
 computed: {
     searchResults() {
         return this.searchResultsList;
-    }
+    },
+    communitySearchResults() {
+        return this.communitySearchResultsList;
+    },
 },
 
 methods: {
     async searchProcess(){
+        await this.userSearchProcess();
+        await this.communitySearchProcess();
+    },
+    async userSearchProcess(){
         this.isDataReady = true; // на случай если строка поиска пустая
         this.searchResultsList = [];
 
@@ -85,6 +116,33 @@ methods: {
             });
 
             this.isDataReady = true;
+        }
+    },
+    async communitySearchProcess(){
+        this.isCommunityDataReady = true; // на случай если строка поиска пустая
+        this.communitySearchResultsList = [];
+
+        if (this.$root.$lastSearch === '')
+            return;
+
+        this.isCommunityDataReady = false;
+        let apiResponse = null;
+
+        try {
+            apiResponse = await this.$root.$api.$communities.loadCommunities(this.$root.$lastSearch);
+        }
+        catch (e) {
+            window.console.warn(e.detailMessage);
+        }
+
+        if (apiResponse !== null) {
+            this.communitySearchResultsList = [];
+
+            apiResponse.map( (srItem)=> {
+                this.communitySearchResultsList.push( new PliziCommunity(srItem ) );
+            });
+
+            this.isCommunityDataReady = true;
         }
     }
 },

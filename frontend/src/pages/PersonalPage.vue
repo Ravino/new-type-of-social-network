@@ -68,6 +68,7 @@ import SmallSpinner from "../common/SmallSpinner.vue";
 
 import PliziUser from '../classes/PliziUser.js';
 import PliziPost from '../classes/PliziPost.js';
+import LazyLoadPosts from "../mixins/LazyLoadPosts.js";
 
 export default {
 name: 'PersonalPage',
@@ -85,15 +86,15 @@ components: {
     PostRepostModal,
     SmallSpinner,
 },
-
+    mixins: [LazyLoadPosts],
 computed: {
     filteredPosts(){
         switch (this.filterMode) {
             case 'user':
-                return this.userPosts.filter(post => post.checkIsMinePost(this.profileData.id));
+                return this.posts.filter(post => post.checkIsMinePost(this.profileData.id));
         }
 
-        return this.userPosts;
+        return this.posts;
     },
 },
 
@@ -103,7 +104,7 @@ data() {
         profileData: {},
         isDataReady: false,
         isShowMessageDialog: false,
-        userPosts: [],
+        posts: [],
         userPhotos: [
             {path: '/images/user-photos/user-photo-01.png',},
             {path: '/images/user-photos/user-photo-02.png',},
@@ -140,12 +141,6 @@ methods: {
 
     handlePersonalMessage(evData){
         this.sendMessageToUser(evData);
-    },
-
-    onScrollYPage(){
-        if (window.scrollY >= (document.body.scrollHeight - document.documentElement.clientHeight - (document.documentElement.clientHeight/2) )){
-            this.lazyLoadPost();
-        }
     },
 
     async getUserInfo() {
@@ -209,27 +204,11 @@ methods: {
             this.enabledPostLoader = false;
 
             response.map((post) => {
-                this.userPosts.push(new PliziPost(post));
+                this.posts.push(new PliziPost(post));
             });
 
             return response.length;
         }
-    },
-    async lazyLoadPost() {
-        if (this.lazyLoadStarted) return;
-        if (this.noMorePost) return;
-
-        this.enabledPostLoader = true;
-        this.lazyLoadStarted = true;
-        let oldSize = this.userPosts.length;
-        let added = await this.getPosts(10, oldSize++);
-
-        if (added === 0) {
-            this.noMorePost = true;
-        }
-
-        this.lazyLoadStarted = false;
-        this.onScrollYPage();
     },
 },
 
@@ -251,7 +230,7 @@ mounted() {
 
 beforeRouteUpdate( to, from, next ){
     this.profileData = null;
-    this.userPosts = null;
+    this.posts = null;
     this.userId = to.params.id;
     this.getUserInfo();
     next();

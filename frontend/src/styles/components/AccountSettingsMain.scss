@@ -19,9 +19,10 @@ $titleColor: #363636;
         padding: 8px 0;
 
         .invalid-feedback {
-            margin-left: 15px;
-            width: 40%;
-            align-items: center;
+            width: 100%;
+            //margin-left: 15px;
+            //width: 40%;
+            //align-items: center;
 
             .text-danger {
                 margin-bottom: 0;
@@ -55,6 +56,8 @@ $titleColor: #363636;
 
         &-field {
             display: flex;
+            position: relative;
+            flex-wrap: wrap;
 
             .form-control,
             .form-control-plaintext {
@@ -100,6 +103,16 @@ $titleColor: #363636;
                 -moz-appearance: none;
                 -o-appearance: none;
                 color: #212529 !important;
+            }
+
+            a {
+                font-size: 13px;
+                text-decoration: underline;
+                color: inherit;
+
+                &:hover {
+                    text-decoration: none;
+                }
             }
 
             .fa,
@@ -212,4 +225,11 @@ $titleColor: #363636;
         }
     }
 
+    .plz-prepend-w140 {
+        width: 140px;
+
+        & + input {
+            width: calc(100% - 145px);
+        }
+    }
 }
