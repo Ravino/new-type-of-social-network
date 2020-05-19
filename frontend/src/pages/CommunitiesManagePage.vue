@@ -14,7 +14,15 @@
                 <div class="row">
                     <div class="col-12 col-lg-8 col-xl-9 mb-4 px-4 py-0">
                         <div class="row" v-if="isManagedCommunitiesLoaded">
-                            <ul v-if="managedCommunities  &&  managedCommunities.length>0"
+                            <ul v-if="managedCommunitiesSearch  &&  managedCommunitiesSearch.length > 0"
+                                class="plizi-communities-list w-100 d-flex justify-content-between flex-wrap p-0">
+                                <CommunityItem v-for="(comItem, comIndex) in managedCommunitiesSearch"
+                                               :community="comItem"
+                                               :key="comIndex">
+                                </CommunityItem>
+                            </ul>
+
+                            <ul v-else-if="managedCommunities  &&  managedCommunities.length > 0"
                                 class="plizi-communities-list w-100 d-flex justify-content-between flex-wrap p-0">
                                 <CommunityItem v-for="(comItem, comIndex) in managedCommunities"
                                                :community="comItem"
