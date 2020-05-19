@@ -47,6 +47,17 @@ class PostController extends Controller
      * @return PostCollection
      */
     public function myPosts(Request $request) {
+        $posts = Post::getWithoutOldPosts(\Auth::user(), $request->query('limit'), $request->query('offset'), true);
+
+        return new PostCollection($posts);
+    }
+
+    /**
+     * @param Request $request
+     * @return PostCollection
+     */
+    public function getNews(Request $request)
+    {
         $posts = Post::getWithoutOldPosts(\Auth::user(), $request->query('limit'), $request->query('offset'));
 
         return new PostCollection($posts);
