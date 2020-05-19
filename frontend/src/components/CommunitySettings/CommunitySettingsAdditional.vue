@@ -136,7 +136,7 @@
 </template>
 
 <script>
-    import {url} from 'vuelidate/lib/validators';
+    import {url, or} from 'vuelidate/lib/validators';
     import PliziCommunity from "../../classes/PliziCommunity";
     import lodash from 'lodash';
     import communityUtils from "../../utils/CommunityUtils";
@@ -202,7 +202,7 @@
             return {
                 model: {
                     website: {
-                        url,
+                        or: or(url, (value) => value === ''),
                     },
                 }
             };

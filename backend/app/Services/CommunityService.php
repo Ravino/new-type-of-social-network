@@ -5,6 +5,7 @@ namespace App\Services;
 
 
 use App\Events\CommunityCreated;
+use App\Http\Requests\Request;
 use App\Models\Community;
 
 class CommunityService
@@ -39,8 +40,8 @@ class CommunityService
      * @param $community
      * @return mixed
      */
-    public function updateCommunity($request, $community) {
-        return tap($community)->update(array_filter([
+    public function updateCommunity(Request $request, $community) {
+        $data = array_filter([
             'name' => $request->name,
             'description' => $request->description,
             'notice' => $request->notice,
@@ -48,11 +49,16 @@ class CommunityService
             'privacy' => $request->privacy,
             'type' => $request->type,
             'theme_id' => $request->themeId,
-            'website' => $request->website,
             'geo_city_id' => $request->location,
             'is_verified' => false,
             'updated_at' => time(),
-        ]));
+        ]);
+
+        if ($request->exists('website')) {
+            $data['website'] = $request->website;
+        }
+
+        return tap($community)->update($data);
     }
 
 }
