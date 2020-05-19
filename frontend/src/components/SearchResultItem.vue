@@ -19,9 +19,8 @@
 
                         <IconLocation style="height: 14px;" />
 
-                        <!-- TODO: @YZ нужна проверка городов и страны -->
-                        <span v-if="srItem.location && srItem.city.title && srItem.country.title">
-                            {{ srItem.city.title.ru +', '+  srItem.country.title.ru }}
+                        <span v-if="locationLabel">
+                            {{ locationLabel }}
                         </span>
                         <span v-else>
                             Не указано
@@ -58,7 +57,24 @@ mixins: [FriendshipInvitationMixin],
 props : {
     srItem : PliziUser
 },
-
+computed: {
+    locationLabel() {
+        const location = [];
+        const country = this.srItem.location?.country?.title.ru;
+        if (country) {
+            location.push(country);
+        }
+        const region = this.srItem.location?.region?.title.ru;
+        if (region) {
+            location.push(region);
+        }
+        const city = this.srItem.location?.title.ru;
+        if (city) {
+            location.push(city);
+        }
+        return location.join(', ');
+    }
+},
 methods: {
 }
 }

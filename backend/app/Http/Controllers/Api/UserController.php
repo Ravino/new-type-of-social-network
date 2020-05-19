@@ -9,7 +9,7 @@ use App\Http\Resources\Notification\NotificationCollection;
 use App\Http\Resources\User\UserCollection;
 use App\Http\Resources\User\UserSearchCollection;
 use App\Models\User;
-use DB;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
@@ -26,15 +26,21 @@ class UserController extends Controller
             return new UserSearchCollection([]);
         }
 
-        $users = User::where(static function($query) use ($search)  {
-            $query->whereHas('profile', static function($profile) use ($search) {
+        $users = User::where(static function (Builder $query) use ($search) {
+            $query->whereHas('profile', static function (Builder $profile) use ($search) {
                 $profile
                     ->where('first_name', 'LIKE', "%{$search}%")
                     ->orWhere('last_name', 'LIKE', "%{$search}%")
+                    ->orWhereHas('city', static function (Builder $city) use ($search) {
+                        $city
+                            ->where('title_ru', 'LIKE', "%{$search}%")
+                            ->orWhere('region_ru', 'LIKE', "%{$search}%");
+                    })
                     ->orderBy('last_name');
-            })
-                ->orWhere('email', 'LIKE', "%{$search}%");
-        })->where('id', '<>', Auth::user()->id)
+            });
+        })
+            ->where('id', '<>', Auth::user()->id)
+            ->with('profile', 'profile.city')
             ->limit(10)
             ->get();
         return new UserSearchCollection($users);
