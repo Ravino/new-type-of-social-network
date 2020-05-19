@@ -4,6 +4,7 @@ namespace App\Models;
 
 use App\CommunityMember;
 use App\Models\Geo\City;
+use App\Traits\Neo4jFavorite;
 use App\Traits\NPerGroup;
 use Auth;
 use Domain\Neo4j\Service\UserService;
@@ -17,7 +18,7 @@ use Spiritix\LadaCache\Database\LadaCacheTrait;
 
 class Community extends Model
 {
-    use LadaCacheTrait;
+    use LadaCacheTrait, Neo4jFavorite;
 
     const ROLE_USER = 'user';
     const ROLE_ADMIN = 'admin';
@@ -155,5 +156,15 @@ class Community extends Model
     public function friends($limit = 5, $offset = 0)
     {
         return (new UserService())->getFriendsFromCommunity(Auth::user()->id, $this->id, $limit, $offset);
+    }
+
+    public function getNeo4jNodeName()
+    {
+        return 'Community';
+    }
+
+    public function getNeo4jRelationName()
+    {
+        return 'MEMBER_OF';
     }
 }

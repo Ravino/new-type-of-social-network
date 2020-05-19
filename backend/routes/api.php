@@ -89,6 +89,10 @@ Route::group(['middleware' => ['auth.jwt', 'track.activity']], function () {
         Route::post('avatar', [CommunityController::class, 'uploadAvatar']);
         Route::post('header-image', [CommunityController::class, 'uploadHeaderImage']);
         Route::get('themes/list', 'Api\CommunityController@themeList');
+
+        Route::get('favorite/list', [CommunityController::class, 'listFavorite']);
+        Route::post('favorite/subscribe', [CommunityController::class, 'addFavorite']);
+        Route::delete('favorite/unsubscribe/{groupId}', [CommunityController::class, 'deleteFavorite']);
     });
     Route::get('communities/{community_id}/posts', 'Api\PostController@communityPosts');
 
