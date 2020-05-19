@@ -11,10 +11,11 @@
                     <div class="form pl-2">
                         <div class="form-row align-items-center">
                             <div class="col-12 d-flex justify-content-between p-0">
-                                <Editor class="plz-text-editor-form form-control px-2 py-1 h-100"
+                                <Editor class="plz-text-editor-form form-control px-2 py-1"
                                         @editorPost="onEditorNewPost"
                                         @editorKeyDown="onEditorKeyDown"
                                         @onMaximumCharacterLimit="onMaximumCharacterLimit"
+                                        @onUpdate="onUpdate"
                                         :placeholder="editorPlaceholder"
                                         :inputEditorText="inputEditorText"
                                         :maximumCharacterLimit="maximumCharacterLimit"
@@ -27,19 +28,21 @@
                             <div v-if="isMaximumCharacterLimit" class="col-12">
                                 <p class="text-danger">Превышено максимально допустимое количество символов.</p>
                             </div>
+                            <div v-if="bodyError" class="col-12">
+                                <p class="text-danger">{{ bodyError[0] }}</p>
+                            </div>
                         </div>
                     </div>
                 </div>
 
                 <div class="plz-editor-btns d-flex flex-column flex-md-row justify-content-between"  >
 
-                    <label
+                    <button type="button" @click.stop="onAttachBtnClick($event)"
                         :class="{'attach-file--disallow cursor-non-drop' : isDisallowUpload}"
-                        class="attach-file w-100 d-flex align-items-center justify-content-center btn btn-link my-0 ml-0 mr-0 mr-md-2 px-1 btn-add-file position-relative"
-                    >
+    class="attach-file btn-add-file w-100 d-flex align-items-center justify-content-center btn btn-link my-0 mx-0 mr-md-2 px-1 position-relative">
                         <IconAddFile />
-                        <input type="file" :disabled="isDisallowUpload" @change="onSelectFile($event)" ref="editorFiler" multiple />
-                    </label>
+                        <input type="file" class="plz-text-editor-file-picker" :disabled="isDisallowUpload" @change="onSelectFile()" ref="editorFiler" multiple />
+                    </button>
 
                     <!--<label class="attach-file d-flex align-items-center  btn btn-link my-0 ml-0 mr-2 px-1 btn-add-camera position-relative">
                         <IconAddCamera />
@@ -47,14 +50,7 @@
                     </label>-->
 
                     <button class="btn btn-link w-100 mx-0 px-1 btn-add-smile position-relative" type="button">
-                        <EmojiPicker v-if="dropToDown"
-                                     @addEmoji="onAddEmoji"
-                                     :transform="'transform: translate(-40%, 40px)'">
-                        </EmojiPicker>
-                        <EmojiPicker v-else
-                                     @addEmoji="onAddEmoji"
-                                     :transform="'transform: translate(-54%, -100%)'">
-                        </EmojiPicker>
+                        <EmojiPicker @addEmoji="onAddEmoji" v-bind:transform="emojiTransform"></EmojiPicker>
                     </button>
                 </div>
             </div>
@@ -86,11 +82,13 @@ import Editor from './TextEditor/Editor.vue';
 import EmojiPicker from './TextEditor/EmojiPicker.vue';
 import AttachmentItem from './TextEditor/AttachmentItem.vue';
 
-import PliziAttachment from '../classes/PliziAttachment.js';
 import { checkExtension } from '../utils/FileUtils.js';
 import { docsExtensions, imagesExtensions } from '../enums/FileExtensionEnums.js';
 import PliziAttachmentItem from '../classes/PliziAttachmentItem.js';
-import LinkMixin from "../mixins/LinkMixin.js";
+import LinkMixin from '../mixins/LinkMixin.js';
+
+import PliziAttachment from '../classes/PliziAttachment.js';
+import PliziCollection from '../classes/PliziCollection.js';
 
 /**  TODO: Вставка файлов **/
 /** @link https://www.npmjs.com/package/vue-filepond **/
@@ -105,33 +103,40 @@ components: {
     EmojiPicker,
     AttachmentItem
 },
-props: {
+props : {
     fieldId : String,
-    showAvatar: Boolean,
-    clazz: String,
-    editorPlaceholder: String,
-    dropToDown: Boolean,
-    workMode: {
-        type: String,
-        required: true,
+    showAvatar : Boolean,
+    clazz : String,
+    editorPlaceholder : String,
+    dropToDown : Boolean,
+    workMode : {
+        type : String,
+        required : true,
     },
-  inputEditorText: String,
-  inputEditorAttachment: Array,
-  maxFilesCount: {
-      type: Number,
-      default: 10,
-  },
-    maximumCharacterLimit: {
-        type: Number,
-        default: 10000,
-    }
+    inputEditorText : String,
+    inputEditorAttachment : Array,
+    maxFilesCount : {
+        type : Number,
+        default : 10,
+    },
+    maximumCharacterLimit : {
+        type : Number,
+        default : 10000,
+    },
+    errors : {
+        type : Object,
+        default : null,
+    },
 },
+
 mixins: [LinkMixin],
+
 data() {
-    let attachFiles = [];
+    /** @TGA и почему инициализация этого тут, а не в created() ?? **/
+    let inputFiles = [];
 
     if (this.inputEditorAttachment) {
-        attachFiles = this.inputEditorAttachment.map(file => {
+        inputFiles = this.inputEditorAttachment.map((file) => {
             const attachment = new PliziAttachmentItem(false, file.isImage, file.originalName);
             attachment.attachment = file;
 
@@ -140,7 +145,8 @@ data() {
     }
 
     return {
-        attachFiles,
+        attachFiles : inputFiles,
+        attachmentsData: (new PliziCollection()),
         defaultClasses: `bg-white w-100 border-top position-relative mt-auto`,
         editorContainerHeight: 32,
         isMaximumCharacterLimit: false,
@@ -148,6 +154,13 @@ data() {
 },
 
 computed: {
+    emojiTransform(){
+        if (this.dropToDown)
+            return 'transform: translate(-40%, 40px)';
+
+        return 'transform: translate(-54%, -100%)';
+    },
+
     userPic() {
         return this.$root.$auth.user.userPic;
     },
@@ -159,9 +172,14 @@ computed: {
     blockClass(){
         return this.clazz || this.defaultClasses;
     },
+
     isDisallowUpload() {
         return this.attachFiles.length >= this.maxFilesCount;
-    }
+    },
+
+    bodyError() {
+        return this.errors && this.errors.body ? this.errors.body : null;
+    },
 },
 
 methods: {
@@ -172,7 +190,10 @@ methods: {
     getContent() {
         return {
             postText: this.$refs.editor.getContent(),
-            attachments: this.getAttachmentsIDs()
+            attachments: this.getAttachmentsIDs(),
+            attachmentsData: this.attachmentsData.asArray(),
+            videoLink: null,
+            workMode: this.workMode,
         }
     },
 
@@ -190,23 +211,25 @@ methods: {
             return aItem.attachment.id !== evData.attach.id;
         });
 
-        const $this = this;
-        setTimeout(function() {
-            $this.checkUpdatedChatContainerHeight();
+        this.attachmentsData.delete(evData.attach.id);
+
+        setTimeout(() => {
+            this.checkUpdatedChatContainerHeight();
         }, 200);
 
         this.$emit('onRemoveAttachment', evData.attach.id);
     },
 
-    onAttachmentLoaded(evData) {
+    onAttachmentLoaded() {
         this.checkUpdatedChatContainerHeight();
     },
 
     onSendPostClick(){
         const cont = this.$refs.editor.getContent();
         let str = cont.replace(/<p>|<\/p>/g, '').trim();
+        let attachmentsIds = this.getAttachmentsIDs();
 
-        if (!str.length)
+        if (!str.length && !(attachmentsIds && attachmentsIds.length))
             return;
 
         this.$refs.editor.setContent('');
@@ -227,50 +250,58 @@ methods: {
         let youtubeLinksMatch = this.detectYoutubeLinks(str);
 
         if (youtubeLinksMatch && youtubeLinksMatch.length) {
+            youtubeLinksMatch.forEach((youtubeLink) => {
+
+                this.$emit('editorPost', {
+                    postText: evData.postText,
+                    attachments: this.getAttachmentsIDs(),
+                    attachmentsData: this.attachmentsData.asArray(),
+                    videoLink: youtubeLink,
+                    workMode: this.workMode,
+                });
+            });
+        }
+        else {
             this.$emit('editorPost', {
                 postText: evData.postText,
                 attachments: this.getAttachmentsIDs(),
-                videoLink: youtubeLinksMatch[0],
+                attachmentsData: this.attachmentsData.asArray(),
+                videoLink: null,
                 workMode: this.workMode,
-            });
-        } else {
-            this.$emit('editorPost', {
-                postText: evData.postText,
-                attachments: this.getAttachmentsIDs()
             });
         }
 
         this.attachFiles = [];
+        this.attachmentsData.clear();
     },
 
     onEditorKeyDown(ev) {
         this.$emit('editorKeyDown', ev);
     },
 
-    onSelectFile(evData) {
+    onSelectFile(ev) {
         this.addUploadAttachment(this.$refs.editorFiler.files);
     },
 
-    onSelectImage(evData) {
+    onSelectImage(ev) {
         this.addUploadAttachment(this.$refs.editorImager.files);
     },
 
     onAddEmoji(evData) {
-        if (evData.keys.ctrlKey) { // бал нажат Ctrl
+        if (evData.keys.ctrlKey) { // был нажат Ctrl
             this.$refs.editor.focus();
 
             let txt = this.$refs.editor.getContent();
 
-            //this.$emit('editorPost', { postText : `<!--<p onclick="alert(11111)">Серега привет!!!</p>>-->` });
-            //this.$emit('editorPost', { postText : `<img src="https://steamuserimages-a.akamaihd.net/ugc/792010418808130585/980E17AA6CF29E06865DA40F9067B9164AB54BCD/" alt="" />` });
-
             if (`<p></p>` === txt.toLowerCase()) { // поле ввода пустое - значит отправляем только увеличенный эмоджи
                 const sendSmile = `<p class="big-emoji">${evData.emoji}</p>`;
                 this.$emit('editorPost', {postText: sendSmile});
-            } else { // просто добавляем эмоджи
+            }
+            else { // просто добавляем эмоджи
                 this.$refs.editor.addEmoji(evData.emoji);
             }
-        } else { // просто добавляем эмоджи
+        }
+        else { // просто добавляем эмоджи
             this.$refs.editor.addEmoji(evData.emoji);
         }
     },
@@ -282,8 +313,7 @@ methods: {
     },
 
     getStartContainerHeight () {
-        let startChatContainerHeight = this.$refs.editorContainer.offsetHeight;
-        this.editorContainerHeight = startChatContainerHeight;
+        this.editorContainerHeight = this.$refs.editorContainer.offsetHeight;
     },
 
     checkUpdatedChatContainerHeight() {
@@ -294,19 +324,37 @@ methods: {
         }
 
         this.onEditorNewHeight(this.editorContainerHeight);
-        //console.log('checkUpdatedChatContainerHeight', this.editorContainerHeight);
     },
 
     onMaximumCharacterLimit(str) {
         this.isMaximumCharacterLimit = str.length > this.maximumCharacterLimit;
     },
 
+    onUpdate() {
+        this.$emit('onUpdateEditor');
+    },
+
+    onAttachBtnClick(ev){
+        /** FIXME: @TGA после MVP тут надо переделать
+         * иначе не получается открыть диалог выбора файлов в "привязанном" чате PLZ-420 **/
+        let $btn = null;
+        if (ev.target.tagName.toUpperCase() === 'BUTTON') {
+            $btn = $(ev.target);
+        }
+        else {
+            $btn = $(ev.target).closest('button.attach-file');
+        }
+
+        const $file = $btn.find('input.plz-text-editor-file-picker');
+        $file.click();
+    },
+
     async addUploadAttachment(picsArr) {
         this.$refs.editor.focus();
 
-        const filseCount = picsArr.length + this.attachFiles.length;
+        const filesCount = picsArr.length + this.attachFiles.length;
 
-        if (filseCount > this.maxFilesCount) {
+        if (filesCount > this.maxFilesCount) {
             this.$alert(`
                 <h4 class="text-white">Ошибка</h4>
                 <div class="alert alert-danger">
@@ -337,11 +385,10 @@ methods: {
             }
         }
 
-        if (picsArr.length === 0) {
-          return;
-        }
+        if (picsArr.length === 0)
+            return;
 
-        for (const file of picsArr) {
+        for (let file of picsArr) {
             const reader = new FileReader();
             reader.onload = () => {
                 const attachment = new PliziAttachmentItem(true, checkExtension(file, imagesExtensions), file.name);
@@ -357,11 +404,11 @@ methods: {
             /** TODO: @TGA надо потом перенести отсюда загрузку аттачей **/
             switch (this.workMode) {
                 case 'chat':
-                    apiResponse = this.$root.$api.$chat.attachment(picsArr);
+                    apiResponse = this.$root.$api.$chat.attachment([file]);
                     break;
 
                 case 'post':
-                    apiResponse = this.$root.$api.$post.storePostAttachments(picsArr);
+                    apiResponse = this.$root.$api.$post.storePostAttachments([file]);
                     break;
 
                 default:
@@ -382,18 +429,14 @@ methods: {
                         return foundFile;
                     });
 
+                    this.attachmentsData.add(attItem);
+
                     this.$emit('newAttach', {attach: newAtt});
-
-                    // const $this = this;
-                    // setTimeout(function () {
-                    //     $this .checkUpdatedChatContainerHeight();
-                    // }, 1200); // TODO @TGA как узнать время, когда картинка загружена @veremey
-
-                }).catch(e => {
-                    window.console.warn(e.detailMessage);
-                    throw e;
-                });
-            })
+                })
+            }).catch((e) => {
+                window.console.warn(e.detailMessage);
+                throw e;
+            });
         }
     },
 },

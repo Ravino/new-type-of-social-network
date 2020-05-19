@@ -72,9 +72,13 @@ class PliziCollection {
      * @param {object} data
      */
     add(data){
-        const conv = this.new(data);
-
-        this._collection.set(conv.id, conv);
+        if (data.id) {
+            const conv = this.new(data);
+            this._collection.set(conv.id, conv);
+        }
+        else {
+            window.console.warn(`PliziCollection: empty id for entity`);
+        }
     }
 
     receive(inputArray, objClass){

@@ -101,9 +101,6 @@ methods: {
             let editorText = this.editor.getHTML();
             let str = editorText.replace(/<p>|<\/p>/g, '').trim();
 
-            if (!str.length)
-                return;
-
             if (!(!!str.replace(/[\u{1F300}-\u{1F6FF}]/gu, '').trim())) {
                 let matches = str.match(/[\u{1F300}-\u{1F6FF}]/gu);
 
@@ -137,6 +134,7 @@ methods: {
         let str = this.editor.getHTML().replace(/<\/?[^>]+>/g, '').trim();
 
         this.$emit('onMaximumCharacterLimit', str);
+        this.$emit('onUpdate');
     },
 
     setContent(newContent){

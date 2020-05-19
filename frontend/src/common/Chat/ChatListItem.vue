@@ -2,7 +2,7 @@
     <li class="chat-list-user media m-0 px-4 py-2"
         :class="{ 'bg-light':  dialog.id === currentDialogID, 'bg-white': dialog.id !== currentDialogID  }">
 
-        <div class="user-friend d-flex col-12" @click.prevent="pickChat()">
+        <div class="user-friend d-flex col-12 px-0 px-sm-3" @click.prevent="pickChat()">
 
             <div v-if="dialog.isPrivate" class="user-friend-pic mr-3">
                 <img class="user-friend-img rounded-circle overflow-hidden"
@@ -42,7 +42,7 @@
                         <IconCheckedDouble :clazz="'mb-2'" />
                     </small>
                     <time :datetime="dialog.lastMessageDT" class="">
-                        {{ dialog.lastMessageDT | lastMessageTime }}
+                        {{ showDialogTime }}
                     </time>
                 </div>
 
@@ -99,6 +99,13 @@ computed: {
 
         return 'Вы, '+ this.dialog.attendeesName.join(', ');
     },
+
+    showDialogTime(){
+        if (this.dialog.lastMessageDT===null  ||  this.dialog.lastMessageDT.valueOf()===0)
+            return '';
+
+        return this.$options.filters.lastMessageTime(this.dialog.lastMessageDT);
+    }
 },
 
 methods: {

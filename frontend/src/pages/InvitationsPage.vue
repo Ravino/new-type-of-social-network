@@ -12,19 +12,12 @@
                 <div class="row pl-3">
                     <div class="col-12 order-1 order-md-0 col-md-7 col-lg-8 col-xl-8 bg-white-br20">
 
-                        <div v-if="isDataReady" class="plizi-search-results-list">
-                            <ul v-if="invitations  &&  invitations.length > 0" class="list-unstyled mb-0">
-                                <InvitationItem v-for="invItem in invitations"
-                                                v-bind:invitation="invItem"
-                                                v-bind:key="invItem.id">
-                                </InvitationItem>
-                            </ul>
-                            <div class="p-3" v-else>
-                                <div class="alert alert-info text-center">
-                                    Нет приглашений подружиться.
-                                </div>
-                            </div>
-                        </div>
+                        <InvitationsList v-if="isDataReady"
+                                         v-bind:key="'invitationsList-'+invitationsNumber+'-'+invitationsKeyUpdater"
+                                         @InvitationDecline="onInvitationAction"
+                                         @InvitationAccept="onInvitationAction"
+                                         v-bind:invitations="getInvitations()"
+                                         v-bind:invitationsNumber="invitationsNumber"></InvitationsList>
                         <Spinner v-else v-bind:clazz="`d-flex flex-row`"></Spinner>
                     </div>
 
@@ -48,42 +41,42 @@
 
 <script>
 import FriendsListMixin from '../mixins/FriendsListMixin.js';
-
-import InvitationItem from '../components/InvitationItem.vue';
+import InvitationsList from '../components/InvitationsList.vue';
 
 export default {
 name: 'InvitationsPage',
-components: { InvitationItem },
+components: { InvitationsList},
 mixins : [FriendsListMixin],
 data() {
     return {
         isDataReady : true,
+        invitationsKeyUpdater: 1,
     }
 },
 
 computed: {
-    invitations() {
-        return this.$root.$auth.im.asArray();
+    invitationsNumber() {
+        return this.$root.$auth.im.size;
     },
 },
 
 methods: {
-    removeFromInvitations(evData){
-        this.$root.$auth.im.delete(evData.invitationId);
+    getInvitations() {
+        return this.$root.$auth.im.asArray();
+    },
+
+    onInvitationAction(){
+        this.invitationsKeyUpdater += 1;
     }
 },
 
-mounted(){
-    this.$root.$on('InvitationAccept', (evData)=>{
-        setTimeout(()=>{
-            this.removeFromInvitations(evData);
-        }, 3*1000);
-    });
+mounted() {
+    this.$root.$on( this.$root.$auth.im.updateEventName, ()=>{
+        this.invitationsKeyUpdater += 1;
 
-    this.$root.$on('InvitationDecline', (evData)=>{
-        setTimeout(()=>{
-            this.removeFromInvitations(evData);
-        }, 3*1000);
+        if (this.$root.$auth.im.size === 0){
+            this.$router.push({ path: '/friends' });
+        }
     });
 },
 

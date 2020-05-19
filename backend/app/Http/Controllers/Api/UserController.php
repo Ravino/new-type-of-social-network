@@ -18,25 +18,26 @@ class UserController extends Controller
 
     /**
      * @param string $search
-     * @return UserSearchCollection|\Illuminate\Http\JsonResponse
+     * @return UserSearchCollection
      */
     public function search(string $search)
     {
-        if (!empty($search) || strlen($search) > 3) {
-            $users = User::where(function($query) use ($search)  {
-                $query->whereHas('profile', function($profile) use ($search) {
-                    $profile
-                        ->where('first_name', 'LIKE', "%{$search}%")
-                        ->orWhere('last_name', 'LIKE', "%{$search}%")
-                        ->orderBy('last_name');
-                })
-                ->orWhere('email', 'LIKE', "%{$search}%");
-            })->where('id', '<>', Auth::user()->id)
-                ->limit(10)
-                ->get();
-            return new UserSearchCollection($users);
+        if (mb_strlen($search) < 3) {
+            return new UserSearchCollection([]);
         }
-        return response()->json(['message' => 'No found'], 200);
+
+        $users = User::where(static function($query) use ($search)  {
+            $query->whereHas('profile', static function($profile) use ($search) {
+                $profile
+                    ->where('first_name', 'LIKE', "%{$search}%")
+                    ->orWhere('last_name', 'LIKE', "%{$search}%")
+                    ->orderBy('last_name');
+            })
+                ->orWhere('email', 'LIKE', "%{$search}%");
+        })->where('id', '<>', Auth::user()->id)
+            ->limit(10)
+            ->get();
+        return new UserSearchCollection($users);
     }
 
     /**
@@ -164,11 +165,17 @@ class UserController extends Controller
     }
 
     /**
+     * @param Request $request
      * @return UserCollection
      */
-    public function getRecommendedFriends() {
-        $users = Auth::user()->recommendedFriends;
-        return new UserCollection($users);
+    public function getRecommendedFriends(Request $request) {
+        $recommended_ids = Auth::user()->getRecommendedFriends($request->query('limit') ?? 50, $request->query('offset') ?? 0);
+        $recommended = User::with( 'profile', 'profile.avatar')->whereIn('id', array_keys($recommended_ids))->get();
+        $total_count = $recommended_ids[array_key_first($recommended_ids)]['total_count'];
+        foreach ($recommended as $user) {
+            $user->mutual_count = $recommended_ids[$user->id]['mutual_count'];
+        }
+        return new UserCollection($recommended, $total_count);
     }
 
     /**

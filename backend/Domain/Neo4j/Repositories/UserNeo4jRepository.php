@@ -3,6 +3,7 @@
 namespace Domain\Neo4j\Repositories;
 
 use DB;
+use GraphAware\Common\Result\Record;
 use Illuminate\Database\ConnectionInterface;
 use Domain\Neo4j\Models\User;
 
@@ -42,7 +43,7 @@ class UserNeo4jRepository extends BaseRepository
      * @param $my_oid
      * @param $limit
      * @param $offset
-     * @return \GraphAware\Common\Result\Record[]
+     * @return Record[]
      */
     public function getFriends($oid, $my_oid, $limit, $offset) {
         $query = "MATCH (user:`User` {oid: '{$oid}'})-[:FRIEND_OF]-(other)
@@ -60,7 +61,7 @@ class UserNeo4jRepository extends BaseRepository
     /**
      * @param $first_user_oid
      * @param $second_user_oid
-     * @return \GraphAware\Common\Result\Record
+     * @return Record
      */
     public function isFriendOfFriendWith($first_user_oid, $second_user_oid) {
         $query = "MATCH (me:`User` {oid: '{$first_user_oid}'})-[:FRIEND_OF]-(mf)-[:FRIEND_OF]-(other: `User`{oid: '{$second_user_oid}'})
@@ -72,7 +73,7 @@ class UserNeo4jRepository extends BaseRepository
      * @param $oid
      * @param $limit
      * @param $offset
-     * @return \GraphAware\Common\Result\Record[]
+     * @return Record[]
      */
     public function getFriendsOfFriends($oid, $limit, $offset) {
         $query = "MATCH (me: User {oid: '{$oid}'})-[:FRIEND_OF]-(friend), (friend)-[:FRIEND_OF]-(fof)
@@ -83,7 +84,47 @@ class UserNeo4jRepository extends BaseRepository
                   ORDER BY mutual_count DESC
                   SKIP {$offset}
                   LIMIT {$limit}";
-        \Log::debug($query);
         return $this->client->run($query)->records();
+    }
+
+    /**
+     * @param $oid
+     * @param $limit
+     * @param $offset
+     * @return Record[]
+     */
+    public function getRecommendedFriends($oid, $limit, $offset) {
+        $query = "MATCH (me: User {oid: '{$oid}'})-[:MEMBER_OF]-(community:Community)-[:MEMBER_OF]-(user:User)
+                  WITH COUNT(distinct user) AS total_count
+                  MATCH (me: User {oid: '{$oid}'})-[:MEMBER_OF]-(community:Community)-[:MEMBER_OF]-(user:User)
+                  OPTIONAL MATCH (me:`User` {oid: '{$oid}'})-[:FRIEND_OF]-(mf)-[:FRIEND_OF]-(user)
+                  WHERE NOT (me)-[:FRIEND_OF]-(user) AND me <> user
+                  RETURN DISTINCT user.oid as oid, COUNT(community) as frequency, COUNT(mf) as mutual_count, total_count
+                  ORDER BY mutual_count DESC
+                  SKIP {$offset}
+                  LIMIT {$limit}";
+        return $this->client->run($query)->records();
+    }
+
+    /**
+     * @param $oid
+     * @param $community_oid
+     * @param int $limit
+     * @param int $offset
+     * @return Record[]
+     */
+    public function getFriendsFromCommunity($oid, $community_oid, $limit = 5, $offset = 0) {
+        $query = "MATCH (me:`User` {oid: '{$oid}'})-[:FRIEND_OF]-(mf)-[:MEMBER_OF]-(n:Community {oid: {$community_oid}})
+                  WITH COUNT(mf) AS total_count
+                  MATCH (me:`User` {oid: '{$oid}'})-[:FRIEND_OF]-(mf)-[:MEMBER_OF]-(n:Community {oid: {$community_oid}})
+                  RETURN mf.oid AS oid, total_count
+                  SKIP {$offset}
+                  LIMIT {$limit}";
+        return $this->client->run($query)->records();
+    }
+
+    public function clearAllRelations()
+    {
+        $this->_clearAllRelations('User');
     }
 }

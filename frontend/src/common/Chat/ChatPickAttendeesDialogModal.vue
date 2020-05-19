@@ -1,7 +1,7 @@
 <template>
-    <div class="modal" id="chatPickAttendeesDialogModal" tabindex="-1" role="dialog" aria-labelledby="chatPickAttendeesDialogModal"
-          aria-hidden="true" style="display: block; background-color: rgba(0, 0, 0, .7);"
-          @click.stop="hidePickAttendeesDialogModal">
+    <div class="modal" id="chatPickAttendeesDialogModal" tabindex="-1"
+         role="dialog" aria-labelledby="chatPickAttendeesDialogModal" @click.stop="hidePickAttendeesDialogModal"
+         aria-hidden="true" style="display: block; background-color: rgba(0, 0, 0, .7);">
 
         <div class="modal-dialog modal-dialog-centered" role="document" @click.stop="">
             <div class="modal-content bg-white-br20">
@@ -22,6 +22,8 @@
 
                             <div v-show="$v.model.chatName.$error" class="invalid-feedback">
                                 <p v-if="!$v.model.chatName.required" class="text-danger">Укажите название чата</p>
+                                <p v-if="!$v.model.chatName.minLength" class="text-danger">Название чата не может быть короче {{ $v.model.chatName.$params.minLength.min }} символов</p>
+                                <p v-if="!$v.model.chatName.maxLength" class="text-danger">Название чата не может быть длиннее {{ $v.model.chatName.$params.maxLength.max }} символов</p>
                             </div>
                         </div>
 
@@ -75,7 +77,7 @@
 </template>
 
 <script>
-import { required } from 'vuelidate/lib/validators';
+import { required, minLength, maxLength } from 'vuelidate/lib/validators';
 
 import PliziDialog from '../../classes/PliziDialog.js';
 import PliziRecipientsCollection from '../../classes/Collection/PliziRecipientsCollection.js';
@@ -105,7 +107,9 @@ validations() {
     return {
         model: {
             chatName: {
-                required
+                required,
+                minLength: minLength(3),
+                maxLength: maxLength(20),
             },
         }
     };
@@ -154,6 +158,8 @@ methods: {
         }
 
         if ( apiResponse ) {
+            window.console.log( JSON.stringify(apiResponse) , `apiResponse`);
+
             this.$root.$emit('NewChatDialog', apiResponse);
 
             this.hidePickAttendeesDialogModal();
@@ -177,10 +183,6 @@ computed: {
 
         return this.recipients.asArray();
     }
-},
-
-created(){
-    this.msgData = this.pickedMessage;
 },
 
 }

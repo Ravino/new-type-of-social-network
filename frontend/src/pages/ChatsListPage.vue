@@ -1,11 +1,11 @@
 <template>
-    <div class="container-fluid pl-md-0">
+    <div class="container-fluid pl-md-0 ">
         <div class="row" :class="{ 'is-chatPage' : ('ChatsListPage'===this.$root.$router.currentRoute.name) }" >
-            <div class="col-12 col-md-1 chat-page-height overflow-hidden">
+            <div class="col-12 col-md-1 chat-page-height overflow-hidden px-0 px-md-3 ">
                 <AccountToolbarLeft></AccountToolbarLeft>
             </div>
 
-            <div v-if="isFreshUser" class="col-12 col-md-11 pr-0  chat-page-height">
+            <div v-if="isFreshUser" class="col-12 col-md-11 pr-0  chat-page-height px-0 px-md-3 ">
                 <div class="jumbotron">
                     <p class="alert alert-info w-100 text-center p-5">
                         Вы ещё ни с кем не общались, потому здесь пока никого нет.<br />
@@ -16,13 +16,15 @@
                     </p>
                 </div>
             </div>
-            <div v-else class="col-12 col-md-11 pr-0  chat-page-height">
-                <div v-if="isDialogsLoaded" id="chatMain" class="d-flex flex-column flex-lg-row flex bg-white-br20 overflow-hidden">
+
+            <div v-else class="col-12 col-md-11 pr-0  chat-page-height px-0 px-md-3 ">
+
+                <div v-if="isDialogsLoaded" id="chatMain"
+                     class="d-flex flex-column flex-lg-row flex bg-white-br20 overflow-hidden">
 
                     <ChatDialogs ref="chatMessagesUsersList"
                                  :currentDialogID="currentDialogID"
-                                 @SwitchToChat="onSwitchToChat">
-                    </ChatDialogs>
+                                 @SwitchToChat="onSwitchToChat"></ChatDialogs>
 
                     <div id="chatMessagesWrapper"
                          class="col-12 col-lg-8 bg-light d-lg-flex flex-column p-0 ">
@@ -41,9 +43,9 @@
                                           @clearFilters="clearChatMessagesFilters"
                                           ref="chatMessages">
                             </ChatMessages>
-                            <Spinner v-else v-bind:message="`Сообщения загружаются,<br />можно выбрать другой диалог`">
-
-                            </Spinner>
+                            <Spinner v-else
+                                     v-bind:message="`Сообщения загружаются,<br />можно выбрать другой диалог`">
+                                </Spinner>
 
                             <ChatFooter v-if="currentDialog"
                                         v-bind:currentDialog="currentDialog"
@@ -62,7 +64,8 @@
                 </div>
             </div>
 
-            <ChatNotifications :notifications="notifications" @removeNotification="removeNotification"/>
+            <ChatNotifications :notifications="notifications"
+                               @removeNotification="removeNotification"></ChatNotifications>
         </div>
     </div>
 </template>
@@ -169,14 +172,14 @@ methods: {
         if ('ChatsListPage'!==this.$root.$router.currentRoute.name)
             return;
 
-        if (this.currentDialog.id === evData.message.chatId) {
-         this.addMessageToMessagesList(evData.message);
+        if (this.currentDialog.id === evData.chatId) {
+            this.addMessageToMessagesList(evData.message);
         }
 
         this.updateDialogsList(evData.chatId, evData);
     },
 
-    addNewMessageNotification({ message }) {
+    addNewMessageNotification(message) {
         if (message.isMine || this.currentDialog.id === message.chatId) {
             return;
         }
@@ -225,7 +228,12 @@ methods: {
     addListeners(){
         this.$root.$on('newMessageInDialog', this.addNewChatMessageToList);
         this.$root.$on('newMessageInDialog', this.addNewMessageNotification);
-        this.$root.$on('removeMessageInDialog', this.removeMessageInList);
+
+        this.$root.$on('removeMessageInDialog', (evData)=>{
+            if (this.removeMessageInList) {
+                this.removeMessageInList(evData);
+            }
+        });
     }
 },
 

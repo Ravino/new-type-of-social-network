@@ -44,7 +44,6 @@ class User extends JsonResource
             if($this->appendMutual) {
                 return [
                     'id' => $this->id,
-                    'uuid' => $this->uuid,
                     'isOnline' => $this->isOnline,
                     'lastActivity' => $this->last_activity_dt,
                     'profile' => new Profile($this->profile),
@@ -53,7 +52,6 @@ class User extends JsonResource
             } else {
                 return [
                     'id' => $this->id,
-                    'uuid' => $this->uuid,
                     'isOnline' => $this->isOnline,
                     'lastActivity' => $this->last_activity_dt,
                     'profile' => new Profile($this->profile),

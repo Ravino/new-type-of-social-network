@@ -32,7 +32,7 @@ class ProfileObserver
         if (Cache::has('id-' . $profile->user->id)) {
             Cache::forget('id-' . $profile->user->id);
         }
-        event(new UserUpdated($profile->user));
+        event(new UserUpdated($profile->user->with('profile')->first()));
     }
 
     /**

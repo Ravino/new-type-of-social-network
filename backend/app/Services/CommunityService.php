@@ -4,6 +4,8 @@
 namespace App\Services;
 
 
+use App\Events\CommunityCreated;
+use App\Http\Requests\Request;
 use App\Models\Community;
 
 class CommunityService
@@ -29,6 +31,7 @@ class CommunityService
         ];
         $community = Community::create($data);
         $community->users()->attach(auth()->user()->id, ['role' => Community::ROLE_AUTHOR]);
+        event(new CommunityCreated($community));
         return $community;
     }
 
@@ -37,17 +40,24 @@ class CommunityService
      * @param $community
      * @return mixed
      */
-    public function updateCommunity($request, $community) {
-        $data = [
+    public function updateCommunity(Request $request, $community) {
+        $data = array_filter([
             'name' => $request->name,
             'description' => $request->description,
             'notice' => $request->notice,
             'url' => $request->url,
-            'website' => $request->website,
-            'location' => $request->location,
+            'privacy' => $request->privacy,
+            'type' => $request->type,
+            'theme_id' => $request->themeId,
+            'geo_city_id' => $request->location,
             'is_verified' => false,
             'updated_at' => time(),
-        ];
+        ]);
+
+        if ($request->exists('website')) {
+            $data['website'] = $request->website;
+        }
+
         return tap($community)->update($data);
     }
 

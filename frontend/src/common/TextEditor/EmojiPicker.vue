@@ -11,14 +11,15 @@
         <div slot="emoji-picker" slot-scope="{ emojis, insert, display}">
             <div v-if="isVisible" class="picker" :style="transform">
                 <div v-for="(emojiGroup, category) in emojis" :key="category">
-                    <h5 class="picker-category">{{ category }}</h5>
+                    <!--<h5 class="picker-category">{{ category }}</h5>-->
                     <div>
                         <span v-for="(emojiItem, emojiName) in emojiGroup"
                               :key="emojiName"
                               @click="insert({event: $event, emoji: emojiItem})"
                               :title="emojiName"
-                              class="picker-emoji">
-                            {{ emojiItem }}
+                              v-html="parseEmoji(emojiItem)"
+                              class="picker-emoji py-1">
+                           <!-- {{ emojiItem }} -->
                         </span>
                     </div>
                 </div>
@@ -29,6 +30,9 @@
 
 <script>
 /** @link https://github.com/DCzajkowski/vue-emoji-picker **/
+/**
+ * для кроссбраузерности эмоджиков в частности для хрома в win7
+ * @link https://www.npmjs.com/package/vue-twemoji **/
 
 import Picker from 'vue-emoji-picker';
 import IconAddSmile from '../../icons/IconAddSmile.vue';
@@ -67,6 +71,9 @@ methods: {
             }, 100);
         }
     },
+    parseEmoji: function (string) {
+        return this.$twemoji.parse(string);
+    }
 },
 }
 </script>

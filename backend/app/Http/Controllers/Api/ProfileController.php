@@ -38,15 +38,6 @@ class ProfileController extends Controller
     }
 
     /**
-     * @return CommunityCollection
-     */
-    public function myCommunities()
-    {
-        $user = User::with('communities')->find(Auth::user()->id);
-        return new CommunityCollection($user->communities);
-    }
-
-    /**
      * @param $id
      * @return CommunityCollection
      */

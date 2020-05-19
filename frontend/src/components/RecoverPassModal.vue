@@ -25,7 +25,7 @@
                                        v-model="form.email"
                                        @input="errors = null"
                                        ref="recoverPassInput"
-                                       placeholder="Введите mail или номер телефона"/>
+                                       placeholder="Введите email или номер телефона"/>
                                 <div v-if="errors && errors['email']" class="invalid-feedback">
                                     <p class="text-danger">{{errors['email'][0] }}</p>
                                 </div>

@@ -110,7 +110,7 @@
 
                         <div
                             class="form-group d-flex align-items-center px-5 py-4 community-create-modal-footer mb-0 row">
-                            <label for="communityRules" class="col-7 radio mb-0">
+                            <label for="communityRules" class="col-12 col-md-7 radio mb-3 mb-md-0">
                                 <input class="mb-0"
                                        v-model="model.rule"
                                        type="checkbox" name="communityRules"
@@ -119,7 +119,7 @@
                                     <router-link class="text-link" :to="{name: 'CommunityRulesPage'}" target="_blank">правилами</router-link>
                                 </span>
                             </label>
-                            <div class="col-5 d-flex align-items-center justify-content-end">
+                            <div class="col-12 col-md-5 d-flex align-items-center justify-content-end px-0">
                                 <button @click.stop="startCreateCommunity()" type="button"
                                         :disabled="!model.rule"
                                         class="btn w-100 btn-primary rounded-pill">Создать сообщество

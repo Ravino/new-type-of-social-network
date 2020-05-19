@@ -15,6 +15,7 @@ use App\Models\PostLike;
 use App\Models\User;
 use App\Notifications\UserSystemNotifications;
 use App\Services\S3UploadService;
+use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Notification;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Event;
@@ -38,6 +39,7 @@ class PostController extends Controller
             ->limit($request->query('limit') ?? 50)
             ->offset($request->query('offset') ?? 0)
             ->get();
+
         return new PostCollection($posts, false);
     }
 
@@ -46,11 +48,32 @@ class PostController extends Controller
      * @return PostCollection
      */
     public function myPosts(Request $request) {
-        $posts = \Auth::user()->allPosts()
+        $posts = \Auth::user()->allPosts()->with(['postable', 'author'])
             ->limit($request->query('limit') ?? 50)
             ->offset($request->query('offset') ?? 0)
             ->get();
-        return new PostCollection($posts);
+        $communities = \Auth::user()->communities;
+        $filtered = [];
+
+        foreach ($posts as $post) {
+            $postablePost = $post->postable;
+
+            if ($postablePost instanceof Community) {
+                $community = $communities->first(function ($com) use ($postablePost) {
+                    return $com->id === $postablePost->id;
+                });
+
+                \Log::debug(json_encode(Carbon::parse($post->created_at) > Carbon::parse($community->pivot->created_at)));
+
+                if (!(Carbon::parse($post->created_at) > Carbon::parse($community->pivot->created_at))) {
+                    continue;
+                }
+            }
+
+            $filtered[] = $post;
+        }
+
+        return new PostCollection($filtered);
     }
 
     /**

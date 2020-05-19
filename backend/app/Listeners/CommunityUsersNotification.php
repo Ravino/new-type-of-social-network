@@ -1,7 +1,7 @@
 <?php
 
 
-namespace App\Listeners\Friendships;
+namespace App\Listeners;
 
 use App\Models\User;
 use App\Notifications\UserSystemNotifications;

@@ -76,8 +76,14 @@
         border-top: 1px solid $borderColor;
     }
 
+    .plz-gallery-viewer-nav-btn {
+        height: 40px;
+    }
 
-
+    .plz-gallery-viewer-current  {
+        max-width: calc(100vw - 90px);
+        max-height: calc(100vh - 100px);
+    }
 }
 
 /*- md -*/
@@ -105,6 +111,21 @@
     }
 
 
+    #chatMessagesWrapper {
+        position: relative;
+
+        &:after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            box-shadow: inset 0 0 4px rgba(0, 0, 0, 0.5);
+            pointer-events: none;
+        }
+    }
+
     .plz-editor-body {
         width: 100%;
     }
@@ -123,7 +144,61 @@
         margin-top: 40px;
         width: 40px;
     }
-}
+
+
+    .plz-post-item{
+        .plz-post-item-header,
+        .plz-post-item-body,
+        .plz-post-item-images,
+        .plz-post-item-footer {
+            padding: 0 15px;
+        }
+    }
+
+    $portraitFullHeightResponsive: 400px;
+    .plz-gallery {
+        &-wrap {
+            height: $portraitFullHeightResponsive;
+        }
+        &-image {
+            &-album {
+                &-2 {
+                    height: $portraitFullHeightResponsive / 2;
+                }
+                &-3 {
+                    height: $portraitFullHeightResponsive / 2;
+                }
+            }
+            &-portrait {
+                &-full {
+                    height: $portraitFullHeightResponsive;
+                }
+
+                &-half {
+                    height: $portraitFullHeightResponsive / 2;
+                }
+                &-third {
+                    height: $portraitFullHeightResponsive / 3;
+                }
+            }
+        }
+    }
+
+    .video-player {
+        .video-js {
+            height: 400px;
+        }
+    }
+
+
+    #toolbarLeftGrey::after {
+        content: none;
+    }
+
+
+}/*- max-width: 767px -*/
+
+
 
 /*- sm -*/
 @media (max-width: 576px) {
@@ -181,6 +256,11 @@
 
     #toolbarLeftColor {
         overflow: auto;
+    }
+
+    .profile-filter-links {
+        display: block;
+        width: 100%;
     }
 
 }

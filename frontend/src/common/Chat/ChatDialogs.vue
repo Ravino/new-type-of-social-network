@@ -1,17 +1,17 @@
 <template>
-    <div class="chat-dialogs-list col-sm-12 col-md-12 col-lg-4 col-xl-4 col-auto px-sm-0 px-md-0 ">
+    <div class="chat-dialogs-list col-sm-12 col-md-12 col-lg-4 col-xl-4 col-auto px-0 ">
 
         <ChatDialogsFilter @ChatDialogsFilter="onChatDialogsFilter"></ChatDialogsFilter>
 
         <vue-custom-scrollbar class="chat-list-scroll pb-0 pb-4"
                               :settings="customScrollBarSettings">
-            <ul id="chatDialogsList" class="list-unstyled mb-0">
-                <ChatListItem v-for="dialog in dialogsList"
+            <ul id="chatDialogsList" class="list-unstyled mb-0" v-bind:key="dialogsListKey">
+                <ChatListItem v-for="dialog in dialogsList()"
                               @PickChat="onSwitchToChat"
                               :id="'dialogItem-'+dialog.id"
                               v-bind:dialog="dialog"
                               v-bind:currentDialogID="currentDialogID"
-                              v-bind:key="dialog.id">
+                              v-bind:key="dialogsListItemKey(dialog)">
                 </ChatListItem>
             </ul>
         </vue-custom-scrollbar>
@@ -37,6 +37,7 @@ props : {
 data(){
     return {
         listFilled: false,
+        dialogKeyUpdater: 0,
 
         dialogFilter: {
             text: ``,
@@ -51,6 +52,16 @@ data(){
 },
 
 computed: {
+    dialogsLength(){
+        return this.$root.$auth.dm.size;
+    },
+
+    dialogsListKey(){
+        return 'dialogsList-'+this.dialogKeyUpdater+'-'+this.$root.$auth.dm.size+'-'+ (new Date()).getMilliseconds();
+    }
+},
+
+methods: {
     dialogsList(){
         const dlgList = this.$root.$auth.dm.asArray().slice();
 
@@ -59,20 +70,22 @@ computed: {
 
         return dlgList.filter(dlgItem => dlgItem.checkInAttendees(this.dialogFilter.text) );
     },
-},
 
-methods: {
+    dialogsListItemKey(dialog){
+        return 'dialogItem-'+dialog.id+'-'+this.dialogKeyUpdater+ (new Date()).getMilliseconds();
+    },
+
     onSwitchToChat(evData){
         this.$emit('SwitchToChat', evData);
     },
+
 
     onChatDialogsFilter(evData){
         this.dialogFilter.text = evData.text ? evData.text.trim() : '';
     },
 
-    onRemoveChatDialog(evData){
-        window.console.log(evData.chatId, `onRemoveChatDialog`);
 
+    onRemoveChatDialog(evData){
         this.$root.$auth.dm.delete( evData.chatId );
 
         const newPickedChat = (this.$root.$auth.dm.size > 0) ? this.$root.$auth.dm.firstDialog.id : -1;
@@ -87,16 +100,19 @@ methods: {
         }
     },
 
+
     onUpdateChatDialog(evData){
         const updatedFields = {
-            lastMessageDT : evData.message.createdAt,
-            lastMessageText : evData.message.body,
-            isLastFromMe : !!evData.message.isMine,
-            isRead : !!evData.message.isRead
+            lastMessageDT : evData.createdAt,
+            lastMessageText : evData.body,
+            isLastFromMe : !!evData.isMine,
+            isRead : !!evData.isRead
         };
 
         this.$root.$auth.dm.dialogStateUpdated(evData.chatId, updatedFields);
+        this.dialogKeyUpdater++;
     },
+
 
     async loadDialogsList() {
         this.isDialogsLoaded = true;
@@ -118,6 +134,8 @@ methods: {
     async onDialogsListLoad(wMode){
         if (this.listFilled)
             return;
+
+        this.dialogKeyUpdater++;
 
         await this.loadDialogsList();
 

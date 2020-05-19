@@ -3,8 +3,10 @@
 namespace App\Models;
 
 use App\CommunityMember;
+use App\Models\Geo\City;
 use App\Traits\NPerGroup;
 use Auth;
+use Domain\Neo4j\Service\UserService;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
@@ -33,7 +35,7 @@ class Community extends Model
     public const TYPE_EVENT = 6;
 
     protected $fillable = [
-        'name', 'description', 'notice', 'primary_image', 'url', 'website', 'location', 'is_verified', 'type', 'theme_id', 'privacy',
+        'name', 'description', 'notice', 'primary_image', 'url', 'website', 'geo_city_id', 'is_verified', 'type', 'theme_id', 'privacy',
     ];
 
     protected $with = ['role'];
@@ -80,7 +82,7 @@ class Community extends Model
      */
     public function role()
     {
-        return $this->hasOne(CommunityMember::class)->where('community_members.user_id', Auth::user()->id);
+        return $this->hasOne(CommunityMember::class)->where('community_members.user_id', Auth::user() ? Auth::user()->id : 0);
     }
 
     /**
@@ -104,6 +106,21 @@ class Community extends Model
      */
     public function avatar() {
         return $this->hasOne(CommunityAttachment::class);
+    }
+
+    /**
+     * @return HasOne
+     */
+    public function headerImage() {
+        return $this->hasOne(CommunityHeader::class);
+    }
+
+    /**
+     * @return HasOne
+     */
+    public function city()
+    {
+        return $this->hasOne(City::class, 'id', 'geo_city_id');
     }
 
     /**
@@ -133,5 +150,10 @@ class Community extends Model
             self::TYPE_PUBLIC_PAGE => 'Публичная страница',
             self::TYPE_EVENT => 'Мероприятие',
         ];
+    }
+
+    public function friends($limit = 5, $offset = 0)
+    {
+        return (new UserService())->getFriendsFromCommunity(Auth::user()->id, $this->id, $limit, $offset);
     }
 }

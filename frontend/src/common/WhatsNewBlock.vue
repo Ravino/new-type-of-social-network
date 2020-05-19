@@ -4,8 +4,10 @@
                 :editorPlaceholder="'Что у Вас нового?'"
                 :dropToDown="true"
                 :maximumCharacterLimit="10000"
+                :errors="errors"
                 @editorPost="onTextPost"
-                work-mode="post">
+                @onUpdateEditor="onUpdateEditor"
+                workMode="post">
     </TextEditor>
 </template>
 
@@ -21,7 +23,9 @@ components: {
 },
     mixins: [ChatMixin],
 data() {
-    return {}
+    return {
+        errors: null,
+    }
 },
 computed: {
     userData() {
@@ -29,6 +33,10 @@ computed: {
     },
 },
 methods: {
+    onUpdateEditor() {
+        this.errors = null;
+    },
+
   async onTextPost(evData){
     let msg = evData.postText.trim();
 
@@ -37,7 +45,7 @@ methods: {
       msg = msg.replace(/<p><\/p>/g, brExample);
       msg = this.killBrTrail(msg);
 
-      if (msg !== '') {
+        if (msg !== '') {
         this.savePost( msg, evData.attachments, evData.videoLink, evData.workMode );
       } else if (evData.attachments.length > 0) {
         this.savePost( '<p></p>', evData.attachments, evData.videoLink, evData.workMode );
@@ -61,7 +69,8 @@ methods: {
       try {
           response = await this.$root.$api.$post.storePost(formData);
       } catch (e) {
-        console.warn(e.detailMessage);
+          this.errors = e.data.errors;
+          console.warn(e.detailMessage);
       }
 
       if (response) {
@@ -70,6 +79,8 @@ methods: {
       }
     },
     async storeVideo(youtubeLink, workMode, id) {
+        if (!(youtubeLink && workMode && id)) return;
+
         let response;
 
         try {

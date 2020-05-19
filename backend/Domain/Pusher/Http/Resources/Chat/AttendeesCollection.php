@@ -29,7 +29,7 @@ class AttendeesCollection extends ResourceCollection
         return $this->collection->map(function ($attendee) {
             return [
                 'id' => $attendee->id,
-                'lastActivity' => $attendee->profile->last_activity_dt,
+                'lastActivity' => $attendee->last_activity_dt,
                 'userPic' => $attendee->profile->user_pic,
                 'firstName' => $attendee->profile->first_name,
                 'lastName' => $attendee->profile->last_name,

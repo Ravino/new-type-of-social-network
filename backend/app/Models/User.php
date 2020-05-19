@@ -98,7 +98,7 @@ class User extends Authenticatable implements JWTSubject
     public function communities()
     {
         return $this->belongsToMany(Community::class, 'community_members')
-            ->using(CommunityMember::class)->withPivot('role');
+            ->using(CommunityMember::class)->withPivot('role')->withTimestamps();
     }
 
     /**
@@ -125,7 +125,7 @@ class User extends Authenticatable implements JWTSubject
     {
         return $this->morphMany(Post::class, 'postable')->with('postable', 'parent', 'attachments', 'like')
             ->orWhereIn( 'postable_id', self::communities()->allRelatedIds())
-            ->orWhereIn( 'postable_id', array_column(self::getFriends(), 'id'))->orderBy('posts.id', 'desc');
+            ->orWhereIn( 'postable_id', array_keys(self::getFriends()))->orderBy('posts.id', 'desc');
     }
 
     /**

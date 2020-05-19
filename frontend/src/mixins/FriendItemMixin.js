@@ -40,8 +40,20 @@ methods: {
         // сообщение было в течение последних 7 дней
         let lastWeek = moment().subtract(7, 'days');
         if ( +lmt.format('X') >= +lastWeek.format('X')) {
-            let dow = lmt.format('dddd');
-            return sexTitle+' '+dow.charAt(0).toUpperCase() + dow.slice(1);
+            const dow = lmt.format('dddd').toLowerCase();
+            let dowF = '';
+            switch (dow){
+                case 'понедельник': dowF = 'Понедельник'; break;
+                case 'вторник': dowF = 'Вторник'; break;
+                case 'среда': dowF = 'Среду'; break;
+                case 'четверг': dowF = 'Четверг'; break;
+                case 'пятница': dowF = 'Пятницу'; break;
+                case 'суббота': dowF = 'Субботу'; break;
+                case 'воскресенье': dowF = 'Воскресенье'; break;
+                default: dowF = dow.charAt(0).toUpperCase() + dow.slice(1); break;
+            }
+
+            return sexTitle+' в '+dowF;
         }
 
         return sexTitle+' '+lmt.format('DD.MM.YY');

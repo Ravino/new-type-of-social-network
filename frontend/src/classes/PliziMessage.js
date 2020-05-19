@@ -1,4 +1,5 @@
 import PliziAttachment from './PliziAttachment.js';
+import { convertToDate } from '../utils/DateUtils.js';
 
 class PliziMessage{
     /**
@@ -122,44 +123,28 @@ class PliziMessage{
 
     constructor(msgData){
         this._id = msgData.id;
-        this._userId = msgData._userId;
-        this._chatId = msgData._chatId;
+        this._userId = msgData.userId;
+        this._chatId = msgData.chatId;
         this._firstName = msgData.firstName;
         this._lastName = msgData.lastName;
         this._userPic = msgData.userPic;
-        this._sex = msgData.sex;
+        this._sex  = msgData.sex;
         this._body = msgData.body;
         this._isMine = !! msgData.isMine;
         this._isRead = !! msgData.isRead;
         this._isEdited = !! msgData.isEdited;
-        this._createdAt = this.__convertToDate(msgData.createdAt);
-        this._updatedAt = this.__convertToDate(msgData.updatedAt);
+        this._createdAt = convertToDate(msgData.createdAt);
+        this._updatedAt = convertToDate(msgData.updatedAt);
         this._replyOn = (msgData.replyOn) ? new PliziMessage(msgData.replyOn): null;
         this._isForward = !! msgData.isForward;
 
         this._attachments = [];
 
         if (msgData.attachments &&  msgData.attachments.list /*  &&  msgData.attachments.list>0*/) {
-            //window.console.warn(this._body, 'есть аттачи');
-
             msgData.attachments.list.map((aItem) => {
                 this._attachments.push( new PliziAttachment(aItem) );
             });
         }
-    }
-
-    /**
-     * @param {Date|number} dValue
-     * @returns {Date}
-     * @private
-     */
-    __convertToDate(dValue){
-        /** @see https://developer.mozilla.org/ru/docs/Web/JavaScript/Reference/Global_Objects/Date **/
-        if (dValue instanceof Date) {
-            return new Date( dValue.valueOf() ); // чтобы вернуть по значению, а не по ссылке
-        }
-
-        return new Date(dValue*1000);  // умножаем на 1000 потому, что тут JS считает в миллисекундах
     }
 
     get id(){

@@ -36,7 +36,7 @@
         }
     ],
     "paths": {
-        "chat/dialogs": {
+        "/chat/dialogs": {
             "get": {
                 "tags": [
                     "Chats"
@@ -83,6 +83,51 @@
                         "in": "path",
                         "description": "ID диалога",
                         "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    },
+                    {
+                        "name": "limit",
+                        "in": "query",
+                        "description": "Кол-во записей",
+                        "required": false,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    },
+                    {
+                        "name": "offset",
+                        "in": "query",
+                        "description": "Смещение",
+                        "required": false,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    },
+                    {
+                        "name": "search",
+                        "in": "query",
+                        "description": "Искомая строка",
+                        "required": false,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "dateStart",
+                        "in": "query",
+                        "description": "Начало периода",
+                        "required": false,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    },
+                    {
+                        "name": "dateEnd",
+                        "in": "query",
+                        "description": "Конец периода",
+                        "required": false,
                         "schema": {
                             "type": "integer"
                         }
@@ -1693,6 +1738,35 @@
                 ],
                 "description": "Список сообществ",
                 "operationId": "getCommunities",
+                "parameters": [
+                    {
+                        "$ref": "#/components/parameters/offsetParam"
+                    },
+                    {
+                        "$ref": "#/components/parameters/limitParam"
+                    },
+                    {
+                        "name": "search",
+                        "in": "query",
+                        "required": false,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "list",
+                        "in": "query",
+                        "required": false,
+                        "schema": {
+                            "type": "string",
+                            "enum": [
+                                "popular",
+                                "my",
+                                "owner"
+                            ]
+                        }
+                    }
+                ],
                 "responses": {
                     "200": {
                         "description": "OK",
@@ -2241,8 +2315,42 @@
                 "tags": [
                     "Communities"
                 ],
-                "description": "Список сообществ в которых я учавствую",
-                "operationId": "getMyCommunities",
+                "deprecated": true,
+                "description": "See GET /communities",
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "data": {
+                                            "type": "object",
+                                            "properties": {
+                                                "list": {
+                                                    "type": "array",
+                                                    "items": {
+                                                        "$ref": "#/components/schemas/Community"
+                                                    }
+                                                }
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/owner/communities": {
+            "get": {
+                "tags": [
+                    "Communities"
+                ],
+                "deprecated": true,
+                "description": "See GET /communities",
                 "responses": {
                     "200": {
                         "description": "OK",
@@ -2320,7 +2428,7 @@
                 ]
             }
         },
-        "user/friendship": {
+        "/user/friendship": {
             "get": {
                 "tags": [
                     "Friendships"
@@ -2330,7 +2438,7 @@
                 "parameters": [
                     {
                         "name": "limit",
-                        "in": "path",
+                        "in": "query",
                         "description": "Кол-во записей",
                         "required": false,
                         "schema": {
@@ -2339,7 +2447,7 @@
                     },
                     {
                         "name": "offset",
-                        "in": "path",
+                        "in": "query",
                         "description": "Смещение",
                         "required": false,
                         "schema": {
@@ -2782,7 +2890,7 @@
                 "x-codegen-request-body-name": "body"
             }
         },
-        "user/friendship/group/{group}/{userId}": {
+        "/user/friendship/group/{group}/{userId}": {
             "delete": {
                 "tags": [
                     "Friendships"
@@ -2909,6 +3017,30 @@
         }
     },
     "components": {
+        "parameters": {
+            "offsetParam": {
+                "in": "query",
+                "name": "offset",
+                "required": false,
+                "schema": {
+                    "type": "integer",
+                    "minimum": 0
+                },
+                "description": "The number of items to skip before starting to collect the result set."
+            },
+            "limitParam": {
+                "in": "query",
+                "name": "limit",
+                "required": false,
+                "schema": {
+                    "type": "integer",
+                    "minimum": 1,
+                    "maximum": 50,
+                    "default": 20
+                },
+                "description": "The numbers of items to return."
+            }
+        },
         "schemas": {
             "CreateMessage": {
                 "type": "object",

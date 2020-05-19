@@ -1,10 +1,12 @@
 <?php
 
 
-namespace Domain\PusherListeners;
+namespace Domain\Pusher\Listeners;
 
 use Domain\Pusher\Events\UserTypingEvent;
 use Domain\Pusher\WampServer as Pusher;
+use Illuminate\Bus\Queueable;
+use Illuminate\Contracts\Queue\ShouldQueue;
 
 class UserTypingNotification
 {

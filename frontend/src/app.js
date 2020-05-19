@@ -6,6 +6,19 @@ Vue.use(VueRouter);
 import Vuelidate from 'vuelidate';
 Vue.use(Vuelidate);
 
+/**
+ * для кроссбраузерности эмоджиков в частности для хрома в win7
+ * @link https://www.npmjs.com/package/vue-twemoji **/
+import vuetwemoji from 'vue-twemoji'
+Vue.use(vuetwemoji, {
+    baseUrl: 'https://twemoji.maxcdn.com/',
+    extension: '.png', //.svg, .png
+    className: 'twemoji', //custom className for image output
+    size: '16x16' //image size
+});
+
+
+
 /** @link https://www.npmjs.com/package/vue-textarea-autosize **/
 //import TextareaAutosize from 'vue-textarea-autosize';
 //Vue.use(TextareaAutosize);
@@ -39,6 +52,17 @@ Vue.prototype.$auth = null;
  * @type {string}
  */
 Vue.prototype.$lastSearch = ``;
+
+/**
+ * текст последнего поиска сообществ
+ * добавляем глобально, на использовать будем только от this.$root
+ * @type {Object}
+ */
+Vue.prototype.$lastCommunitiesSearch = {
+    popular: '',
+    my: '',
+    owner: '',
+};
 
 /**
  * добавляем глобально, на использовать будем только от this.$root

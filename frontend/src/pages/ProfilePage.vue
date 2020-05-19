@@ -1,11 +1,11 @@
 <template>
     <div class="container-fluid pl-md-0">
         <div class="row">
-            <div class="col-12 col-md-1 ">
+            <div class="col-12 col-md-1  px-0 px-md-3">
                 <AccountToolbarLeft></AccountToolbarLeft>
             </div>
 
-            <div class="col-12 col-md-11 col-xl-8 pr-0 pr-xl-3">
+            <div class="col-12 col-md-11 col-xl-8 pr-0 pr-xl-3 px-0 px-md-3">
                 <div class="container">
                     <ProfileHeader v-bind:userData="userData" v-bind:isOwner="true"></ProfileHeader>
 
@@ -27,11 +27,19 @@
                         </Post>
                     </template>
 
-                    <div v-else  class="row plz-post-item mb-4 bg-white-br20 p-4">
+                    <div v-else-if="!enabledPostLoader"  class="row plz-post-item mb-4 bg-white-br20 p-4">
                         <div class="alert alert-info w-100 p-5 text-center mb-0">
-                            Вы не создали ни одной записи.
+                            Извините, но сейчас нечего показывать.
                         </div>
                     </div>
+
+                    <template v-if="enabledPostLoader">
+                        <div class="row plz-post-item mb-4 bg-white-br20 p-4">
+                            <div class="w-100 p-5 text-center mb-0">
+                                <SmallSpinner/>
+                            </div>
+                        </div>
+                    </template>
                 </div>
             </div>
 
@@ -64,6 +72,7 @@ import ProfilePhotos from '../components/ProfilePhotos.vue';
 import ProfileFilter from '../components/ProfileFilter.vue';
 import PostEditModal from '../common/Post/PostEditModal.vue';
 import PostVideoModal from '../common/Post/PostVideoModal.vue';
+import SmallSpinner from "../common/SmallSpinner.vue";
 
 import PliziPost from '../classes/PliziPost.js';
 import ShortFriendsMixin from '../mixins/ShortFriendsMixin.js';
@@ -75,6 +84,7 @@ components: {
     ProfileHeader, ProfilePhotos, WhatsNewBlock, ProfileFilter, Post,
     PostEditModal,
     PostVideoModal,
+    SmallSpinner,
 },
 mixins: [ShortFriendsMixin],
 data() {
@@ -103,6 +113,7 @@ data() {
         },
         lazyLoadStarted: false,
         noMorePost: false,
+        enabledPostLoader: true,
     }
 },
 
@@ -151,15 +162,9 @@ methods : {
         this.userPosts.unshift( new PliziPost( post ) );
     },
 
-    startTimer( post ){
+    startTimer( postIndex ){
         setTimeout( () => {
-            const postIndex = this.userPosts.find( ( userPost ) => {
-                return userPost.id === post.id;
-            } );
-
-            if ( post.deleted ){
-                this.userPosts.splice( postIndex, 1 );
-            }
+            this.userPosts.splice( postIndex, 1 );
         }, 5000 );
     },
 
@@ -185,13 +190,15 @@ methods : {
         try{
             response = await this.$root.$api.$post.getPosts(limit, offset);
         } catch (e){
+            this.enabledPostLoader = false;
             console.warn( e.detailMessage );
         }
 
         if ( response !== null ){
-            response.map( ( post ) => {
-                this.userPosts.push( new PliziPost( post ) );
-            } );
+            this.enabledPostLoader = false;
+            response.map((post) => {
+                this.userPosts.push(new PliziPost(post));
+            });
 
             return response.length;
         }
@@ -201,6 +208,7 @@ methods : {
         if (this.lazyLoadStarted) return;
         if (this.noMorePost) return;
 
+        this.enabledPostLoader = true;
         this.lazyLoadStarted = true;
         let oldSize = this.userPosts.length;
         let added = await this.getPosts(10, oldSize++);
@@ -223,13 +231,13 @@ methods : {
         }
 
         if ( response ){
-            const post = this.userPosts.find( ( post ) => {
+            const postIndex = this.userPosts.findIndex( ( post ) => {
                 return post.id === id;
             } );
+            let post = this.userPosts[postIndex].deleted = true;
+            console.log(post);
 
-            post.deleted = true;
-
-            this.startTimer( post );
+            this.startTimer( postIndex );
         }
     },
 
@@ -260,10 +268,14 @@ async mounted() {
 
     this.$root.$on('wallPostsSelect', this.wallPostsSelectHandler);
     await this.getPosts();
-
     window.addEventListener('scroll', this.onScrollYPage);
+
     //await this.loadMyFriends();
-}
+},
+    beforeRouteLeave(to, from, next) {
+        window.removeEventListener('scroll', this.onScrollYPage);
+        next();
+    },
 }
 </script>
 

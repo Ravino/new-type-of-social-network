@@ -135,9 +135,25 @@ trait Friendable
         return $neo4UserService->isFriendOfFriendWith($this->id, $user_id);
     }
 
+    /**
+     * @param int $limit
+     * @param int $offset
+     * @return array
+     */
     public function getFriendsOfFriends($limit = 50, $offset = 0)
     {
         $neo4UserService = new UserService();
         return $neo4UserService->getFriendsOfFriends($this->id, $limit, $offset);
+    }
+
+    /**
+     * @param int $limit
+     * @param int $offset
+     * @return array
+     */
+    public function getRecommendedFriends($limit = 50, $offset = 0)
+    {
+        $neo4UserService = new UserService();
+        return $neo4UserService->getRecommendedFriends($this->id, $limit, $offset);
     }
 }
