@@ -30,6 +30,33 @@ class PliziPostAPI extends PliziBaseAPI {
     }
 
     /**
+     * Получение новостей.
+     * @public
+     * @returns {object[]|null}
+     * @throws PliziAPIError
+     */
+    async getNews(limit, offset){
+        let path = 'api/user/news';
+        let qParams = '';
+
+        if (limit && offset) {
+            qParams = `?limit=${limit}&offset=${offset}`;
+        }
+
+        let response = await this.axios.get( path + qParams, this.authHeaders )
+            .catch( ( error ) => {
+                this.checkIsTokenExpires( error, `getNews` );
+                throw new PliziAPIError( `getNews`, error.response );
+            } );
+
+        if ( response.status === 200 ){
+            return response.data.data.list;
+        }
+
+        return null;
+    }
+
+    /**
      * Получение постов на страницах других пользователей.
      * @public
      * @returns {object[]|null}

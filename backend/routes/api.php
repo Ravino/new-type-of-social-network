@@ -32,6 +32,7 @@ Route::group(['middleware' => ['auth.jwt', 'track.activity']], function () {
 
     Route::get('posts', 'Api\PostController@index');
     Route::get('user/posts', 'Api\PostController@myPosts');
+    Route::get('user/news', 'Api\PostController@getNews');
     Route::get('user/{id}/posts', [
         'middleware' => ['privacy.role:view_wall_permissions'],
         'uses' => 'Api\PostController@userPosts'
