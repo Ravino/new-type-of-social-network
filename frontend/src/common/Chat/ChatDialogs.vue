@@ -11,7 +11,7 @@
                               :id="'dialogItem-'+dialog.id"
                               v-bind:dialog="dialog"
                               v-bind:currentDialogID="currentDialogID"
-                              v-bind:key="dialogsListItemKey(dialog)">
+                              v-bind:key="dialogsListItemKey(dialog)+'-'+chatDialogsKeyUpdater">
                 </ChatListItem>
             </ul>
         </vue-custom-scrollbar>
@@ -31,7 +31,7 @@ name : 'ChatDialogs',
 components : { ChatDialogsFilter, ChatListItem, VueCustomScrollbar },
 props : {
     currentDialogID : {},
-    ChatDialogsFilter : {}
+    chatDialogsKeyUpdater: Number
 },
 
 data(){

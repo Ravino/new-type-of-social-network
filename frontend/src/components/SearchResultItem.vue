@@ -30,9 +30,10 @@
                 </div>
             </div>
 
-            <router-link to="/chats" tag="a" class="plz-short-friend-is-active text-body mr-2 ml-auto">
-                <IconMessageShort />
-            </router-link>
+            <button @click.prevent="goToDialogWithFriend()" type="button" class="plz-short-friend-is-active btn btn-link text-body mr-2 ml-auto">
+                <IconSpinner v-if="isInRedirecting" />
+                <IconMessageShort v-else />
+            </button>
 
             <a class="text-body" @click="sendFriendshipInvitation(srItem.id, srItem.fullName)">
                 <IconAddUser style="width: 24px; height: 24px;" />
@@ -45,21 +46,35 @@
 <script>
 import IconLocation from '../icons/IconLocation.vue';
 import IconMessage from '../icons/IconMessage.vue';
-import IconMessageShort from '../icons/IconMessageShort';
+import IconMessageShort from '../icons/IconMessageShort.vue';
+import IconSpinner from '../icons/IconSpinner.vue';
 import IconAddUser from '../icons/IconAddUser.vue';
 
+import DialogMixin from '../mixins/DialogMixin.js';
+import FriendshipInvitationMixin from '../mixins/FriendshipInvitationMixin.js';
+
 import PliziUser from '../classes/PliziUser.js';
-import FriendshipInvitationMixin from "../mixins/FriendshipInvitationMixin";
 
 export default {
 name : 'SearchResultItem',
-components: {IconMessageShort, IconAddUser, IconMessage, IconLocation},
-mixins: [FriendshipInvitationMixin],
+components: {IconMessageShort, IconAddUser, IconMessage, IconSpinner, IconLocation},
+mixins: [FriendshipInvitationMixin, DialogMixin],
 props : {
     srItem : PliziUser
 },
 
+data(){
+    return {
+        isInRedirecting: false
+    }
+},
+
 methods: {
+    goToDialogWithFriend(){
+        this.isInRedirecting = true;
+        this.openDialogWithFriend( this.srItem );
+        this.$root.$router.push('/chats');
+    },
 }
 }
 </script>
