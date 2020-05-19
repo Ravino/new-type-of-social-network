@@ -8,7 +8,7 @@ class User extends BaseModel
     protected $table = 'User';
     protected $connectionName = 'neo4j';
 
-    protected $fillable = ['name', 'email', 'id'];
+    protected $fillable = ['name', 'email', 'id', 'oid'];
 
     public function friends()
     {
