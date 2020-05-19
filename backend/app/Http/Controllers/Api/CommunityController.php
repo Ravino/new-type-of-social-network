@@ -184,7 +184,7 @@ class CommunityController extends Controller
         $community = Community::find($id);
         if($community) {
             if(!$community->users->contains(auth()->user()->id)) {
-                $community->users()->attach(auth()->user()->id, ['role' => Community::ROLE_USER]);
+                $community->users()->attach(auth()->user()->id, ['role' => Community::ROLE_USER, 'created_at' => time(), 'updated_at' => time()]);
                 event(new CommunitySubscribe($community->id, auth()->user()->id));
                 return response()->json([
                     'data' => [
