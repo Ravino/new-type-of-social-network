@@ -225,11 +225,34 @@ created(){
     this.$root.$on('UserNotification', (evData)=>{
         this.$root.$auth.nm.onAddNewNotification(evData);
 
-        if (evData.data.notificationType === `friendships.sent`) {
+        if (evData.data.notificationType === 'friendships.sent') {
             this.$root.$auth.im.onAddNewInvitation(evData);
         }
+
+        if (evData.data.notificationType === 'friendships.accepted') {
+            this.$root.$auth.frm.onAddAcceptOurInvitation(evData);
+        }
     });
+},
+
+beforeDestroy() {
+    this.$root.$off('afterSuccessLogin', ()=>{});
+    this.$root.$off('afterSuccessLogout', ()=>{});
+
+    this.$root.$off('AfterUserLoad', ()=>{});
+    this.$root.$off('AfterUserRestore', ()=>{});
+
+    this.$root.$off('searchStart', ()=>{});
+
+    this.$root.$off('api:Unauthorized', ()=>{});
+
+    this.$root.$off('alertModal', ()=>{});
+    this.$root.$off('hideAlertModal', ()=>{});
+
+    this.$root.$off('NewChatDialog', ()=>{});
+    this.$root.$off('UserNotification', ()=>{});
 }
+
 
 }
 </script>

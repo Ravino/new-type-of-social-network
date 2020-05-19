@@ -17,7 +17,7 @@
 </template>
 
 <script>
-import InvitationItem from './InvitationItem.vue'
+import InvitationItem from './InvitationItem.vue';
 
 export default {
 name : 'InvitationsList',
