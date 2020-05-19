@@ -100,11 +100,11 @@
                 <div class="form-group row border-bottom">
                     <label for="url"
                            class="plz-account-settings-body-label col-6 col-sm-4 col-lg-4 ">
-                        Адрес старницы
+                        Адрес страницы
                     </label>
                     <div class="plz-account-settings-body-field order-1 order-sm-0 col-12 col-sm-5 col-lg-6 ">
                         <div class="input-group-prepend">
-                            <span class="input-group-text" id="basic-addon1">http://plizi.com/</span>
+                            <span class="input-group-text">http://plizi.com/</span>
                         </div>
                         <input type="text"
                                id="url"
