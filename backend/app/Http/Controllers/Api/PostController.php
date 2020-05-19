@@ -70,7 +70,7 @@ class PostController extends Controller
      */
     public function userPosts(Request $request, $id) {
         $user = User::find($id);
-        $posts = Post::getWithoutOldPosts($user, $request->query('limit'), $request->query('offset'));
+        $posts = Post::getWithoutOldPosts($user, $request->query('limit'), $request->query('offset'), true);
 
         return new PostCollection($posts);
     }
