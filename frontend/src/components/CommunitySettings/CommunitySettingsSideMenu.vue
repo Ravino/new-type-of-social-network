@@ -12,7 +12,7 @@
             <hr>
             <router-link tag="a" :to="{name: 'CommunityPage', params: {id: id}}"
                          class="list-group-item list-group-item-action border-0 py-2">
-                <i class="fa fa-share mr-2"> Назад</i>
+                <i class="fa fa-share mr-2"> </i>Назад
             </router-link>
         </div>
     </div>
