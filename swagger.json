@@ -568,7 +568,7 @@
                     "Communities"
                 ],
                 "description": "Добавить сообщество в избранные",
-                "operationId": "сommunitiesFavoriteAdd",
+                "operationId": "communitiesFavoriteAdd",
                 "requestBody": {
                     "description": "ID пользователя которго требуется добавить в друзья",
                     "content": {
@@ -622,7 +622,7 @@
                     "Communities"
                 ],
                 "description": "Удаление сообщества из избранных",
-                "operationId": "сommunitiesFavoriteDelete",
+                "operationId": "communitiesFavoriteDelete",
                 "parameters": [
                     {
                         "name": "groupId",
