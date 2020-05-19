@@ -4,6 +4,9 @@ $portraitFullHeight: 750px;
 
 .plz-gallery {
     position: relative;
+    &-message {
+        width: 400px !important;
+    }
     &-wrap {
         overflow: hidden;
         height: $portraitFullHeight;

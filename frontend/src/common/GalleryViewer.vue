@@ -1,7 +1,8 @@
 <template>
-    <div class="plz-gallery-viewer d-flex align-items-center justify-content-center">
-        <div class="plz-gallery-viewer-overflow" @click="close"></div>
-        <div class="plz-gallery-viewer-nav d-flex justify-content-between ">
+    <div class="plz-gallery-viewer" :class="{'plz-gallery-viewer-msg' : isMessage}">
+        <button class="plz-gallery-viewer-close" @click="close"></button>
+        <div class="plz-gallery-viewer-overflow" :style="{'background-image': `linear-gradient(to right, rgba(0, 0, 0, .85) 0%, rgba(0, 0, 0, .85) 100%),url('${activeImage.image.normal.path}')`}" @click="close"></div>
+        <div class="plz-gallery-viewer-nav" :class="{'plz-gallery-viewer-msg' : isMessage}">
             <div class="plz-gallery-viewer-nav-btn plz-gallery-viewer-nav-btn-prev" @click="prevImage">
                 <IconArrowLeft/>
             </div>
@@ -9,82 +10,86 @@
                 <IconArrowRight/>
             </div>
         </div>
-        <div class="plz-gallery-viewer-current d-flex align-items-center justify-content-center">
+        <div class="plz-gallery-viewer-current">
             <img :src="activeImage.image.original.path" :alt="activeImage.originalName">
         </div>
     </div>
 </template>
 
 <script>
-import IconArrowLeft from "../icons/IconArrowLeft.vue";
-import IconArrowRight from "../icons/IconArrowRight.vue";
-
+import IconArrowLeft from "../icons/IconArrowLeft";
+import IconArrowRight from "../icons/IconArrowRight";
 export default {
-name: 'GalleryViewer',
-components: {IconArrowRight, IconArrowLeft},
-props: {
-    images: {
-        type: Array,
-        default: () => [],
+    name: 'GalleryViewer',
+ components: {IconArrowRight, IconArrowLeft},
+ props: {
+        images: {
+            type: Array,
+            default: () => [],
+        },
+        isMessage: {
+         type: Boolean,
+         default: false,
+        },
+        activeId: {
+            type: Number,
+        },
     },
-    activeId: {
-        type: Number,
+    data() {
+        return {
+            activeImage: null,
+        };
     },
-},
-data() {
-    return {
-        activeImage: null,
-    };
-},
-created() {
-    if (this.activeId) {
-        const image = this.images.find(image => image.id === this.activeId);
+    created() {
+        if (this.activeId) {
+            const image = this.images.find(image => image.id === this.activeId);
 
-        if (image) {
+            if (image) {
+                this.activeImage = image;
+            }
+        }
+
+        if (!this.activeImage && this.images.length > 0) {
+            this.activeImage = this.images.slice(0, 1).pop();
+        }
+        this.setBodyOverflow('hidden');
+    },
+ destroyed() {
+  this.setBodyOverflow('auto');
+ },
+    computed: {
+        currentImageIndex() {
+            return this.images.findIndex(image => image.id === this.activeImage.id);
+        },
+    },
+    methods: {
+        prevImage() {
+            const prevImageIndex = this.currentImageIndex - 1;
+
+            if (prevImageIndex >= 0 && this.images[prevImageIndex]) {
+                this.activeImage = this.images[prevImageIndex];
+            } else {
+                this.goToImage([...this.images].pop());
+            }
+        },
+        nextImage() {
+            const nextImageIndex = this.currentImageIndex + 1;
+
+            if (nextImageIndex >= 0 && this.images[nextImageIndex]) {
+                this.activeImage = this.images[nextImageIndex];
+            } else {
+                this.goToImage([...this.images].shift());
+            }
+        },
+        close() {
+            this.$emit('close');
+        },
+        goToImage(image) {
             this.activeImage = image;
-        }
+        },
+       setBodyOverflow(overflow) {
+          document.querySelector('body').style.overflow = overflow;
+      }
     }
-
-    if (!this.activeImage && this.images.length > 0) {
-        this.activeImage = this.images.slice(0, 1).pop();
-    }
-
-    this.setBodyOverflow('hidden');
-},
-destroyed() {
-    this.setBodyOverflow('auto');
-},
-computed: {
-    currentImageIndex() {
-        return this.images.findIndex(image => image.id === this.activeImage.id);
-    },
-},
-methods: {
-    prevImage() {
-        const prevImageIndex = this.currentImageIndex - 1;
-
-        if (prevImageIndex >= 0 && this.images[prevImageIndex]) {
-            this.activeImage = this.images[prevImageIndex];
-        } else {
-            this.activeImage = [...this.images].pop();
-        }
-    },
-    nextImage() {
-        const nextImageIndex = this.currentImageIndex + 1;
-
-        if (nextImageIndex >= 0 && this.images[nextImageIndex]) {
-            this.activeImage = this.images[nextImageIndex];
-        } else {
-            this.activeImage = [...this.images].shift();
-        }
-    },
-    close() {
-        this.$emit('close');
-    },
-    setBodyOverflow(overflow) {
-        document.querySelector('body').style.overflow = overflow;
-    }
-}
 }
 </script>
-

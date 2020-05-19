@@ -4,6 +4,7 @@
             <Gallery v-if="attachItem"
                      :images="imageList"
                      class="message-sended-image"
+                     :isMessage="isMessage"
             >
             </Gallery>
             <span v-else class="message-sended-attach d-flex align-items-center mb-2">
@@ -30,6 +31,11 @@ components : {Gallery, IconZip },
 props : {
     message : PliziMessage
 },
+ data() {
+    return {
+     isMessage: true,
+    }
+ },
 computed:{
     isArchive(){
         const ext = this.attach.originalName.split('.').pop().toLowerCase();
