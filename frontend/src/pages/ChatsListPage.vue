@@ -233,7 +233,7 @@ methods: {
             ++this.dialogsListUpdater;
         });
 
-        this.$root.$on('newMessageInDialog', this.addNewMessageNotification);
+        this.$root.$on('newMessageInDialog', this.addNewChatMessageToList);
         this.$root.$on('newMessageInDialog', this.addNewMessageNotification);
 
         this.$root.$on('removeMessageInDialog', (evData)=>{
@@ -248,10 +248,10 @@ created(){
     this.addListeners();
 },
 
-beforeDestroy() {
-    this.$root.$off('newMessageInDialog', ()=>{});
-    this.$root.$off('removeMessageInDialog', ()=>{});
-}
+//beforeDestroy() {
+//    this.$root.$off('newMessageInDialog', ()=>{});
+//    this.$root.$off('removeMessageInDialog', ()=>{});
+//}
 
 }
 </script>
