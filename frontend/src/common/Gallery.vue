@@ -1,8 +1,5 @@
 <template>
-    <div class="plz-gallery"
-         :class="[`plz-gallery-${galleryType}`,
-        {'plz-gallery-message': isMessage}]"
-    >
+    <div class="plz-gallery" :class="[`plz-gallery-${galleryType}`]">
         <div v-if="galleryType === 'album'" class="plz-gallery-wrap plz-gallery-wrap-album">
             <template v-for="image in imagesWithClasses">
                 <img
@@ -31,7 +28,6 @@
         </template>
         <div class="plz-gallery__show" v-if="activeImageId">
             <GalleryViewer
-                :isMessage="isMessage"
                 :images="images"
                 :active-id="activeImageId"
                 @close="activeImageId = null">
@@ -57,10 +53,6 @@ export default {
    post: {
     type: Object,
    },
-   isMessage: {
-    type: Boolean,
-    default: false,
-   }
   },
 data() {
     return {

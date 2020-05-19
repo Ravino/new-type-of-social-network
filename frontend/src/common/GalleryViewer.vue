@@ -1,13 +1,19 @@
 <template>
-    <div class="plz-gallery-viewer" :class="{'plz-gallery-viewer-msg' : isMessage}">
+    <div class="plz-gallery-viewer">
         <button class="plz-gallery-viewer-close" @click="close"></button>
-        <div class="plz-gallery-viewer-overflow" :style="{'background-image': `linear-gradient(to right, rgba(0, 0, 0, .85) 0%, rgba(0, 0, 0, .85) 100%),url('${activeImage.image.normal.path}')`}" @click="close"></div>
-        <div class="plz-gallery-viewer-nav" :class="{'plz-gallery-viewer-msg' : isMessage}">
+        <div class="plz-gallery-viewer-overflow"
+             :style="{'background-image':
+             `linear-gradient(to right, rgba(0, 0, 0, .85) 0%, rgba(0, 0, 0, .85) 100%),
+             url('${activeImage.image.normal.path}')`}"
+             @click="close"
+        >
+        </div>
+        <div class="plz-gallery-viewer-nav">
             <div class="plz-gallery-viewer-nav-btn plz-gallery-viewer-nav-btn-prev" @click="prevImage">
-                <IconArrowLeft/>
+                <img src="../images/gallery/arrow-left.svg" alt="prev">
             </div>
             <div class="plz-gallery-viewer-nav-btn plz-gallery-viewer-nav-btn-next" @click="nextImage">
-                <IconArrowRight/>
+                <img src="../images/gallery/arrow-right.svg" alt="next">
             </div>
         </div>
         <div class="plz-gallery-viewer-current">
@@ -17,19 +23,12 @@
 </template>
 
 <script>
-import IconArrowLeft from "../icons/IconArrowLeft";
-import IconArrowRight from "../icons/IconArrowRight";
 export default {
     name: 'GalleryViewer',
- components: {IconArrowRight, IconArrowLeft},
- props: {
+    props: {
         images: {
             type: Array,
             default: () => [],
-        },
-        isMessage: {
-         type: Boolean,
-         default: false,
         },
         activeId: {
             type: Number,
