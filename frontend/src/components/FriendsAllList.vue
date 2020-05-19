@@ -13,7 +13,7 @@
             </transition-group>
         </ul>
 
-        <div v-else class="alert alert-info w-100 p-5 text-center">
+        <div v-else class="alert alert-info w-100 p-5 text-center mb-0">
             <p v-if="wMode==='all'">Вы ещё ни с кем не подружились.</p>
             <p v-if="wMode==='online'">Сейчас все друзья оффлайн.</p>
             <p v-if="wMode==='favorites'">Вы никого не добавили в Избранные.</p>

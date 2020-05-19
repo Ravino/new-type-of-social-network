@@ -145,6 +145,8 @@ $portraitFullHeight: 750px;
         max-height: calc(100vh - 200px);
         img {
             max-width: 100%;
+            max-height: calc(100vh - 200px);
+            user-select: none;
         }
     }
 }
