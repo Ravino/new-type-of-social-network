@@ -16,7 +16,7 @@
                         Тип сообщества
                     </label>
                     <div class="plz-account-settings-body-field col-sm-6 col-md-6 col-lg-6 col-xl-6">
-                        <div class="d-flex align-items-center w-100 position-relative pl-4 ">
+                        <div class="d-flex align-items-center w-100 position-relative">
                             <i v-if="Number(model.privacy) !== 1" class="fas fa-lock mr-2"></i>
                             <i v-else class="fas fa-unlock mr-2"></i>
                             <div class="w-100 position-relative ml-n2">
@@ -41,7 +41,7 @@
                         Тематика сообщества
                     </label>
                     <div class="plz-account-settings-body-field col-sm-6 col-md-6 col-lg-6 col-xl-6">
-                        <div class="d-flex align-items-center w-100 position-relative pl-4 ">
+                        <div class="d-flex align-items-center w-100 position-relative">
                             <div class="w-100 position-relative ml-n2">
                                 <select v-model="model.themeId" id="themeId" ref="themeId"
                                         @change="accountStartSaveData(model.themeId, 'themeId')"
