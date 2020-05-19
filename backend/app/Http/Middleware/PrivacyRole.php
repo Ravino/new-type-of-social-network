@@ -14,7 +14,7 @@ class PrivacyRole
         if ($user instanceof User) {
             $privacySettingPermissionRole = $user->privacySettings->role($privacyPermission)->first();
             $userPrivacyRole = $user->getUserPrivacyRole(\Auth::user());
-            if ((int) $privacySettingPermissionRole->priority > (int) $userPrivacyRole->priority) {
+            if ((int) $privacySettingPermissionRole->priority > (int) $userPrivacyRole->priority && $userId !== $user->id) {
                 return response()->json(['message' => 'Not allowed'], 403);
             }
         } else {
