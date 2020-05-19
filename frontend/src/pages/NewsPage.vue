@@ -131,7 +131,7 @@ methods: {
         let response = null;
 
         try {
-            response = await this.$root.$api.$post.getPosts(limit, offset);
+            response = await this.$root.$api.$post.getNews(limit, offset);
         } catch (e) {
             this.enabledPostLoader = false;
             console.warn(e.message);

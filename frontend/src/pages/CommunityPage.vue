@@ -12,10 +12,10 @@
                         <div class="plz-community-header-pic position-relative overflow-hidden">
                             <img :src="headerImage" alt="image">
                         </div>
-                        <div class="plz-community-header-bottom d-flex align-items-start align-items-sm-center justify-content-between py-3 px-4">
-                            <div class="plz-community-header-details d-flex align-items-center">
+                        <div class="plz-community-header-bottom d-flex flex-wrap align-items-start justify-content-between py-3 px-4">
+                            <div class="plz-community-header-details d-flex align-items-start flex-wrap flex-sm-nowrap justify-content-center justify-content-sm-start">
                                 <template v-if="isAuthor">
-                                    <label for="communityPrimaryImage" class="community-primary-image mr-3 cursor-pointer plz-community-header-logo position-relative mr-3">
+                                    <label for="communityPrimaryImage" class="community-primary-image cursor-pointer plz-community-header-logo position-relative mb-4 mb-sm-3 mx-0 mr-sm-3">
                                         <img ref="communityAvatar" :src="avatarMedium" :alt="communityData.name" />
                                     </label>
 
@@ -35,7 +35,7 @@
                                     </p>
                                 </div>
                             </div>
-                            <div class="plz-community-subscribe file-label d-flex align-items-center justify-content-between">
+                            <div class="plz-community-subscribe file-label d-flex align-items-center mt-4 justify-content-between mx-auto mx-md-0">
 
                                 <button v-if="subscribeType === 'new'"
                                         class="btn align-items-center justify-content-center d-flex w-75 border-right m-0"
