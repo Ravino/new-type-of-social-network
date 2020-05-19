@@ -24,6 +24,9 @@ RUN apt-get update \
  && apt-get clean \
  && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/* /usr/share/doc/*
 
+RUN pecl install mongodb \
+    && docker-php-ext-enable mongodb
+
 WORKDIR /app
 
 EXPOSE 5555

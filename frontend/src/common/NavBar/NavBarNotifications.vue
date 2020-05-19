@@ -4,19 +4,29 @@
             <span data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" id="dropdownMenuLikes"
                   @click="onShowNotifications">
                 <IconBell />
-                <span v-if="notificationsNumber() > 0" class="counter-info">
-                    {{notificationsNumber()}}
+                <span v-if="notificationsNumber > 0" class="counter-info">
+                    {{notificationsNumber}}
                 </span>
             </span>
 
-            <div v-if="notificationsNumber() > 0" aria-labelledby="dropdownMenuLikes"
+            <div v-if="notificationsNumber > 0" aria-labelledby="dropdownMenuLikes"
                 class="notifications-likes-dropdown dropdown-menu dropdown-menu-right pt-3 pb-0 dropdown-white w-auto">
                 <ul class="list-unstyled mb-0">
-                    <NotificationItem v-for="notifItem in notificationsList()"
+                    <NotificationItem v-for="notifItem in notificationsList"
                                       v-bind:notification="notifItem"
                                       v-bind:key="notifItem.id">
                     </NotificationItem>
                 </ul>
+
+                <vue-custom-scrollbar class="notifications-likes-scroll"
+                                          :settings="customScrollbarSettings">
+                    <ul class="list-unstyled mb-0">
+                        <NotificationItem v-for="notifItem in notificationsList"
+                                          v-bind:notification="notifItem"
+                                          v-bind:key="notifItem.id">
+                        </NotificationItem>
+                    </ul>
+                </vue-custom-scrollbar>
                 <div class="notifications-likes-dropdown-footer border-top">
                     <router-link to="/notifications" tag="a"
                                  class="notifications-link d-block text-center pt-1 pb-3">
@@ -34,7 +44,20 @@ import NotificationItem from '../NotificationItem.vue';
 
 export default {
 name : 'NavBarNotifications',
-components : { IconBell, NotificationItem },
+components : {
+    IconBell, NotificationItem,
+    vueCustomScrollbar,
+},
+
+data(){
+    return {
+        //notificationsNumber : 0,
+        customScrollbarSettings: {
+            maxScrollbarLength: 60,
+            suppressScrollX: true, // rm scroll x
+        }
+    }
+},
 
 methods : {
     async onShowNotifications(){
@@ -59,11 +82,11 @@ methods : {
      });
     },
      notificationsNumber(){
-      return this.$root.$auth.nm.size;
+        return this.$root.$auth.nm.size;
      },
 
      notificationsList(){
-      return this.$root.$auth.nm.asArray();
+         return this.$root.$auth.nm.asArray();
      }
 },
 created(){
@@ -77,6 +100,5 @@ mounted() {
 updated() {
  this.eventOnHideDropdown();
 }
-
 }
 </script>

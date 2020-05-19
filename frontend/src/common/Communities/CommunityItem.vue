@@ -20,18 +20,26 @@
 <!--                    <p class="plizi-community-item-notice p-0 mb-1">-->
 <!--                        {{ community.notice }}</p>-->
                     <p v-else-if="community.notice" class="plizi-community-item-notice p-0 my-0 text-secondary">{{ community.notice }}</p>
-                    <p v-else class="plizi-community-item-location p-0 my-0 text-secondary">{{ community.location }}</p>
+                    <p v-else class="plizi-community-item-location p-0 my-0 text-secondary">{{ locationLabel }}</p>
 
                     <p class="plizi-community-item-members-number p-0 my-0">{{ community.totalMembers }} участников </p><!--TODO @Veremey check this?-->
                 </div>
 
                 <div class="plizi-community-item-body-bottom d-flex flex-column-reverse flex-xl-row align-items-center justify-content-between mt-3 mt-xl-0">
-                    <button v-if="canSubscribe" type="button" class="btn plz-btn-outline  plizi-community-btn rounded-pill" @click="subscribeInvite()">
+                    <button v-if="subscribeType === 'new'" type="button"
+                            class="btn plz-btn-outline  plizi-community-btn rounded-pill"
+                            @click="subscribeInvite(community)">
                         Подписаться
                     </button>
-                    <button v-else type="button" class="btn btn-outline-danger plizi-community-btn  rounded-pill" @click="unsubscribeInvite()">
+                    <button v-else-if="subscribeType === 'exists'" type="button"
+                            class="btn btn-outline-danger plizi-community-btn  rounded-pill"
+                            @click="unsubscribeInvite(community)">
                         Отписаться
                     </button>
+                    <router-link :to="{name: 'CommunitySettingsPage', params: {id: community.id}}" v-else type="button"
+                                 class="btn btn-outline-danger plizi-community-btn  rounded-pill">
+                        Управление
+                    </router-link>
                     <div class="plizi-community-item-body-friends d-flex flex-wrap align-items-center justify-content-between mb-2 mb-xl-0" v-if="community.totalFriends">
                         <div class="plizi-community-item-body-friends-pics mr-3">
                             <div class="plizi-community-item-body-friends-pic position-relative rounded-circle"
@@ -55,90 +63,45 @@ import IconMessageShort from '../../icons/IconMessageShort';
 import IconAddUser from '../../icons/IconAddUser.vue';
 
 import PliziCommunity from '../../classes/PliziCommunity.js';
+import CommunitiesSubscribeMixin from '../../mixins/CommunitiesSubscribeMixin';
 
 export default {
 name : 'CommunityItem',
 components: {IconMessageShort, IconAddUser, IconMessage, IconLocation},
-
+mixins: [CommunitiesSubscribeMixin],
 props : {
     community : PliziCommunity,
-    canSubscribe: Boolean
 },
 computed: {
     avatar() {
         return this.community.avatar?.image.thumb.path || this.community.primaryImage;
+    },
+    subscribeType() {
+        return this.getSubscribeType(this.community);
+    },
+    locationLabel() {
+        const location = [];
+        const country = this.community.location?.country.title.ru;
+        if (country) {
+            location.push(country);
+        }
+        const region = this.community.location?.region.title.ru;
+        if (region) {
+            location.push(region);
+        }
+        const city = this.community.location?.title.ru;
+        if (city) {
+            location.push(city);
+        }
+        return location.join(', ');
     }
 },
 methods: {
-    subscribeInvite(){
-        this.subscribeOnCommunity(this.community);
-    },
     /**
      * @param {PliziMember} user
      */
     getAvatar(user) {
         return user.profile.avatar?.image.thumb.path || user.profile.userPic;
-    },
-    unsubscribeInvite(){
-        this.unsubscribeCommunity(this.community);
-    },
-
-    /**
-     * @param {PliziCommunity} community
-     * @returns {object|null}
-     */
-    async subscribeOnCommunity(community) {
-        let apiResponse = null;
-
-        try {
-            apiResponse = await this.$root.$api.$communities.subscribe(community.id);
-        }
-        catch (e){
-            window.console.warn(e.detailMessage);
-            throw e;
-        }
-
-        window.console.log(apiResponse, `apiResponse`);
-
-        if (apiResponse) {
-            if (apiResponse.status  &&  apiResponse.status===422) {
-                this.$root.$alert(`Вы уже подписаны на ${community.name}`, 'bg-info', 3);
-            }
-            else {
-                this.$root.$alert(`Вы успешно подписались на сообщество ${community.name}`, 'bg-success', 3);
-            }
-        }
-        else {
-            this.$root.$alert(`Не получилось подписаться на ${community.name}`, 'bg-warning', 3);
-        }
-
-        return true;
-    },
-
-
-    /**
-     * @param {PliziCommunity} community
-     * @returns {object|null}
-     */
-    async unsubscribeCommunity(community) {
-        let apiResponse = null;
-
-        try {
-            apiResponse = await this.$root.$api.$communities.unsubscribe(community.id);
-        }
-        catch (e){
-            window.console.warn(e.detailMessage);
-            throw e;
-        }
-
-        if (apiResponse) {
-            this.$root.$alert(`Вы успешно отписались от ${community.name}`, 'bg-success', 3);
-        }
-        else {
-            this.$root.$alert(`Не получилось отписаться от ${community.name}`, 'bg-warning', 3);
-        }
-
-        return true;
     },
 }
 }

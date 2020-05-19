@@ -49,6 +49,16 @@ $postPosterPicSize: 48px;
     .post-main-text {
         color: $postTextColor;
         font-weight: 300;
+        word-break: break-all;
+
+        a {
+            color: $postTextColor;
+            text-decoration: underline;
+
+            &:hover {
+                text-decoration: none;
+            }
+        }
     }
 
     .post-pictures-list {
@@ -113,5 +123,9 @@ $postPosterPicSize: 48px;
             height: 17px;
             margin: 0 .25rem;
         }
+    }
+
+    img {
+        max-width: 100%;
     }
 }

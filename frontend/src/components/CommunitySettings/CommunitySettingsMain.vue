@@ -50,8 +50,10 @@
                         <textarea type="text"
                                   id="description"
                                   class="w-100 w-sm-75"
+                                  :class="[isEdit.description ? 'form-control' : 'form-control-plaintext', { 'is-invalid': !!descriptionError,
+                                                                                                                'is-valid': isSuccessDescription }]"
                                   v-model="model.description"
-                                  :class="[isEdit.description ? 'form-control' : 'form-control-plaintext', { 'is-invalid': !!descriptionError, 'is-valid': isSuccessDescription }]"
+                                  placeholder="Добавьте описание"
                                   @blur="finishFieldEdit(`description`)"
                                   :readonly="!isEdit.description"
                                   ref="description">
@@ -98,11 +100,11 @@
                 <div class="form-group row border-bottom">
                     <label for="url"
                            class="plz-account-settings-body-label col-6 col-sm-4 col-lg-4 ">
-                        Адрес старницы
+                        Адрес страницы
                     </label>
                     <div class="plz-account-settings-body-field order-1 order-sm-0 col-12 col-sm-5 col-lg-6 ">
                         <div class="input-group-prepend">
-                            <span class="input-group-text" id="basic-addon1">http://plizi.com/</span>
+                            <span class="input-group-text">http://plizi.com/</span>
                         </div>
                         <input type="text"
                                id="url"
@@ -383,6 +385,15 @@
                     response = await this.$root.$api.$communities.update(this.community.id, formData);
                 } catch (e) {
                     console.warn(e.detailMessage);
+                    if (e.status === 422) {
+                        const inpRef = this.getRef(fieldName);
+
+                        if (inpRef) {
+                            inpRef.focus();
+                        }
+                        this.isEdit[fieldName] = true;
+                        this.serverRegMessages[fieldName] = e.data?.errors[fieldName][0];
+                    }
                 }
 
                 if (response !== null) {

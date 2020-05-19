@@ -136,7 +136,7 @@ class PliziCommunity {
         this._id = inputData.id;
         this._name = inputData.name;
         this._description = inputData.description;
-        this._location = inputData.location  ? new PliziLocation(inputData.location) : null;;
+        this._location = inputData.location ? new PliziLocation(inputData.location) : null;
         this._notice = inputData.notice;
         this._primaryImage = inputData.primaryImage;
         this._url = inputData.url;
@@ -210,6 +210,10 @@ class PliziCommunity {
 
     get role(){
         return this._role;
+    }
+
+    set role(value){
+        this._role = value;
     }
 
     get members(){

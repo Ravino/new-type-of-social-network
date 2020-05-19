@@ -1,11 +1,11 @@
 <template>
     <div class="container-fluid pl-md-0">
         <div class="row">
-            <div class="col-12 col-md-1 ">
+            <div class="col-12 col-md-1  px-0 px-md-3">
                 <AccountToolbarLeft></AccountToolbarLeft>
             </div>
 
-            <div class="col-12 col-md-11 col-xl-8 pr-0 pr-xl-3">
+            <div class="col-12 col-md-11 col-xl-8 pr-0 pr-xl-3 px-0 px-md-3">
                 <div class="container">
                     <ProfileHeader v-bind:userData="userData" v-bind:isOwner="true"></ProfileHeader>
 
@@ -196,9 +196,9 @@ methods : {
 
         if ( response !== null ){
             this.enabledPostLoader = false;
-            response.map( ( post ) => {
-                this.userPosts.push( new PliziPost( post ) );
-            } );
+            response.map((post) => {
+                this.userPosts.push(new PliziPost(post));
+            });
 
             return response.length;
         }
@@ -268,10 +268,14 @@ async mounted() {
 
     this.$root.$on('wallPostsSelect', this.wallPostsSelectHandler);
     await this.getPosts();
-
     window.addEventListener('scroll', this.onScrollYPage);
+
     //await this.loadMyFriends();
-}
+},
+    beforeRouteLeave(to, from, next) {
+        window.removeEventListener('scroll', this.onScrollYPage);
+        next();
+    },
 }
 </script>
 

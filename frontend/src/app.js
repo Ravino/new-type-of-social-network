@@ -54,6 +54,17 @@ Vue.prototype.$auth = null;
 Vue.prototype.$lastSearch = ``;
 
 /**
+ * текст последнего поиска сообществ
+ * добавляем глобально, на использовать будем только от this.$root
+ * @type {Object}
+ */
+Vue.prototype.$lastCommunitiesSearch = {
+    popular: '',
+    my: '',
+    owner: '',
+};
+
+/**
  * добавляем глобально, на использовать будем только от this.$root
  * @type {PliziAPI|PliziAPIClass}
  */

@@ -5,11 +5,18 @@ class PliziCommunitiesAPI extends PliziBaseAPI {
 
     /**
      * Получение списка сообществ
+     * @param {string} searchText
+     * @param {number} limit
+     * @param {number} offset
      * @returns {object[]|null}
      * @throws PliziAPIError
      */
-    async loadCommunities(){
-        let response = await this.axios.get( 'api/communities', this.authHeaders )
+    async loadCommunities(searchText = '', limit = 20, offset = 0){
+        const search = searchText
+            ? `?search=${searchText}&limit=${limit}&offset=${offset}`
+            : `?limit=${limit}&offset=${offset}`;
+        const url = 'api/communities' + search;
+        let response = await this.axios.get( url, this.authHeaders )
             .catch( ( error ) => {
                 this.checkIsTokenExpires( error, `$communities.loadCommunities` );
                 throw new PliziAPIError( `$communities.loadCommunities`, error.response );
@@ -24,11 +31,18 @@ class PliziCommunitiesAPI extends PliziBaseAPI {
 
     /**
      * Получение списка сообществ для управления
+     * @param {string} searchText
+     * @param {number} limit
+     * @param {number} offset
      * @returns {object[]|null}
      * @throws PliziAPIError
      */
-    async loadManagedCommunities() {
-        let response = await this.axios.get('api/communities?list=owner', this.authHeaders)
+    async loadManagedCommunities(searchText = '', limit = 20, offset = 0) {
+        const search = searchText
+            ? `&search=${searchText}&limit=${limit}&offset=${offset}`
+            : `&limit=${limit}&offset=${offset}`;
+        const url = 'api/communities?list=owner' + search;
+        let response = await this.axios.get(url, this.authHeaders)
             .catch((error) => {
                 this.checkIsTokenExpires(error, `$communities.loadManagedCommunities`);
                 throw new PliziAPIError(`$communities.loadManagedCommunities`, error.response);
@@ -41,9 +55,20 @@ class PliziCommunitiesAPI extends PliziBaseAPI {
         return null;
     }
 
-
-    async userCommunities(){
-        let response = await this.axios.get( 'api/communities?list=my', this.authHeaders )
+    /**
+     * Получение списка сообществ пользователя.
+     * @param {string} searchText
+     * @param {number} limit
+     * @param {number} offset
+     * @returns {object[]|null}
+     * @throws PliziAPIError
+     */
+    async userCommunities(searchText = '', limit = 20, offset = 0) {
+        const search = searchText
+            ? `&search=${searchText}&limit=${limit}&offset=${offset}`
+            : `&limit=${limit}&offset=${offset}`;
+        const url = 'api/communities?list=my' + search;
+        let response = await this.axios.get(url, this.authHeaders )
             .catch( ( error ) => {
                 this.checkIsTokenExpires( error, `$communities.userCommunities` );
                 throw new PliziAPIError( `$communities.userCommunities`, error.response );
@@ -151,11 +176,20 @@ class PliziCommunitiesAPI extends PliziBaseAPI {
     /**
      * Получение постов сообщества
      * @param {number} communityID - ID сообщества, посты которого пытаемся получить
+     * @param {number} limit
+     * @param {number} offset
      * @returns {object[]|null}
      * @throws PliziAPIError
      */
-    async posts(communityID){
-        let response = await this.axios.get( `api/communities/${communityID}/posts`, this.authHeaders )
+    async posts(communityID, limit, offset){
+        let path = `api/communities/${communityID}/posts`;
+        let qParams = '';
+
+        if (limit && offset) {
+            qParams = `?limit=${limit}&offset=${offset}`;
+        }
+
+        let response = await this.axios.get( path + qParams, this.authHeaders )
             .catch( ( error ) => {
                 this.checkIsTokenExpires( error, `$communities.posts` );
                 throw new PliziAPIError( `$communities.posts`, error.response );

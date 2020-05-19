@@ -128,10 +128,3 @@
     }
 </script>
 
-<style lang="scss">
-    .modal {
-        .btn-submit {
-            background-color: #1554F7 !important;
-        }
-    }
-</style>
