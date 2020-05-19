@@ -15,6 +15,18 @@ $portraitFullHeight: 750px;
         object-fit: cover;
         cursor: pointer;
         padding: 5px;
+        width: 100%;
+
+        &-more {
+            position: relative;
+            &:before {
+                content: attr(data-more);
+                z-index: 3000;
+                position: absolute;
+                height: 100%;
+                width: 100%;
+            }
+        }
 
         &-album {
             &-full {
@@ -22,11 +34,13 @@ $portraitFullHeight: 750px;
             }
 
             &-half {
-                width: calc(100% / 2 - 5px);
+                height: 50%;
+                width: calc(100% / 2);
             }
 
             &-third {
-                width: calc(100% / 3 - 5px);
+                width: calc(100% / 3);
+                height: 150px;
             }
 
             &-2 {
@@ -35,7 +49,6 @@ $portraitFullHeight: 750px;
             &-3 {
                 height: $portraitFullHeight / 2;
             }
-
         }
 
         &-portrait {
@@ -66,11 +79,11 @@ $portraitFullHeight: 750px;
             }
 
             &-half {
-                height: $portraitFullHeight/ 2;
+                height: $portraitFullHeight / 2;
             }
 
             &-third {
-                height: $portraitFullHeight/ 3;
+                height: $portraitFullHeight / 3;
             }
         }
     }
@@ -79,70 +92,3 @@ $portraitFullHeight: 750px;
         display: flex;
     }
 }
-
-
-.plz-gallery-viewer {
-    position: fixed;
-    width: 100vw;
-    height: 100vh;
-    z-index: 10000;
-    top: 0;
-    left: 0;
-
-    &-overflow {
-        position: absolute;
-        top: 0;
-        left: 0;
-        height: 100%;
-        width: 100%;
-        background: #000;
-        opacity: 0.7;
-        cursor: pointer;
-
-        &:before {
-            content: '';
-            position: absolute;
-            top: 50px;
-            right: 20px;
-            display: inline-block;
-            vertical-align: middle;
-            background: url("../images/icons/icon-modal-close.png") 50% 50% no-repeat;
-            width: 20px;
-            height: 20px;
-            cursor: pointer;
-        }
-    }
-
-    &-nav {
-        position: absolute;
-        top: 50%;
-        left: 0;
-        right: 0;
-        transform: translateY(-50%);
-        //z-index: 2;
-
-        &-btn {
-            display: inline-block;
-            color: #ffffff;
-            padding: 3px 6px;
-            cursor: pointer;
-            transition: .4s;
-
-            &:active {
-                background-color: rgba(0, 0, 0, .3);
-            }
-        }
-    }
-
-    &-current {
-        position: relative;
-        width: auto;
-        height: auto;
-        max-width: calc(100vw - 200px);
-        max-height: calc(100vh - 200px);
-        img {
-            max-width: 100%;
-        }
-    }
-}
-
