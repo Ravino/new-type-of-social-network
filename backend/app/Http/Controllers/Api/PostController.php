@@ -16,6 +16,7 @@ use App\Models\User;
 use App\Notifications\UserSystemNotifications;
 use App\Services\S3UploadService;
 use Illuminate\Support\Carbon;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Notification;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Event;
@@ -43,37 +44,65 @@ class PostController extends Controller
         return new PostCollection($posts, false);
     }
 
+    public function getWithoutOldPosts($user, $limit, $offset)
+    {
+        $communities = $user->communities()->select('id')->get();
+        $friends = DB::table('friendships')
+            ->where('sender_id', $user->id)
+            ->orWhere('recipient_id', $user->id)
+            ->select('id', 'sender_id', 'recipient_id', 'status', 'created_at')
+            ->get()
+            ->toArray();
+
+        $communitiesPosts = collect();
+
+        foreach($communities as $community) {
+            $communitiesPosts->push(Post::where('postable_type', Community::class)
+                ->where('postable_id', $community->id)
+                ->where('created_at', '>', Carbon::parse($community->pivot->created_at)->timestamp)
+                ->pluck('id'));
+        }
+
+        $friendsPosts = collect();
+
+        foreach($friends as $friend) {
+            if ($friend->status) {
+                if ($friend->sender_id !== $user->id) {
+                    $friendsPosts->push(Post::where('postable_type', User::class)
+                        ->where('postable_id', $friend->sender_id)
+                        ->where('created_at', '>', Carbon::parse($friend->created_at)->timestamp)
+                        ->pluck('id'));
+                }
+
+                if ($friend->recipient_id !== $user->id) {
+                    $friendsPosts->push(Post::where('postable_type', User::class)
+                        ->where('postable_id', $friend->recipient_id)
+                        ->where('created_at', '>', Carbon::parse($friend->created_at)->timestamp)
+                        ->pluck('id'));
+                }
+            }
+        }
+
+        $communitiesPosts = $communitiesPosts->collapse();
+        $friendsPosts = $friendsPosts->collapse();
+        $userPosts = $user->posts()->pluck('id');
+        $postsIds = $communitiesPosts->merge($friendsPosts);
+        $postsIds = $postsIds->merge($userPosts);
+        $posts = Post::whereIn('id', $postsIds)
+            ->with(['postable', 'author'])
+            ->limit($limit ?? 50)
+            ->offset($offset ?? 0)
+            ->get();
+
+        return new PostCollection($posts);
+    }
+
     /**
      * @param Request $request
      * @return PostCollection
      */
     public function myPosts(Request $request) {
-        $posts = \Auth::user()->allPosts()->with(['postable', 'author'])
-            ->limit($request->query('limit') ?? 50)
-            ->offset($request->query('offset') ?? 0)
-            ->get();
-        $communities = \Auth::user()->communities;
-        $filtered = [];
-
-        foreach ($posts as $post) {
-            $postablePost = $post->postable;
-
-            if ($postablePost instanceof Community) {
-                $community = $communities->first(function ($com) use ($postablePost) {
-                    return $com->id === $postablePost->id;
-                });
-
-                \Log::debug(json_encode(Carbon::parse($post->created_at) > Carbon::parse($community->pivot->created_at)));
-
-                if (!(Carbon::parse($post->created_at) > Carbon::parse($community->pivot->created_at))) {
-                    continue;
-                }
-            }
-
-            $filtered[] = $post;
-        }
-
-        return new PostCollection($filtered);
+        return $this->getWithoutOldPosts(\Auth::user(), $request->query('limit'), $request->query('offset'));
     }
 
     /**
@@ -83,11 +112,8 @@ class PostController extends Controller
     public function userPosts(Request $request, $id) {
         /** @var User $user */
         $user = User::find($id);
-        $posts = $user->allPosts()->with(['postable', 'author'])
-            ->limit($request->query('limit') ?? 50)
-            ->offset($request->query('offset') ?? 0)
-            ->get();
-        return new PostCollection($posts);
+
+        return $this->getWithoutOldPosts($user, $request->query('limit'), $request->query('offset'));
     }
 
     /**
