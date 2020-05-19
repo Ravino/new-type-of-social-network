@@ -109,17 +109,17 @@ computed: {
       classes.push(this.getPortraitImageClass(index, countImages));
      }
 
-     return {
-      path: image.normal.path,
-      name: image.originalName,
-      classes,
-      isMore,
-      id: image.id,
-     };
-    });
-   },
-   portraitBlocks() {
-    const countImages = this.viewImages.length;
+            return {
+                path: image.original.path,
+                name: image.originalName,
+                classes,
+                isMore,
+                id: image.id,
+            };
+        });
+    },
+    portraitBlocks() {
+        const countImages = this.viewImages.length;
 
     const first = [];
     const second = [];

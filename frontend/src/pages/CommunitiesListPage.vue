@@ -1,13 +1,13 @@
 <template>
     <div class="container-fluid pl-md-0">
         <div class="row">
-            <div class="col-12 col-md-1 ">
+            <div class="col-12 col-md-1 px-0 px-md-3  ">
                 <AccountToolbarLeft></AccountToolbarLeft>
             </div>
 
-            <div class="col-12 col-md-11 col-lg-9 col-xl-10 ">
+            <div class="col-12 col-md-11 col-lg-9 col-xl-10 px-0 px-md-3  ">
                 <div class="row">
-                    <CommunitiesListHeader></CommunitiesListHeader>
+                    <CommunitiesListHeader list="my"></CommunitiesListHeader>
                     <CommunityCreateBlock></CommunityCreateBlock>
                 </div>
 
@@ -24,8 +24,11 @@
 
                             <div v-else-if="!enabledLoader" class="container px-2 ">
                                 <div  class=" bg-white-br20 p-3">
-                                    <div  class="alert alert-info w-100 py-4 text-center m-0">
+                                    <div v-if="!$root.$lastCommunitiesSearch.my" class="alert alert-info w-100 py-4 text-center m-0">
                                         Вы ещё не присодинились ни к одному сообществу.
+                                    </div>
+                                    <div v-else class="alert alert-info w-100 py-4 text-center m-0">
+                                        По Вашему запросу ничего не найдено.
                                     </div>
                                 </div>
                             </div>
@@ -46,7 +49,7 @@
                 </div>
             </div>
 
-            <div class="col-lg-2 col-xl-1 d-none d-lg-block pr-0">
+            <div class="col-lg-2 col-xl-1 d-none d-lg-block pr-0 px-0 px-md-3 ">
                 <FavoriteFriends :isNarrow="true"></FavoriteFriends>
             </div>
         </div>
@@ -55,7 +58,6 @@
 
 <script>
 import CommunitiesListMixin from '../mixins/CommunitiesListMixin.js';
-import PliziCommunity from '../classes/PliziCommunity.js';
 import SmallSpinner from "../common/SmallSpinner.vue";
 
 export default {

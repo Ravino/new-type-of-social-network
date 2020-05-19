@@ -58,10 +58,9 @@
                 </div>
             </div>
 
-            <!--<div class="w-100" :class="{'px-5': post.sharedFrom}">-->
-                <!--<div class="w-100" >-->
-                    <template v-if="post.sharedFrom">
-                        <div class="post-news-item d-flex flex-row align-content-center pb-4" :class="{'shared px-5': post.sharedFrom}">
+                <template v-if="post.sharedFrom">
+                    <div class="col-12 plz-post-item-body pb-2 pt-4">
+                        <div class="post-news-item d-flex flex-row align-content-center pb-4" :class="{'shared px-4': post.sharedFrom, 'pb-4': !post.sharedFrom}">
                             <div class="post-poster-pic mr-3">
                                 <router-link v-if="post.sharedFrom.user" :to="{name: 'PersonalPage', params: {id: post.sharedFrom.user.id}}">
                                     <img :src="post.sharedFrom.posterPic" :alt="post.sharedFrom.posterName"/>
@@ -87,51 +86,50 @@
                                 </time>
                             </div>
                         </div>
+                    </div>
+                </template>
+
+                <div class="col-12 plz-post-item-body pb-2" :class="{'--px-2 --pt-2': post.sharedFrom, 'pt-4': !post.sharedFrom}">
+                    <template v-if="livePreview && typeof livePreview === 'object'">
+                        <p v-if="livePreview.text"
+                           class="post-main-text mb-0"
+                           v-html="livePreview.text">
+                        </p>
+
+                        <template v-if="livePreview.videoLinks">
+                            <div class="youtube-video-link d-flex justify-content-center">
+                                <p class="post-main-text  mt-2"
+                                   v-html="livePreview.videoLinks"
+                                   @click.stop="hasYoutubeLinks ? openVideoModal() : null">
+                                </p>
+                                <button class="video__button" type="button" aria-label="Запустить видео">
+                                    <svg width="68" height="48" viewBox="0 0 68 48">
+                                        <path class="video__button-shape" d="M66.52,7.74c-0.78-2.93-2.49-5.41-5.42-6.19C55.79,.13,34,0,34,0S12.21,.13,6.9,1.55 C3.97,2.33,2.27,4.81,1.48,7.74C0.06,13.05,0,24,0,24s0.06,10.95,1.48,16.26c0.78,2.93,2.49,5.41,5.42,6.19 C12.21,47.87,34,48,34,48s21.79-0.13,27.1-1.55c2.93-0.78,4.64-3.26,5.42-6.19C67.94,34.95,68,24,68,24S67.94,13.05,66.52,7.74z"></path>
+                                        <path class="video__button-icon" d="M 45,24 27,14 27,34"></path>
+                                    </svg>
+                                </button>
+                            </div>
+                        </template>
                     </template>
 
-                    <div class="col-12 plz-post-item-body pt-4 pb-2">
-                        <template v-if="livePreview && typeof livePreview === 'object'">
-                            <p v-if="livePreview.text"
-                               class="post-main-text mb-0"
-                               v-html="livePreview.text">
-                            </p>
-
-                            <template v-if="livePreview.videoLinks">
-                                <div class="youtube-video-link d-flex justify-content-center">
-                                    <p class="post-main-text  mt-2"
-                                       v-html="livePreview.videoLinks"
-                                       @click.stop="hasYoutubeLinks ? openVideoModal() : null">
-                                    </p>
-                                    <button class="video__button" type="button" aria-label="Запустить видео">
-                                        <svg width="68" height="48" viewBox="0 0 68 48">
-                                            <path class="video__button-shape" d="M66.52,7.74c-0.78-2.93-2.49-5.41-5.42-6.19C55.79,.13,34,0,34,0S12.21,.13,6.9,1.55 C3.97,2.33,2.27,4.81,1.48,7.74C0.06,13.05,0,24,0,24s0.06,10.95,1.48,16.26c0.78,2.93,2.49,5.41,5.42,6.19 C12.21,47.87,34,48,34,48s21.79-0.13,27.1-1.55c2.93-0.78,4.64-3.26,5.42-6.19C67.94,34.95,68,24,68,24S67.94,13.05,66.52,7.74z"></path>
-                                            <path class="video__button-icon" d="M 45,24 27,14 27,34"></path>
-                                        </svg>
-                                    </button>
-                                </div>
-                            </template>
-                        </template>
-
-                        <template v-else>
-                            <p v-if="post.body"
-                               class="post-main-text mb-2"
-                               v-html="this.$options.filters.toBR(post.body)"></p>
-                        </template>
-                    </div>
+                    <template v-else>
+                        <p v-if="post.body"
+                           class="post-main-text mb-2"
+                           v-html="this.$options.filters.toBR(post.body)"></p>
+                    </template>
+                </div>
 
                     <div class="col-12 plz-post-item-images">
                         <div class="post-images">
                             <Gallery :post="post" v-if="imageAttachments.length > 0" :images="imageAttachments"></Gallery>
 
-                            <template v-for="(postAttachment) in post.attachments">
-                                <template v-if="!postAttachment.isImage">
-                                    <AttachmentFile :attach="postAttachment"/>
-                                </template>
+                        <template v-for="(postAttachment) in post.attachments">
+                            <template v-if="!postAttachment.isImage">
+                                <AttachmentFile :attach="postAttachment"/>
                             </template>
-                        </div>
+                        </template>
                     </div>
-                <!--</div>-->
-            <!--</div>-->
+                </div>
 
             <div class="plz-post-item-footer col-12 pt-4">
                 <div class="d-flex">
