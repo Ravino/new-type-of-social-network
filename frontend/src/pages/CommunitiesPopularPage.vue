@@ -1,13 +1,13 @@
 <template>
     <div class="container-fluid pl-md-0">
         <div class="row">
-            <div class="col-12 col-md-1 ">
+            <div class="col-12 col-md-1 px-0 px-md-3 ">
                 <AccountToolbarLeft></AccountToolbarLeft>
             </div>
 
-            <div class="col-12 col-md-11 col-lg-9 col-xl-10 ">
+            <div class="col-12 col-md-11 col-lg-9 col-xl-10 px-0 px-md-3 ">
                 <div class="row">
-                    <CommunitiesListHeader></CommunitiesListHeader>
+                    <CommunitiesListHeader list="popular"></CommunitiesListHeader>
                     <CommunityCreateBlock></CommunityCreateBlock>
                 </div>
 
@@ -23,8 +23,11 @@
                             </ul>
                             <div v-else-if="enabledLoader" class="container px-2">
                                 <div  class=" bg-white-br20 p-3">
-                                    <div  class="alert alert-info w-100 py-4 text-center m-0">
+                                    <div v-if="!$root.$lastCommunitiesSearch.popular" class="alert alert-info w-100 py-4 text-center m-0">
                                         Нет ни одного популярного сообщества.
+                                    </div>
+                                    <div v-else class="alert alert-info w-100 py-4 text-center m-0">
+                                        По Вашему запросу ничего не найдено.
                                     </div>
                                 </div>
                             </div>

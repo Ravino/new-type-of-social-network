@@ -111,6 +111,21 @@
     }
 
 
+    #chatMessagesWrapper {
+        position: relative;
+
+        &:after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            box-shadow: inset 0 0 4px rgba(0, 0, 0, 0.5);
+            pointer-events: none;
+        }
+    }
+
     .plz-editor-body {
         width: 100%;
     }
@@ -175,7 +190,15 @@
         }
     }
 
-}/*-max-width: 767px-*/
+
+    #toolbarLeftGrey::after {
+        content: none;
+    }
+
+
+}/*- max-width: 767px -*/
+
+
 
 /*- sm -*/
 @media (max-width: 576px) {
@@ -233,6 +256,11 @@
 
     #toolbarLeftColor {
         overflow: auto;
+    }
+
+    .profile-filter-links {
+        display: block;
+        width: 100%;
     }
 
 }

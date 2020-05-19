@@ -129,11 +129,7 @@ async function checkRouteAuth(to, from, next) {
                 return routerForcedLogout(next, to);
             }
 
-            window.console.log(tryToLoadUser, `tryToLoadUser`);
-
             if (tryToLoadUser) {
-                window.console.warn(`emit AfterUserLoad`);
-
                 window.app.$root.$emit('AfterUserLoad', {
                     user: tryToLoadUser,
                     token: gwt,
