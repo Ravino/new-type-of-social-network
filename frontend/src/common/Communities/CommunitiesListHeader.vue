@@ -23,6 +23,7 @@
             <div class="col-12 col-xl-4 d-flex align-items-center form-inline mb-3 mb-xl-0 pl-0 pl-xl-4 pr-0 position-relative overflow-hidden rounded-pill mt-4 mt-md-0 ">
                 <div class="form-inline  position-relative w-100"
                      :class="{'isFocused' : isFocused}">
+                    <!-- FIXME: @TGA - для таких вещей есть миксины, не нужно всё тащить в глобальный скоуп -->
                     <input v-model="$root.$lastCommunitiesSearch[list]"
                            @keydown.stop="communitySearchKeyDownCheck($event)"
                            id="txtCommunitiesListSearch"
@@ -43,8 +44,9 @@
 </template>
 
 <script>
+import lodash from 'lodash';
+
 import IconSearch from '../../icons/IconSearch.vue';
-import lodash from "lodash";
 
 export default {
 name : 'CommunitiesListHeader',
@@ -52,14 +54,15 @@ components: {IconSearch},
 props: {
     list: String,
 },
+
 data() {
     return {
         isFocused: false,
     }
 },
-computed: {
-},
+
 methods: {
+    /** @TGA: Слава, ради одного debounce тянем сюда весь lo-dash? **/
     communitySearchKeyDownCheck: lodash.debounce(function (ev) {
         const sText = this.$refs.txtCommunitiesListSearch.value.trim();
         if (13 === ev.keyCode) {
@@ -67,6 +70,7 @@ methods: {
         }
     }, 100),
 
+    /** @TGA: Слава, ради одного debounce тянем сюда весь lo-dash? **/
     initSearch: lodash.debounce(function () {
         const sText = this.$refs.txtCommunitiesListSearch.value.trim();
         return this.startSearch(sText);
@@ -83,6 +87,7 @@ methods: {
     onFocus() {
         this.isFocused = true
     },
+
     onBlur() {
         this.isFocused = false
     }
