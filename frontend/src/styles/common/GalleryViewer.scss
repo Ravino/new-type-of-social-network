@@ -1,0 +1,57 @@
+.plz-gallery-viewer {
+    position: fixed;
+    width: 70vw;
+    height: 100vh;
+    z-index: 10000;
+    top: 0;
+    left: 0;
+
+&-overflow {
+    height: 100%;
+    width: 100%;
+    position: absolute;
+    left: 0;
+    top: 0;
+    z-index: 1;
+    cursor: pointer;
+}
+
+&-nav {
+    width: 70vw;
+    height: 100vh;
+    position: absolute;
+
+    &-btn {
+        position: absolute;
+        display: inline-block;
+        top: 50%;
+        transform: translateY(-50%);
+        color: #ffffff;
+        border: 1px solid #fff3cd;
+        padding: 3px 6px;
+        cursor: pointer;
+        z-index: 5;
+        &:active {
+            background-color: #cccccc;
+        }
+        &-prev {
+            left: 20px;
+        }
+        &-next {
+            right: 20px;
+        }
+    }
+}
+
+&-current {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 100%;
+    img {
+        z-index: 2;
+        max-height: 100%!important;
+        max-width: calc(100% - 100px)!important;
+    }
+}
+}
