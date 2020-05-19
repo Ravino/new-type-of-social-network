@@ -22,8 +22,10 @@
 
                             <div v-show="$v.model.chatName.$error" class="invalid-feedback">
                                 <p v-if="!$v.model.chatName.required" class="text-danger">Укажите название чата</p>
-                                <p v-if="!$v.model.chatName.minLength" class="text-danger">Название чата не может быть короче {{ $v.model.chatName.$params.minLength.min }} символов</p>
-                                <p v-if="!$v.model.chatName.maxLength" class="text-danger">Название чата не может быть длиннее {{ $v.model.chatName.$params.maxLength.max }} символов</p>
+                                <p v-if="!$v.model.chatName.minLength" class="text-danger">
+                                    Название чата не может быть короче {{ $v.model.chatName.$params.minLength.min }} символов</p>
+                                <p v-if="!$v.model.chatName.maxLength" class="text-danger">
+                                    Название чата не может быть длиннее {{ $v.model.chatName.$params.maxLength.max }} символов</p>
                             </div>
                         </div>
 
@@ -158,9 +160,9 @@ methods: {
         }
 
         if ( apiResponse ) {
-            window.console.log( JSON.stringify(apiResponse) , `apiResponse`);
-
             this.$root.$emit('NewChatDialog', apiResponse);
+
+            window.localStorage.setItem('pliziActiveDialog', apiResponse.id);
 
             this.hidePickAttendeesDialogModal();
         }

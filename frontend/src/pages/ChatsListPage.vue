@@ -23,7 +23,9 @@
                      class="d-flex flex-column flex-lg-row flex bg-white-br20 overflow-hidden">
 
                     <ChatDialogs ref="chatMessagesUsersList"
-                                 :currentDialogID="currentDialogID"
+                                 :key="`chatMessagesUsersList-`+dialogsListUpdater"
+                                 v-bind:currentDialogID="currentDialogID"
+                                 v-bind:chatDialogsKeyUpdater="dialogsListUpdater"
                                  @SwitchToChat="onSwitchToChat"></ChatDialogs>
 
                     <div id="chatMessagesWrapper"
@@ -104,6 +106,7 @@ data() {
         currentDialog : null,
         messagesList  : [],
         isMessagesLoaded: false,
+        dialogsListUpdater: 1,
 
         filter : {
             text: '',
@@ -226,7 +229,11 @@ methods: {
     },
 
     addListeners(){
-        this.$root.$on('newMessageInDialog', this.addNewChatMessageToList);
+        this.$root.$on('DialogsIsUpdated', ()=>{
+            ++this.dialogsListUpdater;
+        });
+
+        this.$root.$on('newMessageInDialog', this.addNewMessageNotification);
         this.$root.$on('newMessageInDialog', this.addNewMessageNotification);
 
         this.$root.$on('removeMessageInDialog', (evData)=>{
@@ -240,6 +247,11 @@ methods: {
 created(){
     this.addListeners();
 },
+
+beforeDestroy() {
+    this.$root.$off('newMessageInDialog', ()=>{});
+    this.$root.$off('removeMessageInDialog', ()=>{});
+}
 
 }
 </script>
