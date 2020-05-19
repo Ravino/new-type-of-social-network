@@ -9,7 +9,7 @@
             </InvitationItem>
         </ul>
         <div class="p-3" v-else>
-            <div class="alert alert-info text-center">
+            <div class="alert alert-info text-center mb-0">
                 Нет приглашений подружиться.
             </div>
         </div>
