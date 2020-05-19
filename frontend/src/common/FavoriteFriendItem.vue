@@ -43,14 +43,15 @@
                 </ChatLinkedHeader>
 
                 <div id="chatMessagesWrapperBody" class="position-relative">
-
-                    <ChatMessages v-if="isMessagesLoaded" v-bind:messagesList="messagesList"
-                                  v-bind:filter="filter"
-                                  v-bind:currentDialog="currentDialog"
-                                  :style="`padding-bottom: ${changedHeight}`"
-                                  @clearFilters="clearChatMessagesFilters"
-                                  ref="chatMessages">
-                    </ChatMessages>
+                    <div v-if="isMessagesLoaded"  class="plz-gallery-attached-chat">
+                        <ChatMessages v-bind:messagesList="messagesList"
+                                      v-bind:filter="filter"
+                                      v-bind:currentDialog="currentDialog"
+                                      :style="`padding-bottom: ${changedHeight}`"
+                                      @clearFilters="clearChatMessagesFilters"
+                                      ref="chatMessages">
+                        </ChatMessages>
+                    </div>
                     <Spinner v-else v-bind:message="`Сообщения загружаются`"></Spinner>
 
                     <ChatFooter v-if="currentDialog"

@@ -1,6 +1,6 @@
 <template>
-    <div class="message-attachments d-flex flex-wrap " v-if="message.isAttachments">
-        <div class="message-attachment-item mb-2">
+    <div class="message-attachments d-flex flex-wrap" :class="{'message-attachments-z': attachItem}" v-if="message.isAttachments">
+        <div class="message-attachment-item mb-2 message-gallery">
             <Gallery v-if="attachItem"
                      :images="imageList"
                      class="message-sended-image"

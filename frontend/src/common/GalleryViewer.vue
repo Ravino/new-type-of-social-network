@@ -51,11 +51,12 @@ export default {
         if (!this.activeImage && this.images.length > 0) {
             this.activeImage = this.images.slice(0, 1).pop();
         }
-        this.setBodyOverflow('hidden');
+
+        this.addBodyViewerOpen();
     },
- destroyed() {
-  this.setBodyOverflow('auto');
- },
+    destroyed() {
+       this.removeBodyViewerOpen();
+    },
     computed: {
         currentImageIndex() {
             return this.images.findIndex(image => image.id === this.activeImage.id);
@@ -86,9 +87,12 @@ export default {
         goToImage(image) {
             this.activeImage = image;
         },
-       setBodyOverflow(overflow) {
-          document.querySelector('body').style.overflow = overflow;
-      }
+       addBodyViewerOpen() {
+            document.querySelector('body').classList.add('plz-gallery--open');
+       },
+       removeBodyViewerOpen() {
+            document.querySelector('body').classList.remove('plz-gallery--open');
+       }
     }
 }
 </script>

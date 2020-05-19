@@ -4,6 +4,43 @@ $portraitFullHeight: 750px;
 
 .plz-gallery {
     position: relative;
+
+    .message-gallery {
+        width: 100%;
+        img {
+            width: 100%;
+            height: auto;
+        }
+    }
+
+    &--open {
+        z-index: 2000;
+    }
+
+    &-attached-chat {
+        .plz-gallery-wrap img {
+            width: 100px;
+            height: 100px;
+        }
+        .plz-gallery-viewer {
+            &-current  img{
+
+            }
+        }
+
+        .plz-gallery-image-portrait-wrap {
+            height: 270px;
+        }
+
+        .plz-gallery-viewer-nav {
+            width: 100vw;
+        }
+
+        .plz-gallery-viewer {
+            width: 100vw;
+        }
+
+    }
     &-wrap {
         overflow: hidden;
         height: $portraitFullHeight;
