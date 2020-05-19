@@ -1,5 +1,7 @@
-FROM node:14.0.0-alpine
+FROM node:14.2.0-alpine
 WORKDIR /app
+COPY package.json .
+RUN npm i --quiet
 COPY . .
-RUN npm install --quiet
-RUN npm run build
+RUN npm install pm2 -g
+CMD ["pm2-runtime", "src/index.js"]

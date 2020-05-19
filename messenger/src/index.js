@@ -4,48 +4,38 @@ import ChatController from "./controllers/ChatController.js";
 import ff from "fastify";
 import fastifyJWT from "fastify-jwt";
 import os from 'os';
-import cluster from 'cluster';
-const fastify = ff();
+const fastify = ff({logger: true});
+import 'v8-compile-cache'
+mongoose.Promise = global.Promise;
+dotenv.config();
 
-if (cluster.isMaster) {
-    let cpuCount = os.cpus().length;
-    for (let i = 0; i < cpuCount; i += 1) {
-        cluster.fork();
+fastify.register(fastifyJWT, {
+    secret: process.env.JWT_SECRET
+});
+
+fastify.addHook("onRequest", async (request, reply) => {
+    try {
+        await request.jwtVerify()
+    } catch (err) {
+        reply.send(err)
     }
-} else {
-    mongoose.Promise = global.Promise;
-    dotenv.config();
+});
 
-    fastify.register(fastifyJWT, {
-        secret: process.env.JWT_SECRET
-    });
+fastify.post('/', ChatController.sendMessage);
 
-    fastify.addHook("onRequest", async (request, reply) => {
-        try {
-            await request.jwtVerify()
-        } catch (err) {
-            reply.send(err)
-        }
-    });
+const start = async () => {
+    try {
+        await fastify.listen(process.env.APP_PORT, '0.0.0.0');
+        fastify.log.info(`server listening on ${fastify.server.address().port}`)
+    } catch (err) {
+        fastify.log.error(err)
+        process.exit(1)
+    }
+};
 
-    fastify.post('/api/chat/send', ChatController.sendMessage)
+mongoose.connect(`mongodb://${process.env.MONGO_DB_USERNAME}:${process.env.MONGO_DB_PASSWORD}@${process.env.MONGO_DB_HOST}:${process.env.MONGO_DB_PORT}/${process.env.MONGO_DB_DATABASE}`, {
+    useNewUrlParser: true,
+    useUnifiedTopology: true
+})
 
-    const start = async () => {
-        try {
-            await fastify.listen(process.env.APP_PORT, '0.0.0.0');
-            fastify.log.info(`server listening on ${fastify.server.address().port}`)
-        } catch (err) {
-            fastify.log.error(err)
-            process.exit(1)
-        }
-    };
-    mongoose.connect(`mongodb://${process.env.MONGO_DB_USERNAME}:${process.env.MONGO_DB_PASSWORD}@${process.env.MONGO_DB_HOST}:${process.env.MONGO_DB_PORT}/${process.env.MONGO_DB_DATABASE}`, {
-        useNewUrlParser: true,
-        useUnifiedTopology: true
-    }).then(() => {
-        console.log('connected')
-        start()
-    }).catch((ex) => {
-        console.error('Exception ' + ex)
-    });
-}
+start()

@@ -15,7 +15,7 @@ async function sendMessage(req, res) {
     }
     res.send({
         data: {
-            success: message.id
+            success: true
         }
     })
 }
