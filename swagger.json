@@ -521,7 +521,7 @@
                     "Communities"
                 ],
                 "description": "Список избранных сообществ",
-                "operationId": "getCommunitiesFavotite",
+                "operationId": "getCommunitiesFavorite",
                 "parameters": [
                     {
                         "$ref": "#/components/parameters/offsetParam"
@@ -568,7 +568,7 @@
                     "Communities"
                 ],
                 "description": "Добавить сообщество в избранные",
-                "operationId": "сommunitiesFavotiteAdd",
+                "operationId": "сommunitiesFavoriteAdd",
                 "requestBody": {
                     "description": "ID пользователя которго требуется добавить в друзья",
                     "content": {
@@ -622,7 +622,7 @@
                     "Communities"
                 ],
                 "description": "Удаление сообщества из избранных",
-                "operationId": "сommunitiesFavotiteВудуеу",
+                "operationId": "сommunitiesFavoriteDelete",
                 "parameters": [
                     {
                         "name": "groupId",
