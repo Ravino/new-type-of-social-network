@@ -33,8 +33,6 @@ class PostCollection extends ResourceCollection
     {
         return [
             'list' => $this->collection->map(function ($post) {
-//                \Log::debug(json_encode($post->usersLikes));
-//                return;
                 if($this->injectRelation) {
                     if($post->postable instanceof UserModel) {
                         return [

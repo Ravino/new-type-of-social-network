@@ -13,7 +13,7 @@ class DeletePostLikesTable extends Migration
      */
     public function up()
     {
-        \Illuminate\Support\Facades\DB::table('post_likes')->truncate();
+        Schema::drop('post_likes');
     }
 
     /**

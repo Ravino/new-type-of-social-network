@@ -42,7 +42,6 @@ Route::group(['middleware' => ['auth.jwt', 'track.activity']], function () {
     Route::post('posts', 'Api\PostController@storeByUser');
     Route::post('communities/{community_id}/posts', 'Api\PostController@storeByCommunity');
     Route::post('posts/attachments', 'Api\PostController@uploadAttachments');
-    Route::post('posts/rate', 'Api\PostController@rate');
 
     Route::get('user/friendship', 'Api\UserController@getMyFriendsList');
     Route::get('user/friendship/pending', 'Api\UserController@getMyPendingFriendsList');
@@ -95,6 +94,7 @@ Route::group(['middleware' => ['auth.jwt', 'track.activity']], function () {
     Route::prefix('posts')->group(function () {
         Route::delete('{post}', 'Api\PostController@delete');
         Route::get('{post}/restore', 'Api\PostController@restore');
+        Route::post('rate', 'Api\LikeController@likePost');
         Route::post('{post}/update', 'Api\PostController@update');
         Route::delete('{post}/attachment/{postAttachment}', 'Api\PostController@deleteImage');
     });

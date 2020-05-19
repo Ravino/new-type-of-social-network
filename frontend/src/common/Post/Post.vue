@@ -141,10 +141,15 @@
                             <span>{{ post.likes | space1000 }}</span>
                             <div v-if="post.usersLikes.length" class="usersLikes p-3" @click.stop="">
                                 <p class="mb-0">
-                                    <b>Понравилось</b> {{ post.likes }} пользователю(-ям)
+                                    <b @click.stop="$emit('showUsersLikes', post.usersLikes)"
+                                       style="cursor: pointer">
+                                        Понравилось
+                                    </b>
+                                    {{ post.likes }} пользователям
                                 </p>
-                               <p v-for="(user, index) in shortUsersLikes" class="d-flex">
-                                   <router-link :to="{ name: 'PersonalPage', params: { id: user.id } }">
+                               <p class="d-flex">
+                                   <router-link v-for="(user, index) in shortUsersLikes"
+                                                :to="{ name: 'PersonalPage', params: { id: user.id } }">
                                        <img :src="user.profile.userPic"
                                             :alt="user.profile.firstName + ' ' + user.profile.lastName"
                                             :title="user.profile.firstName + ' ' + user.profile.lastName"
@@ -271,9 +276,14 @@
                     if (this.post.alreadyLiked) {
                         this.post.alreadyLiked = false;
                         this.post.likes--;
+                        let userLikeIndex = this.post.usersLikes.findIndex((userLike) => {
+                            return userLike.id === this.$root.$auth.user.id;
+                        });
+                        this.post.usersLikes.splice(userLikeIndex, 1);
                     } else {
                         this.post.alreadyLiked = true;
                         this.post.likes++;
+                        this.post.usersLikes.push(this.$root.$auth.user);
                     }
                 }
             },

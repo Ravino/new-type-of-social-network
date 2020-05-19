@@ -162,24 +162,6 @@ class PostController extends Controller
     }
 
     /**
-     * @param $request
-     * @return \Illuminate\Http\JsonResponse
-     */
-    public function rate(Request $request) {
-        if(!PostLike::where('user_id', \Auth::user()->id)->where('post_id', $request->postId)->exists()) {
-            PostLike::create([
-                'user_id' => \Auth::user()->id,
-                'post_id' => $request->postId,
-            ]);
-            Event::dispatch('post.liked', ['post_id' => $request->postId, 'user_id' => \Auth::user()->id]);
-            return response()->json(['message' => 'Вы успешно оценили данную запись'], 200);
-        } else {
-            PostLike::where('user_id', \Auth::user()->id)->where('post_id', $request->postId)->first()->delete();
-            return response()->json(['message' => 'Вы успешно сняли свою оценку с данной записи'], 200);
-        }
-    }
-
-    /**
      * @param Post $post
      * @return \Illuminate\Http\JsonResponse
      * @throws \Exception

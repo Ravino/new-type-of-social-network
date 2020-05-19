@@ -57,15 +57,17 @@ class Post extends Model
      * @return \Illuminate\Database\Eloquent\Relations\HasMany
      */
     public function like() {
-        return $this->hasMany(PostLike::class, 'post_id', 'id')->where('user_id', \Auth::user()->id);
+        return $this->hasMany(Like::class, 'likeable_id', 'id')
+            ->where('user_id', \Auth::user()->id);
     }
 
     public function usersLikes()
     {
         return $this->hasManyThrough(
             User::class,
-            PostLike::class,
-            'post_id', 'id',
+            Like::class,
+            'likeable_id',
+            'id',
             'id',
             'user_id'
         );

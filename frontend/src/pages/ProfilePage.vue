@@ -23,7 +23,8 @@
                               @onDeletePost="onDeletePost"
                               @onRestorePost="onRestorePost"
                               @onEditPost="onEditPost"
-                              @openVideoModal="openVideoModal">
+                              @openVideoModal="openVideoModal"
+                              @showUsersLikes="openLikeModal">
                         </Post>
                     </template>
 
@@ -55,6 +56,10 @@
             <PostVideoModal v-if="postVideoModal.isVisible"
                             :videoLink="postVideoModal.content.videoLink"
                             @hideVideoModal="hideVideoModal"/>
+
+            <PostLikeModal v-if="postLikeModal.isVisible"
+                           :users="postLikeModal.content.users"
+                           @hideLikeModal="hideLikeModal"/>
         </div>
     </div>
 </template>
@@ -72,6 +77,7 @@ import ProfilePhotos from '../components/ProfilePhotos.vue';
 import ProfileFilter from '../components/ProfileFilter.vue';
 import PostEditModal from '../common/Post/PostEditModal.vue';
 import PostVideoModal from '../common/Post/PostVideoModal.vue';
+import PostLikeModal from '../common/Post/PostLikeModal.vue';
 import SmallSpinner from "../common/SmallSpinner.vue";
 
 import PliziPost from '../classes/PliziPost.js';
@@ -84,6 +90,7 @@ components: {
     ProfileHeader, ProfilePhotos, WhatsNewBlock, ProfileFilter, Post,
     PostEditModal,
     PostVideoModal,
+    PostLikeModal,
     SmallSpinner,
 },
 mixins: [ShortFriendsMixin],
@@ -109,6 +116,12 @@ data() {
             isVisible: false,
             content: {
                 videoLink: null,
+            },
+        },
+        postLikeModal: {
+            isVisible: false,
+            content: {
+                users: null,
             },
         },
         lazyLoadStarted: false,
@@ -182,6 +195,16 @@ methods : {
         if (window.scrollY >= (document.body.scrollHeight - document.documentElement.clientHeight - (document.documentElement.clientHeight/2) )){
             this.lazyLoadPost();
         }
+    },
+
+    openLikeModal(users) {
+        this.postLikeModal.isVisible = true;
+        this.postLikeModal.content.users = users;
+    },
+
+    hideLikeModal() {
+        this.postLikeModal.isVisible = false;
+        this.postLikeModal.content.users = null;
     },
 
     async getPosts(limit = 50, offset = 0){
