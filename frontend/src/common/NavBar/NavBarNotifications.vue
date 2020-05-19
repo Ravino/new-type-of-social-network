@@ -41,6 +41,7 @@
 <script>
 import IconBell from '../../icons/IconBell.vue';
 import NotificationItem from '../NotificationItem.vue';
+import vueCustomScrollbar from 'vue-custom-scrollbar';
 
 export default {
 name : 'NavBarNotifications',
