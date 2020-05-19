@@ -96,20 +96,26 @@ $postPosterPicSize: 48px;
 
             .icon-eye,
             .icon-message,
-            .icon-heard,
             .icon-share{
                 fill: $iconHoverColor;
+            }
+
+            .icon-heard {
+                fill: red;
             }
         }
 
         &.is-active {
             .icon-message,
-            .icon-heard,
             .icon-share {
                 fill: $iconHoverColor;
             }
             span {
                 color: $iconHoverColor;
+            }
+
+            .icon-heard {
+                fill: red;
             }
         }
     }
@@ -122,6 +128,12 @@ $postPosterPicSize: 48px;
             width: auto;
             height: 17px;
             margin: 0 .25rem;
+        }
+
+        .icon-heard {
+            fill: transparent;
+            stroke: $iconHoverColor;
+            stroke-width: 30px;
         }
     }
 
