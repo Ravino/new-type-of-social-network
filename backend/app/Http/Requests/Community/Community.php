@@ -32,11 +32,11 @@ class Community extends Request
             'name' => [
                 'string',
                 'min:2',
-                'max:255',
+                'max:150',
                 Rule::unique('communities')->ignore($this->id, 'id'),
             ],
-            'description' => 'string',
-            'notice' => 'string|max:255',
+            'description' => 'string|max:1000',
+            'notice' => 'string|max:150',
             'url' => [
                 'string',
                 'max:255',
