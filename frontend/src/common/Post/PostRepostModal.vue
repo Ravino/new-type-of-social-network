@@ -86,9 +86,3 @@
     }
 </script>
 
-<style lang="scss">
-    .multiselect__option--selected {
-        color: #000 !important;
-        background-color: #fff !important;
-    }
-</style>
