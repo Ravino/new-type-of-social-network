@@ -423,7 +423,6 @@ $radioWidth: 18px;
     p {
         font-size: 16px;
         line-height: 24px;
-        //font-family: $light;
         color: #828282;
         margin-left: auto;
     }
@@ -486,7 +485,9 @@ $radioWidth: 18px;
 }
 
 
+input[type='date']::-webkit-inner-spin-button,
 input[type='number']::-webkit-inner-spin-button,
+input[type='date']::-webkit-outer-spin-button,
 input[type='number']::-webkit-outer-spin-button {
     appearance: none;
     -webkit-appearance: none;
@@ -495,8 +496,12 @@ input[type='number']::-webkit-outer-spin-button {
 }
 
 input[type='number'],
+input[type='date'],
 input[type='search']{
     -moz-appearance: textfield;
+}
+input[type='date']::-webkit-clear-button {
+    display: none;
 }
 
 

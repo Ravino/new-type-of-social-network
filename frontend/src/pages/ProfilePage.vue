@@ -13,18 +13,17 @@
 
                     <WhatsNewBlock @addNewPost="addNewPost"></WhatsNewBlock>
 
-                    <ProfileFilter v-if="userPosts && userPosts.length > 1"
+                    <ProfileFilter v-if="posts && posts.length > 1"
                                    @wallPostsSelect="wallPostsSelectHandler"></ProfileFilter>
 
-                    <template v-if="userPosts && userPosts.length > 0">
+                    <template v-if="posts && posts.length > 0">
                         <Post v-for="postItem in filteredPosts"
                               :key="postItem.id"
                               :post="postItem"
                               @onDeletePost="onDeletePost"
                               @onRestorePost="onRestorePost"
                               @onEditPost="onEditPost"
-                              @openVideoModal="openVideoModal"
-                              @showUsersLikes="openLikeModal">
+                              @openVideoModal="openVideoModal">
                         </Post>
                     </template>
 
@@ -81,7 +80,7 @@ import PostLikeModal from '../common/Post/PostLikeModal.vue';
 import SmallSpinner from "../common/SmallSpinner.vue";
 
 import PliziPost from '../classes/PliziPost.js';
-import ShortFriendsMixin from '../mixins/ShortFriendsMixin.js';
+import LazyLoadPosts from '../mixins/LazyLoadPosts.js';
 
 export default {
 name: 'ProfilePage',
@@ -93,12 +92,11 @@ components: {
     PostLikeModal,
     SmallSpinner,
 },
-mixins: [ShortFriendsMixin],
+mixins: [LazyLoadPosts],
 data() {
     return {
-        userPosts: [],
-        //allMyFriends: null,
-        filterMode: `all`,
+        posts: [],
+        filterMode: 'all',
 
         userPhotos: [
             {path: '/images/user-photos/user-photo-01.png',},
@@ -124,9 +122,6 @@ data() {
                 users: null,
             },
         },
-        lazyLoadStarted: false,
-        noMorePost: false,
-        enabledPostLoader: true,
     }
 },
 
@@ -145,13 +140,13 @@ computed : {
     filteredPosts(){
         switch ( this.filterMode ){
             case 'my':
-                return this.userPosts.filter( post => post.checkIsMinePost( this.$root.$auth.user.id ) );
+                return this.posts.filter( post => post.checkIsMinePost( this.$root.$auth.user.id ) );
 
             case 'archive':
-                return this.userPosts.filter( post => post.isArchivePost );
+                return this.posts.filter( post => post.isArchivePost );
         }
 
-        return this.userPosts;
+        return this.posts;
     }
 },
 
@@ -172,12 +167,12 @@ methods : {
     },
 
     addNewPost( post ){
-        this.userPosts.unshift( new PliziPost( post ) );
+        this.posts.unshift( new PliziPost( post ) );
     },
 
     startTimer( postIndex ){
         setTimeout( () => {
-            this.userPosts.splice( postIndex, 1 );
+            this.posts.splice( postIndex, 1 );
         }, 5000 );
     },
 
@@ -189,12 +184,6 @@ methods : {
     hidePostEditModal(){
         this.postEditModal.isVisible = false;
         this.postForEdit = null;
-    },
-
-    onScrollYPage(){
-        if (window.scrollY >= (document.body.scrollHeight - document.documentElement.clientHeight - (document.documentElement.clientHeight/2) )){
-            this.lazyLoadPost();
-        }
     },
 
     openLikeModal(users) {
@@ -220,28 +209,11 @@ methods : {
         if ( response !== null ){
             this.enabledPostLoader = false;
             response.map((post) => {
-                this.userPosts.push(new PliziPost(post));
+                this.posts.push(new PliziPost(post));
             });
 
             return response.length;
         }
-    },
-
-    async lazyLoadPost() {
-        if (this.lazyLoadStarted) return;
-        if (this.noMorePost) return;
-
-        this.enabledPostLoader = true;
-        this.lazyLoadStarted = true;
-        let oldSize = this.userPosts.length;
-        let added = await this.getPosts(10, oldSize++);
-
-        if (added === 0) {
-            this.noMorePost = true;
-        }
-
-        this.lazyLoadStarted = false;
-        this.onScrollYPage();
     },
 
     async onDeletePost( id ){
@@ -254,11 +226,10 @@ methods : {
         }
 
         if ( response ){
-            const postIndex = this.userPosts.findIndex( ( post ) => {
+            const postIndex = this.posts.findIndex( ( post ) => {
                 return post.id === id;
             } );
-            let post = this.userPosts[postIndex].deleted = true;
-            console.log(post);
+            let post = this.posts[postIndex].deleted = true;
 
             this.startTimer( postIndex );
         }
@@ -274,7 +245,7 @@ methods : {
         }
 
         if ( response ){
-            const post = this.userPosts.find( ( post ) => {
+            const post = this.posts.find( ( post ) => {
                 return post.id === id;
             } );
 
@@ -290,15 +261,9 @@ async mounted() {
     });
 
     this.$root.$on('wallPostsSelect', this.wallPostsSelectHandler);
-    await this.getPosts();
-    window.addEventListener('scroll', this.onScrollYPage);
+    // await this.getPosts();
+}
 
-    //await this.loadMyFriends();
-},
-    beforeRouteLeave(to, from, next) {
-        window.removeEventListener('scroll', this.onScrollYPage);
-        next();
-    },
 }
 </script>
 

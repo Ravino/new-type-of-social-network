@@ -119,9 +119,9 @@
                     </template>
                 </div>
 
-                <div class="col-12 plz-post-item-images">
-                    <div class="post-images">
-                        <Gallery v-if="imageAttachments.length > 0" :images="imageAttachments"></Gallery>
+                    <div class="col-12 plz-post-item-images">
+                        <div class="post-images">
+                            <Gallery :post="post" v-if="imageAttachments.length > 0" :images="imageAttachments"></Gallery>
 
                         <template v-for="(postAttachment) in post.attachments">
                             <template v-if="!postAttachment.isImage">
@@ -137,7 +137,8 @@
                         <div class="post-watched-counter"
                              :class="{'is-active': post.alreadyLiked}"
                              @click="onLike">
-                            <IconHeard/>
+                            <IconFillHeard v-if="post.alreadyLiked"/>
+                            <IconHeard v-else/>
                             <span>{{ post.likes | space1000 }}</span>
                             <div v-if="post.usersLikes.length" class="usersLikes p-3" @click.stop="">
                                 <p class="mb-0">
@@ -197,6 +198,7 @@
 <script>
     import IconEye from '../../icons/IconEye.vue';
     import IconHeard from '../../icons/IconHeard.vue';
+    import IconFillHeard from '../../icons/IconFillHeard.vue';
     import IconMessage from '../../icons/IconMessage.vue';
     import IconMessageUserPost from '../../icons/IconMessageUserPost.vue';
     import IconShare from '../../icons/IconShare.vue';
@@ -215,6 +217,7 @@
             IconShare,
             IconMessage,
             IconHeard,
+            IconFillHeard,
             IconEye,
             IconMessageUserPost,
             PostImage,

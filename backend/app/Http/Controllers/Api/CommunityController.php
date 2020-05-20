@@ -63,15 +63,12 @@ class CommunityController extends Controller
         /**
          * TODO: Нужно будет что-то придумать с оптимизацией (дернормализовать таблицы или.... пока не ясно)
          */
+        /** @var Community|Builder $query */
         $query = Community::with('role', 'members', 'avatar', 'city');
 
         $search = $request->search;
         if (mb_strlen($search) >= 3) {
-            $query
-                ->where('name', 'LIKE', "%{$search}%")
-                ->orWhere('description', 'LIKE', "%{$search}%")
-                ->orWhere('url', 'LIKE', "%{$search}%")
-                ->orWhere('website', 'LIKE', "%{$search}%");
+            $query->search($search);
         }
 
         $list = $request->list;
@@ -81,28 +78,10 @@ class CommunityController extends Controller
 
         switch ($list) {
             case 'my':
-                $query->whereHas('role', static function (Builder $query) {
-                    $query->where([
-                        'user_id' => Auth::user()->id,
-                    ]);
-                });
+                $query->onlyMy();
                 break;
             case 'owner':
-                $query->whereHas('role', static function (Builder $query) {
-                    $query
-                        ->where([
-                            'user_id' => Auth::user()->id,
-                        ])
-                        ->where(static function (Builder $query) {
-                            $query
-                                ->where([
-                                    'role' => Community::ROLE_ADMIN,
-                                ])
-                                ->orWhere([
-                                    'role' => Community::ROLE_AUTHOR,
-                                ]);
-                        });
-                });
+                $query->owner();
                 break;
             default:
                 break;
@@ -113,7 +92,7 @@ class CommunityController extends Controller
             ->offset($request->query('offset', 0))
             ->get();
 
-        $communities->each(function($community) {
+        $communities->each(static function($community) {
             $community->load('onlyFiveMembers');
         });
 
@@ -184,7 +163,7 @@ class CommunityController extends Controller
         $community = Community::find($id);
         if($community) {
             if(!$community->users->contains(auth()->user()->id)) {
-                $community->users()->attach(auth()->user()->id, ['role' => Community::ROLE_USER]);
+                $community->users()->attach(auth()->user()->id, ['role' => Community::ROLE_USER, 'created_at' => time(), 'updated_at' => time()]);
                 event(new CommunitySubscribe($community->id, auth()->user()->id));
                 return response()->json([
                     'data' => [
@@ -271,5 +250,47 @@ class CommunityController extends Controller
         return response()->json([
             'data' => CommunityTheme::getTree(),
         ]);
+    }
+
+    /**
+     * @param Request $request
+     * @return CommunityCollection
+     */
+    public function listFavorite(Request $request)
+    {
+        $community_ids = (new Community())->getFavariteIdList(null, $request->query('limit', 5), $request->query('offset', 0));
+        $communities = Community::whereIn('id', $community_ids)
+            ->get();
+        return new CommunityCollection($communities);
+    }
+
+    /**
+     * @param Request $request
+     * @return JsonResponse
+     */
+    public function addFavorite(Request $request)
+    {
+        /** @var Community $community */
+        $community = Community::find($request->id);
+        if ($community && $community->addToFavotite()) {
+            return response()->json(['message' => 'Вы добавили сообщество в избранные'], 200);
+        }
+
+        return response()->json(['message' => 'Вы не состоите в данном сообществе'], 422);
+    }
+
+    /**
+     * @param $groupId
+     * @return JsonResponse
+     */
+    public function deleteFavorite($groupId)
+    {
+        /** @var Community $community */
+        $community = Community::find($groupId);
+        if ($community && $community->deleteFromFavotite()) {
+            return response()->json(['message' => 'Вы удалили сообщество из избранных'], 200);
+        }
+
+        return response()->json(['message' => 'Вы не состоите в данном сообществе'], 422);
     }
 }

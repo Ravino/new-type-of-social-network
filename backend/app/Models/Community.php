@@ -4,20 +4,79 @@ namespace App\Models;
 
 use App\CommunityMember;
 use App\Models\Geo\City;
+use App\Traits\Neo4jFavorite;
 use App\Traits\NPerGroup;
 use Auth;
 use Domain\Neo4j\Service\UserService;
+use Eloquent;
+use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Database\Eloquent\Relations\MorphMany;
+use Illuminate\Support\Carbon;
 use Spiritix\LadaCache\Database\LadaCacheTrait;
 
+/**
+ * App\Models\Community
+ *
+ * @property int $id
+ * @property string $name
+ * @property string|null $description
+ * @property string|null $notice
+ * @property string|null $primary_image
+ * @property string|null $url
+ * @property string|null $website
+ * @property int $is_verified
+ * @property Carbon $created_at
+ * @property Carbon $updated_at
+ * @property int $type
+ * @property int $theme_id
+ * @property int $privacy
+ * @property int|null $geo_city_id
+ * @property-read Collection|User[] $admins
+ * @property-read int|null $admins_count
+ * @property-read Collection|User[] $authors
+ * @property-read int|null $authors_count
+ * @property-read CommunityAttachment|null $avatar
+ * @property-read City|null $city
+ * @property-read CommunityHeader|null $headerImage
+ * @property-read Collection|CommunityMember[] $members
+ * @property-read int|null $members_count
+ * @property-read Collection|Post[] $posts
+ * @property-read int|null $posts_count
+ * @property-read CommunityMember|null $role
+ * @property-read CommunityTheme $theme
+ * @property-read Collection|User[] $users
+ * @property-read int|null $users_count
+ * @method static Builder|Community newModelQuery()
+ * @method static Builder|Community newQuery()
+ * @method static Builder|Community onlyMy()
+ * @method static Builder|Community owner()
+ * @method static Builder|Community query()
+ * @method static Builder|Community search($search)
+ * @method static Builder|Community whereCreatedAt($value)
+ * @method static Builder|Community whereDescription($value)
+ * @method static Builder|Community whereGeoCityId($value)
+ * @method static Builder|Community whereId($value)
+ * @method static Builder|Community whereIsVerified($value)
+ * @method static Builder|Community whereName($value)
+ * @method static Builder|Community whereNotice($value)
+ * @method static Builder|Community wherePrimaryImage($value)
+ * @method static Builder|Community wherePrivacy($value)
+ * @method static Builder|Community whereThemeId($value)
+ * @method static Builder|Community whereType($value)
+ * @method static Builder|Community whereUpdatedAt($value)
+ * @method static Builder|Community whereUrl($value)
+ * @method static Builder|Community whereWebsite($value)
+ * @mixin Eloquent
+ */
 class Community extends Model
 {
-    use LadaCacheTrait;
+    use LadaCacheTrait, Neo4jFavorite;
 
     const ROLE_USER = 'user';
     const ROLE_ADMIN = 'admin';
@@ -155,5 +214,63 @@ class Community extends Model
     public function friends($limit = 5, $offset = 0)
     {
         return (new UserService())->getFriendsFromCommunity(Auth::user()->id, $this->id, $limit, $offset);
+    }
+
+    public function getNeo4jNodeName()
+    {
+        return 'Community';
+    }
+
+    public function getNeo4jRelationName()
+    {
+        return 'MEMBER_OF';
+    }
+
+    /**
+     * @param Builder $query
+     */
+    public function scopeOnlyMy(Builder $query)
+    {
+        $query->whereHas('role', static function (Builder $query) {
+            $query->where([
+                'user_id' => Auth::user()->id,
+            ]);
+        });
+    }
+
+    /**
+     * @param Builder $query
+     */
+    public function scopeOwner(Builder $query)
+    {
+        $query->whereHas('role', static function (Builder $query) {
+            $query
+                ->where([
+                    'user_id' => Auth::user()->id,
+                ])
+                ->where(static function (Builder $query) {
+                    $query
+                        ->where([
+                            'role' => Community::ROLE_ADMIN,
+                        ])
+                        ->orWhere([
+                            'role' => Community::ROLE_AUTHOR,
+                        ]);
+                });
+        });
+    }
+
+    /**
+     * @param Builder $query
+     * @param string $search
+     */
+    public function scopeSearch(Builder $query, $search)
+    {
+        $query
+            ->where('name', 'LIKE', "%{$search}%")
+            ->orWhere('notice', 'LIKE', "%{$search}%")
+            ->orWhere('description', 'LIKE', "%{$search}%")
+            ->orWhere('url', 'LIKE', "%{$search}%")
+            ->orWhere('website', 'LIKE', "%{$search}%");
     }
 }

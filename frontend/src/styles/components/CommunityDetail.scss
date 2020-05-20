@@ -5,8 +5,21 @@ $communityPrimaryImage: 70px;
     &-header {
         min-height: 320px;
         height: auto;
+
+        &-details {
+            width: calc(100% - 180px);
+        }
         &-pic {
+            position: relative;
             height: 210px;
+
+            img {
+                position: absolute;
+                top: 50%;
+                left: 50%;
+                transform: translate(-50%, -50%);
+                min-height: 100%;
+            }
         }
         &-img {
             position: absolute;
@@ -44,6 +57,8 @@ $communityPrimaryImage: 70px;
         }
         &-desc {
             color: $textGreyColor;
+            word-break: break-word;
+
             &[href] {
                 color: $textGreyColor;
             }
@@ -82,6 +97,8 @@ $communityPrimaryImage: 70px;
         &-desc {
             font-size: 13px;
             color: $textGreyColor;
+            word-break: break-word;
+
             &[href] {
                 color: $textColor;
             }
@@ -89,7 +106,7 @@ $communityPrimaryImage: 70px;
     }
 
     &-subscribe {
-        width: 380px;
+        width: 180px;
         max-width: 100%;
         border: 2px solid #f0f0f0;
         border-radius: 20px;
@@ -124,97 +141,5 @@ $communityPrimaryImage: 70px;
 
 }
 
-.videos {
-    &-item {
-        position: relative;
-    }
-}
 
-.video {
-    position: relative;
-    cursor: pointer;
-    border-radius: 8px;
-    overflow: hidden;
-    width: 100%;
-    height: 0;
-    padding-bottom: 56.25%;
-    background-color: #000;
-    z-index: 1;
 
-    &:hover .video__button-shape,
-    &:focus .video__button-shape {
-        fill: #ff0000;
-        fill-opacity: 1;
-    }
-
-    &__button {
-        position: absolute;
-        top: 50%;
-        left: 50%;
-        z-index: 1;
-        padding: 0;
-        width: 68px;
-        height: 48px;
-        border: none;
-        pointer-events: none;
-        background-color: transparent;
-        transform: translate(-50%, -50%);
-        cursor: pointer;
-
-        &:focus {
-            outline: none;
-        }
-
-        &-shape {
-            fill: #212121;
-            fill-opacity: 0.8;
-        }
-
-        &-icon {
-            fill: #ffffff;
-        }
-
-    }
-
-    &-wrap {
-        height: 0;
-        padding-bottom: 56.25%;
-        &-pre {
-            position: relative;
-            width: 100%;
-
-            border-radius: 8px;
-            overflow: hidden;
-            height: 0;
-            padding-bottom: 56.25%;
-
-            img {
-                position: absolute;
-                top: 50%;
-                left: 50%;
-                width: 100%;
-                height: auto;
-                transform: translate(-50%, -50%);
-            }
-        }
-
-        & + .video__button {
-            display: none;
-        }
-
-        iframe {
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-        }
-    }
-    &-desc {
-        font-size: 13px;
-        color: $textGreyColor;
-        &[href] {
-            color: $textGreyColor;
-        }
-    }
-}
