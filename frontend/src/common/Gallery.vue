@@ -2,27 +2,35 @@
     <div class="plz-gallery" :class="[`plz-gallery-${galleryType}`, {'plz-gallery-single': isSingleImage}]">
         <div v-if="galleryType === 'album'" class="plz-gallery-wrap plz-gallery-wrap-album">
             <template v-for="image in imagesWithClasses">
-                <img
-                    @click="showImage(image.id)"
-                    :class="image.classes"
-                    class="plz-gallery-image"
-                    :src="image.path"
-                    :alt="image.name"
-                    :data-more="`Еще ${countImagesMore.toString()}`"
+                <div :class="{'plz-gallery-image-mores': image.isMore}"
+                     :data-more="countImage.toString()"
+                     @click="showImage(image.id)"
                 >
-            </template>
-        </div>
-        <template v-else>
-            <div v-for="block in portraitBlocks" :class="block.classes">
-                <template v-for="image in block.images">
                     <img
                         @click="showImage(image.id)"
                         :class="image.classes"
                         class="plz-gallery-image"
                         :src="image.path"
                         :alt="image.name"
-                        :data-more="`Еще ${countImagesMore.toString()}`"
                     >
+                </div>
+            </template>
+        </div>
+        <template v-else>
+            <div v-for="block in portraitBlocks" :class="block.classes">
+                <template v-for="image in block.images">
+                    <div :class="{'plz-gallery-image-mores': image.isMore}"
+                         :data-more="countImage.toString()"
+                         @click="showImage(image.id)"
+                    >
+                        <img
+                            @click="showImage(image.id)"
+                            :class="image.classes"
+                            class="plz-gallery-image"
+                            :src="image.path"
+                            :alt="image.name"
+                        >
+                    </div>
                 </template>
             </div>
         </template>
@@ -54,12 +62,21 @@ export default {
     type: Object,
    },
   },
+    mounted() {
+        console.log(this.countImage.toString())
+    },
 data() {
     return {
         activeImageId: null,
     };
 },
 computed: {
+   countImage() {
+       if (this.countImagesMore.toString() > 0) {
+           return `Ещё ${this.countImagesMore.toString()}`;
+       }
+       return '';
+   },
    countImages() {
     return this.images.length;
    },
