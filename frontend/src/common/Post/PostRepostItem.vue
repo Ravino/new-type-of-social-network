@@ -8,7 +8,40 @@
                 <h6 class="chatHeader-title w-75 align-self-start mt-2 pb-0 mb-0 pull-left text-body" style="line-height: 20px;">{{ user ? user.firstName : community.name }}</h6>
             </div>
         </div>
-        <p v-html="post.body"></p>
+
+        <template v-if="livePreview && typeof livePreview === 'object'">
+            <p v-if="livePreview.text"
+               class="post-main-text mb-0"
+               v-html="livePreview.text">
+            </p>
+
+            <template v-if="livePreview.videoLinks">
+                <div class="youtube-video-link d-flex justify-content-center">
+                    <p class="post-main-text  mt-2"
+                       v-html="livePreview.videoLinks">
+                    </p>
+                    <button class="video__button" type="button" aria-label="Запустить видео">
+                        <IconYoutube/>
+                    </button>
+                </div>
+            </template>
+        </template>
+
+        <template v-else>
+            <p v-if="post.body"
+               class="post-main-text mb-2"
+               v-html="this.$options.filters.toBR(post.body)"></p>
+        </template>
+
+        <div v-if="post.attachments && post.attachments.length" class="attachments">
+            <Gallery :post="post" v-if="imageAttachments.length > 0" :images="imageAttachments"></Gallery>
+
+            <template v-for="(postAttachment) in post.attachments">
+                <template v-if="!postAttachment.isImage">
+                    <AttachmentFile :attach="postAttachment"/>
+                </template>
+            </template>
+        </div>
     </div>
 </template>
 
@@ -16,6 +49,11 @@
     import PliziUser from '../../classes/PliziUser.js';
     import PliziCommunity from '../../classes/PliziCommunity.js';
     import PliziPost from '../../classes/PliziPost.js';
+    import LinkMixin from '../../mixins/LinkMixin.js';
+
+    import Gallery from '../Gallery.vue';
+    import AttachmentFile from "../AttachmentFile.vue";
+    import IconYoutube from "../../icons/IconYoutube.vue";
 
     export default {
         name: "PostRepostItem",
@@ -24,11 +62,38 @@
             community: PliziCommunity,
             post: PliziPost,
         },
+        mixins: [LinkMixin],
+        components: {
+            Gallery,
+            AttachmentFile,
+            IconYoutube,
+        },
+        computed: {
+            imageAttachments() {
+                return this.post.attachments.filter(attachment => attachment.isImage);
+            },
+            livePreview() {
+                let str = this.post.body.replace(/<\/?[^>]+>/g, '').trim();
+
+                return this.transformStrWithLinks(str);
+            },
+            hasYoutubeLinks() {
+                let str = this.post.body.replace(/<\/?[^>]+>/g, '').trim();
+
+                return this.detectYoutubeLinks(str);
+            },
+        },
     }
 </script>
 
 <style lang="scss">
     .post-repost {
         border-left: 2px solid #cececf;
+
+        .attachments {
+            img {
+                width: 500px;
+            }
+        }
     }
 </style>
