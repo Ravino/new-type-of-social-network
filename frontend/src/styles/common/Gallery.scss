@@ -19,6 +19,10 @@ $portraitFullHeight: 750px;
         }
     }
 
+    &-wrapper {
+      display: inline;
+    }
+
     &-attached-chat {
         .plz-gallery-single {
             .plz-gallery-wrap {

@@ -5,11 +5,12 @@
                 <div :class="{'plz-gallery-image-mores': image.isMore}"
                      :data-more="countImage"
                      @click="showImage(image.id)"
+                     class="plz-gallery-wrapper"
                 >
                     <img
                         @click="showImage(image.id)"
-                        :class="image.classes"
                         class="plz-gallery-image"
+                        :class="image.classes"
                         :src="image.path"
                         :alt="image.name"
                     >
