@@ -42,6 +42,37 @@
                 </div>
 
                 <div class="form-group row border-bottom">
+                    <label for="notice"
+                           class="plz-account-settings-body-label col-6 col-sm-4 col-lg-4 ">
+                        Короткое описание
+                    </label>
+                    <div class="plz-account-settings-body-field order-1 order-sm-0 col-12 col-sm-5 col-lg-6 ">
+                        <input type="text"
+                               id="notice"
+                               class="w-100 w-sm-75"
+                               v-model="model.notice"
+                               :class="[isEdit.notice ? 'form-control' : 'form-control-plaintext', { 'is-invalid': !!noticeError, 'is-valid': isSuccessNotice }]"
+                               @input="inputFieldEdit($event, 'notice')"
+                               @keyup.enter="accountStartSaveData($event.target.value, 'notice')"
+                               @blur="finishFieldEdit('notice')"
+                               :readonly="!isEdit.notice"
+                               ref="notice">
+
+                        <div class="invalid-feedback">
+                            <p class="text-danger">{{ noticeError }}</p>
+                        </div>
+                    </div>
+                    <div class="plz-account-settings-body-action col-6 col-sm-3 col-lg-2 d-flex">
+                        <button type="button"
+                                class="btn btn-link"
+                                :class="{'text-primary': isEdit.notice}"
+                                @click="[isEdit.notice ? finishFieldEdit('notice') : startFieldEdit('notice')]">
+                            {{ isEdit.notice ? 'Сохранить' : 'Изменить' }}
+                        </button>
+                    </div>
+                </div>
+
+                <div class="form-group row border-bottom">
                     <label for="description"
                            class="plz-account-settings-body-label col-6 col-sm-4 col-lg-4 ">
                         Описание
@@ -231,13 +262,31 @@ export default {
             return null;
         },
 
+        isSuccessNotice() {
+            return (!this.$v.model.notice.$invalid || !(!!this.serverRegMessages.notice)) && !
+                !this.model.notice;
+        },
+        noticeError() {
+            if (this.$v.model.notice.$error) {
+                if (!this.$v.model.notice.minLength) {
+                    return 'Слишком короткое опивание.';
+                } else if (!this.$v.model.notice.maxLength) {
+                    return 'Слишком длинное опивание.';
+                }
+            } else if (this.serverRegMessages.notice) {
+                return this.serverRegMessages.notice;
+            }
+
+            return null;
+        },
+
         isSuccessDescription() {
             return (!this.$v.model.description.$invalid || !(!!this.serverRegMessages.description)) && !
                 !this.model.description;
         },
         descriptionError() {
             if (this.$v.model.description.$error) {
-                if (!this.$v.model.name.maxLength) {
+                if (!this.$v.model.description.maxLength) {
                     return 'Слишком длинное описание.';
                 }
             } else if (this.serverRegMessages.name) {
@@ -271,24 +320,28 @@ export default {
         return {
             model: {
                 name: this.community.name,
+                notice: this.community.notice || '',
                 description: this.community.description || '',
                 url: this.community.url,
                 location: this.community.location,
             },
             isEdit: {
                 name: false,
+                notice: false,
                 description: false,
                 url: false,
                 location: false,
             },
             isSend: {
                 name: false,
+                notice: false,
                 description: false,
                 url: false,
                 location: false,
             },
             serverRegMessages: {
                 name: null,
+                notice: null,
                 description: null,
                 url: null,
             },
@@ -301,10 +354,14 @@ export default {
                 name: {
                     required,
                     minLength: minLength(2),
-                    maxLength: maxLength(50),
+                    maxLength: maxLength(100),
+                },
+                notice: {
+                    minLength: minLength(2),
+                    maxLength: maxLength(100),
                 },
                 description: {
-                    maxLength: maxLength(500),
+                    maxLength: maxLength(1000),
                 },
                 url: {
                     minLength: minLength(2),

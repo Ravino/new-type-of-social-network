@@ -31,7 +31,7 @@
                                 <div class="plz-community-header-details-text">
                                     <h1 class="plz-community-header-title mb-1">{{communityData.name}}</h1>
                                     <p class="plz-community-header-desc mb-0">
-                                        {{communityData.description}}
+                                        {{communityData.notice}}
                                     </p>
                                 </div>
                             </div>
