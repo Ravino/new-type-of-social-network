@@ -44,6 +44,7 @@ $postPosterPicSize: 48px;
         font-size: 13px;
         font-weight: 400;
         color: #9a9a9a;
+        text-transform: capitalize;
     }
 
     .post-main-text {
@@ -96,20 +97,26 @@ $postPosterPicSize: 48px;
 
             .icon-eye,
             .icon-message,
-            .icon-heard,
             .icon-share{
                 fill: $iconHoverColor;
+            }
+
+            .icon-heard {
+                fill: red;
             }
         }
 
         &.is-active {
             .icon-message,
-            .icon-heard,
             .icon-share {
                 fill: $iconHoverColor;
             }
             span {
                 color: $iconHoverColor;
+            }
+
+            .icon-heard {
+                fill: red;
             }
         }
     }

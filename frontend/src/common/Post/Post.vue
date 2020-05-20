@@ -137,7 +137,8 @@
                         <div class="post-watched-counter"
                              :class="{'is-active': post.alreadyLiked}"
                              @click="onLike">
-                            <IconHeard/>
+                            <IconFillHeard v-if="post.alreadyLiked"/>
+                            <IconHeard v-else/>
                             <span>{{ post.likes | space1000 }}</span>
                         </div>
                         <div class="post-watched-counter ml-4">
@@ -179,6 +180,7 @@
 <script>
     import IconEye from '../../icons/IconEye.vue';
     import IconHeard from '../../icons/IconHeard.vue';
+    import IconFillHeard from '../../icons/IconFillHeard.vue';
     import IconMessage from '../../icons/IconMessage.vue';
     import IconMessageUserPost from '../../icons/IconMessageUserPost.vue';
     import IconShare from '../../icons/IconShare.vue';
@@ -197,6 +199,7 @@
             IconShare,
             IconMessage,
             IconHeard,
+            IconFillHeard,
             IconEye,
             IconMessageUserPost,
             PostImage,

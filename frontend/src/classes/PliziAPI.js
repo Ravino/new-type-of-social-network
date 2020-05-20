@@ -561,15 +561,7 @@ class PliziAPIClass {
                 });
             }
             if (channelID=== this.channel  &&  `user.notification`===data.event_type) {
-
-                //window.console.log(JSON.stringify(data), `user.notification`);
-                let notifData = data.data;
-                /** TODO: @TGA Ниже костыль, потому что ьэк не присылает все данные **/
-                //notifData.id = new Date().valueOf();
-                //notifData.createdAt = new Date().valueOf();
-                //notifData.readAt = null;
-
-                this.emit('UserNotification', notifData);
+                this.emit('UserNotification', data.data);
             }
         });
     }

@@ -2,11 +2,63 @@
 
 namespace App\Models;
 
+use Eloquent;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Spiritix\LadaCache\Database\LadaCacheTrait;
 use Storage;
 
+/**
+ * App\Models\CommunityAttachment
+ *
+ * @property int $id
+ * @property string $user_id
+ * @property int|null $community_id
+ * @property string $original_name
+ * @property string $path
+ * @property string $mime_type
+ * @property int $size
+ * @property int $updated_at
+ * @property int $created_at
+ * @property string|null $image_normal_path
+ * @property string|null $image_medium_path
+ * @property string|null $image_thumb_path
+ * @property int|null $image_normal_width
+ * @property int|null $image_normal_height
+ * @property int|null $image_thumb_width
+ * @property int|null $image_thumb_height
+ * @property int|null $image_medium_width
+ * @property int|null $image_medium_height
+ * @property int|null $image_original_width
+ * @property int|null $image_original_height
+ * @property-read string $s3_url
+ * @property-read User $user
+ * @method static Builder|CommunityAttachment newModelQuery()
+ * @method static Builder|CommunityAttachment newQuery()
+ * @method static Builder|CommunityAttachment query()
+ * @method static Builder|CommunityAttachment whereCommunityId($value)
+ * @method static Builder|CommunityAttachment whereCreatedAt($value)
+ * @method static Builder|CommunityAttachment whereId($value)
+ * @method static Builder|CommunityAttachment whereImageMediumHeight($value)
+ * @method static Builder|CommunityAttachment whereImageMediumPath($value)
+ * @method static Builder|CommunityAttachment whereImageMediumWidth($value)
+ * @method static Builder|CommunityAttachment whereImageNormalHeight($value)
+ * @method static Builder|CommunityAttachment whereImageNormalPath($value)
+ * @method static Builder|CommunityAttachment whereImageNormalWidth($value)
+ * @method static Builder|CommunityAttachment whereImageOriginalHeight($value)
+ * @method static Builder|CommunityAttachment whereImageOriginalWidth($value)
+ * @method static Builder|CommunityAttachment whereImageThumbHeight($value)
+ * @method static Builder|CommunityAttachment whereImageThumbPath($value)
+ * @method static Builder|CommunityAttachment whereImageThumbWidth($value)
+ * @method static Builder|CommunityAttachment whereMimeType($value)
+ * @method static Builder|CommunityAttachment whereOriginalName($value)
+ * @method static Builder|CommunityAttachment wherePath($value)
+ * @method static Builder|CommunityAttachment whereSize($value)
+ * @method static Builder|CommunityAttachment whereUpdatedAt($value)
+ * @method static Builder|CommunityAttachment whereUserId($value)
+ * @mixin Eloquent
+ */
 class CommunityAttachment extends Model
 {
     use LadaCacheTrait;

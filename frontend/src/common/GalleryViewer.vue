@@ -9,10 +9,10 @@
         >
         </div>
         <div class="plz-gallery-viewer-nav">
-            <div class="plz-gallery-viewer-nav-btn plz-gallery-viewer-nav-btn-prev" @click="prevImage">
+            <div v-if="images.length > 1" class="plz-gallery-viewer-nav-btn plz-gallery-viewer-nav-btn-prev" @click="prevImage">
                 <img src="../images/gallery/arrow-left.svg" alt="prev">
             </div>
-            <div class="plz-gallery-viewer-nav-btn plz-gallery-viewer-nav-btn-next" @click="nextImage">
+            <div v-if="images.length > 1" class="plz-gallery-viewer-nav-btn plz-gallery-viewer-nav-btn-next" @click="nextImage">
                 <img src="../images/gallery/arrow-right.svg" alt="next">
             </div>
         </div>

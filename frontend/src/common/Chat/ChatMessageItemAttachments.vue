@@ -36,10 +36,10 @@ computed:{
         return (`zip`===ext  || `rar`===ext);
     },
     imageList() {
-     return this.message.attachments;
+        return this.message.attachments;
     },
     attachItem() {
-    return this.imageList.map(attach => attach.isImage)
+        return this.imageList.map(attach => attach.isImage);
     },
 },
 }
