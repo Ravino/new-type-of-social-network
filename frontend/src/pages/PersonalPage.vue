@@ -4,7 +4,10 @@
             <AccountToolbarLeft></AccountToolbarLeft>
         </div>
 
-        <div class="col-sm-10 col-md-9 col-lg-8 col-xl-8 pl-0 --bg-danger">
+        <div class="col-sm-10 col-md-9 pl-0"
+             :class="calcCentralBlockClass()"
+             v-bind:key="`CentralColumn-`+$root.$friendsKeyUpdater">
+
             <div class="container">
                 <ProfileHeader v-if="isDataReady"
                                @ShowPersonalMsgModal="onShowPersonalMsgModal"
@@ -44,12 +47,14 @@
                                      v-bind:user="profileData"></NewPersonalMessageModal>
 
             <PostRepostModal v-if="postRepostModal.isVisible"
-                             :user="profileData"
-                             :post="postForRepost"
+                             v-bind:user="profileData"
+                             v-bind:post="postForRepost"
                              @hidePostRepostModal="hidePostRepostModal"></PostRepostModal>
         </div>
 
-        <div class="col-sm-3 col-md-3 col-lg-3 col-xl-3 pr-0">
+        <div v-if="$root.$auth.fm.size>0" class="col-sm-3 col-md-3 col-lg-3 col-xl-3 pr-0"
+             v-bind:key="`RightColumn-`+$root.$favoritesKeyUpdater">
+
             <FavoriteFriends></FavoriteFriends>
         </div>
 
@@ -133,6 +138,14 @@ computed: {
 },
 
 methods: {
+    calcCentralBlockClass(){
+        window.console.log(`calcCentralBlockClass`);
+        return {
+            'col-lg-8 col-xl-8' : (this.$root.$auth.fm.size > 0), // есть фавориты
+            'col-lg-11 col-xl-11' : (this.$root.$auth.fm.size === 0), // нет фаворитов
+        };
+    },
+
     wallPostsSelectHandler(evData) {
         this.filterMode = evData.wMode;
     },
@@ -271,8 +284,6 @@ mounted() {
     this.$root.$on('showPersonalMsgModal', ()=>{
         this.isShowMessageDialog = true;
     });
-
-    this.$root.$on('sendPersonalMessage', this.handlePersonalMessage);
 },
 
 async beforeRouteUpdate( to, from, next ){
