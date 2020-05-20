@@ -7,7 +7,7 @@ const LazyLoadPosts = {
     },
     methods: {
         async onScrollYPage() {
-            if (window.scrollY >= (document.body.scrollHeight - document.documentElement.clientHeight - (document.documentElement.clientHeight/2) )){
+            if (window.scrollY >= (document.body.scrollHeight - document.documentElement.clientHeight - (document.documentElement.clientHeight / 2))) {
                 await this.lazyLoadPosts();
             }
         },
@@ -16,6 +16,7 @@ const LazyLoadPosts = {
 
             this.isStarted = true;
             let oldSize = this.posts.length;
+
             let added = await this.getPosts(10, oldSize++);
 
             if (added === 0) {
@@ -26,10 +27,9 @@ const LazyLoadPosts = {
             this.onScrollYPage();
         },
     },
-    async mounted() {
-        await this.lazyLoadPosts();
 
-        if (!this.lazyLoadStarted) {
+    async mounted() {
+        if (!this.isStarted) {
             window.addEventListener('scroll', this.onScrollYPage);
         }
     },
@@ -40,13 +40,11 @@ const LazyLoadPosts = {
     },
 
     async beforeRouteUpdate(to, from, next) {
-        await this.lazyLoadPosts();
+        next();
 
-        if (!this.lazyLoadStarted) {
+        if (!this.isStarted) {
             window.addEventListener('scroll', this.onScrollYPage);
         }
-
-        next();
     },
 };
 

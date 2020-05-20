@@ -17,7 +17,8 @@
                       @click.stop="wallPostsSelect(`user`)">Записи {{ firstName }}</span>
             </nav>
 
-            <button class="btn btn-link mx-1 px-1 btn-add-file d-none d-md-block" type="button">
+            <!-- TODO: @YZ реализовать после MVP -->
+            <button class="btn btn-link mx-1 px-1 btn-add-file d-none" type="button">
                 <IconSearch style="width: 15px; height: 16px;"/>
             </button>
 
@@ -32,6 +33,7 @@
                            @focus="onFocus"
                            class="top-search form-control form-control  w-100"
                            type="text" placeholder="Поиск" aria-label="Поиск" />
+
                     <button class="btn btn-search h-100" type="button">
                         <IconSearch style="width: 15px; height: 15px;"/>
                     </button>
