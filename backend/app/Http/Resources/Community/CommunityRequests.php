@@ -17,11 +17,10 @@ class CommunityRequests extends ResourceCollection
     public function toArray($request)
     {
         return [
-            'list' => $this->collection->map(function($row) use ($request) {
+            'list' => $this->collection->map(static function($row) {
                 return [
                     'id' => $row->id,
 //                    'community' => new Community($request->community),
-                    'notice' => $row->notice,
                     'created_at' => $row->created_at,
                     'description' => $row->description,
                     'user' => new User($row->user),

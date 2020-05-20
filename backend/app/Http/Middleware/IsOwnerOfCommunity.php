@@ -25,6 +25,6 @@ class IsOwnerOfCommunity
         }
         return response()->json([
             'message' => 'У Вас нет прав'
-        ], 422);
+        ], 403);
     }
 }

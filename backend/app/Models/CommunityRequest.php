@@ -59,9 +59,9 @@ class CommunityRequest extends Model
     public static function getStatusList()
     {
         return [
-            self::STATUS_NEW => 'Новое',
-            self::STATUS_ACCEPTED => 'Принято',
-            self::STATUS_REJECTED => 'Откланено',
+            self::STATUS_NEW => 'New',
+            self::STATUS_ACCEPTED => 'Accepted',
+            self::STATUS_REJECTED => 'Rejected',
         ];
     }
 }
