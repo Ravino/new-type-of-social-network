@@ -162,6 +162,7 @@ class PostController extends Controller
         $my_post->postable_id = \Auth::user()->id;
         $my_post->parent_id = $post->id;
         $my_post->body = '';
+        $my_post->author_id = \Auth::user()->id;
         $my_post->save();
         return new PostResource($my_post);
     }
