@@ -72,8 +72,18 @@ class Post extends Model
         return 'U';
     }
 
-    public static function getWithoutOldPosts($user, $limit, $offset)
+    public static function getWithoutOldPosts($user, $limit, $offset, $isMyPosts = false)
     {
+        if ($isMyPosts) {
+            $userPosts = $user->posts()->pluck('id');
+
+            return Post::whereIn('id', $userPosts)
+                ->with(['postable', 'author'])
+                ->limit($limit ?? 50)
+                ->offset($offset ?? 0)
+                ->get();
+        }
+
         $communities = $user->communities()->select('id')->get();
         $friends = DB::table('friendships')
             ->where('sender_id', $user->id)

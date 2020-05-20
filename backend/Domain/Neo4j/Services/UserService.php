@@ -105,4 +105,24 @@ class UserService
         }
         return $result;
     }
+
+    /**
+     * @param $user_oid
+     * @param $community_oid
+     * @return bool
+     */
+    public function isMemberOfCommunity($user_oid, $community_oid)
+    {
+        return $this->userRepository->isMemberOfCommunity($user_oid, $community_oid);
+    }
+
+    /**
+     * @param $user_oid
+     * @param $community_oid
+     * @return int|null
+     */
+    public function getMemberToCommunityId($user_oid, $community_oid)
+    {
+        return $this->userRepository->getMemberToCommunityId($user_oid, $community_oid);
+    }
 }

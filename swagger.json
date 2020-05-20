@@ -515,6 +515,154 @@
                 }
             }
         },
+        "/communities/favorite/list": {
+            "get": {
+                "tags": [
+                    "Communities"
+                ],
+                "description": "Список избранных сообществ",
+                "operationId": "getCommunitiesFavorite",
+                "parameters": [
+                    {
+                        "$ref": "#/components/parameters/offsetParam"
+                    },
+                    {
+                        "$ref": "#/components/parameters/limitParam"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "data": {
+                                            "type": "object",
+                                            "properties": {
+                                                "list": {
+                                                    "type": "array",
+                                                    "items": {
+                                                        "$ref": "#/components/schemas/Community"
+                                                    }
+                                                }
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "Authorization": []
+                    }
+                ]
+            }
+        },
+        "/communities/favorite/subscribe": {
+            "post": {
+                "tags": [
+                    "Communities"
+                ],
+                "description": "Добавить сообщество в избранные",
+                "operationId": "communitiesFavoriteAdd",
+                "requestBody": {
+                    "description": "ID пользователя которго требуется добавить в друзья",
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "type": "object",
+                                "properties": {
+                                    "userId": {
+                                        "type": "integer",
+                                        "format": "int64"
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "required": true
+                },
+                "responses": {
+                    "200": {
+                        "description": "Вы добавили сообщество в избранные",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "default": "Запрос на добавление в друзья отправлен"
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Вы не состоите в данном сообществе",
+                        "content": {}
+                    }
+                },
+                "security": [
+                    {
+                        "Authorization": []
+                    }
+                ],
+                "x-codegen-request-body-name": "body"
+            }
+        },
+        "/communities/favorite/unsubscribe/{groupId}": {
+            "delete": {
+                "tags": [
+                    "Communities"
+                ],
+                "description": "Удаление сообщества из избранных",
+                "operationId": "communitiesFavoriteDelete",
+                "parameters": [
+                    {
+                        "name": "groupId",
+                        "in": "path",
+                        "description": "ID сообщества",
+                        "required": true,
+                        "schema": {
+                            "type": "number"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Вы удалили сообщество из избранных",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "default": "Вы удалили сообщество из избранных"
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Вы не состоите в данном сообществе",
+                        "content": {}
+                    }
+                },
+                "security": [
+                    {
+                        "Authorization": []
+                    }
+                ]
+            }
+        },
         "/posts": {
             "post": {
                 "tags": [

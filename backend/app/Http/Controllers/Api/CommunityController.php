@@ -184,7 +184,7 @@ class CommunityController extends Controller
         $community = Community::find($id);
         if($community) {
             if(!$community->users->contains(auth()->user()->id)) {
-                $community->users()->attach(auth()->user()->id, ['role' => Community::ROLE_USER]);
+                $community->users()->attach(auth()->user()->id, ['role' => Community::ROLE_USER, 'created_at' => time(), 'updated_at' => time()]);
                 event(new CommunitySubscribe($community->id, auth()->user()->id));
                 return response()->json([
                     'data' => [
@@ -271,5 +271,47 @@ class CommunityController extends Controller
         return response()->json([
             'data' => CommunityTheme::getTree(),
         ]);
+    }
+
+    /**
+     * @param Request $request
+     * @return CommunityCollection
+     */
+    public function listFavorite(Request $request)
+    {
+        $community_ids = (new Community())->getFavariteIdList(null, $request->query('limit', 5), $request->query('offset', 0));
+        $communities = Community::whereIn('id', $community_ids)
+            ->get();
+        return new CommunityCollection($communities);
+    }
+
+    /**
+     * @param Request $request
+     * @return JsonResponse
+     */
+    public function addFavorite(Request $request)
+    {
+        /** @var Community $community */
+        $community = Community::find($request->id);
+        if ($community && $community->addToFavotite()) {
+            return response()->json(['message' => 'Вы добавили сообщество в избранные'], 200);
+        }
+
+        return response()->json(['message' => 'Вы не состоите в данном сообществе'], 422);
+    }
+
+    /**
+     * @param $groupId
+     * @return JsonResponse
+     */
+    public function deleteFavorite($groupId)
+    {
+        /** @var Community $community */
+        $community = Community::find($groupId);
+        if ($community && $community->deleteFromFavotite()) {
+            return response()->json(['message' => 'Вы удалили сообщество из избранных'], 200);
+        }
+
+        return response()->json(['message' => 'Вы не состоите в данном сообществе'], 422);
     }
 }

@@ -138,8 +138,8 @@
 <script>
     import {url, or} from 'vuelidate/lib/validators';
     import PliziCommunity from "../../classes/PliziCommunity";
-    import lodash from 'lodash';
     import communityUtils from "../../utils/CommunityUtils";
+    import {debounce} from "../../utils/Debonce";
 
     export default {
         name: 'CommunitySettingsAdditional',
@@ -215,7 +215,7 @@
                 }
                 return null;
             },
-            startFieldEdit: lodash.debounce(function (fieldName) {
+            startFieldEdit: debounce(function (fieldName) {
                 this.isEdit[fieldName] = true;
 
                 const inpRef = this.getRef(fieldName);
@@ -226,7 +226,7 @@
                     window.console.warn(`Ошибка редактирования поля`);
                 }
             }, 50),
-            finishFieldEdit: lodash.debounce(function (fieldName) {
+            finishFieldEdit: debounce(function (fieldName) {
                 this.$v.model[fieldName].$touch();
                 const inpRef = this.getRef(fieldName);
 
