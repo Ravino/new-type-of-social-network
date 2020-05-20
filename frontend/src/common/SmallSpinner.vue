@@ -23,7 +23,7 @@
 
   data(){
    return {
-    defaultClazz: `col-sm-12 col-md-12 col-lg-4 col-xl-12 py-5 px-5 d-flex flex-column align-items-center`,
+    defaultClazz: `col-12 py-5 px-5 d-flex flex-column align-items-center`,
     defaultMessage: `Данные загружаются`,
    }
   },
