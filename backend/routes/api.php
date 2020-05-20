@@ -94,6 +94,15 @@ Route::group(['middleware' => ['auth.jwt', 'track.activity']], function () {
         Route::get('favorite/list', [CommunityController::class, 'listFavorite']);
         Route::post('favorite/subscribe', [CommunityController::class, 'addFavorite']);
         Route::delete('favorite/unsubscribe/{groupId}', [CommunityController::class, 'deleteFavorite']);
+
+        Route::middleware(['community.get'])->prefix('requests')->group(static function() {
+            Route::post('create/{groupId}', [CommunityController::class, 'requestCreate']);
+            Route::middleware(['community.isOwner'])->group(static function() {
+                Route::get('list/{groupId}', [CommunityController::class, 'requestList']);
+                Route::patch('accept/{groupId}/{id}', [CommunityController::class, 'requestAccept']);
+                Route::patch('reject/{groupId}/{id}', [CommunityController::class, 'requestReject']);
+            });
+        });
     });
     Route::get('communities/{community_id}/posts', 'Api\PostController@communityPosts');
 

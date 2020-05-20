@@ -17,12 +17,6 @@ Vue.use(vuetwemoji, {
     size: '16x16' //image size
 });
 
-
-
-/** @link https://www.npmjs.com/package/vue-textarea-autosize **/
-//import TextareaAutosize from 'vue-textarea-autosize';
-//Vue.use(TextareaAutosize);
-
 /** @link https://vue-multiselect.js.org/#sub-getting-started **/
 import Multiselect from 'vue-multiselect';
 Vue.component('multiselect', Multiselect);
@@ -84,10 +78,11 @@ Vue.prototype.$alert = function(message, clazz, timeOut){
     });
 };
 
-// @TGA пока не нужно
-//
-//import { VueResponsiveComponents } from 'vue-responsive-components';
-// Vue.use(VueResponsiveComponents);
+Vue.prototype.$friendsKeyUpdater = 0;
+Vue.prototype.$favoritesKeyUpdater = 0;
+Vue.prototype.$dialogsKeyUpdater = 0;
+Vue.prototype.$invitationsKeyUpdater = 0;
+Vue.prototype.$notificationsKeyUpdater = 0;
 
 import router from './router/router.js';
 //import store from './store/store.js'

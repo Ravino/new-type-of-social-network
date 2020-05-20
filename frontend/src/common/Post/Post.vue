@@ -29,7 +29,7 @@
                         </time>
                     </div>
 
-                    <div class="post-poster-actions my-auto ml-auto">
+                    <div v-if="post.author.id === user.id" class="post-poster-actions my-auto ml-auto">
                         <button class="btn btn-link post-settings"
                                 :id="`postSettings` + post.id"
                                 type="button"
@@ -42,13 +42,13 @@
                              :aria-labelledby="`postSettings` + post.id">
 
                             <div v-if="post.author.id === user.id" class="nav-item">
-                                <button class="btn dropdown-item px-3 py-1"
+                                <button class="btn dropdown-item text-left px-3 py-1"
                                         @click="$emit('onEditPost', post)">
                                     Редактировать
                                 </button>
                             </div>
                             <div v-if="post.author.id === user.id" class="nav-item">
-                                <button class="btn dropdown-item px-3 py-1"
+                                <button class="btn dropdown-item text-left px-3 py-1"
                                         @click="$emit('onDeletePost', post.id)">
                                     Удалить
                                 </button>
@@ -58,17 +58,17 @@
                 </div>
             </div>
 
-            <div v-if="post.sharedFrom" class="sharedFrom">
+            <div v-if="post.sharedFrom" class="sharedFrom pt-3 pl-3">
                 <div class="col-12 plz-post-item-header">
-                    <div class="post-news-item d-flex flex-row align-content-center pb-4" :class="{'shared px-4': post.sharedFrom, 'pb-4': !post.sharedFrom}">
-                        <div class="post-poster-pic mr-3">
-                            <router-link v-if="post.sharedFrom.user" :to="{name: 'PersonalPage', params: {id: post.sharedFrom.user.id}}">
-                                <img :src="post.sharedFrom.posterPic" :alt="post.sharedFrom.posterName"/>
-                            </router-link>
-                            <router-link v-else :to="{name: 'CommunityPage', params: {id: post.sharedFrom.community.id}}">
-                                <img :src="post.sharedFrom.posterPic" :alt="post.sharedFrom.posterName"/>
-                            </router-link>
-                        </div>
+
+                    <div class="post-news-item d-flex flex-row align-content-center shared  pb-2">
+
+                        <router-link v-if="post.sharedFrom.user"  :to="{name: 'PersonalPage', params: {id: post.sharedFrom.user.id}}" class="post-poster-pic mr-3">
+                            <img :src="post.sharedFrom.posterPic" :alt="post.sharedFrom.posterName"/>
+                        </router-link>
+                        <router-link v-else  :to="{name: 'CommunityPage', params: {id: post.sharedFrom.community.id}}" class="post-poster-pic mr-3">
+                            <img :src="post.sharedFrom.posterPic" :alt="post.sharedFrom.posterName"/>
+                        </router-link>
 
                         <div class="post-poster-name d-flex flex-column justify-content-center">
                             <h6 class="post-poster-title mb-1">
@@ -88,7 +88,7 @@
                     </div>
                 </div>
 
-                <div class="col-12 plz-post-item-body pb-2 pt-4">
+                <div class="col-12 plz-post-item-body pt-2">
                     <template v-if="sharedLivePreview && typeof sharedLivePreview === 'object'">
                         <p v-if="sharedLivePreview.text"
                            class="post-main-text shared mb-0"
@@ -113,7 +113,7 @@
 
                     <template v-else>
                         <p v-if="post.sharedFrom.body"
-                           class="post-main-text shared mb-2"
+                           class="post-main-text shared mb-0"
                            v-html="this.$options.filters.toBR(post.sharedFrom.body)"></p>
                     </template>
                 </div>

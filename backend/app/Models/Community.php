@@ -2,10 +2,8 @@
 
 namespace App\Models;
 
-use App\CommunityMember;
 use App\Models\Geo\City;
 use App\Traits\Neo4jFavorite;
-use App\Traits\NPerGroup;
 use Auth;
 use Domain\Neo4j\Service\UserService;
 use Eloquent;
@@ -48,6 +46,8 @@ use Spiritix\LadaCache\Database\LadaCacheTrait;
  * @property-read int|null $members_count
  * @property-read Collection|Post[] $posts
  * @property-read int|null $posts_count
+ * @property-read Collection|CommunityRequest[] $requests
+ * @property-read int|null $requests_count
  * @property-read CommunityMember|null $role
  * @property-read CommunityTheme $theme
  * @property-read Collection|User[] $users
@@ -119,6 +119,14 @@ class Community extends Model
     public function members()
     {
         return $this->hasMany(CommunityMember::class);
+    }
+
+    /**
+     * @return HasMany
+     */
+    public function requests()
+    {
+        return $this->hasMany(CommunityRequest::class);
     }
 
     /**

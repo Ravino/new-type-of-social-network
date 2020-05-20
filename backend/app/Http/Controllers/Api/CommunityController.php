@@ -7,14 +7,17 @@ use App\Events\CommunityUnsubscribe;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Community\Community as CommunityRequest;
 use App\Http\Requests\Community\CreateCommunity;
+use App\Http\Requests\Community\CreateCommunityRequest;
 use App\Http\Requests\Community\UploadFileRequest;
 use App\Http\Resources\Community\CommunityCollection;
 use App\Http\Resources\Community\Community as CommunityResource;
+use App\Http\Resources\Community\CommunityRequests;
 use App\Http\Resources\Community\CommunityUserCollection;
 use App\Http\Resources\User\Image;
 use App\Models\Community;
 use App\Models\CommunityAttachment;
 use App\Models\CommunityHeader;
+use App\Models\CommunityRequest as CommunityRequestModel;
 use App\Models\CommunityTheme;
 use App\Services\CommunityService;
 use App\Services\S3UploadService;
@@ -23,7 +26,6 @@ use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use App\Http\Resources\Post\AttachmentsCollection;
-use Illuminate\Support\Facades\Auth;
 
 class CommunityController extends Controller
 {
@@ -293,5 +295,76 @@ class CommunityController extends Controller
         }
 
         return response()->json(['message' => 'Вы не состоите в данном сообществе'], 422);
+    }
+
+    public function requestCreate(CreateCommunityRequest $request)
+    {
+        /** @var Community $community */
+        $community = $request->community;
+
+        /**
+         * @todo What about PRIVATE community
+         */
+        if ($community->privacy !== Community::PRIVACY_CLOSED) {
+            return response()->json([
+                'message' => 'Вы не можете создать запрос в это сообщество',
+            ], 422);
+        }
+
+        if ($community->users->contains(auth()->user()->id)) {
+            return response()->json([
+                'message' => 'Вы уже состоите в этом сообществе',
+            ], 422);
+        }
+
+        if ($community->requests->contains(auth()->user()->id)) {
+            return response()->json([
+                'message' => 'Вы уже подали запрос в это сообщество',
+            ], 422);
+        }
+
+        if (CommunityRequestModel::create([
+            'community_id' => $community->id,
+            'description' => $request->description,
+        ])) {
+            return response()->json([
+                'message' => 'Запрос создан',
+            ]);
+        }
+
+        return response()->json([
+            'message' => 'Ошибка создания запроса',
+        ], 422);
+    }
+
+    public function requestList()
+    {
+        return new CommunityRequests($this->communityService->requestList());
+    }
+
+    public function requestAccept()
+    {
+        if ($this->communityService->requestAccept()) {
+            return response()->json([
+                'message' => 'Запрос принят',
+            ]);
+        }
+
+        return response()->json([
+            'message' => 'Ошибка принятия запроса',
+        ], 422);
+    }
+
+    public function requestReject()
+    {
+        if ($this->communityService->requestReject()) {
+            return response()->json([
+                'message' => 'Запрос отклонен',
+            ]);
+        }
+
+        return response()->json([
+            'message' => 'Ошибка отклонения запроса',
+        ], 422);
     }
 }

@@ -32,6 +32,7 @@ class PostWithoutParent extends JsonResource
                 'alreadyLiked' => $this->alreadyLiked,
                 'attachments' => new AttachmentsCollection($this->attachments),
                 'user' => new SimpleUser($this->postable),
+                'author' => new SimpleUser($this->author),
                 'createdAt' => $this->created_at
             ];
         } else if($this->postable instanceof CommunityModel) {
@@ -47,6 +48,7 @@ class PostWithoutParent extends JsonResource
                 'alreadyLiked' => $this->alreadyLiked,
                 'attachments' => new AttachmentsCollection($this->attachments),
                 'community' => new Community($this->postable),
+                'author' => new SimpleUser($this->author),
                 'createdAt' => $this->created_at
             ];
         }
