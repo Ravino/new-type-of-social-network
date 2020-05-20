@@ -14,19 +14,28 @@ $portraitFullHeight: 750px;
     }
 
     &--open {
-        z-index: 2000;
+        header {
+        z-index: 1;
+        }
     }
 
     &-attached-chat {
-        .plz-gallery-wrap img {
-            width: 100px;
-            height: 100px;
-        }
-        .plz-gallery-viewer {
-            &-current  img{
-
+        .plz-gallery-single {
+            .plz-gallery-wrap {
+                img {
+                    width: 200px !important;
+                    height: 200px;
+                }
             }
         }
+        .plz-gallery-portrait {
+            display: flex;
+         .plz-gallery-image-portrait-block-2, .plz-gallery-image-portrait-block-1 {
+             width: 100px;
+         }
+    }
+
+
 
         .plz-gallery-image-portrait-wrap {
             height: 170px;

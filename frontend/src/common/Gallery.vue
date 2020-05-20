@@ -1,5 +1,5 @@
 <template>
-    <div class="plz-gallery" :class="[`plz-gallery-${galleryType}`]">
+    <div class="plz-gallery" :class="[`plz-gallery-${galleryType}`, {'plz-gallery-single': isSingleImage}]">
         <div v-if="galleryType === 'album'" class="plz-gallery-wrap plz-gallery-wrap-album">
             <template v-for="image in imagesWithClasses">
                 <img
@@ -32,7 +32,7 @@
                 :active-id="activeImageId"
                 @close="activeImageId = null">
             </GalleryViewer>
-            <GalleryDescription :post="post"></GalleryDescription>
+            <GalleryDescription v-if="post" :post="post"></GalleryDescription>
         </div>
     </div>
 </template>
@@ -62,6 +62,9 @@ data() {
 computed: {
    countImages() {
     return this.images.length;
+   },
+   isSingleImage() {
+    return this.countImages === 1;
    },
    countImagesMore() {
     return this.countImages - this.moreCount;
