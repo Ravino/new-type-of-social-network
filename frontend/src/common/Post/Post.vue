@@ -142,7 +142,7 @@
                             <span>{{ post.likes | space1000 }}</span>
                             <div v-if="post.usersLikes.length" class="usersLikes p-3" @click.stop="">
                                 <p class="mb-0">
-                                    <b @click.stop="$emit('showUsersLikes', post.usersLikes)"
+                                    <b @click.stop="$emit('onShowUsersLikes', post.id)"
                                        style="cursor: pointer">
                                         Понравилось
                                     </b>
@@ -256,7 +256,7 @@
                 return this.$root.$auth.user;
             },
             shortUsersLikes() {
-                return this.post.usersLikes && this.post.usersLikes.length ? this.post.usersLikes.slice(0, 5) : null;
+                return this.post.usersLikes && this.post.usersLikes.length ? this.post.usersLikes.slice(0, 8) : null;
             },
         },
         methods: {

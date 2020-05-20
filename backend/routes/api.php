@@ -31,6 +31,7 @@ Route::group(['middleware' => ['auth.jwt', 'track.activity']], function () {
     });
 
     Route::get('posts', 'Api\PostController@index');
+    Route::get('posts/{post}/likes/users', 'Api\LikeController@getPostUsersLikes');
     Route::get('user/posts', 'Api\PostController@myPosts');
     Route::get('user/news', 'Api\PostController@getNews');
     Route::get('user/{id}/posts', [

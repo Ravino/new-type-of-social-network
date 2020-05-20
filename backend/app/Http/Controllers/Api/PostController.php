@@ -83,7 +83,9 @@ class PostController extends Controller
         /** @var Community $community */
         $community = Community::find($community_id);
         if($community) {
-            $posts = $community->posts()->with(['postable', 'author'])
+            $posts = $community->posts()->with(['postable', 'author', 'usersLikes' => function ($query) {
+                return $query->limit(8)->get();
+            }])
                 ->limit($request->query('limit') ?? 50)
                 ->offset($request->query('offset') ?? 0)
                 ->orderByDesc('id')

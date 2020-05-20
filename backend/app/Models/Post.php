@@ -92,7 +92,9 @@ class Post extends Model
             $userPosts = $user->posts()->pluck('id');
 
             return Post::whereIn('id', $userPosts)
-                ->with(['postable', 'author'])
+                ->with(['postable', 'author', 'usersLikes' => function ($query) {
+                    return $query->limit(8)->get();
+                }])
                 ->limit($limit ?? 50)
                 ->offset($offset ?? 0)
                 ->orderBy('id', 'desc')
@@ -143,7 +145,9 @@ class Post extends Model
         $postsIds = $postsIds->merge($userPosts);
 
         return Post::whereIn('id', $postsIds)
-            ->with(['postable', 'author'])
+            ->with(['postable', 'author', 'usersLikes' => function ($query) {
+                return $query->limit(8)->get();
+            }])
             ->limit($limit ?? 50)
             ->offset($offset ?? 0)
             ->orderBy('id', 'desc')

@@ -23,7 +23,8 @@
                               @onDeletePost="onDeletePost"
                               @onRestorePost="onRestorePost"
                               @onEditPost="onEditPost"
-                              @openVideoModal="openVideoModal">
+                              @openVideoModal="openVideoModal"
+                              @onShowUsersLikes="openLikeModal">
                         </Post>
                     </template>
 
@@ -80,6 +81,7 @@ import PostLikeModal from '../common/Post/PostLikeModal.vue';
 import SmallSpinner from "../common/SmallSpinner.vue";
 
 import PliziPost from '../classes/PliziPost.js';
+import PliziUser from '../classes/PliziUser.js';
 import LazyLoadPosts from '../mixins/LazyLoadPosts.js';
 
 export default {
@@ -119,7 +121,7 @@ data() {
         postLikeModal: {
             isVisible: false,
             content: {
-                users: null,
+                users: [],
             },
         },
     }
@@ -186,9 +188,9 @@ methods : {
         this.postForEdit = null;
     },
 
-    openLikeModal(users) {
+    async openLikeModal(postId) {
         this.postLikeModal.isVisible = true;
-        this.postLikeModal.content.users = users;
+        await this.getUsersLikes(postId);
     },
 
     hideLikeModal() {
@@ -196,7 +198,7 @@ methods : {
         this.postLikeModal.content.users = null;
     },
 
-    async getPosts(limit = 50, offset = 0){
+    async getPosts(limit = 50, offset = 0) {
         let response = null;
 
         try{
@@ -216,7 +218,27 @@ methods : {
         }
     },
 
-    async onDeletePost( id ){
+    async getUsersLikes(postId, limit = 20, offset = 0) {
+        let response = null;
+
+        try{
+            response = await this.$root.$api.$post.getUsersLikes(postId, limit, offset);
+        } catch (e){
+            this.enabledPostLoader = false;
+            console.warn( e.detailMessage );
+        }
+
+        if ( response !== null ){
+            this.enabledPostLoader = false;
+            response.map((post) => {
+                this.postLikeModal.content.users.push(new PliziUser(post));
+            });
+
+            return response.length;
+        }
+    },
+
+    async onDeletePost( id ) {
         let response;
 
         try{
@@ -235,7 +257,7 @@ methods : {
         }
     },
 
-    async onRestorePost( id ){
+    async onRestorePost( id ) {
         let response;
 
         try{
@@ -262,6 +284,7 @@ async mounted() {
 
     this.$root.$on('wallPostsSelect', this.wallPostsSelectHandler);
     // await this.getPosts();
+    // this.lazyLoadStarted = true;
 }
 
 }
