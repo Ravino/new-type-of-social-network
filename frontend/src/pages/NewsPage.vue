@@ -24,13 +24,13 @@
                           @openVideoModal="openVideoModal"/>
                     </template>
 
-                    <div v-else-if="!enabledPostLoader"  class="row plz-post-item mb-4 bg-white-br20 p-4">
+                    <div v-else-if="!isStarted"  class="row plz-post-item mb-4 bg-white-br20 p-4">
                         <div class="alert alert-info w-100 p-5 text-center mb-0">
                             Извините, но сейчас нечего показывать.
                         </div>
                     </div>
 
-                    <template v-if="enabledPostLoader">
+                    <template v-if="isStarted">
                         <div class="row plz-post-item mb-4 bg-white-br20 p-4">
                             <div class="w-100 p-5 text-center mb-0">
                                 <SmallSpinner/>
@@ -138,7 +138,6 @@ methods: {
         }
 
         if (response !== null) {
-            this.enabledPostLoader = false;
             response.map((post) => {
                 this.posts.push(new PliziPost(post));
             });
@@ -183,8 +182,8 @@ methods: {
     },
 },
 
-mounted() {
-    this.getPosts();
+async mounted() {
+    await this.getPosts();
 },
 }
 </script>

@@ -475,6 +475,7 @@ methods: {
         if (apiResponse) {
             this.communityData = new PliziCommunity(apiResponse);
             this.isDataReady = true;
+            await this.getPosts();
         }
     },
     async getPosts(limit = 50, offset = 0) {
@@ -504,9 +505,9 @@ async mounted() {
     beforeRouteUpdate (to, from, next) {
         this.communityData = null;
         this.posts = null;
+        next();
         this.id = to.params.id;
         this.getCommunityInfo();
-        next();
         window.scrollTo(0, 0);
     },
 }

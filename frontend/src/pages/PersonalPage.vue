@@ -23,13 +23,13 @@
                           @onShare="onSharePost"></Post>
                 </template>
 
-                <div v-else-if="!enabledPostLoader"  class="row plz-post-item mb-4 bg-white-br20 p-4">
+                <div v-else-if="!isStarted"  class="row plz-post-item mb-4 bg-white-br20 p-4">
                     <div class="alert alert-info w-100 p-5 text-center mb-0">
                         Пользователь {{ profileData.firstName }} не создал ни одной записи.
                     </div>
                 </div>
 
-                <template v-if="enabledPostLoader">
+                <template v-if="isStarted">
                     <div class="row plz-post-item mb-4 bg-white-br20 p-4">
                         <div class="w-100 p-5 text-center mb-0">
                             <SmallSpinner />
@@ -115,9 +115,6 @@ data() {
             isVisible: false,
         },
         postForRepost: null,
-        lazyLoadStarted: false,
-        noMorePost: false,
-        enabledPostLoader: true,
     }
 },
 
@@ -234,14 +231,14 @@ methods: {
         let response = null;
 
         try {
-            response = await this.$root.$api.$post.getPostsByUserId(this.profileData.id, limit, offset);
+            if (this.profileData && this.profileData.id) {
+                response = await this.$root.$api.$post.getPostsByUserId(this.profileData.id, limit, offset);
+            }
         } catch (e) {
             console.warn(e.detailMessage);
         }
 
         if (response !== null) {
-            this.enabledPostLoader = false;
-
             response.map((post) => {
                 this.posts.push(new PliziPost(post));
             });
@@ -272,23 +269,16 @@ mounted() {
     });
 
     this.$root.$on('sendPersonalMessage', this.handlePersonalMessage);
-    window.addEventListener('scroll', this.onScrollYPage);
 },
 
 beforeRouteUpdate( to, from, next ){
     this.profileData = null;
     this.posts = null;
     this.userId = to.params.id;
-    this.getUserInfo();
     next();
+    this.getUserInfo();
     window.scrollTo( 0, 0 );
 },
-
-beforeRouteLeave(to, from, next) {
-    window.removeEventListener('scroll', this.onScrollYPage);
-    next();
-}
-
 }
 </script>
 

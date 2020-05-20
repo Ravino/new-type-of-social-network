@@ -280,8 +280,7 @@ async mounted() {
     });
 
     this.$root.$on('wallPostsSelect', this.wallPostsSelectHandler);
-    // await this.getPosts();
-    // this.lazyLoadStarted = true;
+    await this.getPosts();
 }
 
 }
