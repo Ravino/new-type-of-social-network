@@ -88,9 +88,9 @@ computed: {
 },
 
 methods: {
-    goToDialogWithFriend(){
+    async goToDialogWithFriend(){
         this.isInRedirecting = true;
-        this.openDialogWithFriend( this.srItem );
+        await this.openDialogWithFriend( this.srItem );
         this.$root.$router.push('/chats');
     },
 }

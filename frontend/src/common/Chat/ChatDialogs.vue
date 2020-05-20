@@ -1,5 +1,5 @@
 <template>
-    <div class="chat-dialogs-list col-sm-12 col-md-12 col-lg-4 col-xl-4 col-auto px-0 ">
+    <div class="chat-dialogs-list col-sm-12 col-md-12 col-lg-4 col-xl-4 col-auto px-0">
 
         <ChatDialogsFilter @ChatDialogsFilter="onChatDialogsFilter"></ChatDialogsFilter>
 
@@ -30,7 +30,7 @@ export default {
 name : 'ChatDialogs',
 components : { ChatDialogsFilter, ChatListItem, VueCustomScrollbar },
 props : {
-    currentDialogID : {},
+    currentDialogID : String,
     chatDialogsKeyUpdater: Number
 },
 
@@ -79,27 +79,24 @@ methods: {
         this.$emit('SwitchToChat', evData);
     },
 
-
     onChatDialogsFilter(evData){
         this.dialogFilter.text = evData.text ? evData.text.trim() : '';
     },
 
-
     onRemoveChatDialog(evData){
-        this.$root.$auth.dm.delete( evData.chatId );
+        this.$root.$auth.dm.onRemoveDialog( evData.chatId );
 
-        const newPickedChat = (this.$root.$auth.dm.size > 0) ? this.$root.$auth.dm.firstDialog.id : -1;
+        if (this.$root.$auth.dm.size > 0) {
+            const newPickedChat = this.$root.$auth.dm.firstDialog.id;
 
-        this.$emit('SwitchToChat', { chatId: newPickedChat });
-
-        /** FIXME: @TGA: удаление через DOM это костыль, надо потом добиться автоудаления **/
-        let $elem = document.getElementById('dialogItem-'+evData.chatId);
-        window.console.log($elem);
-        if ($elem){
-            $elem.remove();
+            this.$emit('SwitchToChat', { chatId: newPickedChat });
         }
-    },
+        else {
+            window.console.info(`нет диалогов`);
+        }
 
+
+    },
 
     onUpdateChatDialog(evData){
         const updatedFields = {
@@ -130,6 +127,7 @@ methods: {
 
         return true;
     },
+
 
     async onDialogsListLoad(wMode){
         if (this.listFilled)
@@ -197,7 +195,7 @@ created(){
 
 async mounted(){
     if (! this.listFilled) {
-        this.onDialogsListLoad(`mounted`);
+        await this.onDialogsListLoad(`mounted`);
     }
 }
 
