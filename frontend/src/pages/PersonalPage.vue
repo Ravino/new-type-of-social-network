@@ -18,8 +18,8 @@
 
                 <template v-if="filteredPosts && filteredPosts.length > 0">
                     <Post v-for="postItem in filteredPosts"
-                          :key="postItem.id"
-                          :post="postItem"
+                          v-bind:key="`userPost-`+postItem.id"
+                          v-bind:post="postItem"
                           @onShare="onSharePost"></Post>
                 </template>
 
@@ -195,8 +195,6 @@ methods: {
 
         if (apiResponse) {
             this.profileData = new PliziUser(apiResponse.data);
-            this.isDataReady = true;
-            await this.getPosts();
         }
     },
 
@@ -231,6 +229,9 @@ methods: {
     },
 
     async getPosts(limit = 50, offset = 0) {
+        if ( !(this.profileData &&  this.profileData.id))
+            return;
+
         let response = null;
 
         try {
@@ -259,8 +260,10 @@ methods: {
     }
 },
 
-mounted() {
-    this.getUserInfo();
+async mounted() {
+    await this.getUserInfo();
+    await this.getPosts();
+    this.isDataReady = true;
     window.scrollTo(0, 0);
 
     this.$root.$on('hidePersonalMsgModal', ()=>{
@@ -275,11 +278,16 @@ mounted() {
     window.addEventListener('scroll', this.onScrollYPage);
 },
 
-beforeRouteUpdate( to, from, next ){
+async beforeRouteUpdate( to, from, next ){
     this.profileData = null;
     this.posts = null;
     this.userId = to.params.id;
-    this.getUserInfo();
+    this.isDataReady = false;
+
+    await this.getUserInfo();
+    await this.getPosts();
+    this.isDataReady = true;
+
     next();
     window.scrollTo( 0, 0 );
 },
