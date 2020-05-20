@@ -36,15 +36,8 @@
             display: block;
         }
     }
-    //padding-left: 20px;
+
 }
-
-
-// **** TODO @Veremey нужен ли нам этот класс в Разметке постов?
-//.shared {
-//    padding: 10px;
-//    border-left: 2px solid #cececf;
-//}
 
 .youtube-video-link {
     .post-main-text {
@@ -66,7 +59,7 @@
     }
     &__option {
         &--highlight {
-            span {
+            & > span {
                 line-height: 40px;
                 padding-left: 15px;
             }
