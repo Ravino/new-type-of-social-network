@@ -86,6 +86,7 @@ class PostController extends Controller
             $posts = $community->posts()->with(['postable', 'author'])
                 ->limit($request->query('limit') ?? 50)
                 ->offset($request->query('offset') ?? 0)
+                ->orderByDesc('id')
                 ->get();
             return new PostCollection($posts, false);
         }
