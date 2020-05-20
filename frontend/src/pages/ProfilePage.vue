@@ -28,13 +28,13 @@
                         </Post>
                     </template>
 
-                    <div v-else-if="!enabledPostLoader"  class="row plz-post-item mb-4 bg-white-br20 p-4">
+                    <div v-else-if="!isStarted"  class="row plz-post-item mb-4 bg-white-br20 p-4">
                         <div class="alert alert-info w-100 p-5 text-center mb-0">
                             Извините, но сейчас нечего показывать.
                         </div>
                     </div>
 
-                    <template v-if="enabledPostLoader">
+                    <template v-if="isStarted">
                         <div class="row plz-post-item mb-4 bg-white-br20 p-4">
                             <div class="w-100 p-5 text-center mb-0">
                                 <SmallSpinner/>
@@ -164,12 +164,12 @@ methods : {
         }
     },
 
-    hideVideoModal(){
+    hideVideoModal() {
         this.postVideoModal.isVisible = false;
     },
 
-    addNewPost( post ){
-        this.posts.unshift( new PliziPost( post ) );
+    addNewPost(post) {
+        this.posts.unshift(new PliziPost(post));
     },
 
     startTimer( postIndex ){
@@ -204,12 +204,10 @@ methods : {
         try{
             response = await this.$root.$api.$post.getPosts(limit, offset);
         } catch (e){
-            this.enabledPostLoader = false;
             console.warn( e.detailMessage );
         }
 
         if ( response !== null ){
-            this.enabledPostLoader = false;
             response.map((post) => {
                 this.posts.push(new PliziPost(post));
             });
@@ -224,12 +222,10 @@ methods : {
         try{
             response = await this.$root.$api.$post.getUsersLikes(postId, limit, offset);
         } catch (e){
-            this.enabledPostLoader = false;
             console.warn( e.detailMessage );
         }
 
         if ( response !== null ){
-            this.enabledPostLoader = false;
             response.map((post) => {
                 this.postLikeModal.content.users.push(new PliziUser(post));
             });

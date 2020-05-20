@@ -82,8 +82,8 @@
                                      :class="'mx-0 '"
                                      @addNewPost="addNewPost"/>
 
-                    <div v-if="communityPosts && communityPosts.length > 0" id="communityPostsBlock" class="pb-5 mb-4 --text-center">
-                        <Post v-for="postItem in communityPosts"
+                    <div v-if="posts && posts.length > 0" id="communityPostsBlock" class="pb-5 mb-4 --text-center">
+                        <Post v-for="postItem in posts"
                               :key="postItem.id"
                               :post="postItem"
                               :isCommunity="true"
@@ -201,13 +201,14 @@ import CommunitiesSubscribeMixin from "../mixins/CommunitiesSubscribeMixin";
 import CommunityManagedActionBlock from "../common/Communities/CommunityManagedActionBlock.vue";
 
 import IconYoutube from "../icons/IconYoutube.vue";
+import LazyLoadPosts from '../mixins/LazyLoadPosts.js';
 
 export default {
 name: 'CommunityPage',
 props: {
     id : Number|String
 },
-mixins: [CommunitiesSubscribeMixin],
+mixins: [CommunitiesSubscribeMixin, LazyLoadPosts],
 components : {
     CommunityManagedActionBlock,
     CommunityShortMembers,
@@ -228,7 +229,7 @@ data() {
     return {
         isDataReady: false,
         communityData: null,
-        communityPosts: [],
+        posts: [],
         postEditModal: {
             isVisible: false,
         },
@@ -237,9 +238,6 @@ data() {
             isVisible: false,
         },
         postForRepost: null,
-        lazyLoadStarted: false,
-        noMorePost: false,
-        enabledPostLoader: true,
     }
 },
 
@@ -276,16 +274,16 @@ computed: {
 
 methods: {
     addNewPost(post) {
-        this.communityPosts.unshift( new PliziPost( post ) );
+        this.posts.unshift( new PliziPost( post ) );
     },
     startTimer( post ){
         setTimeout( () => {
-            const postIndex = this.communityPosts.find( ( userPost ) => {
+            const postIndex = this.posts.find( ( userPost ) => {
                 return userPost.id === post.id;
             } );
 
             if ( post.deleted ){
-                this.communityPosts.splice( postIndex, 1 );
+                this.posts.splice( postIndex, 1 );
             }
         }, 5000 );
     },
@@ -353,11 +351,6 @@ methods: {
         this.postRepostModal.isVisible = false;
         this.postForRepost = null;
     },
-    onScrollYPage(){
-        if (window.scrollY >= (document.body.scrollHeight - document.documentElement.clientHeight - (document.documentElement.clientHeight/2) )){
-            this.lazyLoadPost();
-        }
-    },
 
     async onDeletePost(id) {
         let response;
@@ -369,7 +362,7 @@ methods: {
         }
 
         if ( response ){
-            const post = this.communityPosts.find( ( post ) => {
+            const post = this.posts.find( ( post ) => {
                 return post.id === id;
             } );
 
@@ -388,7 +381,7 @@ methods: {
         }
 
         if ( response ){
-            const post = this.communityPosts.find( ( post ) => {
+            const post = this.posts.find( ( post ) => {
                 return post.id === id;
             } );
 
@@ -445,62 +438,37 @@ methods: {
             this.isDataReady = true;
         }
     },
-    async getCommunityPosts(limit = 50, offset = 0) {
+    async getPosts(limit = 50, offset = 0) {
         let response = null;
 
         try {
             // TODO: тут нужно получать посты сообщества
             response = await this.$root.$api.$communities.posts(this.id, limit, offset);
         } catch (e) {
-            this.enabledPostLoader = false;
             console.warn(e.detailMessage);
         }
 
         if (response !== null) {
-            this.enabledPostLoader = false;
             response.map((post) => {
-                this.communityPosts.push(new PliziPost(post));
+                this.posts.push(new PliziPost(post));
             });
 
             return response.length;
         }
     },
-    async lazyLoadPost() {
-        if (this.lazyLoadStarted) return;
-        if (this.noMorePost) return;
-
-        this.enabledPostLoader = true;
-        this.lazyLoadStarted = true;
-        let oldSize = this.communityPosts.length;
-        let added = await this.getCommunityPosts(10, oldSize++);
-
-        if (added === 0) {
-            this.noMorePost = true;
-        }
-
-        this.lazyLoadStarted = false;
-        this.onScrollYPage();
-    },
 },
 
 async mounted() {
     await this.getCommunityInfo();
-    await this.getCommunityPosts();
     window.scrollTo(0, 0);
-    window.addEventListener('scroll', this.onScrollYPage);
 },
     beforeRouteUpdate (to, from, next) {
         this.communityData = null;
-        this.communityPosts = null;
+        this.posts = null;
         this.id = to.params.id;
         this.getCommunityInfo();
-        this.getCommunityPosts();
         next();
         window.scrollTo(0, 0);
-    },
-    beforeRouteLeave(to, from, next) {
-        window.removeEventListener('scroll', this.onScrollYPage);
-        next();
     },
 }
 </script>
