@@ -16,16 +16,26 @@ body {
 h1, h2, h3, h4, h5, h6 {
     font-weight: 600;
 }
+
 [type="button"] {
-    background-color: transparent;
+    all: unset;
+    //background-color: transparent;
 }
 
+
 .btn {
+    display: inline-block;
     max-width: 100%;
+    text-align: center;
+    vertical-align: middle;
 
     &:focus {
         outline: none;
         box-shadow: none;
+    }
+
+    &:hover {
+        color: #ffffff;
     }
 
     &-primary {
@@ -34,10 +44,17 @@ h1, h2, h3, h4, h5, h6 {
         color: white;
         font-size: 13px;
         transition: .4s;
+
         &:hover {
             background-color: $blueBtnHover;
             border-color: $blueBtnHover;
+            color: #ffffff;
         }
+    }
+
+    &-block {
+        display: block;
+        width: 100%;
     }
 }
 

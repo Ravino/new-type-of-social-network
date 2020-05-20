@@ -28,7 +28,7 @@
                                         <img ref="communityAvatar" :src="avatarThumb" :alt="communityData.name" />
                                     </div>
                                 </template>
-                                <div class="plz-community-header-details-text">
+                                <div class="plz-community-header-details-text pt-2">
                                     <h1 class="plz-community-header-title mb-1">{{communityData.name}}</h1>
                                     <p class="plz-community-header-desc mb-0">
                                         {{communityData.notice}}

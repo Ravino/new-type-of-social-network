@@ -94,7 +94,7 @@ $postPosterPicSize: 48px;
         transition: .4s;
 
         &:hover {
-            color: $iconHoverColor;
+            color: $postTextColor;
             cursor: pointer;
 
             .icon-eye,
@@ -110,7 +110,7 @@ $postPosterPicSize: 48px;
             }
 
             .icon-heard {
-                fill: red;
+                fill: $counterInfoColor;
             }
         }
 
@@ -120,11 +120,15 @@ $postPosterPicSize: 48px;
                 fill: $iconHoverColor;
             }
             span {
-                color: $iconHoverColor;
+                color: $postTextColor;
             }
 
             .icon-heard {
-                fill: red;
+                fill: $counterInfoColor;
+
+                & + span {
+                    color: $counterInfoColor;
+                }
             }
         }
 
