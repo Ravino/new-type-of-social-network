@@ -5,19 +5,18 @@
                 <AccountToolbarLeft></AccountToolbarLeft>
             </div>
 
-            <div v-if="isFreshUser" class="col-12 col-md-11 pr-0  chat-page-height px-0 px-md-3 ">
+            <div v-if="isFreshUser()" class="chat-page-height col-12 col-md-11 pr-0 px-0 px-md-3">
                 <div class="jumbotron">
                     <p class="alert alert-info w-100 text-center p-5">
                         Вы ещё ни с кем не общались, потому здесь пока никого нет.<br />
-                        Находите себе новых
-                        <router-link tag="a" to="/friends" class="btn btn-link mx-0 px-0">друзей</router-link>,
-                        вступайте в <router-link tag="a" to="/popular-communities" class="btn btn-link mx-0 px-0">
-                        сообщества</router-link>!
+                        Находите себе новых <router-link tag="a" to="/friends" class="btn btn-link mx-0 px-0">друзей</router-link>,
+                        вступайте в
+                        <router-link tag="a" to="/popular-communities" class="btn btn-link mx-0 px-0"> сообщества</router-link>!
                     </p>
                 </div>
             </div>
 
-            <div v-else class="col-12 col-md-11 pr-0  chat-page-height px-0 px-md-3 ">
+            <div v-else class="col-12 col-md-11 pr-0  chat-page-height px-0 px-md-3">
 
                 <div v-if="isDialogsLoaded" id="chatMain"
                      class="d-flex flex-column flex-lg-row flex bg-white-br20 overflow-hidden">
@@ -125,14 +124,14 @@ computed: {
 
     isDialogsLoaded(){
         return this.$root.$auth.dm.isLoad;
-    },
-
-    isFreshUser(){
-        return (this.$root.$auth.fm.size===0  &&  this.$root.$auth.dm.size===0);
     }
 },
 
 methods: {
+    isFreshUser(){
+        return (this.$root.$auth.fm.size===0  &&  this.$root.$auth.dm.size===0);
+    },
+
     onUpdateMessagesFilterText(evData){
         this.filter.text = evData.text ? evData.text.trim() : '';
         this.filter.range = evData.range && evData.range.start && evData.range.end ? evData.range : null;
@@ -251,6 +250,16 @@ created(){
 //beforeDestroy() {
 //    this.$root.$off('newMessageInDialog', ()=>{});
 //    this.$root.$off('removeMessageInDialog', ()=>{});
+//}
+
+//beforeRouteEnter (to, from, next) {
+//    window.console.log(`ChatsListPage::beforeRouteEnter`);
+//},
+//beforeRouteUpdate (to, from, next) {
+//    window.console.log(`ChatsListPage::beforeRouteUpdate`);
+//},
+//beforeRouteLeave (to, from, next) {
+//    window.console.log(`ChatsListPage::beforeRouteLeave`);
 //}
 
 }
