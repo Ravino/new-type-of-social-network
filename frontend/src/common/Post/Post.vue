@@ -29,7 +29,7 @@
                         </time>
                     </div>
 
-                    <div class="post-poster-actions my-auto ml-auto">
+                    <div v-if="post.author.id === user.id" class="post-poster-actions my-auto ml-auto">
                         <button class="btn btn-link post-settings"
                                 :id="`postSettings` + post.id"
                                 type="button"

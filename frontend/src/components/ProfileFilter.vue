@@ -32,7 +32,8 @@
                            @focus="onFocus"
                            class="top-search form-control form-control  w-100"
                            type="text" placeholder="Поиск" aria-label="Поиск" />
-                    <button class="btn btn-search h-100" type="button">
+                    <!-- TODO: @YZ реализовать после MVP -->
+                    <button class="btn btn-search h-100 d-none" type="button">
                         <IconSearch style="width: 15px; height: 15px;"/>
                     </button>
                 </div>
