@@ -53,6 +53,13 @@ class PliziStoredCollection extends PliziCollection{
      */
     pageSize = 10;
 
+    /**
+     * флаг, что данные были загружены из источника (серверное API)
+     * @type {boolean}
+     * @private
+     */
+    _isLoad = false;
+
 
     /**
      * @param {PliziAPI} apiObj
@@ -69,19 +76,28 @@ class PliziStoredCollection extends PliziCollection{
         return this._api;
     }
 
+    get isLoad(){
+        return this._isLoad;
+    }
+
+    set isLoad( value ){
+        this._isLoad = value;
+    }
+
     restore(){
         this.clear();
 
         this.restoreData();
+        this.isLoad = true;
 
-        if (this.size > 0) {
-            this.isLoad = true;
-            if (this.restoreEventName) {
-                this.emit(this.restoreEventName);
-            }
-
-            return true;
-        }
+        //if (this.size > 0) {
+        //    this.isLoad = true;
+        //    if (this.restoreEventName) {
+        //        this.emit(this.restoreEventName);
+        //    }
+        //
+        //    return true;
+        //}
     }
 
     /**

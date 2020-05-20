@@ -5,13 +5,6 @@
 class PliziCollection {
 
     /**
-     * флаг, что данные были загружены из источника (серверное API)
-     * @type {boolean}
-     * @private
-     */
-    _isLoad = false;
-
-    /**
      * @type {Map}
      * @private
      */
@@ -36,14 +29,6 @@ class PliziCollection {
 
     get collection(){
         return this._collection;
-    }
-
-    get isLoad(){
-        return this._isLoad;
-    }
-
-    set isLoad( value ){
-        this._isLoad = value;
     }
 
     get size(){
