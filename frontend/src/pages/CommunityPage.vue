@@ -91,16 +91,17 @@
                               @onShare="onSharePost"
                               @onDeletePost="onDeletePost"
                               @onRestorePost="onRestorePost"
-                              @onEditPost="onEditPost"></Post>
+                              @onEditPost="onEditPost"
+                              @onShowUsersLikes="openLikeModal"/>
                     </div>
 
-                    <div v-else-if="!enabledPostLoader"  class="row plz-post-item mb-4 bg-white-br20 p-4">
+                    <div v-else-if="!isStarted"  class="row plz-post-item mb-4 bg-white-br20 p-4">
                         <div class="alert alert-info w-100 p-5 text-center mb-0">
                             Извините, но сейчас нечего показывать.
                         </div>
                     </div>
 
-                    <template v-if="enabledPostLoader">
+                    <template v-if="isStarted">
                         <div class="row plz-post-item mb-4 bg-white-br20 p-4">
                             <div class="w-100 p-5 text-center mb-0">
                                 <SmallSpinner/>
@@ -177,6 +178,10 @@
                          :community="communityData"
                          :post="postForRepost"
                          @hidePostRepostModal="hidePostRepostModal"/>
+
+        <PostLikeModal v-if="postLikeModal.isVisible"
+                       :users="postLikeModal.content.users"
+                       @hideLikeModal="hideLikeModal"/>
     </div>
 </template>
 
@@ -192,6 +197,7 @@ import CommunityFriendsInformer from '../common/Communities/CommunityFriendsInfo
 import CommunityShortMembers from '../common/Communities/CommunityShortMembers.vue';
 import CommunityEditor from '../common/Communities/CommunityEditor.vue';
 import PostRepostModal from '../common/Post/PostRepostModal.vue';
+import PostLikeModal from '../common/Post/PostLikeModal.vue';
 import SmallSpinner from "../common/SmallSpinner.vue";
 
 import PliziCommunity from '../classes/PliziCommunity.js';
@@ -202,6 +208,7 @@ import CommunityManagedActionBlock from "../common/Communities/CommunityManagedA
 
 import IconYoutube from "../icons/IconYoutube.vue";
 import LazyLoadPosts from '../mixins/LazyLoadPosts.js';
+import PliziUser from "../classes/PliziUser";
 
 export default {
 name: 'CommunityPage',
@@ -221,6 +228,7 @@ components : {
     PostEditModal,
     CommunityEditor,
     PostRepostModal,
+    PostLikeModal,
     SmallSpinner,
     IconYoutube,
 },
@@ -238,6 +246,12 @@ data() {
             isVisible: false,
         },
         postForRepost: null,
+        postLikeModal: {
+            isVisible: false,
+            content: {
+                users: [],
+            },
+        },
     }
 },
 
@@ -351,7 +365,32 @@ methods: {
         this.postRepostModal.isVisible = false;
         this.postForRepost = null;
     },
+    hideLikeModal() {
+        this.postLikeModal.isVisible = false;
+        this.postLikeModal.content.users = null;
+    },
 
+    async openLikeModal(postId) {
+        this.postLikeModal.isVisible = true;
+        await this.getUsersLikes(postId);
+    },
+    async getUsersLikes(postId, limit = 20, offset = 0) {
+        let response = null;
+
+        try{
+            response = await this.$root.$api.$post.getUsersLikes(postId, limit, offset);
+        } catch (e){
+            console.warn( e.detailMessage );
+        }
+
+        if ( response !== null ){
+            response.map((post) => {
+                this.postLikeModal.content.users.push(new PliziUser(post));
+            });
+
+            return response.length;
+        }
+    },
     async onDeletePost(id) {
         let response;
 

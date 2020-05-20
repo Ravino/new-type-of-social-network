@@ -17,6 +17,25 @@ class Like extends Model
         'updated_at' => 'timestamp',
     ];
 
+    public static function boot()
+    {
+        parent::boot();
+        static::creating(function($like) {
+            $like->created_at = time();
+            $like->updated_at = time();
+        });
+        static::created(function($like) {
+            if ($like->likeable instanceof Post) {
+                $like->likeable->increment('likes');
+            }
+        });
+        static::deleting(function($like) {
+            if ($like->likeable instanceof Post) {
+                $like->likeable->decrement('likes');
+            }
+        });
+    }
+
     public function getDateFormat()
     {
         return 'U';
