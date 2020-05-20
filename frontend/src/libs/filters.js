@@ -91,16 +91,16 @@ Vue.filter('lastPostTime', (messageDT) => {
     let yesterday = moment().subtract(1, 'days');
     let lmt = moment(messageDT);
 
-    // если сообщение было сегодня или вчера
-    if (now.format('YYYY-MM-DD')===lmt.format('YYYY-MM-DD')  ||  yesterday.format('YYYY-MM-DD')===lmt.format('YYYY-MM-DD')) {
+    if (lmt.isSame(now, 'day')) {
         return lmt.format('HH:mm');
     }
 
-    // сообщение было в течение последних 7 дней
-    let lastWeek = moment().subtract(7, 'days');
-    if ( +lmt.format('X') >= +lastWeek.format('X')) {
-        let dow = lmt.format('ddd');
-        return dow.charAt(0).toUpperCase() + dow.slice(1);
+    if (lmt.isSame(yesterday, 'day')) {
+        return "Вчера";
+    }
+
+    if (lmt.isSame(now, 'week')) {
+        return lmt.format('dddd');
     }
 
     return lmt.format('DD.MM.YYYY');
