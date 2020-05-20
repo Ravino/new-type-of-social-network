@@ -56,6 +56,7 @@ use Spiritix\LadaCache\Database\LadaCacheTrait;
  * @method static Builder|Community newQuery()
  * @method static Builder|Community onlyMy()
  * @method static Builder|Community owner()
+ * @method static Builder|Community showedForAll()
  * @method static Builder|Community query()
  * @method static Builder|Community search($search)
  * @method static Builder|Community whereCreatedAt($value)
@@ -272,5 +273,22 @@ class Community extends Model
             ->orWhere('description', 'LIKE', "%{$search}%")
             ->orWhere('url', 'LIKE', "%{$search}%")
             ->orWhere('website', 'LIKE', "%{$search}%");
+    }
+
+    /**
+     * @param Builder $query
+     */
+    public function scopeShowedForAll(Builder $query)
+    {
+        $query
+            ->where(static function(Builder $q) {
+                $q
+                    ->where('privacy', '!=', self::PRIVACY_PRIVATE)
+                    ->orWhereHas('role', static function (Builder $query) {
+                        $query->where([
+                            'user_id' => Auth::user()->id,
+                        ]);
+                    });
+            });
     }
 }

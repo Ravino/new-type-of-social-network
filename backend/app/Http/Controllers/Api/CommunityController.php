@@ -84,6 +84,7 @@ class CommunityController extends Controller
                 $query->owner();
                 break;
             default:
+                $query->showedForAll();
                 break;
         }
 
