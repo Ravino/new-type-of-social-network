@@ -23,7 +23,8 @@
                               @onDeletePost="onDeletePost"
                               @onRestorePost="onRestorePost"
                               @onEditPost="onEditPost"
-                              @openVideoModal="openVideoModal">
+                              @openVideoModal="openVideoModal"
+                              @onShowUsersLikes="openLikeModal">
                         </Post>
                     </template>
 
@@ -55,6 +56,10 @@
             <PostVideoModal v-if="postVideoModal.isVisible"
                             :videoLink="postVideoModal.content.videoLink"
                             @hideVideoModal="hideVideoModal"/>
+
+            <PostLikeModal v-if="postLikeModal.isVisible"
+                           :users="postLikeModal.content.users"
+                           @hideLikeModal="hideLikeModal"/>
         </div>
     </div>
 </template>
@@ -72,9 +77,11 @@ import ProfilePhotos from '../components/ProfilePhotos.vue';
 import ProfileFilter from '../components/ProfileFilter.vue';
 import PostEditModal from '../common/Post/PostEditModal.vue';
 import PostVideoModal from '../common/Post/PostVideoModal.vue';
-import SmallSpinner from '../common/SmallSpinner.vue';
+import PostLikeModal from '../common/Post/PostLikeModal.vue';
+import SmallSpinner from "../common/SmallSpinner.vue";
 
 import PliziPost from '../classes/PliziPost.js';
+import PliziUser from '../classes/PliziUser.js';
 import LazyLoadPosts from '../mixins/LazyLoadPosts.js';
 
 export default {
@@ -84,6 +91,7 @@ components: {
     ProfileHeader, ProfilePhotos, WhatsNewBlock, ProfileFilter, Post,
     PostEditModal,
     PostVideoModal,
+    PostLikeModal,
     SmallSpinner,
 },
 mixins: [LazyLoadPosts],
@@ -108,6 +116,12 @@ data() {
             isVisible: false,
             content: {
                 videoLink: null,
+            },
+        },
+        postLikeModal: {
+            isVisible: false,
+            content: {
+                users: [],
             },
         },
     }
@@ -174,7 +188,17 @@ methods : {
         this.postForEdit = null;
     },
 
-    async getPosts(limit = 50, offset = 0){
+    async openLikeModal(postId) {
+        this.postLikeModal.isVisible = true;
+        await this.getUsersLikes(postId);
+    },
+
+    hideLikeModal() {
+        this.postLikeModal.isVisible = false;
+        this.postLikeModal.content.users = null;
+    },
+
+    async getPosts(limit = 50, offset = 0) {
         let response = null;
 
         try{
@@ -194,7 +218,27 @@ methods : {
         }
     },
 
-    async onDeletePost( id ){
+    async getUsersLikes(postId, limit = 20, offset = 0) {
+        let response = null;
+
+        try{
+            response = await this.$root.$api.$post.getUsersLikes(postId, limit, offset);
+        } catch (e){
+            this.enabledPostLoader = false;
+            console.warn( e.detailMessage );
+        }
+
+        if ( response !== null ){
+            this.enabledPostLoader = false;
+            response.map((post) => {
+                this.postLikeModal.content.users.push(new PliziUser(post));
+            });
+
+            return response.length;
+        }
+    },
+
+    async onDeletePost( id ) {
         let response;
 
         try{
@@ -213,7 +257,7 @@ methods : {
         }
     },
 
-    async onRestorePost( id ){
+    async onRestorePost( id ) {
         let response;
 
         try{
@@ -240,6 +284,7 @@ async mounted() {
 
     this.$root.$on('wallPostsSelect', this.wallPostsSelectHandler);
     // await this.getPosts();
+    // this.lazyLoadStarted = true;
 }
 
 }
