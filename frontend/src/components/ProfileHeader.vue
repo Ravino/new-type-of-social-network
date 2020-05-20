@@ -70,6 +70,7 @@
                     </tbody>
                 </table>
             </div>
+
             <div class="plz-profile-userdetails-footer d-flex justify-content-around px-2 px-md-4">
                 <div class="plz-profile-userdetails-numbers text-center pt-2 px-2 pt-md-4 px-md-4">
                     <span class="numbers-top" v-html="sBeaty(userData.subscribersNumber)"></span>
@@ -102,10 +103,11 @@
 import IconAddUser from '../icons/IconAddUser.vue';
 import IconLocation from '../icons/IconLocation';
 
+import FriendshipInvitationMixin from '../mixins/FriendshipInvitationMixin';
+
 import PliziUser from '../classes/PliziUser.js';
 import PliziAuthUser from '../classes/PliziAuthUser.js';
 import PliziAvatar from '../classes/User/PliziAvatar';
-import FriendshipInvitationMixin from '../mixins/FriendshipInvitationMixin';
 
 export default {
 name: 'ProfileHeader',
@@ -119,27 +121,28 @@ data() {
     return {
     }
 },
+
 computed: {
     usrFriendsNumber(){
         return (this.isOwner) ? this.userData.stats.totalFriendsCount : this.userData.friendsNumber;
     },
+
     userAvatar() {
         return this.userData.avatar?.image?.medium.path || this.userData.userPic;
     }
 },
+
 methods: {
     sBeaty(param){
         return this.$options.filters.statsBeauty(param);
     },
 
-
     showProfileOptionsModal(){
         this.$root.$emit('showProfileOptionsModal', { user: this.userData, src : this.$route.name });
     },
 
-
     showPersonalMsgDialog(){
-        this.$root.$emit('showPersonalMsgModal', { user: this.userData, src : this.$route.name });
+        this.$emit('ShowPersonalMsgModal', { user: this.userData, src : this.$route.name });
     },
 
     async uploadUserAvatar(){
@@ -180,7 +183,6 @@ methods: {
             this.$root.$emit('updateUserAvatar', {userPic: this.$root.$auth.user.userPic});
         }
     },
-
 
     /**
      * @returns {boolean|FormData}

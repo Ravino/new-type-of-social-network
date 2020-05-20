@@ -40,7 +40,6 @@ class PliziDialogsCollection extends PliziStoredCollection {
 
 
     onRemoveDialog(removedDialogId){
-        window.console.warn(removedDialogId,`onRemoveDialog`);
         this.delete(removedDialogId);
         this.storeData();
         this.restore();

@@ -6,12 +6,14 @@
 
         <div class="col-sm-10 col-md-9 col-lg-8 col-xl-8 pl-0 --bg-danger">
             <div class="container">
-                <ProfileHeader v-if="isDataReady" v-bind:user-data="profileData"></ProfileHeader>
+                <ProfileHeader v-if="isDataReady"
+                               @ShowPersonalMsgModal="onShowPersonalMsgModal"
+                               v-bind:userData="profileData"></ProfileHeader>
                 <Spinner v-else></Spinner>
 
                 <ProfilePhotos v-bind:photos="userPhotos"/>
                 <ProfileFilter v-if="(filteredPosts && filteredPosts.length > 1) || filterMode !== 'all'"
-                               :first-name="profileData.firstName"
+                               v-bind:firstName="profileData.firstName"
                                @wallPostsSelect="wallPostsSelectHandler"/>
 
                 <template v-if="filteredPosts && filteredPosts.length > 0">
@@ -30,25 +32,27 @@
                 <template v-if="enabledPostLoader">
                     <div class="row plz-post-item mb-4 bg-white-br20 p-4">
                         <div class="w-100 p-5 text-center mb-0">
-                            <SmallSpinner/>
+                            <SmallSpinner />
                         </div>
                     </div>
                 </template>
-
             </div>
 
             <NewPersonalMessageModal v-if="isShowMessageDialog"
-                                     :user="profileData"/>
+                                     @HidePersonalMsgModal="onHidePersonalMsgModal"
+                                     @SendPersonalMessage="handlePersonalMessage"
+                                     v-bind:user="profileData"></NewPersonalMessageModal>
+
+            <PostRepostModal v-if="postRepostModal.isVisible"
+                             :user="profileData"
+                             :post="postForRepost"
+                             @hidePostRepostModal="hidePostRepostModal"></PostRepostModal>
         </div>
 
         <div class="col-sm-3 col-md-3 col-lg-3 col-xl-3 pr-0">
             <FavoriteFriends></FavoriteFriends>
         </div>
 
-        <PostRepostModal v-if="postRepostModal.isVisible"
-                         :user="profileData"
-                         :post="postForRepost"
-                         @hidePostRepostModal="hidePostRepostModal"/>
     </div>
 </template>
 
@@ -57,18 +61,21 @@ import AccountToolbarLeft from '../common/AccountToolbarLeft.vue';
 import FavoriteFriends from '../common/FavoriteFriends.vue';
 import ShortFriends from '../common/ShortFriends.vue';
 import Spinner from '../common/Spinner.vue';
+import SmallSpinner from '../common/SmallSpinner.vue';
 
 import ProfileHeader from '../components/ProfileHeader.vue';
 import ProfilePhotos from '../components/ProfilePhotos.vue';
 import ProfileFilter from '../components/ProfileFilter.vue';
 import Post from '../common/Post/Post.vue';
+
 import NewPersonalMessageModal from '../components/NewPersonalMessageModal.vue';
 import PostRepostModal from '../common/Post/PostRepostModal.vue';
-import SmallSpinner from "../common/SmallSpinner.vue";
+
+import DialogMixin from '../mixins/DialogMixin.js';
+import LazyLoadPosts from '../mixins/LazyLoadPosts.js';
 
 import PliziUser from '../classes/PliziUser.js';
 import PliziPost from '../classes/PliziPost.js';
-import LazyLoadPosts from "../mixins/LazyLoadPosts.js";
 
 export default {
 name: 'PersonalPage',
@@ -86,17 +93,7 @@ components: {
     PostRepostModal,
     SmallSpinner,
 },
-    mixins: [LazyLoadPosts],
-computed: {
-    filteredPosts(){
-        switch (this.filterMode) {
-            case 'user':
-                return this.posts.filter(post => post.checkIsMinePost(this.profileData.id));
-        }
-
-        return this.posts;
-    },
-},
+mixins: [DialogMixin, LazyLoadPosts],
 
 data() {
     return {
@@ -113,7 +110,7 @@ data() {
             {path: '/images/user-photos/user-photo-01.png',},
             {path: '/images/user-photos/user-photo-03.png',},
         ],
-        filterMode: `all`,
+        filterMode: 'all',
         postRepostModal: {
             isVisible: false,
         },
@@ -122,6 +119,17 @@ data() {
         noMorePost: false,
         enabledPostLoader: true,
     }
+},
+
+computed: {
+    filteredPosts(){
+        switch (this.filterMode) {
+            case 'user':
+                return this.posts.filter(post => post.checkIsMinePost(this.profileData.id));
+        }
+
+        return this.posts;
+    },
 },
 
 methods: {
@@ -139,9 +147,40 @@ methods: {
         this.postForRepost = null;
     },
 
-    handlePersonalMessage(evData){
-        this.sendMessageToUser(evData);
+    async handlePersonalMessage(evData){
+        this.onHidePersonalMsgModal();
+
+        this.$root.$once('NewChatDialog', (dlgData) => {
+            this.sendPrivateMessageToUser(dlgData, evData.message);
+        });
+
+        await this.openDialogWithFriend( {
+            id : this.profileData.id,
+            fullName : this.profileData.fullName
+        } );
     },
+
+
+    async sendPrivateMessageToUser( chatData, msgData ){
+        let apiResponse = null;
+
+        try {
+            apiResponse = await this.$root.$api.$chat.messageSend( chatData.id, msgData.postText, msgData.attachments );
+        }
+        catch (e){
+            this.errors = e.data.errors;
+            window.console.warn( e.detailMessage );
+            throw e;
+        }
+
+        if ( apiResponse ){
+            window.console.info(`сообщение отправлено`);
+        }
+        else {
+            window.console.warn( apiResponse );
+        }
+    },
+
 
     async getUserInfo() {
         let apiResponse = null;
@@ -161,7 +200,12 @@ methods: {
         }
     },
 
-    async sendMessageToUser(msg){
+    /**
+     * @deprecated
+     * @param msg
+     * @returns {Promise<void>}
+     */
+    async sendMessageToUserOld(msg){
         let apiResponse = null;
 
         try {
@@ -173,6 +217,8 @@ methods: {
         }
 
         if (apiResponse != null &&  apiResponse.data) {
+            window.console.log(apiResponse, `apiResponse`);
+
             let newMsg = apiResponse.data;
 
             const eventData = {
@@ -180,14 +226,7 @@ methods: {
                 message : newMsg
             }
 
-            try {
-                this.$root.$emit('newMessageInDialog', eventData);
-            } catch (e){
-
-            }
-        }
-        else {
-            window.console.info(apiResponse);
+            this.$root.$emit('newMessageInDialog', eventData);
         }
     },
 
@@ -210,6 +249,14 @@ methods: {
             return response.length;
         }
     },
+
+    onHidePersonalMsgModal(){
+        this.isShowMessageDialog = false;
+    },
+
+    onShowPersonalMsgModal(){
+        this.isShowMessageDialog = true;
+    }
 },
 
 mounted() {
@@ -235,12 +282,13 @@ beforeRouteUpdate( to, from, next ){
     this.getUserInfo();
     next();
     window.scrollTo( 0, 0 );
-
 },
-    beforeRouteLeave(to, from, next) {
-        window.removeEventListener('scroll', this.onScrollYPage);
-        next();
-    },
+
+beforeRouteLeave(to, from, next) {
+    window.removeEventListener('scroll', this.onScrollYPage);
+    next();
+}
+
 }
 </script>
 

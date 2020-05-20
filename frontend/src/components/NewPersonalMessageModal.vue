@@ -10,9 +10,9 @@
 
                 <div class="modal-body">
                     <div class="mb-2">
-                        <router-link to="/chats" tag="a" class="btn btn-link btn-block text-left p-3 bg-light text-black-50">
-                            Перейти к диалогу с {{user.firstName}}
-                        </router-link>
+                        <button @click.prevent="goToDialogWithFriend()" type="button" class="btn btn-link btn-block text-left p-3 bg-light text-black-50">
+                            <IconSpinner v-if="isInRedirecting" /> Перейти к диалогу с {{user.firstName}}
+                        </button>
                     </div>
 
                     <div class="user-friend d-flex">
@@ -58,7 +58,10 @@
 </template>
 
 <script>
+import IconSpinner from '../icons/IconSpinner.vue';
 import TextEditor from '../common/TextEditor.vue';
+
+import DialogMixin from '../mixins/DialogMixin.js';
 
 import PliziUser from '../classes/PliziUser.js';
 
@@ -67,31 +70,35 @@ name: 'NewPersonalMessageModal',
 props: {
     user: PliziUser
 },
-components: { TextEditor },
+components: { IconSpinner, TextEditor },
+mixins: [DialogMixin],
 data() {
     return {
+        isInRedirecting: false
     }
 },
 
 methods: {
     hidePersonalMsgModal() {
-        this.$root.$emit('hidePersonalMsgModal', {});
+        this.$emit('HidePersonalMsgModal', {});
     },
 
     startPersonalMessage(){
-        window.console.log(`startPersonalMessage`);
-
         const msg = this.$refs.messageToUserFromHisPage.getContent();
 
-        if (msg===``  ||  msg==='<p></p>')
+        if (msg===''  ||  msg==='<p></p>')
             return;
 
-        this.$root.$emit('sendPersonalMessage', {
+        this.$emit('SendPersonalMessage', {
             message: msg,
             receiverId: this.user.id,
         });
+    },
 
-        this.$root.$emit('hidePersonalMsgModal', {});
+    async goToDialogWithFriend(){
+        this.isInRedirecting = true;
+        await this.openDialogWithFriend( this.user );
+        await this.$root.$router.push('/chats');
     },
 },
 
