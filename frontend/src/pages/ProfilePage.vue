@@ -86,7 +86,7 @@ components: {
     PostVideoModal,
     SmallSpinner,
 },
-mixins: [ LazyLoadPosts],
+mixins: [LazyLoadPosts],
 data() {
     return {
         posts: [],
@@ -110,9 +110,6 @@ data() {
                 videoLink: null,
             },
         },
-        lazyLoadStarted: false,
-        noMorePost: false,
-        enabledPostLoader: true,
     }
 },
 
@@ -242,7 +239,7 @@ async mounted() {
     });
 
     this.$root.$on('wallPostsSelect', this.wallPostsSelectHandler);
-    await this.getPosts();
+    // await this.getPosts();
 }
 
 }

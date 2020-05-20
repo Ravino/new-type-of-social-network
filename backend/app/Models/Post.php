@@ -81,6 +81,7 @@ class Post extends Model
                 ->with(['postable', 'author'])
                 ->limit($limit ?? 50)
                 ->offset($offset ?? 0)
+                ->orderBy('id', 'desc')
                 ->get();
         }
 
@@ -131,6 +132,7 @@ class Post extends Model
             ->with(['postable', 'author'])
             ->limit($limit ?? 50)
             ->offset($offset ?? 0)
+            ->orderBy('id', 'desc')
             ->get();
     }
 }
