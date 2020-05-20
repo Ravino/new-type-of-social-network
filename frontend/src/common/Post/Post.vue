@@ -140,7 +140,7 @@
                             <IconFillHeard v-if="post.alreadyLiked"/>
                             <IconHeard v-else/>
                             <span>{{ post.likes | space1000 }}</span>
-                            <div v-if="post.usersLikes.length" class="usersLikes p-3" @click.stop="">
+                            <div v-if="post.usersLikes && post.usersLikes.length" class="usersLikes p-3" @click.stop="">
                                 <p class="mb-0">
                                     <b @click.stop="$emit('onShowUsersLikes', post.id)"
                                        style="cursor: pointer">
