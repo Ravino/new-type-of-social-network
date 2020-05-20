@@ -360,6 +360,54 @@ $chatMessagesBodyHeight: calc(100% - 139px);
     }
 }
 
+.message-attachments-z {
+    z-index: 2000;
+
+    .plz-gallery-single {
+        .plz-gallery-wrap-album, .plz-gallery-image-portrait-block-1 {
+            img {
+                width: 200px !important;
+            }
+        }
+        .plz-gallery-wrap-album {
+            img {
+                height: 200px;
+            }
+        }
+    }
+
+    .plz-gallery-wrap-album {
+        width: 100%;
+        display: flex;
+        flex-wrap: wrap;
+        img {
+            width: 100%;
+            height: auto;
+        }
+    }
+
+    .plz-gallery-image-portrait-wrap {
+         height: 170px;
+         width: 100%;
+     }
+
+    .plz-gallery-viewer-current img {
+        width: 50%;
+    }
+
+    .plz-gallery-wrap img {
+       width: 100% ;
+    }
+
+    .plz-gallery-viewer-nav {
+        width: 100vw;
+    }
+
+    .plz-gallery-viewer {
+        width: 100vw;
+    }
+}
+
 .message-sended-image {
     display: inline-block;
     vertical-align: top;
