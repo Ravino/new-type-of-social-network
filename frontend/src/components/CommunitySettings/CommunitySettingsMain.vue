@@ -22,8 +22,8 @@
                                v-model="model.name"
                                :class="[isEdit.name ? 'form-control' : 'form-control-plaintext', { 'is-invalid': !!nameError, 'is-valid': isSuccessName }]"
                                @input="inputFieldEdit($event, 'name')"
-                               @keyup.enter="accountStartSaveData($event.target.value, `name`)"
-                               @blur="finishFieldEdit(`name`)"
+                               @keyup.enter="clickField(`name`)"
+                               @blur="clickField('name')"
                                :readonly="!isEdit.name"
                                ref="name">
 
@@ -35,7 +35,7 @@
                         <button type="button"
                                 class="btn btn-link"
                                 :class="{'text-primary': isEdit.name}"
-                                @click="[isEdit.name ? finishFieldEdit('name') : startFieldEdit('name')]">
+                                @click="clickField('name')">
                             {{ isEdit.name ? 'Сохранить' : 'Изменить' }}
                         </button>
                     </div>
@@ -53,8 +53,8 @@
                                v-model="model.notice"
                                :class="[isEdit.notice ? 'form-control' : 'form-control-plaintext', { 'is-invalid': !!noticeError, 'is-valid': isSuccessNotice }]"
                                @input="inputFieldEdit($event, 'notice')"
-                               @keyup.enter="accountStartSaveData($event.target.value, 'notice')"
-                               @blur="finishFieldEdit('notice')"
+                               @keyup.enter="clickField('notice')"
+                               @blur="clickField('notice')"
                                :readonly="!isEdit.notice"
                                ref="notice">
 
@@ -66,7 +66,7 @@
                         <button type="button"
                                 class="btn btn-link"
                                 :class="{'text-primary': isEdit.notice}"
-                                @click="[isEdit.notice ? finishFieldEdit('notice') : startFieldEdit('notice')]">
+                                @click="clickField('notice')">
                             {{ isEdit.notice ? 'Сохранить' : 'Изменить' }}
                         </button>
                     </div>
@@ -85,7 +85,7 @@
                                                                                                                 'is-valid': isSuccessDescription }]"
                                   v-model="model.description"
                                   placeholder="Добавьте описание"
-                                  @blur="finishFieldEdit(`description`)"
+                                  @blur="clickField(`description`)"
                                   :readonly="!isEdit.description"
                                   ref="description">
                         </textarea>
@@ -98,7 +98,7 @@
                         <button type="button"
                                 class="btn btn-link"
                                 :class="{'text-primary': isEdit.description}"
-                                @click="[isEdit.description ? finishFieldEdit('description') : startFieldEdit('description')]">
+                                @click="clickField('description')">
                             {{ isEdit.description ? 'Сохранить' : 'Изменить' }}
                         </button>
                     </div>
@@ -144,8 +144,8 @@
                                v-model="model.url"
                                :class="[isEdit.url ? 'form-control' : 'form-control-plaintext', { 'is-invalid': !!urlError, 'is-valid': isSuccessUrl }]"
                                @input="inputFieldEdit($event, 'url')"
-                               @keyup.enter="accountStartSaveData($event.target.value, 'url')"
-                               @blur="finishFieldEdit('url')"
+                               @keyup.enter="clickField('url')"
+                               @blur="clickField('url')"
                                :readonly="!isEdit.url"
                                ref="url">
 
@@ -158,7 +158,7 @@
                         <button type="button"
                                 class="btn btn-link"
                                 :class="{'text-primary': isEdit.url}"
-                                @click="[isEdit.url ? finishFieldEdit('url') : startFieldEdit('url')]">
+                                @click="clickField('url')">
                             {{ isEdit.url ? 'Сохранить' : 'Изменить' }}
                         </button>
                     </div>
@@ -268,10 +268,8 @@ export default {
         },
         noticeError() {
             if (this.$v.model.notice.$error) {
-                if (!this.$v.model.notice.minLength) {
-                    return 'Слишком короткое опивание.';
-                } else if (!this.$v.model.notice.maxLength) {
-                    return 'Слишком длинное опивание.';
+                if (!this.$v.model.notice.maxLength) {
+                    return 'Слишком длинное описание.';
                 }
             } else if (this.serverRegMessages.notice) {
                 return this.serverRegMessages.notice;
@@ -357,15 +355,13 @@ export default {
                     maxLength: maxLength(100),
                 },
                 notice: {
-                    minLength: minLength(2),
                     maxLength: maxLength(100),
                 },
                 description: {
                     maxLength: maxLength(1000),
                 },
                 url: {
-                    minLength: minLength(2),
-                    maxLength: maxLength(50),
+                    maxLength: maxLength(100),
                     isCorrectSlug,
                 },
             }
@@ -379,34 +375,39 @@ export default {
             }
             return null;
         },
-        startFieldEdit: debounce(function (fieldName) {
-            this.isEdit[fieldName] = true;
-
+        clickField: debounce(function (fieldName) {
+            this.isEdit[fieldName] = !this.isEdit[fieldName];
+            if (this.isEdit[fieldName]) {
+                this.startFieldEdit(fieldName);
+            } else {
+                this.finishFieldEdit(fieldName);
+            }
+        }, 200),
+        startFieldEdit(fieldName) {
             const inpRef = this.getRef(fieldName);
 
             if (inpRef) {
                 inpRef.focus();
             } else {
-                window.console.warn(`Ошибка редактирования поля`);
+                window.console.warn(`Ошибка редактирования поля`, 's');
             }
-        }, 50),
-        finishFieldEdit: debounce(function (fieldName) {
+        },
+        finishFieldEdit (fieldName) {
             this.$v.model[fieldName].$touch();
             const inpRef = this.getRef(fieldName);
 
             setTimeout(() => {
-                this.isEdit[fieldName] = false;
-
                 if (inpRef) {
                     inpRef.blur();
 
-                    if (!this.isSend[fieldName])
+                    if (!this.isSend[fieldName]) {
                         this.accountStartSaveData(this.model[fieldName], fieldName);
+                    }
                 } else {
-                    window.console.warn(`Ошибка редактирования поля`);
+                    window.console.warn(`Ошибка редактирования поля`, 'f');
                 }
-            }, 100);
-        }, 50),
+            }, 50);
+        },
         formatFormData(newValue, fieldName) {
             let formData = {};
             if (fieldName === 'location') {
@@ -435,7 +436,6 @@ export default {
                 this.model[fieldName] = this.community[fieldName];
                 return;
             }
-            this.isEdit[fieldName] = false;
 
             let formData = this.formatFormData(newValue, fieldName);
             let response = null;
