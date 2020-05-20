@@ -17,7 +17,7 @@
                               @submit.prevent="sendForm">
                             <div class="form-group">
 
-                                <label for="recoverPassInput" class="d-none">Ваш email или телефон </label>
+                                <label for="recoverPassInput" class="d-none">Ваш e-mail</label>
                                 <input type="text"
                                        id="recoverPassInput"
                                        class="lr-input form-control"
@@ -25,7 +25,7 @@
                                        v-model="form.email"
                                        @input="errors = null"
                                        ref="recoverPassInput"
-                                       placeholder="Введите email или номер телефона"/>
+                                       placeholder="Введите e-mail"/>
                                 <div v-if="errors && errors['email']" class="invalid-feedback">
                                     <p class="text-danger">{{errors['email'][0] }}</p>
                                 </div>
