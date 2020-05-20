@@ -279,6 +279,37 @@ class PliziPostAPI extends PliziBaseAPI {
 
         return null;
     }
+
+    /**
+     * Получение пользователей которые лайкнули пост.
+     *
+     * @param {number} postId
+     * @param {number} limit
+     * @param {number} offset
+     * @return {object[]|null}
+     * @throws PliziAPIError
+     */
+    async getUsersLikes(postId, limit, offset) {
+        let path = `api/posts/${postId}/likes/users`;
+        let qParams = '';
+
+        if (limit && offset) {
+            qParams = `?limit=${limit}&offset=${offset}`;
+        }
+
+        let response = await this.axios.get(path + qParams, this.authHeaders)
+            .catch((error) => {
+                this.checkIsTokenExpires(error, `getUsersLikes`);
+                throw new PliziAPIError(`getUsersLikes`, error.response);
+            });
+
+
+        if (response.status === 200) {
+            return response.data.data.list;
+        }
+
+        return null;
+    }
 }
 
 export default PliziPostAPI;

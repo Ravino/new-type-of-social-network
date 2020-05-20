@@ -6,52 +6,97 @@
     top: 0;
     left: 0;
 
-&-overflow {
-    height: 100%;
-    width: 100%;
-    position: absolute;
-    left: 0;
-    top: 0;
-    z-index: 1;
-    cursor: pointer;
-}
 
-&-nav {
-    width: 70vw;
-    height: 100vh;
-    position: absolute;
-
-    &-btn {
+    &-overflow {
+        height: 100%;
+        width: 100%;
         position: absolute;
-        display: inline-block;
-        top: 50%;
-        transform: translateY(-50%);
-        color: #ffffff;
-        border: 1px solid #fff3cd;
-        padding: 3px 6px;
+        z-index: 1;
         cursor: pointer;
-        z-index: 5;
-        &:active {
-            background-color: #cccccc;
-        }
-        &-prev {
-            left: 20px;
-        }
-        &-next {
-            right: 20px;
-        }
+        background-size: cover;
+        background-repeat: no-repeat;
     }
-}
 
-&-current {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    height: 100%;
-    img {
-        z-index: 2;
-        max-height: 100%!important;
-        max-width: calc(100% - 100px)!important;
+    &-nav {
+        width: 70vw;
+        height: 100vh;
+        position: absolute;
+
+        &-btn {
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+            z-index: 5;
+            background: #000;
+            padding: 10px;
+            border-radius: 50%;
+            opacity: 0.6;
+            transition: opacity .3s;
+            cursor: pointer;
+
+            &:hover {
+                opacity: 1;
+            }
+
+            img {
+                width: 25px;
+                height: 25px;
+                margin: 0 !important;
+                user-select: none;
+            }
+            &-prev {
+                left: 5px;
+            }
+            &-next {
+                right: 5px;
+            }
+        }
     }
-}
+
+    &-close {
+        position: absolute;
+        right: 32px;
+        top: 32px;
+        width: 32px;
+        height: 32px;
+        opacity: 0.3;
+        z-index: 2001;
+        border: none;
+        background: none;
+        outline: none;
+        display: inline-block;
+        &:focus {
+            outline: none;
+        }
+    }
+    &-close:hover {
+        opacity: 1;
+    }
+    &-close:before, .plz-gallery-viewer-close:after {
+        position: absolute;
+        left: 15px;
+        content: ' ';
+        height: 33px;
+        width: 2px;
+        background-color: #ffffff;
+    }
+    &-close:before {
+        transform: rotate(45deg);
+    }
+    &-close:after {
+        transform: rotate(-45deg);
+    }
+
+    &-current {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        height: 100%;
+        img {
+            z-index: 2;
+            max-height: 100%!important;
+            max-width: calc(100% - 100px)!important;
+            width: 70%;
+        }
+    }
 }

@@ -87,12 +87,14 @@ $postPosterPicSize: 48px;
     }
 
     .post-watched-counter {
+        position: relative;
         font-size: 13px;
         line-height: 17px;
         color: $postCounterColor;
         transition: .4s;
+
         &:hover {
-            color: $iconHoverColor;
+            color: $postTextColor;
             cursor: pointer;
 
             .icon-eye,
@@ -101,8 +103,14 @@ $postPosterPicSize: 48px;
                 fill: $iconHoverColor;
             }
 
+            .usersLikes {
+                opacity: 1;
+                z-index: 999;
+                transition: 0s;
+            }
+
             .icon-heard {
-                fill: red;
+                fill: $counterInfoColor;
             }
         }
 
@@ -112,11 +120,35 @@ $postPosterPicSize: 48px;
                 fill: $iconHoverColor;
             }
             span {
-                color: $iconHoverColor;
+                color: $postTextColor;
             }
 
             .icon-heard {
-                fill: red;
+                fill: $counterInfoColor;
+
+                & + span {
+                    color: $counterInfoColor;
+                }
+            }
+        }
+
+        .usersLikes {
+            position: absolute;
+            top: 0;
+            width: 275px;
+            height: 77px;
+            opacity: 0;
+            background-color: rgba(0, 0, 0, 0.5);
+            transform: translate(0%, -110%);
+            border-radius: 20px;
+            z-index: -1;
+            transition: 0s .5s;
+            cursor: auto;
+            color: #fff;
+
+            img {
+                width: 30px;
+                height: 30px;
             }
         }
     }
