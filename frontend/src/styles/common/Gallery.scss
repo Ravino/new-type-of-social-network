@@ -4,6 +4,53 @@ $portraitFullHeight: 750px;
 
 .plz-gallery {
     position: relative;
+
+    .message-gallery {
+        width: 100%;
+        img {
+            width: 100%;
+            height: auto;
+        }
+    }
+
+    &--open {
+        header {
+        z-index: 1;
+        }
+    }
+
+    &-attached-chat {
+        .plz-gallery-single {
+            .plz-gallery-wrap {
+                img {
+                    width: 200px !important;
+                    height: 200px;
+                }
+            }
+        }
+        .plz-gallery-portrait {
+            display: flex;
+         .plz-gallery-image-portrait-block-2, .plz-gallery-image-portrait-block-1 {
+             width: 100px;
+         }
+    }
+
+
+
+        .plz-gallery-image-portrait-wrap {
+            height: 170px;
+            width: 200px;
+        }
+
+        .plz-gallery-viewer-nav {
+            width: 100vw;
+        }
+
+        .plz-gallery-viewer {
+            width: 100vw;
+        }
+
+    }
     &-wrap {
         overflow: hidden;
         height: $portraitFullHeight;
