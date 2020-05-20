@@ -49,13 +49,16 @@ $communityPrimaryImage: 70px;
             }
         }
         &-title {
-            font-size: 13px;
+            font-size: 14px;
             color: $textColor;
+            font-weight: 600;
+
             &[href] {
                 color: $textColor;
             }
         }
         &-desc {
+            font-size: 13px;
             color: $textGreyColor;
             word-break: break-word;
 
