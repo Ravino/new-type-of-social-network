@@ -7,7 +7,9 @@
             <div class="plz-gallery-description__holder-data">
                 <div class="plz-gallery-description__holder-data-author">
                     <p class="plz-gallery-description__holder-credentials">{{userName}}</p>
-                    <p class="plz-gallery-description__holder-credentials plz-gallery-description__holder-surname">{{userSurname}}</p>
+                    <p class="plz-gallery-description__holder-credentials plz-gallery-description__holder-surname">
+                        {{userSurname}}
+                    </p>
                 </div>
                 <div class="plz-gallery-description__holder-data-time">
                   <p class="plz-gallery-description__holder-credentials">{{getTimePost}}</p>

@@ -1,7 +1,13 @@
 <template>
     <div class="plz-gallery-viewer">
         <button class="plz-gallery-viewer-close" @click="close"></button>
-        <div class="plz-gallery-viewer-overflow" :style="{'background-image': `linear-gradient(to right, rgba(0, 0, 0, .85) 0%, rgba(0, 0, 0, .85) 100%),url('${activeImage.image.normal.path}')`}" @click="close"></div>
+        <div class="plz-gallery-viewer-overflow"
+             :style="{'background-image':
+             `linear-gradient(to right, rgba(0, 0, 0, .85) 0%, rgba(0, 0, 0, .85) 100%),
+             url('${activeImage.image.normal.path}')`}"
+             @click="close"
+        >
+        </div>
         <div class="plz-gallery-viewer-nav">
             <div v-if="images.length > 1" class="plz-gallery-viewer-nav-btn plz-gallery-viewer-nav-btn-prev" @click="prevImage">
                 <img src="../images/gallery/arrow-left.svg" alt="prev">
@@ -25,7 +31,7 @@ export default {
             default: () => [],
         },
         activeId: {
-            type: Number,
+            type: String,
         },
     },
     data() {
@@ -45,11 +51,12 @@ export default {
         if (!this.activeImage && this.images.length > 0) {
             this.activeImage = this.images.slice(0, 1).pop();
         }
-        this.setBodyOverflow('hidden');
+
+        this.addBodyViewerOpen();
     },
- destroyed() {
-  this.setBodyOverflow('auto');
- },
+    destroyed() {
+       this.removeBodyViewerOpen();
+    },
     computed: {
         currentImageIndex() {
             return this.images.findIndex(image => image.id === this.activeImage.id);
@@ -80,113 +87,12 @@ export default {
         goToImage(image) {
             this.activeImage = image;
         },
-       setBodyOverflow(overflow) {
-          document.querySelector('body').style.overflow = overflow;
-      }
+       addBodyViewerOpen() {
+            document.querySelector('body').classList.add('plz-gallery--open');
+       },
+       removeBodyViewerOpen() {
+            document.querySelector('body').classList.remove('plz-gallery--open');
+       }
     }
 }
 </script>
-
-<style lang="scss">
-    .plz-gallery-viewer {
-        position: fixed;
-        width: 70vw;
-        height: 100vh;
-        z-index: 10000;
-        top: 0;
-        left: 0;
-
-        &-overflow {
-            height: 100%;
-            width: 100%;
-            position: absolute;
-            z-index: 1;
-            cursor: pointer;
-            background-size: cover;
-            background-repeat: no-repeat;
-        }
-
-        &-nav {
-            width: 70vw;
-            height: 100vh;
-            position: absolute;
-
-            &-btn {
-                position: absolute;
-                top: 50%;
-                transform: translateY(-50%);
-                z-index: 5;
-                background: #000;
-                padding: 10px;
-                border-radius: 50%;
-                opacity: 0.6;
-                transition: opacity .3s;
-                cursor: pointer;
-
-                &:hover {
-                    opacity: 1;
-                }
-
-                img {
-                    width: 25px;
-                    height: 25px;
-                    margin: 0 !important;
-                    user-select: none;
-                }
-                &-prev {
-                    left: 5px;
-                }
-                &-next {
-                    right: 5px;
-                }
-            }
-        }
-
-        &-close {
-            position: absolute;
-            right: 32px;
-            top: 32px;
-            width: 32px;
-            height: 32px;
-            opacity: 0.3;
-            z-index: 2001;
-            border: none;
-            background: none;
-            outline: none;
-            display: inline-block;
-            &:focus {
-                outline: none;
-            }
-        }
-        &-close:hover {
-            opacity: 1;
-        }
-        &-close:before, .plz-gallery-viewer-close:after {
-            position: absolute;
-            left: 15px;
-            content: ' ';
-            height: 33px;
-            width: 2px;
-            background-color: #ffffff;
-        }
-        &-close:before {
-            transform: rotate(45deg);
-        }
-        &-close:after {
-            transform: rotate(-45deg);
-        }
-
-        &-current {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            height: 100%;
-            img {
-                z-index: 2;
-                max-height: 100%!important;
-                max-width: calc(100% - 100px)!important;
-                width: 70%;
-            }
-        }
-    }
-</style>
