@@ -46,7 +46,10 @@
 
             <div class="col-sm-3 col-md-3 col-lg-3 col-xl-3 pr-0 d-none d-xl-block">
                 <FavoriteFriends :isNarrow="false"></FavoriteFriends>
-                <ShortFriends v-bind:friends="allFriends"></ShortFriends>
+                <ShortFriends
+                    v-bind:key="`shortFriendsBlock-`+shortFriendsUpdater"
+                    v-bind:friends="getAllFriends()">
+                    </ShortFriends>
             </div>
 
             <PostEditModal v-if="postEditModal.isVisible"
@@ -125,16 +128,14 @@ data() {
                 users: [],
             },
         },
+
+        shortFriendsUpdater: 1,
     }
 },
 
 computed : {
     userData(){
         return this.$root.$auth.user;
-    },
-
-    allFriends(){
-        return this.$root.$auth.frm.asArray();
     },
 
     /**
@@ -154,6 +155,10 @@ computed : {
 },
 
 methods : {
+    getAllFriends(){
+        return this.$root.$auth.frm.asArray();
+    },
+
     wallPostsSelectHandler( evData ){
         this.filterMode = evData.wMode;
     },
@@ -273,6 +278,15 @@ methods : {
     },
 },
 
+created(){
+    this.$root.$on([this.$root.$auth.frm.loadEventName, this.$root.$auth.frm.restoreEventName], ()=>{
+        this.shortFriendsUpdater += 1;
+    });
+    // @TGA это чтоб фильтрануть когда избранные загрузятся
+    this.$root.$on([this.$root.$auth.fm.loadEventName, this.$root.$auth.fm.restoreEventName], ()=>{
+        this.shortFriendsUpdater += 1;
+    });
+},
 
 async mounted() {
     this.$root.$on('showProfileOptionsModal', ()=>{
