@@ -70,7 +70,7 @@ data() {
 },
 computed: {
    countImage() {
-    return this.countImagesMore > 0 ? `Ещё ${this.countImagesMore}` : '';
+    return this.countImagesMore > 0 ? `И ещё ${this.countImagesMore}` : '';
    },
    countImages() {
     return this.images.length;

@@ -69,7 +69,6 @@ $portraitFullHeight: 750px;
         &-mores {
             position: relative;
             &::before {
-                background-image: linear-gradient(to right, rgba(0, 0, 0, 0.85) 0%, rgba(0, 0, 0, 0.85) 100%);
                 content: attr(data-more);
                 position: absolute;
                 height: 97%;
