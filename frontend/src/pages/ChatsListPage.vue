@@ -5,18 +5,18 @@
                 <AccountToolbarLeft></AccountToolbarLeft>
             </div>
 
-            <div v-if="isFreshUser()" class="chat-page-height col-12 col-md-11 pr-0 px-0 px-md-3">
-                <div class="jumbotron">
-                    <p class="alert alert-info w-100 text-center p-5">
+            <div v-if="isFreshUser()" class="chat-page-height col-12 col-md-11 ">
+                <div class="row plz-post-item mb-4 bg-white-br20 p-4">
+                    <p class="alert alert-info w-100 text-center p-5 mb-0">
                         Вы ещё ни с кем не общались, потому здесь пока никого нет.<br />
-                        Находите себе новых <router-link tag="a" to="/friends" class="btn btn-link mx-0 px-0">друзей</router-link>,
+                        Находите себе новых <router-link tag="a" to="/friends" class="btn-link mx-0 px-0">друзей</router-link>,
                         вступайте в
-                        <router-link tag="a" to="/popular-communities" class="btn btn-link mx-0 px-0"> сообщества</router-link>!
+                        <router-link tag="a" to="/popular-communities" class="btn-link mx-0 px-0"> сообщества</router-link>!
                     </p>
                 </div>
             </div>
 
-            <div v-else class="col-12 col-md-11 pr-0  chat-page-height px-0 px-md-3">
+            <div v-else class="col-12 col-md-11 chat-page-height px-0 px-md-3">
 
                 <div v-if="isDialogsLoaded" id="chatMain"
                      class="d-flex flex-column flex-lg-row flex bg-white-br20 overflow-hidden">
