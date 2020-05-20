@@ -67,8 +67,9 @@
 <script>
 import AccountToolbarLeft from '../common/AccountToolbarLeft.vue';
 import FavoriteFriends from '../common/FavoriteFriends.vue';
-import ShortFriends from '../common/ShortFriends.vue';
 
+import SmallSpinner from '../common/SmallSpinner.vue';
+import ShortFriends from '../common/ShortFriends.vue';
 import Post from '../common/Post/Post.vue';
 import WhatsNewBlock from '../common/WhatsNewBlock.vue';
 
@@ -77,12 +78,12 @@ import ProfilePhotos from '../components/ProfilePhotos.vue';
 import ProfileFilter from '../components/ProfileFilter.vue';
 import PostEditModal from '../common/Post/PostEditModal.vue';
 import PostVideoModal from '../common/Post/PostVideoModal.vue';
+
 import PostLikeModal from '../common/Post/PostLikeModal.vue';
-import SmallSpinner from "../common/SmallSpinner.vue";
+import LazyLoadPosts from '../mixins/LazyLoadPosts.js';
 
 import PliziPost from '../classes/PliziPost.js';
 import PliziUser from '../classes/PliziUser.js';
-import LazyLoadPosts from '../mixins/LazyLoadPosts.js';
 
 export default {
 name: 'ProfilePage',
