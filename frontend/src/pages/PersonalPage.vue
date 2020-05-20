@@ -18,18 +18,18 @@
 
                 <template v-if="filteredPosts && filteredPosts.length > 0">
                     <Post v-for="postItem in filteredPosts"
-                          v-bind:key="`userPost-`+postItem.id"
-                          v-bind:post="postItem"
+                          :key="`userPost-`+postItem.id"
+                          :post="postItem"
                           @onShare="onSharePost"></Post>
                 </template>
 
-                <div v-else-if="!enabledPostLoader"  class="row plz-post-item mb-4 bg-white-br20 p-4">
+                <div v-else-if="!isStarted"  class="row plz-post-item mb-4 bg-white-br20 p-4">
                     <div class="alert alert-info w-100 p-5 text-center mb-0">
                         Пользователь {{ profileData.firstName }} не создал ни одной записи.
                     </div>
                 </div>
 
-                <template v-if="enabledPostLoader">
+                <template v-if="isStarted">
                     <div class="row plz-post-item mb-4 bg-white-br20 p-4">
                         <div class="w-100 p-5 text-center mb-0">
                             <SmallSpinner />
@@ -195,6 +195,8 @@ methods: {
 
         if (apiResponse) {
             this.profileData = new PliziUser(apiResponse.data);
+            this.isDataReady = true;
+            await this.getPosts();
         }
     },
 
@@ -241,8 +243,6 @@ methods: {
         }
 
         if (response !== null) {
-            this.enabledPostLoader = false;
-
             response.map((post) => {
                 this.posts.push(new PliziPost(post));
             });
@@ -260,10 +260,8 @@ methods: {
     }
 },
 
-async mounted() {
-    await this.getUserInfo();
-    await this.getPosts();
-    this.isDataReady = true;
+mounted() {
+    this.getUserInfo();
     window.scrollTo(0, 0);
 
     this.$root.$on('hidePersonalMsgModal', ()=>{
@@ -275,28 +273,16 @@ async mounted() {
     });
 
     this.$root.$on('sendPersonalMessage', this.handlePersonalMessage);
-    window.addEventListener('scroll', this.onScrollYPage);
 },
 
 async beforeRouteUpdate( to, from, next ){
     this.profileData = null;
     this.posts = null;
     this.userId = to.params.id;
-    this.isDataReady = false;
-
-    await this.getUserInfo();
-    await this.getPosts();
-    this.isDataReady = true;
-
     next();
+    await this.getUserInfo();
     window.scrollTo( 0, 0 );
 },
-
-beforeRouteLeave(to, from, next) {
-    window.removeEventListener('scroll', this.onScrollYPage);
-    next();
-}
-
 }
 </script>
 
