@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Traits\Likeable;
 use App\Traits\Commentable;
 use Domain\Pusher\Models\ChatMessage;
 use Illuminate\Database\Eloquent\Model;
@@ -12,7 +13,7 @@ use Spiritix\LadaCache\Database\LadaCacheTrait;
 
 class Post extends Model
 {
-    use SoftDeletes, LadaCacheTrait, Commentable;
+    use SoftDeletes, LadaCacheTrait, Likeable, Commentable;
 
     protected $fillable = [
         'name', 'body', 'likes', 'views', 'author_id'
@@ -56,7 +57,20 @@ class Post extends Model
      * @return \Illuminate\Database\Eloquent\Relations\HasMany
      */
     public function like() {
-        return $this->hasMany(PostLike::class, 'post_id', 'id')->where('user_id', \Auth::user()->id);
+        return $this->hasMany(Like::class, 'likeable_id', 'id')
+            ->where('user_id', \Auth::user()->id);
+    }
+
+    public function usersLikes()
+    {
+        return $this->hasManyThrough(
+            User::class,
+            Like::class,
+            'likeable_id',
+            'id',
+            'id',
+            'user_id'
+        );
     }
 
     public function video()
@@ -78,7 +92,9 @@ class Post extends Model
             $userPosts = $user->posts()->pluck('id');
 
             return Post::whereIn('id', $userPosts)
-                ->with(['postable', 'author'])
+                ->with(['postable', 'author', 'usersLikes' => function ($query) {
+                    return $query->limit(8)->get();
+                }])
                 ->limit($limit ?? 50)
                 ->offset($offset ?? 0)
                 ->orderBy('id', 'desc')
@@ -129,7 +145,9 @@ class Post extends Model
         $postsIds = $postsIds->merge($userPosts);
 
         return Post::whereIn('id', $postsIds)
-            ->with(['postable', 'author'])
+            ->with(['postable', 'author', 'usersLikes' => function ($query) {
+                return $query->limit(8)->get();
+            }])
             ->limit($limit ?? 50)
             ->offset($offset ?? 0)
             ->orderBy('id', 'desc')

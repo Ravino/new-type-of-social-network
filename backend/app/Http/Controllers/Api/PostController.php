@@ -83,7 +83,9 @@ class PostController extends Controller
         /** @var Community $community */
         $community = Community::find($community_id);
         if($community) {
-            $posts = $community->posts()->with(['postable', 'author'])
+            $posts = $community->posts()->with(['postable', 'author', 'usersLikes' => function ($query) {
+                return $query->limit(8)->get();
+            }])
                 ->limit($request->query('limit') ?? 50)
                 ->offset($request->query('offset') ?? 0)
                 ->orderByDesc('id')
@@ -171,24 +173,6 @@ class PostController extends Controller
         $attachment_ids = $this->uploadService->uploadFiles(new PostAttachment(), 'post/attachments', $request->allFiles());
         $attachments = PostAttachment::whereIn('id', $attachment_ids)->get();
         return new AttachmentsCollection($attachments);
-    }
-
-    /**
-     * @param $request
-     * @return \Illuminate\Http\JsonResponse
-     */
-    public function rate(Request $request) {
-        if(!PostLike::where('user_id', \Auth::user()->id)->where('post_id', $request->postId)->exists()) {
-            PostLike::create([
-                'user_id' => \Auth::user()->id,
-                'post_id' => $request->postId,
-            ]);
-            Event::dispatch('post.liked', ['post_id' => $request->postId, 'user_id' => \Auth::user()->id]);
-            return response()->json(['message' => 'Вы успешно оценили данную запись'], 200);
-        } else {
-            PostLike::where('user_id', \Auth::user()->id)->where('post_id', $request->postId)->first()->delete();
-            return response()->json(['message' => 'Вы успешно сняли свою оценку с данной записи'], 200);
-        }
     }
 
     /**
