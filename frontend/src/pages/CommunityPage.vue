@@ -12,10 +12,10 @@
                         <div class="plz-community-header-pic position-relative overflow-hidden">
                             <img :src="headerImage" alt="image">
                         </div>
-                        <div class="plz-community-header-bottom d-flex align-items-start align-items-sm-center justify-content-between py-3 px-4">
-                            <div class="plz-community-header-details d-flex align-items-center">
+                        <div class="plz-community-header-bottom d-flex flex-wrap align-items-start justify-content-between py-3 px-4">
+                            <div class="plz-community-header-details d-flex align-items-start flex-wrap flex-sm-nowrap justify-content-center justify-content-sm-start">
                                 <template v-if="isAuthor">
-                                    <label for="communityPrimaryImage" class="community-primary-image mr-3 cursor-pointer plz-community-header-logo position-relative mr-3">
+                                    <label for="communityPrimaryImage" class="community-primary-image cursor-pointer plz-community-header-logo position-relative mb-4 mb-sm-3 mx-0 mr-sm-3">
                                         <img ref="communityAvatar" :src="avatarMedium" :alt="communityData.name" />
                                     </label>
 
@@ -35,7 +35,7 @@
                                     </p>
                                 </div>
                             </div>
-                            <div class="plz-community-subscribe file-label d-flex align-items-center justify-content-between">
+                            <div class="plz-community-subscribe file-label d-flex align-items-center mt-4 justify-content-between mx-auto mx-md-0">
 
                                 <button v-if="subscribeType === 'new'"
                                         class="btn align-items-center justify-content-center d-flex w-75 border-right m-0"
@@ -130,7 +130,7 @@
                                     <img :src="avatarMedium" alt="image">
                                 </div>
                                 <button class="video__button" type="button" aria-label="Запустить видео">
-                                    <svg width="68" height="48" viewBox="0 0 68 48"><path class="video__button-shape" d="M66.52,7.74c-0.78-2.93-2.49-5.41-5.42-6.19C55.79,.13,34,0,34,0S12.21,.13,6.9,1.55 C3.97,2.33,2.27,4.81,1.48,7.74C0.06,13.05,0,24,0,24s0.06,10.95,1.48,16.26c0.78,2.93,2.49,5.41,5.42,6.19 C12.21,47.87,34,48,34,48s21.79-0.13,27.1-1.55c2.93-0.78,4.64-3.26,5.42-6.19C67.94,34.95,68,24,68,24S67.94,13.05,66.52,7.74z"></path><path class="video__button-icon" d="M 45,24 27,14 27,34"></path></svg>
+                                    <IconYoutube/>
                                 </button>
                             </div>
                             <router-link tag="a"
@@ -144,7 +144,7 @@
                                     <img :src="avatarMedium" alt="image">
                                 </div>
                                 <button class="video__button" type="button" aria-label="Запустить видео">
-                                    <svg width="68" height="48" viewBox="0 0 68 48"><path class="video__button-shape" d="M66.52,7.74c-0.78-2.93-2.49-5.41-5.42-6.19C55.79,.13,34,0,34,0S12.21,.13,6.9,1.55 C3.97,2.33,2.27,4.81,1.48,7.74C0.06,13.05,0,24,0,24s0.06,10.95,1.48,16.26c0.78,2.93,2.49,5.41,5.42,6.19 C12.21,47.87,34,48,34,48s21.79-0.13,27.1-1.55c2.93-0.78,4.64-3.26,5.42-6.19C67.94,34.95,68,24,68,24S67.94,13.05,66.52,7.74z"></path><path class="video__button-icon" d="M 45,24 27,14 27,34"></path></svg>
+                                    <IconYoutube/>
                                 </button>
                             </div>
                             <router-link tag="a"
@@ -200,6 +200,8 @@ import PliziCommunityAvatar from '../classes/Community/PliziCommunityAvatar.js';
 import CommunitiesSubscribeMixin from "../mixins/CommunitiesSubscribeMixin";
 import CommunityManagedActionBlock from "../common/Communities/CommunityManagedActionBlock.vue";
 
+import IconYoutube from "../icons/IconYoutube.vue";
+
 export default {
 name: 'CommunityPage',
 props: {
@@ -219,6 +221,7 @@ components : {
     CommunityEditor,
     PostRepostModal,
     SmallSpinner,
+    IconYoutube,
 },
 
 data() {

@@ -57,10 +57,11 @@ import IconLocation from '../icons/IconLocation.vue';
 import IconMessageShort from '../icons/IconMessageShort';
 import IconSpinner from '../icons/IconSpinner.vue';
 
+import FriendListItemMenu from './FriendListItemMenu.vue';
+
 import DialogMixin from '../mixins/DialogMixin.js';
 import FriendItemMixin from '../mixins/FriendItemMixin.js';
 
-import FriendListItemMenu from './FriendListItemMenu.vue';
 import PliziFriend from '../classes/PliziFriend.js';
 
 export default {
@@ -70,11 +71,13 @@ mixins : [DialogMixin, FriendItemMixin],
 props : {
     friend : PliziFriend
 },
+
 data(){
     return {
         isPrepareToRemoved: false,
         isRemoved : false,
-        isFavorite: false
+        isFavorite: false,
+        isInRedirecting: false
     }
 },
 
@@ -85,6 +88,12 @@ computed: {
 },
 
 methods: {
+    goToDialogWithFriend(){
+        this.isInRedirecting = true;
+        this.openDialogWithFriend( this.friend );
+        this.$root.$router.push('/chats');
+    },
+
     checkIsFavorite(){
         this.isFavorite = !!this.$root.$auth.fm.asArray().find( (fItem)=>{
             return fItem.id === this.friend.id;

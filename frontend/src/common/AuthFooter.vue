@@ -1,7 +1,7 @@
 <template>
     <div class="row">
         <footer class=" plz-footer col-12 col-md-11 offset-0 offset-md-1 container-fluid pl-md-0 ">
-            <div class="plz-bottom-links w-100 d-flex flex-wrap flex-column align-items-center flex-md-row justify-content-md-start  ">
+            <div class="plz-bottom-links w-100 d-flex flex-wrap align-items-center justify-content-between  justify-content-md-start  ">
                 <div class="plz-bottom-link">
                     <router-link to="/about" tag="div" class="nav-item text-center text-md-left"><a class="nav-link">О проекте</a></router-link>
                 </div>
@@ -15,23 +15,23 @@
                     <router-link to="/for-developers" tag="div" class="nav-item text-center text-md-left"><a class="nav-link">Для разработчиков</a></router-link>
                 </div>
 
-                <div class="plz-bottom-link dropup">
-                    <p class="nav-link dropdown-menu-btn  text-center text-md-left" id="dropdownMenuButton"
-                       data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                        Русский
-                        <i class="fas fa-chevron-down ml-1"></i>
-                    </p>
-                    <div class="dropdown-menu py-3 px-0" aria-labelledby="dropdownMenuButton">
-                        <router-link to="/switch-language" tag="div" class="nav-item">
-                            <a class="dropdown-item" href="#">English</a>
-                        </router-link>
-                        <router-link to="/switch-language" tag="div" class="nav-item">
-                            <a class="dropdown-item" href="#">German</a>
-                        </router-link>
-                    </div>
+                <div class="plz-bottom-link text-center">
+                        <span class="nav-link dropdown-menu-btn  text-center text-md-left dropup d-inline-block" id="dropdownMenuButton"
+                              data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                            Русский
+                            <i class="fas fa-chevron-down ml-1"></i>
+                            <span class="dropdown-menu py-3 px-0" aria-labelledby="dropdownMenuButton">
+                                <router-link to="/switch-language" tag="div" class="nav-item">
+                                    <a class="dropdown-item" href="#">English</a>
+                                </router-link>
+                                <router-link to="/switch-language" tag="div" class="nav-item">
+                                    <a class="dropdown-item" href="#">German</a>
+                                </router-link>
+                            </span>
+                        </span>
                 </div>
 
-                <div class="plz-bottom-link align-self-end ml-auto mr-0">
+                <div class="plz-bottom-link align-self-end text-center text-md-right ml-auto mr-0">
                     <router-link to="/switch-language" tag="div" class="nav-item"><a class="nav-link plz-copy pr-0">&copy; Plizi {{ (new Date()).getFullYear() }}</a></router-link>
                 </div>
             </div>

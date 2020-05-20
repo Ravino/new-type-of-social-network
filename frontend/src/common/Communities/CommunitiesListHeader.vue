@@ -24,7 +24,7 @@
                 <div class="form-inline  position-relative w-100"
                      :class="{'isFocused' : isFocused}">
                     <!-- FIXME: @TGA - для таких вещей есть миксины, не нужно всё тащить в глобальный скоуп -->
-                    <input v-model="$root.$lastCommunitiesSearch[list]"
+                    <input v-model="lastCommunitiesSearch[list]"
                            @keydown.stop="communitySearchKeyDownCheck($event)"
                            id="txtCommunitiesListSearch"
                            ref="txtCommunitiesListSearch"
@@ -44,9 +44,8 @@
 </template>
 
 <script>
-import lodash from 'lodash';
-
 import IconSearch from '../../icons/IconSearch.vue';
+import {debounce} from "../../utils/Debonce.js";
 
 export default {
 name : 'CommunitiesListHeader',
@@ -58,25 +57,33 @@ props: {
 data() {
     return {
         isFocused: false,
+        lastCommunitiesSearch: {
+            popular: '',
+            my: '',
+            owner: '',
+        }
     }
 },
 
+mounted() {
+    this.lastCommunitiesSearch[this.list] = window.localStorage.getItem('lastCommunitiesSearch_' + this.list);
+},
+
 methods: {
-    /** @TGA: Слава, ради одного debounce тянем сюда весь lo-dash? **/
-    communitySearchKeyDownCheck: lodash.debounce(function (ev) {
+    communitySearchKeyDownCheck: debounce(function (ev) {
         const sText = this.$refs.txtCommunitiesListSearch.value.trim();
         if (13 === ev.keyCode) {
             return this.startSearch(sText);
         }
     }, 100),
 
-    /** @TGA: Слава, ради одного debounce тянем сюда весь lo-dash? **/
-    initSearch: lodash.debounce(function () {
+    initSearch: debounce(function () {
         const sText = this.$refs.txtCommunitiesListSearch.value.trim();
         return this.startSearch(sText);
     }, 100),
 
     startSearch(sText) {
+        window.localStorage.setItem('lastCommunitiesSearch_' + this.list, sText)
         this.$root.$emit('communitySearchStart', {
             searchText: sText,
             source: 'communitySearch',

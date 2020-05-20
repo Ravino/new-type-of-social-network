@@ -72,11 +72,10 @@ import ProfilePhotos from '../components/ProfilePhotos.vue';
 import ProfileFilter from '../components/ProfileFilter.vue';
 import PostEditModal from '../common/Post/PostEditModal.vue';
 import PostVideoModal from '../common/Post/PostVideoModal.vue';
-import SmallSpinner from "../common/SmallSpinner.vue";
+import SmallSpinner from '../common/SmallSpinner.vue';
 
 import PliziPost from '../classes/PliziPost.js';
-import ShortFriendsMixin from '../mixins/ShortFriendsMixin.js';
-import LazyLoadPosts from "../mixins/LazyLoadPosts.js";
+import LazyLoadPosts from '../mixins/LazyLoadPosts.js';
 
 export default {
 name: 'ProfilePage',
@@ -87,12 +86,11 @@ components: {
     PostVideoModal,
     SmallSpinner,
 },
-mixins: [ShortFriendsMixin, LazyLoadPosts],
+mixins: [ LazyLoadPosts],
 data() {
     return {
         posts: [],
-        //allMyFriends: null,
-        filterMode: `all`,
+        filterMode: 'all',
 
         userPhotos: [
             {path: '/images/user-photos/user-photo-01.png',},
@@ -245,8 +243,8 @@ async mounted() {
 
     this.$root.$on('wallPostsSelect', this.wallPostsSelectHandler);
     await this.getPosts();
-    //await this.loadMyFriends();
-},
+}
+
 }
 </script>
 
