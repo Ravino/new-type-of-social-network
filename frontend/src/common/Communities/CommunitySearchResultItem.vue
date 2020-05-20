@@ -45,13 +45,13 @@
                 </div>
             </div>
 
-            <button v-if="subscribeType === 'new'" type="button"
-                    class="btn plz-btn-outline rounded-pill ml-auto"
+            <button v-if="subscribeType === 'new'"
+                    class="btn btn-primary plz-btn-outline rounded-pill ml-auto"
                     @click="subscribeInvite(community)">
                 Подписаться
             </button>
             <button v-else-if="subscribeType === 'exists'" type="button"
-                    class="btn plz-btn-outline rounded-pill ml-auto"
+                    class="btn btn-primary plz-btn-outline rounded-pill ml-auto"
                     @click="unsubscribeInvite(community)">
                 Отписаться
             </button>
