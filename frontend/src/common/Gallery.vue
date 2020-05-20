@@ -3,7 +3,7 @@
         <div v-if="galleryType === 'album'" class="plz-gallery-wrap plz-gallery-wrap-album">
             <template v-for="image in imagesWithClasses">
                 <div :class="{'plz-gallery-image-mores': image.isMore}"
-                     :data-more="countImage.toString()"
+                     :data-more="countImage"
                      @click="showImage(image.id)"
                 >
                     <img
@@ -20,7 +20,7 @@
             <div v-for="block in portraitBlocks" :class="block.classes">
                 <template v-for="image in block.images">
                     <div :class="{'plz-gallery-image-mores': image.isMore}"
-                         :data-more="countImage.toString()"
+                         :data-more="countImage"
                          @click="showImage(image.id)"
                     >
                         <img
@@ -62,9 +62,6 @@ export default {
     type: Object,
    },
   },
-    mounted() {
-        console.log(this.countImage.toString())
-    },
 data() {
     return {
         activeImageId: null,
@@ -72,10 +69,7 @@ data() {
 },
 computed: {
    countImage() {
-       if (this.countImagesMore.toString() > 0) {
-           return `Ещё ${this.countImagesMore.toString()}`;
-       }
-       return '';
+    return this.countImagesMore > 0 ? `Ещё ${this.countImagesMore}` : '';
    },
    countImages() {
     return this.images.length;
@@ -128,18 +122,17 @@ computed: {
       classes.push(this.getPortraitImageClass(index, countImages));
      }
 
-            return {
-                path: image.original.path,
-                name: image.originalName,
-                classes,
-                isMore,
-                id: image.id,
+        return {
+            path: image.original.path,
+            name: image.originalName,
+            classes,
+            isMore,
+            id: image.id,
             };
         });
     },
     portraitBlocks() {
-        const countImages = this.viewImages.length;
-
+    const countImages = this.viewImages.length;
     const first = [];
     const second = [];
     let index = 1;
