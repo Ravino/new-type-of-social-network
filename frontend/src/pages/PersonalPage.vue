@@ -18,7 +18,7 @@
 
                 <template v-if="filteredPosts && filteredPosts.length > 0">
                     <Post v-for="postItem in filteredPosts"
-                          :key="postItem.id"
+                          :key="`userPost-`+postItem.id"
                           :post="postItem"
                           @onShare="onSharePost"></Post>
                 </template>
@@ -115,6 +115,9 @@ data() {
             isVisible: false,
         },
         postForRepost: null,
+        lazyLoadStarted: false,
+        noMorePost: false,
+        enabledPostLoader: true,
     }
 },
 
@@ -228,12 +231,13 @@ methods: {
     },
 
     async getPosts(limit = 50, offset = 0) {
+        if ( !(this.profileData &&  this.profileData.id))
+            return;
+
         let response = null;
 
         try {
-            if (this.profileData && this.profileData.id) {
-                response = await this.$root.$api.$post.getPostsByUserId(this.profileData.id, limit, offset);
-            }
+            response = await this.$root.$api.$post.getPostsByUserId(this.profileData.id, limit, offset);
         } catch (e) {
             console.warn(e.detailMessage);
         }
@@ -271,12 +275,12 @@ mounted() {
     this.$root.$on('sendPersonalMessage', this.handlePersonalMessage);
 },
 
-beforeRouteUpdate( to, from, next ){
+async beforeRouteUpdate( to, from, next ){
     this.profileData = null;
     this.posts = null;
     this.userId = to.params.id;
     next();
-    this.getUserInfo();
+    await this.getUserInfo();
     window.scrollTo( 0, 0 );
 },
 }
