@@ -42,13 +42,13 @@
                              :aria-labelledby="`postSettings` + post.id">
 
                             <div v-if="post.author.id === user.id" class="nav-item">
-                                <button class="btn dropdown-item px-3 py-1"
+                                <button class="btn dropdown-item text-left px-3 py-1"
                                         @click="$emit('onEditPost', post)">
                                     Редактировать
                                 </button>
                             </div>
                             <div v-if="post.author.id === user.id" class="nav-item">
-                                <button class="btn dropdown-item px-3 py-1"
+                                <button class="btn dropdown-item text-left px-3 py-1"
                                         @click="$emit('onDeletePost', post.id)">
                                     Удалить
                                 </button>
