@@ -111,59 +111,13 @@ methods: {
     async addMessageToChat( msgText, attachmentsIds, attachmentsFiles ){
         const chatId = (this.currentDialog) ? this.currentDialog.id : 'unknown';
 
-        let apiResponse = null;
-
-        try {
-            apiResponse = await this.$root.$api.$chat.messageSend( chatId, msgText, attachmentsIds );
-        }
-        catch (e){
-            this.errors = e.data.errors;
-            window.console.warn( e.detailMessage );
-            throw e;
-        }
-
-        if ( apiResponse ){
-            // делим на 1000 потому, что тут JS считает в миллисекундах
-            const nowDT = +( (new Date()).valueOf() / 1000).toFixed(0);
-
-            const newMessage = {
-                id: apiResponse.data.id,
-                userId: this.$root.$auth.user.id,
-                chatId: chatId,
-                firstName: this.$root.$auth.user.firstName,
-                lastName: this.$root.$auth.user.lastName,
-                userPic: this.$root.$auth.user.userPic,
-                sex: this.$root.$auth.user.sex,
-                body: msgText,
-                isMine: true,
-                isRead: false,
-                isEdited: false,
-                createdAt: nowDT,
-                updatedAt: nowDT,
-                attachments: { list : attachmentsFiles },
-                replyOn: null,
-                isForward: null
-            };
-
-            // @TGA так было когда бэк присылал все данные на сообщение
-            //const eventData = {
-            //    chatId : apiResponse.data.chatId,
-            //    message : apiResponse.data
-            //}
-
-            const eventData = {
-                chatId : chatId,
-                message : newMessage
-            };
-
-            //window.console.log( JSON.parse( JSON.stringify(attachmentsFiles) ) , `attachmentsFiles`);
-            //window.console.log( JSON.parse( JSON.stringify(newMessage) ), `newMessage` );
-
-            this.$root.$emit( 'newMessageInDialog', eventData );
-        }
-        else{
-            window.console.info( apiResponse );
-        }
+        const sendData = {
+            chatId: chatId,
+            body: msgText,
+            attachments: attachmentsIds,
+            event: 'new.message'
+        };
+        this.$root.$api.sendToChannel(sendData);
     },
 },
 

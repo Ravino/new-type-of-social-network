@@ -146,34 +146,8 @@ methods: {
         this.sendMessageToUser(evData);
     },
 
-    async sendMessageToUser(msg){
-        let apiResponse = null;
-
-        try {
-            apiResponse = await this.$root.$api.$chat.privateMessageSend(msg.receiverId, msg.message.postText, msg.message.attachments);
-        }
-        catch (e){
-            window.console.warn(e.detailMessage);
-            throw e;
-        }
-
-        if (apiResponse != null &&  apiResponse.data) {
-            let newMsg = apiResponse.data;
-
-            const eventData = {
-                chatId : newMsg.chatId,
-                message : newMsg
-            }
-
-            try {
-                this.$root.$emit('newMessageInDialog', eventData);
-            } catch (e){
-
-            }
-        }
-        else {
-            window.console.info(apiResponse);
-        }
+    async sendMessageToUser(msg) {
+        await this.$root.$api.$chat.privateMessageSend(msg.receiverId, msg.message.postText, msg.message.attachments);
     },
 
     async getPosts() {

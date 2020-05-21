@@ -76,12 +76,8 @@ class ChatService extends BaseService
         if(!$chat_id) {
             $chat_id = $this->chatRepository->createChatForCoupleUsers($user_id, $author_id);
         }
-        $message_id = $this->repository->saveInChatById($chat_id, $body, $author_id, $parent_id, $parent_chat_id);
-        if(count($attachment_ids)) {
-            ChatMessageAttachment::whereIn('_id', $attachment_ids)->update(["chat_message_id" => $message_id]);
-        }
-        $this->dispatcher->dispatch(new NewMessageEvent($message_id, $author_id, $chat_id));
-        return $message_id;
+        $this->dispatcher->dispatch(new NewMessageEvent($body, $author_id, $chat_id, $attachment_ids, $parent_id, $parent_chat_id));
+        return true;
     }
 
     /**
