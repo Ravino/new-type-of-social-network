@@ -248,14 +248,17 @@ methods: {
             return;
 
         let response = null;
+        this.isStarted = true;
 
         try {
             response = await this.$root.$api.$post.getPostsByUserId(this.profileData.id, limit, offset);
         } catch (e) {
+            this.isStarted = false;
             console.warn(e.detailMessage);
         }
 
         if (response !== null) {
+            this.isStarted = false;
             response.map((post) => {
                 this.posts.push(new PliziPost(post));
             });

@@ -25,7 +25,9 @@ class FriendshipTableSeeder extends Seeder
                     'sender_type' => 'App\Models\User',
                     'recipient_id' => $users[$i]->id,
                     'recipient_type' => 'App\Models\User',
-                    'status' => 1
+                    'status' => 1,
+                    'created_at' => \Illuminate\Support\Carbon::now(),
+                    'updated_at' => \Illuminate\Support\Carbon::now(),
                 ]);
             }
         }
@@ -36,7 +38,9 @@ class FriendshipTableSeeder extends Seeder
                     'sender_type' => 'App\Models\User',
                     'recipient_id' => $users[$i]->id,
                     'recipient_type' => 'App\Models\User',
-                    'status' => 1
+                    'status' => 1,
+                    'created_at' => \Illuminate\Support\Carbon::now(),
+                    'updated_at' => \Illuminate\Support\Carbon::now(),
                 ]);
             }
         }
@@ -53,7 +57,9 @@ class FriendshipTableSeeder extends Seeder
                     'sender_type' => 'App\Models\User',
                     'recipient_id' => $user2,
                     'recipient_type' => 'App\Models\User',
-                    'status' => 1
+                    'status' => 1,
+                    'created_at' => \Illuminate\Support\Carbon::now(),
+                    'updated_at' => \Illuminate\Support\Carbon::now(),
                 ]);
             }
         }

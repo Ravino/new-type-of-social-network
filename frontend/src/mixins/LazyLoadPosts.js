@@ -29,9 +29,7 @@ const LazyLoadPosts = {
     },
 
     async mounted() {
-        if (!this.isStarted) {
-            window.addEventListener('scroll', this.onScrollYPage);
-        }
+        window.addEventListener('scroll', this.onScrollYPage);
     },
 
     beforeRouteLeave(to, from, next) {
@@ -42,9 +40,7 @@ const LazyLoadPosts = {
     async beforeRouteUpdate(to, from, next) {
         next();
 
-        if (!this.isStarted) {
-            window.addEventListener('scroll', this.onScrollYPage);
-        }
+        window.addEventListener('scroll', this.onScrollYPage);
     },
 };
 
