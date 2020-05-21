@@ -76,10 +76,10 @@ $friendspicSize: 20px;
 
             &-pics {
                 position: relative;
-                width: 50px;
+                width: auto;
+                max-width: 50px;
                 display: flex;
                 align-items: center;
-
              }
 
         }
