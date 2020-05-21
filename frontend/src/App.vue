@@ -173,6 +173,33 @@ methods: {
         this.$root.$auth.dm.restore();
         this.$root.$auth.im.restore();
         this.$root.$auth.nm.restore();
+    },
+
+    keysUpdatersInitiator(){
+        this.$root.$on([this.$root.$auth.frm.loadEventName, this.$root.$auth.frm.restoreEventName,
+                    this.$root.$auth.frm.updateEventName], ()=>{
+            this.$root.$friendsKeyUpdater++;
+        });
+
+        this.$root.$on([this.$root.$auth.fm.loadEventName, this.$root.$auth.fm.restoreEventName,
+                    this.$root.$auth.fm.updateEventName], ()=>{
+            this.$root.$favoritesKeyUpdater++;
+        });
+
+        this.$root.$on([this.$root.$auth.dm.loadEventName, this.$root.$auth.dm.restoreEventName,
+                    this.$root.$auth.dm.updateEventName], ()=>{
+            this.$root.$dialogsKeyUpdater++;
+        });
+
+        this.$root.$on([this.$root.$auth.im.loadEventName, this.$root.$auth.im.restoreEventName,
+                    this.$root.$auth.im.updateEventName], ()=>{
+            this.$root.$invitationsKeyUpdater++;
+        });
+
+        this.$root.$on([this.$root.$auth.nm.loadEventName, this.$root.$auth.nm.restoreEventName,
+                    this.$root.$auth.nm.updateEventName], ()=>{
+            this.$root.$notificationsKeyUpdater++;
+        });
     }
 },
 
@@ -192,6 +219,8 @@ created(){
 
     this.$root.$auth = PliziAuth;
     this.$root.$auth.init(this.$root.$api);
+
+    this.keysUpdatersInitiator();
 
     this.$root.$on('afterSuccessLogin',  this.afterSuccessLogin);
     this.$root.$on('afterSuccessLogout', this.afterSuccessLogout);

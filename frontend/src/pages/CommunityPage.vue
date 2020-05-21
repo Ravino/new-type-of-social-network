@@ -269,11 +269,10 @@ computed: {
         return this.$root.$auth.user;
     },
     canPost() {
-        if (this.communityData) {
-            return !!this.communityData.members.find((member) => {
-                return member.id === this.authUser.id && (member.role === 'user' || member.role === 'author');
-            });
-        }
+        /**
+         * @todo check privacy
+         */
+        return this.communityData && this.communityData.role !== null;
     },
     avatarMedium() {
         return this.communityData?.avatar?.image.medium.path || this.communityData?.primaryImage;

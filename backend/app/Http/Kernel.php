@@ -2,6 +2,8 @@
 
 namespace App\Http;
 
+use App\Http\Middleware\GetCommunity;
+use App\Http\Middleware\IsOwnerOfCommunity;
 use App\Http\Middleware\PrivacyRole;
 use Illuminate\Foundation\Http\Kernel as HttpKernel;
 
@@ -71,5 +73,10 @@ class Kernel extends HttpKernel
         'permission' => \Laratrust\Middleware\LaratrustPermission::class,
         'ability' => \Laratrust\Middleware\LaratrustAbility::class,
         'privacy.role' => PrivacyRole::class,
+        /**
+         * Community
+         */
+        'community.get' => GetCommunity::class,
+        'community.isOwner' => IsOwnerOfCommunity::class,
     ];
 }

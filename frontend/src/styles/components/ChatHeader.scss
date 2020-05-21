@@ -1,3 +1,4 @@
+
 #chatHeader {
     height: 76px;
 
@@ -10,6 +11,20 @@
         padding-right: 1rem;
         box-shadow: none;
         border: 0;
+    }
+
+    .vc-popover-content-wrapper {
+        left: -17px !important;
+    }
+}
+
+.in-shadow {
+    box-shadow: 0 2px 54px 0 rgba(0, 0, 0, 0.07);
+}
+
+.ChatsListPage {
+    #chatHeader {
+        border-radius: 0 20px 0 0;
     }
 }
 

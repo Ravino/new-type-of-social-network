@@ -5,7 +5,10 @@
                 <AccountToolbarLeft></AccountToolbarLeft>
             </div>
 
-            <div class="col-12 col-md-11 col-xl-8 pr-0 pr-xl-3 px-0 px-md-3">
+            <div class="col-12 col-md-11 pr-0 px-0 px-md-3"
+                 :class="calcCentralBlockClass()"
+                 v-bind:key="`CentralColumn-`+shortFriendsUpdater">
+
                 <div class="container">
                     <ProfileHeader v-bind:userData="userData" v-bind:isOwner="true"></ProfileHeader>
 
@@ -44,9 +47,14 @@
                 </div>
             </div>
 
-            <div class="col-sm-3 col-md-3 col-lg-3 col-xl-3 pr-0 d-none d-xl-block">
+            <div v-if="$root.$auth.frm.size > 0" class="col-sm-3 col-md-3 col-lg-3 col-xl-3 pr-0 d-none d-xl-block"
+                 v-bind:key="`RightColumn-`+shortFriendsUpdater">
+
                 <FavoriteFriends :isNarrow="false"></FavoriteFriends>
-                <ShortFriends v-bind:friends="allFriends"></ShortFriends>
+                <ShortFriends
+                    v-bind:key="`shortFriendsBlock-`+shortFriendsUpdater"
+                    v-bind:friends="getAllFriends()">
+                    </ShortFriends>
             </div>
 
             <PostEditModal v-if="postEditModal.isVisible"
@@ -133,8 +141,8 @@ computed : {
         return this.$root.$auth.user;
     },
 
-    allFriends(){
-        return this.$root.$auth.frm.asArray();
+    shortFriendsUpdater(){
+        return this.$root.$friendsKeyUpdater+'-'+this.$root.$favoritesKeyUpdater;
     },
 
     /**
@@ -154,6 +162,17 @@ computed : {
 },
 
 methods : {
+    calcCentralBlockClass(){
+        return {
+            'col-xl-8 pr-xl-3' : (this.$root.$auth.frm.size > 0),
+            'col-xl-11' : (this.$root.$auth.frm.size === 0),
+        };
+    },
+
+    getAllFriends(){
+        return this.$root.$auth.frm.asArray();
+    },
+
     wallPostsSelectHandler( evData ){
         this.filterMode = evData.wMode;
     },
@@ -272,7 +291,6 @@ methods : {
         }
     },
 },
-
 
 async mounted() {
     this.$root.$on('showProfileOptionsModal', ()=>{
