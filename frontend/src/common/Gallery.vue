@@ -25,7 +25,8 @@
         <template v-else>
             <div v-for="block in portraitBlocks" :class="block.classes">
                 <template v-for="image in block.images">
-                    <div :class="{'plz-gallery-image-mores': image.isMore}"
+                    <div class="plz-gallery-image-mores-div"
+                        :class="{'plz-gallery-image-mores': image.isMore}"
                          :data-more="countImage"
                          @click="showImage(image.id)"
                     >

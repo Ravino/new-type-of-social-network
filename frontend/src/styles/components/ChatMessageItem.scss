@@ -139,11 +139,6 @@ $chatMessagesBodyHeight: calc(100% - 139px);
             }
         }
 
-        .message-time {
-            font-size: $chatTimeFontSize;
-            line-height: 1.8;
-            color: $chatMessageMyMsgTimeColor;
-        }
         .message-info {
             left: auto;
             right: calc(100% + 20px);
@@ -195,11 +190,6 @@ $chatMessagesBodyHeight: calc(100% - 139px);
             color: $chatMessageCompanionMsgTextColor;
         }
 
-        .message-time {
-            font-size: $chatTimeFontSize;
-            line-height: 1.8;
-            color: $chatMessageCompanionMsgTimeColor;
-        }
         .message-resend {
             border-left: 2px solid $grey;
         }
@@ -260,6 +250,18 @@ $chatMessagesBodyHeight: calc(100% - 139px);
             width: 18px;
             fill: $grey;
         }
+    }
+
+    .message-body {
+        max-width: 100%;
+        word-break: break-word;
+    }
+
+    .message-time {
+        font-size: $chatTimeFontSize;
+        line-height: 1.8;
+        color: $chatMessageCompanionMsgTimeColor;
+        white-space: nowrap;
     }
 
     .message-user-pic {
@@ -370,15 +372,11 @@ $chatMessagesBodyHeight: calc(100% - 139px);
     z-index: 2000;
 
     .plz-gallery-single {
-        .plz-gallery-wrap-album, .plz-gallery-image-portrait-block-1 {
-            img {
-                width: 200px !important;
-            }
-        }
-        .plz-gallery-wrap-album {
-            img {
-                height: 200px;
-            }
+
+        .plz-gallery-image-portrait-full {
+            width: auto;
+            min-width: auto;
+            height: 100%;
         }
     }
 
@@ -386,23 +384,6 @@ $chatMessagesBodyHeight: calc(100% - 139px);
         width: 100%;
         display: flex;
         flex-wrap: wrap;
-        img {
-            width: 100%;
-            height: auto;
-        }
-    }
-
-    .plz-gallery-image-portrait-wrap {
-         height: 170px;
-         width: 100%;
-     }
-
-    .plz-gallery-viewer-current img {
-        width: 50%;
-    }
-
-    .plz-gallery-wrap img {
-       width: 100% ;
     }
 
     .plz-gallery-viewer-nav {
@@ -412,14 +393,53 @@ $chatMessagesBodyHeight: calc(100% - 139px);
     .plz-gallery-viewer {
         width: 100vw;
     }
+
+    .plz-gallery-image-mores-div {
+        position: relative;
+        width: 200px;
+        height: 170px;
+        margin: 5px;
+        overflow: hidden;
+    }
+    .plz-gallery-image-portrait-wrap {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+    }
+    .plz-gallery-image-portrait {
+        display: flex;
+        flex-wrap: wrap;
+        height: unset;
+        width: 200px;
+    }
+
 }
 
 .message-sended-image {
-    display: inline-block;
-    vertical-align: top;
+    display: flex;
+    flex-wrap: wrap;
     width: 200px;
     height: auto;
     max-width: 100%;
+
+    .plz-gallery-wrapper {
+        position: relative;
+        height: 170px;
+        width: 200px;
+        overflow: hidden;
+        margin: 5px;
+    }
+    img {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        height: 100%;
+        min-width: 100%;
+        padding: 0;
+        min-height: 100%;
+    }
 }
 
 .message-sended-attach {

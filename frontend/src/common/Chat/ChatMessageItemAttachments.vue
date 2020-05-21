@@ -1,9 +1,9 @@
 <template>
-    <div class="message-attachments d-flex flex-wrap" :class="{'message-attachments-z': attachItem}" v-if="message.isAttachments">
-        <div class="message-attachment-item mb-2 message-gallery">
+    <div class="message-attachments d-flex flex-wrap" :class="{'message-attachments-z': attachItem}" v-if="this.message.attachments.length">
+        <div class="message-attachment-item mb-2 message-gallery --flex-grow-1" >
             <Gallery v-if="attachItem"
                      :images="imageList"
-                     class="message-sended-image"
+                     class="message-sended-image w-100"
             >
             </Gallery>
             <span v-else class="message-sended-attach d-flex align-items-center mb-2">
