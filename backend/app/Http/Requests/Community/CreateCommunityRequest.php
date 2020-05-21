@@ -4,9 +4,9 @@
 namespace App\Http\Requests\Community;
 
 
-use App\Http\Requests\Request;
+use Illuminate\Foundation\Http\FormRequest;
 
-class CreateCommunityRequest extends Request
+class CreateCommunityRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -26,7 +26,14 @@ class CreateCommunityRequest extends Request
     public function rules()
     {
         return [
-            'description' => 'string|max:250',
+            'description' => 'max:250',
         ];
+    }
+
+    protected function prepareForValidation()
+    {
+        $this->merge([
+            'description' => $this->description ?: '',
+        ]);
     }
 }

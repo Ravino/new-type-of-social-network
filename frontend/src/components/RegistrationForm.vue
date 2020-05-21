@@ -88,7 +88,7 @@
             <div class="form-group">
                 <button id="btnRegistration"
                         type="button"
-                        :disabled="$v.$invalid"
+                        :disabled="$v.$invalid || isLoad"
                         @click="startRegistration()"
                         class="btn plz-btn plz-btn-primary text-center"
                         :class="{disabled: isLoad}">

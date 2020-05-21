@@ -94,6 +94,8 @@ class Post extends Model
             return Post::whereIn('id', $userPosts)
                 ->with(['postable', 'author', 'usersLikes' => function ($query) {
                     return $query->limit(8)->get();
+                }, 'parent' => function ($query) {
+                    return $query->withTrashed()->get();
                 }])
                 ->limit($limit ?? 50)
                 ->offset($offset ?? 0)
@@ -147,6 +149,8 @@ class Post extends Model
         return Post::whereIn('id', $postsIds)
             ->with(['postable', 'author', 'usersLikes' => function ($query) {
                 return $query->limit(8)->get();
+            }, 'parent' => function ($query) {
+                return $query->withTrashed()->get();
             }])
             ->limit($limit ?? 50)
             ->offset($offset ?? 0)

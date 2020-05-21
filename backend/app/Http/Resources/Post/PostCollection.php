@@ -26,15 +26,15 @@ class PostCollection extends ResourceCollection
     /**
      * Transform the resource collection into an array.
      *
-     * @param  \Illuminate\Http\Request  $request
+     * @param \Illuminate\Http\Request $request
      * @return array
      */
     public function toArray($request)
     {
         return [
             'list' => $this->collection->map(function ($post) {
-                if($this->injectRelation) {
-                    if($post->postable instanceof UserModel) {
+                if ($this->injectRelation) {
+                    if ($post->postable instanceof UserModel) {
                         return [
                             'id' => $post->id,
                             'name' => $post->name,
@@ -49,10 +49,10 @@ class PostCollection extends ResourceCollection
                             'attachments' => new AttachmentsCollection($post->attachments),
                             'user' => new SimpleUser($post->postable),
                             'createdAt' => $post->created_at,
-                            'sharedFrom' => $post->parent_id ? new PostWithoutParent($post->parent()->withTrashed()->first()) : null,
+                            'sharedFrom' => $post->parent_id ? new Post($post->parent) : null,
                             'author' => new SimpleUser($post->author),
                         ];
-                    } else if($post->postable instanceof CommunityModel) {
+                    } else if ($post->postable instanceof CommunityModel) {
                         return [
                             'id' => $post->id,
                             'name' => $post->name,
@@ -67,7 +67,7 @@ class PostCollection extends ResourceCollection
                             'attachments' => new AttachmentsCollection($post->attachments),
                             'community' => new Community($post->postable),
                             'createdAt' => $post->created_at,
-                            'sharedFrom' => $post->parent_id ? new PostWithoutParent($post->parent) : null,
+                            'sharedFrom' => $post->parent_id ? new Post($post->parent) : null,
                             'author' => new SimpleUser($post->author),
                         ];
                     }
@@ -85,7 +85,7 @@ class PostCollection extends ResourceCollection
                         'alreadyLiked' => (bool)count($post->like),
                         'createdAt' => $post->created_at,
                         'attachments' => new AttachmentsCollection($post->attachments),
-                        'sharedFrom' => $post->parent_id ? new PostWithoutParent($post->parent) : null,
+                        'sharedFrom' => $post->parent_id ? new Post($post->parent) : null,
                         'author' => new SimpleUser($post->author),
                     ];
                 }

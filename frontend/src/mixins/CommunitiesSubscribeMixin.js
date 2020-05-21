@@ -9,7 +9,14 @@ const CommunitiesSubscribeMixin = {
         getSubscribeType(community) {
             const role = community.role;
             if (!role) {
-                return 'new';
+                switch (community.privacy) {
+                    case 1://Open
+                        return 'new';
+                    case 2://Closed
+                        return 'request';
+                    default:
+                        return '';
+                }
             }
             if (role === 'author') {
                 return 'author';
@@ -28,6 +35,12 @@ const CommunitiesSubscribeMixin = {
          */
         unsubscribeInvite(community) {
             this.unsubscribeCommunity(community);
+        },
+        /**
+         * @param {PliziCommunity} community
+         */
+        sendRequest(community) {
+            this.requestCommunity(community);
         },
 
         /**
@@ -78,6 +91,29 @@ const CommunitiesSubscribeMixin = {
                 this.$root.$alert(`Вы успешно отписались от ${community.name}`, 'bg-success', 3);
             } else {
                 this.$root.$alert(`Не получилось отписаться от ${community.name}`, 'bg-warning', 3);
+            }
+
+            return true;
+        },
+
+        /**
+         * @param {PliziCommunity} community
+         * @returns {object|null}
+         */
+        async requestCommunity(community) {
+            let apiResponse = null;
+
+            try {
+                apiResponse = await this.$root.$api.$communities.requestCreate(community.id);
+            } catch (e) {
+                window.console.warn(e.detailMessage);
+                throw e;
+            }
+
+            if (apiResponse) {
+                this.$root.$alert(apiResponse.message, 'bg-success', 3);
+            } else {
+                this.$root.$alert(`Ошибка отправки запроса`, 'bg-warning', 3);
             }
 
             return true;

@@ -29,7 +29,10 @@
                                     </div>
                                 </template>
                                 <div class="plz-community-header-details-text pt-2">
-                                    <h1 class="plz-community-header-title mb-1">{{communityData.name}}</h1>
+                                    <h1 class="plz-community-header-title mb-1">
+                                        {{communityData.name}}
+                                        <PrivacyLabel :community="communityData"></PrivacyLabel>
+                                    </h1>
                                     <p class="plz-community-header-desc mb-0">
                                         {{communityData.notice}}
                                     </p>
@@ -42,12 +45,17 @@
                                         @click="subscribeInvite(communityData)">
                                     подписаться
                                 </button>
+                                <button v-else-if="subscribeType === 'request'" type="button"
+                                        class="btn plz-btn-outline  plizi-community-btn rounded-pill"
+                                        @click="sendRequest(community)">
+                                    запрос
+                                </button>
                                 <button v-else-if="subscribeType === 'exists'"
                                         class="btn align-items-center justify-content-center d-flex w-75 border-right m-0"
                                         @click="unsubscribeInvite(communityData)">
                                     отписаться
                                 </button>
-                                <router-link :to="{name: 'CommunitySettingsPage', params: {id: communityData.id}}" v-else
+                                <router-link :to="{name: 'CommunitySettingsPage', params: {id: communityData.id}}" v-else-if="subscribeType === 'author'"
                                              class="btn align-items-center justify-content-center d-flex w-75 border-right m-0">
                                     управление
                                 </router-link>
@@ -208,7 +216,9 @@ import CommunityManagedActionBlock from "../common/Communities/CommunityManagedA
 
 import IconYoutube from "../icons/IconYoutube.vue";
 import LazyLoadPosts from '../mixins/LazyLoadPosts.js';
-import PliziUser from "../classes/PliziUser";
+import PliziUser from "../classes/PliziUser.js";
+
+import PrivacyLabel from "../components/Community/PrivacyLabel.vue";
 
 export default {
 name: 'CommunityPage',
@@ -231,6 +241,7 @@ components : {
     PostLikeModal,
     SmallSpinner,
     IconYoutube,
+    PrivacyLabel,
 },
 
 data() {

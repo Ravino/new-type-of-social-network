@@ -2,17 +2,17 @@
     <div class="plz-top-watcher-item position-relative d-inline-block mr-0 mr-sm-2">
         <div class="btn btn-link my-auto text-body btn-sm cursor-pointer" title="Уведомления" ref="dropdown">
             <span data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" id="dropdownMenuLikes"
-                  @click="onShowNotifications">
+                  @click="onShowNotifications()">
                 <IconBell />
-                <span v-if="notificationsNumber > 0" class="counter-info">
-                    {{notificationsNumber}}
+                <span v-if="notificationsNumber() > 0" class="counter-info">
+                    {{notificationsNumber()}}
                 </span>
             </span>
 
-            <div v-if="notificationsNumber > 0" aria-labelledby="dropdownMenuLikes"
+            <div v-if="notificationsNumber() > 0" aria-labelledby="dropdownMenuLikes"
                 class="notifications-likes-dropdown dropdown-menu dropdown-menu-right pt-3 pb-0 dropdown-white w-auto">
                 <ul class="list-unstyled mb-0">
-                    <NotificationItem v-for="notifItem in notificationsList"
+                    <NotificationItem v-for="notifItem in notificationsList()"
                                       v-bind:notification="notifItem"
                                       v-bind:key="notifItem.id">
                     </NotificationItem>
@@ -21,7 +21,7 @@
                 <vue-custom-scrollbar class="notifications-likes-scroll"
                                           :settings="customScrollbarSettings">
                     <ul class="list-unstyled mb-0">
-                        <NotificationItem v-for="notifItem in notificationsList"
+                        <NotificationItem v-for="notifItem in notificationsList()"
                                           v-bind:notification="notifItem"
                                           v-bind:key="notifItem.id">
                         </NotificationItem>
@@ -46,7 +46,8 @@ import vueCustomScrollbar from 'vue-custom-scrollbar';
 export default {
 name : 'NavBarNotifications',
 components : {
-    IconBell, NotificationItem,
+    IconBell,
+    NotificationItem,
     vueCustomScrollbar,
 },
 
@@ -76,6 +77,7 @@ methods : {
     },
 
     eventOnHideDropdown() {
+     // TODO: Fix jquery
      $(this.$refs.dropdown).off('hidden.bs.dropdown').on('hidden.bs.dropdown', () => {
      this.$root.$auth.nm.clear();
      this.$root.$auth.nm.storeData();

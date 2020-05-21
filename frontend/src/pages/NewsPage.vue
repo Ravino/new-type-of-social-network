@@ -129,15 +129,17 @@ methods: {
 
     async getPosts(limit = 50, offset = 0) {
         let response = null;
+        this.isStarted = true;
 
         try {
             response = await this.$root.$api.$post.getNews(limit, offset);
         } catch (e) {
-            this.enabledPostLoader = false;
+            this.isStarted = false;
             console.warn(e.message);
         }
 
         if (response !== null) {
+            this.isStarted = false;
             response.map((post) => {
                 this.posts.push(new PliziPost(post));
             });
