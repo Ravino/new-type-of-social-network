@@ -8,8 +8,8 @@
                 </div>
             </div>
 
-            <div class="plz-account-settings-body ">
-                <div class="form-group row border-bottom">
+            <div class="plz-account-settings-body">
+                <div class="form-group row border-bottom d-none">
                     <label for="twoFactorAuthEnabled"
                            class="plz-account-settings-body-label col-sm-6 col-md-6 col-lg-4 col-xl-4">
                         Двухэтапная аутентификация
@@ -33,13 +33,12 @@
                     <div class="col-3"></div>
                 </div>
 
-                <div class="form-group row border-bottom">
+                <div class="form-group row border-bottom d-none">
                     <label for="smsConfirm"
                            class="plz-account-settings-body-label col-sm-6 col-md-6 col-lg-4 col-xl-4">
                         Подтверждение через SMS
                     </label>
-                    <div
-                        class="plz-account-settings-body-field  col-sm-6 col-md-6 col-lg-6 col-xl-6">
+                    <div class="plz-account-settings-body-field col-sm-6 col-md-6 col-lg-6 col-xl-6">
                         <div class="d-flex align-items-center w-100 position-relative pl-4">
                             <i v-if="Number(form.smsConfirm) === 1" class="fas fa-check mr-2"></i>
                             <div class="w-100  position-relative ml-n2">
