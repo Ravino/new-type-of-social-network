@@ -189,6 +189,7 @@
                                 </p>
                                <p class="d-flex">
                                    <router-link v-for="(user, index) in shortUsersLikes"
+                                                :key="index"
                                                 :to="{ name: 'PersonalPage', params: { id: user.id } }">
                                        <img :src="user.profile.userPic"
                                             :alt="user.profile.firstName + ' ' + user.profile.lastName"
