@@ -479,15 +479,18 @@ methods: {
     },
     async getPosts(limit = 50, offset = 0) {
         let response = null;
+        this.isStarted = true;
 
         try {
             // TODO: тут нужно получать посты сообщества
             response = await this.$root.$api.$communities.posts(this.id, limit, offset);
         } catch (e) {
+            this.isStarted = false;
             console.warn(e.detailMessage);
         }
 
         if (response !== null) {
+            this.isStarted = false;
             response.map((post) => {
                 this.posts.push(new PliziPost(post));
             });
