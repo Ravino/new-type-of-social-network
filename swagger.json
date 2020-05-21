@@ -663,7 +663,7 @@
                 ]
             }
         },
-        "/communities/request/list/{groupId}": {
+        "/communities/requests/list/{groupId}": {
             "get": {
                 "tags": [
                     "Communities"
@@ -695,7 +695,7 @@
                 }
             }
         },
-        "/communities/request/create/{groupId}": {
+        "/communities/requests/create/{groupId}": {
             "post": {
                 "tags": [
                     "Communities"
@@ -751,7 +751,7 @@
                 ]
             }
         },
-        "/communities/request/accept/{groupId}/{id}": {
+        "/communities/requests/accept/{groupId}/{id}": {
             "patch": {
                 "tags": [
                     "Communities"
@@ -807,7 +807,7 @@
                 ]
             }
         },
-        "/communities/request/reject/{groupId}/{id}": {
+        "/communities/requests/reject/{groupId}/{id}": {
             "patch": {
                 "tags": [
                     "Communities"

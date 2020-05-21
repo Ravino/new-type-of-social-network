@@ -10,6 +10,7 @@ use App\Http\Requests\Request;
 use App\Models\Community;
 use App\Models\CommunityRequest;
 use App\Notifications\UserSystemNotifications;
+use Illuminate\Database\Query\Builder;
 use Storage;
 
 class CommunityService
@@ -127,6 +128,7 @@ class CommunityService
             return false;
         }
 
+        /** @var Community|Builder $community */
         [$community, $request] = $models;
         if (!tap($request)->update([
                 'status' => CommunityRequest::STATUS_ACCEPTED,
@@ -134,7 +136,9 @@ class CommunityService
             return false;
         }
 
-        if(!$community->users->contains(auth()->user()->id)) {
+        if(!$community->users()->where([
+            'id' => auth()->user()->id,
+        ])->exists()) {
             $community->users()->attach(auth()->user()->id,
                 ['role' => Community::ROLE_USER, 'created_at' => time(), 'updated_at' => time()]);
             event(new CommunitySubscribe($community->id, auth()->user()->id));

@@ -4,13 +4,13 @@
 namespace App\Http\Requests\Community;
 
 
-use App\Http\Requests\Request;
 use App\Models\Community as CommunityModel;
 use App\Models\CommunityTheme;
+use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Support\Str;
 use Illuminate\Validation\Rule;
 
-class CreateCommunity extends Request
+class CreateCommunity extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -29,9 +29,6 @@ class CreateCommunity extends Request
      */
     public function rules()
     {
-        $this->request->add([
-            'url' => Str::slug($this->request->get('name')),
-        ]);
         return [
             'name' => 'required|string|max:255|unique:App\Models\Community,name',
             'url' => 'string|max:255|unique:App\Models\Community,url',
@@ -48,5 +45,12 @@ class CreateCommunity extends Request
                 Rule::in(array_keys(CommunityModel::getPrivacyList())),
             ],
         ];
+    }
+
+    protected function prepareForValidation()
+    {
+        $this->merge([
+            'url' => Str::slug($this->request->get('name')),
+        ]);
     }
 }

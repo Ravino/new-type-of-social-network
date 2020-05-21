@@ -281,6 +281,118 @@ class PliziCommunitiesAPI extends PliziBaseAPI {
 
         return null;
     }
+
+    /**
+     * Список запросов на вступление в сообщество
+     * @see http://vm1095330.hl.had.pm:8082/docs/#/Communities/getCommunityRequestList
+     * @param {number} communityID - ID сообщества, на которое собираемся подписаться
+     * @returns {object|null}
+     * @throws PliziAPIError
+     */
+    async requestList(communityID) {
+        let response = await this.axios.get(`api/communities/requests/list/${communityID}`, this.authHeaders)
+            .catch((error) => {
+                if (error.response.status === 422) {
+                    return {
+                        status: 422,
+                        message: error.response.data.message
+                    }
+                }
+                this.checkIsTokenExpires(error, `$communities.requestList`);
+                throw new PliziAPIError('$communities.requestList', error.response);
+            });
+
+        if (response.status === 200) {
+            return response.data;
+        }
+
+        return null;
+    }
+
+    /**
+     * Отправить запрос на вступление в сообщество
+     * @see http://vm1095330.hl.had.pm:8082/docs/#/Communities/createCommunityRequest
+     * @param {number} communityID - ID сообщества, на которое собираемся подписаться
+     * @returns {object|null}
+     * @throws PliziAPIError
+     */
+    async requestCreate(communityID) {
+        let response = await this.axios.post(`api/communities/requests/create/${communityID}`, {}, this.authHeaders)
+            .catch((error) => {
+                if (error.response.status === 422) {
+                    return {
+                        status: 422,
+                        data: {
+                            message: error.response.data.message
+                        },
+                    }
+                }
+                this.checkIsTokenExpires(error, `$communities.requestCreate`);
+                throw new PliziAPIError('$communities.requestCreate', error.response);
+            });
+
+        if ([200, 422].includes(response.status)) {
+            return response.data;
+        }
+
+        return null;
+    }
+
+    /**
+     * Принятие запроса на вступление в сообщество
+     * @see http://vm1095330.hl.had.pm:8082/docs/#/Communities/acceptCommunityRequest
+     * @param {number} communityID - ID сообщества, на которое собираемся подписаться
+     * @param {number} id - ID заявки
+     * @returns {object|null}
+     * @throws PliziAPIError
+     */
+    async requestAccept(communityID, id) {
+        let response = await this.axios.patch(`api/communities/requests/accept/${communityID}/${id}`, {}, this.authHeaders)
+            .catch((error) => {
+                if (error.response.status === 422) {
+                    return {
+                        status: 422,
+                        message: error.response.data.message
+                    }
+                }
+                this.checkIsTokenExpires(error, `$communities.requestAccept`);
+                throw new PliziAPIError('$communities.requestAccept', error.response);
+            });
+
+        if (response.status === 200) {
+            return response.data;
+        }
+
+        return null;
+    }
+
+    /**
+     * Отклонение запроса на вступление в сообщество
+     * @see http://vm1095330.hl.had.pm:8082/docs/#/Communities/rejectCommunityRequest
+     * @param {number} communityID - ID сообщества, на которое собираемся подписаться
+     * @param {number} id - ID заявки
+     * @returns {object|null}
+     * @throws PliziAPIError
+     */
+    async requestReject(communityID, id) {
+        let response = await this.axios.patch(`api/communities/requests/reject/${communityID}/${id}`, {}, this.authHeaders)
+            .catch((error) => {
+                if (error.response.status === 422) {
+                    return {
+                        status: 422,
+                        message: error.response.data.message
+                    }
+                }
+                this.checkIsTokenExpires(error, `$communities.requestReject`);
+                throw new PliziAPIError('$communities.requestReject', error.response);
+            });
+
+        if (response.status === 200) {
+            return response.data;
+        }
+
+        return null;
+    }
 }
 
 export default PliziCommunitiesAPI;

@@ -42,12 +42,17 @@
                                         @click="subscribeInvite(communityData)">
                                     подписаться
                                 </button>
+                                <button v-else-if="subscribeType === 'request'" type="button"
+                                        class="btn plz-btn-outline  plizi-community-btn rounded-pill"
+                                        @click="sendRequest(community)">
+                                    запрос
+                                </button>
                                 <button v-else-if="subscribeType === 'exists'"
                                         class="btn align-items-center justify-content-center d-flex w-75 border-right m-0"
                                         @click="unsubscribeInvite(communityData)">
                                     отписаться
                                 </button>
-                                <router-link :to="{name: 'CommunitySettingsPage', params: {id: communityData.id}}" v-else
+                                <router-link :to="{name: 'CommunitySettingsPage', params: {id: communityData.id}}" v-else-if="subscribeType === 'author'"
                                              class="btn align-items-center justify-content-center d-flex w-75 border-right m-0">
                                     управление
                                 </router-link>
