@@ -30,7 +30,7 @@ class Profile extends Request
         return [
             'firstName' => 'sometimes|required|string|min:1|max:255',
             'lastName' => 'sometimes|required|string|min:1|max:255',
-            'birthday' => 'date_format:Y-m-d|nullable|before:today',
+            'birthday' => 'date_format:Y-m-d|nullable|before:today|after:1950-01-01',
             'sex' => Rule::in(array_keys(ProfileModel::SEX_VARIANTS)),
             'geoCityId' => 'exists:geo_cities,id',
             'relationshipId' => Rule::exists('profile_relationships', 'id') . '|nullable',

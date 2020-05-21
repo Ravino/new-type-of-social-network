@@ -375,14 +375,19 @@
                 }
             },
             finishFieldEdit(fieldName) {
-                this.$v.model[fieldName].$touch();
                 const inpRef = this.getRef(fieldName);
+                this.$v.model[fieldName].$touch();
 
                 setTimeout(() => {
                     this.isEdit[fieldName] = false;
 
                     if (inpRef) {
                         inpRef.blur();
+
+                        if ((fieldName === 'birthday') && this.model[fieldName] === '') {
+                            this.model[fieldName] = this.$root.$auth.user.profile[fieldName];
+                            return;
+                        }
 
                         if (!this.isSend[fieldName])
                             this.accountStartSaveData(this.model[fieldName], fieldName);
