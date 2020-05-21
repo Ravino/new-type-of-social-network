@@ -11,7 +11,10 @@
             <div class="plizi-sr-item-body m-0 pr-5 ">
                 <router-link :to="`/community-`+community.id" tag="a"
                              class="plizi-sr-item-top d-flex align-items-end justify-content-between mb-2">
-                    <h6 class="plizi-community-item-name my-0">{{ community.name }}</h6>
+                    <h6 class="plizi-community-item-name my-0">
+                        {{ community.name }}
+                        <PrivacyLabel :community="community"></PrivacyLabel>
+                    </h6>
                 </router-link>
 
                 <div class="plizi-sr-item-body-bottom d-flex pr-5">
@@ -50,12 +53,17 @@
                     @click="subscribeInvite(community)">
                 Подписаться
             </button>
+            <button v-else-if="subscribeType === 'request'" type="button"
+                    class="btn plz-btn-outline  plizi-community-btn rounded-pill"
+                    @click="sendRequest(community)">
+                Запрос
+            </button>
             <button v-else-if="subscribeType === 'exists'" type="button"
                     class="btn btn-primary plz-btn-outline rounded-pill ml-auto"
                     @click="unsubscribeInvite(community)">
                 Отписаться
             </button>
-            <router-link :to="{name: 'CommunitySettingsPage', params: {id: community.id}}" v-else
+            <router-link :to="{name: 'CommunitySettingsPage', params: {id: community.id}}" v-else-if="subscribeType === 'author'"
                          type="button"
                          class="btn plz-btn-outline rounded-pill ml-auto">
                 Управление
@@ -74,11 +82,12 @@
     import IconAddUser from '../../icons/IconAddUser.vue';
 
     import PliziCommunity from '../../classes/PliziCommunity.js';
-    import CommunitiesSubscribeMixin from '../../mixins/CommunitiesSubscribeMixin';
+    import CommunitiesSubscribeMixin from '../../mixins/CommunitiesSubscribeMixin.js';
+    import PrivacyLabel from "../../components/Community/PrivacyLabel.vue";
 
     export default {
         name: 'CommunitySearchResultItem',
-        components: {IconMessageShort, IconAddUser, IconMessage, IconLocation},
+        components: {PrivacyLabel, IconMessageShort, IconAddUser, IconMessage, IconLocation},
         mixins: [CommunitiesSubscribeMixin],
         props: {
             community: PliziCommunity,

@@ -88,6 +88,9 @@ $chatMessagesBodyHeight: calc(100% - 139px);
                 padding-left: $chatTimePadding;
             }
         }
+        &.compact-message {
+            padding-right: 42px;
+        }
         .radio {
             position: absolute;
             bottom: 0;
@@ -163,6 +166,9 @@ $chatMessagesBodyHeight: calc(100% - 139px);
             .message-body {
                 padding-right: $chatTimePadding;
             }
+        }
+        &.compact-message {
+            padding-left: 42px;
         }
         .radio {
             position: absolute;

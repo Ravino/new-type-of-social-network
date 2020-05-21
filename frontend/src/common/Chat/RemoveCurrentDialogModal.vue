@@ -3,7 +3,7 @@
           aria-hidden="true" style="display: block; background-color: rgba(0, 0, 0, .7);"
           @click.stop="hideRemoveCurrentDialogModal">
 
-        <div class="modal-dialog modal-dialog-centered" role="document" @click.stop="">
+        <div class="modal-dialog modal-dialog-centered justify-content-center" role="document" @click.stop="">
             <div class="modal-content bg-white-br20">
 
                 <div id="resendMessageModalBody" class="modal-body p-4">

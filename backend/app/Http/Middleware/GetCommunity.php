@@ -19,7 +19,7 @@ class GetCommunity
     {
         $groupId = $request->route('groupId');
         $community = Community::find($groupId);
-        if (!$community->exists()) {
+        if (!$community) {
             return response()->json([
                 'message' => 'Сообщество не найдено'
             ], 422);
