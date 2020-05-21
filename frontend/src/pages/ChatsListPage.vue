@@ -21,10 +21,10 @@
                 <div v-if="isDialogsLoaded" id="chatMain"
                      class="d-flex flex-column flex-lg-row flex bg-white-br20 overflow-hidden">
 
+                    <!-- @TGA если добавить обновляемый ключ - то будет постоянная перезагрузка списка сообщений с API -->
+<!--                    :key="`chatMessagesUsersList-`+ $root.$dialogsKeyUpdater"-->
                     <ChatDialogs ref="chatMessagesUsersList"
-                                 :key="`chatMessagesUsersList-`+dialogsListUpdater"
                                  v-bind:currentDialogID="currentDialogID"
-                                 v-bind:chatDialogsKeyUpdater="dialogsListUpdater"
                                  @SwitchToChat="onSwitchToChat"></ChatDialogs>
 
                     <div id="chatMessagesWrapper"
@@ -82,7 +82,6 @@ import ChatFooter from '../common/Chat/ChatFooter.vue';
 
 import ChatNotifications from '../common/Chat/ChatNotifications.vue';
 
-import PliziDialog from '../classes/PliziDialog.js';
 import PliziMessage from '../classes/PliziMessage.js';
 import NotificationMixin from '../mixins/NotificationMixin.js';
 
@@ -105,7 +104,6 @@ data() {
         currentDialog : null,
         messagesList  : [],
         isMessagesLoaded: false,
-        dialogsListUpdater: 1,
 
         filter : {
             text: '',
@@ -140,7 +138,11 @@ methods: {
 
     onChatFooterEditorChangedHeight(evData) {
         this.changedHeight = evData.changedHeight + 'px';
-        this.$refs.chatMessages.scrollToEnd();
+        try {
+            this.$refs.chatMessages.scrollToEnd();
+        } catch (e){
+            if ( window.console !== undefined && window.console.error ) window.console.warn( e.toString() );
+        }
     },
 
     clearChatMessagesFilters() {
@@ -228,10 +230,6 @@ methods: {
     },
 
     addListeners(){
-        this.$root.$on('DialogsIsUpdated', ()=>{
-            ++this.dialogsListUpdater;
-        });
-
         this.$root.$on('newMessageInDialog', this.addNewChatMessageToList);
         this.$root.$on('newMessageInDialog', this.addNewMessageNotification);
 
@@ -246,21 +244,6 @@ methods: {
 created(){
     this.addListeners();
 },
-
-//beforeDestroy() {
-//    this.$root.$off('newMessageInDialog', ()=>{});
-//    this.$root.$off('removeMessageInDialog', ()=>{});
-//}
-
-//beforeRouteEnter (to, from, next) {
-//    window.console.log(`ChatsListPage::beforeRouteEnter`);
-//},
-//beforeRouteUpdate (to, from, next) {
-//    window.console.log(`ChatsListPage::beforeRouteUpdate`);
-//},
-//beforeRouteLeave (to, from, next) {
-//    window.console.log(`ChatsListPage::beforeRouteLeave`);
-//}
 
 }
 </script>
