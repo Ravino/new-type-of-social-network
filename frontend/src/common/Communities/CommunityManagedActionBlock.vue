@@ -6,7 +6,7 @@
             <i class="fas fa-cog mr-2"></i>Управление
         </router-link>
 
-        <router-link :to="{name: 'CommunityRequestsPage', params: {id: community.id}}"
+        <router-link v-if="parseInt(community.privacy) === 2" :to="{name: 'CommunityRequestsPage', params: {id: community.id}}"
                      class="btn btn-link btn-block w-100 mb-2 text-black-50 text-left">
             <i class="fas fa-user-cog mr-2"></i>Запросы
         </router-link>
