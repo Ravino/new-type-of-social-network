@@ -4,7 +4,8 @@
         <div class="plz-gallery-viewer-overflow"
              :style="{'background-image':
              `linear-gradient(to right, rgba(0, 0, 0, .85) 0%, rgba(0, 0, 0, .85) 100%),
-             url('${activeImage.image.normal.path}')`}"
+             url('${activeImage.image.normal.path}'),
+             linear-gradient(to right, rgba(0, 0, 0, 1) 0%, rgba(0, 0, 0, 1) 100%)`}"
              @click="close"
         >
         </div>
