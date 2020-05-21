@@ -31,12 +31,17 @@
                             @click="subscribeInvite(community)">
                         Подписаться
                     </button>
+                    <button v-else-if="subscribeType === 'request'" type="button"
+                            class="btn plz-btn-outline  plizi-community-btn rounded-pill"
+                            @click="sendRequest(community)">
+                        Запрос
+                    </button>
                     <button v-else-if="subscribeType === 'exists'" type="button"
                             class="btn btn-outline-danger plizi-community-btn  rounded-pill"
                             @click="unsubscribeInvite(community)">
                         Отписаться
                     </button>
-                    <router-link :to="{name: 'CommunitySettingsPage', params: {id: community.id}}" v-else type="button"
+                    <router-link :to="{name: 'CommunitySettingsPage', params: {id: community.id}}" v-else-if="subscribeType === 'author'" type="button"
                                  class="btn btn-outline-danger plizi-community-btn  rounded-pill">
                         Управление
                     </router-link>

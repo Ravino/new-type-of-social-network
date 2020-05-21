@@ -311,13 +311,18 @@ class CommunityController extends Controller
             ], 422);
         }
 
-        if ($community->users->contains(auth()->user()->id)) {
+        if ($community->users()->where([
+            'id' => auth()->user()->id
+        ])->exists()) {
             return response()->json([
                 'message' => 'Вы уже состоите в этом сообществе',
             ], 422);
         }
 
-        if ($community->requests->contains(auth()->user()->id)) {
+        if ($community->requests()->where([
+            'user_id' => auth()->user()->id,
+            'status' => CommunityRequestModel::STATUS_NEW,
+        ])->exists()) {
             return response()->json([
                 'message' => 'Вы уже подали запрос в это сообщество',
             ], 422);

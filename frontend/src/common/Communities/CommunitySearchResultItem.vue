@@ -50,12 +50,17 @@
                     @click="subscribeInvite(community)">
                 Подписаться
             </button>
+            <button v-else-if="subscribeType === 'request'" type="button"
+                    class="btn plz-btn-outline  plizi-community-btn rounded-pill"
+                    @click="sendRequest(community)">
+                Запрос
+            </button>
             <button v-else-if="subscribeType === 'exists'" type="button"
                     class="btn btn-primary plz-btn-outline rounded-pill ml-auto"
                     @click="unsubscribeInvite(community)">
                 Отписаться
             </button>
-            <router-link :to="{name: 'CommunitySettingsPage', params: {id: community.id}}" v-else
+            <router-link :to="{name: 'CommunitySettingsPage', params: {id: community.id}}" v-else-if="subscribeType === 'author'"
                          type="button"
                          class="btn plz-btn-outline rounded-pill ml-auto">
                 Управление
@@ -74,7 +79,7 @@
     import IconAddUser from '../../icons/IconAddUser.vue';
 
     import PliziCommunity from '../../classes/PliziCommunity.js';
-    import CommunitiesSubscribeMixin from '../../mixins/CommunitiesSubscribeMixin';
+    import CommunitiesSubscribeMixin from '../../mixins/CommunitiesSubscribeMixin.js';
 
     export default {
         name: 'CommunitySearchResultItem',
