@@ -37,9 +37,10 @@ export function isFirstNameAndLastName(value) {
 export function isValidRegistrationBirthDay(dateVal){
     let birthday = moment(dateVal, 'YYYY-MM-DD', true);
     let now = moment();
+    let last = moment('1950-01-01');
 
-    if (birthday.isValid()) {
-        return birthday <= now;
+    if (birthday && birthday.isValid()) {
+        return (birthday <= now) && (birthday >= last);
     }
 
     return false;
