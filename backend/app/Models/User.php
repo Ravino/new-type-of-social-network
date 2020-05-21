@@ -2,7 +2,7 @@
 
 namespace App\Models;
 
-use App\CommunityMember;
+use App\Models\CommunityMember;
 use App\Models\Rbac\Role;
 use App\Models\User\PrivacySettings;
 use App\Notifications\ResetPassword as ResetPasswordNotification;
