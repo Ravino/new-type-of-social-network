@@ -1,5 +1,5 @@
 <template>
-    <li class="plizi-community-item-wrp col-12 col-sm-6 media px-2 mb-3">
+    <li class="plizi-community-item-wrp col-12 col-sm-6 media px-2 mb-3 align-items-stretch">
         <div class="plizi-community-item d-flex flex-column flex-xl-row align-items-start justify-content-between bg-white-br20 w-100 px-4 py-4">
 
             <router-link :to="`/community-`+community.id" tag="a"
@@ -15,10 +15,9 @@
                 </router-link>
 
                 <div class="plizi-community-item-body-middle mb-2">
-                    <p v-if="community.description" class="plizi-community-item-desc p-0 mb-1"> <!--TODO @Veremey check this?-->
-                        {{ community.description }}</p>
-<!--                    <p class="plizi-community-item-notice p-0 mb-1">-->
-<!--                        {{ community.notice }}</p>-->
+                    <p v-if="community.description" class="plizi-community-item-desc p-0 mb-1">
+                        {{ community.description }}
+                    </p>
                     <p v-else-if="community.notice" class="plizi-community-item-notice p-0 my-0 text-secondary">{{ community.notice }}</p>
                     <p v-else class="plizi-community-item-location p-0 my-0 text-secondary">{{ locationLabel }}</p>
 
@@ -40,7 +39,7 @@
                                  class="btn btn-outline-danger plizi-community-btn  rounded-pill">
                         Управление
                     </router-link>
-                    <div class="plizi-community-item-body-friends d-flex flex-wrap align-items-center justify-content-between mb-2 mb-xl-0" v-if="community.totalFriends">
+                    <div class="plizi-community-item-body-friends d-flex flex-wrap align-items-center justify-content-between my-2" v-if="community.totalFriends">
                         <div class="plizi-community-item-body-friends-pics mr-3">
                             <div class="plizi-community-item-body-friends-pic position-relative rounded-circle"
                                 v-for="friend in community.friends" :key="friend.id">
