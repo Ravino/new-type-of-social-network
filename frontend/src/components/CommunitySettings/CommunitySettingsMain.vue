@@ -20,15 +20,23 @@
                                id="name"
                                class="w-100 w-sm-75"
                                v-model="model.name"
-                               :class="[isEdit.name ? 'form-control' : 'form-control-plaintext', { 'is-invalid': !!nameError, 'is-valid': isSuccessName }]"
+                               :class="[isEdit.name ? 'form-control' : 'form-control-plaintext', {
+                                   'is-invalid': ($v.model.name.$error || serverRegMessages.name),
+                                    'is-valid': isSuccessName
+                               }]"
                                @input="inputFieldEdit($event, 'name')"
                                @keyup.enter="clickField(`name`)"
                                @blur="clickField('name')"
                                :readonly="!isEdit.name"
                                ref="name">
 
-                        <div class="invalid-feedback">
-                            <p class="text-danger">{{ nameError }}</p>
+                        <div class="invalid-feedback" v-if="$v.model.name.$error || serverRegMessages.name">
+                            <p class="text-danger" v-if="!$v.model.name.required">Укажите название сообщества.</p>
+                            <p class="text-danger" v-else-if="!$v.model.name.minLength">
+                                Врядли у Вас такое короткое название?
+                            </p>
+                            <p class="text-danger" v-else-if="!$v.model.name.maxLength">Слишком длинное название.</p>
+                            <p class="text-danger" v-else-if="serverRegMessages.name">{{ serverRegMessages.name }}</p>
                         </div>
                     </div>
                     <div class="plz-account-settings-body-action col-6 col-sm-3 col-lg-2 d-flex">
@@ -51,15 +59,19 @@
                                id="notice"
                                class="w-100 w-sm-75"
                                v-model="model.notice"
-                               :class="[isEdit.notice ? 'form-control' : 'form-control-plaintext', { 'is-invalid': !!noticeError, 'is-valid': isSuccessNotice }]"
+                               :class="[isEdit.notice ? 'form-control' : 'form-control-plaintext', {
+                                   'is-invalid': ($v.model.notice.$error || serverRegMessages.notice),
+                                    'is-valid': isSuccessNotice
+                               }]"
                                @input="inputFieldEdit($event, 'notice')"
                                @keyup.enter="clickField('notice')"
                                @blur="clickField('notice')"
                                :readonly="!isEdit.notice"
                                ref="notice">
 
-                        <div class="invalid-feedback">
-                            <p class="text-danger">{{ noticeError }}</p>
+                        <div class="invalid-feedback" v-if="$v.model.notice.$error || serverRegMessages.notice">
+                            <p class="text-danger" v-if="!$v.model.notice.maxLength">Слишком длинное название.</p>
+                            <p class="text-danger" v-else-if="serverRegMessages.notice">{{ serverRegMessages.notice }}</p>
                         </div>
                     </div>
                     <div class="plz-account-settings-body-action col-6 col-sm-3 col-lg-2 d-flex">
@@ -81,8 +93,10 @@
                         <textarea type="text"
                                   id="description"
                                   class="w-100 w-sm-75"
-                                  :class="[isEdit.description ? 'form-control' : 'form-control-plaintext', { 'is-invalid': !!descriptionError,
-                                                                                                                'is-valid': isSuccessDescription }]"
+                                  :class="[isEdit.description ? 'form-control' : 'form-control-plaintext', {
+                                      'is-invalid': ($v.model.description.$error || serverRegMessages.description),
+                                      'is-valid': isSuccessDescription
+                                  }]"
                                   v-model="model.description"
                                   placeholder="Добавьте описание"
                                   @blur="clickField(`description`)"
@@ -90,8 +104,9 @@
                                   ref="description">
                         </textarea>
 
-                        <div class="invalid-feedback">
-                            <p class="text-danger">{{ descriptionError }}</p>
+                        <div class="invalid-feedback" v-if="$v.model.description.$error || serverRegMessages.description">
+                            <p class="text-danger" v-if="!$v.model.description.maxLength">Слишком длинное название.</p>
+                            <p class="text-danger" v-else-if="serverRegMessages.description">{{ serverRegMessages.description }}</p>
                         </div>
                     </div>
                     <div class="plz-account-settings-body-action col-6 col-sm-3 col-lg-2 d-flex">
@@ -120,9 +135,6 @@
                                @change="uploadImage()"
                                class="d-none"/>
 
-                        <div class="invalid-feedback">
-                            <p class="text-danger">{{ nameError }}</p>
-                        </div>
                     </div>
                     <div class="plz-account-settings-body-action col-6 col-sm-3 col-lg-2 d-flex">
                     </div>
@@ -142,16 +154,22 @@
                                id="url"
                                class="px-1"
                                v-model="model.url"
-                               :class="[isEdit.url ? 'form-control' : 'form-control-plaintext', { 'is-invalid': !!urlError, 'is-valid': isSuccessUrl }]"
+                               :class="[isEdit.url ? 'form-control' : 'form-control-plaintext', {
+                                   'is-invalid': $v.model.url.$error || serverRegMessages.url,
+                                    'is-valid': isSuccessUrl
+                               }]"
                                @input="inputFieldEdit($event, 'url')"
                                @keyup.enter="clickField('url')"
                                @blur="clickField('url')"
                                :readonly="!isEdit.url"
                                ref="url">
 
-
-                        <div class="invalid-feedback w-100">
-                            <p class="text-danger">{{ urlError }}</p>
+                        <div class="invalid-feedback w-100" v-if="$v.model.url.$error || serverRegMessages.url">
+                            <p class="text-danger" v-if="!$v.model.url.maxLength">Слишком длинный адрес.</p>
+                            <p class="text-danger" v-else-if="!$v.model.url.isCorrectSlug">
+                                Только латиница, цифры, подчеркивание и дефис (первая буква).
+                            </p>
+                            <p class="text-danger" v-else-if="serverRegMessages.url">{{ serverRegMessages.url }}</p>
                         </div>
                     </div>
                     <div class="plz-account-settings-body-action col-6 col-sm-3 col-lg-2 d-flex">
@@ -210,13 +228,16 @@ import {required, minLength, maxLength} from 'vuelidate/lib/validators';
 import PliziCommunity from "../../classes/PliziCommunity";
 import {isCorrectSlug} from '../../validators/validators.js';
 import PliziCommunityAvatar from "../../classes/Community/PliziCommunityAvatar";
-import {debounce} from "../../utils/Debonce";
+import EditInline from "../../mixins/EditInline.js";
 
 export default {
     name: 'CommunitySettingsMain',
     props: {
         community: PliziCommunity,
     },
+    mixins: [
+        EditInline,
+    ],
     computed: {
         headerImage() {
             return this.community.headerImage?.image.thumb.path || '/images/community-header-bg.jpg';
@@ -246,72 +267,17 @@ export default {
             return (!this.$v.model.name.$invalid || !(!!this.serverRegMessages.name)) && !
                 !this.model.name;
         },
-        nameError() {
-            if (this.$v.model.name.$error) {
-                if (!this.$v.model.name.required) {
-                    return 'Укажите название сообщества.';
-                } else if (!this.$v.model.name.minLength) {
-                    return 'Врядли у Вас такое короткое название?';
-                } else if (!this.$v.model.name.maxLength) {
-                    return 'Слишком длинное название.';
-                }
-            } else if (this.serverRegMessages.name) {
-                return this.serverRegMessages.name;
-            }
-
-            return null;
-        },
-
         isSuccessNotice() {
             return (!this.$v.model.notice.$invalid || !(!!this.serverRegMessages.notice)) && !
                 !this.model.notice;
         },
-        noticeError() {
-            if (this.$v.model.notice.$error) {
-                if (!this.$v.model.notice.maxLength) {
-                    return 'Слишком длинное описание.';
-                }
-            } else if (this.serverRegMessages.notice) {
-                return this.serverRegMessages.notice;
-            }
-
-            return null;
-        },
-
         isSuccessDescription() {
             return (!this.$v.model.description.$invalid || !(!!this.serverRegMessages.description)) && !
                 !this.model.description;
         },
-        descriptionError() {
-            if (this.$v.model.description.$error) {
-                if (!this.$v.model.description.maxLength) {
-                    return 'Слишком длинное описание.';
-                }
-            } else if (this.serverRegMessages.name) {
-                return this.serverRegMessages.name;
-            }
-
-            return null;
-        },
-
         isSuccessUrl() {
             return (!this.$v.model.url.$invalid || !(!!this.serverRegMessages.url)) && !
                 !this.model.url;
-        },
-        urlError() {
-            if (this.$v.model.url.$error) {
-                if (!this.$v.model.url.minLength) {
-                    return 'Врядли у Вас такой короткий адрес?';
-                } else if (!this.$v.model.url.maxLength) {
-                    return 'Слишком длинный адрес.';
-                } else if (!this.$v.model.url.isCorrectSlug) {
-                    return 'Только латиница, цифры, подчеркивание и дефис.';
-                }
-            } else if (this.serverRegMessages.url) {
-                return this.serverRegMessages.url;
-            }
-
-            return null;
         },
     },
     data() {
@@ -368,46 +334,6 @@ export default {
         };
     },
     methods: {
-        getRef(refKey) {
-            for (let [key, value] of Object.entries(this.$refs)) {
-                if (refKey === key)
-                    return value;
-            }
-            return null;
-        },
-        clickField: debounce(function (fieldName) {
-            this.isEdit[fieldName] = !this.isEdit[fieldName];
-            if (this.isEdit[fieldName]) {
-                this.startFieldEdit(fieldName);
-            } else {
-                this.finishFieldEdit(fieldName);
-            }
-        }, 200),
-        startFieldEdit(fieldName) {
-            const inpRef = this.getRef(fieldName);
-
-            if (inpRef) {
-                inpRef.focus();
-            } else {
-                window.console.warn(`Ошибка редактирования поля`, 's');
-            }
-        },
-        finishFieldEdit (fieldName) {
-            this.$v.model[fieldName].$touch();
-            const inpRef = this.getRef(fieldName);
-
-            setTimeout(() => {
-                if (inpRef) {
-                    inpRef.blur();
-
-                    if (!this.isSend[fieldName]) {
-                        this.accountStartSaveData(this.model[fieldName], fieldName);
-                    }
-                } else {
-                    window.console.warn(`Ошибка редактирования поля`, 'f');
-                }
-            }, 50);
-        },
         formatFormData(newValue, fieldName) {
             let formData = {};
             if (fieldName === 'location') {
@@ -416,10 +342,6 @@ export default {
                 formData[fieldName] = newValue;
             }
             return formData;
-        },
-        inputFieldEdit($event, fieldName) {
-            this.serverRegMessages[fieldName] = null;
-            this.$v.model[fieldName].$touch();
         },
         locationLabel({title, region, country}) {
             if (title) {
@@ -455,11 +377,9 @@ export default {
                 }
             }
 
-            if (response !== null) {
-                setTimeout(() => {
-                    this.isSend[fieldName] = false;
-                }, 2000);
-            }
+            setTimeout(() => {
+                this.isSend[fieldName] = false;
+            }, 200);
         },
         async getLocations(location) {
             let response;
