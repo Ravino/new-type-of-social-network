@@ -3,7 +3,7 @@
          aria-hidden="true" style="display: block; background-color: rgba(0, 0, 0, .7);"
          @click.stop="hideModal">
 
-        <div class="modal-dialog modal-xl modal-dialog-centered" role="document" @click.stop="">
+        <div class="modal-dialog modal-dialog-centered" role="document" @click.stop="">
             <div class="modal-content bg-white-br20">
                 <div class="modal-header border-0  justify-content-center pb-0">
                     <h5 class="modal-title " id="changePasswordModalTitle">Обновление пароля</h5>
