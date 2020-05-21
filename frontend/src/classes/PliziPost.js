@@ -49,10 +49,10 @@ class PliziPost {
     _alreadyLiked = false;
 
     /**
-     * @type {PliziUser}
+     * @type {Array}
      * @private
      */
-    _usersLikes = null;
+    _usersLikes = [];
 
     /**
      * кол-во просмотров
@@ -322,7 +322,7 @@ class PliziPost {
         this.alreadyLiked = post.alreadyLiked;
         this.usersLikes = post.usersLikes ? post.usersLikes.list.map((user) => {
             return new PliziUser(user);
-        }) : null;
+        }) : [];
         this.views = post.views;
         this.commentsCount = post.commentsCount;
         this.sharesCount = post.sharesCount;
