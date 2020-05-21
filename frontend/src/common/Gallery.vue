@@ -1,5 +1,10 @@
 <template>
-    <div class="plz-gallery" :class="[`plz-gallery-${galleryType}`, {'plz-gallery-single': isSingleImage}]">
+    <div class="plz-gallery"
+         :class="[`plz-gallery-${galleryType}`,
+         {'plz-gallery-single': isSingleImage},
+         {'plz-gallery-double': isDoubleImages},
+         {'plz-gallery-fourth': isFourthImages}]"
+    >
         <div v-if="galleryType === 'album'" class="plz-gallery-wrap plz-gallery-wrap-album">
             <template v-for="image in imagesWithClasses">
                 <div :class="{'plz-gallery-image-mores': image.isMore}"
@@ -77,6 +82,12 @@ computed: {
    },
    isSingleImage() {
     return this.countImages === 1;
+   },
+   isDoubleImages() {
+       return this.countImages === 2;
+   },
+   isFourthImages() {
+       return this.countImages === 4;
    },
    countImagesMore() {
     return this.countImages - this.moreCount;
