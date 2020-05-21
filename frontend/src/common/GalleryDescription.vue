@@ -74,10 +74,10 @@
 
 <script>
  import moment from "moment";
- import IconHeard from "../icons/IconHeard";
- import IconMessage from "../icons/IconMessage";
- import IconShare from "../icons/IconShare";
- import TextEditor from "./TextEditor";
+ import IconHeard from "../icons/IconHeard.vue";
+ import IconMessage from "../icons/IconMessage.vue";
+ import IconShare from "../icons/IconShare.vue";
+ import TextEditor from "./TextEditor.vue";
 
  export default {
   name: "GalleryDescription",
@@ -87,9 +87,18 @@
     type: Object,
    },
   },
+  data() {
+      return {
+        noAvatar: '../images/noavatar-256.png'
+      };
+  },
   computed: {
    userAvatar() {
-    return this.post.author.profile.avatar.image.thumb.path;
+       if (this.post.author.profile.avatar === null) {
+           return this.noAvatar;
+       }
+
+       return this.post.author.profile.avatar.image.thumb.path;
    },
    userName() {
     return this.post.author.profile.firstName;

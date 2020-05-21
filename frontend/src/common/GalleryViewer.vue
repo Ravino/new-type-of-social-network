@@ -31,7 +31,7 @@ export default {
             default: () => [],
         },
         activeId: {
-            type: String,
+            type: Number|String,
         },
     },
     data() {
