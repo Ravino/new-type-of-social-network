@@ -83,6 +83,7 @@ Vue.prototype.$favoritesKeyUpdater = 0;
 Vue.prototype.$dialogsKeyUpdater = 0;
 Vue.prototype.$invitationsKeyUpdater = 0;
 Vue.prototype.$notificationsKeyUpdater = 0;
+Vue.prototype.$messagesKeyUpdater = 0;
 
 import router from './router/router.js';
 //import store from './store/store.js'

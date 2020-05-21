@@ -41,13 +41,13 @@
                     <small v-if="dialog.isRead " class="mr-1 ml-auto mb-1">
                         <IconCheckedDouble :clazz="'mb-2'" />
                     </small>
-                    <time :datetime="dialog.lastMessageDT" class="">
+                    <time :datetime="lastMessageDT" class="">
                         {{ showDialogTime }}
                     </time>
                 </div>
 
                 <div class="user-friend-body-bottom d-flex pr-5">
-                    <span v-if="dialog.isLastFromMe" class="user-friend-details mr-1">Вы:</span>
+                    <span v-if="isLastFromMe" class="user-friend-details mr-1">Вы:</span>
                     <p class="user-friend-desc p-0 my-0 d-inline" v-html="lastMsgText"></p>
                 </div>
             </div>
@@ -71,23 +71,26 @@ props: {
         type: String,
         required: true,
         default: 'unknown'
-    },
+    }
 },
 
 data(){
     return {
         typingTimeout: null,
-        isTyper: false
+        isTyper: false,
+        lastMessageText : this.dialog.lastMessageText,
+        lastMessageDT: this.dialog.lastMessageDT,
+        isLastFromMe: this.dialog.isLastFromMe
     }
 },
 
 computed: {
     lastMsgText(){
-        if (!this.dialog.lastMessageText) {
+        if (!this.lastMessageText) {
             return `<span class="text-black-50">вы ещё ничего на написали друг другу</span>`;
         }
 
-        let txt = this.dialog.lastMessageText || ``;
+        let txt = this.lastMessageText || ``;
         txt = txt.replace(/<br\/>/g, '&nbsp;');
 
         return this.$options.filters.stripTags(txt);
@@ -101,10 +104,10 @@ computed: {
     },
 
     showDialogTime(){
-        if (this.dialog.lastMessageDT===null  ||  this.dialog.lastMessageDT.valueOf()===0)
+        if (this.lastMessageDT===null  ||  this.lastMessageDT.valueOf()===0)
             return '';
 
-        return this.$options.filters.lastMessageTime(this.dialog.lastMessageDT);
+        return this.$options.filters.lastMessageTime(this.lastMessageDT);
     }
 },
 
@@ -136,6 +139,17 @@ methods: {
 },
 
 mounted(){
+    this.$root.$on('DialogsIsUpdated', (evData)=>{
+        /** FIXME: TGA это костыль - нужно добиться реактивности данных нативными средствами **/
+        if (evData.id === this.dialog.id) {
+            this.lastMessageText = evData.lastMessageText;
+            this.lastMessageDT = evData.lastMessageDT;
+            this.isLastFromMe = evData.isLastFromMe;
+
+            this.$forceUpdate();
+        }
+    });
+
     this.$root.$on('userIsTyping', this.onCompanionTyping);
 }
 

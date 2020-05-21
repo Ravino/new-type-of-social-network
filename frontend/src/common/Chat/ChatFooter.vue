@@ -43,9 +43,7 @@ data() {
 
 methods: {
     onEditorKeyDown(){
-        /**
-         * @TGA пытаемся тут через сокеты отправить инфу о  том что печатаем
-         **/
+        /** @TGA пытаемся тут через сокеты отправить инфу о том, что печатаем **/
         const keyPressData = {
             channel: window.localStorage.getItem('pliziChatChannel'),
             userId: this.$root.$auth.user.id,
@@ -165,10 +163,6 @@ methods: {
             window.console.info( apiResponse );
         }
     },
-},
-
-mounted(){
-    //this.$root.$on('userIsTyping', this.someoneTyping);
 }
 
 }
