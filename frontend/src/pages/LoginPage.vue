@@ -1,6 +1,6 @@
 <template>
     <div class="row">
-        <div class="col-12 col-lg-5 px-0 mb-3 mb-lg-0">
+        <div class="col-12 col-lg-5 d-flex px-0 mb-3 mb-lg-0">
             <LoginForm ref="loginForm"></LoginForm>
         </div>
 
