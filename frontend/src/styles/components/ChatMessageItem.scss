@@ -372,18 +372,6 @@ $chatMessagesBodyHeight: calc(100% - 139px);
     z-index: 2000;
 
     .plz-gallery-single {
-        //.plz-gallery-wrap-album,
-        //.plz-gallery-image-portrait-block-1 {
-        //    img {
-        //        width: 200px;
-        //    }
-        //}
-        //.plz-gallery-wrap-album {
-        //    img {
-        //        height: 200px;
-        //    }
-        //}
-
 
         .plz-gallery-image-portrait-full {
             width: auto;
@@ -396,30 +384,7 @@ $chatMessagesBodyHeight: calc(100% - 139px);
         width: 100%;
         display: flex;
         flex-wrap: wrap;
-        //img {
-        //    width: 100%;
-        //    height: auto;
-        //}
     }
-
-    //.plz-gallery-image-portrait-wrap {
-    //     height: 170px;
-    //     width: 100%;
-    // }
-
-    // check this
-    /*.plz-gallery-viewer {
-        min-height: 100vh;
-        height: auto;
-
-        .plz-gallery-viewer-currentt img {
-            width: 50%;
-        }
-    }*/
-
-    //.plz-gallery-wrap img {
-    //   width: 100% ;
-    //}
 
     .plz-gallery-viewer-nav {
         width: 100vw;
@@ -449,17 +414,9 @@ $chatMessagesBodyHeight: calc(100% - 139px);
         width: 200px;
     }
 
-    //TODO @veremey check this
-
-    //.plz-gallery-image {
-    //    padding: 0;
-    //}
-
 }
 
 .message-sended-image {
-    //display: inline-block;
-    //vertical-align: top;
     display: flex;
     flex-wrap: wrap;
     width: 200px;
