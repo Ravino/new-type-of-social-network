@@ -175,7 +175,13 @@ methods: {
 
 
     async sendPrivateMessageToUser( chatData, msgData ){
-        await this.$root.$api.$chat.messageSend( chatData.id, msgData.postText, msgData.attachments );
+        const sendData = {
+            chatId: chatData.id,
+            body: msgData.postText,
+            attachments: msgData.attachments,
+            event: 'new.message'
+        };
+        this.$root.$api.sendToChannel(sendData);
     },
 
 
