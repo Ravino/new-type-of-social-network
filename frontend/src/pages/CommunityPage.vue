@@ -29,7 +29,10 @@
                                     </div>
                                 </template>
                                 <div class="plz-community-header-details-text pt-2">
-                                    <h1 class="plz-community-header-title mb-1">{{communityData.name}}</h1>
+                                    <h1 class="plz-community-header-title mb-1">
+                                        {{communityData.name}}
+                                        <PrivacyLabel :community="communityData"></PrivacyLabel>
+                                    </h1>
                                     <p class="plz-community-header-desc mb-0">
                                         {{communityData.notice}}
                                     </p>
@@ -213,7 +216,9 @@ import CommunityManagedActionBlock from "../common/Communities/CommunityManagedA
 
 import IconYoutube from "../icons/IconYoutube.vue";
 import LazyLoadPosts from '../mixins/LazyLoadPosts.js';
-import PliziUser from "../classes/PliziUser";
+import PliziUser from "../classes/PliziUser.js";
+
+import PrivacyLabel from "../components/Community/PrivacyLabel.vue";
 
 export default {
 name: 'CommunityPage',
@@ -236,6 +241,7 @@ components : {
     PostLikeModal,
     SmallSpinner,
     IconYoutube,
+    PrivacyLabel,
 },
 
 data() {
