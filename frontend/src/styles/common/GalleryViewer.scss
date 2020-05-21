@@ -14,6 +14,7 @@
         cursor: pointer;
         background-size: cover;
         background-repeat: no-repeat;
+        background-position: center;
     }
 
     &-nav {
@@ -27,7 +28,8 @@
             z-index: 5;
             background: #000;
             box-shadow: 0 0 4px 0 rgba(255, 255, 255, .5);
-            padding: 10px;
+            width: 40px;
+            height: 40px;
             border-radius: 50%;
             opacity: 0.6;
             transition: opacity .3s;
@@ -39,12 +41,6 @@
                 opacity: 1;
             }
 
-            img {
-                width: 25px;
-                height: 25px;
-                margin: 0 !important;
-                user-select: none;
-            }
             &-prev {
                 left: 5px;
             }
@@ -53,11 +49,23 @@
             }
         }
     }
+    .plz-gallery-viewer-nav img {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        width: 25px;
+        height: 25px;
+        min-width: unset;
+        min-height: unset;
+        user-select: none;
+        transform-origin: center;
+    }
 
     &-close {
         position: absolute;
-        right: 32px;
-        top: 32px;
+        right: 20px;
+        top: 20px;
         width: 32px;
         height: 32px;
         opacity: 0.3;
@@ -69,35 +77,40 @@
         &:focus {
             outline: none;
         }
-    }
-    &-close:hover {
-        opacity: 1;
-    }
-    &-close:before, .plz-gallery-viewer-close:after {
-        position: absolute;
-        left: 15px;
-        content: ' ';
-        height: 33px;
-        width: 2px;
-        background-color: #ffffff;
-    }
-    &-close:before {
-        transform: rotate(45deg);
-    }
-    &-close:after {
-        transform: rotate(-45deg);
+        &:hover {
+            opacity: 1;
+        }
+        &:before,
+        &:after {
+            position: absolute;
+            left: 15px;
+            top: 0;
+            content: ' ';
+            height: 33px;
+            width: 2px;
+            background-color: #ffffff;
+        }
+        &:before {
+            transform: rotate(45deg);
+        }
+        &:after {
+            transform: rotate(-45deg);
+        }
     }
 
-    &-current {
+    .plz-gallery-viewer-current {
         display: flex;
         align-items: center;
         justify-content: center;
         height: 100%;
         img {
             z-index: 2;
-            max-height: 100%!important;
-            max-width: calc(100% - 100px)!important;
-            width: 70%;
+            max-height: calc(100% - 100px);
+            max-width: calc(100% - 100px);
+            min-width: unset;
+            min-height: unset;
+            height: auto;
+            width: auto;
         }
     }
 }
