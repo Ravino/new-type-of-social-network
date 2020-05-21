@@ -77,6 +77,7 @@ methods : {
     },
 
     eventOnHideDropdown() {
+     // TODO: Fix jquery
      $(this.$refs.dropdown).off('hidden.bs.dropdown').on('hidden.bs.dropdown', () => {
      this.$root.$auth.nm.clear();
      this.$root.$auth.nm.storeData();
