@@ -40,7 +40,6 @@ class PliziDialogsCollection extends PliziStoredCollection {
 
 
     onRemoveDialog(removedDialogId){
-        window.console.warn(removedDialogId,`onRemoveDialog`);
         this.delete(removedDialogId);
         this.storeData();
         this.restore();
@@ -147,8 +146,8 @@ class PliziDialogsCollection extends PliziStoredCollection {
 
             this.add(dlg);
             this.storeData();
-            this.restore();
-            this.emit(this.updateEventName);
+
+            this.emit(this.updateEventName, this.get(dialogID));
         }
         else {
             window.console.warn(dialogID + ` диалог не найден`);

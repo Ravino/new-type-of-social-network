@@ -88,6 +88,9 @@ $chatMessagesBodyHeight: calc(100% - 139px);
                 padding-left: $chatTimePadding;
             }
         }
+        &.compact-message {
+            padding-right: 42px;
+        }
         .radio {
             position: absolute;
             bottom: 0;
@@ -163,6 +166,9 @@ $chatMessagesBodyHeight: calc(100% - 139px);
             .message-body {
                 padding-right: $chatTimePadding;
             }
+        }
+        &.compact-message {
+            padding-left: 42px;
         }
         .radio {
             position: absolute;
@@ -357,6 +363,54 @@ $chatMessagesBodyHeight: calc(100% - 139px);
 
     &.message-attachment-item-image {
         max-width: calc(50% - 20px);
+    }
+}
+
+.message-attachments-z {
+    z-index: 2000;
+
+    .plz-gallery-single {
+        .plz-gallery-wrap-album, .plz-gallery-image-portrait-block-1 {
+            img {
+                width: 200px !important;
+            }
+        }
+        .plz-gallery-wrap-album {
+            img {
+                height: 200px;
+            }
+        }
+    }
+
+    .plz-gallery-wrap-album {
+        width: 100%;
+        display: flex;
+        flex-wrap: wrap;
+        img {
+            width: 100%;
+            height: auto;
+        }
+    }
+
+    .plz-gallery-image-portrait-wrap {
+         height: 170px;
+         width: 100%;
+     }
+
+    .plz-gallery-viewer-current img {
+        width: 50%;
+    }
+
+    .plz-gallery-wrap img {
+       width: 100% ;
+    }
+
+    .plz-gallery-viewer-nav {
+        width: 100vw;
+    }
+
+    .plz-gallery-viewer {
+        width: 100vw;
     }
 }
 

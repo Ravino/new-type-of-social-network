@@ -2,7 +2,7 @@
 
 namespace App\Models;
 
-use App\CommunityMember;
+use App\Models\CommunityMember;
 use App\Models\Rbac\Role;
 use App\Models\User\PrivacySettings;
 use App\Notifications\ResetPassword as ResetPasswordNotification;
@@ -98,7 +98,7 @@ class User extends Authenticatable implements JWTSubject
     public function communities()
     {
         return $this->belongsToMany(Community::class, 'community_members')
-            ->using(CommunityMember::class)->withPivot('role');
+            ->using(CommunityMember::class)->withPivot('role')->withTimestamps();
     }
 
     /**

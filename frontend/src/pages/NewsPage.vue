@@ -1,58 +1,42 @@
 <template>
     <div class="container-fluid pl-md-0">
         <div class="row">
-            <div class="col-12 col-md-1 ">
+            <div class="col-12 col-md-1 px-0 px-md-3">
                 <AccountToolbarLeft></AccountToolbarLeft>
             </div>
 
-            <div class="col-12 col-md-9 col-lg-9 col-xl-10 ">
+            <div class="col-12 col-md-9 col-lg-9 col-xl-10  px-0 px-md-3">
                 <div class="container">
                     <WhatsNewBlock @addNewPost="addNewPost"></WhatsNewBlock>
 
                     <div class="row mb-4 pt-0">
-                        <div id="postFilter" class="col-12 col-xl-9 mb-4 mb-xl-0 ">
-                            <div class="row mr-xl-0 bg-white-br20 align-items-center justify-content-between">
+                        <PostFilter></PostFilter>
+                        <PostInterest></PostInterest>
+                    </div>
 
-                                    <nav class="col-lg-8 nav profile-filter-links align-items-center pl-3  mb-lg-0" role="tablist">
-                                        <span class="nav-link py-3 px-1 mr-2 mr-lg-4 active">Новости
-                                        <i class="fas fa-chevron-down ml-2"></i></span>
-                                        <span class="nav-link py-3 px-1 mr-2 mr-lg-4">Обновления</span>
-                                        <span class="nav-link py-3 px-1 mr-2 mr-lg-4">Понравилось</span>
-                                        <span class="nav-link py-3 px-1 mr-2 mr-lg-4 ml-auto ml-lg-4">
-                                        <button class="btn px-2 py-0">
-                                            <IconSearch style="width: 15px; height: 16px;"/>
-                                        </button>
-                                    </span>
-                                    </nav>
+                    <template v-if="posts && posts.length > 0">
+                        <Post v-for="(postData, postIndex) in posts"
+                          :key="postIndex"
+                          :post="postData"
+                          @onEditPost="onEditPost"
+                          @onDeletePost="onDeletePost"
+                          @onRestorePost="onRestorePost"
+                          @openVideoModal="openVideoModal"/>
+                    </template>
 
-                                    <div class="newsViewModes col-lg-4 d-lg-flex justify-content-end d-none ">
-                                        <span>Вид:</span>
-                                        <button class="btn bg-transparent p-0">
-                                            <IconMultipleViewMode style="width: 16px; height: 16px;"/>
-                                        </button>
-                                        <button class="btn bg-transparent p-0">
-                                            <IconSingleViewMode style="width: 16px; height: 16px;"/>
-                                        </button>
-
-                                    </div>
-
-                            </div>
-                        </div>
-                        <div id="postInterest" class="col-12 col-xl-3 bg-white-br20 d-flex align-items-center mr-n3 py-2 py-xl-0" >
-                            <div class="d-flex align-items-center">
-                                <IconFire class="mr-3" />
-                                <p class="my-0">Сначала Интересные</p>
-                            </div>
-                            <div class="button-switch d-flex align-items-center justify-content-center ml-2 ml-lg-auto">
-                                <input type="checkbox" id="switch-blue" class="switch" checked />
-                                <label for="switch-blue" class="lbl-off">Off</label>
-                                <label for="switch-blue" class="lbl-on">On</label>
-                            </div>
+                    <div v-else-if="!isStarted"  class="row plz-post-item mb-4 bg-white-br20 p-4">
+                        <div class="alert alert-info w-100 p-5 text-center mb-0">
+                            Извините, но сейчас нечего показывать.
                         </div>
                     </div>
 
-                    <Post v-for="(postData, postIndex) in news"
-                          v-bind:key="postIndex" v-bind:post="postData"></Post>
+                    <template v-if="isStarted">
+                        <div class="row plz-post-item mb-4 bg-white-br20 p-4">
+                            <div class="w-100 p-5 text-center mb-0">
+                                <SmallSpinner/>
+                            </div>
+                        </div>
+                    </template>
                 </div>
             </div>
 
@@ -60,88 +44,147 @@
                 <FavoriteFriends :isNarrow="true"></FavoriteFriends>
             </div>
         </div>
+
+        <PostEditModal v-if="postEditModal.isVisible"
+                       :post="postForEdit"
+                       @hidePostEditModal="hidePostEditModal"/>
+
+        <PostVideoModal v-if="postVideoModal.isVisible"
+                        :videoLink="postVideoModal.content.videoLink"
+                        @hideVideoModal="hideVideoModal"/>
     </div>
 </template>
 
 <script>
 import AccountToolbarLeft from '../common/AccountToolbarLeft.vue';
 import FavoriteFriends from '../common/FavoriteFriends.vue';
+import WhatsNewBlock from '../common/WhatsNewBlock.vue';
 
-import AccountSettingsSideMenu from '../components/AccountSettings/AccountSettingsSideMenu.vue';
-import WhatsNewBlock from "../common/WhatsNewBlock.vue";
-import IconSearch from "../icons/IconSearch.vue";
-import IconSingleViewMode from "../icons/IconSingleViewMode.vue";
-import IconMultipleViewMode from "../icons/IconMultipleViewMode.vue";
-import IconFire from "../icons/IconFire.vue";
-import Post from "../common/Post/Post.vue";
+import Post from '../common/Post/Post.vue';
+import PostFilter from '../common/Post/PostFilter.vue';
+import PostInterest from '../common/Post/PostInterest.vue';
+import PostEditModal from '../common/Post/PostEditModal.vue';
+import PostVideoModal from '../common/Post/PostVideoModal.vue';
+import SmallSpinner from "../common/SmallSpinner.vue";
+
 import PliziPost from '../classes/PliziPost.js';
+import LazyLoadPosts from "../mixins/LazyLoadPosts.js";
 
 export default {
-    name: "NewsPage",
-    components: {
-        AccountToolbarLeft,
-        FavoriteFriends,
-        AccountSettingsSideMenu,
-        WhatsNewBlock,
-        IconSearch,
-        IconSingleViewMode,
-        IconMultipleViewMode,
-        IconFire,
-        Post,
+name: 'NewsPage',
+components: {
+    PostInterest,
+    PostFilter,
+    AccountToolbarLeft,
+    FavoriteFriends,
+    WhatsNewBlock,
+    Post,
+    PostEditModal,
+    PostVideoModal,
+    SmallSpinner,
+},
+    mixins: [LazyLoadPosts],
+data() {
+    return {
+        posts: [],
+        postEditModal: {
+            isVisible: false,
+        },
+        postForEdit: null,
+        postVideoModal: {
+            isVisible: false,
+            content: {
+                videoLink: null,
+            },
+        },
+    }
+},
+
+methods: {
+    addNewPost(post) {
+        this.posts.unshift(new PliziPost(post));
     },
-    data() {
-        return {
-            news: null,
+    onEditPost(post){
+        this.postEditModal.isVisible = true;
+        this.postForEdit = post;
+    },
+    hidePostEditModal(){
+        this.postEditModal.isVisible = false;
+        this.postForEdit = null;
+    },
+    openVideoModal(evData){
+        if ( evData.videoLink ){
+            this.postVideoModal.isVisible = true;
+            this.postVideoModal.content.videoLink = evData.videoLink;
         }
     },
-    methods: {
-        async getPosts() {
-            let response = null;
-
-            try {
-                response = await this.$root.$api.$post.getPosts();
-            } catch (e) {
-                console.warn(e.message);
-            }
-
-            if (response !== null) {
-                this.news = [];
-
-                response.map((post) => {
-                    this.news.push(new PliziPost(post));
-                });
-            }
-        },
-        addNewPost(post) {
-            this.news.unshift(new PliziPost(post));
-        },
+    hideVideoModal(){
+        this.postVideoModal.isVisible = false;
     },
-    mounted() {
-        this.getPosts();
+    startTimer(postIndex) {
+        setTimeout(() => {
+            this.posts.splice(postIndex, 1);
+        }, 5000);
     },
+
+    async getPosts(limit = 50, offset = 0) {
+        let response = null;
+
+        try {
+            response = await this.$root.$api.$post.getNews(limit, offset);
+        } catch (e) {
+            this.enabledPostLoader = false;
+            console.warn(e.message);
+        }
+
+        if (response !== null) {
+            response.map((post) => {
+                this.posts.push(new PliziPost(post));
+            });
+
+            return response.length;
+        }
+    },
+    async onDeletePost(id) {
+        let response;
+
+        try{
+            response = await this.$root.$api.$post.deletePost( id );
+        } catch (e){
+            console.warn( e.detailMessage );
+        }
+
+        if (response){
+            const postIndex = this.posts.findIndex((post) => {
+                return post.id === id;
+            });
+            let post = this.posts[postIndex].deleted = true;
+
+            this.startTimer(postIndex);
+        }
+    },
+    async onRestorePost(id) {
+        let response;
+
+        try{
+            response = await this.$root.$api.$post.restorePost(id);
+        } catch (e){
+            console.warn(e.detailMessage);
+        }
+
+        if (response){
+            const post = this.posts.find((post) => {
+                return post.id === id;
+            });
+
+            post.deleted = false;
+        }
+    },
+},
+
+async mounted() {
+    await this.getPosts();
+},
 }
 </script>
 
-<style lang="scss">
-    .newsViewModes {
-        color: #939292;
-
-        span:first-child {
-            margin-right: 11px;
-        }
-
-        button:nth-child(2) {
-            margin-right: 7px;
-        }
-
-        button {
-            svg {
-                fill: #939292;
-
-                &:hover {
-                    fill: #204af4;
-                }
-            }
-        }
-    }
-</style>

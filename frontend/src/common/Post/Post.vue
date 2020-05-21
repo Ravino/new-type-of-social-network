@@ -29,7 +29,7 @@
                         </time>
                     </div>
 
-                    <div class="post-poster-actions my-auto ml-auto">
+                    <div v-if="post.author.id === user.id" class="post-poster-actions my-auto ml-auto">
                         <button class="btn btn-link post-settings"
                                 :id="`postSettings` + post.id"
                                 type="button"
@@ -42,13 +42,13 @@
                              :aria-labelledby="`postSettings` + post.id">
 
                             <div v-if="post.author.id === user.id" class="nav-item">
-                                <button class="btn dropdown-item px-3 py-1"
+                                <button class="btn dropdown-item text-left px-3 py-1"
                                         @click="$emit('onEditPost', post)">
                                     Редактировать
                                 </button>
                             </div>
                             <div v-if="post.author.id === user.id" class="nav-item">
-                                <button class="btn dropdown-item px-3 py-1"
+                                <button class="btn dropdown-item text-left px-3 py-1"
                                         @click="$emit('onDeletePost', post.id)">
                                     Удалить
                                 </button>
@@ -58,80 +58,117 @@
                 </div>
             </div>
 
-            <div class="w-100" :class="{'px-5': post.sharedFrom}">
-                <div class="row" :class="{shared: post.sharedFrom}">
-                    <template v-if="post.sharedFrom">
-                        <div class="post-news-item d-flex flex-row align-content-center pb-4">
-                            <div class="post-poster-pic mr-3">
+            <div v-if="post.sharedFrom" class="sharedFrom pt-3 pl-3">
+                <div class="col-12 plz-post-item-header">
+
+                    <div class="post-news-item d-flex flex-row align-content-center shared  pb-2">
+
+                        <router-link v-if="post.sharedFrom.user"  :to="{name: 'PersonalPage', params: {id: post.sharedFrom.user.id}}" class="post-poster-pic mr-3">
+                            <img :src="post.sharedFrom.posterPic" :alt="post.sharedFrom.posterName"/>
+                        </router-link>
+                        <router-link v-else  :to="{name: 'CommunityPage', params: {id: post.sharedFrom.community.id}}" class="post-poster-pic mr-3">
+                            <img :src="post.sharedFrom.posterPic" :alt="post.sharedFrom.posterName"/>
+                        </router-link>
+
+                        <div class="post-poster-name d-flex flex-column justify-content-center">
+                            <h6 class="post-poster-title mb-1">
+                                <!-- TODO: @TGA странно что мы нигде не выводим название поста-->
+
                                 <router-link v-if="post.sharedFrom.user" :to="{name: 'PersonalPage', params: {id: post.sharedFrom.user.id}}">
-                                    <img :src="post.sharedFrom.posterPic" :alt="post.sharedFrom.posterName"/>
+                                    <b>{{post.sharedFrom.posterName}}</b>
                                 </router-link>
                                 <router-link v-else :to="{name: 'CommunityPage', params: {id: post.sharedFrom.community.id}}">
-                                    <img :src="post.sharedFrom.posterPic" :alt="post.sharedFrom.posterName"/>
+                                    <b>{{post.sharedFrom.posterName}}</b>
                                 </router-link>
-                            </div>
-
-                            <div class="post-poster-name d-flex flex-column justify-content-center">
-                                <h6 class="post-poster-title mb-1">
-                                    <!-- TODO: @TGA странно что мы нигде не выводим название поста-->
-
-                                    <router-link v-if="post.sharedFrom.user" :to="{name: 'PersonalPage', params: {id: post.sharedFrom.user.id}}">
-                                        <b>{{post.sharedFrom.posterName}}</b>
-                                    </router-link>
-                                    <router-link v-else :to="{name: 'CommunityPage', params: {id: post.sharedFrom.community.id}}">
-                                        <b>{{post.sharedFrom.posterName}}</b>
-                                    </router-link>
-                                </h6>
-                                <time :datetime="post.sharedFrom.createdAt" class="post-poster-time">
-                                    {{ post.sharedFrom.createdAt | lastPostTime }}
-                                </time>
-                            </div>
-                        </div>
-                    </template>
-
-                    <div class="col-12 plz-post-item-body pt-4 pb-2">
-                        <template v-if="livePreview && typeof livePreview === 'object'">
-                            <p v-if="livePreview.text"
-                               class="post-main-text mb-0"
-                               v-html="livePreview.text">
-                            </p>
-
-                            <template v-if="livePreview.videoLinks">
-                                <div class="youtube-video-link d-flex justify-content-center">
-                                    <p class="post-main-text  mt-2"
-                                       v-html="livePreview.videoLinks"
-                                       @click.stop="hasYoutubeLinks ? openVideoModal() : null">
-                                    </p>
-                                    <button class="video__button" type="button" aria-label="Запустить видео">
-                                        <svg width="68" height="48" viewBox="0 0 68 48">
-                                            <path class="video__button-shape" d="M66.52,7.74c-0.78-2.93-2.49-5.41-5.42-6.19C55.79,.13,34,0,34,0S12.21,.13,6.9,1.55 C3.97,2.33,2.27,4.81,1.48,7.74C0.06,13.05,0,24,0,24s0.06,10.95,1.48,16.26c0.78,2.93,2.49,5.41,5.42,6.19 C12.21,47.87,34,48,34,48s21.79-0.13,27.1-1.55c2.93-0.78,4.64-3.26,5.42-6.19C67.94,34.95,68,24,68,24S67.94,13.05,66.52,7.74z"></path>
-                                            <path class="video__button-icon" d="M 45,24 27,14 27,34"></path>
-                                        </svg>
-                                    </button>
-                                </div>
-                            </template>
-                        </template>
-
-                        <template v-else>
-                            <p v-if="post.body"
-                               class="post-main-text mb-2"
-                               v-html="this.$options.filters.toBR(post.body)"></p>
-                        </template>
-                    </div>
-
-                    <div class="col-12 plz-post-item-images">
-                        <div class="post-images">
-                            <Gallery v-if="imageAttachments.length > 0" :images="imageAttachments"></Gallery>
-
-                            <template v-for="(postAttachment) in post.attachments">
-                                <template v-if="!postAttachment.isImage">
-                                    <AttachmentFile :attach="postAttachment"/>
-                                </template>
-                            </template>
+                            </h6>
+                            <time :datetime="post.sharedFrom.createdAt" class="post-poster-time">
+                                {{ post.sharedFrom.createdAt | lastPostTime }}
+                            </time>
                         </div>
                     </div>
                 </div>
+
+                <div class="col-12 plz-post-item-body pt-2">
+                    <template v-if="sharedLivePreview && typeof sharedLivePreview === 'object'">
+                        <p v-if="sharedLivePreview.text"
+                           class="post-main-text shared mb-0"
+                           v-html="sharedLivePreview.text">
+                        </p>
+
+                        <template v-if="sharedLivePreview.videoLinks">
+                            <div class="youtube-video-link d-flex justify-content-center">
+                                <p class="post-main-text  mt-2"
+                                   v-html="sharedLivePreview.videoLinks"
+                                   @click.stop="hasSharedYoutubeLinks ? openVideoModal() : null">
+                                </p>
+                                <button class="video__button" type="button" aria-label="Запустить видео">
+                                    <svg width="68" height="48" viewBox="0 0 68 48">
+                                        <path class="video__button-shape" d="M66.52,7.74c-0.78-2.93-2.49-5.41-5.42-6.19C55.79,.13,34,0,34,0S12.21,.13,6.9,1.55 C3.97,2.33,2.27,4.81,1.48,7.74C0.06,13.05,0,24,0,24s0.06,10.95,1.48,16.26c0.78,2.93,2.49,5.41,5.42,6.19 C12.21,47.87,34,48,34,48s21.79-0.13,27.1-1.55c2.93-0.78,4.64-3.26,5.42-6.19C67.94,34.95,68,24,68,24S67.94,13.05,66.52,7.74z"></path>
+                                        <path class="video__button-icon" d="M 45,24 27,14 27,34"></path>
+                                    </svg>
+                                </button>
+                            </div>
+                        </template>
+                    </template>
+
+                    <template v-else>
+                        <p v-if="post.sharedFrom.body"
+                           class="post-main-text shared mb-0"
+                           v-html="this.$options.filters.toBR(post.sharedFrom.body)"></p>
+                    </template>
+                </div>
+
+                <div class="col-12 plz-post-item-images">
+                    <div class="post-images shared">
+                        <Gallery :post="post" v-if="sharedImageAttachments.length > 0" :images="sharedImageAttachments"></Gallery>
+
+                        <template v-for="(postAttachment) in post.sharedFrom.attachments">
+                            <template v-if="!postAttachment.isImage">
+                                <AttachmentFile :attach="postAttachment"/>
+                            </template>
+                        </template>
+                    </div>
+                </div>
             </div>
+
+            <div class="col-12 plz-post-item-body pb-2" :class="{'--px-2 --pt-2': post.sharedFrom, 'pt-4': !post.sharedFrom}">
+                    <template v-if="livePreview && typeof livePreview === 'object'">
+                        <p v-if="livePreview.text"
+                           class="post-main-text mb-0"
+                           v-html="livePreview.text">
+                        </p>
+
+                        <template v-if="livePreview.videoLinks">
+                            <div class="youtube-video-link d-flex justify-content-center">
+                                <p class="post-main-text  mt-2"
+                                   v-html="livePreview.videoLinks"
+                                   @click.stop="hasYoutubeLinks ? openVideoModal(true) : null">
+                                </p>
+                                <button class="video__button" type="button" aria-label="Запустить видео">
+                                    <IconYoutube/>
+                                </button>
+                            </div>
+                        </template>
+                    </template>
+
+                    <template v-else>
+                        <p v-if="post.body"
+                           class="post-main-text mb-2"
+                           v-html="this.$options.filters.toBR(post.body)"></p>
+                    </template>
+                </div>
+
+            <div class="col-12 plz-post-item-images">
+                        <div class="post-images">
+                            <Gallery :post="post" v-if="imageAttachments.length > 0" :images="imageAttachments"></Gallery>
+
+                        <template v-for="(postAttachment) in post.attachments">
+                            <template v-if="!postAttachment.isImage">
+                                <AttachmentFile :attach="postAttachment"/>
+                            </template>
+                        </template>
+                    </div>
+                </div>
 
             <div class="plz-post-item-footer col-12 pt-4">
                 <div class="d-flex">
@@ -139,8 +176,28 @@
                         <div class="post-watched-counter"
                              :class="{'is-active': post.alreadyLiked}"
                              @click="onLike">
-                            <IconHeard/>
+                            <IconFillHeard v-if="post.alreadyLiked"/>
+                            <IconHeard v-else/>
                             <span>{{ post.likes | space1000 }}</span>
+                            <div v-if="post.usersLikes && post.usersLikes.length" class="usersLikes p-3" @click.stop="">
+                                <p class="mb-0">
+                                    <b @click.stop="$emit('onShowUsersLikes', post.id)"
+                                       style="cursor: pointer">
+                                        Понравилось
+                                    </b>
+                                    {{ post.likes }} пользователям
+                                </p>
+                               <p class="d-flex">
+                                   <router-link v-for="(user, index) in shortUsersLikes"
+                                                :key="index"
+                                                :to="{ name: 'PersonalPage', params: { id: user.id } }">
+                                       <img :src="user.profile.userPic"
+                                            :alt="user.profile.firstName + ' ' + user.profile.lastName"
+                                            :title="user.profile.firstName + ' ' + user.profile.lastName"
+                                            class="rounded-circle">
+                                   </router-link>
+                               </p>
+                            </div>
                         </div>
                         <div class="post-watched-counter ml-4">
                             <IconMessage/>
@@ -168,7 +225,7 @@
                 <div class="post-deleted text-center">
                     <p>Запись удалена.</p>
                     <button class="btn btn-secondary"
-                            @click="$emit('restorePost', post.id)">
+                            @click="$emit('onRestorePost', post.id)">
                         Восстановить запись
                     </button>
                 </div>
@@ -181,9 +238,11 @@
 <script>
     import IconEye from '../../icons/IconEye.vue';
     import IconHeard from '../../icons/IconHeard.vue';
+    import IconFillHeard from '../../icons/IconFillHeard.vue';
     import IconMessage from '../../icons/IconMessage.vue';
     import IconMessageUserPost from '../../icons/IconMessageUserPost.vue';
     import IconShare from '../../icons/IconShare.vue';
+    import IconYoutube from "../../icons/IconYoutube.vue";
 
     import PostImage from './PostImage.vue';
     import AttachmentFile from "../AttachmentFile.vue";
@@ -199,8 +258,10 @@
             IconShare,
             IconMessage,
             IconHeard,
+            IconFillHeard,
             IconEye,
             IconMessageUserPost,
+            IconYoutube,
             PostImage,
             AttachmentFile,
         },
@@ -213,6 +274,16 @@
         },
         mixins: [LinkMixin],
         computed: {
+            sharedLivePreview() {
+                let str = this.post.sharedFrom.body.replace(/<\/?[^>]+>/g, '').trim();
+
+                return this.transformStrWithLinks(str);
+            },
+            hasSharedYoutubeLinks() {
+                let str = this.post.sharedFrom.body.replace(/<\/?[^>]+>/g, '').trim();
+
+                return this.detectYoutubeLinks(str);
+            },
             hasYoutubeLinks() {
                 let str = this.post.body.replace(/<\/?[^>]+>/g, '').trim();
 
@@ -233,14 +304,28 @@
             imageAttachments() {
                 return this.post.attachments.filter(attachment => attachment.isImage);
             },
+            sharedImageAttachments() {
+                return this.post.sharedFrom.attachments.filter(attachment => attachment.isImage);
+            },
             user() {
                 return this.$root.$auth.user;
             },
+            shortUsersLikes() {
+                return this.post.usersLikes && this.post.usersLikes.length ? this.post.usersLikes.slice(0, 8) : null;
+            },
         },
         methods: {
-            openVideoModal() {
+            openVideoModal(shared = false) {
+                let videoLink;
+
+                if (shared) {
+                    videoLink = this.detectYoutubeLinks(this.post.body.replace(/<\/?[^>]+>/g, '').trim())[0];
+                } else {
+                    videoLink = this.detectYoutubeLinks(this.post.sharedFrom.body.replace(/<\/?[^>]+>/g, '').trim())[0];
+                }
+
                 this.$emit('openVideoModal', {
-                    videoLink: this.detectYoutubeLinks(this.post.body.replace(/<\/?[^>]+>/g, '').trim())[0],
+                    videoLink,
                 })
             },
 
@@ -257,9 +342,14 @@
                     if (this.post.alreadyLiked) {
                         this.post.alreadyLiked = false;
                         this.post.likes--;
+                        let userLikeIndex = this.post.usersLikes.findIndex((userLike) => {
+                            return userLike.id === this.$root.$auth.user.id;
+                        });
+                        this.post.usersLikes.splice(userLikeIndex, 1);
                     } else {
                         this.post.alreadyLiked = true;
                         this.post.likes++;
+                        this.post.usersLikes.push(this.$root.$auth.user);
                     }
                 }
             },

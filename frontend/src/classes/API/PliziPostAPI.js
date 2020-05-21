@@ -30,13 +30,47 @@ class PliziPostAPI extends PliziBaseAPI {
     }
 
     /**
+     * Получение новостей.
+     * @public
+     * @returns {object[]|null}
+     * @throws PliziAPIError
+     */
+    async getNews(limit, offset){
+        let path = 'api/user/news';
+        let qParams = '';
+
+        if (limit && offset) {
+            qParams = `?limit=${limit}&offset=${offset}`;
+        }
+
+        let response = await this.axios.get( path + qParams, this.authHeaders )
+            .catch( ( error ) => {
+                this.checkIsTokenExpires( error, `getNews` );
+                throw new PliziAPIError( `getNews`, error.response );
+            } );
+
+        if ( response.status === 200 ){
+            return response.data.data.list;
+        }
+
+        return null;
+    }
+
+    /**
      * Получение постов на страницах других пользователей.
      * @public
      * @returns {object[]|null}
      * @throws PliziAPIError
      */
-    async getPostsByUserId( id ){
-        let response = await this.axios.get( `api/user/${id}/posts`, this.authHeaders )
+    async getPostsByUserId( id, limit, offset ){
+        let path = `api/user/${id}/posts/`;
+        let qParams = '';
+
+        if (limit && offset) {
+            qParams = `?limit=${limit}&offset=${offset}`;
+        }
+
+        let response = await this.axios.get( path + qParams, this.authHeaders )
             .catch( ( error ) => {
                 this.checkIsTokenExpires( error, `getPostsByUserId` );
                 throw new PliziAPIError( `getPostsByUserId`, error.response );
@@ -241,6 +275,37 @@ class PliziPostAPI extends PliziBaseAPI {
 
         if ( response.status === 200 ){
             return response.data.data;
+        }
+
+        return null;
+    }
+
+    /**
+     * Получение пользователей которые лайкнули пост.
+     *
+     * @param {number} postId
+     * @param {number} limit
+     * @param {number} offset
+     * @return {object[]|null}
+     * @throws PliziAPIError
+     */
+    async getUsersLikes(postId, limit, offset) {
+        let path = `api/posts/${postId}/likes/users`;
+        let qParams = '';
+
+        if (limit && offset) {
+            qParams = `?limit=${limit}&offset=${offset}`;
+        }
+
+        let response = await this.axios.get(path + qParams, this.authHeaders)
+            .catch((error) => {
+                this.checkIsTokenExpires(error, `getUsersLikes`);
+                throw new PliziAPIError(`getUsersLikes`, error.response);
+            });
+
+
+        if (response.status === 200) {
+            return response.data.data.list;
         }
 
         return null;

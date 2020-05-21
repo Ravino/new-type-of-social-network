@@ -21,7 +21,6 @@
 }
 
 .post-images {
-
     img {
         max-width: 100%;
         border-radius: 3px;
@@ -29,9 +28,15 @@
     }
 }
 
-.shared {
-    padding: 10px;
-    border-left: 2px solid #cececf;
+.sharedFrom {
+    width: 100%;
+
+    .post-poster-pic {
+        a {
+            display: block;
+        }
+    }
+
 }
 
 .youtube-video-link {
@@ -43,6 +48,25 @@
                 fill: #ff0000;
                 fill-opacity: 1;
             }
+        }
+    }
+}
+.multiselect {
+    &__select {
+        &:before {
+            top: 74%;
+        }
+    }
+    &__option {
+        &--highlight {
+            & > span {
+                line-height: 40px;
+                padding-left: 15px;
+            }
+        }
+        &--selected {
+            color: #000 !important;
+            background-color: #fff !important;
         }
     }
 }

@@ -49,6 +49,12 @@ class PliziPost {
     _alreadyLiked = false;
 
     /**
+     * @type {Array}
+     * @private
+     */
+    _usersLikes = [];
+
+    /**
      * кол-во просмотров
      * @type {number}
      * @private
@@ -175,6 +181,10 @@ class PliziPost {
         return this._alreadyLiked;
     }
 
+    get usersLikes() {
+        return this._usersLikes;
+    }
+
     get views() {
         return this._views
     }
@@ -248,6 +258,10 @@ class PliziPost {
         this._alreadyLiked = value;
     }
 
+    set usersLikes(value) {
+        this._usersLikes = value;
+    }
+
     set views(value) {
         this._views = value;
     }
@@ -306,6 +320,9 @@ class PliziPost {
         this.primaryImage = post.primaryImage;
         this.likes = post.likes;
         this.alreadyLiked = post.alreadyLiked;
+        this.usersLikes = post.usersLikes ? post.usersLikes.list.map((user) => {
+            return new PliziUser(user);
+        }) : [];
         this.views = post.views;
         this.commentsCount = post.commentsCount;
         this.sharesCount = post.sharesCount;

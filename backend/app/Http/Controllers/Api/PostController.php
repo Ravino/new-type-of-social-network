@@ -38,6 +38,7 @@ class PostController extends Controller
             ->limit($request->query('limit') ?? 50)
             ->offset($request->query('offset') ?? 0)
             ->get();
+
         return new PostCollection($posts, false);
     }
 
@@ -46,24 +47,31 @@ class PostController extends Controller
      * @return PostCollection
      */
     public function myPosts(Request $request) {
-        $posts = \Auth::user()->allPosts()->with(['postable', 'author'])
-            ->limit($request->query('limit') ?? 50)
-            ->offset($request->query('offset') ?? 0)
-            ->get();
+        $posts = Post::getWithoutOldPosts(\Auth::user(), $request->query('limit'), $request->query('offset'), true);
+
         return new PostCollection($posts);
     }
 
     /**
+     * @param Request $request
+     * @return PostCollection
+     */
+    public function getNews(Request $request)
+    {
+        $posts = Post::getWithoutOldPosts(\Auth::user(), $request->query('limit'), $request->query('offset'));
+
+        return new PostCollection($posts);
+    }
+
+    /**
+     * @param Request $request
      * @param $id
      * @return PostCollection|\Illuminate\Http\JsonResponse
      */
     public function userPosts(Request $request, $id) {
-        /** @var User $user */
         $user = User::find($id);
-        $posts = $user->allPosts()->with(['postable', 'author'])
-            ->limit($request->query('limit') ?? 50)
-            ->offset($request->query('offset') ?? 0)
-            ->get();
+        $posts = Post::getWithoutOldPosts($user, $request->query('limit'), $request->query('offset'), true);
+
         return new PostCollection($posts);
     }
 
@@ -75,9 +83,12 @@ class PostController extends Controller
         /** @var Community $community */
         $community = Community::find($community_id);
         if($community) {
-            $posts = $community->posts()->with(['postable', 'author'])
+            $posts = $community->posts()->with(['postable', 'author', 'usersLikes' => function ($query) {
+                return $query->limit(8)->get();
+            }])
                 ->limit($request->query('limit') ?? 50)
                 ->offset($request->query('offset') ?? 0)
+                ->orderByDesc('id')
                 ->get();
             return new PostCollection($posts, false);
         }
@@ -150,6 +161,8 @@ class PostController extends Controller
         $my_post->postable_type = User::class;
         $my_post->postable_id = \Auth::user()->id;
         $my_post->parent_id = $post->id;
+        $my_post->body = '';
+        $my_post->author_id = \Auth::user()->id;
         $my_post->save();
         return new PostResource($my_post);
     }
@@ -162,24 +175,6 @@ class PostController extends Controller
         $attachment_ids = $this->uploadService->uploadFiles(new PostAttachment(), 'post/attachments', $request->allFiles());
         $attachments = PostAttachment::whereIn('id', $attachment_ids)->get();
         return new AttachmentsCollection($attachments);
-    }
-
-    /**
-     * @param $request
-     * @return \Illuminate\Http\JsonResponse
-     */
-    public function rate(Request $request) {
-        if(!PostLike::where('user_id', \Auth::user()->id)->where('post_id', $request->postId)->exists()) {
-            PostLike::create([
-                'user_id' => \Auth::user()->id,
-                'post_id' => $request->postId,
-            ]);
-            Event::dispatch('post.liked', ['post_id' => $request->postId, 'user_id' => \Auth::user()->id]);
-            return response()->json(['message' => 'Вы успешно оценили данную запись'], 200);
-        } else {
-            PostLike::where('user_id', \Auth::user()->id)->where('post_id', $request->postId)->first()->delete();
-            return response()->json(['message' => 'Вы успешно сняли свою оценку с данной записи'], 200);
-        }
     }
 
     /**

@@ -1,12 +1,19 @@
 <template>
-    <div class="plz-gallery-viewer d-flex align-items-center justify-content-center">
-        <div class="plz-gallery-viewer-overflow" @click="close"></div>
+    <div class="plz-gallery-viewer">
+        <button class="plz-gallery-viewer-close" @click="close"></button>
+        <div class="plz-gallery-viewer-overflow"
+             :style="{'background-image':
+             `linear-gradient(to right, rgba(0, 0, 0, .85) 0%, rgba(0, 0, 0, .85) 100%),
+             url('${activeImage.image.normal.path}')`}"
+             @click="close"
+        >
+        </div>
         <div class="plz-gallery-viewer-nav">
-            <div class="plz-gallery-viewer-nav-btn plz-gallery-viewer-nav-btn-prev" @click="prevImage">
-                prev
+            <div v-if="images.length > 1" class="plz-gallery-viewer-nav-btn plz-gallery-viewer-nav-btn-prev" @click="prevImage">
+                <img src="../images/gallery/arrow-left.svg" alt="prev">
             </div>
-            <div class="plz-gallery-viewer-nav-btn plz-gallery-viewer-nav-btn-next" @click="nextImage">
-                next
+            <div v-if="images.length > 1" class="plz-gallery-viewer-nav-btn plz-gallery-viewer-nav-btn-next" @click="nextImage">
+                <img src="../images/gallery/arrow-right.svg" alt="next">
             </div>
         </div>
         <div class="plz-gallery-viewer-current">
@@ -24,7 +31,7 @@ export default {
             default: () => [],
         },
         activeId: {
-            type: Number,
+            type: String,
         },
     },
     data() {
@@ -45,10 +52,10 @@ export default {
             this.activeImage = this.images.slice(0, 1).pop();
         }
 
-        this.setBodyOverflow('hidden');
+        this.addBodyViewerOpen();
     },
     destroyed() {
-        this.setBodyOverflow('auto');
+       this.removeBodyViewerOpen();
     },
     computed: {
         currentImageIndex() {
@@ -62,7 +69,7 @@ export default {
             if (prevImageIndex >= 0 && this.images[prevImageIndex]) {
                 this.activeImage = this.images[prevImageIndex];
             } else {
-                this.activeImage = [...this.images].pop();
+                this.goToImage([...this.images].pop());
             }
         },
         nextImage() {
@@ -71,16 +78,21 @@ export default {
             if (nextImageIndex >= 0 && this.images[nextImageIndex]) {
                 this.activeImage = this.images[nextImageIndex];
             } else {
-                this.activeImage = [...this.images].shift();
+                this.goToImage([...this.images].shift());
             }
         },
         close() {
             this.$emit('close');
         },
-        setBodyOverflow(overflow) {
-            document.querySelector('body').style.overflow = overflow;
-        }
+        goToImage(image) {
+            this.activeImage = image;
+        },
+       addBodyViewerOpen() {
+            document.querySelector('body').classList.add('plz-gallery--open');
+       },
+       removeBodyViewerOpen() {
+            document.querySelector('body').classList.remove('plz-gallery--open');
+       }
     }
 }
 </script>
-

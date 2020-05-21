@@ -1,4 +1,5 @@
 
+#profileFilter,
 #communitiesFilter {
     .btn-search {
         position: absolute;
@@ -55,7 +56,7 @@ $friendspicSize: 20px;
             .btn {
                 height: 32px;
                 width: 120px;
-                line-height: 16px;
+                //line-height: 32px;
                 font-size: 11px;
                 text-transform: uppercase;
                 color: $postTextColor;
@@ -75,10 +76,10 @@ $friendspicSize: 20px;
 
             &-pics {
                 position: relative;
-                width: 50px;
+                width: auto;
+                max-width: 50px;
                 display: flex;
                 align-items: center;
-
              }
 
         }
@@ -124,6 +125,7 @@ $friendspicSize: 20px;
     }
 
 }
+
 #createCommunityBlock {
     .btn-create {
         min-height: 40px;

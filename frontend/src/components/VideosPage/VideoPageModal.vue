@@ -33,6 +33,3 @@
     }
 </script>
 
-<style scoped>
-
-</style>

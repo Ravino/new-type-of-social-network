@@ -31,7 +31,7 @@
             </span>
         </div>
 
-        <div v-if="isShowLinkedChat" class="plz-linked-chat-block mr-3 bg-white-br20 " :class="{ 'active-chat': chatWindowShown }">
+        <div v-if="isShowLinkedChat" class="plz-linked-chat-block mr-3 bg-white-br20 " :class="{ 'active-chat plz-favorit-z': chatWindowShown }">
             <!--TODO @TRG class="is-pinned" когда чат прибит-->
             <div id="chatMessagesWrapper" class="plz-linked-chat-body bg-light d-none d-lg-flex flex-column p-0"
                  :class="{'is-pinned' : 'когда_чат_прибит'}">
@@ -43,14 +43,15 @@
                 </ChatLinkedHeader>
 
                 <div id="chatMessagesWrapperBody" class="position-relative">
-
-                    <ChatMessages v-if="isMessagesLoaded" v-bind:messagesList="messagesList"
-                                  v-bind:filter="filter"
-                                  v-bind:currentDialog="currentDialog"
-                                  :style="`padding-bottom: ${changedHeight}`"
-                                  @clearFilters="clearChatMessagesFilters"
-                                  ref="chatMessages">
-                    </ChatMessages>
+                    <div v-if="isMessagesLoaded"  class="plz-gallery-attached-chat">
+                        <ChatMessages v-bind:messagesList="messagesList"
+                                      v-bind:filter="filter"
+                                      v-bind:currentDialog="currentDialog"
+                                      :style="`padding-bottom: ${changedHeight}`"
+                                      @clearFilters="clearChatMessagesFilters"
+                                      ref="chatMessages">
+                        </ChatMessages>
+                    </div>
                     <Spinner v-else v-bind:message="`Сообщения загружаются`"></Spinner>
 
                     <ChatFooter v-if="currentDialog"

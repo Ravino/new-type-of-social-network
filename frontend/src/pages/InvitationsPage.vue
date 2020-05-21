@@ -1,18 +1,19 @@
 <template>
     <div class="container-fluid pl-md-0">
         <div class="row">
-            <div class="col-12 col-md-1 ">
+            <div class="col-12 col-md-1 px-0 px-md-3 ">
                 <AccountToolbarLeft></AccountToolbarLeft>
             </div>
 
-            <div class="col-12 col-md-11 col-lg-9 col-xl-10">
+            <div class="col-12 col-md-11 col-lg-9 col-xl-10 px-0 px-md-3">
 
                 <FriendsListHeader></FriendsListHeader>
 
-                <div class="row pl-3">
+                <div class="d-flex flex-wrap align-items-start">
                     <div class="col-12 order-1 order-md-0 col-md-7 col-lg-8 col-xl-8 bg-white-br20">
 
-                        <InvitationsList v-if="isDataReady" v-bind:key="'invitationsList-'+invitationsNumber+'-'+invitationsKeyUpdater"
+                        <InvitationsList v-if="isDataReady"
+                                         v-bind:key="'invitationsList-'+invitationsNumber+'-'+invitationsKeyUpdater"
                                          @InvitationDecline="onInvitationAction"
                                          @InvitationAccept="onInvitationAction"
                                          v-bind:invitations="getInvitations()"
@@ -42,7 +43,7 @@
 import FriendsListMixin from '../mixins/FriendsListMixin.js';
 import InvitationsList from '../components/InvitationsList.vue';
 
-    export default {
+export default {
 name: 'InvitationsPage',
 components: { InvitationsList},
 mixins : [FriendsListMixin],
@@ -67,6 +68,16 @@ methods: {
     onInvitationAction(){
         this.invitationsKeyUpdater += 1;
     }
+},
+
+mounted() {
+    this.$root.$on( this.$root.$auth.im.updateEventName, ()=>{
+        this.invitationsKeyUpdater += 1;
+
+        if (this.$root.$auth.im.size === 0){
+            this.$router.push({ path: '/friends' });
+        }
+    });
 },
 
 }

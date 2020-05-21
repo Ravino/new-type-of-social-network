@@ -1,17 +1,17 @@
 <template>
-    <div class="chat-dialogs-list col-sm-12 col-md-12 col-lg-4 col-xl-4 col-auto px-sm-0 px-md-0 ">
+    <div class="chat-dialogs-list col-sm-12 col-md-12 col-lg-4 col-xl-4 col-auto px-0">
 
         <ChatDialogsFilter @ChatDialogsFilter="onChatDialogsFilter"></ChatDialogsFilter>
 
         <vue-custom-scrollbar class="chat-list-scroll pb-0 pb-4"
                               :settings="customScrollBarSettings">
-            <ul id="chatDialogsList" class="list-unstyled mb-0" v-bind:key="dialogsListKey">
+            <ul id="chatDialogsList" class="list-unstyled mb-0">
                 <ChatListItem v-for="dialog in dialogsList()"
                               @PickChat="onSwitchToChat"
                               :id="'dialogItem-'+dialog.id"
                               v-bind:dialog="dialog"
                               v-bind:currentDialogID="currentDialogID"
-                              v-bind:key="dialogsListItemKey(dialog)">
+                              v-bind:key="dialog.id+`-`+$root.$dialogsKeyUpdater+`-`+$root.$messagesKeyUpdater">
                 </ChatListItem>
             </ul>
         </vue-custom-scrollbar>
@@ -24,14 +24,11 @@ import VueCustomScrollbar from 'vue-custom-scrollbar';
 import ChatDialogsFilter from './ChatDialogsFilter.vue';
 import ChatListItem from './ChatListItem.vue';
 
-import PliziDialog from '../../classes/PliziDialog.js';
-
 export default {
 name : 'ChatDialogs',
 components : { ChatDialogsFilter, ChatListItem, VueCustomScrollbar },
 props : {
-    currentDialogID : {},
-    ChatDialogsFilter : {}
+    currentDialogID : String
 },
 
 data(){
@@ -52,18 +49,13 @@ data(){
 },
 
 computed: {
-    dialogsLength(){
-        return this.$root.$auth.dm.size;
-    },
 
-    dialogsListKey(){
-        return 'dialogsList-'+this.dialogKeyUpdater+'-'+this.$root.$auth.dm.size+'-'+ (new Date()).getMilliseconds();
-    }
 },
 
 methods: {
+
     dialogsList(){
-        const dlgList = this.$root.$auth.dm.asArray().slice();
+        const dlgList = this.$root.$auth.dm.asArray();
 
         if ( this.dialogFilter.text.length < 3 )
             return dlgList;
@@ -71,48 +63,38 @@ methods: {
         return dlgList.filter(dlgItem => dlgItem.checkInAttendees(this.dialogFilter.text) );
     },
 
-    dialogsListItemKey(dialog){
-        return 'dialogItem-'+dialog.id+'-'+this.dialogKeyUpdater+ (new Date()).getMilliseconds();
-    },
-
     onSwitchToChat(evData){
         this.$emit('SwitchToChat', evData);
     },
-
 
     onChatDialogsFilter(evData){
         this.dialogFilter.text = evData.text ? evData.text.trim() : '';
     },
 
-
     onRemoveChatDialog(evData){
-        this.$root.$auth.dm.delete( evData.chatId );
+        this.$root.$auth.dm.onRemoveDialog( evData.chatId );
 
-        const newPickedChat = (this.$root.$auth.dm.size > 0) ? this.$root.$auth.dm.firstDialog.id : -1;
+        if (this.$root.$auth.dm.size > 0) {
+            const newPickedChat = this.$root.$auth.dm.firstDialog.id;
 
-        this.$emit('SwitchToChat', { chatId: newPickedChat });
-
-        /** FIXME: @TGA: удаление через DOM это костыль, надо потом добиться автоудаления **/
-        let $elem = document.getElementById('dialogItem-'+evData.chatId);
-        window.console.log($elem);
-        if ($elem){
-            $elem.remove();
+            this.$emit('SwitchToChat', { chatId: newPickedChat });
+        }
+        else {
+            window.console.info(`нет диалогов`);
         }
     },
 
-
-    onUpdateChatDialog(evData){
+    onUpdateChatDialog(evData) {
         const updatedFields = {
-            lastMessageDT : evData.createdAt,
-            lastMessageText : evData.body,
-            isLastFromMe : !!evData.isMine,
-            isRead : !!evData.isRead
+            lastMessageDT : evData.message.createdAt,
+            lastMessageText : evData.message.body,
+            isLastFromMe : !!evData.message.isMine,
+            isRead : !!evData.message.isRead
         };
 
         this.$root.$auth.dm.dialogStateUpdated(evData.chatId, updatedFields);
-        this.dialogKeyUpdater++;
+        this.$root.$messagesKeyUpdater++;
     },
-
 
     async loadDialogsList() {
         this.isDialogsLoaded = true;
@@ -131,6 +113,7 @@ methods: {
         return true;
     },
 
+
     async onDialogsListLoad(wMode){
         if (this.listFilled)
             return;
@@ -147,35 +130,8 @@ methods: {
         else {
             window.console.warn(`Условие не сработало!`);
         }
-    },
+    }
 
-    /**
-     * @deprecated
-     * @TGA будет актуально когда бэкенд будет делать морфологический поиск
-     * @returns {Promise<void>}
-     */
-    async searchDialog() {
-        if (!this.dialogFilter.text) {
-            this.dialogsSearchedList = null;
-            return;
-        }
-
-        let response;
-
-        try {
-            response = await this.$root.$api.$chat.dialogSearchByName(this.dialogFilter.text);
-        } catch (e) {
-            console.warn(e.detailMessage);
-        }
-
-        if (response) {
-            this.dialogsSearchedList = [];
-
-            response.map( (dlgItem) => {
-                this.dialogsSearchedList.push( new PliziDialog(dlgItem) );
-            });
-        }
-    },
 },
 
 created(){
@@ -187,17 +143,28 @@ created(){
         this.onDialogsListLoad(this.$root.$auth.dm.restoreEventName);
     });
 
-    this.$root.$on(this.$root.$auth.dm.updateEventName, ()=>{
-        this.onDialogsListLoad(this.$root.$auth.dm.updateEventName);
-    });
-
     this.$root.$on('RemoveChatDialog', this.onRemoveChatDialog);
     this.$root.$on('UpdateChatDialog', this.onUpdateChatDialog);
 },
 
+
+beforeDestroy() {
+    this.$root.$off(this.$root.$auth.dm.loadEventName, ()=>{
+        this.onDialogsListLoad(this.$root.$auth.dm.loadEventName);
+    });
+
+    this.$root.$off(this.$root.$auth.dm.restoreEventName, ()=>{
+        this.onDialogsListLoad(this.$root.$auth.dm.restoreEventName);
+    });
+
+    this.$root.$off('RemoveChatDialog', this.onRemoveChatDialog);
+    this.$root.$off('UpdateChatDialog', this.onUpdateChatDialog);
+},
+
+
 async mounted(){
     if (! this.listFilled) {
-        this.onDialogsListLoad(`mounted`);
+        await this.onDialogsListLoad(`mounted`);
     }
 }
 

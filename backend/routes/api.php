@@ -31,7 +31,9 @@ Route::group(['middleware' => ['auth.jwt', 'track.activity']], function () {
     });
 
     Route::get('posts', 'Api\PostController@index');
+    Route::get('posts/{post}/likes/users', 'Api\LikeController@getPostUsersLikes');
     Route::get('user/posts', 'Api\PostController@myPosts');
+    Route::get('user/news', 'Api\PostController@getNews');
     Route::get('user/{id}/posts', [
         'middleware' => ['privacy.role:view_wall_permissions'],
         'uses' => 'Api\PostController@userPosts'
@@ -42,7 +44,6 @@ Route::group(['middleware' => ['auth.jwt', 'track.activity']], function () {
     Route::post('posts', 'Api\PostController@storeByUser');
     Route::post('communities/{community_id}/posts', 'Api\PostController@storeByCommunity');
     Route::post('posts/attachments', 'Api\PostController@uploadAttachments');
-    Route::post('posts/rate', 'Api\PostController@rate');
 
     Route::get('user/friendship', 'Api\UserController@getMyFriendsList');
     Route::get('user/friendship/pending', 'Api\UserController@getMyPendingFriendsList');
@@ -62,8 +63,6 @@ Route::group(['middleware' => ['auth.jwt', 'track.activity']], function () {
      * User Resource
      */
     Route::get('user/notifications', 'Api\UserController@notifications');
-    Route::get('user/communities', 'Api\ProfileController@myCommunities');
-    Route::get('owner/communities', 'Api\ProfileController@ownerCommunities');
     Route::get('user/{id}/communities', 'Api\ProfileController@userCommunities');
     Route::patch('user', 'Api\ProfileController@patch');
     Route::get('user/videos', 'Api\VideoController@getUserVideo');
@@ -91,12 +90,26 @@ Route::group(['middleware' => ['auth.jwt', 'track.activity']], function () {
         Route::post('avatar', [CommunityController::class, 'uploadAvatar']);
         Route::post('header-image', [CommunityController::class, 'uploadHeaderImage']);
         Route::get('themes/list', 'Api\CommunityController@themeList');
+
+        Route::get('favorite/list', [CommunityController::class, 'listFavorite']);
+        Route::post('favorite/subscribe', [CommunityController::class, 'addFavorite']);
+        Route::delete('favorite/unsubscribe/{groupId}', [CommunityController::class, 'deleteFavorite']);
+
+        Route::middleware(['community.get'])->prefix('requests')->group(static function() {
+            Route::post('create/{groupId}', [CommunityController::class, 'requestCreate']);
+            Route::middleware(['community.isOwner'])->group(static function() {
+                Route::get('list/{groupId}', [CommunityController::class, 'requestList']);
+                Route::patch('accept/{groupId}/{id}', [CommunityController::class, 'requestAccept']);
+                Route::patch('reject/{groupId}/{id}', [CommunityController::class, 'requestReject']);
+            });
+        });
     });
     Route::get('communities/{community_id}/posts', 'Api\PostController@communityPosts');
 
     Route::prefix('posts')->group(function () {
         Route::delete('{post}', 'Api\PostController@delete');
         Route::get('{post}/restore', 'Api\PostController@restore');
+        Route::post('rate', 'Api\LikeController@likePost');
         Route::post('{post}/update', 'Api\PostController@update');
         Route::delete('{post}/attachment/{postAttachment}', 'Api\PostController@deleteImage');
     });

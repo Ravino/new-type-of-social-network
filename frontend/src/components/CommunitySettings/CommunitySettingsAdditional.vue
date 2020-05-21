@@ -16,7 +16,7 @@
                         Тип сообщества
                     </label>
                     <div class="plz-account-settings-body-field col-sm-6 col-md-6 col-lg-6 col-xl-6">
-                        <div class="d-flex align-items-center w-100 position-relative pl-4 ">
+                        <div class="d-flex align-items-center w-100 position-relative">
                             <i v-if="Number(model.privacy) !== 1" class="fas fa-lock mr-2"></i>
                             <i v-else class="fas fa-unlock mr-2"></i>
                             <div class="w-100 position-relative ml-n2">
@@ -41,7 +41,7 @@
                         Тематика сообщества
                     </label>
                     <div class="plz-account-settings-body-field col-sm-6 col-md-6 col-lg-6 col-xl-6">
-                        <div class="d-flex align-items-center w-100 position-relative pl-4 ">
+                        <div class="d-flex align-items-center w-100 position-relative">
                             <div class="w-100 position-relative ml-n2">
                                 <select v-model="model.themeId" id="themeId" ref="themeId"
                                         @change="accountStartSaveData(model.themeId, 'themeId')"
@@ -136,10 +136,10 @@
 </template>
 
 <script>
-    import {url} from 'vuelidate/lib/validators';
+    import {url, or} from 'vuelidate/lib/validators';
     import PliziCommunity from "../../classes/PliziCommunity";
-    import lodash from 'lodash';
     import communityUtils from "../../utils/CommunityUtils";
+    import {debounce} from "../../utils/Debonce";
 
     export default {
         name: 'CommunitySettingsAdditional',
@@ -202,7 +202,7 @@
             return {
                 model: {
                     website: {
-                        url,
+                        or: or(url, (value) => value === ''),
                     },
                 }
             };
@@ -215,7 +215,7 @@
                 }
                 return null;
             },
-            startFieldEdit: lodash.debounce(function (fieldName) {
+            startFieldEdit: debounce(function (fieldName) {
                 this.isEdit[fieldName] = true;
 
                 const inpRef = this.getRef(fieldName);
@@ -226,7 +226,7 @@
                     window.console.warn(`Ошибка редактирования поля`);
                 }
             }, 50),
-            finishFieldEdit: lodash.debounce(function (fieldName) {
+            finishFieldEdit: debounce(function (fieldName) {
                 this.$v.model[fieldName].$touch();
                 const inpRef = this.getRef(fieldName);
 
@@ -267,6 +267,15 @@
                     response = await this.$root.$api.$communities.update(this.community.id, formData);
                 } catch (e) {
                     console.warn(e.detailMessage);
+                    if (e.status === 422) {
+                        const inpRef = this.getRef(fieldName);
+
+                        if (inpRef) {
+                            inpRef.focus();
+                        }
+                        this.isEdit[fieldName] = true;
+                        this.serverRegMessages[fieldName] = e.data?.errors[fieldName][0];
+                    }
                 }
 
                 if (response !== null) {

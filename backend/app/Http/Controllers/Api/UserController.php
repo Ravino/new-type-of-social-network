@@ -9,7 +9,7 @@ use App\Http\Resources\Notification\NotificationCollection;
 use App\Http\Resources\User\UserCollection;
 use App\Http\Resources\User\UserSearchCollection;
 use App\Models\User;
-use DB;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
@@ -26,15 +26,21 @@ class UserController extends Controller
             return new UserSearchCollection([]);
         }
 
-        $users = User::where(static function($query) use ($search)  {
-            $query->whereHas('profile', static function($profile) use ($search) {
+        $users = User::where(static function (Builder $query) use ($search) {
+            $query->whereHas('profile', static function (Builder $profile) use ($search) {
                 $profile
                     ->where('first_name', 'LIKE', "%{$search}%")
                     ->orWhere('last_name', 'LIKE', "%{$search}%")
+                    ->orWhereHas('city', static function (Builder $city) use ($search) {
+                        $city
+                            ->where('title_ru', 'LIKE', "%{$search}%")
+                            ->orWhere('region_ru', 'LIKE', "%{$search}%");
+                    })
                     ->orderBy('last_name');
-            })
-                ->orWhere('email', 'LIKE', "%{$search}%");
-        })->where('id', '<>', Auth::user()->id)
+            });
+        })
+            ->where('id', '<>', Auth::user()->id)
+            ->with('profile', 'profile.city')
             ->limit(10)
             ->get();
         return new UserSearchCollection($users);
@@ -118,7 +124,7 @@ class UserController extends Controller
         $friends = User::with('profile', 'profile.avatar')
             ->whereIn('id', array_keys($friend_ids))
             ->get();
-        $total_count = $friend_ids[array_key_first($friend_ids)]['total_count'];
+        $total_count = array_key_first($friend_ids) ? $friend_ids[array_key_first($friend_ids)]['total_count'] : 0;
         foreach ($friends as $friend) {
             $friend->mutual_count = $friend_ids[$friend->id]['mutual_count'];
         }
@@ -143,7 +149,7 @@ class UserController extends Controller
         $user = User::find($id);
         $friend_ids = $user->getFriends($request->query('limit') ?? 50, $request->query('offset') ?? 0);
         $friends = User::with( 'profile', 'profile.avatar')->whereIn('id', array_keys($friend_ids))->get();
-        $total_count = $friend_ids[array_key_first($friend_ids)]['total_count'];
+        $total_count = array_key_first($friend_ids) ? $friend_ids[array_key_first($friend_ids)]['total_count'] : 0;
         foreach ($friends as $friend) {
             $friend->mutual_count = $friend_ids[$friend->id]['mutual_count'];
         }
@@ -157,7 +163,7 @@ class UserController extends Controller
     public function getPossibleFriends(Request $request) {
         $fof_ids = Auth::user()->getFriendsOfFriends($request->query('limit') ?? 50, $request->query('offset') ?? 0);
         $fofs = User::with( 'profile', 'profile.avatar')->whereIn('id', array_keys($fof_ids))->get();
-        $total_count = $fof_ids[array_key_first($fof_ids)]['total_count'];
+        $total_count = array_key_first($fof_ids) ? $fof_ids[array_key_first($fof_ids)]['total_count'] : 0;
         foreach ($fofs as $fof) {
             $fof->mutual_count = $fof_ids[$fof->id]['mutual_count'];
         }
@@ -171,7 +177,7 @@ class UserController extends Controller
     public function getRecommendedFriends(Request $request) {
         $recommended_ids = Auth::user()->getRecommendedFriends($request->query('limit') ?? 50, $request->query('offset') ?? 0);
         $recommended = User::with( 'profile', 'profile.avatar')->whereIn('id', array_keys($recommended_ids))->get();
-        $total_count = $recommended_ids[array_key_first($recommended_ids)]['total_count'];
+        $total_count = array_key_first($recommended_ids) ? $recommended_ids[array_key_first($recommended_ids)]['total_count'] : 0;
         foreach ($recommended as $user) {
             $user->mutual_count = $recommended_ids[$user->id]['mutual_count'];
         }

@@ -1,23 +1,32 @@
 <template>
     <div class="plz-top-watcher-item position-relative d-inline-block mr-0 mr-sm-2">
-
-        <div class="btn btn-link my-auto text-body btn-sm cursor-pointer" title="Уведомления">
+        <div class="btn btn-link my-auto text-body btn-sm cursor-pointer" title="Уведомления" ref="dropdown">
             <span data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" id="dropdownMenuLikes"
-                  @click="onShowNotifications">
+                  @click="onShowNotifications()">
                 <IconBell />
-                <span v-if="notificationsNumber > 0" class="counter-info">
-                    {{notificationsNumber}}
+                <span v-if="notificationsNumber() > 0" class="counter-info">
+                    {{notificationsNumber()}}
                 </span>
             </span>
 
-            <div v-if="notificationsNumber > 0" aria-labelledby="dropdownMenuLikes"
+            <div v-if="notificationsNumber() > 0" aria-labelledby="dropdownMenuLikes"
                 class="notifications-likes-dropdown dropdown-menu dropdown-menu-right pt-3 pb-0 dropdown-white w-auto">
                 <ul class="list-unstyled mb-0">
-                    <NotificationItem v-for="notifItem in notificationsList"
+                    <NotificationItem v-for="notifItem in notificationsList()"
                                       v-bind:notification="notifItem"
                                       v-bind:key="notifItem.id">
                     </NotificationItem>
                 </ul>
+
+                <vue-custom-scrollbar class="notifications-likes-scroll"
+                                          :settings="customScrollbarSettings">
+                    <ul class="list-unstyled mb-0">
+                        <NotificationItem v-for="notifItem in notificationsList()"
+                                          v-bind:notification="notifItem"
+                                          v-bind:key="notifItem.id">
+                        </NotificationItem>
+                    </ul>
+                </vue-custom-scrollbar>
                 <div class="notifications-likes-dropdown-footer border-top">
                     <router-link to="/notifications" tag="a"
                                  class="notifications-link d-block text-center pt-1 pb-3">
@@ -32,46 +41,67 @@
 <script>
 import IconBell from '../../icons/IconBell.vue';
 import NotificationItem from '../NotificationItem.vue';
+import vueCustomScrollbar from 'vue-custom-scrollbar';
 
 export default {
 name : 'NavBarNotifications',
-components : { IconBell, NotificationItem },
+components : {
+    IconBell,
+    NotificationItem,
+    vueCustomScrollbar,
+},
 
 data(){
     return {
-        //notificationsNumber : 0
+        //notificationsNumber : 0,
+        customScrollbarSettings: {
+            maxScrollbarLength: 60,
+            suppressScrollX: true, // rm scroll x
+        }
     }
 },
 
 methods : {
-    onShowNotifications(){
-        window.console.info(`onShowNotifications`);
+    async onShowNotifications(){
+      const idList = this.$root.$auth.nm.idsList;
 
-        if (this.notificationsNumber <= 0)
-            return;
+        if (idList.length === 0) {
+         return;
+        }
 
-        window.console.dir(this.$root.$auth.nm.idsList, 'getIdsList'); // эти ID-шники помечаем как прочитанные
+        await this.$root.$api.$notifications.markAsRead(idList);
     },
 
     updateNotifications(){
         this.$forceUpdate();
-    }
-},
-
-computed: {
-    notificationsNumber(){
-       return this.$root.$auth.nm.size;
     },
 
-    notificationsList(){
-        return this.$root.$auth.nm.asArray();
-    }
-},
+    eventOnHideDropdown() {
+     // TODO: Fix jquery
+     $(this.$refs.dropdown).off('hidden.bs.dropdown').on('hidden.bs.dropdown', () => {
+     this.$root.$auth.nm.clear();
+     this.$root.$auth.nm.storeData();
+     this.updateNotifications();
+     });
+    },
+     notificationsNumber(){
+        return this.$root.$auth.nm.size;
+     },
 
+     notificationsList(){
+         return this.$root.$auth.nm.asArray();
+     }
+},
 created(){
     this.$root.$on(this.$root.$auth.nm.restoreEventName,  this.updateNotifications);
     this.$root.$on(this.$root.$auth.nm.loadEventName,  this.updateNotifications);
     this.$root.$on(this.$root.$auth.nm.updateEventName,  this.updateNotifications);
+},
+mounted() {
+ this.eventOnHideDropdown();
+},
+updated() {
+ this.eventOnHideDropdown();
 }
 }
 </script>

@@ -55,16 +55,3 @@
     }
 </script>
 
-<style lang="scss">
-    .video-player {
-        .video-js {
-            width: 100%;
-            height: 500px;
-
-            .vjs-big-play-button {
-                left: 45%;
-                top: 50%;
-            }
-        }
-    }
-</style>

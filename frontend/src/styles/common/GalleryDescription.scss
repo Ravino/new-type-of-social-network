@@ -1,0 +1,89 @@
+
+$holderPicSize: 48px;
+$usersPicSize: 32px;
+
+.plz-gallery-description {
+    z-index: 2000;
+    position: fixed;
+    top: 0;
+    width: 30%;
+    right: 0;
+    height: 100vh;
+    background: #FFFFFF;
+
+    &--holder {
+        width: 100%;
+
+        &-surname {
+           // margin-left: 10px !important;
+        }
+        &-data {
+            text-align: left;
+
+            &-author {
+                display: flex;
+                font-size: 14px;
+                color: $postTextColor;
+            }
+            &-time {
+                color: $textGreyColor;
+                font-size: 13px;
+            }
+        }
+        &-avatar {
+            position: relative;
+            display: inline-block;
+            width: $holderPicSize;
+            min-width: $holderPicSize;
+            height: $holderPicSize;
+            border-radius: 50%;
+            overflow: hidden;
+
+            &-item {
+                position: absolute;
+                top: 50%;
+                left: 50%;
+                min-height: 100%;
+                transform: translate(-50%, -50%);
+            }
+        }
+
+    }
+    &--post {
+        &-data {
+            width: 100%;
+            height: 50px;
+            &-option {
+                display: flex;
+                align-items: center;
+                > svg {
+                    width: 30px;
+                    height: 20px;
+                }
+            }
+        }
+    }
+
+    &-body {
+
+    }
+    &--footer {
+        &-pic {
+            position: relative;
+            width: $usersPicSize;
+            min-width: $usersPicSize;
+            height: $usersPicSize;
+            border-radius: 50%;
+            overflow: hidden;
+
+        }
+        &-img {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            min-height: 100%;
+        }
+    }
+
+}

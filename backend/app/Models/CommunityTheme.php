@@ -2,11 +2,35 @@
 
 namespace App\Models;
 
+use Eloquent;
+use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Spiritix\LadaCache\Database\LadaCacheTrait;
 
+/**
+ * App\Models\CommunityTheme
+ *
+ * @property int $id
+ * @property int $parent_id
+ * @property string $name
+ * @property int $updated_at
+ * @property int $created_at
+ * @property-read Collection|CommunityTheme[] $children
+ * @property-read int|null $children_count
+ * @property-read CommunityTheme $parent
+ * @method static Builder|CommunityTheme newModelQuery()
+ * @method static Builder|CommunityTheme newQuery()
+ * @method static Builder|CommunityTheme query()
+ * @method static Builder|CommunityTheme whereCreatedAt($value)
+ * @method static Builder|CommunityTheme whereId($value)
+ * @method static Builder|CommunityTheme whereName($value)
+ * @method static Builder|CommunityTheme whereParentId($value)
+ * @method static Builder|CommunityTheme whereUpdatedAt($value)
+ * @mixin Eloquent
+ */
 class CommunityTheme extends Model
 {
     use LadaCacheTrait;

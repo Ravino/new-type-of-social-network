@@ -1,11 +1,14 @@
 <template>
     <div class="container-fluid pl-md-0">
         <div class="row">
-            <div class="col-12 col-md-1 ">
+            <div class="col-12 col-md-1  px-0 px-md-3">
                 <AccountToolbarLeft></AccountToolbarLeft>
             </div>
 
-            <div class="col-12 col-md-11 col-xl-8 pr-0 pr-xl-3">
+            <div class="col-12 col-md-11 pr-0 px-0 px-md-3"
+                 :class="calcCentralBlockClass()"
+                 v-bind:key="`CentralColumn-`+shortFriendsUpdater">
+
                 <div class="container">
                     <ProfileHeader v-bind:userData="userData" v-bind:isOwner="true"></ProfileHeader>
 
@@ -13,27 +16,28 @@
 
                     <WhatsNewBlock @addNewPost="addNewPost"></WhatsNewBlock>
 
-                    <ProfileFilter v-if="userPosts && userPosts.length > 1"
+                    <ProfileFilter v-if="posts && posts.length > 1"
                                    @wallPostsSelect="wallPostsSelectHandler"></ProfileFilter>
 
-                    <template v-if="userPosts && userPosts.length > 0">
+                    <template v-if="posts && posts.length > 0">
                         <Post v-for="postItem in filteredPosts"
                               :key="postItem.id"
                               :post="postItem"
                               @onDeletePost="onDeletePost"
                               @onRestorePost="onRestorePost"
                               @onEditPost="onEditPost"
-                              @openVideoModal="openVideoModal">
+                              @openVideoModal="openVideoModal"
+                              @onShowUsersLikes="openLikeModal">
                         </Post>
                     </template>
 
-                    <div v-else-if="!enabledPostLoader"  class="row plz-post-item mb-4 bg-white-br20 p-4">
+                    <div v-else-if="!isStarted"  class="row plz-post-item mb-4 bg-white-br20 p-4">
                         <div class="alert alert-info w-100 p-5 text-center mb-0">
                             Извините, но сейчас нечего показывать.
                         </div>
                     </div>
 
-                    <template v-if="enabledPostLoader">
+                    <template v-if="isStarted">
                         <div class="row plz-post-item mb-4 bg-white-br20 p-4">
                             <div class="w-100 p-5 text-center mb-0">
                                 <SmallSpinner/>
@@ -43,9 +47,14 @@
                 </div>
             </div>
 
-            <div class="col-sm-3 col-md-3 col-lg-3 col-xl-3 pr-0 d-none d-xl-block">
+            <div v-if="$root.$auth.frm.size > 0" class="col-sm-3 col-md-3 col-lg-3 col-xl-3 pr-0 d-none d-xl-block"
+                 v-bind:key="`RightColumn-`+shortFriendsUpdater">
+
                 <FavoriteFriends :isNarrow="false"></FavoriteFriends>
-                <ShortFriends v-bind:friends="allFriends"></ShortFriends>
+                <ShortFriends
+                    v-bind:key="`shortFriendsBlock-`+shortFriendsUpdater"
+                    v-bind:friends="getAllFriends()">
+                    </ShortFriends>
             </div>
 
             <PostEditModal v-if="postEditModal.isVisible"
@@ -55,6 +64,10 @@
             <PostVideoModal v-if="postVideoModal.isVisible"
                             :videoLink="postVideoModal.content.videoLink"
                             @hideVideoModal="hideVideoModal"/>
+
+            <PostLikeModal v-if="postLikeModal.isVisible"
+                           :users="postLikeModal.content.users"
+                           @hideLikeModal="hideLikeModal"/>
         </div>
     </div>
 </template>
@@ -62,8 +75,9 @@
 <script>
 import AccountToolbarLeft from '../common/AccountToolbarLeft.vue';
 import FavoriteFriends from '../common/FavoriteFriends.vue';
-import ShortFriends from '../common/ShortFriends.vue';
 
+import SmallSpinner from '../common/SmallSpinner.vue';
+import ShortFriends from '../common/ShortFriends.vue';
 import Post from '../common/Post/Post.vue';
 import WhatsNewBlock from '../common/WhatsNewBlock.vue';
 
@@ -72,10 +86,12 @@ import ProfilePhotos from '../components/ProfilePhotos.vue';
 import ProfileFilter from '../components/ProfileFilter.vue';
 import PostEditModal from '../common/Post/PostEditModal.vue';
 import PostVideoModal from '../common/Post/PostVideoModal.vue';
-import SmallSpinner from "../common/SmallSpinner.vue";
+
+import PostLikeModal from '../common/Post/PostLikeModal.vue';
+import LazyLoadPosts from '../mixins/LazyLoadPosts.js';
 
 import PliziPost from '../classes/PliziPost.js';
-import ShortFriendsMixin from '../mixins/ShortFriendsMixin.js';
+import PliziUser from '../classes/PliziUser.js';
 
 export default {
 name: 'ProfilePage',
@@ -84,14 +100,14 @@ components: {
     ProfileHeader, ProfilePhotos, WhatsNewBlock, ProfileFilter, Post,
     PostEditModal,
     PostVideoModal,
+    PostLikeModal,
     SmallSpinner,
 },
-mixins: [ShortFriendsMixin],
+mixins: [LazyLoadPosts],
 data() {
     return {
-        userPosts: [],
-        //allMyFriends: null,
-        filterMode: `all`,
+        posts: [],
+        filterMode: 'all',
 
         userPhotos: [
             {path: '/images/user-photos/user-photo-01.png',},
@@ -111,9 +127,12 @@ data() {
                 videoLink: null,
             },
         },
-        lazyLoadStarted: false,
-        noMorePost: false,
-        enabledPostLoader: true,
+        postLikeModal: {
+            isVisible: false,
+            content: {
+                users: [],
+            },
+        },
     }
 },
 
@@ -122,8 +141,8 @@ computed : {
         return this.$root.$auth.user;
     },
 
-    allFriends(){
-        return this.$root.$auth.frm.asArray();
+    shortFriendsUpdater(){
+        return this.$root.$friendsKeyUpdater+'-'+this.$root.$favoritesKeyUpdater;
     },
 
     /**
@@ -132,17 +151,28 @@ computed : {
     filteredPosts(){
         switch ( this.filterMode ){
             case 'my':
-                return this.userPosts.filter( post => post.checkIsMinePost( this.$root.$auth.user.id ) );
+                return this.posts.filter( post => post.checkIsMinePost( this.$root.$auth.user.id ) );
 
             case 'archive':
-                return this.userPosts.filter( post => post.isArchivePost );
+                return this.posts.filter( post => post.isArchivePost );
         }
 
-        return this.userPosts;
+        return this.posts;
     }
 },
 
 methods : {
+    calcCentralBlockClass(){
+        return {
+            'col-xl-8 pr-xl-3' : (this.$root.$auth.frm.size > 0),
+            'col-xl-11' : (this.$root.$auth.frm.size === 0),
+        };
+    },
+
+    getAllFriends(){
+        return this.$root.$auth.frm.asArray();
+    },
+
     wallPostsSelectHandler( evData ){
         this.filterMode = evData.wMode;
     },
@@ -154,17 +184,17 @@ methods : {
         }
     },
 
-    hideVideoModal(){
+    hideVideoModal() {
         this.postVideoModal.isVisible = false;
     },
 
-    addNewPost( post ){
-        this.userPosts.unshift( new PliziPost( post ) );
+    addNewPost(post) {
+        this.posts.unshift(new PliziPost(post));
     },
 
     startTimer( postIndex ){
         setTimeout( () => {
-            this.userPosts.splice( postIndex, 1 );
+            this.posts.splice( postIndex, 1 );
         }, 5000 );
     },
 
@@ -178,50 +208,56 @@ methods : {
         this.postForEdit = null;
     },
 
-    onScrollYPage(){
-        if (window.scrollY >= (document.body.scrollHeight - document.documentElement.clientHeight - (document.documentElement.clientHeight/2) )){
-            this.lazyLoadPost();
-        }
+    async openLikeModal(postId) {
+        this.postLikeModal.isVisible = true;
+        await this.getUsersLikes(postId);
     },
 
-    async getPosts(limit = 50, offset = 0){
+    hideLikeModal() {
+        this.postLikeModal.isVisible = false;
+        this.postLikeModal.content.users = null;
+    },
+
+    async getPosts(limit = 50, offset = 0) {
         let response = null;
+        this.isStarted = true;
 
         try{
             response = await this.$root.$api.$post.getPosts(limit, offset);
         } catch (e){
-            this.enabledPostLoader = false;
+            this.isStarted = false;
             console.warn( e.detailMessage );
         }
 
         if ( response !== null ){
-            this.enabledPostLoader = false;
-            response.map( ( post ) => {
-                this.userPosts.push( new PliziPost( post ) );
-            } );
+            this.isStarted = false;
+            response.map((post) => {
+                this.posts.push(new PliziPost(post));
+            });
 
             return response.length;
         }
     },
 
-    async lazyLoadPost() {
-        if (this.lazyLoadStarted) return;
-        if (this.noMorePost) return;
+    async getUsersLikes(postId, limit = 20, offset = 0) {
+        let response = null;
 
-        this.enabledPostLoader = true;
-        this.lazyLoadStarted = true;
-        let oldSize = this.userPosts.length;
-        let added = await this.getPosts(10, oldSize++);
-
-        if (added === 0) {
-            this.noMorePost = true;
+        try{
+            response = await this.$root.$api.$post.getUsersLikes(postId, limit, offset);
+        } catch (e){
+            console.warn( e.detailMessage );
         }
 
-        this.lazyLoadStarted = false;
-        this.onScrollYPage();
+        if ( response !== null ){
+            response.map((post) => {
+                this.postLikeModal.content.users.push(new PliziUser(post));
+            });
+
+            return response.length;
+        }
     },
 
-    async onDeletePost( id ){
+    async onDeletePost( id ) {
         let response;
 
         try{
@@ -231,17 +267,16 @@ methods : {
         }
 
         if ( response ){
-            const postIndex = this.userPosts.findIndex( ( post ) => {
+            const postIndex = this.posts.findIndex( ( post ) => {
                 return post.id === id;
             } );
-            let post = this.userPosts[postIndex].deleted = true;
-            console.log(post);
+            let post = this.posts[postIndex].deleted = true;
 
             this.startTimer( postIndex );
         }
     },
 
-    async onRestorePost( id ){
+    async onRestorePost( id ) {
         let response;
 
         try{
@@ -251,7 +286,7 @@ methods : {
         }
 
         if ( response ){
-            const post = this.userPosts.find( ( post ) => {
+            const post = this.posts.find( ( post ) => {
                 return post.id === id;
             } );
 
@@ -260,7 +295,6 @@ methods : {
     },
 },
 
-
 async mounted() {
     this.$root.$on('showProfileOptionsModal', ()=>{
         this.$alert(`Какие-то опции пользователя`, 'bg-info', 10);
@@ -268,10 +302,8 @@ async mounted() {
 
     this.$root.$on('wallPostsSelect', this.wallPostsSelectHandler);
     await this.getPosts();
-
-    window.addEventListener('scroll', this.onScrollYPage);
-    //await this.loadMyFriends();
 }
+
 }
 </script>
 

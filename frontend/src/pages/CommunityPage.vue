@@ -12,10 +12,10 @@
                         <div class="plz-community-header-pic position-relative overflow-hidden">
                             <img :src="headerImage" alt="image">
                         </div>
-                        <div class="plz-community-header-bottom d-flex align-items-start align-items-sm-center justify-content-between py-3 px-4">
-                            <div class="plz-community-header-details d-flex align-items-center">
+                        <div class="plz-community-header-bottom d-flex flex-wrap align-items-start justify-content-between py-3 px-4">
+                            <div class="plz-community-header-details d-flex align-items-start flex-wrap flex-sm-nowrap justify-content-center justify-content-sm-start">
                                 <template v-if="isAuthor">
-                                    <label for="communityPrimaryImage" class="community-primary-image mr-3 cursor-pointer">
+                                    <label for="communityPrimaryImage" class="community-primary-image cursor-pointer plz-community-header-logo position-relative mb-2 mb-sm-3 mx-0 mr-sm-3">
                                         <img ref="communityAvatar" :src="avatarMedium" :alt="communityData.name" />
                                     </label>
 
@@ -28,15 +28,35 @@
                                         <img ref="communityAvatar" :src="avatarThumb" :alt="communityData.name" />
                                     </div>
                                 </template>
-                                <div class="plz-community-header-details-text">
+                                <div class="plz-community-header-details-text pt-2">
                                     <h1 class="plz-community-header-title mb-1">{{communityData.name}}</h1>
                                     <p class="plz-community-header-desc mb-0">
-                                        {{communityData.description}}
+                                        {{communityData.notice}}
                                     </p>
                                 </div>
                             </div>
-                            <div class="plz-community-subscribe file-label d-flex align-items-center justify-content-between">
-                                <button class="btn align-items-center justify-content-center d-flex w-75 border-right m-0">подписаться</button>
+                            <div class="plz-community-subscribe file-label d-flex align-items-center mt-4 justify-content-between mx-auto mx-md-0">
+
+                                <button v-if="subscribeType === 'new'"
+                                        class="btn align-items-center justify-content-center d-flex w-75 border-right m-0"
+                                        @click="subscribeInvite(communityData)">
+                                    подписаться
+                                </button>
+                                <button v-else-if="subscribeType === 'request'" type="button"
+                                        class="btn plz-btn-outline  plizi-community-btn rounded-pill"
+                                        @click="sendRequest(community)">
+                                    запрос
+                                </button>
+                                <button v-else-if="subscribeType === 'exists'"
+                                        class="btn align-items-center justify-content-center d-flex w-75 border-right m-0"
+                                        @click="unsubscribeInvite(communityData)">
+                                    отписаться
+                                </button>
+                                <router-link :to="{name: 'CommunitySettingsPage', params: {id: communityData.id}}" v-else-if="subscribeType === 'author'"
+                                             class="btn align-items-center justify-content-center d-flex w-75 border-right m-0">
+                                    управление
+                                </router-link>
+
                                 <button title="подписаться" class="btn align-items-center justify-content-center d-flex w-25">
                                     <span class="ps-dot"></span>
                                     <span class="ps-dot"></span>
@@ -67,8 +87,8 @@
                                      :class="'mx-0 '"
                                      @addNewPost="addNewPost"/>
 
-                    <div v-if="isDataReady" id="communityPostsBlock" class="pb-5 mb-4 --text-center">
-                        <Post v-for="postItem in communityPosts"
+                    <div v-if="posts && posts.length > 0" id="communityPostsBlock" class="pb-5 mb-4 --text-center">
+                        <Post v-for="postItem in posts"
                               :key="postItem.id"
                               :post="postItem"
                               :isCommunity="true"
@@ -76,9 +96,23 @@
                               @onShare="onSharePost"
                               @onDeletePost="onDeletePost"
                               @onRestorePost="onRestorePost"
-                              @onEditPost="onEditPost"></Post>
+                              @onEditPost="onEditPost"
+                              @onShowUsersLikes="openLikeModal"/>
                     </div>
-                    <Spinner v-else></Spinner>
+
+                    <div v-else-if="!isStarted"  class="row plz-post-item mb-4 bg-white-br20 p-4">
+                        <div class="alert alert-info w-100 p-5 text-center mb-0">
+                            Извините, но сейчас нечего показывать.
+                        </div>
+                    </div>
+
+                    <template v-if="isStarted">
+                        <div class="row plz-post-item mb-4 bg-white-br20 p-4">
+                            <div class="w-100 p-5 text-center mb-0">
+                                <SmallSpinner/>
+                            </div>
+                        </div>
+                    </template>
                 </div>
 
                 <div class="col-12 col-sm-5 col-lg-4">
@@ -102,7 +136,7 @@
                                     <img :src="avatarMedium" alt="image">
                                 </div>
                                 <button class="video__button" type="button" aria-label="Запустить видео">
-                                    <svg width="68" height="48" viewBox="0 0 68 48"><path class="video__button-shape" d="M66.52,7.74c-0.78-2.93-2.49-5.41-5.42-6.19C55.79,.13,34,0,34,0S12.21,.13,6.9,1.55 C3.97,2.33,2.27,4.81,1.48,7.74C0.06,13.05,0,24,0,24s0.06,10.95,1.48,16.26c0.78,2.93,2.49,5.41,5.42,6.19 C12.21,47.87,34,48,34,48s21.79-0.13,27.1-1.55c2.93-0.78,4.64-3.26,5.42-6.19C67.94,34.95,68,24,68,24S67.94,13.05,66.52,7.74z"></path><path class="video__button-icon" d="M 45,24 27,14 27,34"></path></svg>
+                                    <IconYoutube/>
                                 </button>
                             </div>
                             <router-link tag="a"
@@ -116,7 +150,7 @@
                                     <img :src="avatarMedium" alt="image">
                                 </div>
                                 <button class="video__button" type="button" aria-label="Запустить видео">
-                                    <svg width="68" height="48" viewBox="0 0 68 48"><path class="video__button-shape" d="M66.52,7.74c-0.78-2.93-2.49-5.41-5.42-6.19C55.79,.13,34,0,34,0S12.21,.13,6.9,1.55 C3.97,2.33,2.27,4.81,1.48,7.74C0.06,13.05,0,24,0,24s0.06,10.95,1.48,16.26c0.78,2.93,2.49,5.41,5.42,6.19 C12.21,47.87,34,48,34,48s21.79-0.13,27.1-1.55c2.93-0.78,4.64-3.26,5.42-6.19C67.94,34.95,68,24,68,24S67.94,13.05,66.52,7.74z"></path><path class="video__button-icon" d="M 45,24 27,14 27,34"></path></svg>
+                                    <IconYoutube/>
                                 </button>
                             </div>
                             <router-link tag="a"
@@ -149,6 +183,10 @@
                          :community="communityData"
                          :post="postForRepost"
                          @hidePostRepostModal="hidePostRepostModal"/>
+
+        <PostLikeModal v-if="postLikeModal.isVisible"
+                       :users="postLikeModal.content.users"
+                       @hideLikeModal="hideLikeModal"/>
     </div>
 </template>
 
@@ -164,18 +202,25 @@ import CommunityFriendsInformer from '../common/Communities/CommunityFriendsInfo
 import CommunityShortMembers from '../common/Communities/CommunityShortMembers.vue';
 import CommunityEditor from '../common/Communities/CommunityEditor.vue';
 import PostRepostModal from '../common/Post/PostRepostModal.vue';
+import PostLikeModal from '../common/Post/PostLikeModal.vue';
+import SmallSpinner from "../common/SmallSpinner.vue";
 
 import PliziCommunity from '../classes/PliziCommunity.js';
 import PliziPost from '../classes/PliziPost.js';
 import PliziCommunityAvatar from '../classes/Community/PliziCommunityAvatar.js';
-import CommunityManagedActionBlock from "../common/Communities/CommunityManagedActionBlock";
+import CommunitiesSubscribeMixin from "../mixins/CommunitiesSubscribeMixin";
+import CommunityManagedActionBlock from "../common/Communities/CommunityManagedActionBlock.vue";
+
+import IconYoutube from "../icons/IconYoutube.vue";
+import LazyLoadPosts from '../mixins/LazyLoadPosts.js';
+import PliziUser from "../classes/PliziUser";
 
 export default {
 name: 'CommunityPage',
 props: {
     id : Number|String
 },
-
+mixins: [CommunitiesSubscribeMixin, LazyLoadPosts],
 components : {
     CommunityManagedActionBlock,
     CommunityShortMembers,
@@ -188,13 +233,16 @@ components : {
     PostEditModal,
     CommunityEditor,
     PostRepostModal,
+    PostLikeModal,
+    SmallSpinner,
+    IconYoutube,
 },
 
 data() {
     return {
         isDataReady: false,
         communityData: null,
-        communityPosts: null,
+        posts: [],
         postEditModal: {
             isVisible: false,
         },
@@ -203,6 +251,12 @@ data() {
             isVisible: false,
         },
         postForRepost: null,
+        postLikeModal: {
+            isVisible: false,
+            content: {
+                users: [],
+            },
+        },
     }
 },
 
@@ -210,7 +264,9 @@ computed: {
     isAuthor(){
         return this.communityData?.role === 'author';
     },
-
+    subscribeType() {
+        return this.getSubscribeType(this.communityData);
+    },
     filteredPosts(){
         return [];
     },
@@ -218,11 +274,10 @@ computed: {
         return this.$root.$auth.user;
     },
     canPost() {
-        if (this.communityData) {
-            return !!this.communityData.members.find((member) => {
-                return member.id === this.authUser.id && (member.role === 'user' || member.role === 'author');
-            });
-        }
+        /**
+         * @todo check privacy
+         */
+        return this.communityData && this.communityData.role !== null;
     },
     avatarMedium() {
         return this.communityData?.avatar?.image.medium.path || this.communityData?.primaryImage;
@@ -231,22 +286,22 @@ computed: {
         return this.communityData?.avatar?.image.thumb.path || this.communityData?.primaryImage;
     },
     headerImage() {
-        return this.communityData?.headerImage.image.normal.path || 'images/community-header-bg.jpg';
+        return this.communityData?.headerImage?.image.normal.path || 'images/community-header-bg.jpg';
     }
 },
 
 methods: {
     addNewPost(post) {
-        this.communityPosts.unshift( new PliziPost( post ) );
+        this.posts.unshift( new PliziPost( post ) );
     },
     startTimer( post ){
         setTimeout( () => {
-            const postIndex = this.communityPosts.find( ( userPost ) => {
+            const postIndex = this.posts.find( ( userPost ) => {
                 return userPost.id === post.id;
             } );
 
             if ( post.deleted ){
-                this.communityPosts.splice( postIndex, 1 );
+                this.posts.splice( postIndex, 1 );
             }
         }, 5000 );
     },
@@ -258,7 +313,6 @@ methods: {
         this.postEditModal.isVisible = false;
         this.postForEdit = null;
     },
-
     ytInit(){
         let video = document.getElementsByClassName('video');
 
@@ -271,7 +325,76 @@ methods: {
     ytShow() {
 
     },
+    /**
+     * @returns {boolean|FormData}
+     */
+    getFormData(){
+        const fName = this.$refs.communityPrimaryImage.value;
+        const fExt = fName.split('.').pop().toLowerCase();
+        const allowExts = ['png', 'jpg', 'jpeg', 'bmp', 'webp', 'gif'];
 
+        if ( ! allowExts.includes(fExt) ) {
+            this.$alert(`<h4 class="text-white">Ошибка</h4>
+<div class="alert alert-danger">
+Недопустимое расширение у файла <b>${fName}</b><br />
+Допустимы только: <b class="text-success">${allowExts.join( ', ' )}</b>
+</div>`, `bg-danger`, 30);
+            return false;
+        }
+
+        const formData = new FormData();
+        formData.append('file', this.$refs.communityPrimaryImage.files[0]);
+        formData.append('id', this.communityData.id);
+        this.$refs.communityPrimaryImage.value = '';
+
+        return formData;
+    },
+    showErrorOnLargeFile() {
+        this.$alert(`<h4 class="text-white">Ошибка</h4>
+                <div class="alert alert-danger">
+                    Превышен максимальный размер файла.
+                    <br />
+                    Максимальный размер файла:
+                    <b class="text-success">2 MB</b>
+                </div>`,
+          `bg-danger`,
+          30
+        );
+    },
+    onSharePost(post){
+        this.postRepostModal.isVisible = true;
+        this.postForRepost = post;
+    },
+    hidePostRepostModal() {
+        this.postRepostModal.isVisible = false;
+        this.postForRepost = null;
+    },
+    hideLikeModal() {
+        this.postLikeModal.isVisible = false;
+        this.postLikeModal.content.users = null;
+    },
+
+    async openLikeModal(postId) {
+        this.postLikeModal.isVisible = true;
+        await this.getUsersLikes(postId);
+    },
+    async getUsersLikes(postId, limit = 20, offset = 0) {
+        let response = null;
+
+        try{
+            response = await this.$root.$api.$post.getUsersLikes(postId, limit, offset);
+        } catch (e){
+            console.warn( e.detailMessage );
+        }
+
+        if ( response !== null ){
+            response.map((post) => {
+                this.postLikeModal.content.users.push(new PliziUser(post));
+            });
+
+            return response.length;
+        }
+    },
     async onDeletePost(id) {
         let response;
 
@@ -282,7 +405,7 @@ methods: {
         }
 
         if ( response ){
-            const post = this.communityPosts.find( ( post ) => {
+            const post = this.posts.find( ( post ) => {
                 return post.id === id;
             } );
 
@@ -301,14 +424,13 @@ methods: {
         }
 
         if ( response ){
-            const post = this.communityPosts.find( ( post ) => {
+            const post = this.posts.find( ( post ) => {
                 return post.id === id;
             } );
 
             post.deleted = false;
         }
     },
-
     async uploadPrimaryImage(){
         if (!this.isAuthor)
             return;
@@ -343,54 +465,6 @@ methods: {
             this.communityData.avatar = new PliziCommunityAvatar(apiResponse.data);
         }
     },
-
-    /**
-     * @returns {boolean|FormData}
-     */
-    getFormData(){
-        const fName = this.$refs.communityPrimaryImage.value;
-        const fExt = fName.split('.').pop().toLowerCase();
-        const allowExts = ['png', 'jpg', 'jpeg', 'bmp', 'webp', 'gif'];
-
-        if ( ! allowExts.includes(fExt) ) {
-            this.$alert(`<h4 class="text-white">Ошибка</h4>
-<div class="alert alert-danger">
-Недопустимое расширение у файла <b>${fName}</b><br />
-Допустимы только: <b class="text-success">${allowExts.join( ', ' )}</b>
-</div>`, `bg-danger`, 30);
-            return false;
-        }
-
-        const formData = new FormData();
-        formData.append('file', this.$refs.communityPrimaryImage.files[0]);
-        formData.append('id', this.communityData.id);
-        this.$refs.communityPrimaryImage.value = '';
-
-        return formData;
-    },
-
-    showErrorOnLargeFile() {
-        this.$alert(`<h4 class="text-white">Ошибка</h4>
-                <div class="alert alert-danger">
-                    Превышен максимальный размер файла.
-                    <br />
-                    Максимальный размер файла:
-                    <b class="text-success">2 MB</b>
-                </div>`,
-            `bg-danger`,
-            30
-        );
-    },
-
-    onSharePost(post){
-        this.postRepostModal.isVisible = true;
-        this.postForRepost = post;
-    },
-    hidePostRepostModal() {
-        this.postRepostModal.isVisible = false;
-        this.postForRepost = null;
-    },
-
     async getCommunityInfo() {
         let apiResponse = null;
 
@@ -405,41 +479,42 @@ methods: {
         if (apiResponse) {
             this.communityData = new PliziCommunity(apiResponse);
             this.isDataReady = true;
+            await this.getPosts();
         }
     },
-
-    async getCommunityPosts() {
+    async getPosts(limit = 50, offset = 0) {
         let response = null;
+        this.isStarted = true;
 
         try {
             // TODO: тут нужно получать посты сообщества
-            response = await this.$root.$api.$communities.posts(this.id);
+            response = await this.$root.$api.$communities.posts(this.id, limit, offset);
         } catch (e) {
+            this.isStarted = false;
             console.warn(e.detailMessage);
         }
 
         if (response !== null) {
-            this.communityPosts = [];
-
+            this.isStarted = false;
             response.map((post) => {
-                this.communityPosts.push(new PliziPost(post));
+                this.posts.push(new PliziPost(post));
             });
+
+            return response.length;
         }
     },
 },
 
 async mounted() {
     await this.getCommunityInfo();
-    await this.getCommunityPosts();
     window.scrollTo(0, 0);
 },
     beforeRouteUpdate (to, from, next) {
         this.communityData = null;
-        this.communityPosts = null;
+        this.posts = null;
+        next();
         this.id = to.params.id;
         this.getCommunityInfo();
-        this.getCommunityPosts();
-        next();
         window.scrollTo(0, 0);
     },
 }

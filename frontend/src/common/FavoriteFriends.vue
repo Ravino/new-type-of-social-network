@@ -3,7 +3,7 @@
          :class="{ 'bg-white-br20' : !isPickFavorite, 'is-pick-favorite':isPickFavorite } "
          :key="`favoriteFriends-`+favorUpdated">
 
-        <div v-if="isDataReady" class="--d-flex --flex-row --justify-content-start pb-3 --border-bottom pt-3">
+        <div v-if="isDataReady" class="--d-flex --flex-row --justify-content-start pb-3 --border-bottom pt-3" :key="`favoriteFriendsInner-`+favorUpdated">
             <router-link tag="h6" to="/friends#favorites" v-if="!isNarrow" class="plz-ff-title mt-2 ml-3 d-block cursor-pointer">Избранные</router-link>
 
 <!--            <a href="#" class="w-auto ml-auto &#45;&#45;align-self-end mr-3 mt-2 text-body" title="свернуть">-->
@@ -70,7 +70,6 @@ methods : {
         this.favorUpdated++;
         this.showFavoritesBlock = (((this.favorUpdated * 0) + this.$root.$auth.fm.size) > 0);
         this.isDataReady = true;
-        this.$forceUpdate();
     }
 },
 

@@ -1,5 +1,5 @@
 <template>
-    <div id="toolbarLeftGrey" class="pt-2 mb-5 d-none d-md-block">
+    <div id="toolbarLeftGrey" class="pt-0 pt-md-2 mb-1 mb-md-5 d-flex d-md-block">
 
         <router-link :to="{name: 'NewsPage'}"
                      :class="{ 'active': 'NewsPage'===this.$root.$router.currentRoute.name }"
@@ -63,23 +63,3 @@
         methods: {},
     }
 </script>
-
-<style>
-    #toolbarLeftGrey {
-        position: relative;
-    }
-
-    #toolbarLeftGrey::after {
-        content: '';
-        position: absolute;
-        bottom: -23px;
-        left: 50%;
-        width: 6px;
-        height: 6px;
-        margin-left: -3px;
-        background-color: #cbd0e2;
-        -webkit-border-radius: 100%;
-        -moz-border-radius: 100%;
-        border-radius: 100%;
-    }
-</style>

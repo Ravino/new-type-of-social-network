@@ -29,10 +29,22 @@ class PliziFriendsCollection extends PliziStoredCollection {
 
 
     onAddAcceptFriendsShip(evData){
-        window.console.warn(evData,`onAddAcceptFriendsShip`);
         this.add(evData);
         this.storeData();
-        this.emit(this.updateEventName);
+        this.restore();
+        this.emit(this.updateEventName, evData);
+    }
+
+    onAddAcceptOurInvitation(evData){
+        if (evData.data &&  evData.data.user) {
+            this.add(evData.data.user);
+            this.storeData();
+            this.restore();
+            this.emit(this.updateEventName, evData.data.user);
+        }
+        else {
+            window.console.warn('onAddAcceptOurInvitation: incorrect data structure');
+        }
     }
 
     stopFriendship(removedFriendId){

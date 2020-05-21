@@ -157,8 +157,8 @@ computed: {
     emojiTransform(){
         if (this.dropToDown)
             return 'transform: translate(-40%, 40px)';
-
-        return 'transform: translate(-54%, -100%)';
+            // Усли -84px не подходит, нужно прокинуть событие выше родителю, -84px для ChatFooter.vue
+        return 'transform: translate(-84%, -100%)';
     },
 
     userPic() {

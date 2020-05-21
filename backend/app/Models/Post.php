@@ -2,15 +2,18 @@
 
 namespace App\Models;
 
+use App\Traits\Likeable;
 use App\Traits\Commentable;
 use Domain\Pusher\Models\ChatMessage;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use Illuminate\Support\Carbon;
+use Illuminate\Support\Facades\DB;
 use Spiritix\LadaCache\Database\LadaCacheTrait;
 
 class Post extends Model
 {
-    use SoftDeletes, LadaCacheTrait, Commentable;
+    use SoftDeletes, LadaCacheTrait, Likeable, Commentable;
 
     protected $fillable = [
         'name', 'body', 'likes', 'views', 'author_id'
@@ -54,7 +57,20 @@ class Post extends Model
      * @return \Illuminate\Database\Eloquent\Relations\HasMany
      */
     public function like() {
-        return $this->hasMany(PostLike::class, 'post_id', 'id')->where('user_id', \Auth::user()->id);
+        return $this->hasMany(Like::class, 'likeable_id', 'id')
+            ->where('user_id', \Auth::user()->id);
+    }
+
+    public function usersLikes()
+    {
+        return $this->hasManyThrough(
+            User::class,
+            Like::class,
+            'likeable_id',
+            'id',
+            'id',
+            'user_id'
+        );
     }
 
     public function video()
@@ -68,5 +84,73 @@ class Post extends Model
     public function getDateFormat()
     {
         return 'U';
+    }
+
+    public static function getWithoutOldPosts($user, $limit, $offset, $isMyPosts = false)
+    {
+        if ($isMyPosts) {
+            $userPosts = $user->posts()->pluck('id');
+
+            return Post::whereIn('id', $userPosts)
+                ->with(['postable', 'author', 'usersLikes' => function ($query) {
+                    return $query->limit(8)->get();
+                }])
+                ->limit($limit ?? 50)
+                ->offset($offset ?? 0)
+                ->orderBy('id', 'desc')
+                ->get();
+        }
+
+        $communities = $user->communities()->select('id')->get();
+        $friends = DB::table('friendships')
+            ->where('sender_id', $user->id)
+            ->orWhere('recipient_id', $user->id)
+            ->select('id', 'sender_id', 'recipient_id', 'status', 'created_at')
+            ->get()
+            ->toArray();
+
+        $communitiesPosts = collect();
+
+        foreach($communities as $community) {
+            $communitiesPosts->push(Post::where('postable_type', Community::class)
+                ->where('postable_id', $community->id)
+                ->where('created_at', '>', Carbon::parse($community->pivot->created_at)->timestamp)
+                ->pluck('id'));
+        }
+
+        $friendsPosts = collect();
+
+        foreach($friends as $friend) {
+            if ($friend->status) {
+                if ($friend->sender_id !== $user->id) {
+                    $friendsPosts->push(Post::where('postable_type', User::class)
+                        ->where('postable_id', $friend->sender_id)
+                        ->where('created_at', '>', Carbon::parse($friend->created_at)->timestamp)
+                        ->pluck('id'));
+                }
+
+                if ($friend->recipient_id !== $user->id) {
+                    $friendsPosts->push(Post::where('postable_type', User::class)
+                        ->where('postable_id', $friend->recipient_id)
+                        ->where('created_at', '>', Carbon::parse($friend->created_at)->timestamp)
+                        ->pluck('id'));
+                }
+            }
+        }
+
+        $communitiesPosts = $communitiesPosts->collapse();
+        $friendsPosts = $friendsPosts->collapse();
+        $userPosts = $user->posts()->pluck('id');
+        $postsIds = $communitiesPosts->merge($friendsPosts);
+        $postsIds = $postsIds->merge($userPosts);
+
+        return Post::whereIn('id', $postsIds)
+            ->with(['postable', 'author', 'usersLikes' => function ($query) {
+                return $query->limit(8)->get();
+            }])
+            ->limit($limit ?? 50)
+            ->offset($offset ?? 0)
+            ->orderBy('id', 'desc')
+            ->get();
     }
 }

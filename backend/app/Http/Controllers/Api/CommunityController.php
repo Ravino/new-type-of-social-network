@@ -7,18 +7,22 @@ use App\Events\CommunityUnsubscribe;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Community\Community as CommunityRequest;
 use App\Http\Requests\Community\CreateCommunity;
+use App\Http\Requests\Community\CreateCommunityRequest;
 use App\Http\Requests\Community\UploadFileRequest;
 use App\Http\Resources\Community\CommunityCollection;
 use App\Http\Resources\Community\Community as CommunityResource;
+use App\Http\Resources\Community\CommunityRequests;
 use App\Http\Resources\Community\CommunityUserCollection;
 use App\Http\Resources\User\Image;
 use App\Models\Community;
 use App\Models\CommunityAttachment;
 use App\Models\CommunityHeader;
+use App\Models\CommunityRequest as CommunityRequestModel;
 use App\Models\CommunityTheme;
 use App\Services\CommunityService;
 use App\Services\S3UploadService;
 use Exception;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use App\Http\Resources\Post\AttachmentsCollection;
@@ -61,13 +65,40 @@ class CommunityController extends Controller
         /**
          * TODO: Нужно будет что-то придумать с оптимизацией (дернормализовать таблицы или.... пока не ясно)
          */
-        $communities = Community::with('role', 'members', 'avatar')
+        /** @var Community|Builder $query */
+        $query = Community::with('role', 'members', 'avatar', 'city');
+
+        $search = $request->search;
+        if (mb_strlen($search) >= 3) {
+            $query->search($search);
+        }
+
+        $list = $request->list;
+        $list = in_array($list, ['popular', 'my', 'owner'])
+            ? $list
+            : 'popular';
+
+        switch ($list) {
+            case 'my':
+                $query->onlyMy();
+                break;
+            case 'owner':
+                $query->owner();
+                break;
+            default:
+                $query->showedForAll();
+                break;
+        }
+
+        $communities = $query
             ->limit($request->query('limit', 10))
             ->offset($request->query('offset', 0))
             ->get();
-        $communities->each(function($community) {
+
+        $communities->each(static function($community) {
             $community->load('onlyFiveMembers');
         });
+
         return new CommunityCollection($communities);
     }
 
@@ -135,7 +166,7 @@ class CommunityController extends Controller
         $community = Community::find($id);
         if($community) {
             if(!$community->users->contains(auth()->user()->id)) {
-                $community->users()->attach(auth()->user()->id, ['role' => Community::ROLE_USER]);
+                $community->users()->attach(auth()->user()->id, ['role' => Community::ROLE_USER, 'created_at' => time(), 'updated_at' => time()]);
                 event(new CommunitySubscribe($community->id, auth()->user()->id));
                 return response()->json([
                     'data' => [
@@ -222,5 +253,123 @@ class CommunityController extends Controller
         return response()->json([
             'data' => CommunityTheme::getTree(),
         ]);
+    }
+
+    /**
+     * @param Request $request
+     * @return CommunityCollection
+     */
+    public function listFavorite(Request $request)
+    {
+        $community_ids = (new Community())->getFavariteIdList(null, $request->query('limit', 5), $request->query('offset', 0));
+        $communities = Community::whereIn('id', $community_ids)
+            ->get();
+        return new CommunityCollection($communities);
+    }
+
+    /**
+     * @param Request $request
+     * @return JsonResponse
+     */
+    public function addFavorite(Request $request)
+    {
+        /** @var Community $community */
+        $community = Community::find($request->id);
+        if ($community && $community->addToFavotite()) {
+            return response()->json(['message' => 'Вы добавили сообщество в избранные'], 200);
+        }
+
+        return response()->json(['message' => 'Вы не состоите в данном сообществе'], 422);
+    }
+
+    /**
+     * @param $groupId
+     * @return JsonResponse
+     */
+    public function deleteFavorite($groupId)
+    {
+        /** @var Community $community */
+        $community = Community::find($groupId);
+        if ($community && $community->deleteFromFavotite()) {
+            return response()->json(['message' => 'Вы удалили сообщество из избранных'], 200);
+        }
+
+        return response()->json(['message' => 'Вы не состоите в данном сообществе'], 422);
+    }
+
+    public function requestCreate(CreateCommunityRequest $request)
+    {
+        /** @var Community $community */
+        $community = $request->community;
+
+        /**
+         * @todo What about PRIVATE community
+         */
+        if ($community->privacy !== Community::PRIVACY_CLOSED) {
+            return response()->json([
+                'message' => 'Вы не можете создать запрос в это сообщество',
+            ], 422);
+        }
+
+        if ($community->users()->where([
+            'id' => auth()->user()->id
+        ])->exists()) {
+            return response()->json([
+                'message' => 'Вы уже состоите в этом сообществе',
+            ], 422);
+        }
+
+        if ($community->requests()->where([
+            'user_id' => auth()->user()->id,
+            'status' => CommunityRequestModel::STATUS_NEW,
+        ])->exists()) {
+            return response()->json([
+                'message' => 'Вы уже подали запрос в это сообщество',
+            ], 422);
+        }
+
+        if (CommunityRequestModel::create([
+            'community_id' => $community->id,
+            'description' => $request->description,
+        ])) {
+            return response()->json([
+                'message' => 'Запрос создан',
+            ]);
+        }
+
+        return response()->json([
+            'message' => 'Ошибка создания запроса',
+        ], 422);
+    }
+
+    public function requestList()
+    {
+        return new CommunityRequests($this->communityService->requestList());
+    }
+
+    public function requestAccept()
+    {
+        if ($this->communityService->requestAccept()) {
+            return response()->json([
+                'message' => 'Запрос принят',
+            ]);
+        }
+
+        return response()->json([
+            'message' => 'Ошибка принятия запроса',
+        ], 422);
+    }
+
+    public function requestReject()
+    {
+        if ($this->communityService->requestReject()) {
+            return response()->json([
+                'message' => 'Запрос отклонен',
+            ]);
+        }
+
+        return response()->json([
+            'message' => 'Ошибка отклонения запроса',
+        ], 422);
     }
 }
