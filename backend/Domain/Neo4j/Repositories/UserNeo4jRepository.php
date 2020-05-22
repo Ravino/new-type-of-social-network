@@ -176,7 +176,7 @@ class UserNeo4jRepository extends BaseRepository
     /**
      * @param $owner_oid
      * @param $user_oid
-     * @return bool
+     * @return bool|null
      */
     public function follow($owner_oid, $user_oid)
     {
@@ -186,6 +186,27 @@ class UserNeo4jRepository extends BaseRepository
         $query = "MATCH (owner:User {oid: '{$owner_oid}'})
                   MATCH (user:User {oid: '{$user_oid}'})
                   CREATE (owner)-[r:FOLLOWS]->(user)
+                  RETURN COUNT(r) AS count";
+        try {
+            $result = $this->client->run($query)->firstRecord();
+        } catch (Exception $e) {
+            return false;
+        }
+        return $result->get('count') > 0;
+    }
+
+    /**
+     * @param $owner_oid
+     * @param $user_oid
+     * @return bool|null
+     */
+    public function unfollow($owner_oid, $user_oid)
+    {
+        if (!$this->isFollowed($owner_oid, $user_oid)) {
+            return null;
+        }
+        $query = "MATCH (owner:User {oid: '{$owner_oid}'})-[r:FOLLOWS]-(user:User {oid: '{$user_oid}'})
+                  DELETE r
                   RETURN COUNT(r) AS count";
         try {
             $result = $this->client->run($query)->firstRecord();

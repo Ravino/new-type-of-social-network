@@ -81,6 +81,7 @@ Route::group(['middleware' => ['auth.jwt', 'track.activity']], function () {
     Route::middleware(['user.get'])->group(static function() {
         Route::get('user/{userId}/follow', [UserSubscribeController::class, 'exists']);
         Route::post('user/{userId}/follow', [UserSubscribeController::class, 'follow']);
+        Route::delete('user/{userId}/follow', [UserSubscribeController::class, 'unfollow']);
     });
 
     /**

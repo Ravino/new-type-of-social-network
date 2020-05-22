@@ -41,14 +41,14 @@ class UserSubscribeController extends Controller
      */
     public function follow(Request $request)
     {
-        $subscribe = $this->userService->follow(auth()->user()->id, $request->user->id);
-        if ($subscribe === null) {
+        $success = $this->userService->follow(auth()->user()->id, $request->user->id);
+        if ($success === null) {
             return response()->json([
                 'message' => 'Вы уже подписаны на этого пользователя',
             ], 422);
         }
 
-        if ($subscribe) {
+        if ($success) {
             return response()->json([
                 'message' => 'Вы подписались на этого пользователя',
             ]);
@@ -56,6 +56,30 @@ class UserSubscribeController extends Controller
 
         return response()->json([
             'message' => 'Ошибка подписки',
+        ], 422);
+    }
+
+    /**
+     * @param Request $request
+     * @return JsonResponse
+     */
+    public function unfollow(Request $request)
+    {
+        $success = $this->userService->unfollow(auth()->user()->id, $request->user->id);
+        if ($success === null) {
+            return response()->json([
+                'message' => 'Вы не подписаны на этого пользователя',
+            ], 422);
+        }
+
+        if ($success) {
+            return response()->json([
+                'message' => 'Вы отписались от этого пользователя',
+            ]);
+        }
+
+        return response()->json([
+            'message' => 'Ошибка отписки',
         ], 422);
     }
 }

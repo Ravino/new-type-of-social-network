@@ -2159,6 +2159,46 @@
                         "Authorization": []
                     }
                 ]
+            },
+            "delete": {
+                "tags": [
+                    "User"
+                ],
+                "description": "Отписаться от пользователя",
+                "operationId": "userUnFollow",
+                "parameters": [
+                    {
+                        "name": "userId",
+                        "in": "path",
+                        "description": "ID пользователя",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Успешно отписан",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "message": {
+                                            "type": "string"
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "Authorization": []
+                    }
+                ]
             }
         },
         "/communities": {
