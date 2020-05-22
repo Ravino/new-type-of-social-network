@@ -20,7 +20,7 @@
                 </nav>
             </div>
 
-            <div class="col-12 col-xl-4 d-flex align-items-center form-inline mb-3 mb-xl-0 pl-0 pl-xl-4 pr-0 position-relative overflow-hidden rounded-pill mt-4 mt-md-0 ">
+            <div class="col-12 col-xl-4 d-flex align-items-center form-inline mb-3 mb-xl-0 pl-0 pl-xl-4 pr-0 position-relative  rounded-pill mt-4 mt-md-0 ">
                 <div class="form-inline  position-relative w-100"
                      :class="{'isFocused' : isFocused}">
                     <!-- FIXME: @TGA - для таких вещей есть миксины, не нужно всё тащить в глобальный скоуп -->

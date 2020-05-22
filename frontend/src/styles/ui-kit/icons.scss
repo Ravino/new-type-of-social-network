@@ -110,3 +110,15 @@
 .icon-arrow-right {
     height: 40px;
 }
+.icon-user-x {
+    height: 20px;
+
+    &-del {
+        fill: red;
+    }
+}
+.icon-user-plus {
+    &-plus {
+        fill: green;
+    }
+}
