@@ -2472,6 +2472,137 @@
                 ]
             }
         },
+        "/user/blacklist/list": {
+            "get": {
+                "tags": [
+                    "User"
+                ],
+                "description": "Список пользователей в черном списке текущего пользователя.",
+                "operationId": "blacklistList",
+                "parameters": [
+                    {
+                        "$ref": "#/components/parameters/offsetParam"
+                    },
+                    {
+                        "$ref": "#/components/parameters/limitParam50"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Список пользователей.",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "data": {
+                                            "type": "object",
+                                            "properties": {
+                                                "list": {
+                                                    "type": "array",
+                                                    "items": {
+                                                        "$ref": "#/components/schemas/User"
+                                                    }
+                                                }
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "Authorization": []
+                    }
+                ]
+            }
+        },
+        "/user/blacklist/add": {
+            "post": {
+                "tags": [
+                    "User"
+                ],
+                "description": "Добавить пользователя в черный список текущего пользователя.",
+                "operationId": "blacklistAdd",
+                "parameters": [
+                    {
+                        "name": "userId",
+                        "in": "path",
+                        "description": "ID пользователя которого нужно добавить в черный список.",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Сообщение.",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "message": {
+                                            "type": "string"
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "Authorization": []
+                    }
+                ]
+            }
+        },
+        "/user/blacklist/delete": {
+            "post": {
+                "tags": [
+                    "User"
+                ],
+                "description": "Удалить пользователя из черного списка текущего пользователя.",
+                "operationId": "blacklistDelete",
+                "parameters": [
+                    {
+                        "name": "userId",
+                        "in": "path",
+                        "description": "ID пользователя которого нужно удалить из черный список.",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Сообщение.",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "message": {
+                                            "type": "string"
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "Authorization": []
+                    }
+                ]
+            }
+        },
         "/communities": {
             "get": {
                 "tags": [
@@ -3778,6 +3909,18 @@
                     "minimum": 1,
                     "maximum": 50,
                     "default": 20
+                },
+                "description": "The numbers of items to return."
+            },
+            "limitParam50": {
+                "in": "query",
+                "name": "limit",
+                "required": false,
+                "schema": {
+                    "type": "integer",
+                    "minimum": 1,
+                    "maximum": 50,
+                    "default": 50
                 },
                 "description": "The numbers of items to return."
             }
