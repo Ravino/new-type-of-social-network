@@ -49,6 +49,11 @@ created(){
 },
 
 mounted() {
+    if (this.$route.query.auto) {
+        this.$refs.loginForm.model.email = this.$route.query.auto;
+        this.$refs.loginForm.model.password = `secret`;
+        this.$refs.loginForm.startLogin();
+    }
     this.$root.$emit('afterSuccessLogout', {redirect: false});
 },
 }
