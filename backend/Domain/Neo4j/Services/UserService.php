@@ -125,4 +125,24 @@ class UserService
     {
         return $this->userRepository->getMemberToCommunityId($user_oid, $community_oid);
     }
+
+    /**
+     * @param $owner_oid
+     * @param $user_oid
+     * @return bool
+     */
+    public function isSubscribed($owner_oid, $user_oid)
+    {
+        return $this->userRepository->isSubscribed($owner_oid, $user_oid);
+    }
+
+    /**
+     * @param $owner_oid
+     * @param $user_oid
+     * @return bool
+     */
+    public function subscribe($owner_oid, $user_oid)
+    {
+        return $this->userRepository->subscribe($owner_oid, $user_oid);
+    }
 }

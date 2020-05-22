@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\Api\CommunityController;
+use App\Http\Controllers\Api\UserSubscribeController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -75,6 +76,11 @@ Route::group(['middleware' => ['auth.jwt', 'track.activity']], function () {
     Route::delete('user/blacklist', 'Api\UserBlacklistController@delete');
     Route::post('/user/password/change', 'Auth\ChangePasswordController@changePassword');
     Route::patch('user/notifications/mark/read', 'Api\UserController@markNotificationsAsRead');
+
+    Route::middleware(['user.get'])->group(static function() {
+        Route::get('user/{userId}/subscribe', [UserSubscribeController::class, 'exists']);
+        Route::post('user/{userId}/subscribe', [UserSubscribeController::class, 'subscribe']);
+    });
 
     /**
      * Communities Resource
