@@ -323,8 +323,8 @@ class PliziUser {
             isOnline: this.isOnline,
             lastActivity: (this.lastActivity) ? this.lastActivity.valueOf() / 1000 : this.lastActivity,
             profile: (this.profile) ? this.profile.toJSON() : null,
-            mutualFriendsCount: this.mutualFriendsCount,
-            stats: this.stats.toJSON(),
+            stats: (this.stats) ? this.stats.toJSON() : null,
+            mutualFriendsCount: this.mutualFriendsCount
         };
     }
 
