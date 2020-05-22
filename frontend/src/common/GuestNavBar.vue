@@ -10,7 +10,7 @@
                         </svg>
                     </router-link>
                 </div>
-                <div class="col-12 order-1 order-md-0 col-md-7 d-flex align-items-center  ml-auto px-0">
+                <div class="col-12 order-1 order-md-0 col-md-7 d-flex align-items-center  ml-auto px-0 pl-md-3">
                     <NavBarSearch></NavBarSearch>
                 </div>
                 <div class="col-5 col-md-3 px-md-0 mr-md-0 ml-auto"  style="display: none;">

@@ -25,7 +25,7 @@ methods: {
 
         let now = moment();
         let yesterday = moment().subtract(1, 'days');
-        let lmt = moment.unix(fItem.lastActivity);
+        let lmt = moment.unix(fItem.lastActivity / 1000); // @TGA деление на 1000 тут не ошибка
 
         // если был сегодня
         if (now.format('YYYY-MM-DD')===lmt.format('YYYY-MM-DD')) {

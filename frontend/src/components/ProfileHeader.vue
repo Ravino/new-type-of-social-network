@@ -60,7 +60,16 @@
                     </tr>
                     <tr v-if="!!userData.relationshipId">
                         <td class="">Семейное положение:</td>
-                        <td class="">{{userData.family}}</td>
+                        <td class="">
+                            {{userData.family}}
+                            <template v-if="!!userData.profile.relationshipUser">
+                                {{ userData.profile.relationshipUserText }}
+                                <router-link :to="{ name: 'PersonalPage', params: { id: userData.profile.relationshipUser.id } }">
+                                    {{ userData.profile.relationshipUser.profile.firstName }}
+                                    {{ userData.profile.relationshipUser.profile.lastName }}
+                                </router-link>
+                            </template>
+                        </td>
                     </tr>
                     </tbody>
                 </table>

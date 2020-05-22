@@ -13,19 +13,22 @@
             <IconAtom/>
         </router-link>
 
-        <router-link :to="{name: 'VideosPage'}"
+        <!--<router-link :to="{name: 'VideosPage'}"
                      tag="a"
                      class="w-100 d-block text-center mx-auto mb-4">
             <IconPlay/>
-        </router-link>
+        </router-link>-->
 
         <a class="w-100 d-block text-center mx-auto mb-4" href="#">
             <IconPaper/>
         </a>
 
-        <a class="w-100 d-block text-center mx-auto mb-4" href="#">
+        <router-link :to="{name: 'VideosPage'}"
+                     :class="{ 'active': 'VideosPage' === this.$root.$router.currentRoute.name }"
+                     tag="a"
+                     class="w-100 d-block text-center mx-auto mb-4">
             <IconVideo/>
-        </a>
+        </router-link>
 
         <a class="w-100 d-block text-center mx-auto mb-4" href="#">
             <IconStar/>

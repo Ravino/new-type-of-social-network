@@ -34,7 +34,7 @@ class Profile extends Request
             'sex' => Rule::in(array_keys(ProfileModel::SEX_VARIANTS)),
             'geoCityId' => 'exists:geo_cities,id',
             'relationshipId' => Rule::exists('profile_relationships', 'id') . '|nullable',
-            'relationshipUserId' => 'nullable',
+            'relationshipUserId' => 'sometimes|required|exists:users,id',
         ];
     }
 }

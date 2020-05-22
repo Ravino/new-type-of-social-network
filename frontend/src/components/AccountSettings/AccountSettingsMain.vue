@@ -106,7 +106,37 @@
                                 <option value="1">В браке</option>
                                 <option value="2">Не в браке</option>
                                 <option value="3">В активном поиске</option>
+                                <option value="4">Встречаюсь</option>
+                                <option value="5">В отношениях</option>
                             </select>
+                            <i class="fas fa-chevron-down px-2 d-flex align-items-center h-100 "></i>
+                        </div>
+                    </div>
+                    <div class="col-3 d-sm-none d-md-none"></div>
+                </div>
+
+                <div v-if="canEditRelationUser" class="form-group row border-bottom">
+                    <label for="relationshipUsers"
+                           class="plz-account-settings-body-label col-6 col-sm-4 col-lg-4">
+                        С кем
+                    </label>
+                    <div
+                        class="plz-account-settings-body-field order-1 order-sm-0 col-12 col-sm-5 col-md-6 col-lg-6 col-xl-6">
+                        <div class="w-100 w-sm-75 position-relative ml-n2">
+                            <multiselect id="relationshipUsers"
+                                         class="w-100 w-sm-75 border-0 form-control p-0 position-relative"
+                                         v-model="model.relationshipUser"
+                                         :options="friends"
+                                         :showLabels="false"
+                                         @select="accountStartSaveData"
+                                         track-by="id"
+                                         label="id"
+                                         placeholder="Выберите друга"
+                                         :custom-label="relationshipUserLabel"
+                                         @search-change="getFriends">
+                                <template slot="noOptions">Результатов нет.</template>
+                                <template slot="noResult">У Вас нет такого друга.</template>
+                            </multiselect>
                             <i class="fas fa-chevron-down px-2 d-flex align-items-center h-100 "></i>
                         </div>
                     </div>
@@ -213,7 +243,7 @@
     export default {
         name: 'AccountSettingsMain',
         computed: {
-            userData: function () {
+            userData() {
                 return this.$root.$auth.user;
             },
             geoLocations() {
@@ -236,7 +266,6 @@
 
                 return geolocation;
             },
-
             isSuccessFirstName() {
                 return (!this.$v.model.firstName.$invalid || !(!!this.serverRegMessages.firstName)) && !
                   !this.model.firstName;
@@ -298,6 +327,11 @@
 
                 return null;
             },
+            canEditRelationUser() {
+                let id = Number(this.model.relationshipId);
+
+                return !!(id === 1 || id === 4 || id === 5);
+            },
         },
         data() {
             return {
@@ -306,6 +340,7 @@
                     lastName: this.$root.$auth.user.profile.lastName,
                     sex: this.$root.$auth.user.profile.sex,
                     relationshipId: this.$root.$auth.user.profile.relationshipId,
+                    relationshipUser: this.$root.$auth.user.profile.relationshipUser,
                     birthday: this.$root.$auth.user.profile.birthday,
                     location: this.$root.$auth.user.profile.location,
                 },
@@ -324,6 +359,7 @@
                     location: false,
                 },
                 locations: [],
+                friends: [],
                 serverRegMessages: {
                     firstName: null,
                     lastName: null,
@@ -406,6 +442,8 @@
 
                 if (fieldName === 'location') {
                     formData = {geoCityId: newValue.id};
+                } else if (fieldName === 'relationshipUsers') {
+                    formData = {relationshipUserId: newValue.id};
                 } else {
                     for (let prop in formData) {
                         if (prop !== 'birthday') {
@@ -439,6 +477,9 @@
                     return `${country.title.ru}, ${title.ru}`;
                 }
             },
+            relationshipUserLabel({profile}) {
+                return `${profile.firstName} ${profile.lastName}`;
+            },
 
             async accountStartSaveData(newValue, fieldName) {
                 this.isSend[fieldName] = true;
@@ -470,6 +511,12 @@
                         });
                     }
 
+                    if (fieldName === 'relationshipId') {
+                        if (newValue == 2 || newValue == 3) {
+                            this.model.relationshipUser = response.relationshipUser;
+                        }
+                    }
+
                     setTimeout(() => {
                         this.isSend[fieldName] = false;
                     }, 2000);
@@ -488,6 +535,22 @@
                     this.locations = response;
                 }
             },
+            async getFriends(limit = 50, offset = 0) {
+                let response;
+
+                try {
+                    response = await this.$root.$api.$friend.friendsList(this.userData.id, limit, offset);
+                } catch (e) {
+                    console.warn(e.detailMessage);
+                }
+
+                if (response) {
+                    this.friends = response;
+                }
+            },
+        },
+        mounted() {
+            this.getFriends();
         },
     }
 </script>
