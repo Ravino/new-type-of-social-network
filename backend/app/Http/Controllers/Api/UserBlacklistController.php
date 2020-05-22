@@ -3,47 +3,53 @@
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
-use App\Models\Profile;
+use App\Http\Requests\Blacklist\BlacklistDelete;
+use App\Http\Requests\Blacklist\BlacklistStore;
+use App\Http\Resources\User\SimpleUsers;
 use App\Models\User\Blacklisted;
-use Domain\Pusher\WampServer;
-use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Auth;
-use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
-use App\Http\Resources\User as UserResource;
 
 class UserBlacklistController extends Controller
 {
+    public function index()
+    {
+        $blacklistUsers = \Auth::user()->blacklistUsers()->with('profile')->get();
+
+        return new SimpleUsers($blacklistUsers);
+    }
 
     /**
      * Add user to blacklist api method.
-     * @param Request $request
+     * @param BlacklistStore $request
      * @return \Illuminate\Http\JsonResponse
      */
-    public function post(Request $request)
+    public function store(BlacklistStore $request)
     {
-        $userId = $request->get('user_id');
-        if ((int) $userId > 0) {
-            \DB::table('users_blacklisted')->insertOrIgnore([
-                ['user_id' => Auth::user()->id, 'blacklisted_id' => $userId],
-            ]);
-        }
-        return response()->json(['message' => 'Added'], 200);
+        $userId = \Auth::user()->id;
+        $blacklisted_id = $request->userId;
+
+        Blacklisted::create([
+            'user_id' => $userId,
+            'blacklisted_id' => $blacklisted_id,
+        ]);
+
+        return response()->json([
+            'message' => 'Пользователь успешно добавлен в черный список.'
+        ]);
     }
 
     /**
      * Delete user from blacklist api method.
-     * @param Request $request
+     * @param BlacklistDelete $request
      * @return \Illuminate\Http\JsonResponse
      */
-    public function delete(Request $request)
+    public function delete(BlacklistDelete $request)
     {
-        $userId = $request->get('user_id');
-        if ((int) $userId > 0) {
-            \DB::table('users_blacklisted')
-                ->where('user_id', Auth::user()->id)
-                ->where('blacklisted_id', $userId)
-                ->delete();
-        }
-        return response()->json(['message' => 'Deleted'], 200);
+        $user = \Auth::user();
+        $blacklisted_id = $request->userId;
+        $user->blacklistUsers()->where('blacklisted_id', $blacklisted_id)->first()->delete();
+
+        return response()->json([
+            'message' => 'Пользователь успешно удален из черного списка.',
+        ]);
     }
 }
