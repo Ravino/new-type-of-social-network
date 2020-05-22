@@ -27,7 +27,7 @@
                         {{locationLabel}}</p>
 
                     <p class="plizi-community-item-members-number py-0 my-0 px-2">{{ community.totalMembers }}
-                        участников </p><!--TODO @Veremey check this?-->
+                        участников </p>
 
 
                     <div class="plizi-community-item-members-number py-0 my-0 px-2">
@@ -54,12 +54,12 @@
                 Подписаться
             </button>
             <button v-else-if="subscribeType === 'request'" type="button"
-                    class="btn plz-btn-outline  plizi-community-btn rounded-pill"
+                    class="btn plz-btn-outline  plizi-community-btn rounded-pill ml-auto "
                     @click="sendRequest(community)">
                 Запрос
             </button>
             <button v-else-if="subscribeType === 'exists'" type="button"
-                    class="btn btn-primary plz-btn-outline rounded-pill ml-auto"
+                    class="btn btn-primary plz-btn-outline rounded-pill ml-auto ml-auto"
                     @click="unsubscribeInvite(community)">
                 Отписаться
             </button>
