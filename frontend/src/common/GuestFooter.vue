@@ -4,7 +4,7 @@
             <footer class="navbar plz-footer col-12 w-100 container-fluid  m-0 px-0">
                 <div class="plz-bottom-links w-100 d-flex flex-wrap  align-items-center justify-content-between justify-content-md-start  ">
                     <div class="plz-bottom-link">
-                        <router-link to="/about" tag="div" class="nav-item text-center text-md-left pl-0"><a class="nav-link pl-0">О проекте</a></router-link>
+                        <router-link to="/about" tag="div" class="nav-item text-center text-md-left pl-md-0"><a class="nav-link pl-md-0">О проекте</a></router-link>
                     </div>
                     <div class="plz-bottom-link">
                         <router-link to="/rules" tag="div" class="nav-item text-center text-md-left"><a class="nav-link">Правила</a></router-link>
@@ -16,7 +16,7 @@
                         <router-link to="/for-developers" tag="div" class="nav-item text-center text-md-left"><a class="nav-link">Для разработчиков</a></router-link>
                     </div>
 
-                    <div class="plz-bottom-link text-center">
+                    <div class="plz-bottom-link text-center"  style="display: none;">
                         <span class="nav-link dropdown-menu-btn  text-center text-md-left dropup d-inline-block" id="dropdownMenuButton"
                            data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                             Русский
