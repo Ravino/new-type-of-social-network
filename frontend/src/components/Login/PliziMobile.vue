@@ -3,7 +3,7 @@
          class=" bg-white-br20 ">
         <div class="plizi-mobile d-flex justify-content-between px-4 pt-2 position-relative">
             <div class="plz-for-mobile col-4 d-flex justify-content-center my-auto flex-column">
-                <h5 class="mb-4">Plizi для мобильных устройств</h5>
+                <h5 class="mb-4">Скоро <br>Plizi для мобильных устройств</h5>
                 <div class="plz-social-apps d-flex justify-content-start">
                     <div class="mr-3">
                         <a href="#apple" title="Apple" class="btn-social-app">
