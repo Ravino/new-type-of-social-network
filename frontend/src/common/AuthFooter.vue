@@ -1,7 +1,7 @@
 <template>
     <div class="row">
-        <footer class=" plz-footer col-12 col-md-11 offset-0 offset-md-1 container-fluid pl-md-0 ">
-            <div class="plz-bottom-links w-100 d-flex flex-wrap align-items-center justify-content-between  justify-content-md-start  ">
+        <footer class=" plz-footer col-12 col-md-11 col-xl-8 offset-0 offset-md-1 container-fluid pl-md-0 ">
+            <div class="plz-bottom-links w-100 d-flex flex-wrap align-items-center justify-content-between  justify-content-md-start pr-md-3 pr-xl-0">
                 <div class="plz-bottom-link">
                     <router-link to="/about" tag="div" class="nav-item text-center text-md-left"><a class="nav-link">О проекте</a></router-link>
                 </div>

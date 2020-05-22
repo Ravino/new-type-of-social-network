@@ -8,13 +8,15 @@
         }
         .nav-link {
             color: #484849;
+            padding: 0;
+            cursor: pointer;
             &:hover{
                 color: $linkHoverColor;
             }
         }
         .plz-bottom-link {
-            height: 40px;
-            line-height: 40px;
+            height: auto;
+            line-height: 1.5;
         }
     }
 }
