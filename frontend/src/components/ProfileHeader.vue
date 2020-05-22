@@ -40,15 +40,10 @@
 
                 <table class="plz-user-profile-details table table-borderless mt-2">
                     <tbody>
-                    <tr>
+                    <tr v-if="!!userData.profile.birthday">
                         <td class="">Дата рождения:</td>
                         <td class="">
-                            <template v-if="userData.profile.birthday">
-                                {{ userData.profile.birthday | toLongDate }}
-                            </template>
-                            <template v-else>
-                                Не указано
-                            </template>
+                            {{ userData.profile.birthday | toLongDate }}
                         </td>
                     </tr>
                     <tr>
