@@ -1,9 +1,9 @@
 <template>
     <li class="plizi-community-item-wrp col-12 col-sm-6 media px-2 mb-3 align-items-stretch">
-        <div class="plizi-community-item d-flex flex-column flex-xl-row align-items-start justify-content-between bg-white-br20 w-100 px-4 py-4">
+        <div class="plizi-community-item d-flex flex-column flex-xl-row align-items-center justify-content-between bg-white-br20 w-100 px-4 py-4">
 
             <router-link :to="`/community-`+community.id" tag="a"
-                         class="plizi-community-item-pic mr-auto ml-auto mr-xl-3 ml-xl-3 mb-3 mb-xl-0 rounded-circle overflow-hidden">
+                         class="plizi-community-item-pic mr-auto ml-auto mr-xl-3 ml-xl-3 mb-3 mb-xl-0 rounded-circle overflow-hidden align-self-start">
                 <img class="plizi-community-item-img "
                      :src="avatar" :alt="community.name" :title="community.name"/>
             </router-link>
@@ -13,9 +13,10 @@
                          class="plizi-community-item-top d-flex align-items-end justify-content-between mb-2  " >
                     <h6 class="plizi-community-item-name my-0">
                         {{ community.name }}
-                        <PrivacyLabel :community="community"></PrivacyLabel>
                     </h6>
                 </router-link>
+
+                <PrivacyLabel :community="community"></PrivacyLabel>
 
                 <div class="plizi-community-item-body-middle mb-2">
                     <p v-if="community.description" class="plizi-community-item-desc p-0 mb-1">
@@ -28,22 +29,22 @@
                 </div>
 
                 <div class="plizi-community-item-body-bottom d-flex flex-column-reverse flex-xl-row align-items-center justify-content-between mt-3 mt-xl-0">
-                    <button v-if="subscribeType === 'new'" type="button"
+                    <button v-if="subscribeType === 'new'"
                             class="btn plz-btn-outline  plizi-community-btn rounded-pill"
                             @click="subscribeInvite(community)">
                         Подписаться
                     </button>
-                    <button v-else-if="subscribeType === 'request'" type="button"
+                    <button v-else-if="subscribeType === 'request'"
                             class="btn plz-btn-outline  plizi-community-btn rounded-pill"
                             @click="sendRequest(community)">
                         Запрос
                     </button>
-                    <button v-else-if="subscribeType === 'exists'" type="button"
+                    <button v-else-if="subscribeType === 'exists'"
                             class="btn btn-outline-danger plizi-community-btn  rounded-pill"
                             @click="unsubscribeInvite(community)">
                         Отписаться
                     </button>
-                    <router-link :to="{name: 'CommunitySettingsPage', params: {id: community.id}}" v-else-if="subscribeType === 'author'" type="button"
+                    <router-link :to="{name: 'CommunitySettingsPage', params: {id: community.id}}" v-else-if="subscribeType === 'author'"
                                  class="btn btn-outline-danger plizi-community-btn  rounded-pill">
                         Управление
                     </router-link>
