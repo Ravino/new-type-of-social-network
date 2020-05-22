@@ -163,7 +163,7 @@ class UserNeo4jRepository extends BaseRepository
      */
     public function isFollowed($owner_oid, $user_oid)
     {
-        $query = "MATCH (owner:User {oid: '{$owner_oid}'})-[r:FOLLOWS]-(user:User {oid: '{$user_oid}'})
+        $query = "MATCH (:User {oid: '{$owner_oid}'})-[r:FOLLOWS]-(:User {oid: '{$user_oid}'})
                   RETURN COUNT(r) AS count";
         try {
             $result = $this->client->run($query)->firstRecord();
@@ -205,7 +205,7 @@ class UserNeo4jRepository extends BaseRepository
         if (!$this->isFollowed($owner_oid, $user_oid)) {
             return null;
         }
-        $query = "MATCH (owner:User {oid: '{$owner_oid}'})-[r:FOLLOWS]-(user:User {oid: '{$user_oid}'})
+        $query = "MATCH (:User {oid: '{$owner_oid}'})-[r:FOLLOWS]-(:User {oid: '{$user_oid}'})
                   DELETE r
                   RETURN COUNT(r) AS count";
         try {
@@ -214,5 +214,59 @@ class UserNeo4jRepository extends BaseRepository
             return false;
         }
         return $result->get('count') > 0;
+    }
+
+    /**
+     * @param $owner_oid
+     * @param int $limit
+     * @param int $offset
+     * @return array|Record[]
+     */
+    public function followList($owner_oid, $limit = 20, $offset = 0)
+    {
+        $query = "MATCH (:User {oid: '{$owner_oid}'})-[r:FOLLOWS]-(user:User)
+                  WITH COUNT(user) AS total_count
+                  MATCH (:User {oid: '{$owner_oid}'})-[r:FOLLOWS]-(user:User)
+                  RETURN user.oid AS oid, total_count
+                  SKIP {$offset}
+                  LIMIT {$limit}";
+        try {
+            $result = $this->client->run($query)->records();
+        } catch (Exception $e) {
+            return [];
+        }
+        return $result;
+    }
+
+    /**
+     * @param $owner_oid
+     * @return array|Record[]
+     */
+    public function followIds($owner_oid)
+    {
+        $query = "MATCH (:User {oid: '{$owner_oid}'})-[r:FOLLOWS]-(user:User)
+                  RETURN user.oid AS oid";
+        try {
+            $result = $this->client->run($query)->records();
+        } catch (Exception $e) {
+            return [];
+        }
+        return $result;
+    }
+
+    /**
+     * @param $owner_oid
+     * @return int
+     */
+    public function followCount($owner_oid)
+    {
+        $query = "MATCH (:User {oid: '{$owner_oid}'})-[r:FOLLOWS]-(user:User)
+                  RETURN COUNT(user) AS total_count";
+        try {
+            $result = $this->client->run($query)->firstRecord();
+        } catch (Exception $e) {
+            return 0;
+        }
+        return $result->get('total_count');
     }
 }
