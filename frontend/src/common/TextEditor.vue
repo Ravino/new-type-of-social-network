@@ -89,6 +89,7 @@ import LinkMixin from '../mixins/LinkMixin.js';
 
 import PliziAttachment from '../classes/PliziAttachment.js';
 import PliziCollection from '../classes/PliziCollection.js';
+import { checkMimeType } from "../utils/FileUtils.js";
 
 /**  TODO: Вставка файлов **/
 /** @link https://www.npmjs.com/package/vue-filepond **/
@@ -280,11 +281,11 @@ methods: {
     },
 
     onSelectFile(ev) {
-        this.addUploadAttachment(this.$refs.editorFiler.files);
+        this.addUploadAttachment([...this.$refs.editorFiler.files]);
     },
 
     onSelectImage(ev) {
-        this.addUploadAttachment(this.$refs.editorImager.files);
+        this.addUploadAttachment([...this.$refs.editorImager.files]);
     },
 
     onAddEmoji(evData) {
@@ -369,7 +370,7 @@ methods: {
         const allowExtensions = [...imagesExtensions, ...docsExtensions];
 
         for (const file of picsArr) {
-            if (!checkExtension(file, allowExtensions)) {
+            if (!checkExtension(file, allowExtensions) || !checkMimeType(file)) {
                 this.$alert(`
                     <h4 class="text-white">Ошибка</h4>
                     <div class="alert alert-danger">
