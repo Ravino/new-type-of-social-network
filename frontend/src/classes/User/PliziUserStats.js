@@ -28,6 +28,13 @@ class PliziUserStats {
      */
     _friends = 0;
 
+    /**
+     * В подписчиках ли пользователь
+     * @type {boolean}
+     * @private
+     */
+    _isFollow = true;
+
     get notifications(){
         return this._notifications;
     }
@@ -64,6 +71,14 @@ class PliziUserStats {
         this._friends = value;
     }
 
+    get isFollow() {
+        return this._isFollow;
+    }
+
+    set isFollow(value) {
+        this._isFollow = value;
+    }
+
     constructor(inputData){
         if (inputData) {
             this.update(inputData);
@@ -75,6 +90,7 @@ class PliziUserStats {
         this.unreadMessages = inputData.unreadMessagesCount;
         this.invitations = inputData.pendingFriendshipRequestsCount;
         this.friends = inputData.totalFriendsCount;
+        this.isFollow = inputData.isFollow;
     }
 
     toJSON(){
@@ -82,7 +98,8 @@ class PliziUserStats {
             notificationsCount : this.notifications,
             unreadMessagesCount : this.unreadMessages,
             pendingFriendshipRequestsCount : this.invitations,
-            totalFriendsCount : this.friends
+            totalFriendsCount : this.friends,
+            isFollow: this.isFollow,
         };
     }
 }

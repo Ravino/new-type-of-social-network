@@ -29,6 +29,7 @@ class User extends JsonResource
             return [
                 'id' => $this->id,
                 'email' => $this->email,
+                'isOwner' => true,
                 'isOnline' => $this->isOnline,
                 'lastActivity' => $this->last_activity_dt,
                 'profile' => new Profile($this->profile),
@@ -38,26 +39,35 @@ class User extends JsonResource
                     'unreadMessagesCount' => $this->unreadMessagesCount,
                     'pendingFriendshipRequestsCount' => $this->pendingFriendshipRequestsCount,
                     'totalFriendsCount' => $this->totalFriendsCount,
-                ]
+                    'isFollow' => $this->isFollow,
+                ],
             ];
-        } else {
-            if($this->appendMutual) {
-                return [
-                    'id' => $this->id,
-                    'isOnline' => $this->isOnline,
-                    'lastActivity' => $this->last_activity_dt,
-                    'profile' => new Profile($this->profile),
-                    'mutualFriendsCount' => (int)$this->profile->mutual
-                ];
-            } else {
-                return [
-                    'id' => $this->id,
-                    'isOnline' => $this->isOnline,
-                    'lastActivity' => $this->last_activity_dt,
-                    'profile' => new Profile($this->profile),
-                ];
-            }
         }
+
+        if($this->appendMutual) {
+            return [
+                'id' => $this->id,
+                'isOwner' => false,
+                'isOnline' => $this->isOnline,
+                'lastActivity' => $this->last_activity_dt,
+                'profile' => new Profile($this->profile),
+                'mutualFriendsCount' => (int)$this->profile->mutual,
+                'stats' => [
+                    'isFollow' => $this->isFollow,
+                ],
+            ];
+        }
+
+        return [
+            'id' => $this->id,
+            'isOwner' => false,
+            'isOnline' => $this->isOnline,
+            'lastActivity' => $this->last_activity_dt,
+            'profile' => new Profile($this->profile),
+            'stats' => [
+                'isFollow' => $this->isFollow,
+            ],
+        ];
     }
 }
 
