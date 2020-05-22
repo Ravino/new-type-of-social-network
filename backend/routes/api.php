@@ -122,6 +122,7 @@ Route::group(['middleware' => ['auth.jwt', 'track.activity']], function () {
     Route::prefix('comment')->group(function () {
         Route::post('post', 'Api\CommentController@commentPost');
         Route::get('post/{id}', 'Api\CommentController@getPostComments');
+        Route::delete('{id}', 'Api\CommentController@destroyComment');
     });
 
     /**
