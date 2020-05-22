@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers\Api;
 
+use App\Events\Followers\AddFollower;
+use App\Events\Followers\SubFollower;
 use App\Http\Controllers\Controller;
 use App\Http\Resources\User\UserCollection;
 use App\Models\User;
@@ -74,6 +76,7 @@ class UserSubscribeController extends Controller
         }
 
         if ($success) {
+            event(new AddFollower($request->user));
             return response()->json([
                 'message' => 'Вы подписались на этого пользователя',
             ]);
@@ -98,6 +101,7 @@ class UserSubscribeController extends Controller
         }
 
         if ($success) {
+            event(new SubFollower($request->user));
             return response()->json([
                 'message' => 'Вы отписались от этого пользователя',
             ]);
