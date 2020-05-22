@@ -7,12 +7,18 @@ use App\Http\Requests\Blacklist\BlacklistDelete;
 use App\Http\Requests\Blacklist\BlacklistStore;
 use App\Http\Resources\User\SimpleUsers;
 use App\Models\User\Blacklisted;
+use Illuminate\Http\Request;
 
 class UserBlacklistController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
-        $blacklistUsers = \Auth::user()->blacklistUsers()->with('profile')->get();
+        $blacklistUsers = \Auth::user()
+            ->blacklistUsers()
+            ->with('profile')
+            ->limit($request->query('limit') ?? 50)
+            ->offset($request->query('offset') ?? 0)
+            ->get();
 
         return new SimpleUsers($blacklistUsers);
     }
