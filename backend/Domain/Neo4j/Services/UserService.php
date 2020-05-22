@@ -139,10 +139,20 @@ class UserService
     /**
      * @param $owner_oid
      * @param $user_oid
-     * @return bool
+     * @return bool|null
      */
     public function follow($owner_oid, $user_oid)
     {
         return $this->userRepository->follow($owner_oid, $user_oid);
+    }
+
+    /**
+     * @param $owner_oid
+     * @param $user_oid
+     * @return bool|null
+     */
+    public function unfollow($owner_oid, $user_oid)
+    {
+        return $this->userRepository->unfollow($owner_oid, $user_oid);
     }
 }
