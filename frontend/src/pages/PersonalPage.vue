@@ -175,23 +175,13 @@ methods: {
 
 
     async sendPrivateMessageToUser( chatData, msgData ){
-        let apiResponse = null;
-
-        try {
-            apiResponse = await this.$root.$api.$chat.messageSend( chatData.id, msgData.postText, msgData.attachments );
-        }
-        catch (e){
-            this.errors = e.data.errors;
-            window.console.warn( e.detailMessage );
-            throw e;
-        }
-
-        if ( apiResponse ){
-            window.console.info(`сообщение отправлено`);
-        }
-        else {
-            window.console.warn( apiResponse );
-        }
+        const sendData = {
+            chatId: chatData.id,
+            body: msgData.postText,
+            attachments: msgData.attachments,
+            event: 'new.message'
+        };
+        this.$root.$api.sendToChannel(sendData);
     },
 
 
@@ -219,28 +209,7 @@ methods: {
      * @returns {Promise<void>}
      */
     async sendMessageToUserOld(msg){
-        let apiResponse = null;
-
-        try {
-            apiResponse = await this.$root.$api.$chat.privateMessageSend(msg.receiverId, msg.message.postText, msg.message.attachments);
-        }
-        catch (e){
-            window.console.warn(e.detailMessage);
-            throw e;
-        }
-
-        if (apiResponse != null &&  apiResponse.data) {
-            window.console.log(apiResponse, `apiResponse`);
-
-            let newMsg = apiResponse.data;
-
-            const eventData = {
-                chatId : newMsg.chatId,
-                message : newMsg
-            }
-
-            this.$root.$emit('newMessageInDialog', eventData);
-        }
+        await this.$root.$api.$chat.privateMessageSend(msg.receiverId, msg.message.postText, msg.message.attachments);
     },
 
     async getPosts(limit = 50, offset = 0) {

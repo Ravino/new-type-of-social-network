@@ -72,9 +72,17 @@ class WampServer implements WampServerInterface
 
     public function onCall(ConnectionInterface $conn, $id, $topic, array $params)
     {
-        $params = json_decode(json_encode($params), true);
-        if($params['event'] === 'user.typing') {
-            event(new UserTypingEvent($params['userId'], $params['chatId']));
+        Log::debug($params);
+        try {
+            $params = json_decode(json_encode($params), true);
+            $user_id = $this->getUserIdFronToken($params['token']);
+            if($params['event'] === 'user.typing') {
+                event(new UserTypingEvent($params['userId'], $params['chatId']));
+            } else if($params['event'] === 'new.message') {
+                event(new NewMessageEvent($params['body'], $user_id, $params['chatId'], $params['attachments'], $params['parentId'] ?? null, $params['parentChatId'] ?? null));
+            }
+        } catch (Exception $ex) {
+            Log::error($ex);
         }
     }
 
@@ -89,4 +97,12 @@ class WampServer implements WampServerInterface
     public function onClose(ConnectionInterface $conn) {}
     public function onError(ConnectionInterface $conn, \Exception $e) {}
     public function onMessage() {}
+
+    private function getUserIdFronToken($token) {
+        JWTAuth::setToken($token);
+        $token = JWTAuth::getToken();
+        $decode = JWTAuth::decode($token);
+        $decode = json_decode(json_encode($decode), true);
+        return $decode['sub'];
+    }
 }
