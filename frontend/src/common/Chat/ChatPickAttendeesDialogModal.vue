@@ -13,7 +13,7 @@
 
                         <div class="form-group"
                              :class="{ 'has-error': $v.model.chatName.$error, 'has-success': !$v.model.chatName.$invalid }">
-                            <label for="chatName" class="d-none">Название чата</label>
+                            <label for="chatName" class="">Название чата</label>
                             <input v-model="model.chatName" ref="chatName"
                                    :class="{ 'is-invalid': $v.model.chatName.$error, 'is-valid': !$v.model.chatName.$invalid }"
                                    @blur="$v.model.chatName.$touch()"
@@ -30,6 +30,7 @@
                         </div>
 
                         <div class="form-group">
+                            <label class="">Учатники чата</label>
                             <multiselect v-model="model.selectedRecipients"
                                          :options="getFriendsCombo"
                                          label="fullName"
