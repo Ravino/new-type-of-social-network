@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\Api\CommunityController;
+use App\Http\Controllers\Api\UserSubscribeController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -76,6 +77,11 @@ Route::group(['middleware' => ['auth.jwt', 'track.activity']], function () {
     Route::post('/user/password/change', 'Auth\ChangePasswordController@changePassword');
     Route::post('/user/email/change', 'Auth\ChangeEmailController@changeEmail');
     Route::patch('user/notifications/mark/read', 'Api\UserController@markNotificationsAsRead');
+
+    Route::middleware(['user.get'])->group(static function() {
+        Route::get('user/{userId}/follow', [UserSubscribeController::class, 'exists']);
+        Route::post('user/{userId}/follow', [UserSubscribeController::class, 'follow']);
+    });
 
     /**
      * Communities Resource
