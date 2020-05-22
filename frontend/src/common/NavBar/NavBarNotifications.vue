@@ -8,16 +8,8 @@
                     {{notificationsNumber()}}
                 </span>
             </span>
-
             <div v-if="notificationsNumber() > 0" aria-labelledby="dropdownMenuLikes"
                 class="notifications-likes-dropdown dropdown-menu dropdown-menu-right pt-3 pb-0 dropdown-white w-auto">
-                <ul class="list-unstyled mb-0">
-                    <NotificationItem v-for="notifItem in notificationsList()"
-                                      v-bind:notification="notifItem"
-                                      v-bind:key="notifItem.id">
-                    </NotificationItem>
-                </ul>
-
                 <vue-custom-scrollbar class="notifications-likes-scroll"
                                           :settings="customScrollbarSettings">
                     <ul class="list-unstyled mb-0">
