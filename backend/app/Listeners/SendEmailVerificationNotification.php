@@ -35,7 +35,7 @@ class SendEmailVerificationNotification
 
         Mail::send('emails.register', $data, function ($message) use ($user) {
             $message->from(config('mail.from.address', 'info@example.com'), config('mail.from.name', 'PLIZI'));
-            $message->subject('PLIZI: Социальная сеть');
+            $message->subject('PLIZI: Регистрация');
             $message->to($user->email);
         });
 
