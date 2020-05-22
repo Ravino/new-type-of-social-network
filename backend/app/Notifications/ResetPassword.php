@@ -59,7 +59,7 @@ class ResetPassword extends Notification
                     'url' => $url,
                     'minutes' => config('auth.passwords.'.config('auth.defaults.passwords').'.expire')
                 ]
-            );
+            )->subject('PLIZI: Восстановление пароля');
     }
 
     /**
