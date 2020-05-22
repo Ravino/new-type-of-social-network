@@ -235,6 +235,11 @@ class User extends Authenticatable implements JWTSubject
         return Role::where('name', self::PERMISSION_ROLE_GUEST)->get()->first();
     }
 
+    public function sessions()
+    {
+        return $this->hasMany(Session::class);
+    }
+
     public static function boot()
     {
         parent::boot();

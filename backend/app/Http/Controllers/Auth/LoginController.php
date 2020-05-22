@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
+use App\Models\Session;
 use App\Models\User;
 use App\Providers\RouteServiceProvider;
 use App\Services\SocialAccountsService;
@@ -79,6 +80,13 @@ class LoginController extends Controller
         }
         $this->guard->user()->update([
             'last_activity_dt' => time()
+        ]);
+
+        Session::create([
+            'user_id' => $this->guard->user()->id,
+            'token' => $token,
+            'user_agent' => $request->userAgent(),
+            'ip' => $request->ip(),
         ]);
         $channel = WampServer::channelForUser($this->guard->user()->id);
         return response()->json(compact('token', 'channel'));

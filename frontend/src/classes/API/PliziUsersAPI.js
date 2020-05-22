@@ -87,6 +87,25 @@ class PliziUsersAPI extends PliziBaseAPI{
 
         return null;
     }
+
+    /**
+     * Получение списка активных сессий.
+     *
+     * @returns {object[]|null}
+     */
+    async getActiveSessions() {
+        let response = await this.axios.get('/api/user/sessions/active', this.authHeaders)
+            .catch((error) => {
+                this.checkIsTokenExpires(error, `$users.getActiveSessions`);
+                throw new PliziAPIError(`$users.getActiveSessions`, error.response);
+            });
+
+        if (response.status === 200) {
+            return response.data.data.list;
+        }
+
+        return null;
+    }
 }
 
 export { PliziUsersAPI as default}
