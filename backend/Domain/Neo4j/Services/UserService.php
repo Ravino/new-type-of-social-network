@@ -125,4 +125,24 @@ class UserService
     {
         return $this->userRepository->getMemberToCommunityId($user_oid, $community_oid);
     }
+
+    /**
+     * @param $owner_oid
+     * @param $user_oid
+     * @return bool
+     */
+    public function isFollowed($owner_oid, $user_oid)
+    {
+        return $this->userRepository->isFollowed($owner_oid, $user_oid);
+    }
+
+    /**
+     * @param $owner_oid
+     * @param $user_oid
+     * @return bool
+     */
+    public function follow($owner_oid, $user_oid)
+    {
+        return $this->userRepository->follow($owner_oid, $user_oid);
+    }
 }
