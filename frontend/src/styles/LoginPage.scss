@@ -30,6 +30,11 @@ $bgImage: "/images/plizi-bg-exp.svg";
 
 #guestPageWrapper {
     min-height: 100%;
+
+    .navbar-brand {
+        padding-top: 0;
+        padding-bottom: 0;
+    }
 }
 
 .update-password-title {

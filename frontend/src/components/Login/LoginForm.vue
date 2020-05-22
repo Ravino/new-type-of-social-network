@@ -38,7 +38,7 @@
                 </div>
 
                 <div v-if="isServerError" class="form-group has-error">
-                    <p class="text-danger text-center">Неверный пароль или имя пользоваля</p>
+                    <p class="text-danger text-center">Неверный пароль или имя пользователя</p>
                 </div>
 
                 <div class="form-group">

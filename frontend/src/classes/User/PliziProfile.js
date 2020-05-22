@@ -131,7 +131,7 @@ class PliziUser {
      * @returns {Date}
      */
     get birthday(){
-        return new Date(this._birthday);
+        return !!this._birthday ? new Date(this._birthday) : null;
     }
 
     /**

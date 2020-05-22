@@ -29,7 +29,13 @@ AdminSection::registerModel(User::class, static function (ModelConfiguration $mo
                 AdminColumn::text('email')->setLabel('Email'),
                 AdminColumn::custom('is_admin', static function (Model $model) {
                     return (int)$model->is_admin === 1 ? 'Да' : 'Нет';
-                })->setLabel('Admin')
+                })->setLabel('Admin'),
+                AdminColumn::url('email', 'Local')
+                    ->setIcon('fas fa-reply')
+                    ->setView('column.urlint'),
+                AdminColumn::url('email', 'Test')
+                    ->setIcon('fas fa-reply-all')
+                    ->setView('column.urlext')
             ]);
         $display->getColumnFilters()
             ->setPlacement('table.header')

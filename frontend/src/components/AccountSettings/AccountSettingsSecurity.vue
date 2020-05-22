@@ -57,6 +57,25 @@
                 </div>
 
                 <div class="form-group row border-bottom">
+                    <label for="email"
+                           class="plz-account-settings-body-label col-sm-6 col-md-6 col-lg-4 col-xl-4">Email</label>
+                    <div
+                        class="plz-account-settings-body-field  col-sm-6 col-md-6 col-lg-6 col-xl-6">
+                        <div class="d-flex align-items-center w-100 position-relative ">
+                            <div class="plz-account-settings-body-action pl-1 ">
+                                <button type="button"
+                                        id="email"
+                                        class="btn btn-link"
+                                        @click="openChangeEmailModal">
+                                    Изменить
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-3"></div>
+                </div>
+
+                <div class="form-group row border-bottom">
                     <label for="password"
                            class="plz-account-settings-body-label col-sm-6 col-md-6 col-lg-4 col-xl-4">Пароль</label>
                     <div
@@ -76,18 +95,24 @@
                 </div>
             </div>
         </form>
+
         <ChangePasswordModal v-if="changePasswordModal.isVisible"
                              @hideModal="hideChangePasswordModal"/>
+
+        <ChangeEmailModal v-if="changeEmailModal.isVisible"
+                          @hideModal="hideChangeEmailModal"/>
     </div>
 </template>
 
 <script>
     import ChangePasswordModal from "./ChangePasswordModal.vue";
+    import ChangeEmailModal from "./ChangeEmailModal.vue";
 
     export default {
         name: 'AccountSettingsSecurity',
         components: {
-            ChangePasswordModal
+            ChangePasswordModal,
+            ChangeEmailModal,
         },
         data() {
             return {
@@ -98,6 +123,9 @@
                 changePasswordModal: {
                     isVisible: false,
                 },
+                changeEmailModal: {
+                    isVisible: false,
+                },
             }
         },
         methods: {
@@ -106,6 +134,12 @@
             },
             hideChangePasswordModal() {
                 this.changePasswordModal.isVisible = false;
+            },
+            openChangeEmailModal() {
+                this.changeEmailModal.isVisible = true;
+            },
+            hideChangeEmailModal() {
+                this.changeEmailModal.isVisible = false;
             },
 
             async accountStartSaveData(newValue, fieldName) {

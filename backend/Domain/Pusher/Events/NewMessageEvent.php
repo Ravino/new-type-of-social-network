@@ -11,7 +11,12 @@ class NewMessageEvent
      * Тело сообщения
      * @var string
      */
-    protected $message_id;
+    protected $body;
+
+    /**
+     * @var
+     */
+    protected $attachments;
 
     /**
      * Список индентификаторов получателей
@@ -25,24 +30,41 @@ class NewMessageEvent
     protected $chat_id;
 
     /**
-     * Create a new event instance.
-     * @param string $body
-     * @param array $ids
-     * @return void
+     * @var
      */
-    public function __construct($message_id, $author_id, $chat_id)
+    protected $parent_id;
+
+    /**
+     * @var
+     */
+    protected $parent_chat_id;
+
+    /**
+     * NewMessageEvent constructor.
+     *
+     * @param $body
+     * @param $author_id
+     * @param $chat_id
+     * @param $attachments
+     * @param $parent_id
+     * @param $parent_chat_id
+     */
+    public function __construct($body, $author_id, $chat_id, $attachments, $parent_id = null, $parent_chat_id = null)
     {
-        $this->message_id = $message_id;
+        $this->body = $body;
         $this->author_id = $author_id;
         $this->chat_id = $chat_id;
+        $this->parent_id = $parent_id;
+        $this->parent_chat_id = $parent_chat_id;
+        $this->attachments = $attachments;
     }
 
     /**
      * @return mixed
      */
-    public function getMessageId()
+    public function getBody()
     {
-        return $this->message_id;
+        return $this->body;
     }
 
     /**
@@ -59,5 +81,29 @@ class NewMessageEvent
     public function getChatId()
     {
         return $this->chat_id;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getAttachments()
+    {
+        return $this->attachments;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getParentId()
+    {
+        return $this->parent_id ? $this->parent_id : null;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getParentChatId()
+    {
+        return $this->parent_chat_id ? $this->parent_chat_id : null;
     }
 }

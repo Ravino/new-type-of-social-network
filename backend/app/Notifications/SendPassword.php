@@ -53,7 +53,7 @@ class SendPassword extends Notification
                 [
                     'password' => $password,
                 ]
-            );
+            )->subject('PLIZI: Ваш новый пароль');
     }
 
     /**
