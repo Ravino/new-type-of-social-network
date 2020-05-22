@@ -161,6 +161,20 @@ class PliziUser {
         return this._relationshipUser;
     }
 
+    get relationshipUserText() {
+        if (this._relationshipId === 1) {
+            switch (this._sex) {
+                case 'm': return `на`;
+                case 'f': return `за`;
+                case 'n': return `с`;
+            }
+        }
+
+        if (this._relationshipId === 4 || this._relationshipId === 5) {
+            return 'с';
+        }
+    }
+
     get family(){
         if (this.__RELATIONSHIP_MARRIED === this._relationshipId) {
             switch (this._sex) {
