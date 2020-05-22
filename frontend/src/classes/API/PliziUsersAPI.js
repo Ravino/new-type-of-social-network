@@ -68,7 +68,25 @@ class PliziUsersAPI extends PliziBaseAPI{
         return null;
     }
 
+    /**
+     * Смена email на странице редактирования профиля.
+     *
+     * @param {object} formData
+     * @returns {object[]|null}
+     */
+    async changeEmail(formData) {
+        let response = await this.axios.post('/api/user/email/change', formData, this.authHeaders)
+            .catch((error) => {
+                this.checkIsTokenExpires(error, `$users.changeEmail`);
+                throw new PliziAPIError(`$users.changeEmail`, error.response);
+            });
 
+        if (response.status === 200) {
+            return response.data;
+        }
+
+        return null;
+    }
 }
 
 export { PliziUsersAPI as default}
