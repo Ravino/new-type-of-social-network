@@ -8,6 +8,7 @@ use Auth;
 use Domain\Pusher\Events\DestroyMessageEvent;
 use Domain\Pusher\Events\NewMessageEvent;
 use Domain\Pusher\Http\Resources\Message\AttachmentsCollection;
+use Domain\Pusher\Models\Chat;
 use Domain\Pusher\Models\ChatMessageAttachment;
 use Domain\Pusher\Repositories\ChatRepository;
 use Domain\Pusher\Repositories\MessageRepository;
@@ -82,12 +83,30 @@ class ChatService extends BaseService
 
     /**
      * @param string $chat_id
-     * @param int $user_id
-     * @return \Domain\Pusher\Http\Resources\Chat\Chat
+     * @param string $user_id
+     * @return bool|\Domain\Pusher\Http\Resources\Chat\Chat
      */
     public function appendUserToChat(string $chat_id, string $user_id)
     {
-        return $this->chatRepository->insertToChartParty($chat_id, $user_id);
+        $chat = Chat::where('_id', $chat_id)->first();
+        if($chat->user_id === Auth::user()->id) {
+            return $this->chatRepository->insertToChartParty($chat_id, $user_id);
+        }
+        return false;
+    }
+
+    /**
+     * @param string $chat_id
+     * @param string $user_id
+     * @return bool|\Domain\Pusher\Http\Resources\Chat\Chat
+     */
+    public function removeUserFromChat(string $chat_id, string $user_id)
+    {
+        $chat = Chat::where('_id', $chat_id)->first();
+        if($chat->user_id === Auth::user()->id) {
+            return $this->chatRepository->removeFromChartParty($chat_id, $user_id);
+        }
+        return false;
     }
 
     /**

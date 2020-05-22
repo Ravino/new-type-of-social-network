@@ -37,7 +37,7 @@ class ChatCollection extends ResourceCollection
                     'lastMessageDT' => $chat->last_message_time ? $chat->last_message_time->timestamp : null,
                     'isRead' => (bool)$chat->last_is_read,
                     'isLastFromMe' => ($this->user_id == $chat->last_user_id),
-                    'attendees' => new AttendeesCollection($chat->attendees, $this->user_id)
+                    'attendees' => new AttendeesCollection($chat->attendees, $chat->user_id)
                 ];
             })
         ];
