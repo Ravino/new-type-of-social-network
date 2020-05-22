@@ -3,12 +3,14 @@
 
         <router-link :to="{name: 'NewsPage'}"
                      :class="{ 'active': 'NewsPage'===this.$root.$router.currentRoute.name }"
+                     :title="newsPage"
                      class="w-100 d-block text-center mx-auto mb-4">
             <IconFireLeftToolBar/>
         </router-link>
 
         <router-link :to="{name: 'CommunitiesListPage'}"
                      :class="communitiesListPage"
+                     :title="communities"
                      tag="a" class="w-100 d-block text-center mx-auto mb-4">
             <IconAtom/>
         </router-link>
@@ -19,18 +21,19 @@
             <IconPlay/>
         </router-link>-->
 
-        <a class="w-100 d-block text-center mx-auto mb-4" href="#">
+        <a class="w-100 d-block text-center mx-auto mb-4" href="#" :title="list">
             <IconPaper/>
         </a>
 
         <router-link :to="{name: 'VideosPage'}"
                      :class="{ 'active': 'VideosPage' === this.$root.$router.currentRoute.name }"
+                     :title="videos"
                      tag="a"
                      class="w-100 d-block text-center mx-auto mb-4">
             <IconVideo/>
         </router-link>
 
-        <a class="w-100 d-block text-center mx-auto mb-4" href="#">
+        <a class="w-100 d-block text-center mx-auto mb-4" href="#" :title="favorites">
             <IconStar/>
         </a>
 
@@ -49,7 +52,13 @@
         name: 'AccountToolbarLeftGrey',
         components: {IconStar, IconVideo, IconPaper, IconPlay, IconAtom, IconFireLeftToolBar},
         data() {
-            return {}
+            return {
+                newsPage: 'Новости',
+                communities: 'Сообщества',
+                list: 'Список',
+                videos: 'Видео',
+                favorites: 'Избранное'
+            }
         },
         computed: {
             communitiesListPage() {
