@@ -38,7 +38,7 @@ class Chat extends JsonResource
             'lastMessageDT' => $this->last_message_time ? $this->last_message_time->timestamp : null,
             'isRead' => (bool)$this->last_is_read,
             'isLastFromMe' => ($this->userId == $this->last_user_id),
-            'attendees' => new AttendeesCollection($this->attendees, $this->userId)
+            'attendees' => new AttendeesCollection($this->attendees, $this->user_id)
         ];
     }
 }

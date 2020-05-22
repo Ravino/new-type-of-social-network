@@ -160,6 +160,13 @@ class ChatRepository
         return $this->getChatById($chat_id);
     }
 
+    public function removeFromChartParty($chat_id, $user_id) {
+        /** @var Chat $chat */
+        $chat = Chat::find($chat_id);
+        $chat->attendees()->detach($user_id);
+        return $this->getChatById($chat_id);
+    }
+
     /**
      * @param string $chat_id
      * @return bool
