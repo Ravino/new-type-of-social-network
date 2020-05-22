@@ -2,13 +2,12 @@
 
 namespace App\Models;
 
-use App\Models\CommunityMember;
 use App\Models\Rbac\Role;
 use App\Models\User\Blacklisted;
 use App\Models\User\PrivacySettings;
 use App\Notifications\ResetPassword as ResetPasswordNotification;
 use App\Traits\Friendable;
-use Illuminate\Database\Query\Builder;
+use Domain\Neo4j\Service\UserService;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Spiritix\LadaCache\Database\LadaCacheTrait;
@@ -199,6 +198,14 @@ class User extends Authenticatable implements JWTSubject
      */
     public function getUnreadMessagesCountAttribute() {
         return 0;
+    }
+
+    /**
+     * @return bool
+     */
+    public function getIsFollowAttribute()
+    {
+        return (new UserService())->isFollowed(auth()->user()->id, $this->id);
     }
 
     public function getDateFormat()

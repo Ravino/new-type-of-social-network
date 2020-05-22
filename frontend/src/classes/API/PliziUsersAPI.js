@@ -87,6 +87,50 @@ class PliziUsersAPI extends PliziBaseAPI{
 
         return null;
     }
+
+    async follow(userId) {
+        let response = await this.axios.post(`api/user/${userId}/follow`, {}, this.authHeaders)
+            .catch((error) => {
+                if (error.response.status === 422) {
+                    return {
+                        status: 422,
+                        data: {
+                            message: error.response.data.message
+                        }
+                    }
+                } else {
+                    this.checkIsTokenExpires(error, '$users.follow');
+                    throw new PliziAPIError('$users.follow', error.response);
+                }
+            });
+
+        if ([200, 422].includes(response.status)) {
+            return response.data;
+        }
+        return null;
+    }
+
+    async unFollow(userId) {
+        let response = await this.axios.delete(`api/user/${userId}/follow`, this.authHeaders)
+            .catch((error) => {
+                if (error.response.status === 422) {
+                    return {
+                        status: 422,
+                        data: {
+                            message: error.response.data.message
+                        }
+                    }
+                } else {
+                    this.checkIsTokenExpires(error, '$users.unFollow');
+                    throw new PliziAPIError('$users.unFollow', error.response);
+                }
+            });
+
+        if ([200, 422].includes(response.status)) {
+            return response.data;
+        }
+        return null;
+    }
 }
 
 export { PliziUsersAPI as default}

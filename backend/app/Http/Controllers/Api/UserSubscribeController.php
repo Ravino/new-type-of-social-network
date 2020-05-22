@@ -68,6 +68,11 @@ class UserSubscribeController extends Controller
      */
     public function follow(Request $request)
     {
+        if ($request->user->isFriendWith(auth()->user())) {
+            return response()->json([
+                'message' => 'Вы уже друзья',
+            ], 422);
+        }
         $success = $this->userService->follow(auth()->user()->id, $request->user->id);
         if ($success === null) {
             return response()->json([
