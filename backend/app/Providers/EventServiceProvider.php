@@ -5,6 +5,8 @@ namespace App\Providers;
 use App\Events\CommunityCreated;
 use App\Events\CommunitySubscribe;
 use App\Events\CommunityUnsubscribe;
+use App\Events\Followers\AddFollower;
+use App\Events\Followers\SubFollower;
 use App\Events\ResetPassword;
 use App\Events\UserCreated;
 use App\Events\UserUpdated;
@@ -86,6 +88,12 @@ class EventServiceProvider extends ServiceProvider
         ],
         ResetPassword::class => [
             SendPassword::class,
+        ],
+        AddFollower::class => [
+            \App\Listeners\Followers\AddFollower::class
+        ],
+        SubFollower::class => [
+            \App\Listeners\Followers\SubFollower::class
         ],
     ];
 
