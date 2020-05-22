@@ -31,7 +31,7 @@ class UserSubscribeController extends Controller
     public function exists(Request $request)
     {
         return response()->json([
-            'result' => $this->userService->isSubscribed(auth()->user()->id, $request->user->id),
+            'result' => $this->userService->isFollowed(auth()->user()->id, $request->user->id),
         ]);
     }
 
@@ -39,9 +39,9 @@ class UserSubscribeController extends Controller
      * @param Request $request
      * @return JsonResponse
      */
-    public function subscribe(Request $request)
+    public function follow(Request $request)
     {
-        $subscribe = $this->userService->subscribe(auth()->user()->id, $request->user->id);
+        $subscribe = $this->userService->follow(auth()->user()->id, $request->user->id);
         if ($subscribe === null) {
             return response()->json([
                 'message' => 'Вы уже подписаны на этого пользователя',

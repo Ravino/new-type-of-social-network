@@ -131,9 +131,9 @@ class UserService
      * @param $user_oid
      * @return bool
      */
-    public function isSubscribed($owner_oid, $user_oid)
+    public function isFollowed($owner_oid, $user_oid)
     {
-        return $this->userRepository->isSubscribed($owner_oid, $user_oid);
+        return $this->userRepository->isFollowed($owner_oid, $user_oid);
     }
 
     /**
@@ -141,8 +141,8 @@ class UserService
      * @param $user_oid
      * @return bool
      */
-    public function subscribe($owner_oid, $user_oid)
+    public function follow($owner_oid, $user_oid)
     {
-        return $this->userRepository->subscribe($owner_oid, $user_oid);
+        return $this->userRepository->follow($owner_oid, $user_oid);
     }
 }

@@ -161,7 +161,7 @@ class UserNeo4jRepository extends BaseRepository
      * @param $user_oid
      * @return bool
      */
-    public function isSubscribed($owner_oid, $user_oid)
+    public function isFollowed($owner_oid, $user_oid)
     {
         $query = "MATCH (owner:User {oid: '{$owner_oid}'})-[r:SUBSCRIBED_ON]-(user:User {oid: '{$user_oid}'})
                   RETURN COUNT(r) AS count";
@@ -178,9 +178,9 @@ class UserNeo4jRepository extends BaseRepository
      * @param $user_oid
      * @return bool
      */
-    public function subscribe($owner_oid, $user_oid)
+    public function follow($owner_oid, $user_oid)
     {
-        if ($this->isSubscribed($owner_oid, $user_oid)) {
+        if ($this->isFollowed($owner_oid, $user_oid)) {
             return null;
         }
         $query = "MATCH (owner:User {oid: '{$owner_oid}'})

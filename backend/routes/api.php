@@ -78,8 +78,8 @@ Route::group(['middleware' => ['auth.jwt', 'track.activity']], function () {
     Route::patch('user/notifications/mark/read', 'Api\UserController@markNotificationsAsRead');
 
     Route::middleware(['user.get'])->group(static function() {
-        Route::get('user/{userId}/subscribe', [UserSubscribeController::class, 'exists']);
-        Route::post('user/{userId}/subscribe', [UserSubscribeController::class, 'subscribe']);
+        Route::get('user/{userId}/follow', [UserSubscribeController::class, 'exists']);
+        Route::post('user/{userId}/follow', [UserSubscribeController::class, 'follow']);
     });
 
     /**

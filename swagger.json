@@ -2079,13 +2079,13 @@
                 "x-codegen-request-body-name": "body"
             }
         },
-        "/user/{userId}/subscribe": {
+        "/user/{userId}/follow": {
             "get": {
                 "tags": [
                     "User"
                 ],
                 "description": "Проверить подписан ли на пользователя",
-                "operationId": "isUserSubscribeExists",
+                "operationId": "isUserFollowed",
                 "parameters": [
                     {
                         "name": "userId",
@@ -2125,7 +2125,7 @@
                     "User"
                 ],
                 "description": "Подписаться на пользователя",
-                "operationId": "userSubscribe",
+                "operationId": "userFollow",
                 "parameters": [
                     {
                         "name": "userId",
