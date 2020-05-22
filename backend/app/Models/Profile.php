@@ -65,4 +65,9 @@ class Profile extends Model
     {
         return $this->belongsTo(User::class);
     }
+
+    public function relationshipUser()
+    {
+        return $this->belongsTo(User::class, 'relationship_user_id');
+    }
 }

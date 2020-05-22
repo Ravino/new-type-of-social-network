@@ -54,6 +54,17 @@ class ProfileController extends Controller
     public function patch(ProfileRequest $request)
     {
         $user = User::find(Auth::user()->id);
+
+        if ($request->relationshipUserId) {
+            $relationship_id = $user->profile->relationship_id;
+
+            if (!($relationship_id === 1 || $relationship_id === 4 || $relationship_id === 5)) {
+                return response()->json([
+                    'message' => 'Выберите сначала соответствующее семейное положение.'
+                ], 422);
+            }
+        }
+
         $user->profile->update(array_filter([
             'first_name' => $request->firstName,
             'last_name' => $request->lastName,
@@ -63,9 +74,16 @@ class ProfileController extends Controller
             'relationship_user_id' => $request->relationshipUserId,
         ]));
         if(key_exists('relationshipId', $request->post())) {
-            $user->profile->update([
-                'relationship_id' => $request->relationshipId,
-            ]);
+            if ($request->relationshipId == 2 || $request->relationshipId == 3) {
+                $user->profile->update([
+                    'relationship_id' => $request->relationshipId,
+                    'relationship_user_id' => null,
+                ]);
+            } else {
+                $user->profile->update([
+                    'relationship_id' => $request->relationshipId,
+                ]);
+            }
         }
         $profile = $user->fresh()->profile;
         return new ProfileResource($profile);

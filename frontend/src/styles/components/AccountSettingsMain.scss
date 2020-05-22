@@ -167,6 +167,8 @@ $titleColor: #363636;
                 overflow: hidden;
             }
             &__input {
+                background-color: #fff;
+
                 &::placeholder {
                     font-size: $placeholderSize;
                     color: $placeholderColor;

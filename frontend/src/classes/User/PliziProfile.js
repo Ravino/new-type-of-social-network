@@ -51,6 +51,12 @@ class PliziUser {
     _relationshipId = null;
 
     /**
+     * @type {PliziUser|null}
+     * @private
+     */
+    _relationshipUser = null;
+
+    /**
      *
      * @type {string}
      * @private
@@ -72,12 +78,12 @@ class PliziUser {
      * @param {object} prof
      */
     constructor(prof) {
-        this._firstName = (prof.firstName + ``).trim();
-        this._lastName = (prof.lastName + ``).trim();
-        this._sex = (prof.sex + ``).trim();
+        this._firstName = prof.firstName ? (prof.firstName + ``).trim() : null;
+        this._lastName = prof.lastName ? (prof.lastName + ``).trim() : null;
+        this._sex = prof.sex ? (prof.sex + ``).trim() : null;
         this._birthday = prof.birthday;
         this._relationshipId = prof.relationshipId;
-
+        this._relationshipUser = prof.relationshipUser ? prof.relationshipUser : null;
         this._location = (prof.location) ? new PliziLocation(prof.location) : null;
 
         if (prof.userPic) {
@@ -148,6 +154,13 @@ class PliziUser {
         return this._relationshipId;
     }
 
+    /**
+     * @returns {PliziUser|null}
+     */
+    get relationshipUser(){
+        return this._relationshipUser;
+    }
+
     get family(){
         if (this.__RELATIONSHIP_MARRIED === this._relationshipId) {
             switch (this._sex) {
@@ -167,6 +180,12 @@ class PliziUser {
 
         if (this.relationshipId === 3)
             return `В активном поиске`;
+
+        if  (this.relationshipId === 4)
+            return 'Встречаюсь';
+
+        if  (this.relationshipId === 5)
+            return 'В отношениях';
 
         return `Не указано`;
     }
@@ -215,9 +234,6 @@ class PliziUser {
      * @returns {Object}
      */
     toJSON() {
-        /** @TGA чтобы momentJS не подключать **/
-        // TODO: @YZ пересмотреть данное решение.
-
         return {
             firstName: this.firstName,
             lastName: this.lastName,
@@ -225,6 +241,7 @@ class PliziUser {
             birthday: this._birthday,
             location: (this._location) ? this.location.toJSON() : null,
             relationshipId: this.relationshipId,
+            relationshipUser: !!this._relationshipUser ? this.relationshipUser : null,
             userPic: this._userPic, // реальный
             avatar: this._avatar ? this._avatar.toJSON() : null,
         };
