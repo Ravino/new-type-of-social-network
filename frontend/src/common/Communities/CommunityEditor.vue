@@ -1,7 +1,7 @@
 <template>
     <TextEditor id="communityEditor"
                 :clazz="`row plz-text-editor mb-4 p-4 h-auto  align-items-start bg-white-br20`"
-                :editorPlaceholder="'Что у Вас нового?'"
+                :editorPlaceholder="'Введите текст ...'"
                 :dropToDown="true"
                 @editorPost="onTextPost"
                 workMode="post">
