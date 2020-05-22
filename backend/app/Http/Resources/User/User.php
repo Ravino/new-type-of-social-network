@@ -4,6 +4,7 @@ namespace App\Http\Resources\User;
 
 
 use App\Http\Resources\PrivacySettings;
+use Domain\Neo4j\Service\UserService;
 use Illuminate\Http\Resources\Json\JsonResource;
 
 class User extends JsonResource
@@ -39,7 +40,9 @@ class User extends JsonResource
                     'unreadMessagesCount' => $this->unreadMessagesCount,
                     'pendingFriendshipRequestsCount' => $this->pendingFriendshipRequestsCount,
                     'totalFriendsCount' => $this->totalFriendsCount,
+                    'followCount' => (new UserService())->followCount($this->id),
                     'isFollow' => $this->isFollow,
+                    'isFriend' => $this->isFriendWith(auth()->user()),
                 ],
             ];
         }
@@ -53,7 +56,9 @@ class User extends JsonResource
                 'profile' => new Profile($this->profile),
                 'mutualFriendsCount' => (int)$this->profile->mutual,
                 'stats' => [
+                    'followCount' => (new UserService())->followCount($this->id),
                     'isFollow' => $this->isFollow,
+                    'isFriend' => $this->isFriendWith(auth()->user()),
                 ],
             ];
         }
@@ -65,7 +70,9 @@ class User extends JsonResource
             'lastActivity' => $this->last_activity_dt,
             'profile' => new Profile($this->profile),
             'stats' => [
+                'followCount' => (new UserService())->followCount($this->id),
                 'isFollow' => $this->isFollow,
+                'isFriend' => $this->isFriendWith(auth()->user()),
             ],
         ];
     }

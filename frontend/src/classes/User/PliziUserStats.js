@@ -35,6 +35,20 @@ class PliziUserStats {
      */
     _isFollow = true;
 
+    /**
+     * Друг?
+     * @type {boolean}
+     * @private
+     */
+    _isFriend = false;
+
+    /**
+     * Кол-во подписавшихся
+     * @type {number}
+     * @private
+     */
+    _followCount = 0;
+
     get notifications(){
         return this._notifications;
     }
@@ -79,6 +93,22 @@ class PliziUserStats {
         this._isFollow = value;
     }
 
+    get isFriend() {
+        return this._isFriend;
+    }
+
+    set isFriend(value) {
+        this._isFriend = value;
+    }
+
+    get followCount() {
+        return this._followCount;
+    }
+
+    set followCount(value) {
+        this._followCount = value;
+    }
+
     constructor(inputData){
         if (inputData) {
             this.update(inputData);
@@ -91,6 +121,8 @@ class PliziUserStats {
         this.invitations = inputData.pendingFriendshipRequestsCount;
         this.friends = inputData.totalFriendsCount;
         this.isFollow = inputData.isFollow;
+        this.isFriend = inputData.isFriend;
+        this.followCount = inputData.followCount;
     }
 
     toJSON(){
@@ -100,6 +132,8 @@ class PliziUserStats {
             pendingFriendshipRequestsCount : this.invitations,
             totalFriendsCount : this.friends,
             isFollow: this.isFollow,
+            isFriend: this.isFriend,
+            followCount: this.followCount,
         };
     }
 }
