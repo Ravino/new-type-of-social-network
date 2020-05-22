@@ -77,6 +77,7 @@ import DialogMixin from '../mixins/DialogMixin.js';
 
 import PliziFriend from '../classes/PliziFriend.js';
 import PliziMessage from '../classes/PliziMessage.js';
+import PliziCollection from '../classes/PliziCollection.js';
 
 export default {
 name : 'FavoriteFriendItem',
@@ -109,7 +110,7 @@ data(){
         isTyper: false,
 
         currentDialog : null,
-        messagesList  : [],
+        messagesList  : (new PliziCollection()),
         isMessagesLoaded: false,
 
         filter : {
@@ -172,14 +173,11 @@ methods: {
 
         if (this.currentDialog) {
             if (this.currentDialog.id === evData.message.chatId){
-                this.messagesList.push( new PliziMessage( evData.message ) );
 
-                try{
-                    this.$refs.chatMessages.scrollToEnd();
-                } catch (e){
-                }
+                //this.messagesList.push( new PliziMessage( evData.message ) );
+                this.messagesList.add( new PliziMessage( evData.message ) );
 
-//                this.updateDialogsList(evData.chatId, evData); // TODO: надо обновить диалоги
+                this.$refs.chatMessages.scrollToEnd();
             }
         }
         else {
@@ -270,12 +268,8 @@ methods: {
             if (this.currentDialog.id !== evData.chatId)
                 return;
 
-            this.messagesList = this.messagesList.filter( mItem => evData.messageId !== mItem.id );
-
-            /** @var PliziMessage **/
-            const lastMsg = this.messagesList[this.messagesList.length - 1];
-
-            this.updateDialogsList(evData.chatId, { message: lastMsg });
+            this.messagesList.delete(evData.messageId);
+            this.updateDialogsList(evData.chatId, { message: this.messagesList.last });
         }
     },
 

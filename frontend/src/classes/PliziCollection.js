@@ -43,6 +43,14 @@ class PliziCollection {
         this._collection.clear();
     }
 
+    get first(){
+        return Array.from(this._collection)[0][1];
+    }
+
+    get last(){
+        return Array.from(this._collection)[this._collection.size-1][1];
+    }
+
     /**
      * метод сравнения для сортировки
      * @param {PliziRecipient} d1

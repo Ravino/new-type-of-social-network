@@ -92,12 +92,19 @@ class PliziChatAPI extends PliziBaseAPI{
 
     /**
      * загружает список сообщений (переписку) в определённом диалоге чата
-     * @public
      * @param {number} dialogID - ID диалога
+     * @param {number} offset - смещение
+     * @param {number} limit - лимит
      * @returns {object[]|null} - список сообщений в диалоге, или NULL если была ошибка
      */
-    async messages(dialogID) {
-        let response = await this.axios.get('api/chat/messages/' + (dialogID), this.authHeaders)
+    async messages(dialogID, offset, limit) {
+        let apiPath = 'api/chat/messages/' + dialogID;
+
+        if (offset  &&  limit) {
+            apiPath += `?offset=${offset}&limit=${limit}`;
+        }
+
+        let response = await this.axios.get(apiPath, this.authHeaders)
             .catch((error) => {
                 this.checkIsTokenExpires(error, `$chat.messages`);
                 throw new PliziAPIError(`$chat.messages`, error.response);
