@@ -1,5 +1,5 @@
 <template>
-    <div id="about-page">
+    <div id="advertisementPage">
         <div class="d-flex-row px-0 mb-lg-0 ml-2">
             <h1 class="text-center">Реклама</h1>
             <p class="text-justify">

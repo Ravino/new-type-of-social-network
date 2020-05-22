@@ -1,5 +1,5 @@
 <template>
-    <div id="about-page">
+    <div id="forDevelopers">
         <div class="d-flex-row px-0 mb-lg-0 ml-2">
             <h1 class="text-center">Для разработчиков</h1>
             <p class="text-justify">
