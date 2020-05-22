@@ -78,6 +78,7 @@ Route::group(['middleware' => ['auth.jwt', 'track.activity']], function () {
     Route::post('/user/email/change', 'Auth\ChangeEmailController@changeEmail');
     Route::patch('user/notifications/mark/read', 'Api\UserController@markNotificationsAsRead');
 
+    Route::get('user/follow/list', [UserSubscribeController::class, 'list']);
     Route::middleware(['user.get'])->group(static function() {
         Route::get('user/{userId}/follow', [UserSubscribeController::class, 'exists']);
         Route::post('user/{userId}/follow', [UserSubscribeController::class, 'follow']);
