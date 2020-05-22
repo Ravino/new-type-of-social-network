@@ -2205,6 +2205,53 @@
                 "x-codegen-request-body-name": "body"
             }
         },
+        "/user/follow/list": {
+            "get": {
+                "tags": [
+                    "User"
+                ],
+                "description": "Список \"на кого я подписан\"",
+                "operationId": "followedList",
+                "parameters": [
+                    {
+                        "$ref": "#/components/parameters/offsetParam"
+                    },
+                    {
+                        "$ref": "#/components/parameters/limitParam"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Список юзеров",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "data": {
+                                            "type": "object",
+                                            "properties": {
+                                                "list": {
+                                                    "type": "array",
+                                                    "items": {
+                                                        "$ref": "#/components/schemas/User"
+                                                    }
+                                                }
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "Authorization": []
+                    }
+                ]
+            }
+        },
         "/user/{userId}/follow": {
             "get": {
                 "tags": [
