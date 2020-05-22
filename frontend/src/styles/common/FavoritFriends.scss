@@ -8,6 +8,12 @@ $picSize: 42px;
         box-shadow: none;
     }
 
+    .plz-favorit-z {
+        .plz-favorit-friends-item.plz-linked-chat-block {
+            overflow: visible;
+        }
+    }
+
     &-item {
         position: relative;
         transition: .4s;
