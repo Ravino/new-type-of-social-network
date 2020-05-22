@@ -4,6 +4,7 @@ namespace App\Models;
 
 use App\Models\CommunityMember;
 use App\Models\Rbac\Role;
+use App\Models\User\Blacklisted;
 use App\Models\User\PrivacySettings;
 use App\Notifications\ResetPassword as ResetPasswordNotification;
 use App\Traits\Friendable;
@@ -233,6 +234,18 @@ class User extends Authenticatable implements JWTSubject
             return Role::where('name', self::PERMISSION_ROLE_FRIEND)->get()->first();
         }
         return Role::where('name', self::PERMISSION_ROLE_GUEST)->get()->first();
+    }
+
+    public function blacklistUsers()
+    {
+        return $this->hasManyThrough(
+            User::class,
+            Blacklisted::class,
+            'user_id',
+            'id',
+            'id',
+            'blacklisted_id'
+        );
     }
 
     public static function boot()
