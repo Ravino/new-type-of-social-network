@@ -115,7 +115,7 @@ class ChatController extends Controller
      */
     public function sendToUser(SendMessageToUserRequest $request)
     {
-        $message = $this->chatService->sendToUser(
+        $this->chatService->sendToUser(
             $request->get('body'),
             $request->get('userId'),
             auth()->id(),
@@ -124,7 +124,7 @@ class ChatController extends Controller
             $request->get('attachments') ? $request->get('attachments') : []
         );
         return response()->json(['data' => [
-            'id' => $message
+            'success' => true
         ]]);
     }
 

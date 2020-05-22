@@ -29,7 +29,7 @@ class RedisSubscribe extends Command
      */
     public function handle()
     {
-        Redis::subscribe(['test-channel'], function ($message) {
+        Redis::subscribe(['message'], function ($message) {
             $this->info(sprintf('Message received: %s', $message));
         });
     }

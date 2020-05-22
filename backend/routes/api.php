@@ -74,6 +74,7 @@ Route::group(['middleware' => ['auth.jwt', 'track.activity']], function () {
     Route::post('user/blacklist', 'Api\UserBlacklistController@post');
     Route::delete('user/blacklist', 'Api\UserBlacklistController@delete');
     Route::post('/user/password/change', 'Auth\ChangePasswordController@changePassword');
+    Route::post('/user/email/change', 'Auth\ChangeEmailController@changeEmail');
     Route::patch('user/notifications/mark/read', 'Api\UserController@markNotificationsAsRead');
 
     /**

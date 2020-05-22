@@ -91,14 +91,6 @@ services:
       - mysql
       - mongodb
 
-  js_api:
-    build: ./messenger
-    command: npm run serve
-    ports:
-      - "3000:3000"
-    depends_on:
-      - mongodb
-
   php_ws:
     build: ./backend/docker/ws
     container_name: "plizi_php_ws"
@@ -149,7 +141,7 @@ services:
       - ./frontend/docker/certbot/data:/usr/share/nginx/html/letsencrypt
 
   redis:
-    image: redis
+    image: 'bitnami/redis:latest'
     container_name: "plizi_redis"
     env_file:
       - ./backend/docker/redis/.env
