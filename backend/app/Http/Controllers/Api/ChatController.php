@@ -137,10 +137,32 @@ class ChatController extends Controller
     public function appendUserToChat(Request $request)
     {
         $chat = $this->chatService->appendUserToChat(
-            $request->get('userId'),
             $request->get('chatId'),
+            $request->get('userId'),
         );
-        return response()->json(['data' => $chat]);
+        if($chat) {
+            return response()->json(['data' => $chat]);
+        }
+        return response()->json([
+            'message' => "Вы не можете добавлять людей в данный чат"
+        ], 403);
+    }
+
+    /**
+     * @param Request $request
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function removeUserFromChat(Request $request) {
+        $chat = $this->chatService->removeUserFromChat(
+            $request->get('chatId'),
+            $request->get('userId'),
+            );
+        if($chat) {
+            return response()->json(['data' => $chat]);
+        }
+        return response()->json([
+            'message' => "Вы не можете удалять людей из данного чата"
+        ], 403);
     }
 
     /**

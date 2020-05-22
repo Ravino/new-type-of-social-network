@@ -34,6 +34,7 @@ class AttendeesCollection extends ResourceCollection
                 'firstName' => $attendee->profile->first_name,
                 'lastName' => $attendee->profile->last_name,
                 'isOnline' => $this->isOnline($attendee->last_activity_dt),
+                'isAdmin' => $attendee->id === $this->user_id,
                 'sex' => $attendee->profile->sex,
             ];
         });

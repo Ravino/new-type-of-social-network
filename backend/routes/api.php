@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\Api\CommunityController;
+use App\Http\Controllers\Api\UserSubscribeController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -21,7 +22,8 @@ Route::group(['middleware' => ['auth.jwt', 'track.activity']], function () {
     Route::prefix('chat')->group(function(){
         Route::get('dialogs', 'Api\ChatController@dialogs');
         Route::get('messages/{chat_id}', 'Api\ChatController@messages');
-        Route::post('dialogs/append', 'Api\ChatController@appendUserToChat');
+        Route::post('dialogs/attendees/append', 'Api\ChatController@appendUserToChat');
+        Route::post('dialogs/attendees/remove', 'Api\ChatController@removeUserFromChat');
         Route::post('open', 'Api\ChatController@open');
         Route::post('send', 'Api\ChatController@send');
         Route::post('message/user', 'Api\ChatController@sendToUser');
@@ -77,6 +79,12 @@ Route::group(['middleware' => ['auth.jwt', 'track.activity']], function () {
     Route::post('/user/email/change', 'Auth\ChangeEmailController@changeEmail');
     Route::patch('user/notifications/mark/read', 'Api\UserController@markNotificationsAsRead');
 
+    Route::middleware(['user.get'])->group(static function() {
+        Route::get('user/{userId}/follow', [UserSubscribeController::class, 'exists']);
+        Route::post('user/{userId}/follow', [UserSubscribeController::class, 'follow']);
+        Route::delete('user/{userId}/follow', [UserSubscribeController::class, 'unfollow']);
+    });
+
     /**
      * Communities Resource
      */
@@ -122,6 +130,7 @@ Route::group(['middleware' => ['auth.jwt', 'track.activity']], function () {
     Route::prefix('comment')->group(function () {
         Route::post('post', 'Api\CommentController@commentPost');
         Route::get('post/{id}', 'Api\CommentController@getPostComments');
+        Route::delete('{id}', 'Api\CommentController@destroyComment');
     });
 
     /**
