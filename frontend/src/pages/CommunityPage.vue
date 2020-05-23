@@ -485,6 +485,7 @@ methods: {
         if (apiResponse) {
             this.communityData = new PliziCommunity(apiResponse);
             this.isDataReady = true;
+            document.title = `Plizi: ${this.communityData?.name}`;
             await this.getPosts();
         }
     },
