@@ -132,6 +132,12 @@ class PliziCommunity {
      */
     _themeId = null;
 
+    /**
+     * @type {number}
+     * @private
+     */
+    _requestsCount = 0;
+
     constructor(inputData){
         this._id = inputData.id;
         this._name = inputData.name;
@@ -150,6 +156,7 @@ class PliziCommunity {
 
         this._role = inputData.role;
         this._totalMembers = inputData.totalMembers;
+        this._requestsCount = inputData.requestsCount;
 
         if (inputData.friends) {
             this._friends = [];
@@ -275,6 +282,10 @@ class PliziCommunity {
         this._themeId = value;
     }
 
+    get requestsCount() {
+        return this._requestsCount;
+    }
+
     toJSON(){
         let mmbrs = null;
         let friends = null;
@@ -305,6 +316,7 @@ class PliziCommunity {
             type: this.type,
             themeId: this.themeId,
             totalMembers: this.totalMembers,
+            requestsCount: this.requestsCount,
             avatar: this._avatar ? this._avatar.toJSON() : null,
             headerImage: this._headerImage ? this._headerImage.toJSON() : null,
             members: mmbrs,
