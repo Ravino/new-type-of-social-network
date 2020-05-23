@@ -8,7 +8,8 @@
                 </span>
                 <span class="nav-link py-2 py-sm-3 px-1 mr-2 mr-lg-4">Обновления</span>
                 <span class="nav-link py-2 py-sm-3 px-1 mr-2 mr-lg-4">Понравилось</span>
-                <span class="nav-link py-3 px-1 mr-2 mr-lg-4 ml-auto ml-lg-4 d-none d-md-block">
+                <!-- TODO: @YZ восстановить после MVP -->
+                <span class="nav-link py-3 px-1 mr-2 mr-lg-4 ml-auto ml-lg-4 d-none">
                     <button class="btn px-2 py-0 ">
                         <IconSearch style="width: 15px; height: 16px;"/>
                     </button>
