@@ -59,8 +59,13 @@ class CommunityService
             'updated_at' => time(),
         ]);
 
-        if ($request->exists('website')) {
-            $data['website'] = $request->website;
+        /**
+         * allow save empty string
+         */
+        foreach (['website', 'description', 'notice'] as $attribute) {
+            if ($request->exists($attribute)) {
+                $data[$attribute] = $request->$attribute;
+            }
         }
 
         return tap($community)->update($data);
