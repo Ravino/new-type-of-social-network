@@ -2,6 +2,7 @@
     <span class="pl-2" v-if="!userData.isFriend">
         <AddFollow :userData="userData" v-if="!userData.stats.isFollow"></AddFollow>
         <SubFollow :userData="userData" v-else-if="!userData.isOwner"></SubFollow>
+        <AddToBlacklist :userData="userData"></AddToBlacklist>
     </span>
 </template>
 
@@ -10,12 +11,13 @@
     import PliziAuthUser from "../../classes/PliziAuthUser.js";
     import SubFollow from "./SubFollow.vue";
     import AddFollow from "./AddFollow.vue";
+    import AddToBlacklist from "./AddToBlacklist.vue";
 
     export default {
         name: "ButtonsFollow",
-        components: {AddFollow, SubFollow},
+        components: {AddToBlacklist, AddFollow, SubFollow},
         props: {
-            userData: PliziUser|PliziAuthUser,
+            userData: PliziUser | PliziAuthUser,
         },
     }
 </script>

@@ -43,6 +43,7 @@ const routes = [
     {path: '/for-developers', component: ForDevelopersPage, name: 'ForDevelopersPage', meta: {title: 'Plizi: Для разработчиков', isGuest: true}},
 // Auth
     {path: '/account', component: AccountPage, name: 'AccountPage', meta: {title: 'Plizi: Настройки аккаунта'}, props: true },
+    {path: '/black-list', component: BlackList, name: 'BlackList', meta: {title: 'Plizi: Черный список'}, props: true },
     {path: '/profile', component: ProfilePage, name: 'ProfilePage', meta: {title: 'Plizi: Домашняя'}, props: true},
     {path: '/chats', component: ChatsListPage, name: 'ChatsListPage', meta: {title: 'Plizi: Чаты'}, props: true},
     {path: '/search-results', component: SearchResultsPage, name: 'SearchResultsPage', meta: {title: 'Plizi: Результаты поиска'}, props: true },
