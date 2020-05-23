@@ -2,11 +2,11 @@
 
 namespace App\Models\User;
 
+use App\Models\User;
 use Illuminate\Database\Eloquent\Model;
 
 class Blacklisted extends Model
 {
-
     protected $table = 'users_blacklisted';
 
     protected $casts = [
@@ -18,20 +18,11 @@ class Blacklisted extends Model
         'user_id', 'blacklisted_id',
     ];
 
-    public static function rules($keys = [])
+    /**
+     * @return string
+     */
+    public function getDateFormat()
     {
-        $rules = [
-            'user_id' => 'required|integer',
-            'blacklisted_id' => 'required|integer',
-        ];
-
-        if (count($keys)) {
-            return array_filter($rules, function ($index) use ($keys) {
-                return in_array($index, $keys);
-
-            }, ARRAY_FILTER_USE_KEY);
-        }
-
-        return $rules;
+        return 'U';
     }
 }

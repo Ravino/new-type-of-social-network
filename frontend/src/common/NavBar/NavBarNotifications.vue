@@ -1,14 +1,15 @@
 <template>
     <div class="plz-top-watcher-item position-relative d-inline-block mr-0 mr-sm-2">
         <div class="btn btn-link my-auto text-body btn-sm cursor-pointer" title="Уведомления" ref="dropdown">
-            <span data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" id="dropdownMenuLikes"
+            <span ref="dropdownToggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" id="dropdownMenuLikes"
                   @click="onShowNotifications()">
                 <IconBell />
                 <span v-if="notificationsNumber() > 0" class="counter-info">
                     {{notificationsNumber()}}
                 </span>
             </span>
-            <div v-if="notificationsNumber() > 0" aria-labelledby="dropdownMenuLikes"
+            <div aria-labelledby="dropdownMenuLikes"
+                 :class="{'hidden': notificationsNumber() === 0}"
                 class="notifications-likes-dropdown dropdown-menu dropdown-menu-right pt-3 pb-0 dropdown-white w-auto">
                 <vue-custom-scrollbar class="notifications-likes-scroll"
                                           :settings="customScrollbarSettings">
@@ -60,7 +61,6 @@ methods : {
         if (idList.length === 0) {
          return;
         }
-
         await this.$root.$api.$notifications.markAsRead(idList);
     },
 
@@ -71,9 +71,9 @@ methods : {
     eventOnHideDropdown() {
      // TODO: Fix jquery
      $(this.$refs.dropdown).off('hidden.bs.dropdown').on('hidden.bs.dropdown', () => {
-     this.$root.$auth.nm.clear();
-     this.$root.$auth.nm.storeData();
-     this.updateNotifications();
+         this.$root.$auth.nm.clear();
+         this.$root.$auth.nm.storeData();
+         this.updateNotifications();
      });
     },
      notificationsNumber(){

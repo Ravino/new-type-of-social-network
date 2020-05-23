@@ -133,7 +133,9 @@ class UserService
      */
     public function isFollowed($owner_oid, $user_oid)
     {
-        return $this->userRepository->isFollowed($owner_oid, $user_oid);
+        return $owner_oid === $user_oid
+            ? true
+            : $this->userRepository->isFollowed($owner_oid, $user_oid);
     }
 
     /**
@@ -154,5 +156,52 @@ class UserService
     public function unfollow($owner_oid, $user_oid)
     {
         return $this->userRepository->unfollow($owner_oid, $user_oid);
+    }
+
+    /**
+     * @param $owner_oid
+     * @param int $limit
+     * @param int $offset
+     * @return array
+     */
+    public function followList($owner_oid, $limit = 20, $offset = 0)
+    {
+        if (!$list = $this->userRepository->followList($owner_oid, $limit, $offset)) {
+            return [];
+        }
+
+        $result = [];
+        foreach ($list as $user) {
+            $result[$user->get('oid')] = [
+                'total_count' => $user->get('total_count'),
+            ];
+        }
+        return $result;
+    }
+
+    /**
+     * @param $owner_oid
+     * @return array
+     */
+    public function followIds($owner_oid)
+    {
+        if (!$list = $this->userRepository->followIds($owner_oid)) {
+            return [];
+        }
+
+        $result = [];
+        foreach ($list as $user) {
+            $result[] = $user->get('oid');
+        }
+        return $result;
+    }
+
+    /**
+     * @param $owner_oid
+     * @return int
+     */
+    public function followCount($owner_oid)
+    {
+        return $this->userRepository->followCount($owner_oid);
     }
 }

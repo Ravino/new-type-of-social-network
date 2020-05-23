@@ -48,12 +48,7 @@ data(){
     }
 },
 
-computed: {
-
-},
-
 methods: {
-
     dialogsList(){
         const dlgList = this.$root.$auth.dm.asArray();
 

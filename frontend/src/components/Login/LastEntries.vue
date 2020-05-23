@@ -1,5 +1,5 @@
 <template>
-    <div id="latestEntries" class="plz-latest-entries bg-white-br20" :style="calcStyle()">
+    <div id="latestEntries" class="plz-latest-entries --bg-white-br20" :style="calcStyle()">
         <h6 class="text-center text-sm-left">Вы недавно входили в аккаунт с этого компьютера</h6>
 
         <div class="plz-latest-entries-list d-flex justify-content-between justify-content-sm-start flex-wrap">

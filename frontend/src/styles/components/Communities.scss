@@ -119,6 +119,16 @@ $friendspicSize: 20px;
         }
     }
 
+    &-privacy-label {
+        font-size: 10px;
+        color: #6495ed;
+        font-weight: 400;
+
+        &.text-red {
+            color: $counterInfoColor;
+        }
+    }
+
     .plizi-community-body-friends {
         width: 120px;
         max-width: 120px;

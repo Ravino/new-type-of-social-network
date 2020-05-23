@@ -37,11 +37,14 @@
 
                         <div id="chatMessagesWrapperBody" class="position-relative">
 
-                            <ChatMessages v-if="isMessagesLoaded" v-bind:messagesList="messagesList"
+                            <ChatMessages v-if="isMessagesLoaded"
+                                          v-bind:messagesList="messagesList"
                                           v-bind:filter="filter"
                                           v-bind:currentDialog="currentDialog"
+                                          @ClearFilters="clearChatMessagesFilters"
+                                          @ScrollToTop="onScrollToTop"
+                                          @RemoveMessageInList="removeMessageInList"
                                           :style="`padding-bottom: ${changedHeight}`"
-                                          @clearFilters="clearChatMessagesFilters"
                                           ref="chatMessages">
                             </ChatMessages>
                             <Spinner v-else
@@ -79,11 +82,13 @@ import ChatDialogs from '../common/Chat/ChatDialogs.vue';
 import ChatHeader from '../common/Chat/ChatHeader.vue';
 import ChatMessages from '../common/Chat/ChatMessages.vue';
 import ChatFooter from '../common/Chat/ChatFooter.vue';
-
 import ChatNotifications from '../common/Chat/ChatNotifications.vue';
 
-import PliziMessage from '../classes/PliziMessage.js';
+import ChatMixin from '../mixins/ChatMixin.js';
 import NotificationMixin from '../mixins/NotificationMixin.js';
+
+import PliziMessage from '../classes/PliziMessage.js';
+import PliziCollection from '../classes/PliziCollection.js';
 
 export default {
 name: 'ChatsListPage',
@@ -95,14 +100,14 @@ components: {
     ChatHeader, ChatMessages, ChatFooter,
 },
 
-mixins: [NotificationMixin],
+mixins: [ChatMixin, NotificationMixin],
 
 data() {
     return {
         componentKey: 0,
         chatCarrier   : null,
         currentDialog : null,
-        messagesList  : [],
+        messagesList  : (new PliziCollection()),
         isMessagesLoaded: false,
 
         filter : {
@@ -126,6 +131,12 @@ computed: {
 },
 
 methods: {
+    onScrollToTop(evData){
+        window.console.info(evData, `onScrollToTop`);
+        this.lazyLoadMessages(evData.chatId, evData.offset, evData.limit);
+        this.$root.$messagesKeyUpdater++;
+    },
+
     isFreshUser(){
         return (this.$root.$auth.fm.size===0  &&  this.$root.$auth.dm.size===0);
     },
@@ -155,7 +166,9 @@ methods: {
         });
     },
 
-    removeMessageInList(evData){
+    removeMessageInList(evData) {
+        window.console.log(`removeMessageInList`);
+
         /** @TGA не реагируем, если мы не на странице чата **/
         if ('ChatsListPage'!==this.$root.$router.currentRoute.name)
             return;
@@ -163,24 +176,13 @@ methods: {
         if (this.currentDialog.id !== evData.chatId)
             return;
 
-        this.messagesList = this.messagesList.filter( mItem => evData.messageId !== mItem.id );
+        //this.messagesList = this.messagesList.filter( mItem => evData.messageId !== mItem.id );
+        this.messagesList.delete(evData.messageId);
 
         /** @var PliziMessage **/
-        const lastMsg = this.messagesList[this.messagesList.length - 1];
+        const lastMsg = this.messagesList.last;
 
         this.updateDialogsList(evData.chatId, { message: lastMsg });
-    },
-
-    addNewChatMessageToList(evData){
-        /** @TGA не реагируем, если мы не на странице чата **/
-        if ('ChatsListPage'!==this.$root.$router.currentRoute.name)
-            return;
-
-        if (this.currentDialog.id === evData.chatId) {
-            this.addMessageToMessagesList(evData.message);
-        }
-
-        this.updateDialogsList(evData.chatId, evData);
     },
 
     addNewMessageNotification(message) {
@@ -191,21 +193,17 @@ methods: {
         this.addNotification(message);
     },
 
-    updateDialogsList(chatId, evData){
+    updateDialogsList(chatId, evData) {
         evData.chatId = chatId;
 
         this.$root.$emit('UpdateChatDialog', evData);
-    },
-
-    addMessageToMessagesList(evData){
-        this.messagesList.push( new PliziMessage(evData) );
     },
 
     onSwitchToChat(evData) {
         this.chatSelect(evData.chatId);
     },
 
-    async chatSelect(chatId){
+    async chatSelect(chatId) {
         let msgsResponse = null;
         this.isMessagesLoaded = false;
 
@@ -221,12 +219,28 @@ methods: {
 
         window.localStorage.setItem('pliziActiveDialog', chatId);
 
-        this.messagesList = [];
+        this.messagesList.clear();
         msgsResponse.map( (msg) => {
             this.addMessageToMessagesList(msg);
         });
 
         this.isMessagesLoaded = true;
+    },
+
+    addNewChatMessageToList(evData){
+        /** @TGA не реагируем, если мы не на странице чата **/
+        if ('ChatsListPage'!==this.$root.$router.currentRoute.name)
+            return;
+
+        if (this.currentDialog.id === evData.chatId) {
+            this.addMessageToMessagesList(evData.message);
+        }
+
+        this.updateDialogsList(evData.chatId, evData);
+    },
+
+    addMessageToMessagesList(evData){
+        this.messagesList.add( new PliziMessage(evData) );
     },
 
     addListeners(){

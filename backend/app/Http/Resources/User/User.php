@@ -4,6 +4,7 @@ namespace App\Http\Resources\User;
 
 
 use App\Http\Resources\PrivacySettings;
+use Domain\Neo4j\Service\UserService;
 use Illuminate\Http\Resources\Json\JsonResource;
 
 class User extends JsonResource
@@ -29,6 +30,7 @@ class User extends JsonResource
             return [
                 'id' => $this->id,
                 'email' => $this->email,
+                'isOwner' => true,
                 'isOnline' => $this->isOnline,
                 'lastActivity' => $this->last_activity_dt,
                 'profile' => new Profile($this->profile),
@@ -38,26 +40,41 @@ class User extends JsonResource
                     'unreadMessagesCount' => $this->unreadMessagesCount,
                     'pendingFriendshipRequestsCount' => $this->pendingFriendshipRequestsCount,
                     'totalFriendsCount' => $this->totalFriendsCount,
-                ]
+                    'followCount' => (new UserService())->followCount($this->id),
+                    'isFollow' => $this->isFollow,
+                    'isFriend' => $this->isFriendWith(auth()->user()),
+                ],
             ];
-        } else {
-            if($this->appendMutual) {
-                return [
-                    'id' => $this->id,
-                    'isOnline' => $this->isOnline,
-                    'lastActivity' => $this->last_activity_dt,
-                    'profile' => new Profile($this->profile),
-                    'mutualFriendsCount' => (int)$this->profile->mutual
-                ];
-            } else {
-                return [
-                    'id' => $this->id,
-                    'isOnline' => $this->isOnline,
-                    'lastActivity' => $this->last_activity_dt,
-                    'profile' => new Profile($this->profile),
-                ];
-            }
         }
+
+        if($this->appendMutual) {
+            return [
+                'id' => $this->id,
+                'isOwner' => false,
+                'isOnline' => $this->isOnline,
+                'lastActivity' => $this->last_activity_dt,
+                'profile' => new Profile($this->profile),
+                'mutualFriendsCount' => (int)$this->profile->mutual,
+                'stats' => [
+                    'followCount' => (new UserService())->followCount($this->id),
+                    'isFollow' => $this->isFollow,
+                    'isFriend' => $this->isFriendWith(auth()->user()),
+                ],
+            ];
+        }
+
+        return [
+            'id' => $this->id,
+            'isOwner' => false,
+            'isOnline' => $this->isOnline,
+            'lastActivity' => $this->last_activity_dt,
+            'profile' => new Profile($this->profile),
+            'stats' => [
+                'followCount' => (new UserService())->followCount($this->id),
+                'isFollow' => $this->isFollow,
+                'isFriend' => $this->isFriendWith(auth()->user()),
+            ],
+        ];
     }
 }
 

@@ -17,6 +17,10 @@ $portraitFullHeight: 750px;
     &--open {
         overflow: hidden;
 
+        .plz-linked-chat-block.mr-3.bg-white-br20.active-chat.plz-favorit-z {
+            overflow: visible;
+        }
+
         header {
         z-index: 1;
         }

@@ -29,7 +29,7 @@
                                                    :key="comIndex">
                                     </CommunityItem>
                             </ul>
-                            <div v-else-if="enabledLoader" class="container px-2">
+                            <div v-else-if="!enabledLoader" class="container px-2">
                                 <div  class=" bg-white-br20 p-3">
                                     <div v-if="!$root.$lastCommunitiesSearch.popular" class="alert alert-info w-100 py-4 text-center m-0">
                                         Нет ни одного популярного сообщества.

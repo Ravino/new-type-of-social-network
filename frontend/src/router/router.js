@@ -26,6 +26,10 @@ import VideosPage from "../pages/VideosPage.vue";
 import CommunityFriendsPage from "../pages/CommunityFriendsPage.vue";
 import CommunitySettingsPage from "../pages/CommunitySettingsPage.vue";
 import CommunityRequestsPage from "../pages/CommunityRequestsPage.vue";
+import AboutPage from "../pages/AboutPage.vue";
+import RulesPage from "../pages/RulesPage.vue";
+import AdvertisementPage from "../pages/AdvertisementPage.vue";
+import ForDevelopersPage from "../pages/ForDevelopersPage.vue";
 import ActiveSessionsPage from "../pages/ActiveSessionsPage.vue";
 
 const routes = [
@@ -34,6 +38,10 @@ const routes = [
     {path: '/login', component: LoginPage, name: 'LoginPage', meta: {title: 'Plizi: Авторизация', isGuest: true}},
     {path: '/logout', component: LogoutPage, name: 'LogoutPage', meta: {title: 'Plizi: Выход', isGuest: true}},
     {path: '/password/update', component: UpdatePasswordPage, name: 'UpdatePasswordPage', meta: {title: 'Plizi: Обновление пароля', props: true, isGuest: true}},
+    {path: '/about', component: AboutPage, name: 'AboutPage', meta: {title: 'Plizi: О проекте', isGuest: true}},
+    {path: '/rules', component: RulesPage, name: 'RulesPage', meta: {title: 'Plizi: Правила', isGuest: true}},
+    {path: '/advertisement', component: AdvertisementPage, name: 'AdvertisementPage', meta: {title: 'Plizi: Реклама', isGuest: true}},
+    {path: '/for-developers', component: ForDevelopersPage, name: 'ForDevelopersPage', meta: {title: 'Plizi: Для разработчиков', isGuest: true}},
 // Auth
     {path: '/account', component: AccountPage, name: 'AccountPage', meta: {title: 'Plizi: Настройки аккаунта'}, props: true },
     {path: '/profile', component: ProfilePage, name: 'ProfilePage', meta: {title: 'Plizi: Домашняя'}, props: true},
