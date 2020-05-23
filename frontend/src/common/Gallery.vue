@@ -47,7 +47,10 @@
                 :active-id="activeImageId"
                 @close="activeImageId = null">
             </GalleryViewer>
-            <GalleryDescription v-if="post" :post="post"></GalleryDescription>
+
+            <GalleryDescription v-if="post"
+                                :post="post"
+                                :image="activeImage"/>
         </div>
     </div>
 </template>
@@ -72,6 +75,7 @@ export default {
 data() {
     return {
         activeImageId: null,
+        activeImage: null,
     };
 },
 computed: {
@@ -201,6 +205,7 @@ computed: {
 methods: {
    showImage(id) {
     this.activeImageId = id;
+    this.activeImage = this.post.attachments.find(attachment => attachment.id === id);
    },
    isAlbum(image) {
     return (image.original.width / image.original.height) > 1.2;

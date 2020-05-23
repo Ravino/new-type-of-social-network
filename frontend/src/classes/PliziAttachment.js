@@ -44,6 +44,30 @@ class PliziAttachment{
      */
     _image = null;
 
+    /**
+     * Количество лайков.
+     *
+     * @type {number}
+     * @private
+     */
+    _likes = null;
+
+    /**
+     * Лайкнул ли атачмент текущий пользователь.
+     *
+     * @type {boolean}
+     * @private
+     */
+    _alreadyLiked = false;
+
+    /**
+     * Пользователи лайкнувшие атачмент.
+     *
+     * @type {Array}
+     * @private
+     */
+    _usersLikes = [];
+
     constructor( inputData ){
         this._id = inputData.id;
         this._originalName = inputData.originalName;
@@ -51,6 +75,9 @@ class PliziAttachment{
         this._mimeType = inputData.mimeType;
         this._size = inputData.size;
         this._image = (inputData.image) ? new PliziAttachmentThumbsObj(inputData.image) : null;
+        this._likes = inputData.likes;
+        this._alreadyLiked = inputData.alreadyLiked;
+        this._usersLikes = inputData.usersLikes;
     }
 
     toJSON(){
@@ -124,6 +151,30 @@ class PliziAttachment{
      */
     get thumb(){
         return (this._image) ? this.image.thumb : null;
+    }
+
+    get likes() {
+        return this._likes;
+    }
+
+    get alreadyLiked() {
+        return this._alreadyLiked;
+    }
+
+    get usersLikes() {
+        return this._usersLikes;
+    }
+
+    set likes(value) {
+        this._likes = value;
+    }
+
+    set alreadyLiked(value) {
+        this._alreadyLiked = value;
+    }
+
+    set usersLikes(value) {
+        this._usersLikes = value;
     }
 }
 
