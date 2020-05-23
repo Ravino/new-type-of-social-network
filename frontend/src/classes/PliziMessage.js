@@ -203,6 +203,14 @@ class PliziMessage{
         return this._createdAt;
     }
 
+    /**
+     * время сообщения в формате UnixTime
+     * @returns {number}
+     */
+    get messageUnix(){
+        return this._createdAt.valueOf();
+    }
+
     get updatedAt(){
         return this._updatedAt;
     }
@@ -256,7 +264,7 @@ class PliziMessage{
             createdAt: +(+this.createdAt.valueOf() / 1000).toFixed(0),
             updatedAt: +(+this.updatedAt.valueOf() / 1000).toFixed(0),
             attachments: { list : atts },
-            replyOn: this.isReply ? this.replyOn.toJSON() : null ,
+            replyOn: this.isReply ? this.replyOn.toJSON() : null,
             isForward: this.isForward
         };
     }

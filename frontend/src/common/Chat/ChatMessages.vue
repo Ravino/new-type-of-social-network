@@ -5,7 +5,11 @@
                               ref="chatMessageScrollBar">
             <div v-if="messagesList  &&  messagesList.length>0" class="d-flex flex-column">
 
-                <div v-if="filteredMessages.length === 0" class="text-center">
+                <Spinner v-if="isMessagesLazyLoad"
+                         v-bind:hideText="true">
+                </Spinner>
+
+                <div v-if="filteredMessages().length === 0" class="text-center">
                     <p v-if="filter.range &&  filter.range.isSameDate">
                         Ничего не найдено за <b>{{ rangeStart | toLongDate }}</b>
                     </p>
@@ -23,7 +27,7 @@
                 </div>
 
                 <transition-group v-else name="slide-fade" :duration="700">
-                    <ChatMessageItem v-for="(message, messageIndex) in filteredMessages"
+                    <ChatMessageItem v-for="message in filteredMessages()"
                                      v-if="message.id !== removeMessageID"
                                      @ChatMessagePick="onChatMessagePick"
                                      @ShowForwardMessageModal="onShowForwardMessageModal"
@@ -31,10 +35,10 @@
                                      @RemoveMessage="onRemoveMessage"
                                      @openChatVideoModal="openChatVideoModal"
                                      v-bind:message="message"
-                                     v-bind:next="getNext(messageIndex)"
+                                     v-bind:isNextIsSamePerson="isNextIsSamePerson(message.id, message.userId)"
                                      v-bind:pickedID="pickedMessageID"
                                      v-bind:dialogID="currentDialog.id"
-                                     v-bind:key="message.id+`-`+messageIndex">
+                                     v-bind:key="'chatMessageItem-'+ message.id+'-'+keyUpdater">
                     </ChatMessageItem>
                 </transition-group>
             </div>
@@ -47,20 +51,23 @@
         </vue-custom-scrollbar>
 
         <ResendMessageModal v-if="resendMessageModalShow"
-                            v-bind:pickedMessage="pickedMessage()"
-                            v-bind:currentDialog="currentDialog"
-                            v-bind:pickedID="pickedMessageID">
+                @HideMessageResendModal="onHideMessageResendModal"
+                v-bind:pickedMessage="pickedMessage()"
+                v-bind:currentDialog="currentDialog"
+                v-bind:pickedID="pickedMessageID">
         </ResendMessageModal>
 
         <ReplyMessageModal v-if="replyMessageModalShow"
-                            v-bind:pickedMessage="pickedMessage()"
-                            v-bind:currentDialog="currentDialog"
-                            v-bind:pickedID="pickedMessageID"
-                            v-bind:attendees="currentDialog.attendees">
+                @HideReplyMessageModal="onHideReplyMessageModal"
+                v-bind:pickedMessage="pickedMessage()"
+                v-bind:currentDialog="currentDialog"
+                v-bind:pickedID="pickedMessageID"
+                v-bind:attendees="currentDialog.attendees">
         </ReplyMessageModal>
 
         <ChatVideoModal v-if="chatVideoModalShow"
-                            v-bind:videoLink="chatVideoModalContent.videoLink"></ChatVideoModal>
+                @HideChatVideoModal="onHideChatVideoModal"
+                v-bind:videoLink="chatVideoModalContent.videoLink"></ChatVideoModal>
     </div>
 </template>
 
@@ -75,22 +82,28 @@ import ResendMessageModal from './ResendMessageModal.vue';
 import ReplyMessageModal from './ReplyMessageModal.vue';
 import ChatVideoModal from './ChatVideoModal.vue';
 
+import Spinner from '../Spinner.vue';
+
 import PliziMessage from '../../classes/PliziMessage.js';
-import PliziCollection from '../../classes/PliziCollection.js';
+import PliziMessagesCollection from '../../classes/Collection/PliziMessagesCollection.js';
 
 export default {
 name: 'ChatMessages',
 components: {
     vueCustomScrollbar,
+    Spinner,
     ChatMessageItem,
     ResendMessageModal, ReplyMessageModal,
     ChatVideoModal,
 },
 
 props: {
-    messagesList: PliziCollection,
+    messagesList: PliziMessagesCollection,
     currentDialog: Object,
-    filter: Object
+    filter: Object,
+    keyUpdater: Number,
+    isMessagesLazyLoad: Boolean,
+    isCanLoadMoreMessages: Boolean
 },
 
 data() {
@@ -112,60 +125,28 @@ data() {
         chatVideoModalContent: {
             videoLink: null,
         },
+
+        rangeStart : null,
+        rangeEnd : null
     }
 },
 
-computed: {
+
+methods: {
     filteredMessages() {
         // без фильтра
         if (''===this.filter.text  &&  this.filter.range===null)
-            return this.messagesList.asArray();
-
-        // с фильтром
-        let rangeStart, rangeEnd;
+            return this.messagesList.asArray().slice();
 
         if (this.filter.range && this.filter.range.start && this.filter.range.end) {
-            rangeStart = this.filter.range.start;
-            rangeEnd = this.filter.range.end;
-
-            this.rangeStart = rangeStart;
-            this.rangeEnd = rangeEnd;
+            this.rangeStart = this.filter.range.start;
+            this.rangeEnd = this.filter.range.end;
         }
 
-        // есть и текст и дата
-        if (this.filter.text && this.filter.range && rangeStart && rangeEnd) {
-            const ft = this.filter.text.toLocaleLowerCase();
+        // с фильтром
+        return this.messagesList.filter(this.filter).slice();
+    },
 
-            if (ft.length > 2) {
-                return this.messagesList.asArray().filter((msgItem) => {
-                    return msgItem.body.toLowerCase().includes(ft) &&
-                        (msgItem.createdAt > rangeStart) && (msgItem.createdAt < rangeEnd);
-                });
-            }
-        }
-
-        // есть только текст
-        if (this.filter.text) {
-            const ft = this.filter.text.toLocaleLowerCase();
-
-            if (ft.length > 2)
-                return this.messagesList.asArray().filter((msgItem) => {
-                    return msgItem.body.toLowerCase().includes(ft);
-                });
-        }
-
-        // только дата
-        if (this.filter.range && rangeStart && rangeEnd) {
-            return this.messagesList.asArray().filter((msgItem) => {
-                return (msgItem.createdAt > this.filter.range.start) && (msgItem.createdAt < rangeEnd);
-            });
-        }
-
-        return this.messagesList.asArray();
-    }
-},
-
-methods: {
     onScrollToTop(){
         this.$emit( 'ScrollToTop', {
             chatId: this.currentDialog.id,
@@ -200,11 +181,11 @@ methods: {
 
     onRemoveMessage(evData){
         this.removeMessageID = evData.messageID;
-
         this.removeMessageById(this.removeMessageID);
     },
 
     async removeMessageById(msgID) {
+        //this.messagesList.delete(msgID);
         this.messagesList.delete(msgID);
 
         this.$root.$emit('removeMessageInDialog', {
@@ -225,25 +206,26 @@ methods: {
         }
     },
 
-    onShowForwardMessageModal() {
-        this.resendMessageModalShow = true;
-    },
+    //hideMessageResendModal() {
+    //    this.$root.$emit('hideMessageResendModal', {});
+    //},
+    //hideReplyMessageModal() {
+    //    this.$root.$emit('hideReplyMessageModal', {});
+    //},
 
-    hideMessageResendModal() {
-        this.$root.$emit('hideMessageResendModal', {});
-    },
+    isNextIsSamePerson(itemId, userId) {
+        const node = this.messagesList.getNode(itemId);
+        if (! node)
+            return false;
 
-    onShowReplyMessageModal() {
-        this.replyMessageModalShow = true;
-    },
+        if (! node.next)
+            return false;
 
-    hideReplyMessageModal() {
-        this.$root.$emit('hideReplyMessageModal', {});
-    },
+        const nextItem = this.messagesList.get(node.next);
+        if (! nextItem)
+            return false;
 
-    getNext(currIndex) {
-        let ret = (currIndex < this.filteredMessages.length) ? this.filteredMessages[currIndex + 1] : null;
-        return (typeof ret === 'undefined') ? null : ret;
+        return (nextItem.userId === userId);
     },
 
     scrollToEnd() {
@@ -258,23 +240,31 @@ methods: {
     clearFilters() {
         this.$emit('ClearFilters');
     },
+
+    onShowForwardMessageModal() {
+        this.resendMessageModalShow = true;
+    },
+
+    onShowReplyMessageModal() {
+        this.replyMessageModalShow = true;
+    },
+
+    onHideMessageResendModal(){
+        this.resendMessageModalShow = false;
+    },
+
+    onHideReplyMessageModal(){
+        this.replyMessageModalShow = false;
+    },
+
+    onHideChatVideoModal(){
+        this.chatVideoModalShow = false;
+    }
 },
 
 mounted() {
-    this.$root.$on('hideMessageResendModal', () => {
-        this.resendMessageModalShow = false;
-    });
-
-    this.$root.$on('hideReplyMessageModal', () => {
-        this.replyMessageModalShow = false;
-    });
-
-    this.$root.$on('hideChatVideoModal', () => {
-        this.chatVideoModalShow = false;
-    });
-
     this.scrollToEnd();
-},
+}
 
 }
 </script>

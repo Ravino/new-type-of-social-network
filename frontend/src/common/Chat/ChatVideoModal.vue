@@ -12,25 +12,25 @@
 </template>
 
 <script>
-    import VideoPlayer from "../../common/VideoPlayer.vue";
+import VideoPlayer from '../../common/VideoPlayer.vue';
 
-    export default {
-        name: "ChatVideoModal",
-        props: {
-            videoLink: {
-                type: String,
-                default: null,
-            },
-        },
-        components: {
-            VideoPlayer,
-        },
-        methods: {
-            hideChatVideoModal() {
-                this.$root.$emit('hideChatVideoModal', {});
-            },
-        },
-    }
+export default {
+name: 'ChatVideoModal',
+props: {
+    videoLink: {
+        type: String,
+        default: null,
+    },
+},
+components: {
+    VideoPlayer,
+},
+methods: {
+    hideChatVideoModal() {
+        this.$emit('HideChatVideoModal', {});
+    },
+},
+}
 </script>
 
 <style scoped>

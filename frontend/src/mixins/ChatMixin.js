@@ -1,7 +1,8 @@
+import PliziMessage from "../classes/PliziMessage";
+
 const ChatMixin = {
 data() {
     return {
-        isMessagesLazyLoad: false,
     }
 },
 
@@ -25,9 +26,11 @@ methods: {
     },
 
     async lazyLoadMessages(chatId, offset, limit){
-        let msgsResponse = null;
+        if (!this.isCanLoadMoreMessages)
+            return;
 
         this.isMessagesLazyLoad = true;
+        let msgsResponse = null;
 
         try {
             msgsResponse = await this.$root.$api.$chat.messages(chatId, offset, limit);
@@ -37,13 +40,29 @@ methods: {
             throw e;
         }
 
+        this.isMessagesLazyLoad = false;
+
         window.localStorage.setItem('pliziActiveDialog', chatId);
 
-        msgsResponse.map( (msg) => {
-            this.addMessageToMessagesList(msg);
-        });
+        if (msgsResponse){
+            window.console.log(this.messagesList.size, `messagesList.size`);
 
-        this.isMessagesLazyLoad = true;
+            if (msgsResponse.length > 0) {
+                this.isCanLoadMoreMessages = true;
+                msgsResponse.map( (msg) => {
+                    this.prependMessageToMessagesList(msg);
+                });
+            }
+            else {
+                this.isCanLoadMoreMessages = false;
+            }
+
+            window.console.log(this.messagesList.size, `messagesList.size`);
+        }
+    },
+
+    prependMessageToMessagesList(evData){
+        this.messagesList.prepend( new PliziMessage(evData) );
     },
 },
 
