@@ -30,7 +30,7 @@ const EditInline = {
             if (inpRef) {
                 inpRef.focus();
             } else {
-                window.console.warn('Ошибка редактирования поля', 's');
+                window.console.warn('Ошибка редактирования поля', 's', fieldName);
             }
         },
         finishFieldEdit (fieldName) {
@@ -41,17 +41,13 @@ const EditInline = {
                 return;
             }
             setTimeout(() => {
-                console.log(fieldName, this.model[fieldName], 'setTimeout');
                 if (inpRef) {
-                    console.log(fieldName, this.model[fieldName], 'in1');
                     inpRef.blur();
                     if (!this.isSend[fieldName]) {
-
-                        console.log(fieldName, this.model[fieldName], 'in2');
                         this.accountStartSaveData(this.model[fieldName], fieldName);
                     }
                 } else {
-                    window.console.warn('Ошибка редактирования поля', 'f');
+                    window.console.warn('Ошибка редактирования поля', 'f', fieldName);
                 }
             }, 50);
         },

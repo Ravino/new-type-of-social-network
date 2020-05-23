@@ -7,6 +7,7 @@ namespace App\Http\Requests\Community;
 use App\Http\Requests\Request;
 use App\Models\Community as CommunityModel;
 use App\Models\CommunityTheme;
+use App\Rules\Website;
 use Illuminate\Validation\Rule;
 
 class Community extends Request
@@ -41,7 +42,7 @@ class Community extends Request
                 'max:150',
                 Rule::unique('communities')->ignore($this->id, 'id'),
             ],
-            'website' => 'url|nullable',
+            'website' => ['nullable', new Website()],
             'location' => 'exists:geo_cities,id',
             'privacy' => [
                 Rule::in(array_keys(CommunityModel::getPrivacyList())),
