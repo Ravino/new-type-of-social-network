@@ -72,6 +72,12 @@ $titleColor: #363636;
                     border-bottom: 1px solid transparent;
                 }
 
+                &.relationshipUsers {
+                    .multiselect__tags {
+                        padding: 0;
+                    }
+                }
+
                 .multiselect__single {
                     margin-bottom: 0;
                     line-height: 30px;

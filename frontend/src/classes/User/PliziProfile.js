@@ -180,7 +180,7 @@ class PliziUser {
             switch (this._sex) {
                 case 'm': return `Женат`;
                 case 'f': return `Замужем`;
-                case 'n': return `В отношениях`;
+                case 'n': return `В браке`;
             }
         }
 
@@ -188,7 +188,7 @@ class PliziUser {
             switch (this._sex) {
                 case 'm': return `Не женат`;
                 case 'f': return `Не замужем`;
-                case 'n': return `В поиске`;
+                case 'n': return `Не в браке`;
             }
         }
 
