@@ -11,7 +11,7 @@ $notificationPicSize: 50px;
 .plizi-notification-item-user,
 .plizi-invitation-item {
     transition: .4s;
-    min-width: 400px;
+    //min-width: 400px;  //del for header notification IphooneX
 
     .user-friend-desc {
         overflow: hidden;
