@@ -38,12 +38,12 @@
 
             <button @click.prevent="acceptRequest()" type="button" class="btn btn-link ml-0"
                     title="Принять запрос">
-                <IconMessageShort/>
+                <IconUserPlus  style="height: 20px;" />
             </button>
 
             <button @click.prevent="rejectRequest()" type="button" class="btn btn-link ml-0"
                     title="Отклонить запрос">
-                <IconMessageShort/>
+                <IconUserX  style="height: 20px;" />
             </button>
 
         </div>
@@ -52,15 +52,16 @@
 
 <script>
     import PliziCommunityRequest from "../../classes/Community/PliziCommunityRequest.js";
-    import FriendListItemMenu from "../FriendListItemMenu.vue";
     import IconMessageShort from "../../icons/IconMessageShort.vue";
-    import IconSpinner from "../../icons/IconSpinner.vue";
     import IconLocation from "../../icons/IconLocation.vue";
     import DialogMixin from "../../mixins/DialogMixin.js";
+    import IconUserX from "../../icons/IconUserX.vue";
+    import IconAddUser from "../../icons/IconAddUser.vue";
+    import IconUserPlus from "../../icons/IconUserPlus.vue";
 
     export default {
         name: 'CommunityRequestItem',
-        components: {FriendListItemMenu, IconMessageShort, IconSpinner, IconLocation},
+        components: {IconUserPlus, IconAddUser, IconUserX, IconMessageShort, IconLocation},
         mixins: [DialogMixin],
         props: {
             request: PliziCommunityRequest,

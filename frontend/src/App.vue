@@ -1,6 +1,6 @@
 <template>
     <div  id="pageWrapper">
-        <div v-if="!isAuthorized()" id="guestPageWrapper" class="d-flex flex-column justify-content-center">
+        <div v-if="!isAuthorized()" id="guestPageWrapper" class="d-flex flex-column --justify-content-center">
             <div class="--container-fluid container px-md-0 my-0 pt-4">
 
                 <GuestNavBar></GuestNavBar>
@@ -25,7 +25,7 @@
 
             <div class="--container-fluid container my-0 container-wide mx-auto">
                 <main :id="containerID" role="main"
-                      class="container-fluid pb-sm-5 px-0">
+                      class="container-fluid pb-sm-4 px-0">
                     <transition>
                         <router-view></router-view>
                     </transition>

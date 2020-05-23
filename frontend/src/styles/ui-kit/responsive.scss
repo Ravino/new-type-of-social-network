@@ -50,7 +50,11 @@
         }
     }
 
-    .is-chatPage .chat-page-height {
+    .is-chatPage .chat-page-height-body {
+        //height: calc(100vh - 240px);
+        height: auto;
+    }
+    .is-chatPage .chat-page-height-aside {
         height: auto;
         min-height: auto;
     }
@@ -66,7 +70,7 @@
     }
     #chatMessagesWrapper {
         position: relative;
-        height: 500px;
+        height: 370px; //500
         flex: 1 1 auto;
 
         &:after {
@@ -88,6 +92,17 @@
     #chatHeader {
         border-top: 1px solid $borderColor;
     }
+    .ChatsListPage #chatHeader {
+        border-radius: 0;
+    }
+
+    #chatMessagesBody {
+        padding-bottom: 180px;
+
+        .chat-messages-scroll {
+            min-height: 115px;
+        }
+    }
 
     .plz-gallery-viewer-nav-btn {
         height: 40px;
@@ -97,6 +112,16 @@
         max-width: calc(100vw - 90px);
         max-height: calc(100vh - 100px);
     }
+
+    #watcherWrapper {
+        .dropdown-menu {
+            left: 50%;
+            right: auto;
+            transform: translateX(-50%);
+            max-width: 96vw;
+        }
+    }
+
 }
 
 /*- md -*/

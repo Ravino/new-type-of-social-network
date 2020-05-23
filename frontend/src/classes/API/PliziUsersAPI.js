@@ -87,6 +87,125 @@ class PliziUsersAPI extends PliziBaseAPI{
 
         return null;
     }
+
+    /**
+     * Подписаться на пользователя
+     * @param userId
+     * @returns {Promise<null|any>}
+     */
+    async follow(userId) {
+        let response = await this.axios.post(`api/user/${userId}/follow`, {}, this.authHeaders)
+            .catch((error) => {
+                if (error.response.status === 422) {
+                    return {
+                        status: 422,
+                        data: {
+                            message: error.response.data.message
+                        }
+                    }
+                } else {
+                    this.checkIsTokenExpires(error, '$users.follow');
+                    throw new PliziAPIError('$users.follow', error.response);
+                }
+            });
+
+        if ([200, 422].includes(response.status)) {
+            return response.data;
+        }
+        return null;
+    }
+
+    /**
+     * Отписаться от пользователя
+     * @param userId
+     * @returns {Promise<null|any>}
+     */
+    async unFollow(userId) {
+        let response = await this.axios.delete(`api/user/${userId}/follow`, this.authHeaders)
+            .catch((error) => {
+                if (error.response.status === 422) {
+                    return {
+                        status: 422,
+                        data: {
+                            message: error.response.data.message
+                        }
+                    }
+                } else {
+                    this.checkIsTokenExpires(error, '$users.unFollow');
+                    throw new PliziAPIError('$users.unFollow', error.response);
+                }
+            });
+
+        if ([200, 422].includes(response.status)) {
+            return response.data;
+        }
+        return null;
+    }
+
+    /**
+     * Список тех, на кого я подписан
+     * @param limit
+     * @param offset
+     * @returns {Promise<null|*>}
+     */
+    async followList(limit, offset) {
+        let path = 'api/user/follow/list';
+        let qParams = '';
+
+        if (limit && offset) {
+            qParams = `?limit=${limit}&offset=${offset}`;
+        }
+
+        let response = await this.axios.get(path + qParams, this.authHeaders)
+            .catch((error) => {
+                this.checkIsTokenExpires(error, `$users.followList`);
+                throw new PliziAPIError(`$users.followList`, error.response);
+            });
+
+        if (response.status === 200) {
+            return response.data.data;
+        }
+
+        return null;
+    }
+
+    /**
+     * Получение списка активных сессий.
+     *
+     * @returns {object[]|null}
+     */
+    async getActiveSessions() {
+        let response = await this.axios.get('/api/user/sessions/active', this.authHeaders)
+            .catch((error) => {
+                this.checkIsTokenExpires(error, `$users.getActiveSessions`);
+                throw new PliziAPIError(`$users.getActiveSessions`, error.response);
+            });
+
+        if (response.status === 200) {
+            return response.data.data.list;
+        }
+
+        return null;
+    }
+
+    /**
+     * Закрытие всех соединений кроме текущей.
+     *
+     * @returns {object[]|null}
+     */
+    async closeActiveSessions() {
+        let response = await this.axios.post('/api/user/sessions/close', {}, this.authHeaders)
+            .catch((error) => {
+                this.checkIsTokenExpires(error, `$users.closeActiveSessions`);
+                throw new PliziAPIError(`$users.closeActiveSessions`, error.response);
+            });
+
+        if (response.status === 200) {
+            return response.data;
+        }
+
+        return null;
+    }
 }
 
 export { PliziUsersAPI as default}

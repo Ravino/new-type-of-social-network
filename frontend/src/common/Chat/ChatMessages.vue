@@ -1,14 +1,17 @@
 <template>
     <div id="chatMessagesBody" class="w-100 align-self-stretch position-relative h-100">
         <vue-custom-scrollbar class="chat-messages-scroll py-4" :settings="customScrollbarSettings"
-                              ref="vueCustomScrollbar">
+                              @ps-y-reach-start="onScrollToTop"
+                              ref="chatMessageScrollBar">
             <div v-if="messagesList  &&  messagesList.length>0" class="d-flex flex-column">
+
                 <div v-if="filteredMessages.length === 0" class="text-center">
                     <p v-if="filter.range &&  filter.range.isSameDate">
                         Ничего не найдено за <b>{{ rangeStart | toLongDate }}</b>
                     </p>
                     <p v-if="filter.range &&  !filter.range.isSameDate">
-                        Ничего не найдено за период с <b>{{rangeStart | toLongDate}}</b>  по <b>{{rangeEnd | toLongDate}}</b>
+                        Ничего не найдено за период с
+                        <b>{{rangeStart | toLongDate}}</b>  по <b>{{rangeEnd | toLongDate}}</b>
                     </p>
                     <p v-if="!filter.range &&  filter.text!==''">
                         Не найдено сообщений с текстом <b>{{ filter.text }}</b>
@@ -53,11 +56,11 @@
                             v-bind:pickedMessage="pickedMessage()"
                             v-bind:currentDialog="currentDialog"
                             v-bind:pickedID="pickedMessageID"
-                           :attendees="currentDialog.attendees">
+                            v-bind:attendees="currentDialog.attendees">
         </ReplyMessageModal>
 
         <ChatVideoModal v-if="chatVideoModalShow"
-                        :videoLink="chatVideoModalContent.videoLink"></ChatVideoModal>
+                            v-bind:videoLink="chatVideoModalContent.videoLink"></ChatVideoModal>
     </div>
 </template>
 
@@ -73,6 +76,7 @@ import ReplyMessageModal from './ReplyMessageModal.vue';
 import ChatVideoModal from './ChatVideoModal.vue';
 
 import PliziMessage from '../../classes/PliziMessage.js';
+import PliziCollection from '../../classes/PliziCollection.js';
 
 export default {
 name: 'ChatMessages',
@@ -84,7 +88,7 @@ components: {
 },
 
 props: {
-    messagesList: Array,
+    messagesList: PliziCollection,
     currentDialog: Object,
     filter: Object
 },
@@ -92,9 +96,10 @@ props: {
 data() {
     return {
         pickedMessageID: 'unknown',
-        replyMessageID: 'unknown',
+        replyMessageID:  'unknown',
         removeMessageID: 'unknown',
         previousMsg: null,
+
         resendMessageModalShow: false,
         replyMessageModalShow: false,
 
@@ -102,21 +107,75 @@ data() {
             maxScrollbarLength: 60,
             suppressScrollX: true, // rm scroll x
         },
+
         chatVideoModalShow: false,
         chatVideoModalContent: {
             videoLink: null,
         },
+    }
+},
 
-        range_start : null,
-        range_end : null
+computed: {
+    filteredMessages() {
+        // без фильтра
+        if (''===this.filter.text  &&  this.filter.range===null)
+            return this.messagesList.asArray();
+
+        // с фильтром
+        let rangeStart, rangeEnd;
+
+        if (this.filter.range && this.filter.range.start && this.filter.range.end) {
+            rangeStart = this.filter.range.start;
+            rangeEnd = this.filter.range.end;
+
+            this.rangeStart = rangeStart;
+            this.rangeEnd = rangeEnd;
+        }
+
+        // есть и текст и дата
+        if (this.filter.text && this.filter.range && rangeStart && rangeEnd) {
+            const ft = this.filter.text.toLocaleLowerCase();
+
+            if (ft.length > 2) {
+                return this.messagesList.asArray().filter((msgItem) => {
+                    return msgItem.body.toLowerCase().includes(ft) &&
+                        (msgItem.createdAt > rangeStart) && (msgItem.createdAt < rangeEnd);
+                });
+            }
+        }
+
+        // есть только текст
+        if (this.filter.text) {
+            const ft = this.filter.text.toLocaleLowerCase();
+
+            if (ft.length > 2)
+                return this.messagesList.asArray().filter((msgItem) => {
+                    return msgItem.body.toLowerCase().includes(ft);
+                });
+        }
+
+        // только дата
+        if (this.filter.range && rangeStart && rangeEnd) {
+            return this.messagesList.asArray().filter((msgItem) => {
+                return (msgItem.createdAt > this.filter.range.start) && (msgItem.createdAt < rangeEnd);
+            });
+        }
+
+        return this.messagesList.asArray();
     }
 },
 
 methods: {
-    pickedMessage() {
-        let lMsg = this.messagesList.find((mItem) => {
-            return mItem.id === this.pickedMessageID;
+    onScrollToTop(){
+        this.$emit( 'ScrollToTop', {
+            chatId: this.currentDialog.id,
+            offset: this.messagesList.size,
+            limit: 10
         });
+    },
+
+    pickedMessage() {
+        let lMsg = this.messagesList.get(this.pickedMessageID);
 
         if (lMsg) {
             lMsg = new PliziMessage(lMsg);
@@ -142,17 +201,15 @@ methods: {
     onRemoveMessage(evData){
         this.removeMessageID = evData.messageID;
 
-        setTimeout(()=>{
-            this.removeMessageById(this.removeMessageID);
-            //this.checkUpdatedChatContainerHeight(); // FIXME: в этом компоненте нет такого метода
-        }, 500);
+        this.removeMessageById(this.removeMessageID);
     },
 
     async removeMessageById(msgID) {
-        const fIndex = this.messagesList.findIndex((mItem) => {
-            return mItem.id === msgID;
+        this.messagesList.delete(msgID);
+
+        this.$root.$emit('removeMessageInDialog', {
+            chatId: this.currentDialog.id
         });
-        this.messagesList.splice(fIndex, 1);
 
         let apiResponse = null;
 
@@ -161,6 +218,10 @@ methods: {
         } catch (e) {
             window.console.warn(e.detailMessage);
             throw e;
+        }
+
+        if (apiResponse) {
+
         }
     },
 
@@ -195,58 +256,8 @@ methods: {
     },
 
     clearFilters() {
-        this.$emit('clearFilters');
+        this.$emit('ClearFilters');
     },
-},
-
-computed: {
-    filteredMessages() {
-        // без фильтра
-        if (''===this.filter.text  &&  this.filter.range===null) {
-            return this.messagesList;
-        }
-
-        let rangeStart, rangeEnd;
-
-        if (this.filter.range && this.filter.range.start && this.filter.range.end) {
-            rangeStart = this.filter.range.start;
-            rangeEnd = this.filter.range.end;
-
-            this.rangeStart = rangeStart;
-            this.rangeEnd = rangeEnd;
-        }
-
-        // есть и текст и дата
-        if (this.filter.text && this.filter.range && rangeStart && rangeEnd) {
-            const ft = this.filter.text.toLocaleLowerCase();
-
-            if (ft.length > 2) {
-                return this.messagesList.filter((msgItem) => {
-                    return msgItem.body.toLowerCase().includes(ft) &&
-                        (msgItem.createdAt > rangeStart) && (msgItem.createdAt < rangeEnd);
-                });
-            }
-        }
-
-        // есть только текст
-        if (this.filter.text) {
-            const ft = this.filter.text.toLocaleLowerCase();
-
-            if (ft.length > 2)
-                return this.messagesList.filter((msgItem) => {
-                    return msgItem.body.toLowerCase().includes(ft);
-                });
-        }
-
-        // только дата
-        if (this.filter.range && rangeStart && rangeEnd) {
-            return this.messagesList.filter((msgItem) => {
-                return (msgItem.createdAt > this.filter.range.start) && (msgItem.createdAt < rangeEnd);
-            });
-        }
-
-        return this.messagesList;
-    }
 },
 
 mounted() {

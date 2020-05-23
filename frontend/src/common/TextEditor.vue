@@ -49,7 +49,7 @@
                         <input type="file" @change="onSelectImage($event)" ref="editorImager" multiple />
                     </label>-->
 
-                    <button class="btn btn-link w-100 mx-0 px-1 btn-add-smile position-relative" type="button">
+                    <button class="btn btn-link w-100 mx-0 p-0 btn-add-smile position-relative" type="button">
                         <EmojiPicker @addEmoji="onAddEmoji" v-bind:transform="emojiTransform"></EmojiPicker>
                     </button>
                 </div>

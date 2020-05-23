@@ -1,5 +1,6 @@
 import PliziProfile from './User/PliziProfile.js';
 import { convertToDate } from '../utils/DateUtils.js';
+import PliziUserStats from "./User/PliziUserStats.js";
 
 class PliziUser {
     /**
@@ -13,6 +14,12 @@ class PliziUser {
      * @private
      */
     _isOnline = false;
+
+    /**
+     * @type {boolean}
+     * @private
+     */
+    _isOwner = false;
 
     /**
      * метка времени когда у юзера была последняя актиновсть
@@ -65,6 +72,13 @@ class PliziUser {
     _audiosNumber = 0;
 
     /**
+     * статистика
+     * @type {PliziUserStats}
+     * @private
+     */
+    _stats = null;
+
+    /**
      * @param {object} usrData
      */
     constructor(usrData) {
@@ -78,11 +92,14 @@ class PliziUser {
      */
     updateUserData(inputData) {
         this._id = inputData.id ? inputData.id : this.id;
+        this._isOwner = !!inputData.isOwner;
         this._isOnline = inputData.isOnline ? inputData.isOnline : this.isOnline;
         this._lastActivity = inputData.lastActivity ? convertToDate(inputData.lastActivity) : this.lastActivity;
 
         this._profile = inputData.profile ? new PliziProfile(inputData.profile) : this.profile;
         this._mutualFriendsCount = inputData.mutualFriendsCount ? inputData.mutualFriendsCount : this.mutualFriendsCount;
+
+        this._stats = inputData.stats ? new PliziUserStats(inputData.stats) : this.stats;
 
         // TODO: @TGA переписать потом на загрузку реальных данных
         this._subscribersNumber = Math.floor(Math.random() * 10000);
@@ -105,6 +122,13 @@ class PliziUser {
      */
     get isOnline(){
         return this._isOnline;
+    }
+
+    /**
+     * @returns {boolean}
+     */
+    get isOwner(){
+        return this._isOwner;
     }
 
     /**
@@ -281,15 +305,25 @@ class PliziUser {
     }
 
     /**
+     * ссылка на статистику
+     * @returns {PliziUserStats}
+     */
+    get stats(){
+        return this._stats;
+    }
+
+    /**
      * возвращает данные юзера в том виде как их воазващает api/user/search
      * @returns {Object}
      */
     toJSON() {
         return {
             id: this.id,
+            isOwner: this.isOwner,
             isOnline: this.isOnline,
             lastActivity: (this.lastActivity) ? this.lastActivity.valueOf() / 1000 : this.lastActivity,
             profile: (this.profile) ? this.profile.toJSON() : null,
+            stats: (this.stats) ? this.stats.toJSON() : null,
             mutualFriendsCount: this.mutualFriendsCount
         };
     }

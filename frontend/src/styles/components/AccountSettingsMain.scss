@@ -72,6 +72,12 @@ $titleColor: #363636;
                     border-bottom: 1px solid transparent;
                 }
 
+                &.relationshipUsers {
+                    .multiselect__tags {
+                        padding: 0;
+                    }
+                }
+
                 .multiselect__single {
                     margin-bottom: 0;
                     line-height: 30px;
@@ -143,11 +149,17 @@ $titleColor: #363636;
             padding-right: 0;
             justify-content: flex-end;
 
-            button {
+            button, a {
                 color: #9a9a9a!important;
                 font-size: 13px;
                 padding-right: 0;
                 text-decoration: none;
+            }
+
+            a {
+                &:hover {
+                    text-decoration: underline;
+                }
             }
         }
 

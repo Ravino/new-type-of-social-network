@@ -133,7 +133,9 @@ class UserService
      */
     public function isFollowed($owner_oid, $user_oid)
     {
-        return $this->userRepository->isFollowed($owner_oid, $user_oid);
+        return $owner_oid === $user_oid
+            ? true
+            : $this->userRepository->isFollowed($owner_oid, $user_oid);
     }
 
     /**

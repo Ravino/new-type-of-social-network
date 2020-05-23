@@ -73,11 +73,14 @@ Route::group(['middleware' => ['auth.jwt', 'track.activity']], function () {
     Route::patch('user/privacy', 'Api\UserPrivacySettingController@patch');
     Route::get('user/privacy/roles', 'Api\UserPrivacySettingController@roles');
     Route::get('user/search/{search}', 'Api\UserController@search');
-    Route::post('user/blacklist', 'Api\UserBlacklistController@post');
-    Route::delete('user/blacklist', 'Api\UserBlacklistController@delete');
+    Route::get('user/blacklist/list', 'Api\UserBlacklistController@index');
+    Route::post('user/blacklist/add', 'Api\UserBlacklistController@store');
+    Route::post('user/blacklist/delete', 'Api\UserBlacklistController@delete');
     Route::post('/user/password/change', 'Auth\ChangePasswordController@changePassword');
     Route::post('/user/email/change', 'Auth\ChangeEmailController@changeEmail');
     Route::patch('user/notifications/mark/read', 'Api\UserController@markNotificationsAsRead');
+    Route::get('/user/sessions/active', 'Api\SessionController@index');
+    Route::post('/user/sessions/close', 'Api\SessionController@close');
 
     Route::get('user/follow/list', [UserSubscribeController::class, 'list']);
     Route::middleware(['user.get'])->group(static function() {

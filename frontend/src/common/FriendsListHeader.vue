@@ -16,6 +16,11 @@
                              :class="{ 'active': 'FriendsRecentPage'===this.$root.$router.currentRoute.name }">
                     Новые друзья
                 </router-link>
+
+                <router-link :to="{name: 'FollowListPage'}" tag="span" class="nav-link py-2 py-sm-3 py-lg-4 px-1 mr-2 mr-lg-4" role="tab"
+                             :class="{ 'active': 'FollowListPage'===this.$root.$router.currentRoute.name }">
+                    На кого я подписан
+                </router-link>
             </nav>
         </div>
 

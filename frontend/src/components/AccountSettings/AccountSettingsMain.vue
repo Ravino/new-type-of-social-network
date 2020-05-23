@@ -124,7 +124,7 @@
                         class="plz-account-settings-body-field order-1 order-sm-0 col-12 col-sm-5 col-md-6 col-lg-6 col-xl-6">
                         <div class="w-100 w-sm-75 position-relative ml-n2">
                             <multiselect id="relationshipUsers"
-                                         class="w-100 w-sm-75 border-0 form-control p-0 position-relative"
+                                         class="w-100 w-sm-75 border-0 form-control p-0 position-relative relationshipUsers"
                                          v-model="model.relationshipUser"
                                          :options="friends"
                                          :showLabels="false"

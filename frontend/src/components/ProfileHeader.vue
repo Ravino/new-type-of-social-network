@@ -34,7 +34,10 @@
         <div class="col-12  col-lg-8 col-xl-9 px-0 py-4 plz-profile-userdetails">
             <div class="w-100 bg-white-br20 px-3 px-md-5 pb-3">
                 <div class="d-flex justify-content-between align-items-center mb-2">
-                    <h2 class="plz-user-name">{{userData.fullName}}</h2>
+                    <h2 class="plz-user-name">
+                        {{userData.fullName}}
+                        <ButtonsFollow :userData="userData"></ButtonsFollow>
+                    </h2>
                     <span v-if="userData.isOnline" class="online">В сети</span>
                 </div>
 
@@ -111,11 +114,12 @@ import FriendshipInvitationMixin from '../mixins/FriendshipInvitationMixin';
 
 import PliziUser from '../classes/PliziUser.js';
 import PliziAuthUser from '../classes/PliziAuthUser.js';
-import PliziAvatar from '../classes/User/PliziAvatar';
+import PliziAvatar from '../classes/User/PliziAvatar.js';
+import ButtonsFollow from "./Follow/ButtonsFollow.vue";
 
 export default {
 name: 'ProfileHeader',
-components: {IconLocation, IconAddUser},
+components: {ButtonsFollow, IconLocation, IconAddUser},
 mixins: [FriendshipInvitationMixin],
 props: {
     userData: PliziUser|PliziAuthUser,

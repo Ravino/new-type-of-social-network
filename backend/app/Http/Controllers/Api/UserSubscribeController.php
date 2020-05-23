@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers\Api;
 
+use App\Events\Followers\AddFollower;
+use App\Events\Followers\SubFollower;
 use App\Http\Controllers\Controller;
 use App\Http\Resources\User\UserCollection;
 use App\Models\User;
@@ -66,6 +68,11 @@ class UserSubscribeController extends Controller
      */
     public function follow(Request $request)
     {
+        if ($request->user->isFriendWith(auth()->user())) {
+            return response()->json([
+                'message' => 'Вы уже друзья',
+            ], 422);
+        }
         $success = $this->userService->follow(auth()->user()->id, $request->user->id);
         if ($success === null) {
             return response()->json([
@@ -74,6 +81,7 @@ class UserSubscribeController extends Controller
         }
 
         if ($success) {
+            event(new AddFollower($request->user));
             return response()->json([
                 'message' => 'Вы подписались на этого пользователя',
             ]);
@@ -98,6 +106,7 @@ class UserSubscribeController extends Controller
         }
 
         if ($success) {
+            event(new SubFollower($request->user));
             return response()->json([
                 'message' => 'Вы отписались от этого пользователя',
             ]);
