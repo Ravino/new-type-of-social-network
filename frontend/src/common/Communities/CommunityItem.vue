@@ -49,7 +49,7 @@
                         Управление
                     </router-link>
                     <div class="plizi-community-item-body-friends d-flex flex-wrap align-items-center justify-content-between ml-1" v-if="community.totalFriends">
-                        <div class="plizi-community-item-body-friends-pics mr-3 my-1">
+                        <div class="plizi-community-item-body-friends-pics mr-1 my-1">
                             <div class="plizi-community-item-body-friends-pic position-relative rounded-circle"
                                 v-for="friend in community.friends" :key="friend.id">
                                 <img :src="getAvatar(friend)" :alt="friend.profile.fullName" :title="friend.profile.fullName"/>
