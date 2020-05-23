@@ -117,6 +117,7 @@ methods: {
     },
 
     async loadCommunities(limit = 10, offset = 0) {
+        this.enabledLoader = true;
         const searchText = this.$root.$lastCommunitiesSearch.my;
         let apiResponse = null;
 
@@ -150,6 +151,7 @@ methods: {
     },
 
     async loadPopularCommunitites(limit = 10, offset = 0) {
+        this.enabledLoader = true;
         const searchText = this.$root.$lastCommunitiesSearch.popular;
         let apiResponse = null;
 
@@ -184,6 +186,7 @@ methods: {
     },
 
     async loadManagedCommunities(limit = 10, offset = 0) {
+        this.enabledLoader = true;
         const searchText = this.$root.$lastCommunitiesSearch.owner;
         let apiResponse = null;
         this.isManagedCommunitiesLoaded = false;

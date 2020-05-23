@@ -11,7 +11,7 @@
         </span>
 
         <div  v-if="getInvitationsNumber()>0"
-              class="invitations-dropdown dropdown-menu dropdown-menu-right py-3  dropdown-white w-auto"
+              class="invitations-dropdown dropdown-menu dropdown-menu-right pt-3 pb-0 dropdown-white w-auto"
               aria-labelledby="dropdownMenuFriends">
 
             <ul class="list-unstyled mb-0">

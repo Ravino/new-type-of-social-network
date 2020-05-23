@@ -125,6 +125,7 @@ Route::group(['middleware' => ['auth.jwt', 'track.activity']], function () {
         Route::post('rate', 'Api\LikeController@likePost');
         Route::post('{post}/update', 'Api\PostController@update');
         Route::delete('{post}/attachment/{postAttachment}', 'Api\PostController@deleteImage');
+        Route::post('{post}/image/like', 'Api\LikeController@likePostImage');
     });
 
     Route::prefix('videos')->group(function () {

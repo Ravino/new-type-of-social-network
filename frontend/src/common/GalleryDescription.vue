@@ -40,9 +40,11 @@
             </div>
             <div class="plz-gallery-description--post-data d-flex">
                 <div class="plz-gallery-description--post-data-option post-watched-counter"
+                     :class="{'is-active': image.alreadyLiked}"
                      @click="onLike">
-                    <IconHeard/>
-                    <span>{{ post.likes | space1000 }}</span>
+                    <IconFillHeard v-if="image.alreadyLiked"/>
+                    <IconHeard v-else/>
+                    <span>{{ image.likes | space1000 }}</span>
                 </div>
                 <div class="plz-gallery-description--post-data-option post-watched-counter ml-4">
                     <IconMessage/>
@@ -75,17 +77,22 @@
 <script>
  import moment from "moment";
  import IconHeard from "../icons/IconHeard.vue";
+ import IconFillHeard from '../icons/IconFillHeard.vue';
  import IconMessage from "../icons/IconMessage.vue";
  import IconShare from "../icons/IconShare.vue";
  import TextEditor from "./TextEditor.vue";
 
  export default {
   name: "GalleryDescription",
-  components: {TextEditor, IconShare, IconMessage, IconHeard},
+  components: {TextEditor, IconShare, IconMessage, IconHeard, IconFillHeard},
   props: {
    post: {
     type: Object,
    },
+      image: {
+          type: Object,
+          default: null,
+      },
   },
   data() {
       return {
@@ -111,8 +118,29 @@
    },
   },
   methods: {
-    onLike() {
-        alert('U liked it');
+    async onLike() {
+        let response = null;
+
+        try {
+            response = await this.$root.$api.$image.likePostImage(this.post.id, this.image.id);
+        } catch (e) {
+            console.warn(e.detailMessage);
+        }
+
+        if (response !== null) {
+            if (this.image.alreadyLiked) {
+                this.image.alreadyLiked = false;
+                this.image.likes--;
+                let userLikeIndex = this.image.usersLikes.findIndex((userLike) => {
+                    return userLike.id === this.$root.$auth.user.id;
+                });
+                this.image.usersLikes.splice(userLikeIndex, 1);
+            } else {
+                this.image.alreadyLiked = true;
+                this.image.likes++;
+                this.image.usersLikes.push(this.$root.$auth.user);
+            }
+        }
     }
    },
  }
