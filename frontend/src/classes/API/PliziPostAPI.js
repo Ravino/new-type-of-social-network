@@ -310,6 +310,50 @@ class PliziPostAPI extends PliziBaseAPI {
 
         return null;
     }
+
+    /**
+     * Оставить комментарий
+     *
+     * @param {string} body
+     * @param {number} postId
+     * @param {number} replyOn
+     * @return {object[]|null}
+     * @throws PliziAPIError
+     */
+     async setPostComments(body, postId, replyOn = 0) {
+         const response = await this.axios.post(`api/comment/post`, {
+             body,
+             postId,
+             replyOn
+        }, this.authHeaders
+     );
+
+      if (response.status === 200) {
+          return response.data
+      }
+
+      return null;
+    }
+
+    async getCommentsById(postId) {
+        const response = await this.axios.get(`api/comment/post/${postId}`, this.authHeaders);
+
+        if (response.status === 200) {
+            return response.data;
+        }
+
+        return null;
+    };
+
+    async deleteCommentById(commentId) {
+        const response = await this.axios.delete(`api/comment/${commentId}`, this.authHeaders);
+
+        if (response.status === 200) {
+            return response.data;
+        }
+
+        return null;
+    };
 }
 
 export default PliziPostAPI;

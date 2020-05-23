@@ -213,7 +213,7 @@
                                 </p>
                             </div>
                         </div>
-                        <div class="post-watched-counter ml-4">
+                        <div class="post-watched-counter ml-4" @click="isShowComment = !isShowComment">
                             <IconMessage/>
                             <span>{{ post.commentsCount | space1000 }}</span>
                         </div>
@@ -231,6 +231,7 @@
                         </div>
                     </div>
                 </div>
+                <CommentPost :postId="post.id" v-if="!isShowComment"></CommentPost>
             </div>
         </template>
 
@@ -245,7 +246,6 @@
                 </div>
             </div>
         </template>
-
     </div>
 </template>
 
@@ -264,10 +264,12 @@
     import PliziPost from '../../classes/PliziPost.js';
     import Gallery from '../Gallery.vue';
     import LinkMixin from '../../mixins/LinkMixin.js';
+    import CommentPost from "../../components/CommentPost.vue";
 
     export default {
         name: 'Post',
         components: {
+            CommentPost,
             Gallery,
             IconShare,
             IconMessage,
@@ -291,6 +293,7 @@
             return {
                 recursivePostsSimple: [],
                 recursivePosts: [],
+                isShowComment: true,
             }
         },
         computed: {
@@ -322,6 +325,55 @@
             },
         },
         methods: {
+            getCountComments() {
+
+            },
+            async getCommentsByPostId() {
+                let response = null;
+                try {
+                    response = await this.$root.$api.$post.getCommentsById(this.post.id);
+                } catch (e) {
+                    console.warn(e.detailMessage);
+                }
+            },
+            async sendTestComment() {
+
+                let response = null;
+
+                try {
+                    response = await this.$root.$api.$post.setPostComments('Wow NIce KOT3', this.post.id);
+                } catch (e) {
+                    console.warn(e.detailMessage);
+                }
+
+                const commentId = response.data.id;
+
+                console.log('Created ', response);
+
+                try {
+                    response = await this.$root.$api.$post.getCommentsById(this.post.id);
+                } catch (e) {
+                    console.warn(e.detailMessage);
+                }
+
+                console.log('All ', response);
+
+                try {
+                    response = await this.$root.$api.$post.deleteCommentById(commentId);
+                } catch (e) {
+                    console.warn(e.detailMessage);
+                }
+
+                console.log('Delete ', response);
+
+                try {
+                    response = await this.$root.$api.$post.getCommentsById(this.post.id);
+                } catch (e) {
+                    console.warn(e.detailMessage);
+                }
+
+                console.log('All ', response);
+            },
             openVideoModal(shared = false) {
                 let videoLink;
 
