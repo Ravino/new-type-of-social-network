@@ -30,6 +30,7 @@ import AboutPage from "../pages/AboutPage.vue";
 import RulesPage from "../pages/RulesPage.vue";
 import AdvertisementPage from "../pages/AdvertisementPage.vue";
 import ForDevelopersPage from "../pages/ForDevelopersPage.vue";
+import FollowListPage from "../pages/FollowListPage.vue";
 import ActiveSessionsPage from "../pages/ActiveSessionsPage.vue";
 
 const routes = [
@@ -51,6 +52,7 @@ const routes = [
     {path: '/friends', component: FriendsListPage, name: 'FriendsListPage', meta: {title: 'Plizi: мои друзья'}, props: true },
     {path: '/invitations', component: InvitationsPage, name: 'InvitationsPage', meta: {title: 'Plizi: приглашения дружбы'}, props: true },
     {path: '/friends-recent', component: FriendsRecentPage, name: 'FriendsRecentPage', meta: {title: 'Plizi: новые друзья'}, props: true },
+    {path: '/follow-list', component: FollowListPage, name: 'FollowListPage', meta: {title: 'Plizi: на кого я подписан'}, props: true },
     {path: '/notifications', component: NotificationsPage, name: 'NotificationsPage', meta: {title: 'Plizi: напоминания'}, props: true },
     {path: '/news', component: NewsPage, name: 'NewsPage', meta: {title: 'Plizi: Новости', props: true}},
 
