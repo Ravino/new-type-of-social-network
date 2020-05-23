@@ -51,7 +51,8 @@
     }
 
     .is-chatPage .chat-page-height-body {
-        height: calc(100vh - 240px);
+        //height: calc(100vh - 240px);
+        height: auto;
     }
     .is-chatPage .chat-page-height-aside {
         height: auto;
@@ -69,7 +70,7 @@
     }
     #chatMessagesWrapper {
         position: relative;
-        height: 440px; //500
+        height: 370px; //500
         flex: 1 1 auto;
 
         &:after {
@@ -93,6 +94,14 @@
     }
     .ChatsListPage #chatHeader {
         border-radius: 0;
+    }
+
+    #chatMessagesBody {
+        padding-bottom: 180px;
+
+        .chat-messages-scroll {
+            min-height: 115px;
+        }
     }
 
     .plz-gallery-viewer-nav-btn {

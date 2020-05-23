@@ -4,7 +4,7 @@
         <div slot="emoji-invoker"
              slot-scope="{ events: { click: clickEvent } }"
              @click.stop="clickEvent"
-             class="picker-btn d-inline-block">
+             class="picker-btn  ">
             <IconAddSmile />
         </div>
 

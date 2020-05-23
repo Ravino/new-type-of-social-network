@@ -72,14 +72,15 @@ class WampServer implements WampServerInterface
 
     public function onCall(ConnectionInterface $conn, $id, $topic, array $params)
     {
-        Log::debug($params);
         try {
             $params = json_decode(json_encode($params), true);
             $user_id = $this->getUserIdFronToken($params['token']);
-            if($params['event'] === 'user.typing') {
-                event(new UserTypingEvent($params['userId'], $params['chatId']));
-            } else if($params['event'] === 'new.message') {
-                event(new NewMessageEvent($params['body'], $user_id, $params['chatId'], $params['attachments'], $params['parentId'] ?? null, $params['parentChatId'] ?? null));
+            if($user_id) {
+                if($params['event'] === 'user.typing') {
+                    event(new UserTypingEvent($params['userId'], $params['chatId']));
+                } else if($params['event'] === 'new.message') {
+                    event(new NewMessageEvent($params['body'], $user_id, $params['chatId'], $params['attachments'], $params['parentId'] ?? null, $params['parentChatId'] ?? null));
+                }
             }
         } catch (Exception $ex) {
             Log::error($ex);

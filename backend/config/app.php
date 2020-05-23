@@ -72,6 +72,10 @@ return [
 
     'ws_url' => env('WEBSOCKET_URI', '127.0.0.1:7070'),
 
+    'secure_wss' => env('SECURE_WEBSOcKET', false),
+    'fullchain_path' => env('FULLCHAIN_PATH', '/etc/nginx/ssl/live/vm1095330.hl.had.pm/fullchain.pem'),
+    'private_key_path' => env('PRIVATE_KEY_PATH', '/etc/nginx/ssl/live/vm1095330.hl.had.pm/privkey.pem'),
+
     'asset_url' => env('ASSET_URL', null),
 
     /*
