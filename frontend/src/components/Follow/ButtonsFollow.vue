@@ -1,5 +1,5 @@
 <template>
-    <span class="pl-2" v-if="!userData.isFriend">
+    <span class="pl-2" v-if="!userData.stats.isFriend">
         <AddFollow :userData="userData" v-if="!userData.stats.isFollow"></AddFollow>
         <SubFollow :userData="userData" v-else-if="!userData.isOwner"></SubFollow>
     </span>

@@ -88,6 +88,11 @@ class PliziUsersAPI extends PliziBaseAPI{
         return null;
     }
 
+    /**
+     * Подписаться на пользователя
+     * @param userId
+     * @returns {Promise<null|any>}
+     */
     async follow(userId) {
         let response = await this.axios.post(`api/user/${userId}/follow`, {}, this.authHeaders)
             .catch((error) => {
@@ -110,6 +115,11 @@ class PliziUsersAPI extends PliziBaseAPI{
         return null;
     }
 
+    /**
+     * Отписаться от пользователя
+     * @param userId
+     * @returns {Promise<null|any>}
+     */
     async unFollow(userId) {
         let response = await this.axios.delete(`api/user/${userId}/follow`, this.authHeaders)
             .catch((error) => {
@@ -129,6 +139,33 @@ class PliziUsersAPI extends PliziBaseAPI{
         if ([200, 422].includes(response.status)) {
             return response.data;
         }
+        return null;
+    }
+
+    /**
+     * Список тех, на кого я подписан
+     * @param limit
+     * @param offset
+     * @returns {Promise<null|*>}
+     */
+    async followList(limit, offset) {
+        let path = 'api/user/follow/list';
+        let qParams = '';
+
+        if (limit && offset) {
+            qParams = `?limit=${limit}&offset=${offset}`;
+        }
+
+        let response = await this.axios.get(path + qParams, this.authHeaders)
+            .catch((error) => {
+                this.checkIsTokenExpires(error, `$users.followList`);
+                throw new PliziAPIError(`$users.followList`, error.response);
+            });
+
+        if (response.status === 200) {
+            return response.data.data;
+        }
+
         return null;
     }
 }
