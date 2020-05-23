@@ -31,7 +31,20 @@ class RunPusherCommand extends Command
         $pull->bind("tcp://0.0.0.0:5555");
         $pull->on('message', [$pusher, 'broadcast']);
 
-        $webSock = new Server("0.0.0.0:7070",$loop);
+        if(config('app.secure_wss')) {
+            $webSock = new SecureServer(
+                new Server('0.0.0.0:7070', $loop),
+                $loop,
+                [
+                    'local_cert'        => config('app.fullchain_path'),
+                    'local_pk'          => config('app.private_key_path'),
+                    'allow_self_signed' => TRUE,
+                    'verify_peer' => FALSE
+                ]
+            );
+        } else {
+            $webSock = new Server("0.0.0.0:7070",$loop);
+        }
         $server = new IoServer(
             new HttpServer(
                 new WsServer(

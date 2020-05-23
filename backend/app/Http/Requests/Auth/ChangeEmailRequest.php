@@ -48,4 +48,16 @@ class ChangeEmailRequest extends FormRequest
             'newEmailConfirmation' => ['required', 'email', 'same:newEmail'],
         ];
     }
+
+    /**
+     * @return array
+     */
+    public function attributes()
+    {
+        return [
+            'oldEmail' => 'старый email',
+            'newEmail' => 'новый email',
+            'newEmailConfirmation' => 'подтвердите новый email',
+        ];
+    }
 }

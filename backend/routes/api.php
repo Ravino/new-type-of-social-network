@@ -79,6 +79,8 @@ Route::group(['middleware' => ['auth.jwt', 'track.activity']], function () {
     Route::post('/user/password/change', 'Auth\ChangePasswordController@changePassword');
     Route::post('/user/email/change', 'Auth\ChangeEmailController@changeEmail');
     Route::patch('user/notifications/mark/read', 'Api\UserController@markNotificationsAsRead');
+    Route::get('/user/sessions/active', 'Api\SessionController@index');
+    Route::post('/user/sessions/close', 'Api\SessionController@close');
 
     Route::get('user/follow/list', [UserSubscribeController::class, 'list']);
     Route::middleware(['user.get'])->group(static function() {
