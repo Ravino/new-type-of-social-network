@@ -31,12 +31,10 @@
             <div class="align-self-center ml-auto">
                 <div class="btn-group">
                     <button class="btn btn-sm rounded" @click="acceptInvitation()">
-<!--                        <i class="fas fa-check"></i>&nbsp;Принять-->
-                        <IconUserPlus />
+                        <IconUserPlus style="height: 20px"/>
                     </button>
                     <button class="btn btn-sm ml-2 rounded" @click="declineInvitation()">
-<!--                        <i class="fas fa-stop"></i>&nbsp;Отказать-->
-                        <IconUserX />
+                        <IconUserX  style="height: 20px" />
                     </button>
                 </div>
             </div>
