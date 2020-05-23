@@ -20,7 +20,8 @@ class CreateSessionsTable extends Migration
             $table->string('user_agent');
             $table->ipAddress('ip');
             $table->boolean('is_active')->default(true);
-            $table->timestamps();
+            $table->integer('updated_at')->default(time());
+            $table->integer('created_at')->default(time());
         });
     }
 

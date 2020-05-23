@@ -106,6 +106,25 @@ class PliziUsersAPI extends PliziBaseAPI{
 
         return null;
     }
+
+    /**
+     * Закрытие всех соединений кроме текущей.
+     *
+     * @returns {object[]|null}
+     */
+    async closeActiveSessions() {
+        let response = await this.axios.post('/api/user/sessions/close', {}, this.authHeaders)
+            .catch((error) => {
+                this.checkIsTokenExpires(error, `$users.closeActiveSessions`);
+                throw new PliziAPIError(`$users.closeActiveSessions`, error.response);
+            });
+
+        if (response.status === 200) {
+            return response.data;
+        }
+
+        return null;
+    }
 }
 
 export { PliziUsersAPI as default}
