@@ -27,10 +27,14 @@ class Like extends Model
         static::created(function($like) {
             if ($like->likeable instanceof Post) {
                 $like->likeable->increment('likes');
+            } else if ($like->likeable instanceof PostAttachment) {
+                $like->likeable->increment('likes');
             }
         });
         static::deleting(function($like) {
             if ($like->likeable instanceof Post) {
+                $like->likeable->decrement('likes');
+            } else if ($like->likeable instanceof PostAttachment) {
                 $like->likeable->decrement('likes');
             }
         });

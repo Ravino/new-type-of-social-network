@@ -3,7 +3,7 @@
 
 namespace App\Models;
 
-use App\Models\User;
+use App\Traits\Likeable;
 use Illuminate\Database\Eloquent\Model;
 use Storage;
 
@@ -13,6 +13,8 @@ use Storage;
  */
 class PostAttachment extends Model
 {
+    use Likeable;
+
     protected $casts = [
         'created_at' => 'timestamp',
         'updated_at' => 'timestamp',
@@ -54,6 +56,26 @@ class PostAttachment extends Model
     public function user()
     {
         return $this->belongsTo(User::class, 'user_id');
+    }
+
+    public function usersLikes()
+    {
+        return $this->hasManyThrough(
+            User::class,
+            Like::class,
+            'likeable_id',
+            'id',
+            'id',
+            'user_id'
+        );
+    }
+
+    /**
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
+    public function like() {
+        return $this->hasMany(Like::class, 'likeable_id', 'id')
+            ->where('user_id', \Auth::user()->id);
     }
 
     /**
