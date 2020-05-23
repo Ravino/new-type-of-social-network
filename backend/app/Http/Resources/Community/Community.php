@@ -4,6 +4,7 @@ namespace App\Http\Resources\Community;
 
 use App\Http\Resources\Geo\City as CityResource;
 use App\Http\Resources\User\Image;
+use App\Models\CommunityRequest;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
@@ -40,6 +41,12 @@ class Community extends JsonResource
         if ($this && $this->relationLoaded('users')) {
             $data['members'] = new CommunityUserCollection($this->users);
         }
+
+        $data['requestsCount'] = in_array($data['role'], ['author', 'admin'])
+            ? CommunityRequest::where('community_id', $this->id)
+                ->where('status', CommunityRequest::STATUS_NEW)
+                ->count()
+            : 0;
 
         return $data;
     }
