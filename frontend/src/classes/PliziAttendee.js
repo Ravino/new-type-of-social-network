@@ -1,3 +1,5 @@
+import { convertToDate } from '../utils/DateUtils.js';
+
 class PliziAttendee{
     /**
      * путь к дефолтной аватарке, которую показываем если нет своей
@@ -58,7 +60,7 @@ class PliziAttendee{
 
     constructor( attData ){
         this._id = attData.id;
-        this._lastActivity = new Date(attData.lastActivity);
+        this._lastActivity = attData.lastActivity ? convertToDate(attData.lastActivity) : this.lastActivity;
         this._isOnline = attData.isOnline;
         this._userPic = attData.userPic;
         this._firstName = attData.firstName;
@@ -105,7 +107,7 @@ class PliziAttendee{
     toJSON(){
         return {
             id: this.id,
-            lastActivity: (this.lastActivity.getTime() / 1000) >>> 0,
+            lastActivity: this.lastActivity ? (this.lastActivity.valueOf() / 1000) : this.lastActivity,
             userPic: this._userPic,
             firstName: this.firstName,
             lastName: this.lastName,

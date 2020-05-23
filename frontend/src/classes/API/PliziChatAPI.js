@@ -97,7 +97,7 @@ class PliziChatAPI extends PliziBaseAPI{
      * @param {number} limit - лимит
      * @returns {object[]|null} - список сообщений в диалоге, или NULL если была ошибка
      */
-    async messages(dialogID, offset, limit) {
+    async messages(dialogID, offset = null, limit= null) {
         let apiPath = 'api/chat/messages/' + dialogID;
 
         if (offset  &&  limit) {
