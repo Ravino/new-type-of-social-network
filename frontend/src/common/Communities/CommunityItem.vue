@@ -25,7 +25,7 @@
                     <p v-else-if="community.notice" class="plizi-community-item-notice p-0 my-0 text-secondary">{{ community.notice }}</p>
                     <p v-else class="plizi-community-item-location p-0 my-0 text-secondary">{{ locationLabel }}</p>
 
-                    <p class="plizi-community-item-members-number p-0 my-0">{{ community.totalMembers }} участников </p><!--TODO @Veremey check this?-->
+                    <p class="plizi-community-item-members-number p-0 my-0">{{ community.totalMembers }} участников </p>
                 </div>
 
                 <div class="plizi-community-item-body-bottom d-flex flex-column-reverse flex-xl-row align-items-center justify-content-between mt-3 mt-xl-0">
@@ -48,14 +48,14 @@
                                  class="btn btn-outline-danger plizi-community-btn  rounded-pill">
                         Управление
                     </router-link>
-                    <div class="plizi-community-item-body-friends d-flex flex-wrap align-items-center justify-content-between my-2" v-if="community.totalFriends">
-                        <div class="plizi-community-item-body-friends-pics mr-3">
+                    <div class="plizi-community-item-body-friends d-flex flex-wrap align-items-center justify-content-between ml-1" v-if="community.totalFriends">
+                        <div class="plizi-community-item-body-friends-pics mr-1 my-1">
                             <div class="plizi-community-item-body-friends-pic position-relative rounded-circle"
                                 v-for="friend in community.friends" :key="friend.id">
                                 <img :src="getAvatar(friend)" :alt="friend.profile.fullName" :title="friend.profile.fullName"/>
                             </div>
                         </div>
-                        <p class="plizi-community-item-desc">{{community.totalFriends}} друзей</p>
+                        <p class="plizi-community-item-desc my-1">{{community.totalFriends}} друзей</p>
                     </div>
                 </div>
             </div>

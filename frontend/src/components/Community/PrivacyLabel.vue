@@ -1,5 +1,9 @@
 <template>
-    <mark><small class="text-muted">{{privacyLabel}}</small></mark>
+    <p class="plizi-community-privacy-label mb-0"
+       :class="{'text-red' : privacyLabel == 'Закрытое',
+                'text-blue' : privacyLabel == 'Приватное', }">
+        {{privacyLabel}} сообщество
+    </p>
 </template>
 
 <script>
@@ -20,7 +24,7 @@
                     case 3:
                         return 'Приватное';
                     default:
-                        return '';
+                        return 'Открытое';
                 }
             },
         }
