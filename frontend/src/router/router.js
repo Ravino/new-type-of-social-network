@@ -30,6 +30,7 @@ import AboutPage from "../pages/AboutPage.vue";
 import RulesPage from "../pages/RulesPage.vue";
 import AdvertisementPage from "../pages/AdvertisementPage.vue";
 import ForDevelopersPage from "../pages/ForDevelopersPage.vue";
+import ActiveSessionsPage from "../pages/ActiveSessionsPage.vue";
 
 const routes = [
     {path: '/', redirect: '/login', isGuest: true},
@@ -63,6 +64,7 @@ const routes = [
     {path: '/community-requests-:id', component: CommunityRequestsPage, name: 'CommunityRequestsPage', meta: {title: 'Plizi: Запросы на вытупление в сообщество'}, props: true },
     {path: '*', component: Error404Page, name: 'Error404Page', meta: {title: 'Page not found', isNotFound: true} },
     {path: '/videos', component: VideosPage, name: 'VideosPage', meta: {title: 'Plizi: Видео'}, props: true },
+    {path: '/active-sessions', component: ActiveSessionsPage, name: 'ActiveSessionsPage', meta: {title: 'Plizi: Активные сессии'}, props: true },
 ];
 
 const router = new VueRouter({

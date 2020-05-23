@@ -21,13 +21,17 @@ class LikeController extends Controller
             ->where('likeable_type', Post::class)
             ->where('likeable_id', $request->postId)
             ->exists();
+
         if (!$isExistLike) {
-            Like::create([
+            $like = Like::create([
                 'user_id' => \Auth::user()->id,
                 'likeable_type' => Post::class,
                 'likeable_id' => $request->postId,
             ]);
-            Event::dispatch('post.liked', ['post_id' => $request->postId, 'user_id' => \Auth::user()->id]);
+
+            if ($like->likeable->author_id !== \Auth::user()->id) {
+                Event::dispatch('post.liked', ['post_id' => $request->postId, 'user_id' => \Auth::user()->id]);
+            }
 
             return response()->json(['message' => 'Вы успешно оценили данную запись'], 200);
         } else {

@@ -255,6 +255,11 @@ class User extends Authenticatable implements JWTSubject
         );
     }
 
+    public function sessions()
+    {
+        return $this->hasMany(Session::class);
+    }
+
     public static function boot()
     {
         parent::boot();
