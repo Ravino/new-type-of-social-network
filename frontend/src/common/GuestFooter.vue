@@ -1,7 +1,7 @@
 <template>
     <div class="container-fluid">
         <div class="row">
-            <footer class="navbar plz-footer col-12 w-100 container-fluid  m-0 px-0">
+            <footer class="navbar plz-footer col-12 w-100 container-fluid m-0 px-0 px-sm-3">
                 <div class="plz-bottom-links w-100 d-flex flex-wrap  align-items-center justify-content-between justify-content-md-start  ">
                     <div class="plz-bottom-link">
                         <router-link to="/about" tag="div" class="nav-item text-center text-md-left pl-md-0"><a class="nav-link pl-md-0">О проекте</a></router-link>
@@ -33,7 +33,7 @@
                     </div>
 
                     <div class="plz-bottom-link align-self-end text-center text-md-right ml-auto mr-0">
-                        <router-link to="/switch-language" tag="div" class="nav-item"><a class="nav-link plz-copy pr-0">&copy; Plizi {{ (new Date()).getFullYear() }}</a></router-link>
+                        <router-link to="/switch-language" tag="div" class="nav-item"><a class="nav-link plz-copy px-0">&copy; Plizi {{ (new Date()).getFullYear() }}</a></router-link>
                     </div>
                 </div>
             </footer>
