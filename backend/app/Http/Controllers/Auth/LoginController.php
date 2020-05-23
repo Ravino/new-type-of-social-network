@@ -70,9 +70,7 @@ class LoginController extends Controller
         $credentials = $request->only('email', 'password');
 
         try {
-            if (!$token = $this->guard->attempt($credentials,
-                ['exp' => Carbon::now()->addDays($this->expireDays)->timestamp]
-            )) {
+            if (!$token = $this->guard->attempt($credentials)) {
                 return response()->json(['message' => 'invalid credentials'], 400);
             }
         } catch (JWTException $e) {
