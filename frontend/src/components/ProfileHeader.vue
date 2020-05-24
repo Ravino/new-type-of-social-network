@@ -80,7 +80,7 @@
 
             <div class="plz-profile-userdetails-footer d-flex justify-content-around px-2 px-md-4">
                 <div class="plz-profile-userdetails-numbers text-center pt-2 px-2 pt-md-4 px-md-4">
-                    <span class="numbers-top" v-html="sBeaty(userData.subscribersNumber)"></span>
+                    <span class="numbers-top" v-html="sBeaty(usrFollowersNumber)"></span>
                     <span class="numbers-bottom">Подписчиков</span>
                 </div>
                 <div class="plz-profile-userdetails-numbers text-center pt-2 px-2 pt-md-4 px-md-4">
@@ -135,7 +135,12 @@ data() {
 
 computed: {
     usrFriendsNumber(){
-        return (this.isOwner) ? this.userData.stats.totalFriendsCount : this.userData.friendsNumber;
+        // return (this.isOwner) ? this.userData.stats.totalFriendsCount : this.userData.friendsNumber;
+        return this.userData.stats.totalFriendsCount;
+    },
+
+    usrFollowersNumber() {
+        return this.userData.stats.followCount;
     },
 
     userAvatar() {
