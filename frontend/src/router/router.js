@@ -9,6 +9,7 @@ import NewsPage from '../pages/NewsPage.vue';
 import ProfilePage from '../pages/ProfilePage.vue';
 import PersonalPage from '../pages/PersonalPage.vue';
 import AccountPage from '../pages/AccountPage.vue';
+import BlackList from "../pages/BlackList.vue";
 import ChatsListPage from '../pages/ChatsListPage.vue';
 import SearchResultsPage from '../pages/SearchResultsPage.vue';
 import FriendsListPage from '../pages/FriendsListPage.vue';
@@ -45,6 +46,7 @@ const routes = [
     {path: '/for-developers', component: ForDevelopersPage, name: 'ForDevelopersPage', meta: {title: 'Plizi: Для разработчиков', isGuest: true}},
 // Auth
     {path: '/account', component: AccountPage, name: 'AccountPage', meta: {title: 'Plizi: Настройки аккаунта'}, props: true },
+    {path: '/black-list', component: BlackList, name: 'BlackList', meta: {title: 'Plizi: Черный список'}, props: true },
     {path: '/profile', component: ProfilePage, name: 'ProfilePage', meta: {title: 'Plizi: Домашняя'}, props: true},
     {path: '/chats', component: ChatsListPage, name: 'ChatsListPage', meta: {title: 'Plizi: Чаты'}, props: true},
     {path: '/search-results', component: SearchResultsPage, name: 'SearchResultsPage', meta: {title: 'Plizi: Результаты поиска'}, props: true },
