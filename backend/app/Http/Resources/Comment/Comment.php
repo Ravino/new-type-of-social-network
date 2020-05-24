@@ -23,6 +23,7 @@ class Comment extends JsonResource
             'id' => $this->id,
             'body' => $this->body,
             'author' => new SimpleUser($this->author),
+            'createdAt' => $this->created_at,
         ];
 
         return $data;
