@@ -21,6 +21,7 @@
                             </div>
                         </div>
                     </div>
+                    <Spinner v-else v-bind:clazz="`d-flex flex-row`"></Spinner>
                 </div>
                 <div class="offset-2 col-8 bg-white-br20 p-4 mt-4">
                     <div v-if="isCommunityDataReady" class="plizi-search-results-list">
