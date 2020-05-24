@@ -554,7 +554,13 @@ class PliziAPIClass {
 
     __channelReceiver(s) {
         s.subscribe(this.__channel, (channelID, data) => {
-            window.console.dir(data, 'from WebSockets server');
+            if (`user.typing`===data.event_type) {
+                //const compName = data.data.profile.firstName + ` `+data.data.profile.lastName;
+                //window.console.info( (new Date()).getMilliseconds()+ ` ${data.chatId} ${compName}`, 'user.typing');
+            }
+            else {
+                window.console.dir(data, 'from WebSockets server');
+            }
 
             if (channelID=== this.channel  &&  `message.new`===data.event_type) {
                 this.emit('newMessageInDialog', {
