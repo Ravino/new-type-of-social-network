@@ -91,7 +91,6 @@ import ChatNotifications from '../common/Chat/ChatNotifications.vue';
 import ChatMixin from '../mixins/ChatMixin.js';
 import NotificationMixin from '../mixins/NotificationMixin.js';
 
-import PliziMessage from '../classes/PliziMessage.js';
 import PliziMessagesCollection from '../classes/Collection/PliziMessagesCollection.js';
 
 export default {
@@ -174,8 +173,6 @@ methods: {
     },
 
     removeMessageInList(evData) {
-        window.console.log(`removeMessageInList`);
-
         /** @TGA не реагируем, если мы не на странице чата **/
         if ('ChatsListPage'!==this.$root.$router.currentRoute.name)
             return;
@@ -185,7 +182,6 @@ methods: {
 
         this.$root.$messagesKeyUpdater++;
 
-        //this.messagesList = this.messagesList.filter( mItem => evData.messageId !== mItem.id );
         this.messagesList.delete(evData.messageId);
 
         /** @var PliziMessage **/
@@ -257,8 +253,8 @@ methods: {
     },
 
     appendMessageToMessagesList(evData){
+        this.messagesList.append( evData );
         this.$root.$messagesKeyUpdater++;
-        this.messagesList.append( new PliziMessage(evData) );
     },
 
     addListeners(){

@@ -47,7 +47,7 @@ class PliziMessagesCollection extends PliziLinkedList {
      * @returns {PliziMessage[]}
      */
     asArray(){
-        let arr =[ ...this.collection.values() ];
+        let arr = [ ...this.collection.values() ];
         arr.sort( this.compare );
 
         return arr;

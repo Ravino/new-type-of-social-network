@@ -30,7 +30,10 @@
 
                     <div v-else class="message-text-inner mb-0" v-html="livePreview"></div>
 
-                    <ChatMessageItemAttachments v-bind:message="message"></ChatMessageItemAttachments>
+                    <ChatMessageItemAttachments
+                        v-if="message.isAttachments"
+                        v-bind:message="message"></ChatMessageItemAttachments>
+
                     <ChatMessageItemReplyContent v-if="message.isReply"
                                  v-bind:replyOn="message.replyOn"
                                  v-bind:isForward="message.isForward"></ChatMessageItemReplyContent>

@@ -135,9 +135,12 @@ data() {
 
 methods: {
     filteredMessages() {
+        //window.console.log( this.messagesList.last.toJSON(), `this.messagesList.last` );
+
         // без фильтра
         if (''===this.filter.text  &&  this.filter.range===null)
-            return this.messagesList.asArray().slice();
+            return this.messagesList.asArray();
+            //return this.messagesList.asArray().slice();
 
         if (this.filter.range && this.filter.range.start && this.filter.range.end) {
             this.rangeStart = this.filter.range.start;
@@ -206,13 +209,6 @@ methods: {
 
         }
     },
-
-    //hideMessageResendModal() {
-    //    this.$root.$emit('hideMessageResendModal', {});
-    //},
-    //hideReplyMessageModal() {
-    //    this.$root.$emit('hideReplyMessageModal', {});
-    //},
 
     isNextIsSamePerson(itemId, userId) {
         const node = this.messagesList.getNode(itemId);

@@ -172,6 +172,10 @@ class PliziMessage{
         return this._lastName;
     }
 
+    get fullName(){
+        return this._firstName +' '+ this._lastName;
+    }
+
     get userPic(){
         if (this._userPic!==``)
             return this._userPic;
@@ -235,7 +239,7 @@ class PliziMessage{
     }
 
     get isAttachments(){
-        return !!this._attachments;
+        return !!this._attachments  &&  this._attachments.length && this._attachments.length>0;
     }
 
     get attachmentsNumber(){
