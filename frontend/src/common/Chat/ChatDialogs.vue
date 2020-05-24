@@ -43,7 +43,8 @@ data(){
         customScrollBarSettings: {
             maxScrollbarLength: 60,
             useBothWheelAxes: false,
-            suppressScrollX: true
+            suppressScrollX: true,
+            wheelPropagation: false
         }
     }
 },
