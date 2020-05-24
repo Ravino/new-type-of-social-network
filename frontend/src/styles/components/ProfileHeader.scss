@@ -37,12 +37,17 @@
         cursor: pointer;
     }
 
+    .fullWidth {
+        width: 100%;
+    }
+
     .btn {
         text-transform: uppercase;
         background-color: transparent;
         height: 34px;
         cursor: pointer;
         font-size: 11px;
+        width: 75%;
         font-weight: 600;
         color: #6f7487;
         border-radius: 0;
