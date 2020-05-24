@@ -42,8 +42,15 @@ data() {
 },
 
 methods: {
-    onEditorKeyDown(){
-        /** @TGA пытаемся тут через сокеты отправить инфу о том, что печатаем **/
+    onEditorKeyDown(e){
+        /** https://css-tricks.com/snippets/javascript/javascript-keycodes/ **/
+        const disabledKeys = [8, 9, 13, 16, 17, 18, 20, 27, 32, 33, 34, 35, 36, 37, 38, 39, 40, 45, 46, 91, 92,
+        112, 113, 114, 115, 116, 117, 118, 119, 120, 121, 122, 123];
+
+        if (disabledKeys.includes(e.which))
+            return;
+
+        /** через сокеты отправляем инфу о том, что печатаем **/
         const keyPressData = {
             channel: window.localStorage.getItem('pliziChatChannel'),
             userId: this.$root.$auth.user.id,

@@ -113,11 +113,14 @@ class PliziFavoritesCollection extends PliziStoredCollection {
     }
 
 
-    favoriteStateUpdated(invID, newData){
-        window.console.log(`favoriteStateUpdated`);
-        let favorite = this.get(invID);
+    updateOnlineStatus(userID){
+        let favorite = this.get(userID);
 
         if (favorite) {
+            favorite.lastActivity = (new Date()).valueOf()/1000;
+            favorite.isOnline = true;
+
+            this.add(favorite);
             this.storeData();
         }
     }

@@ -164,6 +164,15 @@ class PliziDialog{
         return this.attendees[0];
     }
 
+    /**
+     * возвращает собеседника по его userId
+     * @param {string} userId - userId собеседника
+     * @returns {PliziAttendee}
+     */
+    getAttendee(userId){
+        return this.attendees.find( aItem => aItem.id === userId );
+    }
+
     set lastMessageText( value ){
         this._lastMessageText = value.trim();
     }

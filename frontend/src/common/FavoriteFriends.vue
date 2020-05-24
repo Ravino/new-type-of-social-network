@@ -55,13 +55,11 @@ methods : {
     },
 
     onPickFavorite(evData){
-        //window.console.log(evData, `onPickFavorite`);
         this.isPickFavorite = true;
         this.pickedFavoriteId = evData.friendId;
     },
 
     onUnPickFavorite(evData){
-        //window.console.log(evData, `onUnPickFavorite`);
         this.isPickFavorite = false;
         this.pickedFavoriteId = 'none';
     },
@@ -70,7 +68,15 @@ methods : {
         this.favorUpdated++;
         this.showFavoritesBlock = (((this.favorUpdated * 0) + this.$root.$auth.fm.size) > 0);
         this.isDataReady = true;
-    }
+    },
+
+    updateOnlineStatus(evData) {
+        this.$root.$auth.fm.updateOnlineStatus(evData.message.userId);
+        this.$root.$favoritesKeyUpdater++;
+
+        this.$root.$auth.frm.updateOnlineStatus(evData.message.userId);
+        this.$root.$friendsKeyUpdater++;
+    },
 },
 
 created(){
@@ -89,6 +95,8 @@ created(){
     this.$root.$on(this.$root.$auth.fm.updateEventName, ()=>{
         this.afterFavoritsLoad(this.$root.$auth.fm.updateEventName);
     });
+
+    this.$root.$on('newMessageInDialog', this.updateOnlineStatus);
 }
 
 }

@@ -77,8 +77,16 @@ class PliziAttendee{
         return this._lastActivity;
     }
 
+    set lastActivity(tValue){
+        this._lastActivity = convertToDate(tValue);
+    }
+
     get isOnline(){
         return this._isOnline;
+    }
+
+    set isOnline(olValue){
+        this._isOnline = !!olValue;
     }
 
     get userPic(){

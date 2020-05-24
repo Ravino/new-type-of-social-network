@@ -85,7 +85,9 @@ methods: {
             lastMessageDT : evData.message.createdAt,
             lastMessageText : evData.message.body,
             isLastFromMe : !!evData.message.isMine,
-            isRead : !!evData.message.isRead
+            isRead : !!evData.message.isRead,
+
+            userId: evData.message.userId
         };
 
         this.$root.$auth.dm.dialogStateUpdated(evData.chatId, updatedFields);

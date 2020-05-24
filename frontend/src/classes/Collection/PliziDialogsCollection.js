@@ -137,20 +137,20 @@ class PliziDialogsCollection extends PliziStoredCollection {
         let dlg = this.get(dialogID);
 
         if (dlg) {
-            dlg = dlg.toJSON();
-
             dlg.lastMessageDT = newData.lastMessageDT;
             dlg.lastMessageText = newData.lastMessageText;
             dlg.isLastFromMe = newData.isLastFromMe;
             dlg.isRead = newData.isRead;
 
+            let attUser = dlg.getAttendee(newData.userId);
+
+            attUser.lastActivity = (new Date()).valueOf()/1000;
+            attUser.isOnline = true;
+
             this.add(dlg);
             this.storeData();
 
             this.emit(this.updateEventName, this.get(dialogID));
-        }
-        else {
-            window.console.warn(dialogID + ` диалог не найден`);
         }
     }
 

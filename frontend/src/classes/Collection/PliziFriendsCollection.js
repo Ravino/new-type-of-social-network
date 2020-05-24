@@ -169,18 +169,14 @@ class PliziFriendsCollection extends PliziStoredCollection {
     }
 
 
-    friendStateUpdated(invID, newData){
-        window.console.log(`friendStateUpdated`);
-        let invitation = this.get(invID);
+    updateOnlineStatus(userID){
+        let favorite = this.get(userID);
 
-        if (invitation) {
-            //invitation.lastMessageDT = newData.lastMessageDT;
-            //invitation.lastMessageText = newData.lastMessageText;
-            //invitation.isLastFromMe = newData.isLastFromMe;
-            //invitation.isRead = newData.isRead;
+        if (favorite) {
+            favorite.lastActivity = (new Date()).valueOf()/1000;
+            favorite.isOnline = true;
 
-            //this.collection.set(invID, invitation);
-
+            this.add(favorite);
             this.storeData();
         }
     }
