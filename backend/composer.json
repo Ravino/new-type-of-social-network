@@ -30,6 +30,7 @@
         "laravel/ui": "^1.0",
         "laravelrus/sleepingowl": "^7.0",
         "league/flysystem-aws-s3-v3": "^1.0",
+        "pda/pheanstalk": "^4.0",
         "predis/predis": "^1.1",
         "react/zmq": "^0.4.0",
         "santigarcor/laratrust": "5.2.*",
@@ -37,6 +38,7 @@
         "socialiteproviders/twitter": "^3.0",
         "socialiteproviders/vkontakte": "^4.0",
         "spiritix/lada-cache": "4.x",
+        "swooletw/laravel-swoole": "^2.6",
         "tymon/jwt-auth": "^1.0"
     },
     "require-dev": {

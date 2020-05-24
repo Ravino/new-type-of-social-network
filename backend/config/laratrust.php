@@ -245,13 +245,13 @@ return [
              * you can do it by setting the key and the content of the message
              * If the message content is empty it won't be added to the redirection.
              */
-            'redirect' => [
-                'url' => '/home',
-                'message' => [
-                    'key' => 'error',
-                    'content' => ''
-                ]
-            ]
+//            'redirect' => [
+//                'url' => '/home',
+//                'message' => [
+//                    'key' => 'error',
+//                    'content' => ''
+//                ]
+//            ]
         ]
     ],
 
