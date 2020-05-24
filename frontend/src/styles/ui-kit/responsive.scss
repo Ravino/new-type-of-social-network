@@ -243,6 +243,18 @@
         }
     }
 
+    .ForDevelopersPage,
+    .AdvertisementPage,
+    .RulesPage,
+    .AboutPage {
+        #pageWrapper {
+            .plz-footer {
+                flex: 0 0 100%;
+                max-width: 100%;
+            }
+        }
+    }
+
 }/*- max-width: 767px -*/
 
 
