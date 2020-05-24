@@ -84,7 +84,7 @@ computed: {
     },
     communitySearchResults() {
         return this.communitySearchResultsList;
-    },
+    }
 },
 
 methods: {

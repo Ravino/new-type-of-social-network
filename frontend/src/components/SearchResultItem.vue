@@ -9,9 +9,7 @@
 
             <div class="plizi-sr-item-body m-0 pr-5 ">
                 <router-link :to="`/user-`+srItem.id" tag="div"  class="plizi-sr-item-top d-flex align-items-end justify-content-between mb-2" >
-                    <h6 class="plizi-sr-item-name my-0">
-                        {{ srItem.fullName }}
-                    </h6>
+                    <h6 v-html="toHighlightFullname" class="plizi-sr-item-name my-0"></h6>
                 </router-link>
 
                 <div class="plizi-sr-item-body-bottom d-flex pr-5">
@@ -19,8 +17,7 @@
 
                         <IconLocation style="height: 14px;" />
 
-                        <span v-if="locationLabel">
-                            {{ locationLabel }}
+                        <span v-if="locationLabel" v-html="toHighlightLocation">
                         </span>
                         <span v-else>
                             Не указано
@@ -69,6 +66,20 @@ data(){
 },
 
 computed: {
+    toHighlightFullname() {
+        const fullName = this.srItem.fullName;
+        let sr = this.$root.$lastSearch;
+        let srName = fullName.replace(new RegExp(`${sr}`, 'ig'), fullName =>
+            `<span class="bg-warning">${fullName}</span>`);
+        return srName;
+    },
+    toHighlightLocation() {
+        const location = this.locationLabel;
+        let sr = this.$root.$lastSearch;
+        let srLocation = location.replace(new RegExp(`${sr}`, 'ig'), location =>
+            `<span class="bg-warning">${location}</span>`);
+        return srLocation;
+    },
     locationLabel() {
         const location = [];
         const country = this.srItem.location?.country?.title.ru;
@@ -93,7 +104,10 @@ methods: {
         await this.openDialogWithFriend( this.srItem );
         this.$root.$router.push('/chats');
     },
+},
+    mounted() {
+    }
 }
-}
+
 </script>
 

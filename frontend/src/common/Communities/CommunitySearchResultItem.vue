@@ -11,20 +11,16 @@
             <div class="plizi-sr-item-body m-0 pr-5 ">
                 <router-link :to="`/community-`+community.id" tag="a"
                              class="plizi-sr-item-top d-flex align-items-end justify-content-between mb-2">
-                    <h6 class="plizi-community-item-name my-0">
-                        {{ community.name }}
-                    </h6>
+                    <h6 v-html="toHighlightName" class="plizi-community-item-name my-0"></h6>
                 </router-link>
 
                 <PrivacyLabel :community="community"></PrivacyLabel>
                 <div class="plizi-sr-item-body-bottom d-flex pr-5">
-                    <p v-if="community.description" class="plizi-community-item-desc p-0 mb-1">
+                    <p v-html="toHighlightDescription" v-if="community.description" class="plizi-community-item-desc p-0 mb-1">
                         <!--TODO @Veremey check this?-->
-                        {{ community.description }}</p>
-                    <p v-else-if="community.notice" class="plizi-community-item-notice p-0 my-0 text-secondary">
-                        {{ community.notice }}</p>
-                    <p v-else class="plizi-community-item-location p-0 my-0 text-secondary">
-                        {{locationLabel}}</p>
+                        </p>
+                    <p v-html="toHighlightNotice" v-else-if="community.notice" class="plizi-community-item-notice p-0 my-0 text-secondary"></p>
+                    <p v-html="toHighlightCommunityLocation" v-else class="plizi-community-item-location p-0 my-0 text-secondary"></p>
 
                     <p class="plizi-community-item-members-number py-0 my-0 px-2">{{ community.totalMembers }}
                         участников </p>
@@ -93,6 +89,34 @@
             community: PliziCommunity,
         },
         computed: {
+            toHighlightName() {
+                const communityName = this.community.name;
+                let sr = this.$root.$lastSearch;
+                let srName = communityName.replace(new RegExp(`${sr}`, 'ig'), communityName =>
+                    `<span class="bg-warning">${communityName}</span>`);
+                return srName;
+            },
+            toHighlightCommunityLocation() {
+                const communityLocation = this.locationLabel;
+                let sr = this.$root.$lastSearch;
+                let srLocation = communityLocation.replace(new RegExp(`${sr}`, 'ig'), communityLocation =>
+                    `<span class="bg-warning">${communityLocation}</span>`);
+                return srLocation;
+            },
+            toHighlightDescription() {
+                const communityDescription = this.community.description;
+                let sr = this.$root.$lastSearch;
+                let srDescription = communityDescription.replace(new RegExp(`${sr}`, 'ig'), communityDescription =>
+                    `<span class="bg-warning">${communityDescription}</span>`);
+                return srDescription;
+            },
+            toHighlightNotice() {
+                const communityNotice = this.community.notice;
+                let sr = this.$root.$lastSearch;
+                let srNotice = communityNotice.replace(new RegExp(`${sr}`, 'ig'), communityNotice =>
+                    `<span class="bg-warning">${communityNotice}</span>`);
+                return srNotice;
+            },
             avatar() {
                 return this.community.avatar?.image.thumb.path || this.community.primaryImage;
             },
