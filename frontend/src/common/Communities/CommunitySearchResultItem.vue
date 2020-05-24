@@ -108,7 +108,6 @@
                 return srLocation;
             },
             toHighlightDescription() {
-                console.log(this.community.description);
                 const communityDescription = this.community.description;
                 let sr = this.$root.$lastSearch;
                 let srDescription = communityDescription.replace(new RegExp(`${sr}`, 'ig'), communityDescription =>
