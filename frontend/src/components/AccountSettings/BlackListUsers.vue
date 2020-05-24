@@ -9,7 +9,7 @@
             </div>
 
             <div class="plz-account-settings-body">
-                <div v-if="isBlacklistDataReady" class="form-group row border-bottom">
+                <div v-if="isBlacklistDataReady" class="form-group row border-bottom flex-column">
                     <BlackListItem v-for="userItem in blockedUsers.asArray()"
                                    :key="'blockedUserItem-' + userItem.id" :userItem="userItem">
                     </BlackListItem>

@@ -33,7 +33,7 @@ import PliziBlackListItem from "../classes/PliziBlackListItem";
 import PliziCollection from "../classes/PliziCollection";
 
 export default {
-    name: 'BlackList',
+    name: 'BlackListPage',
     components: {
         BlackListSideMenu,
         AccountToolbarLeft, BlackListUsers,
@@ -56,11 +56,9 @@ export default {
                 window.console.warn(e.detailMessage);
                 throw e;
             }
-            console.log(apiResponse);
 
             if (apiResponse) {
                 this.blockedUsers.receive(apiResponse,PliziBlackListItem);
-                // console.dir(this.blockedUsers.asArray());
                 this.isBlacklistDataReady = true;
             }
         },
