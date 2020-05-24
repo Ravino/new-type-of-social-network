@@ -8,7 +8,8 @@
                     :dropToDown="true"
                     :maximumCharacterLimit="10000"
                     workMode="post"
-                    :v-model="comment"
+                    @editorPost="sendComment"
+                    :inputEditorText="this.comment"
         >
         </TextEditor>
     </div>
@@ -25,11 +26,12 @@
         },
         data() {
             return {
-                comment: null,
+                comment: 'Hi all',
             };
         },
         mounted() {
             console.log(this.getUserData)
+            console.log(this.comment);
         },
         computed: {
             getUserData() {

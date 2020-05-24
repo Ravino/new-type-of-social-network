@@ -231,7 +231,18 @@
                         </div>
                     </div>
                 </div>
-                <CommentPost :postId="post.id" v-if="!isShowComment"></CommentPost>
+                <div class="plz-comments"
+                    v-for="comment in comments.data.list"
+                >
+                    <CommentItem
+                        :name="comment.body"
+                    >
+                    </CommentItem>
+                </div>
+                <CommentPost
+                    :postId="post.id"
+                    v-if="!isShowComment">
+                </CommentPost>
             </div>
         </template>
 
@@ -265,10 +276,12 @@
     import Gallery from '../Gallery.vue';
     import LinkMixin from '../../mixins/LinkMixin.js';
     import CommentPost from "../../components/CommentPost.vue";
+    import CommentItem from "../../components/CommentItem.vue";
 
     export default {
         name: 'Post',
         components: {
+            CommentItem,
             CommentPost,
             Gallery,
             IconShare,
@@ -294,9 +307,13 @@
                 recursivePostsSimple: [],
                 recursivePosts: [],
                 isShowComment: true,
+                comments: null,
             }
         },
         computed: {
+            getCommentData() {
+                return this.comments.data.list
+            },
             hasYoutubeLinks() {
                 let str = this.post.body.replace(/<\/?[^>]+>/g, '').trim();
 
@@ -325,13 +342,9 @@
             },
         },
         methods: {
-            getCountComments() {
-
-            },
             async getCommentsByPostId() {
-                let response = null;
                 try {
-                    response = await this.$root.$api.$post.getCommentsById(this.post.id);
+                    this.comments = await this.$root.$api.$post.getCommentsById(this.post.id);
                 } catch (e) {
                     console.warn(e.detailMessage);
                 }
@@ -463,6 +476,8 @@
             if (this.post) {
                 this.recursiveParent(this.post);
             }
+            this.getCommentsByPostId();
+            console.log(this.comments)
         },
     }
 </script>
