@@ -22,7 +22,10 @@
                 <div v-else class="plz-profile-userpic-footer">
                     <div class="plz-profile-userpic-edit d-flex align-items-center justify-content-between overflow-hidden d-flex m-0 p-0">
                         <button class="btn align-items-center justify-content-center d-flex w-75 border-right" @click="showPersonalMsgDialog()">Написать</button>
-                        <button class="btn align-items-center justify-content-center d-flex w-25" @click="sendFriendshipInvitation(userData.id, userData.fullName)" title="добавить в друзья">
+
+                        <button v-if="isCanAddToFriends" class="btn align-items-center justify-content-center d-flex w-25"
+                                @click="sendFriendshipInvitation(userData.id, userData.fullName)"
+                                title="добавить в друзья">
                             <IconAddUser/>
                         </button>
                     </div>
@@ -134,6 +137,9 @@ data() {
 },
 
 computed: {
+    isCanAddToFriends(){
+        return !(!!this.$root.$auth.frm.get(this.userData.id));
+    },
     usrFriendsNumber(){
         // return (this.isOwner) ? this.userData.stats.totalFriendsCount : this.userData.friendsNumber;
         return this.userData.stats.totalFriendsCount;
