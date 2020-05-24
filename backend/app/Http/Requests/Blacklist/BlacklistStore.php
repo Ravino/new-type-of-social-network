@@ -23,8 +23,11 @@ class BlacklistStore extends FormRequest
      */
     public function rules()
     {
+        /**
+         * @todo removed unique:users_blacklisted,blacklisted_id - should be other rule with current user_id
+         */
         return [
-            'userId' => 'required|exists:users,id|unique:users_blacklisted,blacklisted_id',
+            'userId' => 'required|exists:users,id',
         ];
     }
 }
