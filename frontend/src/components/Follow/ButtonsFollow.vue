@@ -2,7 +2,7 @@
     <span class="pl-2" v-if="!userData.stats.isFriend">
         <AddFollow :userData="userData" v-if="!userData.stats.isFollow"></AddFollow>
         <SubFollow :userData="userData" v-else-if="!userData.isOwner"></SubFollow>
-        <AddToBlacklist :userData="userData"></AddToBlacklist>
+        <AddToBlacklist v-if="!userData.isOwner" :userData="userData" v-bind:isAddedToBlacklist="isAddedToBlacklist" @checkIfAdded="checkIfAdded"></AddToBlacklist>
     </span>
 </template>
 
@@ -18,10 +18,13 @@
         components: {AddToBlacklist, AddFollow, SubFollow},
         props: {
             userData: PliziUser | PliziAuthUser,
+            isAddedToBlacklist: Boolean,
+            isAddedToBlacklistInner: Boolean,
         },
+        methods: {
+            checkIfAdded() {
+                this.$emit('checkIfAdded', this.isAddedToBlacklistInner);
+            }
+        }
     }
 </script>
-
-<style scoped>
-
-</style>
