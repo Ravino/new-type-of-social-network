@@ -35,9 +35,9 @@ methods: {
             msg = this.killBrTrail(msg);
 
             if (msg !== '') {
-                this.savePost( msg, evData.attachments );
+                this.savePost( msg, evData.attachments, evData.videoLink, evData.workMode );
             } else if (evData.attachments.length > 0) {
-                this.savePost( '<p></p>', evData.attachments );
+                this.savePost( '<p></p>', evData.attachments, evData.videoLink, evData.workMode );
             }
         } else {
             if (evData.attachments.length > 0) {
@@ -46,11 +46,15 @@ methods: {
         }
     },
 
-    async savePost(text, attachments) {
+    async savePost(text, attachments, videoLink = null, workMode = null) {
         let response;
         let formData = {};
 
-        formData.body = text.trim();
+        if (videoLink) {
+            formData.body = videoLink;
+        } else {
+            formData.body = text.trim();
+        }
 
         if (attachments && attachments.length) {
             formData.attachmentIds = attachments;
@@ -64,8 +68,24 @@ methods: {
 
         if (response) {
             this.$emit('addNewPost', response);
+            this.storeVideo(videoLink, workMode, response.id);
         }
-    }
+    },
+    async storeVideo(youtubeLink, workMode, id) {
+        if (!(youtubeLink && workMode && id)) return;
+
+        let response;
+
+        try {
+            response = await this.$root.$api.$video.storeVideo(youtubeLink, workMode, id);
+        } catch (e) {
+            console.warn(e.detailMessage);
+        }
+
+        if (response) {
+            console.log(response);
+        }
+    },
 },
 }
 </script>
