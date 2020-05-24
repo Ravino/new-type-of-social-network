@@ -90,7 +90,7 @@ class PostController extends Controller
                 ->offset($request->query('offset') ?? 0)
                 ->orderByDesc('id')
                 ->get();
-            return new PostCollection($posts, false);
+            return new PostCollection($posts);
         }
         return response()->json(['message' => 'Сообщество не найдено'], 404);
     }

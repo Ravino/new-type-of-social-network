@@ -5,10 +5,10 @@
             <div class="col-12 border-bottom plz-post-item-header">
                 <div class="post-news-item d-flex flex-row align-content-center pb-4">
                     <div class="post-poster-pic mr-3">
-                        <router-link v-if="postable" :to="{name: 'PersonalPage', params: {id: postable.id}}">
+                        <router-link v-if="this.post.user" :to="{name: 'PersonalPage', params: {id: postable.id}}">
                             <img :src="post.posterPic" :alt="post.posterName"/>
                         </router-link>
-                        <router-link v-else :to="{name: 'CommunityPage', params: {id: post.community.id}}">
+                        <router-link v-else :to="{name: 'CommunityPage', params: {id: postable.id}}">
                             <img :src="post.posterPic" :alt="post.posterName"/>
                         </router-link>
                     </div>
@@ -17,10 +17,10 @@
                         <h6 class="post-poster-title mb-1">
                             <!-- TODO: @TGA странно что мы нигде не выводим название поста-->
 
-                            <router-link v-if="postable" :to="{name: 'PersonalPage', params: {id: postable.id}}">
+                            <router-link v-if="this.post.user" :to="{name: 'PersonalPage', params: {id: postable.id}}">
                                 <b>{{post.posterName}}</b>
                             </router-link>
-                            <router-link v-else :to="{name: 'CommunityPage', params: {id: post.community.id}}">
+                            <router-link v-else :to="{name: 'CommunityPage', params: {id: postable.id}}">
                                 <b>{{post.posterName}}</b>
                             </router-link>
                         </h6>
@@ -305,11 +305,11 @@
                 return this.transformStrWithLinks(str);
             },
             postable() {
-                if (this.isCommunity) {
-                    return this.post.author;
+                if (this.post.community) {
+                    return this.post.community;
                 }
 
-                return this.post.user ? this.post.user : null;
+                return this.post.author;
             },
             imageAttachments() {
                 return this.post.attachments.filter(attachment => attachment.isImage);
