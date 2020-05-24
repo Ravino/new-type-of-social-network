@@ -40,7 +40,16 @@ class Community extends Request
             'notice' => 'max:150',
             'url' => [
                 'max:150',
-                Rule::unique('communities')->ignore($this->id, 'id'),
+                function ($attribute, $value, $fail) {
+                    if (!$value) {
+                        return;
+                    }
+                    if (CommunityModel::where('url', $value)
+                        ->where('id', '!=', $this->id)
+                        ->exists()) {
+                        $fail('Уже занято');
+                    }
+                },
             ],
             'website' => ['nullable', new Website()],
             'location' => 'exists:geo_cities,id',

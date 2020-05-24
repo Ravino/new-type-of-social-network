@@ -62,7 +62,7 @@ class CommunityService
         /**
          * allow save empty string
          */
-        foreach (['website', 'description', 'notice'] as $attribute) {
+        foreach (['website', 'description', 'notice', 'url'] as $attribute) {
             if ($request->exists($attribute)) {
                 $data[$attribute] = $request->$attribute;
             }
