@@ -16,6 +16,7 @@ class PliziDialogsCollection extends PliziStoredCollection {
         super(apiObj);
     }
 
+
     /**
      * метод сравнения для сортировки, диалоги сортируем по дате
      * @param {PliziDialog} d1
@@ -144,8 +145,10 @@ class PliziDialogsCollection extends PliziStoredCollection {
 
             let attUser = dlg.getAttendee(newData.userId);
 
-            attUser.lastActivity = (new Date()).valueOf()/1000;
-            attUser.isOnline = true;
+            if (attUser) {
+                attUser.lastActivity = (new Date()).valueOf()/1000;
+                attUser.isOnline = true;
+            }
 
             this.add(dlg);
             this.storeData();
