@@ -12,6 +12,42 @@ body {
     background-color: $plzBodyBG;
 }
 
+.ForDevelopersPage,
+.AdvertisementPage,
+.RulesPage,
+.AboutPage {
+    #guestPageWrapper {
+        justify-content: flex-start !important;
+
+        #contentContainer {
+            padding-top: 30px;
+        }
+        .plz-bottom-links {
+            padding: 0 15px;
+        }
+    }
+
+    #pageWrapper {
+        .plz-footer {
+            flex: 0 0 91.666667%;
+            max-width: 91.666667%;
+            margin: 0 auto!important;
+            .nav-link {
+                color: #484849;
+            }
+            .nav-link.plz-copy {
+                color: #a1a1a2;
+            }
+        }
+    }
+
+    #authPageWrapper {
+        .plz-bottom-links {
+            padding: 0 15px;
+        }
+    }
+}
+
 /* TODO: @TGA - прописать более детально */
 h1, h2, h3, h4, h5, h6 {
     font-weight: 600;
