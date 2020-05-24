@@ -47,34 +47,24 @@ class User extends JsonResource
             ];
         }
 
-        if($this->appendMutual) {
-            return [
-                'id' => $this->id,
-                'isOwner' => false,
-                'isOnline' => $this->isOnline,
-                'lastActivity' => $this->last_activity_dt,
-                'profile' => new Profile($this->profile),
-                'mutualFriendsCount' => (int)$this->profile->mutual,
-                'stats' => [
-                    'followCount' => (new UserService())->followCount($this->id),
-                    'isFollow' => $this->isFollow,
-                    'isFriend' => $this->isFriendWith(auth()->user()),
-                ],
-            ];
-        }
-
-        return [
+        $data = [
             'id' => $this->id,
             'isOwner' => false,
             'isOnline' => $this->isOnline,
             'lastActivity' => $this->last_activity_dt,
             'profile' => new Profile($this->profile),
             'stats' => [
+                'totalFriendsCount' => $this->totalFriendsCount,
                 'followCount' => (new UserService())->followCount($this->id),
                 'isFollow' => $this->isFollow,
                 'isFriend' => $this->isFriendWith(auth()->user()),
             ],
         ];
+        if($this->appendMutual) {
+            $data['mutualFriendsCount'] = (int)$this->profile->mutual;
+        }
+
+        return $data;
     }
 }
 
