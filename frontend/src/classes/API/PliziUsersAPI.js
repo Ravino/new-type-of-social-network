@@ -69,7 +69,6 @@ class PliziUsersAPI extends PliziBaseAPI{
      * @returns {Object|null} - черный списка юзера
      */
     async blacklistAdd(userId) {
-        console.log(userId);
         const postParam = {userId: userId};
         let response = await this.axios.post('api/user/blacklist/add', postParam, this.authHeaders)
             .catch((error) => {
