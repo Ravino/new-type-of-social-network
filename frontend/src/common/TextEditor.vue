@@ -11,6 +11,7 @@
                     <div class="form pl-2">
                         <div class="form-row align-items-center">
                             <div class="col-12 d-flex justify-content-between p-0">
+
                                 <Editor class="plz-text-editor-form form-control px-2 py-1"
                                         @editorPost="onEditorNewPost"
                                         @editorKeyDown="onEditorKeyDown"
@@ -21,6 +22,7 @@
                                         :maximumCharacterLimit="maximumCharacterLimit"
                                         :isError="isMaximumCharacterLimit"
                                         ref="editor" />
+
                                 <button @click.stop="onSendPostClick" class="btn btn-link">
                                     <IconSend style="height: 20px"/>
                                 </button>
@@ -41,7 +43,8 @@
                         :class="{'attach-file--disallow cursor-non-drop' : isDisallowUpload}"
     class="attach-file btn-add-file w-100 d-flex align-items-center justify-content-center btn btn-link my-0 mx-0 mr-md-2 px-1 position-relative">
                         <IconAddFile />
-                        <input type="file" class="plz-text-editor-file-picker" :disabled="isDisallowUpload" @change="onSelectFile()" ref="editorFiler" multiple />
+                        <input type="file" class="plz-text-editor-file-picker"
+                               :disabled="isDisallowUpload" @change="onSelectFile()" ref="editorFiler" multiple />
                     </button>
 
                     <!--<label class="attach-file d-flex align-items-center  btn btn-link my-0 ml-0 mr-2 px-1 btn-add-camera position-relative">
@@ -236,6 +239,8 @@ methods: {
         this.$refs.editor.setContent('');
         this.$refs.editor.focus();
 
+        this.checkUpdatedChatContainerHeight();
+
         this.onEditorNewPost({
             postText: cont
         });
@@ -321,7 +326,7 @@ methods: {
         const updatedChatContainerHeight = this.$refs.editorContainer.offsetHeight;
 
         if (this.editorContainerHeight !== updatedChatContainerHeight) {
-            this.editorContainerHeight = updatedChatContainerHeight;// TODO проверить @TGA
+            this.editorContainerHeight = updatedChatContainerHeight;
         }
 
         this.onEditorNewHeight(this.editorContainerHeight);
