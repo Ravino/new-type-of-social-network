@@ -23,8 +23,11 @@ class BlacklistDelete extends FormRequest
      */
     public function rules()
     {
+        /**
+         * @todo removed exists:users_blacklisted,blacklisted_id - should be other rule with current user_id
+         */
         return [
-            'userId' => 'required|exists:users_blacklisted,blacklisted_id',
+            'userId' => 'required',
         ];
     }
 }

@@ -38,7 +38,11 @@ h1, h2, h3, h4, h5, h6 {
 }
 
 a:hover {
-    text-decoration-color: currentColor;
+    text-decoration-color: $postTextColor;
+}
+
+* {
+    word-break: break-word;
 }
 
 button {
@@ -394,6 +398,7 @@ $loadingDotsSize: 4px;
     border-radius: 7px;
     padding: 2px 4px;
     line-height: 1;
+    word-break: keep-all;
     z-index: 1;
 }
 

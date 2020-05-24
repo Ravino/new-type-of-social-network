@@ -142,11 +142,11 @@ class CommunityService
         }
 
         if(!$community->users()->where([
-            'id' => auth()->user()->id,
+            'id' => $request->user_id,
         ])->exists()) {
-            $community->users()->attach(auth()->user()->id,
+            $community->users()->attach($request->user_id,
                 ['role' => Community::ROLE_USER, 'created_at' => time(), 'updated_at' => time()]);
-            event(new CommunitySubscribe($community->id, auth()->user()->id));
+            event(new CommunitySubscribe($community->id, $request->user_id));
 
             $request->user->notify(new UserSystemNotifications([
                 'community' => $this->getCommunityPayload($community),

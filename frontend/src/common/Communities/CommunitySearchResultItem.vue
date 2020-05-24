@@ -13,10 +13,10 @@
                              class="plizi-sr-item-top d-flex align-items-end justify-content-between mb-2">
                     <h6 class="plizi-community-item-name my-0">
                         {{ community.name }}
-                        <PrivacyLabel :community="community"></PrivacyLabel>
                     </h6>
                 </router-link>
 
+                <PrivacyLabel :community="community"></PrivacyLabel>
                 <div class="plizi-sr-item-body-bottom d-flex pr-5">
                     <p v-if="community.description" class="plizi-community-item-desc p-0 mb-1">
                         <!--TODO @Veremey check this?-->

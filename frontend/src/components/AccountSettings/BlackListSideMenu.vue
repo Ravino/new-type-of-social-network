@@ -15,14 +15,12 @@
 
 <script>
 export default {
-name: 'AccountSettingsSideMenu',
+name: 'BlackListSideMenu',
 data () {
     return {
         menuItems : [
-            { path : '#accountSettingsMain', title : 'Основные', isActive: true },
-            { path : '#accountSettingsPrivacy', title : 'Приватность', isActive: false },
-            { path : '#accountSettingsSecurity', title : 'Безопасность', isActive: false },
-            { path : '/black-list', title : 'Чёрный список', isActive: false },
+            { path : '/account', title : 'Основные', isActive: false },
+            { path : '/black-list', title : 'Чёрный список', isActive: true },
         ],
     }
 },

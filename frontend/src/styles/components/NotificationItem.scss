@@ -143,6 +143,8 @@ $notificationPicSize: 50px;
 .notifications-likes-scroll {
     height: auto;
     max-height: calc(100vh - 140px);
+    width: 460px;
+    max-width: 100vw;
     overflow: auto;
 
     .ps__rail-y {
