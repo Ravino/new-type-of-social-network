@@ -60,7 +60,11 @@ methods: {
       let response;
       let formData = {};
 
-      formData.body = text.trim();
+      if (videoLink) {
+          formData.body = videoLink;
+      } else {
+          formData.body = text.trim();
+      }
 
       if (attachments && attachments.length) {
         formData.attachmentIds = attachments;
@@ -74,8 +78,8 @@ methods: {
       }
 
       if (response) {
-        this.$emit('addNewPost', response);
-        this.storeVideo(videoLink, workMode, response.id);
+          this.$emit('addNewPost', response);
+          this.storeVideo(videoLink, workMode, response.id);
       }
     },
     async storeVideo(youtubeLink, workMode, id) {
