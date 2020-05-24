@@ -9,9 +9,7 @@
 
             <div class="plizi-sr-item-body m-0 pr-5 ">
                 <router-link :to="`/user-`+srItem.id" tag="div"  class="plizi-sr-item-top d-flex align-items-end justify-content-between mb-2" >
-                    <h6 v-html="toHighlightFullname" class="plizi-sr-item-name my-0">
-                        {{ toHighlightFullname }}
-                    </h6>
+                    <h6 v-html="toHighlightFullname" class="plizi-sr-item-name my-0"></h6>
                 </router-link>
 
                 <div class="plizi-sr-item-body-bottom d-flex pr-5">
@@ -20,7 +18,6 @@
                         <IconLocation style="height: 14px;" />
 
                         <span v-if="locationLabel" v-html="toHighlightLocation">
-                            {{ toHighlightLocation }}
                         </span>
                         <span v-else>
                             Не указано
