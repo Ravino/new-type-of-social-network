@@ -9,6 +9,7 @@ import NewsPage from '../pages/NewsPage.vue';
 import ProfilePage from '../pages/ProfilePage.vue';
 import PersonalPage from '../pages/PersonalPage.vue';
 import AccountPage from '../pages/AccountPage.vue';
+import BlackList from "../pages/BlackList.vue";
 import ChatsListPage from '../pages/ChatsListPage.vue';
 import SearchResultsPage from '../pages/SearchResultsPage.vue';
 import FriendsListPage from '../pages/FriendsListPage.vue';
