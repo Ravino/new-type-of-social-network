@@ -9,14 +9,15 @@ use Illuminate\Http\Request;
 
 class SessionController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
         $sessions = \Auth::user()->sessions()
             ->where('is_active', true)
             ->orderByDesc('id')
             ->get();
 
-        return new SessionCollection($sessions);
+
+        return new SessionCollection($sessions, $request->ip(), $request->userAgent());
     }
 
     public function close(Request $request)
@@ -24,13 +25,14 @@ class SessionController extends Controller
         $user_ip = $request->ip();
         $user_agent = $request->userAgent();
         $sessionsIds = \Auth::user()->sessions()
-            ->where('is_active', true)
             ->where(function ($query) use ($user_ip, $user_agent) {
-                return $query->where('ip', '!=', $user_ip)
+                return $query->where('is_active', 1)
+                    ->where('ip', '!=', $user_ip)
                     ->where('user_agent', '!=', $user_agent);
             })
             ->orWhere(function ($query) use ($user_ip, $user_agent) {
-                return $query->where('ip', $user_ip)
+                return $query->where('is_active', 1)
+                    ->where('ip', $user_ip)
                     ->where('user_agent', '!=', $user_agent);
             })
             ->pluck('id');
@@ -40,11 +42,11 @@ class SessionController extends Controller
             'is_active' => false,
         ]);
 
-        \Log::debug(json_encode($sessions));
-
-        $sessions->each(function ($session) {
-            \JWTAuth::manager()->invalidate(new \Tymon\JWTAuth\Token($session->token));
-        });
+        if ($sessions->count()) {
+            $sessions->each(function ($session) {
+                \JWTAuth::manager()->invalidate(new \Tymon\JWTAuth\Token($session->token));
+            });
+        }
 
         return response()->json([
             'message' => 'Успешно.'

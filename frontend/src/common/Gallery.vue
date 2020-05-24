@@ -9,11 +9,11 @@
             <template v-for="image in imagesWithClasses">
                 <div :class="{'plz-gallery-image-mores': image.isMore}"
                      :data-more="countImage"
-                     @click="showImage(image.id)"
+                     @click="showImage(image)"
                      class="plz-gallery-wrapper"
                 >
                     <img
-                        @click="showImage(image.id)"
+                        @click="showImage(image)"
                         class="plz-gallery-image"
                         :class="image.classes"
                         :src="image.path"
@@ -28,10 +28,10 @@
                     <div class="plz-gallery-image-mores-div"
                         :class="{'plz-gallery-image-mores': image.isMore}"
                          :data-more="countImage"
-                         @click="showImage(image.id)"
+                         @click="showImage(image)"
                     >
                         <img
-                            @click="showImage(image.id)"
+                            @click="showImage(image)"
                             :class="image.classes"
                             class="plz-gallery-image"
                             :src="image.path"
@@ -203,9 +203,9 @@ computed: {
    },
   },
 methods: {
-   showImage(id) {
-    this.activeImageId = id;
-    this.activeImage = this.post.attachments.find(attachment => attachment.id === id);
+   showImage(image) {
+    this.activeImageId = image.id;
+    this.activeImage = image;
    },
    isAlbum(image) {
     return (image.original.width / image.original.height) > 1.2;
