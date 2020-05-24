@@ -10,19 +10,32 @@
                     <h4 class="py-3">Активные сессии</h4>
                     <div class="row">
                         <div class="col-12">
+                            <div class="d-flex align-items-baseline mb-3">
+                                <button class="btn btn-primary mr-3"
+                                        @click.prevent="closeActiveSessions">
+                                    Завершить все сеансы кроме текущего
+                                </button>
+                                <p v-if="isSuccess"
+                                   class="text-success">
+                                    Сеансы были успешно завершены.
+                                </p>
+                            </div>
                             <ul v-if="activeSessions && activeSessions.length" class="list-group mb-3">
                                 <li v-for="(activeSession, index) in activeSessions"
                                     :key="index"
                                     class="list-group-item">
-                                    {{ activeSession.createdAt * 1000 | lastEventTime }}
-                                    - браузер {{ activeSession.userAgent }}.
-                                    IP адрес: {{ activeSession.ip }}
+                                    <span>
+                                       {{ activeSession.createdAt * 1000 | lastEventTime }}
+                                        - браузер {{ activeSession.userAgent }}.
+                                        IP адрес: {{ activeSession.ip }}
+                                    </span>
+
+                                    <span v-if="activeSession.isCurrent"
+                                          class="text-primary">
+                                        - Текущая сессия.
+                                    </span>
                                 </li>
                             </ul>
-                            <button class="btn btn-primary mb-3"
-                                    @click.prevent="closeActiveSessions">
-                                Завершить все сеансы кроме текущего
-                            </button>
                         </div>
                     </div>
                 </div>
@@ -48,6 +61,7 @@
         data() {
             return {
                 activeSessions: [],
+                isSuccess: false,
             }
         },
         methods: {
@@ -74,9 +88,13 @@
                 }
 
                 if (response) {
+                    this.isSuccess = true;
 
+                    setTimeout(() => {
+                        this.isSuccess = false;
+                    }, 3000);
                 }
-            }
+            },
         },
         async mounted() {
             await this.getActiveSessions();
