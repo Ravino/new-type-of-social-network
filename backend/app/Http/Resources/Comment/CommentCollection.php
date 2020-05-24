@@ -25,6 +25,7 @@ class CommentCollection extends ResourceCollection
                     'id' => $comment->id,
                     'body' => $comment->body,
                     'author' => new SimpleUser($comment->author),
+                    'createdAt' => $comment->created_at,
                 ];
                 return $data;
             }),

@@ -19,7 +19,6 @@ class SimpleUser extends JsonResource
     {
         return [
             'id' => $this->id,
-            'email' => $this->email,
             'isOnline' => $this->isOnline,
             'lastActivity' => $this->last_activity_dt,
             'profile' => new Profile($this->profile),

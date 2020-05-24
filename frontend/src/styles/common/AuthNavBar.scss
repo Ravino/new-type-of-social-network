@@ -150,6 +150,8 @@ $plzNavBarProfileColor: #A6A7A9;
     }
 }
 
-.notifications-likes-dropdown.hidden {
-    display: none;
+.notifications-likes-dropdown {
+    &.hidden {
+        display: none;
+    }
 }

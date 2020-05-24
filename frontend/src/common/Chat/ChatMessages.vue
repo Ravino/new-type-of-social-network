@@ -119,6 +119,7 @@ data() {
         customScrollbarSettings: {
             maxScrollbarLength: 60,
             suppressScrollX: true, // rm scroll x
+            wheelPropagation: false
         },
 
         chatVideoModalShow: false,

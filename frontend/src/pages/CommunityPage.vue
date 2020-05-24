@@ -46,7 +46,7 @@
                                     подписаться
                                 </button>
                                 <button v-else-if="subscribeType === 'request'" type="button"
-                                        class="btn plz-btn-outline  plizi-community-btn rounded-pill"
+                                        class="btn align-items-center justify-content-center d-flex w-75 border-right m-0"
                                         @click="sendRequest(community)">
                                     запрос
                                 </button>

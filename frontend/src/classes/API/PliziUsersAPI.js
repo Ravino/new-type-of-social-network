@@ -46,6 +46,60 @@ class PliziUsersAPI extends PliziBaseAPI{
         return null;
     }
 
+    /**
+     * получение черного списка юзера
+     * @returns {Object|null} - черный списка юзера
+     */
+    async blacklistGet() {
+        let response = await this.axios.get('api/user/blacklist/list', this.authHeaders)
+            .catch((error) => {
+                this.checkIsTokenExpires(error, '$users.blacklistGet');
+                throw new PliziAPIError('$users.blacklistGet', error.response);
+            });
+
+        if (200 === response.status) {
+            return response.data.data.list;
+        }
+        return null;
+    }
+
+    /**
+     * добавление пользователя в черный список юзера
+     * @param {object} userId
+     * @returns {Object|null} - черный списка юзера
+     */
+    async blacklistAdd(userId) {
+        const postParam = {userId: userId};
+        let response = await this.axios.post('api/user/blacklist/add', postParam, this.authHeaders)
+            .catch((error) => {
+                this.checkIsTokenExpires(error, '$users.blacklistAdd');
+                throw new PliziAPIError('$users.blacklistAdd', error.response);
+            });
+        if (200 === response.status) {
+            return response.data.list;
+        }
+        return null;
+    }
+
+    /**
+     * Удаление пользователя из черного списка.
+     * @param userId
+     * @returns {object[]|null}
+     * @throws PliziAPIError
+     */
+    async deleteFromBlacklist(userId){
+        let response = await this.axios.post( '/user/blacklist/delete', {userId: userId}, this.authHeaders)
+            .catch( ( error ) => {
+                this.checkIsTokenExpires( error, '$users.deleteFromBlacklist' );
+                throw new PliziAPIError( '$users.deleteFromBlacklist', error.response );
+            } );
+
+        if ( response.status === 200 ){
+            return response.data;
+        }
+
+        return null;
+    }
 
     /**
      * поиск по юзерам
