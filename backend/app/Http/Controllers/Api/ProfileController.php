@@ -71,8 +71,8 @@ class ProfileController extends Controller
             'birthday' => $request->birthday,
             'sex' => $request->sex,
             'geo_city_id' => $request->geoCityId,
-            'relationship_user_id' => $request->relationshipUserId,
         ]));
+
         if(key_exists('relationshipId', $request->post())) {
             if ($request->relationshipId == 2 || $request->relationshipId == 3) {
                 $user->profile->update([
@@ -85,6 +85,13 @@ class ProfileController extends Controller
                 ]);
             }
         }
+
+        if (key_exists('relationshipUserId', $request->post())) {
+            $user->profile->update([
+                'relationship_user_id' => $request->relationshipUserId,
+            ]);
+        }
+
         $profile = $user->fresh()->profile;
         return new ProfileResource($profile);
     }
