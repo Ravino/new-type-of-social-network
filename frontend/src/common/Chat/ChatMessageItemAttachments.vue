@@ -1,10 +1,10 @@
 <template>
-    <div class="message-attachments d-flex flex-wrap" :class="{'message-attachments-z': attachItem}" v-if="this.message.attachments.length">
+    <div v-if="message.attachments.length"
+         class="message-attachments d-flex flex-wrap"
+         :class="{'message-attachments-z': attachItem}">
         <div class="message-attachment-item mb-2 message-gallery --flex-grow-1" >
             <Gallery v-if="attachItem"
-                     :images="imageList"
-                     class="message-sended-image w-100"
-            >
+                     v-bind:images="imageList" class="message-sended-image w-100">
             </Gallery>
             <span v-else class="message-sended-attach d-flex align-items-center mb-2">
                 <IconZip/>
@@ -20,27 +20,32 @@
 
 <script>
 import IconZip from '../../icons/IconZip.vue';
+import Gallery from '../Gallery.vue';
 
 import PliziMessage from '../../classes/PliziMessage.js';
-import Gallery from "../Gallery";
 
 export default {
 name : 'ChatMessageItemAttachments',
-components : {Gallery, IconZip },
+components : { Gallery, IconZip },
+
 props : {
     message : PliziMessage
 },
+
 computed:{
     isArchive(){
         const ext = this.attach.originalName.split('.').pop().toLowerCase();
         return (`zip`===ext  || `rar`===ext);
     },
+
     imageList() {
         return this.message.attachments;
     },
+
     attachItem() {
         return this.imageList.map(attach => attach.isImage);
     },
-},
+}
+
 }
 </script>

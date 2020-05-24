@@ -1,5 +1,3 @@
-import PliziMessage from "../classes/PliziMessage";
-
 const ChatMixin = {
 data() {
     return {
@@ -45,8 +43,6 @@ methods: {
         window.localStorage.setItem('pliziActiveDialog', chatId);
 
         if (msgsResponse){
-            window.console.log(this.messagesList.size, `messagesList.size`);
-
             if (msgsResponse.length > 0) {
                 this.isCanLoadMoreMessages = true;
                 msgsResponse.map( (msg) => {
@@ -56,13 +52,11 @@ methods: {
             else {
                 this.isCanLoadMoreMessages = false;
             }
-
-            window.console.log(this.messagesList.size, `messagesList.size`);
         }
     },
 
     prependMessageToMessagesList(evData){
-        this.messagesList.prepend( new PliziMessage(evData) );
+        this.messagesList.prepend( evData );
     },
 },
 

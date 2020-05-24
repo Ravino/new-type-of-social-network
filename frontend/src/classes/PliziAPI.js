@@ -557,6 +557,7 @@ class PliziAPIClass {
             if (`user.typing`===data.event_type) {
                 //const compName = data.data.profile.firstName + ` `+data.data.profile.lastName;
                 //window.console.info( (new Date()).getMilliseconds()+ ` ${data.chatId} ${compName}`, 'user.typing');
+                //window.console.dir(data, 'WebSockets user.typing');
             }
             else {
                 window.console.dir(data, 'from WebSockets server');
