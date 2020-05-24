@@ -282,10 +282,11 @@
                 try {
                     regResponse = await this.$root.$api.register(regData);
                 } catch (e) {
+                    this.isLoad = false;
+
                     if (e.status === 422) {
                         this.processServerErrors(e, regData);
                     } else if (e.status >= 500) {
-                        this.isLoad = false;
                         this.isServerError = true;
                         this.serverErrorText = 'Извините у нас возникла ошибка, попробуйте позже ещё раз.';
                     } else {
