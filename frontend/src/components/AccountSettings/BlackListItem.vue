@@ -78,7 +78,7 @@ methods: {
 },
 
 beforeMount(){
-    console.log(this.userItem.fullName);
+    // console.log(this.userItem.fullName);
 }
 
 }
