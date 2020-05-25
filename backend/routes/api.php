@@ -103,6 +103,7 @@ Route::group(['middleware' => ['auth.jwt', 'track.activity']], function () {
         Route::post('avatar', [CommunityController::class, 'uploadAvatar']);
         Route::post('header-image', [CommunityController::class, 'uploadHeaderImage']);
         Route::get('themes/list', 'Api\CommunityController@themeList');
+        Route::get('recommended/list', [CommunityController::class, 'recommended']);
 
         Route::get('favorite/list', [CommunityController::class, 'listFavorite']);
         Route::post('favorite/subscribe', [CommunityController::class, 'addFavorite']);
