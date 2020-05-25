@@ -136,7 +136,7 @@ span.bg-warning {
 }
 
 #contentContainer {
-    padding-top: 45px;
+    padding-top: 90px;
     min-height: 200px;
 }
 
@@ -642,3 +642,15 @@ $dotSize: 2px;
         flex: none;
     }
 }
+
+.AdvertisementPage,
+.AboutPage,
+.RulesPage,
+.ForDevelopersPage {
+    #contentContainer {
+        padding-left: 15px!important;
+        padding-right: 15px!important;
+    }
+}
+
+

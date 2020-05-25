@@ -125,6 +125,19 @@
 
 /*- md -*/
 @media (max-width: 767px) {
+    .LoginPage,
+    .UpdatePasswordPage,
+    .HomePage,
+    .ForDevelopersPage #guestPageWrapper,
+    .AdvertisementPage #guestPageWrapper,
+    .RulesPage #guestPageWrapper,
+    .AboutPage #guestPageWrapper
+    {
+        #contentContainer {
+            padding-top: 76px;
+        }
+    }
+
     #contentContainer {
         padding-top: 76px;
     }
