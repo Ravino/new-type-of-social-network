@@ -1,8 +1,8 @@
 export default {
     privacyList: [
-        {value: 1, title: 'Открытая'},
-        {value: 2, title: 'Закрытая'},
-        {value: 3, title: 'Частная'},
+        {value: 1, title: 'Открытое'},
+        {value: 2, title: 'Закрытое'},
+        {value: 3, title: 'Частное'},
     ],
     types: [
         {value: 1, title: 'Бизнес'},
