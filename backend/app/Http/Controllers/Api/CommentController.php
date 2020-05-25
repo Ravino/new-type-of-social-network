@@ -2,17 +2,30 @@
 
 namespace App\Http\Controllers\Api;
 
+use App\Http\Requests\Post\UploadFileRequest;
 use App\Http\Resources\Comment\CommentCollection;
+use App\Http\Resources\Post\AttachmentsCollection;
+use App\Http\Resources\Post\Post as PostResource;
 use App\Models\Comment;
 use App\Http\Resources\Comment\Comment as CommentResource;
+use App\Models\CommentAttachment;
 use App\Models\Community;
 use App\Models\Post;
+use App\Models\PostAttachment;
 use App\Models\User;
+use App\Services\S3UploadService;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 
 class CommentController extends Controller
 {
+    public $uploadService;
+
+    public function __construct(S3UploadService $uploadService)
+    {
+        $this->uploadService = $uploadService;
+    }
+
     /**
      * @param Request $request
      * @return CommentResource
@@ -27,7 +40,10 @@ class CommentController extends Controller
             'created_at' => time(),
             'updated_at' => time(),
         ]);
-        $comment = Comment::with('author')->find($comment_id);
+        if(isset($request->attachmentIds) && count($request->attachmentIds)) {
+            CommentAttachment::whereIn('id', $request->attachmentIds)->update(['comment_id' => $comment_id]);
+        }
+        $comment = Comment::with('author', 'attachments')->find($comment_id);
         return new CommentResource($comment);
     }
 
@@ -37,8 +53,39 @@ class CommentController extends Controller
      * @return CommentCollection
      */
     public function getPostComments(Request $request, $id) {
-        $comments = Post::find($id)->comments()->with('author', 'author.profile', 'author.profile.avatar')->get();
+        $comments = Post::find($id)->comments()->with('author', 'author.profile', 'author.profile.avatar', 'attachments')->get();
         return new CommentCollection($comments);
+    }
+
+    /**
+     * @param Request $request
+     * @param Comment $comment
+     * @return CommentResource|\Illuminate\Http\JsonResponse
+     */
+    public function update(Request $request, Comment $comment) {
+        if ($comment->author_id === \Auth::user()->id) {
+            $comment->update(['body' => $request->body]);
+            if(isset($request->attachmentIds) && count($request->attachmentIds)) {
+                CommentAttachment::whereIn('id', $request->attachmentIds)->update(['comment_id' => $comment->id]);
+            }
+
+            return new CommentResource($comment);
+        }
+
+        return response()->json([
+            'message' => 'Комментарий не найден.',
+        ], 404);
+    }
+
+    /**
+     * @param UploadFileRequest $request
+     * @return AttachmentsCollection
+     * @throws \Exception
+     */
+    public function uploadAttachments(UploadFileRequest $request) {
+        $attachment_ids = $this->uploadService->uploadFiles(new CommentAttachment(), 'comment/attachments', $request->allFiles());
+        $attachments = CommentAttachment::whereIn('id', $attachment_ids)->get();
+        return new AttachmentsCollection($attachments);
     }
 
     /**
