@@ -301,7 +301,7 @@ methods: {
 
         this.messagesList.clear();
         msgsResponse.map( (msg) => {
-            this.messagesList.append( new PliziMessage(msg) );
+            this.messagesList.append( msg );
         });
 
         this.isMessagesLoaded = true;

@@ -51,6 +51,7 @@ body {
 /* TODO: @TGA - прописать более детально */
 h1, h2, h3, h4, h5, h6 {
     font-weight: 600;
+    word-break: break-word;
 }
 
 [type="button"] {
@@ -77,7 +78,7 @@ a:hover {
     text-decoration-color: $postTextColor;
 }
 
-* {
+p{
     word-break: break-word;
 }
 
@@ -130,8 +131,12 @@ a::-moz-focus-inner{
     border-color: transparent;
 }
 
+span.bg-warning {
+    background-color: rgba(59, 78, 222, .2)!important;
+}
+
 #contentContainer {
-    padding-top: 90px;
+    padding-top: 45px;
     min-height: 200px;
 }
 

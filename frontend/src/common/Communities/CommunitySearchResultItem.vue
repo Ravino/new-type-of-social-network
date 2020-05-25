@@ -1,74 +1,70 @@
 <template>
-    <li class="plizi-sr-item-user media m-0 py-4 px-4">
-        <div class="plizi-sr-item d-flex w-100 align-items-center">
+    <li class="plizi-sr-item-user plizi-sr-item col-12 --col-lg-6 media px-2 py-3 mb-3 align-items-stretch">
+        <div class="plizi-community-item d-flex flex-column flex-lg-row align-items-center justify-content-between --bg-white-br20 w-100 --px-4 --py-4">
 
             <router-link :to="`/community-`+community.id" tag="a"
-                         class="plizi-sr-item-pic mr-3">
-                <img class="plizi-sr-item-img rounded-circle overflow-hidden"
+                         class="plizi-sr-item-pic mr-auto ml-auto mr-lg-3 ml-lg-3 mb-3 mb-lg-0 rounded-circle overflow-hidden align-self-start">
+                <img class="plizi-community-item-img "
                      :src="avatar" :alt="community.name" :title="community.name"/>
             </router-link>
 
-            <div class="plizi-sr-item-body m-0 pr-5 ">
+            <div class="plizi-sr-item-body ">
                 <router-link :to="`/community-`+community.id" tag="a"
-                             class="plizi-sr-item-top d-flex align-items-end justify-content-between mb-2">
-                    <h6 v-html="toHighlightName" class="plizi-community-item-name my-0"></h6>
+                             class="plizi-community-item-top d-flex align-items-end justify-content-between mb-2  " >
+                    <h6 class="plizi-community-item-name my-0">
+                        {{ community.name }}
+                    </h6>
                 </router-link>
 
                 <PrivacyLabel :community="community"></PrivacyLabel>
-                <div class="plizi-sr-item-body-bottom d-flex pr-5">
-                    <p v-html="toHighlightDescription" v-if="community.description" class="plizi-community-item-desc p-0 mb-1">
-                        <!--TODO @Veremey check this?-->
-                        </p>
-                    <p v-html="toHighlightNotice" v-else-if="community.notice" class="plizi-community-item-notice p-0 my-0 text-secondary"></p>
-                    <p v-html="toHighlightCommunityLocation" v-else class="plizi-community-item-location p-0 my-0 text-secondary"></p>
 
-                    <p class="plizi-community-item-members-number py-0 my-0 px-2">{{ community.totalMembers }}
-                        участников </p>
+                <div class="plizi-community-item-body-middle mb-2">
+                    <p v-if="community.description" class="plizi-community-item-desc p-0 mb-1">
+                        {{ community.description }}
+                    </p>
+                    <p v-else-if="community.notice" class="plizi-community-item-notice p-0 my-0 text-secondary">{{ community.notice }}</p>
+                    <p v-else class="plizi-community-item-location p-0 my-0 text-secondary">{{ locationLabel }}</p>
 
+                    <p class="plizi-community-item-members-number p-0 my-0">{{ community.totalMembers }} участников </p>
+                </div>
 
-                    <div class="plizi-community-item-members-number py-0 my-0 px-2">
-                        <div
-                            class="plizi-community-item-body-friends d-flex flex-wrap align-items-center justify-content-between mb-2 mb-xl-0"
-                            v-if="community.totalFriends">
-                            <div class="plizi-community-item-body-friends-pics mr-3">
-                                <div class="plizi-community-item-body-friends-pic position-relative rounded-circle"
-                                     v-for="friend in community.friends" :key="friend.id">
-                                    <img :src="getAvatar(friend)" :alt="friend.profile.fullName"
-                                         :title="friend.profile.fullName"/>
-                                </div>
+                <div class="plizi-community-item-body-bottom d-flex flex-column-reverse flex-lg-row align-items-center justify-content-between mt-3 mt-lg-0">
+
+                    <div class="plizi-community-item-body-friends d-flex flex-wrap align-items-center justify-content-between ml-1" v-if="community.totalFriends">
+                        <div class="plizi-community-item-body-friends-pics mr-1 my-1">
+                            <div class="plizi-community-item-body-friends-pic position-relative rounded-circle"
+                                 v-for="friend in community.friends" :key="friend.id">
+                                <img :src="getAvatar(friend)" :alt="friend.profile.fullName" :title="friend.profile.fullName"/>
                             </div>
-                            <p class="plizi-community-item-desc">{{community.totalFriends}} друзей</p>
                         </div>
+                        <p class="plizi-community-item-desc my-1">{{community.totalFriends}} друзей</p>
                     </div>
-
                 </div>
             </div>
 
             <button v-if="subscribeType === 'new'"
-                    class="btn btn-primary plz-btn-outline rounded-pill ml-auto"
+                    class="btn plz-btn-outline  plizi-community-btn rounded-pill"
                     @click="subscribeInvite(community)">
                 Подписаться
             </button>
-            <button v-else-if="subscribeType === 'request'" type="button"
-                    class="btn plz-btn-outline  plizi-community-btn rounded-pill ml-auto "
+            <button v-else-if="subscribeType === 'request'"
+                    class="btn plz-btn-outline  plizi-community-btn rounded-pill"
                     @click="sendRequest(community)">
                 Запрос
             </button>
-            <button v-else-if="subscribeType === 'exists'" type="button"
-                    class="btn btn-primary plz-btn-outline rounded-pill ml-auto ml-auto"
+            <button v-else-if="subscribeType === 'exists'"
+                    class="btn btn-outline-danger plizi-community-btn  rounded-pill"
                     @click="unsubscribeInvite(community)">
                 Отписаться
             </button>
             <router-link :to="{name: 'CommunitySettingsPage', params: {id: community.id}}" v-else-if="subscribeType === 'author'"
-                         type="button"
-                         class="btn plz-btn-outline rounded-pill ml-auto">
+                         class="btn btn-outline-danger plizi-community-btn  rounded-pill">
                 Управление
             </router-link>
 
-
         </div>
-
     </li>
+
 </template>
 
 <script>
