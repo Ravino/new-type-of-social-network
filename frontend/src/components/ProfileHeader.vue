@@ -49,8 +49,7 @@
                 <div class="d-flex justify-content-between align-items-center mb-2">
                     <h2 class="plz-user-name">
                         {{userData.fullName}}
-                        <ButtonsFollow :userData="userData" @checkIfAdded="checkIfAdded"
-                                       v-bind:isAddedToBlacklist="isAddedToBlacklist"></ButtonsFollow>
+                        <ButtonsFollow :userData="userData"></ButtonsFollow>
                     </h2>
                     <span v-if="userData.isOnline" class="online">В сети</span>
                 </div>
@@ -140,14 +139,7 @@
         props: {
             userData: PliziUser | PliziAuthUser,
             isOwner: Boolean,
-            isAddedToBlacklistInner: Boolean
         },
-        data() {
-            return {
-                isAddedToBlacklist: false
-            }
-        },
-
         computed: {
             fullWidth: function () {
                 return this.isCanAddToFriends ? 'full-width' : '100%';
@@ -258,31 +250,6 @@
                     30
                 );
             },
-            async getBlacklist() {
-                let apiResponse = null;
-                let res = null;
-
-                try {
-                    apiResponse = await this.$root.$api.$users.blacklistGet();
-                } catch (e) {
-                    window.console.warn(e.detailMessage);
-                    throw e;
-                }
-                res = apiResponse.filter(user => user.id === this.userData.id);
-
-                if (res.length) {
-                    this.isAddedToBlacklist = true;
-                }
-            },
-            checkIfAdded() {
-                if (this.isAddedToBlacklistInner) {
-                    this.isAddedToBlacklist = true;
-                }
-            }
-        },
-        async mounted() {
-            await this.getBlacklist();
-        },
-
+        }
     }
 </script>
