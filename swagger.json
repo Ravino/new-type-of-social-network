@@ -37,9 +37,63 @@
         {
             "name": "Comments",
             "description": "Все, что касается комментариев"
+        },
+        {
+            "name": "Photo Albums",
+            "description": "Все, что касается фотоальбомов"
         }
     ],
     "paths": {
+        "/photo_albums": {
+            "post": {
+                "tags": [
+                  "Photo Albums"
+                ],
+                "description": "Создать фотоальбом",
+                "operationId": "PhotoAlbumStore",
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                              "type": "object",
+                                "properties": {
+                                    "communityId": {
+                                        "type": "number",
+                                        "description": "Community id если фотоальбом создается в сообществе в ином случае этого поля не должно быть в запросе."
+                                    },
+                                    "title": {
+                                        "type": "string",
+                                        "description": "Название фотоальбома. Максимальная длина 100 символов."
+                                    },
+                                    "description": {
+                                        "type": "string",
+                                        "description": "Описание фотоальбома. Максимальная длина 500 символов."
+                                    }
+                                }
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                      "message": {
+                                          "type": "string",
+                                          "description": "Сообщение об успешном создании фотоальбома."
+                                      }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
         "/comment/post": {
             "post": {
                 "tags": [

@@ -138,6 +138,10 @@ Route::group(['middleware' => ['auth.jwt', 'track.activity']], function () {
         Route::delete('{id}', 'Api\CommentController@destroyComment');
     });
 
+    Route::prefix('photo_albums')->group(function () {
+        Route::resource('/', 'Api\PhotoAlbumController');
+    });
+
     /**
      * Geo data Resource
      */
