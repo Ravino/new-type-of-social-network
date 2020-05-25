@@ -38,16 +38,17 @@ methods: {
     },
 
   async onTextPost(evData){
-    let msg = evData.postText.trim();
+      console.log(evData);
+      let msg = evData.postText.trim();
 
-    if (msg !== '') {
+    if (msg !== '' || evData.videoLink) {
       const brExample = `<br/>`;
       msg = msg.replace(/<p><\/p>/g, brExample);
       msg = this.killBrTrail(msg);
 
-        if (msg !== '') {
+        if (msg !== '' || evData.videoLink) {
         this.savePost( msg, evData.attachments, evData.videoLink, evData.workMode );
-      } else if (evData.attachments.length > 0) {
+      } else if (evData.attachments.length > 0 || evData.videoLink) {
         this.savePost( '<p></p>', evData.attachments, evData.videoLink, evData.workMode );
       }
     } else {
@@ -62,6 +63,10 @@ methods: {
 
       if (videoLink) {
           formData.body = videoLink;
+
+          if (text) {
+              formData.body = text;
+          }
       } else {
           formData.body = text.trim();
       }
