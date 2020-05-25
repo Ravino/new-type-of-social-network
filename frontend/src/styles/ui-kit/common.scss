@@ -78,7 +78,7 @@ a:hover {
     text-decoration-color: $postTextColor;
 }
 
-p{
+a {
     word-break: break-word;
 }
 
@@ -599,9 +599,13 @@ input[type='date']::-webkit-clear-button {
 
 
 //modal
+.modal-dialog {
+    margin: 0 auto;
+}
 .modal-content {
     max-width: 96%;
     max-height: 96vh;
+    margin: 0 auto;
 }
 
 #chatVideoModal {

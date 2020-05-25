@@ -113,6 +113,7 @@ $chatMessagesBodyHeight: calc(100% - 139px);
         .message-text {
             margin-left: $chatTextSideMargin;
             display: block;
+            max-width: 100%;
             .message-text-inner {
                 color: $chatMessageMyMsgTextColor;
                 font-size: $chatMessageFS;
@@ -186,6 +187,7 @@ $chatMessagesBodyHeight: calc(100% - 139px);
         .message-text {
             margin-right: $chatTextSideMargin;
             display: block;
+            max-width: 100%;
             font-size: $chatMessageFS;
             color: $chatMessageCompanionMsgTextColor;
         }
@@ -350,6 +352,10 @@ $chatMessagesBodyHeight: calc(100% - 139px);
         }
     }
 
+    .chatHeader-title {
+        white-space: pre;
+    }
+
     &.has-only-one-emoji {
         .message-body {
             padding: 0;
@@ -362,6 +368,7 @@ $chatMessagesBodyHeight: calc(100% - 139px);
 .message-attachment-item {
     display: inline-block;
     vertical-align: top;
+    max-width: 100%;
 
     &.message-attachment-item-image {
         max-width: calc(50% - 20px);
@@ -397,6 +404,7 @@ $chatMessagesBodyHeight: calc(100% - 139px);
     .plz-gallery-image-mores-div {
         position: relative;
         width: 200px;
+        max-width: 100%;
         height: 170px;
         margin: 5px;
         overflow: hidden;
@@ -412,6 +420,7 @@ $chatMessagesBodyHeight: calc(100% - 139px);
         flex-wrap: wrap;
         height: unset;
         width: 200px;
+        max-width: 100%;
     }
 
 }
@@ -420,13 +429,14 @@ $chatMessagesBodyHeight: calc(100% - 139px);
     display: flex;
     flex-wrap: wrap;
     width: 200px;
-    height: auto;
     max-width: 100%;
+    height: auto;
 
     .plz-gallery-wrapper {
         position: relative;
         height: 170px;
         width: 200px;
+        max-width: 100%;
         overflow: hidden;
         margin: 5px;
     }

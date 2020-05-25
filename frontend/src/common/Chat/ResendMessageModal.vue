@@ -50,7 +50,7 @@
                                         workMode="chat"
                                         :showAvatar="false"
                                         :dropToDown="false"
-                                        :clazz="`row plz-text-editor mb-4 px-1 py-4 align-items-start`"
+                                        :clazz="`row plz-text-editor mx-0 mb-4 px-0 py-4 align-items-start`"
                                         @editorPost="onTextPost">
                             </TextEditor>
                         </div>
