@@ -47,7 +47,7 @@
         "/photo_albums": {
             "post": {
                 "tags": [
-                  "Photo Albums"
+                    "Photo Albums"
                 ],
                 "description": "Создать фотоальбом",
                 "operationId": "PhotoAlbumStore",
@@ -55,7 +55,7 @@
                     "content": {
                         "application/json": {
                             "schema": {
-                              "type": "object",
+                                "type": "object",
                                 "properties": {
                                     "communityId": {
                                         "type": "number",
@@ -82,14 +82,14 @@
                                 "schema": {
                                     "type": "object",
                                     "properties": {
-                                      "data": {
-                                          "properties": {
-                                              "id": {
-                                                  "type": "integer",
-                                                  "description": "ID нового фотоальбома при успешном создании."
-                                              }
-                                          }
-                                      }
+                                        "data": {
+                                            "properties": {
+                                                "id": {
+                                                    "type": "integer",
+                                                    "description": "ID нового фотоальбома при успешном создании."
+                                                }
+                                            }
+                                        }
                                     }
                                 }
                             }
@@ -1218,6 +1218,53 @@
                     "422": {
                         "description": "Ошибка отклонения запроса",
                         "content": {}
+                    }
+                },
+                "security": [
+                    {
+                        "Authorization": []
+                    }
+                ]
+            }
+        },
+        "/communities/recommended/list": {
+            "get": {
+                "tags": [
+                    "Communities"
+                ],
+                "description": "Список рекомендованных сообществ",
+                "operationId": "getCommunitiesReccomended",
+                "parameters": [
+                    {
+                        "$ref": "#/components/parameters/offsetParam"
+                    },
+                    {
+                        "$ref": "#/components/parameters/limitParam"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "data": {
+                                            "type": "object",
+                                            "properties": {
+                                                "list": {
+                                                    "type": "array",
+                                                    "items": {
+                                                        "$ref": "#/components/schemas/Community"
+                                                    }
+                                                }
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
                     }
                 },
                 "security": [

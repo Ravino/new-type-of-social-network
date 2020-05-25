@@ -23,11 +23,12 @@ class CommunityService
     /**
      * @param $oid
      * @param int $limit
+     * @param int $offset
      * @return Collection
      */
-    public function recommended($oid, $limit = 5)
+    public function recommended($oid, $limit = 5, $offset = 0)
     {
-        $communities = $this->communityNeo4jRepository->recommended($oid, $limit);
+        $communities = $this->communityNeo4jRepository->recommended($oid, $limit, $offset);
         $result = [];
         foreach ($communities as $community) {
             $result[] = [

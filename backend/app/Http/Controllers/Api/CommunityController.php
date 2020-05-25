@@ -377,11 +377,17 @@ class CommunityController extends Controller
     }
 
     /**
+     * @param Request $request
      * @return CommunityCollection
      */
-    public function recommended()
+    public function recommended(Request $request)
     {
-        $list = (new \Domain\Neo4j\Service\CommunityService())->recommended(auth()->user()->id);
+        $list = (new \Domain\Neo4j\Service\CommunityService())
+            ->recommended(
+                auth()->user()->id,
+                $request->query('limit', 5),
+                $request->query('offset', 0)
+            );
         $communities = Community::whereIn('id', $list->pluck('oid'))
             ->with('avatar')
             ->withCount('members')

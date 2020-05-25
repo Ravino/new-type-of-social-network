@@ -46,15 +46,17 @@ class CommunityNeo4jRepository extends BaseRepository
     /**
      * @param string $oid
      * @param int $limit
+     * @param int $offset
      * @return array|Record[]
      */
-    public function recommended($oid, $limit = 5) {
+    public function recommended($oid, $limit = 5, $offset = 0) {
         $query = "MATCH (u:User {oid:'{$oid}'})-[rf:FRIEND_OF]-(fr:User)
                   WITH fr, u
                   MATCH (fr)-[rc:MEMBER_OF]-(c:Community)
                   WHERE NOT(c)-[:MEMBER_OF]-(u)
                   RETURN c.oid AS oid, COUNT(rc) AS r_count
                   ORDER BY r_count DESC, oid
+                  SKIP {$offset}
                   LIMIT {$limit}";
 
         try {
