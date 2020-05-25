@@ -73,9 +73,11 @@ Route::group(['middleware' => ['auth.jwt', 'track.activity']], function () {
     Route::patch('user/privacy', 'Api\UserPrivacySettingController@patch');
     Route::get('user/privacy/roles', 'Api\UserPrivacySettingController@roles');
     Route::get('user/search/{search}', 'Api\UserController@search');
+
     Route::get('user/blacklist/list', 'Api\UserBlacklistController@index');
     Route::post('user/blacklist/add', 'Api\UserBlacklistController@store');
     Route::post('user/blacklist/delete', 'Api\UserBlacklistController@delete');
+
     Route::post('/user/password/change', 'Auth\ChangePasswordController@changePassword');
     Route::post('/user/email/change', 'Auth\ChangeEmailController@changeEmail');
     Route::patch('user/notifications/mark/read', 'Api\UserController@markNotificationsAsRead');

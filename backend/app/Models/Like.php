@@ -3,9 +3,12 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use Spiritix\LadaCache\Database\LadaCacheTrait;
 
 class Like extends Model
 {
+    use LadaCacheTrait;
+
     protected $fillable = [
         'user_id',
         'likeable_id',

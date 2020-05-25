@@ -5,6 +5,7 @@ namespace App\Models;
 
 use App\Traits\Likeable;
 use Illuminate\Database\Eloquent\Model;
+use Spiritix\LadaCache\Database\LadaCacheTrait;
 use Storage;
 
 /**
@@ -13,7 +14,7 @@ use Storage;
  */
 class PostAttachment extends Model
 {
-    use Likeable;
+    use Likeable, LadaCacheTrait;
 
     protected $casts = [
         'created_at' => 'timestamp',

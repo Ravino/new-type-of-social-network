@@ -2,9 +2,10 @@
 
 namespace App\Http\Requests\Blacklist;
 
-use Illuminate\Foundation\Http\FormRequest;
+use App\Http\Requests\Request;
+use Illuminate\Validation\Rule;
 
-class BlacklistStore extends FormRequest
+class BlacklistStore extends Request
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -23,11 +24,21 @@ class BlacklistStore extends FormRequest
      */
     public function rules()
     {
-        /**
-         * @todo removed unique:users_blacklisted,blacklisted_id - should be other rule with current user_id
-         */
         return [
-            'userId' => 'required|exists:users,id',
+            'userId' => [
+                'required',
+                'exists:users,id',
+                Rule::unique('users_blacklisted', 'blacklisted_id')->where('user_id', auth()->user()->id),
+            ],
+        ];
+    }
+
+    public function messages()
+    {
+        return [
+            'userId.required' => 'Обязательный аттребут',
+            'userId.exists' => 'Запись отсутсвует',
+            'userId.unique' => 'Уже в черном списке',
         ];
     }
 }

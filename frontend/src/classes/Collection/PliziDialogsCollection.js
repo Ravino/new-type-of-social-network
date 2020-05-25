@@ -158,6 +158,46 @@ class PliziDialogsCollection extends PliziStoredCollection {
         }
     }
 
+
+    updateDialog(dialogID, dlgData){
+        let dlg = this.get(dialogID);
+
+        if (dlg) {
+            this.set(dialogID, dlgData);
+            this.storeData();
+
+            this.emit(this.updateEventName, this.get(dialogID));
+        }
+    }
+
+
+    addAttendeeToDialog(dialogID, userData){
+        let dlg = this.get(dialogID);
+
+        if (dlg) {
+            dlg.addAttendee(userData);
+
+            this.add(dlg);
+            this.storeData();
+
+            this.emit(this.updateEventName, this.get(dialogID));
+        }
+    }
+
+
+    removeAttendeeFromDialog(dialogID, userId){
+        let dlg = this.get(dialogID);
+
+        if (dlg) {
+            dlg.removeAttendee(userId);
+
+            this.add(dlg);
+            this.storeData();
+
+            this.emit(this.updateEventName, this.get(dialogID));
+        }
+    }
+
 }
 
 export { PliziDialogsCollection as default }

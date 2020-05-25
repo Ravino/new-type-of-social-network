@@ -49,8 +49,7 @@
                 <div class="d-flex justify-content-between align-items-center mb-2">
                     <h2 class="plz-user-name">
                         {{userData.fullName}}
-                        <ButtonsFollow :userData="userData" @checkIfAdded="checkIfAdded"
-                                       v-bind:isAddedToBlacklist="isAddedToBlacklist"></ButtonsFollow>
+                        <ButtonsFollow :userData="userData"></ButtonsFollow>
                     </h2>
                     <span v-if="userData.isOnline" class="online">В сети</span>
                 </div>
@@ -94,13 +93,19 @@
             </div>
 
             <div class="plz-profile-userdetails-footer d-flex justify-content-around px-2 px-md-4">
-                <div class="plz-profile-userdetails-numbers text-center pt-2 px-2 pt-md-4 px-md-4">
+                <div v-if="usrFollowersNumber > 0" class="plz-profile-userdetails-numbers text-center pt-2 px-2 pt-md-4 px-md-4">
                     <span class="numbers-top" v-html="sBeaty(usrFollowersNumber)"></span>
                     <span class="numbers-bottom">Подписчиков</span>
                 </div>
-                <div class="plz-profile-userdetails-numbers text-center pt-2 px-2 pt-md-4 px-md-4">
+                <div v-else class="plz-profile-userdetails-numbers text-center pt-2 px-2 pt-md-5 px-md-4">
+                    <span class="numbers-bottom">Нет подписчиков</span>
+                </div>
+                <div v-if="usrFriendsNumber > 0" class="plz-profile-userdetails-numbers text-center pt-2 px-2 pt-md-4 px-md-4">
                     <span class="numbers-top" v-html="sBeaty(usrFriendsNumber)"></span>
                     <span class="numbers-bottom">Друзей</span>
+                </div>
+                <div v-else class="plz-profile-userdetails-numbers text-center pt-2 px-2 pt-md-5 px-md-4">
+                    <span class="numbers-bottom">Нет друзей</span>
                 </div>
                 <div class="plz-profile-userdetails-numbers text-center pt-2 px-2 pt-md-4 px-md-4">
                     <span class="numbers-top" v-html="sBeaty(userData.photosNumber)"></span>
@@ -140,14 +145,7 @@
         props: {
             userData: PliziUser | PliziAuthUser,
             isOwner: Boolean,
-            isAddedToBlacklistInner: Boolean
         },
-        data() {
-            return {
-                isAddedToBlacklist: false
-            }
-        },
-
         computed: {
             fullWidth: function () {
                 return this.isCanAddToFriends ? 'full-width' : '100%';
@@ -258,31 +256,6 @@
                     30
                 );
             },
-            async getBlacklist() {
-                let apiResponse = null;
-                let res = null;
-
-                try {
-                    apiResponse = await this.$root.$api.$users.blacklistGet();
-                } catch (e) {
-                    window.console.warn(e.detailMessage);
-                    throw e;
-                }
-                res = apiResponse.filter(user => user.id === this.userData.id);
-
-                if (res.length) {
-                    this.isAddedToBlacklist = true;
-                }
-            },
-            checkIfAdded() {
-                if (this.isAddedToBlacklistInner) {
-                    this.isAddedToBlacklist = true;
-                }
-            }
-        },
-        async mounted() {
-            await this.getBlacklist();
-        },
-
+        }
     }
 </script>

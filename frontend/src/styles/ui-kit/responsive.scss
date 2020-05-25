@@ -149,6 +149,11 @@
     #contentContainer {
         padding-top: 76px;
     }
+
+    .plz-account-settings-body .multiselect__content-wrapper {
+        transform: translateX(0);
+    }
+
     #toolbarLeftColor {
         .add-new {
             width: 48px;
