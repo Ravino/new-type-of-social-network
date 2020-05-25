@@ -139,7 +139,9 @@ Route::group(['middleware' => ['auth.jwt', 'track.activity']], function () {
     });
 
     Route::prefix('photo_albums')->group(function () {
-        Route::resource('/', 'Api\PhotoAlbumController');
+        Route::post('/', 'Api\PhotoAlbumController@store');
+        Route::post('{id}', 'Api\PhotoAlbumController@update');
+        Route::delete('{id}', 'Api\PhotoAlbumController@destroy');
     });
 
     /**

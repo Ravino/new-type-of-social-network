@@ -82,10 +82,96 @@
                                 "schema": {
                                     "type": "object",
                                     "properties": {
-                                      "message": {
-                                          "type": "string",
-                                          "description": "Сообщение об успешном создании фотоальбома."
+                                      "data": {
+                                          "properties": {
+                                              "id": {
+                                                  "type": "integer",
+                                                  "description": "ID нового фотоальбома при успешном создании."
+                                              }
+                                          }
                                       }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/photo_albums/{id}": {
+            "post": {
+                "tags": [
+                    "Photo Albums"
+                ],
+                "description": "Обновление фотоальбома",
+                "operationId": "PhotoAlbumUpdate",
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "type": "object",
+                                "properties": {
+                                    "title": {
+                                        "type": "string",
+                                        "description": "Название фотоальбома. Максимальная длина 100 символов."
+                                    },
+                                    "description": {
+                                        "type": "string",
+                                        "description": "Описание фотоальбома. Максимальная длина 500 символов."
+                                    }
+                                }
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "description": "Сообщение об успешном создании."
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            "delete": {
+                "tags": [
+                    "Photo Albums"
+                ],
+                "description": "Удаление фотоальбома",
+                "operationId": "PhotoAlbumDelete",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "ID фотоальбома",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "description": "Сообщение об успешном удалении."
+                                        }
                                     }
                                 }
                             }

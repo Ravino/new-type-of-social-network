@@ -262,7 +262,7 @@ class User extends Authenticatable implements JWTSubject
 
     public function photoAlbums()
     {
-        return $this->hasMany(PhotoAlbum::class);
+        return $this->hasMany(PhotoAlbum::class, 'author_id', 'id');
     }
 
     public static function boot()
