@@ -1,3 +1,4 @@
+import { convertToDate } from '../../utils/DateUtils.js';
 import PliziDialog from '../PliziDialog.js';
 import PliziStoredCollection from './PliziStoredCollection.js';
 
@@ -138,7 +139,7 @@ class PliziDialogsCollection extends PliziStoredCollection {
         let dlg = this.get(dialogID);
 
         if (dlg) {
-            dlg.lastMessageDT = newData.lastMessageDT;
+            dlg.lastMessageDT = convertToDate(newData.lastMessageDT);
             dlg.lastMessageText = newData.lastMessageText;
             dlg.isLastFromMe = newData.isLastFromMe;
             dlg.isRead = newData.isRead;
