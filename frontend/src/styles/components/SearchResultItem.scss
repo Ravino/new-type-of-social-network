@@ -4,7 +4,6 @@ $srItemTimeColor: #9A9A9A;
 $srItemNameColor: #363636;
 $srItemOnlineColor: #9FCD48;
 $srItemOfflineColor: #CACAC9;
-$fullW: 100%;
 
 .plizi-sr-item-user {
     border-bottom: 1px solid #ebebeb;
@@ -73,7 +72,6 @@ $fullW: 100%;
                 font-size: 11px;
                 color: $srItemTimeColor; // add color to var
             }
-
         }
     }
 
