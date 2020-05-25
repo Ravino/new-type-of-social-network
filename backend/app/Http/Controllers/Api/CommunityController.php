@@ -66,7 +66,8 @@ class CommunityController extends Controller
          * TODO: Нужно будет что-то придумать с оптимизацией (дернормализовать таблицы или.... пока не ясно)
          */
         /** @var Community|Builder $query */
-        $query = Community::with('role', 'members', 'avatar', 'city');
+        $query = Community::with('role', 'members', 'avatar', 'city', 'theme', 'city.region', 'city.country')
+            ->withCount('members');
 
         $search = $request->search;
         if (mb_strlen($search) >= 3) {
@@ -263,6 +264,8 @@ class CommunityController extends Controller
     {
         $community_ids = (new Community())->getFavariteIdList(null, $request->query('limit', 5), $request->query('offset', 0));
         $communities = Community::whereIn('id', $community_ids)
+            ->with('role', 'members', 'avatar', 'city', 'theme')
+            ->withCount('members')
             ->get();
         return new CommunityCollection($communities);
     }
@@ -371,5 +374,19 @@ class CommunityController extends Controller
         return response()->json([
             'message' => 'Ошибка отклонения запроса',
         ], 422);
+    }
+
+    /**
+     * @return CommunityCollection
+     */
+    public function recommended()
+    {
+        $list = (new \Domain\Neo4j\Service\CommunityService())->recommended(auth()->user()->id);
+        $communities = Community::whereIn('id', $list->pluck('oid'))
+            ->with('avatar')
+            ->withCount('members')
+            ->get();
+
+        return new CommunityCollection($communities, false);
     }
 }

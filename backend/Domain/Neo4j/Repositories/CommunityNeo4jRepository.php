@@ -4,6 +4,7 @@ namespace Domain\Neo4j\Repositories;
 
 use DB;
 use Domain\Neo4j\Models\Community;
+use Exception;
 use GraphAware\Common\Result\Record;
 use Illuminate\Database\ConnectionInterface;
 use Domain\Neo4j\Models\User;
@@ -40,5 +41,28 @@ class CommunityNeo4jRepository extends BaseRepository
     public function clearAllRelations()
     {
         $this->_clearAllRelations('Community');
+    }
+
+    /**
+     * @param string $oid
+     * @param int $limit
+     * @return array|Record[]
+     */
+    public function recommended($oid, $limit = 5) {
+        $query = "MATCH (u:User {oid:'{$oid}'})-[rf:FRIEND_OF]-(fr:User)
+                  WITH fr, u
+                  MATCH (fr)-[rc:MEMBER_OF]-(c:Community)
+                  WHERE NOT(c)-[:MEMBER_OF]-(u)
+                  RETURN c.oid AS oid, COUNT(rc) AS r_count
+                  ORDER BY r_count DESC, oid
+                  LIMIT {$limit}";
+
+        try {
+            $list = $this->client->run($query)->records();
+        } catch (Exception $e) {
+            return [];
+        }
+
+        return $list;
     }
 }

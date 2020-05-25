@@ -11,6 +11,14 @@ use Illuminate\Support\Arr;
 
 class CommunityCollection extends ResourceCollection
 {
+    public $extends;
+
+    public function __construct($resource, $extends = true)
+    {
+        $this->extends = $extends;
+        parent::__construct($resource);
+    }
+
     /**
      * Transform the resource collection into an array.
      *
@@ -28,20 +36,25 @@ class CommunityCollection extends ResourceCollection
                     'primaryImage' => $community->primary_image,
                     'url' => $community->url,
                     'website' => $community->website,
-                    'location' => $community->city ? new CityResource($community->city) : null,
-                    'totalMembers' => $community->members->count(),
-                    'role' => $community->role ? $community->role->role : null,
+                    'totalMembers' => $community->members_count,
                     'type' => $community->type,
-                    'theme' => $community->theme_id ? $community->theme :null,
                     'privacy' => $community->privacy,
-                    'friends' => $this->getFriends($community, $request),
                     'avatar' => $community->avatar
                         ? new Image($community->avatar)
                         : null,
                 ];
 
-                if($community && $community->relationLoaded('onlyFiveMembers')) {
-                    $data ['members'] = new CommunityUserCollection($community->onlyFiveMembers);
+                if ($this->extends) {
+                    $data += [
+                        'theme' => $community->theme_id ? $community->theme :null,
+                        'friends' => $this->getFriends($community, $request),
+                        'role' => $community->role ? $community->role->role : null,
+                        'location' => $community->city ? new CityResource($community->city) : null,
+                    ];
+
+                    if($community && $community->relationLoaded('onlyFiveMembers')) {
+                        $data ['members'] = new CommunityUserCollection($community->onlyFiveMembers);
+                    }
                 }
 
                 return $data;
