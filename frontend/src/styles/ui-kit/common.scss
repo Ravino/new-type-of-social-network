@@ -642,3 +642,15 @@ $dotSize: 2px;
         flex: none;
     }
 }
+
+.AdvertisementPage,
+.AboutPage,
+.RulesPage,
+.ForDevelopersPage {
+    #contentContainer {
+        padding-left: 15px!important;
+        padding-right: 15px!important;
+    }
+}
+
+

@@ -26,7 +26,6 @@ $bgImage: "/images/plizi-bg-exp.svg";
     .modal-body {
         padding: 35px 60px 50px;
     }
-
     #contentContainer {
         padding-top: 45px;
     }
@@ -84,6 +83,7 @@ $bgImage: "/images/plizi-bg-exp.svg";
 
     .invalid-feedback {
         position: absolute;
+        z-index: 1;
     }
 }
 

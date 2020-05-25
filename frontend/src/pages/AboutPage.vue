@@ -1,5 +1,5 @@
 <template>
-    <div class="container-fluid ">
+    <div class="container-fluid  px-0 px-sm-3">
         <div class="row justify-content-center" id="aboutPage">
             <div class="col-12 col-md-11 px-4 p-3 bg-white-br20">
                 <h1 class="text-center mb-4 mt-1">О проекте</h1>

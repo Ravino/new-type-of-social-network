@@ -257,7 +257,6 @@ methods: {
 
         if (youtubeLinksMatch && youtubeLinksMatch.length) {
             youtubeLinksMatch.forEach((youtubeLink) => {
-
                 this.$emit('editorPost', {
                     postText: evData.postText,
                     attachments: this.getAttachmentsIDs(),
@@ -265,6 +264,7 @@ methods: {
                     videoLink: youtubeLink,
                     workMode: this.workMode,
                 });
+                evData.postText = '';
             });
         }
         else {

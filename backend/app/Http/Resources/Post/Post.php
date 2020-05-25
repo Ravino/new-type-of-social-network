@@ -31,8 +31,7 @@ class Post extends JsonResource
                 'alreadyLiked' => $this->alreadyLiked,
                 'attachments' => new AttachmentsCollection($this->attachments),
                 'user' => new SimpleUser($this->postable),
-                'sharedFrom' => $this->parent_id && $this->parent->parent_id ? new Post($this->parent) :
-                    $this->parent_id && !$this->parent->parent_id ? new PostWithoutParent($this->parent) : null,
+                'sharedFrom' => $this->parent_id && $this->parent->parent_id ? new Post($this->parent) : ($this->parent_id && !$this->parent->parent_id ? new PostWithoutParent($this->parent) : null),
                 'createdAt' => $this->created_at,
                 'author' => new SimpleUser($this->author),
             ];
@@ -49,8 +48,7 @@ class Post extends JsonResource
                 'alreadyLiked' => $this->alreadyLiked,
                 'attachments' => new AttachmentsCollection($this->attachments),
                 'community' => new Community($this->postable),
-                'sharedFrom' => $this->parent_id && $this->parent->parent_id ? new Post($this->parent) :
-                    $this->parent_id && !$this->parent->parent_id ? new PostWithoutParent($this->parent) : null,
+                'sharedFrom' => $this->parent_id && $this->parent->parent_id ? new Post($this->parent) : ($this->parent_id && !$this->parent->parent_id ? new PostWithoutParent($this->parent) : null),
                 'createdAt' => $this->created_at,
                 'author' => new SimpleUser($this->author),
             ];
