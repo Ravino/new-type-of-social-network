@@ -30,12 +30,14 @@ AdminSection::registerModel(User::class, static function (ModelConfiguration $mo
                 AdminColumn::custom('is_admin', static function (Model $model) {
                     return (int)$model->is_admin === 1 ? 'Да' : 'Нет';
                 })->setLabel('Admin'),
-                AdminColumn::url('email', 'Local')
+                AdminColumn::url('email', '')
                     ->setIcon('fas fa-reply')
-                    ->setView('column.urlint'),
-                AdminColumn::url('email', 'Test')
+                    ->setView('column.urlint')
+                    ->setOrderable(false),
+                AdminColumn::url('email', '')
                     ->setIcon('fas fa-reply-all')
                     ->setView('column.urlext')
+                    ->setOrderable(false)
             ]);
         $display->getColumnFilters()
             ->setPlacement('table.header')

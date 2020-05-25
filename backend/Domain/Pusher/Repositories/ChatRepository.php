@@ -40,6 +40,9 @@ class ChatRepository
         }
 
         $items = $query->orderBy('last_message_time', 'asc')->get();
+        $items = $items->filter(function ($item) {
+            return count($item->user_ids);
+        });
         return new ChatCollection($items, $user_id);
     }
 

@@ -3,10 +3,12 @@
 
 namespace App\Listeners;
 
-use App\Models\User;
+use App\Models\Community;
+use App\Models\Post;
 use App\Notifications\UserSystemNotifications;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
+use Illuminate\Support\Str;
 
 class CommunityUsersNotification implements ShouldQueue
 {
@@ -33,8 +35,8 @@ class CommunityUsersNotification implements ShouldQueue
 
     /**
      * @param $event
-     * @param $community
-     * @param $post
+     * @param Community $community
+     * @param Post $post
      * @return array|null
      */
     private function preparePayload($event, $community, $post)
@@ -45,7 +47,8 @@ class CommunityUsersNotification implements ShouldQueue
                     'name' => $community->name,
                     'primaryImage' => $community->primary_image,
                     'id' => $community->id,
-                    'postId' => $post->id
+                    'postId' => $post->id,
+                    'postName' => Str::limit(strip_tags($post->body), 30),
                 ],
                 'body' => 'There is new post in community {0, string}',
                 'notificationType' => $event,
