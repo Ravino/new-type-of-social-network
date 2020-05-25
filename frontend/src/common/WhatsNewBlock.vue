@@ -38,7 +38,6 @@ methods: {
     },
 
   async onTextPost(evData){
-      console.log(evData);
       let msg = evData.postText.trim();
 
     if (msg !== '' || evData.videoLink) {
@@ -65,7 +64,7 @@ methods: {
           formData.body = videoLink;
 
           if (text) {
-              formData.body = text;
+              formData.body += ` ${text}`;
           }
       } else {
           formData.body = text.trim();

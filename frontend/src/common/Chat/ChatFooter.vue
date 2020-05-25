@@ -73,7 +73,6 @@ methods: {
     },
 
     onTextPost(evData){
-        /** @type {string} **/
         let msg = evData.postText.trim();
 
         if (msg !== '' || evData.videoLink) {
@@ -104,16 +103,12 @@ methods: {
         let sendData = {
             chatId: chatId,
             body: msgText,
-            attachments: attachmentsIds,
+            attachments: attachmentsIds ? attachmentsIds : [],
             event: 'new.message',
         };
 
         if (videoLink) {
-            sendData.body = videoLink;
-
-            if (msgText) {
-                sendData.body = msgText;
-            }
+            sendData.body += ` ${videoLink}`;
         }
 
         this.$root.$api.sendToChannel(sendData);

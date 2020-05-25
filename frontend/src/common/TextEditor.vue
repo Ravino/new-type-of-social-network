@@ -254,31 +254,35 @@ methods: {
 
         let str = evData.postText.replace(/<\/?[^>]+>/g, '').trim();
         let youtubeLinksMatch = this.detectYoutubeLinks(str);
+        let attachmentsIds = this.getAttachmentsIDs();
+        let attachmentsData = this.attachmentsData.asArray();
+        let postText = this.deleteYoutubeLinksFromStr(evData.postText);
 
         if (youtubeLinksMatch && youtubeLinksMatch.length) {
             youtubeLinksMatch.forEach((youtubeLink) => {
-                this.$emit('editorPost', {
-                    postText: evData.postText,
-                    attachments: this.getAttachmentsIDs(),
-                    attachmentsData: this.attachmentsData.asArray(),
-                    videoLink: youtubeLink,
-                    workMode: this.workMode,
-                });
-                evData.postText = '';
+                this.onEmit(postText, null, null, youtubeLink, this.workMode);
+
+                if (attachmentsIds.length) {
+                    this.onEmit('<p></p>', attachmentsIds, attachmentsData, null, this.workMode);
+                }
+
+                postText = '';
             });
-        }
-        else {
-            this.$emit('editorPost', {
-                postText: evData.postText,
-                attachments: this.getAttachmentsIDs(),
-                attachmentsData: this.attachmentsData.asArray(),
-                videoLink: null,
-                workMode: this.workMode,
-            });
+        } else {
+            this.onEmit(postText, attachmentsIds, attachmentsData, null, this.workMode);
         }
 
         this.attachFiles = [];
         this.attachmentsData.clear();
+    },
+    onEmit(postText = null, attachments = null, attachmentsData = null, videoLink = null, workMode = null) {
+        this.$emit('editorPost', {
+            postText: postText,
+            attachments: attachments,
+            attachmentsData: attachmentsData,
+            videoLink: videoLink,
+            workMode: workMode,
+        });
     },
 
     onEditorKeyDown(ev) {
