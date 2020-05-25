@@ -9,7 +9,7 @@
                             <img :src="post.posterPic" :alt="post.posterName"/>
                         </router-link>
                         <router-link v-else :to="{name: 'CommunityPage', params: {id: postable.id}}">
-                            <img :src="post.posterPic" :alt="post.posterName"/>
+                            <img :src="communityAvatar" :alt="post.posterName"/>
                         </router-link>
                     </div>
 
@@ -74,7 +74,7 @@
                                 </router-link>
                                 <router-link v-else :to="{name: 'CommunityPage', params: {id: recursivePost.community.id}}"
                                              class="post-poster-pic mr-3">
-                                    <img :src="recursivePost.posterPic" :alt="recursivePost.posterName"/>
+                                    <img :src="recursiveCommunityAvatar" :alt="recursivePost.posterName"/>
                                 </router-link>
 
                                 <div class="post-poster-name d-flex flex-column justify-content-center">
@@ -264,6 +264,7 @@
     import PliziPost from '../../classes/PliziPost.js';
     import Gallery from '../Gallery.vue';
     import LinkMixin from '../../mixins/LinkMixin.js';
+    import AvatarMixin from '../../mixins/AvatarMixin.js';
 
     export default {
         name: 'Post',
@@ -286,7 +287,7 @@
                 default: false,
             },
         },
-        mixins: [LinkMixin],
+        mixins: [LinkMixin, AvatarMixin],
         data() {
             return {
                 recursivePostsSimple: [],
@@ -319,6 +320,12 @@
             },
             shortUsersLikes() {
                 return this.post.usersLikes && this.post.usersLikes.length ? this.post.usersLikes.slice(0, 8) : null;
+            },
+            communityAvatar() {
+                return this.getCommunityAvatar(this.post?.community);
+            },
+            recursiveCommunityAvatar() {
+                return this.getCommunityAvatar(this.post?.sharedFrom?.community);
             },
         },
         methods: {

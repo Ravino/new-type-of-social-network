@@ -33,6 +33,8 @@ use Storage;
  * @property int|null $image_original_width
  * @property int|null $image_original_height
  * @property-read string $s3_url
+ * @property-read string $s3_thumb_url
+ * @property-read string $s3_medium_url
  * @property-read User $user
  * @method static Builder|CommunityAttachment newModelQuery()
  * @method static Builder|CommunityAttachment newQuery()
@@ -90,12 +92,32 @@ class CommunityAttachment extends Model
         'image_original_height',
     ];
 
+    private function getS3Url($path)
+    {
+        return Storage::disk('s3')->url($path);
+    }
     /**
      * @return string
      */
     public function getS3UrlAttribute()
     {
-        return Storage::disk('s3')->url($this->path);
+        return $this->getS3Url($this->path);
+    }
+
+    /**
+     * @return string
+     */
+    public function getS3ThumbUrlAttribute()
+    {
+        return $this->getS3Url($this->image_thumb_path);
+    }
+
+    /**
+     * @return string
+     */
+    public function getS3MediumUrlAttribute()
+    {
+        return $this->getS3Url($this->image_medium_path);
     }
 
     /**

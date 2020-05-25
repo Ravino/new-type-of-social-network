@@ -203,6 +203,10 @@ class PliziCommunity {
         return this.__defaultAvatarPath;
     }
 
+    get defaultAvatarPath() {
+        return this.__defaultAvatarPath;
+    }
+
     get url(){
         return this._url;
     }
