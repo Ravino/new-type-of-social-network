@@ -1,12 +1,11 @@
 <template>
-    <div id="accountSettingsSideMenu" class="bg-white-br20">
+    <div id="blackListSideMenu" class="bg-white-br20">
         <div class="list-group border-0 py-3">
             <router-link tag="a" v-bind:to="menuItem.path"
                          v-for="(menuItem, menuIndex) in menuItems"
                          v-bind:key="menuIndex"
                          class="list-group-item list-group-item-action border-0 py-2"
-                         :class="{'active' : menuItem.isActive}"
-                         @click.native="anchorHashCheck">
+                         :class="{'active' : menuItem.isActive}">
                 {{menuItem.title}}
             </router-link>
         </div>
@@ -26,19 +25,6 @@ data () {
 },
 
 methods: {
-    anchorHashCheck() {
-        if (window.location.hash === this.$route.hash) {
-            const el = document.getElementById(this.$route.hash.slice(1));
-
-            if (el) {
-                window.scrollTo(0, el.offsetTop);
-
-                this.menuItems.map((menuItem) => {
-                    menuItem.isActive = menuItem.path === this.$route.hash;
-                });
-            }
-        }
-    },
 }
 
 }

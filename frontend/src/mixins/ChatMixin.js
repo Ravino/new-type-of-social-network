@@ -1,8 +1,4 @@
 const ChatMixin = {
-data() {
-    return {
-    }
-},
 
 methods: {
     killBrTrail(sText){
@@ -58,11 +54,8 @@ methods: {
     prependMessageToMessagesList(evData){
         this.messagesList.prepend( evData );
     },
-},
-
-computed : {
-
 }
+
 };
 
 export {ChatMixin as default}

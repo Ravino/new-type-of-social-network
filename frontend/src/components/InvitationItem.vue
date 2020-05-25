@@ -43,9 +43,10 @@
 </template>
 
 <script>
+import IconUserPlus from '../icons/IconUserPlus.vue';
+import IconUserX from '../icons/IconUserX.vue';
+
 import PliziInvitation from '../classes/PliziInvitation.js';
-import IconUserPlus from "../icons/IconUserPlus.vue";
-import IconUserX from "../icons/IconUserX.vue";
 
 export default {
 name : 'InvitationItem',

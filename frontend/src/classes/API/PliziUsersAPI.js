@@ -76,6 +76,7 @@ class PliziUsersAPI extends PliziBaseAPI{
                 throw new PliziAPIError('$users.blacklistAdd', error.response);
             });
         if (200 === response.status) {
+            console.log(response);
             return response.data.list;
         }
         return null;
