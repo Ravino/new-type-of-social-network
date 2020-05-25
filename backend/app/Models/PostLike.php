@@ -8,6 +8,7 @@ use Illuminate\Database\Eloquent\Model;
 class PostLike extends Model
 {
 
+
     protected $casts = [
         'created_at' => 'timestamp',
         'updated_at' => 'timestamp',
