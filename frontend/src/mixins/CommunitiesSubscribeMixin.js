@@ -7,9 +7,9 @@ const CommunitiesSubscribeMixin = {
          * @returns {string}
          */
         getSubscribeType(community) {
-            const role = community.role;
+            const role = community?.role;
             if (!role) {
-                switch (community.privacy) {
+                switch (community?.privacy) {
                     case 1://Open
                         return 'new';
                     case 2://Closed
