@@ -2,9 +2,10 @@
 
 namespace App\Http\Requests\Blacklist;
 
-use Illuminate\Foundation\Http\FormRequest;
+use App\Http\Requests\Request;
+use Illuminate\Validation\Rule;
 
-class BlacklistDelete extends FormRequest
+class BlacklistDelete extends Request
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -24,7 +25,18 @@ class BlacklistDelete extends FormRequest
     public function rules()
     {
         return [
-            'userId' => 'required|exists:users_blacklisted,blacklisted_id',
+            'userId' => [
+                'required',
+                Rule::exists('users_blacklisted', 'blacklisted_id')->where('user_id', auth()->user()->id),
+            ],
+        ];
+    }
+
+    public function messages()
+    {
+        return [
+            'userId.required' => 'Обязательный аттребут',
+            'userId.exists' => 'Запись отсутсвует',
         ];
     }
 }

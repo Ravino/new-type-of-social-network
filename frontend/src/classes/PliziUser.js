@@ -124,6 +124,10 @@ class PliziUser {
         return this._isOnline;
     }
 
+    set isOnline(olStatus){
+        this._isOnline = !!olStatus;
+    }
+
     /**
      * @returns {boolean}
      */

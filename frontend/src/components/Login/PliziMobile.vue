@@ -1,6 +1,6 @@
 <template>
     <div id="pliziMobile"
-         class=" --bg-white-br20 ">
+         class="bg-white-br20 ">
         <div class="plizi-mobile d-flex flex-wrap justify-content-between px-4 pt-2 position-relative">
             <div class="plz-for-mobile col-12 col-sm-4 d-flex justify-content-center my-auto flex-column">
                 <h5 class="mb-4 text-center text-sm-left">Скоро <br>Plizi для мобильных устройств</h5>

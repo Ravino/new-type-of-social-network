@@ -5,10 +5,10 @@
          @click.stop="hideCommunityCreateModal">
 
         <div class="modal-dialog modal-dialog-centered" role="document" @click.stop="">
-            <div class="modal-content bg-white-br20 overflow-hidden">
+            <div class="modal-content bg-white-br20 overflow-auto">
 
-                <div class="modal-body p-0 pt-3">
-                    <div class="community-create-modal-box p-4">
+                <div class="modal-body p-0 pt-3 w-100">
+                    <div class="community-create-modal-box p-4 w-100 overflow-hidden">
                         <h5 class="community-create-modal-title text-center mb-2">Создать сообщество</h5>
 
                         <div class="d-flex align-items-center justify-content-center">
@@ -22,7 +22,7 @@
                         </p>
                     </div>
 
-                    <form class="form community-create-modal-form p-0"
+                    <form class="form community-create-modal-form p-0  w-100 overflow-hidden"
                           @submit.prevent="" novalidate="novalidate">
                         <div class="form-group d-flex align-items-center mb-4 px-5 row position-relative">
                             <label for="commType" class="col-4 community-create-modal-label text-right">Тип

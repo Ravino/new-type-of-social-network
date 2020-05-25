@@ -46,8 +46,8 @@
                                     подписаться
                                 </button>
                                 <button v-else-if="subscribeType === 'request'" type="button"
-                                        class="btn plz-btn-outline  plizi-community-btn rounded-pill"
-                                        @click="sendRequest(community)">
+                                        class="btn align-items-center justify-content-center d-flex w-75 border-right m-0"
+                                        @click="sendRequest(communityData)">
                                     запрос
                                 </button>
                                 <button v-else-if="subscribeType === 'exists'"
@@ -74,7 +74,7 @@
             </div>
 
             <div class="row">
-                <div class="col-12 col-sm-7 col-lg-8 col-xl-8 order-1 order-sm-0">
+                <div class="col-12 --col-sm-7 col-lg-8 col-xl-8 order-1 order-lg-0">
                     <div v-if="isDataReady"
                          id="communityInfoBlock"
                          class="plz-community-info-block bg-white-br20 py-3 px-4 mb-4 text-left">
@@ -103,6 +103,17 @@
                               @onShowUsersLikes="openLikeModal"/>
                     </div>
 
+                    <div v-else-if="!hasAccess"  class="row plz-post-item mb-4 bg-white-br20 p-4">
+                        <div class="alert alert-info w-100 p-5 text-center mb-0">
+                            У Вас нет доступа.
+                            <p v-if="subscribeType === 'request'">
+                                Отправьте
+                                <a href="#" @click.stop="sendRequest(communityData)">запрос</a>
+                                на вступление в сообщество
+                            </p>
+                        </div>
+                    </div>
+
                     <div v-else-if="!isStarted"  class="row plz-post-item mb-4 bg-white-br20 p-4">
                         <div class="alert alert-info w-100 p-5 text-center mb-0">
                             Извините, но сейчас нечего показывать.
@@ -118,7 +129,7 @@
                     </template>
                 </div>
 
-                <div class="col-12 col-sm-5 col-lg-4">
+                <div class="col-12 --col-sm-5 col-lg-4 order-0 order-lg-1">
                     <CommunityManagedActionBlock :community="communityData" v-if="isAuthor"></CommunityManagedActionBlock>
 
                     <CommunityUserActionBlock v-bind:community="communityData"></CommunityUserActionBlock>
@@ -127,7 +138,8 @@
 
                     <CommunityShortMembers v-if="isDataReady" v-bind:community="communityData"></CommunityShortMembers>
 
-                    <div id="communityVideos" class="bg-white-br20 mb-5 mb-4 py-3 px-4">
+                    <div id="communityVideos" class="bg-white-br20 mb-5 mb-4 py-3 px-4"
+                        v-if="hasAccess">
 
                         <h6 class="plz-community-participants-title w-auto mb-4">Видео
                             <span class="plz-community-participants-subtitle ml-2">14</span>
@@ -293,6 +305,13 @@ computed: {
     },
     headerImage() {
         return this.communityData?.headerImage?.image.normal.path || 'images/community-header-bg.jpg';
+    },
+    hasAccess() {
+        // Opened
+        if (this.communityData?.privacy === 1) {
+            return true;
+        }
+        return !!this.communityData?.role;
     }
 },
 
@@ -485,7 +504,17 @@ methods: {
         if (apiResponse) {
             this.communityData = new PliziCommunity(apiResponse);
             this.isDataReady = true;
-            await this.getPosts();
+            document.title = `Plizi: ${this.communityData?.name}`;
+            setTimeout(() => {
+                const getPosts = async () => {
+                    await this.getPosts();
+                };
+                if (!this.hasAccess) {
+                    this.noMore = true;
+                    return;
+                }
+                getPosts();
+            }, 100);
         }
     },
     async getPosts(limit = 50, offset = 0) {

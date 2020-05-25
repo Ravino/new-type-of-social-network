@@ -10,7 +10,7 @@
                 <span></span>
             </label>
 
-            <div v-if="!isNextIsSamePerson()" class="message-user-pic mt-auto">
+            <div v-if="!isNextIsSamePerson" class="message-user-pic mt-auto">
                 <img :src="message.userPic" :alt="message.firstName" class="message-user-img" />
             </div>
 
@@ -30,13 +30,16 @@
 
                     <div v-else class="message-text-inner mb-0" v-html="livePreview"></div>
 
-                    <ChatMessageItemAttachments v-bind:message="message"></ChatMessageItemAttachments>
+                    <ChatMessageItemAttachments
+                        v-if="message.isAttachments"
+                        v-bind:message="message"></ChatMessageItemAttachments>
+
                     <ChatMessageItemReplyContent v-if="message.isReply"
                                  v-bind:replyOn="message.replyOn"
                                  v-bind:isForward="message.isForward"></ChatMessageItemReplyContent>
                 </div>
 
-                <time v-if="!isNextIsSamePerson()" class="message-time mx-2" :datetime="message.createdAt">
+                <time v-if="!isNextIsSamePerson" class="message-time mx-2" :datetime="message.createdAt">
                     {{ message.createdAt | lastMessageTime }}
                 </time>
 
@@ -103,7 +106,7 @@ props: {
     dialogID: String,
     pickedID: String,
     replyID: String,
-    next : PliziMessage | null
+    isNextIsSamePerson: Boolean
 },
 
 data() {
@@ -147,18 +150,8 @@ computed: {
 },
 
 methods: {
-    isNextIsSamePerson() {
-        if (null === this.next)
-            return false;
-
-        let nextID = this.next.isMine ? 1 : 0;
-        let msgID = this.message.isMine ? 1 : 0;
-
-        return (nextID === msgID);
-    },
-
     calcMessageItemClass(){
-        const isNextSame = this.isNextIsSamePerson();
+        const isNextSame = this.isNextIsSamePerson;
 
         return {
             'my-message ml-auto flex-row-reverse': this.message.isMine,

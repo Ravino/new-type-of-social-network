@@ -117,18 +117,43 @@
         .dropdown-menu {
             left: 50%;
             right: auto;
-            transform: translateX(-50%);
+            transform: translateX(-62%);
             max-width: 96vw;
         }
     }
 
+
+    #communityEditor,
+    #profileWhatsNew {
+        .picker {
+            transform: translate(-80%, 40px) !important;
+        }
+    }
 }
 
 /*- md -*/
 @media (max-width: 767px) {
+    .LoginPage,
+    .UpdatePasswordPage,
+    .HomePage,
+    .ForDevelopersPage #guestPageWrapper,
+    .AdvertisementPage #guestPageWrapper,
+    .RulesPage #guestPageWrapper,
+    .AboutPage #guestPageWrapper
+    {
+        #contentContainer {
+            padding-top: 76px;
+        }
+    }
+
     #contentContainer {
         padding-top: 76px;
     }
+
+    .plz-account-settings-body .multiselect__content-wrapper {
+        transform: translateX(0);
+    }
+
     #toolbarLeftColor {
         .add-new {
             width: 48px;
@@ -244,6 +269,19 @@
         }
     }
 
+
+    .ForDevelopersPage,
+    .AdvertisementPage,
+    .RulesPage,
+    .AboutPage {
+        #pageWrapper {
+            .plz-footer {
+                flex: 0 0 100%;
+                max-width: 100%;
+            }
+        }
+    }
+
 }/*- max-width: 767px -*/
 
 
@@ -332,6 +370,15 @@
     .plz-community-header-details-text {
         width: 100%;
         text-align: center;
+    }
+
+
+    .plizi-sr-item-body {
+        width: 100%;
+    }
+    .plizi-sr-item .plizi-community-btn {
+        width: 100%;
+        margin-top: 10px;
     }
 
 }

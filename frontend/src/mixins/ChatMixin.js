@@ -1,9 +1,4 @@
 const ChatMixin = {
-data() {
-    return {
-        isMessagesLazyLoad: false,
-    }
-},
 
 methods: {
     killBrTrail(sText){
@@ -25,9 +20,11 @@ methods: {
     },
 
     async lazyLoadMessages(chatId, offset, limit){
-        let msgsResponse = null;
+        if (!this.isCanLoadMoreMessages)
+            return;
 
         this.isMessagesLazyLoad = true;
+        let msgsResponse = null;
 
         try {
             msgsResponse = await this.$root.$api.$chat.messages(chatId, offset, limit);
@@ -37,19 +34,28 @@ methods: {
             throw e;
         }
 
+        this.isMessagesLazyLoad = false;
+
         window.localStorage.setItem('pliziActiveDialog', chatId);
 
-        msgsResponse.map( (msg) => {
-            this.addMessageToMessagesList(msg);
-        });
-
-        this.isMessagesLazyLoad = true;
+        if (msgsResponse){
+            if (msgsResponse.length > 0) {
+                this.isCanLoadMoreMessages = true;
+                msgsResponse.map( (msg) => {
+                    this.prependMessageToMessagesList(msg);
+                });
+            }
+            else {
+                this.isCanLoadMoreMessages = false;
+            }
+        }
     },
-},
 
-computed : {
-
+    prependMessageToMessagesList(evData){
+        this.messagesList.prepend( evData );
+    },
 }
+
 };
 
 export {ChatMixin as default}

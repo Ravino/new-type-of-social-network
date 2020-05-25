@@ -7,243 +7,189 @@ import CommunitiesListHeader from '../common/Communities/CommunitiesListHeader.v
 import CommunityItem from '../common/Communities/CommunityItem.vue';
 import CommunityCreateBlock from '../common/Communities/CommunityCreateBlock.vue';
 import PliziCommunity from "../classes/PliziCommunity.js";
+import {debounce} from "../utils/Debonce.js";
 
 const CommunitiesListMixin = {
-components: {
-    AccountToolbarLeft,
-    Spinner,
-    CommunitiesListHeader,
-    CommunityItem,
-    CommunityCreateBlock,
-    RecommendedCommunities,
-    FavoriteFriends,
-},
+    components: {
+        AccountToolbarLeft,
+        Spinner,
+        CommunitiesListHeader,
+        CommunityItem,
+        CommunityCreateBlock,
+        RecommendedCommunities,
+        FavoriteFriends,
+    },
 
-data() {
-    return {
-        isCommunitiesLoaded: false,
-        communitiesList: [],
-        communitiesListSearch: [],
+    data() {
+        return {
+            isCommunitiesLoaded: false,
+            communitiesList: [],
 
-        isPopularCommunitiesLoaded: true,
-        popularCommunities: [],
-        popularCommunitiesSearch: [],
+            isPopularCommunitiesLoaded: true,
+            popularCommunities: [],
 
-        isManagedCommunitiesLoaded: false,
-        managedCommunities: [],
-        managedCommunitiesSearch: [],
+            isManagedCommunitiesLoaded: false,
+            managedCommunities: [],
 
-        recommendedCommunities: null,
+            recommendedCommunities: null,
 
-        lazyLoadStarted: false,
-        noMore: false,
-        enabledLoader: true,
-    }
-},
-mounted() {
-    this.$root.$on('communitySearchStart', this.searchProcess);
-    window.addEventListener('scroll', this.onScrollYPage);
-},
+            lazyLoadStarted: false,
+            noMore: false,
+            enabledLoader: true,
+
+            searchString: '',
+        }
+    },
+    mounted() {
+        this.$root.$on('communitySearchStart', this.searchProcess);
+        window.addEventListener('scroll', this.onScrollYPage);
+        this.searchString = window.localStorage.getItem('lastCommunitiesSearch_' + this.list) || '';
+    },
     beforeRouteLeave(to, from, next) {
         window.removeEventListener('scroll', this.onScrollYPage);
         next();
     },
-beforeDestroy() {
-    this.$root.$off('communitySearchStart', this.searchProcess);
-},
-computed: {
-
-},
-
-methods: {
-    async searchProcess(e) {
-        if (e.list === 'my') {
-            return this.loadCommunities();
-        }
-        if (e.list === 'owner') {
-            return this.loadManagedCommunities();
-        }
-        return this.loadPopularCommunitites();
+    beforeDestroy() {
+        this.$root.$off('communitySearchStart', this.searchProcess);
     },
-    isSubscribed(commID){
-        if (! this.popularCommunities)
-            return true;
+    computed: {},
 
-        const ret = !!this.popularCommunities.find( (commItem) => {
-            //window.console.info(commItem.id, commItem.name);
-            return commItem.id===commID;
-        });
-        //window.console.log(ret, commID);
-
-        return ret;
-    },
-
-    onScrollYPage(){
-        if (window.scrollY >= (document.body.scrollHeight - document.documentElement.clientHeight - (document.documentElement.clientHeight/2) )){
-            if (this.$route.name === 'CommunitiesManagePage') {
-                this.lazyLoad('manage');
-            } else if (this.$route.name === 'CommunitiesPopularPage') {
-                this.lazyLoad('popular');
-            } else {
-                this.lazyLoad();
+    methods: {
+        async searchProcess(e) {
+            this.noMore = false;
+            this.searchString = e.searchText;
+            if (e.list === 'my') {
+                return this.loadCommunities();
             }
-        }
-    },
+            if (e.list === 'owner') {
+                return this.loadManagedCommunities();
+            }
+            return this.loadPopularCommunitites();
+        },
+        isSubscribed(commID) {
+            if (!this.popularCommunities)
+                return true;
 
-    /**
-     * @TEST
-     * @returns {Promise<boolean>}
-     */
-    async getCommunities() {
-        window.console.warn(`getCommunities`);
+            const ret = !!this.popularCommunities.find((commItem) => {
+                //window.console.info(commItem.id, commItem.name);
+                return commItem.id === commID;
+            });
+            //window.console.log(ret, commID);
 
-        let apiResponse = null;
+            return ret;
+        },
 
-        try {
-            apiResponse = await this.$root.$api.$communities.getCommunity(40);
-        }
-        catch (e){
-            window.console.warn(e.detailMessage);
-            throw e;
-        }
+        onScrollYPage: debounce(function () {
+            if (window.scrollY >= (document.body.scrollHeight - document.documentElement.clientHeight - (document.documentElement.clientHeight / 2))) {
+                if (this.$route.name === 'CommunitiesManagePage') {
+                    this.lazyLoad('manage');
+                } else if (this.$route.name === 'CommunitiesPopularPage') {
+                    this.lazyLoad('popular');
+                } else {
+                    this.lazyLoad();
+                }
+            }
+        }, 100),
 
-        window.console.log(apiResponse);
+        async loadCommunities(limit = 10, offset = 0) {
+            this.enabledLoader = true;
+            const searchText = this.searchString;
+            let apiResponse = null;
+            if (offset === 0) {
+                this.isCommunitiesLoaded = false;
+            }
 
-        if (apiResponse) {
-
-        }
-
-        return true;
-    },
-
-    async loadCommunities(limit = 10, offset = 0) {
-        const searchText = this.$root.$lastCommunitiesSearch.my;
-        let apiResponse = null;
-
-        try {
-            apiResponse = await this.$root.$api.$communities.userCommunities(searchText, limit, offset);
-        }
-        catch (e){
-            window.console.warn(e.detailMessage);
-            throw e;
-        }
-
-        if (apiResponse) {
-            this.enabledLoader = false;
+            try {
+                apiResponse = await this.$root.$api.$communities.userCommunities(searchText, limit, offset);
+            } catch (e) {
+                window.console.warn(e.detailMessage);
+                throw e;
+            }
             this.isCommunitiesLoaded = true;
+            return this.processApiResponce(offset, apiResponse, 'communitiesList');
+        },
 
-            if (searchText) {
-                this.communitiesListSearch = [];
-                apiResponse.map( (pfItem)=> {
-                    this.communitiesListSearch.push( new PliziCommunity(pfItem) );
-                });
-            } else {
-                apiResponse.map( (pfItem)=> {
-                    this.communitiesList.push( new PliziCommunity(pfItem) );
-                });
+        async loadPopularCommunitites(limit = 10, offset = 0) {
+            this.enabledLoader = true;
+            const searchText = this.searchString;
+            let apiResponse = null;
+            if (offset === 0) {
+                this.isPopularCommunitiesLoaded = false;
             }
 
-            return apiResponse.length;
-        }
-
-        return true;
-    },
-
-    async loadPopularCommunitites(limit = 10, offset = 0) {
-        const searchText = this.$root.$lastCommunitiesSearch.popular;
-        let apiResponse = null;
-
-        try {
-            apiResponse = await this.$root.$api.$communities.loadCommunities(searchText, limit, offset);
-        }
-        catch (e){
-            window.console.warn(e.detailMessage);
-            throw e;
-        }
-
-        if (apiResponse) {
-            this.enabledLoader = false;
+            try {
+                apiResponse = await this.$root.$api.$communities.loadCommunities(searchText, limit, offset);
+            } catch (e) {
+                window.console.warn(e.detailMessage);
+                throw e;
+            }
             this.isPopularCommunitiesLoaded = true;
+            return this.processApiResponce(offset, apiResponse, 'popularCommunities');
+        },
 
-            if (searchText) {
-                this.popularCommunitiesSearch = [];
-                apiResponse.map( (pfItem)=> {
-                    this.popularCommunitiesSearch.push( new PliziCommunity(pfItem) );
-                });
-
-            } else {
-                apiResponse.map( (pfItem)=> {
-                    this.popularCommunities.push( new PliziCommunity(pfItem) );
-                });
+        async loadManagedCommunities(limit = 10, offset = 0) {
+            this.enabledLoader = true;
+            const searchText = this.searchString;
+            let apiResponse = null;
+            if (offset === 0) {
+                this.isManagedCommunitiesLoaded = false;
             }
 
-            return apiResponse.length;
-        }
-
-        return true;
-    },
-
-    async loadManagedCommunities(limit = 10, offset = 0) {
-        const searchText = this.$root.$lastCommunitiesSearch.owner;
-        let apiResponse = null;
-        this.isManagedCommunitiesLoaded = false;
-
-        try {
-            apiResponse = await this.$root.$api.$communities.loadManagedCommunities(searchText, limit, offset);
-        } catch (e) {
-            window.console.warn(e.detailMessage);
-            throw e;
-        }
-
-        if (apiResponse) {
-            this.enabledLoader = false;
+            try {
+                apiResponse = await this.$root.$api.$communities.loadManagedCommunities(searchText, limit, offset);
+            } catch (e) {
+                window.console.warn(e.detailMessage);
+                throw e;
+            }
             this.isManagedCommunitiesLoaded = true;
+            return this.processApiResponce(offset, apiResponse, 'managedCommunities');
+        },
 
-            if (searchText) {
-                this.managedCommunitiesSearch = [];
+        processApiResponce(offset, apiResponse, list) {
+            if (apiResponse) {
+                this.enabledLoader = false;
+                this.isCommunitiesLoaded = true;
+
+                if (offset === 0) {
+                    this[list] = [];
+                }
                 apiResponse.map((pfItem) => {
-                    this.managedCommunitiesSearch.push(new PliziCommunity(pfItem));
+                    this[list].push(new PliziCommunity(pfItem));
                 });
-            } else {
-                apiResponse.map((pfItem) => {
-                    this.managedCommunities.push(new PliziCommunity(pfItem));
-                });
+
+                return apiResponse.length;
             }
 
-            return apiResponse.length;
-        }
+            return 0;
+        },
 
-        return true;
+        async lazyLoad(listName = null) {
+            if (this.lazyLoadStarted) return;
+            if (this.noMore) return;
+
+            this.enabledLoader = true;
+            this.lazyLoadStarted = true;
+
+            let oldSize, added;
+
+            if (listName === 'manage') {
+                oldSize = this.managedCommunities.length;
+                added = await this.loadManagedCommunities(10, oldSize++);
+            } else if (listName === 'popular') {
+                oldSize = this.popularCommunities.length;
+                added = await this.loadPopularCommunitites(10, oldSize++);
+            } else {
+                oldSize = this.communitiesList.length;
+                added = await this.loadCommunities(10, oldSize++);
+            }
+
+            if (added === 0) {
+                this.noMore = true;
+            }
+
+            this.lazyLoadStarted = false;
+        },
     },
-
-    async lazyLoad(listName = null) {
-        if (this.lazyLoadStarted) return;
-        if (this.noMore) return;
-
-        this.enabledLoader = true;
-        this.lazyLoadStarted = true;
-
-        let oldSize, added;
-
-        if (listName === 'manage') {
-            oldSize = this.managedCommunities.length;
-            added = await this.loadPopularCommunitites(10, oldSize++);
-        } else if (listName === 'popular') {
-            oldSize = this.popularCommunities.length;
-            added = await this.loadManagedCommunities(10, oldSize++);
-        } else {
-            oldSize = this.communitiesList.length;
-            added = await this.loadCommunities(10, oldSize++);
-        }
-
-        if (added === 0) {
-            this.noMore = true;
-        }
-
-        this.lazyLoadStarted = false;
-        this.onScrollYPage();
-    },
-},
 
 };
 

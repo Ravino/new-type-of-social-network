@@ -12,9 +12,46 @@ body {
     background-color: $plzBodyBG;
 }
 
+.ForDevelopersPage,
+.AdvertisementPage,
+.RulesPage,
+.AboutPage {
+    #guestPageWrapper {
+        justify-content: flex-start !important;
+
+        #contentContainer {
+            padding-top: 30px;
+        }
+        .plz-bottom-links {
+            padding: 0 15px;
+        }
+    }
+
+    #pageWrapper {
+        .plz-footer {
+            flex: 0 0 91.666667%;
+            max-width: 91.666667%;
+            margin: 0 auto!important;
+            .nav-link {
+                color: #484849;
+            }
+            .nav-link.plz-copy {
+                color: #a1a1a2;
+            }
+        }
+    }
+
+    #authPageWrapper {
+        .plz-bottom-links {
+            padding: 0 15px;
+        }
+    }
+}
+
 /* TODO: @TGA - прописать более детально */
 h1, h2, h3, h4, h5, h6 {
     font-weight: 600;
+    word-break: break-word;
 }
 
 [type="button"] {
@@ -35,6 +72,14 @@ h1, h2, h3, h4, h5, h6 {
     &:hover {
         color: #ffffff;
     }
+}
+
+a:hover {
+    text-decoration-color: $postTextColor;
+}
+
+a {
+    word-break: break-word;
 }
 
 button {
@@ -84,6 +129,10 @@ a:active,
 a::-moz-focus-inner{
     outline: none;
     border-color: transparent;
+}
+
+span.bg-warning {
+    background-color: rgba(59, 78, 222, .2)!important;
 }
 
 #contentContainer {
@@ -390,6 +439,7 @@ $loadingDotsSize: 4px;
     border-radius: 7px;
     padding: 2px 4px;
     line-height: 1;
+    word-break: keep-all;
     z-index: 1;
 }
 
@@ -549,9 +599,13 @@ input[type='date']::-webkit-clear-button {
 
 
 //modal
+.modal-dialog {
+    margin: 0 auto;
+}
 .modal-content {
     max-width: 96%;
     max-height: 96vh;
+    margin: 0 auto;
 }
 
 #chatVideoModal {
@@ -592,3 +646,15 @@ $dotSize: 2px;
         flex: none;
     }
 }
+
+.AdvertisementPage,
+.AboutPage,
+.RulesPage,
+.ForDevelopersPage {
+    #contentContainer {
+        padding-left: 15px!important;
+        padding-right: 15px!important;
+    }
+}
+
+

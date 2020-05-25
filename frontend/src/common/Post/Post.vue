@@ -5,11 +5,11 @@
             <div class="col-12 border-bottom plz-post-item-header">
                 <div class="post-news-item d-flex flex-row align-content-center pb-4">
                     <div class="post-poster-pic mr-3">
-                        <router-link v-if="postable" :to="{name: 'PersonalPage', params: {id: postable.id}}">
+                        <router-link v-if="this.post.user" :to="{name: 'PersonalPage', params: {id: postable.id}}">
                             <img :src="post.posterPic" :alt="post.posterName"/>
                         </router-link>
-                        <router-link v-else :to="{name: 'CommunityPage', params: {id: post.community.id}}">
-                            <img :src="post.posterPic" :alt="post.posterName"/>
+                        <router-link v-else :to="{name: 'CommunityPage', params: {id: postable.id}}">
+                            <img :src="communityAvatar" :alt="post.posterName"/>
                         </router-link>
                     </div>
 
@@ -17,10 +17,10 @@
                         <h6 class="post-poster-title mb-1">
                             <!-- TODO: @TGA странно что мы нигде не выводим название поста-->
 
-                            <router-link v-if="postable" :to="{name: 'PersonalPage', params: {id: postable.id}}">
+                            <router-link v-if="this.post.user" :to="{name: 'PersonalPage', params: {id: postable.id}}">
                                 <b>{{post.posterName}}</b>
                             </router-link>
-                            <router-link v-else :to="{name: 'CommunityPage', params: {id: post.community.id}}">
+                            <router-link v-else :to="{name: 'CommunityPage', params: {id: postable.id}}">
                                 <b>{{post.posterName}}</b>
                             </router-link>
                         </h6>
@@ -74,7 +74,7 @@
                                 </router-link>
                                 <router-link v-else :to="{name: 'CommunityPage', params: {id: recursivePost.community.id}}"
                                              class="post-poster-pic mr-3">
-                                    <img :src="recursivePost.posterPic" :alt="recursivePost.posterName"/>
+                                    <img :src="recursiveCommunityAvatar" :alt="recursivePost.posterName"/>
                                 </router-link>
 
                                 <div class="post-poster-name d-flex flex-column justify-content-center">
@@ -289,6 +289,7 @@
     import LinkMixin from '../../mixins/LinkMixin.js';
     import CommentPost from "../../components/CommentPost.vue";
     import CommentItem from "../../components/CommentItem.vue";
+    import AvatarMixin from '../../mixins/AvatarMixin.js';
 
     export default {
         name: 'Post',
@@ -313,7 +314,7 @@
                 default: false,
             },
         },
-        mixins: [LinkMixin],
+        mixins: [LinkMixin, AvatarMixin],
         data() {
             return {
                 recursivePostsSimple: [],
@@ -334,11 +335,11 @@
                 return this.transformStrWithLinks(str);
             },
             postable() {
-                if (this.isCommunity) {
-                    return this.post.author;
+                if (this.post.community) {
+                    return this.post.community;
                 }
 
-                return this.post.user ? this.post.user : null;
+                return this.post.author;
             },
             imageAttachments() {
                 return this.post.attachments.filter(attachment => attachment.isImage);
@@ -348,6 +349,12 @@
             },
             shortUsersLikes() {
                 return this.post.usersLikes && this.post.usersLikes.length ? this.post.usersLikes.slice(0, 8) : null;
+            },
+            communityAvatar() {
+                return this.getCommunityAvatar(this.post?.community);
+            },
+            recursiveCommunityAvatar() {
+                return this.getCommunityAvatar(this.post?.sharedFrom?.community);
             },
         },
         methods: {

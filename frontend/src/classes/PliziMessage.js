@@ -172,6 +172,10 @@ class PliziMessage{
         return this._lastName;
     }
 
+    get fullName(){
+        return this._firstName +' '+ this._lastName;
+    }
+
     get userPic(){
         if (this._userPic!==``)
             return this._userPic;
@@ -203,6 +207,14 @@ class PliziMessage{
         return this._createdAt;
     }
 
+    /**
+     * время сообщения в формате UnixTime
+     * @returns {number}
+     */
+    get messageUnix(){
+        return this._createdAt.valueOf();
+    }
+
     get updatedAt(){
         return this._updatedAt;
     }
@@ -227,7 +239,7 @@ class PliziMessage{
     }
 
     get isAttachments(){
-        return !!this._attachments;
+        return !!this._attachments  &&  this._attachments.length && this._attachments.length>0;
     }
 
     get attachmentsNumber(){
@@ -256,7 +268,7 @@ class PliziMessage{
             createdAt: +(+this.createdAt.valueOf() / 1000).toFixed(0),
             updatedAt: +(+this.updatedAt.valueOf() / 1000).toFixed(0),
             attachments: { list : atts },
-            replyOn: this.isReply ? this.replyOn.toJSON() : null ,
+            replyOn: this.isReply ? this.replyOn.toJSON() : null,
             isForward: this.isForward
         };
     }

@@ -299,4 +299,14 @@ class Community extends Model
                     });
             });
     }
+
+    public function isUserHasAccess($user = null)
+    {
+        $user = $user ?: auth()->user();
+        if ($this->privacy === self::PRIVACY_OPEN) {
+            return true;
+        }
+
+        return $this->isMember($user);
+    }
 }

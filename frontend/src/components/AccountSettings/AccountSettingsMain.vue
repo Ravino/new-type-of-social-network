@@ -477,7 +477,11 @@
                     return `${country.title.ru}, ${title.ru}`;
                 }
             },
-            relationshipUserLabel({profile}) {
+            relationshipUserLabel({id, title, profile}) {
+                if (id === null) {
+                    return title;
+                }
+
                 return `${profile.firstName} ${profile.lastName}`;
             },
 
@@ -545,7 +549,13 @@
                 }
 
                 if (response) {
-                    this.friends = response;
+                    this.friends.push({
+                       id: null,
+                       title: 'Не указывать',
+                    });
+                    response.forEach((friend) => {
+                        this.friends.push(friend);
+                    });
                 }
             },
         },

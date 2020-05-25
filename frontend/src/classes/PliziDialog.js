@@ -164,6 +164,29 @@ class PliziDialog{
         return this.attendees[0];
     }
 
+    /**
+     * возвращает собеседника по его userId
+     * @param {string} userId - userId собеседника
+     * @returns {PliziAttendee}
+     */
+    getAttendee(userId){
+        return this.attendees.find( aItem => aItem.id === userId );
+    }
+
+    removeAttendee(userId){
+        this._attendees = this._attendees.filter( aItem => aItem.id !== userId );
+    }
+
+    addAttendee(userData){
+        window.console.log(userData instanceof PliziAttendee, ' is PliziAttendee');
+
+        if ( !(userData instanceof PliziAttendee)) {
+            userData = new PliziAttendee(userData);
+        }
+
+        this.attendees.push( userData );
+    }
+
     set lastMessageText( value ){
         this._lastMessageText = value.trim();
     }

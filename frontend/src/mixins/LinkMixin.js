@@ -43,12 +43,22 @@ const LinkMixin = {
          * Заменяем ссылки в строке.
          *
          * @param str
-         * @return {str|null}
+         * @return {string|null}
          */
         replaceLink(str) {
             return str.replace(this.urlRegExp, function (url) {
                 return '<a href="' + url + '" target="_blank">' + url + '</a>';
             });
+        },
+
+        /**
+         * Заменяем youtube ссылки на пустоту.
+         *
+         * @param str
+         * @return {string|null}
+         */
+        deleteYoutubeLinksFromStr(str) {
+            return str.replace(this.youtubeLinksRegExp, '');
         },
 
         transformStrWithLinks(str) {
@@ -66,7 +76,7 @@ const LinkMixin = {
                 let textTransformToLinks = this.replaceLink(textWithoutYoutubeLinks);
 
                 return {
-                    videoLinks: `<img src="//img.youtube.com/vi/${youtubeIds[0]}/0.jpg" 
+                    videoLinks: `<img src="//img.youtube.com/vi/${youtubeIds[0]}/0.jpg"
                              alt="" />`,
                     text: `<p>${textTransformToLinks}</p>`,
                 };

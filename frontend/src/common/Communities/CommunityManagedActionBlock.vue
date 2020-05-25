@@ -9,6 +9,7 @@
         <router-link v-if="parseInt(community.privacy) === 2" :to="{name: 'CommunityRequestsPage', params: {id: community.id}}"
                      class="btn btn-link btn-block w-100 mb-2 text-black-50 text-left">
             <i class="fas fa-user-cog mr-2"></i>Запросы
+            <small v-if="community.requestsCount > 0">({{community.requestsCount}})</small>
         </router-link>
 
         <button type="button"

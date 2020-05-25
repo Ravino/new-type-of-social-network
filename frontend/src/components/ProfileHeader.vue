@@ -1,28 +1,41 @@
 <template>
     <div id="profileHeader" class="row plz-profile-header mb-4">
-        <div class="offset-1 col-10 offset-sm-3 col-sm-6 offset-md-4 col-md-4 offset-lg-0 col-lg-4 col-xl-3 pl-lg-0 mb-4 mb-lg-0">
+        <div
+            class="offset-1 col-10 offset-sm-3 col-sm-6 offset-md-4 col-md-4 offset-lg-0 col-lg-4 col-xl-3 pl-lg-0 mb-4 mb-lg-0">
             <div class="plz-profile-userpic-container d-flex flex-column  bg-white-br20 overflow-hidden">
-                <div class="plz-profile-userpic-wrapper overflow-hidden position-relative d-flex align-items-center justify-content-center mx-auto m-lg-0">
-                    <img ref="userAvatar" :src="userAvatar" :alt="userData.fullName" />
+                <div
+                    class="plz-profile-userpic-wrapper overflow-hidden position-relative d-flex align-items-center justify-content-center mx-auto m-lg-0">
+                    <img ref="userAvatar" :src="userAvatar" :alt="userData.fullName"/>
                 </div>
 
                 <div v-if="isOwner===true" class="plz-profile-userpic-footer mt-auto">
                     <div class="plz-profile-userpic-edit file-label d-flex align-items-center justify-content-between">
-                        <label for="userAvatarFile" class="btn align-items-center justify-content-center d-flex w-75 border-right m-0">Редактировать</label>
+                        <label for="userAvatarFile"
+                               class="btn align-items-center justify-content-center d-flex w-75 border-right m-0">Редактировать</label>
 
-                        <button class="btn align-items-center justify-content-center d-flex w-25" @click="showProfileOptionsModal()" title="опции">
+                        <button class="btn align-items-center justify-content-center d-flex w-25"
+                                @click="showProfileOptionsModal()" title="опции">
                             <span class="ps-dot"></span>
                             <span class="ps-dot"></span>
                             <span class="ps-dot"></span>
                         </button>
                     </div>
-                    <input id="userAvatarFile" ref="userAvatarFile" type="file" @change="uploadUserAvatar()" class="d-none" />
+                    <input id="userAvatarFile" ref="userAvatarFile" type="file" @change="uploadUserAvatar()"
+                           class="d-none"/>
                 </div>
 
                 <div v-else class="plz-profile-userpic-footer">
-                    <div class="plz-profile-userpic-edit d-flex align-items-center justify-content-between overflow-hidden d-flex m-0 p-0">
-                        <button class="btn align-items-center justify-content-center d-flex w-75 border-right" @click="showPersonalMsgDialog()">Написать</button>
-                        <button class="btn align-items-center justify-content-center d-flex w-25" @click="sendFriendshipInvitation(userData.id, userData.fullName)" title="добавить в друзья">
+                    <div
+                        class="plz-profile-userpic-edit d-flex align-items-center justify-content-between overflow-hidden d-flex m-0 p-0">
+                        <button v-bind:style="{ width: fullWidth }"
+                                class="btn align-items-center justify-content-center d-flex border-right"
+                                @click="showPersonalMsgDialog()">Написать
+                        </button>
+
+                        <button v-if="isCanAddToFriends"
+                                class="btn align-items-center justify-content-center d-flex w-25"
+                                @click="sendFriendshipInvitation(userData.id, userData.fullName)"
+                                title="добавить в друзья">
                             <IconAddUser/>
                         </button>
                     </div>
@@ -53,7 +66,7 @@
                         <td class="">Город:</td>
                         <td class="">
                             <template v-if="userData.country && userData.city.title">
-                                <IconLocation />
+                                <IconLocation/>
                                 {{userData.country.title.ru}}, {{userData.city.title.ru}}
                             </template>
                             <template v-else>
@@ -67,7 +80,8 @@
                             {{userData.family}}
                             <template v-if="!!userData.profile.relationshipUser">
                                 {{ userData.profile.relationshipUserText }}
-                                <router-link :to="{ name: 'PersonalPage', params: { id: userData.profile.relationshipUser.id } }">
+                                <router-link
+                                    :to="{ name: 'PersonalPage', params: { id: userData.profile.relationshipUser.id } }">
                                     {{ userData.profile.relationshipUser.profile.firstName }}
                                     {{ userData.profile.relationshipUser.profile.lastName }}
                                 </router-link>
@@ -79,13 +93,19 @@
             </div>
 
             <div class="plz-profile-userdetails-footer d-flex justify-content-around px-2 px-md-4">
-                <div class="plz-profile-userdetails-numbers text-center pt-2 px-2 pt-md-4 px-md-4">
-                    <span class="numbers-top" v-html="sBeaty(userData.subscribersNumber)"></span>
+                <div v-if="usrFollowersNumber > 0" class="plz-profile-userdetails-numbers text-center pt-2 px-2 pt-md-4 px-md-4">
+                    <span class="numbers-top" v-html="sBeaty(usrFollowersNumber)"></span>
                     <span class="numbers-bottom">Подписчиков</span>
                 </div>
-                <div class="plz-profile-userdetails-numbers text-center pt-2 px-2 pt-md-4 px-md-4">
+                <div v-else class="plz-profile-userdetails-numbers text-center pt-2 px-2 pt-md-5 px-md-4">
+                    <span class="numbers-bottom">Нет подписчиков</span>
+                </div>
+                <div v-if="usrFriendsNumber > 0" class="plz-profile-userdetails-numbers text-center pt-2 px-2 pt-md-4 px-md-4">
                     <span class="numbers-top" v-html="sBeaty(usrFriendsNumber)"></span>
                     <span class="numbers-bottom">Друзей</span>
+                </div>
+                <div v-else class="plz-profile-userdetails-numbers text-center pt-2 px-2 pt-md-5 px-md-4">
+                    <span class="numbers-bottom">Нет друзей</span>
                 </div>
                 <div class="plz-profile-userdetails-numbers text-center pt-2 px-2 pt-md-4 px-md-4">
                     <span class="numbers-top" v-html="sBeaty(userData.photosNumber)"></span>
@@ -107,128 +127,135 @@
 </template>
 
 <script>
-import IconAddUser from '../icons/IconAddUser.vue';
-import IconLocation from '../icons/IconLocation';
+    import IconAddUser from '../icons/IconAddUser.vue';
+    import IconLocation from '../icons/IconLocation';
 
-import FriendshipInvitationMixin from '../mixins/FriendshipInvitationMixin';
+    import FriendshipInvitationMixin from '../mixins/FriendshipInvitationMixin';
 
-import PliziUser from '../classes/PliziUser.js';
-import PliziAuthUser from '../classes/PliziAuthUser.js';
-import PliziAvatar from '../classes/User/PliziAvatar.js';
-import ButtonsFollow from "./Follow/ButtonsFollow.vue";
+    import PliziUser from '../classes/PliziUser.js';
+    import PliziAuthUser from '../classes/PliziAuthUser.js';
+    import PliziAvatar from '../classes/User/PliziAvatar.js';
+    import ButtonsFollow from "./Follow/ButtonsFollow.vue";
+    import PliziBlackListItem from "../classes/PliziBlackListItem";
 
-export default {
-name: 'ProfileHeader',
-components: {ButtonsFollow, IconLocation, IconAddUser},
-mixins: [FriendshipInvitationMixin],
-props: {
-    userData: PliziUser|PliziAuthUser,
-    isOwner : Boolean
-},
-data() {
-    return {
-    }
-},
+    export default {
+        name: 'ProfileHeader',
+        components: {ButtonsFollow, IconLocation, IconAddUser},
+        mixins: [FriendshipInvitationMixin],
+        props: {
+            userData: PliziUser | PliziAuthUser,
+            isOwner: Boolean,
+        },
+        computed: {
+            fullWidth: function () {
+                return this.isCanAddToFriends ? 'full-width' : '100%';
 
-computed: {
-    usrFriendsNumber(){
-        return (this.isOwner) ? this.userData.stats.totalFriendsCount : this.userData.friendsNumber;
-    },
+            },
+            isCanAddToFriends() {
+                return !(!!this.$root.$auth.frm.get(this.userData.id));
+            },
+            usrFriendsNumber() {
+                // return (this.isOwner) ? this.userData.stats.totalFriendsCount : this.userData.friendsNumber;
+                return this.userData.stats.totalFriendsCount;
+            },
 
-    userAvatar() {
-        return this.userData.avatar?.image?.medium.path || this.userData.userPic;
-    }
-},
+            usrFollowersNumber() {
+                return this.userData.stats.followCount;
+            },
 
-methods: {
-    sBeaty(param){
-        return this.$options.filters.statsBeauty(param);
-    },
-
-    showProfileOptionsModal(){
-        this.$root.$emit('showProfileOptionsModal', { user: this.userData, src : this.$route.name });
-    },
-
-    showPersonalMsgDialog(){
-        this.$emit('ShowPersonalMsgModal', { user: this.userData, src : this.$route.name });
-    },
-
-    async uploadUserAvatar(){
-        if (this.isOwner!==true)
-            return;
-
-        const formData = this.getFormData();
-
-        if (!formData) {
-            return;
-        }
-
-        const { size } = formData.get('image');
-
-        if (size > 2000000) {
-            this.showErrorOnLargeFile();
-            return;
-        }
-
-        let apiResponse = null;
-
-        try {
-            apiResponse = await this.$root.$api.userProfileImage(formData);
-        } catch (e) {
-            if (e.status === 422) {
-                this.showErrorOnLargeFile();
-                return;
+            userAvatar() {
+                return this.userData.avatar?.image?.medium.path || this.userData.userPic;
             }
+        },
 
-            window.console.warn(e.detailMessage);
-        }
+        methods: {
+            sBeaty(param) {
+                return this.$options.filters.statsBeauty(param);
+            },
 
-        if (apiResponse !== null) {
-            this.$root.$auth.user.userPic = apiResponse.data.path;
-            this.$root.$auth.user.avatar = new PliziAvatar(apiResponse.data);
-            this.$refs.userAvatar.src = this.$root.$auth.user.avatar?.image?.medium.path || this.$root.$auth.user.userPic;
-            this.$root.$auth.storeUserData();
-            this.$root.$emit('updateUserAvatar', {userPic: this.$root.$auth.user.userPic});
-        }
-    },
+            showProfileOptionsModal() {
+                this.$root.$emit('showProfileOptionsModal', {user: this.userData, src: this.$route.name});
+            },
 
-    /**
-     * @returns {boolean|FormData}
-     */
-    getFormData(){
-        const fName = this.$refs.userAvatarFile.value;
-        const fExt = fName.split('.').pop().toLowerCase();
-        const allowExts = ['png', 'jpg', 'jpeg', 'bmp', 'webp', 'gif'];
+            showPersonalMsgDialog() {
+                this.$emit('ShowPersonalMsgModal', {user: this.userData, src: this.$route.name});
+            },
 
-        if ( ! allowExts.includes(fExt) ) {
-            this.$alert(`<h4 class="text-white">Ошибка</h4><div class="alert alert-danger">
+            async uploadUserAvatar() {
+                if (this.isOwner !== true)
+                    return;
+
+                const formData = this.getFormData();
+
+                if (!formData) {
+                    return;
+                }
+
+                const {size} = formData.get('image');
+
+                if (size > 2000000) {
+                    this.showErrorOnLargeFile();
+                    return;
+                }
+
+                let apiResponse = null;
+
+                try {
+                    apiResponse = await this.$root.$api.userProfileImage(formData);
+                } catch (e) {
+                    if (e.status === 422) {
+                        this.showErrorOnLargeFile();
+                        return;
+                    }
+
+                    window.console.warn(e.detailMessage);
+                }
+
+                if (apiResponse !== null) {
+                    this.$root.$auth.user.userPic = apiResponse.data.path;
+                    this.$root.$auth.user.avatar = new PliziAvatar(apiResponse.data);
+                    this.$refs.userAvatar.src = this.$root.$auth.user.avatar?.image?.medium.path || this.$root.$auth.user.userPic;
+                    this.$root.$auth.storeUserData();
+                    this.$root.$emit('updateUserAvatar', {userPic: this.$root.$auth.user.userPic});
+                }
+            },
+
+            /**
+             * @returns {boolean|FormData}
+             */
+            getFormData() {
+                const fName = this.$refs.userAvatarFile.value;
+                const fExt = fName.split('.').pop().toLowerCase();
+                const allowExts = ['png', 'jpg', 'jpeg', 'bmp', 'webp', 'gif'];
+
+                if (!allowExts.includes(fExt)) {
+                    this.$alert(`<h4 class="text-white">Ошибка</h4><div class="alert alert-danger">
 Недопустимое расширение у файла <b>${fName}</b><br />
-Допустимы только: <b class="text-success">${allowExts.join( ', ' )}</b>
+Допустимы только: <b class="text-success">${allowExts.join(', ')}</b>
 </div>`, `bg-danger`, 30);
-            return false;
-        }
+                    return false;
+                }
 
-        const formData = new FormData();
-        formData.append('image', this.$refs.userAvatarFile.files[0]);
-        formData.append('tag', 'primary');
-        this.$refs.userAvatarFile.value = '';
+                const formData = new FormData();
+                formData.append('image', this.$refs.userAvatarFile.files[0]);
+                formData.append('tag', 'primary');
+                this.$refs.userAvatarFile.value = '';
 
-        return formData;
-    },
+                return formData;
+            },
 
-    showErrorOnLargeFile() {
-        this.$alert(`<h4 class="text-white">Ошибка</h4>
+            showErrorOnLargeFile() {
+                this.$alert(`<h4 class="text-white">Ошибка</h4>
                 <div class="alert alert-danger">
                     Превышен максимальный размер файла.
                     <br />
                     Максимальный размер файла:
                     <b class="text-success">2 MB</b>
                 </div>`,
-            `bg-danger`,
-            30
-        );
+                    `bg-danger`,
+                    30
+                );
+            },
+        }
     }
-}
-
-}
 </script>

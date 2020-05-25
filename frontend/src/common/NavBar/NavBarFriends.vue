@@ -11,16 +11,18 @@
         </span>
 
         <div  v-if="getInvitationsNumber()>0"
-              class="invitations-dropdown dropdown-menu dropdown-menu-right py-3  dropdown-white w-auto"
+              class="invitations-dropdown dropdown-menu dropdown-menu-right pt-3 pb-0 dropdown-white w-auto"
               aria-labelledby="dropdownMenuFriends">
-
-            <ul class="list-unstyled mb-0">
-                <InvitationsList v-bind:key="'invitationsList-'+getInvitationsNumber()+'-'+invitationsKeyUpdater"
-                                 @InvitationDecline="onInvitationAction"
-                                 @InvitationAccept="onInvitationAction"
-                                 v-bind:invitations="getInvitations()"
-                                 v-bind:invitationsNumber="getInvitationsNumber()"></InvitationsList>
-            </ul>
+            <vue-custom-scrollbar class="notifications-likes-scroll"
+                                  :settings="customScrollbarSettings">
+                <ul class="list-unstyled mb-0">
+                    <InvitationsList v-bind:key="'invitationsList-'+getInvitationsNumber()+'-'+invitationsKeyUpdater"
+                                     @InvitationDecline="onInvitationAction"
+                                     @InvitationAccept="onInvitationAction"
+                                     v-bind:invitations="getInvitations()"
+                                     v-bind:invitationsNumber="getInvitationsNumber()"></InvitationsList>
+                </ul>
+            </vue-custom-scrollbar>
 
             <div class="invitations-dropdown-footer border-top">
                 <router-link to="/invitations" tag="a"
@@ -35,13 +37,21 @@
 import IconFriends from '../../icons/IconFriends.vue';
 import InvitationItem from '../../components/InvitationItem.vue';
 import InvitationsList from '../../components/InvitationsList.vue';
+import vueCustomScrollbar from 'vue-custom-scrollbar';
 
 export default {
 name : 'NavBarFriends',
-components : { IconFriends, InvitationItem, InvitationsList },
+components : { IconFriends, InvitationItem, InvitationsList,
+                vueCustomScrollbar
+},
 data(){
     return {
         invitationsKeyUpdater: 1,
+        customScrollbarSettings: {
+            maxScrollbarLength: 60,
+            suppressScrollX: true, // rm scroll x
+            wheelPropagation: false
+        },
     }
 },
 methods : {
