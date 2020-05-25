@@ -47,7 +47,7 @@
                                 </button>
                                 <button v-else-if="subscribeType === 'request'" type="button"
                                         class="btn align-items-center justify-content-center d-flex w-75 border-right m-0"
-                                        @click="sendRequest(community)">
+                                        @click="sendRequest(communityData)">
                                     запрос
                                 </button>
                                 <button v-else-if="subscribeType === 'exists'"
