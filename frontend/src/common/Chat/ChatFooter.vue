@@ -76,32 +76,17 @@ methods: {
         /** @type {string} **/
         let msg = evData.postText.trim();
 
-        if (msg !== '') {
+        if (msg !== '' || evData.videoLink) {
             const brExample = `<br/>`;
             msg = msg.replace(/<p><\/p>/g, brExample);
             msg = this.killBrTrail(msg);
 
-            if (msg !== '') {
-                let youtubeIds = this.detectYoutubeLinks(msg);
-
-                if (youtubeIds && youtubeIds.length) {
-                    youtubeIds.forEach((youtubeId) => {
-                        this.addMessageToChat(`${youtubeId} ${msg}`);
-                        msg = '';
-                    });
-
-                    if (evData.attachments && evData.attachments.length) {
-                        this.addMessageToChat( '', evData.attachments, evData.attachmentsData );
-                    }
-                }
-                else {
-                    this.addMessageToChat( msg, evData.attachments, evData.attachmentsData );
-                }
+            if (msg !== '' || evData.videoLink) {
+                this.addMessageToChat( msg, evData.attachments, evData.attachmentsData, evData.videoLink);
             } else if (evData.attachments.length > 0) {
-                this.addMessageToChat( '', evData.attachments, evData.attachmentsData );
+                this.addMessageToChat( '', evData.attachments, evData.attachmentsData, evData.videoLink);
             }
-        }
-        else {
+        } else {
             // сообщение пустое - проверяем есть ли аттачи
             if (evData.attachments.length > 0) {
                 this.addMessageToChat( '', evData.attachments, evData.attachmentsData );
@@ -113,15 +98,24 @@ methods: {
         this.errors = null;
     },
 
-    async addMessageToChat( msgText, attachmentsIds, attachmentsFiles ){
+    async addMessageToChat( msgText, attachmentsIds, attachmentsFiles, videoLink = null){
         const chatId = (this.currentDialog) ? this.currentDialog.id : 'unknown';
 
-        const sendData = {
+        let sendData = {
             chatId: chatId,
             body: msgText,
             attachments: attachmentsIds,
-            event: 'new.message'
+            event: 'new.message',
         };
+
+        if (videoLink) {
+            sendData.body = videoLink;
+
+            if (msgText) {
+                sendData.body = msgText;
+            }
+        }
+
         this.$root.$api.sendToChannel(sendData);
     },
 }
