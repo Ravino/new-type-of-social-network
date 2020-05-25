@@ -3,9 +3,12 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use Spiritix\LadaCache\Database\LadaCacheTrait;
 
 class Comment extends Model
 {
+
+    use LadaCacheTrait;
 
     protected $casts = [
         'created_at' => 'timestamp',
