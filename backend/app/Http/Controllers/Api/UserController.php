@@ -52,6 +52,9 @@ class UserController extends Controller
      */
     public function sendFriendshipRequest(AddToFriend $request) {
         $recipient = User::find($request->userId);
+        if($request->userId === Auth::user()->id) {
+            return response()->json(['message' => 'Вы не можете добавить самого себя в друзья'], 422);
+        }
         if($recipient->hasFriendRequestFrom(Auth::user())) {
             return response()->json(['message' => 'Вы уже отправляли запрос данному пользователю'], 422);
         }
