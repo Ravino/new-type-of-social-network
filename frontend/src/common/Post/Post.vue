@@ -215,7 +215,7 @@
                         </div>
                         <div class="post-watched-counter ml-4" @click="isShowComment = !isShowComment">
                             <IconMessage/>
-                            <span>{{ post.commentsCount | space1000 }}</span>
+                            <span>{{ comments.length | space1000 }}</span>
                         </div>
 
                         <div class="post-watched-counter ml-4" @click="$emit('onShare', post)">
@@ -232,16 +232,28 @@
                     </div>
                 </div>
                 <div class="plz-comments"
-                    v-for="comment in comments.data.list"
+                    v-for="comment in comments"
                 >
                     <CommentItem
-                        :name="comment.body"
+                        :key="comment.id"
+                        :commentId="comment.id"
+                        :text="comment.body"
+                        :authorId="comment.author.id"
+                        :name="comment.author.profile.firstName"
+                        :surname="comment.author.profile.lastName"
+                        :avatar="comment.author.profile.avatar.image.medium.path"
+                        :postId="post.id"
+                        :createdAt="comment.createdAt"
+                        @onDelete="removeComment"
+                        @update="editComment"
                     >
                     </CommentItem>
                 </div>
                 <CommentPost
                     :postId="post.id"
-                    v-if="!isShowComment">
+                    v-if="!isShowComment"
+                    @updateComments="addNewComment"
+                >
                 </CommentPost>
             </div>
         </template>
@@ -307,13 +319,10 @@
                 recursivePostsSimple: [],
                 recursivePosts: [],
                 isShowComment: true,
-                comments: null,
+                comments: [],
             }
         },
         computed: {
-            getCommentData() {
-                return this.comments.data.list
-            },
             hasYoutubeLinks() {
                 let str = this.post.body.replace(/<\/?[^>]+>/g, '').trim();
 
@@ -342,50 +351,23 @@
             },
         },
         methods: {
-            async getCommentsByPostId() {
-                try {
-                    this.comments = await this.$root.$api.$post.getCommentsById(this.post.id);
-                } catch (e) {
-                    console.warn(e.detailMessage);
-                }
+            editComment(newComment) {
+                this.comments = this.comments.map(comment => comment.id === newComment.id ? newComment : comment);
             },
-            async sendTestComment() {
-
+            removeComment(commentId) {
+                this.comments = this.comments.filter(comment => comment.id !== commentId);
+            },
+            addNewComment(newComment) {
+                this.comments.push(newComment);
+            },
+            async getCommentsByPostId() {
                 let response = null;
-
                 try {
-                    response = await this.$root.$api.$post.setPostComments('Wow NIce KOT3', this.post.id);
+                   response = await this.$root.$api.$post.getCommentsById(this.post.id);
+                    this.comments = response.data.list;
                 } catch (e) {
                     console.warn(e.detailMessage);
                 }
-
-                const commentId = response.data.id;
-
-                console.log('Created ', response);
-
-                try {
-                    response = await this.$root.$api.$post.getCommentsById(this.post.id);
-                } catch (e) {
-                    console.warn(e.detailMessage);
-                }
-
-                console.log('All ', response);
-
-                try {
-                    response = await this.$root.$api.$post.deleteCommentById(commentId);
-                } catch (e) {
-                    console.warn(e.detailMessage);
-                }
-
-                console.log('Delete ', response);
-
-                try {
-                    response = await this.$root.$api.$post.getCommentsById(this.post.id);
-                } catch (e) {
-                    console.warn(e.detailMessage);
-                }
-
-                console.log('All ', response);
             },
             openVideoModal(shared = false) {
                 let videoLink;
@@ -477,7 +459,7 @@
                 this.recursiveParent(this.post);
             }
             this.getCommentsByPostId();
-            console.log(this.comments)
+
         },
     }
 </script>

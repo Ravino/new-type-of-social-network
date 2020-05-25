@@ -1,7 +1,8 @@
 <template>
+<div class="plz-comment-reply">
     <div class="plz-comment-post">
         <div class="plz-comment-post-user">
-            <img :src="getUserData.userPic" alt="">
+            <img :src="userData.userPic" alt="">
         </div>
         <TextEditor :clazz="`plz-text-editor h-auto  align-items-start flex-grow-1 `"
                     :editorPlaceholder="'Оставить комментарий...'"
@@ -9,26 +10,44 @@
                     :maximumCharacterLimit="500"
                     workMode="post"
                     @editorPost="onTextPost"
-                    work-mode="comment"
         >
         </TextEditor>
     </div>
+</div>
 </template>
+
 <script>
     import TextEditor from "../common/TextEditor.vue";
     import ChatMixin from "../mixins/ChatMixin.js";
     export default {
-        name: "CommentPost",
+        name: "CommentReply",
         components: {TextEditor},
         mixins: [ChatMixin],
         props: {
+            commentId: {
+                type: String|Number,
+            },
             postId: {
-                type: Number|String,
+                type: String|Number,
+            },
+            name: {
+                type: String,
             },
         },
+        data() {
+            return {
+              newAnswer: [],
+            }
+        },
         computed: {
-            getUserData() {
-                return this.$root.$auth.user;
+            userData() {
+                const usrData = this.$root.$auth.user;
+
+                if (! (!!usrData.profile)){
+                    window.console.warn(usrData, 'profile is null');
+                }
+
+                return usrData;
             },
         },
         methods: {
@@ -40,21 +59,16 @@
                     msg = msg.replace(/<p><\/p>/g, brExample);
                     msg = this.killBrTrail(msg);
 
-                    if (msg !== '') {
-                        this.sendComment(msg, evData.attachments);
-                    } else if (evData.attachments.length > 0) {
-                        this.sendComment('', evData.attachments);
-                    }
-                } else {
-                    if (evData.attachments.length > 0) {
-                        this.sendComment('', evData.attachments );
-                    }
+                    this.setReplyComment(msg);
                 }
             },
-            async sendComment(msg, attachments) {
+           async setReplyComment(msg) {
+                let response = null;
+
                 try {
-                    let response = await this.$root.$api.$post.setPostComments(msg, this.postId, attachments);
-                    this.$emit('updateComments', response.data);
+                    response = await this.$root.$api.$post.setPostComments(msg, this.postId, this.commentId);
+                    this.newAnswer = response.data;
+                    this.comments.push(this.newAnswer);
                 } catch (e) {
                     console.warn(e.detailMessage);
                 }
@@ -63,3 +77,8 @@
     }
 </script>
 
+<style lang="scss">
+    .plz-comment-reply {
+        margin-bottom: 20px;
+    }
+</style>

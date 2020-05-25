@@ -316,14 +316,16 @@ class PliziPostAPI extends PliziBaseAPI {
      *
      * @param {string} body
      * @param {number} postId
+     * @param {Array<Number>} attachmentIds
      * @param {number} replyOn
      * @return {object[]|null}
      * @throws PliziAPIError
      */
-     async setPostComments(body, postId, replyOn = 0) {
+     async setPostComments(body, postId, attachmentIds, replyOn = 0) {
          const response = await this.axios.post(`api/comment/post`, {
              body,
              postId,
+             attachmentIds,
              replyOn
         }, this.authHeaders
      );
@@ -354,6 +356,20 @@ class PliziPostAPI extends PliziBaseAPI {
 
         return null;
     };
+
+    async editCommentById(commentId, body, attachmentIds = []) {
+        const response = await this.axios.patch(`api/comment/${commentId}`, {
+            commentId,
+            body,
+            attachmentIds,
+        }, this.authHeaders);
+
+        if (response.status === 200) {
+            return response.data;
+        }
+
+        return null
+    }
 }
 
 export default PliziPostAPI;
