@@ -39,6 +39,7 @@ data () {
 
 methods: {
     isActiveMenu(routNames) {
+        console.log(routNames);
         return !!routNames.find((rItem) => {
             return this.$router.currentRoute.name === rItem;
         });
