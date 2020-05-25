@@ -93,13 +93,19 @@
             </div>
 
             <div class="plz-profile-userdetails-footer d-flex justify-content-around px-2 px-md-4">
-                <div class="plz-profile-userdetails-numbers text-center pt-2 px-2 pt-md-4 px-md-4">
+                <div v-if="usrFollowersNumber > 0" class="plz-profile-userdetails-numbers text-center pt-2 px-2 pt-md-4 px-md-4">
                     <span class="numbers-top" v-html="sBeaty(usrFollowersNumber)"></span>
                     <span class="numbers-bottom">Подписчиков</span>
                 </div>
-                <div class="plz-profile-userdetails-numbers text-center pt-2 px-2 pt-md-4 px-md-4">
+                <div v-else class="plz-profile-userdetails-numbers text-center pt-2 px-2 pt-md-5 px-md-4">
+                    <span class="numbers-bottom">Нет подписчиков</span>
+                </div>
+                <div v-if="usrFriendsNumber > 0" class="plz-profile-userdetails-numbers text-center pt-2 px-2 pt-md-4 px-md-4">
                     <span class="numbers-top" v-html="sBeaty(usrFriendsNumber)"></span>
                     <span class="numbers-bottom">Друзей</span>
+                </div>
+                <div v-else class="plz-profile-userdetails-numbers text-center pt-2 px-2 pt-md-5 px-md-4">
+                    <span class="numbers-bottom">Нет друзей</span>
                 </div>
                 <div class="plz-profile-userdetails-numbers text-center pt-2 px-2 pt-md-4 px-md-4">
                     <span class="numbers-top" v-html="sBeaty(userData.photosNumber)"></span>
