@@ -13,6 +13,12 @@ class PliziNotificationCommunity {
     _id = null;
 
     /**
+     * @type {string}
+     * @private
+     */
+    _postName = '';
+
+    /**
      * @type {number}
      * @private
      */
@@ -37,6 +43,7 @@ class PliziNotificationCommunity {
     constructor(inputData){
         this._id = inputData.id;
         this._postId = inputData.postId;
+        this._postName = inputData.postName;
         this._name = inputData.name;
         this._primaryImage = inputData.primaryImage || '';
     }
@@ -48,6 +55,10 @@ class PliziNotificationCommunity {
 
     get postId() {
         return this._postId;
+    }
+
+    get postName() {
+        return this._postName;
     }
 
     get name(){
@@ -69,6 +80,7 @@ class PliziNotificationCommunity {
         return {
             id: this.id,
             postId: this.postId,
+            postName: this.postName,
             name: this.name,
             primaryImage: this._primaryImage
         };
