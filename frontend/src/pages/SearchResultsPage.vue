@@ -1,12 +1,12 @@
 <template>
-    <div class="row">
-        <div class="col-sm-1 col-md-1 col-lg-1 col-xl-1 pr-md-0">
-            <AccountToolbarLeft></AccountToolbarLeft>
-        </div>
+    <div class="container-fluid pl-md-0">
+        <div class="row">
+            <div class="col-12 col-md-1 px-0 px-md-3">
+                <AccountToolbarLeft></AccountToolbarLeft>
+            </div>
 
-        <div class="col-sm-10 col-md-10 col-lg-10 col-xl-10">
-            <div class="row">
-                <div class="offset-2 col-8 bg-white-br20 p-4">
+            <div class="col-12 col-md-9 col-lg-9 col-xl-10  px-0 px-md-3">
+                <div class="col-12 offset-xl-2 col-xl-8 bg-white-br20 p-4 mb-3">
                     <div v-if="isDataReady" class="plizi-search-results-list">
                         <h4>Люди</h4>
                         <hr>
@@ -23,7 +23,7 @@
                     </div>
                     <Spinner v-else v-bind:clazz="`d-flex flex-row`"></Spinner>
                 </div>
-                <div class="offset-2 col-8 bg-white-br20 p-4 mt-4">
+                <div class="col-12 offset-xl-2 col-xl-8 bg-white-br20 p-4">
                     <div v-if="isCommunityDataReady" class="plizi-search-results-list">
                         <h4>Сообщества</h4>
                         <hr>
@@ -41,10 +41,10 @@
                     <Spinner v-else v-bind:clazz="`d-flex flex-row`"></Spinner>
                 </div>
             </div>
-        </div>
 
-        <div class="col-sm-1 col-md-1 col-lg-1 col-xl-1">
-            <FavoriteFriends :isNarrow="true"></FavoriteFriends>
+            <div class="col-md-2 col-lg-2 col-xl-1 d-none d-md-block pr-0">
+                <FavoriteFriends :isNarrow="true"></FavoriteFriends>
+            </div>
         </div>
     </div>
 </template>

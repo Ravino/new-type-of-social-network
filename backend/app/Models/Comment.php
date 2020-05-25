@@ -12,6 +12,10 @@ class Comment extends Model
         'updated_at' => 'timestamp',
     ];
 
+    protected $fillable = [
+        'body'
+    ];
+
     /**
      * @return \Illuminate\Database\Eloquent\Relations\HasOne
      */
@@ -24,6 +28,13 @@ class Comment extends Model
      */
     public function commentable() {
         return $this->morphTo();
+    }
+
+    /**
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
+    public function attachments() {
+        return $this->hasMany(CommentAttachment::class, 'comment_id', 'id');
     }
 
     /**

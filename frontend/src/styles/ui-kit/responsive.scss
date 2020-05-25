@@ -121,10 +121,31 @@
             max-width: 96vw;
         }
     }
+
+
+    #communityEditor,
+    #profileWhatsNew {
+        .picker {
+            transform: translate(-80%, 40px) !important;
+        }
+    }
 }
 
 /*- md -*/
 @media (max-width: 767px) {
+    .LoginPage,
+    .UpdatePasswordPage,
+    .HomePage,
+    .ForDevelopersPage #guestPageWrapper,
+    .AdvertisementPage #guestPageWrapper,
+    .RulesPage #guestPageWrapper,
+    .AboutPage #guestPageWrapper
+    {
+        #contentContainer {
+            padding-top: 76px;
+        }
+    }
+
     #contentContainer {
         padding-top: 76px;
     }
@@ -244,13 +265,6 @@
     }
 
 
-    #profileWhatsNew {
-        .picker {
-            transform: translate(-80%, 40px) !important;
-        }
-    }
-
-
     .ForDevelopersPage,
     .AdvertisementPage,
     .RulesPage,
@@ -351,6 +365,15 @@
     .plz-community-header-details-text {
         width: 100%;
         text-align: center;
+    }
+
+
+    .plizi-sr-item-body {
+        width: 100%;
+    }
+    .plizi-sr-item .plizi-community-btn {
+        width: 100%;
+        margin-top: 10px;
     }
 
 }
