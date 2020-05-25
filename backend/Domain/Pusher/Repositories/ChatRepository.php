@@ -6,6 +6,7 @@ namespace Domain\Pusher\Repositories;
 
 use Carbon\Carbon;
 use DB;
+use Domain\Pusher\Events\ChatActionEvent;
 use Domain\Pusher\Helpers\ArrayUtils;
 use Domain\Pusher\DTOs\Dialog;
 use Domain\Pusher\Http\Resources\Chat\ChatCollection;
@@ -115,7 +116,7 @@ class ChatRepository
         $chat = Chat::find($chat_id);
         $chat->attendees()->attach($author_id);
         $chat->attendees()->attach($receiver_id);
-
+        event(new ChatActionEvent($this->getUsersIdListFromChat($chat_id, \Auth::user()->id), 'chat.created', $this->getChatById($chat_id)));
         return $chat_id;
     }
 
@@ -138,7 +139,9 @@ class ChatRepository
         foreach ($receiver_ids as $receiver_id) {
             $chat->attendees()->attach($receiver_id);
         }
-        return $chat->refresh()->id;
+        $chat_id = $chat->refresh()->id;
+        event(new ChatActionEvent($this->getUsersIdListFromChat($chat_id, \Auth::user()->id), 'chat.created', $this->getChatById($chat_id)));
+        return $chat_id;
     }
 
     /**
@@ -160,13 +163,20 @@ class ChatRepository
         /** @var Chat $chat */
         $chat = Chat::find($chat_id);
         $chat->attendees()->attach($user_id);
+        event(new ChatActionEvent($this->getUsersIdListFromChat($chat_id, \Auth::user()->id), 'chat.attendee.appended', $this->getChatById($chat_id)));
         return $this->getChatById($chat_id);
     }
 
+    /**
+     * @param $chat_id
+     * @param $user_id
+     * @return ChatResource
+     */
     public function removeFromChartParty($chat_id, $user_id) {
         /** @var Chat $chat */
         $chat = Chat::find($chat_id);
         $chat->attendees()->detach($user_id);
+        event(new ChatActionEvent($this->getUsersIdListFromChat($chat_id, \Auth::user()->id), 'chat.attendee.removed', ['id' => $chat_id, 'userId' => $user_id]));
         return $this->getChatById($chat_id);
     }
 
@@ -175,6 +185,7 @@ class ChatRepository
      * @return bool
      */
     public function destroyChat(string $chat_id) {
+        event(new ChatActionEvent($this->getUsersIdListFromChat($chat_id, \Auth::user()->id), 'chat.removed', ['id' => $chat_id]));
         Chat::destroy($chat_id);
         return true;
     }
