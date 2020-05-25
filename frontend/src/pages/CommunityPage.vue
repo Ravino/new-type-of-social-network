@@ -74,7 +74,7 @@
             </div>
 
             <div class="row">
-                <div class="col-12 col-sm-7 col-lg-8 col-xl-8 order-1 order-sm-0">
+                <div class="col-12 --col-sm-7 col-lg-8 col-xl-8 order-1 order-lg-0">
                     <div v-if="isDataReady"
                          id="communityInfoBlock"
                          class="plz-community-info-block bg-white-br20 py-3 px-4 mb-4 text-left">
@@ -129,7 +129,7 @@
                     </template>
                 </div>
 
-                <div class="col-12 col-sm-5 col-lg-4">
+                <div class="col-12 --col-sm-5 col-lg-4 order-0 order-lg-1">
                     <CommunityManagedActionBlock :community="communityData" v-if="isAuthor"></CommunityManagedActionBlock>
 
                     <CommunityUserActionBlock v-bind:community="communityData"></CommunityUserActionBlock>
