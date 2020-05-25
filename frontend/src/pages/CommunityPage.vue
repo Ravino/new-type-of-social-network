@@ -103,6 +103,17 @@
                               @onShowUsersLikes="openLikeModal"/>
                     </div>
 
+                    <div v-else-if="!hasAccess"  class="row plz-post-item mb-4 bg-white-br20 p-4">
+                        <div class="alert alert-info w-100 p-5 text-center mb-0">
+                            У Вас нет доступа.
+                            <p v-if="subscribeType === 'request'">
+                                Отправьте
+                                <a href="#" @click.stop="sendRequest(communityData)">запрос</a>
+                                на вступление в сообщество
+                            </p>
+                        </div>
+                    </div>
+
                     <div v-else-if="!isStarted"  class="row plz-post-item mb-4 bg-white-br20 p-4">
                         <div class="alert alert-info w-100 p-5 text-center mb-0">
                             Извините, но сейчас нечего показывать.
@@ -127,7 +138,8 @@
 
                     <CommunityShortMembers v-if="isDataReady" v-bind:community="communityData"></CommunityShortMembers>
 
-                    <div id="communityVideos" class="bg-white-br20 mb-5 mb-4 py-3 px-4">
+                    <div id="communityVideos" class="bg-white-br20 mb-5 mb-4 py-3 px-4"
+                        v-if="hasAccess">
 
                         <h6 class="plz-community-participants-title w-auto mb-4">Видео
                             <span class="plz-community-participants-subtitle ml-2">14</span>
@@ -293,6 +305,13 @@ computed: {
     },
     headerImage() {
         return this.communityData?.headerImage?.image.normal.path || 'images/community-header-bg.jpg';
+    },
+    hasAccess() {
+        // Opened
+        if (this.communityData?.privacy === 1) {
+            return true;
+        }
+        return !!this.communityData?.role;
     }
 },
 
@@ -486,7 +505,14 @@ methods: {
             this.communityData = new PliziCommunity(apiResponse);
             this.isDataReady = true;
             document.title = `Plizi: ${this.communityData?.name}`;
-            await this.getPosts();
+            setTimeout(() => {
+                const getPosts = async () => {
+                    await this.getPosts();
+                };
+                if (this.hasAccess) {
+                    getPosts();
+                }
+            }, 100);
         }
     },
     async getPosts(limit = 50, offset = 0) {
