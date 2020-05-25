@@ -136,6 +136,8 @@ Route::group(['middleware' => ['auth.jwt', 'track.activity']], function () {
         Route::post('post', 'Api\CommentController@commentPost');
         Route::get('post/{id}', 'Api\CommentController@getPostComments');
         Route::delete('{id}', 'Api\CommentController@destroyComment');
+        Route::patch('{comment}', 'Api\CommentController@update');
+        Route::post('attachments', 'Api\CommentController@uploadAttachments');
     });
 
     Route::prefix('photo_albums')->group(function () {

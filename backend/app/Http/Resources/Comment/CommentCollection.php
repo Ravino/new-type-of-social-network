@@ -2,6 +2,7 @@
 
 namespace App\Http\Resources\Comment;
 
+use App\Http\Resources\Post\AttachmentsCollection;
 use App\Http\Resources\User\Image;
 use App\Http\Resources\User\SimpleUser;
 use App\Models\User;
@@ -25,6 +26,7 @@ class CommentCollection extends ResourceCollection
                     'id' => $comment->id,
                     'body' => $comment->body,
                     'author' => new SimpleUser($comment->author),
+                    'attachments' => new AttachmentsCollection($comment->attachments),
                     'createdAt' => $comment->created_at,
                 ];
                 return $data;
