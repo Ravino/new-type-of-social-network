@@ -509,9 +509,11 @@ methods: {
                 const getPosts = async () => {
                     await this.getPosts();
                 };
-                if (this.hasAccess) {
-                    getPosts();
+                if (!this.hasAccess) {
+                    this.noMore = true;
+                    return;
                 }
+                getPosts();
             }, 100);
         }
     },
