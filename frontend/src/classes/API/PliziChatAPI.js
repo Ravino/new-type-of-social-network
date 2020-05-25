@@ -91,6 +91,62 @@ class PliziChatAPI extends PliziBaseAPI{
 
 
     /**
+     * добавляем собеседника в чат
+     * @see http://vm1095330.hl.had.pm:8082/docs/#/Chats/addUserToChat
+     * @param {string} chatId - ID чата (диалога)
+     * @param {string} userId - ID юзера, которого хотим добавить
+     * @returns {object}
+     * @throws PliziAPIError
+     */
+    async addAttendee(chatId, userId) {
+        const sendData = {
+            chatId: chatId,
+            userId: userId
+        };
+
+        let response = await this.axios.post('api/chat/dialogs/attendees/append', sendData, this.authHeaders)
+            .catch((error) => {
+                this.checkIsTokenExpires(error, `$chat.addAttendee`);
+                throw new PliziAPIError(`$chat.addAttendee`, error.response);
+            });
+
+        if (response.status === 200) {
+            return response.data.data;
+        }
+
+        return null;
+    }
+
+
+    /**
+     * удаляем собеседника из чата
+     * @see http://vm1095330.hl.had.pm:8082/docs/#/Chats/addUserToChat
+     * @param {string} chatId - ID чата (диалога)
+     * @param {string} userId - ID юзера, которого хотим удалить из чата
+     * @returns {object}
+     * @throws PliziAPIError
+     */
+    async removeAttendee(chatId, userId) {
+        const sendData = {
+            chatId: chatId,
+            userId: userId
+        };
+
+        let response = await this.axios.post('api/chat/dialogs/attendees/remove', sendData, this.authHeaders)
+            .catch((error) => {
+                this.checkIsTokenExpires(error, `$chat.removeAttendee`);
+                throw new PliziAPIError(`$chat.removeAttendee`, error.response);
+            });
+
+        if (response.status === 200) {
+            return response.data.data;
+        }
+
+        return null;
+    }
+
+
+    /**
      * загружает список сообщений (переписку) в определённом диалоге чата
      * @param {number} dialogID - ID диалога
      * @param {number} offset - смещение

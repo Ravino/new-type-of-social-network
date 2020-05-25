@@ -1,6 +1,6 @@
 import { convertToDate } from '../utils/DateUtils.js';
 
-class PliziAttendee{
+class PliziAttendee {
     /**
      * путь к дефолтной аватарке, которую показываем если нет своей
      * @type {string}
