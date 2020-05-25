@@ -174,6 +174,7 @@ class PostController extends Controller
     /**
      * @param UploadFileRequest $request
      * @return AttachmentsCollection
+     * @throws \Exception
      */
     public function uploadAttachments(UploadFileRequest $request) {
         $attachment_ids = $this->uploadService->uploadFiles(new PostAttachment(), 'post/attachments', $request->allFiles());

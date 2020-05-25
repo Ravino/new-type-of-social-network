@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Api;
 
 use App\Http\Requests\PhotoAlbum\PhotoAlbumStore;
 use App\Http\Requests\PhotoAlbum\PhotoAlbumUpdate;
+use App\Http\Resources\PhotoAlbum\PhotoAlbumCollection;
 use App\Models\Community;
 use App\Models\PhotoAlbum;
 use App\Models\User;
@@ -15,11 +16,26 @@ class PhotoAlbumController extends Controller
     /**
      * Display a listing of the resource.
      *
-     * @return \Illuminate\Http\Response
+     * @return PhotoAlbumCollection
      */
     public function index()
     {
-        //
+        $photo_albums = \Auth::user()
+            ->photoAlbums()
+            ->with(['creatable', 'author'])
+            ->get();
+
+        return new PhotoAlbumCollection($photo_albums);
+    }
+
+    public function indexByCommunity(Request $request, $community)
+    {
+        $photo_albums = Community::find($community)
+            ->photoAlbums()
+            ->with(['creatable', 'author'])
+            ->get();
+
+        return new PhotoAlbumCollection($photo_albums);
     }
 
     /**
@@ -42,6 +58,16 @@ class PhotoAlbumController extends Controller
             'data' => [
                 'id' => $photo_album->id,
             ],
+        ]);
+    }
+
+    public function add(Request $request, $id)
+    {
+        $photoAlbum = PhotoAlbum::find($id);
+        $photoAlbum->photos()->attach($request->photoIds);
+
+        return response()->json([
+            'message' => 'Фото успешно добавлено в альбом',
         ]);
     }
 

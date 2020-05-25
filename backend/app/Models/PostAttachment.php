@@ -40,6 +40,7 @@ class PostAttachment extends Model
         'image_medium_height',
         'image_original_width',
         'image_original_height',
+        'like',
     ];
 
     /**

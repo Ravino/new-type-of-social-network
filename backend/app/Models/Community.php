@@ -309,4 +309,12 @@ class Community extends Model
 
         return $this->isMember($user);
     }
+
+    /**
+     * @return MorphMany
+     */
+    public function photoAlbums()
+    {
+        return $this->morphMany(PhotoAlbum::class, 'creatable');
+    }
 }

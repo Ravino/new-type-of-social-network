@@ -36,6 +36,11 @@ class PhotoAlbum extends Model
 
     public function author()
     {
-        return $this->belongsTo(User::class, 'id', 'author_id');
+        return $this->belongsTo(User::class, 'author_id', 'id');
+    }
+
+    public function photos()
+    {
+        return $this->belongsToMany(Photo::class);
     }
 }
