@@ -139,9 +139,8 @@ computed: {
 
 methods: {
     calcCentralBlockClass(){
-        window.console.log(`calcCentralBlockClass`);
         return {
-            'col-lg-8 col-xl-8' : (this.$root.$auth.fm.size > 0), // есть фавориты
+            'col-lg-8 col-xl-8'   : (this.$root.$auth.fm.size > 0), // есть фавориты
             'col-lg-11 col-xl-11' : (this.$root.$auth.fm.size === 0), // нет фаворитов
         };
     },
@@ -173,7 +172,6 @@ methods: {
         } );
     },
 
-
     async sendPrivateMessageToUser( chatData, msgData ){
         const sendData = {
             chatId: chatData.id,
@@ -183,7 +181,6 @@ methods: {
         };
         this.$root.$api.sendToChannel(sendData);
     },
-
 
     async getUserInfo() {
         let apiResponse = null;
