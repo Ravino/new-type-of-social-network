@@ -96,8 +96,10 @@ class UserNeo4jRepository extends BaseRepository
      */
     public function getRecommendedFriends($oid, $limit, $offset) {
         $query = "MATCH (me: User {oid: '{$oid}'})-[:MEMBER_OF]-(community:Community)-[:MEMBER_OF]-(user:User)
+                  WHERE NOT (me)-[:FRIEND_OF]-(user) AND me <> user
                   WITH COUNT(distinct user) AS total_count
                   MATCH (me: User {oid: '{$oid}'})-[:MEMBER_OF]-(community:Community)-[:MEMBER_OF]-(user:User)
+                  WHERE NOT (me)-[:FRIEND_OF]-(user) AND me <> user
                   OPTIONAL MATCH (me:`User` {oid: '{$oid}'})-[:FRIEND_OF]-(mf)-[:FRIEND_OF]-(user)
                   WHERE NOT (me)-[:FRIEND_OF]-(user) AND me <> user
                   RETURN DISTINCT user.oid as oid, COUNT(community) as frequency, COUNT(mf) as mutual_count, total_count
