@@ -43,6 +43,3 @@
     }
 </script>
 
-<style scoped>
-
-</style>
