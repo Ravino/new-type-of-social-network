@@ -8,19 +8,20 @@ class PliziPhotoalbumsAPI extends PliziBaseAPI {
      * @returns {object[]|null}
      * @throws PliziAPIError
      */
-    // async getUserVideo() {
-    //     let response = await this.axios.get('api/user/videos', this.authHeaders)
-    //       .catch( ( error ) => {
-    //           this.checkIsTokenExpires( error, `getUserVideo` );
-    //           throw new PliziAPIError( `getUserVideo`, error.response );
-    //       } );
-    //
-    //     if ( response.status === 200 ){
-    //         return response.data.data.list;
-    //     }
-    //
-    //     return null;
-    // }
+    async getPhotoalbums() {
+        let response = await this.axios.get('api/photo-albums', this.authHeaders)
+          .catch( ( error ) => {
+              this.checkIsTokenExpires( error, `getPhotoalbums` );
+              throw new PliziAPIError( `getPhotoalbums`, error.response );
+          } );
+
+        if ( response.status === 200 ){
+            console.log(response);
+            return response.data.data.list;
+        }
+
+        return null;
+    }
 
     /**
      * Cоздание нового фотоальбома.
@@ -29,14 +30,13 @@ class PliziPhotoalbumsAPI extends PliziBaseAPI {
      * @throws PliziAPIError
      */
     async createPhotoalbum(formData) {
-        let response = await this.axios.post('api/photo_albums', formData, this.authHeaders)
+        let response = await this.axios.post('api/photo-albums', formData, this.authHeaders)
           .catch( ( error ) => {
               this.checkIsTokenExpires( error, `createPhotoalbum` );
               throw new PliziAPIError( `createPhotoalbum`, error.response );
           } );
 
         if ( response.status === 200 ){
-            console.log(response);
             return response.data.data;
         }
 
@@ -57,12 +57,11 @@ class PliziPhotoalbumsAPI extends PliziBaseAPI {
             "title": title,
             "description": description
         }
-        let response = await this.axios.post( `api/photo_albums/{id}`, requestBody, this.authHeaders )
+        let response = await this.axios.post( `api/photo-albums/{id}`, requestBody, this.authHeaders )
             .catch( ( error ) => {
                 this.checkIsTokenExpires( error, `updatePhotoalbum` );
                 throw new PliziAPIError( `updatePhotoalbum`, error.response );
             } );
-
 
         if ( response.status === 200 ){
             return response.data.data;
