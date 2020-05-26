@@ -48,52 +48,7 @@
         }
     ],
     "paths": {
-        "/photo": {
-            "post": {
-                "tags": [
-                    "Photo"
-                ],
-                "description": "Загрузка фотографии",
-                "operationId": "PhotoStore",
-                "requestBody": {
-                    "content": {
-                        "application/json": {
-                            "schema": {
-                                "type": "object",
-                                "properties": {
-                                    "files": {
-                                        "type": "string",
-                                        "description": "Массив изображений"
-                                    }
-                                }
-                            }
-                        }
-                    }
-                },
-                "responses": {
-                    "200": {
-                        "description": "OK",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "type": "object",
-                                    "properties": {
-                                        "data": {
-                                            "properties": {
-                                                "id": {
-                                                    "$ref": "#/components/schemas/Photo"
-                                                }
-                                            }
-                                        }
-                                    }
-                                }
-                            }
-                        }
-                    }
-                }
-            }
-        },
-        "/photo_albums/{id}/photos": {
+        "/photo-albums/{id}/photos": {
             "post": {
                 "tags": [
                     "Photo Albums"
@@ -118,8 +73,8 @@
                                 "type": "object",
                                 "properties": {
                                     "photosId": {
-                                        "type": "string",
-                                        "description": "Массив id изображений."
+                                        "type": "object",
+                                        "description": "Массив изображений."
                                     }
                                 }
                             }
@@ -137,8 +92,8 @@
                                         "data": {
                                             "properties": {
                                                 "id": {
-                                                    "type": "integer",
-                                                    "description": "ID нового фотоальбома при успешном создании."
+                                                    "type": "object",
+                                                    "description": "Массив изображений с прочими данными."
                                                 }
                                             }
                                         }
@@ -150,7 +105,35 @@
                 }
             }
         },
-        "/photo_albums": {
+        "/photo-albums": {
+            "get": {
+                "tags": [
+                    "Photo Albums"
+                ],
+                "description": "Получить список фотоальбомов для пользователя",
+                "operationId": "PhotoAlbumUserList",
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "data": {
+                                            "properties": {
+                                                "list": {
+                                                    "$ref": "#/components/schemas/PhotoAlbumUserList"
+                                                }
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            },
             "post": {
                 "tags": [
                     "Photo Albums"
@@ -164,6 +147,7 @@
                                 "type": "object",
                                 "properties": {
                                     "communityId": {
+                                        "required": "false",
                                         "type": "number",
                                         "description": "Community id если фотоальбом создается в сообществе в ином случае этого поля не должно быть в запросе."
                                     },
@@ -204,7 +188,7 @@
                 }
             }
         },
-        "/photo_albums/{id}/community/{community}": {
+        "/photo-albums/community/{community}": {
             "get": {
                 "tags": [
                     "Photo Albums"
@@ -254,7 +238,7 @@
                 }
             }
         },
-        "/photo_albums/{id}": {
+        "/photo-albums/{id}": {
             "post": {
                 "tags": [
                     "Photo Albums"
