@@ -34,6 +34,7 @@ import AdvertisementPage from "../pages/AdvertisementPage.vue";
 import ForDevelopersPage from "../pages/ForDevelopersPage.vue";
 import FollowListPage from "../pages/FollowListPage.vue";
 import ActiveSessionsPage from "../pages/ActiveSessionsPage.vue";
+import CommunityMembersPage from "../pages/CommunityMembersPage.vue";
 
 const routes = [
     {path: '/', redirect: '/login', isGuest: true},
@@ -63,6 +64,7 @@ const routes = [
     {path: '/community-rules', component: CommunityRulesPage, name: 'CommunityRulesPage', meta: {title: 'Plizi: Правила сообществ'}, props: true },
     {path: '/manage-communities', component: CommunitiesManagePage, name: 'CommunitiesManagePage', meta: {title: 'Plizi: Управление сообществами'}, props: true },
     {path: '/community-settings-:id', component: CommunitySettingsPage, name: 'CommunitySettingsPage', meta: {title: 'Plizi: Управление сообществом'}, props: true },
+    {path: '/members-:id', component: CommunityMembersPage, name: 'CommunityMembersPage', meta: {title: 'Plizi: Участники сообщества'}, props: true },
     {path: '/popular-communities', component: CommunitiesPopularPage, name: 'CommunitiesPopularPage', meta: {title: 'Plizi: Популярные сообщества'}, props: true },
     {path: '/community-friends-:id', component: CommunityFriendsPage, name: 'CommunityFriendsPage', meta: {title: 'Plizi: Популярные сообщества'}, props: true },
     {path: '/community-requests-:id', component: CommunityRequestsPage, name: 'CommunityRequestsPage', meta: {title: 'Plizi: Запросы на вытупление в сообщество'}, props: true },
