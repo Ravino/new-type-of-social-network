@@ -31,18 +31,18 @@
                             <span class="ps-dot"></span>
                         </button>
 
-                        <div class="dropdown-menu dropdown-menu-right py-3 px-3" aria-labelledby="configurationMenuUser">
+                        <div class="dropdown-menu dropdown-menu-right py-3" aria-labelledby="configurationMenuUser">
                             <div class="nav-item ">
-                                <router-link tag="a" class="dropdown-item px-0 py-1" to="/account">Настройки </router-link>
+                                <router-link tag="a" class="dropdown-item px-0 py-1 px-3" to="/account">Настройки </router-link>
                             </div>
                             <div class="nav-item">
-                                <router-link tag="a" class="dropdown-item px-0 py-1" to="/black-list">Чёрный список</router-link>
+                                <router-link tag="a" class="dropdown-item px-0 py-1 px-3" to="/black-list">Чёрный список</router-link>
                             </div>
                             <div class="nav-item">
-                                <router-link tag="a" class="dropdown-item px-0 py-1" to="/friends">Друзья </router-link>
+                                <router-link tag="a" class="dropdown-item px-0 py-1 px-3" to="/friends">Друзья </router-link>
                             </div>
                             <div class="nav-item ">
-                                <router-link tag="a" class="dropdown-item px-0 py-1" to="/communities">Сообщества </router-link>
+                                <router-link tag="a" class="dropdown-item px-0 py-1 px-3" to="/communities">Сообщества </router-link>
                             </div>
                         </div>
 
