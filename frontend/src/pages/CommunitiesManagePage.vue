@@ -14,15 +14,7 @@
                 <div class="row">
                     <div class="col-12 col-lg-8 col-xl-9 mb-4 px-4 py-0">
                         <div class="row" v-if="isManagedCommunitiesLoaded">
-                            <ul v-if="managedCommunitiesSearch  &&  managedCommunitiesSearch.length > 0"
-                                class="plizi-communities-list w-100 d-flex justify-content-between flex-wrap p-0">
-                                <CommunityItem v-for="(comItem, comIndex) in managedCommunitiesSearch"
-                                               :community="comItem"
-                                               :key="comIndex">
-                                </CommunityItem>
-                            </ul>
-
-                            <ul v-else-if="managedCommunities  &&  managedCommunities.length > 0"
+                            <ul v-if="managedCommunities  &&  managedCommunities.length > 0"
                                 class="plizi-communities-list w-100 d-flex justify-content-between flex-wrap p-0">
                                 <CommunityItem v-for="(comItem, comIndex) in managedCommunities"
                                                :community="comItem"
@@ -32,7 +24,7 @@
 
                             <div v-else-if="!enabledLoader" class="container px-2 ">
                                 <div  class=" bg-white-br20 p-3">
-                                    <div v-if="!$root.$lastCommunitiesSearch.owner" class="alert alert-info w-100 py-4 text-center m-0">
+                                    <div v-if="searchString.length === 0" class="alert alert-info w-100 py-4 text-center m-0">
                                         У Вас нет сообществ для модерации.
                                     </div>
                                     <div v-else class="alert alert-info w-100 py-4 text-center m-0">
@@ -76,16 +68,13 @@
         mixins: [CommunitiesListMixin],
 
         data() {
-            return {}
+            return {
+                list: 'owner',
+            }
         },
         methods: {},
         mounted() {
             this.loadManagedCommunities();
-            window.addEventListener('scroll', this.onScrollYPage);
-        },
-        beforeRouteLeave(to, from, next) {
-            window.removeEventListener('scroll', this.onScrollYPage);
-            next();
         },
     }
 </script>

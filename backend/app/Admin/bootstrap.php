@@ -30,12 +30,14 @@ AdminSection::registerModel(User::class, static function (ModelConfiguration $mo
                 AdminColumn::custom('is_admin', static function (Model $model) {
                     return (int)$model->is_admin === 1 ? 'Да' : 'Нет';
                 })->setLabel('Admin'),
-                AdminColumn::url('email', 'Local')
+                AdminColumn::url('email', '')
                     ->setIcon('fas fa-reply')
-                    ->setView('column.urlint'),
-                AdminColumn::url('email', 'Test')
+                    ->setView('column.urlint')
+                    ->setOrderable(false),
+                AdminColumn::url('email', '')
                     ->setIcon('fas fa-reply-all')
                     ->setView('column.urlext')
+                    ->setOrderable(false)
             ]);
         $display->getColumnFilters()
             ->setPlacement('table.header')
@@ -59,7 +61,7 @@ AdminSection::registerModel(User::class, static function (ModelConfiguration $mo
         );
     });
 })
-    ->addMenuPage(User::class, 0)
+    ->addMenuPage(User::class, 1)
     ->setIcon('fa fa-user')
     ->setAccessLogic(static function () {
         $user = auth()->user();
@@ -84,8 +86,8 @@ AdminSection::registerModel(Relationship::class, static function (ModelConfigura
         );
     });
 })
-    ->addMenuPage(Relationship::class, 0)
-    ->setIcon('fa fa-user')
+    ->addMenuPage(Relationship::class, 1)
+    ->setIcon('fa fa-heartbeat')
     ->setAccessLogic(static function () {
         $user = auth()->user();
         return $user instanceof User && $user->isAdmin();
@@ -122,8 +124,8 @@ AdminSection::registerModel(Country::class, static function (ModelConfiguration 
         );
     });
 })
-    ->addMenuPage(Country::class, 0)
-    ->setIcon('fa fa-user')
+    ->addMenuPage(Country::class, 1)
+    ->setIcon('fa fa-globe')
     ->setAccessLogic(static function () {
         $user = auth()->user();
         return $user instanceof User && $user->isAdmin();
@@ -162,8 +164,8 @@ AdminSection::registerModel(Region::class, static function (ModelConfiguration $
         );
     });
 })
-    ->addMenuPage(Region::class, 0)
-    ->setIcon('fa fa-user')
+    ->addMenuPage(Region::class, 1)
+    ->setIcon('fa fa-globe-europe')
     ->setAccessLogic(static function () {
         $user = auth()->user();
         return $user instanceof User && $user->isAdmin();
@@ -204,8 +206,8 @@ AdminSection::registerModel(City::class, static function (ModelConfiguration $mo
         );
     });
 })
-    ->addMenuPage(City::class, 0)
-    ->setIcon('fa fa-user')
+    ->addMenuPage(City::class, 1)
+    ->setIcon('fa fa-globe-asia')
     ->setAccessLogic(static function () {
         $user = auth()->user();
         return $user instanceof User && $user->isAdmin();
@@ -236,8 +238,8 @@ AdminSection::registerModel(Permission::class, static function (ModelConfigurati
         );
     });
 })
-    ->addMenuPage(Permission::class, 0)
-    ->setIcon('fa fa-user')
+    ->addMenuPage(Permission::class, 1)
+    ->setIcon('fa fa-viruses')
     ->setAccessLogic(static function () {
         $user = auth()->user();
         return $user instanceof User && $user->isAdmin();
@@ -267,8 +269,8 @@ AdminSection::registerModel(Role::class, static function (ModelConfiguration $mo
         );
     });
 })
-    ->addMenuPage(Role::class, 0)
-    ->setIcon('fa fa-user')
+    ->addMenuPage(Role::class, 1)
+    ->setIcon('fa fa-pencil-ruler')
     ->setAccessLogic(static function () {
         $user = auth()->user();
         return $user instanceof User && $user->isAdmin();
@@ -299,7 +301,7 @@ AdminSection::registerModel(CommunityTheme::class, static function (ModelConfigu
         );
     });
 })
-    ->addMenuPage(CommunityTheme::class, 0)
+    ->addMenuPage(CommunityTheme::class, 1)
     ->setIcon('fa fa-tree')
     ->setAccessLogic(static function () {
         $user = auth()->user();

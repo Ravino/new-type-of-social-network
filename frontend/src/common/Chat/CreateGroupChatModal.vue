@@ -1,15 +1,15 @@
 <template>
-    <div class="modal" id="chatPickAttendeesDialogModal" tabindex="-1"
-         role="dialog" aria-labelledby="chatPickAttendeesDialogModal" @click.stop="hidePickAttendeesDialogModal"
+    <div class="modal" id="createGroupChatModal" tabindex="-1"
+         role="dialog" aria-labelledby="createGroupChatModal" @click.stop="hideCreateGroupChatModal"
          aria-hidden="true" style="display: block; background-color: rgba(0, 0, 0, .7);">
 
         <div class="modal-dialog modal-dialog-centered" role="document" @click.stop="">
             <div class="modal-content bg-white-br20">
 
-                <div id="chatPickAttendeesDialogBody" class="modal-body d-flex flex-column p-4">
-                    <h5 class="resend-message-title text-left mb-4">Выберите собеседников</h5>
+                <div id="createGroupChatBody" class="modal-body d-flex flex-column p-4">
+                    <h5 class="resend-message-title text-left mb-4">Создание группового чата</h5>
 
-                    <form id="chatPickAttendeesForm" novalidate="novalidate" class="mb-4">
+                    <form id="createGroupChatForm" novalidate="novalidate" class="mb-4">
 
                         <div class="form-group"
                              :class="{ 'has-error': $v.model.chatName.$error, 'has-success': !$v.model.chatName.$invalid }">
@@ -30,7 +30,7 @@
                         </div>
 
                         <div class="form-group">
-                            <label class="">Учатники чата</label>
+                            <label class="">Участники чата</label>
                             <multiselect v-model="model.selectedRecipients"
                                          :options="getFriendsCombo"
                                          label="fullName"
@@ -85,11 +85,8 @@ import { required, minLength, maxLength } from 'vuelidate/lib/validators';
 import PliziDialog from '../../classes/PliziDialog.js';
 import PliziRecipientsCollection from '../../classes/Collection/PliziRecipientsCollection.js';
 
-/**
- * TODO: @TGA потом переименовать этот компонент т.к. тут создаётся групповой чат
- */
 export default {
-name: 'ChatPickAttendeesDialogModal',
+name: 'CreateGroupChatModal',
 components: {  },
 props: {
     currentDialog: PliziDialog | Object
@@ -126,8 +123,8 @@ methods: {
         this.addToChatDialog();
     },
 
-    hidePickAttendeesDialogModal() {
-        this.$emit('hidePickAttendeesDialogModal', {});
+    hideCreateGroupChatModal() {
+        this.$emit('HideCreateGroupChatModal', {});
     },
 
     checkChatForm(){
@@ -165,10 +162,7 @@ methods: {
 
             window.localStorage.setItem('pliziActiveDialog', apiResponse.id);
 
-            this.hidePickAttendeesDialogModal();
-        }
-        else{
-            window.console.info( apiResponse );
+            this.hideCreateGroupChatModal();
         }
     }
 },

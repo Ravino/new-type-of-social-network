@@ -93,25 +93,6 @@
                     </div>
                     <div class="col-3"></div>
                 </div>
-
-                <div class="form-group row border-bottom">
-                    <label for="activeSessions"
-                           class="plz-account-settings-body-label col-sm-6 col-md-6 col-lg-4 col-xl-4">Активные сессии</label>
-                    <div
-                        class="plz-account-settings-body-field  col-sm-6 col-md-6 col-lg-6 col-xl-6">
-                        <div class="d-flex align-items-center w-100 position-relative ">
-                            <div class="plz-account-settings-body-action pl-1 ">
-                                <router-link :to="{ name: 'ActiveSessionsPage' }"
-                                             tag="a"
-                                             id="activeSessions"
-                                             class="btn btn-link">
-                                    Посмотреть
-                                </router-link>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-3"></div>
-                </div>
             </div>
         </form>
 

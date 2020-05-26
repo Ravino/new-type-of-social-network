@@ -260,6 +260,11 @@ class User extends Authenticatable implements JWTSubject
         return $this->hasMany(Session::class);
     }
 
+    public function photoAlbums()
+    {
+        return $this->hasMany(PhotoAlbum::class, 'author_id', 'id');
+    }
+
     public static function boot()
     {
         parent::boot();

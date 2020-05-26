@@ -148,7 +148,7 @@ class PliziNotificationData {
         }
 
         if ('community.post.created' === this.notificationType) {
-            return `В сообществе ${this.community.name} что-то опубликовано`;
+            return `В сообществе "${this.community.name}" опубликован новый пост "${this.community.postName}"`;
         }
 
         return this.body;

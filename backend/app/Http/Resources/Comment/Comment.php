@@ -2,6 +2,7 @@
 
 namespace App\Http\Resources\Comment;
 
+use App\Http\Resources\Post\AttachmentsCollection;
 use App\Http\Resources\User\Image;
 use App\Http\Resources\User\SimpleUser;
 use App\Models\User;
@@ -23,6 +24,8 @@ class Comment extends JsonResource
             'id' => $this->id,
             'body' => $this->body,
             'author' => new SimpleUser($this->author),
+            'attachments' => new AttachmentsCollection($this->attachments),
+            'createdAt' => $this->created_at,
         ];
 
         return $data;

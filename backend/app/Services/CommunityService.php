@@ -35,7 +35,7 @@ class CommunityService
             'updated_at' => time(),
         ];
         $community = Community::create($data);
-        $community->users()->attach(auth()->user()->id, ['role' => Community::ROLE_AUTHOR]);
+        $community->users()->attach(auth()->user()->id, ['role' => Community::ROLE_AUTHOR, 'created_at' => time(), 'updated_at' => time()]);
         event(new CommunityCreated($community));
         return $community;
     }
@@ -62,7 +62,7 @@ class CommunityService
         /**
          * allow save empty string
          */
-        foreach (['website', 'description', 'notice'] as $attribute) {
+        foreach (['website', 'description', 'notice', 'url'] as $attribute) {
             if ($request->exists($attribute)) {
                 $data[$attribute] = $request->$attribute;
             }
@@ -142,11 +142,11 @@ class CommunityService
         }
 
         if(!$community->users()->where([
-            'id' => auth()->user()->id,
+            'id' => $request->user_id,
         ])->exists()) {
-            $community->users()->attach(auth()->user()->id,
+            $community->users()->attach($request->user_id,
                 ['role' => Community::ROLE_USER, 'created_at' => time(), 'updated_at' => time()]);
-            event(new CommunitySubscribe($community->id, auth()->user()->id));
+            event(new CommunitySubscribe($community->id, $request->user_id));
 
             $request->user->notify(new UserSystemNotifications([
                 'community' => $this->getCommunityPayload($community),

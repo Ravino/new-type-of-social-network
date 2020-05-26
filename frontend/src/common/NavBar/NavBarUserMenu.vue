@@ -27,11 +27,11 @@
                 </div>
 
                 <div class="nav-item">
-                    <router-link tag="a" class="dropdown-item px-0 py-1" to="/account">Настройки</router-link>
+                    <router-link tag="a" class="dropdown-item px-0 py-1" to="/communities">Мои сообщества</router-link>
                 </div>
 
                 <div class="nav-item">
-                    <router-link tag="a" class="dropdown-item px-0 py-1" to="/help">Помощь</router-link>
+                    <router-link tag="a" class="dropdown-item px-0 py-1" to="/account">Настройки</router-link>
                 </div>
 
                 <div class="nav-item border-top">

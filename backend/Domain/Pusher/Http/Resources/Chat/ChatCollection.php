@@ -39,7 +39,7 @@ class ChatCollection extends ResourceCollection
                     'isLastFromMe' => ($this->user_id == $chat->last_user_id),
                     'attendees' => new AttendeesCollection($chat->attendees, $chat->user_id)
                 ];
-            })
+            })->toArray()
         ];
     }
 }

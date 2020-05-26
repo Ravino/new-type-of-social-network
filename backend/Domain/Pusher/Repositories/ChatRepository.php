@@ -6,6 +6,7 @@ namespace Domain\Pusher\Repositories;
 
 use Carbon\Carbon;
 use DB;
+use Domain\Pusher\Events\ChatActionEvent;
 use Domain\Pusher\Helpers\ArrayUtils;
 use Domain\Pusher\DTOs\Dialog;
 use Domain\Pusher\Http\Resources\Chat\ChatCollection;
@@ -40,6 +41,9 @@ class ChatRepository
         }
 
         $items = $query->orderBy('last_message_time', 'asc')->get();
+        $items = $items->filter(function ($item) {
+            return count($item->attendees);
+        });
         return new ChatCollection($items, $user_id);
     }
 
@@ -87,14 +91,12 @@ class ChatRepository
      * @return mixed|null
      */
     public function getChatIdForCoupleUsers($first_user, $second_user) {
-        $chats = Chat::with('attendees')->whereHas('attendees', function($query) use($first_user, $second_user) {
-            $query->whereIn('id', [$first_user, $second_user]);
-        })->get();
-        $user_ids = User::whereIn('id', [$first_user, $second_user])->get()->pluck('id')->toArray();
-        foreach ($chats as $chat) {
-            if(!count(array_diff($chat->user_ids, $user_ids))) {
-                return $chat->id;
-            }
+        $chat = Chat::with('attendees')
+            ->where('user_ids', 'all', [$first_user, $second_user])
+            ->where('user_ids', 'size', 2)
+            ->first();
+        if($chat) {
+            return $chat->id;
         }
         return null;
     }
@@ -112,7 +114,7 @@ class ChatRepository
         $chat = Chat::find($chat_id);
         $chat->attendees()->attach($author_id);
         $chat->attendees()->attach($receiver_id);
-
+        event(new ChatActionEvent($this->getUsersIdListFromChat($chat_id, \Auth::user()->id), 'chat.created', $this->getChatById($chat_id)));
         return $chat_id;
     }
 
@@ -135,7 +137,9 @@ class ChatRepository
         foreach ($receiver_ids as $receiver_id) {
             $chat->attendees()->attach($receiver_id);
         }
-        return $chat->refresh()->id;
+        $chat_id = $chat->refresh()->id;
+        event(new ChatActionEvent($this->getUsersIdListFromChat($chat_id, \Auth::user()->id), 'chat.created', $this->getChatById($chat_id)));
+        return $chat_id;
     }
 
     /**
@@ -157,13 +161,20 @@ class ChatRepository
         /** @var Chat $chat */
         $chat = Chat::find($chat_id);
         $chat->attendees()->attach($user_id);
+        event(new ChatActionEvent($this->getUsersIdListFromChat($chat_id, \Auth::user()->id), 'chat.attendee.appended', $this->getChatById($chat_id)));
         return $this->getChatById($chat_id);
     }
 
+    /**
+     * @param $chat_id
+     * @param $user_id
+     * @return ChatResource
+     */
     public function removeFromChartParty($chat_id, $user_id) {
         /** @var Chat $chat */
         $chat = Chat::find($chat_id);
         $chat->attendees()->detach($user_id);
+        event(new ChatActionEvent($this->getUsersIdListFromChat($chat_id, \Auth::user()->id), 'chat.attendee.removed', ['id' => $chat_id, 'userId' => $user_id]));
         return $this->getChatById($chat_id);
     }
 
@@ -172,6 +183,7 @@ class ChatRepository
      * @return bool
      */
     public function destroyChat(string $chat_id) {
+        event(new ChatActionEvent($this->getUsersIdListFromChat($chat_id, \Auth::user()->id), 'chat.removed', ['id' => $chat_id]));
         Chat::destroy($chat_id);
         return true;
     }

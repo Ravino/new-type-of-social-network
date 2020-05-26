@@ -41,6 +41,10 @@
                                           v-bind:messagesList="messagesList"
                                           v-bind:filter="filter"
                                           v-bind:currentDialog="currentDialog"
+                                          v-bind:keyUpdater="$root.$messagesKeyUpdater"
+                                          v-bind:isMessagesLazyLoad="isMessagesLazyLoad"
+                                          v-bind:isCanLoadMoreMessages="isCanLoadMoreMessages"
+                                          v-bind:key="getChatMessagesKey()"
                                           @ClearFilters="clearChatMessagesFilters"
                                           @ScrollToTop="onScrollToTop"
                                           @RemoveMessageInList="removeMessageInList"
@@ -87,8 +91,7 @@ import ChatNotifications from '../common/Chat/ChatNotifications.vue';
 import ChatMixin from '../mixins/ChatMixin.js';
 import NotificationMixin from '../mixins/NotificationMixin.js';
 
-import PliziMessage from '../classes/PliziMessage.js';
-import PliziCollection from '../classes/PliziCollection.js';
+import PliziMessagesCollection from '../classes/Collection/PliziMessagesCollection.js';
 
 export default {
 name: 'ChatsListPage',
@@ -107,8 +110,10 @@ data() {
         componentKey: 0,
         chatCarrier   : null,
         currentDialog : null,
-        messagesList  : (new PliziCollection()),
+        messagesList  : (new PliziMessagesCollection()),
         isMessagesLoaded: false,
+        isMessagesLazyLoad: false,
+        isCanLoadMoreMessages: true,
 
         filter : {
             text: '',
@@ -132,9 +137,11 @@ computed: {
 
 methods: {
     onScrollToTop(evData){
-        window.console.info(evData, `onScrollToTop`);
         this.lazyLoadMessages(evData.chatId, evData.offset, evData.limit);
-        this.$root.$messagesKeyUpdater++;
+    },
+
+    getChatMessagesKey(){
+        return `chatMessages-`+ this.$root.$messagesKeyUpdater;
     },
 
     isFreshUser(){
@@ -149,10 +156,9 @@ methods: {
 
     onChatFooterEditorChangedHeight(evData) {
         this.changedHeight = evData.changedHeight + 'px';
-        try {
+
+        if (this.$refs &&  this.$refs.chatMessages) {
             this.$refs.chatMessages.scrollToEnd();
-        } catch (e){
-            if ( window.console !== undefined && window.console.error ) window.console.warn( e.toString() );
         }
     },
 
@@ -167,8 +173,6 @@ methods: {
     },
 
     removeMessageInList(evData) {
-        window.console.log(`removeMessageInList`);
-
         /** @TGA не реагируем, если мы не на странице чата **/
         if ('ChatsListPage'!==this.$root.$router.currentRoute.name)
             return;
@@ -176,13 +180,17 @@ methods: {
         if (this.currentDialog.id !== evData.chatId)
             return;
 
-        //this.messagesList = this.messagesList.filter( mItem => evData.messageId !== mItem.id );
+        this.$root.$messagesKeyUpdater++;
+
         this.messagesList.delete(evData.messageId);
 
         /** @var PliziMessage **/
         const lastMsg = this.messagesList.last;
 
         this.updateDialogsList(evData.chatId, { message: lastMsg });
+        if (this.$refs &&  this.$refs.chatMessages) {
+            this.$refs.chatMessages.scrollToEnd();
+        }
     },
 
     addNewMessageNotification(message) {
@@ -210,7 +218,7 @@ methods: {
         this.currentDialog = this.$root.$auth.dm.get(chatId);
 
         try {
-            msgsResponse = await this.$root.$api.$chat.messages(chatId);
+            msgsResponse = await this.$root.$api.$chat.messages(chatId, 0, 10);
         }
         catch (e){
             window.console.warn(e.detailMessage);
@@ -221,7 +229,7 @@ methods: {
 
         this.messagesList.clear();
         msgsResponse.map( (msg) => {
-            this.addMessageToMessagesList(msg);
+            this.appendMessageToMessagesList(msg);
         });
 
         this.isMessagesLoaded = true;
@@ -233,19 +241,26 @@ methods: {
             return;
 
         if (this.currentDialog.id === evData.chatId) {
-            this.addMessageToMessagesList(evData.message);
+            this.appendMessageToMessagesList(evData.message);
+
+            if (this.$refs && this.$refs.chatMessages) {
+                this.$refs.chatMessages.$forceUpdate();
+                this.$refs.chatMessages.scrollToEnd();
+            }
         }
 
         this.updateDialogsList(evData.chatId, evData);
     },
 
-    addMessageToMessagesList(evData){
-        this.messagesList.add( new PliziMessage(evData) );
+    appendMessageToMessagesList(evData){
+        this.messagesList.append( evData );
+        this.$root.$messagesKeyUpdater++;
     },
 
     addListeners(){
-        this.$root.$on('newMessageInDialog', this.addNewChatMessageToList);
         this.$root.$on('newMessageInDialog', this.addNewMessageNotification);
+
+        this.$root.$on('newMessageInDialog', this.addNewChatMessageToList);
 
         this.$root.$on('removeMessageInDialog', (evData)=>{
             if (this.removeMessageInList) {

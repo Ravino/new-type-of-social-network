@@ -1,17 +1,16 @@
 <template>
     <div class="row">
-        <div class="col-12">
-            <div class="w-100 bg-white-br20 p-5">
-                <h4 v-if="!successMessage" class="update-password-title mb-4">Восстановление пароля</h4>
+        <div class="w-100 bg-white-br20 p-5">
+                <h4 v-if="!successMessage" class="update-password-title text-center text-md-left mb-4">Восстановление пароля</h4>
 
                 <form v-if="!successMessage"
                       class="update-password-form w-100 mb-0"
                       method="POST"
                       @submit.prevent="send">
-                    <div class="d-flex justify-content-center update-password-form-box row align-items-center mb-4">
+                    <div class="d-flex flex-wrap justify-content-center update-password-form-box row align-items-center mb-4">
                         <input type="hidden" name="token" v-model="form.token">
 
-                        <div class="form-group col-4 position-relative">
+                        <div class="form-group col-12 col-md-4 position-relative">
                             <label for="email" class="d-none col-form-label text-md-right">Ваш E-mail</label>
 
                             <div class="position-relative">
@@ -33,7 +32,7 @@
                             </div>
                         </div>
 
-                        <div class="form-group col-4 position-relative">
+                        <div class="form-group col-12 col-md-4 position-relative">
                             <label for="password" class="d-none col-form-label text-md-right">Ваш новый пароль</label>
 
                             <div class="position-relative">
@@ -54,7 +53,7 @@
                             </div>
                         </div>
 
-                        <div class="form-group col-4 position-relative">
+                        <div class="form-group col-12 col-md-4 position-relative">
                             <label for="password-confirm" class="d-none col-form-label text-md-right">
                                 Подтвердите новый пароль
                             </label>
@@ -73,7 +72,7 @@
                         </div>
                     </div>
 
-                    <div class="form-group col-4 p-2 mx-auto">
+                    <div class="form-group col-12 col-md-4 p-2 mx-auto">
                         <div class="w-100">
                             <button type="submit" class="btn btn-primary w-100 text-uppercase">
                                 Обновить пароль
@@ -98,7 +97,6 @@
                     </div>
                 </div>
             </div>
-        </div>
     </div>
 </template>
 

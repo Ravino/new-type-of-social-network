@@ -37,9 +37,160 @@
         {
             "name": "Comments",
             "description": "Все, что касается комментариев"
+        },
+        {
+            "name": "Photo Albums",
+            "description": "Все, что касается фотоальбомов"
         }
     ],
     "paths": {
+        "/photo_albums": {
+            "post": {
+                "tags": [
+                    "Photo Albums"
+                ],
+                "description": "Создать фотоальбом",
+                "operationId": "PhotoAlbumStore",
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "type": "object",
+                                "properties": {
+                                    "communityId": {
+                                        "type": "number",
+                                        "description": "Community id если фотоальбом создается в сообществе в ином случае этого поля не должно быть в запросе."
+                                    },
+                                    "title": {
+                                        "type": "string",
+                                        "description": "Название фотоальбома. Максимальная длина 100 символов."
+                                    },
+                                    "description": {
+                                        "type": "string",
+                                        "description": "Описание фотоальбома. Максимальная длина 500 символов."
+                                    }
+                                }
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "data": {
+                                            "properties": {
+                                                "id": {
+                                                    "type": "integer",
+                                                    "description": "ID нового фотоальбома при успешном создании."
+                                                }
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/photo_albums/{id}": {
+            "post": {
+                "tags": [
+                    "Photo Albums"
+                ],
+                "description": "Обновление фотоальбома",
+                "operationId": "PhotoAlbumUpdate",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "ID альбома",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "type": "object",
+                                "properties": {
+                                    "title": {
+                                        "type": "string",
+                                        "description": "Название фотоальбома. Максимальная длина 100 символов."
+                                    },
+                                    "description": {
+                                        "type": "string",
+                                        "description": "Описание фотоальбома. Максимальная длина 500 символов."
+                                    }
+                                }
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "description": "Сообщение об успешном создании."
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            "delete": {
+                "tags": [
+                    "Photo Albums"
+                ],
+                "description": "Удаление фотоальбома",
+                "operationId": "PhotoAlbumDelete",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "ID фотоальбома",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "description": "Сообщение об успешном удалении."
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
         "/comment/post": {
             "post": {
                 "tags": [
@@ -121,6 +272,71 @@
             }
         },
         "/comment/{id}": {
+            "patch": {
+                "tags": [
+                    "Comments"
+                ],
+                "description": "Редактировать комментарий",
+                "operationId": "updateComment",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "ID комментария",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "type": "object",
+                                "properties": {
+                                    "body": {
+                                        "type": "string"
+                                    },
+                                    "attachmentIds": {
+                                        "type": "array",
+                                        "items": {
+                                            "type": "number"
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "data": {
+                                            "type": "object",
+                                            "properties": {
+                                                "id": {
+                                                    "type": "number"
+                                                }
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "Authorization": []
+                    }
+                ]
+            },
             "delete": {
                 "tags": [
                     "Comments"
@@ -159,7 +375,65 @@
                             }
                         }
                     }
-                }
+                },
+                "security": [
+                    {
+                        "Authorization": []
+                    }
+                ]
+            }
+        },
+        "/comment/attachments": {
+            "post": {
+                "tags": [
+                    "Comments"
+                ],
+                "description": "Загрузить файлы",
+                "operationId": "uploadCommentAttachments",
+                "requestBody": {
+                    "content": {
+                        "multipart/form-data": {
+                            "schema": {
+                                "required": [
+                                    "files"
+                                ],
+                                "properties": {
+                                    "files": {
+                                        "type": "string",
+                                        "description": "files to upload",
+                                        "format": "binary"
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "required": true
+                },
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "attachmentIds": {
+                                            "type": "array",
+                                            "items": {
+                                                "type": "number"
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "Authorization": []
+                    }
+                ]
             }
         },
         "/chat/dialogs": {
@@ -916,7 +1190,12 @@
                             }
                         }
                     }
-                }
+                },
+                "security": [
+                    {
+                        "Authorization": []
+                    }
+                ]
             }
         },
         "/communities/requests/create/{groupId}": {
@@ -1085,6 +1364,97 @@
                         "Authorization": []
                     }
                 ]
+            }
+        },
+        "/communities/recommended/list": {
+            "get": {
+                "tags": [
+                    "Communities"
+                ],
+                "description": "Список рекомендованных сообществ",
+                "operationId": "getCommunitiesReccomended",
+                "parameters": [
+                    {
+                        "$ref": "#/components/parameters/offsetParam"
+                    },
+                    {
+                        "$ref": "#/components/parameters/limitParam"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "data": {
+                                            "type": "object",
+                                            "properties": {
+                                                "list": {
+                                                    "type": "array",
+                                                    "items": {
+                                                        "$ref": "#/components/schemas/Community"
+                                                    }
+                                                }
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "Authorization": []
+                    }
+                ]
+            }
+        },
+        "/communities/search/{search}": {
+            "get": {
+                "tags": [
+                    "Communities"
+                ],
+                "description": "Получить данные пользователя",
+                "operationId": "searchCommunity",
+                "parameters": [
+                    {
+                        "in": "path",
+                        "name": "search",
+                        "schema": {
+                            "type": "string"
+                        },
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "data": {
+                                            "type": "object",
+                                            "properties": {
+                                                "list": {
+                                                    "type": "array",
+                                                    "items": {
+                                                        "$ref": "#/components/schemas/User"
+                                                    }
+                                                }
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
             }
         },
         "/posts": {
@@ -1850,6 +2220,102 @@
                 ]
             }
         },
+        "/posts/view": {
+            "post": {
+                "tags": [
+                    "Posts"
+                ],
+                "description": "Просмотреть пост",
+                "operationId": "ViewPost",
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "type": "object",
+                                "properties": {
+                                    "postId": {
+                                        "type": "number"
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "required": true
+                },
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "message": {
+                                            "type": "string"
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "Authorization": []
+                    }
+                ]
+            }
+        },
+        "/posts/{id}/viewed": {
+            "post": {
+                "tags": [
+                    "Posts"
+                ],
+                "description": "Просмотреть пост",
+                "operationId": "ViewedPost",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "ID Поста",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "data": {
+                                            "type": "object",
+                                            "properties": {
+                                                "list": {
+                                                    "type": "array",
+                                                    "items": {
+                                                        "$ref": "#/components/schemas/User"
+                                                    }
+                                                }
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "Authorization": []
+                    }
+                ]
+            }
+        },
         "/register": {
             "post": {
                 "tags": [
@@ -2082,7 +2548,7 @@
                 ]
             }
         },
-        "/user/search": {
+        "/user/search/{search}": {
             "get": {
                 "tags": [
                     "User"
@@ -2091,7 +2557,7 @@
                 "operationId": "searchUser",
                 "parameters": [
                     {
-                        "in": "query",
+                        "in": "path",
                         "name": "search",
                         "schema": {
                             "type": "string"
@@ -2123,13 +2589,7 @@
                             }
                         }
                     }
-                },
-                "security": [
-                    {
-                        "Authorization": []
-                    }
-                ],
-                "x-codegen-request-body-name": "body"
+                }
             }
         },
         "/user/profile/image": {
@@ -3951,6 +4411,12 @@
                     },
                     "replyOn": {
                         "type": "number"
+                    },
+                    "attachmentIds": {
+                        "type": "array",
+                        "items": {
+                            "type": "number"
+                        }
                     }
                 }
             },

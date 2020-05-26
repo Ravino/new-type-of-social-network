@@ -104,7 +104,7 @@ class Post extends Model
                 }, 'parent' => function ($query) {
                     return $query->withTrashed()->get();
                 }])
-                ->limit($limit ?? 50)
+                ->limit($limit ?? 20)
                 ->offset($offset ?? 0)
                 ->orderBy('id', 'desc')
                 ->get();
@@ -145,9 +145,11 @@ class Post extends Model
                 ->where('postable_id', $community->id)
                 ->where('created_at', '>', Carbon::parse($community->pivot->created_at)->timestamp);
         }
+        $posts->orWhere('postable_type', User::class)
+            ->where('postable_id', \Auth::user()->id);
 
         return $posts
-            ->limit($limit ?? 50)
+            ->limit($limit ?? 20)
             ->offset($offset ?? 0)
             ->orderBy('id', 'desc')
             ->get();

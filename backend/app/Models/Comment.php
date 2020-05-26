@@ -3,13 +3,20 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use Spiritix\LadaCache\Database\LadaCacheTrait;
 
 class Comment extends Model
 {
 
+    use LadaCacheTrait;
+
     protected $casts = [
         'created_at' => 'timestamp',
         'updated_at' => 'timestamp',
+    ];
+
+    protected $fillable = [
+        'body'
     ];
 
     /**
@@ -24,6 +31,13 @@ class Comment extends Model
      */
     public function commentable() {
         return $this->morphTo();
+    }
+
+    /**
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
+    public function attachments() {
+        return $this->hasMany(CommentAttachment::class, 'comment_id', 'id');
     }
 
     /**

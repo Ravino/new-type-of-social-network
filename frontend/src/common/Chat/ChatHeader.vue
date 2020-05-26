@@ -37,23 +37,29 @@
 
                         <div class="col-md-auto">
                             <ChatHeaderMenu
-                                @showRemoveCurrentChatModal="onShowRemoveCurrentChatModal"
-                                @showAddAttendeeToDialogModal="onShowAddAttendeeToDialogModal"></ChatHeaderMenu>
+                                @ShowRemoveCurrentChatModal="onShowRemoveCurrentChatModal"
+                                @ShowCreateGroupChatModal="onShowCreateGroupChatModal"
+                                @ShowAddAttendeeModal="onShowAttendeesModal"
+                                @ShowRemoveAttendeeModal="onShowAttendeesModal"></ChatHeaderMenu>
                         </div>
                     </div>
                 </div>
             </div>
-<!--        </div>-->
 
-        <ChatPickAttendeesDialogModal v-if="pickAttendeesDialogModalShow"
-            @hidePickAttendeesDialogModal="onHidePickAttendeesDialogModal"
-            v-bind:currentDialog="currentDialog">
-        </ChatPickAttendeesDialogModal>
+        <CreateGroupChatModal v-if="createGroupChatModalShow"
+                              @HideCreateGroupChatModal="onHideCreateGroupChatModal"
+                              v-bind:currentDialog="currentDialog">
+        </CreateGroupChatModal>
 
         <RemoveCurrentDialogModal v-if="removeDialogModalShow"
-            @hideRemoveDialogModal="onHideRemoveDialogModal"
+            @HideRemoveDialogModal="onHideRemoveDialogModal"
             v-bind:currentDialog="currentDialog">
         </RemoveCurrentDialogModal>
+
+        <GroupChatAttendeesModal v-if="showAttendeesModal"
+            @HideGroupChatAttendeesModal="onHideAttendeesModal"
+            v-bind:currentDialog="currentDialog">
+        </GroupChatAttendeesModal>
 
     </div>
 </template>
@@ -63,8 +69,9 @@ import IconSearch from '../../icons/IconSearch.vue';
 
 import ChatDatePicker from './ChatDatePicker.vue';
 import ChatHeaderMenu from './ChatHeaderMenu.vue';
-import ChatPickAttendeesDialogModal from './ChatPickAttendeesDialogModal.vue';
+import CreateGroupChatModal from './CreateGroupChatModal.vue';
 import RemoveCurrentDialogModal from './RemoveCurrentDialogModal.vue';
+import GroupChatAttendeesModal from './GroupChatAttendeesModal.vue';
 
 import ChatHeaderCompanion from './ChatHeaderCompanion.vue';
 import ChatHeaderAttendeeItem from './ChatHeaderAttendeeItem.vue';
@@ -79,8 +86,9 @@ components: {
     ChatHeaderAttendeeItem,
     ChatDatePicker,
     ChatHeaderMenu,
-    ChatPickAttendeesDialogModal,
-    RemoveCurrentDialogModal
+    CreateGroupChatModal,
+    RemoveCurrentDialogModal,
+    GroupChatAttendeesModal
 },
 props: {
     currentDialog: {
@@ -94,8 +102,9 @@ data() {
         chatFilterText : ``,
         showDatePicker: false,
         dateRange: null,
-        pickAttendeesDialogModalShow: false,
-        removeDialogModalShow : false
+        createGroupChatModalShow: false,
+        removeDialogModalShow : false,
+        showAttendeesModal: false,
     }
 },
 
@@ -126,12 +135,20 @@ methods: {
         this.removeDialogModalShow = false;
     },
 
-    onShowAddAttendeeToDialogModal(){
-        this.pickAttendeesDialogModalShow = true;
+    onShowCreateGroupChatModal(){
+        this.createGroupChatModalShow = true;
     },
 
-    onHidePickAttendeesDialogModal(){
-        this.pickAttendeesDialogModalShow = false;
+    onHideCreateGroupChatModal(){
+        this.createGroupChatModalShow = false;
+    },
+
+    onShowAttendeesModal(){
+        this.showAttendeesModal = true;
+    },
+
+    onHideAttendeesModal(){
+        this.showAttendeesModal = false;
     },
 
     chatSearchKeyDownCheck(ev){

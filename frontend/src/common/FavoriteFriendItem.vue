@@ -77,7 +77,7 @@ import DialogMixin from '../mixins/DialogMixin.js';
 
 import PliziFriend from '../classes/PliziFriend.js';
 import PliziMessage from '../classes/PliziMessage.js';
-import PliziCollection from '../classes/PliziCollection.js';
+import PliziMessagesCollection from '../classes/Collection/PliziMessagesCollection.js';
 
 export default {
 name : 'FavoriteFriendItem',
@@ -110,7 +110,7 @@ data(){
         isTyper: false,
 
         currentDialog : null,
-        messagesList  : (new PliziCollection()),
+        messagesList  : (new PliziMessagesCollection()),
         isMessagesLoaded: false,
 
         filter : {
@@ -174,10 +174,12 @@ methods: {
         if (this.currentDialog) {
             if (this.currentDialog.id === evData.message.chatId){
 
-                //this.messagesList.push( new PliziMessage( evData.message ) );
-                this.messagesList.add( new PliziMessage( evData.message ) );
+                this.messagesList.append( new PliziMessage( evData.message ) );
 
-                this.$refs.chatMessages.scrollToEnd();
+                if (this.$refs && this.$refs.chatMessages) {
+                    this.$refs.chatMessages.$forceUpdate();
+                    this.$refs.chatMessages.scrollToEnd();
+                }
             }
         }
         else {
@@ -297,9 +299,9 @@ methods: {
 
         window.localStorage.setItem('pliziActiveDialog', chatId);
 
-        this.messagesList = [];
+        this.messagesList.clear();
         msgsResponse.map( (msg) => {
-            this.messagesList.push( new PliziMessage(msg) );
+            this.messagesList.append( msg );
         });
 
         this.isMessagesLoaded = true;

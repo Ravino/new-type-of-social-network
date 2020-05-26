@@ -73,11 +73,10 @@ methods: {
     },
 
     hideReplyMessageModal() {
-        this.$root.$emit('hideReplyMessageModal', {});
+        this.$emit('onHideReplyMessageModal', {});
     },
 
     onReplyPost(evData){
-        console.log(evData);
         /** @type {string} **/
         let msg = evData.postText.trim();
 

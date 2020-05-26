@@ -18,15 +18,17 @@ class UserController extends Controller
 
     /**
      * @param string $search
+     * @param Request $request
      * @return UserSearchCollection
      */
-    public function search(string $search)
+    public function search(string $search, Request $request)
     {
         if (mb_strlen($search) < 3) {
             return new UserSearchCollection([]);
         }
 
-        $users = User::where(static function (Builder $query) use ($search) {
+        /** @var Builder $query */
+        $query = User::where(static function (Builder $query) use ($search) {
             $query->whereHas('profile', static function (Builder $profile) use ($search) {
                 $profile
                     ->where('first_name', 'LIKE', "%{$search}%")
@@ -39,10 +41,18 @@ class UserController extends Controller
                     ->orderBy('last_name');
             });
         })
-            ->where('id', '<>', Auth::user()->id)
-            ->with('profile', 'profile.city')
-            ->limit(10)
-            ->get();
+            ->with('profile', 'profile.city');
+
+        if (Auth::guest()) {
+            $query->limit(10);
+        } else {
+            $query
+                ->where('id', '<>', Auth::user()->id)
+                ->limit($request->query('limit', 10))
+                ->offset($request->query('offset', 0));
+        }
+
+        $users = $query->get();
         return new UserSearchCollection($users);
     }
 
@@ -52,6 +62,9 @@ class UserController extends Controller
      */
     public function sendFriendshipRequest(AddToFriend $request) {
         $recipient = User::find($request->userId);
+        if($request->userId === Auth::user()->id) {
+            return response()->json(['message' => 'Вы не можете добавить самого себя в друзья'], 422);
+        }
         if($recipient->hasFriendRequestFrom(Auth::user())) {
             return response()->json(['message' => 'Вы уже отправляли запрос данному пользователю'], 422);
         }

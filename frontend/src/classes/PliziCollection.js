@@ -74,6 +74,15 @@ class PliziCollection {
         }
     }
 
+    /**
+     * @param {number|string} id
+     * @param {Object} data
+     */
+    set(id, data) {
+        const conv = this.new(data);
+        this._collection.set(conv.id, conv);
+    }
+
     receive(inputArray, objClass){
         if (inputArray){
             inputArray.map( ( oItem ) => {

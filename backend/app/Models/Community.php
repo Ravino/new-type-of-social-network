@@ -222,6 +222,9 @@ class Community extends Model
 
     public function friends($limit = 5, $offset = 0)
     {
+        if (Auth::guest()) {
+            return [];
+        }
         return (new UserService())->getFriendsFromCommunity(Auth::user()->id, $this->id, $limit, $offset);
     }
 
@@ -242,7 +245,7 @@ class Community extends Model
     {
         $query->whereHas('role', static function (Builder $query) {
             $query->where([
-                'user_id' => Auth::user()->id,
+                'user_id' => Auth::guest() ? '0' : Auth::user()->id,
             ]);
         });
     }
@@ -255,7 +258,7 @@ class Community extends Model
         $query->whereHas('role', static function (Builder $query) {
             $query
                 ->where([
-                    'user_id' => Auth::user()->id,
+                    'user_id' => Auth::guest() ? '0' : Auth::user()->id,
                 ])
                 ->where(static function (Builder $query) {
                     $query
@@ -294,9 +297,19 @@ class Community extends Model
                     ->where('privacy', '!=', self::PRIVACY_PRIVATE)
                     ->orWhereHas('role', static function (Builder $query) {
                         $query->where([
-                            'user_id' => Auth::user()->id,
+                            'user_id' => Auth::guest() ? '0' : Auth::user()->id,
                         ]);
                     });
             });
+    }
+
+    public function isUserHasAccess($user = null)
+    {
+        $user = $user ?: auth()->user();
+        if ($this->privacy === self::PRIVACY_OPEN) {
+            return true;
+        }
+
+        return $this->isMember($user);
     }
 }

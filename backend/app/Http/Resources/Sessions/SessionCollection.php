@@ -7,6 +7,23 @@ use Illuminate\Http\Resources\Json\ResourceCollection;
 class SessionCollection extends ResourceCollection
 {
     /**
+     * @var string
+     */
+    public $ip;
+
+    /**
+     * @var string
+     */
+    public $user_agent;
+
+    public function __construct($resource, $ip = null, $user_agent = null)
+    {
+        $this->ip = $ip;
+        $this->user_agent = $user_agent;
+        parent::__construct($resource);
+    }
+
+    /**
      * Transform the resource collection into an array.
      *
      * @param \Illuminate\Http\Request $request
@@ -23,6 +40,7 @@ class SessionCollection extends ResourceCollection
                     'ip' => $session->ip,
                     'isActive' => $session->is_active,
                     'createdAt' => $session->created_at,
+                    'isCurrent' => $this->isCurrentSession($session),
                 ];
             }),
         ];
@@ -41,5 +59,22 @@ class SessionCollection extends ResourceCollection
         } else {
             return $session->user_agent;
         }
+    }
+
+    public function isCurrentSession($session)
+    {
+        if ($this->ip && $this->user_agent) {
+            $rows = $this->collection->Where('ip', $this->ip)
+                ->where('user_agent', $this->user_agent);
+            $first = $rows->first();
+
+            if (($this->ip === $session->ip) &&
+                ($this->user_agent === $session->user_agent) &&
+                ($session->id === $first->id)) {
+                return true;
+            }
+        }
+
+        return false;
     }
 }

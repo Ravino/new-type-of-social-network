@@ -22,6 +22,12 @@ class LoginController extends Controller
         return redirect()->intended('admin/login');
     }
 
+    public function logout()
+    {
+        Auth::logout();
+        return redirect()->intended('admin/login');
+    }
+
     public function login() {
         $content = view('admin/login')->toHtml();
         return AdminSection::view($content, 'Login');
