@@ -44,4 +44,4 @@ const LazyLoadPosts = {
     },
 };
 
-export default LazyLoadPosts;
+export {LazyLoadPosts as default}

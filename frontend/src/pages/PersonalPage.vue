@@ -80,6 +80,7 @@ import PostRepostModal from '../common/Post/PostRepostModal.vue';
 
 import DialogMixin from '../mixins/DialogMixin.js';
 import LazyLoadPosts from '../mixins/LazyLoadPosts.js';
+import BlackListMixin from '../mixins/BlackListMixin.js';
 
 import PliziUser from '../classes/PliziUser.js';
 import PliziPost from '../classes/PliziPost.js';
@@ -100,7 +101,7 @@ components: {
     PostRepostModal,
     SmallSpinner,
 },
-mixins: [DialogMixin, LazyLoadPosts],
+mixins: [DialogMixin, LazyLoadPosts, BlackListMixin],
 
 data() {
     return {
@@ -202,15 +203,6 @@ methods: {
         }
     },
 
-    /**
-     * @deprecated
-     * @param msg
-     * @returns {Promise<void>}
-     */
-    async sendMessageToUserOld(msg){
-        await this.$root.$api.$chat.privateMessageSend(msg.receiverId, msg.message.postText, msg.message.attachments);
-    },
-
     async getPosts(limit = 50, offset = 0) {
         if ( !(this.profileData &&  this.profileData.id))
             return;
@@ -247,14 +239,6 @@ methods: {
 mounted() {
     this.getUserInfo();
     window.scrollTo(0, 0);
-
-    this.$root.$on('hidePersonalMsgModal', ()=>{
-        this.isShowMessageDialog = false;
-    });
-
-    this.$root.$on('showPersonalMsgModal', ()=>{
-        this.isShowMessageDialog = true;
-    });
 },
 
 async beforeRouteUpdate( to, from, next ){
