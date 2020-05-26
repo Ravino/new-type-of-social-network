@@ -424,7 +424,7 @@ methods: {
                     break;
 
                 case 'comment':
-                    apiResponse = this.$root.$api.$post.storePostAttachments([file]);
+                    apiResponse = this.$root.$api.$post.addAttachmentsToComment([file]);
                     break;
 
                 default:
