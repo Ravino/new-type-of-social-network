@@ -60,6 +60,9 @@ class VideoController extends Controller
             'creatableby_type' => $type_model,
         ]);
 
+        if ($video) {
+            auth()->user()->profile()->increment('video_count');
+        }
         return response()->json([
             'data' => [
                 'id' => $video->id,
