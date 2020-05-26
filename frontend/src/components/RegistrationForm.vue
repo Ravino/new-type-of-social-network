@@ -334,8 +334,6 @@
                     } else {
                         date = 'Invalid date';
                     }
-                } else {
-                    date = 'Invalid date';
                 }
 
                 return {
