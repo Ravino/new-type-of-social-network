@@ -64,6 +64,8 @@ class PhotoAlbumController extends Controller
      */
     public function store(PhotoAlbumStore $request)
     {
+        // TODO: @YZ Добавить проверку на сообщество.
+
         $photo_album = PhotoAlbum::create([
             'author_id' => \Auth::id(),
             'title' => $request->title,

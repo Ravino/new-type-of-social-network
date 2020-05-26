@@ -154,7 +154,7 @@ Route::group(['middleware' => ['auth.jwt', 'track.activity']], function () {
         Route::post('attachments', 'Api\CommentController@uploadAttachments');
     });
 
-    Route::prefix('photo_albums')->group(function () {
+    Route::prefix('photo-albums')->group(function () {
         Route::get('/', 'Api\PhotoAlbumController@index');
         Route::get('/community/{community}', 'Api\PhotoAlbumController@indexByCommunity');
         Route::post('/', 'Api\PhotoAlbumController@store');
