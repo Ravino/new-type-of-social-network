@@ -423,6 +423,10 @@ methods: {
                     apiResponse = this.$root.$api.$post.storePostAttachments([file]);
                     break;
 
+                case 'comment':
+                    apiResponse = this.$root.$api.$post.addAttachmentsToComment([file]);
+                    break;
+
                 default:
                     console.warn('TextEditor::addUploadAttachment - No matches in switch.');
             }
