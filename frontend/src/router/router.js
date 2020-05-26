@@ -34,11 +34,13 @@ import AdvertisementPage from "../pages/AdvertisementPage.vue";
 import ForDevelopersPage from "../pages/ForDevelopersPage.vue";
 import FollowListPage from "../pages/FollowListPage.vue";
 import ActiveSessionsPage from "../pages/ActiveSessionsPage.vue";
+import GuestSearchResultsPage from "../pages/GuestSearchResultsPage";
 import CommunityMembersPage from "../pages/CommunityMembersPage.vue";
 
 const routes = [
     {path: '/', redirect: '/login', isGuest: true},
     {path: '/', component: HomePage, name: 'HomePage', meta: {title: 'Plizi: Стартовая', isGuest: true}},
+    {path: '/guest-search-results', component: GuestSearchResultsPage, name: 'GuestSearchResultsPage', meta: {title: 'Plizi: Результаты поиска', isGuest: true}},
     {path: '/login', component: LoginPage, name: 'LoginPage', meta: {title: 'Plizi: Авторизация', isGuest: true}},
     {path: '/logout', component: LogoutPage, name: 'LogoutPage', meta: {title: 'Plizi: Выход', isGuest: true}},
     {path: '/password/update', component: UpdatePasswordPage, name: 'UpdatePasswordPage', meta: {title: 'Plizi: Обновление пароля', props: true, isGuest: true}},
