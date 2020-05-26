@@ -67,7 +67,7 @@
                 let response = null;
 
                 try {
-                    response = await this.$root.$api.$post.setPostComments(msg, this.postId, this.commentId);
+                    response = await this.$root.$api.$post.setPostComments(msg, this.postId, [], this.commentId);
                     this.newAnswer = response.data;
                     this.comments.push(this.newAnswer);
                 } catch (e) {

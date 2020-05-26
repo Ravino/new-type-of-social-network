@@ -321,7 +321,7 @@ class PliziPostAPI extends PliziBaseAPI {
      * @return {object[]|null}
      * @throws PliziAPIError
      */
-     async setPostComments(body, postId, attachmentIds, replyOn = 0) {
+     async setPostComments(body, postId, attachmentIds = [], replyOn = 0) {
          const response = await this.axios.post(`api/comment/post`, {
              body,
              postId,
@@ -373,6 +373,15 @@ class PliziPostAPI extends PliziBaseAPI {
         return null;
     };
 
+    /**
+     * Изменить комментарий
+     * @param {string} body
+     * @param {number} commentId
+     * @param {Array<Number>} attachmentIds
+     * @return {object[]|null}
+     * @throws PliziAPIError
+     */
+
     async editCommentById(commentId, body, attachmentIds = []) {
         const response = await this.axios.patch(`api/comment/${commentId}`, {
             commentId,
@@ -386,6 +395,34 @@ class PliziPostAPI extends PliziBaseAPI {
 
         return null
     }
+
+    /**
+     * Загрузка файлов для комментариев.
+     * @param picsArr
+     * @returns {object[]|null}
+     * @throws PliziAPIError
+     */
+
+    async addAttachmentsToComment( picsArr ){
+        const formData = new FormData();
+
+        for ( let i = 0; i < picsArr.length; i++ ){
+            formData.append( 'files[]', picsArr[i] );
+        }
+
+        let response = await this.axios.post( 'api/comment/attachments', formData, this.authHeaders )
+            .catch( ( error ) => {
+                this.checkIsTokenExpires( error, `addAttachmentsToComment` );
+                throw new PliziAPIError( `addAttachmentsToComment`, error.response );
+            } );
+
+        if ( response.status === 200 ){
+            return response.data;
+        }
+
+        return null;
+    }
+
 }
 
 export default PliziPostAPI;

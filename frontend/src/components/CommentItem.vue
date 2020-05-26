@@ -33,10 +33,16 @@
                     >
                         Ответить
                     </button>
-                    <button v-if="isEdit === false && isAuthor" @click="isEdit = true" class="plz-comment-item-reply-btn plz-comment-item-edit">
+                    <button v-if="isEdit === false && isAuthor"
+                            @click="isEdit = true"
+                            class="plz-comment-item-reply-btn plz-comment-item-edit"
+                    >
                         Изменить
                     </button>
-                    <button v-if="isEdit === true" @click="isEdit = false" class="plz-comment-item-reply-btn plz-comment-item-edit">
+                    <button v-if="isEdit === true"
+                            @click="isEdit = false"
+                            class="plz-comment-item-reply-btn plz-comment-item-edit"
+                    >
                         Отменить
                     </button>
                 </div>
