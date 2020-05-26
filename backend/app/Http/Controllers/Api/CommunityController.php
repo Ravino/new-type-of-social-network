@@ -393,6 +393,9 @@ class CommunityController extends Controller
             ->withCount('members')
             ->get();
 
+        /**
+         * @todo add community to full list
+         */
         return new CommunityCollection($communities, false);
     }
 }
