@@ -15,10 +15,14 @@
 
 <script>
 import IconSearch from '../../icons/IconSearch.vue';
+import PliziAuthUser from '../../classes/PliziAuthUser.js';
 
 export default {
 name : 'NavBarSearch',
     components: {IconSearch},
+    props: {
+        userData: PliziAuthUser
+    },
     data () {
     return {
         isFocused: false
@@ -30,7 +34,7 @@ methods: {
         const sText = this.$refs.topSearch.value.trim();
 
         if ( 13 === ev.keyCode   &&  sText!==``){
-            return this.startSearch(sText);
+                return this.startSearch(sText);
         }
     },
 
@@ -51,8 +55,15 @@ methods: {
             source: `topSearch`
         });
 
-        if (this.$route.name !== `SearchResultsPage`) {
-            this.$router.push({ path: '/search-results' });
+        if (this.$root.$isAuth) {
+            if (this.$route.name !== `SearchResultsPage`) {
+                this.$router.push({ path: '/search-results' });
+            }
+        }
+        else {
+            if (this.$route.name !== `GuestSearchResultsPage`) {
+                this.$router.push({ path: '/guest-search-results' });
+            }
         }
     },
 
@@ -62,6 +73,6 @@ methods: {
     onBlur() {
         this.isFocused = false
     }
-}
+},
 }
 </script>

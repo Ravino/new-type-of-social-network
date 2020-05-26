@@ -413,6 +413,29 @@ class PliziCommunitiesAPI extends PliziBaseAPI {
 
         return null;
     }
+
+    /**
+     * Получение списка участников сообщества
+     * @param {number} communityId
+     * @param {number} limit
+     * @param {number} offset
+     * @returns {object[]|null}
+     * @throws PliziAPIError
+     */
+    async members(communityId, limit = 20, offset = 0) {
+        const url = `api/communities/${communityId}/members`;
+        let response = await this.axios.get(url, this.authHeaders)
+            .catch((error) => {
+                this.checkIsTokenExpires(error, `$communities.members`);
+                throw new PliziAPIError(`$communities.members`, error.response);
+            });
+
+        if (response.status === 200) {
+            return response.data.data;
+        }
+
+        return null;
+    }
 }
 
 export default PliziCommunitiesAPI;
