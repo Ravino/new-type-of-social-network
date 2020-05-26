@@ -2,12 +2,17 @@
     position: relative;
     display: flex;
     margin-top: 20px;
+    margin-bottom: -1px;
     &:hover {
         .plz-comment-item-close-btn {
             display: inline-block;
         }
-        .plz-comment-item-edit {
-            display: inline-block;
+    }
+    &-holder {
+        &:hover {
+            .plz-comment-item-edit {
+                display: inline-block;
+            }
         }
     }
     &-data {
@@ -97,5 +102,8 @@
     }
     &-edit {
         display: none;
+    }
+    &-likes {
+        cursor: pointer;
     }
 }

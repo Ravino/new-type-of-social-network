@@ -8,48 +8,71 @@
             </a>
         </div>
         <div class="plz-comment-item-data">
-            <div class="plz-comment-item-data-info">
-                <h6>
-                    <a class="plz-comment-item-data-name" :href="`user-${authorId}`">
-                       <b>{{name}}&nbsp;{{surname}}</b>
-                    </a>
-                </h6>
-                <TextEditor
-                    v-if="isEdit"
-                    :clazz="`plz-text-editor h-auto  align-items-start flex-grow-1 `"
-                    :dropToDown="true"
-                    :maximumCharacterLimit="500"
-                    workMode="post"
-                    @editorPost="onTextPost"
-                    :input-editor-text="text"
-                ></TextEditor>
-                <p v-else v-html="livePreview">{{text}}</p>
-            </div>
-            <div class="plz-comment-item-data-comment">
-                <div class="plz-comment-item-reply">
-                    <span class="plz-comment-item-reply-date">{{ getTimeComment }}</span>
-                    <button class="plz-comment-item-reply-btn"
-                            @click="isAnswer = !isAnswer"
-                    >
-                        Ответить
-                    </button>
-                    <button v-if="isEdit === false && isAuthor"
-                            @click="isEdit = true"
-                            class="plz-comment-item-reply-btn plz-comment-item-edit"
-                    >
-                        Изменить
-                    </button>
-                    <button v-if="isEdit === true"
-                            @click="isEdit = false"
-                            class="plz-comment-item-reply-btn plz-comment-item-edit"
-                    >
-                        Отменить
-                    </button>
+            <div class="plz-comment-item-holder">
+                <div class="plz-comment-item-data-info">
+                    <h6>
+                        <a class="plz-comment-item-data-name" :href="`user-${authorId}`">
+                           <b>{{name}}&nbsp;{{surname}}</b>
+                        </a>
+                    </h6>
+                    <TextEditor
+                        v-if="isEdit"
+                        :clazz="`plz-text-editor h-auto  align-items-start flex-grow-1 `"
+                        :dropToDown="true"
+                        :maximumCharacterLimit="500"
+                        workMode="post"
+                        @editorPost="onTextPost"
+                        :input-editor-text="text"
+                    ></TextEditor>
+                    <p v-else v-html="livePreview">{{text}}</p>
                 </div>
-                <div class="plz-comment-item-likes">
-                    <IconHeard></IconHeard>
+                <div class="plz-comment-item-data-comment">
+                    <div class="plz-comment-item-reply">
+                        <span class="plz-comment-item-reply-date">{{ getTimeComment }}</span>
+                        <button class="plz-comment-item-reply-btn"
+                                @click="isAnswer = !isAnswer"
+                        >
+                            Ответить
+                        </button>
+                        <button v-if="isEdit === false && isAuthor"
+                                @click="isEdit = true"
+                                class="plz-comment-item-reply-btn plz-comment-item-edit"
+                        >
+                            Изменить
+                        </button>
+                        <button v-if="isEdit === true"
+                                @click="isEdit = false"
+                                class="plz-comment-item-reply-btn plz-comment-item-edit"
+                        >
+                            Отменить
+                        </button>
+                    </div>
+                    <div class="plz-comment-item-likes">
+                        <IconHeard></IconHeard>
+                    </div>
                 </div>
             </div>
+             <div class="plz-comment-item__wrapper-answers"
+                  v-for="answer of answers"
+                  :key="answer.id"
+             >
+                 <CommentItem
+                     :answers="answer.thread ? answer.thread.list : []"
+                     :key="answer.id"
+                     :commentId="answer.id"
+                     :text="answer.body"
+                     :authorId="answer.author.id"
+                     :name="answer.author.profile.firstName"
+                     :surname="answer.author.profile.lastName"
+                     :avatar="answer.author.profile.avatar.image.medium.path"
+                     :postId="postId"
+                     :createdAt="answer.createdAt"
+                     @onDelete="removeComment"
+                     @update="editComment"
+                     @updateAnswers="updateAnswers"
+                 >
+                 </CommentItem>
+             </div>
             <div class="plz-comment-item-wrapper-close">
                 <button class="plz-comment-item-close-btn" v-if="isAuthor" @click="deleteComment"></button>
             </div>
@@ -58,6 +81,7 @@
                 :commentId="commentId"
                 :postId="postId"
                 :name="name"
+                @addComment="addComment"
             ></CommentReply>
         </div>
     </div>
@@ -75,6 +99,9 @@
         components: {TextEditor, CommentReply, IconHeard},
         mixins : [LinkMixin, ChatMixin],
         props: {
+            answers: {
+                type: Array
+            },
             name: {
                 type: String,
             },
@@ -129,6 +156,24 @@
             },
         },
         methods: {
+            editComment(newComment) {
+                const answers = this.answers.map(comment => comment.id === newComment.id ? newComment : comment);
+
+                this.$emit('updateAnswers', { id: this.commentId, answers });
+            },
+            addComment(comment) {
+                this.$emit('updateAnswers', { id: this.commentId, answers: [...this.answers, comment] });
+            },
+            removeComment(commentId) {
+                const answers = this.answers.filter(comment => comment.id !== commentId);
+
+                this.$emit('updateAnswers', { id: this.commentId, answers });
+            },
+            updateAnswers({ id, answers }) {
+                const newAnswers = this.answers.map(comment => comment.id === id ? {...comment, thread: { list: answers } } : comment);
+
+                this.$emit('updateAnswers', { id: this.commentId, answers: newAnswers });
+            },
             async onTextPost(evData){
                 let msg = evData.postText.trim();
 
