@@ -1,5 +1,6 @@
 import PliziAttachmentThumbsObj from './Attachment/PliziAttachmentThumbsObj.js';
 import PliziAttachmentThumb from './Attachment/PliziAttachmentThumb.js';
+import PliziUser from "./PliziUser";
 
 class PliziAttachment{
     /**
@@ -77,7 +78,9 @@ class PliziAttachment{
         this._image = (inputData.image) ? new PliziAttachmentThumbsObj(inputData.image) : null;
         this._likes = inputData.likes;
         this._alreadyLiked = inputData.alreadyLiked;
-        this._usersLikes = inputData.usersLikes;
+        this._usersLikes = inputData._usersLikes ? inputData._usersLikes.list.map((user) => {
+            return new PliziUser(user);
+        }) : [];
     }
 
     toJSON(){
