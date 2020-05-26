@@ -394,6 +394,26 @@ class PliziCommunitiesAPI extends PliziBaseAPI {
         return null;
     }
 
+    async recommended() {
+        let response = await this.axios.get(`api/communities/recommended/list`, this.authHeaders)
+            .catch((error) => {
+                if (error.response.status === 422) {
+                    return {
+                        status: 422,
+                        message: error.response.data.message
+                    }
+                }
+                this.checkIsTokenExpires(error, '$communities.recommended');
+                throw new PliziAPIError('$communities.recommended', error.response);
+            });
+
+        if (response.status === 200) {
+            return response.data.data;
+        }
+
+        return null;
+    }
+
     /**
      * Получение списка участников сообщества
      * @param {number} communityId
