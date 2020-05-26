@@ -2,7 +2,7 @@
     <li class="chat-list-user media m-0 px-4 py-2"
         :class="{ 'bg-light':  dialog.id === currentDialogID, 'bg-white': dialog.id !== currentDialogID  }">
 
-        <div class="user-friend d-flex col-12 px-0 px-sm-3" @click.prevent="pickChat()">
+        <div class="user-friend d-flex w-100 px-0 overflow-hidden" @click.prevent="pickChat()">
 
             <div v-if="dialog.isPrivate" class="user-friend-pic mr-3">
                 <img class="user-friend-img rounded-circle overflow-hidden"
@@ -17,14 +17,14 @@
             </div>
 
             <template v-if="dialog.isGroup"> <!-- TODO: @TGA удалить когда Сергей сделает нормально -->
-                <div class="user-friend-pic mr-3">
+                <div class="user-friend-pic  mr-3">
                     <img class="user-friend-img rounded-circle overflow-hidden"
                          v-bind:src="dialog.companion.userPic" v-bind:alt="dialog.companion.fullName" />
                 </div>
             </template>
 
             <template v-if="false"> <!-- @TGA на самом деле "dialog.isGroup" -->
-                <div class="user-friend-pic is-group-chat mr-3">
+                <div class="user-friend-pic is-group-chat">
                     <img v-for="attende in dialog.attendees"
                          v-bind:src="attende.userPic"
                          v-bind:alt="attende.fullName"
@@ -33,7 +33,7 @@
                 </div>/
             </template>
 
-            <div class=" user-friend-body m-0 col-12 pr-5">
+            <div class=" user-friend-body flex-fill m-0 ">
                 <div class="user-friend-body-top d-flex align-items-end justify-content-between">
                     <h6 v-if="dialog.isPrivate" class="user-friend-name my-0">{{ dialog.companion.fullName }}</h6>
                     <h6 v-if="dialog.isGroup" class="user-friend-name my-0">{{ groupDialogName }}</h6>
@@ -46,7 +46,7 @@
                     </time>
                 </div>
 
-                <div class="user-friend-body-bottom d-flex pr-5">
+                <div class="user-friend-body-bottom d-flex">
                     <span v-if="isLastFromMe" class="user-friend-details mr-1">Вы:</span>
                     <p class="user-friend-desc p-0 my-0 d-inline" v-html="lastMsgText"></p>
                 </div>
