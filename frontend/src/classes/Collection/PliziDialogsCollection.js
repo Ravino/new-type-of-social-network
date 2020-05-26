@@ -33,7 +33,6 @@ class PliziDialogsCollection extends PliziStoredCollection {
 
 
     onAddNewDialog(evData){
-        window.console.log(evData, `onAddNewDialog`);
         this.add(evData);
         this.storeData();
         this.restore();

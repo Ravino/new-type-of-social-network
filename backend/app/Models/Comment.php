@@ -47,6 +47,11 @@ class Comment extends Model
         return $this->hasOne( self::class, 'id', 'reply_on');
     }
 
+    public function children()
+    {
+        return $this->hasMany(self::class, 'reply_on', 'id');
+    }
+
     public function getDateFormat() {
         return 'U';
     }

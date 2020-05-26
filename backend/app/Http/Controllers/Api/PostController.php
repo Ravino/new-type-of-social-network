@@ -8,11 +8,13 @@ use App\Http\Resources\Post\AttachmentsCollection;
 use App\Http\Resources\Post\Post as PostResource;
 use App\Http\Requests\Post\Post as PostRequest;
 use App\Http\Resources\Post\PostCollection;
+use App\Http\Resources\User\SimpleUsers;
 use App\Models\Community;
 use App\Models\Post;
 use App\Models\PostAttachment;
 use App\Models\PostLike;
 use App\Models\User;
+use App\Models\View;
 use App\Notifications\UserSystemNotifications;
 use App\Services\S3UploadService;
 use Illuminate\Support\Facades\Notification;
@@ -260,5 +262,39 @@ class PostController extends Controller
         return response()->json([
             'message' => 'Запись не найдена.',
         ], 404);
+    }
+
+    /**
+     * @param Request $request
+     * @param $id
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function markViewed(Request $request) {
+        View::create([
+            'user_id' => \Auth::user()->id,
+            'viewable_type' => Post::class,
+            'viewable_id' => $request->get('postId')
+        ]);
+        return response()->json([
+            'data' => [
+                'message' => 'Просмотрено'
+            ]
+        ]);
+    }
+
+    /**
+     * @param Request $request
+     * @param $id
+     * @return SimpleUsers
+     */
+    public function getViewedUsers(Request $request, $id) {
+        $views = View::with('user')
+            ->select('user_id', 'viewable_id', 'viewable_type')
+            ->where('viewable_id', $id)
+            ->where('viewable_type', Post::class)
+            ->groupBy('user_id', 'viewable_id', 'viewable_type')
+            ->limit(5)
+            ->get();
+        return new SimpleUsers($views->pluck('user'));
     }
 }

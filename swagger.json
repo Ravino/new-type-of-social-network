@@ -151,34 +151,6 @@
             }
         },
         "/photo_albums": {
-            "get": {
-                "tags": [
-                    "Photo Albums"
-                ],
-                "description": "Получить список фотоальбомов для пользователя",
-                "operationId": "PhotoAlbumUserList",
-                "responses": {
-                    "200": {
-                        "description": "OK",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "type": "object",
-                                    "properties": {
-                                        "data": {
-                                            "properties": {
-                                                "list": {
-                                                    "$ref": "#/components/schemas/PhotoAlbumUserList"
-                                                }
-                                            }
-                                        }
-                                    }
-                                }
-                            }
-                        }
-                    }
-                }
-            },
             "post": {
                 "tags": [
                     "Photo Albums"
@@ -1374,7 +1346,12 @@
                             }
                         }
                     }
-                }
+                },
+                "security": [
+                    {
+                        "Authorization": []
+                    }
+                ]
             }
         },
         "/communities/requests/create/{groupId}": {
@@ -1590,6 +1567,50 @@
                         "Authorization": []
                     }
                 ]
+            }
+        },
+        "/communities/search/{search}": {
+            "get": {
+                "tags": [
+                    "Communities"
+                ],
+                "description": "Получить данные пользователя",
+                "operationId": "searchCommunity",
+                "parameters": [
+                    {
+                        "in": "path",
+                        "name": "search",
+                        "schema": {
+                            "type": "string"
+                        },
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "data": {
+                                            "type": "object",
+                                            "properties": {
+                                                "list": {
+                                                    "type": "array",
+                                                    "items": {
+                                                        "$ref": "#/components/schemas/User"
+                                                    }
+                                                }
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
             }
         },
         "/posts": {
@@ -2355,6 +2376,102 @@
                 ]
             }
         },
+        "/posts/view": {
+            "post": {
+                "tags": [
+                    "Posts"
+                ],
+                "description": "Просмотреть пост",
+                "operationId": "ViewPost",
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "type": "object",
+                                "properties": {
+                                    "postId": {
+                                        "type": "number"
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "required": true
+                },
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "message": {
+                                            "type": "string"
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "Authorization": []
+                    }
+                ]
+            }
+        },
+        "/posts/{id}/viewed": {
+            "post": {
+                "tags": [
+                    "Posts"
+                ],
+                "description": "Просмотреть пост",
+                "operationId": "ViewedPost",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "ID Поста",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "data": {
+                                            "type": "object",
+                                            "properties": {
+                                                "list": {
+                                                    "type": "array",
+                                                    "items": {
+                                                        "$ref": "#/components/schemas/User"
+                                                    }
+                                                }
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "Authorization": []
+                    }
+                ]
+            }
+        },
         "/register": {
             "post": {
                 "tags": [
@@ -2587,7 +2704,7 @@
                 ]
             }
         },
-        "/user/search": {
+        "/user/search/{search}": {
             "get": {
                 "tags": [
                     "User"
@@ -2596,7 +2713,7 @@
                 "operationId": "searchUser",
                 "parameters": [
                     {
-                        "in": "query",
+                        "in": "path",
                         "name": "search",
                         "schema": {
                             "type": "string"
@@ -2628,13 +2745,7 @@
                             }
                         }
                     }
-                },
-                "security": [
-                    {
-                        "Authorization": []
-                    }
-                ],
-                "x-codegen-request-body-name": "body"
+                }
             }
         },
         "/user/profile/image": {
