@@ -5,11 +5,11 @@
             <img :src="userData.userPic" alt="">
         </div>
         <TextEditor :clazz="`plz-text-editor h-auto  align-items-start flex-grow-1 `"
-                    :editorPlaceholder="'Оставить комментарий...'"
                     :dropToDown="true"
                     :maximumCharacterLimit="500"
                     workMode="post"
                     @editorPost="onTextPost"
+                    :input-editor-text="name + ','"
         >
         </TextEditor>
     </div>
@@ -59,6 +59,7 @@
                     msg = msg.replace(/<p><\/p>/g, brExample);
                     msg = this.killBrTrail(msg);
 
+                    this.isAnswer = !this.isAnswer
                     this.setReplyComment(msg);
                 }
             },
@@ -76,9 +77,3 @@
         },
     }
 </script>
-
-<style lang="scss">
-    .plz-comment-reply {
-        margin-bottom: 20px;
-    }
-</style>

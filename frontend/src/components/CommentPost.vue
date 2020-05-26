@@ -3,7 +3,7 @@
         <div class="plz-comment-post-user">
             <img :src="getUserData.userPic" alt="">
         </div>
-        <TextEditor :clazz="`plz-text-editor h-auto  align-items-start flex-grow-1 `"
+        <TextEditor :clazz="`plz-text-editor h-auto plz-comment-post-text-field align-items-start flex-grow-1 `"
                     :editorPlaceholder="'Оставить комментарий...'"
                     :dropToDown="true"
                     :maximumCharacterLimit="500"

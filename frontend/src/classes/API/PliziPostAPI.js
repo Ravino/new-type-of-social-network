@@ -337,6 +337,14 @@ class PliziPostAPI extends PliziBaseAPI {
       return null;
     }
 
+    /**
+     * Получить коментарии к посту
+     *
+     * @param {number} postId
+     * @return {object[]|null}
+     * @throws PliziAPIError
+     */
+
     async getCommentsById(postId) {
         const response = await this.axios.get(`api/comment/post/${postId}`, this.authHeaders);
 
@@ -346,6 +354,14 @@ class PliziPostAPI extends PliziBaseAPI {
 
         return null;
     };
+
+    /**
+     * Удалить комментарий
+     *
+     * @param {number} commentId
+     * @return {object[]|null}
+     * @throws PliziAPIError
+     */
 
     async deleteCommentById(commentId) {
         const response = await this.axios.delete(`api/comment/${commentId}`, this.authHeaders);

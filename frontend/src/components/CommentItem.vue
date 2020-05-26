@@ -17,11 +17,11 @@
                 <TextEditor
                     v-if="isEdit"
                     :clazz="`plz-text-editor h-auto  align-items-start flex-grow-1 `"
-                    :editorPlaceholder="'Оставить комментарий...'"
                     :dropToDown="true"
                     :maximumCharacterLimit="500"
                     workMode="post"
                     @editorPost="onTextPost"
+                    :input-editor-text="text"
                 ></TextEditor>
                 <p v-else v-html="livePreview">{{text}}</p>
             </div>
@@ -33,9 +33,11 @@
                     >
                         Ответить
                     </button>
-<!--                     :TODO нужно поле по которому будет проверка я автор комментария-->
-                    <button @click="isEdit = true" class="plz-comment-item-reply-btn plz-comment-item-edit">
+                    <button v-if="isEdit === false && isAuthor" @click="isEdit = true" class="plz-comment-item-reply-btn plz-comment-item-edit">
                         Изменить
+                    </button>
+                    <button v-if="isEdit === true" @click="isEdit = false" class="plz-comment-item-reply-btn plz-comment-item-edit">
+                        Отменить
                     </button>
                 </div>
                 <div class="plz-comment-item-likes">
@@ -43,7 +45,7 @@
                 </div>
             </div>
             <div class="plz-comment-item-wrapper-close">
-                <button class="plz-comment-item-close-btn" @click="deleteComment"></button>
+                <button class="plz-comment-item-close-btn" v-if="isAuthor" @click="deleteComment"></button>
             </div>
             <CommentReply
                 v-if="isAnswer"
@@ -116,6 +118,9 @@
             getTimeComment() {
                 return moment.unix(this.createdAt).fromNow();
             },
+            isAuthor() {
+                return this.$root.$auth.user.id === this.authorId;
+            },
         },
         methods: {
             async onTextPost(evData){
@@ -149,107 +154,3 @@
         }
     }
 </script>
-
-<style lang="scss">
-.plz-comment-item {
-    position: relative;
-    display: flex;
-    margin-top: 20px;
-    &:hover {
-        .plz-comment-item-close-btn {
-            display: inline-block;
-        }
-        .plz-comment-item-edit {
-            display: inline-block;
-        }
-    }
-    &-data {
-        margin-left: 15px;
-        width: 100%;
-        border-bottom: 1px solid #e1e1e1;
-        &-name {
-            font-weight: bolder;
-            color: #363636;
-            font-size: 13px;
-            &:hover {
-                text-decoration: underline;
-                color: #363636;
-            }
-        }
-        &-comment {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 10px;
-        }
-    }
-    &-wrapper {
-        &-avatar {
-            border-radius: 50%;
-            height: 50px;
-            width: 50px;
-        }
-    }
-    &-close {
-        &-btn {
-            position: absolute;
-            right: 10px;
-            top: 0;
-            width: 5px;
-            height: 5px;
-            opacity: 0.6;
-            z-index: 20;
-            border: none;
-            background: none;
-            outline: none;
-            display: none;
-            &:focus {
-                outline: none;
-            }
-            &:hover {
-                opacity: 1;
-            }
-            &:before,
-            &:after {
-                position: absolute;
-                left: 15px;
-                top: 0;
-                content: ' ';
-                height: 20px;
-                width: 2px;
-                background-color: #b9b2b2;
-            }
-            &:before {
-                transform: rotate(45deg);
-            }
-            &:after {
-                transform: rotate(-45deg);
-            }
-        }
-    }
-    &-reply {
-        &-date {
-            color: #333336;
-            opacity: 0.7;
-        }
-        &-btn {
-            border: none;
-            background: none;
-            outline: none;
-            opacity: .4;
-            transition: opacity .3s;
-            &:focus {
-                outline: none;
-            }
-            &:hover {
-                opacity: 1;
-                cursor: pointer;
-                text-decoration: underline;
-            }
-        }
-    }
-    &-edit {
-        display: none;
-    }
-}
-</style>
