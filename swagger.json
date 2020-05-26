@@ -105,6 +105,16 @@
                 ],
                 "description": "Обновление фотоальбома",
                 "operationId": "PhotoAlbumUpdate",
+                "parameters": [
+                    {
+                        "in": "path",
+                        "name": "id",
+                        "schema": {
+                            "type": "string"
+                        },
+                        "required": true
+                    }
+                ],
                 "requestBody": {
                     "content": {
                         "application/json": {
@@ -1179,7 +1189,12 @@
                             }
                         }
                     }
-                }
+                },
+                "security": [
+                    {
+                        "Authorization": []
+                    }
+                ]
             }
         },
         "/communities/requests/create/{groupId}": {
@@ -1395,6 +1410,50 @@
                         "Authorization": []
                     }
                 ]
+            }
+        },
+        "/communities/search/{search}": {
+            "get": {
+                "tags": [
+                    "Communities"
+                ],
+                "description": "Получить данные пользователя",
+                "operationId": "searchCommunity",
+                "parameters": [
+                    {
+                        "in": "path",
+                        "name": "search",
+                        "schema": {
+                            "type": "string"
+                        },
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "data": {
+                                            "type": "object",
+                                            "properties": {
+                                                "list": {
+                                                    "type": "array",
+                                                    "items": {
+                                                        "$ref": "#/components/schemas/User"
+                                                    }
+                                                }
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
             }
         },
         "/posts": {
@@ -2392,7 +2451,7 @@
                 ]
             }
         },
-        "/user/search": {
+        "/user/search/{search}": {
             "get": {
                 "tags": [
                     "User"
@@ -2401,7 +2460,7 @@
                 "operationId": "searchUser",
                 "parameters": [
                     {
-                        "in": "query",
+                        "in": "path",
                         "name": "search",
                         "schema": {
                             "type": "string"
@@ -2434,11 +2493,6 @@
                         }
                     }
                 },
-                "security": [
-                    {
-                        "Authorization": []
-                    }
-                ],
                 "x-codegen-request-body-name": "body"
             }
         },
