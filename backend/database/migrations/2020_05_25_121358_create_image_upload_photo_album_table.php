@@ -13,9 +13,9 @@ class CreatePhotoPhotoAlbumTable extends Migration
      */
     public function up()
     {
-        Schema::create('photo_photo_album', function (Blueprint $table) {
+        Schema::create('image_upload_album', function (Blueprint $table) {
             $table->unsignedBigInteger('photo_album_id');
-            $table->unsignedBigInteger('photo_id');
+            $table->unsignedBigInteger('image_upload_id');
             $table->integer('updated_at')->default(time());
             $table->integer('created_at')->default(time());
 
@@ -23,9 +23,9 @@ class CreatePhotoPhotoAlbumTable extends Migration
                 ->references('id')
                 ->on('photo_albums')
                 ->onDelete('cascade');
-            $table->foreign('photo_id')
+            $table->foreign('image_upload_id')
                 ->references('id')
-                ->on('photos')
+                ->on('image_uploads')
                 ->onDelete('cascade');
         });
     }
@@ -37,6 +37,6 @@ class CreatePhotoPhotoAlbumTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('photo_photo_album');
+        Schema::dropIfExists('image_upload_album');
     }
 }

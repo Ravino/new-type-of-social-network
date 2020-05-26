@@ -83,6 +83,7 @@ Route::group(['middleware' => ['auth.jwt', 'track.activity']], function () {
     Route::patch('user/notifications/mark/read', 'Api\UserController@markNotificationsAsRead');
     Route::get('/user/sessions/active', 'Api\SessionController@index');
     Route::post('/user/sessions/close', 'Api\SessionController@close');
+    Route::get('/user/{userId}/photo_albums', 'api\PhotoAlbums@indexByUser');
 
     Route::get('user/follow/list', [UserSubscribeController::class, 'list']);
     Route::middleware(['user.get'])->group(static function() {
@@ -150,11 +151,7 @@ Route::group(['middleware' => ['auth.jwt', 'track.activity']], function () {
         Route::post('{id}', 'Api\PhotoAlbumController@update');
         Route::delete('{id}', 'Api\PhotoAlbumController@destroy');
 
-        Route::post('{id}/photos', 'Api\PhotoAlbumController@add');
-    });
-
-    Route::prefix('photo')->group(function () {
-        Route::post('/', 'Api\PhotoController@store');
+        Route::post('{id}/photos', 'Api\PhotoAlbumController@storePhotoInAlbum');
     });
 
     /**

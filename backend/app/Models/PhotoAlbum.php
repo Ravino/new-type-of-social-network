@@ -39,8 +39,8 @@ class PhotoAlbum extends Model
         return $this->belongsTo(User::class, 'author_id', 'id');
     }
 
-    public function photos()
+    public function images()
     {
-        return $this->belongsToMany(Photo::class);
+        return $this->belongsToMany(ImageUpload::class);
     }
 }
