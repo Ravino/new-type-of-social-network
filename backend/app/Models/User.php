@@ -260,9 +260,17 @@ class User extends Authenticatable implements JWTSubject
         return $this->hasMany(Session::class);
     }
 
-    public function photoAlbums()
+    public function photoAlbumsByAuthor()
     {
         return $this->hasMany(PhotoAlbum::class, 'author_id', 'id');
+    }
+
+    /**
+     * @return \Illuminate\Database\Eloquent\Relations\MorphMany
+     */
+    public function photoAlbums()
+    {
+        return $this->morphMany(PhotoAlbum::class, 'creatable');
     }
 
     public static function boot()

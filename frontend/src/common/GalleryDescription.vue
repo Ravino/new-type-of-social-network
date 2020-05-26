@@ -81,6 +81,7 @@
  import IconMessage from "../icons/IconMessage.vue";
  import IconShare from "../icons/IconShare.vue";
  import TextEditor from "./TextEditor.vue";
+ import PliziAttachment from '../classes/PliziAttachment.js';
 
  export default {
   name: "GalleryDescription",
@@ -90,7 +91,7 @@
     type: Object,
    },
       image: {
-          type: Object,
+          type: PliziAttachment,
           default: null,
       },
   },

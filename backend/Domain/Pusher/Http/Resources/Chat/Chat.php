@@ -17,7 +17,7 @@ class Chat extends JsonResource
      */
     public $userId;
 
-    public function __construct($resource, $user_id)
+    public function __construct($resource, $user_id = null)
     {
         $this->userId = $user_id;
         parent::__construct($resource);
