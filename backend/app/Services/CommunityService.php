@@ -35,7 +35,7 @@ class CommunityService
             'updated_at' => time(),
         ];
         $community = Community::create($data);
-        $community->users()->attach(auth()->user()->id, ['role' => Community::ROLE_AUTHOR]);
+        $community->users()->attach(auth()->user()->id, ['role' => Community::ROLE_AUTHOR, 'created_at' => time(), 'updated_at' => time()]);
         event(new CommunityCreated($community));
         return $community;
     }
