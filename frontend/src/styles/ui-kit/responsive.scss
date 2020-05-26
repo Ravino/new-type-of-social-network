@@ -129,10 +129,11 @@
             transform: translate(-80%, 40px) !important;
         }
     }
+
 }
 
 /*- md -*/
-@media (max-width: 767px) {
+@media (max-width: 768px) {
     .LoginPage,
     .UpdatePasswordPage,
     .HomePage,
@@ -279,6 +280,12 @@
                 flex: 0 0 100%;
                 max-width: 100%;
             }
+        }
+    }
+
+    .ChatsListPage {
+        #toolbarLeftColor {
+            display: none!important;
         }
     }
 
