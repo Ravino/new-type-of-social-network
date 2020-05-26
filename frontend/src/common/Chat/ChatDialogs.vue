@@ -24,6 +24,8 @@ import VueCustomScrollbar from 'vue-custom-scrollbar';
 import ChatDialogsFilter from './ChatDialogsFilter.vue';
 import ChatListItem from './ChatListItem.vue';
 
+import PliziDialog from '../../classes/PliziDialog.js';
+
 export default {
 name : 'ChatDialogs',
 components : { ChatDialogsFilter, ChatListItem, VueCustomScrollbar },
@@ -69,6 +71,7 @@ methods: {
 
     onRemoveChatDialog(evData){
         this.$root.$auth.dm.onRemoveDialog( evData.chatId );
+        this.$root.$dialogsKeyUpdater++;
 
         if (this.$root.$auth.dm.size > 0) {
             const newPickedChat = this.$root.$auth.dm.firstDialog.id;
@@ -92,6 +95,24 @@ methods: {
 
         this.$root.$auth.dm.dialogStateUpdated(evData.chatId, updatedFields);
         this.$root.$messagesKeyUpdater++;
+    },
+
+    remoteCreateDialog(evData){
+        let newDlg = new PliziDialog(evData.data);
+        newDlg.removeAttendee( this.$root.$auth.user.id );
+
+        this.$root.$auth.dm.onAddNewDialog( newDlg.toJSON() );
+        this.$root.$dialogsKeyUpdater++;
+    },
+
+    remoteAddAttendee(evData){
+        return this.remoteCreateDialog(evData);
+    },
+
+    remoteRemoveAttendee(evData){
+        if (evData.userId === this.$root.$auth.user.id) {
+            this.onRemoveChatDialog(evData);
+        }
     },
 
     async loadDialogsList() {
@@ -132,7 +153,7 @@ methods: {
 
 },
 
-created(){
+created() {
     this.$root.$on(this.$root.$auth.dm.loadEventName, ()=>{
         this.onDialogsListLoad(this.$root.$auth.dm.loadEventName);
     });
@@ -143,6 +164,12 @@ created(){
 
     this.$root.$on('RemoveChatDialog', this.onRemoveChatDialog);
     this.$root.$on('UpdateChatDialog', this.onUpdateChatDialog);
+
+    // эвенты через ВебСокеты
+    this.$root.$on('remoteCreateDialog', this.remoteCreateDialog);
+    this.$root.$on('remoteRemoveDialog', this.onRemoveChatDialog);
+    this.$root.$on('remoteAddAttendee',  this.remoteAddAttendee);
+    this.$root.$on('remoteRemoveAttendee',  this.remoteRemoveAttendee);
 },
 
 

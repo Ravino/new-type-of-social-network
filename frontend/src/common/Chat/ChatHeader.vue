@@ -9,6 +9,8 @@
                         v-bind:attendee="attItem"
                         v-bind:key="attItem.id">
                     </ChatHeaderAttendeeItem>
+
+                    <ChatHeaderAttendeePlus @ShowAddAttendeeModal="onShowAttendeesModal"></ChatHeaderAttendeePlus>
                 </div>
             </div>
 
@@ -75,6 +77,7 @@ import GroupChatAttendeesModal from './GroupChatAttendeesModal.vue';
 
 import ChatHeaderCompanion from './ChatHeaderCompanion.vue';
 import ChatHeaderAttendeeItem from './ChatHeaderAttendeeItem.vue';
+import ChatHeaderAttendeePlus from './ChatHeaderAttendeePlus.vue';
 
 import PliziDialog from '../../classes/PliziDialog.js';
 
@@ -84,6 +87,7 @@ components: {
     IconSearch,
     ChatHeaderCompanion,
     ChatHeaderAttendeeItem,
+    ChatHeaderAttendeePlus,
     ChatDatePicker,
     ChatHeaderMenu,
     CreateGroupChatModal,

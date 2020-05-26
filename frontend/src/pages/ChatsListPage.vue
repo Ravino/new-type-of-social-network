@@ -22,8 +22,8 @@
                      class="d-flex flex-column flex-lg-row flex bg-white-br20 overflow-hidden in-shadow">
 
                     <!-- @TGA если добавить обновляемый ключ - то будет постоянная перезагрузка списка сообщений с API -->
-<!--                    :key="`chatMessagesUsersList-`+ $root.$dialogsKeyUpdater"-->
-                    <ChatDialogs ref="chatMessagesUsersList"
+<!--                    :key="`chatDialogs-`+ $root.$dialogsKeyUpdater"-->
+                    <ChatDialogs ref="chatDialogs"
                                  v-bind:currentDialogID="currentDialogID"
                                  @SwitchToChat="onSwitchToChat"></ChatDialogs>
 
@@ -258,6 +258,12 @@ methods: {
     },
 
     addListeners(){
+        this.$root.$on('DialogsIsUpdated', ()=>{
+            if (this.$refs  &&  this.$refs.chatDialogs) {
+                this.$refs.chatDialogs.$forceUpdate();
+            }
+        });
+
         this.$root.$on('newMessageInDialog', this.addNewMessageNotification);
 
         this.$root.$on('newMessageInDialog', this.addNewChatMessageToList);
