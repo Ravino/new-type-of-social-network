@@ -4,22 +4,56 @@ namespace App\Http\Controllers\Api;
 
 use App\Http\Requests\PhotoAlbum\PhotoAlbumStore;
 use App\Http\Requests\PhotoAlbum\PhotoAlbumUpdate;
+use App\Http\Requests\Post\UploadFileRequest;
+use App\Http\Resources\PhotoAlbum\PhotoAlbumCollection;
+use App\Http\Resources\Post\AttachmentsCollection;
 use App\Models\Community;
+use App\Models\ImageUpload;
 use App\Models\PhotoAlbum;
 use App\Models\User;
+use App\Services\S3UploadService;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 
 class PhotoAlbumController extends Controller
 {
     /**
+     * @var S3UploadService
+     */
+    private $uploadService;
+
+    /**
+     * ImageUploadController constructor.
+     * @param S3UploadService $uploadService
+     */
+    public function __construct(S3UploadService $uploadService)
+    {
+        $this->uploadService = $uploadService;
+    }
+
+    /**
      * Display a listing of the resource.
      *
-     * @return \Illuminate\Http\Response
+     * @return PhotoAlbumCollection
      */
     public function index()
     {
-        //
+        $photo_albums = \Auth::user()
+            ->photoAlbums()
+            ->with(['creatable', 'author'])
+            ->get();
+
+        return new PhotoAlbumCollection($photo_albums);
+    }
+
+    public function indexByCommunity(Request $request, $community)
+    {
+        $photo_albums = Community::find($community)
+            ->photoAlbums()
+            ->with(['creatable', 'author'])
+            ->get();
+
+        return new PhotoAlbumCollection($photo_albums);
     }
 
     /**
@@ -43,6 +77,16 @@ class PhotoAlbumController extends Controller
                 'id' => $photo_album->id,
             ],
         ]);
+    }
+
+    public function storePhotoInAlbum(UploadFileRequest $request, $id)
+    {
+        $photo_ids = $this->uploadService->uploadFiles(new ImageUpload(), 'photoAlbum', $request->allFiles());
+        $photos = ImageUpload::whereIn('id', $photo_ids)->get();
+        $photoAlbum = PhotoAlbum::find($id);
+        $photoAlbum->images()->attach($photo_ids);
+
+        return new AttachmentsCollection($photos);
     }
 
     /**
