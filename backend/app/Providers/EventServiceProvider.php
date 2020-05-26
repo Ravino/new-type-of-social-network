@@ -19,9 +19,11 @@ use Domain\Neo4j\Listeners\CommunityListener;
 use Domain\Neo4j\Listeners\CommunitySubscribeListener;
 use Domain\Neo4j\Listeners\CommunityUnsubscribeListener;
 use Domain\Neo4j\Listeners\UserRelationsListener;
+use Domain\Pusher\Events\ChatActionEvent;
 use Domain\Pusher\Events\DestroyMessageEvent;
 use Domain\Pusher\Events\NewMessageEvent;
 use Domain\Pusher\Events\UserTypingEvent;
+use Domain\Pusher\Listeners\ChatActionListener;
 use Domain\Pusher\Listeners\NewNotification;
 use Domain\Pusher\Listeners\UserUpdateListener;
 use Domain\Pusher\Listeners\DestroyMessageNotification;
@@ -39,6 +41,9 @@ class EventServiceProvider extends ServiceProvider
     protected $listen = [
         \App\Events\Registered::class => [
             \App\Listeners\SendEmailVerificationNotification::class,
+        ],
+        ChatActionEvent::class => [
+            ChatActionListener::class
         ],
         NewMessageEvent::class => [
             NewMessageNotification::class

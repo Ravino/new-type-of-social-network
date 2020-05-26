@@ -1,7 +1,7 @@
 <template>
     <span class="pl-2" v-if="!userData.stats.isFriend">
         <AddFollow :userData="userData" v-if="!userData.stats.isFollow" title="Подписаться"></AddFollow>
-        <SubFollow :userData="userData" v-else-if="!userData.isOwner"></SubFollow>
+        <SubFollow :userData="userData" v-else-if="!userData.isOwner" title="Отписаться"></SubFollow>
         <AddToBlacklist v-if="!userData.isOwner" :userData="userData"></AddToBlacklist>
     </span>
 </template>

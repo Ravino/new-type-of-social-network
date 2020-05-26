@@ -563,6 +563,17 @@ class PliziAPIClass {
                 window.console.dir(data, 'from WebSockets server');
             }
 
+            if (channelID=== this.channel  &&  `user.typing`===data.event_type) {
+                this.emit('userIsTyping', {
+                    chatId :  data.chatId,
+                    user : data.data,
+                });
+            }
+
+            if (channelID=== this.channel  &&  `user.notification`===data.event_type) {
+                this.emit('UserNotification', data.data);
+            }
+
             if (channelID=== this.channel  &&  `message.new`===data.event_type) {
                 this.emit('newMessageInDialog', {
                     chatId :  data.data.chatId,
@@ -576,15 +587,34 @@ class PliziAPIClass {
                     messageId : data.data.messageId,
                 });
             }
-            if (channelID=== this.channel  &&  `user.typing`===data.event_type) {
-                this.emit('userIsTyping', {
-                    chatId :  data.chatId,
-                    user : data.data,
+
+            if (channelID=== this.channel  &&  `chat.removed`===data.event_type) {
+                this.emit('remoteRemoveDialog', {
+                    chatId :  data.data.id
                 });
             }
-            if (channelID=== this.channel  &&  `user.notification`===data.event_type) {
-                this.emit('UserNotification', data.data);
+
+            if (channelID=== this.channel  &&  `chat.created`===data.event_type) {
+                this.emit('remoteCreateDialog', {
+                    data :  data.data
+                });
             }
+
+            if (channelID=== this.channel  &&  `chat.attendee.appended`===data.event_type) {
+                this.emit('remoteAddAttendee', {
+                    data :  data.data
+                });
+            }
+
+            if (channelID=== this.channel  &&  `chat.attendee.removed`===data.event_type) {
+                console.dir(data, `data`);
+
+                this.emit('remoteRemoveAttendee', {
+                    chatId :  data.data.id,
+                    userId :  data.data.userId
+                });
+            }
+
         });
     }
 

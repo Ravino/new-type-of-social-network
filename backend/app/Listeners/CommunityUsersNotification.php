@@ -45,7 +45,9 @@ class CommunityUsersNotification implements ShouldQueue
             return [
                 'community' => [
                     'name' => $community->name,
-                    'primaryImage' => $community->primary_image,
+                    'primaryImage' => $community->avatar
+                        ? $community->avatar->s3_thumb_url
+                        : $community->primary_image,
                     'id' => $community->id,
                     'postId' => $post->id,
                     'postName' => Str::limit(strip_tags($post->body), 30),

@@ -221,7 +221,7 @@ computed : {
 methods : {
     showImage( image ){
         this.activeImageId = image.id;
-        this.activeImage = image;
+        this.activeImage = this.images.find(attach => attach.id === image.id);
     },
 
     isAlbum( image ){

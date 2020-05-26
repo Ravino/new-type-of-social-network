@@ -1,6 +1,6 @@
 <template>
     <nav class="navbar plz-guest-navbar">
-        <div class="container-fluid px-0 py-0 --w-100 my-0">
+        <div class="container-fluid px-0 px-md-3 py-0 --w-100 my-0">
             <div class="row w-100 px-0 mx-auto">
                 <div class="col-12 --col-sm-3 col-md-2 d-flex align-items-center justify-content-center pl-0 ">
                     <router-link to="/" tag="a" class="navbar-brand mx-auto ml-md-0 mr-md-auto mb-2 mb-md-0 --d-flex justify-content-center">

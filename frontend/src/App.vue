@@ -205,7 +205,7 @@ methods: {
 
 
 created(){
-    const style = ['padding: 1rem;',
+    const style = ['padding: 0.5rem;',
         'background: rgb(0, 123, 255);',
         'font-size: 1.4/3 Verdana;',
         'font-weight: bold;',
