@@ -115,6 +115,11 @@ Route::group(['middleware' => ['auth.jwt', 'track.activity']], function () {
         Route::post('favorite/subscribe', [CommunityController::class, 'addFavorite']);
         Route::delete('favorite/unsubscribe/{groupId}', [CommunityController::class, 'deleteFavorite']);
 
+        Route::middleware(['community.get', 'community.getMember'])->group(static function() {
+            Route::post('admin/{groupId}/{userId}', [CommunityController::class, 'adminCreate']);
+            Route::delete('admin/{groupId}/{userId}', [CommunityController::class, 'adminDelete']);
+        });
+
         Route::middleware(['community.get'])->prefix('requests')->group(static function() {
             Route::post('create/{groupId}', [CommunityController::class, 'requestCreate']);
             Route::middleware(['community.isOwner'])->group(static function() {
@@ -149,7 +154,7 @@ Route::group(['middleware' => ['auth.jwt', 'track.activity']], function () {
         Route::post('attachments', 'Api\CommentController@uploadAttachments');
     });
 
-    Route::prefix('photo_albums')->group(function () {
+    Route::prefix('photo-albums')->group(function () {
         Route::get('/', 'Api\PhotoAlbumController@index');
         Route::get('/community/{community}', 'Api\PhotoAlbumController@indexByCommunity');
         Route::post('/', 'Api\PhotoAlbumController@store');

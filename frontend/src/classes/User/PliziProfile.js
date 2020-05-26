@@ -175,6 +175,14 @@ class PliziUser {
         }
     }
 
+    /**
+     * возвращает имя/фамилию партнёра (жены/мужа)
+     * @returns {string}
+     */
+    get partnerFullname() {
+        return this.relationshipUser.profile.firstName +' '+ this.relationshipUser.profile.lastName;
+    }
+
     get family(){
         if (this.__RELATIONSHIP_MARRIED === this._relationshipId) {
             switch (this._sex) {

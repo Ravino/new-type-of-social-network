@@ -12,6 +12,7 @@ body {
     background-color: $plzBodyBG;
 }
 
+.GuestSearchResultsPage,
 .ForDevelopersPage,
 .AdvertisementPage,
 .RulesPage,
@@ -653,6 +654,7 @@ $dotSize: 2px;
     }
 }
 
+.GuestSearchResultsPage,
 .AdvertisementPage,
 .AboutPage,
 .RulesPage,
@@ -663,4 +665,12 @@ $dotSize: 2px;
     }
 }
 
+.spinner-color {
+    color: #b3b6d0!important;
+    font-size: 2em!important;
+    h3 {
+        font-size: 16px!important;
+        font-weight: normal!important;
+    }
+}
 

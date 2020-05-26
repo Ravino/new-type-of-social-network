@@ -5,14 +5,50 @@
             <h6 class="plz-sf-title w-auto mt-2 ml-3">Рекомендуемые</h6>
         </div>
 
-        <div class="plz-recommended-communities-list pb-2" >
-            <div class="alert alert-info">Тут будут <br> <b>Рекомендуемые сообщества</b></div>
+        <div class="plz-recommended-communities-list pb-2">
+            <RecommendedItem v-for="community in communities" :community="community"></RecommendedItem>
         </div>
     </div>
 </template>
 
 <script>
-export default {
-name: 'RecommendedCommunities'
-}
+    import PliziCommunity from "../../classes/PliziCommunity.js";
+    import RecommendedItem from "./RecommendedItem.vue";
+
+    export default {
+        name: 'RecommendedCommunities',
+        components: {RecommendedItem},
+        data() {
+            return {
+                isDataReady: false,
+                communities: [],
+            };
+        },
+        methods: {
+            async getList() {
+                this.isDataReady = false;
+                this.communities = [];
+                let apiResponse = null;
+
+                try {
+                    apiResponse = await this.$root.$api.$communities.recommended()
+                } catch (e) {
+                    window.console.warn(e.detailMessage);
+                }
+
+                if (apiResponse !== null) {
+                    this.communities = [];
+
+                    apiResponse.list.map((srItem) => {
+                        this.communities.push(new PliziCommunity(srItem));
+                    });
+
+                    this.isDataReady = true;
+                }
+            }
+        },
+        mounted() {
+            this.getList();
+        }
+    }
 </script>

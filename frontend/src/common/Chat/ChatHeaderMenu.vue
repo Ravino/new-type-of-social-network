@@ -16,11 +16,7 @@
                 </span>
             </div>
 
-            <div class="nav-item">
-                <span class="dropdown-item px-3 py-1 cursor-pointer" @click.prevent="onRemoveCurrentChatClick">
-                    Удалить этот чат
-                </span>
-            </div>
+            <div class="dropdown-divider"></div>
 
             <div class="nav-item">
                 <span class="dropdown-item px-3 py-1 cursor-pointer" @click.prevent="onAddAttendeeClick">
@@ -31,6 +27,14 @@
             <div class="nav-item">
                 <span class="dropdown-item px-3 py-1 cursor-pointer" @click.prevent="onRemoveAttendeeClick">
                     Удалить собеседника из чата
+                </span>
+            </div>
+
+            <div class="dropdown-divider"></div>
+
+            <div class="nav-item">
+                <span class="dropdown-item px-3 py-1 cursor-pointer" @click.prevent="onRemoveCurrentChatClick">
+                    Удалить этот чат
                 </span>
             </div>
         </div>

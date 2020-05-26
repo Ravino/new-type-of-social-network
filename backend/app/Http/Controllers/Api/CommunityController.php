@@ -17,6 +17,7 @@ use App\Http\Resources\User\Image;
 use App\Models\Community;
 use App\Models\CommunityAttachment;
 use App\Models\CommunityHeader;
+use App\Models\CommunityMember;
 use App\Models\CommunityRequest as CommunityRequestModel;
 use App\Models\CommunityTheme;
 use App\Services\CommunityService;
@@ -127,15 +128,24 @@ class CommunityController extends Controller
      * @param int $id
      * @return CommunityUserCollection|JsonResponse
      */
-    public function members(Request $request, int $id) {
+    public function members(Request $request, int $id)
+    {
         $role = $request->query('role');
-        $community = Community::with(['users' => function($query) use ($role) {
-            if($role) {
-                $query->wherePivot('role', $role);
+        $community = Community::with([
+            'users' => static function ($query) use ($role, $request) {
+                if ($role) {
+                    $query->wherePivot('role', $role);
+                }
+                $query
+                    ->where('id', '!=', auth()->user()->id)
+                    ->limit($request->query('limit', 10))
+                    ->offset($request->query('offset', 0));
             }
-        }])->find($id);
-        if($community) {
-            return new CommunityUserCollection($community->users);
+        ])
+            ->showedForAll()
+            ->find($id);
+        if ($community) {
+            return new CommunityUserCollection($community->users, $community->role);
         }
         return response()->json(['message' => 'Сообщество не найдено'], 404);
     }
@@ -398,6 +408,57 @@ class CommunityController extends Controller
             ->withCount('members')
             ->get();
 
+        /**
+         * @todo add community to full list
+         */
         return new CommunityCollection($communities, false);
+    }
+
+    /**
+     * @param Request $request
+     * @return JsonResponse
+     */
+    public function adminCreate(Request $request)
+    {
+        /** @var Community $community */
+        $community = $request->community;
+
+        $updated = CommunityMember::where('community_id', $community->id)
+            ->where('user_id', $request->userId)
+            ->update([
+                'role' => Community::ROLE_ADMIN,
+            ]);
+        if ($updated) {
+            return response()->json([
+                'message' => 'Роль назначили',
+            ]);
+        }
+        return response()->json([
+            'message' => 'Ошибка назначения роли',
+        ], 422);
+    }
+
+    /**
+     * @param Request $request
+     * @return JsonResponse
+     */
+    public function adminDelete(Request $request)
+    {
+        /** @var Community $community */
+        $community = $request->community;
+
+        $updated = CommunityMember::where('community_id', $community->id)
+            ->where('user_id', $request->userId)
+            ->update([
+                'role' => Community::ROLE_USER,
+            ]);
+        if ($updated) {
+            return response()->json([
+                'message' => 'Роль убрана',
+            ]);
+        }
+        return response()->json([
+            'message' => 'Ошибка убирания роли',
+        ], 422);
     }
 }

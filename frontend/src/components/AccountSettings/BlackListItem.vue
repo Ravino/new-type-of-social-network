@@ -30,12 +30,9 @@
                     </p>
                 </div>
             </div>
-            <button
-                type="button"
-                class="btn btn-primary btn-sm delete-from-blacklist"
-                title="Удалить из черного листа"
-                @click="deleteFromBlacklist"
-                style="cursor: pointer;">
+
+            <button type="button" class="btn btn-link" title="Удалить из чёрного списка"
+                    @click="onClickRemoveFromBlackList">
                 <i class="fas fa-times"></i>
             </button>
         </div>
@@ -43,42 +40,24 @@
 </template>
 
 <script>
-    import IconLocation from '../../icons/IconLocation.vue';
-import PliziBlackListItem from "../../classes/PliziBlackListItem";
+import IconLocation from '../../icons/IconLocation.vue';
+import PliziBlackListItem from '../../classes/PliziBlackListItem.js';
 
 export default {
 name : 'BlackListItem',
-    components: {
-        IconLocation
-    },
+components: {
+    IconLocation
+},
 props : {
     userItem: PliziBlackListItem
 },
 
-data(){
-    return {
-
-    }
-},
-
 methods: {
-    async deleteFromBlacklist() {
-        let apiResponse = null;
-
-        try {
-            apiResponse = await this.$root.$api.$users.deleteFromBlacklist(this.userItem.id);
-        } catch (e) {
-            window.console.warn(e.detailMessage);
-            throw e;
-        }
-
-        return true;
-
+    onClickRemoveFromBlackList(){
+        this.$emit('RemoveFromBlackList', {
+            userId: this.userItem.id
+        });
     }
-},
-
-beforeMount(){
-    // console.log(this.userItem.fullName);
 }
 
 }

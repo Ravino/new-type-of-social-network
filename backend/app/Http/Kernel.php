@@ -3,6 +3,7 @@
 namespace App\Http;
 
 use App\Http\Middleware\GetCommunity;
+use App\Http\Middleware\GetCommunityMember;
 use App\Http\Middleware\GetUser;
 use App\Http\Middleware\IsOwnerOfCommunity;
 use App\Http\Middleware\PrivacyRole;
@@ -78,6 +79,7 @@ class Kernel extends HttpKernel
          * Community
          */
         'community.get' => GetCommunity::class,
+        'community.getMember' => GetCommunityMember::class,
         'community.isOwner' => IsOwnerOfCommunity::class,
         /**
          * User
