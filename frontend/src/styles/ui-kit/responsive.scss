@@ -129,6 +129,7 @@
             transform: translate(-80%, 40px) !important;
         }
     }
+
 }
 
 /*- md -*/
@@ -280,6 +281,19 @@
                 max-width: 100%;
             }
         }
+
+        .plz-guest-navbar {
+            flex: 0 0 100%;
+            max-width: 100%;
+            padding-left: 15px;
+            padding-right: 15px;
+        }
+    }
+
+    .ChatsListPage {
+        #toolbarLeftColor {
+            display: none!important;
+        }
     }
 
 }/*- max-width: 767px -*/
@@ -380,5 +394,17 @@
         width: 100%;
         margin-top: 10px;
     }
+
+    .ForDevelopersPage,
+    .AdvertisementPage,
+    .RulesPage,
+    .AboutPage {
+
+        .plz-guest-navbar {
+            padding-left: 0;
+            padding-right: 0;
+        }
+    }
+
 
 }

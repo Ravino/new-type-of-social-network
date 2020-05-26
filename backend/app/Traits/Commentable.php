@@ -14,6 +14,6 @@ trait Commentable
      */
     public function comments()
     {
-        return $this->morphMany(Comment::class, 'commentable')->with('reply','author', 'author.profile', 'author.profile.avatar');
+        return $this->morphMany(Comment::class, 'commentable')->whereNull('reply_on')->with('children', 'author', 'author.profile', 'author.profile.avatar');
     }
 }

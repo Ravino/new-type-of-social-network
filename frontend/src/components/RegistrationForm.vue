@@ -64,7 +64,7 @@
                 </div>
             </div>
 
-            <div class="form-group"
+            <div class="form-group d-xl-none"
                  :class="{ 'has-error': !!birthdayError, 'has-success': isSuccessBirthday }">
                 <i class="icon icon-calendar"></i>
                 <label for="userBirth" class="d-none">Дата рождения</label>
@@ -82,6 +82,24 @@
 
                 <div class="invalid-feedback">
                     <p class="text-danger">{{ birthdayError }}</p>
+                </div>
+            </div>
+
+            <div class="form-group d-xl-block d-none"
+                 :class="{ 'has-error': !!birthdayError, 'has-success': isSuccessBirthday }">
+                <i class="icon icon-calendar"></i>
+                <label for="userBirth" class="d-none">Дата рождения</label>
+                <PickerDate id="userBirth"
+                            v-model="model.birthday"
+                            :inputProps="pickerDateInputPros"
+                            :class="{ 'is-invalid': !!birthdayError, 'is-valid': isSuccessBirthday }"
+                            :clazz="'lr-input form-control'"
+                            ref="userBirth"/>
+
+                <div class="invalid-feedback" :class="{'d-block': !!birthdayError}">
+                    <p class="text-danger">
+                        <span v-html="birthdayError"></span>
+                    </p>
                 </div>
             </div>
 
@@ -110,9 +128,13 @@
 <script>
     import {required, minLength, maxLength, email} from 'vuelidate/lib/validators';
     import {isCorrectHumanName, isValidRegistrationBirthDay, notHaveSpace} from '../validators/validators.js';
+    import PickerDate from "../common/PickerDate.vue";
 
     export default {
         name: 'RegistrationForm',
+        components: {
+            PickerDate,
+        },
         computed: {
             isSuccessFirstName() {
                 return (!this.$v.model.firstName.$invalid || !(!!this.serverRegMessages.firstName)) && !
@@ -186,7 +208,7 @@
             birthdayError() {
                 if (this.$v.model.birthday.$error) {
                     if (!this.$v.model.birthday.isValidBirthday) {
-                        return 'Укажите коррекнтую дату.';
+                        return 'Укажите корректную дату.';
                     }
                 } else if (this.serverRegMessages.birthday) {
                     return this.serverRegMessages.birthday;
@@ -217,6 +239,9 @@
                     other: ``,
                 },
                 isLoad: false,
+                pickerDateInputPros: {
+                    placeholder: "Дата рождения",
+                },
             }
         },
 
@@ -261,45 +286,6 @@
         },
 
         methods: {
-            async startRegistration() {
-                this.isLoad = true;
-                this.$v.$touch();
-                this.isServerError = false;
-                this.serverErrorText = null;
-
-                for (let [key, value] of Object.entries(this.serverRegMessages)) {
-                    this.serverRegMessages[key] = ``;
-                }
-
-                let regData = {
-                    email: this.model.email.trim(),
-                    firstName: this.model.firstName.trim(),
-                    lastName: this.model.lastName.trim(),
-                    birthday: this.model.birthday.trim()
-                };
-
-                let regResponse = null;
-                try {
-                    regResponse = await this.$root.$api.register(regData);
-                } catch (e) {
-                    this.isLoad = false;
-
-                    if (e.status === 422) {
-                        this.processServerErrors(e, regData);
-                    } else if (e.status >= 500) {
-                        this.isServerError = true;
-                        this.serverErrorText = 'Извините у нас возникла ошибка, попробуйте позже ещё раз.';
-                    } else {
-                        window.console.warn(e.message);
-                    }
-                }
-
-                if (regResponse && regResponse.status === 201) {
-                    this.isLoad = false;
-                    this.$emit('successRegistration', this.model);
-                }
-            },
-
             processServerErrors(error, oldRegData) {
                 // TODO: @tga довести до ума обработку ошибок
                 this.isServerError = true;
@@ -324,15 +310,72 @@
                     }
                 }
             },
-
             registrationKeyDownCheck(ev) {
                 if (13 === ev.keyCode)
                     return this.startRegistration();
             },
-
             onInput(fieldName) {
                 this.serverRegMessages[fieldName] = null;
                 this.$v.model[fieldName].$touch();
+            },
+            getFormData() {
+                let date = this.model.birthday;
+
+                if (date instanceof Date) {
+                    if (isValidRegistrationBirthDay(this.model.birthday)) {
+                        let dd = date.getDate();
+                        let mm = date.getMonth()+1;
+                        let yyyy = date.getFullYear();
+
+                        if(dd < 10) dd = '0'+dd;
+                        if(mm < 10) mm='0'+mm;
+
+                        date = yyyy + '-' + mm + '-' + dd;
+                    } else {
+                        date = 'Invalid date';
+                    }
+                }
+
+                return {
+                    email: this.model.email.trim(),
+                    firstName: this.model.firstName.trim(),
+                    lastName: this.model.lastName.trim(),
+                    birthday: date,
+                };
+            },
+
+            async startRegistration() {
+                this.isLoad = true;
+                this.$v.$touch();
+                this.isServerError = false;
+                this.serverErrorText = null;
+
+                for (let [key, value] of Object.entries(this.serverRegMessages)) {
+                    this.serverRegMessages[key] = ``;
+                }
+
+                let regData = this.getFormData();
+                let regResponse = null;
+
+                try {
+                    regResponse = await this.$root.$api.register(regData);
+                } catch (e) {
+                    this.isLoad = false;
+
+                    if (e.status === 422) {
+                        this.processServerErrors(e, regData);
+                    } else if (e.status >= 500) {
+                        this.isServerError = true;
+                        this.serverErrorText = 'Извините у нас возникла ошибка, попробуйте позже ещё раз.';
+                    } else {
+                        window.console.warn(e.message);
+                    }
+                }
+
+                if (regResponse && regResponse.status === 201) {
+                    this.isLoad = false;
+                    this.$emit('successRegistration', this.model);
+                }
             },
         },
 

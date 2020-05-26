@@ -222,6 +222,9 @@ class Community extends Model
 
     public function friends($limit = 5, $offset = 0)
     {
+        if (Auth::guest()) {
+            return [];
+        }
         return (new UserService())->getFriendsFromCommunity(Auth::user()->id, $this->id, $limit, $offset);
     }
 
@@ -242,7 +245,7 @@ class Community extends Model
     {
         $query->whereHas('role', static function (Builder $query) {
             $query->where([
-                'user_id' => Auth::user()->id,
+                'user_id' => Auth::guest() ? '0' : Auth::user()->id,
             ]);
         });
     }
@@ -255,7 +258,7 @@ class Community extends Model
         $query->whereHas('role', static function (Builder $query) {
             $query
                 ->where([
-                    'user_id' => Auth::user()->id,
+                    'user_id' => Auth::guest() ? '0' : Auth::user()->id,
                 ])
                 ->where(static function (Builder $query) {
                     $query
@@ -294,7 +297,7 @@ class Community extends Model
                     ->where('privacy', '!=', self::PRIVACY_PRIVATE)
                     ->orWhereHas('role', static function (Builder $query) {
                         $query->where([
-                            'user_id' => Auth::user()->id,
+                            'user_id' => Auth::guest() ? '0' : Auth::user()->id,
                         ]);
                     });
             });
@@ -308,5 +311,13 @@ class Community extends Model
         }
 
         return $this->isMember($user);
+    }
+
+    /**
+     * @return MorphMany
+     */
+    public function photoAlbums()
+    {
+        return $this->morphMany(PhotoAlbum::class, 'creatable');
     }
 }

@@ -21,6 +21,7 @@ use App\Models\CommunityRequest as CommunityRequestModel;
 use App\Models\CommunityTheme;
 use App\Services\CommunityService;
 use App\Services\S3UploadService;
+use Auth;
 use Exception;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Http\JsonResponse;
@@ -91,10 +92,14 @@ class CommunityController extends Controller
                 break;
         }
 
-        $communities = $query
-            ->limit($request->query('limit', 10))
-            ->offset($request->query('offset', 0))
-            ->get();
+        if (Auth::guest()) {
+            $query->limit(10);
+        } else {
+            $query
+                ->limit($request->query('limit', 10))
+                ->offset($request->query('offset', 0));
+        }
+        $communities = $query->get();
 
         $communities->each(static function($community) {
             $community->load('onlyFiveMembers');
