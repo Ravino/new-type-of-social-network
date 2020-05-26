@@ -127,15 +127,24 @@ class CommunityController extends Controller
      * @param int $id
      * @return CommunityUserCollection|JsonResponse
      */
-    public function members(Request $request, int $id) {
+    public function members(Request $request, int $id)
+    {
         $role = $request->query('role');
-        $community = Community::with(['users' => function($query) use ($role) {
-            if($role) {
-                $query->wherePivot('role', $role);
+        $community = Community::with([
+            'users' => static function ($query) use ($role, $request) {
+                if ($role) {
+                    $query->wherePivot('role', $role);
+                }
+                $query
+                    ->where('id', '!=', auth()->user()->id)
+                    ->limit($request->query('limit', 10))
+                    ->offset($request->query('offset', 0));
             }
-        }])->find($id);
-        if($community) {
-            return new CommunityUserCollection($community->users);
+        ])
+            ->showedForAll()
+            ->find($id);
+        if ($community) {
+            return new CommunityUserCollection($community->users, $community->role);
         }
         return response()->json(['message' => 'Сообщество не найдено'], 404);
     }

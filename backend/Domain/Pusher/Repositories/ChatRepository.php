@@ -66,6 +66,21 @@ class ChatRepository
     }
 
     /**
+     * Получение чата по ID
+     *
+     * @param string $id
+     * @return ChatResource
+     */
+    public function getChatByIdWithAllAttendees(string $id)
+    {
+        $items = Chat::with(['attendees'])->where('_id', $id)
+            ->orderBy('last_message_time', 'desc')
+            ->first();
+
+        return new ChatResource($items);
+    }
+
+    /**
      * Возвращает список идентификаторов пользователей,
      * которые являются участниками чата. Если указана
      * $exclude_id, этот пользователь будет исключен из результатирующего
@@ -114,7 +129,7 @@ class ChatRepository
         $chat = Chat::find($chat_id);
         $chat->attendees()->attach($author_id);
         $chat->attendees()->attach($receiver_id);
-        event(new ChatActionEvent($this->getUsersIdListFromChat($chat_id, \Auth::user()->id), 'chat.created', $this->getChatById($chat_id)));
+        event(new ChatActionEvent($this->getUsersIdListFromChat($chat_id, \Auth::user()->id), 'chat.created', $this->getChatByIdWithAllAttendees($chat_id)));
         return $chat_id;
     }
 
@@ -138,7 +153,7 @@ class ChatRepository
             $chat->attendees()->attach($receiver_id);
         }
         $chat_id = $chat->refresh()->id;
-        event(new ChatActionEvent($this->getUsersIdListFromChat($chat_id, \Auth::user()->id), 'chat.created', $this->getChatById($chat_id)));
+        event(new ChatActionEvent($this->getUsersIdListFromChat($chat_id, \Auth::user()->id), 'chat.created', $this->getChatByIdWithAllAttendees($chat_id)));
         return $chat_id;
     }
 
@@ -161,7 +176,7 @@ class ChatRepository
         /** @var Chat $chat */
         $chat = Chat::find($chat_id);
         $chat->attendees()->attach($user_id);
-        event(new ChatActionEvent($this->getUsersIdListFromChat($chat_id, \Auth::user()->id), 'chat.attendee.appended', $this->getChatById($chat_id)));
+        event(new ChatActionEvent($this->getUsersIdListFromChat($chat_id, \Auth::user()->id), 'chat.attendee.appended', $this->getChatByIdWithAllAttendees($chat_id)));
         return $this->getChatById($chat_id);
     }
 
@@ -173,8 +188,8 @@ class ChatRepository
     public function removeFromChartParty($chat_id, $user_id) {
         /** @var Chat $chat */
         $chat = Chat::find($chat_id);
-        $chat->attendees()->detach($user_id);
         event(new ChatActionEvent($this->getUsersIdListFromChat($chat_id, \Auth::user()->id), 'chat.attendee.removed', ['id' => $chat_id, 'userId' => $user_id]));
+        $chat->attendees()->detach($user_id);
         return $this->getChatById($chat_id);
     }
 

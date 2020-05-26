@@ -213,9 +213,9 @@
                                 </p>
                             </div>
                         </div>
-                        <div class="post-watched-counter ml-4">
+                        <div class="post-watched-counter ml-4" @click="isShowComment = !isShowComment">
                             <IconMessage/>
-                            <span>{{ post.commentsCount | space1000 }}</span>
+                            <span>{{ comments.length | space1000 }}</span>
                         </div>
 
                         <div class="post-watched-counter ml-4" @click="$emit('onShare', post)">
@@ -231,6 +231,30 @@
                         </div>
                     </div>
                 </div>
+                <div class="plz-comments"
+                    v-for="comment in comments"
+                >
+                    <CommentItem
+                        :key="comment.id"
+                        :commentId="comment.id"
+                        :text="comment.body"
+                        :authorId="comment.author.id"
+                        :name="comment.author.profile.firstName"
+                        :surname="comment.author.profile.lastName"
+                        :avatar="comment.author.profile.avatar.image.medium.path"
+                        :postId="post.id"
+                        :createdAt="comment.createdAt"
+                        @onDelete="removeComment"
+                        @update="editComment"
+                    >
+                    </CommentItem>
+                </div>
+                <CommentPost
+                    :postId="post.id"
+                    v-if="!isShowComment"
+                    @updateComments="addNewComment"
+                >
+                </CommentPost>
             </div>
         </template>
 
@@ -245,7 +269,6 @@
                 </div>
             </div>
         </template>
-
     </div>
 </template>
 
@@ -264,11 +287,15 @@
     import PliziPost from '../../classes/PliziPost.js';
     import Gallery from '../Gallery.vue';
     import LinkMixin from '../../mixins/LinkMixin.js';
+    import CommentPost from "../../components/CommentPost.vue";
+    import CommentItem from "../../components/CommentItem.vue";
     import AvatarMixin from '../../mixins/AvatarMixin.js';
 
     export default {
         name: 'Post',
         components: {
+            CommentItem,
+            CommentPost,
             Gallery,
             IconShare,
             IconMessage,
@@ -292,6 +319,8 @@
             return {
                 recursivePostsSimple: [],
                 recursivePosts: [],
+                isShowComment: true,
+                comments: [],
             }
         },
         computed: {
@@ -329,6 +358,24 @@
             },
         },
         methods: {
+            editComment(newComment) {
+                this.comments = this.comments.map(comment => comment.id === newComment.id ? newComment : comment);
+            },
+            removeComment(commentId) {
+                this.comments = this.comments.filter(comment => comment.id !== commentId);
+            },
+            addNewComment(newComment) {
+                this.comments.push(newComment);
+            },
+            async getCommentsByPostId() {
+                let response = null;
+                try {
+                   response = await this.$root.$api.$post.getCommentsById(this.post.id);
+                    this.comments = response.data.list;
+                } catch (e) {
+                    console.warn(e.detailMessage);
+                }
+            },
             openVideoModal(shared = false) {
                 let videoLink;
 
@@ -418,6 +465,8 @@
             if (this.post) {
                 this.recursiveParent(this.post);
             }
+            this.getCommentsByPostId();
+
         },
     }
 </script>

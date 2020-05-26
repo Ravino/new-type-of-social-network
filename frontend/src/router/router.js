@@ -23,6 +23,7 @@ import CommunitiesPopularPage from '../pages/CommunitiesPopularPage.vue';
 import CommunityPage from '../pages/CommunityPage.vue';
 import Error404Page from '../pages/Error404Page.vue';
 import CommunityRulesPage from "../pages/CommunityRulesPage.vue";
+import PhotoalbumsPage from "../pages/PhotoalbumsPage.vue";
 import VideosPage from "../pages/VideosPage.vue";
 import CommunityFriendsPage from "../pages/CommunityFriendsPage.vue";
 import CommunitySettingsPage from "../pages/CommunitySettingsPage.vue";
@@ -33,10 +34,13 @@ import AdvertisementPage from "../pages/AdvertisementPage.vue";
 import ForDevelopersPage from "../pages/ForDevelopersPage.vue";
 import FollowListPage from "../pages/FollowListPage.vue";
 import ActiveSessionsPage from "../pages/ActiveSessionsPage.vue";
+import GuestSearchResultsPage from "../pages/GuestSearchResultsPage";
+import CommunityMembersPage from "../pages/CommunityMembersPage.vue";
 
 const routes = [
     {path: '/', redirect: '/login', isGuest: true},
     {path: '/', component: HomePage, name: 'HomePage', meta: {title: 'Plizi: Стартовая', isGuest: true}},
+    {path: '/guest-search-results', component: GuestSearchResultsPage, name: 'GuestSearchResultsPage', meta: {title: 'Plizi: Результаты поиска', isGuest: true}},
     {path: '/login', component: LoginPage, name: 'LoginPage', meta: {title: 'Plizi: Авторизация', isGuest: true}},
     {path: '/logout', component: LogoutPage, name: 'LogoutPage', meta: {title: 'Plizi: Выход', isGuest: true}},
     {path: '/password/update', component: UpdatePasswordPage, name: 'UpdatePasswordPage', meta: {title: 'Plizi: Обновление пароля', props: true, isGuest: true}},
@@ -62,11 +66,13 @@ const routes = [
     {path: '/community-rules', component: CommunityRulesPage, name: 'CommunityRulesPage', meta: {title: 'Plizi: Правила сообществ'}, props: true },
     {path: '/manage-communities', component: CommunitiesManagePage, name: 'CommunitiesManagePage', meta: {title: 'Plizi: Управление сообществами'}, props: true },
     {path: '/community-settings-:id', component: CommunitySettingsPage, name: 'CommunitySettingsPage', meta: {title: 'Plizi: Управление сообществом'}, props: true },
+    {path: '/members-:id', component: CommunityMembersPage, name: 'CommunityMembersPage', meta: {title: 'Plizi: Участники сообщества'}, props: true },
     {path: '/popular-communities', component: CommunitiesPopularPage, name: 'CommunitiesPopularPage', meta: {title: 'Plizi: Популярные сообщества'}, props: true },
     {path: '/community-friends-:id', component: CommunityFriendsPage, name: 'CommunityFriendsPage', meta: {title: 'Plizi: Популярные сообщества'}, props: true },
     {path: '/community-requests-:id', component: CommunityRequestsPage, name: 'CommunityRequestsPage', meta: {title: 'Plizi: Запросы на вытупление в сообщество'}, props: true },
     {path: '/community-:id', component: CommunityPage, name: 'CommunityPage', meta: {title: 'Plizi: Популярные сообщества'}, props: true },
     {path: '*', component: Error404Page, name: 'Error404Page', meta: {title: 'Page not found', isNotFound: true} },
+    {path: '/photoalbums', component: PhotoalbumsPage, name: 'PhotoalbumsPage', meta: {title: 'Plizi: Фотоальбомы'}, props: true },
     {path: '/videos', component: VideosPage, name: 'VideosPage', meta: {title: 'Plizi: Видео'}, props: true },
     {path: '/active-sessions', component: ActiveSessionsPage, name: 'ActiveSessionsPage', meta: {title: 'Plizi: Активные сессии'}, props: true },
 ];
