@@ -131,6 +131,7 @@ class CommunityController extends Controller
                     $query->wherePivot('role', $role);
                 }
                 $query
+                    ->where('id', '!=', auth()->user()->id)
                     ->limit($request->query('limit', 10))
                     ->offset($request->query('offset', 0));
             }
@@ -138,7 +139,7 @@ class CommunityController extends Controller
             ->showedForAll()
             ->find($id);
         if ($community) {
-            return new CommunityUserCollection($community->users);
+            return new CommunityUserCollection($community->users, $community->role);
         }
         return response()->json(['message' => 'Сообщество не найдено'], 404);
     }
