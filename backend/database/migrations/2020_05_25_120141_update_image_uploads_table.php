@@ -13,7 +13,7 @@ class UpdateImageUploadsTable extends Migration
      */
     public function up()
     {
-        Schema::create('image_uploads', function (Blueprint $table) {
+        Schema::table('image_uploads', function (Blueprint $table) {
             $table->integer('likes')->default(0);
             $table->string('creatable_id');
             $table->string('creatable_type')->nullable();
@@ -27,7 +27,7 @@ class UpdateImageUploadsTable extends Migration
      */
     public function down()
     {
-        Schema::table('photos', function (Blueprint $table) {
+        Schema::table('image_uploads', function (Blueprint $table) {
             $table->dropColumn('likes');
             $table->dropColumn('creatable_id');
             $table->dropColumn('creatable_type');

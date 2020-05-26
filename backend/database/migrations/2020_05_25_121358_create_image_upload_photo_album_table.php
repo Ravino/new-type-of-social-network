@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreatePhotoPhotoAlbumTable extends Migration
+class CreateImageUploadPhotoAlbumTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,9 +13,9 @@ class CreatePhotoPhotoAlbumTable extends Migration
      */
     public function up()
     {
-        Schema::create('image_upload_album', function (Blueprint $table) {
+        Schema::create('image_upload_photo_album', function (Blueprint $table) {
             $table->unsignedBigInteger('photo_album_id');
-            $table->unsignedBigInteger('image_upload_id');
+            $table->integer('image_upload_id');
             $table->integer('updated_at')->default(time());
             $table->integer('created_at')->default(time());
 
@@ -37,6 +37,6 @@ class CreatePhotoPhotoAlbumTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('image_upload_album');
+        Schema::dropIfExists('image_upload_photo_album');
     }
 }
