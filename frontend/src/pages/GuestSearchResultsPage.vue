@@ -25,9 +25,9 @@
                         <h4>Сообщества</h4>
                         <hr>
                         <ul v-if="communitySearchResults  &&  (communitySearchResults.length > 0)" class="list-unstyled mb-0">
-                            <CommunitySearchResultItem v-for="(srItem, srIndex) in communitySearchResults"
+                            <GuestCommunitySearchResultItem v-for="(srItem, srIndex) in communitySearchResults"
                                               :key="srIndex" :community="srItem">
-                            </CommunitySearchResultItem>
+                            </GuestCommunitySearchResultItem>
                         </ul>
                         <div v-else>
                             <div class="alert alert-info">
@@ -49,13 +49,13 @@ import Spinner from '../common/Spinner.vue';
 
 import PliziUser from '../classes/PliziUser.js';
 import PliziCommunity from "../classes/PliziCommunity.js";
-import CommunitySearchResultItem from "../common/Communities/CommunitySearchResultItem.vue";
+import GuestCommunitySearchResultItem from "../common/Communities/GuestCommunitySearchResultItem.vue";
 import GuestSearchResultItem from "../components/GuestSearchResultItem.vue";
 
 export default {
 name: 'GuestSearchResultsPage',
 components: {
-    CommunitySearchResultItem,
+    GuestCommunitySearchResultItem,
     GuestSearchResultItem,
     Spinner
 },
@@ -103,9 +103,9 @@ methods: {
         if (apiResponse !== null) {
             this.searchResultsList = [];
 
-            // apiResponse.map( (srItem)=> {
-            //     this.searchResultsList.push( new PliziUser(srItem ) );
-            // });
+            apiResponse.map( (srItem)=> {
+                this.searchResultsList.push( new PliziUser(srItem ) );
+            });
 
             this.isDataReady = true;
         }
