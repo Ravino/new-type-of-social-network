@@ -76,7 +76,7 @@ const LinkMixin = {
                 let textTransformToLinks = this.replaceLink(textWithoutYoutubeLinks);
 
                 return {
-                    videoLinks: `<img src="//img.youtube.com/vi/${youtubeIds[0]}/0.jpg"
+                    videoLinks: `<img src="//img.youtube.com/vi/${youtubeIds[0]}/mqdefault.jpg"
                              alt="" />`,
                     text: `<p>${textTransformToLinks}</p>`,
                 };

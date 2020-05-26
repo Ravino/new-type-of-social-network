@@ -60,6 +60,11 @@ $postPosterPicSize: 48px;
                 text-decoration: none;
             }
         }
+
+        img {
+            width: 600px;
+            max-width: 100%;
+        }
     }
 
     .post-pictures-list {
