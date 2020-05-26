@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\Api\CommunityController;
+use App\Http\Controllers\Api\UserController;
 use App\Http\Controllers\Api\UserSubscribeController;
 use Illuminate\Support\Facades\Route;
 
@@ -16,6 +17,9 @@ use Illuminate\Support\Facades\Route;
 */
 //Route::post('/auth/verify', 'Auth\RegisterController@verify')->firstName('verify_registration');
 Auth::routes();
+
+Route::get('user/search/{search}', [UserController::class, 'search']);
+Route::get('communities/search/{search}', [CommunityController::class, 'index']);
 
 Route::group(['middleware' => ['auth.jwt', 'track.activity']], function () {
 
@@ -72,7 +76,6 @@ Route::group(['middleware' => ['auth.jwt', 'track.activity']], function () {
     Route::post('user/profile/image', 'Api\ImageUploadController@upload');
     Route::patch('user/privacy', 'Api\UserPrivacySettingController@patch');
     Route::get('user/privacy/roles', 'Api\UserPrivacySettingController@roles');
-    Route::get('user/search/{search}', 'Api\UserController@search');
 
     Route::get('user/blacklist/list', 'Api\UserBlacklistController@index');
     Route::post('user/blacklist/add', 'Api\UserBlacklistController@store');
