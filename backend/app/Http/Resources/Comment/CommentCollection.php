@@ -27,6 +27,7 @@ class CommentCollection extends ResourceCollection
                     'body' => $comment->body,
                     'author' => new SimpleUser($comment->author),
                     'attachments' => new AttachmentsCollection($comment->attachments),
+                    'thread' => $comment->children ? new CommentCollection($comment->children) : [],
                     'createdAt' => $comment->created_at,
                 ];
                 return $data;
