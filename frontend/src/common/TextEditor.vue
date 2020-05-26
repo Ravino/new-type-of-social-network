@@ -7,7 +7,9 @@
                          v-bind:src="userPic" v-bind:alt="userFullName" />
                 </div>
 
-                <div class="plz-editor-body pl-0" :class="{ 'plz-editor-body-wza': showAvatar, 'forward-message-width': !showAvatar }">
+                <div class="plz-editor-body pl-0"
+                     :class="{ 'plz-editor-body-wza': showAvatar, 'forward-message-width': !showAvatar }">
+
                     <div class="form pl-2">
                         <div class="form-row align-items-center">
                             <div class="col-12 d-flex justify-content-between p-0">
@@ -24,7 +26,7 @@
                                         ref="editor" />
 
                                 <button @click.stop="onSendPostClick" class="btn btn-link">
-                                    <IconSend style="height: 20px"/>
+                                    <IconSend style="height: 20px" />
                                 </button>
                             </div>
                             <div v-if="isMaximumCharacterLimit" class="col-12">
@@ -85,17 +87,14 @@ import Editor from './TextEditor/Editor.vue';
 import EmojiPicker from './TextEditor/EmojiPicker.vue';
 import AttachmentItem from './TextEditor/AttachmentItem.vue';
 
-import { checkExtension } from '../utils/FileUtils.js';
-import { docsExtensions, imagesExtensions } from '../enums/FileExtensionEnums.js';
-import PliziAttachmentItem from '../classes/PliziAttachmentItem.js';
 import LinkMixin from '../mixins/LinkMixin.js';
 
+import { checkMimeType, checkExtension } from '../utils/FileUtils.js';
+import { docsExtensions, imagesExtensions } from '../enums/FileExtensionEnums.js';
+
+import PliziAttachmentItem from '../classes/PliziAttachmentItem.js';
 import PliziAttachment from '../classes/PliziAttachment.js';
 import PliziCollection from '../classes/PliziCollection.js';
-import { checkMimeType } from "../utils/FileUtils.js";
-
-/**  TODO: Вставка файлов **/
-/** @link https://www.npmjs.com/package/vue-filepond **/
 
 export default {
 name: 'TextEditor',
@@ -161,7 +160,8 @@ computed: {
     emojiTransform(){
         if (this.dropToDown)
             return 'transform: translate(-40%, 40px)';
-            // Усли -84px не подходит, нужно прокинуть событие выше родителю, -84px для ChatFooter.vue
+
+        // Если -84px не подходит, нужно прокинуть событие выше родителю, -84px для ChatFooter.vue
         return 'transform: translate(-84%, -100%)';
     },
 
@@ -260,28 +260,30 @@ methods: {
 
         if (youtubeLinksMatch && youtubeLinksMatch.length) {
             youtubeLinksMatch.forEach((youtubeLink) => {
-                this.onEmit(postText, null, null, youtubeLink, this.workMode);
+                this.emitPost(postText, null, null, youtubeLink);
 
-                if (attachmentsIds.length) {
-                    this.onEmit('<p></p>', attachmentsIds, attachmentsData, null, this.workMode);
+                if (attachmentsIds.length >= 1) {
+                    this.emitPost('<p></p>', attachmentsIds, attachmentsData, null);
                 }
 
                 postText = '';
             });
-        } else {
-            this.onEmit(postText, attachmentsIds, attachmentsData, null, this.workMode);
+        }
+        else {
+            this.emitPost(postText, attachmentsIds, attachmentsData, null);
         }
 
         this.attachFiles = [];
         this.attachmentsData.clear();
     },
-    onEmit(postText = null, attachments = null, attachmentsData = null, videoLink = null, workMode = null) {
+
+    emitPost(postText = null, attachments = null, attachmentsData = null, videoLink = null) {
         this.$emit('editorPost', {
             postText: postText,
             attachments: attachments,
             attachmentsData: attachmentsData,
             videoLink: videoLink,
-            workMode: workMode,
+            workMode: this.workMode
         });
     },
 

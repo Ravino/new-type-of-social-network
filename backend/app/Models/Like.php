@@ -28,18 +28,10 @@ class Like extends Model
             $like->updated_at = time();
         });
         static::created(function($like) {
-            if ($like->likeable instanceof Post) {
-                $like->likeable->increment('likes');
-            } else if ($like->likeable instanceof PostAttachment) {
-                $like->likeable->increment('likes');
-            }
+            $like->likeable->increment('likes');
         });
         static::deleting(function($like) {
-            if ($like->likeable instanceof Post) {
-                $like->likeable->decrement('likes');
-            } else if ($like->likeable instanceof PostAttachment) {
-                $like->likeable->decrement('likes');
-            }
+            $like->likeable->decrement('likes');
         });
     }
 
