@@ -21,9 +21,13 @@
             <IconPlay/>
         </router-link>-->
 
-        <a class="w-100 d-block text-center mx-auto mb-4" href="#" :title="list">
-            <IconPaper/>
-        </a>
+        <router-link :to="{name: 'PhotoalbumsPage'}"
+                     :class="{ 'active': 'PhotoalbumsPage' === this.$root.$router.currentRoute.name }"
+                     :title="photoalbums"
+                     tag="a"
+                     class="w-100 d-block text-center mx-auto mb-4">
+            <IconAddCamera clazz="icon icon-atom"/>
+        </router-link>
 
         <router-link :to="{name: 'VideosPage'}"
                      :class="{ 'active': 'VideosPage' === this.$root.$router.currentRoute.name }"
@@ -44,18 +48,18 @@
     import IconFireLeftToolBar from '../icons/IconFireLeftToolBar.vue';
     import IconAtom from '../icons/IconAtom.vue';
     import IconPlay from '../icons/IconPlay.vue';
-    import IconPaper from '../icons/IconPaper.vue';
     import IconVideo from '../icons/IconVideo.vue';
     import IconStar from '../icons/IconStar.vue';
+    import IconAddCamera from "../icons/IconAddCamera.vue";
 
     export default {
         name: 'AccountToolbarLeftGrey',
-        components: {IconStar, IconVideo, IconPaper, IconPlay, IconAtom, IconFireLeftToolBar},
+        components: {IconAddCamera, IconStar, IconVideo, IconPlay, IconAtom, IconFireLeftToolBar},
         data() {
             return {
                 newsPage: 'Новости',
                 communities: 'Сообщества',
-                list: 'Список',
+                photoalbums: 'Фотоальбомы',
                 videos: 'Видео',
                 favorites: 'Избранное'
             }
