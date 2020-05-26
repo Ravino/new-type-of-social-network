@@ -31,7 +31,9 @@
             </span>
         </div>
 
-        <div v-if="isShowLinkedChat" class="plz-linked-chat-block mr-3 bg-white-br20 " :class="{ 'active-chat plz-favorit-z': chatWindowShown }">
+        <div v-if="isShowLinkedChat" class="plz-linked-chat-block mr-3 bg-white-br20 "
+             :class="{ 'active-chat plz-favorit-z': chatWindowShown }">
+
             <!--TODO @TRG class="is-pinned" когда чат прибит-->
             <div id="chatMessagesWrapper" class="plz-linked-chat-body bg-light d-none d-lg-flex flex-column p-0"
                  :class="{'is-pinned' : 'когда_чат_прибит'}">
@@ -58,7 +60,8 @@
                                 v-bind:currentDialog="currentDialog"
                                 @chatFooterEditorChangedHeight="onChatFooterEditorChangedHeight"
                                 :style="`height: ${changedHeight}`"
-                                ref="ChatFooter"></ChatFooter>
+                                ref="ChatFooter">
+                    </ChatFooter>
                 </div>
             </div>
         </div>
@@ -174,7 +177,7 @@ methods: {
         if (this.currentDialog) {
             if (this.currentDialog.id === evData.message.chatId){
 
-                this.messagesList.append( new PliziMessage( evData.message ) );
+                this.messagesList.append( evData.message );
 
                 if (this.$refs && this.$refs.chatMessages) {
                     this.$refs.chatMessages.$forceUpdate();
