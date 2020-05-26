@@ -133,7 +133,7 @@
 }
 
 /*- md -*/
-@media (max-width: 768px) {
+@media (max-width: 767px) {
     .LoginPage,
     .UpdatePasswordPage,
     .HomePage,
@@ -281,6 +281,13 @@
                 max-width: 100%;
             }
         }
+
+        .plz-guest-navbar {
+            flex: 0 0 100%;
+            max-width: 100%;
+            padding-left: 15px;
+            padding-right: 15px;
+        }
     }
 
     .ChatsListPage {
@@ -387,5 +394,17 @@
         width: 100%;
         margin-top: 10px;
     }
+
+    .ForDevelopersPage,
+    .AdvertisementPage,
+    .RulesPage,
+    .AboutPage {
+
+        .plz-guest-navbar {
+            padding-left: 0;
+            padding-right: 0;
+        }
+    }
+
 
 }
