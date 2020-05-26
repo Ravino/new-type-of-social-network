@@ -66,15 +66,15 @@
                             <span class="ps-dot"></span>
                         </button>
 
-                        <div class="dropdown-menu dropdown-menu-right py-3 " aria-labelledby="configurationMenuUser">
+                        <div class="dropdown-menu dropdown-menu-right py-3 " aria-labelledby="configurationMenuUser" :key="`userActionBlock-`+$root.$friendsKeyUpdater">
                             <div class="nav-item ">
-                                <p v-if="isCanAddToFriends"
+                                <p v-if="isCanAddToFriends()"
                                     class="dropdown-item px-0 py-1 m-0 px-3"
                                     @click="sendFriendshipInvitation(userData.id, userData.fullName)"
                                     title="Добавить в друзья" >Добавить в друзья</p>
                                 <p v-else
                                     class="dropdown-item px-0 py-1 m-0 px-3"
-                                    @click="sendFriendshipInvitation(userData.id, userData.fullName)"
+                                    @click="stopFriendship(userData.id)"
                                     title="Удалить из друзей" >Удалить из друзей</p>
                             </div>
                             <div class="nav-item">
@@ -208,10 +208,6 @@ computed: {
 
     },
 
-    isCanAddToFriends() {
-        return !(!!this.$root.$auth.frm.get(this.userData.id));
-    },
-
     usrFriendsNumber() {
         return this.userData.stats.totalFriendsCount;
     },
@@ -226,6 +222,10 @@ computed: {
 },
 
 methods: {
+    isCanAddToFriends() {
+        return !(!!this.$root.$auth.frm.get(this.userData.id));
+    },
+
     sBeaty(param) {
         return this.$options.filters.statsBeauty(param);
     },

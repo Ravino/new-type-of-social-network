@@ -156,32 +156,9 @@ methods: {
     },
 
     onFriendshipStop(){
-        this.stopFriendship();
+        this.stopFriendship(this.friend.id);
     },
 
-    async stopFriendship(){
-        let apiResponse = null;
-
-        try {
-            apiResponse = await this.$root.$api.$friend.friendshipStop( this.friend.id );
-        } catch (e){
-            window.console.warn( e.detailMessage );
-            throw e;
-        }
-
-        this.isPrepareToRemoved = true;
-
-        if ( apiResponse ) {
-            this.isRemoved = true;
-
-            this.$root.$auth.fm.removeFromFavorites(this.friend.id);
-            this.$root.$auth.frm.stopFriendship(this.friend.id);
-
-            this.$emit( 'FriendshipStop', {
-                friendId: this.friend.id
-            });
-        }
-    }
 },
 
 beforeMount(){

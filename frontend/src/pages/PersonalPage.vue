@@ -10,7 +10,7 @@
                  v-bind:key="`CentralColumn-`+$root.$friendsKeyUpdater">
 
                 <div class="container">
-                    <ProfileHeader v-if="isDataReady"
+                    <ProfileHeader v-if="isDataReady" ref="personalProfileHeader"
                                    @ShowPersonalMsgModal="onShowPersonalMsgModal"
                                    v-bind:userData="profileData"></ProfileHeader>
                     <Spinner v-else></Spinner>
@@ -235,6 +235,15 @@ methods: {
         this.isShowMessageDialog = true;
     }
 },
+
+created(){
+    this.$root.$on( this.$root.$auth.frm.updateEventName,()=>{
+        if (this.$refs  && this.$refs.personalProfileHeader){
+            this.$refs.personalProfileHeader.$forceUpdate();
+        }
+    });
+},
+
 
 mounted() {
     this.getUserInfo();
