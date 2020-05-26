@@ -16,12 +16,13 @@
 
                     <template v-if="posts && posts.length > 0">
                         <Post v-for="(postData, postIndex) in posts"
-                          :key="postIndex"
-                          :post="postData"
-                          @onEditPost="onEditPost"
-                          @onDeletePost="onDeletePost"
-                          @onRestorePost="onRestorePost"
-                          @openVideoModal="openVideoModal"/>
+                              :key="postIndex"
+                              :post="postData"
+                              @onEditPost="onEditPost"
+                              @onDeletePost="onDeletePost"
+                              @onRestorePost="onRestorePost"
+                              @openVideoModal="openVideoModal"
+                              @onShare="onSharePost"/>
                     </template>
 
                     <div v-else-if="!isStarted"  class="row plz-post-item mb-4 bg-white-br20 p-4">
@@ -52,6 +53,11 @@
         <PostVideoModal v-if="postVideoModal.isVisible"
                         :videoLink="postVideoModal.content.videoLink"
                         @hideVideoModal="hideVideoModal"/>
+
+        <PostRepostModal v-if="postRepostModal.isVisible"
+                         v-bind:user="postRepostModal.content.postForRepost.author"
+                         v-bind:post="postRepostModal.content.postForRepost"
+                         @hidePostRepostModal="hidePostRepostModal"></PostRepostModal>
     </div>
 </template>
 
@@ -65,6 +71,7 @@ import PostFilter from '../common/Post/PostFilter.vue';
 import PostInterest from '../common/Post/PostInterest.vue';
 import PostEditModal from '../common/Post/PostEditModal.vue';
 import PostVideoModal from '../common/Post/PostVideoModal.vue';
+import PostRepostModal from '../common/Post/PostRepostModal.vue';
 import SmallSpinner from "../common/SmallSpinner.vue";
 
 import PliziPost from '../classes/PliziPost.js';
@@ -81,6 +88,7 @@ components: {
     Post,
     PostEditModal,
     PostVideoModal,
+    PostRepostModal,
     SmallSpinner,
 },
     mixins: [LazyLoadPosts],
@@ -95,6 +103,12 @@ data() {
             isVisible: false,
             content: {
                 videoLink: null,
+            },
+        },
+        postRepostModal: {
+            isVisible: false,
+            content: {
+                postForRepost: null,
             },
         },
     }
@@ -125,6 +139,14 @@ methods: {
         setTimeout(() => {
             this.posts.splice(postIndex, 1);
         }, 5000);
+    },
+    onSharePost(post) {
+        this.postRepostModal.isVisible = true;
+        this.postRepostModal.content.postForRepost = post;
+    },
+    hidePostRepostModal() {
+        this.postRepostModal.isVisible = false;
+        this.postRepostModal.content.postForRepost = null;
     },
 
     async getPosts(limit = 50, offset = 0) {

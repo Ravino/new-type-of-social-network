@@ -93,7 +93,7 @@ class RegisterController extends Controller
             'email' => 'required|string|email|max:255|unique:users',
             'firstName' => 'required|string|min:2|max:50|regex:/^[a-zA-Z\p{Cyrillic}\-]+$/u',
             'lastName' => 'required|string|min:2|max:50|regex:/^[a-zA-Z\p{Cyrillic}\-]+$/u',
-            'birthday' => 'date_format:Y-m-d|nullable|before:today',
+            'birthday' => 'date_format:Y-m-d|nullable|before:today|after:1949-12-31',
         ]);
     }
 
