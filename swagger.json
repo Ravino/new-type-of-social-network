@@ -3072,7 +3072,7 @@
                 ]
             }
         },
-        "/user/blacklist/list": {
+        "/user/blacklist": {
             "get": {
                 "tags": [
                     "User"
@@ -3117,9 +3117,7 @@
                         "Authorization": []
                     }
                 ]
-            }
-        },
-        "/user/blacklist/add": {
+            },
             "post": {
                 "tags": [
                     "User"
@@ -3159,10 +3157,8 @@
                         "Authorization": []
                     }
                 ]
-            }
-        },
-        "/user/blacklist/delete": {
-            "post": {
+            },
+            "delete": {
                 "tags": [
                     "User"
                 ],
