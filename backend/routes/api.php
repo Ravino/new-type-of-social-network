@@ -96,6 +96,7 @@ Route::group(['middleware' => ['auth.jwt', 'track.activity']], function () {
     });
 
     Route::post('user/images/{imageUpload}', 'Api\LikeController@likeUserImage');
+    Route::post('user/images/{imageUpload}/comment', 'Api\CommentController@commentUserImage');
 
     /**
      * Communities Resource
@@ -142,6 +143,7 @@ Route::group(['middleware' => ['auth.jwt', 'track.activity']], function () {
         Route::post('{post}/image/like', 'Api\LikeController@likePostImage');
         Route::post('/view', 'Api\PostController@markViewed');
         Route::get('{id}/viewed', 'Api\PostController@getViewedUsers');
+        Route::post('attachments/{postAttachment}/comment', 'Api\CommentController@commentPostImage');
     });
 
     Route::prefix('videos')->group(function () {

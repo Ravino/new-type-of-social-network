@@ -436,6 +436,46 @@ class PliziCommunitiesAPI extends PliziBaseAPI {
 
         return null;
     }
+
+    /**
+     * @param {string} communityId
+     * @param {string} userId
+     * @returns {Promise<null|any>}
+     */
+    async becomeAdmin(communityId, userId) {
+        const url = `api/communities/admin/${communityId}/${userId}`;
+        let response = await this.axios.post(url, {}, this.authHeaders)
+            .catch((error) => {
+                this.checkIsTokenExpires(error, `$communities.members`);
+                throw new PliziAPIError(`$communities.members`, error.response);
+            });
+
+        if (response.status === 200) {
+            return response.data;
+        }
+
+        return null;
+    }
+
+    /**
+     * @param {string} communityId
+     * @param {string} userId
+     * @returns {Promise<null|any>}
+     */
+    async stopBeAdmin(communityId, userId) {
+        const url = `api/communities/admin/${communityId}/${userId}`;
+        let response = await this.axios.delete(url, this.authHeaders)
+            .catch((error) => {
+                this.checkIsTokenExpires(error, `$communities.members`);
+                throw new PliziAPIError(`$communities.members`, error.response);
+            });
+
+        if (response.status === 200) {
+            return response.data;
+        }
+
+        return null;
+    }
 }
 
 export default PliziCommunitiesAPI;
