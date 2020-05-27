@@ -1,63 +1,107 @@
 <template>
-    <div id="toolbarLeftColor" class="d-flex d-md-block  ">
-        <a class="add-new text-center mx-sm-auto mr-1 mb-3 mb-md-4" href="#">
+    <div id="hotCommunities" class="hot-communities d-flex d-md-block">
+        <button v-if="isCanAddToFavorites" type="button" v-bind:key="'btnAddToHot'+$root.$communitiesKeyUpdater"
+                @click="onAddCommunityToHot"
+                class="add-new btn btn-link text-center mx-sm-auto mr-1 mb-4 px-0 py-0">
             <i class="fa fa-plus" aria-hidden="true"></i>
-        </a>
-        <a class="d-inline-block d-sm-block text-center mx-sm-auto mb-3 mb-md-4 mx-1" href="#">
-            <button class="btn-close"  aria-label="delete">
-                <i class="fa fa-plus" aria-hidden="true"></i>
-            </button>
-            <img class="mx-auto" src="/images/left-colored-icons/icon-01.png" alt="" />
-        </a>
-        <a class="d-inline-block d-sm-block text-center mx-sm-auto mb-3 mb-md-4 mx-1" href="#">
-            <button class="btn-close"  aria-label="delete">
-                <i class="fa fa-plus" aria-hidden="true"></i>
-            </button>
-            <img class="mx-auto" src="/images/left-colored-icons/icon-02.png" alt="" />
-        </a>
-        <a class="d-inline-block d-sm-block text-center mx-sm-auto mb-3 mb-md-4 mx-1" href="#">
-            <button class="btn-close"  aria-label="delete">
-                <i class="fa fa-plus" aria-hidden="true"></i>
-            </button>
-            <img class="mx-auto" src="/images/left-colored-icons/icon-03.png" alt="" />
-        </a>
-        <a class="d-inline-block d-sm-block text-center mx-sm-auto mb-3 mb-md-4 mx-1" href="#">
-            <button class="btn-close"  aria-label="delete">
-                <i class="fa fa-plus" aria-hidden="true"></i>
-            </button>
-            <img class="mx-auto" src="/images/left-colored-icons/icon-04.png" alt="" />
-        </a>
-        <a class="d-inline-block d-sm-block text-center mx-sm-auto mb-3 mb-md-4 mx-1" href="#">
-            <button class="btn-close"  aria-label="delete">
-                <i class="fa fa-plus" aria-hidden="true"></i>
-            </button>
-            <img class="mx-auto" src="/images/left-colored-icons/icon-05.png" alt="" />
-        </a>
-        <a class="d-inline-block d-sm-block text-center mx-sm-auto mb-3 mb-md-4 mx-1" href="#">
-            <button class="btn-close"  aria-label="delete">
-                <i class="fa fa-plus" aria-hidden="true"></i>
-            </button>
-            <img class="mx-auto" src="/images/left-colored-icons/icon-06.png" alt="" />
-        </a>
-        <a class="d-inline-block d-sm-block text-center mx-sm-auto mb-3 mb-md-4 mx-1" href="#">
-            <button class="btn-close"  aria-label="delete">
-                <i class="fa fa-plus" aria-hidden="true"></i>
-            </button>
-            <img class="mx-auto" src="/images/left-colored-icons/icon-07.png" alt="" />
-        </a>
+        </button>
 
+        <HotCommunities v-if="isDataReady"
+                        v-bind:communities="hotCommunitiesList(keyUpdater)"
+                        v-bind:key="'hotCommunitiesBlock-'+keyUpdater"
+                        v-bind:keyUpdater="keyUpdater"
+                        @AddCommunityToHot="onAddCommunityToHot"
+                        @RemoveCommunityFromHots="onRemoveCommunityFromHots"
+                        ref="hotCommunitiesBlock"></HotCommunities>
+        <Spinner v-else clazz="plz-favorit-friends-spinner d-flex flex-column align-items-center"></Spinner>
     </div>
 </template>
 
 <script>
+import Spinner from '../common/Spinner.vue';
+import HotCommunities from './HotCommunities.vue';
+
+import HotCommunitiesMixin from '../mixins/HotCommunitiesMixin.js';
+
+/**
+ * TODO: @TGA после MVP переимновать этот компонент в HotCommunities
+ */
 export default {
 name: 'AccountToolbarLeftColor',
-data () {
+components : { HotCommunities, Spinner},
+mixins: [HotCommunitiesMixin],
+
+data() {
     return {
+        isDataReady : false,
+        keyUpdater: 0
     }
 },
 
+computed: {
+    isCanAddToFavorites(){
+        const isCan = this.$root.$auth.cm.isCanAddToFavorites(this.$route.params.id);
+        //const isIn = this.$root.$auth.cm.get(this.$route.params.id);
+
+        return this.isDataReady &&  (this.$root.$router.currentRoute.name === 'CommunityPage')  && isCan;
+    },
+},
+
 methods: {
+    hotCommunitiesList(parasm){
+        return this.$root.$auth.cm.asArray().splice();
+    },
+
+    onRemoveCommunityFromHots(evData){
+        window.console.log(evData, `onRemoveCommunityFromHots`);
+        this.keyUpdater++;
+        this.removeCommunityFromFavorites( evData.id, evData.community );
+
+        if (this.$refs  &&  this.$refs.hotCommunitiesBlock) {
+            this.$refs.hotCommunitiesBlock.$forceUpdate();
+        }
+    },
+
+    onAddCommunityToHot(){
+        window.console.log(this.communityData, `onAddCommunityToHot`);
+
+        this.keyUpdater++;
+        const comm = this.communityData || null;
+        this.addCommunityToFavorites( this.$route.params.id, comm );
+
+        if (this.$refs  &&  this.$refs.hotCommunitiesBlock) {
+            this.$refs.hotCommunitiesBlock.$forceUpdate();
+        }
+    },
+
+    afterFavoritsLoad(){
+        this.$root.$communitiesKeyUpdater++;
+        this.showFavoritesBlock = (this.$root.$auth.cm.size > 0);
+        this.isDataReady = true;
+    }
+},
+
+created(){
+    if (this.$root.$auth.cm.isLoad) {
+        this.afterFavoritsLoad(`this.$root.$auth.cm.isLoad`);
+    }
+
+    this.$root.$on(this.$root.$auth.cm.loadEventName, ()=>{
+        this.afterFavoritsLoad(this.$root.$auth.cm.loadEventName);
+    });
+
+    this.$root.$on(this.$root.$auth.cm.restoreEventName, ()=>{
+        this.afterFavoritsLoad(this.$root.$auth.cm.restoreEventName);
+    });
+
+    this.$root.$on(this.$root.$auth.cm.updateEventName, ()=>{
+        window.console.log(`on `+this.$root.$auth.cm.updateEventName);
+        if (this.$refs  &&  this.$refs.hotCommunitiesBlock) {
+            window.console.log(`call this.$refs.hotCommunitiesBlock.$forceUpdate();`);
+            this.$root.$communitiesKeyUpdater++;
+            this.$refs.hotCommunitiesBlock.$forceUpdate();
+        }
+    });
 }
 
 }

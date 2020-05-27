@@ -1,5 +1,5 @@
 <template>
-    <div id="accountToolbarLeft" class="--card py-2">
+    <div id="accountToolbarLeft" class="py-2">
 
         <AccountToolbarLeftGrey></AccountToolbarLeftGrey>
 
@@ -15,13 +15,5 @@ import AccountToolbarLeftColor from './AccountToolbarLeftColor.vue';
 export default {
 name: 'AccountToolbarLeft',
 components: { AccountToolbarLeftGrey, AccountToolbarLeftColor },
-    data () {
-    return {
-    }
-},
-
-methods: {
-}
-
 }
 </script>
