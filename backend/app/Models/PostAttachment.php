@@ -3,6 +3,7 @@
 
 namespace App\Models;
 
+use App\Traits\Commentable;
 use App\Traits\Likeable;
 use Illuminate\Database\Eloquent\Model;
 use Spiritix\LadaCache\Database\LadaCacheTrait;
@@ -14,7 +15,7 @@ use Storage;
  */
 class PostAttachment extends Model
 {
-    use Likeable, LadaCacheTrait;
+    use Likeable, LadaCacheTrait, Commentable;
 
     protected $casts = [
         'created_at' => 'timestamp',
