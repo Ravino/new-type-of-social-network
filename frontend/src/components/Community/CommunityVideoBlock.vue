@@ -60,7 +60,6 @@
                 }
             },
             openVideoModal(evData) {
-                console.log(evData, 'block');
                 this.$emit('openVideoModal', evData);
             },
         },

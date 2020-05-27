@@ -512,7 +512,6 @@ methods: {
         }
     },
     openVideoModal(evData) {
-        console.log(evData, 'page');
         if (evData.videoLink) {
             this.postVideoModal.isVisible = true;
             this.postVideoModal.content.videoLink = evData.videoLink;
