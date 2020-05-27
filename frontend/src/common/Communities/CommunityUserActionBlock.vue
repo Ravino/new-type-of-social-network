@@ -5,11 +5,6 @@
         </button>
 
         <button type="button"
-                @click="onMentionClick"
-                class="btn btn-link btn-block w-100 mb-2 text-black-50 text-left">
-            <i class="fas fa-at mr-2"></i>Упоминания</button>
-
-        <button type="button"
                 @click="onNotificationEnableClick"
                 class="btn btn-link btn-block w-100 mb-2 text-black-50 text-left">
             <i class="far fa-bell mr-2"></i>Включить уведомления</button>
