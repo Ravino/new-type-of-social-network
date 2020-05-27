@@ -45,9 +45,131 @@
         {
             "name": "Photo",
             "description": "Все, что касается фотографий"
+        },
+        {
+            "name": "Video",
+            "description": "Все, что касается видео"
         }
     ],
     "paths": {
+        "/videos": {
+            "get": {
+                "tags": [
+                    "Video"
+                ],
+                "description": "Список ссылок на видео",
+                "operationId": "VideoList",
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "data": {
+                                            "properties": {
+                                                "list": {
+                                                    "$ref": "#/components/schemas/VideoList"
+                                                }
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            "post": {
+                "tags": [
+                    "Video"
+                ],
+                "description": "Сохранить ссылку на видео",
+                "operationId": "VideoStore",
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "type": "object",
+                                "properties": {
+                                    "link": {
+                                        "type": "string",
+                                        "description": "Ссылка на видео"
+                                    },
+                                    "id": {
+                                        "nullable": true,
+                                        "type": "integer",
+                                        "description": "ID поста (если есть)"
+                                    },
+                                    "workMode": {
+                                        "nullable": true,
+                                        "type": "string",
+                                        "description": "Если видео находится в посте, то 'post'"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "id": {
+                                            "type": "integer",
+                                            "description": "ID видео"
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/user/images/{imageId}": {
+            "post": {
+                "tags": [
+                    "Photo"
+                ],
+                "description": "Лайкнуть изображение пользователя.",
+                "operationId": "UserPhotoLike",
+                "parameters": [
+                    {
+                        "name": "imageId",
+                        "in": "path",
+                        "description": "ID изображения",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "description": "Сообщение об успешном лайк/анлайк."
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
         "/photo-albums/{id}/photos": {
             "post": {
                 "tags": [
@@ -322,6 +444,140 @@
                                         "message": {
                                             "type": "string",
                                             "description": "Сообщение об успешном удалении."
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/user/images/{imageId}/comment": {
+            "post": {
+                "tags": [
+                    "Comments"
+                ],
+                "operationId": "CommentUserImage",
+                "parameters": [
+                    {
+                        "name": "imageId",
+                        "in": "path",
+                        "description": "ID изображения пользователя",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/CreateCommentOnPost"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "list": {
+                                            "type": "array",
+                                            "items": {
+                                                "$ref": "#/components/schemas/Comment"
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/posts/attachments/{attachmentId}/comment": {
+            "post": {
+                "tags": [
+                    "Comments"
+                ],
+                "operationId": "CommentPostImage",
+                "parameters": [
+                    {
+                        "name": "attachmentId",
+                        "in": "path",
+                        "description": "ID изображения поста",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/CreateCommentOnPost"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "list": {
+                                            "type": "array",
+                                            "items": {
+                                                "$ref": "#/components/schemas/Comment"
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/comment/{commentId}/like": {
+            "post": {
+                "tags": [
+                    "Comments"
+                ],
+                "description": "Лайкнуть комментарий.",
+                "operationId": "CommentLike",
+                "parameters": [
+                    {
+                        "name": "commentId",
+                        "in": "path",
+                        "description": "ID комментария",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "description": "Сообщение об успешном лайк/анлайк."
                                         }
                                     }
                                 }
@@ -1208,13 +1464,13 @@
                 "description": "Добавить сообщество в избранные",
                 "operationId": "communitiesFavoriteAdd",
                 "requestBody": {
-                    "description": "ID пользователя которго требуется добавить в друзья",
+                    "description": "ID сообщества",
                     "content": {
                         "application/json": {
                             "schema": {
                                 "type": "object",
                                 "properties": {
-                                    "userId": {
+                                    "id": {
                                         "type": "integer",
                                         "format": "int64"
                                     }
@@ -1588,6 +1844,51 @@
                                                     }
                                                 }
                                             }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/user/news": {
+            "get": {
+                "tags": [
+                    "Posts"
+                ],
+                "operationId": "NewsList",
+                "parameters": [
+                    {
+                        "name": "onlyLiked",
+                        "in": "query",
+                        "description": "Возвращать только лайкнутые или нет",
+                        "required": false,
+                        "schema": {
+                            "type": "boolean"
+                        }
+                    },
+                    {
+                        "name": "orderBy",
+                        "in": "query",
+                        "description": "Сортировка по любым колонкам, например, views или created_at",
+                        "required": false,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "data": {
+                                            "$ref": "#/components/schemas/PostByUser"
                                         }
                                     }
                                 }
@@ -3072,7 +3373,7 @@
                 ]
             }
         },
-        "/user/blacklist/list": {
+        "/user/blacklist": {
             "get": {
                 "tags": [
                     "User"
@@ -3117,9 +3418,7 @@
                         "Authorization": []
                     }
                 ]
-            }
-        },
-        "/user/blacklist/add": {
+            },
             "post": {
                 "tags": [
                     "User"
@@ -3159,10 +3458,8 @@
                         "Authorization": []
                     }
                 ]
-            }
-        },
-        "/user/blacklist/delete": {
-            "post": {
+            },
+            "delete": {
                 "tags": [
                     "User"
                 ],
@@ -3658,6 +3955,12 @@
                                 "user"
                             ]
                         }
+                    },
+                    {
+                        "$ref": "#/components/parameters/offsetParam"
+                    },
+                    {
+                        "$ref": "#/components/parameters/limitParam"
                     }
                 ],
                 "responses": {
@@ -3675,6 +3978,62 @@
                                                     "type": "array",
                                                     "items": {
                                                         "$ref": "#/components/schemas/CommunityUser"
+                                                    }
+                                                }
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "Authorization": []
+                    }
+                ]
+            }
+        },
+        "/communities/{id}/videos": {
+            "get": {
+                "tags": [
+                    "Communities"
+                ],
+                "description": "Список видео сообщества",
+                "operationId": "CommunityVideos",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "ID сообщества",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    },
+                    {
+                        "$ref": "#/components/parameters/offsetParam"
+                    },
+                    {
+                        "$ref": "#/components/parameters/limitParam"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "data": {
+                                            "type": "object",
+                                            "properties": {
+                                                "list": {
+                                                    "type": "array",
+                                                    "items": {
+                                                        "$ref": "#/components/schemas/Video"
                                                     }
                                                 }
                                             }
@@ -5256,6 +5615,37 @@
                     },
                     "size": {
                         "type": "number"
+                    }
+                }
+            },
+            "VideoList": {
+                "type": "object",
+                "properties": {
+                    "id": {
+                        "type": "string"
+                    },
+                    "link": {
+                        "type": "string"
+                    },
+                    "user": {
+                        "$ref": "#/components/schemas/User"
+                    },
+                    "post": {
+                        "$ref": "#/components/schemas/User"
+                    },
+                    "createdAt": {
+                        "type": "number"
+                    }
+                }
+            },
+            "Video": {
+                "type": "object",
+                "properties": {
+                    "id": {
+                        "type": "number"
+                    },
+                    "link": {
+                        "type": "string"
                     }
                 }
             }

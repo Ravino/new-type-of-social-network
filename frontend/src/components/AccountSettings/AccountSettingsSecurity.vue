@@ -58,38 +58,29 @@
 
                 <div class="form-group row border-bottom">
                     <label for="email"
-                           class="plz-account-settings-body-label col-sm-6 col-md-6 col-lg-4 col-xl-4">Email</label>
-                    <div
-                        class="plz-account-settings-body-field  col-sm-6 col-md-6 col-lg-6 col-xl-6">
-                        <div class="d-flex align-items-center w-100 position-relative ">
-                            <div class="plz-account-settings-body-action pl-1 ">
-                                <button type="button"
-                                        id="email"
-                                        class="btn btn-link"
-                                        @click="openChangeEmailModal">
-                                    Изменить
-                                </button>
-                            </div>
-                        </div>
+                           class="plz-account-settings-body-label col-6 col-lg-4">Email</label>
+                    <div class="plz-account-settings-body-action justify-content-end justify-content-sm-start col-6 text-right text-sm-right pl-1">
+                        <button type="button"
+                                id="email"
+                                class="btn btn-link"
+                                @click="openChangeEmailModal">
+                            Изменить
+                        </button>
                     </div>
                     <div class="col-3"></div>
                 </div>
 
                 <div class="form-group row border-bottom">
                     <label for="password"
-                           class="plz-account-settings-body-label col-sm-6 col-md-6 col-lg-4 col-xl-4">Пароль</label>
-                    <div
-                        class="plz-account-settings-body-field  col-sm-6 col-md-6 col-lg-6 col-xl-6">
-                        <div class="d-flex align-items-center w-100 position-relative ">
-                            <div class="plz-account-settings-body-action pl-1 ">
-                                <button type="button"
-                                        id="password"
-                                        class="btn btn-link"
-                                        @click="openChangePasswordModal">
-                                    Изменить
-                                </button>
-                            </div>
-                        </div>
+                           class="plz-account-settings-body-label col-6 col-lg-4 ">Пароль</label>
+
+                    <div class="plz-account-settings-body-action justify-content-end justify-content-sm-start col-6 text-right text-sm-right pl-1">
+                        <button type="button"
+                                id="password"
+                                class="btn btn-link"
+                                @click="openChangePasswordModal">
+                            Изменить
+                        </button>
                     </div>
                     <div class="col-3"></div>
                 </div>

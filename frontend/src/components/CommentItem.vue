@@ -1,8 +1,8 @@
 <template>
     <div class="plz-comment-item">
         <div class="plz-comment-item-wrapper">
-            <a class="plz-comment-item-data-name" :href="`user-${authorId}`">
-                <img class="plz-comment-item-wrapper-avatar"
+            <a class="plz-comment-item-data-pic" :href="`user-${authorId}`">
+                <img class="plz-comment-item-data-img"
                      :src="checkAuthorAvatar"
                      :alt="name">
             </a>
@@ -25,10 +25,10 @@
                 ></TextEditor>
                 <p v-else v-html="livePreview">{{text}}</p>
             </div>
-            <div class="plz-comment-item-data-comment">
-                <div class="plz-comment-item-reply">
+            <div class="plz-comment-item-data-comment ">
+                <div class="plz-comment-item-reply d-flex">
                     <span class="plz-comment-item-reply-date">{{ getTimeComment }}</span>
-                    <button class="plz-comment-item-reply-btn"
+                    <button class="plz-comment-item-reply-btn pl-2"
                             @click="isAnswer = !isAnswer"
                     >
                         Ответить
@@ -41,7 +41,7 @@
                     </button>
                     <button v-if="isEdit === true"
                             @click="isEdit = false"
-                            class="plz-comment-item-reply-btn plz-comment-item-edit"
+                            class="plz-comment-item-reply-btn plz-comment-item-edit pl-2"
                     >
                         Отменить
                     </button>
@@ -50,6 +50,7 @@
                     <IconHeard></IconHeard>
                 </div>
             </div>
+            <!-- TODO @TRG не понятно, что это за блок кода?  -->
             <div class="plz-comment-item-wrapper-close">
                 <button class="plz-comment-item-close-btn" v-if="isAuthor" @click="deleteComment"></button>
             </div>
@@ -64,99 +65,100 @@
 </template>
 
 <script>
-    import IconHeard from "../icons/IconHeard.vue";
-    import CommentReply from "./CommentReply.vue";
-    import moment from "moment";
-    import LinkMixin from '../mixins/LinkMixin.js';
-    import TextEditor from "../common/TextEditor.vue";
-    import ChatMixin from "../mixins/ChatMixin.js";
-    export default {
-        name: "CommentItem",
-        components: {TextEditor, CommentReply, IconHeard},
-        mixins : [LinkMixin, ChatMixin],
-        props: {
-            name: {
-                type: String,
-            },
-            text: {
-                type: String,
-            },
-            avatar: {
-                type: String,
-            },
-            surname: {
-                type: String,
-            },
-            commentId: {
-                type: Number,
-            },
-            authorId: {
-                type: String|Number
-            },
-            postId: {
-                type: String|Number
-            },
-            createdAt: {
-                type: Number,
-            },
-        },
-        data() {
-            return {
-                noAvatar: '../images/noavatar-256.png',
-                isAnswer: false,
-                isEdit: false,
-            };
-        },
-        computed: {
-            livePreview() {
-                let str = this.text.replace(/<\/?[^>]+>/g, '').trim();
-                let returnedStr = this.transformStrWithLinks(str);
+import IconHeard from "../icons/IconHeard.vue";
+import CommentReply from "./CommentReply.vue";
+import moment from "moment";
+import LinkMixin from '../mixins/LinkMixin.js';
+import TextEditor from "../common/TextEditor.vue";
+import ChatMixin from "../mixins/ChatMixin.js";
 
-                return str === returnedStr ? this.text : this.transformStrWithLinks(str);
-            },
-            checkAuthorAvatar() {
-                if (this.avatar === null) {
-                    return this.noAvatar;
-                }
+export default {
+name: "CommentItem",
+components: {TextEditor, CommentReply, IconHeard},
+mixins : [LinkMixin, ChatMixin],
+props: {
+    name: {
+        type: String,
+    },
+    text: {
+        type: String,
+    },
+    avatar: {
+        type: String,
+    },
+    surname: {
+        type: String,
+    },
+    commentId: {
+        type: Number,
+    },
+    authorId: {
+        type: String|Number
+    },
+    postId: {
+        type: String|Number
+    },
+    createdAt: {
+        type: Number,
+    },
+},
+data() {
+    return {
+        noAvatar: '../images/noavatar-256.png',
+        isAnswer: false,
+        isEdit: false,
+    };
+},
+computed: {
+    livePreview() {
+        let str = this.text.replace(/<\/?[^>]+>/g, '').trim();
+        let returnedStr = this.transformStrWithLinks(str);
 
-                return this.avatar;
-            },
-            getTimeComment() {
-                return moment.unix(this.createdAt).fromNow();
-            },
-            isAuthor() {
-                return this.$root.$auth.user.id === this.authorId;
-            },
-        },
-        methods: {
-            async onTextPost(evData){
-                let msg = evData.postText.trim();
+        return str === returnedStr ? this.text : this.transformStrWithLinks(str);
+    },
+    checkAuthorAvatar() {
+        if (this.avatar === null) {
+            return this.noAvatar;
+        }
 
-                if (msg !== '') {
-                    const brExample = `<br/>`;
-                    msg = msg.replace(/<p><\/p>/g, brExample);
-                    msg = this.killBrTrail(msg);
+        return this.avatar;
+    },
+    getTimeComment() {
+        return moment.unix(this.createdAt).fromNow();
+    },
+    isAuthor() {
+        return this.$root.$auth.user.id === this.authorId;
+    },
+},
+methods: {
+    async onTextPost(evData){
+        let msg = evData.postText.trim();
 
-                    this.updateComment(msg);
-                    this.isEdit = false;
-                }
-            },
-            async deleteComment() {
-                try {
-                    await this.$root.$api.$post.deleteCommentById(this.commentId);
-                    this.$emit('onDelete', this.commentId);
-                } catch (e) {
-                    console.warn(e.detailMessage);
-                }
-            },
-            async updateComment(msg) {
-                try {
-                    let response = await  this.$root.$api.$post.editCommentById(this.commentId, msg);
-                    this.$emit('update', response.data);
-                } catch (e) {
-                    console.warn(e.detailMessage);
-                }
-            }
+        if (msg !== '') {
+            const brExample = `<br/>`;
+            msg = msg.replace(/<p><\/p>/g, brExample);
+            msg = this.killBrTrail(msg);
+
+            this.updateComment(msg);
+            this.isEdit = false;
+        }
+    },
+    async deleteComment() {
+        try {
+            await this.$root.$api.$post.deleteCommentById(this.commentId);
+            this.$emit('onDelete', this.commentId);
+        } catch (e) {
+            console.warn(e.detailMessage);
+        }
+    },
+    async updateComment(msg) {
+        try {
+            let response = await  this.$root.$api.$post.editCommentById(this.commentId, msg);
+            this.$emit('update', response.data);
+        } catch (e) {
+            console.warn(e.detailMessage);
         }
     }
+}
+}
 </script>

@@ -3,7 +3,9 @@
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\Video\VideoStore;
 use App\Http\Resources\Video\VideoCollection;
+use App\Models\Community;
 use App\Models\Video;
 use Illuminate\Http\Request;
 
@@ -21,7 +23,9 @@ class VideoController extends Controller
 
     public function getUserVideo()
     {
-        $videos = auth()->user()->videos()->with(['creatableby'])->latest()->get();
+        $videos = auth()->user()->videos()->with(['creatableby' => function ($query) {
+            return $query->withTrashed()->get();
+        }])->latest()->get();
 
         return new VideoCollection($videos);
     }
@@ -42,7 +46,7 @@ class VideoController extends Controller
      * @param \Illuminate\Http\Request $request
      * @return \Illuminate\Http\JsonResponse
      */
-    public function store(Request $request)
+    public function store(VideoStore $request)
     {
         $user = auth()->user();
         $type_model = null;
@@ -81,16 +85,6 @@ class VideoController extends Controller
         //
     }
 
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param \App\Models\Video $video
-     * @return \Illuminate\Http\Response
-     */
-    public function edit(Video $video)
-    {
-        //
-    }
 
     /**
      * Update the specified resource in storage.

@@ -60,7 +60,14 @@ class PostController extends Controller
      */
     public function getNews(Request $request)
     {
-        $posts = Post::getWithoutOldPosts(\Auth::user(), $request->query('limit'), $request->query('offset'));
+        $posts = Post::getWithoutOldPosts(
+            \Auth::user(),
+            $request->query('limit'),
+            $request->query('offset'),
+            false,
+            $request->get('onlyLiked') ?? false,
+            $request->get('orderBy') ?? null,
+        );
 
         return new PostCollection($posts);
     }
@@ -168,6 +175,8 @@ class PostController extends Controller
         $my_post->postable_id = \Auth::user()->id;
         $my_post->parent_id = $post->id;
         $my_post->body = '';
+        $my_post->likes = 0;
+        $my_post->views = 0;
         $my_post->author_id = \Auth::user()->id;
         $my_post->save();
         return new PostResource($my_post);

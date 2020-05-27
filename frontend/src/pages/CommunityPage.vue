@@ -100,6 +100,7 @@
                               @onDeletePost="onDeletePost"
                               @onRestorePost="onRestorePost"
                               @onEditPost="onEditPost"
+                              @openVideoModal="openVideoModal"
                               @onShowUsersLikes="openLikeModal"/>
                     </div>
 
@@ -138,50 +139,10 @@
 
                     <CommunityShortMembers v-if="isDataReady" v-bind:community="communityData"></CommunityShortMembers>
 
-                    <div id="communityVideos" class="bg-white-br20 mb-5 mb-4 py-3 px-4"
-                        v-if="hasAccess">
-
-                        <h6 class="plz-community-participants-title w-auto mb-4">Видео
-                            <span class="plz-community-participants-subtitle ml-2">14</span>
-                        </h6>
-
-                        <div class="videos-item mb-4">
-                            <div class="video mb-3">
-                                <div class="video-wrap-pre">
-                                    <img :src="avatarMedium" alt="image">
-                                </div>
-                                <button class="video__button" type="button" aria-label="Запустить видео">
-                                    <IconYoutube/>
-                                </button>
-                            </div>
-                            <router-link tag="a"
-                                         :to="`/user-`+1"
-                                         class="video-desc mb-0">Эдвард Бил приглашает тебя на открытие 6 сервера Sunrise (GTA 5 RP / gta5rp.com)
-                            </router-link>
-                        </div>
-                        <div class="videos-item mb-4">
-                            <div class="video mb-3">
-                                <div class="video-wrap-pre">
-                                    <img :src="avatarMedium" alt="image">
-                                </div>
-                                <button class="video__button" type="button" aria-label="Запустить видео">
-                                    <IconYoutube/>
-                                </button>
-                            </div>
-                            <router-link tag="a"
-                                         :to="`/user-`+1"
-                                         class="video-desc mb-0">Эдвард Бил приглашает тебя на открытие 6 сервера Sunrise (GTA 5 RP / gta5rp.com)
-                            </router-link>
-                        </div>
-
-                        <div class="d-block text-center">
-                            <router-link tag="a"
-                                         class="plz-community-header-desc "
-                                        to="#">
-                                <small>Смотреть ещё</small>
-                            </router-link>
-                        </div>
-                      </div>
+                    <CommunityVideoBlock v-if="hasAccess"
+                             :avatarMedium="avatarMedium"
+                             :communityId="parseInt(id)"
+                             @openVideoModal="openVideoModal"/>
                 </div>
             </div>
         </div>
@@ -202,6 +163,10 @@
         <PostLikeModal v-if="postLikeModal.isVisible"
                        :users="postLikeModal.content.users"
                        @hideLikeModal="hideLikeModal"/>
+
+        <PostVideoModal v-if="postVideoModal.isVisible"
+                        :videoLink="postVideoModal.content.videoLink"
+                        @hideVideoModal="hideVideoModal"/>
     </div>
 </template>
 
@@ -227,6 +192,10 @@ import PrivacyLabel from "../components/Community/PrivacyLabel.vue";
 import LazyLoadPosts from '../mixins/LazyLoadPosts.js';
 import CommunitiesSubscribeMixin from '../mixins/CommunitiesSubscribeMixin.js';
 
+import PrivacyLabel from "../components/Community/PrivacyLabel.vue";
+import CommunityVideoBlock from "../components/Community/CommunityVideoBlock.vue";
+import PostVideoModal from "../common/Post/PostVideoModal.vue";
+
 import PliziCommunity from '../classes/PliziCommunity.js';
 import PliziPost from '../classes/PliziPost.js';
 import PliziCommunityAvatar from '../classes/Community/PliziCommunityAvatar.js';
@@ -239,6 +208,8 @@ props: {
 },
 mixins: [CommunitiesSubscribeMixin, LazyLoadPosts],
 components : {
+    PostVideoModal,
+    CommunityVideoBlock,
     CommunityManagedActionBlock,
     CommunityShortMembers,
     CommunityFriendsInformer,
@@ -252,7 +223,6 @@ components : {
     PostRepostModal,
     PostLikeModal,
     SmallSpinner,
-    IconYoutube,
     PrivacyLabel,
 },
 
@@ -273,6 +243,12 @@ data() {
             isVisible: false,
             content: {
                 users: [],
+            },
+        },
+        postVideoModal: {
+            isVisible: false,
+            content: {
+                videoLink: null,
             },
         },
     }
@@ -535,6 +511,15 @@ methods: {
 
             return response.length;
         }
+    },
+    openVideoModal(evData) {
+        if (evData.videoLink) {
+            this.postVideoModal.isVisible = true;
+            this.postVideoModal.content.videoLink = evData.videoLink;
+        }
+    },
+    hideVideoModal() {
+        this.postVideoModal.isVisible = false;
     },
 },
 

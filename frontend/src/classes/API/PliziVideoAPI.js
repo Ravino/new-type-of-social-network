@@ -25,11 +25,12 @@ class PliziVideoAPI extends PliziBaseAPI {
     /**
      * Сохранение ссылок на видео.
      * @public
+     * @param {object} formData
      * @returns {object[]|null}
      * @throws PliziAPIError
      */
-    async storeVideo(link, workMode, id) {
-        let response = await this.axios.post('api/videos', {link, workMode, id}, this.authHeaders)
+    async storeVideo(formData) {
+        let response = await this.axios.post('api/videos', formData, this.authHeaders)
           .catch( ( error ) => {
               this.checkIsTokenExpires( error, `storeVideo` );
               throw new PliziAPIError( `storeVideo`, error.response );

@@ -37,7 +37,7 @@ methods: {
         this.errors = null;
     },
 
-  async onTextPost(evData){
+  async onTextPost(evData) {
       let msg = evData.postText.trim();
 
     if (msg !== '' || evData.videoLink) {
@@ -90,9 +90,14 @@ methods: {
         if (!(youtubeLink && workMode && id)) return;
 
         let response;
+        let formData = {
+            link: youtubeLink,
+            workMode: workMode,
+            id: id,
+        };
 
         try {
-            response = await this.$root.$api.$video.storeVideo(youtubeLink, workMode, id);
+            response = await this.$root.$api.$video.storeVideo(formData);
         } catch (e) {
             console.warn(e.detailMessage);
         }

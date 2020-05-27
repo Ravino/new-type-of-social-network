@@ -19,20 +19,22 @@
         left: 0;
     }
 
+    $toolbarPicSize: 28px;
+
     #toolbarLeftColor {
         .add-new {
-            width: 32px;
-            min-width: 32px;
-            height: 32px;
+            width: $toolbarPicSize;
+            min-width: $toolbarPicSize;
+            height: $toolbarPicSize;
             .fa {
-                line-height: 32px;
+                line-height: $toolbarPicSize;
             }
         }
 
         img{
             position: relative;
-            width: 32px;
-            height: 32px;
+            width: $toolbarPicSize;
+            height: $toolbarPicSize;
             border-radius: 100%;
             overflow: hidden;
         }
@@ -123,6 +125,7 @@
     }
 
 
+    .plz-comments,
     #communityEditor,
     #profileWhatsNew {
         .picker {
@@ -145,6 +148,31 @@
     {
         #contentContainer {
             padding-top: 76px;
+        }
+    }
+
+    #toolbarLeftGrey {
+        position: fixed;
+        width: 100%;
+        bottom: -1px;
+        z-index: 50;
+        left: 0;
+        right: 0;
+        background-color: #f7f8fc;
+        box-shadow: 0 0 4px 0 rgba(0, 0, 0, .05);
+        margin: 0 !important;
+        display: flex;
+        align-items: stretch;
+        justify-content: space-around;
+
+        a {
+            //box-shadow: 0 0 4px 0 rgba(0, 0, 0, .05);
+            &:hover {
+                //background-color: rgba(0, 0, 0, .05);
+                .icon {
+                    fill: $blueBtnHover
+                }
+            }
         }
     }
 
@@ -207,9 +235,24 @@
 
     $portraitFullHeightResponsive: 400px;
     .plz-gallery {
+        height: $portraitFullHeightResponsive;
+
+        &-single,
         &-wrap {
             height: $portraitFullHeightResponsive;
         }
+
+        &-single {
+            img {
+                height: $portraitFullHeightResponsive;
+            }
+        }
+        &-double {
+            img {
+                height: $portraitFullHeightResponsive;
+            }
+        }
+
         &-image {
             &-album {
                 &-2 {
@@ -218,10 +261,17 @@
                 &-3 {
                     height: $portraitFullHeightResponsive / 2;
                 }
+                &-third {
+                    height: $portraitFullHeightResponsive / 2;
+                }
             }
             &-portrait {
                 &-full {
                     height: $portraitFullHeightResponsive;
+
+                    .plz-gallery-double {
+                        height: $portraitFullHeightResponsive / 2;
+                    }
                 }
 
                 &-half {
@@ -232,6 +282,15 @@
                 }
             }
         }
+
+        &-double {
+            .plz-gallery-image-album-full {
+                height: $portraitFullHeightResponsive / 2;
+            }
+             //img {
+             //    height: $portraitFullHeightResponsive / 2;
+             //}
+         }
     }
 
     .video-player {
