@@ -45,37 +45,38 @@
 </template>
 
 <script>
-    import IconFireLeftToolBar from '../icons/IconFireLeftToolBar.vue';
-    import IconAtom from '../icons/IconAtom.vue';
-    import IconPlay from '../icons/IconPlay.vue';
-    import IconVideo from '../icons/IconVideo.vue';
-    import IconStar from '../icons/IconStar.vue';
-    import IconAddCamera from "../icons/IconAddCamera.vue";
+import IconFireLeftToolBar from '../icons/IconFireLeftToolBar.vue';
+import IconAtom from '../icons/IconAtom.vue';
+import IconPlay from '../icons/IconPlay.vue';
+import IconVideo from '../icons/IconVideo.vue';
+import IconStar from '../icons/IconStar.vue';
+import IconAddCamera from '../icons/IconAddCamera.vue';
 
-    export default {
-        name: 'AccountToolbarLeftGrey',
-        components: {IconAddCamera, IconStar, IconVideo, IconPlay, IconAtom, IconFireLeftToolBar},
-        data() {
-            return {
-                newsPage: 'Новости',
-                communities: 'Сообщества',
-                photoalbums: 'Фотоальбомы',
-                videos: 'Видео',
-                favorites: 'Избранное'
-            }
-        },
-        computed: {
-            communitiesListPage() {
-                if (this.$root.$router.currentRoute.name === 'CommunitiesListPage' ||
-                  this.$root.$router.currentRoute.name === 'CommunitiesManagePage' ||
-                  this.$root.$router.currentRoute.name === 'CommunitiesPopularPage' ||
-                  this.$root.$router.currentRoute.name === 'CommunityPage') {
-                    return ['router-link-exact-active', 'router-link-active', 'active'];
-                }
+export default {
+name: 'AccountToolbarLeftGrey',
+components: {IconAddCamera, IconStar, IconVideo, IconPlay, IconAtom, IconFireLeftToolBar},
 
-                return null;
-            },
-        },
-        methods: {},
+data() {
+    return {
+        newsPage : 'Новости',
+        communities : 'Сообщества',
+        photoalbums : 'Фотоальбомы',
+        videos : 'Видео',
+        favorites : 'Избранное'
     }
+},
+computed: {
+    communitiesListPage() {
+        if (this.$root.$router.currentRoute.name === 'CommunitiesListPage' ||
+          this.$root.$router.currentRoute.name === 'CommunitiesManagePage' ||
+          this.$root.$router.currentRoute.name === 'CommunitiesPopularPage' ||
+          this.$root.$router.currentRoute.name === 'CommunityPage') {
+            return ['router-link-exact-active', 'router-link-active', 'active'];
+        }
+
+        return null;
+    },
+},
+methods: {},
+}
 </script>

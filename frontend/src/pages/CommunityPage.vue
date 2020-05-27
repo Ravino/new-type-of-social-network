@@ -219,18 +219,18 @@ import CommunityEditor from '../common/Communities/CommunityEditor.vue';
 import PostRepostModal from '../common/Post/PostRepostModal.vue';
 import PostLikeModal from '../common/Post/PostLikeModal.vue';
 import SmallSpinner from "../common/SmallSpinner.vue";
+import IconYoutube from "../icons/IconYoutube.vue";
+
+import CommunityManagedActionBlock from "../common/Communities/CommunityManagedActionBlock.vue";
+import PrivacyLabel from "../components/Community/PrivacyLabel.vue";
+
+import LazyLoadPosts from '../mixins/LazyLoadPosts.js';
+import CommunitiesSubscribeMixin from '../mixins/CommunitiesSubscribeMixin.js';
 
 import PliziCommunity from '../classes/PliziCommunity.js';
 import PliziPost from '../classes/PliziPost.js';
 import PliziCommunityAvatar from '../classes/Community/PliziCommunityAvatar.js';
-import CommunitiesSubscribeMixin from "../mixins/CommunitiesSubscribeMixin";
-import CommunityManagedActionBlock from "../common/Communities/CommunityManagedActionBlock.vue";
-
-import IconYoutube from "../icons/IconYoutube.vue";
-import LazyLoadPosts from '../mixins/LazyLoadPosts.js';
-import PliziUser from "../classes/PliziUser.js";
-
-import PrivacyLabel from "../components/Community/PrivacyLabel.vue";
+import PliziUser from '../classes/PliziUser.js';
 
 export default {
 name: 'CommunityPage',
@@ -522,11 +522,9 @@ methods: {
         this.isStarted = true;
 
         try {
-            // TODO: тут нужно получать посты сообщества
             response = await this.$root.$api.$communities.posts(this.id, limit, offset);
         } catch (e) {
             this.isStarted = false;
-            console.warn(e.detailMessage);
         }
 
         if (response !== null) {
@@ -540,17 +538,23 @@ methods: {
     },
 },
 
-async mounted() {
+created(){
+
+},
+
+    async mounted() {
     await this.getCommunityInfo();
     window.scrollTo(0, 0);
 },
-    beforeRouteUpdate (to, from, next) {
-        this.communityData = null;
-        this.posts = null;
-        next();
-        this.id = to.params.id;
-        this.getCommunityInfo();
-        window.scrollTo(0, 0);
-    },
+
+beforeRouteUpdate (to, from, next) {
+    this.communityData = null;
+    this.posts = null;
+    next();
+    this.id = to.params.id;
+    this.getCommunityInfo();
+    window.scrollTo(0, 0);
+},
+
 }
 </script>
