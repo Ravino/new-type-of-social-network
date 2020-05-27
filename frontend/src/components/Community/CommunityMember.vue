@@ -60,7 +60,7 @@
         props: {
             srItem: PliziMember,
             isAdmin: Boolean,
-            communityId: String,
+            communityId: Number,
         },
 
         data() {
