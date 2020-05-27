@@ -18,27 +18,54 @@ node_js:
 services:
   - docker # required, but travis uses older version of docker :(
 
-script:
-  - cd frontend
+jobs:
+  include:
+    - stage: PLZ-439
+      script:
+        - cd frontend
+        - sed -ie  "s,__APIS_URL__,$APIS_URL,g; s,__WSS_URL__,$WSS_URL,g" public/index.html.example
+        - sed -ie  "s,__API__,$API,g; s,__WS__,$WS,g; s,__URL__,$URL,g; s,__APIS_URL__,$APIS_URL,g; s,__WS_SERVICE__,$WS_SERVICE,g; s,__API_SERVICE__,$API_SERVICE,g" docker/nginx/default.example.conf
+        - npm install
+        - npm run prod
+        - docker --version  # document the version travis is using
+        - pip install --user awscli # install aws cli w/o sudo
+        - export PATH=$PATH:$HOME/.local/bin # put aws in the path
+        - mkdir ${HOME}/.aws
+        - echo "$AWS_CREDENTIALS" | base64 --decode > ${HOME}/.aws/credentials
+        - echo "$AWS_CONFIG" | base64 --decode > ${HOME}/.aws/config
+        #- eval $(aws ecr get-login --region us-east-1) #needs AWS_ACCESS_KEY_ID and AWS_SECRET_ACCESS_KEY envvars
+        - aws ecr get-login-password --region eu-central-1 | docker login --username AWS --password-stdin 884088487044.dkr.ecr.eu-central-1.amazonaws.com
+        - cp docker/nginx/Dockerfile .
+        - docker build -t plizi_front .
+        - docker tag plizi_front 884088487044.dkr.ecr.eu-central-1.amazonaws.com/plizi_front:latest
+        - docker push 884088487044.dkr.ecr.eu-central-1.amazonaws.com/plizi_front:latest
+        - echo "no tests!" # put your normal testing scripts here
+    - # stage name not required, will continue to use `test`
+      script: ./test 2
+    - stage: deploy
+      script: ./deploy
 
-  - sed -ie  "s,__APIS_URL__,$APIS_URL,g; s,__WSS_URL__,$WSS_URL,g" public/index.html.example
-  - sed -ie  "s,__API__,$API,g; s,__WS__,$WS,g; s,__URL__,$URL,g; s,__APIS_URL__,$APIS_URL,g; s,__WS_SERVICE__,$WS_SERVICE,g; s,__API_SERVICE__,$API_SERVICE,g" docker/nginx/default.example.conf
-
-  - npm install
-  - npm run prod
-  - docker --version  # document the version travis is using
-  - pip install --user awscli # install aws cli w/o sudo
-  - export PATH=$PATH:$HOME/.local/bin # put aws in the path
-  - mkdir ${HOME}/.aws
-  - echo "$AWS_CREDENTIALS" | base64 --decode > ${HOME}/.aws/credentials
-  - echo "$AWS_CONFIG" | base64 --decode > ${HOME}/.aws/config
-  #- eval $(aws ecr get-login --region us-east-1) #needs AWS_ACCESS_KEY_ID and AWS_SECRET_ACCESS_KEY envvars
-
-  - aws ecr get-login-password --region eu-central-1 | docker login --username AWS --password-stdin 884088487044.dkr.ecr.eu-central-1.amazonaws.com
-  - cp docker/nginx/Dockerfile .
-  - docker build -t plizi_front .
-  - docker tag plizi_front 884088487044.dkr.ecr.eu-central-1.amazonaws.com/plizi_front:latest
-  - docker push 884088487044.dkr.ecr.eu-central-1.amazonaws.com/plizi_front:latest
+#script:
+#  - cd frontend
+#
+#  - sed -ie  "s,__APIS_URL__,$APIS_URL,g; s,__WSS_URL__,$WSS_URL,g" public/index.html.example
+#  - sed -ie  "s,__API__,$API,g; s,__WS__,$WS,g; s,__URL__,$URL,g; s,__APIS_URL__,$APIS_URL,g; s,__WS_SERVICE__,$WS_SERVICE,g; s,__API_SERVICE__,$API_SERVICE,g" docker/nginx/default.example.conf
+#
+#  - npm install
+#  - npm run prod
+#  - docker --version  # document the version travis is using
+#  - pip install --user awscli # install aws cli w/o sudo
+#  - export PATH=$PATH:$HOME/.local/bin # put aws in the path
+#  - mkdir ${HOME}/.aws
+#  - echo "$AWS_CREDENTIALS" | base64 --decode > ${HOME}/.aws/credentials
+#  - echo "$AWS_CONFIG" | base64 --decode > ${HOME}/.aws/config
+#  #- eval $(aws ecr get-login --region us-east-1) #needs AWS_ACCESS_KEY_ID and AWS_SECRET_ACCESS_KEY envvars
+#
+#  - aws ecr get-login-password --region eu-central-1 | docker login --username AWS --password-stdin 884088487044.dkr.ecr.eu-central-1.amazonaws.com
+#  - cp docker/nginx/Dockerfile .
+#  - docker build -t plizi_front .
+#  - docker tag plizi_front 884088487044.dkr.ecr.eu-central-1.amazonaws.com/plizi_front:latest
+#  - docker push 884088487044.dkr.ecr.eu-central-1.amazonaws.com/plizi_front:latest
 #  - echo "no tests!" # put your normal testing scripts here
 
 
