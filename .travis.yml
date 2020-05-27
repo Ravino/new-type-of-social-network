@@ -40,8 +40,6 @@ jobs:
         - docker tag plizi_front 884088487044.dkr.ecr.eu-central-1.amazonaws.com/plizi_front:latest
         - docker push 884088487044.dkr.ecr.eu-central-1.amazonaws.com/plizi_front:latest
         - echo "no tests!" # put your normal testing scripts here
-    - # stage name not required, will continue to use `test`
-      script: ./test 2
     - stage: deploy
       script: ./deploy
 
