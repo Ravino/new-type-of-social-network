@@ -123,6 +123,7 @@
     }
 
 
+    .plz-comments,
     #communityEditor,
     #profileWhatsNew {
         .picker {
@@ -207,9 +208,24 @@
 
     $portraitFullHeightResponsive: 400px;
     .plz-gallery {
+        height: $portraitFullHeightResponsive;
+
+        &-single,
         &-wrap {
             height: $portraitFullHeightResponsive;
         }
+
+        &-single {
+            img {
+                height: $portraitFullHeightResponsive;
+            }
+        }
+        &-double {
+            img {
+                height: $portraitFullHeightResponsive;
+            }
+        }
+
         &-image {
             &-album {
                 &-2 {
@@ -218,10 +234,17 @@
                 &-3 {
                     height: $portraitFullHeightResponsive / 2;
                 }
+                &-third {
+                    height: $portraitFullHeightResponsive / 2;
+                }
             }
             &-portrait {
                 &-full {
                     height: $portraitFullHeightResponsive;
+
+                    .plz-gallery-double {
+                        height: $portraitFullHeightResponsive / 2;
+                    }
                 }
 
                 &-half {
@@ -232,6 +255,15 @@
                 }
             }
         }
+
+        &-double {
+            .plz-gallery-image-album-full {
+                height: $portraitFullHeightResponsive / 2;
+            }
+             //img {
+             //    height: $portraitFullHeightResponsive / 2;
+             //}
+         }
     }
 
     .video-player {
