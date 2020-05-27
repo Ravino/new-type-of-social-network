@@ -122,7 +122,7 @@
                     </label>
                     <div
                         class="plz-account-settings-body-field order-1 order-sm-0 col-12 col-sm-5 col-md-6 col-lg-6 col-xl-6">
-                        <div class="w-100 w-sm-75 position-relative ml-n2">
+                        <div class="w-100 w-sm-75 position-relative ">
                             <multiselect id="relationshipUsers"
                                          class="w-100 w-sm-75 border-0 form-control p-0 position-relative relationshipUsers"
                                          v-model="model.relationshipUser"
@@ -145,11 +145,11 @@
 
                 <div class="form-group row border-bottom">
                     <label for="birthday"
-                           class="plz-account-settings-body-label col-6 col-sm-4 col-lg-4">
+                           class="plz-account-settings-body-label col-6 col-sm-4 ">
                         Дата рождения
                     </label>
                     <div
-                        class="plz-account-settings-body-field order-1 order-sm-0 col-12 col-sm-5 col-md-6 col-lg-6 col-xl-6 ">
+                        class="plz-account-settings-body-field order-1 order-sm-0 col-12 col-sm-5 col-lg-6  ">
                         <div v-if="!isEdit.birthday" class="form-control-plaintext border-bottom-0">
                             <template v-if="model.birthday">
                                 {{ model.birthday | toDMY }}
@@ -174,7 +174,7 @@
                         </div>
                     </div>
                     <div
-                        class="plz-account-settings-body-action col-6 col-sm-3 col-lg-2 d-sm-none d-md-none d-lg-flex d-xl-flex">
+                        class="plz-account-settings-body-action col-6 col-sm-3 col-lg-2 col-xl-auto d-lg-flex ">
                         <button type="button"
                                 class="btn btn-link"
                                 :class="{'text-primary': isEdit.birthday}"
