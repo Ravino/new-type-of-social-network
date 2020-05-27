@@ -78,6 +78,11 @@ class Post extends Model
         return $this->morphOne(Video::class, 'creatableby');
     }
 
+    public function children()
+    {
+        return $this->hasMany(self::class, 'parent_id', 'id');
+    }
+
     /**
      * @return string
      */
@@ -96,7 +101,7 @@ class Post extends Model
                     return $query->limit(8)->get();
                 }, 'parent' => function ($query) {
                     return $query->withTrashed()->get();
-                }])
+                }])->withCount('comments')->withCount('children')
                 ->limit($limit ?? 20)
                 ->offset($offset ?? 0)
                 ->orderBy('id', 'desc')
@@ -115,7 +120,7 @@ class Post extends Model
             return $query->limit(8)->get();
         }, 'parent' => function ($query) {
             return $query->withTrashed()->get();
-        }]);
+        }])->withCount('comments')->withCount('children');
 
         foreach($friends as $friend) {
             if ($friend->status) {
