@@ -1853,6 +1853,51 @@
                 }
             }
         },
+        "/user/news": {
+            "get": {
+                "tags": [
+                    "Posts"
+                ],
+                "operationId": "NewsList",
+                "parameters": [
+                    {
+                        "name": "onlyLiked",
+                        "in": "query",
+                        "description": "Возвращать только лайкнутые или нет",
+                        "required": false,
+                        "schema": {
+                            "type": "boolean"
+                        }
+                    },
+                    {
+                        "name": "orderBy",
+                        "in": "query",
+                        "description": "Сортировка по любым колонкам, например, views или created_at",
+                        "required": false,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "data": {
+                                            "$ref": "#/components/schemas/PostByUser"
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
         "/posts": {
             "post": {
                 "tags": [
