@@ -25,6 +25,33 @@ methods: {
             }
         }
     },
+
+    async stopFriendship(friendId){
+        let apiResponse = null;
+
+        try {
+            apiResponse = await this.$root.$api.$friend.friendshipStop( friendId );
+        } catch (e){
+            window.console.warn( e.detailMessage );
+            throw e;
+        }
+
+        this.isPrepareToRemoved = true;
+
+        if ( apiResponse ) {
+            this.isRemoved = true;
+
+            this.$root.$auth.fm.removeFromFavorites(friendId);
+            this.$root.$auth.frm.stopFriendship(friendId);
+
+            this.$root.$friendsKeyUpdater++;
+            this.$root.$favoritesKeyUpdater++;
+
+            this.$emit( 'FriendshipStop', {
+                friendId: friendId
+            });
+        }
+    }
 }
 
 };

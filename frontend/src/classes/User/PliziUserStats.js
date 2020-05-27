@@ -49,6 +49,13 @@ class PliziUserStats {
      */
     _followCount = 0;
 
+    /**
+     * В черном списке?
+     * @type {boolean}
+     * @private
+     */
+    _isInBlacklist = false;
+
     get notifications(){
         return this._notifications;
     }
@@ -109,6 +116,14 @@ class PliziUserStats {
         this._followCount = value;
     }
 
+    get isInBlacklist() {
+        return this._isInBlacklist;
+    }
+
+    set isInBlacklist(value) {
+        this._isInBlacklist = value;
+    }
+
     constructor(inputData){
         if (inputData) {
             this.update(inputData);
@@ -123,6 +138,7 @@ class PliziUserStats {
         this.isFollow = inputData.isFollow;
         this.isFriend = inputData.isFriend;
         this.followCount = inputData.followCount;
+        this.isInBlacklist = inputData.isInBlacklist;
     }
 
     toJSON(){
@@ -134,6 +150,7 @@ class PliziUserStats {
             isFollow: this.isFollow,
             isFriend: this.isFriend,
             followCount: this.followCount,
+            isInBlacklist: this.isInBlacklist,
         };
     }
 }

@@ -9,7 +9,7 @@ import PotentialFriends from '../common/PotentialFriends.vue';
 
 import PliziUser from '../classes/PliziUser.js'; // @TGA не удалять - объявление PliziUser тут нужно
 import PliziFriend from '../classes/PliziFriend.js';
-import { shuffle } from "../utils/ArrayUtils.js";
+import { shuffle } from '../utils/ArrayUtils.js';
 
 const FriendsListMixin = {
 components: {
@@ -30,7 +30,6 @@ data() {
 },
 
 methods: {
-
     /**
      * @param a
      * @returns {*}

@@ -48,6 +48,44 @@
         }
     ],
     "paths": {
+        "/user/images/{imageId}": {
+            "post": {
+                "tags": [
+                    "Photo"
+                ],
+                "description": "Лайкнуть изображение пользователя.",
+                "operationId": "UserPhotoLike",
+                "parameters": [
+                    {
+                        "name": "imageId",
+                        "in": "path",
+                        "description": "ID изображения",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "description": "Сообщение об успешном лайк/анлайк."
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
         "/photo-albums/{id}/photos": {
             "post": {
                 "tags": [
@@ -322,6 +360,140 @@
                                         "message": {
                                             "type": "string",
                                             "description": "Сообщение об успешном удалении."
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/user/images/{imageId}/comment": {
+            "post": {
+                "tags": [
+                    "Comments"
+                ],
+                "operationId": "CommentUserImage",
+                "parameters": [
+                    {
+                        "name": "imageId",
+                        "in": "path",
+                        "description": "ID изображения пользователя",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/CreateCommentOnPost"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "list": {
+                                            "type": "array",
+                                            "items": {
+                                                "$ref": "#/components/schemas/Comment"
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/posts/attachments/{attachmentId}/comment": {
+            "post": {
+                "tags": [
+                    "Comments"
+                ],
+                "operationId": "CommentPostImage",
+                "parameters": [
+                    {
+                        "name": "attachmentId",
+                        "in": "path",
+                        "description": "ID изображения поста",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/CreateCommentOnPost"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "list": {
+                                            "type": "array",
+                                            "items": {
+                                                "$ref": "#/components/schemas/Comment"
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/comment/{commentId}/like": {
+            "post": {
+                "tags": [
+                    "Comments"
+                ],
+                "description": "Лайкнуть комментарий.",
+                "operationId": "CommentLike",
+                "parameters": [
+                    {
+                        "name": "commentId",
+                        "in": "path",
+                        "description": "ID комментария",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "description": "Сообщение об успешном лайк/анлайк."
                                         }
                                     }
                                 }
@@ -3072,7 +3244,7 @@
                 ]
             }
         },
-        "/user/blacklist/list": {
+        "/user/blacklist": {
             "get": {
                 "tags": [
                     "User"
@@ -3117,9 +3289,7 @@
                         "Authorization": []
                     }
                 ]
-            }
-        },
-        "/user/blacklist/add": {
+            },
             "post": {
                 "tags": [
                     "User"
@@ -3159,10 +3329,8 @@
                         "Authorization": []
                     }
                 ]
-            }
-        },
-        "/user/blacklist/delete": {
-            "post": {
+            },
+            "delete": {
                 "tags": [
                     "User"
                 ],

@@ -34,8 +34,8 @@
                 <IconMessageShort v-else/>
             </button>
 
-            <ButtonsBecomeAdmin v-if="isAdmin && srItem.role === 'user'"></ButtonsBecomeAdmin>
-            <ButtonsStopBeAdmin v-else-if="isAdmin && srItem.role === 'admin'"></ButtonsStopBeAdmin>
+            <ButtonsBecomeAdmin v-if="isAdmin && srItem.role === 'user'" :srItem="srItem" :communityId="communityId"/>
+            <ButtonsStopBeAdmin v-else-if="isAdmin && srItem.role === 'admin'" :srItem="srItem" :communityId="communityId"/>
 
         </div>
     </li>
@@ -60,6 +60,7 @@
         props: {
             srItem: PliziMember,
             isAdmin: Boolean,
+            communityId: String,
         },
 
         data() {
