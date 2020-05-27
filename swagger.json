@@ -51,7 +51,7 @@
         "/user/images/{imageId}": {
             "post": {
                 "tags": [
-                  "Photo"
+                    "Photo"
                 ],
                 "description": "Лайкнуть изображение пользователя.",
                 "operationId": "UserPhotoLike",
@@ -62,13 +62,13 @@
                         "description": "ID изображения",
                         "required": true,
                         "schema": {
-                          "type": "integer"
+                            "type": "integer"
                         }
                     }
                 ],
                 "responses": {
                     "200": {
-                      "description": "OK",
+                        "description": "OK",
                         "content": {
                             "application/json": {
                                 "schema": {
@@ -360,6 +360,102 @@
                                         "message": {
                                             "type": "string",
                                             "description": "Сообщение об успешном удалении."
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/user/images/{imageId}/comment": {
+            "post": {
+                "tags": [
+                    "Comments"
+                ],
+                "operationId": "CommentUserImage",
+                "parameters": [
+                    {
+                        "name": "imageId",
+                        "in": "path",
+                        "description": "ID изображения пользователя",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/CreateCommentOnPost"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "list": {
+                                            "type": "array",
+                                            "items": {
+                                                "$ref": "#/components/schemas/Comment"
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/posts/attachments/{attachmentId}/comment": {
+            "post": {
+                "tags": [
+                    "Comments"
+                ],
+                "operationId": "CommentPostImage",
+                "parameters": [
+                    {
+                        "name": "attachmentId",
+                        "in": "path",
+                        "description": "ID изображения поста",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/CreateCommentOnPost"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "list": {
+                                            "type": "array",
+                                            "items": {
+                                                "$ref": "#/components/schemas/Comment"
+                                            }
                                         }
                                     }
                                 }
