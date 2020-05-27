@@ -60,7 +60,14 @@ class PostController extends Controller
      */
     public function getNews(Request $request)
     {
-        $posts = Post::getWithoutOldPosts(\Auth::user(), $request->query('limit'), $request->query('offset'));
+        $posts = Post::getWithoutOldPosts(
+            \Auth::user(),
+            $request->query('limit'),
+            $request->query('offset'),
+            false,
+            $request->get('onlyLiked') ?? false,
+            $request->get('orderBy') ?? null,
+        );
 
         return new PostCollection($posts);
     }
