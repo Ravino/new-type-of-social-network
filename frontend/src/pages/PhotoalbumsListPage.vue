@@ -18,11 +18,6 @@
                                             <div class="row">
                                                 <div v-for="album in photoalbums" class="col-4 my-4 mb-4">
                                                     <PhotoalbumItem :album="album" :key="album.id"></PhotoalbumItem>
-<!--                                                    <img v-if="video.isYoutubeLink"-->
-<!--                                                         :src="`//img.youtube.com/vi/${video.youtubeId}/0.jpg`"-->
-<!--                                                         class="img-fluid"-->
-<!--                                                         alt=""-->
-<!--                                                         @click.stop="openVideoModal(video.link)"/>-->
                                                 </div>
                                             </div>
                                         </div>
@@ -37,10 +32,6 @@
                 <FavoriteFriends :isNarrow="true"></FavoriteFriends>
             </div>
         </div>
-
-        <PhotoalbumsPageModal v-if="videoModal.isVisible"
-                        :videoLink="videoModal.content.videoLink"
-                        @hideVideoModal="hideVideoModal"/>
     </div>
 </template>
 
@@ -56,7 +47,7 @@
     import IconPlayVideo from "../icons/IconPlayVideo.vue";
 
     export default {
-name: "PhotoalbumsPage",
+name: "PhotoalbumsListPage",
 components: {
     IconPlayVideo,
     IconYoutube,

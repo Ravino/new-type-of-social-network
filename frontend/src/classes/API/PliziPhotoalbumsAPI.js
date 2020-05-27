@@ -16,7 +16,6 @@ class PliziPhotoalbumsAPI extends PliziBaseAPI {
           } );
 
         if ( response.status === 200 ){
-            console.log(response);
             return response.data.data.list;
         }
 
@@ -45,19 +44,13 @@ class PliziPhotoalbumsAPI extends PliziBaseAPI {
 
     /**
      * Обновление данных альбома
-     * @param {string} id
-     * @param {title} title - данные для загрузки
-     * @param {description} description - данные для загрузки
+     // * @param {string} albumId
+     * @param {{description: string, title: string}} formData - данные для загрузки
      * @returns {object|null} - ответ сервера
      * @throws PliziAPIError
      */
-    async updatePhotoalbum( id, title, description ){
-        let requestBody = {
-            "communityId": id,
-            "title": title,
-            "description": description
-        }
-        let response = await this.axios.post( `api/photo-albums/{id}`, requestBody, this.authHeaders )
+    async updatePhotoalbum( albumId, formData ){
+        let response = await this.axios.post( `api/photo-albums/${albumId}`, formData, this.authHeaders )
             .catch( ( error ) => {
                 this.checkIsTokenExpires( error, `updatePhotoalbum` );
                 throw new PliziAPIError( `updatePhotoalbum`, error.response );

@@ -1,20 +1,15 @@
 <template>
     <div class="photoalbum-item d-flex">
         <div>
-            <router-link :to="`/community-`+album.id" tag="a"
+            <router-link :to="`/photoalbum-`+album.id" tag="a"
                          class="">
                 <img class="" src="../../images/noavatar-256.png" :alt="album.title" :title="album.title"/>
-            </router-link>
-
-            <div class="plizi-community-item-body">
-                <router-link :to="`/community-`+album.id" tag="a"
-                         class="plizi-community-item-top d-flex align-items-end justify-content-between mb-2  " >
-                    <h6 class="plizi-community-item-name my-0">
+                <div class="photoalbum-item-title">
+                    <h6>
                         {{ album.title }}
                     </h6>
-                </router-link>
-            </div>
-
+                </div>
+            </router-link>
         </div>
     </div>
 </template>
@@ -37,9 +32,6 @@ props : {
     album : Object,
 },
 computed: {
-    // avatar() {
-    //     return this.community.avatar?.image.thumb.path || this.community.primaryImage;
-    // },
     subscribeType() {
         return this.getSubscribeType(this.community);
     },
