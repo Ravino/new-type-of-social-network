@@ -226,6 +226,7 @@ methods : {
         this.postRepostModal.isVisible = true;
         this.postRepostModal.content.postForRepost = post;
     },
+
     hidePostRepostModal() {
         this.postRepostModal.isVisible = false;
         this.postRepostModal.content.postForRepost = null;
@@ -249,7 +250,6 @@ methods : {
             response = await this.$root.$api.$post.getPosts(limit, offset);
         } catch (e){
             this.isStarted = false;
-            console.warn( e.detailMessage );
         }
 
         if ( response !== null ){
@@ -319,11 +319,6 @@ methods : {
 },
 
 async mounted() {
-    this.$root.$on('showProfileOptionsModal', ()=>{
-        this.$alert(`Какие-то опции пользователя`, 'bg-info', 10);
-    });
-
-    this.$root.$on('wallPostsSelect', this.wallPostsSelectHandler);
     await this.getPosts();
 }
 

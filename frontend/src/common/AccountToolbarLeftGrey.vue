@@ -21,8 +21,8 @@
             <IconPlay/>
         </router-link>-->
 
-        <router-link :to="{name: 'PhotoalbumsPage'}"
-                     :class="{ 'active': 'PhotoalbumsPage' === this.$root.$router.currentRoute.name }"
+        <router-link :to="{name: 'PhotoalbumsListPage'}"
+                     :class="{ 'active': 'PhotoalbumsListPage' === this.$root.$router.currentRoute.name }"
                      :title="photoalbums"
                      tag="a"
                      class="w-100 d-block text-center mx-auto mb-4">
@@ -37,9 +37,9 @@
             <IconVideo/>
         </router-link>
 
-        <a class="w-100 d-block text-center mx-auto mb-4" href="#" :title="favorites">
-            <IconStar/>
-        </a>
+<!--        <a class="w-100 d-block text-center mx-auto mb-4" href="#" :title="favorites">-->
+<!--            <IconStar/>-->
+<!--        </a>-->
 
     </div>
 </template>

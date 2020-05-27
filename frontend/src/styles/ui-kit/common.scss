@@ -85,7 +85,7 @@ a:hover {
     text-decoration-color: $postTextColor;
 }
 
-a {
+a:not(.btn) {
     word-break: break-word;
 }
 
@@ -665,4 +665,12 @@ $dotSize: 2px;
     }
 }
 
+.spinner-color {
+    color: #b3b6d0!important;
+    font-size: 2em!important;
+    h3 {
+        font-size: 16px!important;
+        font-weight: normal!important;
+    }
+}
 

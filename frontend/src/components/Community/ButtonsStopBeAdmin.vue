@@ -10,11 +10,23 @@
     export default {
         name: "ButtonsStopBeAdmin",
         props: {
-            srItem: PliziMember
+            srItem: PliziMember,
+            communityId: Number,
         },
         methods: {
-            doClick() {
-                this.$root.$alert('stop be admin', 'bg-info', 3);
+            async doClick() {
+                let apiResponse;
+
+                try {
+                    apiResponse = await this.$root.$api.$communities.stopBeAdmin(this.communityId, this.srItem.id);
+                } catch (e) {
+                    console.warn(e.detailMessage);
+                }
+
+                if (apiResponse) {
+                    this.srItem.role = 'user';
+                    this.$root.$alert('Пользователь удален из администраторов сообщества', 'bg-info', 3);
+                }
             }
         },
     }

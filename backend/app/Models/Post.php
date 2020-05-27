@@ -54,10 +54,10 @@ class Post extends Model
     }
 
     /**
-     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     * @return \Illuminate\Database\Eloquent\Relations\MorphMany
      */
     public function like() {
-        return $this->hasMany(Like::class, 'likeable_id', 'id')
+        return $this->morphMany(Like::class, 'likeable')
             ->where('user_id', \Auth::user()->id);
     }
 
@@ -70,12 +70,17 @@ class Post extends Model
             'id',
             'id',
             'user_id'
-        );
+        )->where('likeable_type', Post::class);
     }
 
     public function video()
     {
         return $this->morphOne(Video::class, 'creatableby');
+    }
+
+    public function children()
+    {
+        return $this->hasMany(self::class, 'parent_id', 'id');
     }
 
     /**
@@ -86,6 +91,7 @@ class Post extends Model
         return 'U';
     }
 
+<<<<<<< HEAD
     /**
      * @param $user
      * @param $limit
@@ -94,6 +100,9 @@ class Post extends Model
      * @return \Illuminate\Database\Eloquent\Builder[]|\Illuminate\Database\Eloquent\Collection
      */
     public static function getWithoutOldPosts($user, $limit, $offset, $isMyPosts = false)
+=======
+    public static function getWithoutOldPosts($user, $limit, $offset, $isMyPosts = false, $onlyLiked = false, $orderBy = null)
+>>>>>>> 15caafde99246783492771ba56ba0caee3e9bc11
     {
         if ($isMyPosts) {
             $userPosts = $user->posts()->pluck('id');
@@ -103,7 +112,9 @@ class Post extends Model
                     return $query->limit(8)->get();
                 }, 'parent' => function ($query) {
                     return $query->withTrashed()->get();
-                }])
+                }, 'attachments' => function ($query) {
+                    return $query->withCount('comments');
+                }])->withCount('comments')->withCount('children')
                 ->limit($limit ?? 20)
                 ->offset($offset ?? 0)
                 ->orderBy('id', 'desc')
@@ -122,7 +133,9 @@ class Post extends Model
             return $query->limit(8)->get();
         }, 'parent' => function ($query) {
             return $query->withTrashed()->get();
-        }]);
+        }, 'attachments' => function ($query) {
+            return $query->withCount('comments');
+        }])->withCount('comments')->withCount('children');
 
         foreach($friends as $friend) {
             if ($friend->status) {
@@ -147,11 +160,19 @@ class Post extends Model
         }
         $posts->orWhere('postable_type', User::class)
             ->where('postable_id', \Auth::user()->id);
+        $orderByColumn = $orderBy ?? 'id';
 
         return $posts
+            ->where(function ($query) use ($onlyLiked) {
+                if ($onlyLiked) {
+                    return $query->where('likes', '>', 0);
+                }
+
+                return $query;
+            })
             ->limit($limit ?? 20)
             ->offset($offset ?? 0)
-            ->orderBy('id', 'desc')
+            ->orderBy($orderByColumn, 'desc')
             ->get();
     }
 }

@@ -394,6 +394,26 @@ class PliziCommunitiesAPI extends PliziBaseAPI {
         return null;
     }
 
+    async recommended() {
+        let response = await this.axios.get(`api/communities/recommended/list`, this.authHeaders)
+            .catch((error) => {
+                if (error.response.status === 422) {
+                    return {
+                        status: 422,
+                        message: error.response.data.message
+                    }
+                }
+                this.checkIsTokenExpires(error, '$communities.recommended');
+                throw new PliziAPIError('$communities.recommended', error.response);
+            });
+
+        if (response.status === 200) {
+            return response.data.data;
+        }
+
+        return null;
+    }
+
     /**
      * Получение списка участников сообщества
      * @param {number} communityId
@@ -403,7 +423,7 @@ class PliziCommunitiesAPI extends PliziBaseAPI {
      * @throws PliziAPIError
      */
     async members(communityId, limit = 20, offset = 0) {
-        const url = `api/communities/${communityId}/members`;
+        const url = `api/communities/${communityId}/members?limit=${limit}&offset=${offset}`;
         let response = await this.axios.get(url, this.authHeaders)
             .catch((error) => {
                 this.checkIsTokenExpires(error, `$communities.members`);
@@ -412,6 +432,68 @@ class PliziCommunitiesAPI extends PliziBaseAPI {
 
         if (response.status === 200) {
             return response.data.data;
+        }
+
+        return null;
+    }
+
+    /**
+     *
+     * @param {number} communityId
+     * @param {number} limit
+     * @param {number} offset
+     * @returns {Promise<null|*>}
+     */
+    async videos(communityId, limit = 5, offset = 0) {
+        const url = `api/communities/${communityId}/videos?limit=${limit}&offset=${offset}`;
+        let response = await this.axios.get(url, this.authHeaders)
+            .catch((error) => {
+                this.checkIsTokenExpires(error, `$communities.videos`);
+                throw new PliziAPIError(`$communities.videos`, error.response);
+            });
+
+        if (response.status === 200) {
+            return response.data.data;
+        }
+
+        return null;
+    }
+
+    /**
+     * @param {number} communityId
+     * @param {string} userId
+     * @returns {Promise<null|any>}
+     */
+    async becomeAdmin(communityId, userId) {
+        const url = `api/communities/admin/${communityId}/${userId}`;
+        let response = await this.axios.post(url, {}, this.authHeaders)
+            .catch((error) => {
+                this.checkIsTokenExpires(error, `$communities.members`);
+                throw new PliziAPIError(`$communities.members`, error.response);
+            });
+
+        if (response.status === 200) {
+            return response.data;
+        }
+
+        return null;
+    }
+
+    /**
+     * @param {number} communityId
+     * @param {string} userId
+     * @returns {Promise<null|any>}
+     */
+    async stopBeAdmin(communityId, userId) {
+        const url = `api/communities/admin/${communityId}/${userId}`;
+        let response = await this.axios.delete(url, this.authHeaders)
+            .catch((error) => {
+                this.checkIsTokenExpires(error, `$communities.members`);
+                throw new PliziAPIError(`$communities.members`, error.response);
+            });
+
+        if (response.status === 200) {
+            return response.data;
         }
 
         return null;

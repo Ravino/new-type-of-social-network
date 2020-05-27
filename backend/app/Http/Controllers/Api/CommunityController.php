@@ -14,11 +14,15 @@ use App\Http\Resources\Community\Community as CommunityResource;
 use App\Http\Resources\Community\CommunityRequests;
 use App\Http\Resources\Community\CommunityUserCollection;
 use App\Http\Resources\User\Image;
+use App\Http\Resources\Video\VideoCollection;
 use App\Models\Community;
 use App\Models\CommunityAttachment;
 use App\Models\CommunityHeader;
+use App\Models\CommunityMember;
 use App\Models\CommunityRequest as CommunityRequestModel;
 use App\Models\CommunityTheme;
+use App\Models\Post;
+use App\Models\Video;
 use App\Services\CommunityService;
 use App\Services\S3UploadService;
 use Auth;
@@ -407,6 +411,86 @@ class CommunityController extends Controller
             ->withCount('members')
             ->get();
 
+        /**
+         * @todo add community to full list
+         */
         return new CommunityCollection($communities, false);
+    }
+
+    /**
+     * @param Request $request
+     * @return JsonResponse
+     */
+    public function adminCreate(Request $request)
+    {
+        /** @var Community $community */
+        $community = $request->community;
+
+        $updated = CommunityMember::where('community_id', $community->id)
+            ->where('user_id', $request->userId)
+            ->update([
+                'role' => Community::ROLE_ADMIN,
+            ]);
+        if ($updated) {
+            return response()->json([
+                'message' => 'Роль назначили',
+            ]);
+        }
+        return response()->json([
+            'message' => 'Ошибка назначения роли',
+        ], 422);
+    }
+
+    /**
+     * @param Request $request
+     * @return JsonResponse
+     */
+    public function adminDelete(Request $request)
+    {
+        /** @var Community $community */
+        $community = $request->community;
+
+        $updated = CommunityMember::where('community_id', $community->id)
+            ->where('user_id', $request->userId)
+            ->update([
+                'role' => Community::ROLE_USER,
+            ]);
+        if ($updated) {
+            return response()->json([
+                'message' => 'Роль убрана',
+            ]);
+        }
+        return response()->json([
+            'message' => 'Ошибка убирания роли',
+        ], 422);
+    }
+
+    /**
+     * @param Request $request
+     * @return VideoCollection
+     */
+    public function videos(Request $request)
+    {
+        /** @var Community $community */
+        $community = $request->community;
+
+        $videos = Video::where(static function (Builder $query) use ($community) {
+            $query->whereHasMorph('creatableby', Post::class, static function (Builder $creatableby) use ($community) {
+                $creatableby
+                    ->where([
+                        'postable_type' => Community::class,
+                        'postable_id' => $community->id,
+                    ]);
+            });
+        })
+            ->limit($request->query('limit', 5))
+            ->offset($request->query('offset', 0))
+            ->orderBy('id', 'desc')
+            ->get();
+
+        /**
+         * TODO add total count
+         */
+        return new VideoCollection($videos, true);
     }
 }

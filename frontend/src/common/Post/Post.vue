@@ -332,7 +332,7 @@
             livePreview() {
                 let str = this.post.body.replace(/<\/?[^>]+>/g, '').trim();
 
-                return this.transformStrWithLinks(str);
+                return this.transformStrWithLinks(str, 'hqdefault');
             },
             postable() {
                 if (this.post.community) {
@@ -408,7 +408,7 @@
             recursiveLivePreview(str) {
                 str = str.replace(/<\/?[^>]+>/g, '').trim();
 
-                return this.transformStrWithLinks(str);
+                return this.transformStrWithLinks(str, 'hqdefault');
             },
             recursiveHasYoutubeLinks(str) {
                 str = str.replace(/<\/?[^>]+>/g, '').trim();

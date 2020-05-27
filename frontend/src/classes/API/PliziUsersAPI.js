@@ -50,8 +50,8 @@ class PliziUsersAPI extends PliziBaseAPI{
      * получение черного списка юзера
      * @returns {Object|null} - черный списка юзера
      */
-    async blacklistGet() {
-        let response = await this.axios.get('api/user/blacklist/list', this.authHeaders)
+    async blacklist() {
+        let response = await this.axios.get('api/user/blacklist', this.authHeaders)
             .catch((error) => {
                 this.checkIsTokenExpires(error, '$users.blacklistGet');
                 throw new PliziAPIError('$users.blacklistGet', error.response);
@@ -70,13 +70,13 @@ class PliziUsersAPI extends PliziBaseAPI{
      */
     async blacklistAdd(userId) {
         const postParam = {userId: userId};
-        let response = await this.axios.post('api/user/blacklist/add', postParam, this.authHeaders)
+        let response = await this.axios.post('api/user/blacklist', postParam, this.authHeaders)
             .catch((error) => {
                 this.checkIsTokenExpires(error, '$users.blacklistAdd');
                 throw new PliziAPIError('$users.blacklistAdd', error.response);
             });
+
         if (200 === response.status) {
-            console.log(response);
             return response.data.list;
         }
         return null;
@@ -84,12 +84,12 @@ class PliziUsersAPI extends PliziBaseAPI{
 
     /**
      * Удаление пользователя из черного списка.
-     * @param userId
+     * @param {string} userId
      * @returns {object[]|null}
      * @throws PliziAPIError
      */
-    async deleteFromBlacklist(userId){
-        let response = await this.axios.post( '/user/blacklist/delete', {userId: userId}, this.authHeaders)
+    async blacklistDelete(userId){
+        let response = await this.axios.delete( 'api/user/blacklist?userId=' + userId, this.authHeaders)
             .catch( ( error ) => {
                 this.checkIsTokenExpires( error, '$users.deleteFromBlacklist' );
                 throw new PliziAPIError( '$users.deleteFromBlacklist', error.response );
@@ -104,7 +104,7 @@ class PliziUsersAPI extends PliziBaseAPI{
 
     /**
      * поиск по юзерам
-     * @param sText - строка поиска
+     * @param {string} sText - строка поиска
      * @returns {object[]|null} - коллеция с найденными юзерами или null как признак ошибки
      */
     async search(sText) {
@@ -167,6 +167,7 @@ class PliziUsersAPI extends PliziBaseAPI{
         if ([200, 422].includes(response.status)) {
             return response.data;
         }
+
         return null;
     }
 
@@ -194,6 +195,7 @@ class PliziUsersAPI extends PliziBaseAPI{
         if ([200, 422].includes(response.status)) {
             return response.data;
         }
+
         return null;
     }
 
