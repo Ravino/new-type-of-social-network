@@ -1,5 +1,5 @@
 <template>
-    <div id="communityVideos" class="bg-white-br20 mb-5 mb-4 py-3 px-4">
+    <div id="communityVideos" class="bg-white-br20 mb-5 mb-4 py-3 px-4" v-if="videos.length > 0">
 
         <h6 class="plz-community-participants-title w-auto mb-4">Видео
             <!--                            <span class="plz-community-participants-subtitle ml-2">14</span>-->
