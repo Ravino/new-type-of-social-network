@@ -73,8 +73,8 @@ const routes = [
     {path: '/community-requests-:id', component: CommunityRequestsPage, name: 'CommunityRequestsPage', meta: {title: 'Plizi: Запросы на вытупление в сообщество'}, props: true },
     {path: '/community-:id', component: CommunityPage, name: 'CommunityPage', meta: {title: 'Plizi: Популярные сообщества'}, props: true },
     {path: '*', component: Error404Page, name: 'Error404Page', meta: {title: 'Page not found', isNotFound: true} },
-    {path: '/photoalbums-list', component: PhotoalbumsListPage, name: 'PhotoalbumsListPage', meta: {title: 'Plizi: Фотоальбомы'}, props: true },
-    {path: '/photoalbum-:id', component: PhotoalbumPage, name: 'PhotoalbumPage', meta: {title: 'Plizi: Фотоальбом'}, props: true },
+    {path: '/photoalbums-list', component: PhotoalbumsListPage, name: 'PhotoalbumsListPage', meta: {title: 'Plizi: Фотоальбомы'}, props: true},
+    {path: '/photoalbum-:id', component: PhotoalbumPage, name: 'PhotoalbumPage', meta: {title: 'Plizi: Фотоальбом'}, props: true},
     {path: '/videos', component: VideosPage, name: 'VideosPage', meta: {title: 'Plizi: Видео'}, props: true },
     {path: '/active-sessions', component: ActiveSessionsPage, name: 'ActiveSessionsPage', meta: {title: 'Plizi: Активные сессии'}, props: true },
 ];

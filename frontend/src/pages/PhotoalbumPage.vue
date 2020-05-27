@@ -7,7 +7,7 @@
             <div class="col-12 col-md-11 col-lg-9 col-xl-10 px-0 px-md-3">
                 <div class="w-100">
                     <div class="col-12">
-                        <PhotoalbumsPageFilter @wallPostsSelect="wallPostsSelectHandler"/>
+                        <PhotoalbumsPageFilter />
                     </div>
                     <div class="col-12">
                         <div class="row">
@@ -15,8 +15,11 @@
                                 <template>
                                     <div class="card mb-4">
                                         <div class="card-body py-0">
-                                            <div class="row">
-                                                <div v-for="album in photoalbums" class="col-4 my-4 mb-4">
+                                            <div class="photoalbum-description-block">
+                                                <PhotoalbumEditBlock :album="album"/>
+                                            </div>
+                                            <div class="row mx-lg-n1 justify-content-center">
+                                                <div v-for="album in photoalbums" class="px-lg-1 col-md-auto my-2 mb-2">
                                                     <img v-if="album"
                                                          src="../images/noavatar-256.png"
                                                          :key="album.id"
@@ -36,10 +39,6 @@
                 <FavoriteFriends :isNarrow="true"></FavoriteFriends>
             </div>
         </div>
-
-<!--        <PhotoalbumsPageModal v-if="videoModal.isVisible"-->
-<!--                        :videoLink="videoModal.content.videoLink"-->
-<!--                        @hideVideoModal="hideVideoModal"/>-->
     </div>
 </template>
 
@@ -49,67 +48,52 @@
     import PhotoalbumsPageFilter from "../components/PhotoalbumsPage/PhotoalbumsPageFilter.vue";
     import PhotoalbumsPageModal from "../components/PhotoalbumsPage/PhotoalbumsPageModal.vue";
     import PhotoalbumItem from "../components/PhotoalbumsPage/PhotoalbumItem.vue";
-
-    import LinkMixin from "../mixins/LinkMixin.js";
-    import IconYoutube from "../icons/IconYoutube.vue";
-    import IconPlayVideo from "../icons/IconPlayVideo.vue";
+    import PhotoalbumEditBlock from "../components/PhotoalbumsPage/PhotoalbumEditBlock.vue";
 
     export default {
-name: "PhotoalbumPage",
-components: {
-    IconPlayVideo,
-    IconYoutube,
-    AccountToolbarLeft,
-    FavoriteFriends,
-    PhotoalbumsPageFilter,
-    PhotoalbumsPageModal,
-    PhotoalbumItem
-},
-mixins: [LinkMixin],
-data() {
-    return {
-        photoalbums: null,
-        filterMode: 'my',
-        userVideos: [],
-        videoModal: {
-            isVisible: false,
-            content: {
-                videoLink: null,
-            },
+        name: "PhotoalbumPage",
+        components: {
+            AccountToolbarLeft,
+            FavoriteFriends,
+            PhotoalbumsPageFilter,
+            PhotoalbumsPageModal,
+            PhotoalbumItem,
+            PhotoalbumEditBlock
+        },
+        data() {
+            return {
+                albumId: this.$route.params.id,
+                album: null,
+                photoalbums: null
+            }
+        },
+        methods: {
+            async getPhotoalbums() {
+                let apiResponse = null;
+                let res;
+
+                try {
+                    apiResponse = await this.$root.$api.$photoalbums.list();
+                    this.hidePhotoalbumCreateModal();
+                } catch (e) {
+                    console.warn(e.detailMessage);
+                }
+
+                this.photoalbums = apiResponse;
+
+                res = this.photoalbums.filter(album => album.id.toString() === this.albumId);
+                if (apiResponse) {
+                    apiResponse.forEach(album => {
+                        if (album.id.toString() === this.albumId) {
+                            this.album = album;
+                        }
+                    });
+                }
+            }
+        },
+        async mounted() {
+            await this.getPhotoalbums();
         },
     }
-},
-methods: {
-    wallPostsSelectHandler(evData) {
-        this.filterMode = evData.wMode;
-    },
-    openVideoModal(id) {
-        this.videoModal.isVisible = true;
-        this.videoModal.content.videoLink = id;
-    },
-    hideVideoModal(){
-        this.videoModal.isVisible = false;
-    },
-
-    async getPhotoalbums() {
-        let apiResponse = null;
-
-        try {
-            apiResponse = await this.$root.$api.$photoalbums.list();
-            this.hidePhotoalbumCreateModal();
-        } catch (e) {
-            console.warn(e.detailMessage);
-        }
-
-        this.photoalbums = apiResponse;
-        if (apiResponse) {
-            this.$emit('AddNewCommunity', apiResponse);
-        }
-    }
-},
-async mounted() {
-    await this.getPhotoalbums();
-},
-}
 </script>
 
