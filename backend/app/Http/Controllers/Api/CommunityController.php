@@ -14,12 +14,15 @@ use App\Http\Resources\Community\Community as CommunityResource;
 use App\Http\Resources\Community\CommunityRequests;
 use App\Http\Resources\Community\CommunityUserCollection;
 use App\Http\Resources\User\Image;
+use App\Http\Resources\Video\VideoCollection;
 use App\Models\Community;
 use App\Models\CommunityAttachment;
 use App\Models\CommunityHeader;
 use App\Models\CommunityMember;
 use App\Models\CommunityRequest as CommunityRequestModel;
 use App\Models\CommunityTheme;
+use App\Models\Post;
+use App\Models\Video;
 use App\Services\CommunityService;
 use App\Services\S3UploadService;
 use Auth;
@@ -460,5 +463,34 @@ class CommunityController extends Controller
         return response()->json([
             'message' => 'Ошибка убирания роли',
         ], 422);
+    }
+
+    /**
+     * @param Request $request
+     * @return VideoCollection
+     */
+    public function videos(Request $request)
+    {
+        /** @var Community $community */
+        $community = $request->community;
+
+        $videos = Video::where(static function (Builder $query) use ($community) {
+            $query->whereHasMorph('creatableby', Post::class, static function (Builder $creatableby) use ($community) {
+                $creatableby
+                    ->where([
+                        'postable_type' => Community::class,
+                        'postable_id' => $community->id,
+                    ]);
+            });
+        })
+            ->limit($request->query('limit', 5))
+            ->offset($request->query('offset', 0))
+            ->orderBy('id', 'desc')
+            ->get();
+
+        /**
+         * TODO add total count
+         */
+        return new VideoCollection($videos, true);
     }
 }

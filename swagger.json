@@ -1380,13 +1380,13 @@
                 "description": "Добавить сообщество в избранные",
                 "operationId": "communitiesFavoriteAdd",
                 "requestBody": {
-                    "description": "ID пользователя которго требуется добавить в друзья",
+                    "description": "ID сообщества",
                     "content": {
                         "application/json": {
                             "schema": {
                                 "type": "object",
                                 "properties": {
-                                    "userId": {
+                                    "id": {
                                         "type": "integer",
                                         "format": "int64"
                                     }
@@ -3826,6 +3826,12 @@
                                 "user"
                             ]
                         }
+                    },
+                    {
+                        "$ref": "#/components/parameters/offsetParam"
+                    },
+                    {
+                        "$ref": "#/components/parameters/limitParam"
                     }
                 ],
                 "responses": {
@@ -3843,6 +3849,62 @@
                                                     "type": "array",
                                                     "items": {
                                                         "$ref": "#/components/schemas/CommunityUser"
+                                                    }
+                                                }
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "Authorization": []
+                    }
+                ]
+            }
+        },
+        "/communities/{id}/videos": {
+            "get": {
+                "tags": [
+                    "Communities"
+                ],
+                "description": "Список видео сообщества",
+                "operationId": "CommunityVideos",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "ID сообщества",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    },
+                    {
+                        "$ref": "#/components/parameters/offsetParam"
+                    },
+                    {
+                        "$ref": "#/components/parameters/limitParam"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "data": {
+                                            "type": "object",
+                                            "properties": {
+                                                "list": {
+                                                    "type": "array",
+                                                    "items": {
+                                                        "$ref": "#/components/schemas/Video"
                                                     }
                                                 }
                                             }
@@ -5424,6 +5486,17 @@
                     },
                     "size": {
                         "type": "number"
+                    }
+                }
+            },
+            "Video": {
+                "type": "object",
+                "properties": {
+                    "id": {
+                        "type": "number"
+                    },
+                    "link": {
+                        "type": "string"
                     }
                 }
             }
