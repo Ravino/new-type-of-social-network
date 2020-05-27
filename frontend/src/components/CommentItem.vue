@@ -197,7 +197,7 @@
             async updateComment(msg) {
                 try {
                     let response = await  this.$root.$api.$post.editCommentById(this.commentId, msg);
-                    this.$emit('update', response.data);
+                    this.$emit('update', {...response.data, thread: { list: this.answers } });
                 } catch (e) {
                     console.warn(e.detailMessage);
                 }
