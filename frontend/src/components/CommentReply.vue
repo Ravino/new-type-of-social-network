@@ -1,8 +1,8 @@
 <template>
 <div class="plz-comment-reply"  v-if="isSending">
     <div class="plz-comment-post">
-        <div class="plz-comment-post-user">
-            <img :src="userData.userPic" alt="">
+        <div class="plz-comment-item-data-pic mr-3">
+            <img class="plz-comment-item-data-img" :src="userData.userPic" alt="">
         </div>
         <TextEditor :clazz="`plz-text-editor h-auto  align-items-start flex-grow-1 `"
                     :dropToDown="true"

@@ -11,7 +11,7 @@
         name: "ButtonsBecomeAdmin",
         props: {
             srItem: PliziMember,
-            communityId: String,
+            communityId: Number,
         },
         methods: {
             async doClick() {

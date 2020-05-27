@@ -139,12 +139,12 @@
                 let str = this.text.replace(/<\/?[^>]+>/g, '').trim();
                 let returnedStr = this.transformStrWithLinks(str);
 
-                return str === returnedStr ? this.text : this.transformStrWithLinks(str);
-            },
-            checkAuthorAvatar() {
-                if (this.avatar === null) {
-                    return this.noAvatar;
-                }
+        return str === returnedStr ? this.text : this.transformStrWithLinks(str);
+    },
+    checkAuthorAvatar() {
+        if (this.avatar === null) {
+            return this.noAvatar;
+        }
 
                 return this.avatar;
             },
@@ -177,11 +177,33 @@
             async onTextPost(evData){
                 let msg = evData.postText.trim();
 
-                if (msg !== '') {
-                    const brExample = `<br/>`;
-                    msg = msg.replace(/<p><\/p>/g, brExample);
-                    msg = this.killBrTrail(msg);
+        if (msg !== '') {
+            const brExample = `<br/>`;
+            msg = msg.replace(/<p><\/p>/g, brExample);
+            msg = this.killBrTrail(msg);
 
+            this.updateComment(msg);
+            this.isEdit = false;
+        }
+    },
+    async deleteComment() {
+        try {
+            await this.$root.$api.$post.deleteCommentById(this.commentId);
+            this.$emit('onDelete', this.commentId);
+        } catch (e) {
+            console.warn(e.detailMessage);
+        }
+    },
+    async updateComment(msg) {
+        try {
+            let response = await  this.$root.$api.$post.editCommentById(this.commentId, msg);
+            this.$emit('update', response.data);
+        } catch (e) {
+            console.warn(e.detailMessage);
+        }
+    }
+}
+}
                     this.updateComment(msg);
                     this.isEdit = false;
                 }

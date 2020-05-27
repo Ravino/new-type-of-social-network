@@ -91,7 +91,7 @@ class Post extends Model
         return 'U';
     }
 
-    public static function getWithoutOldPosts($user, $limit, $offset, $isMyPosts = false)
+    public static function getWithoutOldPosts($user, $limit, $offset, $isMyPosts = false, $onlyLiked = false, $orderBy = null)
     {
         if ($isMyPosts) {
             $userPosts = $user->posts()->pluck('id');
@@ -101,6 +101,8 @@ class Post extends Model
                     return $query->limit(8)->get();
                 }, 'parent' => function ($query) {
                     return $query->withTrashed()->get();
+                }, 'attachments' => function ($query) {
+                    return $query->withCount('comments');
                 }])->withCount('comments')->withCount('children')
                 ->limit($limit ?? 20)
                 ->offset($offset ?? 0)
@@ -120,6 +122,8 @@ class Post extends Model
             return $query->limit(8)->get();
         }, 'parent' => function ($query) {
             return $query->withTrashed()->get();
+        }, 'attachments' => function ($query) {
+            return $query->withCount('comments');
         }])->withCount('comments')->withCount('children');
 
         foreach($friends as $friend) {
@@ -145,11 +149,19 @@ class Post extends Model
         }
         $posts->orWhere('postable_type', User::class)
             ->where('postable_id', \Auth::user()->id);
+        $orderByColumn = $orderBy ?? 'id';
 
         return $posts
+            ->where(function ($query) use ($onlyLiked) {
+                if ($onlyLiked) {
+                    return $query->where('likes', '>', 0);
+                }
+
+                return $query;
+            })
             ->limit($limit ?? 20)
             ->offset($offset ?? 0)
-            ->orderBy('id', 'desc')
+            ->orderBy($orderByColumn, 'desc')
             ->get();
     }
 }
