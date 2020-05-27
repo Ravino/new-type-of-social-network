@@ -186,15 +186,14 @@ import PostLikeModal from '../common/Post/PostLikeModal.vue';
 import SmallSpinner from "../common/SmallSpinner.vue";
 import IconYoutube from "../icons/IconYoutube.vue";
 
-import CommunityManagedActionBlock from "../common/Communities/CommunityManagedActionBlock.vue";
 import PrivacyLabel from "../components/Community/PrivacyLabel.vue";
+
+import CommunityVideoBlock from "../components/Community/CommunityVideoBlock.vue";
+import CommunityManagedActionBlock from "../common/Communities/CommunityManagedActionBlock.vue";
+import PostVideoModal from "../common/Post/PostVideoModal.vue";
 
 import LazyLoadPosts from '../mixins/LazyLoadPosts.js';
 import CommunitiesSubscribeMixin from '../mixins/CommunitiesSubscribeMixin.js';
-
-import PrivacyLabel from "../components/Community/PrivacyLabel.vue";
-import CommunityVideoBlock from "../components/Community/CommunityVideoBlock.vue";
-import PostVideoModal from "../common/Post/PostVideoModal.vue";
 
 import PliziCommunity from '../classes/PliziCommunity.js';
 import PliziPost from '../classes/PliziPost.js';
@@ -264,9 +263,7 @@ computed: {
     filteredPosts(){
         return [];
     },
-    authUser() {
-        return this.$root.$auth.user;
-    },
+
     canPost() {
         /**
          * @todo check privacy
@@ -314,6 +311,7 @@ methods: {
         this.postEditModal.isVisible = false;
         this.postForEdit = null;
     },
+
     ytInit(){
         let video = document.getElementsByClassName('video');
 
@@ -323,9 +321,7 @@ methods: {
             console.log(videoWrap);
         }
     },
-    ytShow() {
 
-    },
     /**
      * @returns {boolean|FormData}
      */

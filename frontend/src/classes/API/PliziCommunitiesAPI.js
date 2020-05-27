@@ -462,6 +462,7 @@ class PliziCommunitiesAPI extends PliziBaseAPI {
      */
     async videos(communityId, limit = 5, offset = 0) {
         const url = `api/communities/${communityId}/videos?limit=${limit}&offset=${offset}`;
+
         let response = await this.axios.get(url, this.authHeaders)
             .catch((error) => {
                 this.checkIsTokenExpires(error, `$communities.videos`);
@@ -474,7 +475,7 @@ class PliziCommunitiesAPI extends PliziBaseAPI {
 
         return null;
     }
-  
+
     async favorites() {
         let response = await this.axios.get('api/communities/favorite/list', this.authHeaders)
             .catch((error) => {
@@ -507,8 +508,8 @@ class PliziCommunitiesAPI extends PliziBaseAPI {
 
         return null;
     }
-  
-  
+
+
     async addToFavorites(communityID) {
         const sendData = {
             id: communityID,
@@ -518,6 +519,8 @@ class PliziCommunitiesAPI extends PliziBaseAPI {
             .catch((error) => {
                 this.checkIsTokenExpires(error, '$communities.addToFavorites');
                 throw new PliziAPIError('$communities.addToFavorites', error.response);
+            });
+
         if (response.status === 200) {
             return response.data;
         }
@@ -551,6 +554,8 @@ class PliziCommunitiesAPI extends PliziBaseAPI {
             .catch((error) => {
                 this.checkIsTokenExpires(error, '$communities.removeToFavorites');
                 throw new PliziAPIError('$communities.removeToFavorites', error.response);
+            });
+
         if (response.status === 200) {
             return response.data;
         }
