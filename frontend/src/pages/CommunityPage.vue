@@ -15,7 +15,7 @@
                         <div class="plz-community-header-bottom d-flex flex-wrap align-items-start justify-content-between py-3 px-4">
                             <div class="plz-community-header-details d-flex align-items-start flex-wrap flex-sm-nowrap justify-content-center justify-content-sm-start">
                                 <template v-if="isAuthor">
-                                    <label for="communityPrimaryImage" class="community-primary-image cursor-pointer plz-community-header-logo position-relative mb-2 mb-sm-3 mx-0 mr-sm-3">
+                                    <label for="communityPrimaryImage" class="community-primary-image cursor-pointer plz-community-header-logo position-relative mb-2 mb-sm-0 mx-0 mr-sm-3">
                                         <img ref="communityAvatar" :src="avatarMedium" :alt="communityData.name" />
                                     </label>
 
@@ -29,10 +29,10 @@
                                     </div>
                                 </template>
                                 <div class="plz-community-header-details-text pt-2">
-                                    <h1 class="plz-community-header-title mb-1">
+                                    <h1 class="plz-community-header-title mb-2">
                                         {{communityData.name}}
-                                        <PrivacyLabel :community="communityData"></PrivacyLabel>
                                     </h1>
+                                    <PrivacyLabel :community="communityData"></PrivacyLabel>
                                     <p class="plz-community-header-desc mb-0">
                                         {{communityData.notice}}
                                     </p>
@@ -45,7 +45,7 @@
                                         @click="subscribeInvite(communityData)">
                                     подписаться
                                 </button>
-                                <button v-else-if="subscribeType === 'request'" type="button"
+                                <button v-else-if="subscribeType === 'request'"
                                         class="btn align-items-center justify-content-center d-flex w-75 border-right m-0"
                                         @click="sendRequest(communityData)">
                                     запрос
@@ -55,19 +55,33 @@
                                         @click="unsubscribeInvite(communityData)">
                                     отписаться
                                 </button>
-                                <router-link :to="{name: 'CommunitySettingsPage', params: {id: communityData.id}}" v-else-if="subscribeType === 'author'"
+                                <router-link :to="{name: 'CommunitySettingsPage', params: {id: communityData.id}}"
+                                             v-else-if="subscribeType === 'author'"
                                              class="btn align-items-center justify-content-center d-flex w-75 border-right m-0">
                                     управление
                                 </router-link>
 
-                                <button title="подписаться" class="btn align-items-center justify-content-center d-flex w-25">
+                                <button title="опции"
+                                        class="btn align-items-center justify-content-center d-flex w-25"
+                                        type="button"
+                                        id="CommunityOptions"
+                                        data-toggle="dropdown"
+                                        data-offset="0,5"
+                                        aria-haspopup="true"
+                                        aria-expanded="false">
                                     <span class="ps-dot"></span>
                                     <span class="ps-dot"></span>
                                     <span class="ps-dot"></span>
                                 </button>
-                            </div>
-                        </div>
 
+                                <div class="dropdown-menu dropdown-menu-right py-3"
+                                     aria-labelledby="CommunityOptions" >
+                                    <CommunityAuthorOptions  v-if="isAuthor" v-bind:community="communityData" ></CommunityAuthorOptions>
+                                    <CommunityUserOptions v-else v-bind:community="communityData" ></CommunityUserOptions>
+                                </div>
+                            </div>
+
+                        </div>
                     </div>
                     <Spinner v-else></Spinner>
                 </div>
@@ -131,9 +145,10 @@
                 </div>
 
                 <div class="col-12 --col-sm-5 col-lg-4 order-0 order-lg-1">
-                    <CommunityManagedActionBlock :community="communityData" v-if="isAuthor"></CommunityManagedActionBlock>
-
-                    <CommunityUserActionBlock v-bind:community="communityData"></CommunityUserActionBlock>
+<!--               TODO @tga мы этот блок можем удалить? -->
+<!--                    <CommunityManagedActionBlock :community="communityData" v-if="isAuthor"></CommunityManagedActionBlock>-->
+ <!--               TODO @tga мы этот блок можем удалить? -->
+                    <CommunityUserActionBlock v-if="!isAuthor" v-bind:community="communityData"></CommunityUserActionBlock>
 
                     <CommunityFriendsInformer v-bind:community="communityData"></CommunityFriendsInformer>
 
@@ -188,8 +203,10 @@ import IconYoutube from "../icons/IconYoutube.vue";
 
 import PrivacyLabel from "../components/Community/PrivacyLabel.vue";
 
-import CommunityVideoBlock from "../components/Community/CommunityVideoBlock.vue";
 import CommunityManagedActionBlock from "../common/Communities/CommunityManagedActionBlock.vue";
+import CommunityAuthorOptions from "../common/Communities/CommunityAuthorOptions.vue";
+import CommunityUserOptions from "../common/Communities/CommunityUserOptions.vue";
+import CommunityVideoBlock from "../components/Community/CommunityVideoBlock.vue";
 import PostVideoModal from "../common/Post/PostVideoModal.vue";
 
 import LazyLoadPosts from '../mixins/LazyLoadPosts.js';
@@ -207,6 +224,8 @@ props: {
 },
 mixins: [CommunitiesSubscribeMixin, LazyLoadPosts],
 components : {
+    CommunityUserOptions,
+    CommunityAuthorOptions,
     PostVideoModal,
     CommunityVideoBlock,
     CommunityManagedActionBlock,
