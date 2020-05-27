@@ -3,6 +3,7 @@
 
 namespace App\Models;
 
+use App\Traits\Commentable;
 use App\Traits\Likeable;
 use Illuminate\Database\Eloquent\Model;
 use Spiritix\LadaCache\Database\LadaCacheTrait;
@@ -14,7 +15,7 @@ use Storage;
  */
 class PostAttachment extends Model
 {
-    use Likeable, LadaCacheTrait;
+    use Likeable, LadaCacheTrait, Commentable;
 
     protected $casts = [
         'created_at' => 'timestamp',
@@ -69,14 +70,14 @@ class PostAttachment extends Model
             'id',
             'id',
             'user_id'
-        );
+        )->where('likeable_type', PostAttachment::class);
     }
 
     /**
-     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     * @return \Illuminate\Database\Eloquent\Relations\MorphMany
      */
     public function like() {
-        return $this->hasMany(Like::class, 'likeable_id', 'id')
+        return $this->morphMany(Like::class, 'likeable')
             ->where('user_id', \Auth::user()->id);
     }
 

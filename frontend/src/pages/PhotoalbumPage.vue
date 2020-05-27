@@ -12,16 +12,16 @@
                     <div class="col-12">
                         <div class="row">
                             <div class="videos-content w-100">
-                                <template v-if="filterMode === 'my'">
+                                <template>
                                     <div class="card mb-4">
                                         <div class="card-body py-0">
                                             <div class="row">
-                                                <div v-for="(video, index) in userVideos" class="col-3 my-3 mb-4">
-                                                    <img v-if="video.isYoutubeLink"
-                                                         :src="`//img.youtube.com/vi/${video.youtubeId}/0.jpg`"
+                                                <div v-for="album in photoalbums" class="col-4 my-4 mb-4">
+                                                    <img v-if="album"
+                                                         src="../images/noavatar-256.png"
+                                                         :key="album.id"
                                                          class="img-fluid"
-                                                         alt=""
-                                                         @click.stop="openVideoModal(video.link)"/>
+                                                         alt=""/>
                                                 </div>
                                             </div>
                                         </div>
@@ -37,9 +37,9 @@
             </div>
         </div>
 
-        <PhotoalbumsPageModal v-if="videoModal.isVisible"
-                        :videoLink="videoModal.content.videoLink"
-                        @hideVideoModal="hideVideoModal"/>
+<!--        <PhotoalbumsPageModal v-if="videoModal.isVisible"-->
+<!--                        :videoLink="videoModal.content.videoLink"-->
+<!--                        @hideVideoModal="hideVideoModal"/>-->
     </div>
 </template>
 
@@ -48,14 +48,14 @@
     import FavoriteFriends from "../common/FavoriteFriends.vue";
     import PhotoalbumsPageFilter from "../components/PhotoalbumsPage/PhotoalbumsPageFilter.vue";
     import PhotoalbumsPageModal from "../components/PhotoalbumsPage/PhotoalbumsPageModal.vue";
+    import PhotoalbumItem from "../components/PhotoalbumsPage/PhotoalbumItem.vue";
 
     import LinkMixin from "../mixins/LinkMixin.js";
-    import PliziVideo from '../classes/PliziVideo.js';
     import IconYoutube from "../icons/IconYoutube.vue";
     import IconPlayVideo from "../icons/IconPlayVideo.vue";
 
     export default {
-name: "PhotoalbumsPage",
+name: "PhotoalbumPage",
 components: {
     IconPlayVideo,
     IconYoutube,
@@ -63,10 +63,12 @@ components: {
     FavoriteFriends,
     PhotoalbumsPageFilter,
     PhotoalbumsPageModal,
+    PhotoalbumItem
 },
 mixins: [LinkMixin],
 data() {
     return {
+        photoalbums: null,
         filterMode: 'my',
         userVideos: [],
         videoModal: {
@@ -89,24 +91,24 @@ methods: {
         this.videoModal.isVisible = false;
     },
 
-    async getUserVideo() {
-        let response;
+    async getPhotoalbums() {
+        let apiResponse = null;
 
         try {
-            response = await this.$root.$api.$video.getUserVideo();
+            apiResponse = await this.$root.$api.$photoalbums.list();
+            this.hidePhotoalbumCreateModal();
         } catch (e) {
-            console.log(e.detailMessage);
+            console.warn(e.detailMessage);
         }
 
-        if (response) {
-            response.map((video) => {
-                this.userVideos.push(new PliziVideo(video));
-            });
+        this.photoalbums = apiResponse;
+        if (apiResponse) {
+            this.$emit('AddNewCommunity', apiResponse);
         }
-    },
+    }
 },
 async mounted() {
-    await this.getUserVideo();
+    await this.getPhotoalbums();
 },
 }
 </script>

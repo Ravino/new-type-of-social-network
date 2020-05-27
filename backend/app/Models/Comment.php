@@ -2,13 +2,13 @@
 
 namespace App\Models;
 
+use App\Traits\Likeable;
 use Illuminate\Database\Eloquent\Model;
 use Spiritix\LadaCache\Database\LadaCacheTrait;
 
 class Comment extends Model
 {
-
-    use LadaCacheTrait;
+    use LadaCacheTrait, Likeable;
 
     protected $casts = [
         'created_at' => 'timestamp',
@@ -54,5 +54,28 @@ class Comment extends Model
 
     public function getDateFormat() {
         return 'U';
+    }
+
+    /**
+     * @return \Illuminate\Database\Eloquent\Relations\MorphMany
+     */
+    public function like() {
+        return $this->morphMany(Like::class, 'likeable')
+            ->where('user_id', \Auth::user()->id);
+    }
+
+    /**
+     * @return \Illuminate\Database\Eloquent\Relations\HasManyThrough
+     */
+    public function usersLikes()
+    {
+        return $this->hasManyThrough(
+            User::class,
+            Like::class,
+            'likeable_id',
+            'id',
+            'id',
+            'user_id'
+        )->where('likeable_type', Comment::class);
     }
 }
