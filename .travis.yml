@@ -2,12 +2,12 @@ dist: Bionic
 #before_install:
 #  - sudo apt-get -y install build-essential
 install:
-  - curl -LO https://storage.googleapis.com/kubernetes-release/release/$(curl -s https://storage.googleapis.com/kubernetes-release/release/stable.txt)/bin/linux/amd64/kubectl
-  - chmod +x ./kubectl
-  - sudo mv ./kubectl /usr/local/bin/kubectl
-  - mkdir ${HOME}/.kube
-  - echo "$KUBE_CONFIG" | base64 --decode > ${HOME}/.kube/config
-  -
+  #- curl -LO https://storage.googleapis.com/kubernetes-release/release/$(curl -s https://storage.googleapis.com/kubernetes-release/release/stable.txt)/bin/linux/amd64/kubectl
+  #- chmod +x ./kubectl
+  #- sudo mv ./kubectl /usr/local/bin/kubectl
+  #- mkdir ${HOME}/.kube
+  #- echo "$KUBE_CONFIG" | base64 --decode > ${HOME}/.kube/config
+  #-
 
 sudo: required #is required to use docker service in travis
 language: node_js #can be any language, just php for example
@@ -33,9 +33,6 @@ script:
   - echo "$AWS_CREDENTIALS" | base64 --decode > ${HOME}/.aws/credentials
   - echo "$AWS_CONFIG" | base64 --decode > ${HOME}/.aws/config
   #- eval $(aws ecr get-login --region us-east-1) #needs AWS_ACCESS_KEY_ID and AWS_SECRET_ACCESS_KEY envvars
-
-
-
 
   - aws ecr get-login-password --region eu-central-1 | docker login --username AWS --password-stdin 884088487044.dkr.ecr.eu-central-1.amazonaws.com
   - cp docker/nginx/Dockerfile .
