@@ -12,7 +12,9 @@
                 <div class="container">
                     <ProfileHeader v-if="isDataReady" ref="personalProfileHeader"
                                    @ShowPersonalMsgModal="onShowPersonalMsgModal"
-                                   v-bind:userData="profileData"></ProfileHeader>
+                                   :isInBlacklist="profileData.stats.isInBlacklist"
+                                   :userData="profileData">
+                    </ProfileHeader>
                     <Spinner v-else></Spinner>
 
                     <ProfilePhotos v-bind:photos="userPhotos"/>

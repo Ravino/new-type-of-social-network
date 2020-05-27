@@ -51,7 +51,7 @@ class PliziUsersAPI extends PliziBaseAPI{
      * @returns {Object|null} - черный списка юзера
      */
     async blacklist() {
-        let response = await this.axios.get('api/user/blacklist/list', this.authHeaders)
+        let response = await this.axios.get('api/user/blacklist', this.authHeaders)
             .catch((error) => {
                 this.checkIsTokenExpires(error, '$users.blacklistGet');
                 throw new PliziAPIError('$users.blacklistGet', error.response);
@@ -70,7 +70,7 @@ class PliziUsersAPI extends PliziBaseAPI{
      */
     async blacklistAdd(userId) {
         const postParam = {userId: userId};
-        let response = await this.axios.post('api/user/blacklist/add', postParam, this.authHeaders)
+        let response = await this.axios.post('api/user/blacklist', postParam, this.authHeaders)
             .catch((error) => {
                 this.checkIsTokenExpires(error, '$users.blacklistAdd');
                 throw new PliziAPIError('$users.blacklistAdd', error.response);
@@ -89,7 +89,7 @@ class PliziUsersAPI extends PliziBaseAPI{
      * @throws PliziAPIError
      */
     async blacklistDelete(userId){
-        let response = await this.axios.post( '/api/user/blacklist/delete', {userId: userId}, this.authHeaders)
+        let response = await this.axios.delete( 'api/user/blacklist?userId=' + userId, this.authHeaders)
             .catch( ( error ) => {
                 this.checkIsTokenExpires( error, '$users.deleteFromBlacklist' );
                 throw new PliziAPIError( '$users.deleteFromBlacklist', error.response );

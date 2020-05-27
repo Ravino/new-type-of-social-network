@@ -78,14 +78,14 @@
                                     title="Удалить из друзей" >Удалить из друзей</p>
                             </div>
                             <div class="nav-item">
-                                <p v-if="!userData.stats.isFollow" class="dropdown-item px-0 py-1 m-0 px-3"
+                                <p v-if="userData.stats.isFollow" class="dropdown-item px-0 py-1 m-0 px-3"
                                    @click="unFollow" title="Отписаться">Отписаться</p>
                                 <p v-else class="dropdown-item px-0 py-1 m-0 px-3"
                                    @click="follow" title="Подписаться">Подписаться</p>
                             </div>
                             <div class="nav-item">
                                 <p v-if="isAddedToBlacklist" class="dropdown-item px-0 py-1 m-0 px-3"
-                                   @click="removeFromBlacklist"  title="Удалить с чёрного списка">Удалить с чёрного списка</p>
+                                   @click="deleteFromBlacklist(userData.id)"  title="Удалить с чёрного списка">Удалить с чёрного списка</p>
                                 <p v-else class="dropdown-item px-0 py-1 m-0 px-3"
                                    @click="addToBlacklist"  title="Добавить в чёрный список">Добавить в чёрный список</p>
                             </div>
@@ -193,12 +193,12 @@ mixins: [FriendshipInvitationMixin, BlackListMixin],
 props: {
     userData: PliziUser | PliziAuthUser,
     isOwner: Boolean,
+    isInBlacklist: Boolean,
 },
 
 data(){
     return {
         configurationMenuID : 'configurationMenuUser',
-        isAddedToBlacklist: false,
     }
 },
 
@@ -361,51 +361,10 @@ methods: {
 
         return true;
     },
-
-    async getBlacklist() {
-        let apiResponse = null;
-
-        try {
-            apiResponse = await this.$root.$api.$users.blacklist();
-        } catch (e) {
-            window.console.warn(e.detailMessage);
-            throw e;
-        }
-
-        if (apiResponse) {
-            this.isAddedToBlacklist = apiResponse.find(user => user.id === this.userData.id);
-        }
-    },
-
-    async addToBlacklist(){
-        if (this.isAddedToBlacklist) {
-            this.$root.$alert( `Пользователь уже внесен в чёрный список`, 'bg-warning', 3 );
-            return true;
-        }
-
-        let apiResponse = null;
-        try{
-            apiResponse = await this.$root.$api.$users.blacklistAdd( this.userData.id );
-        } catch (e){
-            if ( e.status === 422 ){
-                (console.log( 'выбранный пользователь уже добавлен в Ваш чёрный список' ));
-                this.isAddedToBlacklist = true;
-                return;
-            }
-            window.console.warn( e.detailMessage );
-        }
-
-        this.isAddedToBlacklist = true;
-        this.$root.$alert( `Вы добавили пользователя в чёрный список`, 'bg-success', 3 );
-    },
-
-    removeFromBlacklist(){
-        this.deleteFromBlacklist(this.userData.id);
-    }
 },
 
 async mounted() {
-    await this.getBlacklist();
+    this.isAddedToBlacklist = this.isInBlacklist;
 },
 
 }
