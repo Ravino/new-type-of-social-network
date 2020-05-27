@@ -6,6 +6,7 @@ import PliziFavoritesCollection from './Collection/PliziFavoritesCollection.js';
 import PliziDialogsCollection from './Collection/PliziDialogsCollection.js';
 import PliziInvitationsCollection from './Collection/PliziInvitationsCollection.js';
 import PliziNotificationsCollection from './Collection/PliziNotificationsCollection.js';
+import PliziCommunitiesCollection from './Collection/PliziCommunitiesCollection.js';
 
 class PliziAuthClass {
     /**
@@ -82,6 +83,13 @@ class PliziAuthClass {
      */
     _nm = null;
 
+    /**
+     * ссылка на менеджер сообществ
+     * @type {PliziCommunitiesCollection}
+     * @private
+     */
+    _cm = null;
+
     _isLoaded = false;
 
     __isInit = false;
@@ -102,6 +110,7 @@ class PliziAuthClass {
         this._dm = new PliziDialogsCollection(apiObj);
         this._im = new PliziInvitationsCollection(apiObj);
         this._nm = new PliziNotificationsCollection(apiObj);
+        this._cm = new PliziCommunitiesCollection(apiObj);
 
         this.__isInit = true;
     }
@@ -176,6 +185,7 @@ class PliziAuthClass {
         localStorage.removeItem( this.dm.localStorageKey );
         localStorage.removeItem( this.im.localStorageKey );
         localStorage.removeItem( this.nm.localStorageKey );
+        localStorage.removeItem( this.cm.localStorageKey );
     }
 
     /**
@@ -216,6 +226,14 @@ class PliziAuthClass {
      */
     get nm(){
         return this._nm;
+    }
+
+    /**
+     * ссылка на менеджер сообщест
+     * @returns {PliziCommunitiesCollection}
+     */
+    get cm(){
+        return this._cm;
     }
 
     get isLoaded(){

@@ -24,7 +24,7 @@
                             :key="member.id"
                             :srItem="member"
                             :isAdmin="role && role !== 'user'"
-                            :communityId="id">
+                            :communityId="parseInt(id)">
                         </CommunityMember>
                         <Spinner v-else></Spinner>
                     </div>
@@ -51,7 +51,7 @@
             CommunityMember
         },
         props: {
-            id: String,
+            id: Number,
         },
         data() {
             return {

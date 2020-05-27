@@ -186,36 +186,38 @@
 </template>
 
 <script>
-    import AccountToolbarLeft from '../common/AccountToolbarLeft.vue';
-    import FavoriteFriends from '../common/FavoriteFriends.vue';
-    import Spinner from '../common/Spinner.vue';
-    import Post from '../common/Post/Post.vue';
-    import PostEditModal from '../common/Post/PostEditModal.vue';
+import AccountToolbarLeft from '../common/AccountToolbarLeft.vue';
+import FavoriteFriends from '../common/FavoriteFriends.vue';
+import Spinner from '../common/Spinner.vue';
+import Post from '../common/Post/Post.vue';
+import PostEditModal from '../common/Post/PostEditModal.vue';
 
-    import CommunityUserActionBlock from '../common/Communities/CommunityUserActionBlock.vue';
-    import CommunityFriendsInformer from '../common/Communities/CommunityFriendsInformer.vue';
-    import CommunityShortMembers from '../common/Communities/CommunityShortMembers.vue';
-    import CommunityEditor from '../common/Communities/CommunityEditor.vue';
-    import PostRepostModal from '../common/Post/PostRepostModal.vue';
-    import PostLikeModal from '../common/Post/PostLikeModal.vue';
-    import SmallSpinner from "../common/SmallSpinner.vue";
+import CommunityUserActionBlock from '../common/Communities/CommunityUserActionBlock.vue';
+import CommunityFriendsInformer from '../common/Communities/CommunityFriendsInformer.vue';
+import CommunityShortMembers from '../common/Communities/CommunityShortMembers.vue';
+import CommunityEditor from '../common/Communities/CommunityEditor.vue';
+import PostRepostModal from '../common/Post/PostRepostModal.vue';
+import PostLikeModal from '../common/Post/PostLikeModal.vue';
+import SmallSpinner from "../common/SmallSpinner.vue";
+import IconYoutube from "../icons/IconYoutube.vue";
 
-    import PliziCommunity from '../classes/PliziCommunity.js';
-    import PliziPost from '../classes/PliziPost.js';
-    import PliziCommunityAvatar from '../classes/Community/PliziCommunityAvatar.js';
-    import CommunitiesSubscribeMixin from "../mixins/CommunitiesSubscribeMixin";
-    import CommunityManagedActionBlock from "../common/Communities/CommunityManagedActionBlock.vue";
-    import CommunityAuthorOptions from "../common/Communities/CommunityAuthorOptions.vue";
+import PrivacyLabel from "../components/Community/PrivacyLabel.vue";
 
-    import LazyLoadPosts from '../mixins/LazyLoadPosts.js';
-    import PliziUser from "../classes/PliziUser.js";
+import CommunityManagedActionBlock from "../common/Communities/CommunityManagedActionBlock.vue";
+import CommunityAuthorOptions from "../common/Communities/CommunityAuthorOptions.vue";
+import CommunityUserOptions from "../common/Communities/CommunityUserOptions.vue";
+import CommunityVideoBlock from "../components/Community/CommunityVideoBlock.vue";
+import PostVideoModal from "../common/Post/PostVideoModal.vue";
 
-    import PrivacyLabel from "../components/Community/PrivacyLabel.vue";
-    import CommunityVideoBlock from "../components/Community/CommunityVideoBlock.vue";
-    import PostVideoModal from "../common/Post/PostVideoModal.vue";
-    import CommunityUserOptions from "../common/Communities/CommunityUserOptions";
+import LazyLoadPosts from '../mixins/LazyLoadPosts.js';
+import CommunitiesSubscribeMixin from '../mixins/CommunitiesSubscribeMixin.js';
 
-    export default {
+import PliziCommunity from '../classes/PliziCommunity.js';
+import PliziPost from '../classes/PliziPost.js';
+import PliziCommunityAvatar from '../classes/Community/PliziCommunityAvatar.js';
+import PliziUser from '../classes/PliziUser.js';
+
+export default {
 name: 'CommunityPage',
 props: {
     id : Number|String
@@ -280,9 +282,7 @@ computed: {
     filteredPosts(){
         return [];
     },
-    authUser() {
-        return this.$root.$auth.user;
-    },
+
     canPost() {
         /**
          * @todo check privacy
@@ -330,6 +330,7 @@ methods: {
         this.postEditModal.isVisible = false;
         this.postForEdit = null;
     },
+
     ytInit(){
         let video = document.getElementsByClassName('video');
 
@@ -339,9 +340,7 @@ methods: {
             console.log(videoWrap);
         }
     },
-    ytShow() {
 
-    },
     /**
      * @returns {boolean|FormData}
      */
@@ -514,11 +513,9 @@ methods: {
         this.isStarted = true;
 
         try {
-            // TODO: тут нужно получать посты сообщества
             response = await this.$root.$api.$communities.posts(this.id, limit, offset);
         } catch (e) {
             this.isStarted = false;
-            console.warn(e.detailMessage);
         }
 
         if (response !== null) {
@@ -541,17 +538,23 @@ methods: {
     },
 },
 
-async mounted() {
+created(){
+
+},
+
+    async mounted() {
     await this.getCommunityInfo();
     window.scrollTo(0, 0);
 },
-    beforeRouteUpdate (to, from, next) {
-        this.communityData = null;
-        this.posts = null;
-        next();
-        this.id = to.params.id;
-        this.getCommunityInfo();
-        window.scrollTo(0, 0);
-    },
+
+beforeRouteUpdate (to, from, next) {
+    this.communityData = null;
+    this.posts = null;
+    next();
+    this.id = to.params.id;
+    this.getCommunityInfo();
+    window.scrollTo(0, 0);
+},
+
 }
 </script>
