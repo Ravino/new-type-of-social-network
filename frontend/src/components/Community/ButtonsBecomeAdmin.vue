@@ -10,11 +10,23 @@
     export default {
         name: "ButtonsBecomeAdmin",
         props: {
-            srItem: PliziMember
+            srItem: PliziMember,
+            communityId: String,
         },
         methods: {
-            doClick() {
-                this.$root.$alert('become admin', 'bg-info', 3);
+            async doClick() {
+                let apiResponse;
+
+                try {
+                    apiResponse = await this.$root.$api.$communities.becomeAdmin(this.communityId, this.srItem.id);
+                } catch (e) {
+                    console.warn(e.detailMessage);
+                }
+
+                if (apiResponse) {
+                    this.srItem.role = 'admin';
+                    this.$root.$alert('Пользователь назначен администратором сообщества', 'bg-info', 3);
+                }
             }
         },
     }

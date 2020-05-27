@@ -23,7 +23,8 @@
                             v-if="isLoaded"
                             :key="member.id"
                             :srItem="member"
-                            :isAdmin="role && role !== 'user'">
+                            :isAdmin="role && role !== 'user'"
+                            :communityId="id">
                         </CommunityMember>
                         <Spinner v-else></Spinner>
                     </div>
