@@ -256,7 +256,7 @@ methods: {
         let youtubeLinksMatch = this.detectYoutubeLinks(str);
         let attachmentsIds = this.getAttachmentsIDs();
         let attachmentsData = this.attachmentsData.asArray();
-        let postText = this.deleteYoutubeLinksFromStr(evData.postText);
+        let postText = this.deleteYoutubeLinksFromStr(str);
 
         if (youtubeLinksMatch && youtubeLinksMatch.length) {
             youtubeLinksMatch.forEach((youtubeLink) => {
