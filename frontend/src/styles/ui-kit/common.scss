@@ -611,8 +611,11 @@ input[type='date']::-webkit-clear-button {
 }
 .modal-content {
     max-width: 96%;
-    max-height: 96vh;
     margin: 0 auto;
+}
+
+.modal-body {
+    max-height: 90vh;
 }
 
 #chatVideoModal {
