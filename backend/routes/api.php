@@ -95,6 +95,8 @@ Route::group(['middleware' => ['auth.jwt', 'track.activity']], function () {
         Route::delete('user/{userId}/follow', [UserSubscribeController::class, 'unfollow']);
     });
 
+    Route::post('user/images/{imageUpload}', 'Api\LikeController@likeUserImage');
+
     /**
      * Communities Resource
      */
@@ -152,6 +154,7 @@ Route::group(['middleware' => ['auth.jwt', 'track.activity']], function () {
         Route::delete('{id}', 'Api\CommentController@destroyComment');
         Route::patch('{comment}', 'Api\CommentController@update');
         Route::post('attachments', 'Api\CommentController@uploadAttachments');
+        Route::post('{comment}/like', 'Api\LikeController@likeComment');
     });
 
     Route::prefix('photo-albums')->group(function () {
