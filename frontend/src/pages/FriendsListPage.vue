@@ -39,11 +39,11 @@
 
                     <div class="col-12 col-md-5 col-lg-4 col-xl-4">
                         <PotentialFriends v-if="possibleFriends && possibleFriends.length"
-                                          :blockName="`Возможные друзья`"
-                                          :friends="shuffle(possibleFriends)"></PotentialFriends>
+                                          v-bind:blockName="`Возможные друзья`"
+                                          v-bind:friends="possibleFriends"></PotentialFriends>
                         <PotentialFriends v-if="recommendedFriends && recommendedFriends.length"
-                                          :blockName="`Рекомендуемые друзья`"
-                                          :friends="shuffle(recommendedFriends)"></PotentialFriends>
+                                          v-bind:blockName="`Рекомендуемые друзья`"
+                                          v-bind:friends="recommendedFriends"></PotentialFriends>
                     </div>
 
                 </div>
