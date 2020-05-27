@@ -97,7 +97,7 @@
     export default {
         name: "CommentItem",
         components: {TextEditor, CommentReply, IconHeard},
-        mixins : [LinkMixin, ChatMixin],
+        mixins: [LinkMixin, ChatMixin],
         props: {
             answers: {
                 type: Array
@@ -118,10 +118,10 @@
                 type: Number,
             },
             authorId: {
-                type: String|Number
+                type: String | Number
             },
             postId: {
-                type: String|Number
+                type: String | Number
             },
             createdAt: {
                 type: Number,
@@ -139,12 +139,12 @@
                 let str = this.text.replace(/<\/?[^>]+>/g, '').trim();
                 let returnedStr = this.transformStrWithLinks(str);
 
-        return str === returnedStr ? this.text : this.transformStrWithLinks(str);
-    },
-    checkAuthorAvatar() {
-        if (this.avatar === null) {
-            return this.noAvatar;
-        }
+                return str === returnedStr ? this.text : this.transformStrWithLinks(str);
+            },
+            checkAuthorAvatar() {
+                if (this.avatar === null) {
+                    return this.noAvatar;
+                }
 
                 return this.avatar;
             },
@@ -159,51 +159,32 @@
             editComment(newComment) {
                 const answers = this.answers.map(comment => comment.id === newComment.id ? newComment : comment);
 
-                this.$emit('updateAnswers', { id: this.commentId, answers });
+                this.$emit('updateAnswers', {id: this.commentId, answers});
             },
             addComment(comment) {
-                this.$emit('updateAnswers', { id: this.commentId, answers: [...this.answers, comment] });
+                this.$emit('updateAnswers', {id: this.commentId, answers: [...this.answers, comment]});
             },
             removeComment(commentId) {
                 const answers = this.answers.filter(comment => comment.id !== commentId);
 
-                this.$emit('updateAnswers', { id: this.commentId, answers });
+                this.$emit('updateAnswers', {id: this.commentId, answers});
             },
-            updateAnswers({ id, answers }) {
-                const newAnswers = this.answers.map(comment => comment.id === id ? {...comment, thread: { list: answers } } : comment);
+            updateAnswers({id, answers}) {
+                const newAnswers = this.answers.map(comment => comment.id === id ? {
+                    ...comment,
+                    thread: {list: answers}
+                } : comment);
 
-                this.$emit('updateAnswers', { id: this.commentId, answers: newAnswers });
+                this.$emit('updateAnswers', {id: this.commentId, answers: newAnswers});
             },
-            async onTextPost(evData){
+            async onTextPost(evData) {
                 let msg = evData.postText.trim();
 
-        if (msg !== '') {
-            const brExample = `<br/>`;
-            msg = msg.replace(/<p><\/p>/g, brExample);
-            msg = this.killBrTrail(msg);
+                if (msg !== '') {
+                    const brExample = `<br/>`;
+                    msg = msg.replace(/<p><\/p>/g, brExample);
+                    msg = this.killBrTrail(msg);
 
-            this.updateComment(msg);
-            this.isEdit = false;
-        }
-    },
-    async deleteComment() {
-        try {
-            await this.$root.$api.$post.deleteCommentById(this.commentId);
-            this.$emit('onDelete', this.commentId);
-        } catch (e) {
-            console.warn(e.detailMessage);
-        }
-    },
-    async updateComment(msg) {
-        try {
-            let response = await  this.$root.$api.$post.editCommentById(this.commentId, msg);
-            this.$emit('update', response.data);
-        } catch (e) {
-            console.warn(e.detailMessage);
-        }
-    }
-}
-}
                     this.updateComment(msg);
                     this.isEdit = false;
                 }
@@ -218,8 +199,8 @@
             },
             async updateComment(msg) {
                 try {
-                    let response = await  this.$root.$api.$post.editCommentById(this.commentId, msg);
-                    this.$emit('update', {...response.data, thread: { list: this.answers } });
+                    let response = await this.$root.$api.$post.editCommentById(this.commentId, msg);
+                    this.$emit('update', {...response.data, thread: {list: this.answers}});
                 } catch (e) {
                     console.warn(e.detailMessage);
                 }
