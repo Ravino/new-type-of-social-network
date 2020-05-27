@@ -12,6 +12,7 @@ yarn-error.log*
 /images/
 /js/images
 
+.env
 # Editor directories and files
 .idea
 .vscode

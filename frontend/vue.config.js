@@ -10,7 +10,8 @@ module.exports = {
             let _base = args[0]["process.env"];
             args[0]["process.env"] = {
                 ..._base,
-                "API_URL": JSON.stringify(process.env.URL),
+                "API_URL": JSON.stringify(process.env.API_URL),
+                "WS_URL": JSON.stringify(process.env.WS_URL),
             };
             return args;
         });

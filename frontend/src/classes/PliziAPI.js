@@ -132,8 +132,8 @@ class PliziAPIClass {
         if (this.__isInit)
             return;
 
-        this.__baseURL   = (window.apiURL) ? (window.apiURL + ``).trim() : ``;
-        this.__baseWsURL = (window.wsUrl) ? (window.wsUrl + ``).trim() : ``;
+        this.__baseURL   = (process.env.API_URL) ? (process.env.API_URL + ``).trim() : ``;
+        this.__baseWsURL = (process.env.WS_URL) ? (process.env.WS_URL + ``).trim() : ``;
 
         if ($root) {
             this.__$root = $root;
