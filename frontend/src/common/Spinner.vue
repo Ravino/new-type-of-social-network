@@ -18,7 +18,7 @@ export default {
         message: String,
         hideText: {
             type: Boolean,
-            default: false,
+            default: true,
         }
     },
 

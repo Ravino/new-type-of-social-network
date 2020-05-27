@@ -466,8 +466,10 @@
             if (this.post) {
                 this.recursiveParent(this.post);
             }
-            this.getCommentsByPostId();
 
+            if (this.commentsCount > 0) {
+                this.getCommentsByPostId();
+            }
         },
     }
 </script>

@@ -194,6 +194,7 @@ import PostVideoModal from "../common/Post/PostVideoModal.vue";
 
 import LazyLoadPosts from '../mixins/LazyLoadPosts.js';
 import CommunitiesSubscribeMixin from '../mixins/CommunitiesSubscribeMixin.js';
+import HotCommunitiesMixin from '../mixins/HotCommunitiesMixin.js';
 
 import PliziCommunity from '../classes/PliziCommunity.js';
 import PliziPost from '../classes/PliziPost.js';
@@ -205,7 +206,7 @@ name: 'CommunityPage',
 props: {
     id : Number|String
 },
-mixins: [CommunitiesSubscribeMixin, LazyLoadPosts],
+mixins: [CommunitiesSubscribeMixin, LazyLoadPosts, HotCommunitiesMixin],
 components : {
     PostVideoModal,
     CommunityVideoBlock,
@@ -257,9 +258,11 @@ computed: {
     isAuthor(){
         return this.communityData?.role === 'author';
     },
+
     subscribeType() {
         return this.getSubscribeType(this.communityData);
     },
+
     filteredPosts(){
         return [];
     },
@@ -346,6 +349,7 @@ methods: {
 
         return formData;
     },
+
     showErrorOnLargeFile() {
         this.$alert(`<h4 class="text-white">Ошибка</h4>
                 <div class="alert alert-danger">
@@ -358,14 +362,17 @@ methods: {
           30
         );
     },
+
     onSharePost(post){
         this.postRepostModal.isVisible = true;
         this.postForRepost = post;
     },
+
     hidePostRepostModal() {
         this.postRepostModal.isVisible = false;
         this.postForRepost = null;
     },
+
     hideLikeModal() {
         this.postLikeModal.isVisible = false;
         this.postLikeModal.content.users = null;
@@ -375,6 +382,7 @@ methods: {
         this.postLikeModal.isVisible = true;
         await this.getUsersLikes(postId);
     },
+
     async getUsersLikes(postId, limit = 20, offset = 0) {
         let response = null;
 
@@ -392,6 +400,7 @@ methods: {
             return response.length;
         }
     },
+
     async onDeletePost(id) {
         let response;
 
@@ -411,6 +420,7 @@ methods: {
             this.startTimer( post );
         }
     },
+
     async onRestorePost(id) {
         let response;
 
@@ -428,6 +438,7 @@ methods: {
             post.deleted = false;
         }
     },
+
     async uploadPrimaryImage(){
         if (!this.isAuthor)
             return;
@@ -462,6 +473,7 @@ methods: {
             this.communityData.avatar = new PliziCommunityAvatar(apiResponse.data);
         }
     },
+
     async getCommunityInfo() {
         let apiResponse = null;
 
@@ -489,6 +501,7 @@ methods: {
             }, 100);
         }
     },
+
     async getPosts(limit = 50, offset = 0) {
         let response = null;
         this.isStarted = true;
@@ -508,22 +521,34 @@ methods: {
             return response.length;
         }
     },
+
     openVideoModal(evData) {
         if (evData.videoLink) {
             this.postVideoModal.isVisible = true;
             this.postVideoModal.content.videoLink = evData.videoLink;
         }
     },
+
     hideVideoModal() {
         this.postVideoModal.isVisible = false;
     },
+
+    onNeedAddCommunityToHot(){
+        this.keyUpdater++;
+        const comm = this.communityData || null;
+        this.addCommunityToFavorites( this.$route.params.id, comm );
+
+        if (this.$refs  &&  this.$refs.hotCommunitiesBlock) {
+            this.$refs.hotCommunitiesBlock.$forceUpdate();
+        }
+    }
 },
 
 created(){
-
+    this.$root.$on('NeedAddCommunityToHot', this.onNeedAddCommunityToHot);
 },
 
-    async mounted() {
+async mounted() {
     await this.getCommunityInfo();
     window.scrollTo(0, 0);
 },

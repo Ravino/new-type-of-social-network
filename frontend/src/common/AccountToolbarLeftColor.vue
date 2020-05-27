@@ -41,19 +41,17 @@ data() {
 computed: {
     isCanAddToFavorites(){
         const isCan = this.$root.$auth.cm.isCanAddToFavorites(this.$route.params.id);
-        //const isIn = this.$root.$auth.cm.get(this.$route.params.id);
 
         return this.isDataReady &&  (this.$root.$router.currentRoute.name === 'CommunityPage')  && isCan;
-    },
+    }
 },
 
 methods: {
     hotCommunitiesList(parasm){
-        return this.$root.$auth.cm.asArray().splice();
+        return this.$root.$auth.cm.asArray().slice();
     },
 
     onRemoveCommunityFromHots(evData){
-        window.console.log(evData, `onRemoveCommunityFromHots`);
         this.keyUpdater++;
         this.removeCommunityFromFavorites( evData.id, evData.community );
 
@@ -63,19 +61,12 @@ methods: {
     },
 
     onAddCommunityToHot(){
-        window.console.log(this.communityData, `onAddCommunityToHot`);
-
-        this.keyUpdater++;
-        const comm = this.communityData || null;
-        this.addCommunityToFavorites( this.$route.params.id, comm );
-
-        if (this.$refs  &&  this.$refs.hotCommunitiesBlock) {
-            this.$refs.hotCommunitiesBlock.$forceUpdate();
-        }
+        this.$root.$emit('NeedAddCommunityToHot', {});
     },
 
-    afterFavoritsLoad(){
+    afterFavoritsLoad(param1){
         this.$root.$communitiesKeyUpdater++;
+        this.keyUpdater++;
         this.showFavoritesBlock = (this.$root.$auth.cm.size > 0);
         this.isDataReady = true;
     }
@@ -95,14 +86,21 @@ created(){
     });
 
     this.$root.$on(this.$root.$auth.cm.updateEventName, ()=>{
-        window.console.log(`on `+this.$root.$auth.cm.updateEventName);
         if (this.$refs  &&  this.$refs.hotCommunitiesBlock) {
-            window.console.log(`call this.$refs.hotCommunitiesBlock.$forceUpdate();`);
             this.$root.$communitiesKeyUpdater++;
+            this.keyUpdater++;
             this.$refs.hotCommunitiesBlock.$forceUpdate();
         }
     });
+},
+
+beforeDestroy() {
+    this.$root.$off(this.$root.$auth.cm.loadEventName, ()=>{});
+    this.$root.$off(this.$root.$auth.cm.restoreEventName, ()=>{});
+
+    this.$root.$off(this.$root.$auth.cm.updateEventName, ()=>{});
 }
+
 
 }
 </script>

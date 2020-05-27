@@ -31,7 +31,7 @@ methods: {
                 communityId: communityId,
             });
 
-            this.$root.$alert('Вы добавили это сообщество в Избранные', 'bg-success', 3);
+            //this.$root.$alert('Вы добавили это сообщество в Избранные', 'bg-success', 3);
         }
 
         return true;
