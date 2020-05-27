@@ -27,6 +27,13 @@ class VideoCollection extends ResourceCollection
                         'post' => new Post($video->creatableby),
                         'createdAt' => $video->created_at,
                     ];
+                } else {
+                    return [
+                        'id' => $video->id,
+                        'link' => $video->link,
+                        'user' => new SimpleUser($video->user),
+                        'createdAt' => $video->created_at,
+                    ];
                 }
             }),
         ];
