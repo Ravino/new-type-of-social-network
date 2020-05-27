@@ -423,7 +423,7 @@ class PliziCommunitiesAPI extends PliziBaseAPI {
      * @throws PliziAPIError
      */
     async members(communityId, limit = 20, offset = 0) {
-        const url = `api/communities/${communityId}/members`;
+        const url = `api/communities/${communityId}/members?limit=${limit}&offset=${offset}`;
         let response = await this.axios.get(url, this.authHeaders)
             .catch((error) => {
                 this.checkIsTokenExpires(error, `$communities.members`);
@@ -438,7 +438,29 @@ class PliziCommunitiesAPI extends PliziBaseAPI {
     }
 
     /**
-     * @param {string} communityId
+     *
+     * @param {number} communityId
+     * @param {number} limit
+     * @param {number} offset
+     * @returns {Promise<null|*>}
+     */
+    async videos(communityId, limit = 5, offset = 0) {
+        const url = `api/communities/${communityId}/videos?limit=${limit}&offset=${offset}`;
+        let response = await this.axios.get(url, this.authHeaders)
+            .catch((error) => {
+                this.checkIsTokenExpires(error, `$communities.videos`);
+                throw new PliziAPIError(`$communities.videos`, error.response);
+            });
+
+        if (response.status === 200) {
+            return response.data.data;
+        }
+
+        return null;
+    }
+
+    /**
+     * @param {number} communityId
      * @param {string} userId
      * @returns {Promise<null|any>}
      */
@@ -458,7 +480,7 @@ class PliziCommunitiesAPI extends PliziBaseAPI {
     }
 
     /**
-     * @param {string} communityId
+     * @param {number} communityId
      * @param {string} userId
      * @returns {Promise<null|any>}
      */

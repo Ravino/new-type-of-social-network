@@ -1,0 +1,23 @@
+.photoalbum-item {
+    position: relative;
+    max-width: 250px;
+    a {
+        img {
+            width: 100%;
+        }
+        .photoalbum-item-title {
+            position: absolute;
+            background-color: #000000;
+            width: 100%;
+            opacity: .5;
+            bottom: 0;
+            h6 {
+                font-weight: normal;
+                margin-top: 10px;
+                margin-left: 15px;
+                font-size: 13px;
+                color: #FFFFFF;
+            }
+        }
+    }
+}

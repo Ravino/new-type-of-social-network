@@ -10,6 +10,22 @@ use Illuminate\Http\Resources\Json\ResourceCollection;
 class VideoCollection extends ResourceCollection
 {
     /**
+     * @var bool
+     */
+    private $onlyVideoData;
+
+    /**
+     * VideoCollection constructor.
+     * @param $resource
+     * @param $onlyVideoData
+     */
+    public function __construct($resource, $onlyVideoData = false)
+    {
+        $this->onlyVideoData = $onlyVideoData;
+        parent::__construct($resource);
+    }
+
+    /**
      * Transform the resource collection into an array.
      *
      * @param  \Illuminate\Http\Request  $request
@@ -17,8 +33,17 @@ class VideoCollection extends ResourceCollection
      */
     public function toArray($request)
     {
+        $onlyVideoData = $this->onlyVideoData;
         return [
-            'list' => $this->collection->map(function ($video) {
+            'list' => $this->collection->map(static function ($video) use ($onlyVideoData) {
+                if ($onlyVideoData) {
+                    return [
+                        'id' => $video->id,
+                        'link' => $video->link,
+                        'createdAt' => $video->created_at,
+                    ];
+                }
+
                 if($video->creatableby instanceof PostModel) {
                     return [
                         'id' => $video->id,

@@ -102,6 +102,10 @@ Route::group(['middleware' => ['auth.jwt', 'track.activity']], function () {
      * Communities Resource
      */
     Route::prefix('communities')->group(function(){
+        Route::middleware(['community.get', 'community.isHasAccess'])->group(static function() {
+            Route::get('{groupId}/videos', [CommunityController::class, 'videos']);
+        });
+
         Route::patch('{id}', 'Api\CommunityController@update');
         Route::post('', 'Api\CommunityController@store');
         Route::get('', 'Api\CommunityController@index');

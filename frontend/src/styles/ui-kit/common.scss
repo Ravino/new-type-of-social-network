@@ -85,7 +85,7 @@ a:hover {
     text-decoration-color: $postTextColor;
 }
 
-a {
+a:not(.btn) {
     word-break: break-word;
 }
 
