@@ -45,9 +45,93 @@
         {
             "name": "Photo",
             "description": "Все, что касается фотографий"
+        },
+        {
+            "name": "Video",
+            "description": "Все, что касается видео"
         }
     ],
     "paths": {
+        "/videos": {
+            "get": {
+                "tags": [
+                    "Video"
+                ],
+                "description": "Список ссылок на видео",
+                "operationId": "VideoList",
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "data": {
+                                            "properties": {
+                                                "list": {
+                                                    "$ref": "#/components/schemas/VideoList"
+                                                }
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            "post": {
+                "tags": [
+                    "Video"
+                ],
+                "description": "Сохранить ссылку на видео",
+                "operationId": "VideoStore",
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "type": "object",
+                                "properties": {
+                                    "link": {
+                                        "type": "string",
+                                        "description": "Ссылка на видео"
+                                    },
+                                    "id": {
+                                        "nullable": true,
+                                        "type": "integer",
+                                        "description": "ID поста (если есть)"
+                                    },
+                                    "workMode": {
+                                        "nullable": true,
+                                        "type": "string",
+                                        "description": "Если видео находится в посте, то 'post'"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "id": {
+                                            "type": "integer",
+                                            "description": "ID видео"
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
         "/user/images/{imageId}": {
             "post": {
                 "tags": [
@@ -5485,6 +5569,26 @@
                         "type": "string"
                     },
                     "size": {
+                        "type": "number"
+                    }
+                }
+            },
+            "VideoList": {
+                "type": "object",
+                "properties": {
+                    "id": {
+                        "type": "string"
+                    },
+                    "link": {
+                        "type": "string"
+                    },
+                    "user": {
+                        "$ref": "#/components/schemas/User"
+                    },
+                    "post": {
+                        "$ref": "#/components/schemas/User"
+                    },
+                    "createdAt": {
                         "type": "number"
                     }
                 }

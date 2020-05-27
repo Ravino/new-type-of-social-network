@@ -90,9 +90,14 @@ methods: {
         if (!(youtubeLink && workMode && id)) return;
 
         let response;
+        let formData = {
+            link: youtubeLink,
+            workMode: workMode,
+            id: id,
+        };
 
         try {
-            response = await this.$root.$api.$video.storeVideo(youtubeLink, workMode, id);
+            response = await this.$root.$api.$video.storeVideo(formData);
         } catch (e) {
             console.warn(e.detailMessage);
         }

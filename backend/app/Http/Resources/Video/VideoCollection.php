@@ -36,18 +36,29 @@ class VideoCollection extends ResourceCollection
         $onlyVideoData = $this->onlyVideoData;
         return [
             'list' => $this->collection->map(static function ($video) use ($onlyVideoData) {
-                if($video->creatableby instanceof PostModel) {
-                    $data = [
+                if ($onlyVideoData) {
+                    return [
                         'id' => $video->id,
                         'link' => $video->link,
                         'createdAt' => $video->created_at,
                     ];
-                    if (!$onlyVideoData) {
-                        $data['user'] = new SimpleUser($video->user);
-                        $data['post'] = new Post($video->creatableby);
-                    }
+                }
 
-                    return $data;
+                if($video->creatableby instanceof PostModel) {
+                    return [
+                        'id' => $video->id,
+                        'link' => $video->link,
+                        'user' => new SimpleUser($video->user),
+                        'post' => new Post($video->creatableby),
+                        'createdAt' => $video->created_at,
+                    ];
+                } else {
+                    return [
+                        'id' => $video->id,
+                        'link' => $video->link,
+                        'user' => new SimpleUser($video->user),
+                        'createdAt' => $video->created_at,
+                    ];
                 }
             }),
         ];
