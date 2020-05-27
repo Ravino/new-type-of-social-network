@@ -48,6 +48,44 @@
         }
     ],
     "paths": {
+        "/user/images/{imageId}": {
+            "post": {
+                "tags": [
+                  "Photo"
+                ],
+                "description": "Лайкнуть изображение пользователя.",
+                "operationId": "UserPhotoLike",
+                "parameters": [
+                    {
+                        "name": "imageId",
+                        "in": "path",
+                        "description": "ID изображения",
+                        "required": true,
+                        "schema": {
+                          "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                      "description": "OK",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "description": "Сообщение об успешном лайк/анлайк."
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
         "/photo-albums/{id}/photos": {
             "post": {
                 "tags": [
@@ -322,6 +360,44 @@
                                         "message": {
                                             "type": "string",
                                             "description": "Сообщение об успешном удалении."
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/comment/{commentId}/like": {
+            "post": {
+                "tags": [
+                    "Comments"
+                ],
+                "description": "Лайкнуть комментарий.",
+                "operationId": "CommentLike",
+                "parameters": [
+                    {
+                        "name": "commentId",
+                        "in": "path",
+                        "description": "ID комментария",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "description": "Сообщение об успешном лайк/анлайк."
                                         }
                                     }
                                 }

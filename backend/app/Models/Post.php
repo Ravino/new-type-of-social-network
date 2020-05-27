@@ -54,10 +54,10 @@ class Post extends Model
     }
 
     /**
-     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     * @return \Illuminate\Database\Eloquent\Relations\MorphMany
      */
     public function like() {
-        return $this->hasMany(Like::class, 'likeable_id', 'id')
+        return $this->morphMany(Like::class, 'likeable')
             ->where('user_id', \Auth::user()->id);
     }
 
@@ -70,7 +70,7 @@ class Post extends Model
             'id',
             'id',
             'user_id'
-        );
+        )->where('likeable_type', Post::class);
     }
 
     public function video()
