@@ -87,7 +87,7 @@ methods: {
         let apiResponse = null;
 
         try {
-            apiResponse = await this.$root.$api.$photoalbums.getPhotoalbums();
+            apiResponse = await this.$root.$api.$photoalbums.list();
             this.hidePhotoalbumCreateModal();
         } catch (e) {
             console.warn(e.detailMessage);

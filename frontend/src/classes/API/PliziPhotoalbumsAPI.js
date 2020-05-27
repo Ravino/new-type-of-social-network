@@ -8,11 +8,11 @@ class PliziPhotoalbumsAPI extends PliziBaseAPI {
      * @returns {object[]|null}
      * @throws PliziAPIError
      */
-    async getPhotoalbums() {
+    async list() {
         let response = await this.axios.get('api/photo-albums', this.authHeaders)
           .catch( ( error ) => {
-              this.checkIsTokenExpires( error, `getPhotoalbums` );
-              throw new PliziAPIError( `getPhotoalbums`, error.response );
+              this.checkIsTokenExpires( error, `list` );
+              throw new PliziAPIError( `list`, error.response );
           } );
 
         if ( response.status === 200 ){
