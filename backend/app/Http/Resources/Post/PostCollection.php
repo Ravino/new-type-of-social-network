@@ -62,7 +62,7 @@ class PostCollection extends ResourceCollection
                             'usersLikes' => new SimpleUsers($post->usersLikes),
                             'views' => $post->views,
                             'sharesCount' => $post->children_count,
-                            'commentsCount' => $this->comments_count,
+                            'commentsCount' => $post->comments_count,
                             'alreadyLiked' => (bool)count($post->like),
                             'attachments' => new AttachmentsCollection($post->attachments),
                             'community' => new Community($post->postable),
