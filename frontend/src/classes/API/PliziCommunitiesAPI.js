@@ -460,7 +460,7 @@ class PliziCommunitiesAPI extends PliziBaseAPI {
     }
 
     /**
-     * @param {string} communityId
+     * @param {number} communityId
      * @param {string} userId
      * @returns {Promise<null|any>}
      */
@@ -480,7 +480,7 @@ class PliziCommunitiesAPI extends PliziBaseAPI {
     }
 
     /**
-     * @param {string} communityId
+     * @param {number} communityId
      * @param {string} userId
      * @returns {Promise<null|any>}
      */
