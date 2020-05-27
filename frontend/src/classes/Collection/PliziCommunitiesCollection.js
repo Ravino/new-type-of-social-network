@@ -34,7 +34,6 @@ class PliziCommunitiesCollection extends PliziStoredCollection {
     onAddToFavorites(evData){
         this.add(evData);
         this.storeData();
-        this.restore();
         this.emit(this.updateEventName);
     }
 
@@ -42,7 +41,6 @@ class PliziCommunitiesCollection extends PliziStoredCollection {
     removeFromFavorites(removedCommunityId){
         this.delete(removedCommunityId);
         this.storeData();
-        this.restore();
         this.emit(this.updateEventName);
     }
 
