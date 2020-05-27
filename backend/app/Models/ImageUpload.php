@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Traits\Commentable;
 use App\Traits\Likeable;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Event;
@@ -10,7 +11,7 @@ use Storage;
 
 class ImageUpload extends Model
 {
-    use LadaCacheTrait, Likeable;
+    use LadaCacheTrait, Likeable, Commentable;
 
     const TAG_PRIMARY = 'primary';
     const TAG_SECONDARY = 'secondary';
