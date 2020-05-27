@@ -5,6 +5,7 @@ namespace App\Http;
 use App\Http\Middleware\GetCommunity;
 use App\Http\Middleware\GetCommunityMember;
 use App\Http\Middleware\GetUser;
+use App\Http\Middleware\IsHasAccessToCommunity;
 use App\Http\Middleware\IsOwnerOfCommunity;
 use App\Http\Middleware\PrivacyRole;
 use Illuminate\Foundation\Http\Kernel as HttpKernel;
@@ -81,6 +82,7 @@ class Kernel extends HttpKernel
         'community.get' => GetCommunity::class,
         'community.getMember' => GetCommunityMember::class,
         'community.isOwner' => IsOwnerOfCommunity::class,
+        'community.isHasAccess' => IsHasAccessToCommunity::class,
         /**
          * User
          */
