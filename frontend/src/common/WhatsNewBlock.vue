@@ -37,7 +37,7 @@ methods: {
         this.errors = null;
     },
 
-  async onTextPost(evData){
+  async onTextPost(evData) {
       let msg = evData.postText.trim();
 
     if (msg !== '' || evData.videoLink) {
