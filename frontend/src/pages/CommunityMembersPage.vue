@@ -51,7 +51,7 @@
             CommunityMember
         },
         props: {
-            id: String,
+            id: Number,
         },
         data() {
             return {
