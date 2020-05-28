@@ -316,17 +316,15 @@ class PliziPostAPI extends PliziBaseAPI {
      *
      * @param {string} body
      * @param {number} postId
-     * @param {Array<Number>} attachmentIds
-     * @param {number} replyOn
+     * @param {number[]} attachmentIds
      * @return {object[]|null}
      * @throws PliziAPIError
      */
-     async setPostComments(body, postId, attachmentIds = [], replyOn = 0) {
+     async setPostComments(body, postId, attachmentIds = []) {
          const response = await this.axios.post(`api/comment/post`, {
              body,
              postId,
              attachmentIds,
-             replyOn
         }, this.authHeaders
      );
 
@@ -335,6 +333,33 @@ class PliziPostAPI extends PliziBaseAPI {
       }
 
       return null;
+    }
+
+    /**
+     * Оставить комментарий
+     *
+     * @param {string} body
+     * @param {number} postId
+     * @param {number[]} attachmentIds
+     * @param {number} replyOn
+     * @return {object[]|null}
+     * @throws PliziAPIError
+     */
+
+    async getAnswerToComment(body, postId, attachmentIds = [], replyOn) {
+        const response = await this.axios.post(`api/comment/post`, {
+                body,
+                postId,
+                attachmentIds,
+                replyOn
+            }, this.authHeaders
+        );
+
+        if (response.status === 200) {
+            return response.data
+        }
+
+        return null;
     }
 
     /**
@@ -377,7 +402,7 @@ class PliziPostAPI extends PliziBaseAPI {
      * Изменить комментарий
      * @param {string} body
      * @param {number} commentId
-     * @param {Array<Number>} attachmentIds
+     * @param {number[]} attachmentIds
      * @return {object[]|null}
      * @throws PliziAPIError
      */

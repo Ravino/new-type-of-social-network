@@ -214,7 +214,7 @@
                                 </div>
                             </div>
                         </div>
-                        <div class="post-watched-counter ml-4" @click="isShowComment = !isShowComment">
+                        <div class="post-watched-counter ml-4" @click="getCommentsByPostId">
                             <IconMessage/>
                             <span>{{ comments.length | space1000 }}</span>
                         </div>
@@ -236,6 +236,8 @@
                     v-for="comment in comments"
                 >
                     <CommentItem
+                        v-if="!isShowComment"
+                        :answers="comment.thread ? comment.thread.list : []"
                         :key="comment.id"
                         :commentId="comment.id"
                         :text="comment.body"
@@ -247,6 +249,7 @@
                         :createdAt="comment.createdAt"
                         @onDelete="removeComment"
                         @update="editComment"
+                        @updateAnswers="updateAnswers"
                     >
                     </CommentItem>
                 </div>
@@ -362,6 +365,9 @@
             editComment(newComment) {
                 this.comments = this.comments.map(comment => comment.id === newComment.id ? newComment : comment);
             },
+            updateAnswers({ id, answers }) {
+                this.comments = this.comments.map(comment => comment.id === id ? {...comment, thread: { list:answers } } : comment);
+            },
             removeComment(commentId) {
                 this.comments = this.comments.filter(comment => comment.id !== commentId);
             },
@@ -369,9 +375,9 @@
                 this.comments.push(newComment);
             },
             async getCommentsByPostId() {
-                let response = null;
+                this.isShowComment = !this.isShowComment;
                 try {
-                   response = await this.$root.$api.$post.getCommentsById(this.post.id);
+                    let response = await this.$root.$api.$post.getCommentsById(this.post.id);
                     this.comments = response.data.list;
                 } catch (e) {
                     console.warn(e.detailMessage);
@@ -465,10 +471,6 @@
         mounted() {
             if (this.post) {
                 this.recursiveParent(this.post);
-            }
-
-            if (this.commentsCount > 0) {
-                this.getCommentsByPostId();
             }
         },
     }

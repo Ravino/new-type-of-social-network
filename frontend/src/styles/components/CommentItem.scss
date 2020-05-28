@@ -5,13 +5,17 @@ $commentPicSize: 50px;
     position: relative;
     display: flex;
     margin-top: 20px;
-
+    margin-bottom: -1px;
     &:hover {
         .plz-comment-item-close-btn {
             display: inline-block;
         }
-        .plz-comment-item-edit {
-            display: inline-block;
+    }
+    &-holder {
+        &:hover {
+            .plz-comment-item-edit {
+                display: inline-block;
+            }
         }
     }
 
@@ -51,9 +55,16 @@ $commentPicSize: 50px;
             display: flex;
             justify-content: space-between;
             align-items: center;
+            margin-bottom: 10px;
         }
     }
-
+    &-wrapper {
+        &-avatar {
+            border-radius: 50%;
+            height: 50px;
+            width: 50px;
+        }
+    }
     &-close {
         &-btn {
             position: absolute;
@@ -118,5 +129,8 @@ $commentPicSize: 50px;
     }
     &-edit {
         display: none;
+    }
+    &-likes {
+        cursor: pointer;
     }
 }
