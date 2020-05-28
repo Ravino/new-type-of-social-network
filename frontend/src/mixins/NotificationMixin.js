@@ -8,7 +8,11 @@ data() {
         limitNotifications: 5,
     };
 },
-
+computed: {
+    userData() {
+        return this.$root.$auth.user;
+    },
+},
 methods: {
     addNotification(inputNotification) {
         const uuid = uuidv4();
@@ -21,7 +25,7 @@ methods: {
         };
         if (inputNotification.data.notificationType === 'user.profile.image.updated') {
             notification.body = this.senderFullName(inputNotification) +
-                        (inputNotification.data.sender.sex === 'f' ? 'сменила 1111 аватарку' : 'сменил аватарку');
+                        (inputNotification.data.sender.sex === 'f' ? 'сменила аватарку' : 'сменил аватарку');
         }
         if (inputNotification.data.notificationType === 'friendships.accepted') {
             notification.body = this.senderFullName(inputNotification) +
@@ -36,6 +40,10 @@ methods: {
             notification.body = `Сообщество <b class="community-name">${inputNotification.data.community.name}</b> опубликовало новый пост`;
             notification.primaryImage = inputNotification.data.community.primaryImage;
             }
+        if (inputNotification.data.notificationType === 'chat.created') {
+            notification.body = this.senderFullName(inputNotification) +
+                ('f' === inputNotification.data.sender.sex ? 'создала чат с Вами' : 'создал чат с Вами');
+        }
 
         this.notifications.push({
             ...notification,
@@ -64,8 +72,21 @@ methods: {
     },
 
     transformDialogToNotification(data) {
-        return {
+        let user;
+        if (data.dialog.attendees.length === 2) {
+            user = data.dialog.attendees.filter(item => item.id !== this.userData.id);
 
+            return {
+                data: {
+                    notificationType: data.type,
+                    sender: {
+                        userPic: user[0].userPic ? user[0].userPic : null,
+                        firstName: user[0].firstName ? user[0].firstName : null,
+                        lastName: user[0].lastName ? user[0].lastName : null,
+                        sex: user[0].sex ? user[0].sex : null
+                    }
+                }
+            }
         }
     }
 }

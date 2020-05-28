@@ -166,13 +166,10 @@ methods: {
             return;
 
         if (`user.notification`===evData.type) {
-            // обработка нотификаций
-            console.log(evData.notification.data.notificationType, 'user notify');
             this.addNotification(evData.notification);
         }
         if (`chat.created`===evData.type) {
-            console.log(evData.data.data, 'кто-то создал чат с вами');
-            let chatNotificationData = this.transformDialogToNotification(evData.data);
+            let chatNotificationData = this.transformDialogToNotification(evData);
             this.addNotification(chatNotificationData);
         }
         // if (`chat.attendee.appended`===evData.type) { аналогично с предыдущим тип данных
