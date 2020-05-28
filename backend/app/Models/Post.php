@@ -4,7 +4,6 @@ namespace App\Models;
 
 use App\Traits\Likeable;
 use App\Traits\Commentable;
-use Domain\Pusher\Models\ChatMessage;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Support\Carbon;
@@ -163,5 +162,20 @@ class Post extends Model
             ->offset($offset ?? 0)
             ->orderBy($orderByColumn, 'desc')
             ->get();
+    }
+
+    /**
+     * @param null|User $user
+     * @return bool
+     */
+    public function userHasAccess($user = null)
+    {
+        $user = $user ?: auth()->user();
+        if ($this->postable instanceof Community) {
+            $role = $this->postable->role;
+            return $role && in_array($role->role, [Community::ROLE_ADMIN, Community::ROLE_AUTHOR], true);
+        }
+
+        return $this->author_id === $user->id;
     }
 }
