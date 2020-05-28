@@ -650,6 +650,21 @@ $dotSize: 2px;
 }
 
 
+.back-link {
+    font-size: 13px;
+    color: #bfc0c3;
+    cursor: pointer;
+    transition: .4s;
+    &:hover {
+        color: $textColor;
+
+        .icon {
+            fill: $textColor;
+        }
+    }
+}
+
+
 //.flex-column,
 .flex-column-reverse {
     * {
