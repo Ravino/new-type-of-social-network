@@ -206,8 +206,10 @@ methods : {
         this.posts.unshift(new PliziPost(post));
     },
 
-    startTimer( postIndex ){
+    startTimer(post){
         setTimeout( () => {
+            let postIndex = this.posts.findIndex(item => item.id === post.id);
+
             this.posts.splice( postIndex, 1 );
         }, 5000 );
     },
@@ -280,7 +282,7 @@ methods : {
         }
     },
 
-    async onDeletePost( id ) {
+    async onDeletePost(id) {
         let response;
 
         try{
@@ -290,12 +292,10 @@ methods : {
         }
 
         if ( response ){
-            const postIndex = this.posts.findIndex( ( post ) => {
-                return post.id === id;
-            } );
-            let post = this.posts[postIndex].deleted = true;
+            const post = this.posts.find(post => post.id === id);
 
-            this.startTimer( postIndex );
+            post.deleted = true;
+            this.startTimer(post);
         }
     },
 
