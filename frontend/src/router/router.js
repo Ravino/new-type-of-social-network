@@ -30,6 +30,7 @@ import AboutPage from "../pages/AboutPage.vue";
 import RulesPage from "../pages/RulesPage.vue";
 import AdvertisementPage from "../pages/AdvertisementPage.vue";
 import ForDevelopersPage from "../pages/ForDevelopersPage.vue";
+import BlackListPage from "../pages/BlackListPage.vue";
 
 const routes = [
     {path: '/', redirect: '/login', isGuest: true},
@@ -43,7 +44,7 @@ const routes = [
     {path: '/for-developers', component: ForDevelopersPage, name: 'ForDevelopersPage', meta: {title: 'Plizi: Для разработчиков', isGuest: true}},
 // Auth
     {path: '/account', component: AccountPage, name: 'AccountPage', meta: {title: 'Plizi: Настройки аккаунта'}, props: true },
-    {path: '/black-list', component: BlackList, name: 'BlackList', meta: {title: 'Plizi: Черный список'}, props: true },
+    {path: '/black-list', component: BlackListPage, name: 'BlackList', meta: {title: 'Plizi: Черный список'}, props: true },
     {path: '/profile', component: ProfilePage, name: 'ProfilePage', meta: {title: 'Plizi: Домашняя'}, props: true},
     {path: '/chats', component: ChatsListPage, name: 'ChatsListPage', meta: {title: 'Plizi: Чаты'}, props: true},
     {path: '/search-results', component: SearchResultsPage, name: 'SearchResultsPage', meta: {title: 'Plizi: Результаты поиска'}, props: true },

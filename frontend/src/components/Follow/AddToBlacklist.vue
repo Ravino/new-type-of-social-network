@@ -16,15 +16,19 @@
             async addToBlacklist() {
                 let apiResponse = null;
 
-                try {
-                    apiResponse = await this.$root.$api.$users.blacklistAdd(this.userData.id);
-                } catch (e) {
-                    window.console.warn(e.detailMessage);
-                    throw e;
+                if (!this.userData.isOwner) {
+                    try {
+                        apiResponse = await this.$root.$api.$users.blacklistAdd(this.userData.id);
+                    } catch (e) {
+                        window.console.warn(e.detailMessage);
+                        throw e;
+                    }
+
+                    return true;
+
+                } else {
+                    this.$root.$alert('Вы не можете добавить себя в черный список', 'bg-warning', 3);
                 }
-
-                return true;
-
             }
         }
     }
