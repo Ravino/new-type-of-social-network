@@ -194,26 +194,27 @@
                             <IconHeard v-else/>
                             <span>{{ post.likes | space1000 }}</span>
                             <div v-if="post.usersLikes && post.usersLikes.length" class="usersLikes p-3" @click.stop="">
-                                <p class="mb-0">
+                                <p class="mb-1">
                                     <b @click.stop="$emit('onShowUsersLikes', post.id)"
                                        style="cursor: pointer">
                                         Понравилось
                                     </b>
                                     {{ post.likes }} пользователям
                                 </p>
-                                <p class="d-flex">
+                                <div class="d-flex mb-0">
                                     <router-link v-for="(user, index) in shortUsersLikes"
                                                  :key="index"
+                                                 class="usersLikes-user"
                                                  :to="{ name: 'PersonalPage', params: { id: user.id } }">
                                         <img :src="user.profile.userPic"
                                              :alt="user.profile.firstName + ' ' + user.profile.lastName"
                                              :title="user.profile.firstName + ' ' + user.profile.lastName"
                                              class="rounded-circle">
                                     </router-link>
-                                </p>
+                                </div>
                             </div>
                         </div>
-                        <div class="post-watched-counter ml-4" @click="isShowComment = !isShowComment">
+                        <div class="post-watched-counter ml-4" @click="getCommentsByPostId">
                             <IconMessage/>
                             <span>{{ comments.length | space1000 }}</span>
                         </div>
@@ -235,6 +236,8 @@
                     v-for="comment in comments"
                 >
                     <CommentItem
+                        v-if="!isShowComment"
+                        :answers="comment.thread ? comment.thread.list : []"
                         :key="comment.id"
                         :commentId="comment.id"
                         :text="comment.body"
@@ -246,6 +249,7 @@
                         :createdAt="comment.createdAt"
                         @onDelete="removeComment"
                         @update="editComment"
+                        @updateAnswers="updateAnswers"
                     >
                     </CommentItem>
                 </div>
@@ -361,6 +365,9 @@
             editComment(newComment) {
                 this.comments = this.comments.map(comment => comment.id === newComment.id ? newComment : comment);
             },
+            updateAnswers({ id, answers }) {
+                this.comments = this.comments.map(comment => comment.id === id ? {...comment, thread: { list:answers } } : comment);
+            },
             removeComment(commentId) {
                 this.comments = this.comments.filter(comment => comment.id !== commentId);
             },
@@ -368,9 +375,9 @@
                 this.comments.push(newComment);
             },
             async getCommentsByPostId() {
-                let response = null;
+                this.isShowComment = !this.isShowComment;
                 try {
-                   response = await this.$root.$api.$post.getCommentsById(this.post.id);
+                    let response = await this.$root.$api.$post.getCommentsById(this.post.id);
                     this.comments = response.data.list;
                 } catch (e) {
                     console.warn(e.detailMessage);
@@ -465,8 +472,6 @@
             if (this.post) {
                 this.recursiveParent(this.post);
             }
-            this.getCommentsByPostId();
-
         },
     }
 </script>

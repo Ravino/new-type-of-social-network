@@ -6,7 +6,8 @@
                     Создать альбом
                 </button>
                 <PhotoalbumCreateModal v-if="photoalbumCreateModalShow"
-                         @HidePhotoalbumCreateModal="onHidePhotoalbumCreateModal">
+                         @HidePhotoalbumCreateModal="onHidePhotoalbumCreateModal"
+                >
                 </PhotoalbumCreateModal>
     </div>
 </template>

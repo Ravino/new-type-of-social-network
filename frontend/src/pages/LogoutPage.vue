@@ -5,11 +5,6 @@
 <script>
 export default {
 name: 'LogoutPage',
-data() {
-    return {
-
-    }
-},
 
 beforeMount() {
     this.$root.$isAuth = false;
@@ -18,7 +13,16 @@ beforeMount() {
     window.localStorage.removeItem('pliziUser');
     window.localStorage.removeItem('pliziChatChannel');
 
-    this.$router.push({path: '/login'});
+    window.localStorage.removeItem('pliziLastSearch');
+
+    window.localStorage.removeItem('pliziFriends');
+    window.localStorage.removeItem('pliziFavorites');
+    window.localStorage.removeItem('pliziDialogs');
+    window.localStorage.removeItem('pliziInvitations');
+    window.localStorage.removeItem('pliziNotifications');
+
+    //this.$router.push({path: '/login'});
+    window.location = window.location.origin + '/login'; // @TGA: for app restart
 },
 
 

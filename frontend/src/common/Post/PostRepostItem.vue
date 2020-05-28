@@ -249,15 +249,3 @@
     }
 </script>
 
-<style lang="scss">
-    .post-repost {
-        border-left: 2px solid #cececf;
-
-        .attachments {
-            img {
-                width: 500px;
-                height: 500px;
-            }
-        }
-    }
-</style>
