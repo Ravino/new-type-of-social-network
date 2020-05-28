@@ -166,7 +166,7 @@ class PliziUserStats {
             isFollow: this.isFollow,
             isFriend: this.isFriend,
             followCount: this.followCount,
-            videosCount: this.videosCount
+            videosCount: this.videosCount,
             isInBlacklist: this.isInBlacklist,
         };
     }
