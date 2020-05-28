@@ -207,7 +207,7 @@ class UserNeo4jRepository extends BaseRepository
         if (!$this->isFollowed($owner_oid, $user_oid)) {
             return null;
         }
-        $query = "MATCH (:User {oid: '{$owner_oid}'})-[r:FOLLOWS]-(:User {oid: '{$user_oid}'})
+        $query = "MATCH (:User {oid: '{$owner_oid}'})-[r:FOLLOWS]->(:User {oid: '{$user_oid}'})
                   DELETE r
                   RETURN COUNT(r) AS count";
         try {
@@ -226,9 +226,9 @@ class UserNeo4jRepository extends BaseRepository
      */
     public function followList($owner_oid, $limit = 20, $offset = 0)
     {
-        $query = "MATCH (:User {oid: '{$owner_oid}'})-[r:FOLLOWS]-(user:User)
+        $query = "MATCH (:User {oid: '{$owner_oid}'})-[r:FOLLOWS]->(user:User)
                   WITH COUNT(user) AS total_count
-                  MATCH (:User {oid: '{$owner_oid}'})-[r:FOLLOWS]-(user:User)
+                  MATCH (:User {oid: '{$owner_oid}'})-[r:FOLLOWS]->(user:User)
                   RETURN user.oid AS oid, total_count
                   SKIP {$offset}
                   LIMIT {$limit}";
@@ -246,7 +246,7 @@ class UserNeo4jRepository extends BaseRepository
      */
     public function followIds($owner_oid)
     {
-        $query = "MATCH (:User {oid: '{$owner_oid}'})-[r:FOLLOWS]-(user:User)
+        $query = "MATCH (:User {oid: '{$owner_oid}'})-[r:FOLLOWS]->(user:User)
                   RETURN user.oid AS oid";
         try {
             $result = $this->client->run($query)->records();
@@ -262,7 +262,7 @@ class UserNeo4jRepository extends BaseRepository
      */
     public function followCount($owner_oid)
     {
-        $query = "MATCH (:User {oid: '{$owner_oid}'})-[r:FOLLOWS]-(user:User)
+        $query = "MATCH (:User {oid: '{$owner_oid}'})<-[r:FOLLOWS]-(user:User)
                   RETURN COUNT(user) AS total_count";
         try {
             $result = $this->client->run($query)->firstRecord();
