@@ -21,7 +21,8 @@
 
     $toolbarPicSize: 28px;
 
-    #toolbarLeftColor {
+    #toolbarLeftColor,
+    .hot-communities {
         .add-new {
             width: $toolbarPicSize;
             min-width: $toolbarPicSize;
@@ -31,7 +32,7 @@
             }
         }
 
-        img{
+        img {
             position: relative;
             width: $toolbarPicSize;
             height: $toolbarPicSize;
