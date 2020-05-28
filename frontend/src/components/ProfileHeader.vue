@@ -41,6 +41,9 @@
                             <div class="nav-item">
                                 <router-link tag="a" class="dropdown-item px-0 py-1 px-3" to="/friends">Друзья</router-link>
                             </div>
+                            <div class="nav-item">
+                                <router-link tag="a" class="dropdown-item px-0 py-1 px-3" to="/follow-list">Подписки</router-link>
+                            </div>
                             <div class="nav-item ">
                                 <router-link tag="a" class="dropdown-item px-0 py-1 px-3" to="/communities">Сообщества</router-link>
                             </div>
