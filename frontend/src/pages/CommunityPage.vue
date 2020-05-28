@@ -517,6 +517,7 @@ methods: {
                     return;
                 }
                 getPosts();
+                this.noMore = false;
             }, 100);
         }
     },
