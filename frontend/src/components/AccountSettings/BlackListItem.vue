@@ -1,5 +1,5 @@
 <template>
-    <li class="plizi-friend-item-user media m-0 py-4 px-4">
+    <li class="plizi-friend-item-user media m-0 py-4 pl-4 pr-2">
 
         <div class="plizi-friend-item d-flex w-100 align-items-center">
             <router-link :to="`/user-`+userItem.id" tag="div" class="plizi-friend-item-pic mr-3 " >
@@ -31,9 +31,9 @@
                 </div>
             </div>
 
-            <button type="button" class="btn btn-link" title="Удалить из чёрного списка"
+            <button type="button" class="btn btn-link mb-auto ml-auto" title="Удалить из чёрного списка"
                     @click="onClickRemoveFromBlackList">
-                <i class="fas fa-times"></i>
+                <i class="fas fa-times" style="font-size: 20px"></i>
             </button>
         </div>
     </li>
