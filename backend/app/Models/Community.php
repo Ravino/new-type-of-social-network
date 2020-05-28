@@ -54,6 +54,8 @@ use Spiritix\LadaCache\Database\LadaCacheTrait;
  * @property-read int|null $users_count
  * @property-read Collection|User[] $subscribers
  * @property-read int|null $subscribers_count
+ * @property-read Collection|User[] $supers
+ * @property-read int|null $supers_count
  * @method static Builder|Community newModelQuery()
  * @method static Builder|Community newQuery()
  * @method static Builder|Community onlyMy()
@@ -144,6 +146,16 @@ class Community extends Model
     public function requests()
     {
         return $this->hasMany(CommunityRequest::class);
+    }
+
+    /**
+     * @return BelongsToMany
+     */
+    public function supers()
+    {
+        return $this->belongsToMany(User::class, 'community_members')
+            ->withPivot(['role'])
+            ->wherePivotIn('role', [self::ROLE_AUTHOR, self::ROLE_ADMIN]);
     }
 
     /**
