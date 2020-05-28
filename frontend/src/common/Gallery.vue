@@ -147,7 +147,6 @@ computed : {
             else{
                 classes.push( this.getPortraitImageClass( index, countImages ) );
             }
-
             return {
                 path : image.original.path,
                 name : image.originalName,

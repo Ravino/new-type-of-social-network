@@ -7,9 +7,8 @@
                     :editorPlaceholder="'Оставить комментарий...'"
                     :dropToDown="true"
                     :maximumCharacterLimit="500"
-                    workMode="post"
+                    workMode="comment"
                     @editorPost="onTextPost"
-                    work-mode="comment"
         >
         </TextEditor>
     </div>
