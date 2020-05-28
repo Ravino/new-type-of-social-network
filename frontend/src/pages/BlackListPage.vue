@@ -5,7 +5,7 @@
                 <AccountToolbarLeft></AccountToolbarLeft>
             </div>
 
-            <div class="col-12 col-md-9 col-xl-8  px-0 px-md-3">
+            <div class="col-12 col-md-9 col-xl-8 px-0 px-md-3">
                 <BlackListUsers v-bind:key="`blackList-`+blackListUpdater"
                                 @RemoveFromBlackList="onRemoveFromBlackList"
                                 v-bind:blockedUsers="blockedUsers"

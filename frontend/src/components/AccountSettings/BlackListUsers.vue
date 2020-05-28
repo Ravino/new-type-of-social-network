@@ -6,15 +6,17 @@
             </div>
 
             <div class="plz-account-settings-body">
-                <div v-if="isBlacklistDataReady" class="form-group row border-bottom border-top flex-column">
+                <div v-if="isBlacklistDataReady && blockedUsers.length" class="form-group row border-bottom border-top flex-column">
                     <BlackListItem v-for="blItem in blockedUsers.asArray()"
                                    @RemoveFromBlackList="onRemoveFromBlackList"
                                    v-bind:userItem="blItem"
                                    v-bind:key="'blockedUserItem-' + blItem.id">
                     </BlackListItem>
                 </div>
-                <div v-else-if="blockedUsers.length === 0" class="alert alert-info">
-                    Ваш чёрный список пуст
+                <div v-else class="row">
+                    <div class="alert alert-info w-100">
+                        Ваш чёрный список пуст
+                    </div>
                 </div>
             </div>
         </form>
