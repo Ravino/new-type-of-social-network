@@ -18,7 +18,7 @@
                                             <div class="row">
                                                 <div v-for="(video, index) in userVideos" class="col-3 my-3">
                                                     <img v-if="video.isYoutubeLink"
-                                                         :src="`//img.youtube.com/vi/${video.youtubeId}/0.jpg`"
+                                                         :src="`//img.youtube.com/vi/${video.youtubeId}/mqdefault.jpg`"
                                                          class="img-fluid"
                                                          alt=""
                                                          @click.stop="openVideoModal(video.link)"/>
