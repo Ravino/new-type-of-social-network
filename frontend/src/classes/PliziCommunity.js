@@ -94,6 +94,13 @@ class PliziCommunity {
     _members = null;
 
     /**
+     * админы сообщества
+     * @type {PliziMember[]}
+     * @private
+     */
+    _admins = null;
+
+    /**
      * небольшой список друзей в сообществе
      * @type {PliziMember[]}
      * @private
@@ -181,6 +188,14 @@ class PliziCommunity {
                 this._members.push(new PliziMember(mItem));
             });
         }
+
+        if (inputData.admins) {
+            this._admins = [];
+
+            inputData.admins.list.map( (mItem) => {
+                this._admins.push(new PliziMember(mItem));
+            });
+        }
     }
 
     get id(){
@@ -236,6 +251,18 @@ class PliziCommunity {
 
     set role(value){
         this._role = value;
+    }
+
+    get admins(){
+        return this._admins;
+    }
+
+    get adminsIds(){
+        if (this._admins) {
+            return this._admins.map( aItem=> aItem.id );
+        }
+
+        return [];
     }
 
     get members(){
@@ -312,10 +339,17 @@ class PliziCommunity {
     toJSON(){
         let mmbrs = null;
         let friends = null;
+        let admins = null;
 
         if (this.members) {
             mmbrs = {
                 list: this.members.map( mItem => mItem.toJSON() )
+            };
+        }
+
+        if (this.admins) {
+            admins = {
+                list: this.admins.map( mItem => mItem.toJSON() )
             };
         }
 
@@ -343,6 +377,7 @@ class PliziCommunity {
             avatar: this._avatar ? this._avatar.toJSON() : null,
             headerImage: this._headerImage ? this._headerImage.toJSON() : null,
             members: mmbrs,
+            admins: admins,
             friends: friends,
             subscribed: this.subscribed,
         };
