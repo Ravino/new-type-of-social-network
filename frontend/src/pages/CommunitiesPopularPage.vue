@@ -76,8 +76,8 @@ methods : {
 
 },
 
-mounted(){
-    this.loadPopularCommunitites();
+async mounted(){
+    await this.loadPopularCommunitites();
 },
 }
 </script>
