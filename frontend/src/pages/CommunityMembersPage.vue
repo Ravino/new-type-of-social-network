@@ -9,15 +9,15 @@
 
                 <div class="d-flex flex-wrap align-items-start">
 
-                    <div class="col-12 col-lg-8 d-flex align-items-center justify-content-between px-0">
-                        <nav class="nav profile-filter-links mt-2 mt-lg-0" role="tablist">
-                            <router-link :to="`/community-`+id" tag="span" class="nav-link py-2 py-sm-3 py-lg-4 px-1 mr-2 mr-lg-4" role="tab">
-                                Назад
-                            </router-link>
-                        </nav>
+                    <div class="col-12 col-lg-8 d-flex align-items-center justify-content-between px-0 mb-3">
+                        <router-link :to="`/community-`+id" tag="span"
+                                     class="back-link py-2 px-1 mr-2" >
+                            <IconShare class="mr-2" style="height: 16px; transform: scaleX(-1)"></IconShare>
+                            Назад
+                        </router-link>
                     </div>
 
-                    <div class="col-12 order-1 order-md-0 bg-white-br20">
+                    <div class="col-12 order-1 order-md-0 bg-white-br20 py-2">
                         <CommunityMember
                             v-for="member in allMembers"
                             v-if="isLoaded"
@@ -42,13 +42,16 @@
     import Spinner from '../common/Spinner.vue';
     import AccountToolbarLeft from '../common/AccountToolbarLeft.vue';
 
+    import IconShare from '../icons/IconShare.vue';
+
     export default {
         name: 'CommunityMembersPage',
         components: {
             FriendsAllList,
             Spinner,
             AccountToolbarLeft,
-            CommunityMember
+            CommunityMember,
+            IconShare,
         },
         props: {
             id: Number|String,
