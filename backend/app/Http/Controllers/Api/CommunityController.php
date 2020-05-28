@@ -493,4 +493,79 @@ class CommunityController extends Controller
          */
         return new VideoCollection($videos, true);
     }
+
+    /**
+     * @param Request $request
+     * @return JsonResponse
+     */
+    public function subscribeNotify(Request $request)
+    {
+        /** @var Community $community */
+        $community = $request->community;
+
+        if ($community->role) {
+            CommunityMember::where([
+                'user_id' => auth()->id(),
+                'community_id' => $community->id,
+            ])->update([
+                'subscribed' => true,
+            ]);
+            return response()->json([
+                'message' => 'Вы успешно подписались на уведомления',
+            ]);
+        }
+
+        if ($community->privacy === Community::PRIVACY_OPEN) {
+            $community->users()->attach(auth()->user()->id, [
+                'role' => Community::ROLE_GUEST,
+                'subscribed' => true,
+                'created_at' => time(),
+                'updated_at' => time(),
+            ]);
+            return response()->json([
+                'message' => 'Вы успешно подписались на уведомления',
+            ]);
+        }
+
+        return response()->json([
+            'message' => 'Ошибка подписки на уведомления',
+        ], 422);
+    }
+
+    /**
+     * @param Request $request
+     * @return JsonResponse
+     */
+    public function unsubscribeNotify(Request $request)
+    {
+        /** @var Community $community */
+        $community = $request->community;
+
+        if (!$community->role) {
+            return response()->json([
+                'message' => 'Ошибка отписки от уведомлений',
+            ], 422);
+        }
+
+        if ($community->role->role === Community::ROLE_GUEST) {
+            CommunityMember::where([
+                'user_id' => auth()->id(),
+                'community_id' => $community->id,
+            ])->delete();
+            return response()->json([
+                'message' => 'Вы успешно отписались от уведомлений',
+            ]);
+        }
+
+        CommunityMember::where([
+            'user_id' => auth()->id(),
+            'community_id' => $community->id,
+        ])->update([
+            'subscribed' => false,
+        ]);
+
+        return response()->json([
+            'message' => 'Вы успешно отписались от уведомлений',
+        ]);
+    }
 }

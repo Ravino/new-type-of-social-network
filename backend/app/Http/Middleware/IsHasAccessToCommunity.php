@@ -24,7 +24,8 @@ class IsHasAccessToCommunity
             return $next($request);
         }
 
-        if($community->role && in_array($community->role->role, [Community::ROLE_ADMIN, Community::ROLE_AUTHOR], true)) {
+        if($community->role
+            && in_array($community->role->role, [Community::ROLE_USER, Community::ROLE_ADMIN, Community::ROLE_AUTHOR], true)) {
             return $next($request);
         }
         return response()->json([

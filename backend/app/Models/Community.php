@@ -52,6 +52,8 @@ use Spiritix\LadaCache\Database\LadaCacheTrait;
  * @property-read CommunityTheme $theme
  * @property-read Collection|User[] $users
  * @property-read int|null $users_count
+ * @property-read Collection|User[] $subscribers
+ * @property-read int|null $subscribers_count
  * @method static Builder|Community newModelQuery()
  * @method static Builder|Community newQuery()
  * @method static Builder|Community onlyMy()
@@ -82,6 +84,7 @@ class Community extends Model
     const ROLE_USER = 'user';
     const ROLE_ADMIN = 'admin';
     const ROLE_AUTHOR = 'author';
+    const ROLE_GUEST = 'guest';
 
     public const PRIVACY_OPEN = 1;
     public const PRIVACY_CLOSED = 2;
@@ -105,7 +108,21 @@ class Community extends Model
      */
     public function users()
     {
-        return $this->belongsToMany(User::class, 'community_members')->withPivot(['role']);
+        return $this
+            ->belongsToMany(User::class, 'community_members')
+            ->withPivot(['role'])
+            ->wherePivot('role', '!=', self::ROLE_GUEST);
+    }
+
+    /**
+     * @return BelongsToMany
+     */
+    public function subscribers()
+    {
+        return $this
+            ->belongsToMany(User::class, 'community_members')
+            ->withPivot(['role'])
+            ->wherePivot('subscribed', true);
     }
 
     public function onlyFiveMembers()
@@ -118,7 +135,7 @@ class Community extends Model
      */
     public function members()
     {
-        return $this->hasMany(CommunityMember::class);
+        return $this->hasMany(CommunityMember::class)->where('role', '!=', self::ROLE_GUEST);
     }
 
     /**
