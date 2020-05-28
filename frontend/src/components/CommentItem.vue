@@ -1,8 +1,8 @@
 <template>
     <div class="plz-comment-item">
         <div class="plz-comment-item-wrapper">
-            <a class="plz-comment-item-data-name" :href="`user-${authorId}`">
-                <img class="plz-comment-item-wrapper-avatar"
+            <a class="plz-comment-item-data-pic" :href="`user-${authorId}`">
+                <img class="plz-comment-item-data-img"
                      :src="checkAuthorAvatar"
                      :alt="name">
             </a>
@@ -28,16 +28,16 @@
                     <Gallery v-if="images.length > 0" :images="imageList"></Gallery>
                 </div>
                 <div class="plz-comment-item-data-comment">
-                    <div class="plz-comment-item-reply">
+                    <div class="plz-comment-item-reply d-flex">
                         <span class="plz-comment-item-reply-date">{{ getTimeComment }}</span>
-                        <button class="plz-comment-item-reply-btn"
+                        <button class="plz-comment-item-reply-btn pl-2"
                                 @click="isAnswer = !isAnswer"
                         >
                             Ответить
                         </button>
                         <button v-if="isEdit === false && isAuthor"
                                 @click="isEdit = true"
-                                class="plz-comment-item-reply-btn plz-comment-item-edit"
+                                class="plz-comment-item-reply-btn plz-comment-item-edit pl-2"
                         >
                             Изменить
                         </button>
