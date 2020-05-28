@@ -9,7 +9,7 @@
             </nav>
 
             <div class="additionalBtns col-12 col-sm-5 d-flex justify-content-between justify-content-sm-end px-0  my-3 my-sm-0">
-                <button class="btn bg-transparent p-0 mr-3" @click="openAddVideoModal">
+                <button class="btn plz-btn plz-btn-primary p-0 mr-3" @click="openAddVideoModal">
                     Добавить видео
                 </button>
             </div>

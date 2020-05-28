@@ -15,8 +15,8 @@
                                 <div>
                                     <div class="card mb-4">
                                         <div class="card-body py-0">
-                                            <div class="row mx-lg-n1 justify-content-center">
-                                                    <div v-for="album in photoalbums"
+                                            <div class="row mx-lg-n1">
+                                                    <div v-for="album in photoAlbums"
                                                          class="px-lg-1 col-md-auto my-2 mb-2">
                                                         <PhotoalbumItem :album="album" :key="album.id"></PhotoalbumItem>
                                                     </div>
@@ -29,9 +29,9 @@
                     </div>
                 </div>
             </div>
-        </div>
-        <div class="col-lg-2 col-xl-1 d-none d-lg-block pr-0">
-            <FavoriteFriends :isNarrow="true"></FavoriteFriends>
+            <div class="col-lg-2 col-xl-1 d-none d-lg-block pr-0">
+                <FavoriteFriends :isNarrow="true"></FavoriteFriends>
+            </div>
         </div>
     </div>
 </template>
@@ -43,6 +43,8 @@
     import PhotoalbumsPageModal from "../components/PhotoalbumsPage/PhotoalbumsPageModal.vue";
     import PhotoalbumItem from "../components/PhotoalbumsPage/PhotoalbumItem.vue";
     import SmallSpinner from "../common/SmallSpinner.vue";
+
+    import PliziPhotoAlbum from "../classes/PliziPhotoAlbum.js";
 
     export default {
         name: "PhotoalbumsListPage",
@@ -56,12 +58,16 @@
         },
         data() {
             return {
-                photoalbums: null,
+                photoAlbums: null,
                 filterMode: 'my'
             }
         },
         methods: {
-            async getPhotoalbums() {
+            onAddPhotoAlbum(photoAlbum) {
+                this.photoAlbums.unshift(new PliziPhotoAlbum(photoAlbum));
+            },
+
+            async getPhotoAlbums() {
                 let apiResponse = null;
 
                 try {
@@ -71,11 +77,15 @@
                     console.warn(e.detailMessage);
                 }
 
-                this.photoalbums = apiResponse;
+                this.photoAlbums = apiResponse.map((photoAlbum) => {
+                    return new PliziPhotoAlbum(photoAlbum);
+                });
             }
         },
         async mounted() {
-            await this.getPhotoalbums();
+            await this.getPhotoAlbums();
+
+            this.$root.$on('onAddPhotoAlbum', this.onAddPhotoAlbum);
         },
     }
 </script>

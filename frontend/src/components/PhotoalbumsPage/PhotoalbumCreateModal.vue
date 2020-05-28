@@ -47,20 +47,21 @@
                             </div>
                             <div class="col-4"></div>
                             <div class="col-8 invalid-feedback" v-if="$v.model.description.$error">
-                                <p v-if="!$v.model.description.required" class="text-danger">Укажите описание
-                                    альбома</p>
-                                <p v-if="!$v.model.description.minLength" class="text-danger">Описание не может быть короче
+                                <p v-if="!$v.model.description.isValidDescription" class="text-danger">Описание не может быть короче
                                     <b>четырёх</b> символов</p>
                             </div>
                         </div>
 
                         <div
-                            class="form-group d-flex align-items-center px-5 py-4 community-create-modal-footer mb-0 row">
+                            class="form-group d-flex flex-column align-items-center px-5 py-4 community-create-modal-footer mb-0 row">
                             <div class="col-12 col-md-5 d-flex align-items-center justify-content-end px-0 mx-auto">
                                 <button @click.stop="startCreatePhotoalbum()" type="button"
                                         class="btn w-100 btn-primary rounded-pill">Создать альбом
                                 </button>
                             </div>
+                            <p v-if="isSuccess" class="text-success mt-3 mb-0">
+                                Альбом успешно создан.
+                            </p>
                         </div>
                     </form>
                 </div>
@@ -81,7 +82,8 @@ export default {
             model: {
                 title: '',
                 description: ''
-            }
+            },
+            isSuccess: false,
         }
     },
     validations() {
@@ -92,10 +94,15 @@ export default {
                     minLength: minLength(4)
                 },
                 description: {
-                    required,
-                    minLength: minLength(4)
+                    isValidDescription(value) {
+                        if (!!value) {
+                            return value.length >= 4;
+                        }
+
+                        return true;
+                    },
                 },
-            }
+            },
         };
     },
     methods: {
@@ -119,13 +126,19 @@ export default {
 
             try {
                 apiResponse = await this.$root.$api.$photoalbums.createPhotoalbum(formData);
-                this.hidePhotoalbumCreateModal();
             } catch (e) {
                 console.warn(e.detailMessage);
             }
 
             if (apiResponse) {
-                this.$emit('AddNewCommunity', apiResponse);
+                formData.id = apiResponse.id;
+                this.isSuccess = true;
+                this.$root.$emit('onAddPhotoAlbum', formData);
+
+                setTimeout(() => {
+                    this.isSuccess = false;
+                    this.hidePhotoalbumCreateModal();
+                }, 3000);
             }
         }
     },
