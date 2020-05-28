@@ -40,27 +40,23 @@
             async addToBlacklist() {
                 if (this.isAddedToBlacklist === false) {
                     let apiResponse = null;
-                    if (!this.userData.isOwner) {
-                    try {
-                        apiResponse = await this.$root.$api.$users.blacklistAdd(this.userData.id);
-                    } catch (e) {
-                        if (e.status === 422) {
-                            (console.log('выбранный пользователь уже добавлен в ваш черный список'));
-                            this.isAddedToBlacklist = true;
-                            return;
-                        }window.console.warn(e.detailMessage);
 
-                    }
+                        try {
+                            apiResponse = await this.$root.$api.$users.blacklistAdd(this.userData.id);
+                        } catch (e) {
+                            if (e.status === 422) {
+                                (console.log('выбранный пользователь уже добавлен в ваш черный список'));
+                                this.isAddedToBlacklist = true;
+                                return;
+                            }
+                            window.console.warn(e.detailMessage);
+                        }
 
                     this.isAddedToBlacklist = true;
                     this.$root.$alert(`Вы добавили пользователя в черный список`, 'bg-success', 3);
                 } else {
                     this.$root.$alert(`Пользователь уже внесен в черный список`, 'bg-warning', 3);
-                }return true;
-
-                } else {
-                    this.$root.$alert('Вы не можете добавить себя в черный список', 'bg-warning', 3);
-                }
+                } return true;
             }
 
         },

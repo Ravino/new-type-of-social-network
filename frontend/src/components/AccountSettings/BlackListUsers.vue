@@ -13,7 +13,7 @@
                                    v-bind:key="'blockedUserItem-' + blItem.id">
                     </BlackListItem>
                 </div>
-                <div v-else class="alert alert-info">
+                <div v-else-if="blockedUsers.length === 0" class="alert alert-info">
                     Ваш чёрный список пуст
                 </div>
             </div>
@@ -40,6 +40,9 @@ methods: {
     onRemoveFromBlackList(evData){
         this.$emit('RemoveFromBlackList', evData);
     }
-}
+},
+    mounted() {
+        console.log(this.blockedUsers.length);
+    },
 }
 </script>
