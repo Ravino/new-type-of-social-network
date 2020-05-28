@@ -139,6 +139,9 @@ class CommunityController extends Controller
                 if ($role) {
                     $query->wherePivot('role', $role);
                 }
+                /**
+                 * TODO show or not auth user in list?
+                 */
                 $query
                     ->where('id', '!=', auth()->user()->id)
                     ->limit($request->query('limit', 10))
