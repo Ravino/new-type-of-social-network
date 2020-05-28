@@ -33,7 +33,7 @@
                 </div>/
             </template>
 
-            <div class=" user-friend-body flex-fill m-0 ">
+            <div class="user-friend-body flex-fill m-0">
                 <div class="user-friend-body-top d-flex align-items-end justify-content-between">
                     <h6 v-if="dialog.isPrivate" class="user-friend-name my-0">{{ dialog.companion.fullName }}</h6>
                     <h6 v-if="dialog.isGroup" class="user-friend-name my-0">{{ groupDialogName }}</h6>

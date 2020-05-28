@@ -51,6 +51,12 @@ data(){
     }
 },
 
+computed: {
+    isMessagesAutoLoad(){
+        return (this.$root.$isLG()  || this.$root.$isXL())
+    }
+},
+
 methods: {
     dialogsList(){
         const dlgList = this.$root.$auth.dm.asArray();
@@ -144,7 +150,9 @@ methods: {
         this.listFilled = true;
 
         if ( this.currentDialog ) {
-            this.onSwitchToChat( { chatId : this.currentDialog.id })
+            if ( this.isMessagesAutoLoad) {
+                this.onSwitchToChat( { chatId : this.currentDialog.id })
+            }
         }
         else {
             window.console.warn(`Условие не сработало!`);

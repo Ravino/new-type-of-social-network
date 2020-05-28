@@ -1,5 +1,5 @@
 <template>
-    <div  id="pageWrapper">
+    <div id="pageWrapper">
         <div v-if="!isAuthorized()" id="guestPageWrapper" class="d-flex flex-column justify-content-center">
             <div class="--container-fluid container px-md-0 my-0 pt-4">
 
