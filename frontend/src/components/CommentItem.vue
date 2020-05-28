@@ -1,18 +1,18 @@
 <template>
     <div class="plz-comment-item">
         <div class="plz-comment-item-wrapper">
-            <a class="plz-comment-item-data-pic" :href="`user-${authorId}`">
+            <a class="plz-comment-item-data-pic" :href="`user-${comment.author.id}`">
                 <img class="plz-comment-item-data-img"
                      :src="checkAuthorAvatar"
-                     :alt="name">
+                     :alt="comment.author.profile.firstName">
             </a>
         </div>
         <div class="plz-comment-item-data">
             <div class="plz-comment-item-holder">
                 <div class="plz-comment-item-data-info">
                     <h6>
-                        <a class="plz-comment-item-data-name" :href="`user-${authorId}`">
-                           <b>{{name}}&nbsp;{{surname}}</b>
+                        <a class="plz-comment-item-data-name" :href="`user-${comment.author.id}`">
+                           <b>{{comment.author.profile.firstName}}&nbsp;{{comment.author.profile.lastName}}</b>
                         </a>
                     </h6>
                     <TextEditor
@@ -22,10 +22,12 @@
                         :maximumCharacterLimit="500"
                         workMode="comment"
                         @editorPost="onTextPost"
-                        :input-editor-text="text"
+                        :input-editor-text="comment.body"
                     ></TextEditor>
-                    <p v-else v-html="livePreview">{{text}}</p>
-                    <Gallery v-if="images.length > 0" :images="imageList"></Gallery>
+                    <template v-else>
+                        <p v-html="livePreview">{{comment.body}}</p>
+                        <Gallery v-if="imageList.length > 0" :images="imageList"></Gallery>
+                    </template>
                 </div>
                 <div class="plz-comment-item-data-comment">
                     <div class="plz-comment-item-reply d-flex">
@@ -48,26 +50,38 @@
                             Отменить
                         </button>
                     </div>
-                    <div class="plz-comment-item-likes">
-                        <IconHeard></IconHeard>
-                    </div>
+                        <div class="plz-comment-item-likes post-watched-counter"
+                             :class="{'is-active': alreadyLiked}"
+                             @click="onLike">
+                            <IconFillHeard v-if="alreadyLiked"/>
+                            <IconHeard v-else/>
+                            <span>{{ likes | space1000 }}</span>
+                            <div v-if="usersLikes && usersLikes.length" class="usersLikes p-3">
+                                <p class="mb-1">
+                                    <b style="cursor: pointer">Понравилось</b>
+                                    {{ likes }} пользователям
+                                </p>
+                                <div class="d-flex mb-0">
+                                    <router-link v-for="(user, index) in shortUsersLikes"
+                                                 :key="index"
+                                                 class="usersLikes-user"
+                                                 :to="{ name: 'PersonalPage', params: { id: user.id } }">
+                                        <img :src="user.profile.userPic"
+                                             :alt="user.profile.firstName + ' ' + user.profile.lastName"
+                                             :title="user.profile.firstName + ' ' + user.profile.lastName"
+                                             class="rounded-circle">
+                                    </router-link>
+                                </div>
+                            </div>
+                        </div>
                 </div>
             </div>
-             <div class="plz-comment-item__wrapper-answers"
-                  v-for="answer of answers"
-                  :key="answer.id"
-             >
+             <div class="plz-comment-item__wrapper-answers" v-for="answer of answers" :key="answer.id">
                  <CommentItem
                      :answers="answer.thread ? answer.thread.list : []"
                      :key="answer.id"
-                     :commentId="answer.id"
-                     :text="answer.body"
-                     :authorId="answer.author.id"
-                     :name="answer.author.profile.firstName"
-                     :surname="answer.author.profile.lastName"
-                     :avatar="answer.author.profile.avatar.image.medium.path"
                      :postId="postId"
-                     :createdAt="answer.createdAt"
+                     :comment="answer"
                      @onDelete="removeComment"
                      @update="editComment"
                      @updateAnswers="updateAnswers"
@@ -79,9 +93,9 @@
             </div>
             <CommentReply
                 v-if="isAnswer"
-                :commentId="commentId"
+                :commentId="comment.id"
                 :postId="postId"
-                :name="name"
+                :name="comment.author.profile.firstName"
                 @addComment="addComment"
             ></CommentReply>
         </div>
@@ -97,87 +111,74 @@
     import ChatMixin from "../mixins/ChatMixin.js";
     import Gallery from "../common/Gallery.vue";
     import PliziAttachment from "../classes/PliziAttachment.js";
+    import IconFillHeard from "../icons/IconFillHeard.vue";
+    import PliziComment from "../classes/PliziComment.js";
+
     export default {
         name: "CommentItem",
-        components: {Gallery, TextEditor, CommentReply, IconHeard},
+        components: {IconFillHeard, Gallery, TextEditor, CommentReply, IconHeard},
         mixins: [LinkMixin, ChatMixin],
         props: {
-            images: {
-                type: Array,
+            comment: {
+                type: Object
             },
             answers: {
                 type: Array,
             },
-            name: {
-                type: String,
-            },
-            text: {
-                type: String,
-            },
-            avatar: {
-                type: String,
-            },
-            surname: {
-                type: String,
-            },
-            commentId: {
-                type: Number,
-            },
-            authorId: {
-                type: String | Number
-            },
             postId: {
                 type: String | Number
-            },
-            createdAt: {
-                type: Number,
             },
         },
         data() {
             return {
-                noAvatar: '../images/noavatar-256.png',
                 isAnswer: false,
                 isEdit: false,
+
+                alreadyLiked: false,
+                likes: 0,
+                usersLikes: [],
             };
         },
         computed: {
+            shortUsersLikes() {
+                return this.comment.usersLikes && this.comment.usersLikes.length ? this.comment.usersLikes.slice(0, 8) : null;
+            },
             imageList() {
-                // Its not images its attachments !
-                return this.images.map(file => new PliziAttachment(file)).filter(attachment => attachment.isImage);
+                return this.comment.attachments.list.map(file => new PliziAttachment(file)).filter(attachment => attachment.isImage);
             },
             livePreview() {
-                let str = this.text.replace(/<\/?[^>]+>/g, '').trim();
+                let str = this.comment.body.replace(/<\/?[^>]+>/g, '').trim();
                 let returnedStr = this.transformStrWithLinks(str);
 
-                return str === returnedStr ? this.text : this.transformStrWithLinks(str);
+                return str === returnedStr ? this.comment.body : this.transformStrWithLinks(str);
             },
             checkAuthorAvatar() {
-                if (this.avatar === null) {
-                    return this.noAvatar;
+                if (this.comment.author.profile.avatar.image.medium.path === null) {
+                    return this.comment.defaultAvatarPath;
                 }
 
-                return this.avatar;
+                return this.comment.author.profile.avatar.image.medium.path;
             },
             getTimeComment() {
-                return moment.unix(this.createdAt).fromNow();
+                return moment.unix(this.comment.createdAt).fromNow();
             },
             isAuthor() {
-                return this.$root.$auth.user.id === this.authorId;
+                return this.$root.$auth.user.id === this.comment.author.id;
             },
         },
         methods: {
             editComment(newComment) {
                 const answers = this.answers.map(comment => comment.id === newComment.id ? newComment : comment);
 
-                this.$emit('updateAnswers', {id: this.commentId, answers});
+                this.$emit('updateAnswers', {id: this.comment.id, answers});
             },
             addComment(comment) {
-                this.$emit('updateAnswers', {id: this.commentId, answers: [...this.answers, comment]});
+                this.$emit('updateAnswers', {id: this.comment.id, answers: [...this.answers, comment]});
             },
             removeComment(commentId) {
                 const answers = this.answers.filter(comment => comment.id !== commentId);
 
-                this.$emit('updateAnswers', {id: this.commentId, answers});
+                this.$emit('updateAnswers', {id: this.comment.id, answers});
             },
             updateAnswers({id, answers}) {
                 const newAnswers = this.answers.map(comment => comment.id === id ? {
@@ -185,7 +186,7 @@
                     thread: {list: answers}
                 } : comment);
 
-                this.$emit('updateAnswers', {id: this.commentId, answers: newAnswers});
+                this.$emit('updateAnswers', {id: this.comment.id, answers: newAnswers});
             },
             async onTextPost(evData) {
                 let msg = evData.postText.trim();
@@ -201,23 +202,43 @@
             },
             async deleteComment() {
                 try {
-                    await this.$root.$api.$post.deleteCommentById(this.commentId);
-                    this.$emit('onDelete', this.commentId);
+                    await this.$root.$api.$post.deleteCommentById(this.comment.id);
+                    this.$emit('onDelete', this.comment.id);
                 } catch (e) {
                     console.warn(e.detailMessage);
                 }
             },
             async updateComment(msg) {
                 try {
-                    let response = await this.$root.$api.$post.editCommentById(this.commentId, msg);
+                    let response = await this.$root.$api.$post.editCommentById(this.comment.id, msg);
                     this.$emit('update', {...response.data, thread: {list: this.answers}});
                 } catch (e) {
                     console.warn(e.detailMessage);
                 }
-            }
+            },
+            async onLike() {
+                console.log(123)
+                try {
+                    let response = await this.$root.$api.$post.likeComment(this.comment.id);
+
+                    if (response !== null) {
+                        if (this.alreadyLiked) {
+                            this.alreadyLiked = false;
+                            this.likes--;
+                            let userLikeIndex = this.usersLikes.findIndex((userLike) => {
+                                return userLike.id === this.$root.$auth.user.id;
+                            });
+                            this.usersLikes.splice(userLikeIndex, 1);
+                        } else {
+                            this.alreadyLiked = true;
+                            this.likes++;
+                            this.usersLikes.push(this.$root.$auth.user);
+                        }
+                    }
+                } catch (e) {
+                    console.warn(e.detailMessage);
+                }
+            },
         },
-        mounted() {
-            console.log(this.images, 'images')
-        }
     }
 </script>

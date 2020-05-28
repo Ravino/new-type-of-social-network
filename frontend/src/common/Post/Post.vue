@@ -232,34 +232,21 @@
                         </div>
                     </div>
                 </div>
-                <div class="plz-comments"
-                    v-for="comment in comments"
-                >
-                    <CommentItem
-                        v-if="!isShowComment"
-                        :answers="comment.thread ? comment.thread.list : []"
-                        :key="comment.id"
-                        :images="comment.attachments.list"
-                        :commentId="comment.id"
-                        :text="comment.body"
-                        :authorId="comment.author.id"
-                        :name="comment.author.profile.firstName"
-                        :surname="comment.author.profile.lastName"
-                        :avatar="comment.author.profile.avatar.image.medium.path"
-                        :postId="post.id"
-                        :createdAt="comment.createdAt"
-                        @onDelete="removeComment"
-                        @update="editComment"
-                        @updateAnswers="updateAnswers"
-                    >
-                    </CommentItem>
-                </div>
-                <CommentPost
-                    :postId="post.id"
-                    v-if="!isShowComment"
-                    @updateComments="addNewComment"
-                >
-                </CommentPost>
+                <template v-if="!isShowComment">
+                    <div class="plz-comments" v-for="comment in comments">
+                        <CommentItem
+                            :answers="comment.thread ? comment.thread.list : []"
+                            :key="comment.id"
+                            :comment="comment"
+                            :postId="post.id"
+                            @onDelete="removeComment"
+                            @update="editComment"
+                            @updateAnswers="updateAnswers"
+                        ></CommentItem>
+                    </div>
+
+                    <CommentPost :postId="post.id" @updateComments="addNewComment"></CommentPost>
+                </template>
             </div>
         </template>
 
@@ -314,6 +301,7 @@
         },
         props: {
             post: PliziPost,
+
             isCommunity: {
                 type: Boolean,
                 default: false,

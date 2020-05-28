@@ -435,14 +435,27 @@ class PliziPostAPI extends PliziBaseAPI {
             formData.append( 'files[]', picsArr[i] );
         }
 
-        let response = await this.axios.post( 'api/comment/attachments', formData, this.authHeaders )
-            .catch( ( error ) => {
-                this.checkIsTokenExpires( error, `addAttachmentsToComment` );
-                throw new PliziAPIError( `addAttachmentsToComment`, error.response );
-            } );
+        let response = await this.axios.post( 'api/comment/attachments', formData, this.authHeaders );
 
         if ( response.status === 200 ){
             return response.data.data.list;
+        }
+
+        return null;
+    }
+
+    /**
+     * Лайк комментариев.
+     *
+     * @param commentId
+     * @returns {object[]|null}
+     * @throws PliziAPIError
+     */
+    async likeComment(commentId) {
+        let response = await this.axios.post( `api/comment/${commentId}/like`, {}, this.authHeaders );
+
+        if ( response.status === 200 ){
+            return response.data.data;
         }
 
         return null;
