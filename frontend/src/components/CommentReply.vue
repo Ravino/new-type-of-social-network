@@ -7,7 +7,7 @@
         <TextEditor :clazz="`plz-text-editor h-auto  align-items-start flex-grow-1 `"
                     :dropToDown="true"
                     :maximumCharacterLimit="500"
-                    workMode="post"
+                    workMode="comment"
                     @editorPost="onTextPost"
                     :input-editor-text="name + ','"
         >

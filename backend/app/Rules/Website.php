@@ -17,7 +17,7 @@ class Website implements Rule
      */
     public function passes($attribute, $value)
     {
-        return !!preg_match('#^(https?://)?([a-z0-9\-]+\.)+[a-z]{2,6}$#i', $value);
+        return !!preg_match('#^(https?://)?([a-z0-9\-]+\.)+[a-z]{2,6}/?$#i', $value);
     }
 
     /**

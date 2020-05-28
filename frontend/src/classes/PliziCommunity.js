@@ -138,6 +138,12 @@ class PliziCommunity {
      */
     _requestsCount = 0;
 
+    /**
+     * @type {boolean}
+     * @private
+     */
+    _subscribed = false;
+
     constructor(inputData){
         this._id = inputData.id;
         this._name = inputData.name;
@@ -157,6 +163,7 @@ class PliziCommunity {
         this._role = inputData.role;
         this._totalMembers = inputData.totalMembers;
         this._requestsCount = inputData.requestsCount;
+        this._subscribed = inputData.subscribed;
 
         if (inputData.friends) {
             this._friends = [];
@@ -294,6 +301,14 @@ class PliziCommunity {
         return this._requestsCount;
     }
 
+    get subscribed() {
+        return this._subscribed;
+    }
+
+    set subscribed(value) {
+        this._subscribed = value;
+    }
+
     toJSON(){
         let mmbrs = null;
         let friends = null;
@@ -328,7 +343,8 @@ class PliziCommunity {
             avatar: this._avatar ? this._avatar.toJSON() : null,
             headerImage: this._headerImage ? this._headerImage.toJSON() : null,
             members: mmbrs,
-            friends: friends
+            friends: friends,
+            subscribed: this.subscribed,
         };
     }
 }

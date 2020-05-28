@@ -27,7 +27,19 @@
                 </div>
 
                 <div class="nav-item">
+                    <router-link tag="a" class="dropdown-item px-0 py-1" to="/friends">Мои друзья</router-link>
+                </div>
+
+                <div class="nav-item">
                     <router-link tag="a" class="dropdown-item px-0 py-1" to="/communities">Мои сообщества</router-link>
+                </div>
+
+                <div class="nav-item border-bottom">
+                    <router-link tag="a" class="dropdown-item px-0 py-1" to="/follow-list">Мои подписки</router-link>
+                </div>
+
+                <div class="nav-item">
+                    <router-link tag="a" class="dropdown-item px-0 py-1" to="/black-list">Чёрный список</router-link>
                 </div>
 
                 <div class="nav-item">

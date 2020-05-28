@@ -15,7 +15,7 @@
                         </router-link>
                     </div>
 
-                    <div class="col-sm-4 col-md-6 col-lg-5 offset-xl-1 d-none d-md-flex align-items-center pl-xl-0">
+                    <div class="col-sm-4 col-md-6 col-lg-5 d-none d-md-flex align-items-center ">
                         <NavBarSearch></NavBarSearch>
                     </div>
                     <!--<div id="playerWrapper" class="plz-top-player col-lg-2 col-xl-2 d-sm-none d-md-none d-lg-block d-xl-block text-center ">

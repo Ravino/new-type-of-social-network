@@ -41,6 +41,9 @@
                             <div class="nav-item">
                                 <router-link tag="a" class="dropdown-item px-0 py-1 px-3" to="/friends">Друзья</router-link>
                             </div>
+                            <div class="nav-item">
+                                <router-link tag="a" class="dropdown-item px-0 py-1 px-3" to="/follow-list">Подписки</router-link>
+                            </div>
                             <div class="nav-item ">
                                 <router-link tag="a" class="dropdown-item px-0 py-1 px-3" to="/communities">Сообщества</router-link>
                             </div>
@@ -83,7 +86,7 @@
                                 <p v-else class="dropdown-item px-0 py-1 m-0 px-3"
                                    @click="follow" title="Подписаться">Подписаться</p>
                             </div>
-                            <div class="nav-item">
+                            <div v-if="!userData.isOwner" class="nav-item">
                                 <p v-if="isAddedToBlacklist" class="dropdown-item px-0 py-1 m-0 px-3"
                                    @click="deleteFromBlacklist(userData.id)"  title="Удалить с чёрного списка">Удалить с чёрного списка</p>
                                 <p v-else class="dropdown-item px-0 py-1 m-0 px-3"
@@ -159,9 +162,12 @@
                     <span class="numbers-top" v-html="sBeaty(userData.photosNumber)"></span>
                     <span class="numbers-bottom">Фотографий</span>
                 </div>
-                <div class="plz-profile-userdetails-numbers text-center pt-2 px-2 pt-md-4 px-md-4">
-                    <span class="numbers-top" v-html="sBeaty(userData.videosNumber)"></span>
+                <div v-if="usrVideosNumber > 0" class="plz-profile-userdetails-numbers text-center pt-2 px-2 pt-md-4 px-md-4">
+                    <span class="numbers-top" v-html="sBeaty(usrVideosNumber)"></span>
                     <span class="numbers-bottom">Видео</span>
+                </div>
+                <div v-else class="plz-profile-userdetails-numbers text-center pt-2 px-2 pt-md-5 px-md-4">
+                    <span class="numbers-bottom">Нет видео</span>
                 </div>
                 <!--
                 <div class="plz-profile-userdetails-numbers text-center pt-4 px-4">
@@ -216,10 +222,14 @@ computed: {
         return this.userData.stats.followCount;
     },
 
-    userAvatar() {
-        return this.userData.avatar?.image?.medium.path || this.userData.userPic;
-    }
-},
+    usrVideosNumber() {
+                return this.userData.stats.videosCount;
+            },
+
+            userAvatar() {
+                return this.userData.avatar?.image?.medium.path || this.userData.userPic;
+            }
+        },
 
 methods: {
     isCanAddToFriends() {

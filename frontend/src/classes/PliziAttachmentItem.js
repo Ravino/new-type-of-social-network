@@ -80,4 +80,10 @@ export default class PliziAttachmentItem {
     set originalName(value) {
         this._originalName = value;
     }
+
+    get isArchive() {
+        const ext = this.originalName.split('.').pop().toLowerCase();
+
+        return (`zip` ===  ext  || `rar` === ext);
+    }
 }
