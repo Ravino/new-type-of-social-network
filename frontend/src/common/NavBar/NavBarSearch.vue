@@ -1,5 +1,5 @@
 <template>
-    <div class="form-inline mt-1 mt-md-1 position-relative overflow-hidden rounded-pill w-100 pl-3"
+    <div class="form-inline mt-1 mt-md-1 position-relative overflow-hidden rounded-pill w-100 "
          :class="{'isFocused' : isFocused}">
         <input v-model="$root.$lastSearch" id="topSearch" ref="topSearch"
                @keydown.stop="topSearchKeyDownCheck($event)"
