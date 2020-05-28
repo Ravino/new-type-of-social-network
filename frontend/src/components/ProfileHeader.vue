@@ -86,7 +86,7 @@
                                 <p v-else class="dropdown-item px-0 py-1 m-0 px-3"
                                    @click="follow" title="Подписаться">Подписаться</p>
                             </div>
-                            <div class="nav-item">
+                            <div v-if="!userData.isOwner" class="nav-item">
                                 <p v-if="isAddedToBlacklist" class="dropdown-item px-0 py-1 m-0 px-3"
                                    @click="deleteFromBlacklist(userData.id)"  title="Удалить с чёрного списка">Удалить с чёрного списка</p>
                                 <p v-else class="dropdown-item px-0 py-1 m-0 px-3"
