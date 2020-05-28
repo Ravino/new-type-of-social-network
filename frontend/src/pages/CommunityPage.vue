@@ -119,7 +119,7 @@
                               @onShowUsersLikes="openLikeModal"/>
                     </div>
 
-                    <div v-else-if="!hasAccess"  class="row plz-post-item mb-4 bg-white-br20 p-4">
+                    <div v-else-if="!hasAccess"  class="plz-post-item mb-4 bg-white-br20 p-4">
                         <div class="alert alert-info w-100 p-5 text-center mb-0">
                             У Вас нет доступа.
                             <p v-if="subscribeType === 'request'">
