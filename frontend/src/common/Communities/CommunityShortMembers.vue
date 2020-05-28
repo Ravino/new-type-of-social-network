@@ -15,10 +15,10 @@
                               v-bind:key="fmItem.id"></CommunityShortMemberItem>
         </div>
 
-        <div class="text-center">
+        <div class="text-center" v-if="community.totalMembers > friendsMembers.length">
             <router-link tag="a"
                          class="plz-community-header-desc "
-                         :to="`/members-`+community.id"><small>Смотреть ещё</small></router-link>
+                         :to="`/members-`+community.id"><small>Все участники</small></router-link>
         </div>
 
     </div>
