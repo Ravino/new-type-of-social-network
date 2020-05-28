@@ -148,6 +148,7 @@
 <!--               TODO @tga мы этот блок можем удалить? -->
 <!--                    <CommunityManagedActionBlock :community="communityData" v-if="isAuthor"></CommunityManagedActionBlock>-->
  <!--               TODO @tga мы этот блок можем удалить? -->
+<!--                    @TGA отвечаю - пока не можем -->
                     <CommunityUserActionBlock v-if="!isAuthor" v-bind:community="communityData"></CommunityUserActionBlock>
 
                     <CommunityFriendsInformer v-bind:community="communityData"></CommunityFriendsInformer>
