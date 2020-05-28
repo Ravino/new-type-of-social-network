@@ -12,12 +12,9 @@ use App\Http\Resources\User\SimpleUsers;
 use App\Models\Community;
 use App\Models\Post;
 use App\Models\PostAttachment;
-use App\Models\PostLike;
 use App\Models\User;
 use App\Models\View;
-use App\Notifications\UserSystemNotifications;
 use App\Services\S3UploadService;
-use Illuminate\Support\Facades\Notification;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Event;
 
@@ -127,7 +124,7 @@ class PostController extends Controller
     public function storeByUser(PostRequest $request) {
         $post = \Auth::user()->posts()->create([
             'name' => $request->name,
-            'body' => $request->body,
+            'body' => $request->body ?: '',
             'author_id' => \Auth::user()->id
         ]);
         if(isset($request->attachmentIds) && count($request->attachmentIds)) {
@@ -148,7 +145,7 @@ class PostController extends Controller
             if($community->users->contains(auth()->user()->id)) {
                 $post = $community->posts()->create([
                     'name' => $request->name,
-                    'body' => $request->body,
+                    'body' => $request->body ?: '',
                     'author_id' => \Auth::user()->id
                 ]);
                 if(isset($request->attachmentIds) && count($request->attachmentIds)) {

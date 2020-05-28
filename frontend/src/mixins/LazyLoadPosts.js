@@ -2,7 +2,7 @@ const LazyLoadPosts = {
     data() {
         return {
             isStarted: false,
-            noMore: false,
+            noMore: true,
         }
     },
     methods: {
