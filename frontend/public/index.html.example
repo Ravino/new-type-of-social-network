@@ -1,9 +1,17 @@
 <html>
     <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
 
     <meta name="description" content="Социальная сеть нового поколения, для вас и ваших близких.">
     <meta name="keywords" content="Социальная сеть">
-    <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
+    <meta property="og:title" content="Социальная сеть нового поколения, для вас и ваших близких." />
+    <meta property="og:url" content="" />
+    <meta property="og:description" content="Социальная сеть нового поколения, для вас и ваших близких." />
+    <meta property="og:image" content="./favicons/android-chrome-256x256.png" />
+    <meta property="og:image:type" content="image/png" />
+    <meta property="og:image:width" content="256" />
+    <meta property="og:image:height" content="256" />
+    <meta property="twitter:description" content="Социальная сеть нового поколения, для вас и ваших близких." />
 
     <link rel="apple-touch-icon" sizes="60x60" href="./favicons/apple-touch-icon-60x60.png" />
     <link rel="apple-touch-icon" sizes="72x72" href="./favicons/apple-touch-icon-72x72.png" />
