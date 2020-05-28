@@ -33,6 +33,9 @@
                 <AuthFooter v-if=" 'ChatsListPage'!==this.$root.$router.currentRoute.name "></AuthFooter>
             </div>
 
+            <AppNotifications :notifications="notifications"
+                               @removeNotification="removeNotification"></AppNotifications>
+
             <AlertModal v-if="mainModalVisible"
                         v-bind:alertMessage="mainModalMessage"
                         v-bind:alertClass="mainModalClass"
@@ -49,19 +52,25 @@ import AuthNavBar from './common/AuthNavBar.vue';
 import AuthFooter from './common/AuthFooter.vue';
 import GuestFooter from './common/GuestFooter.vue';
 import AlertModal from './components/AlertModal.vue';
+import AppNotifications from './common/AppNotifications.vue';
+import NotificationMixin from "./mixins/NotificationMixin.js";
 
 import {PliziAPI} from './classes/PliziAPI.js';
 import {PliziAuth} from './classes/PliziAuth.js';
 
+
 export default {
 name: 'App',
 components: {
-    GuestNavBar, AuthNavBar, AuthFooter, GuestFooter, AlertModal
+    GuestNavBar, AuthNavBar, AuthFooter, GuestFooter, AlertModal, AppNotifications
 },
+mixins: [NotificationMixin],
 data () {
     return {
         containerID : `contentContainer`, /** @TGA - просто хак, чтобы phpStorm не ругался на одинаковый ID у элемента */
         lastSearchText: ``,
+
+        notifyBlockIsVisible: false,
 
         mainModalVisible : false,
         mainModalTitle   : '',
@@ -151,6 +160,29 @@ methods: {
         }
     },
 
+    onNewAppNotification(evData){
+        window.console.log(evData, `onNewAppNotification`);
+        if (this.$root.$isXS()  || this.$root.$isSM() || this.$root.$isMD())
+            return;
+
+        if (`user.notification`===evData.type) {
+            // обработка нотификаций
+            console.log(evData.notification.data.notificationType, 'user notify');
+            this.addNotification(evData.notification);
+        }
+        if (`chat.created`===evData.type) {
+            console.log(evData.data.data, 'кто-то создал чат с вами');
+            let chatNotificationData = this.transformDialogToNotification(evData.data);
+            this.addNotification(chatNotificationData);
+        }
+        // if (`chat.attendee.appended`===evData.type) { аналогично с предыдущим тип данных
+        //     console.log(evData.data.data, 'кто-то добавил вас в групповой чат');
+        // }
+        // if (`message.new`===evData.type) {
+        //     console.log(evData.data.data, 'у вас новое сообщение в чате');
+        // }
+    },
+
     isAuthorized(){
         return this.$root.$isAuth;
     },
@@ -234,6 +266,8 @@ created(){
 
     this.$root.$on('AfterUserLoad', this.afterUserLoad);
     this.$root.$on('AfterUserRestore', this.afterUserRestore);
+
+    this.$root.$on('NewAppNotification', this.onNewAppNotification);
 
     this.$root.$on('searchStart', (evData) => {
         this.lastSearchText = evData.searchText;

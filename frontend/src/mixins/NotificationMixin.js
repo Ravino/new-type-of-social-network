@@ -10,8 +10,32 @@ data() {
 },
 
 methods: {
-    addNotification(notification) {
+    addNotification(inputNotification) {
         const uuid = uuidv4();
+        let notification = {
+            id: uuid,
+            userPic: (inputNotification.data.sender) ? inputNotification.data.sender.userPic : null,
+            firstName: (inputNotification.data.sender) ? inputNotification.data.sender.firstName : null,
+            lastName: (inputNotification.data.sender) ? inputNotification.data.sender.lastName : null,
+            isHuman: true
+        };
+        if (inputNotification.data.notificationType === 'user.profile.image.updated') {
+            notification.body = this.senderFullName(inputNotification) +
+                        (inputNotification.data.sender.sex === 'f' ? 'сменила 1111 аватарку' : 'сменил аватарку');
+        }
+        if (inputNotification.data.notificationType === 'friendships.accepted') {
+            notification.body = this.senderFullName(inputNotification) +
+                        ('f' === inputNotification.data.sender.sex ? 'одобрила Вашу заявку в друзья' : 'одобрил Вашу заявку в друзья');
+        }
+        if (inputNotification.data.notificationType === 'friendships.denied') {
+            notification.body = this.senderFullName(inputNotification) +
+                        ('f' === inputNotification.data.sender.sex ? 'отклонила Вашу заявку в друзья' : 'отклонил Вашу заявку в друзья');
+            }
+        if (inputNotification.data.notificationType === 'community.post.created') {
+            notification.isHuman = false;
+            notification.body = `Сообщество <b class="community-name">${inputNotification.data.community.name}</b> опубликовало новый пост`;
+            notification.primaryImage = inputNotification.data.community.primaryImage;
+            }
 
         this.notifications.push({
             ...notification,
@@ -31,8 +55,18 @@ methods: {
         }
     },
 
+    senderFullName(inputNotification) {
+        return `${inputNotification.data.sender.firstName} ${inputNotification.data.sender.lastName} `;
+    },
+
     removeNotification({ uuid }) {
         this.notifications = this.notifications.filter(foundNotification => foundNotification.uuid !== uuid);
+    },
+
+    transformDialogToNotification(data) {
+        return {
+
+        }
     }
 }
 
