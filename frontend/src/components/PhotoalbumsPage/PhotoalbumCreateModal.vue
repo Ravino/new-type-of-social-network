@@ -84,18 +84,6 @@ export default {
             }
         }
     },
-    // async mounted() {
-    //     let apiResponse = null;
-    //
-    //     try {
-    //         apiResponse = await this.$root.$api.$communities.getThemes();
-    //     } catch (e) {
-    //         window.console.warn(e.detailMessage);
-    //         throw e;
-    //     }
-    //
-    //     this.themes = apiResponse.data;
-    // },
     validations() {
         return {
             model: {

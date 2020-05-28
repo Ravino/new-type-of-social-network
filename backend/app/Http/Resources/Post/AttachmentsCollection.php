@@ -60,6 +60,7 @@ class AttachmentsCollection extends ResourceCollection
                         'likes' => $attachment->likes,
                         'alreadyLiked' => (bool)count($attachment->like),
                         'usersLikes' => new SimpleUsers($attachment->usersLikes),
+                        'commentsCount' => $attachment->comments_count,
                     ];
                 } else {
                     return [

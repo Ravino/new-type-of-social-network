@@ -33,7 +33,6 @@ const CommunitiesListMixin = {
 
             recommendedCommunities: null,
 
-            lazyLoadStarted: false,
             noMore: false,
             enabledLoader: true,
 
@@ -78,23 +77,36 @@ const CommunitiesListMixin = {
 
             return ret;
         },
-
-        onScrollYPage: debounce(function () {
+        async onScrollYPage() {
             if (window.scrollY >= (document.body.scrollHeight - document.documentElement.clientHeight - (document.documentElement.clientHeight / 2))) {
+                console.log(this.$route.name);
+
                 if (this.$route.name === 'CommunitiesManagePage') {
-                    this.lazyLoad('manage');
+                    await this.lazyLoad('manage');
                 } else if (this.$route.name === 'CommunitiesPopularPage') {
-                    this.lazyLoad('popular');
+                    await this.lazyLoad('popular');
                 } else {
-                    this.lazyLoad();
+                    await this.lazyLoad();
                 }
             }
-        }, 100),
+        },
+        // onScrollYPage: debounce(function () {
+        //     if (window.scrollY >= (document.body.scrollHeight - document.documentElement.clientHeight - (document.documentElement.clientHeight / 2))) {
+        //         if (this.$route.name === 'CommunitiesManagePage') {
+        //             this.lazyLoad('manage');
+        //         } else if (this.$route.name === 'CommunitiesPopularPage') {
+        //             this.lazyLoad('popular');
+        //         } else {
+        //             this.lazyLoad();
+        //         }
+        //     }
+        // }, 100),
 
         async loadCommunities(limit = 10, offset = 0) {
             this.enabledLoader = true;
             const searchText = this.searchString;
             let apiResponse = null;
+
             if (offset === 0) {
                 this.isCommunitiesLoaded = false;
             }
@@ -102,10 +114,14 @@ const CommunitiesListMixin = {
             try {
                 apiResponse = await this.$root.$api.$communities.userCommunities(searchText, limit, offset);
             } catch (e) {
+                this.enabledLoader = false;
                 window.console.warn(e.detailMessage);
                 throw e;
             }
+
             this.isCommunitiesLoaded = true;
+            this.enabledLoader = false;
+
             return this.processApiResponce(offset, apiResponse, 'communitiesList');
         },
 
@@ -113,6 +129,7 @@ const CommunitiesListMixin = {
             this.enabledLoader = true;
             const searchText = this.searchString;
             let apiResponse = null;
+
             if (offset === 0) {
                 this.isPopularCommunitiesLoaded = false;
             }
@@ -120,10 +137,14 @@ const CommunitiesListMixin = {
             try {
                 apiResponse = await this.$root.$api.$communities.loadCommunities(searchText, limit, offset);
             } catch (e) {
+                this.enabledLoader = false;
                 window.console.warn(e.detailMessage);
                 throw e;
             }
+
             this.isPopularCommunitiesLoaded = true;
+            this.enabledLoader = false;
+
             return this.processApiResponce(offset, apiResponse, 'popularCommunities');
         },
 
@@ -131,6 +152,7 @@ const CommunitiesListMixin = {
             this.enabledLoader = true;
             const searchText = this.searchString;
             let apiResponse = null;
+
             if (offset === 0) {
                 this.isManagedCommunitiesLoaded = false;
             }
@@ -138,10 +160,14 @@ const CommunitiesListMixin = {
             try {
                 apiResponse = await this.$root.$api.$communities.loadManagedCommunities(searchText, limit, offset);
             } catch (e) {
+                this.enabledLoader = false;
                 window.console.warn(e.detailMessage);
                 throw e;
             }
+
             this.isManagedCommunitiesLoaded = true;
+            this.enabledLoader = false;
+
             return this.processApiResponce(offset, apiResponse, 'managedCommunities');
         },
 
@@ -164,30 +190,34 @@ const CommunitiesListMixin = {
         },
 
         async lazyLoad(listName = null) {
-            if (this.lazyLoadStarted) return;
-            if (this.noMore) return;
+            if (this.noMore || this.enabledLoader) return;
 
             this.enabledLoader = true;
-            this.lazyLoadStarted = true;
 
             let oldSize, added;
 
             if (listName === 'manage') {
                 oldSize = this.managedCommunities.length;
-                added = await this.loadManagedCommunities(10, oldSize++);
+
+                if (oldSize)
+                    added = await this.loadManagedCommunities(10, oldSize++);
             } else if (listName === 'popular') {
                 oldSize = this.popularCommunities.length;
-                added = await this.loadPopularCommunitites(10, oldSize++);
+
+                if(oldSize)
+                    added = await this.loadPopularCommunitites(10, oldSize++);
             } else {
                 oldSize = this.communitiesList.length;
-                added = await this.loadCommunities(10, oldSize++);
+
+                if(oldSize)
+                    added = await this.loadCommunities(10, oldSize++);
             }
 
             if (added === 0) {
                 this.noMore = true;
             }
 
-            this.lazyLoadStarted = false;
+            this.enabledLoader = false;
         },
     },
 

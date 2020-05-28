@@ -29,13 +29,14 @@
             </div>
 
             <button @click.prevent="goToDialogWithFriend()" type="button"
-                    class="plz-short-friend-is-active btn btn-link text-body mr-2 ml-auto">
+                    class="plz-short-friend-is-active btn btn-link text-body mr-2 ml-auto"
+                    title="Написать сообщение">
                 <IconSpinner v-if="isInRedirecting"/>
                 <IconMessageShort v-else/>
             </button>
 
-            <ButtonsBecomeAdmin v-if="isAdmin && srItem.role === 'user'"></ButtonsBecomeAdmin>
-            <ButtonsStopBeAdmin v-else-if="isAdmin && srItem.role === 'admin'"></ButtonsStopBeAdmin>
+            <ButtonsBecomeAdmin v-if="isAdmin && srItem.role === 'user'" :srItem="srItem" :communityId="communityId"/>
+            <ButtonsStopBeAdmin v-else-if="isAdmin && srItem.role === 'admin'" :srItem="srItem" :communityId="communityId"/>
 
         </div>
     </li>
@@ -60,6 +61,7 @@
         props: {
             srItem: PliziMember,
             isAdmin: Boolean,
+            communityId: Number,
         },
 
         data() {

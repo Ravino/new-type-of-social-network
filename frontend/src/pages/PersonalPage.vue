@@ -10,9 +10,11 @@
                  v-bind:key="`CentralColumn-`+$root.$friendsKeyUpdater">
 
                 <div class="container">
-                    <ProfileHeader v-if="isDataReady"
+                    <ProfileHeader v-if="isDataReady" ref="personalProfileHeader"
                                    @ShowPersonalMsgModal="onShowPersonalMsgModal"
-                                   v-bind:userData="profileData"></ProfileHeader>
+                                   :isInBlacklist="profileData.stats.isInBlacklist"
+                                   :userData="profileData">
+                    </ProfileHeader>
                     <Spinner v-else></Spinner>
 
                     <ProfilePhotos v-bind:photos="userPhotos"/>
@@ -80,6 +82,7 @@ import PostRepostModal from '../common/Post/PostRepostModal.vue';
 
 import DialogMixin from '../mixins/DialogMixin.js';
 import LazyLoadPosts from '../mixins/LazyLoadPosts.js';
+import BlackListMixin from '../mixins/BlackListMixin.js';
 
 import PliziUser from '../classes/PliziUser.js';
 import PliziPost from '../classes/PliziPost.js';
@@ -100,7 +103,7 @@ components: {
     PostRepostModal,
     SmallSpinner,
 },
-mixins: [DialogMixin, LazyLoadPosts],
+mixins: [DialogMixin, LazyLoadPosts, BlackListMixin],
 
 data() {
     return {
@@ -191,6 +194,7 @@ methods: {
             apiResponse = await this.$root.$api.$users.getUser(this.userId);
         }
         catch (e){
+            this.isStarted = false;
             window.console.warn(e.detailMessage);
             throw e;
         }
@@ -200,15 +204,6 @@ methods: {
             this.isDataReady = true;
             await this.getPosts();
         }
-    },
-
-    /**
-     * @deprecated
-     * @param msg
-     * @returns {Promise<void>}
-     */
-    async sendMessageToUserOld(msg){
-        await this.$root.$api.$chat.privateMessageSend(msg.receiverId, msg.message.postText, msg.message.attachments);
     },
 
     async getPosts(limit = 50, offset = 0) {
@@ -244,17 +239,19 @@ methods: {
     }
 },
 
+created(){
+    this.$root.$on( this.$root.$auth.frm.updateEventName,()=>{
+        if (this.$refs  && this.$refs.personalProfileHeader){
+            this.$refs.personalProfileHeader.$forceUpdate();
+        }
+    });
+},
+
+
 mounted() {
+    this.isStarted = true;
     this.getUserInfo();
     window.scrollTo(0, 0);
-
-    this.$root.$on('hidePersonalMsgModal', ()=>{
-        this.isShowMessageDialog = false;
-    });
-
-    this.$root.$on('showPersonalMsgModal', ()=>{
-        this.isShowMessageDialog = true;
-    });
 },
 
 async beforeRouteUpdate( to, from, next ){

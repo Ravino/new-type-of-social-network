@@ -50,6 +50,13 @@ class PliziUserStats {
     _followCount = 0;
 
     /**
+     * В черном списке?
+     * @type {boolean}
+     * @private
+     */
+    _isInBlacklist = false;
+
+    /**
      * Кол-во видео
      * @type {number}
      * @private
@@ -124,6 +131,14 @@ class PliziUserStats {
         this._videosCount = value;
     }
 
+    get isInBlacklist() {
+        return this._isInBlacklist;
+    }
+
+    set isInBlacklist(value) {
+        this._isInBlacklist = value;
+    }
+
     constructor(inputData){
         if (inputData) {
             this.update(inputData);
@@ -139,6 +154,7 @@ class PliziUserStats {
         this.isFriend = inputData.isFriend;
         this.followCount = inputData.followCount;
         this.videosCount = inputData.videosCount;
+        this.isInBlacklist = inputData.isInBlacklist;
     }
 
     toJSON(){
@@ -151,6 +167,7 @@ class PliziUserStats {
             isFriend: this.isFriend,
             followCount: this.followCount,
             videosCount: this.videosCount
+            isInBlacklist: this.isInBlacklist,
         };
     }
 }

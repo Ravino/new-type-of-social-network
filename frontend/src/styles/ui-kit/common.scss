@@ -85,7 +85,7 @@ a:hover {
     text-decoration-color: $postTextColor;
 }
 
-a {
+a:not(.btn) {
     word-break: break-word;
 }
 
@@ -445,7 +445,7 @@ $loadingDotsSize: 4px;
     font-size: 10px;
     border-radius: 7px;
     padding: 2px 4px;
-    line-height: 1;
+    line-height: 1.2;
     word-break: keep-all;
     z-index: 1;
 }
@@ -611,8 +611,11 @@ input[type='date']::-webkit-clear-button {
 }
 .modal-content {
     max-width: 96%;
-    max-height: 96vh;
     margin: 0 auto;
+}
+
+.modal-body {
+    max-height: 90vh;
 }
 
 #chatVideoModal {
@@ -642,6 +645,21 @@ $dotSize: 2px;
             top: 50%;
             left: 50%;
             transform: translate(-50%, -50%);
+        }
+    }
+}
+
+
+.back-link {
+    font-size: 13px;
+    color: #bfc0c3;
+    cursor: pointer;
+    transition: .4s;
+    &:hover {
+        color: $textColor;
+
+        .icon {
+            fill: $textColor;
         }
     }
 }

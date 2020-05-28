@@ -35,7 +35,7 @@ class BlacklistDelete extends Request
     public function messages()
     {
         return [
-            'userId.required' => 'Обязательный аттребут',
+            'userId.required' => 'Обязательный атрибут',
             'userId.exists' => 'Запись отсутсвует',
         ];
     }

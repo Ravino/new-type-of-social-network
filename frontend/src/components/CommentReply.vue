@@ -1,8 +1,8 @@
 <template>
-<div class="plz-comment-reply">
+<div class="plz-comment-reply"  v-if="isSending">
     <div class="plz-comment-post">
-        <div class="plz-comment-post-user">
-            <img :src="userData.userPic" alt="">
+        <div class="plz-comment-item-data-pic mr-3">
+            <img class="plz-comment-item-data-img" :src="userData.userPic" alt="">
         </div>
         <TextEditor :clazz="`plz-text-editor h-auto  align-items-start flex-grow-1 `"
                     :dropToDown="true"
@@ -37,6 +37,7 @@
         data() {
             return {
               newAnswer: [],
+              isSending: true,
             }
         },
         computed: {
@@ -59,17 +60,15 @@
                     msg = msg.replace(/<p><\/p>/g, brExample);
                     msg = this.killBrTrail(msg);
 
-                    this.isAnswer = !this.isAnswer
-                    this.setReplyComment(msg);
+                    this.isAnswer = !this.isAnswer;
+                    this.getAnswerToComment(msg);
+                    this.isSending = false;
                 }
             },
-           async setReplyComment(msg) {
-                let response = null;
-
+           async getAnswerToComment(msg) {
                 try {
-                    response = await this.$root.$api.$post.setPostComments(msg, this.postId, [], this.commentId);
-                    this.newAnswer = response.data;
-                    this.comments.push(this.newAnswer);
+                    let response = await this.$root.$api.$post.getAnswerToComment(msg, this.postId, [], this.commentId);
+                    this.$emit('addComment', response.data);
                 } catch (e) {
                     console.warn(e.detailMessage);
                 }

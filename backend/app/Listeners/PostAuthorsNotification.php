@@ -3,6 +3,7 @@
 
 namespace App\Listeners;
 
+use App\Models\Notification;
 use App\Models\Post;
 use App\Models\User;
 use App\Notifications\UserSystemNotifications;
@@ -17,7 +18,7 @@ class PostAuthorsNotification implements ShouldQueue
 
     /**
      * @param $event
-     * @param $user_id
+     * @param $data
      */
     public function handle($event, $data)
     {
@@ -26,7 +27,12 @@ class PostAuthorsNotification implements ShouldQueue
         $user = User::find($user_id);
         $post = Post::with('author')->find($post_id);
         $details = $this->preparePayload($event, $user, $post);
-        if($post->author) {
+        $isNotificationExists = Notification::where('notifiable_type', User::class)
+            ->where('notifiable_id', $post->author->id)
+            ->where('data->data->sender->id', $user->id)
+            ->exists();
+
+        if($post->author && !$isNotificationExists) {
             $post->author->notify(new UserSystemNotifications($details));
         }
     }

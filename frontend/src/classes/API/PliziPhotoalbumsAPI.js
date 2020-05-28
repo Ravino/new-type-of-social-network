@@ -44,7 +44,7 @@ class PliziPhotoalbumsAPI extends PliziBaseAPI {
 
     /**
      * Обновление данных альбома
-     // * @param {string} albumId
+     * @param {string} albumId
      * @param {{description: string, title: string}} formData - данные для загрузки
      * @returns {object|null} - ответ сервера
      * @throws PliziAPIError
@@ -58,6 +58,26 @@ class PliziPhotoalbumsAPI extends PliziBaseAPI {
 
         if ( response.status === 200 ){
             return response.data.data;
+        }
+
+        return null;
+    }
+
+    /**
+     * Удаление фотоальбома.
+     * @param albumId
+     * @returns {object[]|null}
+     * @throws PliziAPIError
+     */
+    async deleteAlbum( albumId ){
+        let response = await this.axios.delete( `api/photo-albums/${albumId}`, this.authHeaders )
+            .catch( ( error ) => {
+                this.checkIsTokenExpires( error, `deleteAlbum` );
+                throw new PliziAPIError( `deleteAlbum`, error.response );
+            } );
+
+        if ( response.status === 200 ){
+            return response.data;
         }
 
         return null;

@@ -575,7 +575,9 @@ class PliziAPIClass {
                 //window.console.dir(data, 'WebSockets user.typing');
             }
             else {
-                window.console.dir(data, 'from WebSockets server');
+                if (data) {
+                    window.console.dir( JSON.parse( JSON.stringify(data) ), 'from WebSockets server');
+                }
             }
 
             if (channelID=== this.channel  &&  `user.typing`===data.event_type) {

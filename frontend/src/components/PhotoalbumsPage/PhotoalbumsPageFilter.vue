@@ -4,9 +4,6 @@
             <nav class="videos-filter-links col-lg-7 nav pt-2 pt-sm-0" role="tablist">
                 <span class="nav-link py-2 py-sm-3 px-1 mr-sm-4" :class="{ 'active': wMode === 'my' }" id="tabMyPhotoalbums" role="tab"
                       @click.stop="ontabChange">Мои альбомы</span>
-                <template v-if="wMode === 'album'">
-                    <PhotoalbumEditBlock></PhotoalbumEditBlock>
-                </template>
             </nav>
 
             <div class="additionalBtns col-12 col-sm-5 d-flex justify-content-between justify-content-sm-end px-0  my-3 my-sm-0">
@@ -14,7 +11,13 @@
                     <PhotoalbumCreateBlock></PhotoalbumCreateBlock>
                 </template>
                 <template v-else>
-                    <a href="#">Добавить фотографии</a>
+                    <button type="button" @click.stop="onAttachBtnClick($event)"
+                            :class="{'attach-file--disallow cursor-non-drop' : isDisallowUpload}"
+                            class="attach-file btn-add-file w-100 d-flex align-items-center justify-content-center add-photos btn btn-link my-0 mx-0 mr-md-2 px-1 position-relative">
+                        Добавить фотографии
+                        <input type="file" class="plz-text-editor-file-picker"
+                               :disabled="isDisallowUpload" @change="onSelectFile()" ref="editorFiler" multiple />
+                    </button>
                 </template>
             </div>
         </div>
@@ -23,13 +26,11 @@
 
 <script>
 import PhotoalbumCreateBlock from "./PhotoalbumCreateBlock.vue";
-import PhotoalbumEditBlock from "./PhotoalbumEditBlock.vue";
 
 export default {
     name: "PhotoalbumsPageFilter",
     components: {
-        PhotoalbumCreateBlock,
-        PhotoalbumEditBlock
+        PhotoalbumCreateBlock
     },
     data() {
         return {
@@ -37,16 +38,24 @@ export default {
         }
     },
     methods: {
+        onAttachBtnClick(ev){
+            let $btn = null;
+            if (ev.target.tagName.toUpperCase() === 'BUTTON') {
+                $btn = $(ev.target);
+            }
+            else {
+                $btn = $(ev.target).closest('button.attach-file');
+            }
+
+            const $file = $btn.find('input.plz-text-editor-file-picker');
+            $file.click();
+        },
         ontabChange() {
             if (this.$route.name !== 'PhotoalbumsListPage') {
                 this.$router.push({ path: '/photoalbums-list' });
                 this.wMode = 'album';
             }
-        },
-        wallPostsSelect(wMode) {
-            this.wMode = wMode;
-            this.$emit('wallPostsSelect', {wMode: wMode});
-        },
+        }
     },
     mounted() {
         if (this.$route.name !== 'PhotoalbumsListPage') {

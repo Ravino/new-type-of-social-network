@@ -1,7 +1,7 @@
 import PliziMember from './PliziMember.js';
-import PliziCommunityAvatar from './Community/PliziCommunityAvatar';
-import PliziCommunityHeaderImage from './Community/PliziCommunityHeaderImage';
-import PliziLocation from "./User/PliziLocation";
+import PliziCommunityAvatar from './Community/PliziCommunityAvatar.js';
+import PliziCommunityHeaderImage from './Community/PliziCommunityHeaderImage.js';
+import PliziLocation from './User/PliziLocation.js';
 
 class PliziCommunity {
     /**
@@ -199,6 +199,10 @@ class PliziCommunity {
     get primaryImage(){
         if (this._primaryImage)
             return this._primaryImage;
+
+        if (this._avatar  &&  this._avatar.image  &&  this._avatar.image.thumb  &&  this._avatar.image.thumb.path) {
+            return this._avatar.image.thumb.path;
+        }
 
         return this.__defaultAvatarPath;
     }

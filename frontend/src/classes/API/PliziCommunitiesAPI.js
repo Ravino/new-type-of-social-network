@@ -16,6 +16,7 @@ class PliziCommunitiesAPI extends PliziBaseAPI {
             ? `?search=${searchText}&limit=${limit}&offset=${offset}`
             : `?limit=${limit}&offset=${offset}`;
         const url = 'api/communities' + search;
+
         let response = await this.axios.get( url, this.authHeaders )
             .catch( ( error ) => {
                 this.checkIsTokenExpires( error, `$communities.loadCommunities` );
@@ -28,6 +29,7 @@ class PliziCommunitiesAPI extends PliziBaseAPI {
 
         return null;
     }
+
 
     /**
      * Получение списка сообществ для управления
@@ -55,6 +57,7 @@ class PliziCommunitiesAPI extends PliziBaseAPI {
         return null;
     }
 
+
     /**
      * Получение списка сообществ пользователя.
      * @param {string} searchText
@@ -68,6 +71,7 @@ class PliziCommunitiesAPI extends PliziBaseAPI {
             ? `&search=${searchText}&limit=${limit}&offset=${offset}`
             : `&limit=${limit}&offset=${offset}`;
         const url = 'api/communities?list=my' + search;
+
         let response = await this.axios.get(url, this.authHeaders )
             .catch( ( error ) => {
                 this.checkIsTokenExpires( error, `$communities.userCommunities` );
@@ -129,7 +133,6 @@ class PliziCommunitiesAPI extends PliziBaseAPI {
     async subscribe(communityID){
         let response = await this.axios.get( `api/communities/${communityID}/subscribe`, this.authHeaders )
             .catch( ( error ) => {
-                window.console.log(error.response.status, `error.response.status`);
                 /** @TGA так сервер отвечает, что юзер уже в этом сообществе **/
                 if (error.response.status === 422) {
                     return {
@@ -202,6 +205,7 @@ class PliziCommunitiesAPI extends PliziBaseAPI {
         return null;
     }
 
+
     /**
      * Обновление данных сообщества
      * @param {string} id
@@ -244,6 +248,7 @@ class PliziCommunitiesAPI extends PliziBaseAPI {
         return null;
     }
 
+
     /**
      * загружает аватарку сообщества
      * @param {formData} formData - данные для загрузки
@@ -264,9 +269,10 @@ class PliziCommunitiesAPI extends PliziBaseAPI {
         return null;
     }
 
+
     /**
      * загружает список тем
-     * @returns {Promise<null|any>}
+     * @returns {object[]}
      */
     async getThemes() {
         let response = await this.axios.get('/api/communities/themes/list', this.authHeaders)
@@ -282,11 +288,12 @@ class PliziCommunitiesAPI extends PliziBaseAPI {
         return null;
     }
 
+
     /**
      * Список запросов на вступление в сообщество
      * @see http://vm1095330.hl.had.pm:8082/docs/#/Communities/getCommunityRequestList
      * @param {number} communityID - ID сообщества, на которое собираемся подписаться
-     * @returns {object|null}
+     * @returns {object[]|null}
      * @throws PliziAPIError
      */
     async requestList(communityID) {
@@ -298,6 +305,7 @@ class PliziCommunitiesAPI extends PliziBaseAPI {
                         message: error.response.data.message
                     }
                 }
+
                 this.checkIsTokenExpires(error, `$communities.requestList`);
                 throw new PliziAPIError('$communities.requestList', error.response);
             });
@@ -308,6 +316,7 @@ class PliziCommunitiesAPI extends PliziBaseAPI {
 
         return null;
     }
+
 
     /**
      * Отправить запрос на вступление в сообщество
@@ -338,6 +347,7 @@ class PliziCommunitiesAPI extends PliziBaseAPI {
         return null;
     }
 
+
     /**
      * Принятие запроса на вступление в сообщество
      * @see http://vm1095330.hl.had.pm:8082/docs/#/Communities/acceptCommunityRequest
@@ -365,6 +375,7 @@ class PliziCommunitiesAPI extends PliziBaseAPI {
 
         return null;
     }
+
 
     /**
      * Отклонение запроса на вступление в сообщество
@@ -394,6 +405,7 @@ class PliziCommunitiesAPI extends PliziBaseAPI {
         return null;
     }
 
+
     async recommended() {
         let response = await this.axios.get(`api/communities/recommended/list`, this.authHeaders)
             .catch((error) => {
@@ -414,6 +426,7 @@ class PliziCommunitiesAPI extends PliziBaseAPI {
         return null;
     }
 
+
     /**
      * Получение списка участников сообщества
      * @param {number} communityId
@@ -423,7 +436,7 @@ class PliziCommunitiesAPI extends PliziBaseAPI {
      * @throws PliziAPIError
      */
     async members(communityId, limit = 20, offset = 0) {
-        const url = `api/communities/${communityId}/members`;
+        const url = `api/communities/${communityId}/members?limit=${limit}&offset=${offset}`;
         let response = await this.axios.get(url, this.authHeaders)
             .catch((error) => {
                 this.checkIsTokenExpires(error, `$communities.members`);
@@ -431,7 +444,120 @@ class PliziCommunitiesAPI extends PliziBaseAPI {
             });
 
         if (response.status === 200) {
+            /**
+             * FIXME: @TGA тут должен быть возврат response.data.data.list
+             **/
             return response.data.data;
+        }
+
+        return null;
+    }
+
+    /**
+     *
+     * @param {number} communityId
+     * @param {number} limit
+     * @param {number} offset
+     * @returns {Promise<null|*>}
+     */
+    async videos(communityId, limit = 5, offset = 0) {
+        const url = `api/communities/${communityId}/videos?limit=${limit}&offset=${offset}`;
+
+        let response = await this.axios.get(url, this.authHeaders)
+            .catch((error) => {
+                this.checkIsTokenExpires(error, `$communities.videos`);
+                throw new PliziAPIError(`$communities.videos`, error.response);
+            });
+
+        if (response.status === 200) {
+            return response.data.data;
+        }
+
+        return null;
+    }
+
+    async favorites() {
+        let response = await this.axios.get('api/communities/favorite/list', this.authHeaders)
+            .catch((error) => {
+                this.checkIsTokenExpires(error, `$communities.favorites`);
+                throw new PliziAPIError(`$communities.favorites`, error.response);
+            });
+
+        if (response.status === 200) {
+            return response.data.data.list;
+        }
+        return null;
+    }
+
+    /**
+     * @param {number} communityId
+     * @param {string} userId
+     * @returns {Promise<null|any>}
+     */
+    async becomeAdmin(communityId, userId) {
+        const url = `api/communities/admin/${communityId}/${userId}`;
+        let response = await this.axios.post(url, {}, this.authHeaders)
+            .catch((error) => {
+                this.checkIsTokenExpires(error, `$communities.members`);
+                throw new PliziAPIError(`$communities.members`, error.response);
+            });
+
+        if (response.status === 200) {
+            return response.data;
+        }
+
+        return null;
+    }
+
+
+    async addToFavorites(communityID) {
+        const sendData = {
+            id: communityID,
+        };
+
+        let response = await this.axios.post('api/communities/favorite/subscribe', sendData, this.authHeaders)
+            .catch((error) => {
+                this.checkIsTokenExpires(error, '$communities.addToFavorites');
+                throw new PliziAPIError('$communities.addToFavorites', error.response);
+            });
+
+        if (response.status === 200) {
+            return response.data;
+        }
+
+        return null;
+    }
+
+
+    /**
+     * @param {number} communityId
+     * @param {string} userId
+     * @returns {Promise<null|any>}
+     */
+    async stopBeAdmin(communityId, userId) {
+        const url = `api/communities/admin/${communityId}/${userId}`;
+        let response = await this.axios.delete(url, this.authHeaders)
+            .catch((error) => {
+                this.checkIsTokenExpires(error, `$communities.members`);
+                throw new PliziAPIError(`$communities.members`, error.response);
+            });
+
+        if (response.status === 200) {
+            return response.data;
+        }
+
+        return null;
+    }
+
+    async removeToFavorites(communityID) {
+        let response = await this.axios.delete('api/communities/favorite/unsubscribe/'+communityID, this.authHeaders)
+            .catch((error) => {
+                this.checkIsTokenExpires(error, '$communities.removeToFavorites');
+                throw new PliziAPIError('$communities.removeToFavorites', error.response);
+            });
+
+        if (response.status === 200) {
+            return response.data;
         }
 
         return null;

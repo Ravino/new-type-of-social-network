@@ -206,8 +206,10 @@ methods : {
         this.posts.unshift(new PliziPost(post));
     },
 
-    startTimer( postIndex ){
+    startTimer(post){
         setTimeout( () => {
+            let postIndex = this.posts.findIndex(item => item.id === post.id);
+
             this.posts.splice( postIndex, 1 );
         }, 5000 );
     },
@@ -226,6 +228,7 @@ methods : {
         this.postRepostModal.isVisible = true;
         this.postRepostModal.content.postForRepost = post;
     },
+
     hidePostRepostModal() {
         this.postRepostModal.isVisible = false;
         this.postRepostModal.content.postForRepost = null;
@@ -249,7 +252,6 @@ methods : {
             response = await this.$root.$api.$post.getPosts(limit, offset);
         } catch (e){
             this.isStarted = false;
-            console.warn( e.detailMessage );
         }
 
         if ( response !== null ){
@@ -280,7 +282,7 @@ methods : {
         }
     },
 
-    async onDeletePost( id ) {
+    async onDeletePost(id) {
         let response;
 
         try{
@@ -290,12 +292,10 @@ methods : {
         }
 
         if ( response ){
-            const postIndex = this.posts.findIndex( ( post ) => {
-                return post.id === id;
-            } );
-            let post = this.posts[postIndex].deleted = true;
+            const post = this.posts.find(post => post.id === id);
 
-            this.startTimer( postIndex );
+            post.deleted = true;
+            this.startTimer(post);
         }
     },
 
@@ -319,11 +319,6 @@ methods : {
 },
 
 async mounted() {
-    this.$root.$on('showProfileOptionsModal', ()=>{
-        this.$alert(`Какие-то опции пользователя`, 'bg-info', 10);
-    });
-
-    this.$root.$on('wallPostsSelect', this.wallPostsSelectHandler);
     await this.getPosts();
 }
 
