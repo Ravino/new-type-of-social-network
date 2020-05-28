@@ -86,7 +86,7 @@ Route::group(['middleware' => ['auth.jwt', 'track.activity']], function () {
     Route::patch('user/notifications/mark/read', 'Api\UserController@markNotificationsAsRead');
     Route::get('/user/sessions/active', 'Api\SessionController@index');
     Route::post('/user/sessions/close', 'Api\SessionController@close');
-    Route::get('/user/{userId}/photo_albums', 'api\PhotoAlbums@indexByUser');
+    Route::get('/user/{userId}/photo_albums', 'Api\PhotoAlbumController@indexByUser');
 
     Route::get('user/follow/list', [UserSubscribeController::class, 'list']);
     Route::middleware(['user.get'])->group(static function() {
@@ -150,8 +150,9 @@ Route::group(['middleware' => ['auth.jwt', 'track.activity']], function () {
         Route::post('attachments/{postAttachment}/comment', 'Api\CommentController@commentPostImage');
     });
 
+    Route::resource('/videos', 'Api\VideoController');
     Route::prefix('videos')->group(function () {
-        Route::resource('/', 'Api\VideoController');
+
     });
 
     Route::prefix('comment')->group(function () {

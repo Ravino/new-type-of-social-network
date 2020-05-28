@@ -42,6 +42,27 @@ class PliziVideoAPI extends PliziBaseAPI {
 
         return null;
     }
+
+    /**
+     * Удаление ссылок на видео.
+     * @public
+     * @param {number} id
+     * @returns {object[]|null}
+     * @throws PliziAPIError
+     */
+    async deleteVideo(id) {
+        let response = await this.axios.delete(`api/videos/${id}`, this.authHeaders)
+            .catch( ( error ) => {
+                this.checkIsTokenExpires( error, `deleteVideo` );
+                throw new PliziAPIError( `deleteVideo`, error.response );
+            } );
+
+        if ( response.status === 200 ){
+            return response.data;
+        }
+
+        return null;
+    }
 }
 
 export default PliziVideoAPI;

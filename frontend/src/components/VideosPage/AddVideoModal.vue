@@ -33,7 +33,7 @@
                         </div>
                     </div>
                     <button type="submit" class="btn plz-btn plz-btn-primary">Сохранить</button>
-                    <p v-if="isSuccess" class="text-success pt-3 mb-0">
+                    <p v-if="isSuccess" class="text-success pt-3 mb-0 text-center">
                         Ссылка на видео успешно добавлено.
                     </p>
                 </form>
@@ -109,6 +109,7 @@
 
                     setTimeout(() => {
                         this.isSuccess = false;
+                        this.onHide();
                     }, 3000);
                 }
             },

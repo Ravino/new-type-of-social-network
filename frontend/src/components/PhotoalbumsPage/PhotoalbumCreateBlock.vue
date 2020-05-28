@@ -2,7 +2,7 @@
     <div id="createCommunityBlock">
                 <button type="button"
                         @click="showPhotoalbumCreateModal"
-                        class="btn btn-create btn-block btn-primary rounded-pill">
+                        class="btn plz-btn plz-btn-primary p-0 mr-3">
                     Создать альбом
                 </button>
                 <PhotoalbumCreateModal v-if="photoalbumCreateModalShow"
