@@ -64,6 +64,10 @@ const LinkMixin = {
         transformStrWithLinks(str, imgName = 'mqdefault') {
             let youtubeLinks = this.detectYoutubeLinks(str);
             let links = this.detectLink(str);
+            //TODO Лучьше сразу установить значение 'mqdefault' без переменной
+            if(imgName == 'hqdefault') {
+                imgName = 'mqdefault';
+            }
 
             if (youtubeLinks && youtubeLinks.length) {
                 let youtubeIds = [];
