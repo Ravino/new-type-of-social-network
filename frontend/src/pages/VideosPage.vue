@@ -357,7 +357,6 @@ methods: {
         this.videoModal.isVisible = false;
     },
     onAddVideo(video) {
-        console.log(video);
         this.userVideos.unshift(new PliziVideo(video));
     },
 
