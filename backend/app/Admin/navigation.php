@@ -1,5 +1,6 @@
 <?php
 
+use App\Models\User;
 use SleepingOwl\Admin\Navigation\Page;
 
 // Default check access logic
@@ -26,12 +27,25 @@ return [
         'title' => 'Dashboard',
         'icon'  => 'fas fa-tachometer-alt',
         'url'   => route('admin.dashboard'),
+        'priority' => 0,
     ],
 
     [
         'title' => 'Information',
         'icon'  => 'fas fa-info-circle',
         'url'   => route('admin.information'),
+        'priority' => 2,
+    ],
+
+    [
+        'title' => 'Logout',
+        'icon'  => 'fas fa-sign-out-alt',
+        'url'   => route('admin.logout'),
+        'priority' => 2,
+        'accessLogic' => static function(Page $page) {
+            $user = auth()->user();
+            return $user instanceof User && $user->isAdmin();
+        }
     ],
 
     // Examples

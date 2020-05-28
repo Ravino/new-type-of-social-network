@@ -1,9 +1,14 @@
 <template>
-    <mark><small class="text-muted">{{privacyLabel}}</small></mark>
+    <p class="plizi-community-privacy-label mb-0"
+       :class="{'text-red' : privacyLabel == 'Закрытое',
+                'text-blue' : privacyLabel == 'Частное', }">
+        {{privacyLabel}} сообщество
+    </p>
 </template>
 
 <script>
     import PliziCommunity from '../../classes/PliziCommunity.js';
+    import communityUtils from "../../utils/CommunityUtils"
 
     export default {
         name: "PrivacyLabel",
@@ -12,16 +17,7 @@
         },
         computed: {
             privacyLabel() {
-                switch (this.community?.privacy) {
-                    case 1:
-                        return 'Открытое';
-                    case 2:
-                        return 'Закрытое';
-                    case 3:
-                        return 'Приватное';
-                    default:
-                        return '';
-                }
+                return communityUtils.getPrivacyLabel(this.community?.privacy);
             },
         }
     }

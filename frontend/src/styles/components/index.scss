@@ -4,6 +4,7 @@
 @import "./AccountSettingsSecurity.scss";
 @import "./AccountSettingsSideMenu.scss";
 @import "./BlackListItem.scss";
+@import "./BlackListSideMenu.scss";
 @import "./ChatFooter.scss";
 @import "./ChatHeader.scss";
 @import "./ChatListItem.scss";
@@ -19,6 +20,7 @@
 @import "./ProfileHeader.scss";
 @import "./ChatHeader.scss";
 @import "./ProfilePhotos.scss";
+@import "./PhotoalbumItem.scss";
 @import "./ProfilePost.scss";
 @import "./ProfileWhatsNew.scss";
 @import "./RegistrationForm.scss";
@@ -34,3 +36,6 @@
 @import "./Communities.scss";
 @import "./CommunityDetail.scss";
 @import "./Video.scss";
+@import "./CommentPost";
+@import "./CommentItem";
+@import "./CommentReply";

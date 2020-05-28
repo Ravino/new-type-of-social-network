@@ -11,20 +11,31 @@
 
         <div class="dropdown-menu dropdown-menu-right py-3" aria-labelledby="chatHeaderMenu">
             <div class="nav-item">
-                <span class="dropdown-item px-3 py-1 cursor-pointer" @click.prevent="onAddAttendeeClick">
+                <span class="dropdown-item px-3 py-1 cursor-pointer" @click.prevent="onCreateGroupChatClick">
                     Создать групповой чат
                 </span>
             </div>
+
+            <div class="dropdown-divider"></div>
+
             <div class="nav-item">
-                <span class="dropdown-item px-3 py-1 cursor-pointer" @click.prevent="onRemoveCurrentChatClick">
-                    Удалить этот чат
+                <span class="dropdown-item px-3 py-1 cursor-pointer" @click.prevent="onAddAttendeeClick">
+                    Добавить собеседника в чат
                 </span>
             </div>
 
             <div class="nav-item">
-                <a href="#" class="dropdown-item px-3 py-1">
-                    Какое-то действие
-                </a>
+                <span class="dropdown-item px-3 py-1 cursor-pointer" @click.prevent="onRemoveAttendeeClick">
+                    Удалить собеседника из чата
+                </span>
+            </div>
+
+            <div class="dropdown-divider"></div>
+
+            <div class="nav-item">
+                <span class="dropdown-item px-3 py-1 cursor-pointer" @click.prevent="onRemoveCurrentChatClick">
+                    Удалить этот чат
+                </span>
             </div>
         </div>
     </div>
@@ -35,12 +46,20 @@ export default {
 name : 'ChatHeaderMenu',
 
 methods: {
-    onAddAttendeeClick(){
-        this.$emit(`showAddAttendeeToDialogModal`, {});
+    onCreateGroupChatClick(){
+        this.$emit(`ShowCreateGroupChatModal`, {});
     },
 
     onRemoveCurrentChatClick(){
-        this.$emit(`showRemoveCurrentChatModal`, {});
+        this.$emit(`ShowRemoveCurrentChatModal`, {});
+    },
+
+    onAddAttendeeClick(){
+        this.$emit(`ShowAddAttendeeModal`, {});
+    },
+
+    onRemoveAttendeeClick(){
+        this.$emit(`ShowRemoveAttendeeModal`, {});
     }
 }
 

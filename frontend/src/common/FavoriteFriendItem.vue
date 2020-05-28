@@ -31,7 +31,9 @@
             </span>
         </div>
 
-        <div v-if="isShowLinkedChat" class="plz-linked-chat-block mr-3 bg-white-br20 " :class="{ 'active-chat plz-favorit-z': chatWindowShown }">
+        <div v-if="isShowLinkedChat" class="plz-linked-chat-block mr-3 bg-white-br20 "
+             :class="{ 'active-chat plz-favorit-z': chatWindowShown }">
+
             <!--TODO @TRG class="is-pinned" когда чат прибит-->
             <div id="chatMessagesWrapper" class="plz-linked-chat-body bg-light d-none d-lg-flex flex-column p-0"
                  :class="{'is-pinned' : 'когда_чат_прибит'}">
@@ -58,7 +60,8 @@
                                 v-bind:currentDialog="currentDialog"
                                 @chatFooterEditorChangedHeight="onChatFooterEditorChangedHeight"
                                 :style="`height: ${changedHeight}`"
-                                ref="ChatFooter"></ChatFooter>
+                                ref="ChatFooter">
+                    </ChatFooter>
                 </div>
             </div>
         </div>
@@ -77,7 +80,7 @@ import DialogMixin from '../mixins/DialogMixin.js';
 
 import PliziFriend from '../classes/PliziFriend.js';
 import PliziMessage from '../classes/PliziMessage.js';
-import PliziCollection from '../classes/PliziCollection.js';
+import PliziMessagesCollection from '../classes/Collection/PliziMessagesCollection.js';
 
 export default {
 name : 'FavoriteFriendItem',
@@ -110,7 +113,7 @@ data(){
         isTyper: false,
 
         currentDialog : null,
-        messagesList  : (new PliziCollection()),
+        messagesList  : (new PliziMessagesCollection()),
         isMessagesLoaded: false,
 
         filter : {
@@ -174,10 +177,12 @@ methods: {
         if (this.currentDialog) {
             if (this.currentDialog.id === evData.message.chatId){
 
-                //this.messagesList.push( new PliziMessage( evData.message ) );
-                this.messagesList.add( new PliziMessage( evData.message ) );
+                this.messagesList.append( evData.message );
 
-                this.$refs.chatMessages.scrollToEnd();
+                if (this.$refs && this.$refs.chatMessages) {
+                    this.$refs.chatMessages.$forceUpdate();
+                    this.$refs.chatMessages.scrollToEnd();
+                }
             }
         }
         else {
@@ -297,9 +302,9 @@ methods: {
 
         window.localStorage.setItem('pliziActiveDialog', chatId);
 
-        this.messagesList = [];
+        this.messagesList.clear();
         msgsResponse.map( (msg) => {
-            this.messagesList.push( new PliziMessage(msg) );
+            this.messagesList.append( msg );
         });
 
         this.isMessagesLoaded = true;

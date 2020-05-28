@@ -37,20 +37,11 @@
 import ChatHeaderCompanion from './ChatHeaderCompanion.vue';
 import ChatHeaderAttendeeItem from './ChatHeaderAttendeeItem.vue';
 
-import ChatMixin from '../../mixins/ChatMixin.js';
-
 export default {
 name: 'RemoveCurrentDialogModal',
 components: { ChatHeaderCompanion, ChatHeaderAttendeeItem },
-mixins : [ChatMixin],
 props: {
     currentDialog: Object
-},
-
-data() {
-    return {
-
-    }
 },
 
 methods: {
@@ -59,7 +50,7 @@ methods: {
     },
 
     hideRemoveCurrentDialogModal() {
-        this.$emit('hideRemoveDialogModal', {});
+        this.$emit('HideRemoveDialogModal', {});
     },
 
     async removeChat( ){
@@ -76,9 +67,6 @@ methods: {
         if ( apiResponse ) {
             this.$root.$emit( 'RemoveChatDialog', { chatId : this.currentDialog.id } );
             this.hideRemoveCurrentDialogModal();
-        }
-        else {
-            window.console.info( apiResponse );
         }
     }
 },

@@ -7,6 +7,7 @@ namespace App\Http\Requests\Community;
 use App\Http\Requests\Request;
 use App\Models\Community as CommunityModel;
 use App\Models\CommunityTheme;
+use App\Rules\Website;
 use Illuminate\Validation\Rule;
 
 class Community extends Request
@@ -39,9 +40,18 @@ class Community extends Request
             'notice' => 'max:150',
             'url' => [
                 'max:150',
-                Rule::unique('communities')->ignore($this->id, 'id'),
+                function ($attribute, $value, $fail) {
+                    if (!$value) {
+                        return;
+                    }
+                    if (CommunityModel::where('url', $value)
+                        ->where('id', '!=', $this->id)
+                        ->exists()) {
+                        $fail('Уже занято');
+                    }
+                },
             ],
-            'website' => 'url|nullable',
+            'website' => ['nullable', new Website()],
             'location' => 'exists:geo_cities,id',
             'privacy' => [
                 Rule::in(array_keys(CommunityModel::getPrivacyList())),

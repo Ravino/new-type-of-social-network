@@ -60,6 +60,11 @@ $postPosterPicSize: 48px;
                 text-decoration: none;
             }
         }
+
+        img {
+            width: 600px;
+            max-width: 100%;
+        }
     }
 
     .post-pictures-list {
@@ -146,9 +151,19 @@ $postPosterPicSize: 48px;
             cursor: auto;
             color: #fff;
 
-            img {
+            &-user {
+                position: relative;
                 width: 30px;
                 height: 30px;
+
+                img {
+                    position: absolute;
+                    top: 50%;
+                    left: 50%;
+                    transform: translate(-50%, -50%);
+                    min-height: 30px;
+                    min-width: 30px;
+                }
             }
         }
     }
@@ -167,4 +182,8 @@ $postPosterPicSize: 48px;
     img {
         max-width: 100%;
     }
+}
+
+.post-repost {
+    border-left: 2px solid #cececf;
 }

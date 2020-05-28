@@ -8,14 +8,13 @@ use App\Http\Resources\Post\AttachmentsCollection;
 use App\Http\Resources\Post\Post as PostResource;
 use App\Http\Requests\Post\Post as PostRequest;
 use App\Http\Resources\Post\PostCollection;
+use App\Http\Resources\User\SimpleUsers;
 use App\Models\Community;
 use App\Models\Post;
 use App\Models\PostAttachment;
-use App\Models\PostLike;
 use App\Models\User;
-use App\Notifications\UserSystemNotifications;
+use App\Models\View;
 use App\Services\S3UploadService;
-use Illuminate\Support\Facades\Notification;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Event;
 
@@ -58,7 +57,14 @@ class PostController extends Controller
      */
     public function getNews(Request $request)
     {
-        $posts = Post::getWithoutOldPosts(\Auth::user(), $request->query('limit'), $request->query('offset'));
+        $posts = Post::getWithoutOldPosts(
+            \Auth::user(),
+            $request->query('limit'),
+            $request->query('offset'),
+            false,
+            $request->get('onlyLiked') ?? false,
+            $request->get('orderBy') ?? null,
+        );
 
         return new PostCollection($posts);
     }
@@ -76,12 +82,16 @@ class PostController extends Controller
     }
 
     /**
+     * @param Request $request
      * @param $community_id
      * @return PostCollection|\Illuminate\Http\JsonResponse
      */
     public function communityPosts(Request $request, $community_id) {
         /** @var Community $community */
         $community = Community::find($community_id);
+        if (!$community->isUserHasAccess()) {
+            return response()->json(['message' => 'Нет доступа'], 403);
+        }
         if($community) {
             $posts = $community->posts()->with(['postable', 'author', 'usersLikes' => function ($query) {
                 return $query->limit(8)->get();
@@ -90,7 +100,7 @@ class PostController extends Controller
                 ->offset($request->query('offset') ?? 0)
                 ->orderByDesc('id')
                 ->get();
-            return new PostCollection($posts, false);
+            return new PostCollection($posts);
         }
         return response()->json(['message' => 'Сообщество не найдено'], 404);
     }
@@ -114,7 +124,7 @@ class PostController extends Controller
     public function storeByUser(PostRequest $request) {
         $post = \Auth::user()->posts()->create([
             'name' => $request->name,
-            'body' => $request->body,
+            'body' => $request->body ?: '',
             'author_id' => \Auth::user()->id
         ]);
         if(isset($request->attachmentIds) && count($request->attachmentIds)) {
@@ -135,7 +145,7 @@ class PostController extends Controller
             if($community->users->contains(auth()->user()->id)) {
                 $post = $community->posts()->create([
                     'name' => $request->name,
-                    'body' => $request->body,
+                    'body' => $request->body ?: '',
                     'author_id' => \Auth::user()->id
                 ]);
                 if(isset($request->attachmentIds) && count($request->attachmentIds)) {
@@ -162,6 +172,8 @@ class PostController extends Controller
         $my_post->postable_id = \Auth::user()->id;
         $my_post->parent_id = $post->id;
         $my_post->body = '';
+        $my_post->likes = 0;
+        $my_post->views = 0;
         $my_post->author_id = \Auth::user()->id;
         $my_post->save();
         return new PostResource($my_post);
@@ -170,6 +182,7 @@ class PostController extends Controller
     /**
      * @param UploadFileRequest $request
      * @return AttachmentsCollection
+     * @throws \Exception
      */
     public function uploadAttachments(UploadFileRequest $request) {
         $attachment_ids = $this->uploadService->uploadFiles(new PostAttachment(), 'post/attachments', $request->allFiles());
@@ -255,5 +268,39 @@ class PostController extends Controller
         return response()->json([
             'message' => 'Запись не найдена.',
         ], 404);
+    }
+
+    /**
+     * @param Request $request
+     * @param $id
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function markViewed(Request $request) {
+        View::create([
+            'user_id' => \Auth::user()->id,
+            'viewable_type' => Post::class,
+            'viewable_id' => $request->get('postId')
+        ]);
+        return response()->json([
+            'data' => [
+                'message' => 'Просмотрено'
+            ]
+        ]);
+    }
+
+    /**
+     * @param Request $request
+     * @param $id
+     * @return SimpleUsers
+     */
+    public function getViewedUsers(Request $request, $id) {
+        $views = View::with('user')
+            ->select('user_id', 'viewable_id', 'viewable_type')
+            ->where('viewable_id', $id)
+            ->where('viewable_type', Post::class)
+            ->groupBy('user_id', 'viewable_id', 'viewable_type')
+            ->limit(5)
+            ->get();
+        return new SimpleUsers($views->pluck('user'));
     }
 }

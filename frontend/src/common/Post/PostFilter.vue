@@ -6,9 +6,10 @@
                 <span class="nav-link py-2 py-sm-3 px-1 mr-2 mr-lg-4 active">Новости
                     <i class="fas fa-chevron-down ml-2"></i>
                 </span>
-                <span class="nav-link py-2 py-sm-3 px-1 mr-2 mr-lg-4">Обновления</span>
+
                 <span class="nav-link py-2 py-sm-3 px-1 mr-2 mr-lg-4">Понравилось</span>
-                <span class="nav-link py-3 px-1 mr-2 mr-lg-4 ml-auto ml-lg-4 d-none d-md-block">
+                <!-- TODO: @YZ восстановить после MVP -->
+                <span class="nav-link py-3 px-1 mr-2 mr-lg-4 ml-auto ml-lg-4 d-none #d-md-inline-block">
                     <button class="btn px-2 py-0 ">
                         <IconSearch style="width: 15px; height: 16px;"/>
                     </button>
@@ -31,7 +32,7 @@
                 </div>
             </nav>
 
-            <div class="newsViewModes col-lg-4 d-lg-flex justify-content-end d-none ">
+            <div class="newsViewModes col-lg-4 justify-content-end d-none ">
                 <span>Вид:</span>
                 <button class="btn bg-transparent p-0">
                     <IconMultipleViewMode style="width: 16px; height: 16px;"/>

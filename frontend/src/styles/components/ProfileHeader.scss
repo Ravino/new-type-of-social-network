@@ -5,6 +5,14 @@
     }
 }
 
+.user-avatar-file-label {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+}
+
 .plz-profile-userpic-container {
     width: 100%;
     box-shadow: 0 2px 5px 0 rgba(0, 0, 0, 0.05);
@@ -37,12 +45,17 @@
         cursor: pointer;
     }
 
+    .fullWidth {
+        width: 100%;
+    }
+
     .btn {
         text-transform: uppercase;
         background-color: transparent;
         height: 34px;
         cursor: pointer;
         font-size: 11px;
+        width: 75%;
         font-weight: 600;
         color: #6f7487;
         border-radius: 0;

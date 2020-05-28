@@ -5,11 +5,11 @@
             <div class="col-12 border-bottom plz-post-item-header">
                 <div class="post-news-item d-flex flex-row align-content-center pb-4">
                     <div class="post-poster-pic mr-3">
-                        <router-link v-if="postable" :to="{name: 'PersonalPage', params: {id: postable.id}}">
+                        <router-link v-if="this.post.user" :to="{name: 'PersonalPage', params: {id: postable.id}}">
                             <img :src="post.posterPic" :alt="post.posterName"/>
                         </router-link>
-                        <router-link v-else :to="{name: 'CommunityPage', params: {id: post.community.id}}">
-                            <img :src="post.posterPic" :alt="post.posterName"/>
+                        <router-link v-else :to="{name: 'CommunityPage', params: {id: postable.id}}">
+                            <img :src="communityAvatar" :alt="post.posterName"/>
                         </router-link>
                     </div>
 
@@ -17,10 +17,10 @@
                         <h6 class="post-poster-title mb-1">
                             <!-- TODO: @TGA странно что мы нигде не выводим название поста-->
 
-                            <router-link v-if="postable" :to="{name: 'PersonalPage', params: {id: postable.id}}">
+                            <router-link v-if="this.post.user" :to="{name: 'PersonalPage', params: {id: postable.id}}">
                                 <b>{{post.posterName}}</b>
                             </router-link>
-                            <router-link v-else :to="{name: 'CommunityPage', params: {id: post.community.id}}">
+                            <router-link v-else :to="{name: 'CommunityPage', params: {id: postable.id}}">
                                 <b>{{post.posterName}}</b>
                             </router-link>
                         </h6>
@@ -74,7 +74,7 @@
                                 </router-link>
                                 <router-link v-else :to="{name: 'CommunityPage', params: {id: recursivePost.community.id}}"
                                              class="post-poster-pic mr-3">
-                                    <img :src="recursivePost.posterPic" :alt="recursivePost.posterName"/>
+                                    <img :src="recursiveCommunityAvatar" :alt="recursivePost.posterName"/>
                                 </router-link>
 
                                 <div class="post-poster-name d-flex flex-column justify-content-center">
@@ -194,28 +194,29 @@
                             <IconHeard v-else/>
                             <span>{{ post.likes | space1000 }}</span>
                             <div v-if="post.usersLikes && post.usersLikes.length" class="usersLikes p-3" @click.stop="">
-                                <p class="mb-0">
+                                <p class="mb-1">
                                     <b @click.stop="$emit('onShowUsersLikes', post.id)"
                                        style="cursor: pointer">
                                         Понравилось
                                     </b>
                                     {{ post.likes }} пользователям
                                 </p>
-                                <p class="d-flex">
+                                <div class="d-flex mb-0">
                                     <router-link v-for="(user, index) in shortUsersLikes"
                                                  :key="index"
+                                                 class="usersLikes-user"
                                                  :to="{ name: 'PersonalPage', params: { id: user.id } }">
                                         <img :src="user.profile.userPic"
                                              :alt="user.profile.firstName + ' ' + user.profile.lastName"
                                              :title="user.profile.firstName + ' ' + user.profile.lastName"
                                              class="rounded-circle">
                                     </router-link>
-                                </p>
+                                </div>
                             </div>
                         </div>
-                        <div class="post-watched-counter ml-4">
+                        <div class="post-watched-counter ml-4" @click="getCommentsByPostId">
                             <IconMessage/>
-                            <span>{{ post.commentsCount | space1000 }}</span>
+                            <span>{{ comments.length | space1000 }}</span>
                         </div>
 
                         <div class="post-watched-counter ml-4" @click="$emit('onShare', post)">
@@ -231,6 +232,33 @@
                         </div>
                     </div>
                 </div>
+                <div class="plz-comments"
+                    v-for="comment in comments"
+                >
+                    <CommentItem
+                        v-if="!isShowComment"
+                        :answers="comment.thread ? comment.thread.list : []"
+                        :key="comment.id"
+                        :commentId="comment.id"
+                        :text="comment.body"
+                        :authorId="comment.author.id"
+                        :name="comment.author.profile.firstName"
+                        :surname="comment.author.profile.lastName"
+                        :avatar="comment.author.profile.avatar.image.medium.path"
+                        :postId="post.id"
+                        :createdAt="comment.createdAt"
+                        @onDelete="removeComment"
+                        @update="editComment"
+                        @updateAnswers="updateAnswers"
+                    >
+                    </CommentItem>
+                </div>
+                <CommentPost
+                    :postId="post.id"
+                    v-if="!isShowComment"
+                    @updateComments="addNewComment"
+                >
+                </CommentPost>
             </div>
         </template>
 
@@ -245,7 +273,6 @@
                 </div>
             </div>
         </template>
-
     </div>
 </template>
 
@@ -264,10 +291,15 @@
     import PliziPost from '../../classes/PliziPost.js';
     import Gallery from '../Gallery.vue';
     import LinkMixin from '../../mixins/LinkMixin.js';
+    import CommentPost from "../../components/CommentPost.vue";
+    import CommentItem from "../../components/CommentItem.vue";
+    import AvatarMixin from '../../mixins/AvatarMixin.js';
 
     export default {
         name: 'Post',
         components: {
+            CommentItem,
+            CommentPost,
             Gallery,
             IconShare,
             IconMessage,
@@ -286,11 +318,13 @@
                 default: false,
             },
         },
-        mixins: [LinkMixin],
+        mixins: [LinkMixin, AvatarMixin],
         data() {
             return {
                 recursivePostsSimple: [],
                 recursivePosts: [],
+                isShowComment: true,
+                comments: [],
             }
         },
         computed: {
@@ -302,14 +336,14 @@
             livePreview() {
                 let str = this.post.body.replace(/<\/?[^>]+>/g, '').trim();
 
-                return this.transformStrWithLinks(str);
+                return this.transformStrWithLinks(str, 'hqdefault');
             },
             postable() {
-                if (this.isCommunity) {
-                    return this.post.author;
+                if (this.post.community) {
+                    return this.post.community;
                 }
 
-                return this.post.user ? this.post.user : null;
+                return this.post.author;
             },
             imageAttachments() {
                 return this.post.attachments.filter(attachment => attachment.isImage);
@@ -320,8 +354,35 @@
             shortUsersLikes() {
                 return this.post.usersLikes && this.post.usersLikes.length ? this.post.usersLikes.slice(0, 8) : null;
             },
+            communityAvatar() {
+                return this.getCommunityAvatar(this.post?.community);
+            },
+            recursiveCommunityAvatar() {
+                return this.getCommunityAvatar(this.post?.sharedFrom?.community);
+            },
         },
         methods: {
+            editComment(newComment) {
+                this.comments = this.comments.map(comment => comment.id === newComment.id ? newComment : comment);
+            },
+            updateAnswers({ id, answers }) {
+                this.comments = this.comments.map(comment => comment.id === id ? {...comment, thread: { list:answers } } : comment);
+            },
+            removeComment(commentId) {
+                this.comments = this.comments.filter(comment => comment.id !== commentId);
+            },
+            addNewComment(newComment) {
+                this.comments.push(newComment);
+            },
+            async getCommentsByPostId() {
+                this.isShowComment = !this.isShowComment;
+                try {
+                    let response = await this.$root.$api.$post.getCommentsById(this.post.id);
+                    this.comments = response.data.list;
+                } catch (e) {
+                    console.warn(e.detailMessage);
+                }
+            },
             openVideoModal(shared = false) {
                 let videoLink;
 
@@ -354,7 +415,7 @@
             recursiveLivePreview(str) {
                 str = str.replace(/<\/?[^>]+>/g, '').trim();
 
-                return this.transformStrWithLinks(str);
+                return this.transformStrWithLinks(str, 'hqdefault');
             },
             recursiveHasYoutubeLinks(str) {
                 str = str.replace(/<\/?[^>]+>/g, '').trim();

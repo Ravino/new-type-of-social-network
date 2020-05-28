@@ -14,15 +14,7 @@
                 <div class="row">
                     <div class="col-12 col-lg-8 col-xl-9 mb-4 px-4 py-0">
                         <div v-if="isPopularCommunitiesLoaded" class="row">
-                            <ul v-if="popularCommunitiesSearch  &&  popularCommunitiesSearch.length > 0"
-                                class="plizi-communities-list w-100 d-flex justify-content-between flex-wrap p-0">
-                                <CommunityItem v-for="(comItem, comIndex) in popularCommunitiesSearch"
-                                               :community="comItem"
-                                               :key="comIndex">
-                                </CommunityItem>
-                            </ul>
-
-                            <ul v-else-if="popularCommunities  &&  popularCommunities.length > 0"
+                            <ul v-if="popularCommunities  &&  popularCommunities.length > 0"
                                 class="plizi-communities-list w-100 d-flex justify-content-between flex-wrap p-0">
                                     <CommunityItem v-for="(comItem, comIndex) in popularCommunities"
                                                    :community="comItem"
@@ -31,7 +23,7 @@
                             </ul>
                             <div v-else-if="!enabledLoader" class="container px-2">
                                 <div  class=" bg-white-br20 p-3">
-                                    <div v-if="!$root.$lastCommunitiesSearch.popular" class="alert alert-info w-100 py-4 text-center m-0">
+                                    <div v-if="searchString.length === 0" class="alert alert-info w-100 py-4 text-center m-0">
                                         Нет ни одного популярного сообщества.
                                     </div>
                                     <div v-else class="alert alert-info w-100 py-4 text-center m-0">
@@ -76,7 +68,7 @@ mixins: [CommunitiesListMixin],
 
 data(){
     return {
-
+        list: 'popular',
     }
 },
 
@@ -84,15 +76,8 @@ methods : {
 
 },
 
-mounted(){
-    this.loadCommunities();
-    this.loadPopularCommunitites();
-    window.addEventListener('scroll', this.onScrollYPage);
+async mounted(){
+    await this.loadPopularCommunitites();
 },
-    beforeRouteLeave(to, from, next) {
-        window.removeEventListener('scroll', this.onScrollYPage);
-        next();
-    },
-
 }
 </script>

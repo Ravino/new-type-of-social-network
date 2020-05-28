@@ -2,6 +2,7 @@
 
 namespace App\Http\Resources\Post;
 
+use App\Http\Resources\User\SimpleUsers;
 use Illuminate\Http\Resources\Json\ResourceCollection;
 use Storage;
 
@@ -55,7 +56,11 @@ class AttachmentsCollection extends ResourceCollection
                                 'height' => $attachment->image_thumb_height,
                                 'path' => Storage::disk('s3')->url($attachment->image_thumb_path)
                             ]
-                        ]
+                        ],
+                        'likes' => $attachment->likes,
+                        'alreadyLiked' => (bool)count($attachment->like),
+                        'usersLikes' => new SimpleUsers($attachment->usersLikes),
+                        'commentsCount' => $attachment->comments_count,
                     ];
                 } else {
                     return [

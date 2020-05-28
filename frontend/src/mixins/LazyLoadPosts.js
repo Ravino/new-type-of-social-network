@@ -2,7 +2,7 @@ const LazyLoadPosts = {
     data() {
         return {
             isStarted: false,
-            noMore: false,
+            noMore: true,
         }
     },
     methods: {
@@ -16,8 +16,11 @@ const LazyLoadPosts = {
 
             this.isStarted = true;
             let oldSize = this.posts.length;
+            let added = 0;
 
-            let added = await this.getPosts(10, oldSize++);
+            if (oldSize) {
+                added = await this.getPosts(10, oldSize++);
+            }
 
             if (added === 0) {
                 this.noMore = true;
@@ -44,4 +47,4 @@ const LazyLoadPosts = {
     },
 };
 
-export default LazyLoadPosts;
+export {LazyLoadPosts as default}

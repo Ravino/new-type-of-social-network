@@ -54,10 +54,10 @@ class Post extends Model
     }
 
     /**
-     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     * @return \Illuminate\Database\Eloquent\Relations\MorphMany
      */
     public function like() {
-        return $this->hasMany(Like::class, 'likeable_id', 'id')
+        return $this->morphMany(Like::class, 'likeable')
             ->where('user_id', \Auth::user()->id);
     }
 
@@ -70,12 +70,17 @@ class Post extends Model
             'id',
             'id',
             'user_id'
-        );
+        )->where('likeable_type', Post::class);
     }
 
     public function video()
     {
         return $this->morphOne(Video::class, 'creatableby');
+    }
+
+    public function children()
+    {
+        return $this->hasMany(self::class, 'parent_id', 'id');
     }
 
     /**
@@ -86,7 +91,7 @@ class Post extends Model
         return 'U';
     }
 
-    public static function getWithoutOldPosts($user, $limit, $offset, $isMyPosts = false)
+    public static function getWithoutOldPosts($user, $limit, $offset, $isMyPosts = false, $onlyLiked = false, $orderBy = null)
     {
         if ($isMyPosts) {
             $userPosts = $user->posts()->pluck('id');
@@ -96,8 +101,10 @@ class Post extends Model
                     return $query->limit(8)->get();
                 }, 'parent' => function ($query) {
                     return $query->withTrashed()->get();
-                }])
-                ->limit($limit ?? 50)
+                }, 'attachments' => function ($query) {
+                    return $query->withCount('comments');
+                }])->withCount('comments')->withCount('children')
+                ->limit($limit ?? 20)
                 ->offset($offset ?? 0)
                 ->orderBy('id', 'desc')
                 ->get();
@@ -111,50 +118,50 @@ class Post extends Model
             ->get()
             ->toArray();
 
-        $communitiesPosts = collect();
-
-        foreach($communities as $community) {
-            $communitiesPosts->push(Post::where('postable_type', Community::class)
-                ->where('postable_id', $community->id)
-                ->where('created_at', '>', Carbon::parse($community->pivot->created_at)->timestamp)
-                ->pluck('id'));
-        }
-
-        $friendsPosts = collect();
+        $posts = self::with(['attachments', 'postable', 'author', 'usersLikes' => function ($query) {
+            return $query->limit(8)->get();
+        }, 'parent' => function ($query) {
+            return $query->withTrashed()->get();
+        }, 'attachments' => function ($query) {
+            return $query->withCount('comments');
+        }])->withCount('comments')->withCount('children');
 
         foreach($friends as $friend) {
             if ($friend->status) {
                 if ($friend->sender_id !== $user->id) {
-                    $friendsPosts->push(Post::where('postable_type', User::class)
+                    $posts->orWhere('postable_type', User::class)
                         ->where('postable_id', $friend->sender_id)
-                        ->where('created_at', '>', Carbon::parse($friend->created_at)->timestamp)
-                        ->pluck('id'));
+                        ->where('created_at', '>', Carbon::parse($friend->created_at)->timestamp);
                 }
 
                 if ($friend->recipient_id !== $user->id) {
-                    $friendsPosts->push(Post::where('postable_type', User::class)
+                    $posts->orWhere('postable_type', User::class)
                         ->where('postable_id', $friend->recipient_id)
-                        ->where('created_at', '>', Carbon::parse($friend->created_at)->timestamp)
-                        ->pluck('id'));
+                        ->where('created_at', '>', Carbon::parse($friend->created_at)->timestamp);
                 }
             }
         }
 
-        $communitiesPosts = $communitiesPosts->collapse();
-        $friendsPosts = $friendsPosts->collapse();
-        $userPosts = $user->posts()->pluck('id');
-        $postsIds = $communitiesPosts->merge($friendsPosts);
-        $postsIds = $postsIds->merge($userPosts);
+        foreach($communities as $community) {
+            $posts->orWhere('postable_type', Community::class)
+                ->where('postable_id', $community->id)
+                ->where('created_at', '>', Carbon::parse($community->pivot->created_at)->timestamp);
+        }
+        $posts->orWhere('postable_type', User::class)
+            ->where('postable_id', \Auth::user()->id);
+        $orderByColumn = $orderBy ?? 'id';
 
-        return Post::whereIn('id', $postsIds)
-            ->with(['postable', 'author', 'usersLikes' => function ($query) {
-                return $query->limit(8)->get();
-            }, 'parent' => function ($query) {
-                return $query->withTrashed()->get();
-            }])
-            ->limit($limit ?? 50)
+        return $posts
+            ->where(function ($query) use ($onlyLiked) {
+                if ($onlyLiked) {
+                    return $query->where('likes', '>', 0);
+                }
+
+                return $query;
+            })
+            ->limit($limit ?? 20)
             ->offset($offset ?? 0)
-            ->orderBy('id', 'desc')
+            ->orderBy($orderByColumn, 'desc')
             ->get();
     }
 }

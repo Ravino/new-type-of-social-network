@@ -7,6 +7,7 @@ use App\Http\Controllers\Controller;
 use App\Providers\RouteServiceProvider;
 use App\Models\User;
 use Carbon\Carbon;
+use Domain\Pusher\Models\Profile;
 use Illuminate\Foundation\Auth\RegistersUsers;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
@@ -72,7 +73,6 @@ class RegisterController extends Controller
         $user = User::find($user->id);
 
         event(new Registered($user, $this->rawPassword));
-        event(new UserCreated($user->load('profile')));
 
         return response()->json([
             'message' => 'Please confirm email',
@@ -93,7 +93,7 @@ class RegisterController extends Controller
             'email' => 'required|string|email|max:255|unique:users',
             'firstName' => 'required|string|min:2|max:50|regex:/^[a-zA-Z\p{Cyrillic}\-]+$/u',
             'lastName' => 'required|string|min:2|max:50|regex:/^[a-zA-Z\p{Cyrillic}\-]+$/u',
-            'birthday' => 'date_format:Y-m-d|nullable|before:today',
+            'birthday' => 'date_format:Y-m-d|nullable|before:today|after:1949-12-31',
         ]);
     }
 
@@ -120,7 +120,45 @@ class RegisterController extends Controller
             'birthday' => isset($data['birthday']) ? $data['birthday'] : null,
         ]);
 
+        $this->createInMongo($user);
+        $this->createInNeo4j($user);
+
         return $user;
+    }
+
+    /**
+     * @param $user
+     * @throws \Exception
+     */
+    protected function createInMongo($user) {
+        $user = User::with('profile')->find($user->id);
+        $user = $user->toArray();
+        $profile = $user['profile'];
+        $user = array_diff_key($user, array_flip(['profile']));
+        $user['created_at'] = new Carbon($user['created_at']);
+        $user['updated_at'] = new Carbon($user['updated_at']);
+        $profile['created_at'] = new Carbon($profile['created_at']);
+        $profile['updated_at'] = new Carbon($profile['updated_at']);
+        $user = \Domain\Pusher\Models\User::create($user);
+        $user->profile()->save(
+            new Profile($profile)
+        );
+    }
+
+    /**
+     * @param $user
+     * @throws \Exception
+     */
+    protected function createInNeo4j($user) {
+        $user = User::with('profile')->find($user->id);
+        $user = $user->toArray();
+        $user['oid'] = $user['id'];
+        $user['name'] = $user['profile']['first_name'];
+        $user = array_diff_key($user, array_flip(['profile', 'id']));
+        $user['created_at'] = new Carbon($user['created_at']);
+        $user['updated_at'] = new Carbon($user['updated_at']);
+        /** @var User $user */
+        \Domain\Neo4j\Models\User::insert($user);
     }
 
 

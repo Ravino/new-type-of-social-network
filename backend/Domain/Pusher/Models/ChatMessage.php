@@ -81,9 +81,15 @@ class ChatMessage extends Model
             $last_message = self::where('chat_id', $message->chat_id)->latest('created_at')->first();
             /** @var Chat $chat */
             $chat = Chat::find($message->chat_id);
-            $chat->last_message_body = $last_message->body;
-            $chat->last_user_id = $last_message->user_id;
-            $chat->last_message_time = $last_message->created_at;
+            if($last_message) {
+                $chat->last_user_id = $last_message->user_id;
+                $chat->last_message_time = $last_message->created_at;
+                $chat->last_message_time = $last_message->created_at;
+            } else {
+                $chat->last_message_body = '';
+                $chat->last_user_id = '';
+                $chat->last_message_time = '';
+            }
             $chat->save();
         });
     }

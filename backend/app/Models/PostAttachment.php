@@ -3,8 +3,10 @@
 
 namespace App\Models;
 
-use App\Models\User;
+use App\Traits\Commentable;
+use App\Traits\Likeable;
 use Illuminate\Database\Eloquent\Model;
+use Spiritix\LadaCache\Database\LadaCacheTrait;
 use Storage;
 
 /**
@@ -13,6 +15,8 @@ use Storage;
  */
 class PostAttachment extends Model
 {
+    use Likeable, LadaCacheTrait, Commentable;
+
     protected $casts = [
         'created_at' => 'timestamp',
         'updated_at' => 'timestamp',
@@ -38,6 +42,7 @@ class PostAttachment extends Model
         'image_medium_height',
         'image_original_width',
         'image_original_height',
+        'like',
     ];
 
     /**
@@ -54,6 +59,26 @@ class PostAttachment extends Model
     public function user()
     {
         return $this->belongsTo(User::class, 'user_id');
+    }
+
+    public function usersLikes()
+    {
+        return $this->hasManyThrough(
+            User::class,
+            Like::class,
+            'likeable_id',
+            'id',
+            'id',
+            'user_id'
+        )->where('likeable_type', PostAttachment::class);
+    }
+
+    /**
+     * @return \Illuminate\Database\Eloquent\Relations\MorphMany
+     */
+    public function like() {
+        return $this->morphMany(Like::class, 'likeable')
+            ->where('user_id', \Auth::user()->id);
     }
 
     /**

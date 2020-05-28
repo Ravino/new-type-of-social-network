@@ -1,6 +1,6 @@
 import { uuidv4 } from '../utils/StringUtils.js';
 
-export default {
+const NotificationMixin = {
 data() {
     return {
         notifications: [],
@@ -8,6 +8,7 @@ data() {
         limitNotifications: 5,
     };
 },
+
 methods: {
     addNotification(notification) {
         const uuid = uuidv4();
@@ -34,4 +35,7 @@ methods: {
         this.notifications = this.notifications.filter(foundNotification => foundNotification.uuid !== uuid);
     }
 }
-}
+
+};
+
+export {NotificationMixin as default}

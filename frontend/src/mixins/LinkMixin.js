@@ -43,7 +43,7 @@ const LinkMixin = {
          * Заменяем ссылки в строке.
          *
          * @param str
-         * @return {str|null}
+         * @return {string|null}
          */
         replaceLink(str) {
             return str.replace(this.urlRegExp, function (url) {
@@ -51,9 +51,23 @@ const LinkMixin = {
             });
         },
 
-        transformStrWithLinks(str) {
+        /**
+         * Заменяем youtube ссылки на пустоту.
+         *
+         * @param str
+         * @return {string|null}
+         */
+        deleteYoutubeLinksFromStr(str) {
+            return str.replace(this.youtubeLinksRegExp, '');
+        },
+
+        transformStrWithLinks(str, imgName = 'mqdefault') {
             let youtubeLinks = this.detectYoutubeLinks(str);
             let links = this.detectLink(str);
+            //TODO Лучьше сразу установить значение 'mqdefault' без переменной
+            if(imgName == 'hqdefault') {
+                imgName = 'mqdefault';
+            }
 
             if (youtubeLinks && youtubeLinks.length) {
                 let youtubeIds = [];
@@ -66,7 +80,7 @@ const LinkMixin = {
                 let textTransformToLinks = this.replaceLink(textWithoutYoutubeLinks);
 
                 return {
-                    videoLinks: `<img src="//img.youtube.com/vi/${youtubeIds[0]}/0.jpg" 
+                    videoLinks: `<img src="//img.youtube.com/vi/${youtubeIds[0]}/${imgName}.jpg"
                              alt="" />`,
                     text: `<p>${textTransformToLinks}</p>`,
                 };

@@ -1,6 +1,6 @@
 <template>
-    <li class="plizi-invitation-item-user --media m-0 px-4 py-2" :class="calcClazz()">
-        <div class="plizi-invitation-item d-flex">
+    <li class="plizi-invitation-item-user --media m-0 px-4 py-2 w-100" :class="calcClazz()">
+        <div class="plizi-invitation-item d-flex w-100 ">
             <router-link :to="`/user-`+invitation.id" tag="div" class="plizi-invitation-item-pic mr-3">
                 <img class="plizi-invitation-item-img rounded-circle overflow-hidden" v-bind:src="invitation.userPic" v-bind:alt="invitation.fullName" />
                 <span v-if="invitation.isOnline" class="plizi-invitation-item-isonline" title="онлайн"></span>
@@ -30,11 +30,11 @@
 
             <div class="align-self-center ml-auto">
                 <div class="btn-group">
-                    <button class="btn btn-success btn-sm rounded" @click="acceptInvitation()">
-                        <i class="fas fa-check"></i>&nbsp;Принять
+                    <button class="btn btn-sm rounded" @click="acceptInvitation()">
+                        <IconUserPlus style="height: 20px"/>
                     </button>
-                    <button class="btn btn-danger btn-sm ml-2 rounded" @click="declineInvitation()">
-                        <i class="fas fa-stop"></i>&nbsp;Отказать
+                    <button class="btn btn-sm ml-2 rounded" @click="declineInvitation()">
+                        <IconUserX  style="height: 20px" />
                     </button>
                 </div>
             </div>
@@ -43,11 +43,15 @@
 </template>
 
 <script>
+import IconUserPlus from '../icons/IconUserPlus.vue';
+import IconUserX from '../icons/IconUserX.vue';
+
 import PliziInvitation from '../classes/PliziInvitation.js';
 
 export default {
 name : 'InvitationItem',
-props : {
+    components: {IconUserX, IconUserPlus},
+    props : {
     invitation : {
         type: PliziInvitation,
         required: true

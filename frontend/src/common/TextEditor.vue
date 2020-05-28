@@ -7,10 +7,13 @@
                          v-bind:src="userPic" v-bind:alt="userFullName" />
                 </div>
 
-                <div class="plz-editor-body pl-0" :class="{ 'plz-editor-body-wza': showAvatar, 'forward-message-width': !showAvatar }">
+                <div class="plz-editor-body pl-0"
+                     :class="{ 'plz-editor-body-wza': showAvatar, 'forward-message-width': !showAvatar }">
+
                     <div class="form pl-2">
                         <div class="form-row align-items-center">
                             <div class="col-12 d-flex justify-content-between p-0">
+
                                 <Editor class="plz-text-editor-form form-control px-2 py-1"
                                         @editorPost="onEditorNewPost"
                                         @editorKeyDown="onEditorKeyDown"
@@ -21,8 +24,9 @@
                                         :maximumCharacterLimit="maximumCharacterLimit"
                                         :isError="isMaximumCharacterLimit"
                                         ref="editor" />
+
                                 <button @click.stop="onSendPostClick" class="btn btn-link">
-                                    <IconSend style="height: 20px"/>
+                                    <IconSend style="height: 20px" />
                                 </button>
                             </div>
                             <div v-if="isMaximumCharacterLimit" class="col-12">
@@ -41,7 +45,8 @@
                         :class="{'attach-file--disallow cursor-non-drop' : isDisallowUpload}"
     class="attach-file btn-add-file w-100 d-flex align-items-center justify-content-center btn btn-link my-0 mx-0 mr-md-2 px-1 position-relative">
                         <IconAddFile />
-                        <input type="file" class="plz-text-editor-file-picker" :disabled="isDisallowUpload" @change="onSelectFile()" ref="editorFiler" multiple />
+                        <input type="file" class="plz-text-editor-file-picker"
+                               :disabled="isDisallowUpload" @change="onSelectFile()" ref="editorFiler" multiple />
                     </button>
 
                     <!--<label class="attach-file d-flex align-items-center  btn btn-link my-0 ml-0 mr-2 px-1 btn-add-camera position-relative">
@@ -49,7 +54,7 @@
                         <input type="file" @change="onSelectImage($event)" ref="editorImager" multiple />
                     </label>-->
 
-                    <button class="btn btn-link w-100 mx-0 px-1 btn-add-smile position-relative" type="button">
+                    <button class="btn btn-link w-100 mx-0 p-0 btn-add-smile position-relative" type="button">
                         <EmojiPicker @addEmoji="onAddEmoji" v-bind:transform="emojiTransform"></EmojiPicker>
                     </button>
                 </div>
@@ -82,17 +87,14 @@ import Editor from './TextEditor/Editor.vue';
 import EmojiPicker from './TextEditor/EmojiPicker.vue';
 import AttachmentItem from './TextEditor/AttachmentItem.vue';
 
-import { checkExtension } from '../utils/FileUtils.js';
-import { docsExtensions, imagesExtensions } from '../enums/FileExtensionEnums.js';
-import PliziAttachmentItem from '../classes/PliziAttachmentItem.js';
 import LinkMixin from '../mixins/LinkMixin.js';
 
+import { checkMimeType, checkExtension } from '../utils/FileUtils.js';
+import { docsExtensions, imagesExtensions } from '../enums/FileExtensionEnums.js';
+
+import PliziAttachmentItem from '../classes/PliziAttachmentItem.js';
 import PliziAttachment from '../classes/PliziAttachment.js';
 import PliziCollection from '../classes/PliziCollection.js';
-import { checkMimeType } from "../utils/FileUtils.js";
-
-/**  TODO: Вставка файлов **/
-/** @link https://www.npmjs.com/package/vue-filepond **/
 
 export default {
 name: 'TextEditor',
@@ -158,7 +160,8 @@ computed: {
     emojiTransform(){
         if (this.dropToDown)
             return 'transform: translate(-40%, 40px)';
-            // Усли -84px не подходит, нужно прокинуть событие выше родителю, -84px для ChatFooter.vue
+
+        // Если -84px не подходит, нужно прокинуть событие выше родителю, -84px для ChatFooter.vue
         return 'transform: translate(-84%, -100%)';
     },
 
@@ -236,6 +239,8 @@ methods: {
         this.$refs.editor.setContent('');
         this.$refs.editor.focus();
 
+        this.checkUpdatedChatContainerHeight();
+
         this.onEditorNewPost({
             postText: cont
         });
@@ -247,33 +252,39 @@ methods: {
             return;
         }
 
-        let str = evData.postText.replace(/<\/?[^>]+>/g, '').trim();
+        let str = evData.postText.replace(/<\/?[^>]+>/g, ' ').trim();
         let youtubeLinksMatch = this.detectYoutubeLinks(str);
+        let attachmentsIds = this.getAttachmentsIDs();
+        let attachmentsData = this.attachmentsData.asArray();
+        let postText = this.deleteYoutubeLinksFromStr(str);
 
         if (youtubeLinksMatch && youtubeLinksMatch.length) {
             youtubeLinksMatch.forEach((youtubeLink) => {
+                this.emitPost(postText, null, null, youtubeLink);
 
-                this.$emit('editorPost', {
-                    postText: evData.postText,
-                    attachments: this.getAttachmentsIDs(),
-                    attachmentsData: this.attachmentsData.asArray(),
-                    videoLink: youtubeLink,
-                    workMode: this.workMode,
-                });
+                if (attachmentsIds.length >= 1) {
+                    this.emitPost('<p></p>', attachmentsIds, attachmentsData, null);
+                }
+
+                postText = '';
             });
         }
         else {
-            this.$emit('editorPost', {
-                postText: evData.postText,
-                attachments: this.getAttachmentsIDs(),
-                attachmentsData: this.attachmentsData.asArray(),
-                videoLink: null,
-                workMode: this.workMode,
-            });
+            this.emitPost(postText, attachmentsIds, attachmentsData, null);
         }
 
         this.attachFiles = [];
         this.attachmentsData.clear();
+    },
+
+    emitPost(postText = null, attachments = null, attachmentsData = null, videoLink = null) {
+        this.$emit('editorPost', {
+            postText: postText,
+            attachments: attachments,
+            attachmentsData: attachmentsData,
+            videoLink: videoLink,
+            workMode: this.workMode
+        });
     },
 
     onEditorKeyDown(ev) {
@@ -321,7 +332,7 @@ methods: {
         const updatedChatContainerHeight = this.$refs.editorContainer.offsetHeight;
 
         if (this.editorContainerHeight !== updatedChatContainerHeight) {
-            this.editorContainerHeight = updatedChatContainerHeight;// TODO проверить @TGA
+            this.editorContainerHeight = updatedChatContainerHeight;
         }
 
         this.onEditorNewHeight(this.editorContainerHeight);
@@ -410,6 +421,10 @@ methods: {
 
                 case 'post':
                     apiResponse = this.$root.$api.$post.storePostAttachments([file]);
+                    break;
+
+                case 'comment':
+                    apiResponse = this.$root.$api.$post.addAttachmentsToComment([file]);
                     break;
 
                 default:

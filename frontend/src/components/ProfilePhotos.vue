@@ -8,7 +8,7 @@
                     </h6>
                 </div>
 
-                <div class="profilePhotos-desc">
+                <div class="profilePhotos-desc d-none" >
                     <a href="#onmap">Показать на карте</a>
                 </div>
             </div>

@@ -15,11 +15,10 @@
                                 <template v-if="filterMode === 'my'">
                                     <div class="card mb-4">
                                         <div class="card-body py-0">
-                                            hello
                                             <div class="row">
-                                                <div v-for="(video, index) in userVideos" class="col-3 my-3 mb-4">
+                                                <div v-for="(video, index) in userVideos" class="col-3 my-3">
                                                     <img v-if="video.isYoutubeLink"
-                                                         :src="`//img.youtube.com/vi/${video.youtubeId}/0.jpg`"
+                                                         :src="`//img.youtube.com/vi/${video.youtubeId}/mqdefault.jpg`"
                                                          class="img-fluid"
                                                          alt=""
                                                          @click.stop="openVideoModal(video.link)"/>
@@ -357,6 +356,10 @@ methods: {
     hideVideoModal(){
         this.videoModal.isVisible = false;
     },
+    onAddVideo(video) {
+        console.log(video);
+        this.userVideos.unshift(new PliziVideo(video));
+    },
 
     async getUserVideo() {
         let response;
@@ -376,6 +379,8 @@ methods: {
 },
 async mounted() {
     await this.getUserVideo();
+
+    this.$root.$on('onAddVideo', this.onAddVideo);
 },
 }
 </script>

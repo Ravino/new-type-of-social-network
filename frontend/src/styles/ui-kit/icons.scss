@@ -111,14 +111,21 @@
     height: 40px;
 }
 .icon-user-x {
-    height: 20px;
+    //height: 20px;
 
     &-del {
         fill: red;
     }
 }
 .icon-user-plus {
+    //height: 20px;
+
     &-plus {
         fill: green;
     }
+}
+
+.icon-admin-add,
+.icon-admin-remove {
+    fill: #8f9298;
 }

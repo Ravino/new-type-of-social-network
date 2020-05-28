@@ -24,6 +24,7 @@ $friendspicSize: 20px;
         &-pic {
             position: relative;
             width: 25%;
+            min-width: 25%;
             height: 0;
             padding-bottom: 25%;
         }
@@ -39,6 +40,14 @@ $friendspicSize: 20px;
         }
         &-body {
             width: calc( 75% - 15px );
+            word-break: break-word;
+        }
+
+        &-top {
+            color: $postTextColor;
+            &:hover {
+                text-decoration-color: $postTextColor;
+            }
         }
         &-name {
             color: $postTextColor;
@@ -73,6 +82,7 @@ $friendspicSize: 20px;
         }
 
         &-body-friends{
+            max-width: 50%;
 
             &-pics {
                 position: relative;
@@ -121,11 +131,14 @@ $friendspicSize: 20px;
 
     &-privacy-label {
         font-size: 10px;
-        color: #6495ed;
+        color: $placeholderColor;
         font-weight: 400;
 
         &.text-red {
             color: $counterInfoColor;
+        }
+        &.text-blue {
+            color: $blueBtn;
         }
     }
 
@@ -210,8 +223,10 @@ $labelColor: #9a9a9a;
         transform: translateY(-50%);
         pointer-events: none;
         padding-right: 5px;
+        padding-left: 5px;
         font-size: 10px;
         color: #a3a8b9;
+        background-color: #f7f8fc;
     }
     .radio {
 

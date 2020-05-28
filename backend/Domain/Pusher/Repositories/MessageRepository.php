@@ -48,8 +48,8 @@ class MessageRepository
     {
         $items = ChatMessage::with('user', 'attachments')->where('chat_id', $chat_id)
             ->orderBy('created_at', 'desc')
-            ->limit($limit)
-            ->offset($offset);
+            ->limit((int)$limit)
+            ->offset((int)$offset);
 
         if($search) {
             $items->where('body', 'LIKE', "%{$search}%");

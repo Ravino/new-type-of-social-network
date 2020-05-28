@@ -1,6 +1,7 @@
 <template>
-    <small @click="addToBlacklist" style="cursor: pointer;">
-        <i class="fas fa-user-slash"></i>
+    <small @click="addToBlacklist" class="cursor-pointer ml-2" title="Добавить в чёрный список">
+        <i v-if="isAddedToBlacklist === false" class="fas fa-user-slash text-danger"></i>
+        <i v-else class="fas fa-user-slash text-black-50"></i>
     </small>
 </template>
 
@@ -12,25 +13,60 @@
         props: {
             userData: PliziUser,
         },
+        data() {
+            return {
+                isAddedToBlacklist: false,
+            }
+        },
         methods: {
-            async addToBlacklist() {
+            async getBlacklist() {
                 let apiResponse = null;
+                let res = null;
 
-                if (!this.userData.isOwner) {
+                try {
+                    apiResponse = await this.$root.$api.$users.blacklistGet();
+                } catch (e) {
+                    window.console.warn(e.detailMessage);
+                    throw e;
+                }
+
+                res = apiResponse.filter(user => user.id === this.userData.id);
+
+                if (res.length) {
+                    this.isAddedToBlacklist = true;
+                    console.log('user is in the blacklist');
+                }
+            },
+            async addToBlacklist() {
+                if (this.isAddedToBlacklist === false) {
+                    let apiResponse = null;
+                    if (!this.userData.isOwner) {
                     try {
                         apiResponse = await this.$root.$api.$users.blacklistAdd(this.userData.id);
                     } catch (e) {
-                        window.console.warn(e.detailMessage);
-                        throw e;
+                        if (e.status === 422) {
+                            (console.log('выбранный пользователь уже добавлен в ваш черный список'));
+                            this.isAddedToBlacklist = true;
+                            return;
+                        }window.console.warn(e.detailMessage);
+
                     }
 
-                    return true;
+                    this.isAddedToBlacklist = true;
+                    this.$root.$alert(`Вы добавили пользователя в черный список`, 'bg-success', 3);
+                } else {
+                    this.$root.$alert(`Пользователь уже внесен в черный список`, 'bg-warning', 3);
+                }return true;
 
                 } else {
                     this.$root.$alert('Вы не можете добавить себя в черный список', 'bg-warning', 3);
                 }
             }
-        }
+
+        },
+        async mounted() {
+            await this.getBlacklist();
+        },
     }
 </script>
 

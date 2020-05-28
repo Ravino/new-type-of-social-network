@@ -24,6 +24,8 @@ import VueCustomScrollbar from 'vue-custom-scrollbar';
 import ChatDialogsFilter from './ChatDialogsFilter.vue';
 import ChatListItem from './ChatListItem.vue';
 
+import PliziDialog from '../../classes/PliziDialog.js';
+
 export default {
 name : 'ChatDialogs',
 components : { ChatDialogsFilter, ChatListItem, VueCustomScrollbar },
@@ -43,8 +45,15 @@ data(){
         customScrollBarSettings: {
             maxScrollbarLength: 60,
             useBothWheelAxes: false,
-            suppressScrollX: true
+            suppressScrollX: true,
+            wheelPropagation: false
         }
+    }
+},
+
+computed: {
+    isMessagesAutoLoad(){
+        return (this.$root.$isLG()  || this.$root.$isXL())
     }
 },
 
@@ -68,6 +77,7 @@ methods: {
 
     onRemoveChatDialog(evData){
         this.$root.$auth.dm.onRemoveDialog( evData.chatId );
+        this.$root.$dialogsKeyUpdater++;
 
         if (this.$root.$auth.dm.size > 0) {
             const newPickedChat = this.$root.$auth.dm.firstDialog.id;
@@ -84,11 +94,31 @@ methods: {
             lastMessageDT : evData.message.createdAt,
             lastMessageText : evData.message.body,
             isLastFromMe : !!evData.message.isMine,
-            isRead : !!evData.message.isRead
+            isRead : !!evData.message.isRead,
+
+            userId: evData.message.userId
         };
 
         this.$root.$auth.dm.dialogStateUpdated(evData.chatId, updatedFields);
         this.$root.$messagesKeyUpdater++;
+    },
+
+    remoteCreateDialog(evData){
+        let newDlg = new PliziDialog(evData.data);
+        newDlg.removeAttendee( this.$root.$auth.user.id );
+
+        this.$root.$auth.dm.onAddNewDialog( newDlg.toJSON() );
+        this.$root.$dialogsKeyUpdater++;
+    },
+
+    remoteAddAttendee(evData){
+        return this.remoteCreateDialog(evData);
+    },
+
+    remoteRemoveAttendee(evData){
+        if (evData.userId === this.$root.$auth.user.id) {
+            this.onRemoveChatDialog(evData);
+        }
     },
 
     async loadDialogsList() {
@@ -120,7 +150,9 @@ methods: {
         this.listFilled = true;
 
         if ( this.currentDialog ) {
-            this.onSwitchToChat( { chatId : this.currentDialog.id })
+            if ( this.isMessagesAutoLoad) {
+                this.onSwitchToChat( { chatId : this.currentDialog.id })
+            }
         }
         else {
             window.console.warn(`Условие не сработало!`);
@@ -129,7 +161,7 @@ methods: {
 
 },
 
-created(){
+created() {
     this.$root.$on(this.$root.$auth.dm.loadEventName, ()=>{
         this.onDialogsListLoad(this.$root.$auth.dm.loadEventName);
     });
@@ -140,6 +172,12 @@ created(){
 
     this.$root.$on('RemoveChatDialog', this.onRemoveChatDialog);
     this.$root.$on('UpdateChatDialog', this.onUpdateChatDialog);
+
+    // эвенты через ВебСокеты
+    this.$root.$on('remoteCreateDialog', this.remoteCreateDialog);
+    this.$root.$on('remoteRemoveDialog', this.onRemoveChatDialog);
+    this.$root.$on('remoteAddAttendee',  this.remoteAddAttendee);
+    this.$root.$on('remoteRemoveAttendee',  this.remoteRemoveAttendee);
 },
 
 

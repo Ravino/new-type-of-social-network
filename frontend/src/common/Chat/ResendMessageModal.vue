@@ -50,7 +50,7 @@
                                         workMode="chat"
                                         :showAvatar="false"
                                         :dropToDown="false"
-                                        :clazz="`row plz-text-editor mb-4 px-1 py-4 align-items-start`"
+                                        :clazz="`row plz-text-editor mx-0 mb-4 px-0 py-4 align-items-start`"
                                         @editorPost="onTextPost">
                             </TextEditor>
                         </div>
@@ -86,6 +86,7 @@ props: {
     messageID: Number,
     currentDialog: Object
 },
+
 data() {
     return {
         /** @var PliziRecipientsCollection **/
@@ -95,6 +96,24 @@ data() {
         selectedFriend: null
     }
 },
+
+computed: {
+    getFriendsCombo(){
+        this.recipients = new PliziRecipientsCollection();
+
+        /** @TGA сначала диалоги - это важно **/
+        this.$root.$auth.dm.asArray().map( (dItem) => {
+            this.recipients.add(dItem.companion, dItem.id);
+        });
+
+        this.$root.$auth.frm.asArray().map( (frItem) => {
+            this.recipients.add(frItem, null);
+        });
+
+        return this.recipients.asArray();
+    }
+},
+
 methods: {
     startForwardMessage(){
         const msgData = this.$refs.forwardMessageEditor.getContent();
@@ -116,7 +135,7 @@ methods: {
     },
 
     hideMessageResendModal() {
-        this.$root.$emit('hideMessageResendModal', {});
+        this.$emit('HideMessageResendModal', {});
     },
 
     onTextPost(evData){
@@ -156,23 +175,6 @@ methods: {
         else {
             window.console.info( apiResponse );
         }
-    }
-},
-
-computed: {
-    getFriendsCombo(){
-        this.recipients = new PliziRecipientsCollection();
-
-        /** @TGA сначала диалоги - это важно **/
-        this.$root.$auth.dm.asArray().map( (dItem) => {
-            this.recipients.add(dItem.companion, dItem.id);
-        });
-
-        this.$root.$auth.frm.asArray().map( (frItem) => {
-            this.recipients.add(frItem, null);
-        });
-
-        return this.recipients.asArray();
     }
 },
 

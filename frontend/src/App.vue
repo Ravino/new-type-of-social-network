@@ -1,5 +1,5 @@
 <template>
-    <div  id="pageWrapper">
+    <div id="pageWrapper">
         <div v-if="!isAuthorized()" id="guestPageWrapper" class="d-flex flex-column justify-content-center">
             <div class="--container-fluid container px-md-0 my-0 pt-4">
 
@@ -112,6 +112,7 @@ methods: {
         window.localStorage.removeItem('pliziDialogs');
         window.localStorage.removeItem('pliziInvitations');
         window.localStorage.removeItem('pliziNotifications');
+        window.localStorage.removeItem('pliziCommunities');
 
         if (evData.redirect) {
             this.$router.push({path: '/login'});
@@ -165,6 +166,7 @@ methods: {
         await this.$root.$auth.dm.load();
         await this.$root.$auth.im.load();
         await this.$root.$auth.nm.load();
+        await this.$root.$auth.cm.load();
     },
 
     async persistentCollectionsRestore(){
@@ -172,7 +174,7 @@ methods: {
         this.$root.$auth.fm.restore();
         this.$root.$auth.dm.restore();
         this.$root.$auth.im.restore();
-        this.$root.$auth.nm.restore();
+        this.$root.$auth.cm.restore();
     },
 
     keysUpdatersInitiator(){
@@ -200,19 +202,24 @@ methods: {
                     this.$root.$auth.nm.updateEventName], ()=>{
             this.$root.$notificationsKeyUpdater++;
         });
+
+        this.$root.$on([this.$root.$auth.cm.loadEventName, this.$root.$auth.cm.restoreEventName,
+                    this.$root.$auth.cm.updateEventName], ()=>{
+            this.$root.$communitiesKeyUpdater++;
+        });
     }
 },
 
 
 created(){
-    const style = ['padding: 1rem;',
+    const style = ['padding: 0.5rem;',
         'background: rgb(0, 123, 255);',
         'font-size: 1.4/3 Verdana;',
         'font-weight: bold;',
         'border-radius: 5px 0px 5px 0px;',
         'color: white;'];
 
-    console.info ( '%c%s', style.join(''), 'Plizi App created');
+    console.info( '%c%s', style.join(''), 'Plizi App created');
 
     this.$root.$api = PliziAPI;
     this.$root.$api.init(this.$root);

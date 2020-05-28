@@ -19,20 +19,22 @@
         left: 0;
     }
 
+    $toolbarPicSize: 28px;
+
     #toolbarLeftColor {
         .add-new {
-            width: 32px;
-            min-width: 32px;
-            height: 32px;
+            width: $toolbarPicSize;
+            min-width: $toolbarPicSize;
+            height: $toolbarPicSize;
             .fa {
-                line-height: 32px;
+                line-height: $toolbarPicSize;
             }
         }
 
         img{
             position: relative;
-            width: 32px;
-            height: 32px;
+            width: $toolbarPicSize;
+            height: $toolbarPicSize;
             border-radius: 100%;
             overflow: hidden;
         }
@@ -50,7 +52,11 @@
         }
     }
 
-    .is-chatPage .chat-page-height {
+    .is-chatPage .chat-page-height-body {
+        //height: calc(100vh - 240px);
+        height: auto;
+    }
+    .is-chatPage .chat-page-height-aside {
         height: auto;
         min-height: auto;
     }
@@ -66,7 +72,7 @@
     }
     #chatMessagesWrapper {
         position: relative;
-        height: 500px;
+        height: 370px; //500
         flex: 1 1 auto;
 
         &:after {
@@ -88,6 +94,17 @@
     #chatHeader {
         border-top: 1px solid $borderColor;
     }
+    .ChatsListPage #chatHeader {
+        border-radius: 0;
+    }
+
+    #chatMessagesBody {
+        padding-bottom: 180px;
+
+        .chat-messages-scroll {
+            min-height: 115px;
+        }
+    }
 
     .plz-gallery-viewer-nav-btn {
         height: 40px;
@@ -97,13 +114,76 @@
         max-width: calc(100vw - 90px);
         max-height: calc(100vh - 100px);
     }
+
+    #watcherWrapper {
+        .dropdown-menu {
+            left: 50%;
+            right: auto;
+            transform: translateX(-62%);
+            max-width: 96vw;
+        }
+    }
+
+
+    .plz-comments,
+    #communityEditor,
+    #profileWhatsNew {
+        .picker {
+            transform: translate(-80%, 40px) !important;
+        }
+    }
+
 }
 
 /*- md -*/
 @media (max-width: 767px) {
+    .LoginPage,
+    .UpdatePasswordPage,
+    .HomePage,
+    .ForDevelopersPage #guestPageWrapper,
+    .AdvertisementPage #guestPageWrapper,
+    .GuestSearchResultsPage #guestPageWrapper,
+    .RulesPage #guestPageWrapper,
+    .AboutPage #guestPageWrapper
+    {
+        #contentContainer {
+            padding-top: 76px;
+        }
+    }
+
+    #toolbarLeftGrey {
+        position: fixed;
+        width: 100%;
+        bottom: -1px;
+        z-index: 50;
+        left: 0;
+        right: 0;
+        background-color: #f7f8fc;
+        box-shadow: 0 0 4px 0 rgba(0, 0, 0, .05);
+        margin: 0 !important;
+        display: flex;
+        align-items: stretch;
+        justify-content: space-around;
+
+        a {
+            //box-shadow: 0 0 4px 0 rgba(0, 0, 0, .05);
+            &:hover {
+                //background-color: rgba(0, 0, 0, .05);
+                .icon {
+                    fill: $blueBtnHover
+                }
+            }
+        }
+    }
+
     #contentContainer {
         padding-top: 76px;
     }
+
+    .plz-account-settings-body .multiselect__content-wrapper {
+        transform: translateX(0);
+    }
+
     #toolbarLeftColor {
         .add-new {
             width: 48px;
@@ -144,6 +224,10 @@
     }
 
 
+    .plz-community-subscribe {
+        width: 100%;
+    }
+
     .plz-post-item{
         .plz-post-item-header,
         .plz-post-item-body,
@@ -155,9 +239,24 @@
 
     $portraitFullHeightResponsive: 400px;
     .plz-gallery {
+        height: $portraitFullHeightResponsive;
+
+        &-single,
         &-wrap {
             height: $portraitFullHeightResponsive;
         }
+
+        &-single {
+            img {
+                height: $portraitFullHeightResponsive;
+            }
+        }
+        &-double {
+            img {
+                height: $portraitFullHeightResponsive;
+            }
+        }
+
         &-image {
             &-album {
                 &-2 {
@@ -166,10 +265,17 @@
                 &-3 {
                     height: $portraitFullHeightResponsive / 2;
                 }
+                &-third {
+                    height: $portraitFullHeightResponsive / 2;
+                }
             }
             &-portrait {
                 &-full {
                     height: $portraitFullHeightResponsive;
+
+                    .plz-gallery-double {
+                        height: $portraitFullHeightResponsive / 2;
+                    }
                 }
 
                 &-half {
@@ -180,6 +286,15 @@
                 }
             }
         }
+
+        &-double {
+            .plz-gallery-image-album-full {
+                height: $portraitFullHeightResponsive / 2;
+            }
+             //img {
+             //    height: $portraitFullHeightResponsive / 2;
+             //}
+         }
     }
 
     .video-player {
@@ -216,6 +331,32 @@
         }
         &:nth-child(6){
             width: 100%;
+        }
+    }
+
+    .GuestSearchResultsPage,
+    .ForDevelopersPage,
+    .AdvertisementPage,
+    .RulesPage,
+    .AboutPage {
+        #pageWrapper {
+            .plz-footer {
+                flex: 0 0 100%;
+                max-width: 100%;
+            }
+        }
+
+        .plz-guest-navbar {
+            flex: 0 0 100%;
+            max-width: 100%;
+            padding-left: 15px;
+            padding-right: 15px;
+        }
+    }
+
+    .ChatsListPage {
+        #toolbarLeftColor {
+            display: none!important;
         }
     }
 
@@ -300,13 +441,34 @@
     }
 
 
-    .plz-community-subscribe {
-        width: 100%;
-    }
+    //.plz-community-subscribe {
+    //    width: 100%;
+    //}
 
     .plz-community-header-details-text {
         width: 100%;
         text-align: center;
     }
+
+
+    .plizi-sr-item-body {
+        width: 100%;
+    }
+    .plizi-sr-item .plizi-community-btn {
+        width: 100%;
+        margin-top: 10px;
+    }
+
+    .ForDevelopersPage,
+    .AdvertisementPage,
+    .RulesPage,
+    .AboutPage {
+
+        .plz-guest-navbar {
+            padding-left: 0;
+            padding-right: 0;
+        }
+    }
+
 
 }

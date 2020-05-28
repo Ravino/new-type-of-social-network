@@ -27,7 +27,8 @@
                               @onRestorePost="onRestorePost"
                               @onEditPost="onEditPost"
                               @openVideoModal="openVideoModal"
-                              @onShowUsersLikes="openLikeModal">
+                              @onShowUsersLikes="openLikeModal"
+                              @onShare="onSharePost">
                         </Post>
                     </template>
 
@@ -68,6 +69,11 @@
             <PostLikeModal v-if="postLikeModal.isVisible"
                            :users="postLikeModal.content.users"
                            @hideLikeModal="hideLikeModal"/>
+
+            <PostRepostModal v-if="postRepostModal.isVisible"
+                             v-bind:user="postRepostModal.content.postForRepost.author"
+                             v-bind:post="postRepostModal.content.postForRepost"
+                             @hidePostRepostModal="hidePostRepostModal"></PostRepostModal>
         </div>
     </div>
 </template>
@@ -86,6 +92,7 @@ import ProfilePhotos from '../components/ProfilePhotos.vue';
 import ProfileFilter from '../components/ProfileFilter.vue';
 import PostEditModal from '../common/Post/PostEditModal.vue';
 import PostVideoModal from '../common/Post/PostVideoModal.vue';
+import PostRepostModal from '../common/Post/PostRepostModal.vue';
 
 import PostLikeModal from '../common/Post/PostLikeModal.vue';
 import LazyLoadPosts from '../mixins/LazyLoadPosts.js';
@@ -101,6 +108,7 @@ components: {
     PostEditModal,
     PostVideoModal,
     PostLikeModal,
+    PostRepostModal,
     SmallSpinner,
 },
 mixins: [LazyLoadPosts],
@@ -131,6 +139,12 @@ data() {
             isVisible: false,
             content: {
                 users: [],
+            },
+        },
+        postRepostModal: {
+            isVisible: false,
+            content: {
+                postForRepost: null,
             },
         },
     }
@@ -192,8 +206,10 @@ methods : {
         this.posts.unshift(new PliziPost(post));
     },
 
-    startTimer( postIndex ){
+    startTimer(post){
         setTimeout( () => {
+            let postIndex = this.posts.findIndex(item => item.id === post.id);
+
             this.posts.splice( postIndex, 1 );
         }, 5000 );
     },
@@ -206,6 +222,16 @@ methods : {
     hidePostEditModal(){
         this.postEditModal.isVisible = false;
         this.postForEdit = null;
+    },
+
+    onSharePost(post) {
+        this.postRepostModal.isVisible = true;
+        this.postRepostModal.content.postForRepost = post;
+    },
+
+    hidePostRepostModal() {
+        this.postRepostModal.isVisible = false;
+        this.postRepostModal.content.postForRepost = null;
     },
 
     async openLikeModal(postId) {
@@ -226,7 +252,6 @@ methods : {
             response = await this.$root.$api.$post.getPosts(limit, offset);
         } catch (e){
             this.isStarted = false;
-            console.warn( e.detailMessage );
         }
 
         if ( response !== null ){
@@ -257,7 +282,7 @@ methods : {
         }
     },
 
-    async onDeletePost( id ) {
+    async onDeletePost(id) {
         let response;
 
         try{
@@ -267,12 +292,10 @@ methods : {
         }
 
         if ( response ){
-            const postIndex = this.posts.findIndex( ( post ) => {
-                return post.id === id;
-            } );
-            let post = this.posts[postIndex].deleted = true;
+            const post = this.posts.find(post => post.id === id);
 
-            this.startTimer( postIndex );
+            post.deleted = true;
+            this.startTimer(post);
         }
     },
 
@@ -296,11 +319,6 @@ methods : {
 },
 
 async mounted() {
-    this.$root.$on('showProfileOptionsModal', ()=>{
-        this.$alert(`Какие-то опции пользователя`, 'bg-info', 10);
-    });
-
-    this.$root.$on('wallPostsSelect', this.wallPostsSelectHandler);
     await this.getPosts();
 }
 

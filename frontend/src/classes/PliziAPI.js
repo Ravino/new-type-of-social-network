@@ -7,7 +7,9 @@ import PliziFriendAPI from './API/PliziFriendAPI.js';
 import PliziCommunitiesAPI from './API/PliziCommunitiesAPI.js';
 import PliziUsersAPI from './API/PliziUsersAPI.js';
 import PliziNotificationsAPI  from './API/PliziNotificationsAPI.js';
+import PliziPhotoalbumsAPI  from './API/PliziPhotoalbumsAPI.js';
 import PliziVideoAPI from "./API/PliziVideoAPI.js";
+import PliziImageAPI from "./API/PliziImageAPI.js";
 
 class PliziAPIClass {
 
@@ -103,10 +105,22 @@ class PliziAPIClass {
     __notifications = null;
 
     /**
+     * @type {PliziPhotoalbumsAPI}
+     * @private
+     */
+    __photoalbums = null;
+
+    /**
      * @type {PliziVideoAPI}
      * @private
      */
     __video = null;
+
+    /**
+     * @type {PliziImageAPI}
+     * @private
+     */
+    __image = null;
 
     __isInit = false;
 
@@ -140,7 +154,9 @@ class PliziAPIClass {
         this.__communities = new PliziCommunitiesAPI(this);
         this.__users = new PliziUsersAPI(this);
         this.__notifications = new PliziNotificationsAPI(this);
+        this.__photoalbums = new PliziPhotoalbumsAPI(this);
         this.__video = new PliziVideoAPI(this);
+        this.__image = new PliziImageAPI(this);
 
         this.__isInit = true;
     }
@@ -189,10 +205,24 @@ class PliziAPIClass {
     }
 
     /**
+     * @return {PliziPhotoalbumsAPI}
+     */
+    get $photoalbums() {
+        return this.__photoalbums;
+    }
+
+    /**
      * @return {PliziVideoAPI}
      */
     get $video() {
        return this.__video;
+    }
+
+    /**
+     * @return {PliziImageAPI}
+     */
+    get $image() {
+        return this.__image;
     }
 
     get axios() {
@@ -539,7 +569,27 @@ class PliziAPIClass {
 
     __channelReceiver(s) {
         s.subscribe(this.__channel, (channelID, data) => {
-            window.console.dir(data, 'from WebSockets server');
+            if (`user.typing`===data.event_type) {
+                //const compName = data.data.profile.firstName + ` `+data.data.profile.lastName;
+                //window.console.info( (new Date()).getMilliseconds()+ ` ${data.chatId} ${compName}`, 'user.typing');
+                //window.console.dir(data, 'WebSockets user.typing');
+            }
+            else {
+                if (data) {
+                    window.console.dir( JSON.parse( JSON.stringify(data) ), 'from WebSockets server');
+                }
+            }
+
+            if (channelID=== this.channel  &&  `user.typing`===data.event_type) {
+                this.emit('userIsTyping', {
+                    chatId :  data.chatId,
+                    user : data.data,
+                });
+            }
+
+            if (channelID=== this.channel  &&  `user.notification`===data.event_type) {
+                this.emit('UserNotification', data.data);
+            }
 
             if (channelID=== this.channel  &&  `message.new`===data.event_type) {
                 this.emit('newMessageInDialog', {
@@ -554,15 +604,34 @@ class PliziAPIClass {
                     messageId : data.data.messageId,
                 });
             }
-            if (channelID=== this.channel  &&  `user.typing`===data.event_type) {
-                this.emit('userIsTyping', {
-                    chatId :  data.chatId,
-                    user : data.data,
+
+            if (channelID=== this.channel  &&  `chat.removed`===data.event_type) {
+                this.emit('remoteRemoveDialog', {
+                    chatId :  data.data.id
                 });
             }
-            if (channelID=== this.channel  &&  `user.notification`===data.event_type) {
-                this.emit('UserNotification', data.data);
+
+            if (channelID=== this.channel  &&  `chat.created`===data.event_type) {
+                this.emit('remoteCreateDialog', {
+                    data :  data.data
+                });
             }
+
+            if (channelID=== this.channel  &&  `chat.attendee.appended`===data.event_type) {
+                this.emit('remoteAddAttendee', {
+                    data :  data.data
+                });
+            }
+
+            if (channelID=== this.channel  &&  `chat.attendee.removed`===data.event_type) {
+                console.dir(data, `data`);
+
+                this.emit('remoteRemoveAttendee', {
+                    chatId :  data.data.id,
+                    userId :  data.data.userId
+                });
+            }
+
         });
     }
 

@@ -14,13 +14,18 @@ use App\Http\Resources\Community\Community as CommunityResource;
 use App\Http\Resources\Community\CommunityRequests;
 use App\Http\Resources\Community\CommunityUserCollection;
 use App\Http\Resources\User\Image;
+use App\Http\Resources\Video\VideoCollection;
 use App\Models\Community;
 use App\Models\CommunityAttachment;
 use App\Models\CommunityHeader;
+use App\Models\CommunityMember;
 use App\Models\CommunityRequest as CommunityRequestModel;
 use App\Models\CommunityTheme;
+use App\Models\Post;
+use App\Models\Video;
 use App\Services\CommunityService;
 use App\Services\S3UploadService;
+use Auth;
 use Exception;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Http\JsonResponse;
@@ -66,7 +71,8 @@ class CommunityController extends Controller
          * TODO: Нужно будет что-то придумать с оптимизацией (дернормализовать таблицы или.... пока не ясно)
          */
         /** @var Community|Builder $query */
-        $query = Community::with('role', 'members', 'avatar', 'city');
+        $query = Community::with('role', 'members', 'avatar', 'city', 'theme', 'city.region', 'city.country')
+            ->withCount('members');
 
         $search = $request->search;
         if (mb_strlen($search) >= 3) {
@@ -90,10 +96,14 @@ class CommunityController extends Controller
                 break;
         }
 
-        $communities = $query
-            ->limit($request->query('limit', 10))
-            ->offset($request->query('offset', 0))
-            ->get();
+        if (Auth::guest()) {
+            $query->limit(10);
+        } else {
+            $query
+                ->limit($request->query('limit', 10))
+                ->offset($request->query('offset', 0));
+        }
+        $communities = $query->get();
 
         $communities->each(static function($community) {
             $community->load('onlyFiveMembers');
@@ -121,15 +131,24 @@ class CommunityController extends Controller
      * @param int $id
      * @return CommunityUserCollection|JsonResponse
      */
-    public function members(Request $request, int $id) {
+    public function members(Request $request, int $id)
+    {
         $role = $request->query('role');
-        $community = Community::with(['users' => function($query) use ($role) {
-            if($role) {
-                $query->wherePivot('role', $role);
+        $community = Community::with([
+            'users' => static function ($query) use ($role, $request) {
+                if ($role) {
+                    $query->wherePivot('role', $role);
+                }
+                $query
+                    ->where('id', '!=', auth()->user()->id)
+                    ->limit($request->query('limit', 10))
+                    ->offset($request->query('offset', 0));
             }
-        }])->find($id);
-        if($community) {
-            return new CommunityUserCollection($community->users);
+        ])
+            ->showedForAll()
+            ->find($id);
+        if ($community) {
+            return new CommunityUserCollection($community->users, $community->role);
         }
         return response()->json(['message' => 'Сообщество не найдено'], 404);
     }
@@ -159,21 +178,39 @@ class CommunityController extends Controller
     }
 
     /**
+     * @param $community
+     * @return JsonResponse
+     */
+    private function subscribeSuccessResponse($community)
+    {
+        event(new CommunitySubscribe($community->id, auth()->user()->id));
+        return response()->json([
+            'data' => [
+                'message' => 'Вы были успешно добавлены в сообщество',
+                'id' => $community->id
+            ]
+        ], 200);
+    }
+
+    /**
      * @param int $id
      * @return JsonResponse
      */
     public function subscribe(int $id) {
         $community = Community::find($id);
         if($community) {
-            if(!$community->users->contains(auth()->user()->id)) {
+            if (!$community->role) {
                 $community->users()->attach(auth()->user()->id, ['role' => Community::ROLE_USER, 'created_at' => time(), 'updated_at' => time()]);
-                event(new CommunitySubscribe($community->id, auth()->user()->id));
-                return response()->json([
-                    'data' => [
-                        'message' => 'Вы были успешно добавлены в сообщество',
-                        'id' => $community->id
-                    ]
-                ], 200);
+                return $this->subscribeSuccessResponse($community);
+            }
+            if ($community->role->role === Community::ROLE_GUEST) {
+                CommunityMember::where([
+                    'user_id' => auth()->id(),
+                    'community_id' => $community->id,
+                ])->update([
+                        'role' => Community::ROLE_USER,
+                    ]);
+                return $this->subscribeSuccessResponse($community);
             }
 
             return response()->json(['message' => 'Вы уже являетесь участником данного сообщества'], 422);
@@ -263,6 +300,8 @@ class CommunityController extends Controller
     {
         $community_ids = (new Community())->getFavariteIdList(null, $request->query('limit', 5), $request->query('offset', 0));
         $communities = Community::whereIn('id', $community_ids)
+            ->with('role', 'members', 'avatar', 'city', 'theme')
+            ->withCount('members')
             ->get();
         return new CommunityCollection($communities);
     }
@@ -371,5 +410,180 @@ class CommunityController extends Controller
         return response()->json([
             'message' => 'Ошибка отклонения запроса',
         ], 422);
+    }
+
+    /**
+     * @param Request $request
+     * @return CommunityCollection
+     */
+    public function recommended(Request $request)
+    {
+        $list = (new \Domain\Neo4j\Service\CommunityService())
+            ->recommended(
+                auth()->user()->id,
+                $request->query('limit', 5),
+                $request->query('offset', 0)
+            );
+        $communities = Community::whereIn('id', $list->pluck('oid'))
+            ->with('avatar')
+            ->withCount('members')
+            ->get();
+
+        /**
+         * @todo add community to full list
+         */
+        return new CommunityCollection($communities, false);
+    }
+
+    /**
+     * @param Request $request
+     * @return JsonResponse
+     */
+    public function adminCreate(Request $request)
+    {
+        /** @var Community $community */
+        $community = $request->community;
+
+        $updated = CommunityMember::where('community_id', $community->id)
+            ->where('user_id', $request->userId)
+            ->update([
+                'role' => Community::ROLE_ADMIN,
+            ]);
+        if ($updated) {
+            return response()->json([
+                'message' => 'Роль назначили',
+            ]);
+        }
+        return response()->json([
+            'message' => 'Ошибка назначения роли',
+        ], 422);
+    }
+
+    /**
+     * @param Request $request
+     * @return JsonResponse
+     */
+    public function adminDelete(Request $request)
+    {
+        /** @var Community $community */
+        $community = $request->community;
+
+        $updated = CommunityMember::where('community_id', $community->id)
+            ->where('user_id', $request->userId)
+            ->update([
+                'role' => Community::ROLE_USER,
+            ]);
+        if ($updated) {
+            return response()->json([
+                'message' => 'Роль убрана',
+            ]);
+        }
+        return response()->json([
+            'message' => 'Ошибка убирания роли',
+        ], 422);
+    }
+
+    /**
+     * @param Request $request
+     * @return VideoCollection
+     */
+    public function videos(Request $request)
+    {
+        /** @var Community $community */
+        $community = $request->community;
+
+        $videos = Video::where(static function (Builder $query) use ($community) {
+            $query->whereHasMorph('creatableby', Post::class, static function (Builder $creatableby) use ($community) {
+                $creatableby
+                    ->where([
+                        'postable_type' => Community::class,
+                        'postable_id' => $community->id,
+                    ]);
+            });
+        })
+            ->limit($request->query('limit', 5))
+            ->offset($request->query('offset', 0))
+            ->orderBy('id', 'desc')
+            ->get();
+
+        /**
+         * TODO add total count
+         */
+        return new VideoCollection($videos, true);
+    }
+
+    /**
+     * @param Request $request
+     * @return JsonResponse
+     */
+    public function subscribeNotify(Request $request)
+    {
+        /** @var Community $community */
+        $community = $request->community;
+
+        if ($community->role) {
+            CommunityMember::where([
+                'user_id' => auth()->id(),
+                'community_id' => $community->id,
+            ])->update([
+                'subscribed' => true,
+            ]);
+            return response()->json([
+                'message' => 'Вы успешно подписались на уведомления',
+            ]);
+        }
+
+        if ($community->privacy === Community::PRIVACY_OPEN) {
+            $community->users()->attach(auth()->user()->id, [
+                'role' => Community::ROLE_GUEST,
+                'subscribed' => true,
+                'created_at' => time(),
+                'updated_at' => time(),
+            ]);
+            return response()->json([
+                'message' => 'Вы успешно подписались на уведомления',
+            ]);
+        }
+
+        return response()->json([
+            'message' => 'Ошибка подписки на уведомления',
+        ], 422);
+    }
+
+    /**
+     * @param Request $request
+     * @return JsonResponse
+     */
+    public function unsubscribeNotify(Request $request)
+    {
+        /** @var Community $community */
+        $community = $request->community;
+
+        if (!$community->role) {
+            return response()->json([
+                'message' => 'Ошибка отписки от уведомлений',
+            ], 422);
+        }
+
+        if ($community->role->role === Community::ROLE_GUEST) {
+            CommunityMember::where([
+                'user_id' => auth()->id(),
+                'community_id' => $community->id,
+            ])->delete();
+            return response()->json([
+                'message' => 'Вы успешно отписались от уведомлений',
+            ]);
+        }
+
+        CommunityMember::where([
+            'user_id' => auth()->id(),
+            'community_id' => $community->id,
+        ])->update([
+            'subscribed' => false,
+        ]);
+
+        return response()->json([
+            'message' => 'Вы успешно отписались от уведомлений',
+        ]);
     }
 }

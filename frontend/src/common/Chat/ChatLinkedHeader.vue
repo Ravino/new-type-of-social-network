@@ -15,9 +15,9 @@
                 </button>
             </div>
             <div class="plz-linked-chat-btns d-flex align-items-center justify-content-between pr-3">
-                <button class="btn" @click="unPinChat()">
-                    <IconPin />
-                </button>
+<!--                <button class="btn" @click="unPinChat()">-->
+<!--                    <IconPin />-->
+<!--                </button>-->
 
                 <button class="btn" @click="closeLinkedChat()">
                     <i class="fa fa-times"></i>

@@ -4,7 +4,7 @@ namespace App\Http\Resources\User;
 
 
 use App\Http\Resources\PrivacySettings;
-use Domain\Neo4j\Service\UserService;
+use App\Models\User\Blacklisted;
 use Illuminate\Http\Resources\Json\JsonResource;
 
 class User extends JsonResource
@@ -40,41 +40,35 @@ class User extends JsonResource
                     'unreadMessagesCount' => $this->unreadMessagesCount,
                     'pendingFriendshipRequestsCount' => $this->pendingFriendshipRequestsCount,
                     'totalFriendsCount' => $this->totalFriendsCount,
-                    'followCount' => (new UserService())->followCount($this->id),
-                    'isFollow' => $this->isFollow,
-                    'isFriend' => $this->isFriendWith(auth()->user()),
+                    'followCount' => $this->profile->follower_count,
+                    'videosCount' => $this->profile->video_count,
                 ],
             ];
         }
 
-        if($this->appendMutual) {
-            return [
-                'id' => $this->id,
-                'isOwner' => false,
-                'isOnline' => $this->isOnline,
-                'lastActivity' => $this->last_activity_dt,
-                'profile' => new Profile($this->profile),
-                'mutualFriendsCount' => (int)$this->profile->mutual,
-                'stats' => [
-                    'followCount' => (new UserService())->followCount($this->id),
-                    'isFollow' => $this->isFollow,
-                    'isFriend' => $this->isFriendWith(auth()->user()),
-                ],
-            ];
-        }
-
-        return [
+        $data = [
             'id' => $this->id,
             'isOwner' => false,
             'isOnline' => $this->isOnline,
             'lastActivity' => $this->last_activity_dt,
             'profile' => new Profile($this->profile),
             'stats' => [
-                'followCount' => (new UserService())->followCount($this->id),
+                'totalFriendsCount' => $this->totalFriendsCount,
+                'followCount' => $this->profile->follower_count,
+                'videosCount' => $this->profile->video_count,
                 'isFollow' => $this->isFollow,
                 'isFriend' => $this->isFriendWith(auth()->user()),
+                'isInBlacklist' => Blacklisted::where([
+                    'user_id' => auth()->id(),
+                    'blacklisted_id' => $this->id,
+                ])->exists(),
             ],
         ];
+        if($this->appendMutual) {
+            $data['mutualFriendsCount'] = (int)$this->profile->mutual;
+        }
+
+        return $data;
     }
 }
 

@@ -4,7 +4,8 @@ namespace App\Http\Resources\User;
 
 
 use App\Http\Resources\PrivacySettings;
-use Illuminate\Http\Resources\Json\JsonResource;
+use Auth;
+use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\ResourceCollection;
 
 class UserCollection extends ResourceCollection
@@ -24,14 +25,15 @@ class UserCollection extends ResourceCollection
     /**
      * Transform the resource into an array.
      *
-     * @param \Illuminate\Http\Request $request
+     * @param Request $request
      * @return array
      */
     public function toArray($request)
     {
         return [
-            'list' => $this->collection->map(function ($user) {
-                if(\Auth::user()->id === $user->id) {
+            'list' => $this->collection->map(static function ($user) {
+                /** @var \App\Models\User $user */
+                if(Auth::user()->id === $user->id) {
                     return [
                         'id' => $user->id,
                         'email' => $user->email,
@@ -40,15 +42,17 @@ class UserCollection extends ResourceCollection
                         'profile' => new Profile($user->profile),
                         'privacySettings' => new PrivacySettings($user->privacySettings)
                     ];
-                } else {
-                    return [
-                        'id' => $user->id,
-                        'isOnline' => $user->isOnline,
-                        'lastActivity' => $user->last_activity_dt,
-                        'profile' => new Profile($user->profile),
-                        'mutualFriendsCount' => (int)$user->mutual_count
-                    ];
                 }
+
+                $friendship = $user->getFriendship(Auth::user());
+                return [
+                    'id' => $user->id,
+                    'isOnline' => $user->isOnline,
+                    'lastActivity' => $user->last_activity_dt,
+                    'profile' => new Profile($user->profile),
+                    'mutualFriendsCount' => (int)$user->mutual_count,
+                    'friendshipSinceTime' => $friendship ? $friendship->created_at->getTimestamp() : null,
+                ];
             }),
             'totalCount' => $this->totalCount
         ];

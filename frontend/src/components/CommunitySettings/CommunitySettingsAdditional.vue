@@ -70,63 +70,29 @@
                                id="website"
                                class="w-100 w-sm-75"
                                v-model="model.website"
-                               :class="[isEdit.website ? 'form-control' : 'form-control-plaintext', { 'is-invalid': !!websiteError, 'is-valid': isSuccessWebsite }]"
+                               :class="[isEdit.website ? 'form-control' : 'form-control-plaintext', {
+                                   'is-invalid': $v.model.website.$error || serverRegMessages.website,
+                                    'is-valid': isSuccessWebsite
+                               }]"
                                @input="inputFieldEdit($event, 'website')"
-                               @keyup.enter="accountStartSaveData($event.target.value, 'website')"
-                               @blur="finishFieldEdit('website')"
+                               @keyup.enter="clickField('website')"
+                               @blur="clickField('website')"
                                :readonly="!isEdit.website"
                                ref="website">
 
-                        <div class="invalid-feedback">
-                            <p class="text-danger">{{ websiteError }}</p>
+                        <div class="invalid-feedback w-100" v-if="$v.model.website.$error || serverRegMessages.website">
+                            <p class="text-danger" v-if="!$v.model.website.or">Укажите корректный адрес сайта сообщества.</p>
+                            <p class="text-danger" v-else-if="serverRegMessages.website">{{ serverRegMessages.website }}</p>
                         </div>
+
                     </div>
                     <div class="plz-account-settings-body-action col-6 col-sm-3 col-lg-2 d-flex">
                         <button type="button"
                                 class="btn btn-link"
                                 :class="{'text-primary': isEdit.website}"
-                                @click="[isEdit.website ? finishFieldEdit('website') : startFieldEdit('website')]">
+                                @click="clickField('website')">
                             {{ isEdit.website ? 'Сохранить' : 'Изменить' }}
                         </button>
-                    </div>
-                </div>
-
-                <div class="form-group row border-bottom">
-                    <label
-                           class="plz-account-settings-body-label col-6 col-sm-4 col-lg-4 ">
-                        Автор сообщества
-                    </label>
-                    <div class="plz-account-settings-body-field order-1 order-sm-0 col-12 col-sm-5 col-lg-6 ">
-                        Нужно ли?
-                    </div>
-                    <div class="plz-account-settings-body-action col-6 col-sm-3 col-lg-2 d-flex">
-
-                    </div>
-                </div>
-
-                <div class="form-group row border-bottom">
-                    <label
-                        class="plz-account-settings-body-label col-6 col-sm-4 col-lg-4 ">
-                        Предлагаемые новости
-                    </label>
-                    <div class="plz-account-settings-body-field order-1 order-sm-0 col-12 col-sm-5 col-lg-6 ">
-                        Нужно ли?
-                    </div>
-                    <div class="plz-account-settings-body-action col-6 col-sm-3 col-lg-2 d-flex">
-
-                    </div>
-                </div>
-
-                <div class="form-group row border-bottom">
-                    <label
-                        class="plz-account-settings-body-label col-6 col-sm-4 col-lg-4 ">
-                        Дата основания
-                    </label>
-                    <div class="plz-account-settings-body-field order-1 order-sm-0 col-12 col-sm-5 col-lg-6 ">
-                        Нужно ли?
-                    </div>
-                    <div class="plz-account-settings-body-action col-6 col-sm-3 col-lg-2 d-flex">
-
                     </div>
                 </div>
 
@@ -137,30 +103,23 @@
 
 <script>
     import {url, or} from 'vuelidate/lib/validators';
-    import PliziCommunity from "../../classes/PliziCommunity";
-    import communityUtils from "../../utils/CommunityUtils";
-    import {debounce} from "../../utils/Debonce";
+    import PliziCommunity from "../../classes/PliziCommunity.js";
+    import communityUtils from "../../utils/CommunityUtils.js";
+    import EditInline from "../../mixins/EditInline.js";
+    import {isCorrectUrl} from '../../validators/validators.js';
 
     export default {
         name: 'CommunitySettingsAdditional',
         props: {
             community: PliziCommunity,
         },
+        mixins: [
+            EditInline,
+        ],
         computed: {
             isSuccessWebsite() {
                 return (!this.$v.model.website.$invalid || !(!!this.serverRegMessages.website)) && !
                     !this.model.website;
-            },
-            websiteError() {
-                if (this.$v.model.website.$error) {
-                    if (!this.$v.model.website.url) {
-                        return 'Укажите корректный адрес сайта сообщества.';
-                    }
-                } else if (this.serverRegMessages.website) {
-                    return this.serverRegMessages.website;
-                }
-
-                return null;
             },
         },
         data() {
@@ -202,7 +161,7 @@
             return {
                 model: {
                     website: {
-                        or: or(url, (value) => value === ''),
+                        or: or(url, (value) => value === '', isCorrectUrl),
                     },
                 }
             };
@@ -215,50 +174,12 @@
                 }
                 return null;
             },
-            startFieldEdit: debounce(function (fieldName) {
-                this.isEdit[fieldName] = true;
-
-                const inpRef = this.getRef(fieldName);
-
-                if (inpRef) {
-                    inpRef.focus();
-                } else {
-                    window.console.warn(`Ошибка редактирования поля`);
-                }
-            }, 50),
-            finishFieldEdit: debounce(function (fieldName) {
-                this.$v.model[fieldName].$touch();
-                const inpRef = this.getRef(fieldName);
-
-                setTimeout(() => {
-                    this.isEdit[fieldName] = false;
-
-                    if (inpRef) {
-                        inpRef.blur();
-
-                        if (!this.isSend[fieldName])
-                            this.accountStartSaveData(this.model[fieldName], fieldName);
-                    } else {
-                        window.console.warn(`Ошибка редактирования поля`);
-                    }
-                }, 100);
-            }, 50),
-            formatFormData(newValue, fieldName) {
-                let formData = {};
-                formData[fieldName] = newValue;
-                return formData;
-            },
-            inputFieldEdit($event, fieldName) {
-                this.serverRegMessages[fieldName] = null;
-                this.$v.model[fieldName].$touch();
-            },
             async accountStartSaveData(newValue, fieldName) {
                 this.isSend[fieldName] = true;
                 if (!!this[`${fieldName}Error`]) {
                     this.model[fieldName] = this.community[fieldName];
                     return;
                 }
-                this.isEdit[fieldName] = false;
 
                 let formData = this.formatFormData(newValue, fieldName);
                 let response = null;
@@ -278,11 +199,9 @@
                     }
                 }
 
-                if (response !== null) {
-                    setTimeout(() => {
-                        this.isSend[fieldName] = false;
-                    }, 2000);
-                }
+                setTimeout(() => {
+                    this.isSend[fieldName] = false;
+                }, 200);
             },
         },
     }

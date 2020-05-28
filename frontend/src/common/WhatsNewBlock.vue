@@ -37,17 +37,17 @@ methods: {
         this.errors = null;
     },
 
-  async onTextPost(evData){
-    let msg = evData.postText.trim();
+  async onTextPost(evData) {
+      let msg = evData.postText.trim();
 
-    if (msg !== '') {
+    if (msg !== '' || evData.videoLink) {
       const brExample = `<br/>`;
       msg = msg.replace(/<p><\/p>/g, brExample);
       msg = this.killBrTrail(msg);
 
-        if (msg !== '') {
+        if (msg !== '' || evData.videoLink) {
         this.savePost( msg, evData.attachments, evData.videoLink, evData.workMode );
-      } else if (evData.attachments.length > 0) {
+      } else if (evData.attachments.length > 0 || evData.videoLink) {
         this.savePost( '<p></p>', evData.attachments, evData.videoLink, evData.workMode );
       }
     } else {
@@ -60,7 +60,15 @@ methods: {
       let response;
       let formData = {};
 
-      formData.body = text.trim();
+      if (videoLink) {
+          formData.body = videoLink;
+
+          if (text) {
+              formData.body += ` ${text}`;
+          }
+      } else {
+          formData.body = text.trim();
+      }
 
       if (attachments && attachments.length) {
         formData.attachmentIds = attachments;
@@ -74,17 +82,22 @@ methods: {
       }
 
       if (response) {
-        this.$emit('addNewPost', response);
-        this.storeVideo(videoLink, workMode, response.id);
+          this.$emit('addNewPost', response);
+          this.storeVideo(videoLink, workMode, response.id);
       }
     },
     async storeVideo(youtubeLink, workMode, id) {
         if (!(youtubeLink && workMode && id)) return;
 
         let response;
+        let formData = {
+            link: youtubeLink,
+            workMode: workMode,
+            id: id,
+        };
 
         try {
-            response = await this.$root.$api.$video.storeVideo(youtubeLink, workMode, id);
+            response = await this.$root.$api.$video.storeVideo(formData);
         } catch (e) {
             console.warn(e.detailMessage);
         }

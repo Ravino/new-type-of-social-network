@@ -23,6 +23,7 @@ data () {
             { path : '#accountSettingsPrivacy', title : 'Приватность', isActive: false },
             { path : '#accountSettingsSecurity', title : 'Безопасность', isActive: false },
             { path : '/black-list', title : 'Чёрный список', isActive: false },
+            { path : { name: 'ActiveSessionsPage' }, title : 'Активные сессии', isActive: false },
         ],
     }
 },

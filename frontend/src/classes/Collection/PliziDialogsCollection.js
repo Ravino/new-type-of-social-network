@@ -1,3 +1,4 @@
+import { convertToDate } from '../../utils/DateUtils.js';
 import PliziDialog from '../PliziDialog.js';
 import PliziStoredCollection from './PliziStoredCollection.js';
 
@@ -16,6 +17,7 @@ class PliziDialogsCollection extends PliziStoredCollection {
         super(apiObj);
     }
 
+
     /**
      * метод сравнения для сортировки, диалоги сортируем по дате
      * @param {PliziDialog} d1
@@ -31,7 +33,6 @@ class PliziDialogsCollection extends PliziStoredCollection {
 
 
     onAddNewDialog(evData){
-        window.console.log(evData, `onAddNewDialog`);
         this.add(evData);
         this.storeData();
         this.restore();
@@ -137,20 +138,62 @@ class PliziDialogsCollection extends PliziStoredCollection {
         let dlg = this.get(dialogID);
 
         if (dlg) {
-            dlg = dlg.toJSON();
-
-            dlg.lastMessageDT = newData.lastMessageDT;
+            dlg.lastMessageDT = convertToDate(newData.lastMessageDT);
             dlg.lastMessageText = newData.lastMessageText;
             dlg.isLastFromMe = newData.isLastFromMe;
             dlg.isRead = newData.isRead;
+
+            let attUser = dlg.getAttendee(newData.userId);
+
+            if (attUser) {
+                attUser.lastActivity = (new Date()).valueOf()/1000;
+                attUser.isOnline = true;
+            }
 
             this.add(dlg);
             this.storeData();
 
             this.emit(this.updateEventName, this.get(dialogID));
         }
-        else {
-            window.console.warn(dialogID + ` диалог не найден`);
+    }
+
+
+    updateDialog(dialogID, dlgData){
+        let dlg = this.get(dialogID);
+
+        if (dlg) {
+            this.set(dialogID, dlgData);
+            this.storeData();
+
+            this.emit(this.updateEventName, this.get(dialogID));
+        }
+    }
+
+
+    addAttendeeToDialog(dialogID, userData){
+        let dlg = this.get(dialogID);
+
+        if (dlg) {
+            dlg.addAttendee(userData);
+
+            this.add(dlg);
+            this.storeData();
+
+            this.emit(this.updateEventName, this.get(dialogID));
+        }
+    }
+
+
+    removeAttendeeFromDialog(dialogID, userId){
+        let dlg = this.get(dialogID);
+
+        if (dlg) {
+            dlg.removeAttendee(userId);
+
+            this.add(dlg);
+            this.storeData();
+
+            this.emit(this.updateEventName, this.get(dialogID));
         }
     }
 

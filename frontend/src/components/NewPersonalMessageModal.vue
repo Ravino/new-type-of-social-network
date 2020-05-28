@@ -83,14 +83,16 @@ methods: {
         this.$emit('HidePersonalMsgModal', {});
     },
 
-    startPersonalMessage(){
-        const msg = this.$refs.messageToUserFromHisPage.getContent();
+    startPersonalMessage(evData){
+        if (!evData) {
+            evData = this.$refs.messageToUserFromHisPage.getContent();
+        }
 
-        if (msg===''  ||  msg==='<p></p>')
+        if (evData.postText===''  ||  evData.postText==='<p></p>')
             return;
 
         this.$emit('SendPersonalMessage', {
-            message: msg,
+            message: evData,
             receiverId: this.user.id,
         });
     },

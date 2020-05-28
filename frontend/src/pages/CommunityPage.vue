@@ -15,7 +15,7 @@
                         <div class="plz-community-header-bottom d-flex flex-wrap align-items-start justify-content-between py-3 px-4">
                             <div class="plz-community-header-details d-flex align-items-start flex-wrap flex-sm-nowrap justify-content-center justify-content-sm-start">
                                 <template v-if="isAuthor">
-                                    <label for="communityPrimaryImage" class="community-primary-image cursor-pointer plz-community-header-logo position-relative mb-2 mb-sm-3 mx-0 mr-sm-3">
+                                    <label for="communityPrimaryImage" class="community-primary-image cursor-pointer plz-community-header-logo position-relative mb-2 mb-sm-0 mx-0 mr-sm-3">
                                         <img ref="communityAvatar" :src="avatarMedium" :alt="communityData.name" />
                                     </label>
 
@@ -29,10 +29,10 @@
                                     </div>
                                 </template>
                                 <div class="plz-community-header-details-text pt-2">
-                                    <h1 class="plz-community-header-title mb-1">
+                                    <h1 class="plz-community-header-title mb-2">
                                         {{communityData.name}}
-                                        <PrivacyLabel :community="communityData"></PrivacyLabel>
                                     </h1>
+                                    <PrivacyLabel :community="communityData"></PrivacyLabel>
                                     <p class="plz-community-header-desc mb-0">
                                         {{communityData.notice}}
                                     </p>
@@ -45,9 +45,9 @@
                                         @click="subscribeInvite(communityData)">
                                     подписаться
                                 </button>
-                                <button v-else-if="subscribeType === 'request'" type="button"
-                                        class="btn plz-btn-outline  plizi-community-btn rounded-pill"
-                                        @click="sendRequest(community)">
+                                <button v-else-if="subscribeType === 'request'"
+                                        class="btn align-items-center justify-content-center d-flex w-75 border-right m-0"
+                                        @click="sendRequest(communityData)">
                                     запрос
                                 </button>
                                 <button v-else-if="subscribeType === 'exists'"
@@ -55,26 +55,40 @@
                                         @click="unsubscribeInvite(communityData)">
                                     отписаться
                                 </button>
-                                <router-link :to="{name: 'CommunitySettingsPage', params: {id: communityData.id}}" v-else-if="subscribeType === 'author'"
+                                <router-link :to="{name: 'CommunitySettingsPage', params: {id: communityData.id}}"
+                                             v-else-if="subscribeType === 'author'"
                                              class="btn align-items-center justify-content-center d-flex w-75 border-right m-0">
                                     управление
                                 </router-link>
 
-                                <button title="подписаться" class="btn align-items-center justify-content-center d-flex w-25">
+                                <button title="опции"
+                                        class="btn align-items-center justify-content-center d-flex w-25"
+                                        type="button"
+                                        id="CommunityOptions"
+                                        data-toggle="dropdown"
+                                        data-offset="0,5"
+                                        aria-haspopup="true"
+                                        aria-expanded="false">
                                     <span class="ps-dot"></span>
                                     <span class="ps-dot"></span>
                                     <span class="ps-dot"></span>
                                 </button>
-                            </div>
-                        </div>
 
+                                <div class="dropdown-menu dropdown-menu-right py-3"
+                                     aria-labelledby="CommunityOptions" >
+                                    <CommunityAuthorOptions  v-if="isAuthor" v-bind:community="communityData" ></CommunityAuthorOptions>
+                                    <CommunityUserOptions v-else v-bind:community="communityData" ></CommunityUserOptions>
+                                </div>
+                            </div>
+
+                        </div>
                     </div>
                     <Spinner v-else></Spinner>
                 </div>
             </div>
 
             <div class="row">
-                <div class="col-12 col-sm-7 col-lg-8 col-xl-8 order-1 order-sm-0">
+                <div class="col-12 --col-sm-7 col-lg-8 col-xl-8 order-1 order-lg-0">
                     <div v-if="isDataReady"
                          id="communityInfoBlock"
                          class="plz-community-info-block bg-white-br20 py-3 px-4 mb-4 text-left">
@@ -100,7 +114,19 @@
                               @onDeletePost="onDeletePost"
                               @onRestorePost="onRestorePost"
                               @onEditPost="onEditPost"
+                              @openVideoModal="openVideoModal"
                               @onShowUsersLikes="openLikeModal"/>
+                    </div>
+
+                    <div v-else-if="!hasAccess"  class="row plz-post-item mb-4 bg-white-br20 p-4">
+                        <div class="alert alert-info w-100 p-5 text-center mb-0">
+                            У Вас нет доступа.
+                            <p v-if="subscribeType === 'request'">
+                                Отправьте
+                                <a href="#" @click.stop="sendRequest(communityData)">запрос</a>
+                                на вступление в сообщество
+                            </p>
+                        </div>
                     </div>
 
                     <div v-else-if="!isStarted"  class="row plz-post-item mb-4 bg-white-br20 p-4">
@@ -118,58 +144,20 @@
                     </template>
                 </div>
 
-                <div class="col-12 col-sm-5 col-lg-4">
-                    <CommunityManagedActionBlock :community="communityData" v-if="isAuthor"></CommunityManagedActionBlock>
-
-                    <CommunityUserActionBlock v-bind:community="communityData"></CommunityUserActionBlock>
+                <div class="col-12 --col-sm-5 col-lg-4 order-0 order-lg-1">
+<!--               TODO @tga мы этот блок можем удалить? -->
+<!--                    <CommunityManagedActionBlock :community="communityData" v-if="isAuthor"></CommunityManagedActionBlock>-->
+ <!--               TODO @tga мы этот блок можем удалить? -->
+                    <CommunityUserActionBlock v-if="!isAuthor" v-bind:community="communityData"></CommunityUserActionBlock>
 
                     <CommunityFriendsInformer v-bind:community="communityData"></CommunityFriendsInformer>
 
                     <CommunityShortMembers v-if="isDataReady" v-bind:community="communityData"></CommunityShortMembers>
 
-                    <div id="communityVideos" class="bg-white-br20 mb-5 mb-4 py-3 px-4">
-
-                        <h6 class="plz-community-participants-title w-auto mb-4">Видео
-                            <span class="plz-community-participants-subtitle ml-2">14</span>
-                        </h6>
-
-                        <div class="videos-item mb-4">
-                            <div class="video mb-3">
-                                <div class="video-wrap-pre">
-                                    <img :src="avatarMedium" alt="image">
-                                </div>
-                                <button class="video__button" type="button" aria-label="Запустить видео">
-                                    <IconYoutube/>
-                                </button>
-                            </div>
-                            <router-link tag="a"
-                                         :to="`/user-`+1"
-                                         class="video-desc mb-0">Эдвард Бил приглашает тебя на открытие 6 сервера Sunrise (GTA 5 RP / gta5rp.com)
-                            </router-link>
-                        </div>
-                        <div class="videos-item mb-4">
-                            <div class="video mb-3">
-                                <div class="video-wrap-pre">
-                                    <img :src="avatarMedium" alt="image">
-                                </div>
-                                <button class="video__button" type="button" aria-label="Запустить видео">
-                                    <IconYoutube/>
-                                </button>
-                            </div>
-                            <router-link tag="a"
-                                         :to="`/user-`+1"
-                                         class="video-desc mb-0">Эдвард Бил приглашает тебя на открытие 6 сервера Sunrise (GTA 5 RP / gta5rp.com)
-                            </router-link>
-                        </div>
-
-                        <div class="d-block text-center">
-                            <router-link tag="a"
-                                         class="plz-community-header-desc "
-                                        to="#">
-                                <small>Смотреть ещё</small>
-                            </router-link>
-                        </div>
-                      </div>
+                    <CommunityVideoBlock v-if="hasAccess"
+                             :avatarMedium="avatarMedium"
+                             :communityId="parseInt(id)"
+                             @openVideoModal="openVideoModal"/>
                 </div>
             </div>
         </div>
@@ -190,6 +178,10 @@
         <PostLikeModal v-if="postLikeModal.isVisible"
                        :users="postLikeModal.content.users"
                        @hideLikeModal="hideLikeModal"/>
+
+        <PostVideoModal v-if="postVideoModal.isVisible"
+                        :videoLink="postVideoModal.content.videoLink"
+                        @hideVideoModal="hideVideoModal"/>
     </div>
 </template>
 
@@ -207,26 +199,36 @@ import CommunityEditor from '../common/Communities/CommunityEditor.vue';
 import PostRepostModal from '../common/Post/PostRepostModal.vue';
 import PostLikeModal from '../common/Post/PostLikeModal.vue';
 import SmallSpinner from "../common/SmallSpinner.vue";
+import IconYoutube from "../icons/IconYoutube.vue";
+
+import PrivacyLabel from "../components/Community/PrivacyLabel.vue";
+
+import CommunityManagedActionBlock from "../common/Communities/CommunityManagedActionBlock.vue";
+import CommunityAuthorOptions from "../common/Communities/CommunityAuthorOptions.vue";
+import CommunityUserOptions from "../common/Communities/CommunityUserOptions.vue";
+import CommunityVideoBlock from "../components/Community/CommunityVideoBlock.vue";
+import PostVideoModal from "../common/Post/PostVideoModal.vue";
+
+import LazyLoadPosts from '../mixins/LazyLoadPosts.js';
+import CommunitiesSubscribeMixin from '../mixins/CommunitiesSubscribeMixin.js';
+import HotCommunitiesMixin from '../mixins/HotCommunitiesMixin.js';
 
 import PliziCommunity from '../classes/PliziCommunity.js';
 import PliziPost from '../classes/PliziPost.js';
 import PliziCommunityAvatar from '../classes/Community/PliziCommunityAvatar.js';
-import CommunitiesSubscribeMixin from "../mixins/CommunitiesSubscribeMixin";
-import CommunityManagedActionBlock from "../common/Communities/CommunityManagedActionBlock.vue";
-
-import IconYoutube from "../icons/IconYoutube.vue";
-import LazyLoadPosts from '../mixins/LazyLoadPosts.js';
-import PliziUser from "../classes/PliziUser.js";
-
-import PrivacyLabel from "../components/Community/PrivacyLabel.vue";
+import PliziUser from '../classes/PliziUser.js';
 
 export default {
 name: 'CommunityPage',
 props: {
     id : Number|String
 },
-mixins: [CommunitiesSubscribeMixin, LazyLoadPosts],
+mixins: [CommunitiesSubscribeMixin, LazyLoadPosts, HotCommunitiesMixin],
 components : {
+    CommunityUserOptions,
+    CommunityAuthorOptions,
+    PostVideoModal,
+    CommunityVideoBlock,
     CommunityManagedActionBlock,
     CommunityShortMembers,
     CommunityFriendsInformer,
@@ -240,7 +242,6 @@ components : {
     PostRepostModal,
     PostLikeModal,
     SmallSpinner,
-    IconYoutube,
     PrivacyLabel,
 },
 
@@ -263,6 +264,12 @@ data() {
                 users: [],
             },
         },
+        postVideoModal: {
+            isVisible: false,
+            content: {
+                videoLink: null,
+            },
+        },
     }
 },
 
@@ -270,15 +277,15 @@ computed: {
     isAuthor(){
         return this.communityData?.role === 'author';
     },
+
     subscribeType() {
         return this.getSubscribeType(this.communityData);
     },
+
     filteredPosts(){
         return [];
     },
-    authUser() {
-        return this.$root.$auth.user;
-    },
+
     canPost() {
         /**
          * @todo check privacy
@@ -293,6 +300,13 @@ computed: {
     },
     headerImage() {
         return this.communityData?.headerImage?.image.normal.path || 'images/community-header-bg.jpg';
+    },
+    hasAccess() {
+        // Opened
+        if (this.communityData?.privacy === 1) {
+            return true;
+        }
+        return !!this.communityData?.role;
     }
 },
 
@@ -300,15 +314,11 @@ methods: {
     addNewPost(post) {
         this.posts.unshift( new PliziPost( post ) );
     },
-    startTimer( post ){
+    startTimer(post){
         setTimeout( () => {
-            const postIndex = this.posts.find( ( userPost ) => {
-                return userPost.id === post.id;
-            } );
+            let postIndex = this.posts.findIndex(item => item.id === post.id);
 
-            if ( post.deleted ){
-                this.posts.splice( postIndex, 1 );
-            }
+            this.posts.splice( postIndex, 1 );
         }, 5000 );
     },
     onEditPost( post ){
@@ -319,6 +329,7 @@ methods: {
         this.postEditModal.isVisible = false;
         this.postForEdit = null;
     },
+
     ytInit(){
         let video = document.getElementsByClassName('video');
 
@@ -328,9 +339,7 @@ methods: {
             console.log(videoWrap);
         }
     },
-    ytShow() {
 
-    },
     /**
      * @returns {boolean|FormData}
      */
@@ -355,6 +364,7 @@ methods: {
 
         return formData;
     },
+
     showErrorOnLargeFile() {
         this.$alert(`<h4 class="text-white">Ошибка</h4>
                 <div class="alert alert-danger">
@@ -367,14 +377,17 @@ methods: {
           30
         );
     },
+
     onSharePost(post){
         this.postRepostModal.isVisible = true;
         this.postForRepost = post;
     },
+
     hidePostRepostModal() {
         this.postRepostModal.isVisible = false;
         this.postForRepost = null;
     },
+
     hideLikeModal() {
         this.postLikeModal.isVisible = false;
         this.postLikeModal.content.users = null;
@@ -384,6 +397,7 @@ methods: {
         this.postLikeModal.isVisible = true;
         await this.getUsersLikes(postId);
     },
+
     async getUsersLikes(postId, limit = 20, offset = 0) {
         let response = null;
 
@@ -401,6 +415,7 @@ methods: {
             return response.length;
         }
     },
+
     async onDeletePost(id) {
         let response;
 
@@ -417,9 +432,10 @@ methods: {
 
             post.deleted = true;
 
-            this.startTimer( post );
+            this.startTimer(post);
         }
     },
+
     async onRestorePost(id) {
         let response;
 
@@ -437,6 +453,7 @@ methods: {
             post.deleted = false;
         }
     },
+
     async uploadPrimaryImage(){
         if (!this.isAuthor)
             return;
@@ -471,6 +488,7 @@ methods: {
             this.communityData.avatar = new PliziCommunityAvatar(apiResponse.data);
         }
     },
+
     async getCommunityInfo() {
         let apiResponse = null;
 
@@ -485,19 +503,29 @@ methods: {
         if (apiResponse) {
             this.communityData = new PliziCommunity(apiResponse);
             this.isDataReady = true;
-            await this.getPosts();
+            document.title = `Plizi: ${this.communityData?.name}`;
+            setTimeout(() => {
+                const getPosts = async () => {
+                    await this.getPosts();
+                };
+                if (!this.hasAccess) {
+                    this.noMore = true;
+                    return;
+                }
+                getPosts();
+                this.noMore = false;
+            }, 100);
         }
     },
+
     async getPosts(limit = 50, offset = 0) {
         let response = null;
         this.isStarted = true;
 
         try {
-            // TODO: тут нужно получать посты сообщества
             response = await this.$root.$api.$communities.posts(this.id, limit, offset);
         } catch (e) {
             this.isStarted = false;
-            console.warn(e.detailMessage);
         }
 
         if (response !== null) {
@@ -509,19 +537,46 @@ methods: {
             return response.length;
         }
     },
+
+    openVideoModal(evData) {
+        if (evData.videoLink) {
+            this.postVideoModal.isVisible = true;
+            this.postVideoModal.content.videoLink = evData.videoLink;
+        }
+    },
+
+    hideVideoModal() {
+        this.postVideoModal.isVisible = false;
+    },
+
+    onNeedAddCommunityToHot(){
+        this.keyUpdater++;
+        const comm = this.communityData || null;
+        this.addCommunityToFavorites( this.$route.params.id, comm );
+
+        if (this.$refs  &&  this.$refs.hotCommunitiesBlock) {
+            this.$refs.hotCommunitiesBlock.$forceUpdate();
+        }
+    }
+},
+
+created(){
+    this.$root.$on('NeedAddCommunityToHot', this.onNeedAddCommunityToHot);
 },
 
 async mounted() {
     await this.getCommunityInfo();
     window.scrollTo(0, 0);
 },
-    beforeRouteUpdate (to, from, next) {
-        this.communityData = null;
-        this.posts = null;
-        next();
-        this.id = to.params.id;
-        this.getCommunityInfo();
-        window.scrollTo(0, 0);
-    },
+
+beforeRouteUpdate (to, from, next) {
+    this.communityData = null;
+    this.posts = null;
+    next();
+    this.id = to.params.id;
+    this.getCommunityInfo();
+    window.scrollTo(0, 0);
+},
+
 }
 </script>

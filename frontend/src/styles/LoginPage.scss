@@ -26,6 +26,9 @@ $bgImage: "/images/plizi-bg-exp.svg";
     .modal-body {
         padding: 35px 60px 50px;
     }
+    #contentContainer {
+        padding-top: 45px;
+    }
 }
 
 #guestPageWrapper {
@@ -80,6 +83,8 @@ $bgImage: "/images/plizi-bg-exp.svg";
 
     .invalid-feedback {
         position: absolute;
+        width: 110%;
+        z-index: 1;
     }
 }
 

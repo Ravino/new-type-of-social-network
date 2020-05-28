@@ -19,6 +19,14 @@ export function isCorrectSlug(value) {
     return /^[a-z][a-z\-\_\d]*$/i.test(value);
 }
 
+export function isCorrectUrl(value) {
+    if ((value+'') === '') {
+        return true;
+    }
+
+    return /[-a-zA-Z0-9@:%._\+~#=]{1,256}\.[a-zA-Z0-9()]{1,6}\b([-a-zA-Z0-9()@:%_\+.~#?&//=]*)?/gi.test(value);
+}
+
 export function notHaveSpace(value) {
     return !(/\s/.test(value));
 }

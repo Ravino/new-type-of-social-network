@@ -46,4 +46,16 @@ class ChangePasswordRequest extends FormRequest
             'newPasswordConfirmation' => ['required', 'same:newPassword'],
         ];
     }
+
+    /**
+     * @return array
+     */
+    public function attributes()
+    {
+        return [
+            'oldPassword' => 'старый пароль',
+            'newPassword' => 'новый пароль',
+            'newPasswordConfirmation' => 'подтвердите новый пароль',
+        ];
+    }
 }

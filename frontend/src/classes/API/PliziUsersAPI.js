@@ -50,8 +50,8 @@ class PliziUsersAPI extends PliziBaseAPI{
      * получение черного списка юзера
      * @returns {Object|null} - черный списка юзера
      */
-    async blacklistGet() {
-        let response = await this.axios.get('api/user/blacklist/list', this.authHeaders)
+    async blacklist() {
+        let response = await this.axios.get('api/user/blacklist', this.authHeaders)
             .catch((error) => {
                 this.checkIsTokenExpires(error, '$users.blacklistGet');
                 throw new PliziAPIError('$users.blacklistGet', error.response);
@@ -69,13 +69,13 @@ class PliziUsersAPI extends PliziBaseAPI{
      * @returns {Object|null} - черный списка юзера
      */
     async blacklistAdd(userId) {
-        console.log(userId);
         const postParam = {userId: userId};
-        let response = await this.axios.post('api/user/blacklist/add', postParam, this.authHeaders)
+        let response = await this.axios.post('api/user/blacklist', postParam, this.authHeaders)
             .catch((error) => {
                 this.checkIsTokenExpires(error, '$users.blacklistAdd');
                 throw new PliziAPIError('$users.blacklistAdd', error.response);
             });
+
         if (200 === response.status) {
             return response.data.list;
         }
@@ -84,12 +84,12 @@ class PliziUsersAPI extends PliziBaseAPI{
 
     /**
      * Удаление пользователя из черного списка.
-     * @param userId
+     * @param {string} userId
      * @returns {object[]|null}
      * @throws PliziAPIError
      */
-    async deleteFromBlacklist(userId){
-        let response = await this.axios.post( '/user/blacklist/delete', {userId: userId}, this.authHeaders)
+    async blacklistDelete(userId){
+        let response = await this.axios.delete( 'api/user/blacklist?userId=' + userId, this.authHeaders)
             .catch( ( error ) => {
                 this.checkIsTokenExpires( error, '$users.deleteFromBlacklist' );
                 throw new PliziAPIError( '$users.deleteFromBlacklist', error.response );
@@ -104,7 +104,7 @@ class PliziUsersAPI extends PliziBaseAPI{
 
     /**
      * поиск по юзерам
-     * @param sText - строка поиска
+     * @param {string} sText - строка поиска
      * @returns {object[]|null} - коллеция с найденными юзерами или null как признак ошибки
      */
     async search(sText) {
@@ -143,6 +143,11 @@ class PliziUsersAPI extends PliziBaseAPI{
         return null;
     }
 
+    /**
+     * Подписаться на пользователя
+     * @param userId
+     * @returns {Promise<null|any>}
+     */
     async follow(userId) {
         let response = await this.axios.post(`api/user/${userId}/follow`, {}, this.authHeaders)
             .catch((error) => {
@@ -162,9 +167,15 @@ class PliziUsersAPI extends PliziBaseAPI{
         if ([200, 422].includes(response.status)) {
             return response.data;
         }
+
         return null;
     }
 
+    /**
+     * Отписаться от пользователя
+     * @param userId
+     * @returns {Promise<null|any>}
+     */
     async unFollow(userId) {
         let response = await this.axios.delete(`api/user/${userId}/follow`, this.authHeaders)
             .catch((error) => {
@@ -184,6 +195,72 @@ class PliziUsersAPI extends PliziBaseAPI{
         if ([200, 422].includes(response.status)) {
             return response.data;
         }
+
+        return null;
+    }
+
+    /**
+     * Список тех, на кого я подписан
+     * @param limit
+     * @param offset
+     * @returns {Promise<null|*>}
+     */
+    async followList(limit, offset) {
+        let path = 'api/user/follow/list';
+        let qParams = '';
+
+        if (limit && offset) {
+            qParams = `?limit=${limit}&offset=${offset}`;
+        }
+
+        let response = await this.axios.get(path + qParams, this.authHeaders)
+            .catch((error) => {
+                this.checkIsTokenExpires(error, `$users.followList`);
+                throw new PliziAPIError(`$users.followList`, error.response);
+            });
+
+        if (response.status === 200) {
+            return response.data.data;
+        }
+
+        return null;
+    }
+
+    /**
+     * Получение списка активных сессий.
+     *
+     * @returns {object[]|null}
+     */
+    async getActiveSessions() {
+        let response = await this.axios.get('/api/user/sessions/active', this.authHeaders)
+            .catch((error) => {
+                this.checkIsTokenExpires(error, `$users.getActiveSessions`);
+                throw new PliziAPIError(`$users.getActiveSessions`, error.response);
+            });
+
+        if (response.status === 200) {
+            return response.data.data.list;
+        }
+
+        return null;
+    }
+
+    /**
+     * Закрытие всех соединений кроме текущей.
+     *
+     * @returns {object[]|null}
+     */
+    async closeActiveSessions() {
+        let response = await this.axios.post('/api/user/sessions/close', {}, this.authHeaders)
+            .catch((error) => {
+                this.checkIsTokenExpires(error, `$users.closeActiveSessions`);
+                throw new PliziAPIError(`$users.closeActiveSessions`, error.response);
+            });
+
+        if (response.status === 200) {
+            return response.data;
+        }
+
         return null;
     }
 }

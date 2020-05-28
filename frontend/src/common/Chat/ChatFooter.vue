@@ -42,8 +42,15 @@ data() {
 },
 
 methods: {
-    onEditorKeyDown(){
-        /** @TGA пытаемся тут через сокеты отправить инфу о том, что печатаем **/
+    onEditorKeyDown(e){
+        /** https://css-tricks.com/snippets/javascript/javascript-keycodes/ **/
+        const disabledKeys = [8, 9, 13, 16, 17, 18, 20, 27, 32, 33, 34, 35, 36, 37, 38, 39, 40, 45, 46, 91, 92,
+        112, 113, 114, 115, 116, 117, 118, 119, 120, 121, 122, 123];
+
+        if (disabledKeys.includes(e.which))
+            return;
+
+        /** через сокеты отправляем инфу о том, что печатаем **/
         const keyPressData = {
             channel: window.localStorage.getItem('pliziChatChannel'),
             userId: this.$root.$auth.user.id,
@@ -66,35 +73,19 @@ methods: {
     },
 
     onTextPost(evData){
-        /** @type {string} **/
         let msg = evData.postText.trim();
 
-        if (msg !== '') {
+        if (msg !== '' || evData.videoLink) {
             const brExample = `<br/>`;
             msg = msg.replace(/<p><\/p>/g, brExample);
             msg = this.killBrTrail(msg);
 
-            if (msg !== '') {
-                let youtubeIds = this.detectYoutubeLinks(msg);
-
-                if (youtubeIds && youtubeIds.length) {
-                    youtubeIds.forEach((youtubeId) => {
-                        this.addMessageToChat(`${youtubeId} ${msg}`);
-                        msg = '';
-                    });
-
-                    if (evData.attachments && evData.attachments.length) {
-                        this.addMessageToChat( '', evData.attachments, evData.attachmentsData );
-                    }
-                }
-                else {
-                    this.addMessageToChat( msg, evData.attachments, evData.attachmentsData );
-                }
+            if (msg !== '' || evData.videoLink) {
+                this.addMessageToChat( msg, evData.attachments, evData.attachmentsData, evData.videoLink);
             } else if (evData.attachments.length > 0) {
-                this.addMessageToChat( '', evData.attachments, evData.attachmentsData );
+                this.addMessageToChat( '', evData.attachments, evData.attachmentsData, evData.videoLink);
             }
-        }
-        else {
+        } else {
             // сообщение пустое - проверяем есть ли аттачи
             if (evData.attachments.length > 0) {
                 this.addMessageToChat( '', evData.attachments, evData.attachmentsData );
@@ -106,15 +97,20 @@ methods: {
         this.errors = null;
     },
 
-    async addMessageToChat( msgText, attachmentsIds, attachmentsFiles ){
+    async addMessageToChat( msgText, attachmentsIds, attachmentsFiles, videoLink = null){
         const chatId = (this.currentDialog) ? this.currentDialog.id : 'unknown';
 
-        const sendData = {
+        let sendData = {
             chatId: chatId,
             body: msgText,
-            attachments: attachmentsIds,
-            event: 'new.message'
+            attachments: attachmentsIds ? attachmentsIds : [],
+            event: 'new.message',
         };
+
+        if (videoLink) {
+            sendData.body += ` ${videoLink}`;
+        }
+
         this.$root.$api.sendToChannel(sendData);
     },
 }

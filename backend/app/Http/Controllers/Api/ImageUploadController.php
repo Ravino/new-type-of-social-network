@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Http\Resources\User\Image;
 use App\Models\ImageUpload;
 use App\Http\Requests\ImageUpload\StoreImage;
+use App\Models\User;
 use App\Services\S3UploadService;
 use Exception;
 
@@ -50,7 +51,12 @@ class ImageUploadController extends Controller
                 'size' => [80, 80],
             ],
         ]);
+        $creatable = [
+            'creatable_id' => \Auth::id(),
+            'creatable_type' => User::class,
+        ];
         $request->merge($uploaded);
+        $request->merge($creatable);
 
         $image_upload = $this->imageUpload->create($request->only('original_name', 'path', 'title', 'size', 'tag', 'mime_type',
             'image_original_width',
@@ -63,7 +69,9 @@ class ImageUploadController extends Controller
             'image_medium_height',
             'image_thumb_path',
             'image_thumb_width',
-            'image_thumb_height'));
+            'image_thumb_height',
+            'creatable_id',
+            'creatable_type'));
 
         return new Image($image_upload);
     }

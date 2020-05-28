@@ -53,9 +53,12 @@ trait Neo4jFavorite
     {
         $user = $user ?: Auth::user();
 
-        if (!$this->isMember($user)) {
-            return false;
-        }
+        /**
+         * TODO временно или постоянно убрали, может в будущем захотим вернуть
+         */
+//        if (!$this->isMember($user)) {
+//            return false;
+//        }
 
         return $this->getService()->subscribeAsMember($user->id, $this->id);
     }

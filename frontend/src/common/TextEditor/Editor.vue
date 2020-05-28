@@ -67,6 +67,7 @@ data() {
             content: this.inputEditorText ? this.inputEditorText : null,
         }),
         isFocusedEditor: false,
+        cursorPosition: 1,
     }
 },
 
@@ -77,7 +78,7 @@ computed: {
 },
 
 methods: {
-     setFocusEditor() {
+    setFocusEditor() {
      this.$refs.editor.editor.focus();
      },
     addEmoji(emoji) {
@@ -91,8 +92,8 @@ methods: {
         currText = currText.substr(0, currText.length - 4) + `<span class="emoji">${emoji}</span>`;
 
         this.editor.setContent(currText);
+        this.editor.focus();
     },
-
     onEditorKeyDown(ev) {
         this.$emit('editorKeyDown', ev);
         this.$parent.checkUpdatedChatContainerHeight();
@@ -113,46 +114,40 @@ methods: {
             this.$emit('editorPost', { postText : editorText });
         }
     },
-
     onEditorKeyUp () {
         this.$parent.checkUpdatedChatContainerHeight();
     },
-
     onFocus(event) {
         this.isFocusedEditor = true;
     },
-
     onBlur(event) {
         let str = this.editor.getHTML().replace(/<\/?[^>]+>/g, '').trim();
+        this.cursorPosition = event.view.state.selection.$anchor.pos;
 
         if (!(!!str)) {
             this.isFocusedEditor = false;
         }
     },
-
     onUpdate(event) {
         let str = this.editor.getHTML().replace(/<\/?[^>]+>/g, '').trim();
+        this.cursorPosition = event.state.selection.$anchor.pos;
 
         this.$emit('onMaximumCharacterLimit', str);
         this.$emit('onUpdate');
     },
-
     setContent(newContent){
         this.editor.setContent(newContent);
     },
-
     getContent(){
         return this.editor.getHTML();
     },
-
     focus() {
         this.editor.focus();
-    }
+    },
 },
-
-beforeDestroy() {
-    this.editor.destroy()
-}
+    beforeDestroy() {
+        this.editor.destroy();
+    }
 }
 </script>
 

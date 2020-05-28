@@ -1,7 +1,7 @@
 import PliziMember from './PliziMember.js';
-import PliziCommunityAvatar from './Community/PliziCommunityAvatar';
-import PliziCommunityHeaderImage from './Community/PliziCommunityHeaderImage';
-import PliziLocation from "./User/PliziLocation";
+import PliziCommunityAvatar from './Community/PliziCommunityAvatar.js';
+import PliziCommunityHeaderImage from './Community/PliziCommunityHeaderImage.js';
+import PliziLocation from './User/PliziLocation.js';
 
 class PliziCommunity {
     /**
@@ -132,6 +132,18 @@ class PliziCommunity {
      */
     _themeId = null;
 
+    /**
+     * @type {number}
+     * @private
+     */
+    _requestsCount = 0;
+
+    /**
+     * @type {boolean}
+     * @private
+     */
+    _subscribed = false;
+
     constructor(inputData){
         this._id = inputData.id;
         this._name = inputData.name;
@@ -150,6 +162,8 @@ class PliziCommunity {
 
         this._role = inputData.role;
         this._totalMembers = inputData.totalMembers;
+        this._requestsCount = inputData.requestsCount;
+        this._subscribed = inputData.subscribed;
 
         if (inputData.friends) {
             this._friends = [];
@@ -193,6 +207,14 @@ class PliziCommunity {
         if (this._primaryImage)
             return this._primaryImage;
 
+        if (this._avatar  &&  this._avatar.image  &&  this._avatar.image.thumb  &&  this._avatar.image.thumb.path) {
+            return this._avatar.image.thumb.path;
+        }
+
+        return this.__defaultAvatarPath;
+    }
+
+    get defaultAvatarPath() {
         return this.__defaultAvatarPath;
     }
 
@@ -275,6 +297,18 @@ class PliziCommunity {
         this._themeId = value;
     }
 
+    get requestsCount() {
+        return this._requestsCount;
+    }
+
+    get subscribed() {
+        return this._subscribed;
+    }
+
+    set subscribed(value) {
+        this._subscribed = value;
+    }
+
     toJSON(){
         let mmbrs = null;
         let friends = null;
@@ -305,10 +339,12 @@ class PliziCommunity {
             type: this.type,
             themeId: this.themeId,
             totalMembers: this.totalMembers,
+            requestsCount: this.requestsCount,
             avatar: this._avatar ? this._avatar.toJSON() : null,
             headerImage: this._headerImage ? this._headerImage.toJSON() : null,
             members: mmbrs,
-            friends: friends
+            friends: friends,
+            subscribed: this.subscribed,
         };
     }
 }

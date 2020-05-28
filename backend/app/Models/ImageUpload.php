@@ -2,6 +2,8 @@
 
 namespace App\Models;
 
+use App\Traits\Commentable;
+use App\Traits\Likeable;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Event;
 use Spiritix\LadaCache\Database\LadaCacheTrait;
@@ -9,7 +11,7 @@ use Storage;
 
 class ImageUpload extends Model
 {
-    use LadaCacheTrait;
+    use LadaCacheTrait, Likeable, Commentable;
 
     const TAG_PRIMARY = 'primary';
     const TAG_SECONDARY = 'secondary';
@@ -27,6 +29,9 @@ class ImageUpload extends Model
         'image_thumb_path',
         'image_thumb_width',
         'image_thumb_height',
+        'like',
+        'creatable_id',
+        'creatable_type',
     ];
 
     public function getS3UrlAttribute()
@@ -65,5 +70,40 @@ class ImageUpload extends Model
     public function getDateFormat()
     {
         return 'U';
+    }
+
+    /**
+     * @return \Illuminate\Database\Eloquent\Relations\MorphTo
+     */
+    public function creatable() {
+        return $this->morphTo();
+    }
+
+    public function albums()
+    {
+        return $this->belongsToMany(PhotoAlbum::class);
+    }
+
+    /**
+     * @return \Illuminate\Database\Eloquent\Relations\MorphMany
+     */
+    public function like() {
+        return $this->morphMany(Like::class, 'likeable')
+            ->where('user_id', \Auth::user()->id);
+    }
+
+    /**
+     * @return \Illuminate\Database\Eloquent\Relations\HasManyThrough
+     */
+    public function usersLikes()
+    {
+        return $this->hasManyThrough(
+            User::class,
+            Like::class,
+            'likeable_id',
+            'id',
+            'id',
+            'user_id'
+        )->where('likeable_type', ImageUpload::class);
     }
 }
