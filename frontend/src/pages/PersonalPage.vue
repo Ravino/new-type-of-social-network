@@ -194,6 +194,7 @@ methods: {
             apiResponse = await this.$root.$api.$users.getUser(this.userId);
         }
         catch (e){
+            this.isStarted = false;
             window.console.warn(e.detailMessage);
             throw e;
         }
@@ -248,6 +249,7 @@ created(){
 
 
 mounted() {
+    this.isStarted = true;
     this.getUserInfo();
     window.scrollTo(0, 0);
 },
