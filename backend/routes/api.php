@@ -104,6 +104,9 @@ Route::group(['middleware' => ['auth.jwt', 'track.activity']], function () {
     Route::prefix('communities')->group(function(){
         Route::middleware(['community.get', 'community.isHasAccess'])->group(static function() {
             Route::get('{groupId}/videos', [CommunityController::class, 'videos']);
+
+            Route::post('{groupId}/notify', [CommunityController::class, 'subscribeNotify']);
+            Route::delete('{groupId}/notify', [CommunityController::class, 'unsubscribeNotify']);
         });
 
         Route::patch('{id}', 'Api\CommunityController@update');

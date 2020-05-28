@@ -562,6 +562,44 @@ class PliziCommunitiesAPI extends PliziBaseAPI {
 
         return null;
     }
+
+    /**
+     * @param {number} communityId
+     * @returns {Promise<null|any>}
+     */
+    async subscribeNotify(communityId) {
+        const url = `api/communities/${communityId}/notify`;
+        let response = await this.axios.post(url, {}, this.authHeaders)
+            .catch((error) => {
+                this.checkIsTokenExpires(error, `$communities.subscribeNotify`);
+                throw new PliziAPIError(`$communities.subscribeNotify`, error.response);
+            });
+
+        if (response.status === 200) {
+            return response.data;
+        }
+
+        return null;
+    }
+
+    /**
+     * @param {number} communityId
+     * @returns {Promise<null|any>}
+     */
+    async unsubscribeNotify(communityId) {
+        const url = `api/communities/${communityId}/notify`;
+        let response = await this.axios.delete(url, this.authHeaders)
+            .catch((error) => {
+                this.checkIsTokenExpires(error, `$communities.unsubscribeNotify`);
+                throw new PliziAPIError(`$communities.unsubscribeNotify`, error.response);
+            });
+
+        if (response.status === 200) {
+            return response.data;
+        }
+
+        return null;
+    }
 }
 
 export default PliziCommunitiesAPI;
