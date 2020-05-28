@@ -442,7 +442,7 @@ class PliziPostAPI extends PliziBaseAPI {
             } );
 
         if ( response.status === 200 ){
-            return response.data;
+            return response.data.data.list;
         }
 
         return null;

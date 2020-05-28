@@ -419,12 +419,12 @@ methods: {
                     apiResponse = this.$root.$api.$chat.attachment([file]);
                     break;
 
-                case 'post':
-                    apiResponse = this.$root.$api.$post.storePostAttachments([file]);
-                    break;
-
                 case 'comment':
                     apiResponse = this.$root.$api.$post.addAttachmentsToComment([file]);
+                    break;
+
+                case 'post':
+                    apiResponse = this.$root.$api.$post.storePostAttachments([file]);
                     break;
 
                 default:

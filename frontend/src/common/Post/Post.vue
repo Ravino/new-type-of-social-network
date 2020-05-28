@@ -239,6 +239,7 @@
                         v-if="!isShowComment"
                         :answers="comment.thread ? comment.thread.list : []"
                         :key="comment.id"
+                        :images="comment.attachments.list"
                         :commentId="comment.id"
                         :text="comment.body"
                         :authorId="comment.author.id"
