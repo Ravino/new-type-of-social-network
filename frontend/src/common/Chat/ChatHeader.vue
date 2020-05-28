@@ -192,6 +192,15 @@ methods: {
 
 },
 
+created(){
+    this.$root.$on('ChatDialogsNew', this.onShowCreateGroupChatModal);
+},
+
+beforeDestroy() {
+    this.$root.$off('ChatDialogsNew', ()=>{});
+}
+
+
 
 }
 </script>
