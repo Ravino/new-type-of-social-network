@@ -29,7 +29,7 @@
                         </time>
                     </div>
 
-                    <div v-if="post.author.id === user.id" class="post-poster-actions my-auto ml-auto">
+                    <div v-if="post.author.id === user.id || isAdmin" class="post-poster-actions my-auto ml-auto">
                         <button class="btn btn-link post-settings"
                                 :id="`postSettings` + post.id"
                                 type="button"
@@ -47,7 +47,7 @@
                                     Редактировать
                                 </button>
                             </div>
-                            <div v-if="post.author.id === user.id" class="nav-item">
+                            <div class="nav-item">
                                 <button class="btn dropdown-item text-left px-3 py-1"
                                         @click="$emit('onDeletePost', post.id)">
                                     Удалить
@@ -315,6 +315,10 @@
         props: {
             post: PliziPost,
             isCommunity: {
+                type: Boolean,
+                default: false,
+            },
+            isAdmin: {
                 type: Boolean,
                 default: false,
             },

@@ -110,6 +110,7 @@
                               :post="postItem"
                               :isCommunity="true"
                               :class="'mx-0'"
+                              :isAdmin="['admin', 'author'].includes(communityData.role)"
                               @onShare="onSharePost"
                               @onDeletePost="onDeletePost"
                               @onRestorePost="onRestorePost"

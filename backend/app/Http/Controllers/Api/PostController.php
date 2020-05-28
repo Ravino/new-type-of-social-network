@@ -197,7 +197,7 @@ class PostController extends Controller
      */
     public function delete(Post $post)
     {
-        if ($post->author->id === \Auth::user()->id) {
+        if ($post->userHasAccess()) {
             $post->delete();
 
             return response()->json([
@@ -207,7 +207,7 @@ class PostController extends Controller
 
         return response()->json([
             'message' => 'Запись не найдена.',
-        ]);
+        ], 404);
     }
 
     /**
@@ -236,9 +236,11 @@ class PostController extends Controller
      */
     public function restore($id)
     {
-        $post = Post::withTrashed()->where('id', $id)->first();
+        $post = Post::withTrashed()
+            ->where('id', $id)
+            ->first();
 
-        if ($post->author->id === \Auth::user()->id) {
+        if ($post->userHasAccess()) {
             $post->restore();
 
             return response()->json([
