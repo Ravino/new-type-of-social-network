@@ -18,6 +18,7 @@ class PliziUsersAPI extends PliziBaseAPI{
             });
 
         if (200 === response.status) {
+            console.log(response);
             return response.data;
         }
 

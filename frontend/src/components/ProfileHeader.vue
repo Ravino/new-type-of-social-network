@@ -167,9 +167,12 @@
                     <span class="numbers-top" v-html="sBeaty(userData.photosNumber)"></span>
                     <span class="numbers-bottom">Фотографий</span>
                 </div>
-                <div class="plz-profile-userdetails-numbers text-center pt-2 px-2 pt-md-4 px-md-4">
-                    <span class="numbers-top" v-html="sBeaty(userData.videosNumber)"></span>
+                <div v-if="usrVideosNumber > 0" class="plz-profile-userdetails-numbers text-center pt-2 px-2 pt-md-4 px-md-4">
+                    <span class="numbers-top" v-html="sBeaty(usrVideosNumber)"></span>
                     <span class="numbers-bottom">Видео</span>
+                </div>
+                <div v-else class="plz-profile-userdetails-numbers text-center pt-2 px-2 pt-md-5 px-md-4">
+                    <span class="numbers-bottom">Нет видео</span>
                 </div>
                 <!--
                 <div class="plz-profile-userdetails-numbers text-center pt-4 px-4">
@@ -217,6 +220,10 @@
 
             usrFollowersNumber() {
                 return this.userData.stats.followCount;
+            },
+
+            usrVideosNumber() {
+                return this.userData.stats.videosCount;
             },
 
             userAvatar() {

@@ -49,6 +49,13 @@ class PliziUserStats {
      */
     _followCount = 0;
 
+    /**
+     * Кол-во видео
+     * @type {number}
+     * @private
+     */
+    _videosCount = 0;
+
     get notifications(){
         return this._notifications;
     }
@@ -109,6 +116,14 @@ class PliziUserStats {
         this._followCount = value;
     }
 
+    get videosCount() {
+        return this._videosCount;
+    }
+
+    set videosCount(value) {
+        this._videosCount = value;
+    }
+
     constructor(inputData){
         if (inputData) {
             this.update(inputData);
@@ -123,6 +138,7 @@ class PliziUserStats {
         this.isFollow = inputData.isFollow;
         this.isFriend = inputData.isFriend;
         this.followCount = inputData.followCount;
+        this.videosCount = inputData.videosCount;
     }
 
     toJSON(){
@@ -134,6 +150,7 @@ class PliziUserStats {
             isFollow: this.isFollow,
             isFriend: this.isFriend,
             followCount: this.followCount,
+            videosCount: this.videosCount
         };
     }
 }
