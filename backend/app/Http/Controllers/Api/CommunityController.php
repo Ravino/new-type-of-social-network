@@ -178,21 +178,39 @@ class CommunityController extends Controller
     }
 
     /**
+     * @param $community
+     * @return JsonResponse
+     */
+    private function subscribeSuccessResponse($community)
+    {
+        event(new CommunitySubscribe($community->id, auth()->user()->id));
+        return response()->json([
+            'data' => [
+                'message' => 'Вы были успешно добавлены в сообщество',
+                'id' => $community->id
+            ]
+        ], 200);
+    }
+
+    /**
      * @param int $id
      * @return JsonResponse
      */
     public function subscribe(int $id) {
         $community = Community::find($id);
         if($community) {
-            if(!$community->users->contains(auth()->user()->id)) {
+            if (!$community->role) {
                 $community->users()->attach(auth()->user()->id, ['role' => Community::ROLE_USER, 'created_at' => time(), 'updated_at' => time()]);
-                event(new CommunitySubscribe($community->id, auth()->user()->id));
-                return response()->json([
-                    'data' => [
-                        'message' => 'Вы были успешно добавлены в сообщество',
-                        'id' => $community->id
-                    ]
-                ], 200);
+                return $this->subscribeSuccessResponse($community);
+            }
+            if ($community->role->role === Community::ROLE_GUEST) {
+                CommunityMember::where([
+                    'user_id' => auth()->id(),
+                    'community_id' => $community->id,
+                ])->update([
+                        'role' => Community::ROLE_USER,
+                    ]);
+                return $this->subscribeSuccessResponse($community);
             }
 
             return response()->json(['message' => 'Вы уже являетесь участником данного сообщества'], 422);

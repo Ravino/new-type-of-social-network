@@ -261,9 +261,11 @@ class Community extends Model
     public function scopeOnlyMy(Builder $query)
     {
         $query->whereHas('role', static function (Builder $query) {
-            $query->where([
-                'user_id' => Auth::guest() ? '0' : Auth::user()->id,
-            ]);
+            $query
+                ->where([
+                    'user_id' => Auth::guest() ? '0' : Auth::user()->id,
+                ])
+                ->where('role', '!=', self::ROLE_GUEST);
         });
     }
 
@@ -311,11 +313,13 @@ class Community extends Model
         $query
             ->where(static function(Builder $q) {
                 $q
-                    ->where('privacy', '!=', self::PRIVACY_PRIVATE)
+                    ->whereNotIn('privacy', [self::PRIVACY_PRIVATE, self::PRIVACY_CLOSED])
                     ->orWhereHas('role', static function (Builder $query) {
-                        $query->where([
-                            'user_id' => Auth::guest() ? '0' : Auth::user()->id,
-                        ]);
+                        $query
+                            ->where([
+                                'user_id' => Auth::guest() ? '0' : Auth::user()->id,
+                            ])
+                            ->where('role', '!=', self::ROLE_GUEST);
                     });
             });
     }

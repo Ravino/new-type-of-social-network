@@ -37,6 +37,7 @@ class Community extends JsonResource
             'avatar' => $this->avatar ? new Image($this->avatar) : null,
             'headerImage' => $this->headerImage ? new Image($this->headerImage) : null,
             'friends' => $this->getFriends($request),
+            'subscribed' => $this->role ? (bool)$this->role->subscribed : false,
         ];
         if ($this && $this->relationLoaded('users')) {
             $data['members'] = new CommunityUserCollection($this->users);
