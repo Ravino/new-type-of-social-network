@@ -314,15 +314,11 @@ methods: {
     addNewPost(post) {
         this.posts.unshift( new PliziPost( post ) );
     },
-    startTimer( post ){
+    startTimer(post){
         setTimeout( () => {
-            const postIndex = this.posts.find( ( userPost ) => {
-                return userPost.id === post.id;
-            } );
+            let postIndex = this.posts.findIndex(item => item.id === post.id);
 
-            if ( post.deleted ){
-                this.posts.splice( postIndex, 1 );
-            }
+            this.posts.splice( postIndex, 1 );
         }, 5000 );
     },
     onEditPost( post ){
@@ -436,7 +432,7 @@ methods: {
 
             post.deleted = true;
 
-            this.startTimer( post );
+            this.startTimer(post);
         }
     },
 
