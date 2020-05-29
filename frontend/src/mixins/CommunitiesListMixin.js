@@ -1,13 +1,13 @@
-import AccountToolbarLeft from '../common/AccountToolbarLeft.vue';
-import Spinner from '../common/Spinner.vue';
-import FavoriteFriends from '../common/FavoriteFriends.vue';
-import RecommendedCommunities from '../common/Communities/RecommendedCommunities.vue';
-import CommunitiesListHeader from '../common/Communities/CommunitiesListHeader.vue';
-
-import CommunityItem from '../common/Communities/CommunityItem.vue';
-import CommunityCreateBlock from '../common/Communities/CommunityCreateBlock.vue';
 import PliziCommunity from "../classes/PliziCommunity.js";
-import {debounce} from "../utils/Debonce.js";
+
+import AccountToolbarLeft from '../common/AccountToolbarLeft.vue';
+import FavoriteFriends from '../common/FavoriteFriends.vue';
+import Spinner from '../common/Spinner.vue';
+
+import CommunitiesListHeader from '../common/Communities/CommunitiesListHeader.vue';
+import CommunityCreateBlock from '../common/Communities/CommunityCreateBlock.vue';
+import CommunityItem from '../common/Communities/CommunityItem.vue';
+import RecommendedCommunities from '../common/Communities/RecommendedCommunities.vue';
 
 const CommunitiesListMixin = {
     components: {
@@ -51,7 +51,6 @@ const CommunitiesListMixin = {
     beforeDestroy() {
         this.$root.$off('communitySearchStart', this.searchProcess);
     },
-    computed: {},
 
     methods: {
         async searchProcess(e) {
@@ -63,7 +62,7 @@ const CommunitiesListMixin = {
             if (e.list === 'owner') {
                 return this.loadManagedCommunities();
             }
-            return this.loadPopularCommunitites();
+            return this.loadPopularCommunities();
         },
         isSubscribed(commID) {
             if (!this.popularCommunities)
@@ -79,7 +78,7 @@ const CommunitiesListMixin = {
         },
         async onScrollYPage() {
             if (window.scrollY >= (document.body.scrollHeight - document.documentElement.clientHeight - (document.documentElement.clientHeight / 2))) {
-                console.log(this.$route.name);
+                // console.log(this.$route.name);
 
                 if (this.$route.name === 'CommunitiesManagePage') {
                     await this.lazyLoad('manage');
@@ -90,17 +89,6 @@ const CommunitiesListMixin = {
                 }
             }
         },
-        // onScrollYPage: debounce(function () {
-        //     if (window.scrollY >= (document.body.scrollHeight - document.documentElement.clientHeight - (document.documentElement.clientHeight / 2))) {
-        //         if (this.$route.name === 'CommunitiesManagePage') {
-        //             this.lazyLoad('manage');
-        //         } else if (this.$route.name === 'CommunitiesPopularPage') {
-        //             this.lazyLoad('popular');
-        //         } else {
-        //             this.lazyLoad();
-        //         }
-        //     }
-        // }, 100),
 
         async loadCommunities(limit = 10, offset = 0) {
             this.enabledLoader = true;
@@ -125,7 +113,7 @@ const CommunitiesListMixin = {
             return this.processApiResponce(offset, apiResponse, 'communitiesList');
         },
 
-        async loadPopularCommunitites(limit = 10, offset = 0) {
+        async loadPopularCommunities(limit = 10, offset = 0) {
             this.enabledLoader = true;
             const searchText = this.searchString;
             let apiResponse = null;
@@ -200,17 +188,17 @@ const CommunitiesListMixin = {
                 oldSize = this.managedCommunities.length;
 
                 if (oldSize)
-                    added = await this.loadManagedCommunities(10, oldSize++);
+                    added = await this.loadManagedCommunities(20, oldSize++);
             } else if (listName === 'popular') {
                 oldSize = this.popularCommunities.length;
 
                 if(oldSize)
-                    added = await this.loadPopularCommunitites(10, oldSize++);
+                    added = await this.loadPopularCommunities(20, oldSize++);
             } else {
                 oldSize = this.communitiesList.length;
 
                 if(oldSize)
-                    added = await this.loadCommunities(10, oldSize++);
+                    added = await this.loadCommunities(20, oldSize++);
             }
 
             if (added === 0) {
