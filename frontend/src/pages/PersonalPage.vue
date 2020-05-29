@@ -145,9 +145,8 @@ watch: {
 
 computed: {
     filteredPosts(){
-        switch (this.filterMode) {
-            case 'user':
-                return this.posts.filter(post => post.checkIsMinePost(this.profileData.id));
+        if (this.filterMode === 'user') {
+            return this.posts.filter(post => post.checkIsMinePost(this.profileData.id));
         }
 
         return this.posts;
@@ -155,10 +154,12 @@ computed: {
 },
 
 methods: {
-    afterRouteUpdate(ev){
+    async afterRouteUpdate(ev){
         this.userId = ev.params.id;
         this.posts = [];
-        this.getUserInfo();
+        this.isStarted = true;
+        await this.getUserInfo();
+        await this.getPosts();
         window.scrollTo(0, 0);
     },
 
@@ -287,16 +288,16 @@ async mounted() {
 /**
  * @TGA закоменченное ниже - ошибка но пусть пока будет
  */
-async beforeRouteUpdate( to, from, next ){
-   this.profileData = null;
-   this.posts = null;
-   this.userId = to.params.id;
-   next();
-    this.isStarted = true;
-    await this.getUserInfo();
-    await this.getPosts();
-   window.scrollTo( 0, 0 );
-},
+// async beforeRouteUpdate( to, from, next ){
+//    this.profileData = null;
+//    this.posts = null;
+//    this.userId = to.params.id;
+//    next();
+//     this.isStarted = true;
+//     await this.getUserInfo();
+//     await this.getPosts();
+//    window.scrollTo( 0, 0 );
+// },
 }
 </script>
 
