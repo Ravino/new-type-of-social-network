@@ -301,7 +301,6 @@ methods : {
 },
 
 async mounted() {
-    console.log(this.$root.$auth.user);
     await this.getPosts();
 },
 }
