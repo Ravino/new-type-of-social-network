@@ -168,6 +168,7 @@ components : {
 
 data() {
     return {
+        currentId: null,
         isDataReady: false,
         communityData: null,
         posts: [],
@@ -192,6 +193,10 @@ data() {
             },
         },
     }
+},
+
+watch: {
+    $route: 'afterRouteUpdate' // при изменениях маршрута запрашиваем данные снова
 },
 
 computed: {
@@ -226,9 +231,17 @@ computed: {
 },
 
 methods: {
+    afterRouteUpdate(ev){
+        this.currentId = ev.params.id;
+        this.posts = [];
+        this.getCommunityInfo();
+        window.scrollTo(0, 0);
+    },
+
     addNewPost(post) {
         this.posts.unshift( new PliziPost( post ) );
     },
+
     startTimer(post){
         setTimeout( () => {
             let postIndex = this.posts.findIndex(item => item.id === post.id);
@@ -236,6 +249,7 @@ methods: {
             this.posts.splice( postIndex, 1 );
         }, 5000 );
     },
+
     onEditPost( post ){
         this.postEditModal.isVisible = true;
         this.postForEdit = post;
@@ -312,46 +326,55 @@ methods: {
             post.deleted = false;
         }
     },
-    async getCommunityInfo() {
+
+    async uploadPrimaryImage(){
+        if (!this.isAuthor)
+            return;
+
+        const formData = this.getFormData();
+
+        if (!formData) {
+            return;
+        }
+
+        const { size } = formData.get('file');
+
+        if (size > 2000000) {
+            this.showErrorOnLargeFile();
+            return;
+        }
+
         let apiResponse = null;
 
         try {
-            apiResponse = await this.$root.$api.$communities.getCommunity(this.id);
-        }
-        catch (e){
+            apiResponse = await this.$root.$api.$communities.updatePrimaryImage(formData);
+        } catch (e) {
+            if (e.status === 422) {
+                this.showErrorOnLargeFile();
+                return;
+            }
+
             window.console.warn(e.detailMessage);
-            throw e;
         }
 
         if (apiResponse) {
-            this.communityData = new PliziCommunity(apiResponse);
-            this.isDataReady = true;
-            document.title = `Plizi: ${this.communityData?.name}`;
-            setTimeout(() => {
-                const getPosts = async () => {
-                    await this.getPosts();
-                };
-                if (!this.hasAccess) {
-                    this.noMore = true;
-                    return;
-                }
-                getPosts();
-                this.noMore = false;
-            }, 100);
+            this.communityData.avatar = new PliziCommunityAvatar(apiResponse.data);
         }
     },
+
     async getPosts(limit = 50, offset = 0) {
         let response = null;
         this.isStarted = true;
 
         try {
-            response = await this.$root.$api.$communities.posts(this.id, limit, offset);
+            response = await this.$root.$api.$communities.posts(this.currentId, limit, offset);
         } catch (e) {
             this.isStarted = false;
         }
 
         if (response !== null) {
             this.isStarted = false;
+            this.posts = [];
             response.map((post) => {
                 this.posts.push(new PliziPost(post));
             });
@@ -374,15 +397,48 @@ methods: {
     onNeedAddCommunityToHot(){
         this.keyUpdater++;
         const comm = this.communityData || null;
-        this.addCommunityToFavorites( this.$route.params.id, comm );
+        this.addCommunityToFavorites( this.currentId, comm );
 
         if (this.$refs  &&  this.$refs.hotCommunitiesBlock) {
             this.$refs.hotCommunitiesBlock.$forceUpdate();
         }
-    }
+    },
+
+    async getCommunityInfo() {
+        let apiResponse = null;
+
+        try {
+            apiResponse = await this.$root.$api.$communities.getCommunity(this.currentId);
+        }
+        catch (e){
+            window.console.warn(e.detailMessage);
+            throw e;
+        }
+
+        if (apiResponse) {
+            this.communityData = new PliziCommunity(apiResponse);
+            this.isDataReady = true;
+            document.title = `Plizi: ${this.communityData?.name}`;
+
+            setTimeout(() => {
+                const getPosts = async () => {
+                    await this.getPosts();
+                };
+
+                if (!this.hasAccess) {
+                    this.noMore = true;
+                    return;
+                }
+                getPosts();
+                this.noMore = false;
+            }, 100);
+        }
+    },
 },
 
 created(){
+    this.currentId = this.id;
+
     this.$root.$on('NeedAddCommunityToHot', this.onNeedAddCommunityToHot);
 },
 
@@ -391,14 +447,17 @@ async mounted() {
     window.scrollTo(0, 0);
 },
 
-beforeRouteUpdate (to, from, next) {
-    this.communityData = null;
-    this.posts = null;
-    next();
-    this.id = to.params.id;
-    this.getCommunityInfo();
-    window.scrollTo(0, 0);
-},
+/**
+ * @TGA закоменченное ниже - ошибка но пусть пока будет
+ */
+//beforeRouteUpdate(to, from, next) {
+//    this.communityData = null;
+//    this.posts = null;
+//    next();
+//    this.id = to.params.id;
+//    this.getCommunityInfo();
+//    window.scrollTo(0, 0);
+//},
 
 }
 </script>

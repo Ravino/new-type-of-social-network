@@ -97,7 +97,6 @@ created(){
 beforeDestroy() {
     this.$root.$off(this.$root.$auth.cm.loadEventName, ()=>{});
     this.$root.$off(this.$root.$auth.cm.restoreEventName, ()=>{});
-
     this.$root.$off(this.$root.$auth.cm.updateEventName, ()=>{});
 }
 

@@ -589,12 +589,21 @@ class PliziAPIClass {
 
             if (channelID=== this.channel  &&  `user.notification`===data.event_type) {
                 this.emit('UserNotification', data.data);
+                console.log('emit NewAppNotification');
+                this.emit('NewAppNotification', {
+                    type :  data.event_type,
+                    notification : data.data
+                });
             }
 
             if (channelID=== this.channel  &&  `message.new`===data.event_type) {
                 this.emit('newMessageInDialog', {
                     chatId :  data.data.chatId,
                     message : data.data
+                });
+                this.emit('NewAppNotification', {
+                   type :  data.event_type,
+                   message : data.data
                 });
             }
 
@@ -606,32 +615,47 @@ class PliziAPIClass {
             }
 
             if (channelID=== this.channel  &&  `chat.removed`===data.event_type) {
-                this.emit('remoteRemoveDialog', {
+                this.emit('NewAppNotification', {
+                    type :  data.event_type,
                     chatId :  data.data.id
                 });
-            }
+                setTimeout(() => {
+                    this.emit('remoteRemoveDialog', {
+                        chatId :  data.data.id
+                    });
+                }, 300);
 
+            }
             if (channelID=== this.channel  &&  `chat.created`===data.event_type) {
                 this.emit('remoteCreateDialog', {
                     data :  data.data
                 });
+                this.emit('NewAppNotification', {
+                   type :  data.event_type,
+                   dialog :  data.data
+                });
             }
-
             if (channelID=== this.channel  &&  `chat.attendee.appended`===data.event_type) {
                 this.emit('remoteAddAttendee', {
                     data :  data.data
                 });
-            }
-
-            if (channelID=== this.channel  &&  `chat.attendee.removed`===data.event_type) {
-                console.dir(data, `data`);
-
-                this.emit('remoteRemoveAttendee', {
-                    chatId :  data.data.id,
-                    userId :  data.data.userId
+                this.emit('NewAppNotification', {
+                   type :  data.event_type,
+                   dialog :  data.data
                 });
             }
-
+            if (channelID=== this.channel  &&  `chat.attendee.removed`===data.event_type) {
+                this.emit('NewAppNotification', {
+                    type :  data.event_type,
+                    chatId :  data.data.id
+                });
+                setTimeout(() => {
+                    this.emit('remoteRemoveAttendee', {
+                        chatId :  data.data.id,
+                        userId :  data.data.userId
+                    });
+                }, 300);
+            }
         });
     }
 
