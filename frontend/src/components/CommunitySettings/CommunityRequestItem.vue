@@ -91,7 +91,7 @@
                 }
                 if (apiResponse) {
                     this.$emit('accepted');
-                    this.$root.$alert(apiResponse.message, 'bg-white-br20', 3);
+                    this.$root.$notify(apiResponse.message);
                 } else {
                     this.$root.$alert(`Ошибка отправки запроса`, 'bg-warning', 3);
                 }
@@ -107,7 +107,7 @@
                 }
                 if (apiResponse) {
                     this.$emit('rejected');
-                    this.$root.$alert(apiResponse.message, 'bg-white-br20', 3);
+                    this.$root.$notify(apiResponse.message);
                 } else {
                     this.$root.$alert(`Ошибка отправки запроса`, 'bg-warning', 3);
                 }

@@ -28,7 +28,7 @@ methods: {
 
         if (apiResponse) {
             this.srItem.role = 'admin';
-            this.$root.$alert('Пользователь назначен администратором сообщества', 'bg-info', 3);
+            this.$root.$notify(`Пользователь ${this.srItem.firstName} ${this.srItem.lastName} назначен администратором сообщества`);
         }
     }
 },

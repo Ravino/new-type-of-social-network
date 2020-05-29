@@ -27,7 +27,7 @@ methods: {
 
         if (apiResponse) {
             this.srItem.role = 'user';
-            this.$root.$alert('Пользователь удален из администраторов сообщества', 'bg-info', 3);
+            this.$root.$notify(`Пользователь ${this.srItem.firstName} ${this.srItem.lastName} удален из администраторов сообщества`);
         }
     }
 },
