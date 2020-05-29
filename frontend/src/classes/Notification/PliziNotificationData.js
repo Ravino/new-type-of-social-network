@@ -151,6 +151,14 @@ class PliziNotificationData {
             return `В сообществе "${this.community.name}" опубликован новый пост "${this.community.postName}"`;
         }
 
+        if ("community.request.accepted" === this.notificationType) {
+            return `В сообществе «${this.community.name}» одобрили Ваше вступление в сообщество`;
+        }
+
+        if ("community.request.rejected" === this.notificationType) {
+            return `В сообществе «${this.community.name}»  отклонили Ваше вступление в сообщество`;
+        }
+
         return this.body;
     }
 
