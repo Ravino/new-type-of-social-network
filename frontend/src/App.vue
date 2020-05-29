@@ -33,6 +33,9 @@
                 <AuthFooter v-if=" 'ChatsListPage'!==this.$root.$router.currentRoute.name "></AuthFooter>
             </div>
 
+            <AppNotifications :notifications="notifications"
+                               @removeNotification="removeNotification"></AppNotifications>
+
             <AlertModal v-if="mainModalVisible"
                         v-bind:alertMessage="mainModalMessage"
                         v-bind:alertClass="mainModalClass"
@@ -49,19 +52,25 @@ import AuthNavBar from './common/AuthNavBar.vue';
 import AuthFooter from './common/AuthFooter.vue';
 import GuestFooter from './common/GuestFooter.vue';
 import AlertModal from './components/AlertModal.vue';
+import AppNotifications from './common/AppNotifications.vue';
+import NotificationMixin from "./mixins/NotificationMixin.js";
 
 import {PliziAPI} from './classes/PliziAPI.js';
 import {PliziAuth} from './classes/PliziAuth.js';
 
+
 export default {
 name: 'App',
 components: {
-    GuestNavBar, AuthNavBar, AuthFooter, GuestFooter, AlertModal
+    GuestNavBar, AuthNavBar, AuthFooter, GuestFooter, AlertModal, AppNotifications
 },
+mixins: [NotificationMixin],
 data () {
     return {
         containerID : `contentContainer`, /** @TGA - просто хак, чтобы phpStorm не ругался на одинаковый ID у элемента */
         lastSearchText: ``,
+
+        notifyBlockIsVisible: false,
 
         mainModalVisible : false,
         mainModalTitle   : '',
@@ -151,6 +160,51 @@ methods: {
         }
     },
 
+    onNewAppNotification(evData){
+        window.console.log(evData, `onNewAppNotification`);
+        if (this.$root.$isXS()  || this.$root.$isSM() || this.$root.$isMD())
+            return;
+
+        if (`app.notification`===evData.type) {
+            console.log(evData);
+            let chatNotificationData = this.transformNotifyToNotification(evData);
+            // this.addNotification(chatNotificationData);
+        }
+
+        if (`user.notification`===evData.type) {
+            this.addNotification(evData.notification);
+        }
+
+        if (`chat.created`===evData.type) {
+            let chatNotificationData = this.transformDialogToNotification(evData);
+            this.addNotification(chatNotificationData);
+        }
+
+        if (`chat.removed`===evData.type) {
+            const chatRemoved = this.$root.$auth.dm.get(evData.chatId);
+            let chatNotificationData = this.transformForChatRemovedToNotification(chatRemoved, evData.type);
+            this.addNotification(chatNotificationData);
+        }
+
+        if (`chat.attendee.removed`===evData.type) {
+            const chatRemoved = this.$root.$auth.dm.get(evData.chatId);
+            let chatNotificationData = this.transformForChatRemovedToNotification(chatRemoved, evData.type);
+            this.addNotification(chatNotificationData);
+        }
+
+        if (`chat.attendee.appended`===evData.type) {
+            let chatNotificationData = this.transformDialogToNotification(evData);
+            this.addNotification(chatNotificationData);
+        }
+
+        if (`message.new`===evData.type) {
+            if (!evData.message.isMine) {
+                let chatNotificationData = this.transformMessageToNotification(evData);
+                this.addNotification(chatNotificationData);
+            }
+        }
+    },
+
     isAuthorized(){
         return this.$root.$isAuth;
     },
@@ -234,6 +288,8 @@ created(){
 
     this.$root.$on('AfterUserLoad', this.afterUserLoad);
     this.$root.$on('AfterUserRestore', this.afterUserRestore);
+
+    this.$root.$on('NewAppNotification', this.onNewAppNotification);
 
     this.$root.$on('searchStart', (evData) => {
         this.lastSearchText = evData.searchText;

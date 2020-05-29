@@ -7,10 +7,12 @@
                     :key="notification.id"
                 >
                     <div class="plz-notification-pic mr-3">
-                        <img :src="notification.userPic" alt="image">
+                        <img v-if="notification.isHuman" :src="notification.userPic" alt="image" />
+                        <img v-else :src="notification.primaryImage" alt="image" />
                     </div>
                     <div class="plz-notification-body mr-3">
-                        <h6 class="plz-notification-name mb-2">{{ notification.firstName }} {{ notification.lastName }}</h6>
+                        <h6 v-if="notification.isHuman" class="plz-notification-name mb-2">{{ notification.firstName }} {{ notification.lastName }}</h6>
+                        <h6 v-else class="plz-notification-name mb-2">{{ notification.name }} </h6>
                         <div class="plz-notification-text" v-html="notification.body"></div>
                     </div>
                     <button class="btn btn-close pt-0 pr-0 ml-auto" @click="removeNotification(notification)">
@@ -23,7 +25,7 @@
 
 <script>
 export default {
-name: 'ChatNotifications',
+name: 'AppNotifications',
 props: {
     notifications: {
         type: Array,
