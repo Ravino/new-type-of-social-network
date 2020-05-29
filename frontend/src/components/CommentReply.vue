@@ -4,7 +4,7 @@
         <div class="plz-comment-item-data-pic mr-3">
             <img class="plz-comment-item-data-img" :src="userData.userPic" alt="">
         </div>
-        <TextEditor :clazz="`plz-text-editor h-auto  align-items-start flex-grow-1 `"
+        <TextEditor :clazz="`plz-text-editor h-auto plz-comment-post-text-field align-items-start flex-grow-1 `"
                     :dropToDown="true"
                     :maximumCharacterLimit="500"
                     workMode="comment"
@@ -60,19 +60,28 @@
                     msg = msg.replace(/<p><\/p>/g, brExample);
                     msg = this.killBrTrail(msg);
 
-                    this.isAnswer = !this.isAnswer;
-                    this.getAnswerToComment(msg);
-                    this.isSending = false;
+                    if (msg !== '') {
+                        this.getAnswerToComment(msg, evData.attachments);
+                    } else if (evData.attachments.length > 0) {
+                        this.getAnswerToComment('', evData.attachments);
+                    }
+                } else {
+                    if (evData.attachments.length > 0) {
+                        this.getAnswerToComment('', evData.attachments);
+                    }
                 }
+
+                this.isAnswer = !this.isAnswer;
+                this.isSending = false;
             },
-           async getAnswerToComment(msg) {
+            async getAnswerToComment(msg, attachments) {
                 try {
-                    let response = await this.$root.$api.$post.getAnswerToComment(msg, this.postId, [], this.commentId);
+                    let response = await this.$root.$api.$post.getAnswerToComment(msg, this.postId, attachments, this.commentId);
                     this.$emit('addComment', response.data);
                 } catch (e) {
                     console.warn(e.detailMessage);
                 }
             },
-        },
+        }
     }
 </script>
