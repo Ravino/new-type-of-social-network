@@ -204,7 +204,7 @@
                                 <div class="d-flex mb-0">
                                     <router-link v-for="(user, index) in shortUsersLikes"
                                                  :key="index"
-                                                 class="usersLikes-user"
+                                                 class="usersLikes-user m-1"
                                                  :to="{ name: 'PersonalPage', params: { id: user.id } }">
                                         <img :src="user.profile.userPic"
                                              :alt="user.profile.firstName + ' ' + user.profile.lastName"
