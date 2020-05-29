@@ -175,6 +175,14 @@ class Community extends Model
     }
 
     /**
+     * @return BelongsToMany
+     */
+    public function managers()
+    {
+        return $this->belongsToMany(User::class, 'community_members')->withPivot(['role'])->wherePivot('role', self::ROLE_ADMIN)->orWherePivot('role', self::ROLE_AUTHOR);
+    }
+
+    /**
      * @return HasOne
      */
     public function role()

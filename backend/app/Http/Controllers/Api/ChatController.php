@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
+use App\Models\Community;
 use Domain\Pusher\Http\Requests\OpenChat;
 use Domain\Pusher\Http\Requests\SendMessageRequest;
 use Domain\Pusher\Http\Requests\SendMessageToUserRequest;
@@ -84,6 +85,23 @@ class ChatController extends Controller
     {
         $chat = $this->chatService->getChatForUsers(
             $request->get('userIds'),
+            $request->get('name')
+        );
+        return response()->json(['data' => $chat]);
+    }
+
+    /**
+     * @param Request $request
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function openWithCommunityAdmins(Request $request)
+    {
+        $community = Community::find($request->get('communityId'));
+        $author = $community->authors()->first();
+        $admin_ids = $community->admins()->get()->pluck('id')->toArray();
+        $chat = $this->chatService->openWithCustomAdmin(
+            array_merge($admin_ids, [Auth::user()->id]),
+            $author->id,
             $request->get('name')
         );
         return response()->json(['data' => $chat]);

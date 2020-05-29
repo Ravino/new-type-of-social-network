@@ -117,6 +117,21 @@ class ChatRepository
     }
 
     /**
+     * @param $user_ids
+     * @return mixed|null
+     */
+    public function getChatIdForGroupUsers($user_ids) {
+        $chat = Chat::with('attendees')
+            ->where('user_ids', 'all', $user_ids)
+            ->where('user_ids', 'size', count($user_ids))
+            ->first();
+        if($chat) {
+            return $chat->id;
+        }
+        return null;
+    }
+
+    /**
      * Создает чат для двух пользователей
      *
      * @param $receiver_id
