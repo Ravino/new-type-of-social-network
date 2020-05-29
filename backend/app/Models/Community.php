@@ -333,7 +333,7 @@ class Community extends Model
         $query
             ->where(static function(Builder $q) {
                 $q
-                    ->whereNotIn('privacy', [self::PRIVACY_PRIVATE, self::PRIVACY_CLOSED])
+                    ->whereNotIn('privacy', [self::PRIVACY_PRIVATE])
                     ->orWhereHas('role', static function (Builder $query) {
                         $query
                             ->where([
