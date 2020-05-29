@@ -98,6 +98,7 @@ Route::group(['middleware' => ['auth.jwt', 'track.activity']], function () {
 
     Route::post('user/images/{imageUpload}', 'Api\LikeController@likeUserImage');
     Route::post('user/images/{imageUpload}/comment', 'Api\CommentController@commentUserImage');
+    Route::get('/user/{user}/photos', 'Api\ImageUploadController@getUserImages');
 
     /**
      * Communities Resource

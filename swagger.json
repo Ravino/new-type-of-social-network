@@ -79,7 +79,12 @@
               }
             }
           }
-        }
+        },
+          "security": [
+              {
+                  "Authorization": []
+              }
+          ]
       },
       "post": {
         "tags": [
@@ -129,7 +134,12 @@
               }
             }
           }
-        }
+        },
+          "security": [
+              {
+                  "Authorization": []
+              }
+          ]
       }
     },
     "/user/images/{imageId}": {
@@ -167,9 +177,60 @@
               }
             }
           }
-        }
+        },
+          "security": [
+              {
+                  "Authorization": []
+              }
+          ]
       }
     },
+      "/user/{id}/photos":{
+          "get": {
+              "tags": [
+                "Photo"
+              ],
+              "description": "Получить изображения для шапки профиля",
+              "operationId": "GetProfileHeaderUserPhotoList",
+              "parameters": [
+                  {
+                      "name": "id",
+                      "in": "path",
+                      "description": "ID пользователя",
+                      "required": true,
+                      "schema": {
+                          "type": "integer"
+                      }
+                  }
+              ],
+              "responses": {
+                  "200": {
+                      "description": "OK",
+                      "content": {
+                          "application/json": {
+                              "schema": {
+                                  "type": "object",
+                                  "properties": {
+                                      "data": {
+                                          "properties": {
+                                              "list": {
+                                                  "$ref": "#/components/schemas/ImageUploadList"
+                                              }
+                                          }
+                                      }
+                                  }
+                              }
+                          }
+                      }
+                  }
+              },
+              "security": [
+                  {
+                      "Authorization": []
+                  }
+              ]
+          }
+      },
     "/photo-albums/{id}/photos": {
       "post": {
         "tags": [
@@ -224,7 +285,12 @@
               }
             }
           }
-        }
+        },
+          "security": [
+              {
+                  "Authorization": []
+              }
+          ]
       }
     },
     "/photo-albums": {
@@ -254,7 +320,12 @@
               }
             }
           }
-        }
+        },
+          "security": [
+              {
+                  "Authorization": []
+              }
+          ]
       },
       "post": {
         "tags": [
@@ -269,7 +340,6 @@
                 "type": "object",
                 "properties": {
                   "communityId": {
-                    "required": "false",
                     "type": "number",
                     "description": "Community id если фотоальбом создается в сообществе в ином случае этого поля не должно быть в запросе."
                   },
@@ -307,7 +377,12 @@
               }
             }
           }
-        }
+        },
+          "security": [
+              {
+                  "Authorization": []
+              }
+          ]
       }
     },
     "/photo-albums/community/{community}": {
@@ -357,7 +432,12 @@
               }
             }
           }
-        }
+        },
+          "security": [
+              {
+                  "Authorization": []
+              }
+          ]
       }
     },
     "/photo-albums/{id}": {
@@ -414,7 +494,12 @@
               }
             }
           }
-        }
+        },
+          "security": [
+              {
+                  "Authorization": []
+              }
+          ]
       },
       "delete": {
         "tags": [
@@ -450,7 +535,12 @@
               }
             }
           }
-        }
+        },
+          "security": [
+              {
+                  "Authorization": []
+              }
+          ]
       }
     },
     "/user/images/{imageId}/comment": {
@@ -498,7 +588,12 @@
               }
             }
           }
-        }
+        },
+          "security": [
+              {
+                  "Authorization": []
+              }
+          ]
       }
     },
     "/posts/attachments/{attachmentId}/comment": {
@@ -546,7 +641,12 @@
               }
             }
           }
-        }
+        },
+          "security": [
+              {
+                  "Authorization": []
+              }
+          ]
       }
     },
     "/comment/{commentId}/like": {
@@ -584,7 +684,12 @@
               }
             }
           }
-        }
+        },
+          "security": [
+              {
+                  "Authorization": []
+              }
+          ]
       }
     },
     "/comment/post": {
@@ -5694,6 +5799,82 @@
           }
         }
       },
+        "ImageUploadList": {
+            "type": "object",
+            "properties": {
+                "id": {
+                    "type": "number"
+                },
+                "originalName": {
+                    "type": "string"
+                },
+                "url": {
+                    "type": "string"
+                },
+                "path": {
+                    "type": "string"
+                },
+                "mimeType": {
+                    "type": "string"
+                },
+                "size": {
+                    "type": "string"
+                },
+                "image": {
+                    "type": "object",
+                    "properties": {
+                        "original": {
+                            "type": "object",
+                            "properties": {
+
+                            }
+                        },
+                        "normal": {
+                            "type": "object",
+                            "properties": {
+                                "width": {
+                                    "type": "string"
+                                },
+                                "height": {
+                                    "type": "string"
+                                },
+                                "path": {
+                                    "type": "string"
+                                }
+                            }
+                        },
+                        "medium": {
+                            "type": "object",
+                            "properties": {
+                                "width": {
+                                    "type": "string"
+                                },
+                                "height": {
+                                    "type": "string"
+                                },
+                                "path": {
+                                    "type": "string"
+                                }
+                            }
+                        },
+                        "thumb": {
+                            "type": "object",
+                            "properties": {
+                                "width": {
+                                    "type": "string"
+                                },
+                                "height": {
+                                    "type": "string"
+                                },
+                                "path": {
+                                    "type": "string"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
       "VideoList": {
         "type": "object",
         "properties": {
