@@ -601,10 +601,10 @@ class PliziAPIClass {
                     chatId :  data.data.chatId,
                     message : data.data
                 });
-                //this.emit('NewAppNotification', {
-                //    type :  data.event_type,
-                //    message : data.data
-                //});
+                this.emit('NewAppNotification', {
+                   type :  data.event_type,
+                   message : data.data
+                });
             }
 
             if (channelID=== this.channel  &&  `message.deleted`===data.event_type) {
@@ -613,14 +613,18 @@ class PliziAPIClass {
                     messageId : data.data.messageId,
                 });
             }
+            /** TODO: Алексей сказал сделаем позже **/
             if (channelID=== this.channel  &&  `chat.removed`===data.event_type) {
-                this.emit('remoteRemoveDialog', {
-                    chatId :  data.data.id
-                });
                 this.emit('NewAppNotification', {
                     type :  data.event_type,
                     chatId :  data.data.id
                 });
+                setTimeout(() => {
+                    this.emit('remoteRemoveDialog', {
+                        chatId :  data.data.id
+                    });
+                }, 300);
+
             }
             if (channelID=== this.channel  &&  `chat.created`===data.event_type) {
                 this.emit('remoteCreateDialog', {

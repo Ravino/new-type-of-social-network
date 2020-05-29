@@ -165,6 +165,11 @@ methods: {
         if (this.$root.$isXS()  || this.$root.$isSM() || this.$root.$isMD())
             return;
 
+        if (`app.notification`===evData.type) {
+            let chatNotificationData = this.transformNotifyToNotification(evData);
+            this.addNotification(chatNotificationData);
+        }
+
         if (`user.notification`===evData.type) {
             this.addNotification(evData.notification);
         }
@@ -172,14 +177,22 @@ methods: {
             let chatNotificationData = this.transformDialogToNotification(evData);
             this.addNotification(chatNotificationData);
         }
-        if (`chat.attendee.appended`===evData.type) { //аналогично с предыдущим тип данных
+        if (`chat.removed`===evData.type) {
+            const chatRemoved = this.$root.$auth.dm.get(evData.chatId);
+            let chatNotificationData = this.transformDialogToNotification(chatRemoved, `chat.removed`);
+            this.addNotification(chatNotificationData);
+        }
+        if (`chat.attendee.appended`===evData.type) {
             console.log(evData, 'кто-то добавил вас в групповой чат');
             let chatNotificationData = this.transformDialogToNotification(evData);
             this.addNotification(chatNotificationData);
         }
-        // if (`message.new`===evData.type) {
-        //     console.log(evData.data.data, 'у вас новое сообщение в чате');
-        // }
+        if (`message.new`===evData.type) {
+            if (!evData.message.isMine) {
+                let chatNotificationData = this.transformMessageToNotification(evData);
+                this.addNotification(chatNotificationData);
+            }
+        }
     },
 
     isAuthorized(){
