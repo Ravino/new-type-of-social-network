@@ -239,7 +239,6 @@ methods: {
         if (apiResponse) {
             this.profileData = new PliziUser(apiResponse.data);
             this.isDataReady = true;
-            await this.getPosts();
         }
     },
 
@@ -248,7 +247,6 @@ methods: {
             return;
 
         let response = null;
-        this.isStarted = true;
 
         try {
             response = await this.$root.$api.$post.getPostsByUserId(this.profileData.id, limit, offset);
@@ -279,23 +277,26 @@ created(){
 },
 
 
-mounted() {
+async mounted() {
     this.isStarted = true;
-    this.getUserInfo();
+    await this.getUserInfo();
+    await this.getPosts();
     window.scrollTo(0, 0);
 },
 
 /**
  * @TGA закоменченное ниже - ошибка но пусть пока будет
  */
-//async beforeRouteUpdate( to, from, next ){
-//    this.profileData = null;
-//    this.posts = null;
-//    this.userId = to.params.id;
-//    next();
-//    await this.getUserInfo();
-//    window.scrollTo( 0, 0 );
-//},
+async beforeRouteUpdate( to, from, next ){
+   this.profileData = null;
+   this.posts = null;
+   this.userId = to.params.id;
+   next();
+    this.isStarted = true;
+    await this.getUserInfo();
+    await this.getPosts();
+   window.scrollTo( 0, 0 );
+},
 }
 </script>
 
