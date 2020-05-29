@@ -26,7 +26,8 @@
                         <Post v-for="postItem in filteredPosts"
                               :key="`userPost-`+postItem.id"
                               :post="postItem"
-                              @onShare="onSharePost"></Post>
+                              @onShare="onSharePost"
+                              @onShowUsersLikes="openLikeModal"></Post>
                     </template>
 
                     <div v-else-if="!isStarted"  class="row plz-post-item mb-4 bg-white-br20 p-4">
@@ -53,6 +54,10 @@
                                  v-bind:user="profileData"
                                  v-bind:post="postForRepost"
                                  @hidePostRepostModal="hidePostRepostModal"></PostRepostModal>
+
+                <PostLikeModal v-if="postLikeModal.isVisible"
+                               :postId="postLikeModal.content.postId"
+                               @hideLikeModal="hideLikeModal"/>
             </div>
 
             <div v-if="$root.$auth.fm.size>0" class="col-sm-3 col-md-3 col-lg-3 col-xl-3 pr-0 d-none d-xl-block"
@@ -79,6 +84,7 @@ import Post from '../common/Post/Post.vue';
 
 import NewPersonalMessageModal from '../components/NewPersonalMessageModal.vue';
 import PostRepostModal from '../common/Post/PostRepostModal.vue';
+import PostLikeModal from '../common/Post/PostLikeModal.vue';
 
 import DialogMixin from '../mixins/DialogMixin.js';
 import LazyLoadPosts from '../mixins/LazyLoadPosts.js';
@@ -92,7 +98,6 @@ name: 'PersonalPage',
 props: {
     id : Number|String
 },
-
 components: {
     Spinner,
     AccountToolbarLeft, FavoriteFriends, ShortFriends,
@@ -102,9 +107,9 @@ components: {
     ProfileFilter,
     PostRepostModal,
     SmallSpinner,
+    PostLikeModal,
 },
 mixins: [DialogMixin, LazyLoadPosts, BlackListMixin],
-
 data() {
     return {
         userId: this.id,
@@ -125,9 +130,12 @@ data() {
             isVisible: false,
         },
         postForRepost: null,
-        lazyLoadStarted: false,
-        noMorePost: false,
-        enabledPostLoader: true,
+        postLikeModal: {
+            isVisible: false,
+            content: {
+                postId: null,
+            },
+        },
     }
 },
 
@@ -162,6 +170,24 @@ methods: {
     hidePostRepostModal() {
         this.postRepostModal.isVisible = false;
         this.postForRepost = null;
+    },
+
+    onHidePersonalMsgModal(){
+        this.isShowMessageDialog = false;
+    },
+
+    onShowPersonalMsgModal(){
+        this.isShowMessageDialog = true;
+    },
+
+    hideLikeModal() {
+        this.postLikeModal.isVisible = false;
+        this.postLikeModal.content.postId = null;
+    },
+
+    openLikeModal(postId) {
+        this.postLikeModal.isVisible = true;
+        this.postLikeModal.content.postId = postId;
     },
 
     async handlePersonalMessage(evData){
@@ -229,14 +255,6 @@ methods: {
             return response.length;
         }
     },
-
-    onHidePersonalMsgModal(){
-        this.isShowMessageDialog = false;
-    },
-
-    onShowPersonalMsgModal(){
-        this.isShowMessageDialog = true;
-    }
 },
 
 created(){
