@@ -17,15 +17,21 @@ $lastEntryPicSize: 85px;
         padding: 24px 0 0 40px;
     }
 
+    &-wrap {
+        padding-left: 30px;
+        padding-right: 5px;
+    }
+
     &-list {
-        padding-left: 40px;
         margin-top: 15px;
+        overflow: auto;
+        max-width: 100%;
     }
 
     &-item {
         border: 1px solid #C9CBD9;
         width: $lastEntryW;
-        //min-width: $lastEntryW;
+        min-width: $lastEntryW;
         //max-width: $lastEntryW;
         height: $lastEntryH;
         min-height: $lastEntryH;
@@ -51,6 +57,12 @@ $lastEntryPicSize: 85px;
         min-height: $lastEntryPicSize;
         max-height: $lastEntryPicSize;
         border-radius: $lastEntryPicSize;
+    }
+
+    .ps__rail-x,
+    .ps__rail-y {
+        opacity: 1;
+        border-radius: 10px;
     }
 }
 
