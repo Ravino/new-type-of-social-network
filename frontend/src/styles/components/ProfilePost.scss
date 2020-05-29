@@ -140,7 +140,7 @@ $postPosterPicSize: 48px;
         .usersLikes {
             position: absolute;
             top: 0;
-            width: 275px;
+            width: 250px;
             height: 77px;
             opacity: 0;
             background-color: rgba(0, 0, 0, 0.5);
@@ -186,4 +186,28 @@ $postPosterPicSize: 48px;
 
 .post-repost {
     border-left: 2px solid #cececf;
+}
+
+.post-like-body {
+    &-box {
+        p {
+            word-break: keep-all;
+        }
+    }
+    &-pic {
+        position: relative;
+        width: 100%;
+        //min-width: 100px;
+        //height: 100px;
+        height: 0;
+        padding-top: 100%;
+        margin: auto auto 0 auto;
+    }
+    &-img {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        height: 100%;
+    }
 }

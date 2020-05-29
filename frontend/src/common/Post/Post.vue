@@ -204,7 +204,7 @@
                                 <div class="d-flex mb-0">
                                     <router-link v-for="(user, index) in shortUsersLikes"
                                                  :key="index"
-                                                 class="usersLikes-user"
+                                                 class="usersLikes-user m-1"
                                                  :to="{ name: 'PersonalPage', params: { id: user.id } }">
                                         <img :src="user.profile.userPic"
                                              :alt="user.profile.firstName + ' ' + user.profile.lastName"
@@ -216,7 +216,7 @@
                         </div>
                         <div class="post-watched-counter ml-4" @click="getCommentsByPostId">
                             <IconMessage/>
-                            <span>{{ comments.length | space1000 }}</span>
+                            <span>{{ post.commentsCount | space1000 }}</span>
                         </div>
 
                         <div class="post-watched-counter ml-4" @click="$emit('onShare', post)">
@@ -235,13 +235,11 @@
                 <template v-if="!isShowComment">
                     <div class="plz-comments" v-for="comment in comments">
                         <CommentItem
-                            :answers="comment.thread ? comment.thread.list : []"
                             :key="comment.id"
                             :comment="comment"
                             :postId="post.id"
                             @onDelete="removeComment"
                             @update="editComment"
-                            @updateAnswers="updateAnswers"
                         ></CommentItem>
                     </div>
 
@@ -282,6 +280,7 @@
     import CommentPost from "../../components/CommentPost.vue";
     import CommentItem from "../../components/CommentItem.vue";
     import AvatarMixin from '../../mixins/AvatarMixin.js';
+    import PliziComment from "../../classes/PliziComment.js";
 
     export default {
         name: 'Post',
@@ -356,22 +355,21 @@
         },
         methods: {
             editComment(newComment) {
-                this.comments = this.comments.map(comment => comment.id === newComment.id ? newComment : comment);
-            },
-            updateAnswers({ id, answers }) {
-                this.comments = this.comments.map(comment => comment.id === id ? {...comment, thread: { list:answers } } : comment);
+                this.comments = this.comments.map(comment => comment.id === newComment.id ? comment.update(newComment) : comment);
             },
             removeComment(commentId) {
                 this.comments = this.comments.filter(comment => comment.id !== commentId);
+                this.post.commentsCount = this.comments.length;
             },
             addNewComment(newComment) {
-                this.comments.push(newComment);
+                this.comments.push(new PliziComment(newComment));
+                this.post.commentsCount = this.comments.length;
             },
             async getCommentsByPostId() {
                 this.isShowComment = !this.isShowComment;
                 try {
                     let response = await this.$root.$api.$post.getCommentsById(this.post.id);
-                    this.comments = response.data.list;
+                    this.comments = response.data.list.map(comment => new PliziComment(comment));
                 } catch (e) {
                     console.warn(e.detailMessage);
                 }

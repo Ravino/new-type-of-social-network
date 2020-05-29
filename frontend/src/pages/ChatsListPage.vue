@@ -70,9 +70,6 @@
                     <Spinner v-else></Spinner>
                 </div>
             </div>
-
-            <ChatNotifications :notifications="notifications"
-                               @removeNotification="removeNotification"></ChatNotifications>
         </div>
     </div>
 </template>
@@ -85,24 +82,21 @@ import ChatDialogs from '../common/Chat/ChatDialogs.vue';
 import ChatHeader from '../common/Chat/ChatHeader.vue';
 import ChatMessages from '../common/Chat/ChatMessages.vue';
 import ChatFooter from '../common/Chat/ChatFooter.vue';
-import ChatNotifications from '../common/Chat/ChatNotifications.vue';
 
 import ChatMixin from '../mixins/ChatMixin.js';
-import NotificationMixin from '../mixins/NotificationMixin.js';
 
 import PliziMessagesCollection from '../classes/Collection/PliziMessagesCollection.js';
 
 export default {
 name: 'ChatsListPage',
 components: {
-    ChatNotifications,
     ChatDialogs,
     AccountToolbarLeft,
     Spinner,
     ChatHeader, ChatMessages, ChatFooter,
 },
 
-mixins: [ChatMixin, NotificationMixin],
+mixins: [ChatMixin],
 
 data() {
     return {
@@ -207,14 +201,6 @@ methods: {
         }
     },
 
-    addNewMessageNotification(message) {
-        if (message.isMine || this.currentDialog.id === message.chatId) {
-            return;
-        }
-
-        this.addNotification(message);
-    },
-
     updateDialogsList(chatId, evData) {
         evData.chatId = chatId;
 
@@ -278,8 +264,6 @@ methods: {
                 this.$refs.chatDialogs.$forceUpdate();
             }
         });
-
-        this.$root.$on('newMessageInDialog', this.addNewMessageNotification);
 
         this.$root.$on('newMessageInDialog', this.addNewChatMessageToList);
 

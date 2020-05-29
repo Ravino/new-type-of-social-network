@@ -175,6 +175,14 @@ class Community extends Model
     }
 
     /**
+     * @return BelongsToMany
+     */
+    public function managers()
+    {
+        return $this->belongsToMany(User::class, 'community_members')->withPivot(['role'])->wherePivot('role', self::ROLE_ADMIN)->orWherePivot('role', self::ROLE_AUTHOR);
+    }
+
+    /**
      * @return HasOne
      */
     public function role()
@@ -325,7 +333,7 @@ class Community extends Model
         $query
             ->where(static function(Builder $q) {
                 $q
-                    ->whereNotIn('privacy', [self::PRIVACY_PRIVATE, self::PRIVACY_CLOSED])
+                    ->whereNotIn('privacy', [self::PRIVACY_PRIVATE])
                     ->orWhereHas('role', static function (Builder $query) {
                         $query
                             ->where([

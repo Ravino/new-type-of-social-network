@@ -112,7 +112,7 @@ components: {
 mixins: [DialogMixin, LazyLoadPosts, BlackListMixin],
 data() {
     return {
-        userId: this.id,
+        userId: null,
         profileData: {},
         isDataReady: false,
         isShowMessageDialog: false,
@@ -139,6 +139,10 @@ data() {
     }
 },
 
+watch: {
+    $route: 'afterRouteUpdate' // при изменениях маршрута запрашиваем данные снова
+},
+
 computed: {
     filteredPosts(){
         switch (this.filterMode) {
@@ -151,6 +155,13 @@ computed: {
 },
 
 methods: {
+    afterRouteUpdate(ev){
+        this.userId = ev.params.id;
+        this.posts = [];
+        this.getUserInfo();
+        window.scrollTo(0, 0);
+    },
+
     calcCentralBlockClass(){
         return {
             'col-lg-8 col-xl-8'   : (this.$root.$auth.fm.size > 0), // есть фавориты
@@ -258,6 +269,8 @@ methods: {
 },
 
 created(){
+    this.userId = this.id;
+
     this.$root.$on( this.$root.$auth.frm.updateEventName,()=>{
         if (this.$refs  && this.$refs.personalProfileHeader){
             this.$refs.personalProfileHeader.$forceUpdate();
@@ -272,14 +285,17 @@ mounted() {
     window.scrollTo(0, 0);
 },
 
-async beforeRouteUpdate( to, from, next ){
-    this.profileData = null;
-    this.posts = null;
-    this.userId = to.params.id;
-    next();
-    await this.getUserInfo();
-    window.scrollTo( 0, 0 );
-},
+/**
+ * @TGA закоменченное ниже - ошибка но пусть пока будет
+ */
+//async beforeRouteUpdate( to, from, next ){
+//    this.profileData = null;
+//    this.posts = null;
+//    this.userId = to.params.id;
+//    next();
+//    await this.getUserInfo();
+//    window.scrollTo( 0, 0 );
+//},
 }
 </script>
 
