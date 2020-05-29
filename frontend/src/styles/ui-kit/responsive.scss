@@ -222,6 +222,14 @@
         #chatMessagesWrapper {
             height: calc(100vh - 100px);
         }
+
+        .message-attachments-z {
+            .plz-gallery-single,
+            .plz-gallery-wrap,
+            .plz-gallery{
+                height: auto;
+            }
+        }
     }
 
 
