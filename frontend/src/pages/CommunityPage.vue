@@ -88,10 +88,10 @@
             </div>
 
             <div class="row">
-                <div class="col-12 --col-sm-7 col-lg-8 col-xl-8 order-1 order-lg-0">
+                <div class="col-12 --col-sm-7 col-lg-8 col-xl-8">
                     <div v-if="isDataReady"
                          id="communityInfoBlock"
-                         class="plz-community-info-block bg-white-br20 py-3 px-4 mb-4 text-left">
+                         class="plz-community-info-block bg-white-br20 d-none d-lg-block py-3 px-4 mb-4 text-left">
                         <h4 class="plz-community-header-title">Информация</h4>
 
                         <p class="plz-community-info-desc">{{communityData.description}}</p>
@@ -130,14 +130,14 @@
                         </div>
                     </div>
 
-                    <div v-else-if="!isStarted"  class="row plz-post-item mb-4 bg-white-br20 p-4">
+                    <div v-else-if="!isStarted"  class="plz-post-item mb-4 bg-white-br20 p-4">
                         <div class="alert alert-info w-100 p-5 text-center mb-0">
                             Извините, но сейчас нечего показывать.
                         </div>
                     </div>
 
                     <template v-if="isStarted">
-                        <div class="row plz-post-item mb-4 bg-white-br20 p-4">
+                        <div class="plz-post-item mb-4 bg-white-br20 p-4">
                             <div class="w-100 p-5 text-center mb-0">
                                 <SmallSpinner/>
                             </div>
@@ -145,7 +145,7 @@
                     </template>
                 </div>
 
-                <div class="col-12 --col-sm-5 col-lg-4 order-0 order-lg-1">
+                <div class="col-12 --col-sm-5 col-lg-4">
 <!--               TODO @tga мы этот блок можем удалить? -->
 <!--                    <CommunityManagedActionBlock :community="communityData" v-if="isAuthor"></CommunityManagedActionBlock>-->
  <!--               TODO @tga мы этот блок можем удалить? -->
