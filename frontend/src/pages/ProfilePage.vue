@@ -67,7 +67,7 @@
                             @hideVideoModal="hideVideoModal"/>
 
             <PostLikeModal v-if="postLikeModal.isVisible"
-                           :users="postLikeModal.content.users"
+                           :postId="postLikeModal.content.postId"
                            @hideLikeModal="hideLikeModal"/>
 
             <PostRepostModal v-if="postRepostModal.isVisible"
@@ -138,7 +138,7 @@ data() {
         postLikeModal: {
             isVisible: false,
             content: {
-                users: [],
+                postId: null,
             },
         },
         postRepostModal: {
@@ -234,14 +234,14 @@ methods : {
         this.postRepostModal.content.postForRepost = null;
     },
 
-    async openLikeModal(postId) {
+    openLikeModal(postId) {
         this.postLikeModal.isVisible = true;
-        await this.getUsersLikes(postId);
+        this.postLikeModal.content.postId = postId;
     },
 
     hideLikeModal() {
         this.postLikeModal.isVisible = false;
-        this.postLikeModal.content.users = null;
+        this.postLikeModal.content.postId = null;
     },
 
     async getPosts(limit = 50, offset = 0) {
@@ -258,24 +258,6 @@ methods : {
             this.isStarted = false;
             response.map((post) => {
                 this.posts.push(new PliziPost(post));
-            });
-
-            return response.length;
-        }
-    },
-
-    async getUsersLikes(postId, limit = 20, offset = 0) {
-        let response = null;
-
-        try{
-            response = await this.$root.$api.$post.getUsersLikes(postId, limit, offset);
-        } catch (e){
-            console.warn( e.detailMessage );
-        }
-
-        if ( response !== null ){
-            response.map((post) => {
-                this.postLikeModal.content.users.push(new PliziUser(post));
             });
 
             return response.length;
@@ -320,8 +302,7 @@ methods : {
 
 async mounted() {
     await this.getPosts();
-}
-
+},
 }
 </script>
 

@@ -178,7 +178,7 @@
                          @hidePostRepostModal="hidePostRepostModal"/>
 
         <PostLikeModal v-if="postLikeModal.isVisible"
-                       :users="postLikeModal.content.users"
+                       :postId="postLikeModal.content.postId"
                        @hideLikeModal="hideLikeModal"/>
 
         <PostVideoModal v-if="postVideoModal.isVisible"
@@ -263,7 +263,7 @@ data() {
         postLikeModal: {
             isVisible: false,
             content: {
-                users: [],
+                postId: null,
             },
         },
         postVideoModal: {
@@ -392,30 +392,12 @@ methods: {
 
     hideLikeModal() {
         this.postLikeModal.isVisible = false;
-        this.postLikeModal.content.users = null;
+        this.postLikeModal.content.postId = null;
     },
 
-    async openLikeModal(postId) {
+    openLikeModal(postId) {
         this.postLikeModal.isVisible = true;
-        await this.getUsersLikes(postId);
-    },
-
-    async getUsersLikes(postId, limit = 20, offset = 0) {
-        let response = null;
-
-        try{
-            response = await this.$root.$api.$post.getUsersLikes(postId, limit, offset);
-        } catch (e){
-            console.warn( e.detailMessage );
-        }
-
-        if ( response !== null ){
-            response.map((post) => {
-                this.postLikeModal.content.users.push(new PliziUser(post));
-            });
-
-            return response.length;
-        }
+        this.postLikeModal.content.postId = postId;
     },
 
     async onDeletePost(id) {
