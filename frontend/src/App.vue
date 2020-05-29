@@ -52,6 +52,7 @@ import AlertModal from './components/AlertModal.vue';
 
 import {PliziAPI} from './classes/PliziAPI.js';
 import {PliziAuth} from './classes/PliziAuth.js';
+import PliziLastEntriesCollection from "./classes/Collection/PliziLastEntriesCollection.js";
 
 export default {
 name: 'App',
@@ -130,6 +131,16 @@ methods: {
             this.$root.$auth.updateAuthUserData( evData.user, evData.token );
             this.$root.$api.connectToChannel( evData.user.channel );
             this.$root.$isAuth = true;
+
+            let userEntry = {
+                id: evData.user.data.id,
+                email: evData.user.data.email,
+                firstName: evData.user.data.profile.firstName,
+                lastName: evData.user.data.profile.lastName,
+                userPic: evData.user.data.profile.userPic,
+                lastLoginAt: new Date(),
+            };
+            (new PliziLastEntriesCollection(null)).addNewLastEntries(userEntry);
 
             await this.persistentCollectionsReload();
         }
