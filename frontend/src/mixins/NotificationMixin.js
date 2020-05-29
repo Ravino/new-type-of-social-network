@@ -35,6 +35,11 @@ const NotificationMixin = {
                     ('f' === inputNotification.data.sender.sex ? 'одобрила Вашу заявку в друзья' : 'одобрил Вашу заявку в друзья');
             }
 
+            if (inputNotification.data.notificationType === 'friendships.sent') {
+                notification.body = this.senderFullName(inputNotification) +
+                    ('f' === inputNotification.data.sender.sex ? 'отправила Вам заявку в друзья' : 'отправил Вам заявку в друзья');
+            }
+
             if (inputNotification.data.notificationType === 'friendships.denied') {
                 notification.body = this.senderFullName(inputNotification) +
                     ('f' === inputNotification.data.sender.sex ? 'отклонила Вашу заявку в друзья' : 'отклонил Вашу заявку в друзья');
