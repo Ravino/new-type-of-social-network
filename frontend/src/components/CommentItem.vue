@@ -108,7 +108,6 @@
     import TextEditor from "../common/TextEditor.vue";
     import ChatMixin from "../mixins/ChatMixin.js";
     import Gallery from "../common/Gallery.vue";
-    import PliziAttachment from "../classes/PliziAttachment.js";
     import IconFillHeard from "../icons/IconFillHeard.vue";
     import PliziComment from "../classes/PliziComment.js";
 
@@ -196,7 +195,6 @@
                 }
             },
             async onLike() {
-                console.log(123)
                 try {
                     let response = await this.$root.$api.$post.likeComment(this.comment.id);
 

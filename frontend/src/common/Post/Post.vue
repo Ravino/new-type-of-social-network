@@ -216,7 +216,7 @@
                         </div>
                         <div class="post-watched-counter ml-4" @click="getCommentsByPostId">
                             <IconMessage/>
-                            <span>{{ comments.length | space1000 }}</span>
+                            <span>{{ post.commentsCount | space1000 }}</span>
                         </div>
 
                         <div class="post-watched-counter ml-4" @click="$emit('onShare', post)">
@@ -280,7 +280,7 @@
     import CommentPost from "../../components/CommentPost.vue";
     import CommentItem from "../../components/CommentItem.vue";
     import AvatarMixin from '../../mixins/AvatarMixin.js';
-    import PliziComment from "../../classes/PliziComment";
+    import PliziComment from "../../classes/PliziComment.js";
 
     export default {
         name: 'Post',
@@ -355,9 +355,11 @@
             },
             removeComment(commentId) {
                 this.comments = this.comments.filter(comment => comment.id !== commentId);
+                this.post.commentsCount = this.comments.length;
             },
             addNewComment(newComment) {
                 this.comments.push(new PliziComment(newComment));
+                this.post.commentsCount = this.comments.length;
             },
             async getCommentsByPostId() {
                 this.isShowComment = !this.isShowComment;
