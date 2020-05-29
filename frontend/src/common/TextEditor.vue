@@ -25,7 +25,9 @@
                                         :isError="isMaximumCharacterLimit"
                                         ref="editor" />
 
-                                <button @click.stop="onSendPostClick" class="btn btn-link">
+                                <button @click.stop="onSendPostClick"
+                                        :disabled="isLoading"
+                                        class="btn btn-link">
                                     <IconSend style="height: 20px" />
                                 </button>
                             </div>
@@ -148,6 +150,7 @@ data() {
     }
 
     return {
+        isLoading: false,
         attachFiles : inputFiles,
         attachmentsData: (new PliziCollection()),
         defaultClasses: `bg-white w-100 border-top position-relative mt-auto`,
@@ -405,6 +408,7 @@ methods: {
             reader.onload = () => {
                 const attachment = new PliziAttachmentItem(true, checkExtension(file, imagesExtensions), file.name);
                 attachment.isBlob = true;
+                this.isLoading = attachment.isBlob;
                 attachment.fileBlob = reader.result;
                 this.attachFiles.push(attachment);
             };
@@ -439,6 +443,7 @@ methods: {
                         if (foundFile.originalName === newAtt.originalName) {
                             foundFile.attachment = newAtt;
                             foundFile.isBlob = false;
+                            this.isLoading = foundFile.isBlob;
                             foundFile.fileBlob = null;
                         }
 
