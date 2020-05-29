@@ -1,11 +1,11 @@
 <template>
     <div class="row">
         <div class="col-12 col-md-1 ">
-            <AccountToolbarLeft></AccountToolbarLeft>
+            <AccountToolbarLeft/>
         </div>
 
         <div class="col-sm-12 col-md-11 col-lg-9 col-xl-10">
-            <CommunityHeader :community="communityData"/>
+            <CommunityHeader :community="communityData" :subscribe-type="subscribeType"/>
 
             <div class="row">
                 <div class="col-12 --col-sm-7 col-lg-8 col-xl-8 order-1 order-lg-0">
@@ -24,37 +24,13 @@
                                      :class="'mx-0 '"
                                      @addNewPost="addNewPost"/>
 
-                    <div v-if="posts && posts.length > 0" id="communityPostsBlock" class="pb-5 mb-4 --text-center">
-                        <Post v-for="postItem in posts"
-                              :key="postItem.id"
-                              :post="postItem"
-                              :isCommunity="true"
-                              :class="'mx-0'"
-                              :isAdmin="['admin', 'author'].includes(communityData.role)"
-                              @onShare="onSharePost"
-                              @onDeletePost="onDeletePost"
-                              @onRestorePost="onRestorePost"
-                              @onEditPost="onEditPost"
-                              @openVideoModal="openVideoModal"
-                              @onShowUsersLikes="openLikeModal"/>
-                    </div>
-
-                    <div v-else-if="!hasAccess"  class="plz-post-item mb-4 bg-white-br20 p-4">
-                        <div class="alert alert-info w-100 p-5 text-center mb-0">
-                            У Вас нет доступа.
-                            <p v-if="subscribeType === 'request'">
-                                Отправьте
-                                <a href="#" @click.stop="sendRequest(communityData)">запрос</a>
-                                на вступление в сообщество
-                            </p>
-                        </div>
-                    </div>
-
-                    <div v-else-if="!isStarted"  class="row plz-post-item mb-4 bg-white-br20 p-4">
-                        <div class="alert alert-info w-100 p-5 text-center mb-0">
-                            Извините, но сейчас нечего показывать.
-                        </div>
-                    </div>
+                    <CommunityPostsList
+                        :community="communityData"
+                        :has-access="hasAccess"
+                        :is-started="isStarted"
+                        :posts="posts"
+                        :subscribe-type="subscribeType"
+                        @openVideoModal="openVideoModal"/>
 
                     <template v-if="isStarted">
                         <div class="row plz-post-item mb-4 bg-white-br20 p-4">
@@ -88,55 +64,35 @@
             <FavoriteFriends :isNarrow="true"></FavoriteFriends>
         </div>
 
-        <PostEditModal v-if="postEditModal.isVisible"
-                       :post="postForEdit"
-                       @hidePostEditModal="hidePostEditModal"/>
-
-        <PostRepostModal v-if="postRepostModal.isVisible"
-                         :community="communityData"
-                         :post="postForRepost"
-                         @hidePostRepostModal="hidePostRepostModal"/>
-
-        <PostLikeModal v-if="postLikeModal.isVisible"
-                       :postId="postLikeModal.content.postId"
-                       @hideLikeModal="hideLikeModal"/>
-
         <PostVideoModal v-if="postVideoModal.isVisible"
                         :videoLink="postVideoModal.content.videoLink"
                         @hideVideoModal="hideVideoModal"/>
+
     </div>
 </template>
 
 <script>
-import AccountToolbarLeft from '../common/AccountToolbarLeft.vue';
-import FavoriteFriends from '../common/FavoriteFriends.vue';
-import Spinner from '../common/Spinner.vue';
-import Post from '../common/Post/Post.vue';
-import PostEditModal from '../common/Post/PostEditModal.vue';
-
-import CommunityUserActionBlock from '../common/Communities/CommunityUserActionBlock.vue';
-import CommunityFriendsInformer from '../common/Communities/CommunityFriendsInformer.vue';
-import CommunityShortMembers from '../common/Communities/CommunityShortMembers.vue';
-import CommunityEditor from '../common/Communities/CommunityEditor.vue';
-import PostRepostModal from '../common/Post/PostRepostModal.vue';
-import PostLikeModal from '../common/Post/PostLikeModal.vue';
-import SmallSpinner from "../common/SmallSpinner.vue";
-
-import PrivacyLabel from "../components/Community/PrivacyLabel.vue";
-
-import CommunityManagedActionBlock from "../common/Communities/CommunityManagedActionBlock.vue";
-import CommunityAuthorOptions from "../common/Communities/CommunityAuthorOptions.vue";
-import CommunityUserOptions from "../common/Communities/CommunityUserOptions.vue";
-import CommunityVideoBlock from "../components/Community/CommunityVideoBlock.vue";
-import PostVideoModal from "../common/Post/PostVideoModal.vue";
-
-import LazyLoadPosts from '../mixins/LazyLoadPosts.js';
-import CommunitiesSubscribeMixin from '../mixins/CommunitiesSubscribeMixin.js';
-import HotCommunitiesMixin from '../mixins/HotCommunitiesMixin.js';
-
 import PliziCommunity from '../classes/PliziCommunity.js';
 import PliziPost from '../classes/PliziPost.js';
+
+import CommunitiesSubscribeMixin from '../mixins/CommunitiesSubscribeMixin.js';
+import HotCommunitiesMixin from '../mixins/HotCommunitiesMixin.js';
+import LazyLoadPosts from '../mixins/LazyLoadPosts.js';
+
+import AccountToolbarLeft from '../common/AccountToolbarLeft.vue';
+import FavoriteFriends from '../common/FavoriteFriends.vue';
+import SmallSpinner from "../common/SmallSpinner.vue";
+import Spinner from '../common/Spinner.vue';
+
+import CommunityEditor from '../common/Communities/CommunityEditor.vue';
+import CommunityFriendsInformer from '../common/Communities/CommunityFriendsInformer.vue';
 import CommunityHeader from "../components/Community/CommunityHeader.vue";
+import CommunityManagedActionBlock from "../common/Communities/CommunityManagedActionBlock.vue";
+import CommunityPostsList from "../components/Community/CommunityPostsList.vue";
+import CommunityShortMembers from '../common/Communities/CommunityShortMembers.vue';
+import CommunityVideoBlock from "../components/Community/CommunityVideoBlock.vue";
+import CommunityUserActionBlock from '../common/Communities/CommunityUserActionBlock.vue';
+import PostVideoModal from "../common/Post/PostVideoModal";
 
 export default {
 name: 'CommunityPage',
@@ -145,10 +101,9 @@ props: {
 },
 mixins: [CommunitiesSubscribeMixin, LazyLoadPosts, HotCommunitiesMixin],
 components : {
-    CommunityHeader,
-    CommunityUserOptions,
-    CommunityAuthorOptions,
     PostVideoModal,
+    CommunityPostsList,
+    CommunityHeader,
     CommunityVideoBlock,
     CommunityManagedActionBlock,
     CommunityShortMembers,
@@ -157,13 +112,8 @@ components : {
     Spinner,
     AccountToolbarLeft,
     FavoriteFriends,
-    Post,
-    PostEditModal,
     CommunityEditor,
-    PostRepostModal,
-    PostLikeModal,
     SmallSpinner,
-    PrivacyLabel,
 },
 
 data() {
@@ -172,20 +122,6 @@ data() {
         isDataReady: false,
         communityData: null,
         posts: [],
-        postEditModal: {
-            isVisible: false,
-        },
-        postForEdit: null,
-        postRepostModal: {
-            isVisible: false,
-        },
-        postForRepost: null,
-        postLikeModal: {
-            isVisible: false,
-            content: {
-                postId: null,
-            },
-        },
         postVideoModal: {
             isVisible: false,
             content: {
@@ -203,15 +139,9 @@ computed: {
     isAuthor(){
         return this.communityData?.role === 'author';
     },
-
     subscribeType() {
         return this.getSubscribeType(this.communityData);
     },
-
-    filteredPosts(){
-        return [];
-    },
-
     canPost() {
         /**
          * @todo check privacy
@@ -237,134 +167,28 @@ methods: {
         this.getCommunityInfo();
         window.scrollTo(0, 0);
     },
-
     addNewPost(post) {
         this.posts.unshift( new PliziPost( post ) );
     },
-
-    startTimer(post){
-        setTimeout( () => {
-            let postIndex = this.posts.findIndex(item => item.id === post.id);
-
-            this.posts.splice( postIndex, 1 );
-        }, 5000 );
-    },
-
-    onEditPost( post ){
-        this.postEditModal.isVisible = true;
-        this.postForEdit = post;
-    },
-    hidePostEditModal(){
-        this.postEditModal.isVisible = false;
-        this.postForEdit = null;
-    },
-
-    ytInit(){
-        let video = document.getElementsByClassName('video');
-
-        let videoWrap;
-        for (let i = 0; i < video.length; i++) {
-            videoWrap = video[i].getElementsByClassName('video_wrap');
-            console.log(videoWrap);
-        }
-    },
-
-    onSharePost(post){
-        this.postRepostModal.isVisible = true;
-        this.postForRepost = post;
-    },
-
-    hidePostRepostModal() {
-        this.postRepostModal.isVisible = false;
-        this.postForRepost = null;
-    },
-
-    hideLikeModal() {
-        this.postLikeModal.isVisible = false;
-        this.postLikeModal.content.postId = null;
-    },
-
-    openLikeModal(postId) {
-        this.postLikeModal.isVisible = true;
-        this.postLikeModal.content.postId = postId;
-    },
-
-    async onDeletePost(id) {
-        let response;
-
-        try{
-            response = await this.$root.$api.$post.deletePost( id );
-        } catch (e){
-            console.warn( e.detailMessage );
-        }
-
-        if ( response ){
-            const post = this.posts.find( ( post ) => {
-                return post.id === id;
-            } );
-
-            post.deleted = true;
-
-            this.startTimer(post);
-        }
-    },
-
-    async onRestorePost(id) {
-        let response;
-
-        try{
-            response = await this.$root.$api.$post.restorePost( id );
-        } catch (e){
-            console.warn( e.detailMessage );
-        }
-
-        if ( response ){
-            const post = this.posts.find( ( post ) => {
-                return post.id === id;
-            } );
-
-            post.deleted = false;
-        }
-    },
-
-    async uploadPrimaryImage(){
-        if (!this.isAuthor)
-            return;
-
-        const formData = this.getFormData();
-
-        if (!formData) {
-            return;
-        }
-
-        const { size } = formData.get('file');
-
-        if (size > 2000000) {
-            this.showErrorOnLargeFile();
-            return;
-        }
-
-        let apiResponse = null;
-
-        try {
-            apiResponse = await this.$root.$api.$communities.updatePrimaryImage(formData);
-        } catch (e) {
-            if (e.status === 422) {
-                this.showErrorOnLargeFile();
-                return;
-            }
-
-            window.console.warn(e.detailMessage);
-        }
-
-        if (apiResponse) {
-            this.communityData.avatar = new PliziCommunityAvatar(apiResponse.data);
-        }
-    },
-
+    /**
+     * @TGA не понятно где используется и для чего
+     */
+    // ytInit(){
+    //     let video = document.getElementsByClassName('video');
+    //
+    //     let videoWrap;
+    //     for (let i = 0; i < video.length; i++) {
+    //         videoWrap = video[i].getElementsByClassName('video_wrap');
+    //         console.log(videoWrap);
+    //     }
+    // },
     async getPosts(limit = 50, offset = 0) {
         let response = null;
         this.isStarted = true;
+
+        if (offset === 0) {
+            this.posts = [];
+        }
 
         try {
             response = await this.$root.$api.$communities.posts(this.currentId, limit, offset);
@@ -374,7 +198,6 @@ methods: {
 
         if (response !== null) {
             this.isStarted = false;
-            this.posts = [];
             response.map((post) => {
                 this.posts.push(new PliziPost(post));
             });
@@ -382,18 +205,6 @@ methods: {
             return response.length;
         }
     },
-
-    openVideoModal(evData) {
-        if (evData.videoLink) {
-            this.postVideoModal.isVisible = true;
-            this.postVideoModal.content.videoLink = evData.videoLink;
-        }
-    },
-
-    hideVideoModal() {
-        this.postVideoModal.isVisible = false;
-    },
-
     onNeedAddCommunityToHot(){
         this.keyUpdater++;
         const comm = this.communityData || null;
@@ -403,7 +214,6 @@ methods: {
             this.$refs.hotCommunitiesBlock.$forceUpdate();
         }
     },
-
     async getCommunityInfo() {
         let apiResponse = null;
 
@@ -433,6 +243,15 @@ methods: {
                 this.noMore = false;
             }, 100);
         }
+    },
+    openVideoModal(evData) {
+        if (evData.videoLink) {
+            this.postVideoModal.isVisible = true;
+            this.postVideoModal.content.videoLink = evData.videoLink;
+        }
+    },
+    hideVideoModal() {
+        this.postVideoModal.isVisible = false;
     },
 },
 

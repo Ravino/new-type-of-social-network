@@ -103,7 +103,8 @@
         components: {Spinner, CommunityUserOptions, CommunityAuthorOptions, PrivacyLabel},
         mixins: [CommunitiesSubscribeMixin],
         props: {
-            community: PliziCommunity
+            community: PliziCommunity,
+            subscribeType: String,
         },
         computed: {
             isAuthor() {
@@ -117,9 +118,6 @@
             },
             avatarMedium() {
                 return this.community?.avatar?.image.medium.path || this.community?.primaryImage;
-            },
-            subscribeType() {
-                return this.getSubscribeType(this.community);
             },
         },
         methods: {
