@@ -5,87 +5,7 @@
         </div>
 
         <div class="col-sm-12 col-md-11 col-lg-9 col-xl-10">
-            <div class="row">
-                <div class="col-12">
-                    <div v-if="isDataReady" id="communityHeader"
-                         class="plz-community-header bg-white-br20 mb-4 text-left overflow-hidden">
-                        <div class="plz-community-header-pic position-relative overflow-hidden">
-                            <img :src="headerImage" alt="image">
-                        </div>
-                        <div class="plz-community-header-bottom d-flex flex-wrap align-items-start justify-content-between py-3 px-4">
-                            <div class="plz-community-header-details d-flex align-items-start flex-wrap flex-sm-nowrap justify-content-center justify-content-sm-start">
-                                <template v-if="isAuthor">
-                                    <label for="communityPrimaryImage" class="community-primary-image cursor-pointer plz-community-header-logo position-relative mb-2 mb-sm-0 mx-0 mr-sm-3">
-                                        <img ref="communityAvatar" :src="avatarMedium" :alt="communityData.name" />
-                                    </label>
-
-                                    <input id="communityPrimaryImage" ref="communityPrimaryImage" type="file"
-                                           @change="uploadPrimaryImage()"
-                                           class="d-none" />
-                                </template>
-                                <template v-else>
-                                    <div class="plz-community-header-logo position-relative mr-3">
-                                        <img ref="communityAvatar" :src="avatarThumb" :alt="communityData.name" />
-                                    </div>
-                                </template>
-                                <div class="plz-community-header-details-text pt-2">
-                                    <h1 class="plz-community-header-title mb-2">
-                                        {{communityData.name}}
-                                    </h1>
-                                    <PrivacyLabel :community="communityData"></PrivacyLabel>
-                                    <p class="plz-community-header-desc mb-0">
-                                        {{communityData.notice}}
-                                    </p>
-                                </div>
-                            </div>
-                            <div class="plz-community-subscribe file-label d-flex align-items-center mt-4 justify-content-between mx-auto mx-md-0">
-
-                                <button v-if="subscribeType === 'new'"
-                                        class="btn align-items-center justify-content-center d-flex w-75 border-right m-0"
-                                        @click="subscribeInvite(communityData)">
-                                    подписаться
-                                </button>
-                                <button v-else-if="subscribeType === 'request'"
-                                        class="btn align-items-center justify-content-center d-flex w-75 border-right m-0"
-                                        @click="sendRequest(communityData)">
-                                    запрос
-                                </button>
-                                <button v-else-if="subscribeType === 'exists'"
-                                        class="btn align-items-center justify-content-center d-flex w-75 border-right m-0"
-                                        @click="unsubscribeInvite(communityData)">
-                                    отписаться
-                                </button>
-                                <router-link :to="{name: 'CommunitySettingsPage', params: {id: communityData.id}}"
-                                             v-else-if="subscribeType === 'author'"
-                                             class="btn align-items-center justify-content-center d-flex w-75 border-right m-0">
-                                    управление
-                                </router-link>
-
-                                <button title="опции"
-                                        class="btn align-items-center justify-content-center d-flex w-25"
-                                        type="button"
-                                        id="CommunityOptions"
-                                        data-toggle="dropdown"
-                                        data-offset="0,5"
-                                        aria-haspopup="true"
-                                        aria-expanded="false">
-                                    <span class="ps-dot"></span>
-                                    <span class="ps-dot"></span>
-                                    <span class="ps-dot"></span>
-                                </button>
-
-                                <div class="dropdown-menu dropdown-menu-right py-3"
-                                     aria-labelledby="CommunityOptions" >
-                                    <CommunityAuthorOptions  v-if="isAuthor" v-bind:community="communityData" ></CommunityAuthorOptions>
-                                    <CommunityUserOptions v-else v-bind:community="communityData" ></CommunityUserOptions>
-                                </div>
-                            </div>
-
-                        </div>
-                    </div>
-                    <Spinner v-else></Spinner>
-                </div>
-            </div>
+            <CommunityHeader :community="communityData"/>
 
             <div class="row">
                 <div class="col-12 --col-sm-7 col-lg-8 col-xl-8 order-1 order-lg-0">
@@ -201,7 +121,6 @@ import CommunityEditor from '../common/Communities/CommunityEditor.vue';
 import PostRepostModal from '../common/Post/PostRepostModal.vue';
 import PostLikeModal from '../common/Post/PostLikeModal.vue';
 import SmallSpinner from "../common/SmallSpinner.vue";
-import IconYoutube from "../icons/IconYoutube.vue";
 
 import PrivacyLabel from "../components/Community/PrivacyLabel.vue";
 
@@ -217,8 +136,7 @@ import HotCommunitiesMixin from '../mixins/HotCommunitiesMixin.js';
 
 import PliziCommunity from '../classes/PliziCommunity.js';
 import PliziPost from '../classes/PliziPost.js';
-import PliziCommunityAvatar from '../classes/Community/PliziCommunityAvatar.js';
-import PliziUser from '../classes/PliziUser.js';
+import CommunityHeader from "../components/Community/CommunityHeader.vue";
 
 export default {
 name: 'CommunityPage',
@@ -227,6 +145,7 @@ props: {
 },
 mixins: [CommunitiesSubscribeMixin, LazyLoadPosts, HotCommunitiesMixin],
 components : {
+    CommunityHeader,
     CommunityUserOptions,
     CommunityAuthorOptions,
     PostVideoModal,
@@ -297,12 +216,6 @@ computed: {
     avatarMedium() {
         return this.communityData?.avatar?.image.medium.path || this.communityData?.primaryImage;
     },
-    avatarThumb() {
-        return this.communityData?.avatar?.image.thumb.path || this.communityData?.primaryImage;
-    },
-    headerImage() {
-        return this.communityData?.headerImage?.image.normal.path || 'images/community-header-bg.jpg';
-    },
     hasAccess() {
         // Opened
         if (this.communityData?.privacy === 1) {
@@ -340,44 +253,6 @@ methods: {
             videoWrap = video[i].getElementsByClassName('video_wrap');
             console.log(videoWrap);
         }
-    },
-
-    /**
-     * @returns {boolean|FormData}
-     */
-    getFormData(){
-        const fName = this.$refs.communityPrimaryImage.value;
-        const fExt = fName.split('.').pop().toLowerCase();
-        const allowExts = ['png', 'jpg', 'jpeg', 'bmp', 'webp', 'gif'];
-
-        if ( ! allowExts.includes(fExt) ) {
-            this.$alert(`<h4 class="text-white">Ошибка</h4>
-<div class="alert alert-danger">
-Недопустимое расширение у файла <b>${fName}</b><br />
-Допустимы только: <b class="text-success">${allowExts.join( ', ' )}</b>
-</div>`, `bg-danger`, 30);
-            return false;
-        }
-
-        const formData = new FormData();
-        formData.append('file', this.$refs.communityPrimaryImage.files[0]);
-        formData.append('id', this.communityData.id);
-        this.$refs.communityPrimaryImage.value = '';
-
-        return formData;
-    },
-
-    showErrorOnLargeFile() {
-        this.$alert(`<h4 class="text-white">Ошибка</h4>
-                <div class="alert alert-danger">
-                    Превышен максимальный размер файла.
-                    <br />
-                    Максимальный размер файла:
-                    <b class="text-success">2 MB</b>
-                </div>`,
-          `bg-danger`,
-          30
-        );
     },
 
     onSharePost(post){
@@ -437,42 +312,6 @@ methods: {
             post.deleted = false;
         }
     },
-
-    async uploadPrimaryImage(){
-        if (!this.isAuthor)
-            return;
-
-        const formData = this.getFormData();
-
-        if (!formData) {
-            return;
-        }
-
-        const { size } = formData.get('file');
-
-        if (size > 2000000) {
-            this.showErrorOnLargeFile();
-            return;
-        }
-
-        let apiResponse = null;
-
-        try {
-            apiResponse = await this.$root.$api.$communities.updatePrimaryImage(formData);
-        } catch (e) {
-            if (e.status === 422) {
-                this.showErrorOnLargeFile();
-                return;
-            }
-
-            window.console.warn(e.detailMessage);
-        }
-
-        if (apiResponse) {
-            this.communityData.avatar = new PliziCommunityAvatar(apiResponse.data);
-        }
-    },
-
     async getCommunityInfo() {
         let apiResponse = null;
 
@@ -501,7 +340,6 @@ methods: {
             }, 100);
         }
     },
-
     async getPosts(limit = 50, offset = 0) {
         let response = null;
         this.isStarted = true;
