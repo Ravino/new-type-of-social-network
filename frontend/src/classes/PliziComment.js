@@ -1,5 +1,5 @@
 import PliziUser from './PliziUser.js';
-import PliziAttachment from "./PliziAttachment";
+import PliziAttachment from "./PliziAttachment.js";
 
 class PliziComment {
     /**
@@ -7,7 +7,7 @@ class PliziComment {
      * @type {string}
      * @private
      */
-    __defaultAvatarPath = `/images/noavatar-256.png`;
+    __defaultAvatarPath = '/images/plizi-noPrimaryImage-256.png';
 
     /**
      * @type {null}
@@ -19,20 +19,14 @@ class PliziComment {
      * @type {null}
      * @private
      */
-    _name = null;
-
-    /**
-     * @type {null}
-     * @private
-     */
     _body = null;
 
     /**
      * кол-во лайков
-     * @type {null}
+     * @type {Number}
      * @private
      */
-    _likes = null;
+    _likes = 0;
 
     /**
      * Лайкнутый ли этот пост текущим пользователем.
@@ -48,13 +42,6 @@ class PliziComment {
     _usersLikes = [];
 
     /**
-     * автор-юзер
-     * @type {PliziUser|null}
-     * @private
-     */
-    _user = null;
-
-    /**
      * Автор комента.
      * @type {PliziUser|null}
      * @private
@@ -68,25 +55,21 @@ class PliziComment {
     _createdAt = null;
 
     /**
-     * Запись удалена, но только для отображения.
-     * @type {boolean}
-     * @private
-     */
-    _deleted = false;
-
-    /**
      * объект с аттачментами
      * @type {object[]}
      * @private
      */
-    _attachments = null;
+    _attachments = [];
+
+    /**
+     * Children comments
+     * @type {PliziComment[]}
+     * @private
+     */
+    _thread = [];
 
     get id() {
         return this._id;
-    }
-
-    get name() {
-        return this._name
     }
 
     get body() {
@@ -108,13 +91,6 @@ class PliziComment {
     /**
      * @returns {PliziUser}
      */
-    get user() {
-        return this._user;
-    }
-
-    /**
-     * @returns {PliziUser}
-     */
     get author() {
         return this._author;
     }
@@ -123,19 +99,20 @@ class PliziComment {
         return this._createdAt;
     }
 
-    get deleted() {
-        return this._deleted;
-    }
-
     get attachments(){
         return this._attachments;
     }
-    set id(value) {
-        this._id = value;
+
+    get thread() {
+        return this._thread;
     }
 
-    set name(value) {
-        this._name = value;
+    get defaultAvatarPath() {
+        return this.__defaultAvatarPath;
+    }
+
+    set id(value) {
+        this._id = value;
     }
 
     set body(value) {
@@ -154,10 +131,6 @@ class PliziComment {
         this._usersLikes = value;
     }
 
-    set user(value) {
-        this._user = value;
-    }
-
     set author(value) {
         this._author = value;
     }
@@ -166,12 +139,12 @@ class PliziComment {
         this._createdAt = new Date(value * 1000);
     }
 
-    set deleted(value) {
-        this._deleted = Boolean(value);
-    }
-
     set attachments(value) {
         this._attachments = value;
+    }
+
+    set thread(value) {
+        this._thread = value;
     }
 
     /**
@@ -187,22 +160,25 @@ class PliziComment {
      */
     update(comment) {
         this.body = comment.body;
-        this.name = comment.name;
         this.id = comment.id;
-        this.likes = comment.likes;
+        this.likes = comment.likes || 0;
         this.author = comment.author;
-        this.alreadyLiked = comment.alreadyLiked;
+        this.alreadyLiked = comment.alreadyLiked || false;
         this.usersLikes = comment.usersLikes ? post.usersLikes.list.map((user) => {
             return new PliziUser(user);
         }) : [];
         this.createdAt = comment.createdAt;
-        this.user = comment.user ? new PliziUser(comment.user) : null;
         this.attachments = [];
-        this.deleted = false;
 
         if (comment.attachments && comment.attachments.list && comment.attachments.list.length > 0) {
             comment.attachments.list.map((aItem) => {
                 this.attachments.push(new PliziAttachment(aItem));
+            });
+        }
+
+        if (comment.thread && comment.thread.list && comment.thread.list.length > 0) {
+            comment.thread.list.map((aItem) => {
+                this.thread.push(new PliziComment(aItem));
             });
         }
 
