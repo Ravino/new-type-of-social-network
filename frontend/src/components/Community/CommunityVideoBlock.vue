@@ -47,7 +47,7 @@
                 this.isLoaded = false;
 
                 try {
-                    apiResponse = await this.$root.$api.$communities.videos(this.communityId);
+                    apiResponse = await this.$root.$api.$communities.videos(this.communityId, 2);
                 } catch (e) {
                     console.warn(e.detailMessage);
                 }

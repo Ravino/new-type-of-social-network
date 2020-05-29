@@ -41,7 +41,7 @@
                     <template v-if="isStarted">
                         <div class="row plz-post-item mb-4 bg-white-br20 p-4">
                             <div class="w-100 p-5 text-center mb-0">
-                                <SmallSpinner/>
+                                <SmallSpinner clazz="position-absolute"/>
                             </div>
                         </div>
                     </template>
@@ -301,6 +301,7 @@ methods : {
 },
 
 async mounted() {
+    console.log(this.$root.$auth.user);
     await this.getPosts();
 },
 }
