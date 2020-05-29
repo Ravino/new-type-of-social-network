@@ -5,6 +5,7 @@ namespace App\Http\Resources\Comment;
 use App\Http\Resources\Post\AttachmentsCollection;
 use App\Http\Resources\User\Image;
 use App\Http\Resources\User\SimpleUser;
+use App\Http\Resources\User\SimpleUsers;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
@@ -25,6 +26,9 @@ class Comment extends JsonResource
             'body' => $this->body,
             'author' => new SimpleUser($this->author),
             'attachments' => new AttachmentsCollection($this->attachments),
+            'likes' => $this->likes,
+            'usersLikes' => new SimpleUsers($this->usersLikes),
+            'alreadyLiked' => (bool)count($this->like),
             'createdAt' => $this->created_at,
         ];
 

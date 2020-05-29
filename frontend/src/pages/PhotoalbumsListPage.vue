@@ -15,9 +15,10 @@
                                 <div>
                                     <div class="card mb-4">
                                         <div class="card-body py-0">
-                                            <div class="row mx-lg-n1">
-                                                    <div v-for="album in photoAlbums"
-                                                         class="px-lg-1 col-md-auto my-2 mb-2">
+                                            <div class="row">
+                                                    <div v-for="(album, index) in photoAlbums"
+                                                         :key="index"
+                                                         class="col-12 col-sm-6 col-xl-3 my-3">
                                                         <PhotoalbumItem :album="album" :key="album.id"></PhotoalbumItem>
                                                     </div>
                                             </div>
