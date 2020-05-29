@@ -1,7 +1,7 @@
 <template>
     <div v-if="isFriendsInCommunity"
          id="communityParticipants"
-         class="bg-white-br20 mb-4 py-3 px-4">
+         class="bg-white-br20 mb-4 py-3 px-4 d-none d-lg-block">
 
         <div class="d-flex flex-row justify-content-start mb-1">
             <h6 class="plz-community-participants-title w-auto ">Участники

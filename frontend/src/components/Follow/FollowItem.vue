@@ -8,7 +8,7 @@
                 <span v-else class="plizi-invitation-item-isoffline"></span>
             </router-link>
 
-            <div class="plizi-invitation-item-body m-0 pr-5">
+            <div class="plizi-invitation-item-body flex-shrink-0 w-50 m-0 pr-4">
                 <div class="plizi-invitation-item-top d-flex align-items-start justify-content-between">
                     <router-link :to="`/user-`+follow.id" tag="h6" class="plizi-invitation-item-name my-0"
                                  :title=" follow.fullName ">
@@ -25,7 +25,7 @@
                 </div>
             </div>
 
-            <div class="align-self-center ml-auto">
+            <div class="align-self-center flex-shrink-0 ml-auto">
                 <div class="btn-group">
                     <button class="btn btn-danger btn-sm ml-2 rounded" @click="unFollow()">
                         <i class="fas fa-stop"></i>&nbsp;Отписаться

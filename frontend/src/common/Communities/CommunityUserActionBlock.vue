@@ -1,7 +1,7 @@
 
 <!--  TODO @tga  Мы можем этот блок кода удалить? -->
 <template>
-    <div id="communityUserActions" class="bg-white-br20 mb-4 py-3 px-4">
+    <div id="communityUserActions" class="bg-white-br20 mb-4 py-3 px-4 d-none d-lg-block">
         <button @click="onSendMessagetoAdminClick" type="button"
                 class="btn btn-primary btn-block mx-auto px-3 py-2 text-uppercase text-center rounded-pill">
             Написать сообщение
