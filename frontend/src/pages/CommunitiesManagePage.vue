@@ -74,7 +74,7 @@
         },
         methods: {},
         async mounted() {
-            await this.loadManagedCommunities();
+            await this.loadManagedCommunities(30);
         },
     }
 </script>

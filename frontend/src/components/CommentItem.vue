@@ -51,15 +51,15 @@
                         </button>
                     </div>
                         <div class="plz-comment-item-likes post-watched-counter"
-                             :class="{'is-active': alreadyLiked}"
+                             :class="{'is-active': comment.alreadyLiked}"
                              @click="onLike">
-                            <IconFillHeard v-if="alreadyLiked"/>
+                            <IconFillHeard v-if="comment.alreadyLiked"/>
                             <IconHeard v-else/>
-                            <span>{{ likes | space1000 }}</span>
-                            <div v-if="usersLikes && usersLikes.length" class="usersLikes p-3">
+                            <span>{{ comment.likes | space1000 }}</span>
+                            <div v-if="comment.usersLikes && comment.usersLikes.length" class="usersLikes p-3">
                                 <p class="mb-1">
                                     <b style="cursor: pointer">Понравилось</b>
-                                    {{ likes }} пользователям
+                                    {{ comment.likes }} пользователям
                                 </p>
                                 <div class="d-flex mb-0">
                                     <router-link v-for="(user, index) in shortUsersLikes"
@@ -76,15 +76,13 @@
                         </div>
                 </div>
             </div>
-             <div class="plz-comment-item__wrapper-answers" v-for="answer of answers" :key="answer.id">
+             <div class="plz-comment-item__wrapper-answers" v-for="answer of comment.thread" :key="answer.id">
                  <CommentItem
-                     :answers="answer.thread ? answer.thread.list : []"
                      :key="answer.id"
                      :postId="postId"
                      :comment="answer"
                      @onDelete="removeComment"
                      @update="editComment"
-                     @updateAnswers="updateAnswers"
                  >
                  </CommentItem>
              </div>
@@ -110,7 +108,6 @@
     import TextEditor from "../common/TextEditor.vue";
     import ChatMixin from "../mixins/ChatMixin.js";
     import Gallery from "../common/Gallery.vue";
-    import PliziAttachment from "../classes/PliziAttachment.js";
     import IconFillHeard from "../icons/IconFillHeard.vue";
     import PliziComment from "../classes/PliziComment.js";
 
@@ -120,10 +117,7 @@
         mixins: [LinkMixin, ChatMixin],
         props: {
             comment: {
-                type: Object
-            },
-            answers: {
-                type: Array,
+                type: PliziComment
             },
             postId: {
                 type: String | Number
@@ -133,10 +127,6 @@
             return {
                 isAnswer: false,
                 isEdit: false,
-
-                alreadyLiked: false,
-                likes: 0,
-                usersLikes: [],
             };
         },
         computed: {
@@ -144,7 +134,7 @@
                 return this.comment.usersLikes && this.comment.usersLikes.length ? this.comment.usersLikes.slice(0, 8) : null;
             },
             imageList() {
-                return this.comment.attachments.list.map(file => new PliziAttachment(file)).filter(attachment => attachment.isImage);
+                return this.comment.attachments.filter(attachment => attachment.isImage);
             },
             livePreview() {
                 let str = this.comment.body.replace(/<\/?[^>]+>/g, '').trim();
@@ -160,7 +150,7 @@
                 return this.comment.author.profile.avatar.image.medium.path;
             },
             getTimeComment() {
-                return moment.unix(this.comment.createdAt).fromNow();
+                return moment(this.comment.createdAt).fromNow();
             },
             isAuthor() {
                 return this.$root.$auth.user.id === this.comment.author.id;
@@ -168,25 +158,13 @@
         },
         methods: {
             editComment(newComment) {
-                const answers = this.answers.map(comment => comment.id === newComment.id ? newComment : comment);
-
-                this.$emit('updateAnswers', {id: this.comment.id, answers});
+                this.comment.thread = this.comment.thread.map(comment => comment.id === newComment.id ? comment.update(newComment) : comment);
             },
             addComment(comment) {
-                this.$emit('updateAnswers', {id: this.comment.id, answers: [...this.answers, comment]});
+                this.comment.thread.push(new PliziComment(comment));
             },
             removeComment(commentId) {
-                const answers = this.answers.filter(comment => comment.id !== commentId);
-
-                this.$emit('updateAnswers', {id: this.comment.id, answers});
-            },
-            updateAnswers({id, answers}) {
-                const newAnswers = this.answers.map(comment => comment.id === id ? {
-                    ...comment,
-                    thread: {list: answers}
-                } : comment);
-
-                this.$emit('updateAnswers', {id: this.comment.id, answers: newAnswers});
+                this.comment.thread = this.comment.thread.filter(comment => comment.id !== commentId);
             },
             async onTextPost(evData) {
                 let msg = evData.postText.trim();
@@ -211,28 +189,27 @@
             async updateComment(msg) {
                 try {
                     let response = await this.$root.$api.$post.editCommentById(this.comment.id, msg);
-                    this.$emit('update', {...response.data, thread: {list: this.answers}});
+                    this.$emit('update', response.data);
                 } catch (e) {
                     console.warn(e.detailMessage);
                 }
             },
             async onLike() {
-                console.log(123)
                 try {
                     let response = await this.$root.$api.$post.likeComment(this.comment.id);
 
                     if (response !== null) {
-                        if (this.alreadyLiked) {
-                            this.alreadyLiked = false;
-                            this.likes--;
-                            let userLikeIndex = this.usersLikes.findIndex((userLike) => {
+                        if (this.comment.alreadyLiked) {
+                            this.comment.alreadyLiked = false;
+                            this.comment.likes--;
+                            let userLikeIndex = this.comment.usersLikes.findIndex((userLike) => {
                                 return userLike.id === this.$root.$auth.user.id;
                             });
-                            this.usersLikes.splice(userLikeIndex, 1);
+                            this.comment.usersLikes.splice(userLikeIndex, 1);
                         } else {
-                            this.alreadyLiked = true;
-                            this.likes++;
-                            this.usersLikes.push(this.$root.$auth.user);
+                            this.comment.alreadyLiked = true;
+                            this.comment.likes++;
+                            this.comment.usersLikes.push(this.$root.$auth.user);
                         }
                     }
                 } catch (e) {
