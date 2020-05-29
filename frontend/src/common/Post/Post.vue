@@ -351,7 +351,7 @@
         },
         methods: {
             editComment(newComment) {
-                this.comments = this.comments.map(comment => comment.id === newComment.id ? newComment : comment);
+                this.comments = this.comments.map(comment => comment.id === newComment.id ? comment.update(newComment) : comment);
             },
             removeComment(commentId) {
                 this.comments = this.comments.filter(comment => comment.id !== commentId);

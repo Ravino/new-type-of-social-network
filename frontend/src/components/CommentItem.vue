@@ -108,7 +108,6 @@
     import TextEditor from "../common/TextEditor.vue";
     import ChatMixin from "../mixins/ChatMixin.js";
     import Gallery from "../common/Gallery.vue";
-    import PliziAttachment from "../classes/PliziAttachment.js";
     import IconFillHeard from "../icons/IconFillHeard.vue";
     import PliziComment from "../classes/PliziComment.js";
 
@@ -159,7 +158,7 @@
         },
         methods: {
             editComment(newComment) {
-                this.comment.thread = this.comment.thread.map(comment => comment.id === newComment.id ? new PliziComment(newComment) : comment);
+                this.comment.thread = this.comment.thread.map(comment => comment.id === newComment.id ? comment.update(newComment) : comment);
             },
             addComment(comment) {
                 this.comment.thread.push(new PliziComment(comment));
@@ -190,13 +189,12 @@
             async updateComment(msg) {
                 try {
                     let response = await this.$root.$api.$post.editCommentById(this.comment.id, msg);
-                    this.$emit('update', {...response.data, thread: {list: this.answers}});
+                    this.$emit('update', response.data);
                 } catch (e) {
                     console.warn(e.detailMessage);
                 }
             },
             async onLike() {
-                console.log(123)
                 try {
                     let response = await this.$root.$api.$post.likeComment(this.comment.id);
 

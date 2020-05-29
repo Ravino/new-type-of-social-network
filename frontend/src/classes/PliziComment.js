@@ -164,7 +164,7 @@ class PliziComment {
         this.likes = comment.likes || 0;
         this.author = comment.author;
         this.alreadyLiked = comment.alreadyLiked || false;
-        this.usersLikes = comment.usersLikes ? post.usersLikes.list.map((user) => {
+        this.usersLikes = comment.usersLikes ? comment.usersLikes.list.map((user) => {
             return new PliziUser(user);
         }) : [];
         this.createdAt = comment.createdAt;
@@ -183,6 +183,8 @@ class PliziComment {
         }
 
         this.author = comment.author ? new PliziUser(comment.author) : null;
+
+        return this;
     };
 }
 
