@@ -19,11 +19,6 @@ class FavoriteNeo4jRepository extends BaseRepository
     private $relationName;
 
     /**
-     * @var string
-     */
-    private $relationAttribute = 'is_favorite';
-
-    /**
      * FavoriteNeo4jRepository constructor.
      * @param string $targetName
      * @param string $relationName
@@ -71,7 +66,21 @@ class FavoriteNeo4jRepository extends BaseRepository
      */
     public function subscribeAsMember($user_oid, $target_oid)
     {
-        return $this->_su($user_oid, $target_oid, 1);
+        if ($id = $this->getMemberId($user_oid, $target_oid)) {
+            return false;
+        }
+
+        $query = "MATCH (u:User {oid: '{$user_oid}'})
+                  MATCH (c:{$this->targetName} {oid: {$target_oid}})
+                  CREATE (u)-[r:{$this->relationName}]->(c)
+                  RETURN COUNT(r) AS count";
+        try {
+            $this->client->run($query)->firstRecord();
+        } catch (Exception $e) {
+            return false;
+        }
+
+        return true;
     }
 
     /**
@@ -81,16 +90,13 @@ class FavoriteNeo4jRepository extends BaseRepository
      */
     public function unsubscribeFromMember($user_oid, $target_oid)
     {
-        return $this->_su($user_oid, $target_oid, 0);
-    }
-
-    private function _su($user_oid, $target_oid, $val)
-    {
         if (!$id = $this->getMemberId($user_oid, $target_oid)) {
             return false;
         }
 
-        $query = "MATCH ()-[r]-() WHERE id(r)={$id} SET r.is_favorite={$val} RETURN id(r)";
+        $query = "MATCH (:User {oid: '{$user_oid}'})-[r:{$this->relationName}]-(c:{$this->targetName} {oid: {$target_oid}})
+                  DELETE r
+                  RETURN COUNT(r) AS count";
         try {
             $this->client->run($query)->firstRecord();
         } catch (Exception $e) {
@@ -121,16 +127,6 @@ class FavoriteNeo4jRepository extends BaseRepository
     }
 
     /**
-     * @param string $relationAttribute
-     * @return self
-     */
-    public function setRelationAttribute(string $relationAttribute)
-    {
-        $this->relationAttribute = $relationAttribute;
-        return $this;
-    }
-
-    /**
      * @param $user_oid
      * @param int $limit
      * @param int $offset
@@ -138,7 +134,7 @@ class FavoriteNeo4jRepository extends BaseRepository
      */
     public function getIdList($user_oid, $limit = 20, $offset = 0)
     {
-        $query = "MATCH (u:User {oid: '{$user_oid}'})-[r:{$this->relationName} {is_favorite:1}]-(c:{$this->targetName})
+        $query = "MATCH (u:User {oid: '{$user_oid}'})-[r:{$this->relationName}]-(c:{$this->targetName})
                   RETURN c.oid AS oid
                   SKIP {$offset}
                   LIMIT {$limit}";

@@ -321,7 +321,7 @@ class CommunityController extends Controller
             return response()->json(['message' => 'Вы добавили сообщество в избранные'], 200);
         }
 
-        return response()->json(['message' => 'Вы не состоите в данном сообществе'], 422);
+        return response()->json(['message' => 'Вы уже добавили сообщество в избранные'], 422);
     }
 
     /**
@@ -336,7 +336,7 @@ class CommunityController extends Controller
             return response()->json(['message' => 'Вы удалили сообщество из избранных'], 200);
         }
 
-        return response()->json(['message' => 'Вы не состоите в данном сообществе'], 422);
+        return response()->json(['message' => 'Данного сообщества нет у вас в избранных'], 422);
     }
 
     public function requestCreate(CreateCommunityRequest $request)
