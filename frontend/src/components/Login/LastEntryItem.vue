@@ -1,5 +1,5 @@
 <template>
-    <div class="plz-latest-entries-item mb-3">
+    <div class="plz-latest-entries-item mb-1">
         <img v-bind:src="userPic" class="plz-latest-entries-user-pic mb-3" :alt="fullName" />
         <div class="d-inline-block text-center mx-auto px-4 my-0">
             <a href="/profile">
