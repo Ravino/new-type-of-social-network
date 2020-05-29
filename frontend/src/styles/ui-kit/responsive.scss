@@ -64,7 +64,7 @@
 
     .chat-dialogs-list {
         border: 0;
-        height: 200px;
+        height: calc(100vh - 140px);
         flex: 0 0 200px
     }
 
@@ -73,20 +73,21 @@
     }
     #chatMessagesWrapper {
         position: relative;
-        height: 370px; //500
+        //height: 370px; //500
+        height: calc(100vh - 140px);
         flex: 1 1 auto;
 
-        &:after {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            box-shadow: inset 0 0 4px rgba(0, 0, 0, 0.5);
-            pointer-events: none;
-            border-radius: 0 0 20px 20px;
-        }
+        //&:after {
+        //    content: '';
+        //    position: absolute;
+        //    top: 0;
+        //    left: 0;
+        //    right: 0;
+        //    bottom: 0;
+        //    box-shadow: inset 0 0 4px rgba(0, 0, 0, 0.5);
+        //    pointer-events: none;
+        //    border-radius: 20px;
+        //}
     }
     #chatMessagesWrapperBody {
         position: relative;
@@ -132,6 +133,10 @@
         .picker {
             transform: translate(-80%, 40px) !important;
         }
+    }
+
+    .modal:before {
+        right: 15px;
     }
 
 }
@@ -201,6 +206,21 @@
             height: 48px;
             border-radius: 100%;
             overflow: hidden;
+        }
+    }
+
+    .is-chatPage {
+        .chat-page-height-aside {
+            display: none;
+        }
+        .chat-dialogs-list {
+            border: 0;
+            height: calc(100vh - 100px);
+            flex: 0 0 200px
+        }
+
+        #chatMessagesWrapper {
+            height: calc(100vh - 100px);
         }
     }
 
