@@ -635,10 +635,10 @@ class PliziAPIClass {
                 this.emit('remoteAddAttendee', {
                     data :  data.data
                 });
-                //this.emit('NewAppNotification', {
-                //    type :  data.event_type,
-                //    dialog :  data.data
-                //});
+                this.emit('NewAppNotification', {
+                   type :  data.event_type,
+                   dialog :  data.data
+                });
             }
             if (channelID=== this.channel  &&  `chat.attendee.removed`===data.event_type) {
                 this.emit('remoteRemoveAttendee', {

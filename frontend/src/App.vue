@@ -172,9 +172,11 @@ methods: {
             let chatNotificationData = this.transformDialogToNotification(evData);
             this.addNotification(chatNotificationData);
         }
-        // if (`chat.attendee.appended`===evData.type) { аналогично с предыдущим тип данных
-        //     console.log(evData.data.data, 'кто-то добавил вас в групповой чат');
-        // }
+        if (`chat.attendee.appended`===evData.type) { //аналогично с предыдущим тип данных
+            console.log(evData, 'кто-то добавил вас в групповой чат');
+            let chatNotificationData = this.transformDialogToNotification(evData);
+            this.addNotification(chatNotificationData);
+        }
         // if (`message.new`===evData.type) {
         //     console.log(evData.data.data, 'у вас новое сообщение в чате');
         // }

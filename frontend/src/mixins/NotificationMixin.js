@@ -21,7 +21,8 @@ methods: {
             userPic: (inputNotification.data.sender) ? inputNotification.data.sender.userPic : null,
             firstName: (inputNotification.data.sender) ? inputNotification.data.sender.firstName : null,
             lastName: (inputNotification.data.sender) ? inputNotification.data.sender.lastName : null,
-            isHuman: true
+            isHuman: true,
+            name: (inputNotification.data.name) ? inputNotification.data.name : null,
         };
         if (inputNotification.data.notificationType === 'user.profile.image.updated') {
             notification.body = this.senderFullName(inputNotification) +
@@ -41,8 +42,24 @@ methods: {
             notification.primaryImage = inputNotification.data.community.primaryImage;
             }
         if (inputNotification.data.notificationType === 'chat.created') {
-            notification.body = this.senderFullName(inputNotification) +
-                ('f' === inputNotification.data.sender.sex ? 'создала чат с Вами' : 'создал чат с Вами');
+            if (inputNotification.attendees.length >= 3) {
+                notification.isHuman = false;
+                notification.primaryImage = "/images/noavatar-256.png";
+                notification.body = `Создан групповой чат ${inputNotification.data.name} с Вами`;
+            } else {
+                notification.body = this.senderFullName(inputNotification) +
+                    ('f' === inputNotification.data.sender.sex ? 'создала чат с Вами' : 'создал чат с Вами');
+            }
+        }
+        if (inputNotification.data.notificationType === 'chat.attendee.appended') {
+            if (inputNotification.attendees.length >= 3) {
+                notification.isHuman = false;
+                notification.primaryImage = "/images/noavatar-256.png";
+                notification.body = `Вас добавили в групповой чат ${inputNotification.data.name}`;
+            } else {
+                notification.body = this.senderFullName(inputNotification) +
+                    ('f' === inputNotification.data.sender.sex ? 'добавила Вас в групповой чат' : 'добавил Вас в групповой чат');
+            }
         }
 
         this.notifications.push({
@@ -77,14 +94,27 @@ methods: {
             user = data.dialog.attendees.filter(item => item.id !== this.userData.id);
 
             return {
+                attendees: data.dialog.attendees,
                 data: {
                     notificationType: data.type,
+                    name: data.name ? data.name : null,
                     sender: {
                         userPic: user[0].userPic ? user[0].userPic : null,
                         firstName: user[0].firstName ? user[0].firstName : null,
                         lastName: user[0].lastName ? user[0].lastName : null,
                         sex: user[0].sex ? user[0].sex : null
                     }
+                }
+            }
+        }
+        if (data.dialog.attendees.length >= 3) {
+            user = data.dialog.attendees.filter(item => item.id !== this.userData.id);
+
+            return {
+                attendees: data.dialog.attendees,
+                data: {
+                    notificationType: data.type,
+                    name: data.dialog.name ? data.dialog.name : null,
                 }
             }
         }
