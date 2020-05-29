@@ -180,15 +180,18 @@ methods: {
         }
 
         if (`chat.removed`===evData.type) {
-            console.log(evData);
             const chatRemoved = this.$root.$auth.dm.get(evData.chatId);
-            console.log(chatRemoved);
-            let chatNotificationData = this.transformForChatRemovedToNotification(chatRemoved, `chat.removed`);
+            let chatNotificationData = this.transformForChatRemovedToNotification(chatRemoved, evData.type);
+            this.addNotification(chatNotificationData);
+        }
+
+        if (`chat.attendee.removed`===evData.type) {
+            const chatRemoved = this.$root.$auth.dm.get(evData.chatId);
+            let chatNotificationData = this.transformForChatRemovedToNotification(chatRemoved, evData.type);
             this.addNotification(chatNotificationData);
         }
 
         if (`chat.attendee.appended`===evData.type) {
-            // console.log(evData, 'кто-то добавил вас в групповой чат');
             let chatNotificationData = this.transformDialogToNotification(evData);
             this.addNotification(chatNotificationData);
         }

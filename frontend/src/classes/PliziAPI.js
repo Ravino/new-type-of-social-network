@@ -613,7 +613,7 @@ class PliziAPIClass {
                     messageId : data.data.messageId,
                 });
             }
-            /** TODO: Алексей сказал сделаем позже **/
+
             if (channelID=== this.channel  &&  `chat.removed`===data.event_type) {
                 this.emit('NewAppNotification', {
                     type :  data.event_type,
@@ -645,10 +645,16 @@ class PliziAPIClass {
                 });
             }
             if (channelID=== this.channel  &&  `chat.attendee.removed`===data.event_type) {
-                this.emit('remoteRemoveAttendee', {
-                    chatId :  data.data.id,
-                    userId :  data.data.userId
+                this.emit('NewAppNotification', {
+                    type :  data.event_type,
+                    chatId :  data.data.id
                 });
+                setTimeout(() => {
+                    this.emit('remoteRemoveAttendee', {
+                        chatId :  data.data.id,
+                        userId :  data.data.userId
+                    });
+                }, 300);
             }
         });
     }

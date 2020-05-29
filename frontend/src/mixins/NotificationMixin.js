@@ -15,7 +15,6 @@ const NotificationMixin = {
     },
     methods: {
         addNotification(inputNotification) {
-            console.log(inputNotification);
             const uuid = uuidv4();
             let notification = {
                 id: uuid,
@@ -59,6 +58,17 @@ const NotificationMixin = {
             }
 
             if (inputNotification.data.notificationType === 'chat.removed') {
+                if (inputNotification.attendees.length >= 3) {
+                    notification.isHuman = false;
+                    notification.primaryImage = "/images/noavatar-256.png";
+                    notification.body = `Вас удалили из группового чата ${inputNotification.data.name}`;
+                } else {
+                    notification.body = this.senderFullName(inputNotification) +
+                        ('f' === inputNotification.data.sender.sex ? 'удалила чат с Вами' : 'удалил чат с Вами');
+                }
+            }
+
+            if (inputNotification.data.notificationType === 'chat.attendee.removed') {
                 if (inputNotification.attendees.length >= 3) {
                     notification.isHuman = false;
                     notification.primaryImage = "/images/noavatar-256.png";
@@ -131,7 +141,7 @@ const NotificationMixin = {
         transformForChatRemovedToNotification(data, notifType) {
             if (this.isGroupChatforChatRemove(data, notifType)) {
                 return {
-                    attendees: data.attendees,
+                    attendees: Array.from(data.attendees),
                     data: {
                         notificationType: notifType,
                         name: data.name ? data.name : null,
