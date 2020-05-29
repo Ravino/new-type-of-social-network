@@ -25,23 +25,28 @@ const NotificationMixin = {
                 name: (inputNotification.data.name) ? inputNotification.data.name : null,
                 isHuman: true
             };
+
             if (inputNotification.data.notificationType === 'user.profile.image.updated') {
                 notification.body = this.senderFullName(inputNotification) +
                     (inputNotification.data.sender.sex === 'f' ? 'сменила аватарку' : 'сменил аватарку');
             }
+
             if (inputNotification.data.notificationType === 'friendships.accepted') {
                 notification.body = this.senderFullName(inputNotification) +
                     ('f' === inputNotification.data.sender.sex ? 'одобрила Вашу заявку в друзья' : 'одобрил Вашу заявку в друзья');
             }
+
             if (inputNotification.data.notificationType === 'friendships.denied') {
                 notification.body = this.senderFullName(inputNotification) +
                     ('f' === inputNotification.data.sender.sex ? 'отклонила Вашу заявку в друзья' : 'отклонил Вашу заявку в друзья');
             }
+
             if (inputNotification.data.notificationType === 'community.post.created') {
                 notification.isHuman = false;
                 notification.body = `Сообщество <b class="community-name">${inputNotification.data.community.name}</b> опубликовало новый пост`;
                 notification.primaryImage = inputNotification.data.community.primaryImage;
             }
+
             if (inputNotification.data.notificationType === 'chat.created') {
                 if (inputNotification.attendees.length >= 3) {
                     notification.isHuman = false;
@@ -52,6 +57,18 @@ const NotificationMixin = {
                         ('f' === inputNotification.data.sender.sex ? 'создала чат с Вами' : 'создал чат с Вами');
                 }
             }
+
+            if (inputNotification.data.notificationType === 'chat.removed') {
+                if (inputNotification.attendees.length >= 3) {
+                    notification.isHuman = false;
+                    notification.primaryImage = "/images/noavatar-256.png";
+                    notification.body = `Вас удалили из группового чата ${inputNotification.data.name}`;
+                } else {
+                    notification.body = this.senderFullName(inputNotification) +
+                        ('f' === inputNotification.data.sender.sex ? 'удалила чат с Вами' : 'удалил чат с Вами');
+                }
+            }
+
             if (inputNotification.data.notificationType === 'chat.attendee.appended') {
                 if (inputNotification.attendees.length >= 3) {
                     notification.isHuman = false;
@@ -62,6 +79,7 @@ const NotificationMixin = {
                         ('f' === inputNotification.data.sender.sex ? 'добавила Вас в групповой чат' : 'добавил Вас в групповой чат');
                 }
             }
+
             if (inputNotification.data.notificationType === 'message.new') {
                 notification.body = inputNotification.data.sender.message;
             }
@@ -110,6 +128,32 @@ const NotificationMixin = {
             // this.$root.$auth.user.firstName
         },
 
+        transformForChatRemovedToNotification(data, notifType) {
+            if (this.isGroupChatforChatRemove(data, notifType)) {
+                return {
+                    attendees: data.attendees,
+                    data: {
+                        notificationType: notifType,
+                        name: data.name ? data.name : null,
+                    }
+                }
+            }
+
+            return {
+                attendees: data.attendees,
+                data: {
+                    notificationType: notifType || data.type,
+                    name: data.name ? data.name : null,
+                    sender: {
+                        userPic: data.attendees[0].userPic ? data.attendees[0].userPic : null,
+                        firstName: data.attendees[0].firstName ? data.attendees[0].firstName : null,
+                        lastName: data.attendees[0].lastName ? data.attendees[0].lastName : null,
+                        sex: data.attendees[0].sex ? data.attendees[0].sex : null
+                    }
+                }
+            }
+        },
+
         transformDialogToNotification(data, notifType = null) {
             if (this.isGroupChat(data, notifType)) {
                 return {
@@ -143,6 +187,13 @@ const NotificationMixin = {
             if ((nType === 'chat.removed' && nType === 'chat.attendee.removed') && (data.dialog.attendees.length >= 2))
                 return true;
             return (data.dialog.attendees.length >= 3);
+        },
+
+        isGroupChatforChatRemove(data, notifType = null) {
+            const nType = notifType || data.type;
+            if ((nType === 'chat.removed' && nType === 'chat.attendee.removed') && (data.attendees.length >= 2))
+                return true;
+            return (data.attendees.length >= 3);
         }
     }
 

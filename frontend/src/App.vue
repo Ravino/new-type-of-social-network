@@ -173,20 +173,26 @@ methods: {
         if (`user.notification`===evData.type) {
             this.addNotification(evData.notification);
         }
+
         if (`chat.created`===evData.type) {
             let chatNotificationData = this.transformDialogToNotification(evData);
             this.addNotification(chatNotificationData);
         }
+
         if (`chat.removed`===evData.type) {
+            console.log(evData);
             const chatRemoved = this.$root.$auth.dm.get(evData.chatId);
-            let chatNotificationData = this.transformDialogToNotification(chatRemoved, `chat.removed`);
+            console.log(chatRemoved);
+            let chatNotificationData = this.transformForChatRemovedToNotification(chatRemoved, `chat.removed`);
             this.addNotification(chatNotificationData);
         }
+
         if (`chat.attendee.appended`===evData.type) {
-            console.log(evData, 'кто-то добавил вас в групповой чат');
+            // console.log(evData, 'кто-то добавил вас в групповой чат');
             let chatNotificationData = this.transformDialogToNotification(evData);
             this.addNotification(chatNotificationData);
         }
+
         if (`message.new`===evData.type) {
             if (!evData.message.isMine) {
                 let chatNotificationData = this.transformMessageToNotification(evData);
