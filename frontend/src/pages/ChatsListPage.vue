@@ -241,13 +241,13 @@ methods: {
         if ('ChatsListPage'!==this.$root.$router.currentRoute.name)
             return;
 
-        if (true /*this.currentDialog && this.currentDialog.id === evData.chatId*/) {
+        if (this.currentDialog && this.currentDialog.id === evData.chatId) {
             this.appendMessageToMessagesList(evData.message);
+        }
 
-            if (this.$refs && this.$refs.chatMessages) {
-                this.$refs.chatMessages.$forceUpdate();
-                this.$refs.chatMessages.scrollToEnd();
-            }
+        if (this.$refs && this.$refs.chatMessages) {
+            this.$refs.chatMessages.$forceUpdate();
+            this.$refs.chatMessages.scrollToEnd();
         }
 
         this.updateDialogsList(evData.chatId, evData);
@@ -263,6 +263,10 @@ methods: {
             if (this.$refs  &&  this.$refs.chatDialogs) {
                 this.$refs.chatDialogs.$forceUpdate();
             }
+        });
+
+        this.$root.$on('GoToChat', ()=>{
+            this.isChatPicked = false;
         });
 
         this.$root.$on('newMessageInDialog', this.addNewChatMessageToList);
