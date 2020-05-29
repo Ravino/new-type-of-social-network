@@ -272,7 +272,7 @@ class Community extends Model
 
     public function getNeo4jRelationName()
     {
-        return 'MEMBER_OF';
+        return 'COMMUNITY_FAVORITE';
     }
 
     /**
