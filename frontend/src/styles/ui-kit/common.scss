@@ -636,6 +636,13 @@ $dotSize: 2px;
     margin: 0 3px;
 }
 
+.b-20 {
+    border-radius: 20px;
+}
+.bt-20 {
+    border-radius: 20px 20px 0 0 ;
+}
+
 .video-player {
     .video-js {
         width: 100%;
