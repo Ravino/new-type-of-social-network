@@ -23,7 +23,7 @@ jobs:
     - stage: PLZ-439
       script:
         - cd frontend
-        - sed -ie  "s,__APIS_URL__,$APIS_URL,g; s,__WSS_URL__,$WSS_URL,g" public/index.html.example
+        - sed -ie  "s,__APIS_URL__,$APIS2_URL,g; s,__WSS_URL__,$WSS_URL,g" public/index.html.example
         - sed -ie  "s,__API__,$API2,g; s,__WS__,$WS,g; s,__URL__,$URL,g; s,__APIS_URL__,$APIS2_URL,g; s,__WS_SERVICE__,$WS_SERVICE,g; s,__API_SERVICE__,$API_SERVICE,g" docker/nginx/default.example.conf
         - npm install
         - npm run prod
