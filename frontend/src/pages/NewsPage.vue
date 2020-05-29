@@ -22,7 +22,8 @@
                               @onDeletePost="onDeletePost"
                               @onRestorePost="onRestorePost"
                               @openVideoModal="openVideoModal"
-                              @onShare="onSharePost"/>
+                              @onShare="onSharePost"
+                              @onShowUsersLikes="openLikeModal"/>
                     </template>
 
                     <div v-else-if="!isStarted"  class="row plz-post-item mb-4 bg-white-br20 p-4">
@@ -58,6 +59,10 @@
                          v-bind:user="postRepostModal.content.postForRepost.author"
                          v-bind:post="postRepostModal.content.postForRepost"
                          @hidePostRepostModal="hidePostRepostModal"></PostRepostModal>
+
+        <PostLikeModal v-if="postLikeModal.isVisible"
+                       :postId="postLikeModal.content.postId"
+                       @hideLikeModal="hideLikeModal"/>
     </div>
 </template>
 
@@ -73,6 +78,7 @@ import PostEditModal from '../common/Post/PostEditModal.vue';
 import PostVideoModal from '../common/Post/PostVideoModal.vue';
 import PostRepostModal from '../common/Post/PostRepostModal.vue';
 import SmallSpinner from "../common/SmallSpinner.vue";
+import PostLikeModal from '../common/Post/PostLikeModal.vue';
 
 import PliziPost from '../classes/PliziPost.js';
 import LazyLoadPosts from "../mixins/LazyLoadPosts.js";
@@ -90,6 +96,7 @@ components: {
     PostVideoModal,
     PostRepostModal,
     SmallSpinner,
+    PostLikeModal,
 },
     mixins: [LazyLoadPosts],
 data() {
@@ -109,6 +116,12 @@ data() {
             isVisible: false,
             content: {
                 postForRepost: null,
+            },
+        },
+        postLikeModal: {
+            isVisible: false,
+            content: {
+                postId: null,
             },
         },
     }
@@ -147,6 +160,15 @@ methods: {
     hidePostRepostModal() {
         this.postRepostModal.isVisible = false;
         this.postRepostModal.content.postForRepost = null;
+    },
+    openLikeModal(postId) {
+        this.postLikeModal.isVisible = true;
+        this.postLikeModal.content.postId = postId;
+    },
+
+    hideLikeModal() {
+        this.postLikeModal.isVisible = false;
+        this.postLikeModal.content.postId = null;
     },
 
     async getPosts(limit = 50, offset = 0) {
