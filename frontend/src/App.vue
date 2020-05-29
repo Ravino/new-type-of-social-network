@@ -166,8 +166,9 @@ methods: {
             return;
 
         if (`app.notification`===evData.type) {
+            console.log(evData);
             let chatNotificationData = this.transformNotifyToNotification(evData);
-            this.addNotification(chatNotificationData);
+            // this.addNotification(chatNotificationData);
         }
 
         if (`user.notification`===evData.type) {
