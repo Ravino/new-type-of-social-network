@@ -52,6 +52,10 @@ data() {
     }
 },
 methods: {
+    hidePicker(){
+        this.isVisible= false;
+    },
+
     insert(eventData) {
         this.$emit('addEmoji', {
             emoji : eventData.emoji,
