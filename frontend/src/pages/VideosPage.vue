@@ -346,7 +346,6 @@
     import IconYoutube from "../icons/IconYoutube.vue";
     import IconPlayVideo from "../icons/IconPlayVideo.vue";
     import IconDelete from "../icons/IconDelete.vue";
-    import {debounce} from "../utils/Debonce.js";
 
     export default {
 name: "VideosPage",
@@ -378,6 +377,7 @@ data() {
             },
         },
         isSuccess: false,
+        isDeleteRequest: false,
     }
 },
 methods: {
@@ -405,7 +405,11 @@ methods: {
         this.openDeleteVideoModal(id);
     },
 
-    onSuccessDeleteVideoModal: debounce(async function() {
+    async onSuccessDeleteVideoModal() {
+        if (this.isDeleteRequest) {
+            return;
+        }
+        this.isDeleteRequest = true;
         let response;
 
         try {
@@ -422,9 +426,13 @@ methods: {
             setTimeout(() => {
                 this.isSuccess = false;
                 this.hideDeleteVideoModal();
+                this.isDeleteRequest = false;
             }, 3000);
+        } else {
+            this.isDeleteRequest = false;
         }
-    }, 5000),
+    },
+
     async getUserVideo() {
         let response;
 
