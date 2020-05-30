@@ -39,8 +39,8 @@ return [
             // Enable coroutine send
             'send_yield' => true,
             // You must add --enable-openssl while compiling Swoole
-            'ssl_cert_file' => env('FULLCHAIN_PATH', '/etc/nginx/ssl/live/vm1095330.hl.had.pm/fullchain.pem'),
-            'ssl_key_file' => env('PRIVATE_KEY_PATH', '/etc/nginx/ssl/live/vm1095330.hl.had.pm/privkey.pem'),
+            'ssl_cert_file' => null,
+            'ssl_key_file' => null,
         ],
     ],
 
