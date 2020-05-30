@@ -26,7 +26,7 @@
 </template>
 
 <script>
-    import ProfileGallery from '../common/Gallery.vue';
+    import ProfileGallery from '../common/ProfileGallery.vue';
 
 export default {
 name: 'ProfilePhotos',
