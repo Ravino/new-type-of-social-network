@@ -3,7 +3,8 @@
          :class="[`plz-gallery-${galleryType}`,
          {'plz-gallery-single': isSingleImage},
          {'plz-gallery-double': isDoubleImages},
-         {'plz-gallery-fourth': isFourthImages}]">
+         {'plz-gallery-fourth': isFourthImages},
+         {'plz-gallery-triple': isTripleImages}]">
 
         <div v-if="galleryType === 'album'" class="plz-gallery-wrap plz-gallery-wrap-album">
             <div v-if="profilePhotos" class="profile-photos d-flex">
@@ -118,6 +119,10 @@
                 return this.countImages === 1;
             },
 
+            isTripleImages() {
+                return this.countImages === 3;
+            },
+            
             isDoubleImages() {
                 return this.countImages === 2;
             },
