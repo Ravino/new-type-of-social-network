@@ -78,9 +78,11 @@
                     console.warn(e.detailMessage);
                 }
 
-                this.photoAlbums = apiResponse.map((photoAlbum) => {
-                    return new PliziPhotoAlbum(photoAlbum);
-                });
+                if (apiResponse) {
+                    this.photoAlbums = apiResponse.map((photoAlbum) => {
+                        return new PliziPhotoAlbum(photoAlbum);
+                    });
+                }
             }
         },
         async mounted() {

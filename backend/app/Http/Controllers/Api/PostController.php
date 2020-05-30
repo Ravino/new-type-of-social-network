@@ -62,8 +62,8 @@ class PostController extends Controller
             $request->query('limit'),
             $request->query('offset'),
             false,
-            $request->get('onlyLiked') ?? false,
-            $request->get('orderBy') ?? null,
+            $request->get('onlyLiked', false),
+            $request->get('orderBy')
         );
 
         return new PostCollection($posts);
@@ -96,8 +96,9 @@ class PostController extends Controller
             $posts = $community->posts()->with(['postable', 'author', 'usersLikes' => function ($query) {
                 return $query->limit(8)->get();
             }])
-                ->limit($request->query('limit') ?? 50)
-                ->offset($request->query('offset') ?? 0)
+                ->withCount('comments')
+                ->limit($request->query('limit', 50))
+                ->offset($request->query('offset', 0))
                 ->orderByDesc('id')
                 ->get();
             return new PostCollection($posts);

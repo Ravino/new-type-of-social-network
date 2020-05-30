@@ -49,10 +49,14 @@ class PostCollection extends ResourceCollection
                             'attachments' => new AttachmentsCollection($post->attachments),
                             'user' => new SimpleUser($post->postable),
                             'createdAt' => $post->created_at,
-                            'sharedFrom' => $post->parent_id ? new Post($post->parent) : null,
+                            'sharedFrom' => $post->parent_id
+                                ? new Post($post->parent()->withCount('comments', 'children')->first())
+                                : null,
                             'author' => new SimpleUser($post->author),
                         ];
-                    } else if ($post->postable instanceof CommunityModel) {
+                    }
+
+                    if ($post->postable instanceof CommunityModel) {
                         return [
                             'id' => $post->id,
                             'name' => $post->name,
@@ -67,7 +71,9 @@ class PostCollection extends ResourceCollection
                             'attachments' => new AttachmentsCollection($post->attachments),
                             'community' => new Community($post->postable),
                             'createdAt' => $post->created_at,
-                            'sharedFrom' => $post->parent_id ? new Post($post->parent) : null,
+                            'sharedFrom' => $post->parent_id
+                                ? new Post($post->parent()->withCount('comments', 'children')->first())
+                                : null,
                             'author' => new SimpleUser($post->author),
                         ];
                     }
@@ -85,7 +91,9 @@ class PostCollection extends ResourceCollection
                         'alreadyLiked' => (bool)count($post->like),
                         'createdAt' => $post->created_at,
                         'attachments' => new AttachmentsCollection($post->attachments),
-                        'sharedFrom' => $post->parent_id ? new Post($post->parent) : null,
+                        'sharedFrom' => $post->parent_id
+                            ? new Post($post->parent()->withCount('comments', 'children')->first())
+                            : null,
                         'author' => new SimpleUser($post->author),
                     ];
                 }

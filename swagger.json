@@ -441,6 +441,46 @@
       }
     },
     "/photo-albums/{id}": {
+        "get": {
+            "tags": [
+                "Photo Albums"
+            ],
+            "description": "Получить фотоальбом",
+            "operationId": "GetPhotoAlbum",
+            "parameters": [
+                {
+                    "name": "id",
+                    "in": "path",
+                    "description": "ID фотоальбома",
+                    "required": true,
+                    "schema": {
+                        "type": "integer"
+                    }
+                }
+            ],
+            "responses": {
+                "200": {
+                    "description": "OK",
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "type": "object",
+                                "properties": {
+                                    "data": {
+                                        "$ref": "#/components/schemas/PhotoAlbum"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            "security": [
+                {
+                    "Authorization": []
+                }
+            ]
+        },
       "post": {
         "tags": [
           "Photo Albums"
@@ -5754,6 +5794,37 @@
           "user": {
             "$ref": "#/components/schemas/User"
           }
+        }
+      },
+      "PhotoAlbum": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "number"
+          },
+          "title": {
+            "type": "string"
+          },
+          "description": {
+            "type": "string"
+          },
+          "author": {
+            "$ref": "#/components/schemas/User"
+          },
+          "createdAt": {
+            "type": "number"
+          },
+          "user": {
+            "$ref": "#/components/schemas/User"
+          },
+            "images": {
+                "type": "object",
+                "properties": {
+                    "list": {
+                        "$ref": "#/components/schemas/ImageUploadList"
+                    }
+                }
+            }
         }
       },
       "PhotoAlbumCommunityList": {

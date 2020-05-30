@@ -2,7 +2,7 @@
     <div class="modal community-create-modal" id="communityCreateModal"
          tabindex="-1" role="dialog" aria-labelledby="communityCreateModal"
          aria-hidden="true" style="display: block; background-color: rgba(0, 0, 0, .7);"
-         @click.stop="hidePhotoalbumCreateModal">
+         @click.stop="onHide">
 
         <div class="modal-dialog modal-dialog-centered" role="document" @click.stop="">
             <div class="modal-content bg-white-br20 overflow-auto">
@@ -21,14 +21,19 @@
                     </div>
 
                     <form class="form community-create-modal-form p-0  w-100 overflow-hidden"
-                          @submit.prevent="" novalidate="novalidate">
+                          @submit.prevent="startEditPhotoAlbum" novalidate="novalidate">
 
                         <div class="form-group d-flex align-items-center mb-4 px-5 row position-relative">
                             <label for="photoTitle" class="col-4 community-create-modal-label  text-right">Название:</label>
                             <div class="col-8">
-                                <input v-model="model.title" type="text" id="photoTitle" ref="commName"
+                                <input v-model="model.title"
+                                       type="text"
+                                       id="photoTitle"
+                                       ref="commName"
+                                       @input="onInput('title')"
                                        @blur="$v.model.title.$touch()"
-                                       class="form-control community-create-modal-select" required/>
+                                       class="form-control community-create-modal-select"
+                                       required/>
                             </div>
                             <div class="col-4"></div>
                             <div class="col-8 invalid-feedback" v-if="$v.model.title.$error">
@@ -41,25 +46,35 @@
                         <div class="form-group d-flex align-items-center mb-4 px-5 row position-relative">
                             <label for="photoDescription" class="col-4 community-create-modal-label  text-right">Описание:</label>
                             <div class="col-8">
-                                <input v-model="model.description" type="text" id="photoDescription" ref="commName"
+                                <input v-model="model.description"
+                                       type="text"
+                                       id="photoDescription"
+                                       ref="commName"
+                                       @input="onInput('description')"
                                        @blur="$v.model.description.$touch()"
-                                       class="form-control community-create-modal-select" required/>
+                                       class="form-control community-create-modal-select"
+                                       required/>
                             </div>
                             <div class="col-4"></div>
-                            <div class="col-8 invalid-feedback" v-if="$v.model.description.$error">
-                                <p v-if="!$v.model.description.required" class="text-danger">Укажите описание
-                                    альбома</p>
-                                <p v-if="!$v.model.description.minLength" class="text-danger">Описание не может быть короче
-                                    <b>четырёх</b> символов</p>
+                            <div v-if="$v.model.description.$error"
+                                 class="col-8 invalid-feedback">
+                                <p v-if="!$v.model.description.isValidDescription" class="text-danger">
+                                    Укажите описание альбома
+                                </p>
                             </div>
                         </div>
 
                         <div
                             class="form-group d-flex align-items-center px-5 py-4 community-create-modal-footer mb-0 row">
-                            <div class="col-12 col-md-5 d-flex align-items-center justify-content-end px-0 mx-auto">
-                                <button @click.stop="startEditPhotoalbum()" type="button"
-                                        class="btn w-100 btn-primary rounded-pill">Сохранить изменения
+                            <div class="col-12 col-md-5 d-flex flex-column align-items-center justify-content-end px-0 mx-auto">
+                                <button type="submit"
+                                        :disabled="isShipped"
+                                        class="btn w-100 btn-primary rounded-pill">
+                                    Сохранить изменения
                                 </button>
+                                <div v-if="isSuccess" class="text-success text-center mt-3">
+                                    Фотоальбом был успешно обновлен.
+                                </div>
                             </div>
                         </div>
                     </form>
@@ -72,18 +87,22 @@
 
 <script>
 import {minLength, required} from "vuelidate/lib/validators";
+import PliziPhotoAlbum from "../../classes/PliziPhotoAlbum.js";
 
 export default {
     name: 'PhotoalbumEditModal',
     props: {
-        albumId: Object
+        photoAlbum: PliziPhotoAlbum,
     },
     data() {
         return {
             model: {
-                title: '',
-                description: ''
-            }
+                title: this.photoAlbum.title,
+                description: this.photoAlbum.description,
+            },
+            isSuccess: false,
+            isShipped: false,
+            errors: null,
         }
     },
     validations() {
@@ -94,39 +113,67 @@ export default {
                     minLength: minLength(4)
                 },
                 description: {
-                    required,
-                    minLength: minLength(4)
+                    isValidDescription(value) {
+                        if (!!value) {
+                            return value.length >= 4;
+                        }
+
+                        return true;
+                    },
                 },
             }
         };
     },
     methods: {
-        hidePhotoalbumCreateModal() {
+        onHide() {
             this.$emit('HidePhotoalbumEditModal', {});
         },
-
-        startEditPhotoalbum() {
+        startEditPhotoAlbum() {
             this.$v.$touch();
-            if (!this.$v.model.$invalid)
-                this.editPhotoalbum();
+
+            if (!this.$v.$invalid) {
+                this.editPhotoAlbum();
+            }
+        },
+        onInput(fieldName) {
+            if (this.errors && this.errors[fieldName]) {
+                this.errors[fieldName] = null;
+            }
         },
 
-        async editPhotoalbum() {
+        async editPhotoAlbum() {
+            this.isShipped = true;
+            this.errors = null;
             let apiResponse = null;
-
             let formData = {
                 title: this.model.title.trim(),
-                description: this.model.description.trim()
+                description: this.model.description ? this.model.description.trim() : null,
             };
+
             try {
-                apiResponse = await this.$root.$api.$photoalbums.updatePhotoalbum(this.albumId, formData);
-                this.hidePhotoalbumCreateModal();
+                apiResponse = await this.$root.$api.$photoalbums.updatePhotoAlbum(this.photoAlbum.id, formData);
             } catch (e) {
+                this.isShipped = false;
+
+                if (e.status === 422) {
+                    this.errors = e.data.errors;
+                }
+
                 console.warn(e.detailMessage);
             }
 
             if (apiResponse) {
-                this.$emit('AddNewCommunity', apiResponse);
+                this.isSuccess = true;
+                this.$root.$emit('onUpdate', {
+                    title: this.model.title,
+                    description: this.model.description,
+                });
+
+                setTimeout(() => {
+                    this.isSuccess = false;
+                    this.onHide();
+                }, 3000);
+
             }
         }
     },
