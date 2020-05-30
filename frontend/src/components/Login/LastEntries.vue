@@ -96,7 +96,7 @@ methods: {
         ];
     },
     onClickEntry(entry) {
-        if (this.checkIsTarga()) {
+        if (this.checkIsTarga() || entry.id === 0) {
             this.$emit('logInWithEntryItem', entry);
 
             return;
