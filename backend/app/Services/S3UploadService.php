@@ -18,17 +18,20 @@ class S3UploadService
      * @param $files
      * @param string $visibility
      * @param array $config
+     * @param array $additionalData
      * @return array
      * @throws Exception
      */
-    public function uploadFiles(Model $model, $path, $files, $visibility = 'public', $config = [])
+    public function uploadFiles(Model $model, $path, $files, $visibility = 'public', $config = [], $additionalData = [])
     {
         $config = $config ?: $this->getDefaultConfig();
 
         $uploaded = $this->multiUpload($path, $files, $visibility, $config);
 
         $attachment_ids = [];
+
         foreach ($uploaded as $data) {
+            $data = array_merge($data, $additionalData);
             $attachment = $model::create($data);
             $attachment_ids[] = $attachment->id;
         }

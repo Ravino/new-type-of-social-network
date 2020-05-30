@@ -40,3 +40,4 @@ Thumbs.db
 *.js.map
 *.css.map
 mix-manifest.json
+/.env
