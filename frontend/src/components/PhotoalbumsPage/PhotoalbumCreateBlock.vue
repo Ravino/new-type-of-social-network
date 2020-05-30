@@ -1,14 +1,14 @@
 <template>
     <div id="createCommunityBlock">
-                <button type="button"
-                        @click="showPhotoalbumCreateModal"
-                        class="btn plz-btn plz-btn-primary p-0 mr-3">
-                    Создать альбом
-                </button>
-                <PhotoalbumCreateModal v-if="photoalbumCreateModalShow"
-                         @HidePhotoalbumCreateModal="onHidePhotoalbumCreateModal"
-                >
-                </PhotoalbumCreateModal>
+        <button type="button"
+                @click="showPhotoalbumCreateModal"
+                class="btn plz-btn plz-btn-primary p-0">
+            Создать альбом
+        </button>
+        <PhotoalbumCreateModal v-if="photoalbumCreateModalShow"
+                 @HidePhotoalbumCreateModal="onHidePhotoalbumCreateModal"
+        >
+        </PhotoalbumCreateModal>
     </div>
 </template>
 
