@@ -30,6 +30,29 @@ class PliziCommunitiesAPI extends PliziBaseAPI {
         return null;
     }
 
+    /**
+     * Получение списка сообществ для гостя
+     * @param {string} sText
+     // * @param {number} limit
+     // * @param {number} offset
+     * @returns {object[]|null}
+     * @throws PliziAPIError
+     */
+    async guestLoadCommunities(sText){
+        const sData = (sText + '').trim();
+
+        let response = await this.axios.get('api/communities/search/' + sData)
+            .catch( ( error ) => {
+                this.checkIsTokenExpires( error, `$communities.guestLoadCommunities` );
+                throw new PliziAPIError( `$communities.guestLoadCommunities`, error.response );
+            } );
+
+        if ( response.status === 200 ){
+            return response.data.data.list;
+        }
+
+        return null;
+    }
 
     /**
      * Получение списка сообществ для управления
