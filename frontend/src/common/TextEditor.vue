@@ -57,7 +57,7 @@
                     </label>-->
 
                     <button class="btn btn-link w-100 mx-0 p-0 btn-add-smile position-relative" type="button">
-                        <EmojiPicker @addEmoji="onAddEmoji" v-bind:transform="emojiTransform"></EmojiPicker>
+                        <EmojiPicker @addEmoji="onAddEmoji" v-bind:transform="emojiTransform" refs="emojiPicker"></EmojiPicker>
                     </button>
                 </div>
             </div>
@@ -191,6 +191,7 @@ computed: {
 
 methods: {
     focus(){
+        this.$refs.emojiPicker.hidePicker();
         this.$refs.editor.focus();
     },
 
