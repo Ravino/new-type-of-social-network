@@ -90,6 +90,14 @@ class PliziUserStats {
         return this._friends;
     }
 
+    set totalFriendsCount( value ){
+        this._friends = value;
+    }
+
+    set friends( value ){
+        this._friends = value;
+    }
+
     set notifications( value ){
         this._notifications = value;
     }
@@ -100,10 +108,6 @@ class PliziUserStats {
 
     set invitations( value ){
         this._invitations = value;
-    }
-
-    set friends( value ){
-        this._friends = value;
     }
 
     get isFollow() {
