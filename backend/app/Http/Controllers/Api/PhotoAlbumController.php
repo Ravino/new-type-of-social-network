@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Api;
 
+use \App\Http\Resources\PhotoAlbum\PhotoAlbum as PhotoAlbumJsonResource;
 use App\Http\Requests\PhotoAlbum\PhotoAlbumStore;
 use App\Http\Requests\PhotoAlbum\PhotoAlbumUpdate;
 use App\Http\Requests\Post\UploadFileRequest;
@@ -94,12 +95,14 @@ class PhotoAlbumController extends Controller
     /**
      * Display the specified resource.
      *
-     * @param int $id
-     * @return \Illuminate\Http\Response
+     * @param PhotoAlbum $photoAlbum
+     * @return \App\Http\Resources\PhotoAlbum\PhotoAlbum
      */
-    public function show($id)
+    public function show(PhotoAlbum $photoAlbum)
     {
-        //
+        $photoAlbum = $photoAlbum->with(['images'])->first();
+
+        return new PhotoAlbumJsonResource($photoAlbum);
     }
 
     /**

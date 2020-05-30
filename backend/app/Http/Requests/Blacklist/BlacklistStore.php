@@ -29,6 +29,7 @@ class BlacklistStore extends Request
                 'required',
                 'exists:users,id',
                 Rule::unique('users_blacklisted', 'blacklisted_id')->where('user_id', auth()->user()->id),
+                'not_in:' . auth()->id(),
             ],
         ];
     }
@@ -36,9 +37,10 @@ class BlacklistStore extends Request
     public function messages()
     {
         return [
-            'userId.required' => 'Обязательный аттребут',
+            'userId.required' => 'Обязательный атрибут',
             'userId.exists' => 'Запись отсутсвует',
             'userId.unique' => 'Уже в черном списке',
+            'userId.not_in' => 'Не возможно самого себя добавить в черный список',
         ];
     }
 }

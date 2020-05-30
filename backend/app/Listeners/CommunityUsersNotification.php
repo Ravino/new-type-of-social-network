@@ -27,7 +27,7 @@ class CommunityUsersNotification implements ShouldQueue
         $post = isset($data['post']) && $data['post'] ? $data['post'] : null;
         $details = $this->preparePayload($event, $community, $post);
         if($details) {
-            foreach ($community->users as $user) {
+            foreach ($community->subscribers as $user) {
                 $user->notify(new UserSystemNotifications($details));
             }
         }

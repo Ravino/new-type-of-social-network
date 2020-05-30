@@ -1,7 +1,7 @@
 import PliziMember from './PliziMember.js';
-import PliziCommunityAvatar from './Community/PliziCommunityAvatar';
-import PliziCommunityHeaderImage from './Community/PliziCommunityHeaderImage';
-import PliziLocation from "./User/PliziLocation";
+import PliziCommunityAvatar from './Community/PliziCommunityAvatar.js';
+import PliziCommunityHeaderImage from './Community/PliziCommunityHeaderImage.js';
+import PliziLocation from './User/PliziLocation.js';
 
 class PliziCommunity {
     /**
@@ -94,6 +94,13 @@ class PliziCommunity {
     _members = null;
 
     /**
+     * админы сообщества
+     * @type {PliziMember[]}
+     * @private
+     */
+    _admins = null;
+
+    /**
      * небольшой список друзей в сообществе
      * @type {PliziMember[]}
      * @private
@@ -138,6 +145,12 @@ class PliziCommunity {
      */
     _requestsCount = 0;
 
+    /**
+     * @type {boolean}
+     * @private
+     */
+    _subscribed = false;
+
     constructor(inputData){
         this._id = inputData.id;
         this._name = inputData.name;
@@ -157,6 +170,7 @@ class PliziCommunity {
         this._role = inputData.role;
         this._totalMembers = inputData.totalMembers;
         this._requestsCount = inputData.requestsCount;
+        this._subscribed = inputData.subscribed;
 
         if (inputData.friends) {
             this._friends = [];
@@ -172,6 +186,14 @@ class PliziCommunity {
 
             inputData.members.list.map( (mItem) => {
                 this._members.push(new PliziMember(mItem));
+            });
+        }
+
+        if (inputData.admins) {
+            this._admins = [];
+
+            inputData.admins.list.map( (mItem) => {
+                this._admins.push(new PliziMember(mItem));
             });
         }
     }
@@ -200,6 +222,10 @@ class PliziCommunity {
         if (this._primaryImage)
             return this._primaryImage;
 
+        if (this._avatar  &&  this._avatar.image  &&  this._avatar.image.thumb  &&  this._avatar.image.thumb.path) {
+            return this._avatar.image.thumb.path;
+        }
+
         return this.__defaultAvatarPath;
     }
 
@@ -225,6 +251,18 @@ class PliziCommunity {
 
     set role(value){
         this._role = value;
+    }
+
+    get admins(){
+        return this._admins;
+    }
+
+    get adminsIds(){
+        if (this._admins) {
+            return this._admins.map( aItem=> aItem.id );
+        }
+
+        return [];
     }
 
     get members(){
@@ -290,13 +328,28 @@ class PliziCommunity {
         return this._requestsCount;
     }
 
+    get subscribed() {
+        return this._subscribed;
+    }
+
+    set subscribed(value) {
+        this._subscribed = value;
+    }
+
     toJSON(){
         let mmbrs = null;
         let friends = null;
+        let admins = null;
 
         if (this.members) {
             mmbrs = {
                 list: this.members.map( mItem => mItem.toJSON() )
+            };
+        }
+
+        if (this.admins) {
+            admins = {
+                list: this.admins.map( mItem => mItem.toJSON() )
             };
         }
 
@@ -324,7 +377,9 @@ class PliziCommunity {
             avatar: this._avatar ? this._avatar.toJSON() : null,
             headerImage: this._headerImage ? this._headerImage.toJSON() : null,
             members: mmbrs,
-            friends: friends
+            admins: admins,
+            friends: friends,
+            subscribed: this.subscribed,
         };
     }
 }

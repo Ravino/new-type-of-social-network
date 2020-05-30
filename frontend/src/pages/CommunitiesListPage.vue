@@ -76,8 +76,8 @@ data(){
 methods : {
 },
 
-mounted(){
-    this.loadCommunities();
+async mounted(){
+    await this.loadCommunities(30);
 },
 }
 </script>

@@ -1,20 +1,22 @@
 <template>
     <div id="blackList" class="plz-account-settings bg-white-br20 plz-mb20 container-fluid">
         <form class="plz-account-settings-form pb-0 px-3 mb-0">
-            <div class="plz-account-settings-header row border-bottom">
+            <div class="plz-account-settings-header row ">
                 <div class="d-flex"><h6>Чёрный список</h6></div>
             </div>
 
             <div class="plz-account-settings-body">
-                <div v-if="isBlacklistDataReady" class="form-group row border-bottom flex-column">
+                <div v-if="isBlacklistDataReady && blockedUsers.length" class="form-group row border-bottom border-top flex-column">
                     <BlackListItem v-for="blItem in blockedUsers.asArray()"
                                    @RemoveFromBlackList="onRemoveFromBlackList"
                                    v-bind:userItem="blItem"
                                    v-bind:key="'blockedUserItem-' + blItem.id">
                     </BlackListItem>
                 </div>
-                <div v-else class="alert alert-info">
-                    Ваш чёрный список пуст
+                <div v-else class="row">
+                    <div class="alert alert-info w-100">
+                        Ваш чёрный список пуст
+                    </div>
                 </div>
             </div>
         </form>
@@ -40,6 +42,9 @@ methods: {
     onRemoveFromBlackList(evData){
         this.$emit('RemoveFromBlackList', evData);
     }
-}
+},
+    mounted() {
+        console.log(this.blockedUsers.length);
+    },
 }
 </script>

@@ -41,7 +41,7 @@
                     <template v-if="isStarted">
                         <div class="row plz-post-item mb-4 bg-white-br20 p-4">
                             <div class="w-100 p-5 text-center mb-0">
-                                <SmallSpinner/>
+                                <SmallSpinner clazz="position-absolute"/>
                             </div>
                         </div>
                     </template>
@@ -67,7 +67,7 @@
                             @hideVideoModal="hideVideoModal"/>
 
             <PostLikeModal v-if="postLikeModal.isVisible"
-                           :users="postLikeModal.content.users"
+                           :postId="postLikeModal.content.postId"
                            @hideLikeModal="hideLikeModal"/>
 
             <PostRepostModal v-if="postRepostModal.isVisible"
@@ -138,7 +138,7 @@ data() {
         postLikeModal: {
             isVisible: false,
             content: {
-                users: [],
+                postId: null,
             },
         },
         postRepostModal: {
@@ -206,8 +206,10 @@ methods : {
         this.posts.unshift(new PliziPost(post));
     },
 
-    startTimer( postIndex ){
+    startTimer(post){
         setTimeout( () => {
+            let postIndex = this.posts.findIndex(item => item.id === post.id);
+
             this.posts.splice( postIndex, 1 );
         }, 5000 );
     },
@@ -232,14 +234,14 @@ methods : {
         this.postRepostModal.content.postForRepost = null;
     },
 
-    async openLikeModal(postId) {
+    openLikeModal(postId) {
         this.postLikeModal.isVisible = true;
-        await this.getUsersLikes(postId);
+        this.postLikeModal.content.postId = postId;
     },
 
     hideLikeModal() {
         this.postLikeModal.isVisible = false;
-        this.postLikeModal.content.users = null;
+        this.postLikeModal.content.postId = null;
     },
 
     async getPosts(limit = 50, offset = 0) {
@@ -262,25 +264,7 @@ methods : {
         }
     },
 
-    async getUsersLikes(postId, limit = 20, offset = 0) {
-        let response = null;
-
-        try{
-            response = await this.$root.$api.$post.getUsersLikes(postId, limit, offset);
-        } catch (e){
-            console.warn( e.detailMessage );
-        }
-
-        if ( response !== null ){
-            response.map((post) => {
-                this.postLikeModal.content.users.push(new PliziUser(post));
-            });
-
-            return response.length;
-        }
-    },
-
-    async onDeletePost( id ) {
+    async onDeletePost(id) {
         let response;
 
         try{
@@ -290,12 +274,10 @@ methods : {
         }
 
         if ( response ){
-            const postIndex = this.posts.findIndex( ( post ) => {
-                return post.id === id;
-            } );
-            let post = this.posts[postIndex].deleted = true;
+            const post = this.posts.find(post => post.id === id);
 
-            this.startTimer( postIndex );
+            post.deleted = true;
+            this.startTimer(post);
         }
     },
 
@@ -320,8 +302,7 @@ methods : {
 
 async mounted() {
     await this.getPosts();
-}
-
+},
 }
 </script>
 

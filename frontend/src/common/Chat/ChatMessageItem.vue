@@ -1,5 +1,5 @@
 <template>
-    <div class="w-100 d-flex px-3 px-md-5" @click.prevent="onPickMessage()"
+    <div class="w-100 d-flex px-5" @click.prevent="onPickMessage()"
          :class="{ 'checked-message': isPicked }"
          :id="messageID">
         <div class="message-item d-flex w-100 justify-content-start"

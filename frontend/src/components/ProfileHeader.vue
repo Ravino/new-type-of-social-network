@@ -41,6 +41,9 @@
                             <div class="nav-item">
                                 <router-link tag="a" class="dropdown-item px-0 py-1 px-3" to="/friends">Друзья</router-link>
                             </div>
+                            <div class="nav-item">
+                                <router-link tag="a" class="dropdown-item px-0 py-1 px-3" to="/follow-list">Подписки</router-link>
+                            </div>
                             <div class="nav-item ">
                                 <router-link tag="a" class="dropdown-item px-0 py-1 px-3" to="/communities">Сообщества</router-link>
                             </div>
@@ -78,14 +81,14 @@
                                     title="Удалить из друзей" >Удалить из друзей</p>
                             </div>
                             <div class="nav-item">
-                                <p v-if="!userData.stats.isFollow" class="dropdown-item px-0 py-1 m-0 px-3"
+                                <p v-if="userData.stats.isFollow" class="dropdown-item px-0 py-1 m-0 px-3"
                                    @click="unFollow" title="Отписаться">Отписаться</p>
                                 <p v-else class="dropdown-item px-0 py-1 m-0 px-3"
                                    @click="follow" title="Подписаться">Подписаться</p>
                             </div>
-                            <div class="nav-item">
+                            <div v-if="!userData.isOwner" class="nav-item">
                                 <p v-if="isAddedToBlacklist" class="dropdown-item px-0 py-1 m-0 px-3"
-                                   @click="removeFromBlacklist"  title="Удалить с чёрного списка">Удалить с чёрного списка</p>
+                                   @click="deleteFromBlacklist(userData.id)"  title="Удалить с чёрного списка">Удалить с чёрного списка</p>
                                 <p v-else class="dropdown-item px-0 py-1 m-0 px-3"
                                    @click="addToBlacklist"  title="Добавить в чёрный список">Добавить в чёрный список</p>
                             </div>
@@ -97,7 +100,7 @@
             </div>
         </div>
 
-        <div class="col-12  col-lg-8 col-xl-9 px-0 py-4 plz-profile-userdetails">
+        <div class="col-12  col-lg-8 col-xl-9 px-0 pt-4 plz-profile-userdetails">
             <div class="w-100 bg-white-br20 px-3 px-md-5 pb-3">
                 <div class="d-flex justify-content-between align-items-center mb-2">
                     <h2 class="plz-user-name">{{userData.fullName}}</h2>
@@ -141,28 +144,37 @@
             </div>
 
             <div class="plz-profile-userdetails-footer d-flex justify-content-around px-2 px-md-4">
-                <div v-if="usrFollowersNumber > 0" class="plz-profile-userdetails-numbers text-center pt-2 px-2 pt-md-4 px-md-4">
+                <div v-if="usrFollowersNumber > 0" class="plz-profile-userdetails-numbers text-center py-2 px-2 py-md-4 px-md-4">
                     <span class="numbers-top" v-html="sBeaty(usrFollowersNumber)"></span>
                     <span class="numbers-bottom">Подписчиков</span>
                 </div>
-                <div v-else class="plz-profile-userdetails-numbers text-center pt-2 px-2 pt-md-5 px-md-4">
-                    <span class="numbers-bottom">Нет подписчиков</span>
+                <div v-else class="plz-profile-userdetails-numbers text-center py-2 px-2 py-md-4 px-md-4">
+                    <span class="numbers-bottom mt-auto">Нет подписчиков</span>
                 </div>
-                <div v-if="usrFriendsNumber > 0" class="plz-profile-userdetails-numbers text-center pt-2 px-2 pt-md-4 px-md-4">
-                    <span class="numbers-top" v-html="sBeaty(usrFriendsNumber)"></span>
-                    <span class="numbers-bottom">Друзей</span>
-                </div>
-                <div v-else class="plz-profile-userdetails-numbers text-center pt-2 px-2 pt-md-5 px-md-4">
-                    <span class="numbers-bottom">Нет друзей</span>
-                </div>
-                <div class="plz-profile-userdetails-numbers text-center pt-2 px-2 pt-md-4 px-md-4">
-                    <span class="numbers-top" v-html="sBeaty(userData.photosNumber)"></span>
-                    <span class="numbers-bottom">Фотографий</span>
-                </div>
-                <div class="plz-profile-userdetails-numbers text-center pt-2 px-2 pt-md-4 px-md-4">
-                    <span class="numbers-top" v-html="sBeaty(userData.videosNumber)"></span>
-                    <span class="numbers-bottom">Видео</span>
-                </div>
+                <router-link tag="a" class="p-0" to="/friends">
+                    <div v-if="usrFriendsNumber > 0" class="plz-profile-userdetails-numbers text-center py-2 px-2 py-md-4 px-md-4">
+                        <span class="numbers-top" v-html="sBeaty(usrFriendsNumber)"></span>
+                        <span class="numbers-bottom">Друзей</span>
+                    </div>
+                    <div v-else class="plz-profile-userdetails-numbers text-center py-2 px-2 py-md-4 px-md-4">
+                        <span class="numbers-bottom">Нет друзей</span>
+                    </div>
+                </router-link>
+                <router-link tag="a" class="p-0" to="/photoalbums-list">
+                    <div class="plz-profile-userdetails-numbers text-center py-2 px-2 py-md-4 px-md-4">
+                        <span class="numbers-top" v-html="sBeaty(userData.photosNumber)"></span>
+                        <span class="numbers-bottom">Фотографий</span>
+                    </div>
+                </router-link>
+                <router-link tag="a" class="p-0" to="/videos">
+                    <div v-if="usrVideosNumber > 0" class="plz-profile-userdetails-numbers text-center py-2 px-2 py-md-4 px-md-4">
+                        <span class="numbers-top" v-html="sBeaty(usrVideosNumber)"></span>
+                        <span class="numbers-bottom">Видео</span>
+                    </div>
+                    <div v-else class="plz-profile-userdetails-numbers text-center py-2 px-2 py-md-4 px-md-4">
+                        <span class="numbers-bottom">Нет видео</span>
+                    </div>
+                </router-link>
                 <!--
                 <div class="plz-profile-userdetails-numbers text-center pt-4 px-4">
                     <span class="numbers-top" v-html="sBeaty(userData.audiosNumber)"></span>
@@ -193,12 +205,12 @@ mixins: [FriendshipInvitationMixin, BlackListMixin],
 props: {
     userData: PliziUser | PliziAuthUser,
     isOwner: Boolean,
+    isInBlacklist: Boolean,
 },
 
 data(){
     return {
         configurationMenuID : 'configurationMenuUser',
-        isAddedToBlacklist: false,
     }
 },
 
@@ -216,10 +228,14 @@ computed: {
         return this.userData.stats.followCount;
     },
 
-    userAvatar() {
-        return this.userData.avatar?.image?.medium.path || this.userData.userPic;
-    }
-},
+    usrVideosNumber() {
+                return this.userData.stats.videosCount;
+            },
+
+            userAvatar() {
+                return this.userData.avatar?.image?.medium.path || this.userData.userPic;
+            }
+        },
 
 methods: {
     isCanAddToFriends() {
@@ -326,7 +342,7 @@ methods: {
             } else {
                 this.userData.stats.isFollow = true;
                 this.userData.stats.followCount = this.userData.stats.followCount + 1;
-                this.$root.$alert(apiResponse.message, 'bg-success', 3);
+                this.$root.$notify(apiResponse.message);
             }
         } else {
             this.$root.$alert(`Не получилось подписаться`, 'bg-warning', 3);
@@ -352,7 +368,7 @@ methods: {
             } else {
                 this.userData.stats.isFollow = false;
                 this.userData.stats.followCount = this.userData.stats.followCount - 1;
-                this.$root.$alert(apiResponse.message, 'bg-success', 3);
+                this.$root.$notify(apiResponse.message);
             }
         }
         else {
@@ -361,51 +377,10 @@ methods: {
 
         return true;
     },
-
-    async getBlacklist() {
-        let apiResponse = null;
-
-        try {
-            apiResponse = await this.$root.$api.$users.blacklist();
-        } catch (e) {
-            window.console.warn(e.detailMessage);
-            throw e;
-        }
-
-        if (apiResponse) {
-            this.isAddedToBlacklist = apiResponse.find(user => user.id === this.userData.id);
-        }
-    },
-
-    async addToBlacklist(){
-        if (this.isAddedToBlacklist) {
-            this.$root.$alert( `Пользователь уже внесен в чёрный список`, 'bg-warning', 3 );
-            return true;
-        }
-
-        let apiResponse = null;
-        try{
-            apiResponse = await this.$root.$api.$users.blacklistAdd( this.userData.id );
-        } catch (e){
-            if ( e.status === 422 ){
-                (console.log( 'выбранный пользователь уже добавлен в Ваш чёрный список' ));
-                this.isAddedToBlacklist = true;
-                return;
-            }
-            window.console.warn( e.detailMessage );
-        }
-
-        this.isAddedToBlacklist = true;
-        this.$root.$alert( `Вы добавили пользователя в чёрный список`, 'bg-success', 3 );
-    },
-
-    removeFromBlacklist(){
-        this.deleteFromBlacklist(this.userData.id);
-    }
 },
 
 async mounted() {
-    await this.getBlacklist();
+    this.isAddedToBlacklist = this.isInBlacklist;
 },
 
 }

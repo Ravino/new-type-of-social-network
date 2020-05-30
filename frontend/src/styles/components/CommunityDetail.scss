@@ -144,5 +144,29 @@ $communityPrimaryImage: 70px;
 
 }
 
+.community-options {
+    &-link {
+        display: block;
+        color: #ffffff;
+        transition: .4s;
 
+        &:hover {
+            text-decoration: none;
+            background-color: rgba(0, 0, 0, 0.7);
+            color: #ffffff
+        }
+
+        .counter-info {
+            position: static;
+            margin-left: 5px;
+            padding-top: 0;
+            padding-bottom: 0;
+        }
+
+        .fa,
+        .fas {
+            width: 22px;
+        }
+    }
+}
 

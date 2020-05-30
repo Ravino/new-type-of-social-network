@@ -42,7 +42,7 @@ class UserSubscribeController extends Controller
             return new UserCollection([], 0);
         }
 
-        $users = User::with('profile', 'profile.avatar')
+        $users = User::with('profile.avatar', 'profile.city.region', 'profile.city.country')
             ->whereIn('id', array_keys($user_ids))
             ->get();
 

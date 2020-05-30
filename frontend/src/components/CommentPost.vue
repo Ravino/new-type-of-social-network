@@ -1,15 +1,14 @@
 <template>
     <div class="plz-comment-post">
-        <div class="plz-comment-post-user">
+        <div class="plz-comment-post-user mr-3">
             <img :src="getUserData.userPic" alt="">
         </div>
         <TextEditor :clazz="`plz-text-editor h-auto plz-comment-post-text-field align-items-start flex-grow-1 `"
                     :editorPlaceholder="'Оставить комментарий...'"
                     :dropToDown="true"
                     :maximumCharacterLimit="500"
-                    workMode="post"
+                    workMode="comment"
                     @editorPost="onTextPost"
-                    work-mode="comment"
         >
         </TextEditor>
     </div>

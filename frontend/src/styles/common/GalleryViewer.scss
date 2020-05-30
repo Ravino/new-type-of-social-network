@@ -23,6 +23,9 @@
         position: absolute;
 
         &-btn {
+            display: flex;
+            justify-content: center;
+            align-items: center;
             position: absolute;
             top: 50%;
             z-index: 5;
@@ -36,6 +39,10 @@
             transform: translateY(-50%);
             transform-origin: 50% 50%;
             cursor: pointer;
+
+            svg {
+                height: 25px;
+            }
 
             &:hover {
                 opacity: 1;

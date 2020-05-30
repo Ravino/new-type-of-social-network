@@ -5,6 +5,11 @@ module.exports = {
     pluginOptions: {
         sourceDir: 'src'
     },
+
+    filenameHashing : false,
+    lintOnSave : false,
+    productionSourceMap: false,
+
     chainWebpack: config => {
         config.plugin("define").tap(args => {
             let _base = args[0]["process.env"];

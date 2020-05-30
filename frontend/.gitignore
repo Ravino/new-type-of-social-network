@@ -7,7 +7,7 @@ npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
 
-#build folders
+# build folders
 /dist
 /images/
 /js/images
@@ -28,7 +28,7 @@ yarn-error.log*
 Thumbs.db
 .DS_Store
 
-#targa local settings
+# targa local settings
 /public/js/*.LICENSE.txt
 /*/*.bak
 *.bak
@@ -38,6 +38,22 @@ Thumbs.db
 /public/js/app.js
 /public/css/app.css
 
+# map files for results
 *.js.map
 *.css.map
 mix-manifest.json
+
+# building results
+app.css
+app.min.css
+chunk-vendors.css
+chunk-vendors.min.css
+app.js
+app.min.js
+vendor.js
+vendor.min.js
+chunk-vendors.js
+chunk-vendors.min.js
+manifest.js
+manifest.min.js
+*.LICENSE.txt

@@ -12,7 +12,9 @@
                 <div class="container">
                     <ProfileHeader v-if="isDataReady" ref="personalProfileHeader"
                                    @ShowPersonalMsgModal="onShowPersonalMsgModal"
-                                   v-bind:userData="profileData"></ProfileHeader>
+                                   :isInBlacklist="profileData.stats.isInBlacklist"
+                                   :userData="profileData">
+                    </ProfileHeader>
                     <Spinner v-else></Spinner>
 
                     <ProfilePhotos v-bind:photos="userPhotos"/>
@@ -24,7 +26,8 @@
                         <Post v-for="postItem in filteredPosts"
                               :key="`userPost-`+postItem.id"
                               :post="postItem"
-                              @onShare="onSharePost"></Post>
+                              @onShare="onSharePost"
+                              @onShowUsersLikes="openLikeModal"></Post>
                     </template>
 
                     <div v-else-if="!isStarted"  class="row plz-post-item mb-4 bg-white-br20 p-4">
@@ -51,6 +54,10 @@
                                  v-bind:user="profileData"
                                  v-bind:post="postForRepost"
                                  @hidePostRepostModal="hidePostRepostModal"></PostRepostModal>
+
+                <PostLikeModal v-if="postLikeModal.isVisible"
+                               :postId="postLikeModal.content.postId"
+                               @hideLikeModal="hideLikeModal"/>
             </div>
 
             <div v-if="$root.$auth.fm.size>0" class="col-sm-3 col-md-3 col-lg-3 col-xl-3 pr-0 d-none d-xl-block"
@@ -77,6 +84,7 @@ import Post from '../common/Post/Post.vue';
 
 import NewPersonalMessageModal from '../components/NewPersonalMessageModal.vue';
 import PostRepostModal from '../common/Post/PostRepostModal.vue';
+import PostLikeModal from '../common/Post/PostLikeModal.vue';
 
 import DialogMixin from '../mixins/DialogMixin.js';
 import LazyLoadPosts from '../mixins/LazyLoadPosts.js';
@@ -90,7 +98,6 @@ name: 'PersonalPage',
 props: {
     id : Number|String
 },
-
 components: {
     Spinner,
     AccountToolbarLeft, FavoriteFriends, ShortFriends,
@@ -100,12 +107,12 @@ components: {
     ProfileFilter,
     PostRepostModal,
     SmallSpinner,
+    PostLikeModal,
 },
 mixins: [DialogMixin, LazyLoadPosts, BlackListMixin],
-
 data() {
     return {
-        userId: this.id,
+        userId: null,
         profileData: {},
         isDataReady: false,
         isShowMessageDialog: false,
@@ -123,17 +130,23 @@ data() {
             isVisible: false,
         },
         postForRepost: null,
-        lazyLoadStarted: false,
-        noMorePost: false,
-        enabledPostLoader: true,
+        postLikeModal: {
+            isVisible: false,
+            content: {
+                postId: null,
+            },
+        },
     }
+},
+
+watch: {
+    $route: 'afterRouteUpdate' // при изменениях маршрута запрашиваем данные снова
 },
 
 computed: {
     filteredPosts(){
-        switch (this.filterMode) {
-            case 'user':
-                return this.posts.filter(post => post.checkIsMinePost(this.profileData.id));
+        if (this.filterMode === 'user') {
+            return this.posts.filter(post => post.checkIsMinePost(this.profileData.id));
         }
 
         return this.posts;
@@ -141,6 +154,15 @@ computed: {
 },
 
 methods: {
+    async afterRouteUpdate(ev){
+        this.userId = ev.params.id;
+        this.posts = [];
+        this.isStarted = true;
+        await this.getUserInfo();
+        await this.getPosts();
+        window.scrollTo(0, 0);
+    },
+
     calcCentralBlockClass(){
         return {
             'col-lg-8 col-xl-8'   : (this.$root.$auth.fm.size > 0), // есть фавориты
@@ -160,6 +182,24 @@ methods: {
     hidePostRepostModal() {
         this.postRepostModal.isVisible = false;
         this.postForRepost = null;
+    },
+
+    onHidePersonalMsgModal(){
+        this.isShowMessageDialog = false;
+    },
+
+    onShowPersonalMsgModal(){
+        this.isShowMessageDialog = true;
+    },
+
+    hideLikeModal() {
+        this.postLikeModal.isVisible = false;
+        this.postLikeModal.content.postId = null;
+    },
+
+    openLikeModal(postId) {
+        this.postLikeModal.isVisible = true;
+        this.postLikeModal.content.postId = postId;
     },
 
     async handlePersonalMessage(evData){
@@ -192,6 +232,7 @@ methods: {
             apiResponse = await this.$root.$api.$users.getUser(this.userId);
         }
         catch (e){
+            this.isStarted = false;
             window.console.warn(e.detailMessage);
             throw e;
         }
@@ -199,7 +240,6 @@ methods: {
         if (apiResponse) {
             this.profileData = new PliziUser(apiResponse.data);
             this.isDataReady = true;
-            await this.getPosts();
         }
     },
 
@@ -208,7 +248,6 @@ methods: {
             return;
 
         let response = null;
-        this.isStarted = true;
 
         try {
             response = await this.$root.$api.$post.getPostsByUserId(this.profileData.id, limit, offset);
@@ -226,17 +265,11 @@ methods: {
             return response.length;
         }
     },
-
-    onHidePersonalMsgModal(){
-        this.isShowMessageDialog = false;
-    },
-
-    onShowPersonalMsgModal(){
-        this.isShowMessageDialog = true;
-    }
 },
 
 created(){
+    this.userId = this.id;
+
     this.$root.$on( this.$root.$auth.frm.updateEventName,()=>{
         if (this.$refs  && this.$refs.personalProfileHeader){
             this.$refs.personalProfileHeader.$forceUpdate();
@@ -245,19 +278,26 @@ created(){
 },
 
 
-mounted() {
-    this.getUserInfo();
+async mounted() {
+    this.isStarted = true;
+    await this.getUserInfo();
+    await this.getPosts();
     window.scrollTo(0, 0);
 },
 
-async beforeRouteUpdate( to, from, next ){
-    this.profileData = null;
-    this.posts = null;
-    this.userId = to.params.id;
-    next();
-    await this.getUserInfo();
-    window.scrollTo( 0, 0 );
-},
+/**
+ * @TGA закоменченное ниже - ошибка но пусть пока будет
+ */
+// async beforeRouteUpdate( to, from, next ){
+//    this.profileData = null;
+//    this.posts = null;
+//    this.userId = to.params.id;
+//    next();
+//     this.isStarted = true;
+//     await this.getUserInfo();
+//     await this.getPosts();
+//    window.scrollTo( 0, 0 );
+// },
 }
 </script>
 

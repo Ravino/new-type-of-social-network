@@ -428,18 +428,26 @@ $chatMessagesBodyHeight: calc(100% - 139px);
 .message-sended-image {
     display: flex;
     flex-wrap: wrap;
-    width: 200px;
+    width: max-content;
     max-width: 100%;
     height: auto;
 
     .plz-gallery-wrapper {
         position: relative;
         height: 170px;
-        width: 200px;
+        width: 245px;
         max-width: 100%;
         overflow: hidden;
         margin: 5px;
+        &:nth-child(5) {
+            width: 500px;
+        }
     }
+
+    .plz-gallery-image-mores {
+        width: 500px;
+    }
+
     img {
         position: absolute;
         top: 50%;

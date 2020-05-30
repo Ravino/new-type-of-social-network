@@ -1,5 +1,5 @@
 <template>
-    <div  id="pageWrapper">
+    <div id="pageWrapper">
         <div v-if="!isAuthorized()" id="guestPageWrapper" class="d-flex flex-column justify-content-center">
             <div class="--container-fluid container px-md-0 my-0 pt-4">
 
@@ -33,6 +33,9 @@
                 <AuthFooter v-if=" 'ChatsListPage'!==this.$root.$router.currentRoute.name "></AuthFooter>
             </div>
 
+            <AppNotifications :notifications="notifications"
+                               @removeNotification="removeNotification"></AppNotifications>
+
             <AlertModal v-if="mainModalVisible"
                         v-bind:alertMessage="mainModalMessage"
                         v-bind:alertClass="mainModalClass"
@@ -49,19 +52,26 @@ import AuthNavBar from './common/AuthNavBar.vue';
 import AuthFooter from './common/AuthFooter.vue';
 import GuestFooter from './common/GuestFooter.vue';
 import AlertModal from './components/AlertModal.vue';
+import AppNotifications from './common/AppNotifications.vue';
+import NotificationMixin from "./mixins/NotificationMixin.js";
 
 import {PliziAPI} from './classes/PliziAPI.js';
 import {PliziAuth} from './classes/PliziAuth.js';
+import PliziLastEntriesCollection from "./classes/Collection/PliziLastEntriesCollection.js";
+
 
 export default {
 name: 'App',
 components: {
-    GuestNavBar, AuthNavBar, AuthFooter, GuestFooter, AlertModal
+    GuestNavBar, AuthNavBar, AuthFooter, GuestFooter, AlertModal, AppNotifications
 },
+mixins: [NotificationMixin],
 data () {
     return {
         containerID : `contentContainer`, /** @TGA - просто хак, чтобы phpStorm не ругался на одинаковый ID у элемента */
         lastSearchText: ``,
+
+        notifyBlockIsVisible: false,
 
         mainModalVisible : false,
         mainModalTitle   : '',
@@ -112,6 +122,7 @@ methods: {
         window.localStorage.removeItem('pliziDialogs');
         window.localStorage.removeItem('pliziInvitations');
         window.localStorage.removeItem('pliziNotifications');
+        window.localStorage.removeItem('pliziCommunities');
 
         if (evData.redirect) {
             this.$router.push({path: '/login'});
@@ -129,6 +140,16 @@ methods: {
             this.$root.$auth.updateAuthUserData( evData.user, evData.token );
             this.$root.$api.connectToChannel( evData.user.channel );
             this.$root.$isAuth = true;
+
+            let userEntry = {
+                id: evData.user.data.id,
+                email: evData.user.data.email,
+                firstName: evData.user.data.profile.firstName,
+                lastName: evData.user.data.profile.lastName,
+                userPic: evData.user.data.profile.userPic,
+                lastLoginAt: new Date(),
+            };
+            (new PliziLastEntriesCollection(null)).addNewLastEntries(userEntry);
 
             await this.persistentCollectionsReload();
         }
@@ -150,6 +171,49 @@ methods: {
         }
     },
 
+    onNewAppNotification(evData){
+        if (this.$root.$isXS()  || this.$root.$isSM() || this.$root.$isMD())
+            return;
+
+        if (`app.notification`===evData.type) {
+            let appNotificationData = this.transformNotifyToNotification(evData);
+            this.addNotification(appNotificationData);
+        }
+
+        if (`user.notification`===evData.type) {
+            this.addNotification(evData.notification);
+        }
+
+        if (`chat.created`===evData.type) {
+            let chatNotificationData = this.transformDialogToNotification(evData);
+            this.addNotification(chatNotificationData);
+        }
+
+        if (`chat.removed`===evData.type) {
+            const chatRemoved = this.$root.$auth.dm.get(evData.chatId);
+            let chatNotificationData = this.transformForChatRemovedToNotification(chatRemoved, evData.type);
+            this.addNotification(chatNotificationData);
+        }
+
+        if (`chat.attendee.removed`===evData.type) {
+            const chatRemoved = this.$root.$auth.dm.get(evData.chatId);
+            let chatNotificationData = this.transformForChatRemovedToNotification(chatRemoved, evData.type);
+            this.addNotification(chatNotificationData);
+        }
+
+        if (`chat.attendee.appended`===evData.type) {
+            let chatNotificationData = this.transformDialogToNotification(evData);
+            this.addNotification(chatNotificationData);
+        }
+
+        if (`message.new`===evData.type) {
+            if (!evData.message.isMine) {
+                let chatNotificationData = this.transformMessageToNotification(evData);
+                this.addNotification(chatNotificationData);
+            }
+        }
+    },
+
     isAuthorized(){
         return this.$root.$isAuth;
     },
@@ -165,6 +229,7 @@ methods: {
         await this.$root.$auth.dm.load();
         await this.$root.$auth.im.load();
         await this.$root.$auth.nm.load();
+        await this.$root.$auth.cm.load();
     },
 
     async persistentCollectionsRestore(){
@@ -172,7 +237,7 @@ methods: {
         this.$root.$auth.fm.restore();
         this.$root.$auth.dm.restore();
         this.$root.$auth.im.restore();
-        this.$root.$auth.nm.restore();
+        this.$root.$auth.cm.restore();
     },
 
     keysUpdatersInitiator(){
@@ -200,6 +265,11 @@ methods: {
                     this.$root.$auth.nm.updateEventName], ()=>{
             this.$root.$notificationsKeyUpdater++;
         });
+
+        this.$root.$on([this.$root.$auth.cm.loadEventName, this.$root.$auth.cm.restoreEventName,
+                    this.$root.$auth.cm.updateEventName], ()=>{
+            this.$root.$communitiesKeyUpdater++;
+        });
     }
 },
 
@@ -212,7 +282,7 @@ created(){
         'border-radius: 5px 0px 5px 0px;',
         'color: white;'];
 
-    console.info ( '%c%s', style.join(''), 'Plizi App created');
+    console.info( '%c%s', style.join(''), 'Plizi App created');
 
     this.$root.$api = PliziAPI;
     this.$root.$api.init(this.$root);
@@ -227,6 +297,8 @@ created(){
 
     this.$root.$on('AfterUserLoad', this.afterUserLoad);
     this.$root.$on('AfterUserRestore', this.afterUserRestore);
+
+    this.$root.$on('NewAppNotification', this.onNewAppNotification);
 
     this.$root.$on('searchStart', (evData) => {
         this.lastSearchText = evData.searchText;
@@ -286,4 +358,4 @@ beforeDestroy() {
 }
 </script>
 
-<style lang="scss" src="./styles/App.scss"></style>
+<style lang="scss" src="./styles/app.scss"></style>
