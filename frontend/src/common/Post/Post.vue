@@ -188,18 +188,18 @@
                 <div class="d-flex">
                     <div class="d-flex">
                         <div class="post-watched-counter"
-                             :class="{'is-active': post.alreadyLiked}"
+                             :class="{'is-active': postLikes}"
                              @click="onLike">
-                            <IconFillHeard v-if="post.alreadyLiked"/>
+                            <IconFillHeard v-if="postLikes"/>
                             <IconHeard v-else/>
-                            <span>{{ post.likes | space1000 }}</span>
+                            <span>{{ postLikes | space1000 }}</span>
                             <div v-if="post.usersLikes && post.usersLikes.length" class="usersLikes p-3" @click.stop="">
                                 <p class="mb-1">
-                                    <b @click.stop="$emit('onShowUsersLikes', post.id)"
+                                    <b @click.stop="$emit('onShowUsersLikes', postIdForComment)"
                                        style="cursor: pointer">
                                         Понравилось
                                     </b>
-                                    {{ post.likes }} пользователям
+                                    {{ postLikes }} пользователям
                                 </p>
                                 <div class="d-flex mb-0">
                                     <router-link v-for="(user, index) in shortUsersLikes"
@@ -216,18 +216,18 @@
                         </div>
                         <div class="post-watched-counter ml-4" @click="getCommentsByPostId">
                             <IconMessage/>
-                            <span>{{ post.commentsCount | space1000 }}</span>
+                            <span>{{ postCommentCount | space1000 }}</span>
                         </div>
 
                         <div class="post-watched-counter ml-4" @click="$emit('onShare', post)">
                             <IconShare/>
-                            <span>{{ post.sharesCount | space1000 }}</span>
+                            <span>{{ postSharesCount | space1000 }}</span>
                         </div>
                     </div>
 
                     <div class="ml-auto d-flex align-items-center">
                         <div class="post-watched-counter">
-                            <span>{{ post.views | space1000 }}</span>
+                            <span>{{ postViewsCount | space1000 }}</span>
                             <IconEye/>
                         </div>
                     </div>
@@ -237,13 +237,13 @@
                         <CommentItem
                             :key="comment.id"
                             :comment="comment"
-                            :postId="post.id"
+                            :postId="postIdForComment"
                             @onDelete="removeComment"
                             @update="editComment"
                         ></CommentItem>
                     </div>
 
-                    <CommentPost :postId="post.id" @updateComments="addNewComment"></CommentPost>
+                    <CommentPost :postId="postIdForComment" @updateComments="addNewComment"></CommentPost>
                 </template>
             </div>
         </template>
@@ -352,6 +352,21 @@
             recursiveCommunityAvatar() {
                 return this.getCommunityAvatar(this.post?.sharedFrom?.community);
             },
+            postLikes() {
+                return parseInt(this.post?.likes || this.post?.sharedFrom?.likes);
+            },
+            postCommentCount() {
+                return parseInt(this.post?.commentsCount || this.post?.sharedFrom?.commentsCount);
+            },
+            postSharesCount() {
+                return parseInt(this.post?.sharesCount || this.post?.sharedFrom?.sharesCount);
+            },
+            postViewsCount() {
+                return parseInt(this.post?.views || this.post?.sharedFrom?.views);
+            },
+            postIdForComment() {
+                return this.post?.sharedFrom?.id || this.post.id;
+            },
         },
         methods: {
             editComment(newComment) {
@@ -367,8 +382,11 @@
             },
             async getCommentsByPostId() {
                 this.isShowComment = !this.isShowComment;
+                if (this.isShowComment) {
+                    return;
+                }
                 try {
-                    let response = await this.$root.$api.$post.getCommentsById(this.post.id);
+                    let response = await this.$root.$api.$post.getCommentsById(this.postIdForComment);
                     this.comments = response.data.list.map(comment => new PliziComment(comment));
                 } catch (e) {
                     console.warn(e.detailMessage);

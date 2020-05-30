@@ -227,6 +227,25 @@ class PliziUsersAPI extends PliziBaseAPI{
     }
 
     /**
+     * Список последних фотографий
+     // * @param limit
+     // * @param offset
+     * @returns {Promise<null|*>}
+     */
+    async lastPhotos(userId) {
+        let response = await this.axios.get(`/api/user/${userId}/photos`, this.authHeaders)
+            .catch((error) => {
+                this.checkIsTokenExpires(error, '$users.lastPhotos');
+                throw new PliziAPIError('$users.lastPhotos', error.response);
+            });
+
+        if (200 === response.status) {
+            return response.data.data.list;
+        }
+        return null;
+    }
+
+    /**
      * Получение списка активных сессий.
      *
      * @returns {object[]|null}

@@ -45,15 +45,6 @@
     <script src="./js/autobahn.min.js" type="application/javascript"></script>
 
     <title>Plizi</title>
-
-    <script>
-        // local access
-        var apiURL = 'http://plizi.loc';
-        var wsUrl = 'ws://127.0.0.1:7070';
-        // remote access
-        // var apiURL = 'https://vm1095330.hl.had.pm';
-        // var wsUrl  = 'wss://vm1095330.hl.had.pm:7070';
-    </script>
 </head>
 <body>
 

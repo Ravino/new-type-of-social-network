@@ -10,8 +10,11 @@
                 <div v-if="this.requests.length > 0" class="row plz-post-item mb-4 bg-white-br20 p-4">
                     <ul class="d-block w-100 p-0">
                         <CommunityRequestItem v-for="request in requests"
-                                              :request="request" :communityId="id"
-                                @accepted="refreshList" @rejected="refreshList">
+                              :key="request.id"
+                              :request="request"
+                              :communityId="id"
+                              @accepted="refreshList"
+                              @rejected="refreshList">
                         </CommunityRequestItem>
                     </ul>
                 </div>
