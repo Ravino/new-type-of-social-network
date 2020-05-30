@@ -178,6 +178,7 @@ Route::group(['middleware' => ['auth.jwt', 'track.activity']], function () {
 
         Route::get('{photoAlbum}', 'Api\PhotoAlbumController@show');
         Route::post('{id}/photos', 'Api\PhotoAlbumController@storePhotoInAlbum');
+        Route::delete('{photoAlbum}/photos/{imageUpload}', 'Api\PhotoAlbumController@destroyImageInAlbum');
     });
 
     /**

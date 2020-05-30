@@ -122,7 +122,7 @@
             isTripleImages() {
                 return this.countImages === 3;
             },
-
+            
             isDoubleImages() {
                 return this.countImages === 2;
             },
