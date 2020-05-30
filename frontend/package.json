@@ -35,7 +35,6 @@
         "vue-template-compiler": "^2.6.11",
         "webpack": "^4.42.1"
     },
-
     "dependencies": {
         "axios": "^0.19.2",
         "moment": "^2.24.0",
@@ -56,7 +55,6 @@
         "v-calendar": "^1.0.5",
         "videojs-youtube": "^2.6.1"
     },
-
     "browserslist": [
         "> 1%",
         "last 2 versions",
