@@ -90,6 +90,10 @@ $usersPicSize: 32px;
             transform: translate(-50%, -50%);
             min-height: 100%;
         }
+
+        .plz-text-editor {
+            max-width: calc( 100% - 30px);
+        }
     }
 
 }
