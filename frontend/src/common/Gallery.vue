@@ -14,7 +14,7 @@
                      @click="showImage(photo)">
                     <img @click="showImage(photo)"
                          class="plz-gallery-image"
-                         :src="photo.path"
+                         :src="photo.url"
                          :alt="photo.name"/>
                 </div>
             </div>
@@ -43,7 +43,7 @@
                          @click="showImage(photo)">
                         <img @click="showImage(photo)"
                              class="plz-gallery-image"
-                             :src="photo.path"
+                             :src="photo.url"
                              :alt="photo.name"/>
                     </div>
                 </div>
