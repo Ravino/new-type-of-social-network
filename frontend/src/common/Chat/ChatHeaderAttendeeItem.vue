@@ -1,16 +1,17 @@
 <template>
     <div class="">
         <router-link :to="`/user-`+attendee.id" tag="div"
+                     :title="attendee.fullName"
                      class="mr-3 cursor-pointer position-relative">
-            <div class="media-pic border rounded-circle ">
-                <img :src="attendee.userPic" v-bind:alt="attendee.firstName" />
+            <div class="media-pic border rounded-circle">
+                <img :src="attendee.userPic" :alt="attendee.fullName" />
             </div>
 
             <template v-if="isTyper">
                 <div class="writing"><span></span><span></span><span></span></div>
             </template>
             <template v-else>
-                <span v-if="attendee.isOnline" class="user-friend-isonline" :title="attendee.firstName + ' онлайн'"></span>
+                <span v-if="attendee.isOnline" class="user-friend-isonline" :title="attendee.fullName + ' онлайн'"></span>
                 <span v-else class="user-friend-isoffline"></span>
             </template>
         </router-link>
