@@ -172,7 +172,6 @@ methods: {
     },
 
     onNewAppNotification(evData){
-        window.console.log(evData, `onNewAppNotification`);
         if (this.$root.$isXS()  || this.$root.$isSM() || this.$root.$isMD())
             return;
 
@@ -360,4 +359,4 @@ beforeDestroy() {
 }
 </script>
 
-<style lang="scss" src="./styles/App.scss"></style>
+<style lang="scss" src="./styles/app.scss"></style>

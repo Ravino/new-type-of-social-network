@@ -131,7 +131,12 @@ import App from './App.vue';
 
 delete window.app;
 
-window.app = new Vue({
-    router,
-    render: h => h(App),
-}).$mount('#app');
+if ( (self.parent && !(self.parent===self)) && (self.parent.frames.length!==0)){
+    self.parent.location = document.location;
+}
+else {
+    window.app = new Vue( {
+        router,
+        render : h => h( App ),
+    } ).$mount( '#app' );
+}
