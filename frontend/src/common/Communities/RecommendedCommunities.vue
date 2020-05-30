@@ -6,7 +6,9 @@
         </div>
 
         <div class="plz-recommended-communities-list pb-2">
-            <RecommendedItem v-for="community in communities" :community="community"></RecommendedItem>
+            <RecommendedItem v-for="community in communities"
+                 :key="community.id"
+                 :community="community"/>
         </div>
     </div>
 </template>
