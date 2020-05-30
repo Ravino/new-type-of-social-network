@@ -7,13 +7,10 @@
     "scripts": {
         "dev": "vue-cli-service serve src/app.js --copy --host=127.0.0.1 --port=8080",
         "dev-local": "vue-cli-service serve src/app.js --copy --host=0.0.0.0 --port=8080",
-
         "build": "vue-cli-service build src/app.js --dest=dist",
-
         "prod": "npm run production",
         "production": "cross-env NODE_ENV=production node_modules/webpack/bin/webpack.js --progress --hide-modules --config=node_modules/laravel-mix/setup/webpack.config.js"
     },
-
     "devDependencies": {
         "@babel/cli": "^7.0.0",
         "@babel/core": "^7.0.0",
@@ -38,7 +35,6 @@
         "vue-template-compiler": "^2.6.11",
         "webpack": "^4.42.1"
     },
-
     "dependencies": {
         "axios": "^0.19.2",
         "moment": "^2.24.0",
@@ -59,7 +55,6 @@
         "v-calendar": "^1.0.5",
         "videojs-youtube": "^2.6.1"
     },
-
     "browserslist": [
         "> 1%",
         "last 2 versions",
