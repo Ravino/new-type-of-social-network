@@ -61,13 +61,14 @@ import FriendListItemMenu from './FriendListItemMenu.vue';
 
 import DialogMixin from '../mixins/DialogMixin.js';
 import FriendItemMixin from '../mixins/FriendItemMixin.js';
+import FriendshipInvitationMixin from '../mixins/FriendshipInvitationMixin.js';
 
 import PliziFriend from '../classes/PliziFriend.js';
 
 export default {
 name : 'FriendListItem',
 components: { FriendListItemMenu, IconMessageShort, IconSpinner, IconLocation},
-mixins : [DialogMixin, FriendItemMixin],
+mixins : [DialogMixin, FriendItemMixin, FriendshipInvitationMixin ],
 props : {
     friend : PliziFriend
 },

@@ -162,4 +162,22 @@ class CommentController extends Controller
 
         return new CommentResource($comment);
     }
+
+    public function getCommentPostImage(PostAttachment $postAttachment)
+    {
+        $comments = $postAttachment->comments()
+            ->with('author', 'author.profile', 'author.profile.avatar', 'attachments')
+            ->get();
+
+        return new CommentCollection($comments);
+    }
+
+    public function getCommentUserImage(ImageUpload $imageUpload)
+    {
+        $comments = $imageUpload->comments()
+            ->with('author', 'author.profile', 'author.profile.avatar', 'attachments')
+            ->get();
+
+        return new CommentCollection($comments);
+    }
 }

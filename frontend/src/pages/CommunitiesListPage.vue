@@ -49,7 +49,7 @@
                 </div>
             </div>
 
-            <div class="col-lg-2 col-xl-1 d-none d-lg-block pr-0 px-0 px-md-3 ">
+            <div class="col-lg-2 col-xl-1 d-none d-lg-block pr-0 px-0 pl-md-3 ">
                 <FavoriteFriends :isNarrow="true"></FavoriteFriends>
             </div>
         </div>
