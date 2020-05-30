@@ -18,7 +18,7 @@
                     <Spinner v-else></Spinner>
 
                     <ProfilePhotos v-if="isPhotosDataReady" v-bind:photos="userPhotos"></ProfilePhotos>
-                    <div v-else><SmallSpinner></SmallSpinner></div>
+<!--                    <div v-else><SmallSpinner></SmallSpinner></div>-->
 
                     <ProfileFilter v-if="(filteredPosts && filteredPosts.length > 1) || filterMode !== 'all'"
                                    v-bind:firstName="profileData.firstName"
