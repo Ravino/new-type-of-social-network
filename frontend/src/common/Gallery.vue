@@ -36,20 +36,23 @@
                 </template>
             </div>
         </template>
-        <div class="plz-gallery__show" v-if="activeImageId">
+        <div class="plz-gallery__show" v-if="activeImage">
             <GalleryViewer
                 :images="images"
-                :active-id="activeImageId"
-                @close="closeGalleryModal()"
-                @navChangeImage="getCommentsOnGallery"
-                @navChangeActiveImage="changeGetDataParams"
+                :active-image="activeImage"
+                @close="closeGalleryModal"
+                @showImage="showImage"
+                @navChangeActiveImage="changeGetParams"
             >
             </GalleryViewer>
 
-            <GalleryDescription v-if="post"
-                                :post="post"
-                                :comments="comments"
-                                :image="activeImage">
+            <GalleryDescription
+                v-if="post"
+                :post="post"
+                :comments="comments"
+                :image="activeImage"
+                @updateComments="updateComments"
+            >
             </GalleryDescription>
         </div>
     </div>
@@ -78,7 +81,6 @@ props : {
 
 data(){
     return {
-        activeImageId : null,
         activeImage : null,
         comments: [],
     };
@@ -228,25 +230,31 @@ computed : {
 },
 
 methods : {
-    async getCommentsOnGallery(imageId) {
+    async getCommentsOnGallery() {
         try {
-            let response = await this.$root.$api.$post.getCommentsByIdOnGallery(imageId);
+            let response = await this.$root.$api.$post.getCommentsByIdOnGallery(this.activeImage.id);
             this.comments = response.data.list.map(comment => new PliziComment(comment));
         } catch (e) {
             console.warn(e.detailMessage);
         }
     },
-    changeGetDataParams( image ) {
-        this.$router.replace({query: {activeImageId: image, galleryType: this.type}});
+    updateComments({ comments, id }) {
+        if (this.activeImage.id === id) {
+            this.comments = comments;
+        }
     },
     showImage( image ){
-        this.activeImageId = image.id;
-        this.$router.replace({query: {activeImageId: this.activeImageId, galleryType: this.type}});
         this.activeImage = this.images.find(attach => attach.id === image.id);
+        this.$router.replace({query: {activeImageId: this.activeImage.id, galleryType: this.type}});
+        this.getCommentsOnGallery();
+    },
+
+    changeGetParams( activeImage ) {
+        this.$router.replace({query: {activeImageId: activeImage.id, galleryType: this.type}});
     },
 
     closeGalleryModal() {
-        this.activeImageId = null;
+        this.activeImage = null;
         this.$router.replace({query: ''});
     },
 
@@ -354,7 +362,7 @@ methods : {
         const activeId = this.$router.history.current.query.activeImageId;
         const typeGallery= this.$router.history.current.query.galleryType;
 
-        if (typeGallery !== this.type) {
+        if (typeGallery !== this.type || !activeId) {
             return;
         }
 

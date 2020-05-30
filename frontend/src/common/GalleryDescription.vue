@@ -127,23 +127,18 @@
   },
   methods: {
       addNewComment(newComment) {
-          this.comments.push(new PliziComment(newComment));
-        this.comments.length;
+          this.updateComments([...this.comments, new PliziComment(newComment)]);
       },
       editComment(newComment) {
-          this.comments = this.comments.map(comment => comment.id === newComment.id ? comment.update(newComment) : comment);
+          const comments = this.comments.map(comment => comment.id === newComment.id ? comment.update(newComment) : comment);
+          this.updateComments(comments);
       },
       removeComment(commentId) {
-          this.comments = this.comments.filter(comment => comment.id !== commentId);
-          this.comments.length;
+          const comments = this.comments.filter(comment => comment.id !== commentId);
+          this.updateComments(comments);
       },
-      async getCommentsOnGallery(imageId) {
-          try {
-              let response = await this.$root.$api.$post.getCommentsByIdOnGallery(imageId);
-              this.comments = response.data.list.map(comment => new PliziComment(comment));
-          } catch (e) {
-              console.warn(e.detailMessage);
-          }
+      updateComments(comments) {
+          this.$emit('updateComments', { comments, id: this.image.id });
       },
     async onLike() {
         let response = null;
@@ -170,8 +165,5 @@
         }
     }
    },
-     mounted() {
-         this.getCommentsOnGallery(this.image.id);
-     }
  }
 </script>
