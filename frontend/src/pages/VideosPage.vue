@@ -348,7 +348,7 @@
     import IconYoutube from "../icons/IconYoutube.vue";
     import IconPlayVideo from "../icons/IconPlayVideo.vue";
     import IconDelete from "../icons/IconDelete.vue";
-    import {debounce} from "../utils/Debonce";
+    import {debounce} from "../utils/Debonce.js";
 
     export default {
 name: "VideosPage",
