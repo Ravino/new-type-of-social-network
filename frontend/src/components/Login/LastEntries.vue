@@ -2,12 +2,15 @@
     <div id="latestEntries" class="plz-latest-entries bg-white-br20" :style="calcStyle()">
         <h6 class="text-center text-sm-left">Вы недавно входили в аккаунт с этого компьютера</h6>
 
-        <div class="plz-latest-entries-list d-flex justify-content-between justify-content-sm-start flex-wrap">
-            <LastEntryItem v-for="leItem in getLastFiveEntries()"
-                           v-bind:entry-item="leItem"
-                           v-bind:key="'entry-' + leItem.id"
-                           @click.native.prevent="onClickEntry(leItem)">
-            </LastEntryItem>
+        <div class="plz-latest-entries-wrap ">
+            <vue-custom-scrollbar class="plz-latest-entries-list d-flex justify-content-between justify-content-sm-start pb-3"
+                                  :settings="customScrollbarSettings">
+                <LastEntryItem v-for="leItem in getLastFiveEntries()"
+                               v-bind:entry-item="leItem"
+                               v-bind:key="'entry-' + leItem.id"
+                               @click.native.prevent="onClickEntry(leItem)">
+                </LastEntryItem>
+            </vue-custom-scrollbar>
         </div>
 
         <LastEntryModal v-if="logInModal.isVisible"
@@ -21,11 +24,15 @@ import LastEntryItem from './LastEntryItem.vue';
 import PliziLastEntriesCollection from "../../classes/Collection/PliziLastEntriesCollection.js";
 import LastEntryModal from "./LastEntryModal.vue";
 
+/** @link https://binaryify.github.io/vue-custom-scrollbar/en/#why-custom-scrollbar **/
+import vueCustomScrollbar from 'vue-custom-scrollbar';
+
 export default {
 name: 'LastEntries',
 components: {
     LastEntryItem,
     LastEntryModal,
+    vueCustomScrollbar,
 },
 data() {
     return {
@@ -35,6 +42,11 @@ data() {
             content: {
                 entry: null,
             },
+        },
+        customScrollbarSettings: {
+            maxScrollbarLength: 60,
+            suppressScrollY: true, // rm scroll x
+            wheelPropagation: false
         },
     }
 },

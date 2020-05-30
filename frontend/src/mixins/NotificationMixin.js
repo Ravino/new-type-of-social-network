@@ -15,6 +15,7 @@ const NotificationMixin = {
     },
     methods: {
         addNotification(inputNotification) {
+            console.log(inputNotification);
             const uuid = uuidv4();
             let notification = {
                 id: uuid,
@@ -35,9 +36,19 @@ const NotificationMixin = {
                     ('f' === inputNotification.data.sender.sex ? 'одобрила Вашу заявку в друзья' : 'одобрил Вашу заявку в друзья');
             }
 
+            if (inputNotification.data.notificationType === 'friendships.sent') {
+                notification.body = this.senderFullName(inputNotification) +
+                    ('f' === inputNotification.data.sender.sex ? 'отправила Вам заявку в друзья' : 'отправил Вам заявку в друзья');
+            }
+
             if (inputNotification.data.notificationType === 'friendships.denied') {
                 notification.body = this.senderFullName(inputNotification) +
                     ('f' === inputNotification.data.sender.sex ? 'отклонила Вашу заявку в друзья' : 'отклонил Вашу заявку в друзья');
+            }
+
+            if (inputNotification.data.notificationType === 'friendships.cancelled') {
+                notification.body = this.senderFullName(inputNotification) +
+                    ('f' === inputNotification.data.sender.sex ? 'удалила Вас из друзей' : 'удалил Вас из друзей');
             }
 
             if (inputNotification.data.notificationType === 'community.post.created') {
@@ -94,6 +105,10 @@ const NotificationMixin = {
                 notification.body = inputNotification.data.sender.message;
             }
 
+            if (inputNotification.data.notificationType === 'app.notification') {
+                notification.body = inputNotification.data.sender.message;
+            }
+
             this.notifications.push({
                 ...notification,
                 uuid,
@@ -135,7 +150,16 @@ const NotificationMixin = {
         },
 
         transformNotifyToNotification(data) {
-            // this.$root.$auth.user.firstName
+            const userOwner = this.$root.$auth.user;
+            return {
+                data: {
+                    notificationType: data.type,
+                    sender: {
+                        userPic: userOwner.userPic ? userOwner.userPic : null,
+                        message: data.message ? data.message : null
+                    }
+                }
+            }
         },
 
         transformForChatRemovedToNotification(data, notifType) {

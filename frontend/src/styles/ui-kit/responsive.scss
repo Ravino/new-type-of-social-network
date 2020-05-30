@@ -400,15 +400,16 @@
         h6 {
             padding-left: 0;
         }
-        &-list {
-            padding: 0 10px;
-            display: flex;
-            justify-content: space-between;
-            flex-wrap: wrap;
-        }
+        //&-list {
+            //padding: 0 10px;
+            //display: flex;
+            //justify-content: space-between;
+            //flex-wrap: wrap;
+        //}
         &-item {
-            width: 48%;
-            margin-right: 0;
+            width: 180px;
+            min-width: 180px;
+            //margin-right: 0;
         }
     }
     #pliziMobile .plizi-mobile {

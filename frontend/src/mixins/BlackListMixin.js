@@ -7,7 +7,7 @@ data(){
 methods: {
     async addToBlacklist() {
         if (this.isAddedToBlacklist) {
-            this.$root.$alert(`Пользователь уже внесен в чёрный список`, 'bg-warning', 3);
+            this.$root.$notify(`Пользователь ${this.userData.firstName} ${this.userData.lastName} уже внесен в чёрный список`, 'bg-warning', 3);
             return true;
         }
 
@@ -24,7 +24,7 @@ methods: {
         }
 
         this.isAddedToBlacklist = true;
-        this.$root.$alert(`Вы добавили пользователя в чёрный список`, 'bg-success', 3);
+        this.$root.$notify(`Вы добавили пользователя ${this.userData.firstName} ${this.userData.lastName} в чёрный список`);
     },
     async deleteFromBlacklist(userId) {
         let apiResponse = null;
@@ -37,7 +37,7 @@ methods: {
         }
 
         this.isAddedToBlacklist = false;
-        this.$root.$alert(`Вы удалили пользователя из чёрного списка`, 'bg-success', 3);
+        this.$root.$notify(`Вы удалили пользователя ${this.userData.firstName} ${this.userData.lastName} из чёрного списка`);
     }
 }
 

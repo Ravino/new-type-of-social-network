@@ -17,7 +17,7 @@
                         <p class="plz-community-info-desc">{{communityData.description}}</p>
                         <p><a :href="communityData.website" target="_blank" class="plz-community-info-desc">{{communityData.website}}</a></p>
                     </div>
-                    <Spinner v-else></Spinner>
+                    <Spinner v-else/>
 
                     <CommunityEditor v-if="canPost"
                                      :community-id="communityData.id"
@@ -46,11 +46,11 @@
 <!--                    <CommunityManagedActionBlock :community="communityData" v-if="isAuthor"></CommunityManagedActionBlock>-->
  <!--               TODO @tga мы этот блок можем удалить? -->
 <!--                    @TGA отвечаю - пока не можем -->
-                    <CommunityUserActionBlock v-if="!isAuthor" v-bind:community="communityData"></CommunityUserActionBlock>
+                    <CommunityUserActionBlock v-if="!isAuthor" v-bind:community="communityData"/>
 
-                    <CommunityFriendsInformer v-bind:community="communityData"></CommunityFriendsInformer>
+                    <CommunityFriendsInformer v-bind:community="communityData"/>
 
-                    <CommunityShortMembers v-if="isDataReady" v-bind:community="communityData"></CommunityShortMembers>
+                    <CommunityShortMembers v-if="isDataReady" v-bind:community="communityData"/>
 
                     <CommunityVideoBlock v-if="hasAccess"
                              :avatarMedium="avatarMedium"
@@ -61,7 +61,7 @@
         </div>
 
         <div class="col-sm-2  col-lg-2 col-xl-1 d-none d-lg-block">
-            <FavoriteFriends :isNarrow="true"></FavoriteFriends>
+            <FavoriteFriends :isNarrow="true"/>
         </div>
 
         <PostVideoModal v-if="postVideoModal.isVisible"
@@ -77,58 +77,33 @@ import PliziCommunity from '../classes/PliziCommunity.js';
 import PliziPost from '../classes/PliziPost.js';
 
 import CommunitiesSubscribeMixin from '../mixins/CommunitiesSubscribeMixin.js';
+import CommunityPageMixin from "../mixins/CommunityPageMixin.js";
 import HotCommunitiesMixin from '../mixins/HotCommunitiesMixin.js';
 import LazyLoadPosts from '../mixins/LazyLoadPosts.js';
 
 import AccountToolbarLeft from '../common/AccountToolbarLeft.vue';
 import FavoriteFriends from '../common/FavoriteFriends.vue';
-import SmallSpinner from "../common/SmallSpinner.vue";
-import Spinner from '../common/Spinner.vue';
 
 import CommunityEditor from '../common/Communities/CommunityEditor.vue';
-import CommunityFriendsInformer from '../common/Communities/CommunityFriendsInformer.vue';
-import CommunityHeader from "../components/Community/CommunityHeader.vue";
-import CommunityManagedActionBlock from "../common/Communities/CommunityManagedActionBlock.vue";
 import CommunityPostsList from "../components/Community/CommunityPostsList.vue";
-import CommunityShortMembers from '../common/Communities/CommunityShortMembers.vue';
-import CommunityVideoBlock from "../components/Community/CommunityVideoBlock.vue";
-import CommunityUserActionBlock from '../common/Communities/CommunityUserActionBlock.vue';
-import PostVideoModal from "../common/Post/PostVideoModal";
 
 export default {
 name: 'CommunityPage',
 props: {
     id : Number|String
 },
-mixins: [CommunitiesSubscribeMixin, LazyLoadPosts, HotCommunitiesMixin],
+mixins: [CommunitiesSubscribeMixin, LazyLoadPosts, HotCommunitiesMixin, CommunityPageMixin],
 components : {
-    PostVideoModal,
     CommunityPostsList,
-    CommunityHeader,
-    CommunityVideoBlock,
-    CommunityManagedActionBlock,
-    CommunityShortMembers,
-    CommunityFriendsInformer,
-    CommunityUserActionBlock,
-    Spinner,
     AccountToolbarLeft,
     FavoriteFriends,
     CommunityEditor,
-    SmallSpinner,
 },
 
 data() {
     return {
         currentId: null,
-        isDataReady: false,
-        communityData: null,
         posts: [],
-        postVideoModal: {
-            isVisible: false,
-            content: {
-                videoLink: null,
-            },
-        },
     }
 },
 
@@ -244,15 +219,6 @@ methods: {
                 this.noMore = false;
             }, 100);
         }
-    },
-    openVideoModal(evData) {
-        if (evData.videoLink) {
-            this.postVideoModal.isVisible = true;
-            this.postVideoModal.content.videoLink = evData.videoLink;
-        }
-    },
-    hideVideoModal() {
-        this.postVideoModal.isVisible = false;
     },
 },
 

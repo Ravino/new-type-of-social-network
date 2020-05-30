@@ -3,7 +3,9 @@
         <div class="btn btn-link my-auto text-body btn-sm cursor-pointer" title="Уведомления" ref="dropdown">
             <span ref="dropdownToggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" id="dropdownMenuLikes"
                   @click="onShowNotifications()">
-                <IconBell />
+                 <router-link to="/notifications" tag="a" class="btn btn-link my-auto text-body btn-sm">
+                     <IconBell />
+                 </router-link>
                 <span v-if="notificationsNumber() > 0" class="counter-info">
                     {{notificationsNumber()}}
                 </span>

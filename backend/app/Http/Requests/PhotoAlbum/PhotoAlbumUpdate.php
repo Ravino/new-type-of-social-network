@@ -24,8 +24,8 @@ class PhotoAlbumUpdate extends FormRequest
     public function rules()
     {
         return [
-            'title' => 'required|string|max:100',
-            'description' => 'required|string|max:500',
+            'title' => 'required|string|min:4|max:100',
+            'description' => 'sometimes|nullable|string|max:500',
         ];
     }
 }

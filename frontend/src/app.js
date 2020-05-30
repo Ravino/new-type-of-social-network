@@ -73,7 +73,7 @@ Vue.prototype.$api = null;
 Vue.prototype.$alert = function(message, clazz, timeOut){
     this.$root.$emit('alertModal', {
         message : message ||  ``,
-        clazz : clazz ||  ``,
+        clazz : ``,
         timeOut : timeOut ||  0,
     });
 };
@@ -82,7 +82,7 @@ Vue.prototype.$notify = function(message, clazz = ''){
     this.$root.$emit('NewAppNotification', {
         type : `app.notification`,
         message : message ||  ``,
-        clazz : clazz ||  ``,
+        clazz : ``,
     });
 };
 

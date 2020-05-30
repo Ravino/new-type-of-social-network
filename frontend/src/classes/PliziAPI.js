@@ -591,7 +591,6 @@ class PliziAPIClass {
 
             if (channelID=== this.channel  &&  `user.notification`===data.event_type) {
                 this.emit('UserNotification', data.data);
-                console.log('emit NewAppNotification');
                 this.emit('NewAppNotification', {
                     type :  data.event_type,
                     notification : data.data

@@ -30,7 +30,7 @@
                     } else {
                         this.userData.stats.isFollow = false;
                         this.userData.stats.followCount = this.userData.stats.followCount - 1;
-                        this.$root.$alert(apiResponse.message, 'bg-success', 3);
+                        this.$root.$notify(apiResponse.message);
                     }
                 } else {
                     this.$root.$alert(`Не получилось отписаться`, 'bg-warning', 3);
