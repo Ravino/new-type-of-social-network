@@ -3,7 +3,8 @@
          :class="[`plz-gallery-${galleryType}`,
          {'plz-gallery-single': isSingleImage},
          {'plz-gallery-double': isDoubleImages},
-         {'plz-gallery-fourth': isFourthImages}]">
+         {'plz-gallery-fourth': isFourthImages},
+         {'plz-gallery-triple': isTripleImages}]">
 
         <div v-if="galleryType === 'album'" class="plz-gallery-wrap plz-gallery-wrap-album">
             <template v-for="image in imagesWithClasses">
@@ -89,6 +90,10 @@ computed : {
 
     isDoubleImages(){
         return this.countImages === 2;
+    },
+
+    isTripleImages() {
+        return this.countImages === 3;
     },
 
     isFourthImages(){
