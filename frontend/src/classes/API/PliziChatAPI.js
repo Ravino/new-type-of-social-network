@@ -189,7 +189,7 @@ class PliziChatAPI extends PliziBaseAPI{
             attachments: attachments
         };
 
-        let response = await this.__axios.post('api/chat/send', sendData, this.authHeaders)
+        let response = await this.axios.post('api/chat/send', sendData, this.authHeaders)
             .catch((error) => {
                 this.checkIsTokenExpires(error, `$chat.messageSend`);
                 throw new PliziAPIError(`$chat.messageSend`, error.response);
@@ -260,6 +260,7 @@ class PliziChatAPI extends PliziBaseAPI{
      * @throws PliziAPIError
      */
     async messageForward(config, forwardData) {
+        window.console.log(`messageForward`);
         let apiPath;
 
         if (config.chatId) {
