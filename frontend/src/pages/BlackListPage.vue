@@ -68,7 +68,6 @@
             },
         },
         async mounted() {
-            console.log(this.userData);
             await this.getBlacklist();
         },
     }

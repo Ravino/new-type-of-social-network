@@ -151,27 +151,27 @@
                 <div v-else class="plz-profile-userdetails-numbers text-center py-2 px-2 py-md-4 px-md-4">
                     <span class="numbers-bottom mt-auto">Нет подписчиков</span>
                 </div>
-                <router-link tag="a" class="p-0" to="/friends">
-                    <div v-if="usrFriendsNumber > 0" class="plz-profile-userdetails-numbers text-center py-2 px-2 py-md-4 px-md-4">
+                <router-link tag="a" class="p-0 d-flex" to="/friends">
+                    <div v-if="usrFriendsNumber > 0" class="plz-profile-userdetails-numbers text-center py-2 px-2 py-md-4 px-md-4 mt-auto">
                         <span class="numbers-top" v-html="sBeaty(usrFriendsNumber)"></span>
                         <span class="numbers-bottom">Друзей</span>
                     </div>
-                    <div v-else class="plz-profile-userdetails-numbers text-center py-2 px-2 py-md-4 px-md-4">
+                    <div v-else class="plz-profile-userdetails-numbers text-center py-2 px-2 py-md-4 px-md-4 mt-auto">
                         <span class="numbers-bottom">Нет друзей</span>
                     </div>
                 </router-link>
-                <router-link tag="a" class="p-0" to="/photoalbums-list">
-                    <div class="plz-profile-userdetails-numbers text-center py-2 px-2 py-md-4 px-md-4">
+                <router-link tag="a" class="p-0 d-flex" to="/photoalbums-list">
+                    <div class="plz-profile-userdetails-numbers text-center py-2 px-2 py-md-4 px-md-4 mt-auto">
                         <span class="numbers-top" v-html="sBeaty(userData.photosNumber)"></span>
                         <span class="numbers-bottom">Фотографий</span>
                     </div>
                 </router-link>
-                <router-link tag="a" class="p-0" to="/videos">
-                    <div v-if="usrVideosNumber > 0" class="plz-profile-userdetails-numbers text-center py-2 px-2 py-md-4 px-md-4">
+                <router-link tag="a" class="p-0 d-flex" to="/videos">
+                    <div v-if="usrVideosNumber > 0" class="plz-profile-userdetails-numbers text-center py-2 px-2 py-md-4 px-md-4 mt-auto">
                         <span class="numbers-top" v-html="sBeaty(usrVideosNumber)"></span>
                         <span class="numbers-bottom">Видео</span>
                     </div>
-                    <div v-else class="plz-profile-userdetails-numbers text-center py-2 px-2 py-md-4 px-md-4">
+                    <div v-else class="plz-profile-userdetails-numbers text-center py-2 px-2 py-md-4 px-md-4 mt-auto">
                         <span class="numbers-bottom">Нет видео</span>
                     </div>
                 </router-link>

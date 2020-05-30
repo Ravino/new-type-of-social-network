@@ -26,6 +26,14 @@
             fill: #bfc0c3;
         }
     }
+
+    .btn {
+        &:hover {
+            .fa-times-circle {
+                color: $blueBtnHover;
+            }
+        }
+    }
 }
 
 .in-shadow {

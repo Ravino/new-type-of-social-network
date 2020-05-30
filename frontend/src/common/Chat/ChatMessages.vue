@@ -9,7 +9,7 @@
                          v-bind:hideText="true">
                 </Spinner>
 
-                <div v-if="filteredMessages().length === 0" class="text-center">
+                <div v-if="filteredMessages().length === 0" class="clear-chat-filter text-center">
                     <p v-if="filter.range &&  filter.range.isSameDate">
                         Ничего не найдено за <b>{{ rangeStart | toLongDate }}</b>
                     </p>
