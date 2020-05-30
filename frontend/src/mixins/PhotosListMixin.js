@@ -1,7 +1,9 @@
+import PliziAttachment from "../classes/PliziAttachment";
+
 const PhotosListMixin = {
 data(){
     return {
-        userPhotos: null,
+        userPhotos: [],
         isPhotosDataReady: false
     }
 },
@@ -16,7 +18,9 @@ methods: {
             throw e;
         }
         if (apiResponse) {
-            this.userPhotos = apiResponse;
+            apiResponse.forEach((image) => {
+                this.userPhotos.push(new PliziAttachment(image));
+            });
             this.isPhotosDataReady = true;
         }
     },

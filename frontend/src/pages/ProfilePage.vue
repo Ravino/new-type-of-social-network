@@ -118,7 +118,7 @@ data() {
         posts: [],
         filterMode: 'all',
 
-        userPhotos: null,
+        userPhotos: [],
         isPhotosDataReady: false,
         postEditModal: {
             isVisible: false,
