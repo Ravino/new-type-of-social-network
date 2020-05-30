@@ -278,8 +278,8 @@ created(){
 async mounted() {
     this.isStarted = true;
     await this.getUserInfo();
-    await this.getPosts();
     await this.getUserPhotos(this.userId);
+    await this.getPosts();
     window.scrollTo(0, 0);
 },
 

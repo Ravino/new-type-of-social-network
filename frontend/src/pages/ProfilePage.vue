@@ -297,6 +297,7 @@ methods : {
 
 async mounted() {
     await this.getUserPhotos(this.$root.$auth.user.id);
+
     await this.getPosts();
 },
 }
