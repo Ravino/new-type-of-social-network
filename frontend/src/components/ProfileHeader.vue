@@ -354,7 +354,6 @@
                         this.$root.$alert(apiResponse.message, 'bg-info', 3);
                     } else {
                         this.userData.stats.isFollow = true;
-                        this.userData.stats.followCount = this.userData.stats.followCount + 1;
                         this.$root.$alert(apiResponse.message, 'bg-success', 3);
                     }
                 } else {
