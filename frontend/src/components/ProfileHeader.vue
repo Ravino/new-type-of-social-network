@@ -33,7 +33,7 @@
 
                         <div class="dropdown-menu dropdown-menu-right py-3" aria-labelledby="configurationMenuUser">
                             <div class="nav-item ">
-                                <router-link tag="a" class="dropdown-item px-0 py-1 px-3" to="/account">Настройки </router-link>
+                                <router-link tag="a" class="dropdown-item px-0 py-1 px-3" to="/account">Настройки</router-link>
                             </div>
                             <div class="nav-item">
                                 <router-link tag="a" class="dropdown-item px-0 py-1 px-3" to="/black-list">Чёрный список</router-link>
@@ -69,7 +69,9 @@
                             <span class="ps-dot"></span>
                         </button>
 
-                        <div class="dropdown-menu dropdown-menu-right py-3 " aria-labelledby="configurationMenuUser" :key="`userActionBlock-`+$root.$friendsKeyUpdater">
+                        <div class="dropdown-menu dropdown-menu-right py-3 " aria-labelledby="configurationMenuUser"
+                                :key="`userActionBlock-`+$root.$friendsKeyUpdater">
+
                             <div class="nav-item ">
                                 <p v-if="isCanAddToFriends()"
                                     class="dropdown-item px-0 py-1 m-0 px-3"
@@ -143,57 +145,15 @@
                 </table>
             </div>
 
-            <div class="plz-profile-userdetails-footer d-flex justify-content-around px-2 px-md-4">
-                <div v-if="usrFollowersNumber > 0" class="plz-profile-userdetails-numbers text-center py-2 px-2 py-md-4 px-md-4">
-                    <span class="numbers-top" v-html="sBeaty(usrFollowersNumber)"></span>
-                    <span class="numbers-bottom">Подписчиков</span>
-                </div>
-                <div v-else class="plz-profile-userdetails-numbers text-center py-2 px-2 py-md-4 px-md-4">
-                    <span class="numbers-bottom mt-auto">Нет подписчиков</span>
-                </div>
-                <router-link tag="a" class="p-0 d-flex" to="/friends">
-                    <div v-if="usrFriendsNumber > 0" class="plz-profile-userdetails-numbers text-center py-2 px-2 py-md-4 px-md-4 mt-auto">
-                        <span class="numbers-top" v-html="sBeaty(usrFriendsNumber)"></span>
-                        <span class="numbers-bottom">Друзей</span>
-                    </div>
-                    <div v-else class="plz-profile-userdetails-numbers text-center py-2 px-2 py-md-4 px-md-4 mt-auto">
-                        <span class="numbers-bottom">Нет друзей</span>
-                    </div>
-                </router-link>
-                <router-link tag="a" class="p-0 d-flex" to="/photoalbums-list">
-                    <div class="plz-profile-userdetails-numbers text-center py-2 px-2 py-md-4 px-md-4 mt-auto">
-                        <template v-if="userImageNumber">
-                            <span class="numbers-top" v-html="sBeaty(userImageNumber)"></span>
-                            <span class="numbers-bottom">Фотографий</span>
-                        </template>
-                        <template v-else>
-                            <span class="numbers-bottom">Нет фотографий</span>
-                        </template>
-                    </div>
-                </router-link>
-                <router-link tag="a" class="p-0 d-flex" to="/videos">
-                    <div v-if="usrVideosNumber > 0" class="plz-profile-userdetails-numbers text-center py-2 px-2 py-md-4 px-md-4 mt-auto">
-                        <span class="numbers-top" v-html="sBeaty(usrVideosNumber)"></span>
-                        <span class="numbers-bottom">Видео</span>
-                    </div>
-                    <div v-else class="plz-profile-userdetails-numbers text-center py-2 px-2 py-md-4 px-md-4 mt-auto">
-                        <span class="numbers-bottom">Нет видео</span>
-                    </div>
-                </router-link>
-                <!--
-                <div class="plz-profile-userdetails-numbers text-center pt-4 px-4">
-                    <span class="numbers-top" v-html="sBeaty(userData.audiosNumber)"></span>
-                    <span class="numbers-bottom">Аудио</span>
-                </div>
-                -->
-            </div>
+            <ProfileStats v-bind:userData="userData"
+                          v-bind:key="'ProfileStats'+$root.$friendsKeyUpdater"></ProfileStats>
         </div>
     </div>
 </template>
 
 <script>
-import IconAddUser from '../icons/IconAddUser.vue';
 import IconLocation from '../icons/IconLocation.vue';
+import ProfileStats from './ProfileStats.vue';
 
 import FriendshipInvitationMixin from '../mixins/FriendshipInvitationMixin.js';
 import BlackListMixin from '../mixins/BlackListMixin.js';
@@ -205,7 +165,7 @@ import PliziAvatar from '../classes/User/PliziAvatar.js';
 
 export default {
 name: 'ProfileHeader',
-components: { IconLocation, IconAddUser},
+components: { ProfileStats, IconLocation},
 mixins: [FriendshipInvitationMixin, BlackListMixin],
 props: {
     userData: PliziUser | PliziAuthUser,
@@ -222,37 +182,16 @@ data(){
 computed: {
     fullWidth: function () {
         return this.isCanAddToFriends ? 'full-width' : '100%';
-
-    },
-
-    usrFriendsNumber() {
-        return this.userData.stats.totalFriendsCount;
-    },
-
-    usrFollowersNumber() {
-        return this.userData.stats.followCount;
-    },
-
-    usrVideosNumber() {
-        return this.userData.stats.videosCount;
     },
 
     userAvatar() {
         return this.userData.avatar?.image?.medium.path || this.userData.userPic;
-    },
-
-    userImageNumber() {
-        return this.userData.stats.imageCount;
     },
 },
 
 methods: {
     isCanAddToFriends() {
         return !(!!this.$root.$auth.frm.get(this.userData.id));
-    },
-
-    sBeaty(param) {
-        return this.$options.filters.statsBeauty(param);
     },
 
     showPersonalMsgDialog() {
