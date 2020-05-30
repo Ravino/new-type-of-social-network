@@ -20,7 +20,7 @@
                             <p>{{ entry.email }}</p>
                         </div>
 
-                        <form id="lastEntryForm" novalidate="novalidate">
+                        <form id="lastEntryForm" novalidate="novalidate" @submit.prevent="login">
                             <div class="form-group"
                                  :class="{ 'has-error': !!isPasswordErrors }">
                                 <label for="password" class="d-none">Ваш пароль</label>
@@ -32,8 +32,7 @@
                                        v-model="form.password"
                                        :class="{ 'is-invalid': !!isPasswordErrors }"
                                        @input="onInput('password')"
-                                       @blur="$v.form.password.$touch()"
-                                       @keydown="login">
+                                       @blur="$v.form.password.$touch()">
 
                                 <div class="invalid-feedback">
                                     <p v-if="this.errors && this.errors.password">
@@ -42,14 +41,16 @@
                                     <p v-if="!this.$v.form.password.required">
                                         Поле Ваш пароль обязательно для заполнения.
                                     </p>
+                                    <p v-if="!this.$v.form.password.minLength">
+                                        Поле Ваш пароль не может быть менее 6 символов.
+                                    </p>
                                 </div>
                             </div>
 
                             <div class="form-group">
                                 <button id="btnRegistration"
-                                        type="button"
+                                        type="submit"
                                         :disabled="$v.$invalid"
-                                        @click="login"
                                         class="btn plz-btn plz-btn-primary text-center">
                                         Войти
                                 </button>
@@ -66,7 +67,7 @@
 </template>
 
 <script>
-    import {required} from 'vuelidate/lib/validators';
+    import {required, minLength} from 'vuelidate/lib/validators';
     import PliziLastEntry from "../../classes/PliziLastEntry.js";
 
     export default {
@@ -93,6 +94,7 @@
                 form: {
                     password: {
                         required,
+                        minLength: minLength(6),
                     },
                 },
             };
@@ -137,6 +139,11 @@
                     });
                 }
             }
+        },
+        mounted() {
+            setTimeout(() => {
+                this.$refs.password.focus();
+            }, 100);
         },
     }
 </script>
