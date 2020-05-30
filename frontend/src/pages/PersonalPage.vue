@@ -121,7 +121,7 @@ data() {
         isShowMessageDialog: false,
         posts: [],
         isPhotosDataReady: false,
-        userPhotos: null,
+        userPhotos: [],
         filterMode: 'all',
         postRepostModal: {
             isVisible: false,
