@@ -25,8 +25,8 @@ class PhotoAlbumStore extends FormRequest
     {
         return [
             'communityId' => 'sometimes|required|exists:communities,id',
-            'title' => 'required|string|max:100',
-            'description' => 'required|string|max:500',
+            'title' => 'required|string|min:4|max:100',
+            'description' => 'sometimes|nullable|string|max:500',
         ];
     }
 }

@@ -4,7 +4,7 @@ namespace App\Http\Resources\User;
 
 
 use App\Http\Resources\PrivacySettings;
-use Domain\Neo4j\Service\UserService;
+use App\Models\User\Blacklisted;
 use Illuminate\Http\Resources\Json\JsonResource;
 
 class User extends JsonResource
@@ -42,8 +42,7 @@ class User extends JsonResource
                     'totalFriendsCount' => $this->totalFriendsCount,
                     'followCount' => $this->profile->follower_count,
                     'videosCount' => $this->profile->video_count,
-                    'isFollow' => $this->isFollow,
-                    'isFriend' => $this->isFriendWith(auth()->user()),
+                    'imageCount' => $this->profile->image_count,
                 ],
             ];
         }
@@ -60,6 +59,10 @@ class User extends JsonResource
                 'videosCount' => $this->profile->video_count,
                 'isFollow' => $this->isFollow,
                 'isFriend' => $this->isFriendWith(auth()->user()),
+                'isInBlacklist' => Blacklisted::where([
+                    'user_id' => auth()->id(),
+                    'blacklisted_id' => $this->id,
+                ])->exists(),
             ],
         ];
         if($this->appendMutual) {

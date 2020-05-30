@@ -53,3 +53,10 @@ export function isValidRegistrationBirthDay(dateVal){
 
     return false;
 }
+
+export function isValidYoutubeLink(value) {
+    let youtubeLinksRegExp = /https?:\/\/(?:[0-9A-Z-]+\.)?(?:youtu\.be\/|www.youtube(?:-nocookie)?\.com\S*?[^\w\s-])([\w-]{11})(?=[^\w-]|$)(?![?=&+%\w.-]*(?:['"][^<>]*>|<\/a>))[?=&+%\w.-]*/ig;
+    let youtubeLinks = value.trim().match(youtubeLinksRegExp);
+
+    return !!(youtubeLinks && youtubeLinks.length);
+}

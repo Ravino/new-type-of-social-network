@@ -1,5 +1,5 @@
 <template>
-    <li class="plizi-friend-item-user media m-0 py-4 px-4">
+    <li class="plizi-friend-item-user media m-0 py-4 pl-4 pr-2">
 
         <div class="plizi-friend-item d-flex w-100 align-items-center">
             <router-link :to="`/user-`+userItem.id" tag="div" class="plizi-friend-item-pic mr-3 " >
@@ -30,55 +30,34 @@
                     </p>
                 </div>
             </div>
-            <button
-                type="button"
-                class="btn btn-primary btn-sm delete-from-blacklist"
-                title="Удалить из черного листа"
-                @click="deleteFromBlacklist"
-                style="cursor: pointer;">
-                <i class="fas fa-times"></i>
+
+            <button type="button" class="btn btn-link mb-auto ml-auto" title="Удалить из чёрного списка"
+                    @click="onClickRemoveFromBlackList">
+                <i class="fas fa-times" style="font-size: 20px"></i>
             </button>
         </div>
     </li>
 </template>
 
 <script>
-    import IconLocation from '../../icons/IconLocation.vue';
-import PliziBlackListItem from "../../classes/PliziBlackListItem";
+import IconLocation from '../../icons/IconLocation.vue';
+import PliziBlackListItem from '../../classes/PliziBlackListItem.js';
 
 export default {
 name : 'BlackListItem',
-    components: {
-        IconLocation
-    },
+components: {
+    IconLocation
+},
 props : {
     userItem: PliziBlackListItem
 },
 
-data(){
-    return {
-
-    }
-},
-
 methods: {
-    async deleteFromBlacklist() {
-        let apiResponse = null;
-
-        try {
-            apiResponse = await this.$root.$api.$users.deleteFromBlacklist(this.userItem.id);
-        } catch (e) {
-            window.console.warn(e.detailMessage);
-            throw e;
-        }
-
-        return true;
-
+    onClickRemoveFromBlackList(){
+        this.$emit('RemoveFromBlackList', {
+            userId: this.userItem.id
+        });
     }
-},
-
-beforeMount(){
-    // console.log(this.userItem.fullName);
 }
 
 }

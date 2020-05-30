@@ -4,7 +4,6 @@ namespace App\Models;
 
 use App\Traits\Likeable;
 use App\Traits\Commentable;
-use Domain\Pusher\Models\ChatMessage;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Support\Carbon;
@@ -54,10 +53,10 @@ class Post extends Model
     }
 
     /**
-     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     * @return \Illuminate\Database\Eloquent\Relations\MorphMany
      */
     public function like() {
-        return $this->hasMany(Like::class, 'likeable_id', 'id')
+        return $this->morphMany(Like::class, 'likeable')
             ->where('user_id', \Auth::user()->id);
     }
 
@@ -70,12 +69,17 @@ class Post extends Model
             'id',
             'id',
             'user_id'
-        );
+        )->where('likeable_type', Post::class);
     }
 
     public function video()
     {
         return $this->morphOne(Video::class, 'creatableby');
+    }
+
+    public function children()
+    {
+        return $this->hasMany(self::class, 'parent_id', 'id');
     }
 
     /**
@@ -86,14 +90,7 @@ class Post extends Model
         return 'U';
     }
 
-    /**
-     * @param $user
-     * @param $limit
-     * @param $offset
-     * @param bool $isMyPosts
-     * @return \Illuminate\Database\Eloquent\Builder[]|\Illuminate\Database\Eloquent\Collection
-     */
-    public static function getWithoutOldPosts($user, $limit, $offset, $isMyPosts = false)
+    public static function getWithoutOldPosts($user, $limit, $offset, $isMyPosts = false, $onlyLiked = false, $orderBy = null)
     {
         if ($isMyPosts) {
             $userPosts = $user->posts()->pluck('id');
@@ -103,7 +100,9 @@ class Post extends Model
                     return $query->limit(8)->get();
                 }, 'parent' => function ($query) {
                     return $query->withTrashed()->get();
-                }])
+                }, 'attachments' => function ($query) {
+                    return $query->withCount('comments');
+                }])->withCount('comments', 'children')
                 ->limit($limit ?? 20)
                 ->offset($offset ?? 0)
                 ->orderBy('id', 'desc')
@@ -122,7 +121,9 @@ class Post extends Model
             return $query->limit(8)->get();
         }, 'parent' => function ($query) {
             return $query->withTrashed()->get();
-        }]);
+        }, 'attachments' => function ($query) {
+            return $query->withCount('comments');
+        }])->withCount('comments')->withCount('children');
 
         foreach($friends as $friend) {
             if ($friend->status) {
@@ -147,11 +148,34 @@ class Post extends Model
         }
         $posts->orWhere('postable_type', User::class)
             ->where('postable_id', \Auth::user()->id);
+        $orderByColumn = $orderBy ?? 'id';
 
         return $posts
+            ->where(function ($query) use ($onlyLiked) {
+                if ($onlyLiked) {
+                    return $query->where('likes', '>', 0);
+                }
+
+                return $query;
+            })
             ->limit($limit ?? 20)
             ->offset($offset ?? 0)
-            ->orderBy('id', 'desc')
+            ->orderBy($orderByColumn, 'desc')
             ->get();
+    }
+
+    /**
+     * @param null|User $user
+     * @return bool
+     */
+    public function userHasAccess($user = null)
+    {
+        $user = $user ?: auth()->user();
+        if ($this->postable instanceof Community) {
+            $role = $this->postable->role;
+            return $role && in_array($role->role, [Community::ROLE_ADMIN, Community::ROLE_AUTHOR], true);
+        }
+
+        return $this->author_id === $user->id;
     }
 }

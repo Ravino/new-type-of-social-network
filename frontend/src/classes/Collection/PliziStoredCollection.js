@@ -89,15 +89,6 @@ class PliziStoredCollection extends PliziCollection{
 
         this.restoreData();
         this.isLoad = true;
-
-        //if (this.size > 0) {
-        //    this.isLoad = true;
-        //    if (this.restoreEventName) {
-        //        this.emit(this.restoreEventName);
-        //    }
-        //
-        //    return true;
-        //}
     }
 
     /**

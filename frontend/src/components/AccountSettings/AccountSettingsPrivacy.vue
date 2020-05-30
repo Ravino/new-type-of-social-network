@@ -24,6 +24,7 @@
                                         class="form-control border-0 pl-2"
                                         @change="accountStartSaveData(form.pageType, 'pageType')"
                                         v-model="form.pageType">
+                                    <option value="0" selected disabled>Выберите вариант</option>
                                     <option value="1">Открытая</option>
                                     <option value="2">Закрытая (Только друзья)</option>
                                     <option value="3">Закрытая</option>
@@ -47,6 +48,7 @@
                                         class="form-control border-0 pl-2"
                                         @change="accountStartSaveData(form.writeMessagesPermissions, 'writeMessagesPermissions')"
                                         v-model="form.writeMessagesPermissions">
+                                    <option value="0" selected disabled>Выберите вариант</option>
                                     <option value="1">Все</option>
                                     <option value="2">Только друзья</option>
                                 </select>
@@ -125,6 +127,7 @@
                                         class="form-control border-0 pl-2"
                                         @change="accountStartSaveData(form.postWallPermissions, 'postWallPermissions')"
                                         v-model="form.postWallPermissions">
+                                    <option value="0" selected disabled>Выберите вариант</option>
                                     <option value="1">Только друзья</option>
                                     <option value="2">Только я</option>
                                     <option value="3">Все пользователи</option>
@@ -150,6 +153,7 @@
                                         class="form-control border-0 pl-2"
                                         @change="accountStartSaveData(form.viewWallPermissions, 'viewWallPermissions')"
                                         v-model="form.viewWallPermissions">
+                                    <option value="0" selected disabled>Выберите вариант</option>
                                     <option value="1">Все пользователи</option>
                                     <option value="2">Только друзья</option>
                                     <option value="3">Выбранные друзья из списка</option>
@@ -173,6 +177,7 @@
                                         class="form-control border-0 pl-2"
                                         @change="accountStartSaveData(form.viewFriendsPermissions, 'viewFriendsPermissions')"
                                         v-model="form.viewFriendsPermissions">
+                                    <option value="0" selected disabled>Выберите вариант</option>
                                     <option value="1">Все пользователи</option>
                                     <option value="2">Только друзья</option>
                                     <option value="3">Только друзья и друзья друзей</option>
@@ -219,9 +224,8 @@
                 }
 
                 if (response) {
-                    this.$root.$auth.user.updateAuthUser({profile: response});
+                    this.$root.$auth.user.updateAuthUser(response);
                     this.$root.$auth.storeUserData();
-
                 }
             },
         },

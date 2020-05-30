@@ -43,16 +43,20 @@ class PostCollection extends ResourceCollection
                             'likes' => $post->likes,
                             'usersLikes' => new SimpleUsers($post->usersLikes),
                             'views' => $post->views,
-                            'sharesCount' => 25,
-                            'commentsCount' => 48,
+                            'sharesCount' => $post->children_count,
+                            'commentsCount' => $post->comments_count,
                             'alreadyLiked' => (bool)count($post->like),
                             'attachments' => new AttachmentsCollection($post->attachments),
                             'user' => new SimpleUser($post->postable),
                             'createdAt' => $post->created_at,
-                            'sharedFrom' => $post->parent_id ? new Post($post->parent) : null,
+                            'sharedFrom' => $post->parent_id
+                                ? new Post($post->parent()->withCount('comments', 'children')->first())
+                                : null,
                             'author' => new SimpleUser($post->author),
                         ];
-                    } else if ($post->postable instanceof CommunityModel) {
+                    }
+
+                    if ($post->postable instanceof CommunityModel) {
                         return [
                             'id' => $post->id,
                             'name' => $post->name,
@@ -61,13 +65,15 @@ class PostCollection extends ResourceCollection
                             'likes' => $post->likes,
                             'usersLikes' => new SimpleUsers($post->usersLikes),
                             'views' => $post->views,
-                            'sharesCount' => 25,
-                            'commentsCount' => 48,
+                            'sharesCount' => $post->children_count,
+                            'commentsCount' => $post->comments_count,
                             'alreadyLiked' => (bool)count($post->like),
                             'attachments' => new AttachmentsCollection($post->attachments),
                             'community' => new Community($post->postable),
                             'createdAt' => $post->created_at,
-                            'sharedFrom' => $post->parent_id ? new Post($post->parent) : null,
+                            'sharedFrom' => $post->parent_id
+                                ? new Post($post->parent()->withCount('comments', 'children')->first())
+                                : null,
                             'author' => new SimpleUser($post->author),
                         ];
                     }
@@ -80,12 +86,14 @@ class PostCollection extends ResourceCollection
                         'likes' => $post->likes,
                         'usersLikes' => new SimpleUsers($post->usersLikes),
                         'views' => $post->views,
-                        'sharesCount' => 25,
-                        'commentsCount' => 48,
+                        'sharesCount' => $post->children_count,
+                        'commentsCount' => $post->comments_count,
                         'alreadyLiked' => (bool)count($post->like),
                         'createdAt' => $post->created_at,
                         'attachments' => new AttachmentsCollection($post->attachments),
-                        'sharedFrom' => $post->parent_id ? new Post($post->parent) : null,
+                        'sharedFrom' => $post->parent_id
+                            ? new Post($post->parent()->withCount('comments', 'children')->first())
+                            : null,
                         'author' => new SimpleUser($post->author),
                     ];
                 }

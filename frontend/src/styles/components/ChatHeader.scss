@@ -16,6 +16,24 @@
     .vc-popover-content-wrapper {
         left: -17px !important;
     }
+
+    .icon-user-plus {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        &-plus {
+            fill: #bfc0c3;
+        }
+    }
+
+    .btn {
+        &:hover {
+            .fa-times-circle {
+                color: $blueBtnHover;
+            }
+        }
+    }
 }
 
 .in-shadow {

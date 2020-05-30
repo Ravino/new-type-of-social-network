@@ -93,7 +93,7 @@
                 isRegistrationModalShow: false,
                 isRecoverPassModalShow: false,
                 isServerError: false,
-                serverErrorText: ''
+                serverErrorText: '',
             }
         },
 

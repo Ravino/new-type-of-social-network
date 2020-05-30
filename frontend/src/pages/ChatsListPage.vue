@@ -1,7 +1,7 @@
 <template>
-    <div class="container-fluid pl-md-0 ">
-        <div class="row" :class="{ 'is-chatPage' : ('ChatsListPage'===this.$root.$router.currentRoute.name) }" >
-            <div class="col-12 col-md-1 chat-page-height chat-page-height-aside overflow-hidden px-0 px-md-3 ">
+    <div class="container-fluid pl-md-0">
+        <div class="row" :class="{ 'is-chatPage' : ('ChatsListPage'===this.$root.$router.currentRoute.name) }">
+            <div class="chat-page-height chat-page-height-aside col-12 col-md-1 overflow-hidden px-0 px-md-3 ">
                 <AccountToolbarLeft></AccountToolbarLeft>
             </div>
 
@@ -16,19 +16,18 @@
                 </div>
             </div>
 
-            <div v-else class="col-12 col-md-11 chat-page-height chat-page-height-body px-0 pl-md-3 ">
+            <div v-else class="chat-page-height chat-page-height-body col-12 col-md-11 px-0 pl-md-3 ">
 
                 <div v-if="isDialogsLoaded" id="chatMain"
                      class="d-flex flex-column flex-lg-row flex bg-white-br20 overflow-hidden in-shadow">
 
-                    <!-- @TGA если добавить обновляемый ключ - то будет постоянная перезагрузка списка сообщений с API -->
-<!--                    :key="`chatDialogs-`+ $root.$dialogsKeyUpdater"-->
-                    <ChatDialogs ref="chatDialogs"
+                    <ChatDialogs v-if="isShowDialogsBlock"
+                                 ref="chatDialogs"
                                  v-bind:currentDialogID="currentDialogID"
                                  @SwitchToChat="onSwitchToChat"></ChatDialogs>
 
-                    <div id="chatMessagesWrapper"
-                         class="col-12 col-lg-8 bg-light d-lg-flex flex-column p-0 ">
+                    <div v-show="isShowMessageBlock" id="chatMessagesWrapper"
+                         class="col-12 col-lg-8 bg-light d-lg-flex flex-column p-0">
 
                         <ChatHeader v-if="currentDialog" v-bind:currentDialog="currentDialog"
                                     @ChatMessagesFilter="onUpdateMessagesFilterText"
@@ -71,9 +70,6 @@
                     <Spinner v-else></Spinner>
                 </div>
             </div>
-
-            <ChatNotifications :notifications="notifications"
-                               @removeNotification="removeNotification"></ChatNotifications>
         </div>
     </div>
 </template>
@@ -86,24 +82,21 @@ import ChatDialogs from '../common/Chat/ChatDialogs.vue';
 import ChatHeader from '../common/Chat/ChatHeader.vue';
 import ChatMessages from '../common/Chat/ChatMessages.vue';
 import ChatFooter from '../common/Chat/ChatFooter.vue';
-import ChatNotifications from '../common/Chat/ChatNotifications.vue';
 
 import ChatMixin from '../mixins/ChatMixin.js';
-import NotificationMixin from '../mixins/NotificationMixin.js';
 
 import PliziMessagesCollection from '../classes/Collection/PliziMessagesCollection.js';
 
 export default {
 name: 'ChatsListPage',
 components: {
-    ChatNotifications,
     ChatDialogs,
     AccountToolbarLeft,
     Spinner,
     ChatHeader, ChatMessages, ChatFooter,
 },
 
-mixins: [ChatMixin, NotificationMixin],
+mixins: [ChatMixin],
 
 data() {
     return {
@@ -122,10 +115,25 @@ data() {
 
         dialogsSearchedList: null,
         changedHeight: '',
+        isChatPicked: false,
     }
 },
 
 computed: {
+    isShowDialogsBlock(){
+        if (this.$root.$isLG()  || this.$root.$isXL())
+            return true;
+
+        return !this.isChatPicked;
+    },
+
+    isShowMessageBlock(){
+        if (this.$root.$isLG()  || this.$root.$isXL())
+            return true;
+
+        return this.isChatPicked;
+    },
+
     currentDialogID(){
         return (this.currentDialog) ? this.currentDialog.id : 'unknown';
     },
@@ -193,14 +201,6 @@ methods: {
         }
     },
 
-    addNewMessageNotification(message) {
-        if (message.isMine || this.currentDialog.id === message.chatId) {
-            return;
-        }
-
-        this.addNotification(message);
-    },
-
     updateDialogsList(chatId, evData) {
         evData.chatId = chatId;
 
@@ -233,6 +233,7 @@ methods: {
         });
 
         this.isMessagesLoaded = true;
+        this.isChatPicked = true;
     },
 
     addNewChatMessageToList(evData){
@@ -240,13 +241,13 @@ methods: {
         if ('ChatsListPage'!==this.$root.$router.currentRoute.name)
             return;
 
-        if (this.currentDialog.id === evData.chatId) {
+        if (this.currentDialog && this.currentDialog.id === evData.chatId) {
             this.appendMessageToMessagesList(evData.message);
+        }
 
-            if (this.$refs && this.$refs.chatMessages) {
-                this.$refs.chatMessages.$forceUpdate();
-                this.$refs.chatMessages.scrollToEnd();
-            }
+        if (this.$refs && this.$refs.chatMessages) {
+            this.$refs.chatMessages.$forceUpdate();
+            this.$refs.chatMessages.scrollToEnd();
         }
 
         this.updateDialogsList(evData.chatId, evData);
@@ -264,7 +265,9 @@ methods: {
             }
         });
 
-        this.$root.$on('newMessageInDialog', this.addNewMessageNotification);
+        this.$root.$on('GoToChat', ()=>{
+            this.isChatPicked = false;
+        });
 
         this.$root.$on('newMessageInDialog', this.addNewChatMessageToList);
 

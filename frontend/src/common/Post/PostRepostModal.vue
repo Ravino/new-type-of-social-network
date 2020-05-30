@@ -3,10 +3,10 @@
          aria-hidden="true" style="display: block; background-color: rgba(0, 0, 0, .7);"
          @click.stop="hidePostRepostModal">
 
-        <div class="modal-dialog modal-xl modal-dialog-centered modal-dialog-scrollable" role="document" @click.stop="">
+        <div class="modal-dialog modal-lg modal-dialog-centered modal-dialog-scrollable" role="document" @click.stop="">
             <div class="modal-content bg-white-br20">
                 <div id="resendMessageModalBody" class="modal-body p-4">
-                    <div class="form-group">
+                    <div class="form-group d-none">
                         <multiselect v-model="selectedShareList"
                                      :options="shareList"
                                      :searchable="true"
@@ -51,7 +51,10 @@
         },
         data() {
             return {
-                selectedShareList: null,
+                selectedShareList: {
+                    code: 'myWall',
+                    title: 'На мою стену',
+                },
                 shareList: [
                    {
                        code: 'myWall',

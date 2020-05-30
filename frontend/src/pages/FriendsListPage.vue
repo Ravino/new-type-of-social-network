@@ -10,7 +10,7 @@
                 <FriendsListHeader @filterSearch="filterSearch"></FriendsListHeader>
                 <div class="d-flex flex-wrap align-items-start">
 
-                    <div class="col-12 order-1 order-md-0 col-md-7 col-lg-8 col-xl-8 bg-white-br20">
+                    <div class="col-12 --order-1 --order-md-0 col-md-7 col-lg-8 col-xl-8 bg-white-br20">
                         <div id="friendsListFilter" class="row border-bottom px-4">
                             <div class="col-12 d-flex align-items-center justify-content-between px-0">
                                 <nav class="nav profile-filter-links" role="tablist">
@@ -39,11 +39,11 @@
 
                     <div class="col-12 col-md-5 col-lg-4 col-xl-4">
                         <PotentialFriends v-if="possibleFriends && possibleFriends.length"
-                                          :blockName="`Возможные друзья`"
-                                          :friends="shuffle(possibleFriends)"></PotentialFriends>
+                                          v-bind:blockName="`Возможные друзья`"
+                                          v-bind:friends="possibleFriends"></PotentialFriends>
                         <PotentialFriends v-if="recommendedFriends && recommendedFriends.length"
-                                          :blockName="`Рекомендуемые друзья`"
-                                          :friends="shuffle(recommendedFriends)"></PotentialFriends>
+                                          v-bind:blockName="`Рекомендуемые друзья`"
+                                          v-bind:friends="recommendedFriends"></PotentialFriends>
                     </div>
 
                 </div>

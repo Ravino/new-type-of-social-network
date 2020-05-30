@@ -73,8 +73,8 @@
             }
         },
         methods: {},
-        mounted() {
-            this.loadManagedCommunities();
+        async mounted() {
+            await this.loadManagedCommunities(30);
         },
     }
 </script>

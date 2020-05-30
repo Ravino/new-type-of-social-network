@@ -2,6 +2,8 @@
 
 namespace App\Models;
 
+use App\Traits\Commentable;
+use App\Traits\Likeable;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Event;
 use Spiritix\LadaCache\Database\LadaCacheTrait;
@@ -9,7 +11,7 @@ use Storage;
 
 class ImageUpload extends Model
 {
-    use LadaCacheTrait;
+    use LadaCacheTrait, Likeable, Commentable;
 
     const TAG_PRIMARY = 'primary';
     const TAG_SECONDARY = 'secondary';
@@ -83,13 +85,16 @@ class ImageUpload extends Model
     }
 
     /**
-     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     * @return \Illuminate\Database\Eloquent\Relations\MorphMany
      */
     public function like() {
-        return $this->hasMany(Like::class, 'likeable_id', 'id')
+        return $this->morphMany(Like::class, 'likeable')
             ->where('user_id', \Auth::user()->id);
     }
 
+    /**
+     * @return \Illuminate\Database\Eloquent\Relations\HasManyThrough
+     */
     public function usersLikes()
     {
         return $this->hasManyThrough(
@@ -99,6 +104,6 @@ class ImageUpload extends Model
             'id',
             'id',
             'user_id'
-        );
+        )->where('likeable_type', ImageUpload::class);
     }
 }

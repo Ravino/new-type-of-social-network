@@ -63,7 +63,8 @@ class PliziFriendAPI extends PliziBaseAPI {
      * @throws PliziAPIError
      */
     async getPossibleFriends(){
-        let response = await this.axios.get( 'api/user/friendship/possible', this.authHeaders )
+        const apiPath = 'api/user/friendship/possible/?offset=0&limit=10'
+        let response = await this.axios.get( apiPath, this.authHeaders )
             .catch( ( error ) => {
                 this.checkIsTokenExpires( error, '$friend.getPossibleFriends' );
                 throw new PliziAPIError( `$friend.getPossibleFriends`, error.response );

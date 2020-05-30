@@ -5,6 +5,7 @@ namespace App\Http\Resources\Comment;
 use App\Http\Resources\Post\AttachmentsCollection;
 use App\Http\Resources\User\Image;
 use App\Http\Resources\User\SimpleUser;
+use App\Http\Resources\User\SimpleUsers;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\ResourceCollection;
@@ -28,6 +29,9 @@ class CommentCollection extends ResourceCollection
                     'author' => new SimpleUser($comment->author),
                     'attachments' => new AttachmentsCollection($comment->attachments),
                     'thread' => $comment->children ? new CommentCollection($comment->children) : [],
+                    'likes' => $comment->likes,
+                    'usersLikes' => new SimpleUsers($comment->usersLikes),
+                    'alreadyLiked' => (bool)count($comment->like),
                     'createdAt' => $comment->created_at,
                 ];
                 return $data;
