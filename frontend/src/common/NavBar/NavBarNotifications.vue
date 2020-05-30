@@ -1,15 +1,20 @@
 <template>
     <div class="plz-top-watcher-item position-relative d-inline-block mr-0 mr-sm-2">
         <div class="btn btn-link my-auto text-body btn-sm cursor-pointer" title="Уведомления" ref="dropdown">
-            <span ref="dropdownToggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" id="dropdownMenuLikes"
-                  @click="onShowNotifications()">
+            <span>
                  <router-link to="/notifications" tag="a" class="btn btn-link my-auto text-body btn-sm">
                      <IconBell />
                  </router-link>
-                <span v-if="notificationsNumber() > 0" class="counter-info">
+            </span>
+            <span ref="dropdownToggle"
+                  data-toggle="dropdown"
+                  aria-haspopup="true"
+                  aria-expanded="false"
+                  id="dropdownMenuLikes"
+                  @click="onShowNotifications()"
+                  v-if="notificationsNumber() > 0" class="counter-info">
                     {{notificationsNumber()}}
                 </span>
-            </span>
             <div aria-labelledby="dropdownMenuLikes"
                  :class="{'hidden': notificationsNumber() === 0}"
                 class="notifications-likes-dropdown dropdown-menu dropdown-menu-right pt-3 pb-0 dropdown-white w-auto">
