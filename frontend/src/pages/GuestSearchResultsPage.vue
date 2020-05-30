@@ -94,7 +94,7 @@ methods: {
         let apiResponse = null;
 
         try {
-            apiResponse = await this.$root.$api.$users.search(this.$root.$lastSearch);
+            apiResponse = await this.$root.$api.$users.guestSearch(this.$root.$lastSearch);
         }
         catch (e) {
             window.console.warn(e.detailMessage);
@@ -121,7 +121,7 @@ methods: {
         let apiResponse = null;
 
         try {
-            apiResponse = await this.$root.$api.$communities.loadCommunities(this.$root.$lastSearch);
+            apiResponse = await this.$root.$api.$communities.guestLoadCommunities(this.$root.$lastSearch);
         }
         catch (e) {
             window.console.warn(e.detailMessage);
