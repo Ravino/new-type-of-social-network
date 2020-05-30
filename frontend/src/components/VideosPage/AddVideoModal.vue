@@ -46,6 +46,7 @@
     import {required, url} from 'vuelidate/lib/validators';
     import {isValidYoutubeLink} from '../../validators/validators.js';
     import LinkMixin from "../../mixins/LinkMixin.js";
+    import {debounce} from "../../utils/Debonce.js";
 
     export default {
         name: "AddVideoModal",
@@ -85,7 +86,7 @@
                 }
             },
 
-            async store() {
+            store: debounce(async function() {
                 this.errors = null;
 
                 let response;
@@ -112,7 +113,7 @@
                         this.onHide();
                     }, 3000);
                 }
-            },
+            }, 5000),
         },
     }
 </script>
