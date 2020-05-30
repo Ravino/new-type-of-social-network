@@ -81,6 +81,8 @@
 </template>
 
 <script>
+import {isEmoji} from '../utils/StringUtils.js';
+
 import IconAddFile from '../icons/IconAddFile.vue';
 import IconAddCamera from '../icons/IconAddCamera.vue';
 import IconSend from "../icons/IconSend.vue";
@@ -257,6 +259,16 @@ methods: {
         }
 
         let str = evData.postText.replace(/<\/?[^>]+>/g, ' ').trim();
+
+        if ((str.length === 1 ||  str.length === 2)  &&  isEmoji(str))
+        {
+            const be = `<p class="big-emoji">${str}</p>`;
+            this.emitPost(be, attachmentsIds, attachmentsData, null);
+            this.attachFiles = [];
+            this.attachmentsData.clear();
+            return;
+        }
+
         let youtubeLinksMatch = this.detectYoutubeLinks(str);
         let attachmentsIds = this.getAttachmentsIDs();
         let attachmentsData = this.attachmentsData.asArray();
