@@ -40,12 +40,13 @@
             <GalleryViewer
                 :images="images"
                 :active-id="activeImageId"
-                @close="activeImageId = null">
+                @close="closeGalleryModal()">
             </GalleryViewer>
 
             <GalleryDescription v-if="post"
                                 :post="post"
-                                :image="activeImage"></GalleryDescription>
+                                :image="activeImage">
+            </GalleryDescription>
         </div>
     </div>
 </template>
@@ -65,6 +66,9 @@ props : {
     post : {
         type : Object,
     },
+    type: {
+        type: String,
+    }
 },
 
 data(){
@@ -220,7 +224,13 @@ computed : {
 methods : {
     showImage( image ){
         this.activeImageId = image.id;
+        this.$router.replace({query: {activeImageId: this.activeImageId, galleryType: this.type}});
         this.activeImage = this.images.find(attach => attach.id === image.id);
+    },
+
+    closeGalleryModal() {
+        this.activeImageId = null;
+        this.$router.replace({query: ''});
     },
 
     isAlbum( image ){
@@ -322,6 +332,20 @@ methods : {
             return `plz-gallery-image-portrait-half`;
         }
     }
-}
+},
+    mounted() {
+        const activeId = this.$router.history.current.query.activeImageId;
+        const typeGallery= this.$router.history.current.query.galleryType;
+
+        if (typeGallery !== this.type) {
+            return;
+        }
+
+        const foundImage = this.images.find(image => activeId === image.id.toString());
+
+        if (foundImage) {
+            this.showImage(foundImage);
+        }
+    }
 }
 </script>

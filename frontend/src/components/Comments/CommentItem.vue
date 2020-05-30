@@ -26,7 +26,7 @@
                     ></TextEditor>
                     <template v-else>
                         <p v-html="livePreview">{{comment.body}}</p>
-                        <Gallery v-if="imageList.length > 0" :images="imageList"></Gallery>
+                        <Gallery type="comment" v-if="imageList.length > 0" :images="imageList"></Gallery>
                     </template>
                 </div>
                 <div class="plz-comment-item-data-comment">

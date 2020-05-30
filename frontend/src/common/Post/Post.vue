@@ -130,7 +130,7 @@
 
                         <div class="col-12 plz-post-item-images">
                             <div class="post-images shared">
-                                <Gallery :post="post" v-if="recursivePost.imageAttachments.length > 0" :images="recursivePost.imageAttachments"></Gallery>
+                                <Gallery type="post" :post="post" v-if="recursivePost.imageAttachments.length > 0" :images="recursivePost.imageAttachments"></Gallery>
 
                                 <template v-for="(postAttachment) in recursivePost.attachments">
                                     <template v-if="!postAttachment.isImage">
@@ -174,7 +174,7 @@
 
             <div class="col-12 plz-post-item-images">
                 <div class="post-images">
-                    <Gallery :post="post" v-if="imageAttachments.length > 0" :images="imageAttachments"></Gallery>
+                    <Gallery type="post" :post="post" v-if="imageAttachments.length > 0" :images="imageAttachments"></Gallery>
 
                     <template v-for="(postAttachment) in post.attachments">
                         <template v-if="!postAttachment.isImage">
