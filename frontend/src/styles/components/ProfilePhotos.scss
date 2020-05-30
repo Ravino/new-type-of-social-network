@@ -43,7 +43,8 @@
 
 .plz-profile-photos-list {
     position: relative;
-    max-height: 20vh;
+    //max-height: 20vh;
+    height: 110px;
     overflow: hidden;
     &:after {
         content: '';
@@ -60,8 +61,8 @@
     position: relative;
     display: inline-block;
     vertical-align: top;
-    width: 140px;
-    height: 140px;
+    //width: 140px;
+    //height: 140px;
     text-align: center;
     &:hover .btn-close{
         opacity: 1;
