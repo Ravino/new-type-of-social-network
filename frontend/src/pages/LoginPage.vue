@@ -25,17 +25,17 @@ data() {
 
 methods: {
     logInWithEntryItem(entry) {
-        if (! entry)
+        if (!entry)
             return;
 
         if (entry.isUser) {
             this.$refs.loginForm.model.email = entry.email;
             this.$refs.loginForm.model.password = entry.password || `secret`;
             this.$refs.loginForm.startLogin();
+            return;
         }
-        else {
-            this.$refs.loginForm.openRegistrationModal();
-        }
+
+        this.$refs.loginForm.openRegistrationModal();
     },
 
     // TODO: удалить позже

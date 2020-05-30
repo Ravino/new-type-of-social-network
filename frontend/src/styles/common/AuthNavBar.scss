@@ -25,6 +25,13 @@ $plzNavBarProfileColor: #A6A7A9;
         }
         .dropdown-menu-btn {
             box-shadow: none;
+            &:hover {
+                color: #212529;
+
+                .fa-chevron-down {
+                    color: #212529;
+                }
+            }
             &[aria-expanded="true"] {
               .fa-chevron-down {
                   transform: rotate(180deg);

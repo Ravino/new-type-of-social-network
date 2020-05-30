@@ -10,7 +10,7 @@
                 <FriendsListHeader></FriendsListHeader>
 
                 <div class="d-flex flex-wrap align-items-start">
-                    <div class="col-12 order-1 order-md-0 col-md-7 col-lg-8 col-xl-8 bg-white-br20">
+                    <div class="col-12 --order-1 --order-md-0 col-md-7 col-lg-8 col-xl-8 bg-white-br20">
 
                         <InvitationsList v-if="isDataReady"
                                          v-bind:key="'invitationsList-'+invitationsNumber+'-'+invitationsKeyUpdater"

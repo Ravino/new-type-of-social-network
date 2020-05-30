@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
 use App\Http\Resources\User\Image;
+use App\Http\Resources\User\ImagesCollection;
 use App\Models\ImageUpload;
 use App\Http\Requests\ImageUpload\StoreImage;
 use App\Models\User;
@@ -74,5 +75,15 @@ class ImageUploadController extends Controller
             'creatable_type'));
 
         return new Image($image_upload);
+    }
+
+    public function getUserImages(User $user)
+    {
+        $images = $user->images()
+            ->orderByDesc('id')
+            ->limit(20)
+            ->get();
+
+        return new ImagesCollection($images);
     }
 }

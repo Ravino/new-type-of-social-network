@@ -45,10 +45,11 @@ class CommunityCollection extends ResourceCollection
                 ];
 
                 if ($this->extends) {
+                    $role = $community->role ? $community->role->role : null;
                     $data += [
                         'theme' => $community->theme_id ? $community->theme :null,
                         'friends' => $this->getFriends($community, $request),
-                        'role' => $community->role ? $community->role->role : null,
+                        'role' => $role === \App\Models\Community::ROLE_GUEST ? null : $role,
                         'location' => $community->city ? new CityResource($community->city) : null,
                     ];
 

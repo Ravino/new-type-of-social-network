@@ -132,8 +132,10 @@ class PliziAPIClass {
         if (this.__isInit)
             return;
 
-        this.__baseURL   = (window.apiURL) ? (window.apiURL + ``).trim() : ``;
-        this.__baseWsURL = (window.wsUrl) ? (window.wsUrl + ``).trim() : ``;
+        //this.__baseURL   = (window.apiURL) ? (window.apiURL + ``).trim() : ``;
+        //this.__baseWsURL = (window.wsUrl) ? (window.wsUrl + ``).trim() : ``;
+        this.__baseURL   = (process.env.API_URL) ? (process.env.API_URL + ``).trim() : ``;
+        this.__baseWsURL = (process.env.WS_URL) ? (process.env.WS_URL + ``).trim() : ``;
 
         if ($root) {
             this.__$root = $root;
@@ -589,12 +591,20 @@ class PliziAPIClass {
 
             if (channelID=== this.channel  &&  `user.notification`===data.event_type) {
                 this.emit('UserNotification', data.data);
+                this.emit('NewAppNotification', {
+                    type :  data.event_type,
+                    notification : data.data
+                });
             }
 
             if (channelID=== this.channel  &&  `message.new`===data.event_type) {
                 this.emit('newMessageInDialog', {
                     chatId :  data.data.chatId,
                     message : data.data
+                });
+                this.emit('NewAppNotification', {
+                   type :  data.event_type,
+                   message : data.data
                 });
             }
 
@@ -606,32 +616,47 @@ class PliziAPIClass {
             }
 
             if (channelID=== this.channel  &&  `chat.removed`===data.event_type) {
-                this.emit('remoteRemoveDialog', {
+                this.emit('NewAppNotification', {
+                    type :  data.event_type,
                     chatId :  data.data.id
                 });
-            }
+                setTimeout(() => {
+                    this.emit('remoteRemoveDialog', {
+                        chatId :  data.data.id
+                    });
+                }, 300);
 
+            }
             if (channelID=== this.channel  &&  `chat.created`===data.event_type) {
                 this.emit('remoteCreateDialog', {
                     data :  data.data
                 });
+                this.emit('NewAppNotification', {
+                   type :  data.event_type,
+                   dialog :  data.data
+                });
             }
-
             if (channelID=== this.channel  &&  `chat.attendee.appended`===data.event_type) {
                 this.emit('remoteAddAttendee', {
                     data :  data.data
                 });
-            }
-
-            if (channelID=== this.channel  &&  `chat.attendee.removed`===data.event_type) {
-                console.dir(data, `data`);
-
-                this.emit('remoteRemoveAttendee', {
-                    chatId :  data.data.id,
-                    userId :  data.data.userId
+                this.emit('NewAppNotification', {
+                   type :  data.event_type,
+                   dialog :  data.data
                 });
             }
-
+            if (channelID=== this.channel  &&  `chat.attendee.removed`===data.event_type) {
+                this.emit('NewAppNotification', {
+                    type :  data.event_type,
+                    chatId :  data.data.id
+                });
+                setTimeout(() => {
+                    this.emit('remoteRemoveAttendee', {
+                        chatId :  data.data.id,
+                        userId :  data.data.userId
+                    });
+                }, 300);
+            }
         });
     }
 

@@ -29,7 +29,8 @@
             </div>
 
             <button @click.prevent="goToDialogWithFriend()" type="button"
-                    class="plz-short-friend-is-active btn btn-link text-body mr-2 ml-auto">
+                    class="plz-short-friend-is-active btn btn-link text-body mr-2 ml-auto"
+                    title="Написать сообщение">
                 <IconSpinner v-if="isInRedirecting"/>
                 <IconMessageShort v-else/>
             </button>

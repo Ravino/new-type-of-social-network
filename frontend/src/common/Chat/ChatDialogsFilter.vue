@@ -2,7 +2,7 @@
     <div class="find-in-dialogs-form d-flex align-items-center w-100 border-bottom py-3">
         <div class="d-flex w-100 align-items-center position-relative px-4">
 
-            <button class="btn-group-chat btn btn-group-chat rounded-circle position-relative p-0 mr-3"  >
+            <button class="btn-group-chat btn btn-group-chat rounded-circle position-relative p-0 mr-3" @click.stop="onAddDialogClick">
                 <IconFriends class="w-50 h-50 " />
             </button>
 
@@ -22,8 +22,8 @@
         </div>
     </div>
 </template>
-<script>
 
+<script>
 import IconSearch from '../../icons/IconSearch.vue';
 import IconFriends from '../../icons/IconFriends.vue';
 
@@ -40,6 +40,10 @@ data(){
 },
 
 methods: {
+    onAddDialogClick(){
+        this.$root.$emit('ChatDialogsNew', {});
+    },
+
     dialogSearchKeyDownCheck(ev){
         if (8===ev.keyCode  ||  13===ev.keyCode  ||  46===ev.keyCode){
             return this.startDialogFilter();

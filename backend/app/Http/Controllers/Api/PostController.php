@@ -12,12 +12,9 @@ use App\Http\Resources\User\SimpleUsers;
 use App\Models\Community;
 use App\Models\Post;
 use App\Models\PostAttachment;
-use App\Models\PostLike;
 use App\Models\User;
 use App\Models\View;
-use App\Notifications\UserSystemNotifications;
 use App\Services\S3UploadService;
-use Illuminate\Support\Facades\Notification;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Event;
 
@@ -65,8 +62,8 @@ class PostController extends Controller
             $request->query('limit'),
             $request->query('offset'),
             false,
-            $request->get('onlyLiked') ?? false,
-            $request->get('orderBy') ?? null,
+            $request->get('onlyLiked', false),
+            $request->get('orderBy')
         );
 
         return new PostCollection($posts);
@@ -99,8 +96,9 @@ class PostController extends Controller
             $posts = $community->posts()->with(['postable', 'author', 'usersLikes' => function ($query) {
                 return $query->limit(8)->get();
             }])
-                ->limit($request->query('limit') ?? 50)
-                ->offset($request->query('offset') ?? 0)
+                ->withCount('comments')
+                ->limit($request->query('limit', 50))
+                ->offset($request->query('offset', 0))
                 ->orderByDesc('id')
                 ->get();
             return new PostCollection($posts);
@@ -127,7 +125,7 @@ class PostController extends Controller
     public function storeByUser(PostRequest $request) {
         $post = \Auth::user()->posts()->create([
             'name' => $request->name,
-            'body' => $request->body,
+            'body' => $request->body ?: '',
             'author_id' => \Auth::user()->id
         ]);
         if(isset($request->attachmentIds) && count($request->attachmentIds)) {
@@ -148,7 +146,7 @@ class PostController extends Controller
             if($community->users->contains(auth()->user()->id)) {
                 $post = $community->posts()->create([
                     'name' => $request->name,
-                    'body' => $request->body,
+                    'body' => $request->body ?: '',
                     'author_id' => \Auth::user()->id
                 ]);
                 if(isset($request->attachmentIds) && count($request->attachmentIds)) {
@@ -200,7 +198,7 @@ class PostController extends Controller
      */
     public function delete(Post $post)
     {
-        if ($post->author->id === \Auth::user()->id) {
+        if ($post->userHasAccess()) {
             $post->delete();
 
             return response()->json([
@@ -210,7 +208,7 @@ class PostController extends Controller
 
         return response()->json([
             'message' => 'Запись не найдена.',
-        ]);
+        ], 404);
     }
 
     /**
@@ -239,9 +237,11 @@ class PostController extends Controller
      */
     public function restore($id)
     {
-        $post = Post::withTrashed()->where('id', $id)->first();
+        $post = Post::withTrashed()
+            ->where('id', $id)
+            ->first();
 
-        if ($post->author->id === \Auth::user()->id) {
+        if ($post->userHasAccess()) {
             $post->restore();
 
             return response()->json([

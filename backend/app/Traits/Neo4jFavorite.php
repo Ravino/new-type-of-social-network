@@ -71,9 +71,9 @@ trait Neo4jFavorite
     {
         $user = $user ?: Auth::user();
 
-        if (!$this->isMember($user)) {
-            return false;
-        }
+//        if (!$this->isMember($user)) {
+//            return false;
+//        }
 
         return $this->getService()->unsubscribeFromMember($user->id, $this->id);
     }

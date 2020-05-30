@@ -334,6 +334,18 @@ export default {
         };
     },
     methods: {
+        showErrorOnLargeFile() {
+            this.$alert(`<h4 class="text-white">Ошибка</h4>
+        <div class="alert alert-danger">
+            Превышен максимальный размер файла.
+            <br />
+            Максимальный размер файла:
+            <b class="text-success">2 MB</b>
+        </div>`,
+             `bg-danger`,
+             30
+            );
+        },
         formatFormData(newValue, fieldName) {
             let formData = {};
             if (fieldName === 'location') {

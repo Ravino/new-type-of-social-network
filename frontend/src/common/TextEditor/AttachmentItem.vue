@@ -4,6 +4,9 @@
         <img v-if="attach.isImage" :src="imageSrc"
              v-on:load="onAttachmentLoaded"
              :alt="attach.originalName.originalName" :title="attach.originalName.originalName" />
+        <template v-else-if="attach.isBlob" v-on:show="onZipDisplayed">
+            <AttachmentFile :attach="attach"/>
+        </template>
         <template v-else v-on:show="onZipDisplayed">
             <AttachmentFile :attach="attach.attachment"/>
         </template>

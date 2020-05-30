@@ -2,56 +2,86 @@
     <div class="container-fluid pl-md-0">
         <div class="row">
             <div class="col-12 col-md-1 px-0 px-md-3 ">
-                <AccountToolbarLeft></AccountToolbarLeft>
+                <AccountToolbarLeft/>
             </div>
 
-            <div class="col-12 col-md-11 col-lg-9 col-xl-10 px-0 px-md-3">
+            <div class="col-sm-12 col-md-11 col-lg-9 col-xl-10">
+                <CommunityHeader :community="communityData" :subscribe-type="subscribeType"/>
 
-                <div class="d-flex flex-wrap align-items-start">
+                <div class="row">
+                    <div class="col-12 --col-sm-7 col-lg-8 col-xl-8">
 
-                    <div class="col-12 col-lg-8 d-flex align-items-center justify-content-between px-0">
-                        <nav class="nav profile-filter-links mt-2 mt-lg-0" role="tablist">
-                            <router-link :to="`/community-`+id" tag="span" class="nav-link py-2 py-sm-3 py-lg-4 px-1 mr-2 mr-lg-4" role="tab">
+                        <div class="col-12 col-lg-8 d-flex align-items-center justify-content-between px-0 mb-3">
+                            <router-link :to="`/community-`+id" tag="span"
+                                         class="back-link py-2 px-1 mr-2">
+                                <IconShare class="mr-2" style="height: 16px; transform: scaleX(-1)"/>
                                 Назад
                             </router-link>
-                        </nav>
+                        </div>
+
+                        <div class="col-12 order-1 order-md-0 bg-white-br20 py-2">
+                            <CommunityMember
+                                v-for="member in allMembers"
+                                v-if="isLoaded"
+                                :key="member.id"
+                                :srItem="member"
+                                :isAdmin="role && role !== 'user'"
+                                :communityId="parseInt(id)" />
+                            <Spinner v-else/>
+                        </div>
                     </div>
 
-                    <div class="col-12 order-1 order-md-0 bg-white-br20">
-                        <CommunityMember
-                            v-for="member in allMembers"
-                            v-if="isLoaded"
-                            :key="member.id"
-                            :srItem="member"
-                            :isAdmin="role && role !== 'user'"
-                            :communityId="parseInt(id)">
-                        </CommunityMember>
-                        <Spinner v-else></Spinner>
+                    <div class="col-12 --col-sm-5 col-lg-4">
+                        <!--               TODO @tga мы этот блок можем удалить? -->
+                        <!--                    <CommunityManagedActionBlock :community="communityData" v-if="isAuthor"></CommunityManagedActionBlock>-->
+                        <!--               TODO @tga мы этот блок можем удалить? -->
+                        <!--                    @TGA отвечаю - пока не можем -->
+                        <CommunityUserActionBlock v-if="!isAuthor" v-bind:community="communityData"/>
+
+                        <CommunityFriendsInformer v-bind:community="communityData"/>
+
+                        <CommunityShortMembers v-if="isDataReady" v-bind:community="communityData"/>
+
+                        <CommunityVideoBlock v-if="hasAccess"
+                                             :avatarMedium="avatarMedium"
+                                             :communityId="parseInt(id)"
+                                             @openVideoModal="openVideoModal"/>
                     </div>
                 </div>
             </div>
         </div>
+
+        <PostVideoModal v-if="postVideoModal.isVisible"
+                        :videoLink="postVideoModal.content.videoLink"
+                        @hideVideoModal="hideVideoModal"/>
+
     </div>
 </template>
 
 <script>
+    import PliziMember from '../classes/PliziMember.js';
+    import PliziCommunity from "../classes/PliziCommunity.js";
+    import CommunitiesSubscribeMixin from "../mixins/CommunitiesSubscribeMixin.js";
+    import CommunityPageMixin from "../mixins/CommunityPageMixin.js";
+
+    import AccountToolbarLeft from '../common/AccountToolbarLeft.vue';
+
     import FriendsAllList from '../components/FriendsAllList.vue';
     import CommunityMember from '../components/Community/CommunityMember.vue';
 
-    import PliziMember from '../classes/PliziMember.js';
-    import Spinner from '../common/Spinner.vue';
-    import AccountToolbarLeft from '../common/AccountToolbarLeft.vue';
+    import IconShare from '../icons/IconShare.vue';
 
     export default {
         name: 'CommunityMembersPage',
+        mixins: [CommunitiesSubscribeMixin, CommunityPageMixin],
         components: {
             FriendsAllList,
-            Spinner,
             AccountToolbarLeft,
-            CommunityMember
+            CommunityMember,
+            IconShare,
         },
         props: {
-            id: Number,
+            id: Number | String,
         },
         data() {
             return {
@@ -63,8 +93,46 @@
                 noMore: false,
             }
         },
-        computed: {},
+        computed: {
+            isAuthor(){
+                return this.communityData?.role === 'author';
+            },
+            subscribeType() {
+                return this.getSubscribeType(this.communityData);
+            },
+            avatarMedium() {
+                return this.communityData?.avatar?.image.medium.path || this.communityData?.primaryImage;
+            },
+            hasAccess() {
+                // Opened
+                if (this.communityData?.privacy === 1) {
+                    return true;
+                }
+                return !!this.communityData?.role;
+            }
+        },
         methods: {
+            async getCommunityInfo() {
+                let apiResponse = null;
+
+                try {
+                    apiResponse = await this.$root.$api.$communities.getCommunity(this.id);
+                }
+                catch (e){
+                    window.console.warn(e.detailMessage);
+                    throw e;
+                }
+
+                if (apiResponse) {
+                    this.communityData = new PliziCommunity(apiResponse);
+                    this.isDataReady = true;
+                    document.title = `Plizi: ${this.communityData?.name}`;
+
+                    setTimeout(() => {
+                        this.loadCommunityMembers();
+                    }, 100);
+                }
+            },
             async loadCommunityMembers() {
                 let apiResponse;
                 this.isLoaded = false;
@@ -106,7 +174,8 @@
             }
         },
         mounted() {
-            this.loadCommunityMembers();
+            this.getCommunityInfo();
+            window.scrollTo(0, 0);
             // window.addEventListener('scroll', this.onScrollYPage);
         }
 

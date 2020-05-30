@@ -11,10 +11,10 @@
         </div>
         <div class="plz-gallery-viewer-nav">
             <div v-if="images.length > 1" class="plz-gallery-viewer-nav-btn plz-gallery-viewer-nav-btn-prev" @click="prevImage">
-                <img src="../images/gallery/arrow-left.svg" alt="prev">
+                <IconArrowLeft></IconArrowLeft>
             </div>
             <div v-if="images.length > 1" class="plz-gallery-viewer-nav-btn plz-gallery-viewer-nav-btn-next" @click="nextImage">
-                <img src="../images/gallery/arrow-right.svg" alt="next">
+                <IconArrowRight></IconArrowRight>
             </div>
         </div>
         <div class="plz-gallery-viewer-current">
@@ -24,8 +24,11 @@
 </template>
 
 <script>
+import IconArrowRight from "../icons/IconArrowRight.vue";
+import IconArrowLeft from "../icons/IconArrowLeft.vue";
 export default {
     name: 'GalleryViewer',
+    components: {IconArrowLeft, IconArrowRight},
     props: {
         images: {
             type: Array,

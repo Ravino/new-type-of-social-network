@@ -24,9 +24,30 @@ class VideoStore extends FormRequest
     public function rules()
     {
         return [
-            'link' => 'required|url',
-            'creatableby_id' => 'sometimes|nullable',
-            'creatableby_type' => 'sometimes|nullable',
+            'link' => [
+                "required",
+                "url",
+                function ($attribute, $value, $fail) {
+                    if (!preg_match_all("/https?:\/\/(?:[0-9A-Z-]+\.)?(?:youtu\.be\/|www.youtube(?:-nocookie)?\.com\S*?[^\w\s-])([\w-]{11})(?=[^\w-]|$)(?![?=&+%\w.-]*(?:[\'\"][^<>]*>|<\/a>))[?=&+%\w.-]*/i", $value)) {
+                       $fail('Значение поле Ссылка на видео не является корректной ссылкой на сервис youtube');
+                    }
+                },
+            ],
+            'creatableby_id' => [
+                'sometimes',
+                'nullable',
+            ],
+            'creatableby_type' => [
+                'sometimes',
+                'nullable',
+            ],
+        ];
+    }
+
+    public function attributes()
+    {
+        return [
+            'link' => 'Ссылка на видео',
         ];
     }
 }

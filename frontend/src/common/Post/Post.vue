@@ -29,7 +29,7 @@
                         </time>
                     </div>
 
-                    <div v-if="post.author.id === user.id" class="post-poster-actions my-auto ml-auto">
+                    <div v-if="post.author.id === user.id || isAdmin" class="post-poster-actions my-auto ml-auto">
                         <button class="btn btn-link post-settings"
                                 :id="`postSettings` + post.id"
                                 type="button"
@@ -47,7 +47,7 @@
                                     Редактировать
                                 </button>
                             </div>
-                            <div v-if="post.author.id === user.id" class="nav-item">
+                            <div class="nav-item">
                                 <button class="btn dropdown-item text-left px-3 py-1"
                                         @click="$emit('onDeletePost', post.id)">
                                     Удалить
@@ -188,73 +188,63 @@
                 <div class="d-flex">
                     <div class="d-flex">
                         <div class="post-watched-counter"
-                             :class="{'is-active': post.alreadyLiked}"
+                             :class="{'is-active': postLikes}"
                              @click="onLike">
-                            <IconFillHeard v-if="post.alreadyLiked"/>
+                            <IconFillHeard v-if="postLikes"/>
                             <IconHeard v-else/>
-                            <span>{{ post.likes | space1000 }}</span>
+                            <span>{{ postLikes | space1000 }}</span>
                             <div v-if="post.usersLikes && post.usersLikes.length" class="usersLikes p-3" @click.stop="">
-                                <p class="mb-0">
-                                    <b @click.stop="$emit('onShowUsersLikes', post.id)"
+                                <p class="mb-1">
+                                    <b @click.stop="$emit('onShowUsersLikes', postIdForComment)"
                                        style="cursor: pointer">
                                         Понравилось
                                     </b>
-                                    {{ post.likes }} пользователям
+                                    {{ postLikes }} пользователям
                                 </p>
-                                <p class="d-flex">
+                                <div class="d-flex mb-0">
                                     <router-link v-for="(user, index) in shortUsersLikes"
                                                  :key="index"
+                                                 class="usersLikes-user m-1"
                                                  :to="{ name: 'PersonalPage', params: { id: user.id } }">
                                         <img :src="user.profile.userPic"
                                              :alt="user.profile.firstName + ' ' + user.profile.lastName"
                                              :title="user.profile.firstName + ' ' + user.profile.lastName"
                                              class="rounded-circle">
                                     </router-link>
-                                </p>
+                                </div>
                             </div>
                         </div>
-                        <div class="post-watched-counter ml-4" @click="isShowComment = !isShowComment">
+                        <div class="post-watched-counter ml-4" @click="getCommentsByPostId">
                             <IconMessage/>
-                            <span>{{ comments.length | space1000 }}</span>
+                            <span>{{ postCommentCount | space1000 }}</span>
                         </div>
 
                         <div class="post-watched-counter ml-4" @click="$emit('onShare', post)">
                             <IconShare/>
-                            <span>{{ post.sharesCount | space1000 }}</span>
+                            <span>{{ postSharesCount | space1000 }}</span>
                         </div>
                     </div>
 
                     <div class="ml-auto d-flex align-items-center">
                         <div class="post-watched-counter">
-                            <span>{{ post.views | space1000 }}</span>
+                            <span>{{ postViewsCount | space1000 }}</span>
                             <IconEye/>
                         </div>
                     </div>
                 </div>
-                <div class="plz-comments"
-                    v-for="comment in comments"
-                >
-                    <CommentItem
-                        :key="comment.id"
-                        :commentId="comment.id"
-                        :text="comment.body"
-                        :authorId="comment.author.id"
-                        :name="comment.author.profile.firstName"
-                        :surname="comment.author.profile.lastName"
-                        :avatar="comment.author.profile.avatar.image.medium.path"
-                        :postId="post.id"
-                        :createdAt="comment.createdAt"
-                        @onDelete="removeComment"
-                        @update="editComment"
-                    >
-                    </CommentItem>
-                </div>
-                <CommentPost
-                    :postId="post.id"
-                    v-if="!isShowComment"
-                    @updateComments="addNewComment"
-                >
-                </CommentPost>
+                <template v-if="!isShowComment">
+                    <div class="plz-comments" v-for="comment in comments">
+                        <CommentItem
+                            :key="comment.id"
+                            :comment="comment"
+                            :postId="postIdForComment"
+                            @onDelete="removeComment"
+                            @update="editComment"
+                        ></CommentItem>
+                    </div>
+
+                    <CommentPost :postId="postIdForComment" @updateComments="addNewComment"></CommentPost>
+                </template>
             </div>
         </template>
 
@@ -290,6 +280,7 @@
     import CommentPost from "../../components/CommentPost.vue";
     import CommentItem from "../../components/CommentItem.vue";
     import AvatarMixin from '../../mixins/AvatarMixin.js';
+    import PliziComment from "../../classes/PliziComment.js";
 
     export default {
         name: 'Post',
@@ -309,7 +300,12 @@
         },
         props: {
             post: PliziPost,
+
             isCommunity: {
+                type: Boolean,
+                default: false,
+            },
+            isAdmin: {
                 type: Boolean,
                 default: false,
             },
@@ -356,22 +352,42 @@
             recursiveCommunityAvatar() {
                 return this.getCommunityAvatar(this.post?.sharedFrom?.community);
             },
+            postLikes() {
+                return parseInt(this.post?.likes || this.post?.sharedFrom?.likes);
+            },
+            postCommentCount() {
+                return parseInt(this.post?.commentsCount || this.post?.sharedFrom?.commentsCount);
+            },
+            postSharesCount() {
+                return parseInt(this.post?.sharesCount || this.post?.sharedFrom?.sharesCount);
+            },
+            postViewsCount() {
+                return parseInt(this.post?.views || this.post?.sharedFrom?.views);
+            },
+            postIdForComment() {
+                return this.post?.sharedFrom?.id || this.post.id;
+            },
         },
         methods: {
             editComment(newComment) {
-                this.comments = this.comments.map(comment => comment.id === newComment.id ? newComment : comment);
+                this.comments = this.comments.map(comment => comment.id === newComment.id ? comment.update(newComment) : comment);
             },
             removeComment(commentId) {
                 this.comments = this.comments.filter(comment => comment.id !== commentId);
+                this.post.commentsCount = this.comments.length;
             },
             addNewComment(newComment) {
-                this.comments.push(newComment);
+                this.comments.push(new PliziComment(newComment));
+                this.post.commentsCount = this.comments.length;
             },
             async getCommentsByPostId() {
-                let response = null;
+                this.isShowComment = !this.isShowComment;
+                if (this.isShowComment) {
+                    return;
+                }
                 try {
-                   response = await this.$root.$api.$post.getCommentsById(this.post.id);
-                    this.comments = response.data.list;
+                    let response = await this.$root.$api.$post.getCommentsById(this.postIdForComment);
+                    this.comments = response.data.list.map(comment => new PliziComment(comment));
                 } catch (e) {
                     console.warn(e.detailMessage);
                 }
@@ -465,8 +481,6 @@
             if (this.post) {
                 this.recursiveParent(this.post);
             }
-            this.getCommentsByPostId();
-
         },
     }
 </script>
