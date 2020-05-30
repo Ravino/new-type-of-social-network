@@ -17,7 +17,9 @@
                     </ProfileHeader>
                     <Spinner v-else></Spinner>
 
-                    <ProfilePhotos v-bind:photos="userPhotos"/>
+                    <ProfilePhotos v-if="isPhotosDataReady" v-bind:photos="userPhotos"></ProfilePhotos>
+                    <div v-else><SmallSpinner></SmallSpinner></div>
+
                     <ProfileFilter v-if="(filteredPosts && filteredPosts.length > 1) || filterMode !== 'all'"
                                    v-bind:firstName="profileData.firstName"
                                    @wallPostsSelect="wallPostsSelectHandler"/>
@@ -89,6 +91,7 @@ import PostLikeModal from '../common/Post/PostLikeModal.vue';
 import DialogMixin from '../mixins/DialogMixin.js';
 import LazyLoadPosts from '../mixins/LazyLoadPosts.js';
 import BlackListMixin from '../mixins/BlackListMixin.js';
+import PhotosListMixin from '../mixins/PhotosListMixin.js';
 
 import PliziUser from '../classes/PliziUser.js';
 import PliziPost from '../classes/PliziPost.js';
@@ -109,7 +112,7 @@ components: {
     SmallSpinner,
     PostLikeModal,
 },
-mixins: [DialogMixin, LazyLoadPosts, BlackListMixin],
+mixins: [DialogMixin, LazyLoadPosts, BlackListMixin, PhotosListMixin],
 data() {
     return {
         userId: null,
@@ -117,14 +120,8 @@ data() {
         isDataReady: false,
         isShowMessageDialog: false,
         posts: [],
-        userPhotos: [
-            {path: '/images/user-photos/user-photo-01.png',},
-            {path: '/images/user-photos/user-photo-02.png',},
-            {path: '/images/user-photos/user-photo-03.png',},
-            {path: '/images/user-photos/user-photo-04.png',},
-            {path: '/images/user-photos/user-photo-01.png',},
-            {path: '/images/user-photos/user-photo-03.png',},
-        ],
+        isPhotosDataReady: false,
+        userPhotos: null,
         filterMode: 'all',
         postRepostModal: {
             isVisible: false,
@@ -282,6 +279,7 @@ async mounted() {
     this.isStarted = true;
     await this.getUserInfo();
     await this.getPosts();
+    await this.getUserPhotos(this.userId);
     window.scrollTo(0, 0);
 },
 

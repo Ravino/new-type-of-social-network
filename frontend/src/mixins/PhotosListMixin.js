@@ -1,26 +1,24 @@
 const PhotosListMixin = {
 data(){
     return {
-
+        userPhotos: null,
+        isPhotosDataReady: false
     }
 },
 methods: {
-    async getUserPhotos(userId = null) {
+    async getUserPhotos(userId) {
         let apiResponse = null;
-        if (userId === null) {
-            try {
-                apiResponse = await this.$root.$api.$users.lastPhotos();
-            } catch (e) {
-                if (e.status === 422) {
-                    (console.log('выбранный пользователь уже добавлен в Ваш чёрный список'));
-                    this.isAddedToBlacklist = true;
-                    return;
-                }
-                window.console.warn(e.detailMessage);
-            }
+        try {
+            apiResponse = await this.$root.$api.$users.lastPhotos(userId);
         }
-
-        this.$root.$alert(`Вы добавили пользователя в чёрный список`, 'bg-success', 3);
+        catch (e){
+            window.console.warn(e.detailMessage);
+            throw e;
+        }
+        if (apiResponse) {
+            this.userPhotos = apiResponse;
+            this.isPhotosDataReady = true;
+        }
     },
 }
 

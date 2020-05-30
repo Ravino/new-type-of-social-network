@@ -232,24 +232,16 @@ class PliziUsersAPI extends PliziBaseAPI{
      // * @param offset
      * @returns {Promise<null|*>}
      */
-    async lastPhotos() {
-        let path = '/api/user/photos';
-        // let qParams = '';
-
-        // if (limit && offset) {
-        //     qParams = `?limit=${limit}&offset=${offset}`;
-        // }
-
-        let response = await this.axios.get(path, this.authHeaders)
+    async lastPhotos(userId) {
+        let response = await this.axios.get(`/api/user/${userId}/photos`, this.authHeaders)
             .catch((error) => {
-                this.checkIsTokenExpires(error, `$users.followList`);
-                throw new PliziAPIError(`$users.followList`, error.response);
+                this.checkIsTokenExpires(error, '$users.lastPhotos');
+                throw new PliziAPIError('$users.lastPhotos', error.response);
             });
 
-        if (response.status === 200) {
-            return response.data.data;
+        if (200 === response.status) {
+            return response.data.data.list;
         }
-
         return null;
     }
 
