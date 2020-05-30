@@ -342,7 +342,7 @@ methods: {
             } else {
                 this.userData.stats.isFollow = true;
                 this.userData.stats.followCount = this.userData.stats.followCount + 1;
-                this.$root.$alert(apiResponse.message, 'bg-success', 3);
+                this.$root.$notify(apiResponse.message);
             }
         } else {
             this.$root.$alert(`Не получилось подписаться`, 'bg-warning', 3);
@@ -368,7 +368,7 @@ methods: {
             } else {
                 this.userData.stats.isFollow = false;
                 this.userData.stats.followCount = this.userData.stats.followCount - 1;
-                this.$root.$alert(apiResponse.message, 'bg-success', 3);
+                this.$root.$notify(apiResponse.message);
             }
         }
         else {
