@@ -17,7 +17,7 @@
                     <a href="#onmap">Показать на карте</a>
                 </div>
             </div>
-            <div class="w-100 d-flex flex-row plz-profile-photos-list pt-4">
+            <div class="w-100 d-flex flex-row plz-profile-photos-list pt-3">
                 <Gallery v-if="photos.length > 0" :profilePhotos="profilePhotos" :images="photos"></Gallery>
                 <div v-else class="mx-auto">Нет фотографий</div>
             </div>
