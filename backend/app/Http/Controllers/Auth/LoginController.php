@@ -68,7 +68,6 @@ class LoginController extends Controller
     public function login(Request $request)
     {
         $credentials = $request->only('email', 'password');
-        \Log::debug($credentials);
 
         try {
             if (!$token = $this->guard->attempt($credentials)) {
