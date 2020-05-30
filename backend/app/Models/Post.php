@@ -4,7 +4,6 @@ namespace App\Models;
 
 use App\Traits\Likeable;
 use App\Traits\Commentable;
-use Domain\Pusher\Models\ChatMessage;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Support\Carbon;
@@ -91,18 +90,7 @@ class Post extends Model
         return 'U';
     }
 
-<<<<<<< HEAD
-    /**
-     * @param $user
-     * @param $limit
-     * @param $offset
-     * @param bool $isMyPosts
-     * @return \Illuminate\Database\Eloquent\Builder[]|\Illuminate\Database\Eloquent\Collection
-     */
-    public static function getWithoutOldPosts($user, $limit, $offset, $isMyPosts = false)
-=======
     public static function getWithoutOldPosts($user, $limit, $offset, $isMyPosts = false, $onlyLiked = false, $orderBy = null)
->>>>>>> 15caafde99246783492771ba56ba0caee3e9bc11
     {
         if ($isMyPosts) {
             $userPosts = $user->posts()->pluck('id');
@@ -114,7 +102,7 @@ class Post extends Model
                     return $query->withTrashed()->get();
                 }, 'attachments' => function ($query) {
                     return $query->withCount('comments');
-                }])->withCount('comments')->withCount('children')
+                }])->withCount('comments', 'children')
                 ->limit($limit ?? 20)
                 ->offset($offset ?? 0)
                 ->orderBy('id', 'desc')
@@ -174,5 +162,20 @@ class Post extends Model
             ->offset($offset ?? 0)
             ->orderBy($orderByColumn, 'desc')
             ->get();
+    }
+
+    /**
+     * @param null|User $user
+     * @return bool
+     */
+    public function userHasAccess($user = null)
+    {
+        $user = $user ?: auth()->user();
+        if ($this->postable instanceof Community) {
+            $role = $this->postable->role;
+            return $role && in_array($role->role, [Community::ROLE_ADMIN, Community::ROLE_AUTHOR], true);
+        }
+
+        return $this->author_id === $user->id;
     }
 }
