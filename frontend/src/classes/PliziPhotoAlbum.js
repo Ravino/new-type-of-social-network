@@ -1,5 +1,6 @@
 import PliziUser from './PliziUser.js';
 import PliziCommunity from './PliziCommunity.js';
+import PliziAttachment from "./PliziAttachment.js";
 
 class PliziPhotoAlbum {
     /**
@@ -43,6 +44,12 @@ class PliziPhotoAlbum {
      * @private
      */
     _createdAt = null;
+
+    /**
+     * @type {PliziAttachment}
+     * @private
+     */
+    _images = null;
 
     get id() {
         return this._id;
@@ -100,6 +107,14 @@ class PliziPhotoAlbum {
         this._createdAt = value;
     }
 
+    get images() {
+        return this._images;
+    }
+
+    set images(value) {
+        this._images = value;
+    }
+
     constructor(photoAlbum) {
         this._id = photoAlbum.id;
         this._author = new PliziUser(photoAlbum.user);
@@ -108,6 +123,7 @@ class PliziPhotoAlbum {
         this._user = photoAlbum.user ? new PliziUser(photoAlbum.user) : null;
         this._community = photoAlbum.community ? new PliziCommunity(photoAlbum.community) : null;
         this._createdAt = photoAlbum.createdAt;
+        this._images = photoAlbum.images ? photoAlbum.images.list : null;
     }
 }
 

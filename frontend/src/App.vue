@@ -172,7 +172,6 @@ methods: {
     },
 
     onNewAppNotification(evData){
-        // window.console.log(evData, `onNewAppNotification`);
         if (this.$root.$isXS()  || this.$root.$isSM() || this.$root.$isMD())
             return;
 

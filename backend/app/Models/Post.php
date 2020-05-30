@@ -102,7 +102,7 @@ class Post extends Model
                     return $query->withTrashed()->get();
                 }, 'attachments' => function ($query) {
                     return $query->withCount('comments');
-                }])->withCount('comments')->withCount('children')
+                }])->withCount('comments', 'children')
                 ->limit($limit ?? 20)
                 ->offset($offset ?? 0)
                 ->orderBy('id', 'desc')

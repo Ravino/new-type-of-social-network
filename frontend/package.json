@@ -7,10 +7,13 @@
     "scripts": {
         "dev": "vue-cli-service serve src/app.js --copy --host=127.0.0.1 --port=8080",
         "dev-local": "vue-cli-service serve src/app.js --copy --host=0.0.0.0 --port=8080",
-        "build": "vue-cli-service build src/app.js --dest=dist --DONT-CHANGE-DEST--or-u-break-build",
+
+        "build": "vue-cli-service build src/app.js --dest=public --no-clean --DONT-CHANGE-DEST--or-u-break-build",
+
         "prod": "npm run production",
-        "production": "cross-env NODE_ENV=production node_modules/webpack/bin/webpack.js --no-progress --hide-modules --config=node_modules/laravel-mix/setup/webpack.config.js"
+        "production": "cross-env NODE_ENV=production node_modules/webpack/bin/webpack.js --progress --hide-modules --config=node_modules/laravel-mix/setup/webpack.config.js"
     },
+
     "devDependencies": {
         "@babel/cli": "^7.0.0",
         "@babel/core": "^7.0.0",
@@ -35,19 +38,15 @@
         "vue-template-compiler": "^2.6.11",
         "webpack": "^4.42.1"
     },
+
     "dependencies": {
         "axios": "^0.19.2",
-        "bootstrap": "^4.4.1",
-        "emoji-vue": "^0.2.4",
-        "jquery": "^3.5.0",
         "moment": "^2.24.0",
         "numeral": "^2.0.6",
-        "popper.js": "^1.16.1",
         "tiptap": "^1.27.0",
         "tiptap-extensions": "^1.29.0",
-        "v-calendar": "^1.0.5",
-        "videojs-youtube": "^2.6.1",
         "vue": "^2.6.11",
+        "vuelidate": "^0.7.5",
         "vue-custom-scrollbar": "^1.1.0",
         "vue-emoji-picker": "^1.0.1",
         "vue-multiselect": "^2.1.6",
@@ -56,8 +55,11 @@
         "vue-textarea-autosize": "^1.1.1",
         "vue-twemoji": "^1.0.1",
         "vue-video-player": "^5.0.2",
-        "vuelidate": "^0.7.5"
+        "emoji-vue": "^0.2.4",
+        "v-calendar": "^1.0.5",
+        "videojs-youtube": "^2.6.1"
     },
+
     "browserslist": [
         "> 1%",
         "last 2 versions",

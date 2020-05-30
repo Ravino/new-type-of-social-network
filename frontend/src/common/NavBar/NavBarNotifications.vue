@@ -1,6 +1,6 @@
 <template>
     <div class="plz-top-watcher-item position-relative d-inline-block mr-0 mr-sm-2">
-        <div class="btn btn-link my-auto text-body btn-sm cursor-pointer" title="Уведомления" ref="dropdown">
+        <div class="btn btn-link my-auto text-body btn-sm cursor-pointer p-1" title="Уведомления" ref="dropdown">
             <span ref="dropdownToggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" id="dropdownMenuLikes"
                   @click="onShowNotifications()">
                  <router-link to="/notifications" tag="a" class="btn btn-link my-auto text-body btn-sm p-0">

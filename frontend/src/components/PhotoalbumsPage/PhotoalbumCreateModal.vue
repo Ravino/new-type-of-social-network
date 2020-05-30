@@ -55,7 +55,9 @@
                         <div
                             class="form-group d-flex flex-column align-items-center px-5 py-4 community-create-modal-footer mb-0 row">
                             <div class="col-12 col-md-5 d-flex align-items-center justify-content-end px-0 mx-auto">
-                                <button @click.stop="startCreatePhotoalbum()" type="button"
+                                <button @click.stop="startCreatePhotoalbum()"
+                                        type="button"
+                                        :disabled="isSuccess"
                                         class="btn w-100 btn-primary rounded-pill">Создать альбом
                                 </button>
                             </div>
