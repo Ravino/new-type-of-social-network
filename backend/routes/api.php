@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\Api\CommunityController;
+use App\Http\Controllers\Api\PostController;
 use App\Http\Controllers\Api\UserController;
 use App\Http\Controllers\Api\UserSubscribeController;
 use Illuminate\Support\Facades\Route;
@@ -109,6 +110,8 @@ Route::group(['middleware' => ['auth.jwt', 'track.activity']], function () {
 
             Route::post('{groupId}/notify', [CommunityController::class, 'subscribeNotify']);
             Route::delete('{groupId}/notify', [CommunityController::class, 'unsubscribeNotify']);
+
+            Route::get('{groupId}/posts', [PostController::class, 'communityPosts']);
         });
 
         Route::patch('{id}', 'Api\CommunityController@update');
@@ -141,7 +144,6 @@ Route::group(['middleware' => ['auth.jwt', 'track.activity']], function () {
             });
         });
     });
-    Route::get('communities/{community_id}/posts', 'Api\PostController@communityPosts');
 
     Route::prefix('posts')->group(function () {
         Route::delete('{post}', 'Api\PostController@delete');
