@@ -358,4 +358,4 @@ beforeDestroy() {
 }
 </script>
 
-<style lang="scss" src="./styles/app.scss"></style>
+<style lang="scss" src="./styles/App.scss"></style>
