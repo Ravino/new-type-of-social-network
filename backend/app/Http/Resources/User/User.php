@@ -42,6 +42,7 @@ class User extends JsonResource
                     'totalFriendsCount' => $this->totalFriendsCount,
                     'followCount' => $this->profile->follower_count,
                     'videosCount' => $this->profile->video_count,
+                    'imageCount' => $this->profile->image_count,
                 ],
             ];
         }
