@@ -102,6 +102,52 @@ class PliziPhotoalbumsAPI extends PliziBaseAPI {
 
         return null;
     }
+
+    /**
+     *
+     * @param id
+     * @param images
+     * @return {object[]|null}
+     */
+    async uploadImagesInPhotoAlbum(id, images) {
+        const formData = new FormData();
+
+        for(let i = 0; i < images.length; i++){
+            formData.append('files[]', images[i]);
+        }
+
+        let response = await this.axios.post(`api/photo-albums/${id}/photos`, formData, this.authFileHeaders)
+            .catch((error) => {
+                this.checkIsTokenExpires(error, `$photoAlbums.uploadImagesInPhotoAlbum`);
+                throw new PliziAPIError(`$photoAlbums.uploadImagesInPhotoAlbum`, error.response);
+            });
+
+        if (response.status === 200) {
+            return response.data.data.list;
+        }
+
+        return null;
+    }
+
+    /**
+     *
+     * @param {number} photoAlbumId
+     * @param {number} imageId
+     * @return {object[]|null}
+     */
+    async deleteImageInPhotoAlbum(photoAlbumId, imageId) {
+        let response = await this.axios.delete(`api/photo-albums/${photoAlbumId}/photos/${imageId}`, this.authFileHeaders)
+            .catch((error) => {
+                this.checkIsTokenExpires(error, `$photoAlbums.deleteImageInPhotoAlbum`);
+                throw new PliziAPIError(`$photoAlbums.deleteImageInPhotoAlbum`, error.response);
+            });
+
+        if (response.status === 200) {
+            return response.data;
+        }
+
+        return null;
+    }
 }
 
 export default PliziPhotoalbumsAPI;

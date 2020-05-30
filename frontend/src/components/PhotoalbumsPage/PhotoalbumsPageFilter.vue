@@ -1,40 +1,51 @@
 <template>
-    <div id="photoalbumPageFilter" class="row bg-white-br20 mb-4 pt-0 px-4">
-        <div class="col-12 d-flex flex-wrap flex-sm-nowrap align-items-center justify-content-between px-0 ">
-            <nav class="videos-filter-links col-lg-7 nav pt-2 pt-sm-0" role="tablist">
-                <span class="nav-link py-2 py-sm-3 px-1 mr-sm-4" :class="{ 'active': wMode === 'my' }" id="tabMyPhotoalbums" role="tab"
-                      @click.stop="ontabChange">Мои альбомы</span>
-            </nav>
+    <div id="photoalbumPageFilter"  class="bg-white-br20  col-12 d-flex flex-wrap flex-sm-nowrap align-items-center justify-content-between mb-4">
+        <nav class="videos-filter-links col-lg-7 nav pt-2 pt-sm-0" role="tablist">
+            <span class="nav-link py-2 py-sm-3 py-xl-4 px-1 mr-2 mr-xl-4" :class="{ 'active': wMode === 'my' }" id="tabMyPhotoalbums" role="tab"
+                  @click.stop="ontabChange">Мои альбомы</span>
+        </nav>
 
-            <div class="additionalBtns col-12 col-sm-5 d-flex justify-content-between justify-content-sm-end px-0  my-3 my-sm-0">
-                <template v-if="wMode === 'my'">
-                    <PhotoalbumCreateBlock></PhotoalbumCreateBlock>
-                </template>
-                <template v-else>
-                    <button type="button" @click.stop="onAttachBtnClick($event)"
-                            class="btn plz-btn plz-btn-primary p-0 mr-3">
-                        Добавить фотографию
-                        <input type="file"
-                               class="plz-text-editor-file-picker d-none"
-                               ref="editorFiler" multiple />
-                    </button>
-                </template>
-            </div>
+        <div class="additionalBtns col-12 col-sm-5 d-flex justify-content-between justify-content-sm-end px-0  ">
+            <template v-if="wMode === 'my'">
+                <PhotoalbumCreateBlock></PhotoalbumCreateBlock>
+            </template>
+            <template v-else>
+                <button type="button" @click.stop="onAttachBtnClick($event)"
+                        class="btn plz-btn plz-btn-primary p-0 mr-0">
+                    Добавить фотографию
+                    <input type="file"
+                           class="plz-text-editor-file-picker d-none"
+                           ref="editorFiler"
+                           multiple
+                           @change="onSelect"/>
+                </button>
+            </template>
         </div>
     </div>
 </template>
 
 <script>
 import PhotoalbumCreateBlock from "./PhotoalbumCreateBlock.vue";
+import {docsExtensions, imagesExtensions} from "../../enums/FileExtensionEnums";
+import {checkExtension, checkMimeType} from "../../utils/FileUtils";
+import PliziAttachmentItem from "../../classes/PliziAttachmentItem";
+import PliziAttachment from "../../classes/PliziAttachment";
+import PliziCollection from "../../classes/PliziCollection";
+import PliziPhotoAlbum from "../../classes/PliziPhotoAlbum.js";
 
 export default {
     name: "PhotoalbumsPageFilter",
     components: {
         PhotoalbumCreateBlock
     },
+    props: {
+        photoAlbum: PliziPhotoAlbum,
+    },
     data() {
         return {
-            wMode: `my`
+            wMode: `my`,
+            attachFiles: [],
+            attachmentsData: (new PliziCollection()),
         }
     },
     methods: {
@@ -55,7 +66,73 @@ export default {
                 this.$router.push({ path: '/photoalbums-list' });
                 this.wMode = 'album';
             }
-        }
+        },
+        onSelect() {
+            this.addUploadAttachment([...this.$refs.editorFiler.files]);
+        },
+
+        async addUploadAttachment(picsArr) {
+            const filesCount = picsArr.length + this.attachFiles.length;
+
+            if (filesCount > this.maxFilesCount) {
+                this.$alert(`
+                <h4 class="text-white">Ошибка</h4>
+                <div class="alert alert-danger">
+                Превышен лимит загрузки файлов
+                <br />
+                Допустимый максимальный лимит файлов: <b class="text-success">${this.maxFilesCount}</b>
+                </div>`, `bg-danger`, 30
+                );
+                return;
+            }
+
+            const allowExtensions = [...imagesExtensions, ...docsExtensions];
+
+            for (const file of picsArr) {
+                if (!checkExtension(file, allowExtensions) || !checkMimeType(file)) {
+                    this.$alert(`
+                    <h4 class="text-white">Ошибка</h4>
+                    <div class="alert alert-danger">
+                        Недопустимое расширение у файла <b>${file.name}</b>
+                        <br />
+                        Допустимые расширения файлов: <b class="text-success">${allowExtensions.join( ', ' )}</b>
+                    </div>`,
+                        `bg-danger`,
+                        30
+                    );
+
+                    picsArr = picsArr.filter(foundFile => foundFile.name !== file.name);
+                }
+            }
+
+            if (picsArr.length === 0)
+                return;
+
+            for (let file of picsArr) {
+                const reader = new FileReader();
+                reader.onload = () => {
+                    const attachment = new PliziAttachmentItem(true, checkExtension(file, imagesExtensions), file.name);
+                    attachment.isBlob = true;
+                    this.isLoading = attachment.isBlob;
+                    attachment.fileBlob = reader.result;
+                    this.attachFiles.push(attachment);
+                };
+
+                reader.readAsDataURL(file);
+
+                let apiResponse = null;
+
+                try {
+                    apiResponse = await this.$root.$api.$photoalbums.uploadImagesInPhotoAlbum(this.photoAlbum.id, [file]);
+                } catch (e) {
+                    console.warn(e.detailMessage);
+                }
+
+                if (apiResponse) {
+                    this.$emit('addNewImages', apiResponse);
+                }
+            }
+        },
     },
     mounted() {
         if (this.$route.name !== 'PhotoalbumsListPage') {

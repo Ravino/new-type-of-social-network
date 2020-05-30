@@ -62,6 +62,7 @@
                 },
                 isSuccess: false,
                 errors: null,
+                isStoreRequest: false,
             }
         },
         validations() {
@@ -86,6 +87,10 @@
             },
 
             async store() {
+                if (this.isStoreRequest) {
+                    return ;
+                }
+                this.isStoreRequest = true;
                 this.errors = null;
 
                 let response;
@@ -110,7 +115,10 @@
                     setTimeout(() => {
                         this.isSuccess = false;
                         this.onHide();
+                        this.isStoreRequest = false;
                     }, 3000);
+                } else {
+                    this.isStoreRequest = false;
                 }
             },
         },
