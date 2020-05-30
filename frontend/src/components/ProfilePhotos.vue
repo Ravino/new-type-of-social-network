@@ -3,9 +3,14 @@
         <div class="col-12 bg-white-br20 p-0">
             <div class="w-100 d-flex flex-row justify-content-between align-items-center">
                 <div class="">
-                    <h6 class="profilePhotos-title my-0">Фотографии
-                        <span class="profilePhotos-desc">{{userData.photosNumber}}</span>
-                    </h6>
+                    <template v-if="userImageNumber">
+                        <h6 class="profilePhotos-title my-0">Фотографии
+                        <span class="profilePhotos-desc" v-html="sBeaty(userImageNumber)"></span>
+                        </h6>
+                    </template>
+                    <template v-else>
+                        <span class="numbers-bottom">Нет фотографий</span>
+                    </template>
                 </div>
 
                 <div class="profilePhotos-desc d-none" >
@@ -41,7 +46,15 @@ computed : {
     userData() {
         return this.$root.$auth.user;
     },
+    userImageNumber() {
+        return this.userData.stats.imageCount;
+    },
 },
+    methods: {
+        sBeaty(param) {
+            return this.$options.filters.statsBeauty(param);
+        }
+    }
 
 }
 </script>
