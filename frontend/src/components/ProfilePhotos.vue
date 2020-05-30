@@ -13,26 +13,34 @@
                 </div>
             </div>
             <div class="w-100 d-flex flex-row plz-profile-photos-list pt-4">
-                <div v-for="(photo, photoIndex) in photos" v-bind:key="photoIndex"
-                     class="plz-profile-photo-item w-auto my-0 ml-0 mr-3">
-                    <button class="btn-close"  aria-label="delete">
-                        <i class="fa fa-plus" aria-hidden="true"></i>
-                    </button>
-                    <img :src="photo.path" :alt="photoIndex" />
-                </div>
+<!--                <div v-for="(photo, photoIndex) in photos" v-bind:key="photoIndex"-->
+<!--                     class="plz-profile-photo-item w-auto my-0 ml-0 mr-3">-->
+<!--                    <button class="btn-close"  aria-label="delete">-->
+<!--                        <i class="fa fa-plus" aria-hidden="true"></i>-->
+<!--                    </button>-->
+<!--                    <img :src="photo.path" :alt="photoIndex" />-->
+<!--                </div>-->
+                <Gallery v-if="photos.length > 0" :profilePhotos="profilePhotos" :images="photos"></Gallery>
+                <div v-else class="mx-auto">Нет фотографий</div>
             </div>
         </div>
     </div>
 </template>
 
 <script>
+    import Gallery from '../common/Gallery.vue';
+
 export default {
 name: 'ProfilePhotos',
+    components: {
+        Gallery
+    },
 props: {
     photos: Array
 },
 data () {
     return {
+        profilePhotos: true
     }
 },
 

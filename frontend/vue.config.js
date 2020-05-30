@@ -6,7 +6,7 @@ module.exports = {
         sourceDir: 'src'
     },
 
-    filenameHashing : false,
+    filenameHashing : true,
     lintOnSave : false,
     productionSourceMap: false,
 

@@ -42,8 +42,9 @@
 }
 
 .plz-profile-photos-list {
-    overflow-x: hidden;
     position: relative;
+    max-height: 20vh;
+    overflow: hidden;
     &:after {
         content: '';
         position: absolute;
@@ -71,6 +72,8 @@
         vertical-align: top;
         overflow: hidden;
         border-radius: 10px;
+        height: 100px;
+        width: 100px;
     }
     .btn-close{
         position: absolute;
