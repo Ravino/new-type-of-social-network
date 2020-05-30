@@ -45,6 +45,7 @@ $usersPicSize: 32px;
                 left: 50%;
                 min-height: 100%;
                 transform: translate(-50%, -50%);
+                object-fit: contain;
             }
         }
 

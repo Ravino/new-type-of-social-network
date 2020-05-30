@@ -101,15 +101,15 @@
 </template>
 
 <script>
-    import IconHeard from "../icons/IconHeard.vue";
+    import IconHeard from "../../icons/IconHeard.vue";
     import CommentReply from "./CommentReply.vue";
     import moment from "moment";
-    import LinkMixin from '../mixins/LinkMixin.js';
-    import TextEditor from "../common/TextEditor.vue";
-    import ChatMixin from "../mixins/ChatMixin.js";
-    import Gallery from "../common/Gallery.vue";
-    import IconFillHeard from "../icons/IconFillHeard.vue";
-    import PliziComment from "../classes/PliziComment.js";
+    import LinkMixin from '../../mixins/LinkMixin.js';
+    import TextEditor from "../../common/TextEditor.vue";
+    import ChatMixin from "../../mixins/ChatMixin.js";
+    import Gallery from "../../common/Gallery.vue";
+    import IconFillHeard from "../../icons/IconFillHeard.vue";
+    import PliziComment from "../../classes/PliziComment.js";
 
     export default {
         name: "CommentItem",

@@ -277,8 +277,8 @@
     import PliziPost from '../../classes/PliziPost.js';
     import Gallery from '../Gallery.vue';
     import LinkMixin from '../../mixins/LinkMixin.js';
-    import CommentPost from "../../components/CommentPost.vue";
-    import CommentItem from "../../components/CommentItem.vue";
+    import CommentPost from "../../components/Comments/CommentPost.vue";
+    import CommentItem from "../../components/Comments/CommentItem.vue";
     import AvatarMixin from '../../mixins/AvatarMixin.js';
     import PliziComment from "../../classes/PliziComment.js";
 

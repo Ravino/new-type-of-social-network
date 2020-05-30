@@ -56,21 +56,8 @@
                 </div>
             </div>
         </div>
-        <div class="plz-gallery-description-header-body d-flex w-100 flex-column align-items-end">
-            <div class="plz-gallery-description--footer d-flex w-100 p-3 mt-auto">
-                <div class="plz-gallery-description--footer-pic mr-2">
-                    <img class="plz-gallery-description--footer-img" :src="userAvatar" alt="user photo">
-                </div>
-
-                <TextEditor :clazz="`plz-text-editor h-auto  align-items-start flex-grow-1 `"
-                            :editorPlaceholder="'Оставить комментарий...'"
-                            :dropToDown="true"
-                            :maximumCharacterLimit="10000"
-                            workMode="post">
-                </TextEditor>
-
-            </div>
-        </div>
+        <CommentGallery :post-id="post.id" :imageId="image.id">
+        </CommentGallery>
     </div>
 </template>
 
@@ -82,10 +69,11 @@
  import IconShare from "../icons/IconShare.vue";
  import TextEditor from "./TextEditor.vue";
  import PliziAttachment from '../classes/PliziAttachment.js';
+ import CommentGallery from "../components/Comments/CommentGallery.vue";
 
  export default {
   name: "GalleryDescription",
-  components: {TextEditor, IconShare, IconMessage, IconHeard, IconFillHeard},
+  components: {CommentGallery, TextEditor, IconShare, IconMessage, IconHeard, IconFillHeard},
   props: {
    post: {
     type: Object,
