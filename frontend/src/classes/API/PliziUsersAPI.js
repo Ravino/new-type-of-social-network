@@ -227,6 +227,33 @@ class PliziUsersAPI extends PliziBaseAPI{
     }
 
     /**
+     * Список последних фотографий
+     // * @param limit
+     // * @param offset
+     * @returns {Promise<null|*>}
+     */
+    async lastPhotos() {
+        let path = '/api/user/photos';
+        // let qParams = '';
+
+        // if (limit && offset) {
+        //     qParams = `?limit=${limit}&offset=${offset}`;
+        // }
+
+        let response = await this.axios.get(path, this.authHeaders)
+            .catch((error) => {
+                this.checkIsTokenExpires(error, `$users.followList`);
+                throw new PliziAPIError(`$users.followList`, error.response);
+            });
+
+        if (response.status === 200) {
+            return response.data.data;
+        }
+
+        return null;
+    }
+
+    /**
      * Получение списка активных сессий.
      *
      * @returns {object[]|null}
