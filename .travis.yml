@@ -27,7 +27,7 @@ jobs:
         - sed -ie  "s,__API__,$API2,g; s,__WS__,$WS,g; s,__URL__,$URL,g; s,__APIS_URL__,$APIS2_URL,g; s,__WS_SERVICE__,$WS_SERVICE,g; s,__API_SERVICE__,$API_SERVICE,g" docker/nginx/default.example.conf
         - npm install
         - npm run prod
-        - docker --version  # document the version travis is using
+        - docker --version  # document the version  travis is using
         - pip install --user awscli # install aws cli w/o sudo
         - export PATH=$PATH:$HOME/.local/bin # put aws in the path
         - mkdir ${HOME}/.aws
