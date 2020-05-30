@@ -69,7 +69,7 @@
                         this.$emit('unFollow', {
                             id: this.follow.id
                         });
-                        this.$root.$alert(response.message, 'bg-success', 3);
+                        this.$root.$notify(response.message);
                     }
                 } else {
                     this.$root.$alert(`Не получилось отписаться`, 'bg-warning', 3);

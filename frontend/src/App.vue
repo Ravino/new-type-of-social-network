@@ -172,14 +172,13 @@ methods: {
     },
 
     onNewAppNotification(evData){
-        window.console.log(evData, `onNewAppNotification`);
+        // window.console.log(evData, `onNewAppNotification`);
         if (this.$root.$isXS()  || this.$root.$isSM() || this.$root.$isMD())
             return;
 
         if (`app.notification`===evData.type) {
-            console.log(evData);
-            let chatNotificationData = this.transformNotifyToNotification(evData);
-            // this.addNotification(chatNotificationData);
+            let appNotificationData = this.transformNotifyToNotification(evData);
+            this.addNotification(appNotificationData);
         }
 
         if (`user.notification`===evData.type) {
