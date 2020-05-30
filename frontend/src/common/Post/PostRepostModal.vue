@@ -24,7 +24,7 @@
                                         :community="community"/>
                     </div>
                     <button type="button" class="btn plz-btn plz-btn-primary mt-4" @click.prevent="sharePostToWall">
-                        Отправить
+                        Отправить себе на стену
                     </button>
                 </div>
             </div>
