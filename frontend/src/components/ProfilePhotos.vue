@@ -3,9 +3,14 @@
         <div class="col-12 bg-white-br20 p-0">
             <div class="w-100 d-flex flex-row justify-content-between align-items-center">
                 <div class="">
-                    <h6 class="profilePhotos-title my-0">Фотографии
-                        <span class="profilePhotos-desc">{{userData.photosNumber}}</span>
-                    </h6>
+                    <template v-if="userImageNumber">
+                        <h6 class="profilePhotos-title my-0">Фотографии
+                        <span class="profilePhotos-desc" v-html="sBeaty(userImageNumber)"></span>
+                        </h6>
+                    </template>
+                    <template v-else>
+                        <span class="numbers-bottom">Нет фотографий</span>
+                    </template>
                 </div>
 
                 <div class="profilePhotos-desc d-none" >
@@ -13,13 +18,6 @@
                 </div>
             </div>
             <div class="w-100 d-flex flex-row plz-profile-photos-list pt-4">
-<!--                <div v-for="(photo, photoIndex) in photos" v-bind:key="photoIndex"-->
-<!--                     class="plz-profile-photo-item w-auto my-0 ml-0 mr-3">-->
-<!--                    <button class="btn-close"  aria-label="delete">-->
-<!--                        <i class="fa fa-plus" aria-hidden="true"></i>-->
-<!--                    </button>-->
-<!--                    <img :src="photo.path" :alt="photoIndex" />-->
-<!--                </div>-->
                 <Gallery v-if="photos.length > 0" :profilePhotos="profilePhotos" :images="photos"></Gallery>
                 <div v-else class="mx-auto">Нет фотографий</div>
             </div>
@@ -48,7 +46,15 @@ computed : {
     userData() {
         return this.$root.$auth.user;
     },
-}
+    userImageNumber() {
+        return this.userData.stats.imageCount;
+    },
+},
+    methods: {
+        sBeaty(param) {
+            return this.$options.filters.statsBeauty(param);
+        }
+    }
 
 }
 </script>

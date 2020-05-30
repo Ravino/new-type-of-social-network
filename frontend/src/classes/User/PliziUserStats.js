@@ -63,6 +63,13 @@ class PliziUserStats {
      */
     _videosCount = 0;
 
+    /**
+     * Кол-во фотографий
+     * @type {number}
+     * @private
+     */
+    _imageCount = 0;
+
     get notifications(){
         return this._notifications;
     }
@@ -139,6 +146,14 @@ class PliziUserStats {
         this._isInBlacklist = value;
     }
 
+    get imageCount() {
+        return this._imageCount;
+    }
+
+    set imageCount(value) {
+        this._imageCount = value;
+    }
+
     constructor(inputData){
         if (inputData) {
             this.update(inputData);
@@ -155,6 +170,7 @@ class PliziUserStats {
         this.followCount = inputData.followCount;
         this.videosCount = inputData.videosCount;
         this.isInBlacklist = inputData.isInBlacklist;
+        this.imageCount = inputData.imageCount;
     }
 
     toJSON(){
@@ -168,6 +184,7 @@ class PliziUserStats {
             followCount: this.followCount,
             videosCount: this.videosCount,
             isInBlacklist: this.isInBlacklist,
+            imageCount: this.imageCount,
         };
     }
 }

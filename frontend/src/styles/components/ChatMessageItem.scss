@@ -425,6 +425,21 @@ $chatMessagesBodyHeight: calc(100% - 139px);
 
 }
 
+.message-attachment-item {
+    .plz-gallery-triple,  .plz-gallery-double {
+        .plz-gallery-wrap-album {
+            flex-direction: column;
+        }
+    }
+    .plz-gallery-fourth {
+        .plz-gallery-wrap {
+            .plz-gallery-wrapper {
+                width: 225px;
+            }
+        }
+    }
+}
+
 .message-sended-image {
     display: flex;
     flex-wrap: wrap;

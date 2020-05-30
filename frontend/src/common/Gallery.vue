@@ -3,7 +3,8 @@
          :class="[`plz-gallery-${galleryType}`,
          {'plz-gallery-single': isSingleImage},
          {'plz-gallery-double': isDoubleImages},
-         {'plz-gallery-fourth': isFourthImages}]">
+         {'plz-gallery-fourth': isFourthImages},
+         {'plz-gallery-triple': isTripleImages}]">
 
         <div v-if="galleryType === 'album'" class="plz-gallery-wrap plz-gallery-wrap-album">
             <div v-if="profilePhotos" class="profile-photos d-flex">
@@ -14,7 +15,7 @@
                      @click="showImage(photo)">
                     <img @click="showImage(photo)"
                          class="plz-gallery-image"
-                         :src="photo.path"
+                         :src="photo.medium.path"
                          :alt="photo.name"/>
                 </div>
             </div>
@@ -43,7 +44,7 @@
                          @click="showImage(photo)">
                         <img @click="showImage(photo)"
                              class="plz-gallery-image"
-                             :src="photo.path"
+                             :src="photo.medium.path"
                              :alt="photo.name"/>
                     </div>
                 </div>
@@ -118,6 +119,10 @@
                 return this.countImages === 1;
             },
 
+            isTripleImages() {
+                return this.countImages === 3;
+            },
+            
             isDoubleImages() {
                 return this.countImages === 2;
             },

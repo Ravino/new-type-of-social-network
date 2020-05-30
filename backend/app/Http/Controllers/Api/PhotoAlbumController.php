@@ -94,6 +94,7 @@ class PhotoAlbumController extends Controller
         $photos = ImageUpload::whereIn('id', $photo_ids)->get();
         $photoAlbum = PhotoAlbum::find($id);
         $photoAlbum->images()->attach($photo_ids);
+        \Auth::user()->profile()->increment('image_count');
 
         return new AttachmentsCollection($photos);
     }
@@ -187,6 +188,7 @@ class PhotoAlbumController extends Controller
         if ($photoAlbum->author->id === \Auth::id()) {
             $photoAlbum->images()->where('id', $image_id)->delete();
             $photoAlbum->images()->detach($image_id);
+            \Auth::user()->profile()->decrement('image_count');
 
             return response()->json([
                 'message' => 'Изображение учпешно удалено',

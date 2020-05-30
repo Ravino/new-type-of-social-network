@@ -162,8 +162,13 @@
                 </router-link>
                 <router-link tag="a" class="p-0 d-flex" to="/photoalbums-list">
                     <div class="plz-profile-userdetails-numbers text-center py-2 px-2 py-md-4 px-md-4 mt-auto">
-                        <span class="numbers-top" v-html="sBeaty(userData.photosNumber)"></span>
-                        <span class="numbers-bottom">Фотографий</span>
+                        <template v-if="userImageNumber">
+                            <span class="numbers-top" v-html="sBeaty(userImageNumber)"></span>
+                            <span class="numbers-bottom">Фотографий</span>
+                        </template>
+                        <template v-else>
+                            <span class="numbers-bottom">Нет фотографий</span>
+                        </template>
                     </div>
                 </router-link>
                 <router-link tag="a" class="p-0 d-flex" to="/videos">
@@ -229,13 +234,17 @@ computed: {
     },
 
     usrVideosNumber() {
-                return this.userData.stats.videosCount;
-            },
+        return this.userData.stats.videosCount;
+    },
 
-            userAvatar() {
-                return this.userData.avatar?.image?.medium.path || this.userData.userPic;
-            }
-        },
+    userAvatar() {
+        return this.userData.avatar?.image?.medium.path || this.userData.userPic;
+    },
+
+    userImageNumber() {
+        return this.userData.stats.imageCount;
+    },
+},
 
 methods: {
     isCanAddToFriends() {

@@ -95,6 +95,17 @@
                 images.forEach((image) => {
                     this.photoAlbum.images.unshift(new PliziAttachment(image))
                 });
+
+                // TODO: @YZ сделать по нормальному после MVP
+                let lsUser = JSON.parse(localStorage.getItem('pliziUser'));
+
+                if (!lsUser.data.stats.imageCount) {
+                    lsUser.data.stats.imageCount = 1;
+                } else {
+                    lsUser.data.stats.imageCount++;
+                }
+
+                localStorage.setItem('pliziUser', JSON.stringify(lsUser));
             },
 
             async onDeleteImage(id) {
@@ -109,6 +120,17 @@
                 if (apiResponse) {
                     let deletedImageIndex = this.photoAlbum.images.findIndex(image => image.id === id);
                     this.photoAlbum.images.splice(deletedImageIndex, 1);
+
+                    // TODO: @YZ сделать по нормальному после MVP
+                    let lsUser = JSON.parse(localStorage.getItem('pliziUser'));
+
+                    if (!lsUser.data.stats.imageCount) {
+                        lsUser.data.stats.imageCount = 0;
+                    } else {
+                        lsUser.data.stats.imageCount--;
+                    }
+
+                    localStorage.setItem('pliziUser', JSON.stringify(lsUser));
                 }
             },
             async getPhotoAlbum() {
