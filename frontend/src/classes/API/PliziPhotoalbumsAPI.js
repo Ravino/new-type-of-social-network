@@ -49,7 +49,7 @@ class PliziPhotoalbumsAPI extends PliziBaseAPI {
      * @returns {object|null} - ответ сервера
      * @throws PliziAPIError
      */
-    async updatePhotoalbum( albumId, formData ){
+    async updatePhotoAlbum( albumId, formData ){
         let response = await this.axios.post( `api/photo-albums/${albumId}`, formData, this.authHeaders )
             .catch( ( error ) => {
                 this.checkIsTokenExpires( error, `updatePhotoalbum` );
@@ -57,7 +57,7 @@ class PliziPhotoalbumsAPI extends PliziBaseAPI {
             } );
 
         if ( response.status === 200 ){
-            return response.data.data;
+            return response.data;
         }
 
         return null;
@@ -78,6 +78,26 @@ class PliziPhotoalbumsAPI extends PliziBaseAPI {
 
         if ( response.status === 200 ){
             return response.data;
+        }
+
+        return null;
+    }
+
+    /**
+     * Получение фотоальбома
+     * @param {number} id
+     * @return {object[]|null}
+     * @throws PliziAPIError
+     */
+    async getPhotoAlbum(id) {
+        let response = await this.axios.get( `api/photo-albums/${id}`, this.authHeaders )
+            .catch( ( error ) => {
+                this.checkIsTokenExpires( error, `getPhotoAlbum` );
+                throw new PliziAPIError( `getPhotoAlbum`, error.response );
+            } );
+
+        if ( response.status === 200 ){
+            return response.data.data;
         }
 
         return null;

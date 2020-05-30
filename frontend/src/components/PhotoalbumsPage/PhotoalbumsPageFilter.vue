@@ -12,11 +12,11 @@
                 </template>
                 <template v-else>
                     <button type="button" @click.stop="onAttachBtnClick($event)"
-                            :class="{'attach-file--disallow cursor-non-drop' : isDisallowUpload}"
-                            class="attach-file btn-add-file w-100 d-flex align-items-center justify-content-center add-photos btn btn-link my-0 mx-0 mr-md-2 px-1 position-relative">
-                        Добавить фотографии
-                        <input type="file" class="plz-text-editor-file-picker"
-                               :disabled="isDisallowUpload" @change="onSelectFile()" ref="editorFiler" multiple />
+                            class="btn plz-btn plz-btn-primary p-0 mr-3">
+                        Добавить фотографию
+                        <input type="file"
+                               class="plz-text-editor-file-picker d-none"
+                               ref="editorFiler" multiple />
                     </button>
                 </template>
             </div>
