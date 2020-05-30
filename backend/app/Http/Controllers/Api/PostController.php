@@ -12,12 +12,9 @@ use App\Http\Resources\User\SimpleUsers;
 use App\Models\Community;
 use App\Models\Post;
 use App\Models\PostAttachment;
-use App\Models\PostLike;
 use App\Models\User;
 use App\Models\View;
-use App\Notifications\UserSystemNotifications;
 use App\Services\S3UploadService;
-use Illuminate\Support\Facades\Notification;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Event;
 
@@ -60,7 +57,14 @@ class PostController extends Controller
      */
     public function getNews(Request $request)
     {
-        $posts = Post::getWithoutOldPosts(\Auth::user(), $request->query('limit'), $request->query('offset'));
+        $posts = Post::getWithoutOldPosts(
+            \Auth::user(),
+            $request->query('limit'),
+            $request->query('offset'),
+            false,
+            $request->get('onlyLiked', false),
+            $request->get('orderBy')
+        );
 
         return new PostCollection($posts);
     }
@@ -79,26 +83,21 @@ class PostController extends Controller
 
     /**
      * @param Request $request
-     * @param $community_id
-     * @return PostCollection|\Illuminate\Http\JsonResponse
+     * @return PostCollection
      */
-    public function communityPosts(Request $request, $community_id) {
+    public function communityPosts(Request $request) {
         /** @var Community $community */
-        $community = Community::find($community_id);
-        if (!$community->isUserHasAccess()) {
-            return response()->json(['message' => 'Нет доступа'], 403);
-        }
-        if($community) {
-            $posts = $community->posts()->with(['postable', 'author', 'usersLikes' => function ($query) {
-                return $query->limit(8)->get();
-            }])
-                ->limit($request->query('limit') ?? 50)
-                ->offset($request->query('offset') ?? 0)
-                ->orderByDesc('id')
-                ->get();
-            return new PostCollection($posts);
-        }
-        return response()->json(['message' => 'Сообщество не найдено'], 404);
+        $community = $request->community;
+
+        $posts = $community->posts()->with(['postable', 'author', 'usersLikes' => static function ($query) {
+            return $query->limit(8)->get();
+        }])
+            ->withCount('comments')
+            ->limit($request->query('limit', 50))
+            ->offset($request->query('offset', 0))
+            ->orderByDesc('id')
+            ->get();
+        return new PostCollection($posts);
     }
 
     /**
@@ -120,7 +119,7 @@ class PostController extends Controller
     public function storeByUser(PostRequest $request) {
         $post = \Auth::user()->posts()->create([
             'name' => $request->name,
-            'body' => $request->body,
+            'body' => $request->body ?: '',
             'author_id' => \Auth::user()->id
         ]);
         if(isset($request->attachmentIds) && count($request->attachmentIds)) {
@@ -141,7 +140,7 @@ class PostController extends Controller
             if($community->users->contains(auth()->user()->id)) {
                 $post = $community->posts()->create([
                     'name' => $request->name,
-                    'body' => $request->body,
+                    'body' => $request->body ?: '',
                     'author_id' => \Auth::user()->id
                 ]);
                 if(isset($request->attachmentIds) && count($request->attachmentIds)) {
@@ -168,6 +167,8 @@ class PostController extends Controller
         $my_post->postable_id = \Auth::user()->id;
         $my_post->parent_id = $post->id;
         $my_post->body = '';
+        $my_post->likes = 0;
+        $my_post->views = 0;
         $my_post->author_id = \Auth::user()->id;
         $my_post->save();
         return new PostResource($my_post);
@@ -191,7 +192,7 @@ class PostController extends Controller
      */
     public function delete(Post $post)
     {
-        if ($post->author->id === \Auth::user()->id) {
+        if ($post->userHasAccess()) {
             $post->delete();
 
             return response()->json([
@@ -201,7 +202,7 @@ class PostController extends Controller
 
         return response()->json([
             'message' => 'Запись не найдена.',
-        ]);
+        ], 404);
     }
 
     /**
@@ -230,9 +231,11 @@ class PostController extends Controller
      */
     public function restore($id)
     {
-        $post = Post::withTrashed()->where('id', $id)->first();
+        $post = Post::withTrashed()
+            ->where('id', $id)
+            ->first();
 
-        if ($post->author->id === \Auth::user()->id) {
+        if ($post->userHasAccess()) {
             $post->restore();
 
             return response()->json([

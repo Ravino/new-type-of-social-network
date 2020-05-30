@@ -6,7 +6,7 @@
         </router-link>
 
         <span v-if="getInvitationsNumber()>0" class="counter-info" id="dropdownMenuFriends"
-                type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                 data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
             {{getInvitationsNumber()}}
         </span>
 

@@ -40,17 +40,42 @@ $userPicSize: 32px;
 
     .chat-list-scroll {
         height: calc(100% - 76px);
+
+        &-scroll {
+            position: relative;
+            max-height: 100%;
+        }
     }
 
-    > .find-in-dialogs-form{
+    > .find-in-dialogs-form {
         height: 76px;
 
-        .find-in-chat-list-btn {
-            .icon.icon-search
-            {
-                width: 15px;
-                height: 15px;
+        .find-in-chat-list {
+            width: calc(100% - 36px - 15px);
+
+            &-btn {
+                background-color: #eeeff4;
+                border-radius: 0 40px 40px 0;
+
+                .icon.icon-search {
+                    width: 15px;
+                    height: 15px;
+                }
             }
+        }
+    }
+
+    .btn-group-chat {
+        position: relative;
+        width: 36px;
+        min-width: 36px;
+        height: 36px;
+        border: 1px solid $borderColor;
+        .icon {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
         }
     }
 }
@@ -65,6 +90,13 @@ $userPicSize: 32px;
         overflow: hidden;
         text-overflow: ellipsis;
         white-space: nowrap;
+    }
+
+    .user-friend-body {
+        width: calc(100% - 32px - 15px);
+    }
+    .user-friend-body-top {
+        width: 100%;
     }
 }
 

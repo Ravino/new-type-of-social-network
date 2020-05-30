@@ -7,6 +7,7 @@ import PliziFriendAPI from './API/PliziFriendAPI.js';
 import PliziCommunitiesAPI from './API/PliziCommunitiesAPI.js';
 import PliziUsersAPI from './API/PliziUsersAPI.js';
 import PliziNotificationsAPI  from './API/PliziNotificationsAPI.js';
+import PliziPhotoalbumsAPI  from './API/PliziPhotoalbumsAPI.js';
 import PliziVideoAPI from "./API/PliziVideoAPI.js";
 import PliziImageAPI from "./API/PliziImageAPI.js";
 
@@ -104,6 +105,12 @@ class PliziAPIClass {
     __notifications = null;
 
     /**
+     * @type {PliziPhotoalbumsAPI}
+     * @private
+     */
+    __photoalbums = null;
+
+    /**
      * @type {PliziVideoAPI}
      * @private
      */
@@ -125,8 +132,10 @@ class PliziAPIClass {
         if (this.__isInit)
             return;
 
-        this.__baseURL   = (window.apiURL) ? (window.apiURL + ``).trim() : ``;
-        this.__baseWsURL = (window.wsUrl) ? (window.wsUrl + ``).trim() : ``;
+        //this.__baseURL   = (window.apiURL) ? (window.apiURL + ``).trim() : ``;
+        //this.__baseWsURL = (window.wsUrl) ? (window.wsUrl + ``).trim() : ``;
+        this.__baseURL   = (process.env.API_URL) ? (process.env.API_URL + ``).trim() : ``;
+        this.__baseWsURL = (process.env.WS_URL) ? (process.env.WS_URL + ``).trim() : ``;
 
         if ($root) {
             this.__$root = $root;
@@ -147,6 +156,7 @@ class PliziAPIClass {
         this.__communities = new PliziCommunitiesAPI(this);
         this.__users = new PliziUsersAPI(this);
         this.__notifications = new PliziNotificationsAPI(this);
+        this.__photoalbums = new PliziPhotoalbumsAPI(this);
         this.__video = new PliziVideoAPI(this);
         this.__image = new PliziImageAPI(this);
 
@@ -194,6 +204,13 @@ class PliziAPIClass {
      */
     get $notifications() {
         return this.__notifications;
+    }
+
+    /**
+     * @return {PliziPhotoalbumsAPI}
+     */
+    get $photoalbums() {
+        return this.__photoalbums;
     }
 
     /**
@@ -560,7 +577,9 @@ class PliziAPIClass {
                 //window.console.dir(data, 'WebSockets user.typing');
             }
             else {
-                window.console.dir(data, 'from WebSockets server');
+                if (data) {
+                    window.console.dir( JSON.parse( JSON.stringify(data) ), 'from WebSockets server');
+                }
             }
 
             if (channelID=== this.channel  &&  `user.typing`===data.event_type) {
@@ -572,12 +591,20 @@ class PliziAPIClass {
 
             if (channelID=== this.channel  &&  `user.notification`===data.event_type) {
                 this.emit('UserNotification', data.data);
+                this.emit('NewAppNotification', {
+                    type :  data.event_type,
+                    notification : data.data
+                });
             }
 
             if (channelID=== this.channel  &&  `message.new`===data.event_type) {
                 this.emit('newMessageInDialog', {
                     chatId :  data.data.chatId,
                     message : data.data
+                });
+                this.emit('NewAppNotification', {
+                   type :  data.event_type,
+                   message : data.data
                 });
             }
 
@@ -589,32 +616,47 @@ class PliziAPIClass {
             }
 
             if (channelID=== this.channel  &&  `chat.removed`===data.event_type) {
-                this.emit('remoteRemoveDialog', {
+                this.emit('NewAppNotification', {
+                    type :  data.event_type,
                     chatId :  data.data.id
                 });
-            }
+                setTimeout(() => {
+                    this.emit('remoteRemoveDialog', {
+                        chatId :  data.data.id
+                    });
+                }, 300);
 
+            }
             if (channelID=== this.channel  &&  `chat.created`===data.event_type) {
                 this.emit('remoteCreateDialog', {
                     data :  data.data
                 });
+                this.emit('NewAppNotification', {
+                   type :  data.event_type,
+                   dialog :  data.data
+                });
             }
-
             if (channelID=== this.channel  &&  `chat.attendee.appended`===data.event_type) {
                 this.emit('remoteAddAttendee', {
                     data :  data.data
                 });
-            }
-
-            if (channelID=== this.channel  &&  `chat.attendee.removed`===data.event_type) {
-                console.dir(data, `data`);
-
-                this.emit('remoteRemoveAttendee', {
-                    chatId :  data.data.id,
-                    userId :  data.data.userId
+                this.emit('NewAppNotification', {
+                   type :  data.event_type,
+                   dialog :  data.data
                 });
             }
-
+            if (channelID=== this.channel  &&  `chat.attendee.removed`===data.event_type) {
+                this.emit('NewAppNotification', {
+                    type :  data.event_type,
+                    chatId :  data.data.id
+                });
+                setTimeout(() => {
+                    this.emit('remoteRemoveAttendee', {
+                        chatId :  data.data.id,
+                        userId :  data.data.userId
+                    });
+                }, 300);
+            }
         });
     }
 

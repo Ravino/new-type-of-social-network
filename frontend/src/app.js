@@ -73,8 +73,16 @@ Vue.prototype.$api = null;
 Vue.prototype.$alert = function(message, clazz, timeOut){
     this.$root.$emit('alertModal', {
         message : message ||  ``,
-        clazz : clazz ||  ``,
+        clazz : ``,
         timeOut : timeOut ||  0,
+    });
+};
+
+Vue.prototype.$notify = function(message, clazz = ''){
+    this.$root.$emit('NewAppNotification', {
+        type : `app.notification`,
+        message : message ||  ``,
+        clazz : ``,
     });
 };
 
@@ -84,9 +92,29 @@ Vue.prototype.$dialogsKeyUpdater = 0;
 Vue.prototype.$invitationsKeyUpdater = 0;
 Vue.prototype.$notificationsKeyUpdater = 0;
 Vue.prototype.$messagesKeyUpdater = 0;
+Vue.prototype.$communitiesKeyUpdater = 0;
+
+Vue.prototype.$isXS = () => {
+    return window.innerWidth <= 575;
+};
+
+Vue.prototype.$isSM = () => {
+    return window.innerWidth >= 576  &&  window.innerWidth <= 767;
+};
+
+Vue.prototype.$isMD = () => {
+    return window.innerWidth >= 768  &&  window.innerWidth <= 991;
+};
+
+Vue.prototype.$isLG = () => {
+    return window.innerWidth >= 992  &&  window.innerWidth <= 1199;
+};
+
+Vue.prototype.$isXL = () => {
+    return window.innerWidth >= 1200;
+};
 
 import router from './router/router.js';
-//import store from './store/store.js'
 import './libs/filters.js';
 
 import './libs/facebook.js';
@@ -103,7 +131,12 @@ import App from './App.vue';
 
 delete window.app;
 
-window.app = new Vue({
-    router,
-    render: h => h(App),
-}).$mount('#app');
+if ( (self.parent && !(self.parent===self)) && (self.parent.frames.length!==0)){
+    self.parent.location = document.location;
+}
+else {
+    window.app = new Vue( {
+        router,
+        render : h => h( App ),
+    } ).$mount( '#app' );
+}

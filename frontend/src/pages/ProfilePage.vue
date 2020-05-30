@@ -10,9 +10,10 @@
                  v-bind:key="`CentralColumn-`+shortFriendsUpdater">
 
                 <div class="container">
-                    <ProfileHeader v-bind:userData="userData" v-bind:isOwner="true"></ProfileHeader>
+                    <ProfileHeader v-bind:userData="userData()" v-bind:isOwner="true"></ProfileHeader>
 
-                    <ProfilePhotos v-bind:photos="userPhotos"></ProfilePhotos>
+                    <ProfilePhotos v-if="isPhotosDataReady" v-bind:photos="userPhotos"></ProfilePhotos>
+                    <div v-else><SmallSpinner></SmallSpinner></div>
 
                     <WhatsNewBlock @addNewPost="addNewPost"></WhatsNewBlock>
 
@@ -41,7 +42,7 @@
                     <template v-if="isStarted">
                         <div class="row plz-post-item mb-4 bg-white-br20 p-4">
                             <div class="w-100 p-5 text-center mb-0">
-                                <SmallSpinner/>
+                                <SmallSpinner clazz="position-absolute"/>
                             </div>
                         </div>
                     </template>
@@ -60,15 +61,15 @@
 
             <PostEditModal v-if="postEditModal.isVisible"
                            :post="postForEdit"
-                           @hidePostEditModal="hidePostEditModal"/>
+                           @hidePostEditModal="hidePostEditModal"></PostEditModal>
 
             <PostVideoModal v-if="postVideoModal.isVisible"
                             :videoLink="postVideoModal.content.videoLink"
-                            @hideVideoModal="hideVideoModal"/>
+                            @hideVideoModal="hideVideoModal"></PostVideoModal>
 
             <PostLikeModal v-if="postLikeModal.isVisible"
-                           :users="postLikeModal.content.users"
-                           @hideLikeModal="hideLikeModal"/>
+                           :postId="postLikeModal.content.postId"
+                           @hideLikeModal="hideLikeModal"></PostLikeModal>
 
             <PostRepostModal v-if="postRepostModal.isVisible"
                              v-bind:user="postRepostModal.content.postForRepost.author"
@@ -98,7 +99,7 @@ import PostLikeModal from '../common/Post/PostLikeModal.vue';
 import LazyLoadPosts from '../mixins/LazyLoadPosts.js';
 
 import PliziPost from '../classes/PliziPost.js';
-import PliziUser from '../classes/PliziUser.js';
+import PhotosListMixin from '../mixins/PhotosListMixin.js';
 
 export default {
 name: 'ProfilePage',
@@ -111,20 +112,14 @@ components: {
     PostRepostModal,
     SmallSpinner,
 },
-mixins: [LazyLoadPosts],
+mixins: [LazyLoadPosts, PhotosListMixin],
 data() {
     return {
         posts: [],
         filterMode: 'all',
 
-        userPhotos: [
-            {path: '/images/user-photos/user-photo-01.png',},
-            {path: '/images/user-photos/user-photo-02.png',},
-            {path: '/images/user-photos/user-photo-03.png',},
-            {path: '/images/user-photos/user-photo-04.png',},
-            {path: '/images/user-photos/user-photo-01.png',},
-            {path: '/images/user-photos/user-photo-03.png',},
-        ],
+        userPhotos: [],
+        isPhotosDataReady: false,
         postEditModal: {
             isVisible: false,
         },
@@ -138,7 +133,7 @@ data() {
         postLikeModal: {
             isVisible: false,
             content: {
-                users: [],
+                postId: null,
             },
         },
         postRepostModal: {
@@ -151,10 +146,6 @@ data() {
 },
 
 computed : {
-    userData(){
-        return this.$root.$auth.user;
-    },
-
     shortFriendsUpdater(){
         return this.$root.$friendsKeyUpdater+'-'+this.$root.$favoritesKeyUpdater;
     },
@@ -176,6 +167,10 @@ computed : {
 },
 
 methods : {
+    userData(){
+        return this.$root.$auth.user;
+    },
+
     calcCentralBlockClass(){
         return {
             'col-xl-8 pr-xl-3' : (this.$root.$auth.frm.size > 0),
@@ -206,8 +201,10 @@ methods : {
         this.posts.unshift(new PliziPost(post));
     },
 
-    startTimer( postIndex ){
+    startTimer(post){
         setTimeout( () => {
+            let postIndex = this.posts.findIndex(item => item.id === post.id);
+
             this.posts.splice( postIndex, 1 );
         }, 5000 );
     },
@@ -226,19 +223,20 @@ methods : {
         this.postRepostModal.isVisible = true;
         this.postRepostModal.content.postForRepost = post;
     },
+
     hidePostRepostModal() {
         this.postRepostModal.isVisible = false;
         this.postRepostModal.content.postForRepost = null;
     },
 
-    async openLikeModal(postId) {
+    openLikeModal(postId) {
         this.postLikeModal.isVisible = true;
-        await this.getUsersLikes(postId);
+        this.postLikeModal.content.postId = postId;
     },
 
     hideLikeModal() {
         this.postLikeModal.isVisible = false;
-        this.postLikeModal.content.users = null;
+        this.postLikeModal.content.postId = null;
     },
 
     async getPosts(limit = 50, offset = 0) {
@@ -249,7 +247,6 @@ methods : {
             response = await this.$root.$api.$post.getPosts(limit, offset);
         } catch (e){
             this.isStarted = false;
-            console.warn( e.detailMessage );
         }
 
         if ( response !== null ){
@@ -262,25 +259,7 @@ methods : {
         }
     },
 
-    async getUsersLikes(postId, limit = 20, offset = 0) {
-        let response = null;
-
-        try{
-            response = await this.$root.$api.$post.getUsersLikes(postId, limit, offset);
-        } catch (e){
-            console.warn( e.detailMessage );
-        }
-
-        if ( response !== null ){
-            response.map((post) => {
-                this.postLikeModal.content.users.push(new PliziUser(post));
-            });
-
-            return response.length;
-        }
-    },
-
-    async onDeletePost( id ) {
+    async onDeletePost(id) {
         let response;
 
         try{
@@ -290,12 +269,10 @@ methods : {
         }
 
         if ( response ){
-            const postIndex = this.posts.findIndex( ( post ) => {
-                return post.id === id;
-            } );
-            let post = this.posts[postIndex].deleted = true;
+            const post = this.posts.find(post => post.id === id);
 
-            this.startTimer( postIndex );
+            post.deleted = true;
+            this.startTimer(post);
         }
     },
 
@@ -319,14 +296,9 @@ methods : {
 },
 
 async mounted() {
-    this.$root.$on('showProfileOptionsModal', ()=>{
-        this.$alert(`Какие-то опции пользователя`, 'bg-info', 10);
-    });
-
-    this.$root.$on('wallPostsSelect', this.wallPostsSelectHandler);
+    await this.getUserPhotos(this.$root.$auth.user.id);
     await this.getPosts();
-}
-
+},
 }
 </script>
 

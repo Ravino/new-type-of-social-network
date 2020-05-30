@@ -25,7 +25,7 @@
 </template>
 <script>
 import IconAddUser from '../icons/IconAddUser.vue';
-import FriendshipInvitationMixin from '../mixins/FriendshipInvitationMixin';
+import FriendshipInvitationMixin from '../mixins/FriendshipInvitationMixin.js';
 
 export default {
 name : 'ShortFriendItem',

@@ -10,6 +10,7 @@ use App\Models\Comment;
 use App\Http\Resources\Comment\Comment as CommentResource;
 use App\Models\CommentAttachment;
 use App\Models\Community;
+use App\Models\ImageUpload;
 use App\Models\Post;
 use App\Models\PostAttachment;
 use App\Models\User;
@@ -24,6 +25,25 @@ class CommentController extends Controller
     public function __construct(S3UploadService $uploadService)
     {
         $this->uploadService = $uploadService;
+    }
+
+    public function comment($model, $id, Request $request)
+    {
+        $comment_id = Comment::insertGetId([
+            'body' => $request->get('body'),
+            'author_id' => \Auth::user()->id,
+            'commentable_id' => $id,
+            'commentable_type' => $model,
+            'reply_on' => $request->get('replyOn'),
+            'created_at' => time(),
+            'updated_at' => time(),
+        ]);
+
+        if(isset($request->attachmentIds) && count($request->attachmentIds)) {
+            CommentAttachment::whereIn('id', $request->attachmentIds)->update(['comment_id' => $comment_id]);
+        }
+
+        return Comment::with('author', 'attachments')->find($comment_id);
     }
 
     /**
@@ -127,5 +147,37 @@ class CommentController extends Controller
         return response()->json([
             'message' => "Вы не можете удалить данный комментарий"
         ], 403);
+    }
+
+    public function commentPostImage(PostAttachment $postAttachment, Request $request)
+    {
+        $comment = $this->comment(PostAttachment::class, $postAttachment->id, $request);
+
+        return new CommentResource($comment);
+    }
+
+    public function commentUserImage(ImageUpload $imageUpload, Request $request)
+    {
+        $comment = $this->comment(ImageUpload::class, $imageUpload->id, $request);
+
+        return new CommentResource($comment);
+    }
+
+    public function getCommentPostImage(PostAttachment $postAttachment)
+    {
+        $comments = $postAttachment->comments()
+            ->with('author', 'author.profile', 'author.profile.avatar', 'attachments')
+            ->get();
+
+        return new CommentCollection($comments);
+    }
+
+    public function getCommentUserImage(ImageUpload $imageUpload)
+    {
+        $comments = $imageUpload->comments()
+            ->with('author', 'author.profile', 'author.profile.avatar', 'attachments')
+            ->get();
+
+        return new CommentCollection($comments);
     }
 }

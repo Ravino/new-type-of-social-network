@@ -1,5 +1,5 @@
 <template>
-    <div class="w-100 d-flex px-3 px-md-5" @click.prevent="onPickMessage()"
+    <div class="w-100 d-flex px-5" @click.prevent="onPickMessage()"
          :class="{ 'checked-message': isPicked }"
          :id="messageID">
         <div class="message-item d-flex w-100 justify-content-start"
@@ -21,11 +21,16 @@
                            class="message-text-inner mb-0"
                            v-html="livePreview.text">
                         </p>
-                        <p v-if="livePreview.videoLinks"
-                           class="message-text-inner mt-2"
-                           v-html="livePreview.videoLinks"
+                        <div v-if="livePreview.videoLinks"
+                           class="message-text-inner mt-2 chat-video"
                            @click.stop="hasYoutubeLinks ? openChatVideoModal() : null">
-                        </p>
+                            <div v-html="livePreview.videoLinks"></div>
+                            <button type="button"
+                                    aria-label="Запустить видео"
+                                    class="video__button">
+                                <IconYoutube/>
+                            </button>
+                        </div>
                     </template>
 
                     <div v-else class="message-text-inner mb-0" v-html="livePreview"></div>
@@ -81,6 +86,7 @@ import IconPencilEdit from '../../icons/IconPencilEdit.vue';
 import IconCheckedDouble from '../../icons/IconCheckedDouble.vue';
 import IconShare from '../../icons/IconShare.vue';
 import IconBasket from '../../icons/IconBasket.vue';
+import IconYoutube from "../../icons/IconYoutube.vue";
 
 import TextEditor from '../TextEditor.vue';
 
@@ -95,7 +101,8 @@ name: 'ChatMessageItem',
 components: {
     ChatMessageItemAttachments, ChatMessageItemReplyContent,
     TextEditor,
-    IconBasket, IconShare, IconPencilEdit, IconCheckedDouble
+    IconBasket, IconShare, IconPencilEdit, IconCheckedDouble,
+    IconYoutube,
 },
 mixins : [LinkMixin],
 props: {

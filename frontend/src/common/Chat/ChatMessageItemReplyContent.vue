@@ -36,7 +36,7 @@ components: {ReplyMessageItemAttachments},
         },
         livePreview() {
             if (this.detectYoutubeLink) {
-                return `<img src="//img.youtube.com/vi/${this.detectYoutubeLink}/0.jpg" alt="" />`;
+                return `<img src="//img.youtube.com/vi/${this.detectYoutubeLink}/mqdefault.jpg" alt="" />`;
             }
         },
         msgBody(){

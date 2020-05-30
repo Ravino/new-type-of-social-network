@@ -25,7 +25,9 @@
                                         :isError="isMaximumCharacterLimit"
                                         ref="editor" />
 
-                                <button @click.stop="onSendPostClick" class="btn btn-link">
+                                <button @click.stop="onSendPostClick"
+                                        :disabled="isLoading"
+                                        class="btn btn-link">
                                     <IconSend style="height: 20px" />
                                 </button>
                             </div>
@@ -55,7 +57,7 @@
                     </label>-->
 
                     <button class="btn btn-link w-100 mx-0 p-0 btn-add-smile position-relative" type="button">
-                        <EmojiPicker @addEmoji="onAddEmoji" v-bind:transform="emojiTransform"></EmojiPicker>
+                        <EmojiPicker @addEmoji="onAddEmoji" v-bind:transform="emojiTransform" refs="emojiPicker"></EmojiPicker>
                     </button>
                 </div>
             </div>
@@ -148,6 +150,7 @@ data() {
     }
 
     return {
+        isLoading: false,
         attachFiles : inputFiles,
         attachmentsData: (new PliziCollection()),
         defaultClasses: `bg-white w-100 border-top position-relative mt-auto`,
@@ -188,6 +191,7 @@ computed: {
 
 methods: {
     focus(){
+        this.$refs.emojiPicker.hidePicker();
         this.$refs.editor.focus();
     },
 
@@ -252,11 +256,11 @@ methods: {
             return;
         }
 
-        let str = evData.postText.replace(/<\/?[^>]+>/g, '').trim();
+        let str = evData.postText.replace(/<\/?[^>]+>/g, ' ').trim();
         let youtubeLinksMatch = this.detectYoutubeLinks(str);
         let attachmentsIds = this.getAttachmentsIDs();
         let attachmentsData = this.attachmentsData.asArray();
-        let postText = this.deleteYoutubeLinksFromStr(evData.postText);
+        let postText = this.deleteYoutubeLinksFromStr(str);
 
         if (youtubeLinksMatch && youtubeLinksMatch.length) {
             youtubeLinksMatch.forEach((youtubeLink) => {
@@ -405,6 +409,7 @@ methods: {
             reader.onload = () => {
                 const attachment = new PliziAttachmentItem(true, checkExtension(file, imagesExtensions), file.name);
                 attachment.isBlob = true;
+                this.isLoading = attachment.isBlob;
                 attachment.fileBlob = reader.result;
                 this.attachFiles.push(attachment);
             };
@@ -417,6 +422,10 @@ methods: {
             switch (this.workMode) {
                 case 'chat':
                     apiResponse = this.$root.$api.$chat.attachment([file]);
+                    break;
+
+                case 'comment':
+                    apiResponse = this.$root.$api.$post.addAttachmentsToComment([file]);
                     break;
 
                 case 'post':
@@ -435,6 +444,7 @@ methods: {
                         if (foundFile.originalName === newAtt.originalName) {
                             foundFile.attachment = newAtt;
                             foundFile.isBlob = false;
+                            this.isLoading = foundFile.isBlob;
                             foundFile.fileBlob = null;
                         }
 

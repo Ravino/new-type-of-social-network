@@ -4,6 +4,7 @@
 namespace Domain\Pusher\Services;
 
 
+use App\Models\Community;
 use Auth;
 use Domain\Pusher\Events\DestroyMessageEvent;
 use Domain\Pusher\Events\NewMessageEvent;
@@ -203,6 +204,20 @@ class ChatService extends BaseService
         }
         if(!$chat_id) {
             $chat_id = $this->chatRepository->createChatForUsers($user_ids, Auth::user()->id, $name);
+        }
+        return $this->chatRepository->getChatById($chat_id);
+    }
+
+    /**
+     * @param $user_ids
+     * @param $admin_id
+     * @param string $name
+     * @return \Domain\Pusher\Http\Resources\Chat\Chat
+     */
+    public function openWithCustomAdmin($user_ids, $admin_id, $name = '') {
+        $chat_id = $this->chatRepository->getChatIdForGroupUsers(array_merge($user_ids, [$admin_id]));
+        if(!$chat_id) {
+            $chat_id = $this->chatRepository->createChatForUsers($user_ids, $admin_id, $name);
         }
         return $this->chatRepository->getChatById($chat_id);
     }

@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\Api\CommunityController;
+use App\Http\Controllers\Api\PostController;
 use App\Http\Controllers\Api\UserController;
 use App\Http\Controllers\Api\UserSubscribeController;
 use Illuminate\Support\Facades\Route;
@@ -32,6 +33,7 @@ Route::group(['middleware' => ['auth.jwt', 'track.activity']], function () {
         Route::post('send', 'Api\ChatController@send');
         Route::post('message/user', 'Api\ChatController@sendToUser');
         Route::post('message/attachments', 'Api\ChatController@uploadAttachments');
+        Route::post('open/community', 'Api\ChatController@openWithCommunityAdmins');
         Route::delete('message/{id}', 'Api\ChatController@destroyMessage');
         Route::delete('{id}', 'Api\ChatController@destroyChat');
     });
@@ -68,6 +70,10 @@ Route::group(['middleware' => ['auth.jwt', 'track.activity']], function () {
     /**
      * User Resource
      */
+    Route::get('user/blacklist', 'Api\UserBlacklistController@index');
+    Route::post('user/blacklist', 'Api\UserBlacklistController@store');
+    Route::delete('user/blacklist', 'Api\UserBlacklistController@delete');
+
     Route::get('user/notifications', 'Api\UserController@notifications');
     Route::get('user/{id}/communities', 'Api\ProfileController@userCommunities');
     Route::patch('user', 'Api\ProfileController@patch');
@@ -77,16 +83,12 @@ Route::group(['middleware' => ['auth.jwt', 'track.activity']], function () {
     Route::patch('user/privacy', 'Api\UserPrivacySettingController@patch');
     Route::get('user/privacy/roles', 'Api\UserPrivacySettingController@roles');
 
-    Route::get('user/blacklist/list', 'Api\UserBlacklistController@index');
-    Route::post('user/blacklist/add', 'Api\UserBlacklistController@store');
-    Route::post('user/blacklist/delete', 'Api\UserBlacklistController@delete');
-
     Route::post('/user/password/change', 'Auth\ChangePasswordController@changePassword');
     Route::post('/user/email/change', 'Auth\ChangeEmailController@changeEmail');
     Route::patch('user/notifications/mark/read', 'Api\UserController@markNotificationsAsRead');
     Route::get('/user/sessions/active', 'Api\SessionController@index');
     Route::post('/user/sessions/close', 'Api\SessionController@close');
-    Route::get('/user/{userId}/photo_albums', 'api\PhotoAlbums@indexByUser');
+    Route::get('/user/{userId}/photo_albums', 'Api\PhotoAlbumController@indexByUser');
 
     Route::get('user/follow/list', [UserSubscribeController::class, 'list']);
     Route::middleware(['user.get'])->group(static function() {
@@ -95,10 +97,24 @@ Route::group(['middleware' => ['auth.jwt', 'track.activity']], function () {
         Route::delete('user/{userId}/follow', [UserSubscribeController::class, 'unfollow']);
     });
 
+    Route::post('user/images/{imageUpload}', 'Api\LikeController@likeUserImage');
+    Route::get('user/images/{imageUpload}/comment', 'Api\CommentController@getCommentUserImage');
+    Route::post('user/images/{imageUpload}/comment', 'Api\CommentController@commentUserImage');
+    Route::get('/user/{user}/photos', 'Api\ImageUploadController@getUserImages');
+
     /**
      * Communities Resource
      */
     Route::prefix('communities')->group(function(){
+        Route::middleware(['community.get', 'community.isHasAccess'])->group(static function() {
+            Route::get('{groupId}/videos', [CommunityController::class, 'videos']);
+
+            Route::post('{groupId}/notify', [CommunityController::class, 'subscribeNotify']);
+            Route::delete('{groupId}/notify', [CommunityController::class, 'unsubscribeNotify']);
+
+            Route::get('{groupId}/posts', [PostController::class, 'communityPosts']);
+        });
+
         Route::patch('{id}', 'Api\CommunityController@update');
         Route::post('', 'Api\CommunityController@store');
         Route::get('', 'Api\CommunityController@index');
@@ -115,6 +131,11 @@ Route::group(['middleware' => ['auth.jwt', 'track.activity']], function () {
         Route::post('favorite/subscribe', [CommunityController::class, 'addFavorite']);
         Route::delete('favorite/unsubscribe/{groupId}', [CommunityController::class, 'deleteFavorite']);
 
+        Route::middleware(['community.get', 'community.getMember'])->group(static function() {
+            Route::post('admin/{groupId}/{userId}', [CommunityController::class, 'adminCreate']);
+            Route::delete('admin/{groupId}/{userId}', [CommunityController::class, 'adminDelete']);
+        });
+
         Route::middleware(['community.get'])->prefix('requests')->group(static function() {
             Route::post('create/{groupId}', [CommunityController::class, 'requestCreate']);
             Route::middleware(['community.isOwner'])->group(static function() {
@@ -124,7 +145,6 @@ Route::group(['middleware' => ['auth.jwt', 'track.activity']], function () {
             });
         });
     });
-    Route::get('communities/{community_id}/posts', 'Api\PostController@communityPosts');
 
     Route::prefix('posts')->group(function () {
         Route::delete('{post}', 'Api\PostController@delete');
@@ -135,10 +155,13 @@ Route::group(['middleware' => ['auth.jwt', 'track.activity']], function () {
         Route::post('{post}/image/like', 'Api\LikeController@likePostImage');
         Route::post('/view', 'Api\PostController@markViewed');
         Route::get('{id}/viewed', 'Api\PostController@getViewedUsers');
+        Route::get('attachments/{postAttachment}/comment', 'Api\CommentController@getCommentPostImage');
+        Route::post('attachments/{postAttachment}/comment', 'Api\CommentController@commentPostImage');
     });
 
+    Route::resource('/videos', 'Api\VideoController');
     Route::prefix('videos')->group(function () {
-        Route::resource('/', 'Api\VideoController');
+
     });
 
     Route::prefix('comment')->group(function () {
@@ -147,16 +170,19 @@ Route::group(['middleware' => ['auth.jwt', 'track.activity']], function () {
         Route::delete('{id}', 'Api\CommentController@destroyComment');
         Route::patch('{comment}', 'Api\CommentController@update');
         Route::post('attachments', 'Api\CommentController@uploadAttachments');
+        Route::post('{comment}/like', 'Api\LikeController@likeComment');
     });
 
-    Route::prefix('photo_albums')->group(function () {
+    Route::prefix('photo-albums')->group(function () {
         Route::get('/', 'Api\PhotoAlbumController@index');
         Route::get('/community/{community}', 'Api\PhotoAlbumController@indexByCommunity');
         Route::post('/', 'Api\PhotoAlbumController@store');
         Route::post('{id}', 'Api\PhotoAlbumController@update');
         Route::delete('{id}', 'Api\PhotoAlbumController@destroy');
 
+        Route::get('{photoAlbum}', 'Api\PhotoAlbumController@show');
         Route::post('{id}/photos', 'Api\PhotoAlbumController@storePhotoInAlbum');
+        Route::delete('{photoAlbum}/photos/{imageUpload}', 'Api\PhotoAlbumController@destroyImageInAlbum');
     });
 
     /**

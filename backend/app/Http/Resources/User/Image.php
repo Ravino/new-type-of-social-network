@@ -14,7 +14,7 @@ class Image extends JsonResource
             'id' => $this->id,
             'originalName' => $this->original_name,
             'url' => $this->url,
-            'path' => $this->url,
+            'path' => $this->path,
             'mimeType' => $this->mime_type,
             'size' => $this->size,
             'image' => [

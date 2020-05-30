@@ -11,12 +11,13 @@
 </template>
 
 <script>
-  import PliziAttachment from "../classes/PliziAttachment";
+  import PliziAttachment from "../classes/PliziAttachment.js";
+  import PliziAttachmentItem from "../classes/PliziAttachmentItem.js";
 
   export default {
     name: "AttachmentFile",
     props : {
-      attach : PliziAttachment
+      attach : PliziAttachment | PliziAttachmentItem
     },
   }
 </script>

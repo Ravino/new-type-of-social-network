@@ -25,11 +25,12 @@ class PliziVideoAPI extends PliziBaseAPI {
     /**
      * Сохранение ссылок на видео.
      * @public
+     * @param {object} formData
      * @returns {object[]|null}
      * @throws PliziAPIError
      */
-    async storeVideo(link, workMode, id) {
-        let response = await this.axios.post('api/videos', {link, workMode, id}, this.authHeaders)
+    async storeVideo(formData) {
+        let response = await this.axios.post('api/videos', formData, this.authHeaders)
           .catch( ( error ) => {
               this.checkIsTokenExpires( error, `storeVideo` );
               throw new PliziAPIError( `storeVideo`, error.response );
@@ -37,6 +38,27 @@ class PliziVideoAPI extends PliziBaseAPI {
 
         if ( response.status === 200 ){
             return response.data.data;
+        }
+
+        return null;
+    }
+
+    /**
+     * Удаление ссылок на видео.
+     * @public
+     * @param {number} id
+     * @returns {object[]|null}
+     * @throws PliziAPIError
+     */
+    async deleteVideo(id) {
+        let response = await this.axios.delete(`api/videos/${id}`, this.authHeaders)
+            .catch( ( error ) => {
+                this.checkIsTokenExpires( error, `deleteVideo` );
+                throw new PliziAPIError( `deleteVideo`, error.response );
+            } );
+
+        if ( response.status === 200 ){
+            return response.data;
         }
 
         return null;

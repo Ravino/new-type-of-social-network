@@ -310,6 +310,157 @@ class PliziPostAPI extends PliziBaseAPI {
 
         return null;
     }
+
+    /**
+     * Оставить комментарий
+     *
+     * @param {string} body
+     * @param {number} postId
+     * @param {number[]} attachmentIds
+     * @return {object[]|null}
+     * @throws PliziAPIError
+     */
+     async setPostComments(body, postId, attachmentIds = []) {
+         const response = await this.axios.post(`api/comment/post`, {
+             body,
+             postId,
+             attachmentIds,
+        }, this.authHeaders
+     );
+
+      if (response.status === 200) {
+          return response.data
+      }
+
+      return null;
+    }
+
+    /**
+     * Оставить комментарий
+     *
+     * @param {string} body
+     * @param {number} postId
+     * @param {number[]} attachmentIds
+     * @param {number} replyOn
+     * @return {object[]|null}
+     * @throws PliziAPIError
+     */
+
+    async getAnswerToComment(body, postId, attachmentIds = [], replyOn) {
+        const response = await this.axios.post(`api/comment/post`, {
+                body,
+                postId,
+                attachmentIds,
+                replyOn
+            }, this.authHeaders
+        );
+
+        if (response.status === 200) {
+            return response.data
+        }
+
+        return null;
+    }
+
+    /**
+     * Получить коментарии к посту
+     *
+     * @param {number} postId
+     * @return {object[]|null}
+     * @throws PliziAPIError
+     */
+
+    async getCommentsById(postId) {
+        const response = await this.axios.get(`api/comment/post/${postId}`, this.authHeaders);
+
+        if (response.status === 200) {
+            return response.data;
+        }
+
+        return null;
+    };
+
+    /**
+     * Удалить комментарий
+     *
+     * @param {number} commentId
+     * @return {object[]|null}
+     * @throws PliziAPIError
+     */
+
+    async deleteCommentById(commentId) {
+        const response = await this.axios.delete(`api/comment/${commentId}`, this.authHeaders);
+
+        if (response.status === 200) {
+            return response.data;
+        }
+
+        return null;
+    };
+
+    /**
+     * Изменить комментарий
+     * @param {string} body
+     * @param {number} commentId
+     * @param {number[]} attachmentIds
+     * @return {object[]|null}
+     * @throws PliziAPIError
+     */
+
+    async editCommentById(commentId, body, attachmentIds = []) {
+        const response = await this.axios.patch(`api/comment/${commentId}`, {
+            commentId,
+            body,
+            attachmentIds,
+        }, this.authHeaders);
+
+        if (response.status === 200) {
+            return response.data;
+        }
+
+        return null
+    }
+
+    /**
+     * Загрузка файлов для комментариев.
+     * @param picsArr
+     * @returns {object[]|null}
+     * @throws PliziAPIError
+     */
+
+    async addAttachmentsToComment( picsArr ){
+        const formData = new FormData();
+
+        for ( let i = 0; i < picsArr.length; i++ ){
+            formData.append( 'files[]', picsArr[i] );
+        }
+
+        let response = await this.axios.post( 'api/comment/attachments', formData, this.authHeaders );
+
+        if ( response.status === 200 ){
+            return response.data.data.list;
+        }
+
+        return null;
+    }
+
+    /**
+     * Лайк комментариев.
+     *
+     * @param commentId
+     * @returns {object[]|null}
+     * @throws PliziAPIError
+     */
+    async likeComment(commentId) {
+        let response = await this.axios.post( `api/comment/${commentId}/like`, {}, this.authHeaders );
+
+        if ( response.status === 200 ){
+            return response.data.data;
+        }
+
+        return null;
+    }
+
 }
 
 export default PliziPostAPI;

@@ -3,6 +3,7 @@
 namespace App\Http\Requests\Post;
 
 use App\Http\Requests\Request;
+use App\Rules\PostBody;
 
 class Post extends Request
 {
@@ -25,8 +26,10 @@ class Post extends Request
     {
         return [
             'name' => 'nullable|string|max:255',
-            'body' => 'required|string|max:10050',
-            'attachmentIds' => 'array'
+            'attachmentIds' => 'array',
+            'body' => [
+                new PostBody()
+            ],
         ];
     }
 }

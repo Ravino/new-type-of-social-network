@@ -61,13 +61,14 @@ import FriendListItemMenu from './FriendListItemMenu.vue';
 
 import DialogMixin from '../mixins/DialogMixin.js';
 import FriendItemMixin from '../mixins/FriendItemMixin.js';
+import FriendshipInvitationMixin from '../mixins/FriendshipInvitationMixin.js';
 
 import PliziFriend from '../classes/PliziFriend.js';
 
 export default {
 name : 'FriendListItem',
 components: { FriendListItemMenu, IconMessageShort, IconSpinner, IconLocation},
-mixins : [DialogMixin, FriendItemMixin],
+mixins : [DialogMixin, FriendItemMixin, FriendshipInvitationMixin ],
 props : {
     friend : PliziFriend
 },
@@ -156,32 +157,9 @@ methods: {
     },
 
     onFriendshipStop(){
-        this.stopFriendship();
+        this.stopFriendship(this.friend.id);
     },
 
-    async stopFriendship(){
-        let apiResponse = null;
-
-        try {
-            apiResponse = await this.$root.$api.$friend.friendshipStop( this.friend.id );
-        } catch (e){
-            window.console.warn( e.detailMessage );
-            throw e;
-        }
-
-        this.isPrepareToRemoved = true;
-
-        if ( apiResponse ) {
-            this.isRemoved = true;
-
-            this.$root.$auth.fm.removeFromFavorites(this.friend.id);
-            this.$root.$auth.frm.stopFriendship(this.friend.id);
-
-            this.$emit( 'FriendshipStop', {
-                friendId: this.friend.id
-            });
-        }
-    }
 },
 
 beforeMount(){
