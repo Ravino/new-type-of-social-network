@@ -18,7 +18,7 @@
                 </div>
             </div>
             <div class="w-100 d-flex flex-row plz-profile-photos-list pt-3">
-                <Gallery v-if="photos.length > 0" :profilePhotos="profilePhotos" :images="photos"></Gallery>
+                <ProfileGallery v-if="photos.length > 0" :profilePhotos="profilePhotos" :images="photos"></ProfileGallery>
                 <div v-else class="mx-auto">Нет фотографий</div>
             </div>
         </div>
@@ -26,12 +26,12 @@
 </template>
 
 <script>
-    import Gallery from '../common/Gallery.vue';
+    import ProfileGallery from '../common/Gallery.vue';
 
 export default {
 name: 'ProfilePhotos',
     components: {
-        Gallery
+        ProfileGallery
     },
 props: {
     photos: Array
