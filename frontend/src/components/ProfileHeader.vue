@@ -31,7 +31,7 @@
                             <span class="ps-dot"></span>
                         </button>
 
-                        <div class="dropdown-menu dropdown-menu-right py-3" aria-labelledby="configurationMenuUser">
+                        <div class="dropdown-menu dropdown-menu-right py-3" :aria-labelledby="configurationMenuID">
                             <div class="nav-item ">
                                 <router-link tag="a" class="dropdown-item px-0 py-1 px-3" to="/account">Настройки</router-link>
                             </div>
@@ -63,13 +63,13 @@
                                 data-toggle="dropdown"
                                 aria-haspopup="true"
                                 aria-expanded="false"
-                                title="опции">
+                                title="меню">
                             <span class="ps-dot"></span>
                             <span class="ps-dot"></span>
                             <span class="ps-dot"></span>
                         </button>
 
-                        <div class="dropdown-menu dropdown-menu-right py-3 " aria-labelledby="configurationMenuUser"
+                        <div class="dropdown-menu dropdown-menu-right py-3 " :aria-labelledby="configurationMenuID"
                                 :key="`userActionBlock-`+$root.$friendsKeyUpdater">
 
                             <div class="nav-item ">
