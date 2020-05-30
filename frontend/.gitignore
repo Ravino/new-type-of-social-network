@@ -23,6 +23,7 @@ yarn-error.log*
 *.sln
 *.sw?
 
+/.env
 
 # windows thumbnail cache
 Thumbs.db
