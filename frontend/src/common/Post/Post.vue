@@ -236,6 +236,7 @@
                     <div class="plz-comments" v-for="comment in comments">
                         <CommentItem
                             :key="comment.id"
+                            type="post"
                             :comment="comment"
                             :postId="postIdForComment"
                             @onDelete="removeComment"

@@ -26,6 +26,7 @@
 <script>
 import IconArrowRight from "../icons/IconArrowRight.vue";
 import IconArrowLeft from "../icons/IconArrowLeft.vue";
+import PliziComment from "../classes/PliziComment";
 export default {
     name: 'GalleryViewer',
     components: {IconArrowLeft, IconArrowRight},
@@ -75,6 +76,8 @@ export default {
             } else {
                 this.goToImage([...this.images].pop());
             }
+            this.$emit('navChangeImage', this.activeImage.id);
+            this.$emit('navChangeActiveImage', this.activeImage.id);
         },
         nextImage() {
             const nextImageIndex = this.currentImageIndex + 1;
@@ -84,6 +87,8 @@ export default {
             } else {
                 this.goToImage([...this.images].shift());
             }
+            this.$emit('navChangeImage', this.activeImage.id);
+            this.$emit('navChangeActiveImage', this.activeImage.id);
         },
         close() {
             this.$emit('close');

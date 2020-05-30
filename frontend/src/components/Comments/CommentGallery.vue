@@ -9,7 +9,9 @@
                         :editorPlaceholder="'Оставить комментарий...'"
                         :dropToDown="true"
                         :maximumCharacterLimit="10000"
-                        workMode="post">
+                        workMode="comment"
+                        @editorPost="onTextPost"
+            >
             </TextEditor>
 
         </div>
@@ -45,6 +47,7 @@
                     msg = msg.replace(/<p><\/p>/g, brExample);
                     msg = this.killBrTrail(msg);
                 }
+
                 this.sendCommentToGallery(msg);
             },
             async sendCommentToGallery(msg) {

@@ -1,6 +1,6 @@
 <template>
     <div class="plz-gallery-description d-flex flex-column justify-content-between">
-        <div class="plz-gallery-description-header px-4 pt-4 pb-0 border-bottom">
+        <div class="plz-gallery-description-header px-4 pt-4 pb-0">
             <div class="plz-gallery-description--holder d-flex">
                 <div class="plz-gallery-description--holder-avatar mr-3">
                     <img class="plz-gallery-description--holder-avatar-item" :src="userAvatar" :alt="userName +' '+ userSurname">
@@ -48,15 +48,25 @@
                 </div>
                 <div class="plz-gallery-description--post-data-option post-watched-counter ml-4">
                     <IconMessage/>
-                    <span>{{ post.commentsCount | space1000 }}</span>
+                    <span>{{  comments.length | space1000 }}</span>
                 </div>
                 <div class="plz-gallery-description--post-data-option post-watched-counter ml-4">
                     <IconShare/>
                     <span>{{ post.sharesCount | space1000 }}</span>
                 </div>
             </div>
+            <div class="plz-gallery-description-comment-wrapper">
+                <div class="plz-gallery-description-comment-item" v-for="comment in comments">
+                    <CommentItem :key="comment.id"
+                                 :comment="comment"
+                                 :post-id="postIdForComment"
+                                 @onDelete="removeComment"
+                                 @update="editComment"
+                    ></CommentItem>
+                </div>
+            </div>
         </div>
-        <CommentGallery :post-id="post.id" :imageId="image.id">
+        <CommentGallery class="plz-gallery-description-write-comment" :post-id="postIdForComment" @updateComments="addNewComment" :imageId="image.id">
         </CommentGallery>
     </div>
 </template>
@@ -70,22 +80,28 @@
  import TextEditor from "./TextEditor.vue";
  import PliziAttachment from '../classes/PliziAttachment.js';
  import CommentGallery from "../components/Comments/CommentGallery.vue";
+ import CommentItem from "../components/Comments/CommentItem.vue";
+ import PliziComment from "../classes/PliziComment.js";
 
  export default {
   name: "GalleryDescription",
-  components: {CommentGallery, TextEditor, IconShare, IconMessage, IconHeard, IconFillHeard},
+  components: {CommentItem, CommentGallery, TextEditor, IconShare, IconMessage, IconHeard, IconFillHeard},
   props: {
+   comments: {
+       type: Array,
+       required: true,
+   },
    post: {
     type: Object,
    },
-      image: {
-          type: PliziAttachment,
-          default: null,
-      },
+  image: {
+      type: PliziAttachment,
+      default: null,
+  },
   },
   data() {
       return {
-        noAvatar: '../images/noavatar-256.png'
+        noAvatar: '../images/noavatar-256.png',
       };
   },
   computed: {
@@ -96,6 +112,9 @@
 
        return this.post.author.profile.avatar.image.thumb.path;
    },
+    postIdForComment() {
+      return this.post?.sharedFrom?.id || this.post.id;
+    },
    userName() {
     return this.post.author.profile.firstName;
    },
@@ -107,6 +126,25 @@
    },
   },
   methods: {
+      addNewComment(newComment) {
+          this.comments.push(new PliziComment(newComment));
+        this.comments.length;
+      },
+      editComment(newComment) {
+          this.comments = this.comments.map(comment => comment.id === newComment.id ? comment.update(newComment) : comment);
+      },
+      removeComment(commentId) {
+          this.comments = this.comments.filter(comment => comment.id !== commentId);
+          this.comments.length;
+      },
+      async getCommentsOnGallery(imageId) {
+          try {
+              let response = await this.$root.$api.$post.getCommentsByIdOnGallery(imageId);
+              this.comments = response.data.list.map(comment => new PliziComment(comment));
+          } catch (e) {
+              console.warn(e.detailMessage);
+          }
+      },
     async onLike() {
         let response = null;
 
@@ -132,5 +170,8 @@
         }
     }
    },
+     mounted() {
+         this.getCommentsOnGallery(this.image.id);
+     }
  }
 </script>

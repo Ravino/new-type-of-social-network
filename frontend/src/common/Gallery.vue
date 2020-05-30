@@ -40,11 +40,15 @@
             <GalleryViewer
                 :images="images"
                 :active-id="activeImageId"
-                @close="closeGalleryModal()">
+                @close="closeGalleryModal()"
+                @navChangeImage="getCommentsOnGallery"
+                @navChangeActiveImage="changeGetDataParams"
+            >
             </GalleryViewer>
 
             <GalleryDescription v-if="post"
                                 :post="post"
+                                :comments="comments"
                                 :image="activeImage">
             </GalleryDescription>
         </div>
@@ -54,6 +58,7 @@
 <script>
 import GalleryViewer from './GalleryViewer.vue';
 import GalleryDescription from './GalleryDescription.vue';
+import PliziComment from "../classes/PliziComment";
 
 export default {
 name : 'Gallery',
@@ -75,6 +80,7 @@ data(){
     return {
         activeImageId : null,
         activeImage : null,
+        comments: [],
     };
 },
 
@@ -222,6 +228,17 @@ computed : {
 },
 
 methods : {
+    async getCommentsOnGallery(imageId) {
+        try {
+            let response = await this.$root.$api.$post.getCommentsByIdOnGallery(imageId);
+            this.comments = response.data.list.map(comment => new PliziComment(comment));
+        } catch (e) {
+            console.warn(e.detailMessage);
+        }
+    },
+    changeGetDataParams( image ) {
+        this.$router.replace({query: {activeImageId: image, galleryType: this.type}});
+    },
     showImage( image ){
         this.activeImageId = image.id;
         this.$router.replace({query: {activeImageId: this.activeImageId, galleryType: this.type}});

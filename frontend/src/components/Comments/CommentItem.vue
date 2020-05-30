@@ -122,6 +122,9 @@
             postId: {
                 type: String | Number
             },
+            type: {
+                type: String,
+            },
         },
         data() {
             return {
