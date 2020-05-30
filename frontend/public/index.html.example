@@ -48,8 +48,8 @@
 
     <script>
         // local access
-        var apiURL = 'http://plizi.loc';
-        var wsUrl = 'ws://127.0.0.1:7070';
+        var apiURL = '__APIS_URL__';
+        var wsUrl = '__WSS_URL__';
         // remote access
         // var apiURL = 'https://vm1095330.hl.had.pm';
         // var wsUrl  = 'wss://vm1095330.hl.had.pm:7070';
