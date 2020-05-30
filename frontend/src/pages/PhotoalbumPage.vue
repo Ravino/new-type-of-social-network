@@ -7,29 +7,40 @@
             <div class="col-12 col-md-11 col-lg-9 col-xl-10 px-0 px-md-3">
                 <div class="w-100">
                     <div class="col-12">
-                        <PhotoalbumsPageFilter />
+                        <PhotoalbumsPageFilter :photoAlbum="photoAlbum"
+                                               @addNewImages="addNewImages"/>
                     </div>
                     <div class="col-12">
                         <div class="row">
-                            <div class="videos-content w-100">
-                                <template>
-                                    <div class="card mb-4">
-                                        <div class="card-body py-0">
-                                            <div class="photoalbum-description-block">
-                                                <PhotoalbumEditBlock :album="album"/>
-                                            </div>
-                                            <div class="row mx-lg-n1 justify-content-center">
-                                                <div v-for="album in photoalbums" class="px-lg-1 col-md-auto my-2 mb-2">
-                                                    <img v-if="album"
-                                                         src="../images/noavatar-256.png"
-                                                         :key="album.id"
-                                                         class="img-fluid"
-                                                         alt=""/>
-                                                </div>
+                            <div class="col-12">
+                                <div class="photo-album-description-block">
+                                    <PhotoalbumEditBlock :photoAlbum="photoAlbum"/>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="photo-album-images-content w-100">
+                                <div v-if="photoAlbum && photoAlbum.images" class="card mb-4">
+                                    <div class="card-body py-0">
+                                        <div class="row">
+                                            <div v-for="image in photoAlbum.images"
+                                                 :key="image.id"
+                                                 class="col-12 col-sm-6 col-xl-3 my-3 photo-album-image">
+                                                <img v-if="image"
+                                                     :key="image.id"
+                                                     :src="image.image.original.path"
+                                                     class="img-fluid"
+                                                     alt=""/>
+                                                <button type="button"
+                                                        aria-label="Удалить изображение"
+                                                        class="delete__button"
+                                                        @click="onDeleteImage(image.id)">
+                                                    <IconDelete/>
+                                                </button>
                                             </div>
                                         </div>
                                     </div>
-                                </template>
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -49,6 +60,10 @@
     import PhotoalbumsPageModal from "../components/PhotoalbumsPage/PhotoalbumsPageModal.vue";
     import PhotoalbumItem from "../components/PhotoalbumsPage/PhotoalbumItem.vue";
     import PhotoalbumEditBlock from "../components/PhotoalbumsPage/PhotoalbumEditBlock.vue";
+    import IconDelete from "../icons/IconDelete.vue";
+
+    import PliziPhotoAlbum from "../classes/PliziPhotoAlbum.js";
+    import PliziAttachment from "../classes/PliziAttachment.js";
 
     export default {
         name: "PhotoalbumPage",
@@ -58,42 +73,86 @@
             PhotoalbumsPageFilter,
             PhotoalbumsPageModal,
             PhotoalbumItem,
-            PhotoalbumEditBlock
+            PhotoalbumEditBlock,
+            IconDelete,
         },
         data() {
             return {
-                albumId: this.$route.params.id,
-                album: null,
-                photoalbums: null
+                photoAlbumId: this.$route.params.id,
+                photoAlbum: null,
             }
         },
         methods: {
-            async getPhotoalbums() {
+            onUpdatePhotoAlbum({ title, description }) {
+                this.photoAlbum.title = title;
+                this.photoAlbum.description = description;
+            },
+            addNewImages(images) {
+                if (!this.photoAlbum.images) {
+                    this.photoAlbum.images = [];
+                }
+
+                images.forEach((image) => {
+                    this.photoAlbum.images.unshift(new PliziAttachment(image))
+                });
+            },
+
+            async onDeleteImage(id) {
                 let apiResponse = null;
-                let res;
 
                 try {
-                    apiResponse = await this.$root.$api.$photoalbums.list();
-                    this.hidePhotoalbumCreateModal();
+                    apiResponse = await this.$root.$api.$photoalbums.deleteImageInPhotoAlbum(this.photoAlbumId, id);
                 } catch (e) {
                     console.warn(e.detailMessage);
                 }
 
-                this.photoalbums = apiResponse;
-
-                res = this.photoalbums.filter(album => album.id.toString() === this.albumId);
                 if (apiResponse) {
-                    apiResponse.forEach(album => {
-                        if (album.id.toString() === this.albumId) {
-                            this.album = album;
-                        }
-                    });
+                    let deletedImageIndex = this.photoAlbum.images.findIndex(image => image.id === id);
+                    this.photoAlbum.images.splice(deletedImageIndex, 1);
+                }
+            },
+            async getPhotoAlbum() {
+                let apiResponse = null;
+
+                try {
+                    apiResponse = await this.$root.$api.$photoalbums.getPhotoAlbum(this.photoAlbumId);
+                } catch (e) {
+                    console.warn(e.detailMessage);
+                }
+
+                if (apiResponse) {
+                    this.photoAlbum = new PliziPhotoAlbum(apiResponse);
                 }
             }
         },
         async mounted() {
-            await this.getPhotoalbums();
+            await this.getPhotoAlbum();
+
+            this.$root.$on('onUpdate', this.onUpdatePhotoAlbum);
         },
     }
 </script>
+
+<style lang="scss">
+    .photo-album-images-content {
+        .photo-album-image {
+            &:hover {
+                .delete__button {
+                    display: block;
+                }
+            }
+
+            img {
+                position: relative;
+            }
+
+            .delete__button {
+                display: none;
+                position: absolute;
+                top: 10px;
+                right: 20px;
+            }
+        }
+    }
+</style>
 

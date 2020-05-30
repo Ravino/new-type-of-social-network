@@ -348,8 +348,7 @@
     import IconYoutube from "../icons/IconYoutube.vue";
     import IconPlayVideo from "../icons/IconPlayVideo.vue";
     import IconDelete from "../icons/IconDelete.vue";
-    import PliziUser from "../classes/PliziUser";
-    import PliziAuthUser from "../classes/PliziAuthUser";
+    import {debounce} from "../utils/Debonce.js";
 
     export default {
 name: "VideosPage",
@@ -364,9 +363,6 @@ components: {
     DeleteVideoModal,
 },
 mixins: [LinkMixin],
-        props: {
-            userData: PliziUser | PliziAuthUser,
-        },
 data() {
     return {
         filterMode: 'my',
@@ -411,7 +407,7 @@ methods: {
         this.openDeleteVideoModal(id);
     },
 
-    async onSuccessDeleteVideoModal() {
+    onSuccessDeleteVideoModal: debounce(async function() {
         let response;
 
         try {
@@ -423,7 +419,6 @@ methods: {
         if (response) {
             let userVideoIndex = this.userVideos.findIndex(userVideo => userVideo.id === this.deleteVideoModal.content.id);
             this.userVideos.splice(userVideoIndex, 1);
-            this.$root.$auth.user.stats.videosCount = this.$root.$auth.user.stats.videosCount - 1;
             this.isSuccess = true;
 
             setTimeout(() => {
@@ -431,7 +426,7 @@ methods: {
                 this.hideDeleteVideoModal();
             }, 3000);
         }
-    },
+    }, 5000),
     async getUserVideo() {
         let response;
 

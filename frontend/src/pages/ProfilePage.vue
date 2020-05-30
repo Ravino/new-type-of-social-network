@@ -12,7 +12,8 @@
                 <div class="container">
                     <ProfileHeader v-bind:userData="userData" v-bind:isOwner="true"></ProfileHeader>
 
-                    <ProfilePhotos v-bind:photos="userPhotos"></ProfilePhotos>
+                    <ProfilePhotos v-if="isPhotosDataReady" v-bind:photos="userPhotos"></ProfilePhotos>
+                    <div v-else><SmallSpinner></SmallSpinner></div>
 
                     <WhatsNewBlock @addNewPost="addNewPost"></WhatsNewBlock>
 
@@ -41,7 +42,7 @@
                     <template v-if="isStarted">
                         <div class="row plz-post-item mb-4 bg-white-br20 p-4">
                             <div class="w-100 p-5 text-center mb-0">
-                                <SmallSpinner/>
+                                <SmallSpinner clazz="position-absolute"/>
                             </div>
                         </div>
                     </template>
@@ -98,7 +99,7 @@ import PostLikeModal from '../common/Post/PostLikeModal.vue';
 import LazyLoadPosts from '../mixins/LazyLoadPosts.js';
 
 import PliziPost from '../classes/PliziPost.js';
-import PliziUser from '../classes/PliziUser.js';
+import PhotosListMixin from "../mixins/PhotosListMixin";
 
 export default {
 name: 'ProfilePage',
@@ -111,20 +112,14 @@ components: {
     PostRepostModal,
     SmallSpinner,
 },
-mixins: [LazyLoadPosts],
+mixins: [LazyLoadPosts, PhotosListMixin],
 data() {
     return {
         posts: [],
         filterMode: 'all',
 
-        userPhotos: [
-            {path: '/images/user-photos/user-photo-01.png',},
-            {path: '/images/user-photos/user-photo-02.png',},
-            {path: '/images/user-photos/user-photo-03.png',},
-            {path: '/images/user-photos/user-photo-04.png',},
-            {path: '/images/user-photos/user-photo-01.png',},
-            {path: '/images/user-photos/user-photo-03.png',},
-        ],
+        userPhotos: null,
+        isPhotosDataReady: false,
         postEditModal: {
             isVisible: false,
         },
@@ -301,6 +296,7 @@ methods : {
 },
 
 async mounted() {
+    await this.getUserPhotos(this.$root.$auth.user.id);
     await this.getPosts();
 },
 }

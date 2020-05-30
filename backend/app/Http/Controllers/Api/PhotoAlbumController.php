@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Api;
 
+use \App\Http\Resources\PhotoAlbum\PhotoAlbum as PhotoAlbumJsonResource;
 use App\Http\Requests\PhotoAlbum\PhotoAlbumStore;
 use App\Http\Requests\PhotoAlbum\PhotoAlbumUpdate;
 use App\Http\Requests\Post\UploadFileRequest;
@@ -41,6 +42,7 @@ class PhotoAlbumController extends Controller
         $photo_albums = \Auth::user()
             ->photoAlbums()
             ->with(['creatable', 'author'])
+            ->orderByDesc('id')
             ->get();
 
         return new PhotoAlbumCollection($photo_albums);
@@ -51,6 +53,7 @@ class PhotoAlbumController extends Controller
         $photo_albums = Community::find($community)
             ->photoAlbums()
             ->with(['creatable', 'author'])
+            ->orderByDesc('id')
             ->get();
 
         return new PhotoAlbumCollection($photo_albums);
@@ -83,7 +86,11 @@ class PhotoAlbumController extends Controller
 
     public function storePhotoInAlbum(UploadFileRequest $request, $id)
     {
-        $photo_ids = $this->uploadService->uploadFiles(new ImageUpload(), 'photoAlbum', $request->allFiles());
+        $additionalData = [
+           'creatable_id' => \Auth::id(),
+           'creatable_type' => User::class,
+        ];
+        $photo_ids = $this->uploadService->uploadFiles(new ImageUpload(), 'photoAlbum', $request->allFiles(), 'public', [], $additionalData);
         $photos = ImageUpload::whereIn('id', $photo_ids)->get();
         $photoAlbum = PhotoAlbum::find($id);
         $photoAlbum->images()->attach($photo_ids);
@@ -94,12 +101,16 @@ class PhotoAlbumController extends Controller
     /**
      * Display the specified resource.
      *
-     * @param int $id
-     * @return \Illuminate\Http\Response
+     * @param PhotoAlbum $photoAlbum
+     * @return \App\Http\Resources\PhotoAlbum\PhotoAlbum
      */
     public function show($id)
     {
-        //
+        $photoAlbum = PhotoAlbum::find($id);
+
+        if ($photoAlbum->author->id === \Auth::id()) {
+            return new PhotoAlbumJsonResource($photoAlbum);
+        }
     }
 
     /**
@@ -167,5 +178,19 @@ class PhotoAlbumController extends Controller
         return response()->json([
             'message' => 'Фотоальбом успешно удален.',
         ]);
+    }
+
+    public function destroyImageInAlbum($photo_album_id, $image_id)
+    {
+        $photoAlbum = PhotoAlbum::find($photo_album_id);
+
+        if ($photoAlbum->author->id === \Auth::id()) {
+            $photoAlbum->images()->where('id', $image_id)->delete();
+            $photoAlbum->images()->detach($image_id);
+
+            return response()->json([
+                'message' => 'Изображение учпешно удалено',
+            ]);
+        }
     }
 }

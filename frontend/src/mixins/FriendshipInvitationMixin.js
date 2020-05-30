@@ -13,15 +13,11 @@ methods: {
 
         if (apiResponse !== null) {
             if (apiResponse.status === 200) {
-                this.$alert(`<h6>Приглашение дружить</h6>
-<div class="alert alert-info">
-Приглашение дружбы для <b class="friend-name">${fullName}</b> отправлено!
-</div>`, `bg-success`, 10);
+                this.$notify(`Приглашение дружбы для <b class="friend-name">${fullName}</b> отправлено!`);
             }
 
             if (apiResponse.status === 422) {
-                this.$alert(`<h6>Приглашение дружить</h6>
-<div class="alert alert-info">${apiResponse.message}.</div>`, `bg-info`, 10);
+                this.$notify(apiResponse.message);
             }
         }
     },
@@ -41,6 +37,7 @@ methods: {
         if ( apiResponse ) {
             this.isRemoved = true;
 
+            const exFriend = this.$root.$auth.frm.get(friendId).toJSON();
             this.$root.$auth.fm.removeFromFavorites(friendId);
             this.$root.$auth.frm.stopFriendship(friendId);
 
@@ -50,6 +47,7 @@ methods: {
             this.$emit( 'FriendshipStop', {
                 friendId: friendId
             });
+            this.$notify(`<b class="friend-name">${exFriend.profile.firstName} ${exFriend.profile.lastName}</b> больше не Ваш друг`);
         }
     }
 }

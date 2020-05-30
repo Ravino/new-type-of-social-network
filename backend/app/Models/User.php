@@ -273,6 +273,11 @@ class User extends Authenticatable implements JWTSubject
         return $this->morphMany(PhotoAlbum::class, 'creatable');
     }
 
+    public function images()
+    {
+        return $this->hasMany(ImageUpload::class);
+    }
+
     public static function boot()
     {
         parent::boot();

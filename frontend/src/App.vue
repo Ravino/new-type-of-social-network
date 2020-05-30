@@ -57,6 +57,7 @@ import NotificationMixin from "./mixins/NotificationMixin.js";
 
 import {PliziAPI} from './classes/PliziAPI.js';
 import {PliziAuth} from './classes/PliziAuth.js';
+import PliziLastEntriesCollection from "./classes/Collection/PliziLastEntriesCollection.js";
 
 
 export default {
@@ -140,6 +141,16 @@ methods: {
             this.$root.$api.connectToChannel( evData.user.channel );
             this.$root.$isAuth = true;
 
+            let userEntry = {
+                id: evData.user.data.id,
+                email: evData.user.data.email,
+                firstName: evData.user.data.profile.firstName,
+                lastName: evData.user.data.profile.lastName,
+                userPic: evData.user.data.profile.userPic,
+                lastLoginAt: new Date(),
+            };
+            (new PliziLastEntriesCollection(null)).addNewLastEntries(userEntry);
+
             await this.persistentCollectionsReload();
         }
     },
@@ -161,14 +172,12 @@ methods: {
     },
 
     onNewAppNotification(evData){
-        window.console.log(evData, `onNewAppNotification`);
         if (this.$root.$isXS()  || this.$root.$isSM() || this.$root.$isMD())
             return;
 
         if (`app.notification`===evData.type) {
-            console.log(evData);
-            let chatNotificationData = this.transformNotifyToNotification(evData);
-            // this.addNotification(chatNotificationData);
+            let appNotificationData = this.transformNotifyToNotification(evData);
+            this.addNotification(appNotificationData);
         }
 
         if (`user.notification`===evData.type) {

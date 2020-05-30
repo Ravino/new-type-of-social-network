@@ -41,6 +41,11 @@ class PhotoAlbum extends Model
 
     public function images()
     {
-        return $this->belongsToMany(ImageUpload::class);
+        return $this->belongsToMany(
+            ImageUpload::class,
+            'image_upload_photo_album',
+            'photo_album_id',
+            'image_upload_id'
+        );
     }
 }

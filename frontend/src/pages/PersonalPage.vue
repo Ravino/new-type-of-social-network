@@ -17,7 +17,9 @@
                     </ProfileHeader>
                     <Spinner v-else></Spinner>
 
-                    <ProfilePhotos v-bind:photos="userPhotos"/>
+                    <ProfilePhotos v-if="isPhotosDataReady" v-bind:photos="userPhotos"></ProfilePhotos>
+                    <div v-else><SmallSpinner></SmallSpinner></div>
+
                     <ProfileFilter v-if="(filteredPosts && filteredPosts.length > 1) || filterMode !== 'all'"
                                    v-bind:firstName="profileData.firstName"
                                    @wallPostsSelect="wallPostsSelectHandler"/>
@@ -89,6 +91,7 @@ import PostLikeModal from '../common/Post/PostLikeModal.vue';
 import DialogMixin from '../mixins/DialogMixin.js';
 import LazyLoadPosts from '../mixins/LazyLoadPosts.js';
 import BlackListMixin from '../mixins/BlackListMixin.js';
+import PhotosListMixin from '../mixins/PhotosListMixin.js';
 
 import PliziUser from '../classes/PliziUser.js';
 import PliziPost from '../classes/PliziPost.js';
@@ -109,7 +112,7 @@ components: {
     SmallSpinner,
     PostLikeModal,
 },
-mixins: [DialogMixin, LazyLoadPosts, BlackListMixin],
+mixins: [DialogMixin, LazyLoadPosts, BlackListMixin, PhotosListMixin],
 data() {
     return {
         userId: null,
@@ -117,14 +120,8 @@ data() {
         isDataReady: false,
         isShowMessageDialog: false,
         posts: [],
-        userPhotos: [
-            {path: '/images/user-photos/user-photo-01.png',},
-            {path: '/images/user-photos/user-photo-02.png',},
-            {path: '/images/user-photos/user-photo-03.png',},
-            {path: '/images/user-photos/user-photo-04.png',},
-            {path: '/images/user-photos/user-photo-01.png',},
-            {path: '/images/user-photos/user-photo-03.png',},
-        ],
+        isPhotosDataReady: false,
+        userPhotos: null,
         filterMode: 'all',
         postRepostModal: {
             isVisible: false,
@@ -145,9 +142,8 @@ watch: {
 
 computed: {
     filteredPosts(){
-        switch (this.filterMode) {
-            case 'user':
-                return this.posts.filter(post => post.checkIsMinePost(this.profileData.id));
+        if (this.filterMode === 'user') {
+            return this.posts.filter(post => post.checkIsMinePost(this.profileData.id));
         }
 
         return this.posts;
@@ -155,10 +151,12 @@ computed: {
 },
 
 methods: {
-    afterRouteUpdate(ev){
+    async afterRouteUpdate(ev){
         this.userId = ev.params.id;
         this.posts = [];
-        this.getUserInfo();
+        this.isStarted = true;
+        await this.getUserInfo();
+        await this.getPosts();
         window.scrollTo(0, 0);
     },
 
@@ -239,7 +237,6 @@ methods: {
         if (apiResponse) {
             this.profileData = new PliziUser(apiResponse.data);
             this.isDataReady = true;
-            await this.getPosts();
         }
     },
 
@@ -248,7 +245,6 @@ methods: {
             return;
 
         let response = null;
-        this.isStarted = true;
 
         try {
             response = await this.$root.$api.$post.getPostsByUserId(this.profileData.id, limit, offset);
@@ -279,23 +275,27 @@ created(){
 },
 
 
-mounted() {
+async mounted() {
     this.isStarted = true;
-    this.getUserInfo();
+    await this.getUserInfo();
+    await this.getUserPhotos(this.userId);
+    await this.getPosts();
     window.scrollTo(0, 0);
 },
 
 /**
  * @TGA закоменченное ниже - ошибка но пусть пока будет
  */
-//async beforeRouteUpdate( to, from, next ){
+// async beforeRouteUpdate( to, from, next ){
 //    this.profileData = null;
 //    this.posts = null;
 //    this.userId = to.params.id;
 //    next();
-//    await this.getUserInfo();
+//     this.isStarted = true;
+//     await this.getUserInfo();
+//     await this.getPosts();
 //    window.scrollTo( 0, 0 );
-//},
+// },
 }
 </script>
 

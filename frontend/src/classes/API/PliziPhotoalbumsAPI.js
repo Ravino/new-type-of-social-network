@@ -49,7 +49,7 @@ class PliziPhotoalbumsAPI extends PliziBaseAPI {
      * @returns {object|null} - ответ сервера
      * @throws PliziAPIError
      */
-    async updatePhotoalbum( albumId, formData ){
+    async updatePhotoAlbum( albumId, formData ){
         let response = await this.axios.post( `api/photo-albums/${albumId}`, formData, this.authHeaders )
             .catch( ( error ) => {
                 this.checkIsTokenExpires( error, `updatePhotoalbum` );
@@ -57,7 +57,7 @@ class PliziPhotoalbumsAPI extends PliziBaseAPI {
             } );
 
         if ( response.status === 200 ){
-            return response.data.data;
+            return response.data;
         }
 
         return null;
@@ -77,6 +77,72 @@ class PliziPhotoalbumsAPI extends PliziBaseAPI {
             } );
 
         if ( response.status === 200 ){
+            return response.data;
+        }
+
+        return null;
+    }
+
+    /**
+     * Получение фотоальбома
+     * @param {number} id
+     * @return {object[]|null}
+     * @throws PliziAPIError
+     */
+    async getPhotoAlbum(id) {
+        let response = await this.axios.get( `api/photo-albums/${id}`, this.authHeaders )
+            .catch( ( error ) => {
+                this.checkIsTokenExpires( error, `getPhotoAlbum` );
+                throw new PliziAPIError( `getPhotoAlbum`, error.response );
+            } );
+
+        if ( response.status === 200 ){
+            return response.data.data;
+        }
+
+        return null;
+    }
+
+    /**
+     *
+     * @param id
+     * @param images
+     * @return {object[]|null}
+     */
+    async uploadImagesInPhotoAlbum(id, images) {
+        const formData = new FormData();
+
+        for(let i = 0; i < images.length; i++){
+            formData.append('files[]', images[i]);
+        }
+
+        let response = await this.axios.post(`api/photo-albums/${id}/photos`, formData, this.authFileHeaders)
+            .catch((error) => {
+                this.checkIsTokenExpires(error, `$photoAlbums.uploadImagesInPhotoAlbum`);
+                throw new PliziAPIError(`$photoAlbums.uploadImagesInPhotoAlbum`, error.response);
+            });
+
+        if (response.status === 200) {
+            return response.data.data.list;
+        }
+
+        return null;
+    }
+
+    /**
+     *
+     * @param {number} photoAlbumId
+     * @param {number} imageId
+     * @return {object[]|null}
+     */
+    async deleteImageInPhotoAlbum(photoAlbumId, imageId) {
+        let response = await this.axios.delete(`api/photo-albums/${photoAlbumId}/photos/${imageId}`, this.authFileHeaders)
+            .catch((error) => {
+                this.checkIsTokenExpires(error, `$photoAlbums.deleteImageInPhotoAlbum`);
+                throw new PliziAPIError(`$photoAlbums.deleteImageInPhotoAlbum`, error.response);
+            });
+
+        if (response.status === 200) {
             return response.data;
         }
 
