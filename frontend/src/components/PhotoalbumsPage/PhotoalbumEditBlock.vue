@@ -44,7 +44,7 @@
                 }
 
                 if (apiResponse) {
-                    await this.$root.$alert(`Вы удалили альбом ${this.album.title}`, 'bg-success', 3);
+                    await this.$root.$notify(`Вы удалили альбом ${this.album.title}`);
                     await this.$router.push({path: '/photoalbums-list'});
                 }
             },
