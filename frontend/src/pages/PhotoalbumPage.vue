@@ -5,7 +5,7 @@
                 <AccountToolbarLeft></AccountToolbarLeft>
             </div>
             <div class="col-12 col-md-11 col-lg-9 col-xl-10 px-0 px-md-3">
-                <div class="w-100">
+                <div class="row">
                     <div class="col-12">
                         <PhotoalbumsPageFilter :photoAlbum="photoAlbum"
                                                @addNewImages="addNewImages"

@@ -1,8 +1,8 @@
 <template>
-    <div id="createCommunityBlock">
+    <div id="createCommunityBlock" class="mx-auto mr-sm-0">
         <button type="button"
                 @click="showPhotoalbumCreateModal"
-                class="btn plz-btn plz-btn-primary p-0">
+                class="btn plz-btn plz-btn-primary p-0 ">
             Создать альбом
         </button>
         <PhotoalbumCreateModal v-if="photoalbumCreateModalShow"
