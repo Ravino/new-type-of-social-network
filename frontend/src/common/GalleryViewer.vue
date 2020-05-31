@@ -37,6 +37,9 @@ export default {
         },
         activeImage: null,
     },
+    mounted() {
+        console.log(this.activeImage);
+    },
     created() {
         if (!this.activeImage && this.images.length > 0) {
             this.goToImage(this.images.slice(0, 1).pop());
@@ -64,6 +67,7 @@ export default {
             this.$emit('navChangeActiveImage', this.activeImage.id);
         },
         nextImage() {
+            console.log('fhdffhfd 11111');
             const nextImageIndex = this.currentImageIndex + 1;
 
             if (nextImageIndex >= 0 && this.images[nextImageIndex]) {
