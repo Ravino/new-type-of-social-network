@@ -8,7 +8,8 @@
                 <div class="w-100">
                     <div class="col-12">
                         <PhotoalbumsPageFilter :photoAlbum="photoAlbum"
-                                               @addNewImages="addNewImages"/>
+                                               @addNewImages="addNewImages"
+                                               @finishAddNewImages="finishAddNewImages"/>
                     </div>
                     <div class="col-12">
                         <div class="row mb-3">
@@ -36,9 +37,13 @@
                                         <button type="button"
                                                 aria-label="Удалить изображение"
                                                 class="delete__button"
-                                                @click="onDeleteImage(image.id)">
-                                                <i class="fa fa-plus"></i>
+                                                @click.prevent="onDeleteImage(image.id)">
+                                                <i class="fa fa-plus"
+                                                   aria-hidden="true"></i>
                                         </button>
+                                        <SmallSpinner v-if="image.isBlob"
+                                                      clazz="media__spinner"
+                                                      :hide-text="true"/>
                                     </div>
                                 </div>
                             </div>
@@ -61,6 +66,7 @@
     import PhotoalbumItem from "../components/PhotoalbumsPage/PhotoalbumItem.vue";
     import PhotoalbumEditBlock from "../components/PhotoalbumsPage/PhotoalbumEditBlock.vue";
     import IconDelete from "../icons/IconDelete.vue";
+    import SmallSpinner from "../common/SmallSpinner.vue";
 
     import PliziPhotoAlbum from "../classes/PliziPhotoAlbum.js";
     import PliziAttachment from "../classes/PliziAttachment.js";
@@ -75,11 +81,13 @@
             PhotoalbumItem,
             PhotoalbumEditBlock,
             IconDelete,
+            SmallSpinner,
         },
         data() {
             return {
                 photoAlbumId: this.$route.params.id,
                 photoAlbum: null,
+                loadImages: null,
             }
         },
         methods: {
@@ -87,14 +95,15 @@
                 this.photoAlbum.title = title;
                 this.photoAlbum.description = description;
             },
-            addNewImages(images) {
+            addNewImages(image) {
+                // this.loadImages = [];
+                // this.loadImages.unshift(new PliziAttachment(image));
+
                 if (!this.photoAlbum.images) {
                     this.photoAlbum.images = [];
                 }
 
-                images.forEach((image) => {
-                    this.photoAlbum.images.unshift(new PliziAttachment(image))
-                });
+                this.photoAlbum.images.unshift(new PliziAttachment(image));
 
                 // TODO: @YZ сделать по нормальному после MVP
                 let lsUser = JSON.parse(localStorage.getItem('pliziUser'));
@@ -106,6 +115,9 @@
                 }
 
                 localStorage.setItem('pliziUser', JSON.stringify(lsUser));
+            },
+            finishAddNewImages() {
+
             },
 
             async onDeleteImage(id) {
