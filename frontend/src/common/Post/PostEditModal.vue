@@ -49,15 +49,15 @@ methods: {
     async onTextPost(evData) {
         let msg = evData.postText.trim();
 
-        if (msg !== '') {
+        if (msg !== '' || evData.videoLink) {
             const brExample = `<br/>`;
             msg = msg.replace(/<p><\/p>/g, brExample);
             msg = this.killBrTrail(msg);
 
-            if (msg !== '') {
-                this.updatePost(msg, evData.attachments);
+            if (msg !== '' || evData.videoLink) {
+                this.updatePost(msg, evData.attachments, evData.videoLink, evData.workMode);
             } else if (evData.attachments.length > 0) {
-                this.updatePost('<p></p>', evData.attachments);
+                this.updatePost('<p></p>', evData.attachments, evData.videoLink, evData.workMode);
             }
         } else {
             if (evData.attachments.length > 0) {
@@ -65,21 +65,26 @@ methods: {
             }
         }
     },
-    async updatePost(text, attachments) {
+    async updatePost(text, attachments, videoLink = null, workMode = null) {
         let response;
         let formData = {};
 
-        formData.body = text.trim();
+        if (videoLink) {
+            formData.body = videoLink;
+
+            if (text) {
+                formData.body += ` ${text}`;
+            }
+        } else {
+            formData.body = text.trim();
+        }
 
         if (attachments && attachments.length) {
             formData.attachmentIds = attachments;
         }
 
         try {
-            response = await this.$root.$api.$post.updatePost(this.post.id, {
-                body: text,
-                attachmentIds: attachments,
-            });
+            response = await this.$root.$api.$post.updatePost(this.post.id, formData);
         } catch (e) {
             console.warn(e.detailMessage);
         }

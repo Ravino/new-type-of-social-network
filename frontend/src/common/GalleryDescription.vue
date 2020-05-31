@@ -1,6 +1,6 @@
 <template>
     <div class="plz-gallery-description d-flex flex-column justify-content-between">
-        <div class="plz-gallery-description-header px-4 pt-4 pb-0 border-bottom">
+        <div class="plz-gallery-description-header px-4 pt-4 pb-0">
             <div class="plz-gallery-description--holder d-flex">
                 <div class="plz-gallery-description--holder-avatar mr-3">
                     <img class="plz-gallery-description--holder-avatar-item" :src="userAvatar" :alt="userName +' '+ userSurname">
@@ -48,77 +48,104 @@
                 </div>
                 <div class="plz-gallery-description--post-data-option post-watched-counter ml-4">
                     <IconMessage/>
-                    <span>{{ post.commentsCount | space1000 }}</span>
+                    <span>{{  comments.length | space1000 }}</span>
                 </div>
                 <div class="plz-gallery-description--post-data-option post-watched-counter ml-4">
                     <IconShare/>
                     <span>{{ post.sharesCount | space1000 }}</span>
                 </div>
             </div>
-        </div>
-        <div class="plz-gallery-description-header-body d-flex w-100 flex-column align-items-end">
-            <div class="plz-gallery-description--footer d-flex w-100 p-3 mt-auto">
-                <div class="plz-gallery-description--footer-pic mr-2">
-                    <img class="plz-gallery-description--footer-img" :src="userAvatar" alt="user photo">
+            <div class="plz-gallery-description-comment-wrapper">
+                <div class="plz-gallery-description-comment-item" v-for="comment in comments">
+                    <CommentItem :key="comment.id"
+                                 :comment="comment"
+                                 :post-id="postIdForComment"
+                                 @onDelete="removeComment"
+                                 @update="editComment"
+                    ></CommentItem>
                 </div>
-
-                <TextEditor :clazz="`plz-text-editor h-auto  align-items-start flex-grow-1 `"
-                            :editorPlaceholder="'Оставить комментарий...'"
-                            :dropToDown="true"
-                            :maximumCharacterLimit="10000"
-                            workMode="post">
-                </TextEditor>
-
             </div>
         </div>
+        <CommentGallery class="plz-gallery-description-write-comment"
+                        :post-id="postIdForComment"
+                        @updateComments="addNewComment"
+                        :imageId="image.id">
+        </CommentGallery>
     </div>
 </template>
 
 <script>
- import moment from "moment";
- import IconHeard from "../icons/IconHeard.vue";
- import IconFillHeard from '../icons/IconFillHeard.vue';
- import IconMessage from "../icons/IconMessage.vue";
- import IconShare from "../icons/IconShare.vue";
- import TextEditor from "./TextEditor.vue";
- import PliziAttachment from '../classes/PliziAttachment.js';
+import moment from "moment";
+import IconHeard from "../icons/IconHeard.vue";
+import IconFillHeard from '../icons/IconFillHeard.vue';
+import IconMessage from "../icons/IconMessage.vue";
+import IconShare from "../icons/IconShare.vue";
+import TextEditor from "./TextEditor.vue";
+import PliziAttachment from '../classes/PliziAttachment.js';
+import CommentGallery from "../components/Comments/CommentGallery.vue";
+import CommentItem from "../components/Comments/CommentItem.vue";
+import PliziComment from "../classes/PliziComment.js";
 
  export default {
   name: "GalleryDescription",
-  components: {TextEditor, IconShare, IconMessage, IconHeard, IconFillHeard},
+  components: {CommentItem, CommentGallery, TextEditor, IconShare, IconMessage, IconHeard, IconFillHeard},
   props: {
+   comments: {
+       type: Array,
+       required: true,
+   },
    post: {
     type: Object,
    },
-      image: {
-          type: PliziAttachment,
-          default: null,
-      },
+  image: {
+      type: PliziAttachment,
+      default: null,
+  },
   },
   data() {
       return {
-        noAvatar: '../images/noavatar-256.png'
+        noAvatar: '../images/noavatar-256.png',
       };
   },
   computed: {
    userAvatar() {
-       if (this.post.author.profile.avatar === null) {
+       if (this.getUserData.profile.avatar === null) {
            return this.noAvatar;
        }
 
-       return this.post.author.profile.avatar.image.thumb.path;
+       return this.getUserData.profile.avatar.image.thumb.path;
    },
+    postIdForComment() {
+      return this.post?.sharedFrom?.id || this.post.id;
+    },
    userName() {
-    return this.post.author.profile.firstName;
+    return this.getUserData.profile.firstName;
    },
    userSurname() {
-    return this.post.author.profile.lastName;
+    return this.getUserData.profile.lastName;
    },
    getTimePost() {
     return moment(this.post.createdAt).fromNow();
    },
+  getUserData() {
+      return this.$root.$auth.user;
+  },
   },
   methods: {
+      addNewComment(newComment) {
+          this.updateComments([...this.comments, new PliziComment(newComment)]);
+      },
+      editComment(newComment) {
+          const comments = this.comments.map(comment => comment.id === newComment.id ? comment.update(newComment) : comment);
+          this.updateComments(comments);
+      },
+      removeComment(commentId) {
+          const comments = this.comments.filter(comment => comment.id !== commentId);
+          this.updateComments(comments);
+      },
+      updateComments(comments) {
+          this.$emit('updateComments', { comments, id: this.image.id });
+      },
     async onLike() {
         let response = null;
 
