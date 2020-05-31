@@ -129,9 +129,9 @@ window.Vue = Vue;
 
 Vue.config.productionTip = false;
 
-Vue.config.silent = false;
+Vue.config.silent = true;
 
-Vue.config.devtools = true;
+Vue.config.devtools = false;
 
 import App from './App.vue';
 
