@@ -223,7 +223,16 @@ methods: {
 
 created(){
     this.msgData = this.pickedMessage;
+},
+
+mounted(){
+    setTimeout(()=>{
+        if (this.$refs.forwardMessageEditor) {
+            this.$refs.forwardMessageEditor.focus();
+        }
+    }, 100);
 }
+
 
 }
 </script>

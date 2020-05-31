@@ -193,8 +193,13 @@ computed: {
 
 methods: {
     focus(){
-        this.$refs.emojiPicker.hidePicker();
-        this.$refs.editor.focus();
+        if (this.$refs.emojiPicker) {
+            this.$refs.emojiPicker.hidePicker();
+        }
+
+        if (this.$refs.editor) {
+            this.$refs.editor.focus();
+        }
     },
 
     getContent() {
