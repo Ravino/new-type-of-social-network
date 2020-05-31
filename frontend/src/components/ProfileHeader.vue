@@ -149,6 +149,7 @@
             </div>
 
             <ProfileStats v-bind:userData="userData"
+                          v-bind:isOwner="isOwner"
                           v-bind:key="'ProfileStats'+$root.$friendsKeyUpdater"></ProfileStats>
         </div>
     </div>
