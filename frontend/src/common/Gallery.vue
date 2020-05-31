@@ -42,8 +42,7 @@
                 :active-image="activeImage"
                 @close="closeGalleryModal"
                 @showImage="showImage"
-                @navChangeActiveImage="changeGetParams"
-            >
+                @navChangeActiveImage="changeGetParams">
             </GalleryViewer>
 
             <GalleryDescription
@@ -51,8 +50,7 @@
                 :post="post"
                 :comments="comments"
                 :image="activeImage"
-                @updateComments="updateComments"
-            >
+                @updateComments="updateComments">
             </GalleryDescription>
         </div>
     </div>
@@ -61,7 +59,7 @@
 <script>
 import GalleryViewer from './GalleryViewer.vue';
 import GalleryDescription from './GalleryDescription.vue';
-import PliziComment from "../classes/PliziComment";
+import PliziComment from "../classes/PliziComment.js";
 
 export default {
 name : 'Gallery',
@@ -230,9 +228,9 @@ computed : {
 },
 
 methods : {
-    async getCommentsOnGallery() {
+    async getCommentsOnGallery( activeImageId ) {
         try {
-            let response = await this.$root.$api.$post.getCommentsByIdOnGallery(this.activeImage.id);
+            let response = await this.$root.$api.$post.getCommentsByIdOnGallery(activeImageId);
             this.comments = response.data.list.map(comment => new PliziComment(comment));
         } catch (e) {
             console.warn(e.detailMessage);
@@ -245,12 +243,12 @@ methods : {
     },
     showImage( image ){
         this.activeImage = this.images.find(attach => attach.id === image.id);
-        this.$router.replace({query: {activeImageId: this.activeImage.id, galleryType: this.type}});
-        this.getCommentsOnGallery();
+        this.$router.history.push({query: {activeImageId: image.id, galleryType: this.type}});
+        this.getCommentsOnGallery( image.id );
     },
 
     changeGetParams( activeImage ) {
-        this.$router.replace({query: {activeImageId: activeImage.id, galleryType: this.type}});
+        this.$router.history.push({query: {activeImageId: activeImage, galleryType: this.type}});
     },
 
     closeGalleryModal() {
@@ -360,7 +358,7 @@ methods : {
 },
     mounted() {
         const activeId = this.$router.history.current.query.activeImageId;
-        const typeGallery= this.$router.history.current.query.galleryType;
+        const typeGallery = this.$router.history.current.query.galleryType;
 
         if (typeGallery !== this.type || !activeId) {
             return;

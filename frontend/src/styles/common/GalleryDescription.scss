@@ -12,6 +12,81 @@ $usersPicSize: 32px;
     background: #FFFFFF;
     overflow-y: scroll;
 
+    .plz-comment-item-data-info {
+        .plz-gallery-portrait.plz-gallery-fourth {
+            flex-direction: row;
+            height: 500px;
+            img {
+                width: 160px;
+                height: 250px;
+            }
+        }
+    }
+
+    .plz-gallery-portrait {
+        flex-direction: column;
+        height: auto;
+        img {
+            width: 100%;
+            height: 250px;
+        }
+    }
+
+    .plz-comment-item-data-info {
+         .plz-gallery-fourth {
+             height: 365px;
+        }
+    }
+
+    .plz-gallery-album {
+        height: auto;
+    }
+
+    .plz-gallery-wrapper {
+        img {
+            height: 170px;
+        }
+    }
+
+    &-header-body {
+        .plz-gallery-description--footer {
+        .plz-text-editor {
+            div {
+                .plz-attachment-images-list {
+                    li {
+                        img {
+                            width: 50px;
+                            height: 50px;
+                        }
+                    }
+                }
+            }
+            }
+        }
+    }
+    .usersLikes {
+        right: 0;
+
+        &-user {
+            img {
+                object-fit: contain;
+            }
+        }
+    }
+
+    .picker {
+        top: -180px;
+        left: -160px;
+        height: 170px;
+        width: 250px;
+    }
+
+    .twemoji {
+        max-width: 100%;
+        object-fit: contain;
+        height: 20px;
+    }
+
     &--holder {
         width: 100%;
 

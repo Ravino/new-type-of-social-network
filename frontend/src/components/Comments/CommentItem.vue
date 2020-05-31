@@ -33,20 +33,17 @@
                     <div class="plz-comment-item-reply d-flex">
                         <span class="plz-comment-item-reply-date">{{ getTimeComment }}</span>
                         <button class="plz-comment-item-reply-btn pl-2"
-                                @click="isAnswer = !isAnswer"
-                        >
+                                @click="isAnswer = !isAnswer">
                             Ответить
                         </button>
                         <button v-if="isEdit === false && isAuthor"
                                 @click="isEdit = true"
-                                class="plz-comment-item-reply-btn plz-comment-item-edit pl-2"
-                        >
+                                class="plz-comment-item-reply-btn plz-comment-item-edit pl-2">
                             Изменить
                         </button>
                         <button v-if="isEdit === true"
                                 @click="isEdit = false"
-                                class="plz-comment-item-reply-btn plz-comment-item-edit"
-                        >
+                                class="plz-comment-item-reply-btn plz-comment-item-edit">
                             Отменить
                         </button>
                     </div>
@@ -82,8 +79,7 @@
                      :postId="postId"
                      :comment="answer"
                      @onDelete="removeComment"
-                     @update="editComment"
-                 >
+                     @update="editComment">
                  </CommentItem>
              </div>
             <div class="plz-comment-item-wrapper-close">
@@ -94,131 +90,130 @@
                 :commentId="comment.id"
                 :postId="postId"
                 :name="comment.author.profile.firstName"
-                @addComment="addComment"
-            ></CommentReply>
+                @addComment="addComment">
+            </CommentReply>
         </div>
     </div>
 </template>
 
 <script>
-    import IconHeard from "../../icons/IconHeard.vue";
-    import CommentReply from "./CommentReply.vue";
-    import moment from "moment";
-    import LinkMixin from '../../mixins/LinkMixin.js';
-    import TextEditor from "../../common/TextEditor.vue";
-    import ChatMixin from "../../mixins/ChatMixin.js";
-    import Gallery from "../../common/Gallery.vue";
-    import IconFillHeard from "../../icons/IconFillHeard.vue";
-    import PliziComment from "../../classes/PliziComment.js";
+import moment from "moment";
+import CommentReply from "./CommentReply.vue";
+import TextEditor from "../../common/TextEditor.vue";
+import IconHeard from "../../icons/IconHeard.vue";
+import IconFillHeard from "../../icons/IconFillHeard.vue";
+import LinkMixin from '../../mixins/LinkMixin.js';
+import ChatMixin from "../../mixins/ChatMixin.js";
+import PliziComment from "../../classes/PliziComment.js";
 
-    export default {
-        name: "CommentItem",
-        components: {IconFillHeard, Gallery, TextEditor, CommentReply, IconHeard},
-        mixins: [LinkMixin, ChatMixin],
-        props: {
-            comment: {
-                type: PliziComment
-            },
-            postId: {
-                type: String | Number
-            },
-            type: {
-                type: String,
-            },
+export default {
+    name: "CommentItem",
+    components: {IconFillHeard, Gallery: () => import('../../common/Gallery.vue'), TextEditor, CommentReply, IconHeard},
+    mixins: [LinkMixin, ChatMixin],
+    props: {
+        comment: {
+            type: PliziComment
         },
-        data() {
-            return {
-                isAnswer: false,
-                isEdit: false,
-            };
+        postId: {
+            type: String | Number
         },
-        computed: {
-            shortUsersLikes() {
-                return this.comment.usersLikes && this.comment.usersLikes.length ? this.comment.usersLikes.slice(0, 8) : null;
-            },
-            imageList() {
-                return this.comment.attachments.filter(attachment => attachment.isImage);
-            },
-            livePreview() {
-                let str = this.comment.body.replace(/<\/?[^>]+>/g, '').trim();
-                let returnedStr = this.transformStrWithLinks(str);
-
-                return str === returnedStr ? this.comment.body : this.transformStrWithLinks(str);
-            },
-            checkAuthorAvatar() {
-                if (this.comment.author.profile.avatar.image.medium.path === null) {
-                    return this.comment.defaultAvatarPath;
-                }
-
-                return this.comment.author.profile.avatar.image.medium.path;
-            },
-            getTimeComment() {
-                return moment(this.comment.createdAt).fromNow();
-            },
-            isAuthor() {
-                return this.$root.$auth.user.id === this.comment.author.id;
-            },
+        type: {
+            type: String,
         },
-        methods: {
-            editComment(newComment) {
-                this.comment.thread = this.comment.thread.map(comment => comment.id === newComment.id ? comment.update(newComment) : comment);
-            },
-            addComment(comment) {
-                this.comment.thread.push(new PliziComment(comment));
-            },
-            removeComment(commentId) {
-                this.comment.thread = this.comment.thread.filter(comment => comment.id !== commentId);
-            },
-            async onTextPost(evData) {
-                let msg = evData.postText.trim();
+    },
+    data() {
+        return {
+            isAnswer: false,
+            isEdit: false,
+        };
+    },
+    computed: {
+        shortUsersLikes() {
+            return this.comment.usersLikes && this.comment.usersLikes.length ? this.comment.usersLikes.slice(0, 8) : null;
+        },
+        imageList() {
+            return this.comment.attachments.filter(attachment => attachment.isImage);
+        },
+        livePreview() {
+            let str = this.comment.body.replace(/<\/?[^>]+>/g, '').trim();
+            let returnedStr = this.transformStrWithLinks(str);
 
-                if (msg !== '') {
-                    const brExample = `<br/>`;
-                    msg = msg.replace(/<p><\/p>/g, brExample);
-                    msg = this.killBrTrail(msg);
+            return str === returnedStr ? this.comment.body : this.transformStrWithLinks(str);
+        },
+        checkAuthorAvatar() {
+            if (this.comment.author.profile.avatar.image.medium.path === null) {
+                return this.comment.defaultAvatarPath;
+            }
 
-                    this.updateComment(msg);
-                    this.isEdit = false;
-                }
-            },
-            async deleteComment() {
-                try {
-                    await this.$root.$api.$post.deleteCommentById(this.comment.id);
-                    this.$emit('onDelete', this.comment.id);
-                } catch (e) {
-                    console.warn(e.detailMessage);
-                }
-            },
-            async updateComment(msg) {
-                try {
-                    let response = await this.$root.$api.$post.editCommentById(this.comment.id, msg);
-                    this.$emit('update', response.data);
-                } catch (e) {
-                    console.warn(e.detailMessage);
-                }
-            },
-            async onLike() {
-                try {
-                    let response = await this.$root.$api.$post.likeComment(this.comment.id);
+            return this.comment.author.profile.avatar.image.medium.path;
+        },
+        getTimeComment() {
+            return moment(this.comment.createdAt).fromNow();
+        },
+        isAuthor() {
+            return this.$root.$auth.user.id === this.comment.author.id;
+        },
+    },
+    methods: {
+        editComment(newComment) {
+            this.comment.thread = this.comment.thread.map(comment => comment.id === newComment.id ? comment.update(newComment) : comment);
+        },
+        addComment(comment) {
+            this.comment.thread.push(new PliziComment(comment));
+        },
+        removeComment(commentId) {
+            this.comment.thread = this.comment.thread.filter(comment => comment.id !== commentId);
+        },
+        async onTextPost(evData) {
+            let msg = evData.postText.trim();
 
-                    if (response !== null) {
-                        if (this.comment.alreadyLiked) {
-                            this.comment.alreadyLiked = false;
-                            this.comment.likes--;
-                            let userLikeIndex = this.comment.usersLikes.findIndex((userLike) => {
-                                return userLike.id === this.$root.$auth.user.id;
-                            });
-                            this.comment.usersLikes.splice(userLikeIndex, 1);
-                        } else {
-                            this.comment.alreadyLiked = true;
-                            this.comment.likes++;
-                            this.comment.usersLikes.push(this.$root.$auth.user);
-                        }
+            if (msg !== '') {
+                const brExample = `<br/>`;
+                msg = msg.replace(/<p><\/p>/g, brExample);
+                msg = this.killBrTrail(msg);
+
+                this.updateComment(msg);
+                this.isEdit = false;
+            }
+        },
+        async deleteComment() {
+            try {
+                await this.$root.$api.$post.deleteCommentById(this.comment.id);
+                this.$emit('onDelete', this.comment.id);
+            } catch (e) {
+                console.warn(e.detailMessage);
+            }
+        },
+        async updateComment(msg) {
+            try {
+                let response = await this.$root.$api.$post.editCommentById(this.comment.id, msg);
+                this.$emit('update', response.data);
+            } catch (e) {
+                console.warn(e.detailMessage);
+            }
+        },
+        async onLike() {
+            try {
+                let response = await this.$root.$api.$post.likeComment(this.comment.id);
+
+                if (response !== null) {
+                    if (this.comment.alreadyLiked) {
+                        this.comment.alreadyLiked = false;
+                        this.comment.likes--;
+                        let userLikeIndex = this.comment.usersLikes.findIndex((userLike) => {
+                            return userLike.id === this.$root.$auth.user.id;
+                        });
+                        this.comment.usersLikes.splice(userLikeIndex, 1);
+                    } else {
+                        this.comment.alreadyLiked = true;
+                        this.comment.likes++;
+                        this.comment.usersLikes.push(this.$root.$auth.user);
                     }
-                } catch (e) {
-                    console.warn(e.detailMessage);
                 }
-            },
+            } catch (e) {
+                console.warn(e.detailMessage);
+            }
         },
-    }
+    },
+}
 </script>

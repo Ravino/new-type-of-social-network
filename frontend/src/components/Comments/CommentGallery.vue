@@ -46,13 +46,22 @@
                     const brExample = `<br/>`;
                     msg = msg.replace(/<p><\/p>/g, brExample);
                     msg = this.killBrTrail(msg);
-                }
 
-                this.sendCommentToGallery(msg);
+                    if (msg !== '') {
+                        this.sendCommentToGallery(msg, evData.attachments);
+                    } else if (evData.attachments.length > 0) {
+                        this.sendCommentToGallery('', evData.attachments);
+                    }
+                else {
+                    if (evData.attachments.length > 0) {
+                        this.sendCommentToGallery('', evData.attachments );
+                    }
+                }
+                }
             },
-            async sendCommentToGallery(msg) {
+            async sendCommentToGallery(msg, attachments) {
                 try {
-                    let response = await this.$root.$api.$post.setGalleryComments(msg, this.postId, this.imageId);
+                    let response = await this.$root.$api.$post.setGalleryComments(msg, this.postId, this.imageId, attachments);
                     this.$emit('updateComments', response.data);
                 } catch (e) {
                     console.warn(e.detailMessage);

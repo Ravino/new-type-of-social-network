@@ -467,14 +467,16 @@ class PliziPostAPI extends PliziBaseAPI {
      * @param {string} body
      * @param {number} postId
      * @param {number[]} attachmentId
+     * @param {number[]} attachmentIds
      * @return {object[]|null}
      * @throws PliziAPIError
      */
-    async setGalleryComments(body, postId, attachmentId = []) {
+    async setGalleryComments(body, postId, attachmentId, attachmentIds = []) {
         const response = await this.axios.post(`api/posts/attachments/${attachmentId}/comment`, {
                 body,
                 postId,
                 attachmentId,
+                attachmentIds,
             }, this.authHeaders
         );
 
