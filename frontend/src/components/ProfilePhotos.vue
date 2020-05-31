@@ -27,6 +27,8 @@
 
 <script>
     import ProfileGallery from '../common/ProfileGallery.vue';
+    import PliziUser from "../classes/PliziUser";
+    import PliziAuthUser from "../classes/PliziAuthUser";
 
 export default {
 name: 'ProfilePhotos',
@@ -34,7 +36,9 @@ name: 'ProfilePhotos',
         ProfileGallery
     },
 props: {
-    photos: Array
+    photos: Array,
+    profileData: PliziUser | PliziAuthUser,
+    isOwner: Boolean,
 },
 data () {
     return {
@@ -47,7 +51,11 @@ computed : {
         return this.$root.$auth.user;
     },
     userImageNumber() {
-        return this.userData.stats.imageCount;
+        if (this.profileData) {
+            return this.profileData.stats.imageCount;
+        } else {
+            return this.userData.stats.imageCount;
+        }
     },
 },
     methods: {
@@ -55,9 +63,6 @@ computed : {
             return this.$options.filters.statsBeauty(param);
         }
     },
-    mounted() {
-
-    }
 
 }
 </script>
