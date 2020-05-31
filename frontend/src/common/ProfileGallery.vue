@@ -5,9 +5,12 @@
                  class="plz-profile-photo-item my-0 ml-0 mr-3"
                  :class="{'plz-gallery-image-mores': photo.isMore}"
                  @click="showImage(photo)">
-                <img @click="showImage(photo)"
-                     :src="photo.medium.path"
-                     :alt="photo.name"/>
+                <div class="plz-profile-photo-pic">
+                    <img class="plz-profile-photo-img"
+                         @click="showImage(photo)"
+                         :src="photo.medium.path"
+                         :alt="photo.name"/>
+                </div>
             </div>
         </div>
         <div class="plz-gallery__show" v-if="activeImageId">
