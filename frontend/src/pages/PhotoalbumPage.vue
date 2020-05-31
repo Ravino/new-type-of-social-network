@@ -11,34 +11,34 @@
                                                @addNewImages="addNewImages"/>
                     </div>
                     <div class="col-12">
-                        <div class="row">
+                        <div class="row mb-3">
                             <div class="col-12">
                                 <div class="photo-album-description-block">
                                     <PhotoalbumEditBlock :photoAlbum="photoAlbum"/>
                                 </div>
                             </div>
                         </div>
-                        <div class="row">
-                            <div class="photo-album-images-content w-100">
-                                <div v-if="photoAlbum && photoAlbum.images" class="card mb-4">
-                                    <div class="card-body py-0">
-                                        <div class="row">
-                                            <div v-for="image in photoAlbum.images"
+                        <div v-if="photoAlbum && photoAlbum.images"
+                             class="row photoalbum-images-content mb-4">
+                            <div class="col-12">
+                                <div class="bg-white-br20 d-flex flex-wrap px-3">
+                                    <div v-for="image in photoAlbum.images"
+                                         :key="image.id"
+                                         class="photoalbum-image col-12 col-sm-6 col-xl-3 my-3 d-flex align-items-stretch position-relative">
+                                        <div class="photoalbum-pic d-flex flex-column position-relative overflow-hidden">
+                                            <img v-if="image"
                                                  :key="image.id"
-                                                 class="col-12 col-sm-6 col-xl-3 my-3 photo-album-image">
-                                                <img v-if="image"
-                                                     :key="image.id"
-                                                     :src="image.image.original.path"
-                                                     class="img-fluid"
-                                                     alt=""/>
-                                                <button type="button"
-                                                        aria-label="Удалить изображение"
-                                                        class="delete__button"
-                                                        @click="onDeleteImage(image.id)">
-                                                    <IconDelete/>
-                                                </button>
-                                            </div>
+                                                 :src="image.image.original.path"
+                                                 class="photoalbum-img img-fluid"
+                                                 alt=""/>
                                         </div>
+
+                                        <button type="button"
+                                                aria-label="Удалить изображение"
+                                                class="delete__button"
+                                                @click="onDeleteImage(image.id)">
+                                                <i class="fa fa-plus"></i>
+                                        </button>
                                     </div>
                                 </div>
                             </div>
@@ -155,26 +155,5 @@
     }
 </script>
 
-<style lang="scss">
-    .photo-album-images-content {
-        .photo-album-image {
-            &:hover {
-                .delete__button {
-                    display: block;
-                }
-            }
 
-            img {
-                position: relative;
-            }
-
-            .delete__button {
-                display: none;
-                position: absolute;
-                top: 10px;
-                right: 20px;
-            }
-        }
-    }
-</style>
 
