@@ -124,6 +124,27 @@ class PliziUsersAPI extends PliziBaseAPI{
     }
 
     /**
+     * гостевой поиск по юзерам
+     * @param {string} sText - строка поиска
+     * @returns {object[]|null} - коллеция с найденными юзерами или null как признак ошибки
+     */
+    async guestSearch(sText) {
+        const sData = (sText + '').trim();
+
+        let response = await this.axios.get('/api/user/search/' + sData)
+            .catch((error) => {
+                this.checkIsTokenExpires(error, `$users.guestSearch`);
+                throw new PliziAPIError(`$users.guestSearch`, error.response);
+            });
+
+        if (response.status === 200) {
+            return response.data.data.list;
+        }
+
+        return null;
+    }
+
+    /**
      * Смена email на странице редактирования профиля.
      *
      * @param {object} formData

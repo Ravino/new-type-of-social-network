@@ -11,14 +11,6 @@
                 <div class="row">
                     <div class="col-12 --col-sm-7 col-lg-8 col-xl-8">
 
-                        <div class="col-12 col-lg-8 d-flex align-items-center justify-content-between px-0 mb-3">
-                            <router-link :to="`/community-`+id" tag="span"
-                                         class="back-link py-2 px-1 mr-2">
-                                <IconShare class="mr-2" style="height: 16px; transform: scaleX(-1)"/>
-                                Назад
-                            </router-link>
-                        </div>
-
                         <div class="col-12 order-1 order-md-0 bg-white-br20 py-2">
                             <CommunityMember
                                 v-for="member in allMembers"

@@ -14,6 +14,7 @@
                                @input="onInput('link')"
                                @blur="$v.form.link.$touch()"
                                id="link"
+                               ref="videoLink"
                                v-model="form.link">
 
                         <div v-if="isLinkError"
@@ -33,9 +34,6 @@
                         </div>
                     </div>
                     <button type="submit" class="btn plz-btn plz-btn-primary">Сохранить</button>
-                    <p v-if="isSuccess" class="text-success pt-3 mb-0 text-center">
-                        Ссылка на видео успешно добавлено.
-                    </p>
                 </form>
             </div>
         </div>
@@ -46,7 +44,6 @@
     import {required, url} from 'vuelidate/lib/validators';
     import {isValidYoutubeLink} from '../../validators/validators.js';
     import LinkMixin from "../../mixins/LinkMixin.js";
-    import {debounce} from "../../utils/Debonce.js";
 
     export default {
         name: "AddVideoModal",
@@ -61,8 +58,8 @@
                 form: {
                     link: null,
                 },
-                isSuccess: false,
                 errors: null,
+                isStoreRequest: false,
             }
         },
         validations() {
@@ -86,7 +83,11 @@
                 }
             },
 
-            store: debounce(async function() {
+            async store() {
+                if (this.isStoreRequest) {
+                    return ;
+                }
+                this.isStoreRequest = true;
                 this.errors = null;
 
                 let response;
@@ -102,18 +103,21 @@
                 }
 
                 if (response) {
-                    this.isSuccess = true;
+                    this.onHide();
                     this.$root.$emit('onAddVideo', {
                         id: response.id,
                         link: this.form.link,
                     });
-
-                    setTimeout(() => {
-                        this.isSuccess = false;
-                        this.onHide();
-                    }, 3000);
+                    this.$notify('Ссылка на видео успешно добавлена.');
+                } else {
+                    this.isStoreRequest = false;
                 }
-            }, 5000),
+            },
+        },
+        mounted() {
+            setTimeout(() => {
+                this.$refs.videoLink.focus();
+            }, 100);
         },
     }
 </script>

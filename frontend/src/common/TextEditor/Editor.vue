@@ -1,12 +1,13 @@
 <template>
-    <div class="editor"
-         :class="{'border-danger': isError}">
+    <div class="editor" :class="{'border-danger': isError}">
+
         <editor-content class="editor-content"
                         :editor="editor"
                         ref="editor"
                         @keydown.native="onEditorKeyDown"
-                        @keyup.native="onEditorKeyUp"/>
-        <span v-if="!isFocusedEditor" @click="setFocusEditor" class="placeholder">
+                        @keyup.native="onEditorKeyUp"></editor-content>
+
+        <span v-if="isShowPlaceHolder" @click="setFocusEditor" class="placeholder">
             {{ placeholder }}
         </span>
     </div>
@@ -75,77 +76,90 @@ computed: {
     calcEditorH(){
         return 'height: '+this.height+'px';
     },
+
+    isShowPlaceHolder(){
+        return !(this.isFocusedEditor || this.editor.getHTML() !== '<p></p>');
+    }
 },
 
 methods: {
-    setFocusEditor() {
-     this.$refs.editor.editor.focus();
-     },
-    addEmoji(emoji) {
+    setFocusEditor(){
+        this.$refs.editor.editor.focus();
+    },
+
+    addEmoji( emoji ){
         let currText = this.editor.getHTML();
         currText = (currText.toLowerCase() === `<p></p>`) ? '' : currText;
 
-        if  (`` === currText) {
-            this.editor.setContent(`<p class="big-emoji">${emoji}</p>`);
+        if ( `` === currText ){
+            this.editor.setContent( `<p class="big-emoji">${emoji}</p>` );
         }
 
-        currText = currText.substr(0, currText.length - 4) + `<span class="emoji">${emoji}</span>`;
+        currText = currText.substr( 0, currText.length - 4 ) + `<span class="emoji">${emoji}</span>`;
 
-        this.editor.setContent(currText);
+        this.editor.setContent( currText );
         this.editor.focus();
     },
-    onEditorKeyDown(ev) {
-        this.$emit('editorKeyDown', ev);
+
+    onEditorKeyDown( ev ){
+        this.$emit( 'editorKeyDown', ev );
         this.$parent.checkUpdatedChatContainerHeight();
 
-        if (13 === ev.keyCode && ev.ctrlKey === true) {
+        if ( 13 === ev.keyCode && ev.ctrlKey === true ){
             let editorText = this.editor.getHTML();
-            let str = editorText.replace(/<p>|<\/p>/g, '').trim();
+            let str = editorText.replace( /<p>|<\/p>/g, '' ).trim();
 
-            if (!(!!str.replace(/[\u{1F300}-\u{1F6FF}]/gu, '').trim())) {
-                let matches = str.match(/[\u{1F300}-\u{1F6FF}]/gu);
+            if ( !(!!str.replace( /[\u{1F300}-\u{1F6FF}]/gu, '' ).trim()) ){
+                let matches = str.match( /[\u{1F300}-\u{1F6FF}]/gu );
 
-                if (matches && matches.length === 1) {
+                if ( matches && matches.length === 1 ){
                     editorText = `<p class="big-emoji">${str}</p>`;
                 }
             }
 
-            this.editor.setContent(``);
-            this.$emit('editorPost', { postText : editorText });
+            this.editor.setContent( `` );
+            this.$emit( 'editorPost', { postText : editorText } );
         }
     },
-    onEditorKeyUp () {
+
+    onEditorKeyUp(){
         this.$parent.checkUpdatedChatContainerHeight();
     },
-    onFocus(event) {
+
+    onFocus( event ){
         this.isFocusedEditor = true;
     },
-    onBlur(event) {
-        let str = this.editor.getHTML().replace(/<\/?[^>]+>/g, '').trim();
+
+    onBlur( event ){
+        let str = this.editor.getHTML().replace( /<\/?[^>]+>/g, '' ).trim();
         this.cursorPosition = event.view.state.selection.$anchor.pos;
 
-        if (!(!!str)) {
+        if ( !(!!str) ){
             this.isFocusedEditor = false;
         }
     },
-    onUpdate(event) {
-        let str = this.editor.getHTML().replace(/<\/?[^>]+>/g, '').trim();
+
+    onUpdate( event ){
+        let str = this.editor.getHTML().replace( /<\/?[^>]+>/g, '' ).trim();
         this.cursorPosition = event.state.selection.$anchor.pos;
 
-        this.$emit('onMaximumCharacterLimit', str);
-        this.$emit('onUpdate');
+        this.$emit( 'onMaximumCharacterLimit', str );
+        this.$emit( 'onUpdate' );
     },
-    setContent(newContent){
-        this.editor.setContent(newContent);
+
+    setContent( newContent ){
+        this.editor.setContent( newContent );
     },
+
     getContent(){
         return this.editor.getHTML();
     },
-    focus() {
+
+    focus(){
         this.editor.focus();
     },
 },
-    beforeDestroy() {
+    beforeDestroy(){
         this.editor.destroy();
     }
 }

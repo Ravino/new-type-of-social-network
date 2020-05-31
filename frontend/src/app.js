@@ -94,6 +94,12 @@ Vue.prototype.$notificationsKeyUpdater = 0;
 Vue.prototype.$messagesKeyUpdater = 0;
 Vue.prototype.$communitiesKeyUpdater = 0;
 
+/**
+ * это временный костыль
+ * @type {PliziMessagesCollection}
+ */
+Vue.prototype.$messagesList = null;
+
 Vue.prototype.$isXS = () => {
     return window.innerWidth <= 575;
 };
@@ -123,9 +129,9 @@ window.Vue = Vue;
 
 Vue.config.productionTip = false;
 
-Vue.config.silent = false;
+Vue.config.silent = true;
 
-Vue.config.devtools = true;
+Vue.config.devtools = false;
 
 import App from './App.vue';
 

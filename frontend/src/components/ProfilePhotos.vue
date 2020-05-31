@@ -3,44 +3,56 @@
         <div class="col-12 bg-white-br20 p-0">
             <div class="w-100 d-flex flex-row justify-content-between align-items-center">
                 <div class="">
-                    <h6 class="profilePhotos-title my-0">Фотографии
-                        <span class="profilePhotos-desc">{{userData.photosNumber}}</span>
-                    </h6>
+                    <template v-if="userImageNumber">
+                        <h6 class="profilePhotos-title my-0">Фотографии
+                        <span class="profilePhotos-desc" v-html="sBeaty(userImageNumber)"></span>
+                        </h6>
+                    </template>
+                    <template v-else>
+                        <span class="numbers-bottom">Нет фотографий</span>
+                    </template>
                 </div>
 
                 <div class="profilePhotos-desc d-none" >
                     <a href="#onmap">Показать на карте</a>
                 </div>
             </div>
-            <div class="w-100 d-flex flex-row plz-profile-photos-list pt-4">
-<!--                <div v-for="(photo, photoIndex) in photos" v-bind:key="photoIndex"-->
-<!--                     class="plz-profile-photo-item w-auto my-0 ml-0 mr-3">-->
-<!--                    <button class="btn-close"  aria-label="delete">-->
-<!--                        <i class="fa fa-plus" aria-hidden="true"></i>-->
-<!--                    </button>-->
-<!--                    <img :src="photo.path" :alt="photoIndex" />-->
-<!--                </div>-->
-                <Gallery v-if="photos.length > 0" :profilePhotos="profilePhotos" :images="photos"></Gallery>
-                <div v-else class="mx-auto">Нет фотографий</div>
+            <div class="w-100 d-flex flex-row plz-profile-photos-list pt-3">
+                <vue-custom-scrollbar class="plz-latest-entries-list d-flex justify-content-between justify-content-sm-start pb-3"
+                                      :settings="customScrollbarSettings">
+                    <ProfileGallery v-if="photos.length > 0" :profilePhotos="profilePhotos" :images="photos"></ProfileGallery>
+                    <div v-else class="mx-auto">Нет фотографий</div>
+                </vue-custom-scrollbar>
             </div>
         </div>
     </div>
 </template>
 
 <script>
-    import Gallery from '../common/Gallery.vue';
+    import ProfileGallery from '../common/ProfileGallery.vue';
+    import PliziUser from "../classes/PliziUser";
+    import PliziAuthUser from "../classes/PliziAuthUser";
+    import vueCustomScrollbar from "vue-custom-scrollbar";
 
 export default {
 name: 'ProfilePhotos',
     components: {
-        Gallery
+        ProfileGallery,
+        vueCustomScrollbar
     },
 props: {
-    photos: Array
+    photos: Array,
+    profileData: PliziUser | PliziAuthUser,
+    isOwner: Boolean,
 },
 data () {
     return {
-        profilePhotos: true
+        profilePhotos: true,
+        customScrollbarSettings: {
+            maxScrollbarLength: 60,
+            suppressScrollY: true, // rm scroll x
+            wheelPropagation: false
+        },
     }
 },
 
@@ -48,7 +60,19 @@ computed : {
     userData() {
         return this.$root.$auth.user;
     },
-}
+    userImageNumber() {
+        if (this.profileData) {
+            return this.profileData.stats.imageCount;
+        } else {
+            return this.userData.stats.imageCount;
+        }
+    },
+},
+    methods: {
+        sBeaty(param) {
+            return this.$options.filters.statsBeauty(param);
+        }
+    },
 
 }
 </script>

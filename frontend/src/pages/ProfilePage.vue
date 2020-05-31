@@ -10,7 +10,7 @@
                  v-bind:key="`CentralColumn-`+shortFriendsUpdater">
 
                 <div class="container">
-                    <ProfileHeader v-bind:userData="userData" v-bind:isOwner="true"></ProfileHeader>
+                    <ProfileHeader v-bind:userData="userData()" v-bind:isOwner="true"></ProfileHeader>
 
                     <ProfilePhotos v-if="isPhotosDataReady" v-bind:photos="userPhotos"></ProfilePhotos>
                     <div v-else><SmallSpinner></SmallSpinner></div>
@@ -61,15 +61,15 @@
 
             <PostEditModal v-if="postEditModal.isVisible"
                            :post="postForEdit"
-                           @hidePostEditModal="hidePostEditModal"/>
+                           @hidePostEditModal="hidePostEditModal"></PostEditModal>
 
             <PostVideoModal v-if="postVideoModal.isVisible"
                             :videoLink="postVideoModal.content.videoLink"
-                            @hideVideoModal="hideVideoModal"/>
+                            @hideVideoModal="hideVideoModal"></PostVideoModal>
 
             <PostLikeModal v-if="postLikeModal.isVisible"
                            :postId="postLikeModal.content.postId"
-                           @hideLikeModal="hideLikeModal"/>
+                           @hideLikeModal="hideLikeModal"></PostLikeModal>
 
             <PostRepostModal v-if="postRepostModal.isVisible"
                              v-bind:user="postRepostModal.content.postForRepost.author"
@@ -99,7 +99,7 @@ import PostLikeModal from '../common/Post/PostLikeModal.vue';
 import LazyLoadPosts from '../mixins/LazyLoadPosts.js';
 
 import PliziPost from '../classes/PliziPost.js';
-import PhotosListMixin from "../mixins/PhotosListMixin";
+import PhotosListMixin from '../mixins/PhotosListMixin.js';
 
 export default {
 name: 'ProfilePage',
@@ -146,10 +146,6 @@ data() {
 },
 
 computed : {
-    userData(){
-        return this.$root.$auth.user;
-    },
-
     shortFriendsUpdater(){
         return this.$root.$friendsKeyUpdater+'-'+this.$root.$favoritesKeyUpdater;
     },
@@ -171,6 +167,10 @@ computed : {
 },
 
 methods : {
+    userData(){
+        return this.$root.$auth.user;
+    },
+
     calcCentralBlockClass(){
         return {
             'col-xl-8 pr-xl-3' : (this.$root.$auth.frm.size > 0),

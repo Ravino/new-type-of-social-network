@@ -41,6 +41,8 @@ methods: {
             this.$root.$auth.fm.removeFromFavorites(friendId);
             this.$root.$auth.frm.stopFriendship(friendId);
 
+            this.$root.$auth.freindsDecrease();
+
             this.$root.$friendsKeyUpdater++;
             this.$root.$favoritesKeyUpdater++;
 

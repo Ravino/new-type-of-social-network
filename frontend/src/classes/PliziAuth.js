@@ -267,6 +267,19 @@ class PliziAuthClass {
         return this._channel;
     }
 
+    freindsIncrease(){
+        this.setFreindsNumber(this.user.stats.totalFriendsCount + 1);
+    }
+
+    freindsDecrease(){
+        this.setFreindsNumber(this.user.stats.totalFriendsCount - 1);
+    }
+
+    setFreindsNumber(newValue){
+        this.user.stats.totalFriendsCount = (newValue >= 0) ? newValue : 0;
+        this.storeUserData();
+    }
+
     set channel(val){
         this._channel = val;
 

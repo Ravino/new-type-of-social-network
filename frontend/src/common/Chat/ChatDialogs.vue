@@ -91,9 +91,33 @@ methods: {
     },
 
     onUpdateChatDialog(evData) {
+        let messageBody = evData.message.body;
+
+        if (evData.message.body === ''  ||  evData.message.body==='<p></p>') {
+            let id  = this.$root.$messagesList.last.id;
+            let msg = this.$root.$messagesList.get(id);
+
+            let node = this.$root.$messagesList.nodes.get(id);
+
+            while(true){
+                if (node.prev === null){
+                    break;
+                }
+
+                id = node.self;
+                node = this.$root.$messagesList.nodes.get(node.prev);
+                msg = this.$root.$messagesList.get(id);
+                if (msg.body !== '') {
+                    break;
+                }
+            }
+
+            messageBody = msg.body;
+        }
+
         const updatedFields = {
             lastMessageDT : evData.message.createdAt,
-            lastMessageText : evData.message.body,
+            lastMessageText : messageBody,
             isLastFromMe : !!evData.message.isMine,
             isRead : !!evData.message.isRead,
 

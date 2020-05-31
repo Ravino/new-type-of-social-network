@@ -79,6 +79,38 @@ $chatMessagesBodyHeight: calc(100% - 139px);
             img {
                 width: 100%;
             }
+
+            &.chat-video {
+                &:after {
+                    content: "";
+                    position: absolute;
+                    top: 0;
+                    left: 0;
+                    right: 0;
+                    bottom: 0;
+                    background-color: rgba(0, 0, 0, 0);
+                    transition: 0.4s;
+                    pointer-events: none;
+                }
+
+                &:hover {
+                    &:after {
+                        background-color: rgba(0, 0, 0, 0.2) !important;
+                    }
+                }
+
+                &:hover .video__button-shape,
+                &:focus .video__button-shape {
+                    fill: #ff0000;
+                    fill-opacity: 1;
+                }
+
+                position: relative;
+
+                img {
+                    cursor: pointer;
+                }
+            }
         }
     }
 
@@ -423,6 +455,21 @@ $chatMessagesBodyHeight: calc(100% - 139px);
         max-width: 100%;
     }
 
+}
+
+.message-attachment-item {
+    .plz-gallery-triple,  .plz-gallery-double {
+        .plz-gallery-wrap-album {
+            flex-direction: column;
+        }
+    }
+    .plz-gallery-fourth {
+        .plz-gallery-wrap {
+            .plz-gallery-wrapper {
+                width: 225px;
+            }
+        }
+    }
 }
 
 .message-sended-image {

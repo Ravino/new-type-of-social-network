@@ -5,40 +5,61 @@
                 <AccountToolbarLeft></AccountToolbarLeft>
             </div>
             <div class="col-12 col-md-11 col-lg-9 col-xl-10 px-0 px-md-3">
-                <div class="w-100">
+                <div class="row">
                     <div class="col-12">
                         <PhotoalbumsPageFilter :photoAlbum="photoAlbum"
-                                               @addNewImages="addNewImages"/>
+                                               @addNewImages="addNewImages"
+                                               @uploadingImage="uploadingImage"/>
                     </div>
                     <div class="col-12">
-                        <div class="row">
+                        <div class="row mb-3">
                             <div class="col-12">
                                 <div class="photo-album-description-block">
                                     <PhotoalbumEditBlock :photoAlbum="photoAlbum"/>
                                 </div>
                             </div>
                         </div>
-                        <div class="row">
-                            <div class="photo-album-images-content w-100">
-                                <div v-if="photoAlbum && photoAlbum.images" class="card mb-4">
-                                    <div class="card-body py-0">
-                                        <div class="row">
-                                            <div v-for="image in photoAlbum.images"
-                                                 :key="image.id"
-                                                 class="col-12 col-sm-6 col-xl-3 my-3 photo-album-image">
-                                                <img v-if="image"
-                                                     :key="image.id"
-                                                     :src="image.image.original.path"
-                                                     class="img-fluid"
+                        <div v-if="photoAlbum && photoAlbum.images"
+                             class="row photoalbum-images-content mb-4">
+                            <div class="col-12">
+                                <div class="bg-white-br20 d-flex flex-wrap px-3">
+                                    <template v-if="loadImages">
+                                        <div v-for="(loadImage, index) in loadImages"
+                                             :key="index"
+                                             class="photoalbum-image col-12 col-sm-6 col-xl-3 my-3 d-flex align-items-stretch position-relative">
+                                            <div class="photoalbum-pic d-flex flex-column position-relative overflow-hidden">
+                                                <img v-if="loadImage"
+                                                     :src="loadImage.fileBlob"
+                                                     class="photoalbum-img img-fluid"
                                                      alt=""/>
-                                                <button type="button"
-                                                        aria-label="Удалить изображение"
-                                                        class="delete__button"
-                                                        @click="onDeleteImage(image.id)">
-                                                    <IconDelete/>
-                                                </button>
+                                                <div class="spinner-wrap">
+                                                    <SmallSpinner v-if="loadImage.isBlob"
+                                                                  clazz="media__spinner"
+                                                                  :hide-text="true"/>
+                                                </div>
                                             </div>
+
                                         </div>
+                                    </template>
+
+                                    <div v-for="image in photoAlbum.images"
+                                         :key="image.id"
+                                         class="photoalbum-image col-12 col-sm-6 col-xl-3 my-3 d-flex align-items-stretch position-relative">
+                                        <div class="photoalbum-pic d-flex flex-column position-relative overflow-hidden">
+                                            <img v-if="image"
+                                                 :key="image.id"
+                                                 :src="image.image.original.path"
+                                                 class="photoalbum-img img-fluid"
+                                                 alt=""/>
+                                        </div>
+
+                                        <button type="button"
+                                                aria-label="Удалить изображение"
+                                                class="delete__button"
+                                                @click.prevent="onDeleteImage(image.id)">
+                                                <i class="fa fa-plus"
+                                                   aria-hidden="true"></i>
+                                        </button>
                                     </div>
                                 </div>
                             </div>
@@ -61,6 +82,7 @@
     import PhotoalbumItem from "../components/PhotoalbumsPage/PhotoalbumItem.vue";
     import PhotoalbumEditBlock from "../components/PhotoalbumsPage/PhotoalbumEditBlock.vue";
     import IconDelete from "../icons/IconDelete.vue";
+    import SmallSpinner from "../common/SmallSpinner.vue";
 
     import PliziPhotoAlbum from "../classes/PliziPhotoAlbum.js";
     import PliziAttachment from "../classes/PliziAttachment.js";
@@ -75,11 +97,13 @@
             PhotoalbumItem,
             PhotoalbumEditBlock,
             IconDelete,
+            SmallSpinner,
         },
         data() {
             return {
                 photoAlbumId: this.$route.params.id,
                 photoAlbum: null,
+                loadImages: null,
             }
         },
         methods: {
@@ -87,14 +111,33 @@
                 this.photoAlbum.title = title;
                 this.photoAlbum.description = description;
             },
-            addNewImages(images) {
+            addNewImages(image) {
                 if (!this.photoAlbum.images) {
                     this.photoAlbum.images = [];
                 }
 
-                images.forEach((image) => {
-                    this.photoAlbum.images.unshift(new PliziAttachment(image))
-                });
+                this.photoAlbum.images.unshift(new PliziAttachment(image));
+
+                let loadImageIndex = this.loadImages.findIndex(loadImage => loadImage.id === image.id);
+                this.loadImages.splice(loadImageIndex, 1);
+
+                // TODO: @YZ сделать по нормальному после MVP
+                let lsUser = JSON.parse(localStorage.getItem('pliziUser'));
+
+                if (!lsUser.data.stats.imageCount) {
+                    lsUser.data.stats.imageCount = 1;
+                } else {
+                    lsUser.data.stats.imageCount++;
+                }
+
+                localStorage.setItem('pliziUser', JSON.stringify(lsUser));
+            },
+            uploadingImage(image) {
+                if (!this.loadImages) {
+                    this.loadImages = []
+                }
+
+                this.loadImages.push(image);
             },
 
             async onDeleteImage(id) {
@@ -109,6 +152,17 @@
                 if (apiResponse) {
                     let deletedImageIndex = this.photoAlbum.images.findIndex(image => image.id === id);
                     this.photoAlbum.images.splice(deletedImageIndex, 1);
+
+                    // TODO: @YZ сделать по нормальному после MVP
+                    let lsUser = JSON.parse(localStorage.getItem('pliziUser'));
+
+                    if (!lsUser.data.stats.imageCount) {
+                        lsUser.data.stats.imageCount = 0;
+                    } else {
+                        lsUser.data.stats.imageCount--;
+                    }
+
+                    localStorage.setItem('pliziUser', JSON.stringify(lsUser));
                 }
             },
             async getPhotoAlbum() {
@@ -133,26 +187,5 @@
     }
 </script>
 
-<style lang="scss">
-    .photo-album-images-content {
-        .photo-album-image {
-            &:hover {
-                .delete__button {
-                    display: block;
-                }
-            }
 
-            img {
-                position: relative;
-            }
-
-            .delete__button {
-                display: none;
-                position: absolute;
-                top: 10px;
-                right: 20px;
-            }
-        }
-    }
-</style>
 

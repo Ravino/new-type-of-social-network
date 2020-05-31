@@ -12,11 +12,12 @@
                     <form id="chatPickAttendeesForm" novalidate="novalidate" class="mb-4">
 
                         <div class="form-group">
-                            <div class="d-flex flex-column align-items-start --h-100">
-                                <ChatAttendeeItem v-for="attItem in currentDialog.attendees"
+                            <div class="d-flex flex-column align-items-start" ref="attendeesList" :key="'attendeesList-'+keyUpdater">
+                                <ChatAttendeeItem v-for="attItem in getAttendeesList()"
                                                   @RemoveAttendeeFromChat="onRemoveAttendeeFromChat"
-                                                     v-bind:companion="attItem"
-                                                     v-bind:key="attItem.id">
+                                                  v-bind:companion="attItem"
+                                                  v-bind:isCanDelete="isCanDelete"
+                                                  v-bind:key="'attendeeItem-'+attItem.id+'-'+keyUpdater">
                                 </ChatAttendeeItem>
                             </div>
                         </div>
@@ -32,7 +33,7 @@
                                          :show-labels="false"
                                          :multiple="false"
                                          @select="onPickNewAttendee"
-                                         placeholder="Выберите нового собеседника">
+                                         placeholder="Выберите нового участника чата">
 
                                 <template slot="option" slot-scope="props">
                                     <div class="plz-receivers-item d-flex align-items-center py-2 px-3">
@@ -82,17 +83,46 @@ data() {
             chatName : '',
             selectedRecipients: null
         },
-        hasNoAttendees: false
+        hasNoAttendees: false,
+        keyUpdater: 0
+    }
+},
+
+computed: {
+    isCanDelete(){
+        return this.getAttendeesList().length >= 2;
+    },
+
+    getFriendsCombo(){
+        const atts = this.currentDialog.attendeesIds;
+
+        /** @TGA сначала диалоги - это важно **/
+        this.$root.$auth.dm.asArray().map( (dItem) => {
+            if (!atts.includes(dItem.companion.id)) {
+                this.recipients.add(dItem.companion, dItem.id);
+            }
+        });
+
+        this.$root.$auth.frm.asArray().map( (frItem) => {
+            if (!atts.includes(frItem.id)){
+                this.recipients.add( frItem, null );
+            }
+        });
+
+        return this.recipients.asArray();
     }
 },
 
 methods: {
+    getAttendeesList(){
+        return this.currentDialog.attendees.slice();
+    },
+
     hideGroupChatAttendeesModal() {
         this.$emit('HideGroupChatAttendeesModal', {});
     },
 
     onPickNewAttendee(evData){
-        window.console.log( JSON.parse( JSON.stringify(evData) ), `onPickNewAttendee`);
         this.addAttendeeToChat(evData);
     },
 
@@ -113,11 +143,13 @@ methods: {
         }
 
         if ( apiResponse ) {
-            //this.$root.$emit( 'AddAttendeeToDialog', { chatId : this.currentDialog.id, userId : user.id } );
-            //this.$root.$auth.dm.updateDialog(this.currentDialog.id, apiResponse);
+            this.$emit( 'AddAttendeeToDialog', { chatId : this.currentDialog.id, userId : user.id } );
             this.$root.$auth.dm.addAttendeeToDialog(this.currentDialog.id, user);
+            this.$root.$dialogsKeyUpdater++;
+            this.keyUpdater++;
         }
     },
+
 
     async removeAttendeeFromChat( userId ){
         let apiResponse = null;
@@ -131,33 +163,13 @@ methods: {
         }
 
         if ( apiResponse ) {
-            //this.$root.$emit( 'RemoveAttendeeFromDialog', { chatId : this.currentDialog.id, userId : userId } );
-            //this.$root.$auth.dm.updateDialog(this.currentDialog.id, apiResponse);
+            this.$emit( 'RemoveAttendeeFromDialog', { chatId : this.currentDialog.id, userId : userId } );
             this.$root.$auth.dm.removeAttendeeFromDialog(this.currentDialog.id, userId);
+            this.$root.$dialogsKeyUpdater++;
+            this.keyUpdater++;
         }
     }
 
-},
-
-computed: {
-    getFriendsCombo(){
-        const atts = this.currentDialog.attendeesIds;
-
-        /** @TGA сначала диалоги - это важно **/
-        this.$root.$auth.dm.asArray().map( (dItem) => {
-            if (!atts.includes(dItem.companion.id)) {
-                this.recipients.add(dItem.companion, dItem.id);
-            }
-        });
-
-        this.$root.$auth.frm.asArray().map( (frItem) => {
-            if (!atts.includes(frItem.id)){
-                this.recipients.add( frItem, null );
-            }
-        });
-
-        return this.recipients.asArray();
-    }
 },
 
 }
