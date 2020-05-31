@@ -1,17 +1,21 @@
 <template>
     <div class="profile-photos">
         <div v-if="profilePhotos" class="w-100  d-flex flex-row plz-profile-photos-list pt-4">
-            <div v-for="(photo) in images" v-bind:key="photo.id"
-                 class="plz-profile-photo-item my-0 ml-0 mr-3"
-                 :class="{'plz-gallery-image-mores': photo.isMore}"
-                 @click="showImage(photo)">
-                <div class="plz-profile-photo-pic">
-                    <img class="plz-profile-photo-img"
-                         @click="showImage(photo)"
+
+            <div class="profile-photos-item" v-for="(photo) in images" v-bind:key="photo.id">
+                <div class="plz-profile-photo-item my-0 ml-0 mr-3"
+                     :class="{'plz-gallery-image-mores': photo.isMore}"
+                     @click="showImage(photo)">
+                    <img @click="showImage(photo)"
                          :src="photo.medium.path"
                          :alt="photo.name"/>
                 </div>
+                <button class="btn-close"  aria-label="delete">
+                    <i class="fa fa-plus" aria-hidden="true"></i>
+                </button>
+
             </div>
+
         </div>
         <div class="plz-gallery__show" v-if="activeImageId">
             <GalleryViewer
