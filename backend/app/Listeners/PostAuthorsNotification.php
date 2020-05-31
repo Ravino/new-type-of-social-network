@@ -30,6 +30,7 @@ class PostAuthorsNotification implements ShouldQueue
         $isNotificationExists = Notification::where('notifiable_type', User::class)
             ->where('notifiable_id', $post->author->id)
             ->where('data->data->sender->id', $user->id)
+            ->where('data->data->post->id', $post->id)
             ->exists();
 
         if($post->author && !$isNotificationExists) {
