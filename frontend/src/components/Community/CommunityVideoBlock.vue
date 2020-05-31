@@ -12,13 +12,11 @@
                 @openVideoModal="openVideoModal"/>
         </div>
 
-<!--        <div class="d-block text-center">-->
-<!--            <router-link tag="a"-->
-<!--                         class="plz-community-header-desc "-->
-<!--                         to="#">-->
-<!--                <small>Смотреть ещё</small>-->
-<!--            </router-link>-->
-<!--        </div>-->
+        <div class="text-center" v-if="totalCount > videos.length">
+            <router-link tag="a"
+                         class="plz-community-header-desc "
+                         :to="`/community-videos-`+communityId"><small>Все видео</small></router-link>
+        </div>
     </div>
 </template>
 
@@ -33,6 +31,7 @@
         },
         data() {
             return {
+                totalCount: 0,
                 videos: [],
                 isLoaded: true,
             }
@@ -53,6 +52,7 @@
                 }
 
                 if (apiResponse) {
+                    this.totalCount = apiResponse.totalCount;
                     apiResponse.list.map((video) => {
                         this.videos.push(new PliziVideo(video));
                     });
