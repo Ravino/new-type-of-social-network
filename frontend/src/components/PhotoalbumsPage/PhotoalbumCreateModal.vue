@@ -21,14 +21,18 @@
                     </div>
 
                     <form class="form community-create-modal-form p-0  w-100 overflow-hidden"
-                          @submit.prevent="" novalidate="novalidate">
+                          @submit.prevent="startCreatePhotoalbum" novalidate="novalidate">
 
                         <div class="form-group d-flex align-items-center mb-4 px-5 row position-relative">
                             <label for="photoTitle" class="col-4 community-create-modal-label  text-right">Название:</label>
                             <div class="col-8">
-                                <input v-model="model.title" type="text" id="photoTitle" ref="commName"
+                                <input v-model="model.title"
+                                       type="text"
+                                       id="photoTitle"
+                                       ref="photoTitle"
                                        @blur="$v.model.title.$touch()"
-                                       class="form-control community-create-modal-select" required/>
+                                       class="form-control community-create-modal-select"
+                                       required/>
                             </div>
                             <div class="col-4"></div>
                             <div class="col-8 invalid-feedback" v-if="$v.model.title.$error">
@@ -41,9 +45,12 @@
                         <div class="form-group d-flex align-items-center mb-4 px-5 row position-relative">
                             <label for="photoDescription" class="col-4 community-create-modal-label  text-right">Описание:</label>
                             <div class="col-8">
-                                <input v-model="model.description" type="text" id="photoDescription" ref="commName"
+                                <input v-model="model.description"
+                                       type="text"
+                                       id="photoDescription"
+                                       ref="photoDescription"
                                        @blur="$v.model.description.$touch()"
-                                       class="form-control community-create-modal-select" required/>
+                                       class="form-control community-create-modal-select"/>
                             </div>
                             <div class="col-4"></div>
                             <div class="col-8 invalid-feedback" v-if="$v.model.description.$error">
@@ -55,15 +62,11 @@
                         <div
                             class="form-group d-flex flex-column align-items-center px-5 py-4 community-create-modal-footer mb-0 row">
                             <div class="col-12 col-md-5 d-flex align-items-center justify-content-end px-0 mx-auto">
-                                <button @click.stop="startCreatePhotoalbum()"
-                                        type="button"
-                                        :disabled="isSuccess"
-                                        class="btn w-100 btn-primary rounded-pill">Создать альбом
+                                <button type="submit"
+                                        class="btn w-100 btn-primary rounded-pill">
+                                    Создать альбом
                                 </button>
                             </div>
-                            <p v-if="isSuccess" class="text-success mt-3 mb-0">
-                                Альбом успешно создан.
-                            </p>
                         </div>
                     </form>
                 </div>
@@ -85,7 +88,6 @@ export default {
                 title: '',
                 description: ''
             },
-            isSuccess: false,
         }
     },
     validations() {
@@ -134,15 +136,16 @@ export default {
 
             if (apiResponse) {
                 formData.id = apiResponse.id;
-                this.isSuccess = true;
                 this.$root.$emit('onAddPhotoAlbum', formData);
-
-                setTimeout(() => {
-                    this.isSuccess = false;
-                    this.hidePhotoalbumCreateModal();
-                }, 3000);
+                this.hidePhotoalbumCreateModal();
+                this.$notify('Альбом успешно создан.');
             }
         }
+    },
+    mounted() {
+        setTimeout(() => {
+            this.$refs.photoTitle.focus();
+        }, 100);
     },
 }
 </script>

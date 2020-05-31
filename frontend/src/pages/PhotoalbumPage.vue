@@ -8,7 +8,8 @@
                 <div class="w-100">
                     <div class="col-12">
                         <PhotoalbumsPageFilter :photoAlbum="photoAlbum"
-                                               @addNewImages="addNewImages"/>
+                                               @addNewImages="addNewImages"
+                                               @finishAddNewImages="finishAddNewImages"/>
                     </div>
                     <div class="col-12">
                         <div class="row">
@@ -20,7 +21,7 @@
                         </div>
                         <div class="row">
                             <div class="photo-album-images-content w-100">
-                                <div v-if="photoAlbum && photoAlbum.images" class="card mb-4">
+                                <div v-if="photoAlbum && photoAlbum.images" class="card mb-4 border-0 bg-white-br20">
                                     <div class="card-body py-0">
                                         <div class="row">
                                             <div v-for="image in photoAlbum.images"
@@ -32,11 +33,14 @@
                                                      class="img-fluid"
                                                      alt=""/>
                                                 <button type="button"
-                                                        aria-label="Удалить изображение"
-                                                        class="delete__button"
-                                                        @click="onDeleteImage(image.id)">
-                                                    <IconDelete/>
+                                                        @click.prevent="onDeleteImage(image.id)"
+                                                        class="btn btn-close btn-link border-0 border-danger bg-danger text-white rounded-circle delete__button"
+                                                        aria-label="Удалить видео">
+                                                    <i class="fa fa-plus" aria-hidden="true"></i>
                                                 </button>
+                                                <SmallSpinner v-if="image.isBlob"
+                                                              clazz="media__spinner"
+                                                              :hide-text="true"/>
                                             </div>
                                         </div>
                                     </div>
@@ -61,6 +65,7 @@
     import PhotoalbumItem from "../components/PhotoalbumsPage/PhotoalbumItem.vue";
     import PhotoalbumEditBlock from "../components/PhotoalbumsPage/PhotoalbumEditBlock.vue";
     import IconDelete from "../icons/IconDelete.vue";
+    import SmallSpinner from "../common/SmallSpinner.vue";
 
     import PliziPhotoAlbum from "../classes/PliziPhotoAlbum.js";
     import PliziAttachment from "../classes/PliziAttachment.js";
@@ -75,11 +80,13 @@
             PhotoalbumItem,
             PhotoalbumEditBlock,
             IconDelete,
+            SmallSpinner,
         },
         data() {
             return {
                 photoAlbumId: this.$route.params.id,
                 photoAlbum: null,
+                loadImages: null,
             }
         },
         methods: {
@@ -87,14 +94,15 @@
                 this.photoAlbum.title = title;
                 this.photoAlbum.description = description;
             },
-            addNewImages(images) {
+            addNewImages(image) {
+                // this.loadImages = [];
+                // this.loadImages.unshift(new PliziAttachment(image));
+
                 if (!this.photoAlbum.images) {
                     this.photoAlbum.images = [];
                 }
 
-                images.forEach((image) => {
-                    this.photoAlbum.images.unshift(new PliziAttachment(image))
-                });
+                this.photoAlbum.images.unshift(new PliziAttachment(image));
 
                 // TODO: @YZ сделать по нормальному после MVP
                 let lsUser = JSON.parse(localStorage.getItem('pliziUser'));
@@ -106,6 +114,9 @@
                 }
 
                 localStorage.setItem('pliziUser', JSON.stringify(lsUser));
+            },
+            finishAddNewImages() {
+
             },
 
             async onDeleteImage(id) {
@@ -160,19 +171,32 @@
         .photo-album-image {
             &:hover {
                 .delete__button {
-                    display: block;
+                    opacity: 1;
                 }
             }
 
             img {
                 position: relative;
+                border-radius: 5px;
             }
 
             .delete__button {
-                display: none;
                 position: absolute;
-                top: 10px;
-                right: 20px;
+                top: -5px;
+                left: 95%;
+                width: 20px;
+                height: 20px;
+                display: inline-block;
+                padding: 4px;
+                border: 0;
+                background-color: #ef482c;
+                font-size: 10px;
+                color: #fff;
+                border-radius: 100%;
+                transform: translate(-60%, 0%) rotate(45deg);
+                transition: 0.4s;
+                z-index: 1;
+                opacity: 0;
             }
         }
     }

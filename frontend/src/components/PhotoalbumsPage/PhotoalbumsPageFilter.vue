@@ -123,14 +123,19 @@ export default {
                 let apiResponse = null;
 
                 try {
-                    apiResponse = await this.$root.$api.$photoalbums.uploadImagesInPhotoAlbum(this.photoAlbum.id, [file]);
+                    apiResponse = this.$root.$api.$photoalbums.uploadImagesInPhotoAlbum(this.photoAlbum.id, [file]);
                 } catch (e) {
                     console.warn(e.detailMessage);
                 }
 
-                if (apiResponse) {
-                    this.$emit('addNewImages', apiResponse);
-                }
+                apiResponse.then(response => {
+                    response.map((attItem) => {
+                        this.$emit('addNewImages', attItem);
+                    })
+                }).catch((e) => {
+                    window.console.warn(e.detailMessage);
+                    throw e;
+                });
             }
         },
     },

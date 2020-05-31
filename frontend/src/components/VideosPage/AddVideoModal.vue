@@ -14,6 +14,7 @@
                                @input="onInput('link')"
                                @blur="$v.form.link.$touch()"
                                id="link"
+                               ref="videoLink"
                                v-model="form.link">
 
                         <div v-if="isLinkError"
@@ -33,9 +34,6 @@
                         </div>
                     </div>
                     <button type="submit" class="btn plz-btn plz-btn-primary">Сохранить</button>
-                    <p v-if="isSuccess" class="text-success pt-3 mb-0 text-center">
-                        Ссылка на видео успешно добавлено.
-                    </p>
                 </form>
             </div>
         </div>
@@ -60,7 +58,6 @@
                 form: {
                     link: null,
                 },
-                isSuccess: false,
                 errors: null,
                 isStoreRequest: false,
             }
@@ -106,21 +103,21 @@
                 }
 
                 if (response) {
-                    this.isSuccess = true;
+                    this.onHide();
                     this.$root.$emit('onAddVideo', {
                         id: response.id,
                         link: this.form.link,
                     });
-
-                    setTimeout(() => {
-                        this.isSuccess = false;
-                        this.onHide();
-                        this.isStoreRequest = false;
-                    }, 3000);
+                    this.$notify('Ссылка на видео успешно добавлена.');
                 } else {
                     this.isStoreRequest = false;
                 }
             },
+        },
+        mounted() {
+            setTimeout(() => {
+                this.$refs.videoLink.focus();
+            }, 100);
         },
     }
 </script>

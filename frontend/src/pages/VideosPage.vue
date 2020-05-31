@@ -31,14 +31,14 @@
                                                             <IconYoutube/>
                                                         </button>
                                                         <button type="button"
-                                                                aria-label="Удалить видео"
-                                                                class="delete__button"
-                                                                @click="onDelete(video.id)">
-                                                            <IconDelete/>
+                                                                @click.prevent="onDelete(video.id)"
+                                                                class="btn btn-close btn-link border-0 border-danger bg-danger text-white rounded-circle delete__button"
+                                                                aria-label="Удалить видео">
+                                                            <i class="fa fa-plus" aria-hidden="true"></i>
                                                         </button>
                                                         <div class="video-time d-none">0:32</div>
                                                     </div>
-                                                    <a href="/user-1" class="video-desc d-none mb-0">Sunrise </a>
+                                                    <a href="/user-1" class="video-desc d-none mb-0">Sunrise</a>
                                                 </div>
                                             </div>
                                         </div>
