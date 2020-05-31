@@ -143,9 +143,11 @@ methods: {
         this.getCommunityInfo();
         window.scrollTo(0, 0);
     },
+
     addNewPost(post) {
         this.posts.unshift( new PliziPost( post ) );
     },
+
     /**
      * @TGA не понятно где используется и для чего
      */
@@ -158,6 +160,7 @@ methods: {
     //         console.log(videoWrap);
     //     }
     // },
+
     async getPosts(limit = 50, offset = 0) {
         let response = null;
         this.isStarted = true;
@@ -181,15 +184,29 @@ methods: {
             return response.length;
         }
     },
-    onNeedAddCommunityToHot(){
+
+    onNeedAddCommunityToHot(evData){
+        if (evData.communityId !== this.currentId)
+            return;
+
         this.keyUpdater++;
         const comm = this.communityData || null;
-        this.addCommunityToFavorites( this.currentId, comm );
+        this.addCommunityToFavorites( evData.communityId, comm );
 
         if (this.$refs  &&  this.$refs.hotCommunitiesBlock) {
             this.$refs.hotCommunitiesBlock.$forceUpdate();
         }
     },
+
+    setPageTitle(){
+        if (this.communityData && this.communityData.name) {
+            document.title = `Plizi: ${this.communityData.name}`;
+        }
+        else {
+            document.title = `Plizi: Сообщества`;
+        }
+    },
+
     async getCommunityInfo() {
         let apiResponse = null;
 
@@ -204,7 +221,7 @@ methods: {
         if (apiResponse) {
             this.communityData = new PliziCommunity(apiResponse);
             this.isDataReady = true;
-            document.title = `Plizi: ${this.communityData?.name}`;
+            this.setPageTitle();
 
             setTimeout(() => {
                 const getPosts = async () => {

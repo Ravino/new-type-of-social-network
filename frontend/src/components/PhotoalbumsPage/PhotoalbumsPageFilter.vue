@@ -1,6 +1,6 @@
 <template>
-    <div id="photoalbumPageFilter"  class="bg-white-br20  col-12 d-flex flex-wrap flex-sm-nowrap align-items-center justify-content-between mb-4">
-        <nav class="videos-filter-links col-lg-7 nav pt-2 pt-sm-0" role="tablist">
+    <div id="photoalbumPageFilter"  class="bg-white-br20  col-12 d-flex flex-wrap flex-sm-nowrap align-items-center justify-content-between mb-4 pb-3 pb-sm-0">
+        <nav class="videos-filter-links col-lg-7 nav mb-2 mb-sm-0 pt-2 pt-sm-0" role="tablist">
             <span class="nav-link py-2 py-sm-3 py-xl-4 px-1 mr-2 mr-xl-4" :class="{ 'active': wMode === 'my' }" id="tabMyPhotoalbums" role="tab"
                   @click.stop="ontabChange">Мои альбомы</span>
         </nav>
@@ -11,7 +11,7 @@
             </template>
             <template v-else>
                 <button type="button" @click.stop="onAttachBtnClick($event)"
-                        class="btn plz-btn plz-btn-primary p-0 mr-0">
+                        class="btn plz-btn plz-btn-primary p-0 mx-auto mr-sm-0">
                     Добавить фотографию
                     <input type="file"
                            class="plz-text-editor-file-picker d-none"
@@ -111,11 +111,11 @@ export default {
             for (let file of picsArr) {
                 const reader = new FileReader();
                 reader.onload = () => {
-                    const attachment = new PliziAttachmentItem(true, checkExtension(file, imagesExtensions), file.name);
-                    attachment.isBlob = true;
-                    this.isLoading = attachment.isBlob;
-                    attachment.fileBlob = reader.result;
-                    this.attachFiles.push(attachment);
+                    const image = new PliziAttachmentItem(true, checkExtension(file, imagesExtensions), file.name);
+                    image.isBlob = true;
+                    image.fileBlob = reader.result;
+
+                    this.$emit('uploadingImage', image);
                 };
 
                 reader.readAsDataURL(file);
@@ -128,10 +128,10 @@ export default {
                     console.warn(e.detailMessage);
                 }
 
-                apiResponse.then(response => {
+                apiResponse.then((response) => {
                     response.map((attItem) => {
                         this.$emit('addNewImages', attItem);
-                    })
+                    });
                 }).catch((e) => {
                     window.console.warn(e.detailMessage);
                     throw e;

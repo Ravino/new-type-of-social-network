@@ -284,6 +284,8 @@ methods: {
 },
 
 created(){
+    this.$root.$messagesList = this.messagesList;
+
     this.addListeners();
 },
 

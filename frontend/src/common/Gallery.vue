@@ -36,16 +36,22 @@
                 </template>
             </div>
         </template>
-        <div class="plz-gallery__show" v-if="activeImageId">
+        <div class="plz-gallery__show" v-if="activeImage">
             <GalleryViewer
                 :images="images"
-                :active-id="activeImageId"
-                @close="activeImageId = null">
+                :active-image="activeImage"
+                @close="closeGalleryModal"
+                @showImage="showImage"
+                @navChangeActiveImage="changeGetParams">
             </GalleryViewer>
 
-            <GalleryDescription v-if="post"
-                                :post="post"
-                                :image="activeImage"></GalleryDescription>
+            <GalleryDescription
+                v-if="post"
+                :post="post"
+                :comments="comments"
+                :image="activeImage"
+                @updateComments="updateComments">
+            </GalleryDescription>
         </div>
     </div>
 </template>
@@ -53,6 +59,7 @@
 <script>
 import GalleryViewer from './GalleryViewer.vue';
 import GalleryDescription from './GalleryDescription.vue';
+import PliziComment from "../classes/PliziComment.js";
 
 export default {
 name : 'Gallery',
@@ -65,12 +72,15 @@ props : {
     post : {
         type : Object,
     },
+    type: {
+        type: String,
+    }
 },
 
 data(){
     return {
-        activeImageId : null,
         activeImage : null,
+        comments: [],
     };
 },
 
@@ -218,9 +228,32 @@ computed : {
 },
 
 methods : {
+    async getCommentsOnGallery( activeImageId ) {
+        try {
+            let response = await this.$root.$api.$post.getCommentsByIdOnGallery(activeImageId);
+            this.comments = response.data.list.map(comment => new PliziComment(comment));
+        } catch (e) {
+            console.warn(e.detailMessage);
+        }
+    },
+    updateComments({ comments, id }) {
+        if (this.activeImage.id === id) {
+            this.comments = comments;
+        }
+    },
     showImage( image ){
-        this.activeImageId = image.id;
         this.activeImage = this.images.find(attach => attach.id === image.id);
+        this.$router.history.push({query: {activeImageId: image.id, galleryType: this.type}});
+        this.getCommentsOnGallery( image.id );
+    },
+
+    changeGetParams( activeImage ) {
+        this.$router.history.push({query: {activeImageId: activeImage, galleryType: this.type}});
+    },
+
+    closeGalleryModal() {
+        this.activeImage = null;
+        this.$router.replace({query: ''});
     },
 
     isAlbum( image ){
@@ -322,6 +355,20 @@ methods : {
             return `plz-gallery-image-portrait-half`;
         }
     }
-}
+},
+    mounted() {
+        const activeId = this.$router.history.current.query.activeImageId;
+        const typeGallery = this.$router.history.current.query.galleryType;
+
+        if (typeGallery !== this.type || !activeId) {
+            return;
+        }
+
+        const foundImage = this.images.find(image => activeId === image.id.toString());
+
+        if (foundImage) {
+            this.showImage(foundImage);
+        }
+    }
 }
 </script>

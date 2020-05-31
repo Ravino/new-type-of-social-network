@@ -1,6 +1,6 @@
 <template>
     <div class="profile-photos">
-        <div v-if="profilePhotos" class="w-100  d-flex flex-row plz-profile-photos-list pt-4">
+        <div v-if="profilePhotos" class="w-100  d-flex flex-row plz-profile-photos-list">
 
             <div class="profile-photos-item" v-for="(photo) in images" v-bind:key="photo.id">
                 <div class="plz-profile-photo-item my-0 ml-0 mr-3"

@@ -44,7 +44,7 @@
                                             <td class="mcnImageContent" valign="top" style="padding-right: 9px;padding-left: 9px;padding-top: 0;padding-bottom: 0;text-align: center;mso-line-height-rule: exactly;-ms-text-size-adjust: 100%;-webkit-text-size-adjust: 100%;">
 
 
-                                                <img align="center" alt="" src="https://plizi.s3.eu-north-1.amazonaws.com/images/mail/plizi-mail-logo.png" width="196" style="max-width: 196px;padding-bottom: 0;display: inline !important;vertical-align: bottom;border: 0;height: auto;outline: none;text-decoration: none;-ms-interpolation-mode: bicubic;" class="mcnImage">
+                                                <img align="center" alt="" src="https://plizibuck.s3.eu-central-1.amazonaws.com/images/mail/plizi-mail-logo.png" width="196" style="max-width: 196px;padding-bottom: 0;display: inline !important;vertical-align: bottom;border: 0;height: auto;outline: none;text-decoration: none;-ms-interpolation-mode: bicubic;" class="mcnImage">
 
 
                                             </td>
@@ -93,7 +93,7 @@
 
                                                 <p style="margin: 10px 0 20px 0;padding: 0;mso-line-height-rule: exactly;-ms-text-size-adjust: 100%;-webkit-text-size-adjust: 100%;color: #202020;font-family: Helvetica;font-size: 16px;line-height: 150%;text-align: left;">Ваш новый пароль:&nbsp;<strong>{{ $password ?? 'error' }}</strong><br></p>
                                                 <hr>
-                                                <div style="text-align: center;"><span style="font-size:18px"><strong><a href="https://vm1095330.hl.had.pm/offer" target="_blank" style="mso-line-height-rule: exactly;-ms-text-size-adjust: 100%;-webkit-text-size-adjust: 100%;color: #007C89;font-weight: normal;text-decoration: underline;">Оферта</a>&nbsp; |&nbsp;</strong></span> <strong><span style="font-size:18px"><a href="https://vm1095330.hl.had.pm/confidentiality" target="_blank" style="mso-line-height-rule: exactly;-ms-text-size-adjust: 100%;-webkit-text-size-adjust: 100%;color: #007C89;font-weight: normal;text-decoration: underline;">Политика конфиденциальности</a></span></strong></div>
+                                                <div style="text-align: center;"><span style="font-size:18px"><strong><a href="https://plizi.info/offer" target="_blank" style="mso-line-height-rule: exactly;-ms-text-size-adjust: 100%;-webkit-text-size-adjust: 100%;color: #007C89;font-weight: normal;text-decoration: underline;">Оферта</a>&nbsp; |&nbsp;</strong></span> <strong><span style="font-size:18px"><a href="https://plizi.info/confidentiality" target="_blank" style="mso-line-height-rule: exactly;-ms-text-size-adjust: 100%;-webkit-text-size-adjust: 100%;color: #007C89;font-weight: normal;text-decoration: underline;">Политика конфиденциальности</a></span></strong></div>
 
                                             </td>
                                         </tr>

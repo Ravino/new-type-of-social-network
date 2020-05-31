@@ -5,8 +5,8 @@
             <div class="plz-profile-userpic-container d-flex flex-column  bg-white-br20 overflow-hidden">
                 <div
                     class="plz-profile-userpic-wrapper overflow-hidden position-relative d-flex align-items-center justify-content-center mx-auto m-lg-0"
-                    :class="{'h-100': userData.privacySettings.pageType === 3}">
-                    <img ref="userAvatar" :src="userAvatar" :alt="userData.fullName"/>
+                    :class="{'flex-grow-1': userData.privacySettings.pageType === 3}">
+                    <img ref="userAvatar" :src="userAvatar" :alt="userData.fullName" :class="{'plz-profile-userpic-img': userData.privacySettings.pageType === 3}"/>
                     <label v-if="isOwner===true" for="userAvatarFile"
                            class="user-avatar-file-label m-0 cursor-pointer"></label>
                     <input id="userAvatarFile" ref="userAvatarFile" type="file" @change="uploadUserAvatar()"
