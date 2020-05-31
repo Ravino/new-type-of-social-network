@@ -10,7 +10,7 @@
                     <button class="btn plz-btn plz-btn-primary p-0 mr-3"
                             :disabled="isShipped"
                             @click.stop="onSuccessDelete">
-                        Да, я уверен
+                        Да
                     </button>
                     <button class="btn plz-btn plz-btn-primary p-0 mr-3"
                             :disabled="isShipped"
