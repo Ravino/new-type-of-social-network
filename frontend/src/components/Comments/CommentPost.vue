@@ -14,8 +14,8 @@
     </div>
 </template>
 <script>
-    import TextEditor from "../common/TextEditor.vue";
-    import ChatMixin from "../mixins/ChatMixin.js";
+    import TextEditor from "../../common/TextEditor.vue";
+    import ChatMixin from "../../mixins/ChatMixin.js";
     export default {
         name: "CommentPost",
         components: {TextEditor},

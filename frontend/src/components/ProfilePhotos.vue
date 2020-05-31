@@ -18,8 +18,11 @@
                 </div>
             </div>
             <div class="w-100 d-flex flex-row plz-profile-photos-list pt-3">
-                <ProfileGallery v-if="photos.length > 0" :profilePhotos="profilePhotos" :images="photos"></ProfileGallery>
-                <div v-else class="mx-auto">Нет фотографий</div>
+                <vue-custom-scrollbar class="plz-latest-entries-list d-flex justify-content-between justify-content-sm-start pb-3"
+                                      :settings="customScrollbarSettings">
+                    <ProfileGallery v-if="photos.length > 0" :profilePhotos="profilePhotos" :images="photos"></ProfileGallery>
+                    <div v-else class="mx-auto">Нет фотографий</div>
+                </vue-custom-scrollbar>
             </div>
         </div>
     </div>
@@ -27,18 +30,29 @@
 
 <script>
     import ProfileGallery from '../common/ProfileGallery.vue';
+    import PliziUser from "../classes/PliziUser";
+    import PliziAuthUser from "../classes/PliziAuthUser";
+    import vueCustomScrollbar from "vue-custom-scrollbar";
 
 export default {
 name: 'ProfilePhotos',
     components: {
-        ProfileGallery
+        ProfileGallery,
+        vueCustomScrollbar
     },
 props: {
-    photos: Array
+    photos: Array,
+    profileData: PliziUser | PliziAuthUser,
+    isOwner: Boolean,
 },
 data () {
     return {
-        profilePhotos: true
+        profilePhotos: true,
+        customScrollbarSettings: {
+            maxScrollbarLength: 60,
+            suppressScrollY: true, // rm scroll x
+            wheelPropagation: false
+        },
     }
 },
 
@@ -47,14 +61,18 @@ computed : {
         return this.$root.$auth.user;
     },
     userImageNumber() {
-        return this.userData.stats.imageCount;
+        if (this.profileData) {
+            return this.profileData.stats.imageCount;
+        } else {
+            return this.userData.stats.imageCount;
+        }
     },
 },
     methods: {
         sBeaty(param) {
             return this.$options.filters.statsBeauty(param);
         }
-    }
+    },
 
 }
 </script>
