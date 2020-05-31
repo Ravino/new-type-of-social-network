@@ -12,13 +12,32 @@
                     <div class="col-12 --col-sm-7 col-lg-8 col-xl-8">
 
                         <div class="col-12 order-1 order-md-0 bg-white-br20 py-2">
-                            <CommunityMember
-                                v-for="member in allMembers"
-                                v-if="isLoaded"
-                                :key="member.id"
-                                :srItem="member"
-                                :isAdmin="role && role !== 'user'"
-                                :communityId="parseInt(id)" />
+
+
+                            <div class="card-body py-0" v-if="videos">
+                                <div class="row">
+                                    <div v-for="video in videos"
+                                         :key="video.id"
+                                         class="col-12 col-sm-6 col-xl-6 my-3">
+                                        <div v-if="video.isYoutubeLink" class="videos-item">
+                                            <div class="video mb-2">
+                                                <div class="video-wrap-pre">
+                                                    <img alt="image"
+                                                         :src="`//img.youtube.com/vi/${video.youtubeId}/mqdefault.jpg`"
+                                                         @click.stop="openVideoModal(video.link)">
+                                                </div>
+                                                <button type="button"
+                                                        aria-label="Запустить видео"
+                                                        class="video__button">
+                                                    <IconYoutube/>
+                                                </button>
+                                                <div class="video-time d-none">0:32</div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
                             <Spinner v-else/>
                         </div>
                     </div>
@@ -33,11 +52,6 @@
                         <CommunityFriendsInformer v-bind:community="communityData"/>
 
                         <CommunityShortMembers v-if="isDataReady" v-bind:community="communityData"/>
-
-                        <CommunityVideoBlock v-if="hasAccess"
-                                             :avatarMedium="avatarMedium"
-                                             :communityId="parseInt(id)"
-                                             @openVideoModal="openVideoModal"/>
                     </div>
                 </div>
             </div>
@@ -51,8 +65,9 @@
 </template>
 
 <script>
-    import PliziMember from '../classes/PliziMember.js';
     import PliziCommunity from "../classes/PliziCommunity.js";
+    import PliziVideo from "../classes/PliziVideo.js";
+
     import CommunitiesSubscribeMixin from "../mixins/CommunitiesSubscribeMixin.js";
     import CommunityPageMixin from "../mixins/CommunityPageMixin.js";
 
@@ -62,11 +77,13 @@
     import CommunityMember from '../components/Community/CommunityMember.vue';
 
     import IconShare from '../icons/IconShare.vue';
+    import IconYoutube from "../icons/IconYoutube.vue";
 
     export default {
-        name: 'CommunityMembersPage',
+        name: 'CommunityVideosPage',
         mixins: [CommunitiesSubscribeMixin, CommunityPageMixin],
         components: {
+            IconYoutube,
             FriendsAllList,
             AccountToolbarLeft,
             CommunityMember,
@@ -77,7 +94,7 @@
         },
         data() {
             return {
-                allMembers: [],
+                videos: [],
                 isLoaded: true,
                 role: null,
 
@@ -118,28 +135,27 @@
                 if (apiResponse) {
                     this.communityData = new PliziCommunity(apiResponse);
                     this.isDataReady = true;
-                    document.title = `Plizi: ${this.communityData?.name}`;
+                    document.title = `Plizi: Видео от сообзества ${this.communityData?.name}`;
 
                     setTimeout(() => {
-                        this.loadCommunityMembers();
+                        this.getVideoList();
                     }, 100);
                 }
             },
-            async loadCommunityMembers() {
+            async getVideoList() {
                 let apiResponse;
                 this.isLoaded = false;
 
                 try {
-                    apiResponse = await this.$root.$api.$communities.members(this.id);
+                    apiResponse = await this.$root.$api.$communities.videos(this.id, 30);
                 } catch (e) {
                     console.warn(e.detailMessage);
                 }
 
                 if (apiResponse) {
-                    apiResponse.list.map((request) => {
-                        this.allMembers.push(new PliziMember(request));
+                    apiResponse.list.map((video) => {
+                        this.videos.push(new PliziVideo(video));
                     });
-                    this.role = apiResponse.role;
                     this.isLoaded = true;
                 }
             },
@@ -163,7 +179,14 @@
 
                 this.lazyLoadStarted = false;
                 this.onScrollYPage();
-            }
+            },
+            openVideoModal(id) {
+                this.postVideoModal.isVisible = true;
+                this.postVideoModal.content.videoLink = id;
+            },
+            hideVideoModal(){
+                this.postVideoModal.isVisible = false;
+            },
         },
         mounted() {
             this.getCommunityInfo();

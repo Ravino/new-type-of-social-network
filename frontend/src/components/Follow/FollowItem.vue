@@ -27,8 +27,9 @@
 
             <div class="align-self-center flex-shrink-0 ml-auto">
                 <div class="btn-group">
-                    <button class="btn btn-danger btn-sm ml-2 rounded" @click="unFollow()">
-                        <i class="fas fa-stop"></i>&nbsp;Отписаться
+                    <button @click.prevent="unFollow()" type="button" class="btn btn-link ml-0"
+                            title="Отписаться">
+                        <IconUserX  style="height: 20px;" />
                     </button>
                 </div>
             </div>
@@ -39,8 +40,11 @@
 <script>
     import PliziUser from "../../classes/PliziUser.js";
 
+    import IconUserX from "../../icons/IconUserX.vue";
+
     export default {
         name: 'FollowItem',
+        components: {IconUserX},
         props: {
             follow: {
                 type: PliziUser,

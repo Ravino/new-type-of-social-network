@@ -15,13 +15,20 @@ class VideoCollection extends ResourceCollection
     private $onlyVideoData;
 
     /**
+     * @var int
+     */
+    private $totalCount;
+
+    /**
      * VideoCollection constructor.
      * @param $resource
-     * @param $onlyVideoData
+     * @param bool $onlyVideoData
+     * @param int $totalCount
      */
-    public function __construct($resource, $onlyVideoData = false)
+    public function __construct($resource, $onlyVideoData = false, $totalCount = 0)
     {
         $this->onlyVideoData = $onlyVideoData;
+        $this->totalCount = $totalCount;
         parent::__construct($resource);
     }
 
@@ -35,6 +42,7 @@ class VideoCollection extends ResourceCollection
     {
         $onlyVideoData = $this->onlyVideoData;
         return [
+            'totalCount' => $this->totalCount,
             'list' => $this->collection->map(static function ($video) use ($onlyVideoData) {
                 if ($onlyVideoData) {
                     return [
@@ -52,14 +60,14 @@ class VideoCollection extends ResourceCollection
                         'post' => new Post($video->creatableby),
                         'createdAt' => $video->created_at,
                     ];
-                } else {
-                    return [
-                        'id' => $video->id,
-                        'link' => $video->link,
-                        'user' => new SimpleUser($video->user),
-                        'createdAt' => $video->created_at,
-                    ];
                 }
+
+                return [
+                    'id' => $video->id,
+                    'link' => $video->link,
+                    'user' => new SimpleUser($video->user),
+                    'createdAt' => $video->created_at,
+                ];
             }),
         ];
     }

@@ -1,6 +1,6 @@
 <template>
     <div class="profile-photos">
-        <div v-if="profilePhotos" class="w-100  d-flex flex-row plz-profile-photos-list pt-4">
+        <div v-if="profilePhotos" class="w-100  d-flex flex-row plz-profile-photos-list">
 
             <div class="profile-photos-item" v-for="(photo) in images" v-bind:key="photo.id">
                 <div class="plz-profile-photo-item my-0 ml-0 mr-3"
@@ -10,9 +10,9 @@
                          :src="photo.medium.path"
                          :alt="photo.name"/>
                 </div>
-                <button class="btn-close"  aria-label="delete">
-                    <i class="fa fa-plus" aria-hidden="true"></i>
-                </button>
+<!--                <button class="btn-close"  aria-label="delete" @click="onDeleteImage(photo.id)">-->
+<!--                    <i class="fa fa-plus" aria-hidden="true"></i>-->
+<!--                </button>-->
 
             </div>
 
@@ -51,12 +51,6 @@
         },
 
         computed: {
-            photoStyle(photo) {
-                return {
-                    'background-image': photo
-                }
-            },
-
             viewImages() {
                 return this.images.slice(0, this.moreCount);
             },
@@ -76,7 +70,6 @@
                 this.activeImageId = image.id;
                 this.activeImage = this.images.find(attach => attach.id === image.id);
             },
-
-        }
+        },
     }
 </script>

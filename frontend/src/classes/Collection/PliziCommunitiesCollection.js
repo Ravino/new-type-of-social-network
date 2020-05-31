@@ -61,7 +61,7 @@ class PliziCommunitiesCollection extends PliziStoredCollection {
 
 
     isCanAddToFavorites(ID){
-        return  !this.collection.get(ID+'');
+        return !this.collection.get(+ID);
     }
 
     /**
