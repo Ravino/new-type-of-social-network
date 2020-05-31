@@ -21,7 +21,7 @@
             <GalleryViewer
                 class="w-100"
                 :images="images"
-                :active-id="activeImageId"
+                :active-image="activeImage"
                 @close="activeImageId = null">
             </GalleryViewer>
 
