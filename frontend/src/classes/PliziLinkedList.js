@@ -113,6 +113,9 @@ class PliziLinkedList extends PliziCollection {
     delete(ID) {
         const delItem = this.nodes.get(ID);
 
+        if (!delItem)
+            return;
+
         let oPrev = delItem.prev ? this.nodes.get(delItem.prev).toJSON() : null;
         let oNext = delItem.next ? this.nodes.get(delItem.next).toJSON() : null;
 

@@ -129,7 +129,7 @@
 
                     <div v-if="recursivePost.attachments" class="col-12 plz-post-item-images">
                             <div class="post-images shared">
-                                <Gallery :post="post" v-if="recursivePost.imageAttachments.length > 0" :images="recursivePost.imageAttachments"></Gallery>
+                                <Gallery type="post" :post="post" v-if="recursivePost.imageAttachments.length > 0" :images="recursivePost.imageAttachments"></Gallery>
 
                                 <template v-for="(postAttachment) in recursivePost.attachments">
                                     <template v-if="!postAttachment.isImage">
@@ -172,7 +172,7 @@
 
             <div class="col-12 plz-post-item-images">
                 <div class="post-images">
-                    <Gallery :post="post" v-if="imageAttachments.length > 0" :images="imageAttachments"></Gallery>
+                    <Gallery type="post" :post="post" v-if="imageAttachments.length > 0" :images="imageAttachments"></Gallery>
 
                     <template v-for="(postAttachment) in post.attachments">
                         <template v-if="!postAttachment.isImage">
@@ -234,6 +234,7 @@
                     <div class="plz-comments" v-for="comment in comments">
                         <CommentItem
                             :key="comment.id"
+                            type="post"
                             :comment="comment"
                             :postId="postIdForComment"
                             @onDelete="removeComment"
@@ -275,8 +276,8 @@
     import PliziPost from '../../classes/PliziPost.js';
     import Gallery from '../Gallery.vue';
     import LinkMixin from '../../mixins/LinkMixin.js';
-    import CommentPost from "../../components/CommentPost.vue";
-    import CommentItem from "../../components/CommentItem.vue";
+    import CommentPost from "../../components/Comments/CommentPost.vue";
+    import CommentItem from "../../components/Comments/CommentItem.vue";
     import AvatarMixin from '../../mixins/AvatarMixin.js';
     import PliziComment from "../../classes/PliziComment.js";
 

@@ -31,7 +31,20 @@
                 </template>
             </div>
         </router-link>
+        </template>
+        <template v-else>
+            <div class="plz-profile-userdetails-numbers text-center py-2 px-2 py-md-4 px-md-4 mt-auto">
+                <template v-if="userImageNumber()">
+                    <span class="numbers-top" v-html="sBeaty(usrFriendsNumber())"></span>
+                    <span class="numbers-bottom">Фотографий</span>
+                </template>
+                <template v-else>
+                    <span class="numbers-bottom">Нет фотографий</span>
+                </template>
+            </div>
+        </template>
 
+        <template v-if="isOwner">
         <router-link tag="a" class="p-0 d-flex" to="/videos">
             <div v-if="usrVideosNumber() > 0"
                  class="plz-profile-userdetails-numbers text-center py-2 px-2 py-md-4 px-md-4 mt-auto">
@@ -42,6 +55,17 @@
                 <span class="numbers-bottom">Нет видео</span>
             </div>
         </router-link>
+        </template>
+        <template v-else>
+            <div v-if="usrVideosNumber() > 0"
+                 class="plz-profile-userdetails-numbers text-center py-2 px-2 py-md-4 px-md-4 mt-auto">
+                <span class="numbers-top" v-html="sBeaty(usrVideosNumber())"></span>
+                <span class="numbers-bottom">Видео</span>
+            </div>
+            <div v-else class="plz-profile-userdetails-numbers text-center py-2 px-2 py-md-4 px-md-4 mt-auto">
+                <span class="numbers-bottom">Нет видео</span>
+            </div>
+        </template>
         <!--
         <div class="plz-profile-userdetails-numbers text-center pt-4 px-4">
             <span class="numbers-top" v-html="sBeaty(userData.audiosNumber)"></span>
