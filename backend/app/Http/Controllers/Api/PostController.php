@@ -257,7 +257,10 @@ class PostController extends Controller
     {
         if ($post->author->id === \Auth::user()->id) {
             $post->update(['body' => $request->body]);
-            PostAttachment::whereIn('id', $request->attachmentIds)->update(['post_id' => $post->id]);
+
+            if ($request->attachmentIds) {
+                PostAttachment::whereIn('id', $request->attachmentIds)->update(['post_id' => $post->id]);
+            }
 
             return new PostResource($post);
         }
