@@ -11,5 +11,9 @@ RUN yum install php-pecl-mongodb -y
 RUN yum install php-bcmath -y
 COPY . .
 RUN composer install
-EXPOSE 5555
-CMD php artisan ws:serve
+EXPOSE 7070
+COPY docker-entrypoint.sh /usr/share/docker-laravel/bin/
+RUN chmod +x /usr/share/docker-laravel/bin/docker-entrypoint.sh
+
+# start and setup scripts
+ENTRYPOINT ["/usr/share/docker-laravel/bin/docker-entrypoint.sh"]
