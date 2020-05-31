@@ -2,12 +2,12 @@
     <div v-if="photoAlbum" class="photoalbum-page-description text-center">
         <h6 class="photoalbum-page-album-name">{{ photoAlbum.title }}</h6>
         <p  class="photoalbum-page-album-desc">{{ photoAlbum.description }}</p>
-        <div class="photoalbum-page-album-btns d-flex flex-wrap justify-content-center mb-4">
+        <div class="photoalbum-page-album-btns d-flex flex-wrap justify-content-center mb-3">
             <button @click="showPhotoalbumEditModal"
-                    class="btn plz-btn-primary edit-album mx-3">
+                    class="btn plz-btn-primary edit-album mx-3 mb-2">
                 Редактировать альбом
             </button>
-            <button class="btn btn-outline-danger delete-album mx-3"
+            <button class="btn btn-outline-danger delete-album mx-3 mb-2"
                     @click="onShowDeletePhotoAlbumModal">
                 Удалить альбом
             </button>
