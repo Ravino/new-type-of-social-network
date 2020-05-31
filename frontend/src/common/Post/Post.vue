@@ -62,8 +62,7 @@
                 <div v-for="(recursivePost, index) in recursivePosts"
                      :key="index" class="sharedFrom pt-3 pl-3">
 
-                    <template v-if="recursivePost.body && recursivePost.attachments">
-                        <div class="col-12 plz-post-item-header">
+                    <div class="col-12 plz-post-item-header">
 
                             <div class="post-news-item d-flex flex-row align-content-center shared  pb-2">
 
@@ -97,7 +96,7 @@
                             </div>
                         </div>
 
-                        <div class="col-12 plz-post-item-body pt-2">
+                    <div v-if="recursivePost.body" class="col-12 plz-post-item-body pt-2">
                             <template v-if="recursivePost.livePreview && typeof recursivePost.livePreview === 'object'">
                                 <p v-if="recursivePost.livePreview.text"
                                    class="post-main-text shared mb-0"
@@ -128,7 +127,7 @@
                             </template>
                         </div>
 
-                        <div class="col-12 plz-post-item-images">
+                    <div v-if="recursivePost.attachments" class="col-12 plz-post-item-images">
                             <div class="post-images shared">
                                 <Gallery :post="post" v-if="recursivePost.imageAttachments.length > 0" :images="recursivePost.imageAttachments"></Gallery>
 
@@ -139,7 +138,6 @@
                                 </template>
                             </div>
                         </div>
-                    </template>
 
                 </div>
             </template>
