@@ -461,6 +461,52 @@ class PliziPostAPI extends PliziBaseAPI {
         return null;
     }
 
+    /**
+     * Оставить комментарий к галереи
+     *
+     * @param {string} body
+     * @param {number} postId
+     * @param {number[]} attachmentId
+     * @param {number[]} attachmentIds
+     * @return {object[]|null}
+     * @throws PliziAPIError
+     */
+    async setGalleryComments(body, postId, attachmentId, attachmentIds = []) {
+        const response = await this.axios.post(`api/posts/attachments/${attachmentId}/comment`, {
+                body,
+                postId,
+                attachmentId,
+                attachmentIds,
+            }, this.authHeaders
+        );
+
+        if (response.status === 200) {
+            return response.data
+        }
+
+        return null;
+    }
+
+
+    /**
+     * Получить коментарии к галереии
+     *
+     * @param {number} attachmentId
+     * @return {object[]|null}
+     * @throws PliziAPIError
+     */
+
+    async getCommentsByIdOnGallery(attachmentId) {
+        const response = await this.axios.get(`api/posts/attachments/${attachmentId}/comment`, this.authHeaders);
+
+        if (response.status === 200) {
+            return response.data;
+        }
+
+        return null;
+    };
+
+
 }
 
 export default PliziPostAPI;

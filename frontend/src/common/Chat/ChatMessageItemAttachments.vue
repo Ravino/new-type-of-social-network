@@ -3,7 +3,7 @@
          class="message-attachments d-flex flex-wrap"
          :class="{'message-attachments-z': attachItem}">
         <div class="message-attachment-item mb-2 message-gallery --flex-grow-1" >
-            <Gallery v-if="attachItem"
+            <Gallery type="chat" v-if="attachItem"
                      v-bind:images="imageList" class="message-sended-image w-100">
             </Gallery>
             <span v-else class="message-sended-attach d-flex align-items-center mb-2">
