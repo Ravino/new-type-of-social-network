@@ -109,24 +109,27 @@ import PliziComment from "../classes/PliziComment.js";
   },
   computed: {
    userAvatar() {
-       if (this.post.author.profile.avatar === null) {
+       if (this.getUserData.profile.avatar === null) {
            return this.noAvatar;
        }
 
-       return this.post.author.profile.avatar.image.thumb.path;
+       return this.getUserData.profile.avatar.image.thumb.path;
    },
     postIdForComment() {
       return this.post?.sharedFrom?.id || this.post.id;
     },
    userName() {
-    return this.post.author.profile.firstName;
+    return this.getUserData.profile.firstName;
    },
    userSurname() {
-    return this.post.author.profile.lastName;
+    return this.getUserData.profile.lastName;
    },
    getTimePost() {
     return moment(this.post.createdAt).fromNow();
    },
+  getUserData() {
+      return this.$root.$auth.user;
+  },
   },
   methods: {
       addNewComment(newComment) {
