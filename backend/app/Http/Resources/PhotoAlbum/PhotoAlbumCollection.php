@@ -2,6 +2,7 @@
 
 namespace App\Http\Resources\PhotoAlbum;
 
+use App\Http\Resources\User\Image;
 use App\Http\Resources\User\SimpleUser;
 use App\Models\Community as CommunityModel;
 use \App\Http\Resources\Community\Community;
@@ -29,12 +30,15 @@ class PhotoAlbumCollection extends ResourceCollection
                         'createdAt' => $photoAlbum->created_at,
                     ];
                 } else {
+                    $lastImage = $photoAlbum->images()->latest()->first();
+
                     return [
                         'id' => $photoAlbum->id,
                         'title' => $photoAlbum->title,
                         'description' => $photoAlbum->description,
                         'user' => new SimpleUser($photoAlbum->creatable),
                         'author' => new SimpleUser($photoAlbum->author),
+                        'lastImage' => $lastImage ? new Image($lastImage) : null,
                         'createdAt' => $photoAlbum->created_at,
                     ];
                 }
