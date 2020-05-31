@@ -56,6 +56,11 @@ $communityPrimaryImage: 70px;
             &[href] {
                 color: $textColor;
             }
+            a {
+                font-size: 14px;
+                color: $textColor;
+                font-weight: 600;
+            }
         }
         &-desc {
             font-size: 13px;
