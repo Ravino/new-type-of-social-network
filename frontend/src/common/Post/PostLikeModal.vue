@@ -8,7 +8,7 @@
              @click.stop="">
             <div class="modal-content bg-white-br20">
                 <div id="postLikeBody" class="modal-body p-4">
-                    <div class="row h-100">
+                    <div class="row">
                         <div class="col-4 col-lg-2 text-center mb-3 d-flex align-items-stretch text-center"
                              v-for="(user, index) in users"
                              :key="index">
