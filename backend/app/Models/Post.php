@@ -92,6 +92,15 @@ class Post extends Model
 
     public static function getWithoutOldPosts($user, $limit, $offset, $isMyPosts = false, $onlyLiked = false, $orderBy = null)
     {
+        $isFriend = $user->isFriendWith(auth()->user());
+
+        if ($user->id !== \Auth::id()) {
+            if (($user->privacySettings->page_type === 2 && !$isFriend) ||
+                $user->privacySettings->page_type === 3) {
+                return [];
+            }
+        }
+
         if ($isMyPosts) {
             $userPosts = $user->posts()->pluck('id');
 
