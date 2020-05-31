@@ -2,7 +2,7 @@
     <div class="profile-photos">
         <div v-if="profilePhotos" class="w-100  d-flex flex-row plz-profile-photos-list pt-4">
             <div v-for="(photo) in images" v-bind:key="photo.id"
-                 class="plz-profile-photo-item w-auto my-0 ml-0 mr-3"
+                 class="plz-profile-photo-item my-0 ml-0 mr-3"
                  :class="{'plz-gallery-image-mores': photo.isMore}"
                  @click="showImage(photo)">
                 <img @click="showImage(photo)"
@@ -44,6 +44,11 @@
         },
 
         computed: {
+            photoStyle(photo) {
+                return {
+                    'background-image': photo
+                }
+            },
 
             viewImages() {
                 return this.images.slice(0, this.moreCount);
