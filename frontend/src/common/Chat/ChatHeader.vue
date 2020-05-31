@@ -1,17 +1,20 @@
 <template>
     <div id="chatHeader" class="bg-white w-100 border-bottom d-flex justify-content-between">
-            <div class="col-11 col-md-5 d-flex">
-                <ChatHeaderCompanion v-if="currentDialog.isPrivate" v-bind:companion="companion"></ChatHeaderCompanion>
+            <div class="col-11 col-md-6 d-flex">
+                <vue-custom-scrollbar class="plz-latest-entries-list d-flex justify-content-between justify-content-sm-start pb-3"
+                                      :settings="customScrollbarSettings">
+                    <ChatHeaderCompanion v-if="currentDialog.isPrivate" v-bind:companion="companion"></ChatHeaderCompanion>
 
-                <GroupChatAttendeesList v-if="currentDialog.isGroup"
-                                      v-bind:key="'groupChatAttendeesList'+attendeeKeyUpdater"
-                                      v-bind:currentDialog="currentDialog"
-                                      v-bind:keyUpdater="attendeeKeyUpdater"
-                                      @ShowAddAttendeeModal="onShowAttendeesModal"
-                                      ref="groupChatAttendeesList"></GroupChatAttendeesList>
+                    <GroupChatAttendeesList v-if="currentDialog.isGroup"
+                                          v-bind:key="'groupChatAttendeesList'+attendeeKeyUpdater"
+                                          v-bind:currentDialog="currentDialog"
+                                          v-bind:keyUpdater="attendeeKeyUpdater"
+                                          @ShowAddAttendeeModal="onShowAttendeesModal"
+                                          ref="groupChatAttendeesList"></GroupChatAttendeesList>
+                </vue-custom-scrollbar>
             </div>
 
-            <div class="col-1 col-md-7 d-flex p-0 px-md-3">
+            <div class="col-1 col-md-6 d-flex p-0 px-md-3">
                 <div class="d-flex align-items-center justify-content-end w-100">
                     <div class="form-row align-items-center justify-content-end flex-nowrap">
                         <div class="col-auto d-none d-md-block position-relative">
@@ -79,6 +82,9 @@ import GroupChatAttendeesModal from './GroupChatAttendeesModal.vue';
 import GroupChatAttendeesList from './GroupChatAttendeesList.vue';
 import ChatHeaderCompanion from './ChatHeaderCompanion.vue';
 
+/** @link https://binaryify.github.io/vue-custom-scrollbar/en/#why-custom-scrollbar **/
+import vueCustomScrollbar from 'vue-custom-scrollbar';
+
 import PliziDialog from '../../classes/PliziDialog.js';
 
 export default {
@@ -91,7 +97,8 @@ components: {
     ChatHeaderMenu,
     CreateGroupChatModal,
     RemoveCurrentDialogModal,
-    GroupChatAttendeesModal
+    GroupChatAttendeesModal,
+    vueCustomScrollbar
 },
 props: {
     currentDialog: {
@@ -108,7 +115,12 @@ data() {
         createGroupChatModalShow: false,
         removeDialogModalShow : false,
         showAttendeesModal: false,
-        attendeeKeyUpdater: 0
+        attendeeKeyUpdater: 0,
+        customScrollbarSettings: {
+            maxScrollbarLength: 60,
+            suppressScrollY: true, // rm scroll x
+            wheelPropagation: false
+        },
     }
 },
 
