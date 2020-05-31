@@ -69,6 +69,7 @@
             </div>
         </router-link>
         </template>
+
         <template v-else>
             <div v-if="usrVideosNumber() > 0"
                  class="plz-profile-userdetails-numbers text-center py-2 px-2 py-md-4 px-md-4 mt-auto">
