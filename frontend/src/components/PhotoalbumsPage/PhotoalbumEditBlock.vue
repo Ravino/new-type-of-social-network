@@ -1,13 +1,13 @@
 <template>
-    <div v-if="photoAlbum" class="photoalbum-page-description">
-        <h6>{{ photoAlbum.title }}</h6>
-        <p>{{ photoAlbum.description }}</p>
-        <div class="d-flex">
+    <div v-if="photoAlbum" class="photoalbum-page-description text-center">
+        <h6 class="photoalbum-page-album-name">{{ photoAlbum.title }}</h6>
+        <p  class="photoalbum-page-album-desc">{{ photoAlbum.description }}</p>
+        <div class="photoalbum-page-album-btns d-flex flex-wrap justify-content-center mb-4">
             <button @click="showPhotoalbumEditModal"
-                    class="btn plz-btn-primary edit-album">
+                    class="btn plz-btn-primary edit-album mx-3">
                 Редактировать альбом
             </button>
-            <button class="btn btn-outline-danger delete-album"
+            <button class="btn btn-outline-danger delete-album mx-3"
                     @click="onShowDeletePhotoAlbumModal">
                 Удалить альбом
             </button>
