@@ -29,7 +29,7 @@
                     <div v-show="isShowMessageBlock" id="chatMessagesWrapper"
                          class="col-12 col-lg-8 bg-light d-lg-flex flex-column p-0">
 
-                        <ChatHeader v-if="currentDialog" v-bind:currentDialog="currentDialog"
+                        <ChatHeader v-if="currentDialog" v-bind:currentDialog="getCurrentDialog()"
                                     @ChatMessagesFilter="onUpdateMessagesFilterText"
                                     ref="chatHeader">
                         </ChatHeader>
@@ -144,6 +144,10 @@ computed: {
 },
 
 methods: {
+    getCurrentDialog(){
+        return this.$root.$auth.dm.get(this.currentDialog.id);
+    },
+
     onScrollToTop(evData){
         this.lazyLoadMessages(evData.chatId, evData.offset, evData.limit);
     },

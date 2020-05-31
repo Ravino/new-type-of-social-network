@@ -1,5 +1,6 @@
-import PliziProfile from './User/PliziProfile.js';
 import { convertToDate } from '../utils/DateUtils.js';
+
+import PliziProfile from './User/PliziProfile.js';
 import PliziUserStats from "./User/PliziUserStats.js";
 
 class PliziUser {
