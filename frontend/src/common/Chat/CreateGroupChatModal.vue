@@ -182,5 +182,14 @@ computed: {
     }
 },
 
+mounted(){
+    setTimeout(()=>{
+        if (this.$refs.chatName) {
+            this.$refs.chatName.focus();
+        }
+    }, 100);
+}
+
+
 }
 </script>

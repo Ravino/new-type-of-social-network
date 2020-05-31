@@ -2,6 +2,7 @@ import { convertToDate } from '../utils/DateUtils.js';
 
 import PliziProfile from './User/PliziProfile.js';
 import PliziUserStats from "./User/PliziUserStats.js";
+import PliziUserPrivacySettings from './User/PliziUserPrivacySettings.js';
 
 class PliziUser {
     /**
@@ -80,6 +81,12 @@ class PliziUser {
     _stats = null;
 
     /**
+     * @type {PliziUserPrivacySettings}
+     * @private
+     */
+    _privacySettings = null;
+
+    /**
      * @param {object} usrData
      */
     constructor(usrData) {
@@ -101,6 +108,8 @@ class PliziUser {
         this._mutualFriendsCount = inputData.mutualFriendsCount ? inputData.mutualFriendsCount : this.mutualFriendsCount;
 
         this._stats = inputData.stats ? new PliziUserStats(inputData.stats) : this.stats;
+        this._privacySettings = inputData.privacySettings ? new PliziUserPrivacySettings(inputData.privacySettings) :
+            this.privacySettings;
 
         // TODO: @TGA переписать потом на загрузку реальных данных
         this._subscribersNumber = Math.floor(Math.random() * 10000);
@@ -318,6 +327,13 @@ class PliziUser {
     }
 
     /**
+     * @returns {PliziUserPrivacySettings}
+     */
+    get privacySettings() {
+        return this._privacySettings;
+    }
+
+    /**
      * возвращает данные юзера в том виде как их воазващает api/user/search
      * @returns {Object}
      */
@@ -329,6 +345,7 @@ class PliziUser {
             lastActivity: (this.lastActivity) ? this.lastActivity.valueOf() / 1000 : this.lastActivity,
             profile: (this.profile) ? this.profile.toJSON() : null,
             stats: (this.stats) ? this.stats.toJSON() : null,
+            privacySettings: this.privacySettings ? this.privacySettings.toJSON() : null,
             mutualFriendsCount: this.mutualFriendsCount
         };
     }

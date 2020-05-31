@@ -17,35 +17,59 @@
                     </ProfileHeader>
                     <Spinner v-else></Spinner>
 
-                    <template v-if="userPhotos.length > 0">
+                    <template v-if="isLockedProfile">
+                        <div class="row">
+                            <div class="card locked-profile-notify bg-white-br20 border-0 w-100">
+                                    <div class="card-body d-flex flex-column justify-content-center align-items-center">
+                                        <div class="mb-3">
+                                            <IconUnlock/>
+                                        </div>
+                                        <div class="font-weight-bold text-uppercase">
+                                            Это закрытый профиль
+                                        </div>
+                                        <div v-if="this.profileData.privacySettings.pageType !== 3"
+                                             class="text-center text-secondary mt-2 w-50">
+                                            Добавьте пользователя {{ this.profileData.profile.firstName }} в друзья,
+                                            чтобы смотреть записи, фотографии и другие материалы
+                                        </div>
+                                    </div>
+                                </div>
+                        </div>
+
+                    </template>
+
+                    <template v-else>
+                    
+                        <template v-if="userPhotos.length > 0">
                         <ProfilePhotos v-if="isPhotosDataReady" v-bind:photos="userPhotos"></ProfilePhotos>
                         <Spinner v-else></Spinner>
                     </template>
+                    
+                        <ProfileFilter v-if="(filteredPosts && filteredPosts.length > 1) || filterMode !== 'all'"
+                                       v-bind:firstName="profileData.firstName"
+                                       @wallPostsSelect="wallPostsSelectHandler"/>
 
-                    <ProfileFilter v-if="(filteredPosts && filteredPosts.length > 1) || filterMode !== 'all'"
-                                   v-bind:firstName="profileData.firstName"
-                                   @wallPostsSelect="wallPostsSelectHandler"/>
+                        <template v-if="filteredPosts && filteredPosts.length > 0">
+                            <Post v-for="postItem in filteredPosts"
+                                  :key="`userPost-`+postItem.id"
+                                  :post="postItem"
+                                  @onShare="onSharePost"
+                                  @onShowUsersLikes="openLikeModal"></Post>
+                        </template>
 
-                    <template v-if="filteredPosts && filteredPosts.length > 0">
-                        <Post v-for="postItem in filteredPosts"
-                              :key="`userPost-`+postItem.id"
-                              :post="postItem"
-                              @onShare="onSharePost"
-                              @onShowUsersLikes="openLikeModal"></Post>
-                    </template>
-
-                    <div v-else-if="!isStarted"  class="row plz-post-item mb-4 bg-white-br20 p-4">
-                        <div class="alert alert-info w-100 p-5 text-center mb-0">
-                            Пользователь {{ profileData.firstName }} не создал ни одной записи.
-                        </div>
-                    </div>
-
-                    <template v-if="isStarted">
-                        <div class="row plz-post-item mb-4 bg-white-br20 p-4">
-                            <div class="w-100 p-5 text-center mb-0">
-                                <SmallSpinner />
+                        <div v-else-if="!isStarted"  class="row plz-post-item mb-4 bg-white-br20 p-4">
+                            <div class="alert alert-info w-100 p-5 text-center mb-0">
+                                Пользователь {{ profileData.firstName }} не создал ни одной записи.
                             </div>
                         </div>
+
+                        <template v-if="isStarted">
+                            <div class="row plz-post-item mb-4 bg-white-br20 p-4">
+                                <div class="w-100 p-5 text-center mb-0">
+                                    <SmallSpinner />
+                                </div>
+                            </div>
+                        </template>
                     </template>
                 </div>
 
@@ -89,6 +113,7 @@ import Post from '../common/Post/Post.vue';
 import NewPersonalMessageModal from '../components/NewPersonalMessageModal.vue';
 import PostRepostModal from '../common/Post/PostRepostModal.vue';
 import PostLikeModal from '../common/Post/PostLikeModal.vue';
+import IconUnlock from "../icons/IconUnlock.vue";
 
 import DialogMixin from '../mixins/DialogMixin.js';
 import LazyLoadPosts from '../mixins/LazyLoadPosts.js';
@@ -113,6 +138,7 @@ components: {
     PostRepostModal,
     SmallSpinner,
     PostLikeModal,
+    IconUnlock,
 },
 mixins: [DialogMixin, LazyLoadPosts, BlackListMixin, PhotosListMixin],
 data() {
@@ -150,6 +176,16 @@ computed: {
 
         return this.posts;
     },
+    isLockedProfile() {
+        if (this.profileData && this.profileData.privacySettings && this.profileData.stats) {
+            if ((this.profileData.privacySettings.pageType === 2 && !this.profileData.stats.isFriend) ||
+                this.profileData.privacySettings.pageType === 3) {
+                return true;
+            }
+        }
+
+        return false;
+    },
 },
 
 methods: {
@@ -157,8 +193,12 @@ methods: {
         this.userId = ev.params.id;
         this.posts = [];
         this.isStarted = true;
-        await this.getUserInfo();
-        await this.getPosts();
+
+        if (!this.isLockedProfile) {
+            await this.getUserInfo();
+            await this.getPosts();
+        }
+
         window.scrollTo(0, 0);
     },
 
@@ -280,8 +320,12 @@ created(){
 async mounted() {
     this.isStarted = true;
     await this.getUserInfo();
-    await this.getUserPhotos(this.userId);
-    await this.getPosts();
+
+    if (!this.isLockedProfile) {
+        await this.getUserPhotos(this.userId);
+        await this.getPosts();
+    }
+
     window.scrollTo(0, 0);
 },
 
@@ -300,4 +344,14 @@ async mounted() {
 // },
 }
 </script>
+
+<style lang="scss">
+    .locked-profile-notify {
+        box-shadow: 0 2px 5px 0 rgba(0, 0, 0, 0.05);
+
+        .icon {
+            width: 30px;
+        }
+    }
+</style>
 
