@@ -1,6 +1,6 @@
 <template>
     <div id="hotCommunities" class="hot-communities d-flex d-md-block">
-        <button v-if="isCanAddToFavorites" type="button" v-bind:key="'btnAddToHot'+$root.$communitiesKeyUpdater"
+        <button v-if="isCanAddToFavorites()" type="button" v-bind:key="'btnAddToHot'+$root.$communitiesKeyUpdater"
                 @click="onAddCommunityToHot"
                 class="add-new btn btn-link text-center mx-sm-auto mr-1 mb-4 px-0 py-0">
             <i class="fa fa-plus" aria-hidden="true"></i>
@@ -38,15 +38,13 @@ data() {
     }
 },
 
-computed: {
+methods: {
     isCanAddToFavorites(){
         const isCan = this.$root.$auth.cm.isCanAddToFavorites(this.$route.params.id);
 
         return this.isDataReady &&  (this.$root.$router.currentRoute.name === 'CommunityPage')  && isCan;
-    }
-},
+    },
 
-methods: {
     hotCommunitiesList(parasm){
         return this.$root.$auth.cm.asArray().slice();
     },
@@ -61,7 +59,7 @@ methods: {
     },
 
     onAddCommunityToHot(){
-        this.$root.$emit('NeedAddCommunityToHot', {});
+        this.$root.$emit('NeedAddCommunityToHot', { communityId : this.$route.params.id });
     },
 
     afterFavoritsLoad(param1){
