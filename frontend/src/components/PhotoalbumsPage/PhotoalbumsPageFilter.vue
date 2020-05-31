@@ -111,11 +111,11 @@ export default {
             for (let file of picsArr) {
                 const reader = new FileReader();
                 reader.onload = () => {
-                    const attachment = new PliziAttachmentItem(true, checkExtension(file, imagesExtensions), file.name);
-                    attachment.isBlob = true;
-                    this.isLoading = attachment.isBlob;
-                    attachment.fileBlob = reader.result;
-                    this.attachFiles.push(attachment);
+                    const image = new PliziAttachmentItem(true, checkExtension(file, imagesExtensions), file.name);
+                    image.isBlob = true;
+                    image.fileBlob = reader.result;
+
+                    this.$emit('uploadingImage', image);
                 };
 
                 reader.readAsDataURL(file);
@@ -128,10 +128,10 @@ export default {
                     console.warn(e.detailMessage);
                 }
 
-                apiResponse.then(response => {
+                apiResponse.then((response) => {
                     response.map((attItem) => {
                         this.$emit('addNewImages', attItem);
-                    })
+                    });
                 }).catch((e) => {
                     window.console.warn(e.detailMessage);
                     throw e;

@@ -9,7 +9,7 @@
                     <div class="col-12">
                         <PhotoalbumsPageFilter :photoAlbum="photoAlbum"
                                                @addNewImages="addNewImages"
-                                               @finishAddNewImages="finishAddNewImages"/>
+                                               @uploadingImage="uploadingImage"/>
                     </div>
                     <div class="col-12">
                         <div class="row mb-3">
@@ -23,6 +23,25 @@
                              class="row photoalbum-images-content mb-4">
                             <div class="col-12">
                                 <div class="bg-white-br20 d-flex flex-wrap px-3">
+                                    <template v-if="loadImages">
+                                        <div v-for="(loadImage, index) in loadImages"
+                                             :key="index"
+                                             class="photoalbum-image col-12 col-sm-6 col-xl-3 my-3 d-flex align-items-stretch position-relative">
+                                            <div class="photoalbum-pic d-flex flex-column position-relative overflow-hidden">
+                                                <img v-if="loadImage"
+                                                     :src="loadImage.fileBlob"
+                                                     class="photoalbum-img img-fluid"
+                                                     alt=""/>
+                                                <div class="spinner-wrap">
+                                                    <SmallSpinner v-if="loadImage.isBlob"
+                                                                  clazz="media__spinner"
+                                                                  :hide-text="true"/>
+                                                </div>
+                                            </div>
+
+                                        </div>
+                                    </template>
+
                                     <div v-for="image in photoAlbum.images"
                                          :key="image.id"
                                          class="photoalbum-image col-12 col-sm-6 col-xl-3 my-3 d-flex align-items-stretch position-relative">
@@ -41,9 +60,6 @@
                                                 <i class="fa fa-plus"
                                                    aria-hidden="true"></i>
                                         </button>
-                                        <SmallSpinner v-if="image.isBlob"
-                                                      clazz="media__spinner"
-                                                      :hide-text="true"/>
                                     </div>
                                 </div>
                             </div>
@@ -96,14 +112,14 @@
                 this.photoAlbum.description = description;
             },
             addNewImages(image) {
-                // this.loadImages = [];
-                // this.loadImages.unshift(new PliziAttachment(image));
-
                 if (!this.photoAlbum.images) {
                     this.photoAlbum.images = [];
                 }
 
                 this.photoAlbum.images.unshift(new PliziAttachment(image));
+
+                let loadImageIndex = this.loadImages.findIndex(loadImage => loadImage.id === image.id);
+                this.loadImages.splice(loadImageIndex, 1);
 
                 // TODO: @YZ сделать по нормальному после MVP
                 let lsUser = JSON.parse(localStorage.getItem('pliziUser'));
@@ -116,8 +132,12 @@
 
                 localStorage.setItem('pliziUser', JSON.stringify(lsUser));
             },
-            finishAddNewImages() {
+            uploadingImage(image) {
+                if (!this.loadImages) {
+                    this.loadImages = []
+                }
 
+                this.loadImages.push(image);
             },
 
             async onDeleteImage(id) {
