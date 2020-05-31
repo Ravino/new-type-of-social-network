@@ -9,7 +9,7 @@
                 <div class="d-flex">
                     <button class="btn plz-btn plz-btn-primary p-0 mr-3"
                             @click.stop="deleteVideo">
-                        Да, я уверен
+                        Да
                     </button>
                     <button class="btn plz-btn plz-btn-primary p-0 mr-3"
                             @click.stop="onHide">
