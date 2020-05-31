@@ -9,7 +9,7 @@
                     <div class="col-12">
                         <PhotoalbumsPageFilter :photoAlbum="photoAlbum"
                                                @addNewImages="addNewImages"
-                                               @finishAddNewImages="finishAddNewImages"/>
+                                               @uploadingImage="uploadingImage"/>
                     </div>
                     <div class="col-12">
                         <div class="row">
@@ -24,6 +24,24 @@
                                 <div v-if="photoAlbum && photoAlbum.images" class="card mb-4 border-0 bg-white-br20">
                                     <div class="card-body py-0">
                                         <div class="row">
+                                            <template v-if="loadImages">
+                                                <div v-for="loadImage in loadImages"
+                                                     :key="loadImage.id"
+                                                     class="col-12 col-sm-6 col-xl-3 my-3 photo-album-image-loading">
+                                                    <div class="image-loading-wrap">
+                                                        <img v-if="loadImage"
+                                                             :src="loadImage.fileBlob"
+                                                             class="img-fluid"
+                                                             alt=""/>
+                                                        <div class="spinner-wrap">
+                                                            <SmallSpinner v-if="loadImage.isBlob"
+                                                                          clazz="media__spinner"
+                                                                          :hide-text="true"/>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </template>
+
                                             <div v-for="image in photoAlbum.images"
                                                  :key="image.id"
                                                  class="col-12 col-sm-6 col-xl-3 my-3 photo-album-image">
@@ -38,9 +56,6 @@
                                                         aria-label="Удалить видео">
                                                     <i class="fa fa-plus" aria-hidden="true"></i>
                                                 </button>
-                                                <SmallSpinner v-if="image.isBlob"
-                                                              clazz="media__spinner"
-                                                              :hide-text="true"/>
                                             </div>
                                         </div>
                                     </div>
@@ -95,14 +110,14 @@
                 this.photoAlbum.description = description;
             },
             addNewImages(image) {
-                // this.loadImages = [];
-                // this.loadImages.unshift(new PliziAttachment(image));
-
                 if (!this.photoAlbum.images) {
                     this.photoAlbum.images = [];
                 }
 
                 this.photoAlbum.images.unshift(new PliziAttachment(image));
+
+                let loadImageIndex = this.loadImages.findIndex(loadImage => loadImage.id === image.id);
+                this.loadImages.splice(loadImageIndex, 1);
 
                 // TODO: @YZ сделать по нормальному после MVP
                 let lsUser = JSON.parse(localStorage.getItem('pliziUser'));
@@ -115,8 +130,12 @@
 
                 localStorage.setItem('pliziUser', JSON.stringify(lsUser));
             },
-            finishAddNewImages() {
+            uploadingImage(image) {
+                if (!this.loadImages) {
+                    this.loadImages = []
+                }
 
+                this.loadImages.push(image);
             },
 
             async onDeleteImage(id) {
@@ -168,6 +187,34 @@
 
 <style lang="scss">
     .photo-album-images-content {
+        .photo-album-image-loading {
+            .image-loading-wrap {
+                position: relative;
+            }
+
+            img {
+                position: relative;
+                border-radius: 5px;
+            }
+
+            .spinner-wrap {
+                display: flex;
+                justify-content: center;
+                align-items: center;
+                position: absolute;
+                top: 0;
+                left: 0;
+                right: 0;
+                bottom: 0;
+                background-color: rgba(0, 0, 0, 0.3);
+
+                .media__spinner {
+                    div {
+                        padding-right: 0 !important;
+                    }
+                }
+            }
+        }
         .photo-album-image {
             &:hover {
                 .delete__button {
