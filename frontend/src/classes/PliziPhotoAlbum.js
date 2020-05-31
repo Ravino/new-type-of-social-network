@@ -46,10 +46,16 @@ class PliziPhotoAlbum {
     _createdAt = null;
 
     /**
-     * @type {PliziAttachment}
+     * @type {PliziAttachment[]}
      * @private
      */
     _images = null;
+
+    /**
+     * @type {PliziAttachment}
+     * @private
+     */
+    _lastImage = null;
 
     get id() {
         return this._id;
@@ -115,6 +121,14 @@ class PliziPhotoAlbum {
         this._images = value;
     }
 
+    get lastImage() {
+        return this._lastImage;
+    }
+
+    set lastImage(value) {
+        this._lastImage = value;
+    }
+
     constructor(photoAlbum) {
         this._id = photoAlbum.id;
         this._author = new PliziUser(photoAlbum.user);
@@ -123,7 +137,16 @@ class PliziPhotoAlbum {
         this._user = photoAlbum.user ? new PliziUser(photoAlbum.user) : null;
         this._community = photoAlbum.community ? new PliziCommunity(photoAlbum.community) : null;
         this._createdAt = photoAlbum.createdAt;
-        this._images = photoAlbum.images ? photoAlbum.images.list : null;
+
+        if (photoAlbum.images) {
+            this._images = [];
+
+            photoAlbum.images.list.forEach((image) => {
+                this._images.push(new PliziAttachment(image));
+            })
+        }
+
+        this._lastImage = photoAlbum.lastImage ? new PliziAttachment(photoAlbum.lastImage) : null;
     }
 }
 

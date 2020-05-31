@@ -4,7 +4,10 @@
             <router-link :to="{
                 path: `/photoalbum-`+album.id
             }" tag="a" class="" :album="album">
-                <img class="" src="../../images/noavatar-256.png" :alt="album.title" :title="album.title"/>
+                <img class=""
+                     :src="image"
+                     :alt="album.title"
+                     :title="album.title"/>
                 <div class="photoalbum-item-title">
                     <h6>
                         {{ album.title }}
@@ -23,6 +26,9 @@
             album: Object,
         },
         computed: {
+            image() {
+                return this.album.lastImage ? this.album.lastImage.image.original.path : '../../images/noavatar-256.png';
+            },
         },
         methods: {
 
