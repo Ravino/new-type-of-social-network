@@ -54,6 +54,9 @@ computed : {
         sBeaty(param) {
             return this.$options.filters.statsBeauty(param);
         }
+    },
+    mounted() {
+
     }
 
 }
