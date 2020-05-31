@@ -24,7 +24,8 @@ import PliziAttendee from '../../classes/PliziAttendee.js';
 export default {
 name : 'ChatHeaderAttendeeItem',
 props : {
-    attendee : PliziAttendee
+    attendee : PliziAttendee,
+    keyUpdater : Number
 },
 
 data(){

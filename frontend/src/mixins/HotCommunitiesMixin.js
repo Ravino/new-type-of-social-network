@@ -20,8 +20,6 @@ methods: {
         }
 
         if ( apiResponse ) {
-            window.console.log(apiResponse, `apiResponse`);
-
             if (community) {
                 this.$root.$auth.cm.onAddToFavorites( community.toJSON() );
             }

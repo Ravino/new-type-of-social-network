@@ -1,17 +1,14 @@
 <template>
     <div id="chatHeader" class="bg-white w-100 border-bottom d-flex justify-content-between">
-<!--        <div class="row mx-0 py-1 justify-content-between">-->
             <div class="col-11 col-md-5 d-flex">
                 <ChatHeaderCompanion v-if="currentDialog.isPrivate" v-bind:companion="companion"></ChatHeaderCompanion>
 
-                <div v-if="currentDialog.isGroup" class="d-flex align-items-center h-100">
-                    <ChatHeaderAttendeeItem v-for="attItem in currentDialog.attendees"
-                        v-bind:attendee="attItem"
-                        v-bind:key="attItem.id">
-                    </ChatHeaderAttendeeItem>
-
-                    <ChatHeaderAttendeePlus @ShowAddAttendeeModal="onShowAttendeesModal"></ChatHeaderAttendeePlus>
-                </div>
+                <GroupChatAttendeesList v-if="currentDialog.isGroup"
+                                      v-bind:key="'groupChatAttendeesList'+attendeeKeyUpdater"
+                                      v-bind:currentDialog="currentDialog"
+                                      v-bind:keyUpdater="attendeeKeyUpdater"
+                                      @ShowAddAttendeeModal="onShowAttendeesModal"
+                                      ref="groupChatAttendeesList"></GroupChatAttendeesList>
             </div>
 
             <div class="col-1 col-md-7 d-flex p-0 px-md-3">
@@ -59,8 +56,12 @@
         </RemoveCurrentDialogModal>
 
         <GroupChatAttendeesModal v-if="showAttendeesModal"
-            @HideGroupChatAttendeesModal="onHideAttendeesModal"
-            v-bind:currentDialog="currentDialog">
+                    @HideGroupChatAttendeesModal="onHideAttendeesModal"
+                    @AddAttendeeToDialog="onChangeAttendeeList"
+                    @RemoveAttendeeFromDialog="onChangeAttendeeList"
+                    v-bind:currentDialog="currentDialog"
+                    v-bind:key="'groupChatAttendeesModal'+attendeeKeyUpdater"
+                    ref="groupChatAttendeesModal">
         </GroupChatAttendeesModal>
 
     </div>
@@ -75,19 +76,17 @@ import CreateGroupChatModal from './CreateGroupChatModal.vue';
 import RemoveCurrentDialogModal from './RemoveCurrentDialogModal.vue';
 import GroupChatAttendeesModal from './GroupChatAttendeesModal.vue';
 
+import GroupChatAttendeesList from './GroupChatAttendeesList.vue';
 import ChatHeaderCompanion from './ChatHeaderCompanion.vue';
-import ChatHeaderAttendeeItem from './ChatHeaderAttendeeItem.vue';
-import ChatHeaderAttendeePlus from './ChatHeaderAttendeePlus.vue';
 
 import PliziDialog from '../../classes/PliziDialog.js';
 
 export default {
 name: 'ChatHeader',
 components: {
+    GroupChatAttendeesList,
     IconSearch,
     ChatHeaderCompanion,
-    ChatHeaderAttendeeItem,
-    ChatHeaderAttendeePlus,
     ChatDatePicker,
     ChatHeaderMenu,
     CreateGroupChatModal,
@@ -109,13 +108,14 @@ data() {
         createGroupChatModalShow: false,
         removeDialogModalShow : false,
         showAttendeesModal: false,
+        attendeeKeyUpdater: 0
     }
 },
 
 computed: {
     /**
      * хак, чтобы не падало когда ещё нет данных
-     * @returns {object|PliziAttendee}
+     * @returns {PliziAttendee|object}
      */
     companion(){
         if (this.currentDialog  &&  this.currentDialog.companion) {
@@ -125,7 +125,7 @@ computed: {
         return {
             userPic : this.$defaultAvatarPath,
             firstName : `пользователь`,
-            lastActivity: (new Date()).getTime() / 1000
+            lastActivity: (new Date()).valueOf() / 1000
         }
     }
 },
@@ -153,6 +153,17 @@ methods: {
 
     onHideAttendeesModal(){
         this.showAttendeesModal = false;
+    },
+
+    onChangeAttendeeList(){
+        this.attendeeKeyUpdater++;
+
+        if (this.$refs.groupChatAttendeesModal){
+            this.$refs.groupChatAttendeesModal.$forceUpdate();
+        }
+        if (this.$refs.groupChatAttendeesList){
+            this.$refs.groupChatAttendeesList.$forceUpdate();
+        }
     },
 
     chatSearchKeyDownCheck(ev){
