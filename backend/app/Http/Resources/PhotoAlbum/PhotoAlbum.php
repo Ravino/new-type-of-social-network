@@ -26,7 +26,7 @@ class PhotoAlbum extends JsonResource
             'user' => $this->creatable instanceof UserModel ? new SimpleUser($this->creatable) : null,
             'community' => $this->creatable instanceof CommunityModel ? new Community($this->creatable) : null,
             'author' => new SimpleUser($this->author),
-            'images' => new ImagesCollection($this->images),
+            'images' => new ImagesCollection($this->images()->orderByDesc('id')->get()),
             'createdAt' => $this->created_at,
         ];
     }
