@@ -67,6 +67,9 @@ class VideoController extends Controller
         if ($video) {
             auth()->user()->profile()->increment('video_count');
         }
+        if ($video->creatableby && (($community = $video->creatableby->postable) instanceof Community)) {
+            $community->increment('video_count');
+        }
         return response()->json([
             'data' => [
                 'id' => $video->id,
@@ -108,6 +111,10 @@ class VideoController extends Controller
     public function destroy(Video $video)
     {
         if ($video->user->id === \Auth::id()) {
+            auth()->user()->profile()->decrement('video_count');
+            if ($video->creatableby && (($community = $video->creatableby->postable) instanceof Community)) {
+                $community->decrement('video_count');
+            }
             $video->delete();
 
             return response()->json([

@@ -495,24 +495,13 @@ class CommunityController extends Controller
         /** @var Community $community */
         $community = $request->community;
 
-        $videos = Video::where(static function (Builder $query) use ($community) {
-            $query->whereHasMorph('creatableby', Post::class, static function (Builder $creatableby) use ($community) {
-                $creatableby
-                    ->where([
-                        'postable_type' => Community::class,
-                        'postable_id' => $community->id,
-                    ]);
-            });
-        })
+        $videos = Video::specialForCommunity($community->id)
             ->limit($request->query('limit', 5))
             ->offset($request->query('offset', 0))
             ->orderBy('id', 'desc')
             ->get();
 
-        /**
-         * TODO add total count
-         */
-        return new VideoCollection($videos, true);
+        return new VideoCollection($videos, true, $community->video_count);
     }
 
     /**

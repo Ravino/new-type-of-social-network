@@ -27,7 +27,9 @@
                         </template>
                         <div class="plz-community-header-details-text pt-2">
                             <h1 class="plz-community-header-title mb-2">
-                                {{community.name}}
+                                <router-link :to="`/community-`+community.id" tag="a">
+                                    {{community.name}}
+                                </router-link>
                             </h1>
                             <PrivacyLabel :community="community"/>
                             <p class="plz-community-header-desc mb-0">
