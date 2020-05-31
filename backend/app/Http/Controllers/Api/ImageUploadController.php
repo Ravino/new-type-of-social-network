@@ -79,6 +79,14 @@ class ImageUploadController extends Controller
 
     public function getUserImages(User $user)
     {
+        if ($user->privacySettings->page_type === 3) {
+            return [
+                'data' => [
+                    'list' => []
+                ]
+            ];
+        }
+
         $images = $user->images()
             ->orderByDesc('id')
             ->limit(20)

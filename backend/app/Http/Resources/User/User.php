@@ -53,6 +53,7 @@ class User extends JsonResource
             'isOnline' => $this->isOnline,
             'lastActivity' => $this->last_activity_dt,
             'profile' => new Profile($this->profile),
+            'privacySettings' => new PrivacySettings($this->privacySettings),
             'stats' => [
                 'totalFriendsCount' => $this->totalFriendsCount,
                 'followCount' => $this->profile->follower_count,

@@ -92,6 +92,10 @@ class Post extends Model
 
     public static function getWithoutOldPosts($user, $limit, $offset, $isMyPosts = false, $onlyLiked = false, $orderBy = null)
     {
+        if ($user->privacySettings->page_type === 3) {
+            return [];
+        }
+
         if ($isMyPosts) {
             $userPosts = $user->posts()->pluck('id');
 

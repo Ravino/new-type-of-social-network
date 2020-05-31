@@ -4,7 +4,8 @@
             class="d-flex align-items-stretch offset-1 col-10 offset-sm-3 col-sm-6 offset-md-4 col-md-4 offset-lg-0 col-lg-4 col-xl-3 pl-lg-0 mb-4 mb-lg-0">
             <div class="plz-profile-userpic-container d-flex flex-column  bg-white-br20 overflow-hidden">
                 <div
-                    class="plz-profile-userpic-wrapper overflow-hidden position-relative d-flex align-items-center justify-content-center mx-auto m-lg-0">
+                    class="plz-profile-userpic-wrapper overflow-hidden position-relative d-flex align-items-center justify-content-center mx-auto m-lg-0"
+                    :class="{'h-100': isLockedProfile}">
                     <img ref="userAvatar" :src="userAvatar" :alt="userData.fullName"/>
                     <label v-if="isOwner===true" for="userAvatarFile"
                            class="user-avatar-file-label m-0 cursor-pointer"></label>
@@ -51,7 +52,9 @@
                     </div>
                 </div>
 
-                <div v-else class="plz-profile-userpic-footer mt-auto">
+                <div v-else
+                     class="plz-profile-userpic-footer mt-auto"
+                     :class="{'d-none': isLockedProfile}">
                     <div class="plz-profile-userpic-edit file-label d-flex align-items-center justify-content-between">
                         <button v-bind:style="{ width: fullWidth }"
                                 class="btn align-items-center justify-content-center d-flex w-75 border-right m-0"
@@ -98,7 +101,6 @@
                         </div>
                     </div>
                 </div>
-
             </div>
         </div>
 
@@ -186,6 +188,10 @@ computed: {
 
     userAvatar() {
         return this.userData.avatar?.image?.medium.path || this.userData.userPic;
+    },
+
+    isLockedProfile() {
+        return this.userData && this.userData.privacySettings && this.userData.privacySettings.pageType === 3;
     },
 },
 
