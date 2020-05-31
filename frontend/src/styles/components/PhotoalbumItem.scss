@@ -104,6 +104,23 @@
         border-radius: 4px;
         height: 180px;
         width: 100%;
+
+        .spinner-wrap {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+
+            .media__spinner {
+                div {
+                    padding-right: 0 !important;
+                }
+            }
+        }
     }
     &-img {
         position: absolute;
