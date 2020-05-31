@@ -188,7 +188,7 @@
                 <div class="d-flex">
                     <div class="d-flex">
                         <div class="post-watched-counter"
-                             :class="{'is-active': postLikes}"
+                             :class="{'is-active': post.alreadyLiked}"
                              @click="onLike">
                             <IconFillHeard v-if="postLikes"/>
                             <IconHeard v-else/>

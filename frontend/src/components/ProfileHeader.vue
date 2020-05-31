@@ -5,7 +5,7 @@
             <div class="plz-profile-userpic-container d-flex flex-column  bg-white-br20 overflow-hidden">
                 <div
                     class="plz-profile-userpic-wrapper overflow-hidden position-relative d-flex align-items-center justify-content-center mx-auto m-lg-0"
-                    :class="{'h-100': isLockedProfile}">
+                    :class="{'h-100': userData.privacySettings.pageType === 3}">
                     <img ref="userAvatar" :src="userAvatar" :alt="userData.fullName"/>
                     <label v-if="isOwner===true" for="userAvatarFile"
                            class="user-avatar-file-label m-0 cursor-pointer"></label>
@@ -52,55 +52,56 @@
                     </div>
                 </div>
 
-                <div v-else
-                     class="plz-profile-userpic-footer mt-auto"
-                     :class="{'d-none': isLockedProfile}">
-                    <div class="plz-profile-userpic-edit file-label d-flex align-items-center justify-content-between">
-                        <button v-bind:style="{ width: fullWidth }"
-                                class="btn align-items-center justify-content-center d-flex w-75 border-right m-0"
-                                @click="showPersonalMsgDialog()">Написать</button>
+                <template v-else>
+                    <div v-if="userData.privacySettings.pageType !== 3"
+                         class="plz-profile-userpic-footer mt-auto">
+                        <div class="plz-profile-userpic-edit file-label d-flex align-items-center justify-content-between">
+                            <button v-bind:style="{ width: fullWidth }"
+                                    class="btn align-items-center justify-content-center d-flex w-75 border-right m-0"
+                                    @click="showPersonalMsgDialog()">Написать</button>
 
-                        <button class="btn dropdown-menu-btn align-items-center justify-content-center d-flex w-25"
-                                :id="configurationMenuID"
-                                type="button"
-                                data-toggle="dropdown"
-                                aria-haspopup="true"
-                                aria-expanded="false"
-                                title="меню">
-                            <span class="ps-dot"></span>
-                            <span class="ps-dot"></span>
-                            <span class="ps-dot"></span>
-                        </button>
+                            <button class="btn dropdown-menu-btn align-items-center justify-content-center d-flex w-25"
+                                    :id="configurationMenuID"
+                                    type="button"
+                                    data-toggle="dropdown"
+                                    aria-haspopup="true"
+                                    aria-expanded="false"
+                                    title="меню">
+                                <span class="ps-dot"></span>
+                                <span class="ps-dot"></span>
+                                <span class="ps-dot"></span>
+                            </button>
 
-                        <div class="dropdown-menu dropdown-menu-right py-3 " :aria-labelledby="configurationMenuID"
-                                :key="`userActionBlock-`+$root.$friendsKeyUpdater">
+                            <div class="dropdown-menu dropdown-menu-right py-3 " :aria-labelledby="configurationMenuID"
+                                 :key="`userActionBlock-`+$root.$friendsKeyUpdater">
 
-                            <div class="nav-item ">
-                                <p v-if="isCanAddToFriends()"
-                                    class="dropdown-item px-0 py-1 m-0 px-3"
-                                    @click="sendFriendshipInvitation(userData.id, userData.fullName)"
-                                    title="Добавить в друзья" >Добавить в друзья</p>
-                                <p v-else
-                                    class="dropdown-item px-0 py-1 m-0 px-3"
-                                    @click="stopFriendship(userData.id)"
-                                    title="Удалить из друзей" >Удалить из друзей</p>
+                                <div class="nav-item ">
+                                    <p v-if="isCanAddToFriends()"
+                                       class="dropdown-item px-0 py-1 m-0 px-3"
+                                       @click="sendFriendshipInvitation(userData.id, userData.fullName)"
+                                       title="Добавить в друзья" >Добавить в друзья</p>
+                                    <p v-else
+                                       class="dropdown-item px-0 py-1 m-0 px-3"
+                                       @click="stopFriendship(userData.id)"
+                                       title="Удалить из друзей" >Удалить из друзей</p>
+                                </div>
+                                <div class="nav-item">
+                                    <p v-if="userData.stats.isFollow" class="dropdown-item px-0 py-1 m-0 px-3"
+                                       @click="unFollow" title="Отписаться">Отписаться</p>
+                                    <p v-else class="dropdown-item px-0 py-1 m-0 px-3"
+                                       @click="follow" title="Подписаться">Подписаться</p>
+                                </div>
+                                <div v-if="!userData.isOwner" class="nav-item">
+                                    <p v-if="isAddedToBlacklist" class="dropdown-item px-0 py-1 m-0 px-3"
+                                       @click="deleteFromBlacklist(userData.id)"  title="Удалить с чёрного списка">Удалить с чёрного списка</p>
+                                    <p v-else class="dropdown-item px-0 py-1 m-0 px-3"
+                                       @click="addToBlacklist"  title="Добавить в чёрный список">Добавить в чёрный список</p>
+                                </div>
+
                             </div>
-                            <div class="nav-item">
-                                <p v-if="userData.stats.isFollow" class="dropdown-item px-0 py-1 m-0 px-3"
-                                   @click="unFollow" title="Отписаться">Отписаться</p>
-                                <p v-else class="dropdown-item px-0 py-1 m-0 px-3"
-                                   @click="follow" title="Подписаться">Подписаться</p>
-                            </div>
-                            <div v-if="!userData.isOwner" class="nav-item">
-                                <p v-if="isAddedToBlacklist" class="dropdown-item px-0 py-1 m-0 px-3"
-                                   @click="deleteFromBlacklist(userData.id)"  title="Удалить с чёрного списка">Удалить с чёрного списка</p>
-                                <p v-else class="dropdown-item px-0 py-1 m-0 px-3"
-                                   @click="addToBlacklist"  title="Добавить в чёрный список">Добавить в чёрный список</p>
-                            </div>
-
                         </div>
                     </div>
-                </div>
+                </template>
             </div>
         </div>
 
@@ -191,7 +192,14 @@ computed: {
     },
 
     isLockedProfile() {
-        return this.userData && this.userData.privacySettings && this.userData.privacySettings.pageType === 3;
+        if (this.userData && this.userData.privacySettings && this.userData.stats) {
+            if ((this.userData.privacySettings.pageType === 2 && !this.userData.stats.isFriend) ||
+                this.userData.privacySettings.pageType === 3) {
+                return true;
+            }
+        }
+
+        return false;
     },
 },
 

@@ -64,6 +64,7 @@ class User extends JsonResource
                     'user_id' => auth()->id(),
                     'blacklisted_id' => $this->id,
                 ])->exists(),
+                'imageCount' => $this->profile->image_count,
             ],
         ];
         if($this->appendMutual) {

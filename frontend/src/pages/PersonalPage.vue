@@ -27,6 +27,11 @@
                                         <div class="font-weight-bold text-uppercase">
                                             Это закрытый профиль
                                         </div>
+                                        <div v-if="this.profileData.privacySettings.pageType !== 3"
+                                             class="text-center text-secondary mt-2 w-50">
+                                            Добавьте пользователя {{ this.profileData.profile.firstName }} в друзья,
+                                            чтобы смотреть записи, фотографии и другие материалы
+                                        </div>
                                     </div>
                                 </div>
                         </div>
@@ -168,7 +173,14 @@ computed: {
         return this.posts;
     },
     isLockedProfile() {
-        return this.profileData && this.profileData.privacySettings && this.profileData.privacySettings.pageType === 3;
+        if (this.profileData && this.profileData.privacySettings && this.profileData.stats) {
+            if ((this.profileData.privacySettings.pageType === 2 && !this.profileData.stats.isFriend) ||
+                this.profileData.privacySettings.pageType === 3) {
+                return true;
+            }
+        }
+
+        return false;
     },
 },
 
