@@ -46,6 +46,7 @@
 .profile-photos {
     .profile-photos-item {
         position: relative;
+        cursor: pointer;
 
         &:hover .btn-close {
             opacity: 1;
@@ -148,15 +149,15 @@
 
 
     .btn-close {
-    &-img {
-        position: absolute;
-        top: 50%;
-        left: 50%;
-        transform: translate(-50%, -50%);
-        min-width: 100%;
-        min-height: auto;
+        &-img {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            min-width: 100%;
+            min-height: auto;
+        }
     }
-
 
 }
 
