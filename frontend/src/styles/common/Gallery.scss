@@ -41,7 +41,8 @@ $portraitFullHeight: 750px;
 
     &-double {
         img {
-            height: $portraitFullHeight / 2;
+            height: $portraitFullHeight;
+            //height: $portraitFullHeight / 2;
         }
     }
 
