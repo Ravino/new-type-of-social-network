@@ -1,5 +1,5 @@
 <template>
-    <div class="photoalbum-item d-flex">
+    <div class="photoalbum-item d-flex my-0 mx-auto">
         <router-link :to="{
                 path: `/photoalbum-`+album.id
             }"
