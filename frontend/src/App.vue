@@ -207,7 +207,8 @@ methods: {
         }
 
         if (`message.new`===evData.type) {
-            if (this.$root.$router.currentRoute.name !== 'ChatsListPage') {
+            const curDialog = window.localStorage.getItem('pliziActiveDialog');
+            if (curDialog !== evData.message.chatId) {
                 if (!evData.message.isMine) {
                     let chatNotificationData = this.transformMessageToNotification(evData);
                     this.addNotification(chatNotificationData);
