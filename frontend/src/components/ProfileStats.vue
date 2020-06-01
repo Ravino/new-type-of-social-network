@@ -36,7 +36,7 @@
         <router-link tag="a" class="p-0 d-flex" to="/photoalbums-list">
             <div class="plz-profile-userdetails-numbers text-center py-2 px-2 py-md-4 px-md-4 mt-auto">
                 <template v-if="userImageNumber()">
-                    <span class="numbers-top" v-html="sBeaty(usrFriendsNumber())"></span>
+                    <span class="numbers-top" v-html="sBeaty(userImageNumber())"></span>
                     <span class="numbers-bottom">Фотографий</span>
                 </template>
                 <template v-else>
@@ -48,7 +48,7 @@
         <template v-else>
             <div class="plz-profile-userdetails-numbers text-center py-2 px-2 py-md-4 px-md-4 mt-auto">
                 <template v-if="userImageNumber()">
-                    <span class="numbers-top" v-html="sBeaty(usrFriendsNumber())"></span>
+                    <span class="numbers-top" v-html="sBeaty(userImageNumber())"></span>
                     <span class="numbers-bottom">Фотографий</span>
                 </template>
                 <template v-else>
