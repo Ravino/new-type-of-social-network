@@ -1,14 +1,16 @@
 <template>
     <div class="col-auto col-md-1 col-lg-3 col-xl-2 px-0 profile-menu">
         <router-link to="/profile" tag="a" class="profile-menu-link d-none d-lg-block ">
-            <span v-if="isShowName" ref="navbarUserName">{{userData.firstName}}</span>
+            <span v-if="isShowName" ref="navbarUserName">{{userData().firstName}}</span>
         </router-link>
 
         <div class="profile-menu-item p-0 m-0 d-flex align-items-center position-relative">
 
             <router-link to="/profile" tag="a"
                          class="profile-menu-link profile-menu-pic procreateCommunityBlockfile-menu-pic d-block ">
-                <img v-if="isShowAvatar" ref="navbarAvatar" :src="userData.userPic" :alt="userData.firstName"/>
+                <img v-if="isShowAvatar"
+                     :key="'navbarAvatar-'+avaUpdater"
+                     ref="navbarAvatar" :src="userData().userPic" :alt="userData().firstName"/>
             </router-link>
 
             <button class="btn dropdown-menu-btn"
@@ -62,26 +64,12 @@ props : {},
 data() {
     return {
         isShowName: true,
-        isShowAvatar: true
+        isShowAvatar: true,
+        avaUpdater: 0,
     }
 },
 
 methods: {
-    updateUserName(evData){
-        this.isShowName = false;
-        setTimeout(()=>{ this.isShowName = true; }, 10);
-    },
-
-    updateAvatar(evData){
-        this.isShowAvatar = false;
-        setTimeout(()=>{ this.isShowAvatar = true; }, 10);
-    }
-},
-
-computed: {
-    /**
-     * @returns {PliziAuthUser}
-     */
     userData() {
         const usrData = this.$root.$auth.user;
 
@@ -91,8 +79,18 @@ computed: {
 
         return usrData;
     },
-},
 
+    updateUserName(evData){
+        this.isShowName = false;
+        setTimeout(()=>{ this.isShowName = true; }, 10);
+    },
+
+    updateAvatar(evData){
+        this.isShowAvatar = false;
+        this.avaUpdater++;
+        setTimeout(()=>{ this.isShowAvatar = true; }, 10);
+    }
+},
 
 mounted() {
     this.$root.$on('updateUserAvatar', this.updateAvatar);

@@ -22,6 +22,7 @@ import CommunitiesManagePage from '../pages/CommunitiesManagePage.vue';
 import CommunitiesPopularPage from '../pages/CommunitiesPopularPage.vue';
 import CommunityPage from '../pages/CommunityPage.vue';
 import Error404Page from '../pages/Error404Page.vue';
+import Guest404Page from '../pages/Guest404Page.vue';
 import CommunityRulesPage from "../pages/CommunityRulesPage.vue";
 import PhotoalbumsListPage from "../pages/PhotoalbumsListPage.vue";
 import PhotoalbumPage from "../pages/PhotoalbumPage.vue";
@@ -75,6 +76,7 @@ const routes = [
     {path: '/community-requests-:id', component: CommunityRequestsPage, name: 'CommunityRequestsPage', meta: {title: 'Plizi: Запросы на вытупление в сообщество'}, props: true },
     {path: '/community-:id', component: CommunityPage, name: 'CommunityPage', meta: {title: 'Plizi: Популярные сообщества'}, props: true },
     {path: '*', component: Error404Page, name: 'Error404Page', meta: {title: 'Page not found', isNotFound: true} },
+    {path: '/404', component: Guest404Page, name: 'Guest404Page', meta: {title: 'Page not found', isNotFound: true} },
     {path: '/photoalbums-list', component: PhotoalbumsListPage, name: 'PhotoalbumsListPage', meta: {title: 'Plizi: Фотоальбомы'}, props: true},
     {path: '/photoalbum-:id', component: PhotoalbumPage, name: 'PhotoalbumPage', meta: {title: 'Plizi: Фотоальбом'}, props: true},
     {path: '/videos', component: VideosPage, name: 'VideosPage', meta: {title: 'Plizi: Видео'}, props: true },

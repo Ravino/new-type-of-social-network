@@ -191,7 +191,7 @@ class PhotoAlbumController extends Controller
             \Auth::user()->profile()->decrement('image_count');
 
             return response()->json([
-                'message' => 'Изображение учпешно удалено',
+                'message' => 'Изображение успешно удалено.',
             ]);
         }
     }

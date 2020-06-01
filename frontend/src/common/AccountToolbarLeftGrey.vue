@@ -23,7 +23,7 @@
             </router-link>-->
 
             <router-link :to="{name: 'PhotoalbumsListPage'}"
-                         :class="{ 'active': 'PhotoalbumsListPage' === this.$root.$router.currentRoute.name }"
+                         :class="photoAlbumsPage"
                          :title="photoalbums"
                          tag="a"
                          class="w-100 d-block text-center mx-auto mb-0 mb-md-4 py-3 py-md-0">
@@ -77,6 +77,14 @@ computed: {
         }
 
         return null;
+    },
+    photoAlbumsPage() {
+      if (this.$root.$router.currentRoute.name === 'PhotoalbumsListPage' ||
+          this.$root.$router.currentRoute.name === 'PhotoalbumPage') {
+          return ['router-link-exact-active', 'router-link-active', 'active'];
+      }
+
+      return null;
     },
 },
 methods: {},

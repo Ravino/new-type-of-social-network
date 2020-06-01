@@ -207,9 +207,12 @@ methods: {
         }
 
         if (`message.new`===evData.type) {
-            if (!evData.message.isMine) {
-                let chatNotificationData = this.transformMessageToNotification(evData);
-                this.addNotification(chatNotificationData);
+            const curDialog = window.localStorage.getItem('pliziActiveDialog');
+            if (curDialog !== evData.message.chatId) {
+                if (!evData.message.isMine) {
+                    let chatNotificationData = this.transformMessageToNotification(evData);
+                    this.addNotification(chatNotificationData);
+                }
             }
         }
     },
@@ -282,7 +285,7 @@ created(){
         'border-radius: 5px 0px 5px 0px;',
         'color: white;'];
 
-    console.info( '%c%s', style.join(''), 'Plizi App created');
+    this.$info( '%c%s', style.join(''), 'Plizi App created');
 
     this.$root.$api = PliziAPI;
     this.$root.$api.init(this.$root);
@@ -305,7 +308,7 @@ created(){
     });
 
     this.$root.$on('api:Unauthorized', (evData) => {
-        window.console.warn(evData, `api:Unauthorized!`);
+        this.$warn(evData, `api:Unauthorized!`);
         this.afterSuccessLogout( {redirect : true} );
     });
 

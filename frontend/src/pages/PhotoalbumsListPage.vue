@@ -14,10 +14,16 @@
                             <div class="card mb-4">
                                 <div class="card-body py-0">
                                     <div class="row">
-                                        <div v-for="(album, index) in photoAlbums"
-                                             :key="index"
-                                             class="col-12 col-sm-6 col-xl-3 my-3">
-                                            <PhotoalbumItem :album="album" :key="album.id"></PhotoalbumItem>
+                                        <template v-if="photoAlbums && photoAlbums.length">
+                                            <div v-for="(album, index) in photoAlbums"
+                                                 :key="index"
+                                                 class="col-12 col-sm-6 col-xl-3 my-3">
+                                                <PhotoalbumItem :album="album" :key="album.id"></PhotoalbumItem>
+                                            </div>
+                                        </template>
+
+                                        <div v-else class="alert alert-info bg-transparent border-0 text-secondary w-100 p-5 text-center mb-0">
+                                            Нет альбомов.
                                         </div>
                                     </div>
                                 </div>

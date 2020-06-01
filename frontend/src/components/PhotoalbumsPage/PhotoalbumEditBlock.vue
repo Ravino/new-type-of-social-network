@@ -19,7 +19,6 @@
 
         <DeletePhotoAlbumModal v-if="deletePhotoAlbumModal.isVisible"
                                :id="deletePhotoAlbumModal.content.id"
-                               :isSuccess="isSuccessDelete"
                                :isShipped="isShippedDelete"
                                @onSuccessDelete="deletePhotoAlbum"
                                @onHide="onHideDeletePhotoAlbumModal"/>
@@ -84,11 +83,8 @@
                 }
 
                 if (apiResponse) {
-                    this.isSuccessDelete = true;
-
-                    setTimeout(() => {
-                        this.$router.push({path: '/photoalbums-list'});
-                    }, 3000);
+                    this.$notify(`Альбом "${this.photoAlbum.title}" успешно удален.`);
+                    await this.$router.push({path: '/photoalbums-list'});
                 }
             },
         }

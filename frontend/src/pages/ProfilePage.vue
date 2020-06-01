@@ -12,8 +12,10 @@
                 <div class="container">
                     <ProfileHeader v-bind:userData="userData()" v-bind:isOwner="true"></ProfileHeader>
 
+                    <template v-if="userPhotos.length > 0">
                     <ProfilePhotos v-if="isPhotosDataReady" v-bind:photos="userPhotos"></ProfilePhotos>
-                    <div v-else><SmallSpinner></SmallSpinner></div>
+                        <SmallSpinner v-else></SmallSpinner>
+                    </template>
 
                     <WhatsNewBlock @addNewPost="addNewPost"></WhatsNewBlock>
 
@@ -41,8 +43,8 @@
 
                     <template v-if="isStarted">
                         <div class="row plz-post-item mb-4 bg-white-br20 p-4">
-                            <div class="w-100 p-5 text-center mb-0">
-                                <SmallSpinner clazz="position-absolute"/>
+                            <div class="w-100 text-center mb-0">
+                                <SmallSpinner/>
                             </div>
                         </div>
                     </template>
@@ -156,7 +158,7 @@ computed : {
     filteredPosts(){
         switch ( this.filterMode ){
             case 'my':
-                return this.posts.filter( post => post.checkIsMinePost( this.$root.$auth.user.id ) );
+                return this.posts.filter( post => !post.sharedFrom );
 
             case 'archive':
                 return this.posts.filter( post => post.isArchivePost );

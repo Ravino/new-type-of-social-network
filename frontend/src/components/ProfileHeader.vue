@@ -244,11 +244,11 @@ methods: {
         }
 
         if (apiResponse !== null) {
-            this.$root.$auth.user.userPic = apiResponse.data.path;
             this.$root.$auth.user.avatar = new PliziAvatar(apiResponse.data);
+            this.$root.$auth.user.userPic = this.$root.$auth.user.avatar?.image?.thumb.path;
             this.$refs.userAvatar.src = this.$root.$auth.user.avatar?.image?.medium.path || this.$root.$auth.user.userPic;
             this.$root.$auth.storeUserData();
-            this.$root.$emit('updateUserAvatar', {userPic: this.$root.$auth.user.userPic});
+            this.$root.$emit('updateUserAvatar', {});
         }
     },
 

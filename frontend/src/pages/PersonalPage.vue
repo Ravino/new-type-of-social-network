@@ -20,26 +20,24 @@
                     <template v-if="isLockedProfile">
                         <div class="row">
                             <div class="card locked-profile-notify bg-white-br20 border-0 w-100">
-                                    <div class="card-body d-flex flex-column justify-content-center align-items-center">
-                                        <div class="mb-3">
-                                            <IconUnlock/>
-                                        </div>
-                                        <div class="font-weight-bold text-uppercase">
-                                            Это закрытый профиль
-                                        </div>
-                                        <div v-if="this.profileData.privacySettings.pageType !== 3"
-                                             class="text-center text-secondary mt-2 w-50">
-                                            Добавьте пользователя {{ this.profileData.profile.firstName }} в друзья,
-                                            чтобы смотреть записи, фотографии и другие материалы
-                                        </div>
+                                <div class="card-body d-flex flex-column justify-content-center align-items-center">
+                                    <div class="mb-3">
+                                        <IconUnlock/>
+                                    </div>
+                                    <div class="font-weight-bold text-uppercase">
+                                        Это закрытый профиль
+                                    </div>
+                                    <div v-if="this.profileData.privacySettings.pageType !== 3"
+                                         class="text-center text-secondary mt-2 w-50">
+                                        Добавьте пользователя {{ this.profileData.profile.firstName }} в друзья,
+                                        чтобы смотреть записи, фотографии и другие материалы
                                     </div>
                                 </div>
+                            </div>
                         </div>
-
                     </template>
 
                     <template v-else>
-
                         <template v-if="userPhotos.length > 0">
                         <ProfilePhotos v-if="isPhotosDataReady"
                                        :profileData="profileData"

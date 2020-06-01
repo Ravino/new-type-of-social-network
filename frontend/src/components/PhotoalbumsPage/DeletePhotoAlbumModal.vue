@@ -18,9 +18,6 @@
                         Нет
                     </button>
                 </div>
-                <p v-if="isSuccess" class="text-success text-center mt-3 mb-0">
-                    Фотоальбом был успешно удален.
-                </p>
             </div>
         </div>
     </div>
@@ -31,7 +28,6 @@
         name: "DeletePhotoAlbumModal",
         props: {
             id: Number,
-            isSuccess: Boolean,
             isShipped: Boolean,
         },
         methods: {

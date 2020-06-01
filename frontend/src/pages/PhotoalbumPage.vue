@@ -12,54 +12,17 @@
                                                @uploadingImage="uploadingImage"/>
                     </div>
                     <div class="col-12">
-                        <div class="row mb-3">
+                        <div class="row photoalbum-images-content pt-4 mb-4 bg-white-br20">
                             <div class="col-12">
                                 <div class="photo-album-description-block">
                                     <PhotoalbumEditBlock :photoAlbum="photoAlbum"/>
                                 </div>
-                            </div>
-                        </div>
-                        <div v-if="photoAlbum && photoAlbum.images"
-                             class="row photoalbum-images-content mb-4">
-                            <div class="col-12">
-                                <div class="bg-white-br20 d-flex flex-wrap px-3">
-                                    <template v-if="loadImages">
-                                        <div v-for="(loadImage, index) in loadImages"
-                                             :key="index"
-                                             class="photoalbum-image col-12 col-sm-6 col-xl-3 my-3 d-flex align-items-stretch position-relative">
-                                            <div class="photoalbum-pic d-flex flex-column position-relative overflow-hidden">
-                                                <img v-if="loadImage"
-                                                     :src="loadImage.fileBlob"
-                                                     class="photoalbum-img img-fluid"
-                                                     alt=""/>
-                                                <div class="spinner-wrap">
-                                                    <SmallSpinner v-if="loadImage.isBlob"
-                                                                  clazz="media__spinner"
-                                                                  :hide-text="true"/>
-                                                </div>
-                                            </div>
-
-                                        </div>
-                                    </template>
-
-                                    <div v-for="image in photoAlbum.images"
-                                         :key="image.id"
-                                         class="photoalbum-image col-12 col-sm-6 col-xl-3 my-3 d-flex align-items-stretch position-relative">
-                                        <div class="photoalbum-pic d-flex flex-column position-relative overflow-hidden">
-                                            <img v-if="image"
-                                                 :key="image.id"
-                                                 :src="image.image.original.path"
-                                                 class="photoalbum-img img-fluid"
-                                                 alt=""/>
-                                        </div>
-
-                                        <button type="button"
-                                                aria-label="Удалить изображение"
-                                                class="delete__button"
-                                                @click.prevent="onDeleteImage(image.id)">
-                                                <i class="fa fa-plus"
-                                                   aria-hidden="true"></i>
-                                        </button>
+                                <div class="d-flex flex-wrap px-3">
+                                    <GridGallery v-if="photoAlbum && photoAlbum.images && photoAlbum.images.length"
+                                                 :images="photoAlbum.images"
+                                                 @onDelete="onDeleteImage"/>
+                                    <div v-else class="alert alert-info bg-transparent border-0 text-secondary w-100 p-5 text-center mb-0">
+                                        Нет изображений.
                                     </div>
                                 </div>
                             </div>
@@ -83,6 +46,7 @@
     import PhotoalbumEditBlock from "../components/PhotoalbumsPage/PhotoalbumEditBlock.vue";
     import IconDelete from "../icons/IconDelete.vue";
     import SmallSpinner from "../common/SmallSpinner.vue";
+    import GridGallery from "../common/Gallery/GridGallery.vue";
 
     import PliziPhotoAlbum from "../classes/PliziPhotoAlbum.js";
     import PliziAttachment from "../classes/PliziAttachment.js";
@@ -98,12 +62,12 @@
             PhotoalbumEditBlock,
             IconDelete,
             SmallSpinner,
+            GridGallery,
         },
         data() {
             return {
                 photoAlbumId: this.$route.params.id,
                 photoAlbum: null,
-                loadImages: null,
             }
         },
         methods: {
@@ -116,10 +80,8 @@
                     this.photoAlbum.images = [];
                 }
 
-                this.photoAlbum.images.unshift(new PliziAttachment(image));
-
-                let loadImageIndex = this.loadImages.findIndex(loadImage => loadImage.id === image.id);
-                this.loadImages.splice(loadImageIndex, 1);
+                let loadImageIndex = this.photoAlbum.images.findIndex(loadImage => (loadImage.originalName === image.originalName) && loadImage.isBlob);
+                Vue.set(this.photoAlbum.images, loadImageIndex, new PliziAttachment(image));
 
                 // TODO: @YZ сделать по нормальному после MVP
                 let lsUser = JSON.parse(localStorage.getItem('pliziUser'));
@@ -133,11 +95,11 @@
                 localStorage.setItem('pliziUser', JSON.stringify(lsUser));
             },
             uploadingImage(image) {
-                if (!this.loadImages) {
-                    this.loadImages = []
+                if (!this.photoAlbum.images) {
+                    this.photoAlbum.images = []
                 }
 
-                this.loadImages.push(image);
+                this.photoAlbum.images.unshift(image);
             },
 
             async onDeleteImage(id) {
