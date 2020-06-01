@@ -16,9 +16,6 @@
                         Нет
                     </button>
                 </div>
-                <p v-if="isSuccess" class="text-success text-center mt-3 mb-0">
-                    Видео было успешно удалено.
-                </p>
             </div>
         </div>
     </div>
