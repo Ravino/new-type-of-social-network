@@ -1,5 +1,16 @@
 import Vue from 'vue';
 
+if (process.env.NODE_ENV.toLowerCase() === 'development') {
+    Vue.config.productionTip = false;
+    Vue.config.silent = false;
+    Vue.config.devtools = true;
+}
+else {
+    Vue.config.productionTip = false;
+    Vue.config.silent = true;
+    Vue.config.devtools = false;
+}
+
 import VueRouter from 'vue-router';
 Vue.use(VueRouter);
 
@@ -122,16 +133,9 @@ Vue.prototype.$isXL = () => {
 
 import router from './router/router.js';
 import './libs/filters.js';
-
 import './libs/facebook.js';
 
 window.Vue = Vue;
-
-Vue.config.productionTip = false;
-
-Vue.config.silent = true;
-
-Vue.config.devtools = false;
 
 import App from './App.vue';
 
