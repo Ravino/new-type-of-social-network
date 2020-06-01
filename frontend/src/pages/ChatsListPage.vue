@@ -5,7 +5,7 @@
                 <AccountToolbarLeft></AccountToolbarLeft>
             </div>
 
-            <div v-if="isFreshUser()" class="chat-page-height chat-page-height-body col-12 col-md-11 ">
+            <div v-if="isFreshUser(freshUpdater)" class="fresh-user-block chat-page-height chat-page-height-body col-12 col-md-11 ">
                 <div class="row plz-post-item mb-4 bg-white-br20 p-4">
                     <p class="alert alert-info w-100 text-center p-5 mb-0">
                         Вы ещё ни с кем не общались, потому здесь пока никого нет.<br />
@@ -86,6 +86,7 @@ import ChatFooter from '../common/Chat/ChatFooter.vue';
 import ChatMixin from '../mixins/ChatMixin.js';
 
 import PliziMessagesCollection from '../classes/Collection/PliziMessagesCollection.js';
+import PliziDialog from '../classes/PliziDialog.js';
 
 export default {
 name: 'ChatsListPage',
@@ -116,6 +117,7 @@ data() {
         dialogsSearchedList: null,
         changedHeight: '',
         isChatPicked: false,
+        freshUpdater: 0
     }
 },
 
@@ -262,6 +264,28 @@ methods: {
         this.$root.$messagesKeyUpdater++;
     },
 
+    remoteCreateFirstDialog(evData){
+        let newDlg = new PliziDialog(evData.data);
+        newDlg.removeAttendee( this.$root.$auth.user.id );
+
+        this.$root.$auth.dm.onAddNewDialog( newDlg.toJSON() );
+        this.$root.$dialogsKeyUpdater++;
+
+        this.freshUpdater++;
+
+        this.$root.$on('DialogsIsUpdated', ()=>{
+            if (this.$refs  &&  this.$refs.chatDialogs) {
+                this.$refs.chatDialogs.$forceUpdate();
+            }
+        });
+
+    },
+
+    remoteAddFirstAttendee(evData){
+        return this.remoteCreateFirstDialog(evData);
+    },
+
+
     addListeners(){
         this.$root.$on('DialogsIsUpdated', ()=>{
             if (this.$refs  &&  this.$refs.chatDialogs) {
@@ -280,6 +304,10 @@ methods: {
                 this.removeMessageInList(evData);
             }
         });
+
+        // эвенты через ВебСокеты
+        this.$root.$once('remoteCreateDialog', this.remoteCreateFirstDialog);
+        this.$root.$once('remoteAddAttendee',  this.remoteAddFirstAttendee);
     }
 },
 
