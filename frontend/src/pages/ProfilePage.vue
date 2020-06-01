@@ -12,8 +12,10 @@
                 <div class="container">
                     <ProfileHeader v-bind:userData="userData()" v-bind:isOwner="true"></ProfileHeader>
 
+                    <template v-if="userPhotos.length > 0">
                     <ProfilePhotos v-if="isPhotosDataReady" v-bind:photos="userPhotos"></ProfilePhotos>
-                    <div v-else><SmallSpinner></SmallSpinner></div>
+                        <SmallSpinner v-else></SmallSpinner>
+                    </template>
 
                     <WhatsNewBlock @addNewPost="addNewPost"></WhatsNewBlock>
 
