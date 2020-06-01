@@ -41,8 +41,7 @@
                 :images="images"
                 :active-image="activeImage"
                 @close="closeGalleryModal"
-                @showImage="showImage"
-                @navChangeActiveImage="changeGetParams">
+                @showImage="showImage">
             </GalleryViewer>
 
             <GalleryDescription
@@ -243,12 +242,10 @@ methods : {
     },
     showImage( image ){
         this.activeImage = this.images.find(attach => attach.id === image.id);
-        this.$router.history.push({query: {activeImageId: image.id, galleryType: this.type}});
         this.getCommentsOnGallery( image.id );
-    },
 
-    changeGetParams( activeImage ) {
-        this.$router.history.push({query: {activeImageId: activeImage, galleryType: this.type}});
+        const link = `${this.$router.currentRoute.path}?activeImageId=${image.id}&galleryType=${this.type}`;
+        history.pushState({url: link}, '', link);
     },
 
     closeGalleryModal() {
@@ -356,7 +353,7 @@ methods : {
         }
     }
 },
-    mounted() {
+    created() {
         const activeId = this.$router.history.current.query.activeImageId;
         const typeGallery = this.$router.history.current.query.galleryType;
 
@@ -364,7 +361,7 @@ methods : {
             return;
         }
 
-        const foundImage = this.images.find(image => activeId === image.id.toString());
+        const foundImage = this.images.find(image => image.id.toString() === activeId);
 
         if (foundImage) {
             this.showImage(foundImage);
