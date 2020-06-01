@@ -8,7 +8,7 @@
             <TextEditor :clazz="`plz-text-editor h-auto  align-items-start flex-grow-1 `"
                         :editorPlaceholder="'Оставить комментарий...'"
                         :dropToDown="true"
-                        :maximumCharacterLimit="10000"
+                        :maximumCharacterLimit="500"
                         workMode="comment"
                         @editorPost="onTextPost"
             >

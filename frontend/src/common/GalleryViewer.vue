@@ -37,9 +37,6 @@ export default {
         },
         activeImage: null,
     },
-    mounted() {
-        console.log(this.activeImage);
-    },
     created() {
         if (!this.activeImage && this.images.length > 0) {
             this.goToImage(this.images.slice(0, 1).pop());
@@ -64,10 +61,8 @@ export default {
             } else {
                 this.goToImage([...this.images].pop());
             }
-            this.$emit('navChangeActiveImage', this.activeImage.id);
         },
         nextImage() {
-            console.log('fhdffhfd 11111');
             const nextImageIndex = this.currentImageIndex + 1;
 
             if (nextImageIndex >= 0 && this.images[nextImageIndex]) {
@@ -75,7 +70,6 @@ export default {
             } else {
                 this.goToImage([...this.images].shift());
             }
-            this.$emit('navChangeActiveImage', this.activeImage.id);
         },
         close() {
             this.$emit('close');
