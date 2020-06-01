@@ -19,14 +19,14 @@ class DatabaseSeeder extends Seeder
             $this->doSeed(ChatSeeder::class);
             $this->doSeed(ProfileRelationshipsSeeder::class);
             $this->doSeed(PostsTableSeeder::class);
-            $this->doSeed(CountriesGeoSeeder::class);
-            $this->doSeed(RegionsGeoSeeder::class);
-            $this->doSeed(CitiesGeoSeeder::class);
             $this->doSeed(FriendshipTableSeeder::class);
             $this->doSeed(BaseRBACSeeder::class);
             $this->doSeed(CommunityThemeSeeder::class);
             $this->doSeed(CommunitiesTableSeeder::class);
         }
+        $this->doSeed(CountriesGeoSeeder::class);
+        $this->doSeed(RegionsGeoSeeder::class);
+        $this->doSeed(CitiesGeoSeeder::class);
         Model::reguard();
     }
 

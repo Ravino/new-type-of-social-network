@@ -35,7 +35,7 @@ return [
             // Max buffer size for socket connections
             'socket_buffer_size' => 128 * 1024 * 1024,
             // Worker will restart after processing this number of requests
-            'max_request' => 0,
+            'max_request' => 3000,
             // Enable coroutine send
             'send_yield' => true,
             // You must add --enable-openssl while compiling Swoole
@@ -80,7 +80,7 @@ return [
     */
     'pre_resolved' => [
         'view', 'files', 'session', 'session.store', 'routes',
-        'db', 'db.factory', 'cache', 'cache.store', 'config', 'cookie',
+        'db.factory', 'cache', 'cache.store', 'config', 'cookie',
         'encrypter', 'hash', 'router', 'translator', 'url', 'log',
     ],
 
