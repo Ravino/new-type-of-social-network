@@ -188,7 +188,7 @@
                         <div class="post-watched-counter"
                              :class="{'is-active': post.alreadyLiked}"
                              @click="onLike">
-                            <IconFillHeard v-if="postLikes"/>
+                            <IconFillHeard v-if="post.alreadyLiked"/>
                             <IconHeard v-else/>
                             <span>{{ postLikes | space1000 }}</span>
                             <div v-if="post.usersLikes && post.usersLikes.length" class="usersLikes p-3" @click.stop="">
@@ -352,16 +352,16 @@
                 return this.getCommunityAvatar(this.post?.sharedFrom?.community);
             },
             postLikes() {
-                return parseInt(this.post?.likes || this.post?.sharedFrom?.likes);
+                return parseInt(this.post?.likes);
             },
             postCommentCount() {
-                return parseInt(this.post?.commentsCount || this.post?.sharedFrom?.commentsCount);
+                return parseInt(this.post?.commentsCount);
             },
             postSharesCount() {
-                return parseInt(this.post?.sharesCount || this.post?.sharedFrom?.sharesCount);
+                return parseInt(this.post?.sharesCount);
             },
             postViewsCount() {
-                return parseInt(this.post?.views || this.post?.sharedFrom?.views);
+                return parseInt(this.post?.views);
             },
             postIdForComment() {
                 return this.post?.sharedFrom?.id || this.post.id;
