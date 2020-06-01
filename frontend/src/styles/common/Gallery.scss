@@ -1,6 +1,10 @@
 
 $portraitFullHeight: 750px;
 
+.plz-gallery-portrait {
+    height: auto !important;
+}
+
 .plz-gallery {
     position: relative;
     height: $portraitFullHeight;
@@ -41,8 +45,8 @@ $portraitFullHeight: 750px;
 
     &-double {
         img {
-            height: $portraitFullHeight;
-            //height: $portraitFullHeight / 2;
+            //height: $portraitFullHeight;
+            height: $portraitFullHeight / 2;
         }
     }
 
