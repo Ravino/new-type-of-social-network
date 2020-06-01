@@ -112,9 +112,9 @@ computed: {
         /**
          * TODO Друзья выключены потомучто бэк не создает под них диалоги
          **/
-        // this.$root.$auth.frm.asArray().map( (frItem) => {
-        //     this.recipients.add(frItem, null);
-        // });
+        this.$root.$auth.frm.asArray().map( (frItem) => {
+            this.recipients.add(frItem, null);
+        });
         this.$root.$auth.dm.asArray().map( (dItem) => {
             this.recipients.add(dItem.companion, dItem.id);
         });
@@ -151,6 +151,7 @@ methods: {
 
         if (evData){
             fwdData = {
+                toUserId: this.selectedFriend.id,
                 chatId : this.selectedFriend.chatId,
                 body : evData.postText,
                 replyOnMessageId : this.msgData.id,
@@ -163,6 +164,7 @@ methods: {
             const msgData = this.$refs.forwardMessageEditor.getContent();
 
             fwdData = {
+                toUserId: this.selectedFriend.id,
                 chatId : this.selectedFriend.chatId,
                 body : msgData.postText,
                 replyOnMessageId : this.msgData.id,

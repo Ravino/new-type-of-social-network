@@ -40,6 +40,11 @@ class NewMessageEvent
     protected $parent_chat_id;
 
     /**
+     * @var
+     */
+    protected $toUserId;
+
+    /**
      * NewMessageEvent constructor.
      *
      * @param $body
@@ -48,8 +53,9 @@ class NewMessageEvent
      * @param $attachments
      * @param $parent_id
      * @param $parent_chat_id
+     * @param $toUserId
      */
-    public function __construct($body, $author_id, $chat_id, $attachments, $parent_id = null, $parent_chat_id = null)
+    public function __construct($body, $author_id, $chat_id, $attachments, $parent_id = null, $parent_chat_id = null, $toUserId = null)
     {
         $this->body = $body;
         $this->author_id = $author_id;
@@ -57,6 +63,7 @@ class NewMessageEvent
         $this->parent_id = $parent_id;
         $this->parent_chat_id = $parent_chat_id;
         $this->attachments = $attachments;
+        $this->toUserId = $toUserId;
     }
 
     /**
@@ -96,7 +103,7 @@ class NewMessageEvent
      */
     public function getParentId()
     {
-        return $this->parent_id ? $this->parent_id : null;
+        return $this->parent_id ?: null;
     }
 
     /**
@@ -104,6 +111,14 @@ class NewMessageEvent
      */
     public function getParentChatId()
     {
-        return $this->parent_chat_id ? $this->parent_chat_id : null;
+        return $this->parent_chat_id ?: null;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getToUserId()
+    {
+        return $this->toUserId;
     }
 }
