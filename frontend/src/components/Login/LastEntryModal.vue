@@ -7,9 +7,9 @@
                     <div id="" class="plz-last-entry-form-wrapper">
                         <div class="text-center"><h5>Быстрый вход</h5></div>
                         <div class="plz-last-entry-userPic text-center">
-                            <img :src="entry.userPic"
+                            <img :src="userPic"
                                  class="rounded-circle"
-                                 :alt="`${entry.firstName} ${entry.lastName}`">
+                                 :alt="fullName">
                         </div>
                         <div class="plz-last-entry-fullName text-center">
                             <p class="text-bold">
@@ -87,6 +87,12 @@
         computed: {
             isPasswordErrors() {
                 return this.$v.form.password.$error || (this.errors && this.errors.length);
+            },
+            userPic() {
+                return this.entry.src || this.entry.userPic || '/images/noavatar-256.png';
+            },
+            fullName() {
+                return this.entry.fullName || `${this.entry.firstName} ${this.entry.lastName}`;
             },
         },
         validations() {

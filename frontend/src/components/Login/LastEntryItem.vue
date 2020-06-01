@@ -20,7 +20,7 @@
         },
         computed: {
             userPic() {
-                return this.entryItem.src || this.entryItem.userPic;
+                return this.entryItem.src || this.entryItem.userPic || '/images/noavatar-256.png';
             },
             fullName() {
                 return this.entryItem.fullName || `${this.entryItem.firstName} ${this.entryItem.lastName}`;
