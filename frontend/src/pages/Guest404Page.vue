@@ -1,19 +1,14 @@
 <template>
     <div class="error-page d-flex">
-                    <div class="plz-post-item mb-4 mx-auto bg-white-br20 w-100 p-4">
-                        <div class="error-image mx-auto w-50">
-                            <img src="../images/ErrorImage.svg">
-                        </div>
-                        <div class="alert text-center">
-                            Извините! <br />
-                            Страница, которую Вы ищете, не может быть найдена.
-                        </div>
-                    </div>
-                </div>
+        <Error404Message/>
+     </div>
 </template>
 
 <script>
+import Error404Message from "../common/Error404Message.vue";
+
 export default {
 name: "Guest404Page",
+    components: {Error404Message},
 }
 </script>
