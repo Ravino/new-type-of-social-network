@@ -1,3 +1,4 @@
+import Vue from 'vue';
 import axios from 'axios';
 import PliziAPIError from './API/PliziAPIError.js';
 
@@ -8,8 +9,8 @@ import PliziCommunitiesAPI from './API/PliziCommunitiesAPI.js';
 import PliziUsersAPI from './API/PliziUsersAPI.js';
 import PliziNotificationsAPI  from './API/PliziNotificationsAPI.js';
 import PliziPhotoalbumsAPI  from './API/PliziPhotoalbumsAPI.js';
-import PliziVideoAPI from "./API/PliziVideoAPI.js";
-import PliziImageAPI from "./API/PliziImageAPI.js";
+import PliziVideoAPI from './API/PliziVideoAPI.js';
+import PliziImageAPI from './API/PliziImageAPI.js';
 
 class PliziAPIClass {
 
@@ -655,7 +656,7 @@ class PliziAPIClass {
                         chatId :  data.data.id,
                         userId :  data.data.userId
                     });
-                }, 300);
+                }, 100);
             }
         });
     }
@@ -675,7 +676,7 @@ class PliziAPIClass {
         //window.console.log(reason, `reason`);
         //window.console.log(detail, `detail`);
 
-        window.console.info(`${code}: ${reason} ${(detail || '')}`);
+        this.$info(`${code}: ${reason} ${(detail || '')}`);
     }
 
 
@@ -721,6 +722,51 @@ class PliziAPIClass {
     checkIsTokenExpires(error, srcMethod) {
         return this.__checkIsTokenExperis(error, srcMethod);
     }
+
+    $log(){
+        if (process.env.NODE_ENV.toLowerCase() === 'production')
+            return;
+
+        if (window &&  console && console.log) {
+            console.log.apply(window, arguments);
+        }
+    };
+
+    $info(){
+        if (process.env.NODE_ENV.toLowerCase() === 'production')
+            return;
+
+        if (window &&  console && console.info) {
+            console.log.apply(window, arguments);
+        }
+    };
+
+    $warn(){
+        if (process.env.NODE_ENV.toLowerCase() === 'production')
+            return;
+
+        if (window &&  console && console.warn) {
+            console.log.apply(window, arguments);
+        }
+    };
+
+    $dir(){
+        if (process.env.NODE_ENV.toLowerCase() === 'production')
+            return;
+
+        if (window &&  console && console.dir) {
+            console.log.apply(window, arguments);
+        }
+    };
+
+    $error = function(){
+        if (process.env.NODE_ENV.toLowerCase() === 'production')
+            return;
+
+        if (window &&  console && console.error) {
+            console.log.apply(window, arguments);
+        }
+    };
 
 }
 
