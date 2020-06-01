@@ -80,6 +80,8 @@ methods: {
         /** @type {string} **/
         let msg = evData.postText.trim();
 
+        msg = (msg === '<p></p>') ? '' : msg;
+
         const config = {
             chatId : this.currentDialog.id,
             userId : this.pickedMessage.userId // чтобы Reply получился
