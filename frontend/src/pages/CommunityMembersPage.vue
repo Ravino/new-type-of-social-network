@@ -41,6 +41,11 @@
                     </div>
                 </div>
             </div>
+
+            <div class="col-sm-2  col-lg-2 col-xl-1 d-none d-lg-block">
+                <FavoriteFriends :isNarrow="true"/>
+            </div>
+
         </div>
 
         <PostVideoModal v-if="postVideoModal.isVisible"
@@ -57,6 +62,7 @@
     import CommunityPageMixin from "../mixins/CommunityPageMixin.js";
 
     import AccountToolbarLeft from '../common/AccountToolbarLeft.vue';
+    import FavoriteFriends from "../common/FavoriteFriends.vue";
 
     import FriendsAllList from '../components/FriendsAllList.vue';
     import CommunityMember from '../components/Community/CommunityMember.vue';
@@ -67,6 +73,7 @@
         name: 'CommunityMembersPage',
         mixins: [CommunitiesSubscribeMixin, CommunityPageMixin],
         components: {
+            FavoriteFriends,
             FriendsAllList,
             AccountToolbarLeft,
             CommunityMember,
