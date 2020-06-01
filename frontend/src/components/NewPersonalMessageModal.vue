@@ -88,13 +88,12 @@ methods: {
             evData = this.$refs.messageToUserFromHisPage.getContent();
         }
 
-        if (evData.postText===''  ||  evData.postText==='<p></p>')
-            return;
-
-        this.$emit('SendPersonalMessage', {
-            message: evData,
-            receiverId: this.user.id,
-        });
+        if (evData.postText!=='<p></p>' ||  evData.attachments.length>=1){
+            this.$emit( 'SendPersonalMessage', {
+                message : evData,
+                receiverId : this.user.id,
+            } );
+        }
     },
 
     async goToDialogWithFriend(){
