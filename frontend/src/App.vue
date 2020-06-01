@@ -172,6 +172,7 @@ methods: {
     },
 
     onNewAppNotification(evData){
+        console.log(this.$root.$router.currentRoute.name, evData);
         if (this.$root.$isXS()  || this.$root.$isSM() || this.$root.$isMD())
             return;
 
@@ -207,9 +208,11 @@ methods: {
         }
 
         if (`message.new`===evData.type) {
-            if (!evData.message.isMine) {
-                let chatNotificationData = this.transformMessageToNotification(evData);
-                this.addNotification(chatNotificationData);
+            if (this.$root.$router.currentRoute.name !== 'ChatsListPage') {
+                if (!evData.message.isMine) {
+                    let chatNotificationData = this.transformMessageToNotification(evData);
+                    this.addNotification(chatNotificationData);
+                }
             }
         }
     },
