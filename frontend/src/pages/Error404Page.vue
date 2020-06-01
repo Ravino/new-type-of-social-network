@@ -38,7 +38,7 @@ components: {
 mixins: [ShortFriendsMixin],
 async created() {
     if (!this.$root.$isAuth) {
-    await this.$router.push({ name: 'LogoutPage' });
+    await this.$router.push({ name: 'Guest404Page' });
     return;
     }
 
