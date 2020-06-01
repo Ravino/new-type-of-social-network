@@ -1,7 +1,7 @@
 const LazyLoadPosts = {
     data() {
         return {
-            isStarted: false,
+            isStarted: true,
             noMore: true,
         }
     },

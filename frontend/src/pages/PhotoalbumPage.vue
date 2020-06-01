@@ -12,19 +12,18 @@
                                                @uploadingImage="uploadingImage"/>
                     </div>
                     <div class="col-12">
-                        <div class="row mb-3">
+                        <div class="row photoalbum-images-content pt-4 mb-4 bg-white-br20">
                             <div class="col-12">
                                 <div class="photo-album-description-block">
                                     <PhotoalbumEditBlock :photoAlbum="photoAlbum"/>
                                 </div>
-                            </div>
-                        </div>
-                        <div class="row photoalbum-images-content mb-4">
-                            <div class="col-12">
-                                <div class="bg-white-br20 d-flex flex-wrap px-3">
-                                    <GridGallery v-if="photoAlbum && photoAlbum.images"
+                                <div class="d-flex flex-wrap px-3">
+                                    <GridGallery v-if="photoAlbum && photoAlbum.images && photoAlbum.images.length"
                                                  :images="photoAlbum.images"
                                                  @onDelete="onDeleteImage"/>
+                                    <div v-else class="alert alert-info bg-transparent border-0 text-secondary w-100 p-5 text-center mb-0">
+                                        Нет изображений.
+                                    </div>
                                 </div>
                             </div>
                         </div>

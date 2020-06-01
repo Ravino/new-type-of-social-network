@@ -72,9 +72,6 @@
                                         class="btn w-100 btn-primary rounded-pill">
                                     Сохранить изменения
                                 </button>
-                                <div v-if="isSuccess" class="text-success text-center mt-3">
-                                    Фотоальбом был успешно обновлен.
-                                </div>
                             </div>
                         </div>
                     </form>
@@ -100,7 +97,6 @@ export default {
                 title: this.photoAlbum.title,
                 description: this.photoAlbum.description,
             },
-            isSuccess: false,
             isShipped: false,
             errors: null,
         }
@@ -163,17 +159,12 @@ export default {
             }
 
             if (apiResponse) {
-                this.isSuccess = true;
                 this.$root.$emit('onUpdate', {
                     title: this.model.title,
                     description: this.model.description,
                 });
-
-                setTimeout(() => {
-                    this.isSuccess = false;
-                    this.onHide();
-                }, 3000);
-
+                this.onHide();
+                this.$notify('Альбом успешно обновлен.');
             }
         }
     },

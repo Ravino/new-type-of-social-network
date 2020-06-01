@@ -43,8 +43,8 @@
 
                     <template v-if="isStarted">
                         <div class="row plz-post-item mb-4 bg-white-br20 p-4">
-                            <div class="w-100 p-5 text-center mb-0">
-                                <SmallSpinner clazz="position-absolute"/>
+                            <div class="w-100 text-center mb-0">
+                                <SmallSpinner/>
                             </div>
                         </div>
                     </template>
