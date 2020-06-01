@@ -20,8 +20,12 @@
                          class="chatHeader-title align-self-start mt-2 pb-0 mb-0 pull-left text-body cursor-pointer">
                 {{companion.fullName}}
             </router-link>
-            <p class="chatHeader-subtitle p-0 mb-0 mt-1 w-100 d-block">
+
+            <p v-if="companion.lastActivity" class="chatHeader-subtitle p-0 mb-0 mt-1 w-100 d-block">
                 {{ companion.lastActivity | lastEventTime }}
+            </p>
+            <p v-else class="chatHeader-subtitle p-0 mb-0 mt-1 w-100 d-block">
+                давно
             </p>
         </div>
     </div>
