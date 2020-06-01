@@ -4,11 +4,7 @@
 namespace Domain\Pusher\Repositories;
 
 
-use Carbon\Carbon;
-use DB;
 use Domain\Pusher\Events\ChatActionEvent;
-use Domain\Pusher\Helpers\ArrayUtils;
-use Domain\Pusher\DTOs\Dialog;
 use Domain\Pusher\Http\Resources\Chat\ChatCollection;
 use Domain\Pusher\Models\Chat;
 use Domain\Pusher\Http\Resources\Chat\Chat as ChatResource;
@@ -168,7 +164,7 @@ class ChatRepository
             $chat->attendees()->attach($receiver_id);
         }
         $chat_id = $chat->refresh()->id;
-        event(new ChatActionEvent($this->getUsersIdListFromChat($chat_id, \Auth::user()->id), 'chat.created', $this->getChatByIdWithAllAttendees($chat_id)));
+        event(new ChatActionEvent($this->getUsersIdListFromChat($chat_id, $author_id), 'chat.created', $this->getChatByIdWithAllAttendees($chat_id)));
         return $chat_id;
     }
 
@@ -216,5 +212,19 @@ class ChatRepository
         event(new ChatActionEvent($this->getUsersIdListFromChat($chat_id, \Auth::user()->id), 'chat.removed', ['id' => $chat_id]));
         Chat::destroy($chat_id);
         return true;
+    }
+
+    /**
+     * Найти или создать персональный чат
+     * @param $first_user
+     * @param $second_user
+     * @return int|mixed|null
+     */
+    public function getOrCreateChat($first_user, $second_user)
+    {
+        if (!$chat_id = $this->getChatIdForCoupleUsers($first_user, $second_user)) {
+            $chat_id = $this->createChatForUsers([$first_user], $second_user);
+        }
+        return $chat_id;
     }
 }
