@@ -158,7 +158,7 @@ computed : {
     filteredPosts(){
         switch ( this.filterMode ){
             case 'my':
-                return this.posts.filter( post => post.checkIsMinePost( this.$root.$auth.user.id ) );
+                return this.posts.filter( post => !post.sharedFrom );
 
             case 'archive':
                 return this.posts.filter( post => post.isArchivePost );

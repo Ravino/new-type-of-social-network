@@ -15,31 +15,37 @@
                                 <div class="card mb-4">
                                     <div class="card-body py-0">
                                         <div class="row">
-                                            <div v-for="(video, index) in userVideos"
-                                                 :key="index"
-                                                 class="col-12 col-sm-6 col-xl-3 my-3">
-                                                <div v-if="video.isYoutubeLink" class="videos-item">
-                                                    <div class="video mb-2">
-                                                        <div class="video-wrap-pre">
-                                                            <img alt="image"
-                                                                 :src="`//img.youtube.com/vi/${video.youtubeId}/mqdefault.jpg`"
-                                                                 @click.stop="openVideoModal(video.link)">
+                                            <template v-if="userVideos && userVideos.length">
+                                                <div v-for="(video, index) in userVideos"
+                                                     :key="index"
+                                                     class="col-12 col-sm-6 col-xl-3 my-3">
+                                                    <div v-if="video.isYoutubeLink" class="videos-item">
+                                                        <div class="video mb-2">
+                                                            <div class="video-wrap-pre">
+                                                                <img alt="image"
+                                                                     :src="`//img.youtube.com/vi/${video.youtubeId}/mqdefault.jpg`"
+                                                                     @click.stop="openVideoModal(video.link)">
+                                                            </div>
+                                                            <button type="button"
+                                                                    aria-label="Запустить видео"
+                                                                    class="video__button">
+                                                                <IconYoutube/>
+                                                            </button>
+                                                            <button type="button"
+                                                                    @click.prevent="onDelete(video.id)"
+                                                                    class="btn btn-close btn-link border-0 border-danger bg-danger text-white rounded-circle delete__button"
+                                                                    aria-label="Удалить видео">
+                                                                <i class="fa fa-plus" aria-hidden="true"></i>
+                                                            </button>
+                                                            <div class="video-time d-none">0:32</div>
                                                         </div>
-                                                        <button type="button"
-                                                                aria-label="Запустить видео"
-                                                                class="video__button">
-                                                            <IconYoutube/>
-                                                        </button>
-                                                        <button type="button"
-                                                                @click.prevent="onDelete(video.id)"
-                                                                class="btn btn-close btn-link border-0 border-danger bg-danger text-white rounded-circle delete__button"
-                                                                aria-label="Удалить видео">
-                                                            <i class="fa fa-plus" aria-hidden="true"></i>
-                                                        </button>
-                                                        <div class="video-time d-none">0:32</div>
+                                                        <a href="/user-1" class="video-desc d-none mb-0">Sunrise</a>
                                                     </div>
-                                                    <a href="/user-1" class="video-desc d-none mb-0">Sunrise</a>
                                                 </div>
+                                            </template>
+
+                                            <div v-else class="alert alert-info bg-transparent border-0 text-secondary w-100 p-5 text-center mb-0">
+                                                Нет видео.
                                             </div>
                                         </div>
                                     </div>
@@ -328,7 +334,6 @@
 
         <DeleteVideoModal v-if="deleteVideoModal.isVisible"
                           :id="deleteVideoModal.content.id"
-                          :isSuccess="isSuccess"
                           @onHideDeleteVideoModal="hideDeleteVideoModal"
                           @onSuccessDeleteVideoModal="onSuccessDeleteVideoModal"/>
     </div>
@@ -421,13 +426,10 @@ methods: {
         if (response) {
             let userVideoIndex = this.userVideos.findIndex(userVideo => userVideo.id === this.deleteVideoModal.content.id);
             this.userVideos.splice(userVideoIndex, 1);
-            this.isSuccess = true;
 
-            setTimeout(() => {
-                this.isSuccess = false;
-                this.hideDeleteVideoModal();
-                this.isDeleteRequest = false;
-            }, 3000);
+            this.hideDeleteVideoModal();
+            this.isDeleteRequest = false;
+            this.$notify('Видео успешно удалено.');
         } else {
             this.isDeleteRequest = false;
         }

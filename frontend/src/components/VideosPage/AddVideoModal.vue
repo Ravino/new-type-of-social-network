@@ -108,7 +108,7 @@
                         id: response.id,
                         link: this.form.link,
                     });
-                    this.$notify('Ссылка на видео успешно добавлена.');
+                    this.$notify('Видео успешно добавлено.');
                 } else {
                     this.isStoreRequest = false;
                 }
