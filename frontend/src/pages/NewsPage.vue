@@ -10,12 +10,17 @@
                     <WhatsNewBlock @addNewPost="addNewPost"></WhatsNewBlock>
 
                     <div class="row mb-4 pt-0">
-                        <PostFilter @lastSearchChange="lastSearchChange"/>
-                        <PostInterest @interestSwitch="interestSwitch"/>
+                        <PostFilter
+                            :filter="filter"
+                            @likedClick="likedClick"
+                            @lastSearchChange="lastSearchChange"/>
+                        <PostInterest
+                            :filter="filter"
+                            @interestSwitch="interestSwitch"/>
                     </div>
 
-                    <template v-if="filteredPost && filteredPost.length > 0">
-                        <Post v-for="postData in posts"
+                    <template v-if="filteredPosts && filteredPosts.length > 0">
+                        <Post v-for="postData in filteredPosts"
                               :key="postData.id"
                               :post="postData"
                               @onEditPost="onEditPost"
@@ -102,6 +107,7 @@ mixins: [LazyLoadPosts],
 data() {
     return {
         posts: [],
+        filteredPosts: [],
         postEditModal: {
             isVisible: false,
         },
@@ -127,17 +133,27 @@ data() {
         lastSearch: '',
         filter: {
             interest: false,
+            liked: false,
         },
     }
 },
-computed: {
-    filteredPost() {
-        return this.posts;
-    }
-},
 methods: {
+    filterPost() {
+        this.filteredPosts = [...this.posts];
+        if (this.filter.interest) {
+            this.filteredPosts.sort(function (a, b) {
+                return (b.commentsCount + b.likes) - (a.commentsCount + a.likes);
+            });
+        }
+        if (this.filter.liked) {
+            this.filteredPosts = this.filteredPosts.filter((post) => {
+                return post.alreadyLiked;
+            });
+        }
+    },
     addNewPost(post) {
         this.posts.unshift(new PliziPost(post));
+        this.filterPost();
     },
     onEditPost(post){
         this.postEditModal.isVisible = true;
@@ -159,6 +175,7 @@ methods: {
     startTimer(postIndex) {
         setTimeout(() => {
             this.posts.splice(postIndex, 1);
+            this.filterPost();
         }, 5000);
     },
     onSharePost(post) {
@@ -198,6 +215,7 @@ methods: {
             response.map((post) => {
                 this.posts.push(new PliziPost(post));
             });
+            this.filterPost();
 
             return response.length;
         }
@@ -239,10 +257,16 @@ methods: {
             });
 
             post.deleted = false;
+            this.filterPost();
         }
     },
     interestSwitch(state) {
         this.filter.interest = state;
+        this.filterPost();
+    },
+    likedClick(state) {
+        this.filter.liked = state;
+        this.filterPost();
     }
 },
 

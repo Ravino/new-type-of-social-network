@@ -7,7 +7,7 @@
                     <i class="fas fa-chevron-down ml-2"></i>
                 </span>
 
-                <span class="nav-link py-2 py-sm-3 px-1 mr-2 mr-lg-4">Понравилось</span>
+                <span class="nav-link py-2 py-sm-3 px-1 mr-2 mr-lg-4" :class="{'active': liked}" @click="likedClick">Понравилось</span>
                 <!-- TODO: @YZ восстановить после MVP -->
                 <span class="nav-link py-3 px-1 mr-2 mr-lg-4 ml-auto ml-lg-4 d-none #d-md-inline-block">
                     <button class="btn px-2 py-0 ">
@@ -55,11 +55,14 @@ import IconSingleViewMode from '../../icons/IconSingleViewMode.vue';
 export default {
 name : 'PostFilter',
 components : { IconMultipleViewMode, IconSearch, IconSingleViewMode },
-
+props: {
+    filter: Object,
+},
 data() {
     return {
         isFocused: false,
-        lastSearch : ''
+        lastSearch : '',
+        liked: false,
     }
 },
 
@@ -78,6 +81,13 @@ methods: {
     startSearch() {
         this.$emit('lastSearchChange', this.lastSearch);
     },
+    likedClick() {
+        this.liked = !this.liked;
+        this.$emit('likedClick', this.liked);
+    },
+},
+mounted() {
+    this.liked = this.filter.liked;
 }
 
 }
