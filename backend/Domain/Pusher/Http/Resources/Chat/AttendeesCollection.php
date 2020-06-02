@@ -37,7 +37,7 @@ class AttendeesCollection extends ResourceCollection
                 'isAdmin' => $attendee->id === $this->user_id,
                 'sex' => $attendee->profile->sex,
             ];
-        });
+        })->unique('id');
     }
 
     /**

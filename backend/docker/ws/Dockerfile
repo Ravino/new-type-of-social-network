@@ -16,6 +16,7 @@ RUN yum install php-bcmath -y
 COPY . .
 RUN composer install
 EXPOSE 7070
+EXPOSE 5555
 COPY docker-entrypoint.sh /usr/share/docker-laravel/bin/
 RUN chmod +x /usr/share/docker-laravel/bin/docker-entrypoint.sh
 
