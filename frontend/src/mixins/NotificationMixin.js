@@ -19,7 +19,7 @@ const NotificationMixin = {
 
             let notification = {
                 id: uuid,
-                userPic: (inputNotification.data.sender) ? inputNotification.data.sender.userPic : null,
+                userPic: (inputNotification.data.sender.userPic) ? inputNotification.data.sender.userPic : '../images/noavatar-256.png',
                 firstName: (inputNotification.data.sender) ? inputNotification.data.sender.firstName : null,
                 lastName: (inputNotification.data.sender) ? inputNotification.data.sender.lastName : null,
                 name: (inputNotification.data.name) ? inputNotification.data.name : null,
@@ -107,7 +107,7 @@ const NotificationMixin = {
             }
 
             if (inputNotification.data.notificationType === 'message.new') {
-                    notification.body = inputNotification.data.sender.message;
+                notification.body = inputNotification.data.sender.message;
             }
 
             if (inputNotification.data.notificationType === 'app.notification') {
