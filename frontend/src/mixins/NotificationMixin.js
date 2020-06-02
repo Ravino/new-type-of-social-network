@@ -15,7 +15,6 @@ const NotificationMixin = {
     },
     methods: {
         addNotification(inputNotification) {
-            console.log(inputNotification);
             const uuid = uuidv4();
 
             let notification = {
