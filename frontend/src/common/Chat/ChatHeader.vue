@@ -1,9 +1,12 @@
 <template>
     <div id="chatHeader" class="bg-white w-100 border-bottom d-flex justify-content-between">
             <div class="col-11 col-md-6 d-flex">
-                <vue-custom-scrollbar class="plz-latest-entries-list d-flex justify-content-between justify-content-sm-start pb-3"
-                                      :settings="customScrollbarSettings">
-                    <ChatHeaderCompanion v-if="currentDialog.isPrivate" v-bind:companion="companion"></ChatHeaderCompanion>
+                <vue-custom-scrollbar
+                        class="plz-latest-entries-list d-flex justify-content-between justify-content-sm-start pb-3"
+                        :settings="customScrollbarSettings">
+
+                    <ChatHeaderCompanion v-if="currentDialog.isPrivate"
+                         v-bind:companion="companion"></ChatHeaderCompanion>
 
                     <GroupChatAttendeesList v-if="currentDialog.isGroup"
                                           v-bind:key="'groupChatAttendeesList'+attendeeKeyUpdater"
@@ -39,8 +42,10 @@
 
                         <div class="col-md-auto">
                             <ChatHeaderMenu
+                                v-bind:currentDialog="currentDialog"
                                 @ShowRemoveCurrentChatModal="onShowRemoveCurrentChatModal"
                                 @ShowCreateGroupChatModal="onShowCreateGroupChatModal"
+                                @ShowAttendeeListModal="onShowAttendeesModal"
                                 @ShowAddAttendeeModal="onShowAttendeesModal"
                                 @ShowRemoveAttendeeModal="onShowAttendeesModal"></ChatHeaderMenu>
                         </div>

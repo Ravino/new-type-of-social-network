@@ -17,6 +17,7 @@
                                     <ChatAttendeeItem v-for="attItem in getAttendeesList()"
                                                       @RemoveAttendeeFromChat="onRemoveAttendeeFromChat"
                                                       v-bind:companion="attItem"
+                                                      v-bind:meIsChatAdmin="meIsChatAdmin"
                                                       v-bind:isCanDelete="isCanDelete"
                                                       v-bind:key="'attendeeItem-'+attItem.id+'-'+keyUpdater">
                                     </ChatAttendeeItem>
@@ -24,7 +25,7 @@
                             </vue-custom-scrollbar>
                         </div>
 
-                        <div class="form-group">
+                        <div v-if="meIsChatAdmin" class="form-group">
                             <label class="">Добавить нового участника</label>
                             <multiselect v-model="model.selectedRecipients"
                                          :options="getFriendsCombo"
@@ -66,18 +67,21 @@
 </template>
 
 <script>
+/** @link https://binaryify.github.io/vue-custom-scrollbar/en/#why-custom-scrollbar **/
+import vueCustomScrollbar from 'vue-custom-scrollbar';
+
 import ChatAttendeeItem from './ChatAttendeeItem.vue';
+
+import ChatAdminMixin from '../../mixins/ChatAdminMixin.js';
 
 import PliziDialog from '../../classes/PliziDialog.js';
 import PliziRecipientsCollection from '../../classes/Collection/PliziRecipientsCollection.js';
 
 
-/** @link https://binaryify.github.io/vue-custom-scrollbar/en/#why-custom-scrollbar **/
-import vueCustomScrollbar from 'vue-custom-scrollbar';
-
 export default {
 name: 'GroupChatAttendeesModal',
 components: { ChatAttendeeItem, vueCustomScrollbar },
+mixins: [ChatAdminMixin],
 props: {
     currentDialog: PliziDialog
 },

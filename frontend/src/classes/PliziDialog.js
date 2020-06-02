@@ -143,6 +143,14 @@ class PliziDialog{
         return this.attendees.find( aItem => aItem.id === userId );
     }
 
+    /**
+     * возвращает админа чата
+     * @returns {PliziAttendee}
+     */
+    getAdmin(){
+        return this.attendees.find( aItem => aItem.isAdmin === true );
+    }
+
     removeAttendee(userId){
         this._attendees = this._attendees.filter( aItem => aItem.id !== userId );
     }
