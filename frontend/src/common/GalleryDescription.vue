@@ -69,7 +69,8 @@
         <CommentGallery class="plz-gallery-description-write-comment"
                         :post-id="postIdForComment"
                         @updateComments="addNewComment"
-                        :imageId="image.id">
+                        :imageId="image.id"
+                        type="gallery">
         </CommentGallery>
     </div>
 </template>

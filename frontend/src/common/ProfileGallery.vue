@@ -17,25 +17,31 @@
             </div>
 
         </div>
-        <div class="plz-gallery__show" v-if="activeImageId">
+        <div class="plz-gallery__show" v-if="activeImage">
             <GalleryViewer
-                class="w-100"
                 :images="images"
                 :active-image="activeImage"
                 @showImage="showImage"
-                @close="activeImageId = null">
+                @close="activeImage = null">
             </GalleryViewer>
-
+            <ProfileGalleryDescription
+                :comments="comments"
+                :image="activeImage"
+                @updateComments="updateComments">
+            </ProfileGalleryDescription>
         </div>
     </div>
 </template>
 
 <script>
     import GalleryViewer from './GalleryViewer.vue';
+    import GalleryDescription from "./GalleryDescription.vue";
+    import ProfileGalleryDescription from "./ProfileGalleryDescription.vue";
+    import PliziComment from "../classes/PliziComment";
 
     export default {
         name: 'ProfileGallery',
-        components: {GalleryViewer},
+        components: {ProfileGalleryDescription, GalleryDescription, GalleryViewer},
         props: {
             profilePhotos: Boolean,
             images: {
@@ -46,8 +52,8 @@
 
         data() {
             return {
-                activeImageId: null,
                 activeImage: null,
+                comments: [],
             };
         },
 
@@ -67,9 +73,23 @@
         },
 
         methods: {
+            async getCommentsOfAlbum( activeImageId ) {
+                try {
+                    let response = await this.$root.$api.$post.getAlbumComments(activeImageId);
+                    this.comments = response.data.list.map(comment => new PliziComment(comment));
+                } catch (e) {
+                    console.warn(e.detailMessage);
+                }
+            },
+            updateComments({ comments, id }) {
+                if (this.activeImage.id === id) {
+                    this.comments = comments;
+                }
+            },
             showImage(image) {
-                this.activeImageId = image.id;
                 this.activeImage = this.images.find(attach => attach.id === image.id);
+                this.getCommentsOfAlbum( image.id );
+
             },
         },
     }

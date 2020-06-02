@@ -32,6 +32,9 @@
             imageId: {
                 type: Number|String,
             },
+            type: {
+                type: String,
+            },
         },
         computed: {
             getUserData() {
@@ -60,11 +63,23 @@
                 }
             },
             async sendCommentToGallery(msg, attachments) {
-                try {
-                    let response = await this.$root.$api.$post.setGalleryComments(msg, this.postId, this.imageId, attachments);
-                    this.$emit('updateComments', response.data);
-                } catch (e) {
-                    console.warn(e.detailMessage);
+                let response = null;
+
+                if(this.type === "gallery") {
+                    try {
+                        response = await this.$root.$api.$post.setGalleryComments(msg, this.postId, this.imageId, attachments);
+                        this.$emit('updateComments', response.data);
+                    } catch (e) {
+                        console.warn(e.detailMessage);
+                    }
+                } else if (this.type === "album") {
+                    try {
+                        console.log(this.imageId);
+                        response = await this.$root.$api.$post.sendCommentToAlbum(msg, this.imageId, attachments);
+                        this.$emit('updateNewComments', response.data);
+                    } catch (e) {
+                        console.warn(e.detailMessage);
+                    }
                 }
             },
         },

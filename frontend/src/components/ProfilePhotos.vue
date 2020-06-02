@@ -17,7 +17,7 @@
                     <a href="#onmap">Показать на карте</a>
                 </div>
             </div>
-            <div class="w-100 d-flex flex-row plz-profile-photos-list pt-3">
+            <div class="d-flex flex-row plz-profile-photos-list pt-3">
                 <vue-custom-scrollbar class="plz-latest-entries-list d-flex justify-content-between justify-content-sm-start pb-3"
                                       :settings="customScrollbarSettings">
                     <ProfileGallery v-if="photos.length > 0" :profilePhotos="profilePhotos" :images="photos"></ProfileGallery>

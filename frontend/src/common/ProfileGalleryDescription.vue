@@ -1,0 +1,159 @@
+<template>
+    <div class="plz-gallery-description d-flex flex-column justify-content-between">
+        <div class="plz-gallery-description-header px-4 pt-4 pb-0">
+            <div class="plz-gallery-description--holder d-flex">
+                <div class="plz-gallery-description--holder-avatar mr-3">
+                    <img class="plz-gallery-description--holder-avatar-item" :src="userAvatar" :alt="userName +' '+ userSurname">
+                </div>
+                <div class="plz-gallery-description--holder-data d-flex flex-column w-100 justify-content-center">
+                    <p class="plz-gallery-description--holder-data-author d-flex mb-0">
+                        {{ userName +' '+ userSurname }}
+                    </p>
+                    <p class="plz-gallery-description--holder-data-time mb-0">
+                        {{getTimePost}}
+                    </p>
+                </div>
+                <div class="post-poster-actions my-auto ml-auto">
+                    <button class="btn btn-link post-settings"
+                            type="button"
+                            data-toggle="dropdown"
+                            aria-haspopup="true"
+                            aria-expanded="false">
+                        <i class="dots-vertical"></i>
+                    </button>
+                    <div class="dropdown-menu dropdown-menu-right py-3 px-0">
+
+                        <div class="nav-item">
+                            <button class="btn dropdown-item text-left px-3 py-1">
+                                Редактировать
+                            </button>
+                        </div>
+                        <div  class="nav-item">
+                            <button class="btn dropdown-item text-left px-3 py-1">
+                                Удалить
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="plz-gallery-description--post-data d-flex">
+                <div class="plz-gallery-description--post-data-option post-watched-counter"
+                     :class="{'is-active': image.alreadyLiked}"
+                     @click="onLike">
+                    <IconFillHeard v-if="image.alreadyLiked"/>
+                    <IconHeard v-else/>
+                    <span>{{ image.likes | space1000 }}</span>
+                </div>
+                <div class="plz-gallery-description--post-data-option post-watched-counter ml-4">
+                    <IconMessage/>
+                    <span>{{  comments.length | space1000 }}</span>
+                </div>
+                <div class="plz-gallery-description--post-data-option post-watched-counter ml-4">
+                    <IconShare/>
+                    <span>{{ 0 | space1000 }}</span>
+                </div>
+            </div>
+            <div class="plz-gallery-description-comment-wrapper">
+                <div class="plz-gallery-description-comment-item" v-for="comment in comments">
+                    <CommentItem :key="comment.id"
+                                 :comment="comment"
+                                 @onDelete="removeComment"
+                                 @update="editComment"
+                    ></CommentItem>
+                </div>
+            </div>
+        </div>
+        <CommentGallery
+            class="plz-gallery-description-write-comment"
+            @updateNewComments="addNewComment"
+            :imageId="image.id"
+            type="album">
+        </CommentGallery>
+    </div>
+</template>
+
+<script>
+    import moment from "moment";
+    import IconMessage from "../icons/IconMessage.vue";
+    import IconFillHeard from "../icons/IconFillHeard.vue";
+    import IconHeard from "../icons/IconHeard.vue";
+    import IconShare from "../icons/IconShare.vue";
+    import CommentGallery from "../components/Comments/CommentGallery.vue";
+    import CommentItem from "../components/Comments/CommentItem.vue";
+    import PliziAttachment from "../classes/PliziAttachment.js";
+    import PliziComment from "../classes/PliziComment.js";
+    export default {
+        name: "ProfileGalleryDescription",
+        components: {CommentGallery, IconShare, IconHeard, IconFillHeard, IconMessage, CommentItem},
+        props: {
+            comments: {
+                type: Array,
+                required: true,
+            },
+            image: {
+                type: PliziAttachment,
+                default: null,
+            },
+        },
+        computed: {
+            userAvatar() {
+                if (this.getUserData.profile.avatar === null) {
+                    return this.noAvatar;
+                }
+
+                return this.getUserData.profile.avatar.image.thumb.path;
+            },
+            userName() {
+                return this.getUserData.profile.firstName;
+            },
+            userSurname() {
+                return this.getUserData.profile.lastName;
+            },
+            getUserData() {
+                return this.$root.$auth.user;
+            },
+            getTimePost() {
+                this.comments.map(comment => {
+                    return moment(comment.createdAt).fromNow();
+                });
+            },
+        },
+        methods: {
+            addNewComment(newComment) {
+                this.updateComments([...this.comments, new PliziComment(newComment)]);
+            },
+            editComment(newComment) {
+                const comments = this.comments.map(comment => comment.id === newComment.id ? comment.update(newComment) : comment);
+                this.updateComments(comments);
+            },
+            removeComment(commentId) {
+                const comments = this.comments.filter(comment => comment.id !== commentId);
+                this.updateComments(comments);
+            },
+            async onLike() {
+                let response = null;
+
+                try {
+                    response = await this.$root.$api.$image.likePostImage(this.post.id, this.image.id);
+                } catch (e) {
+                    console.warn(e.detailMessage);
+                }
+
+                if (response !== null) {
+                    if (this.image.alreadyLiked) {
+                        this.image.alreadyLiked = false;
+                        this.image.likes--;
+                        let userLikeIndex = this.image.usersLikes.findIndex((userLike) => {
+                            return userLike.id === this.$root.$auth.user.id;
+                        });
+                        this.image.usersLikes.splice(userLikeIndex, 1);
+                    } else {
+                        this.image.alreadyLiked = true;
+                        this.image.likes++;
+                        this.image.usersLikes.push(this.$root.$auth.user);
+                    }
+                }
+            }
+        },
+    }
+</script>
