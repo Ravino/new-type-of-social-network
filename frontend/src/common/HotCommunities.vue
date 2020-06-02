@@ -1,5 +1,5 @@
 <template>
-    <div>
+    <div class="d-flex d-md-block">
         <HotCommunityItem v-for="hcItem in communities"
                           @RemoveCommunityFromHots="onRemoveCommunityFromHots"
                           v-bind:community="hcItem"
