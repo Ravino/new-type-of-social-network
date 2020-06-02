@@ -57,6 +57,11 @@ const NotificationMixin = {
                 notification.primaryImage = inputNotification.data.community.primaryImage;
             }
 
+            if (inputNotification.data.notificationType === 'user.post.created') {
+                notification.body = this.senderFullName(inputNotification) +
+                    ('f' === inputNotification.data.sender.sex ? 'опубликовала новость' : 'опубликовал новость');
+            }
+
             if (inputNotification.data.notificationType === 'chat.created') {
                 if (inputNotification.attendees.length >= 3) {
                     notification.isHuman = false;
