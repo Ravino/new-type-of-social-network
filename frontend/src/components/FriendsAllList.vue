@@ -1,7 +1,7 @@
 <template>
     <div class="row plizi-friends-list" v-bind:key="friendsKey">
 
-        <ul v-if="hasFriends" class="d-block w-100 p-0" v-bind:key="calcFriendsKey+frmSize">
+        <ul v-if="friends  &&  friends.length>0" class="d-block w-100 p-0" v-bind:key="calcFriendsKey+frmSize">
             <transition-group name="slide-fade" :duration="700">
                 <FriendListItem v-for="friendItem in getFriends()"
                                 @FriendRemoveFromFavorites="changesInFriends"
@@ -15,7 +15,8 @@
 
         <div v-else class="alert alert-info w-100 p-5 text-center mb-0">
             <p v-if="wMode==='all'">Вы ещё ни с кем не подружились.</p>
-            <p v-if="wMode==='online'">Сейчас все друзья оффлайн.</p>
+            <p v-if="wMode==='recent'">Вы давно никого не добавляли в друзья.</p>
+            <p v-if="wMode==='online'">Сейчас все друзей оффлайн.</p>
             <p v-if="wMode==='favorites'">Вы никого не добавили в Избранные.</p>
         </div>
     </div>
@@ -43,6 +44,12 @@ data(){
     };
 },
 
+computed: {
+    calcFriendsKey(){
+        return this.friendsKey + '-' + this.localUpdateKey;
+    }
+},
+
 methods: {
     getFriends(){
         return this.friends.slice();
@@ -51,12 +58,6 @@ methods: {
     changesInFriends(){
         this.friendsKeyCounter += 1;
         this.localUpdateKey = this.friendsKeyCounter+'-'+(new Date()).getMilliseconds();
-    }
-},
-
-computed: {
-    calcFriendsKey(){
-        return this.friendsKey + '-' + this.localUpdateKey;
     }
 },
 
