@@ -1,8 +1,8 @@
 <template>
     <div id="chatFooter" class="chat-footer">
-        <div class="companion-is-typing pl-2" style="min-height: 20px;">
+        <!--<div class="companion-is-typing pl-2 d-flex w-100 align-items-center" >
             <span v-show="isTyper">{{typerName}} печатает...</span>
-        </div>
+        </div>-->
 
         <TextEditor :showAvatar="false"
                     :dropToDown="false"
