@@ -147,8 +147,18 @@
         .dropdown-menu {
             left: 50%;
             right: auto;
-            transform: translateX(-62%);
+            transform: translateX(-42%);
             max-width: 96vw;
+        }
+        .invitations-dropdown {
+            transform: translateX(-62%);
+        }
+        .notifications-likes-dropdown {
+            transform: translateX(-42%);
+        }
+
+        .notifications-likes-scroll {
+            max-width: 100%;
         }
     }
 
