@@ -10,31 +10,31 @@
 </template>
 
 <script>
- export default {
-  name : 'SmallSpinner',
-  props : {
-   clazz : String,
-   message: String,
-   hideText: {
-    type: Boolean,
-    default: false,
-   }
-  },
+export default {
+name : 'SmallSpinner',
+props : {
+    clazz : String,
+    message : String,
+    hideText : {
+        type : Boolean,
+        default : true,
+    }
+},
 
-  data(){
-   return {
-    defaultClazz: `col-12 py-5 px-5 d-flex flex-column align-items-center`,
-    defaultMessage: `Данные загружаются`,
-   }
-  },
+data(){
+    return {
+        defaultClazz : `col-12 py-5 px-5 d-flex flex-column align-items-center`,
+        defaultMessage : `Данные загружаются`,
+    }
+},
 
-  computed: {
-   spinnerClazz(){
-    return this.clazz || this.defaultClazz;
-   },
-   spinnerMessage(){
-    return this.message || this.defaultMessage;
-   },
-  }
- }
+computed : {
+    spinnerClazz(){
+        return this.clazz || this.defaultClazz;
+    },
+    spinnerMessage(){
+        return this.message || this.defaultMessage;
+    },
+}
+}
 </script>

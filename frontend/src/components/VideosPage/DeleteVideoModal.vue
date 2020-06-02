@@ -9,16 +9,13 @@
                 <div class="d-flex">
                     <button class="btn plz-btn plz-btn-primary p-0 mr-3"
                             @click.stop="deleteVideo">
-                        Да, я уверен
+                        Да
                     </button>
                     <button class="btn plz-btn plz-btn-primary p-0 mr-3"
                             @click.stop="onHide">
                         Нет
                     </button>
                 </div>
-                <p v-if="isSuccess" class="text-success text-center mt-3 mb-0">
-                    Видео было успешно удалено.
-                </p>
             </div>
         </div>
     </div>

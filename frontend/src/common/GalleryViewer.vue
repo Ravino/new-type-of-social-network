@@ -26,6 +26,7 @@
 <script>
 import IconArrowRight from "../icons/IconArrowRight.vue";
 import IconArrowLeft from "../icons/IconArrowLeft.vue";
+
 export default {
     name: 'GalleryViewer',
     components: {IconArrowLeft, IconArrowRight},
@@ -34,26 +35,11 @@ export default {
             type: Array,
             default: () => [],
         },
-        activeId: {
-            type: Number|String,
-        },
-    },
-    data() {
-        return {
-            activeImage: null,
-        };
+        activeImage: null,
     },
     created() {
-        if (this.activeId) {
-            const image = this.images.find(image => image.id === this.activeId);
-
-            if (image) {
-                this.activeImage = image;
-            }
-        }
-
         if (!this.activeImage && this.images.length > 0) {
-            this.activeImage = this.images.slice(0, 1).pop();
+            this.goToImage(this.images.slice(0, 1).pop());
         }
 
         this.addBodyViewerOpen();
@@ -71,7 +57,7 @@ export default {
             const prevImageIndex = this.currentImageIndex - 1;
 
             if (prevImageIndex >= 0 && this.images[prevImageIndex]) {
-                this.activeImage = this.images[prevImageIndex];
+                this.goToImage(this.images[prevImageIndex]);
             } else {
                 this.goToImage([...this.images].pop());
             }
@@ -80,7 +66,7 @@ export default {
             const nextImageIndex = this.currentImageIndex + 1;
 
             if (nextImageIndex >= 0 && this.images[nextImageIndex]) {
-                this.activeImage = this.images[nextImageIndex];
+                this.goToImage(this.images[nextImageIndex]);
             } else {
                 this.goToImage([...this.images].shift());
             }
@@ -89,7 +75,7 @@ export default {
             this.$emit('close');
         },
         goToImage(image) {
-            this.activeImage = image;
+            this.$emit('showImage', image);
         },
        addBodyViewerOpen() {
             document.querySelector('body').classList.add('plz-gallery--open');

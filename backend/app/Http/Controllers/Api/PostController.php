@@ -83,27 +83,21 @@ class PostController extends Controller
 
     /**
      * @param Request $request
-     * @param $community_id
-     * @return PostCollection|\Illuminate\Http\JsonResponse
+     * @return PostCollection
      */
-    public function communityPosts(Request $request, $community_id) {
+    public function communityPosts(Request $request) {
         /** @var Community $community */
-        $community = Community::find($community_id);
-        if (!$community->isUserHasAccess()) {
-            return response()->json(['message' => 'Нет доступа'], 403);
-        }
-        if($community) {
-            $posts = $community->posts()->with(['postable', 'author', 'usersLikes' => function ($query) {
-                return $query->limit(8)->get();
-            }])
-                ->withCount('comments')
-                ->limit($request->query('limit', 50))
-                ->offset($request->query('offset', 0))
-                ->orderByDesc('id')
-                ->get();
-            return new PostCollection($posts);
-        }
-        return response()->json(['message' => 'Сообщество не найдено'], 404);
+        $community = $request->community;
+
+        $posts = $community->posts()->with(['postable', 'author', 'usersLikes' => static function ($query) {
+            return $query->limit(8)->get();
+        }])
+            ->withCount('comments')
+            ->limit($request->query('limit', 50))
+            ->offset($request->query('offset', 0))
+            ->orderByDesc('id')
+            ->get();
+        return new PostCollection($posts);
     }
 
     /**
@@ -263,7 +257,10 @@ class PostController extends Controller
     {
         if ($post->author->id === \Auth::user()->id) {
             $post->update(['body' => $request->body]);
-            PostAttachment::whereIn('id', $request->attachmentIds)->update(['post_id' => $post->id]);
+
+            if ($request->attachmentIds) {
+                PostAttachment::whereIn('id', $request->attachmentIds)->update(['post_id' => $post->id]);
+            }
 
             return new PostResource($post);
         }

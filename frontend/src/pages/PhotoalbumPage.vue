@@ -5,40 +5,24 @@
                 <AccountToolbarLeft></AccountToolbarLeft>
             </div>
             <div class="col-12 col-md-11 col-lg-9 col-xl-10 px-0 px-md-3">
-                <div class="w-100">
+                <div class="row">
                     <div class="col-12">
                         <PhotoalbumsPageFilter :photoAlbum="photoAlbum"
-                                               @addNewImages="addNewImages"/>
+                                               @addNewImages="addNewImages"
+                                               @uploadingImage="uploadingImage"/>
                     </div>
                     <div class="col-12">
-                        <div class="row">
+                        <div class="row photoalbum-images-content pt-4 mb-4 bg-white-br20">
                             <div class="col-12">
                                 <div class="photo-album-description-block">
                                     <PhotoalbumEditBlock :photoAlbum="photoAlbum"/>
                                 </div>
-                            </div>
-                        </div>
-                        <div class="row">
-                            <div class="photo-album-images-content w-100">
-                                <div v-if="photoAlbum && photoAlbum.images" class="card mb-4">
-                                    <div class="card-body py-0">
-                                        <div class="row">
-                                            <div v-for="image in photoAlbum.images"
-                                                 :key="image.id"
-                                                 class="col-12 col-sm-6 col-xl-3 my-3 photo-album-image">
-                                                <img v-if="image"
-                                                     :key="image.id"
-                                                     :src="image.image.original.path"
-                                                     class="img-fluid"
-                                                     alt=""/>
-                                                <button type="button"
-                                                        aria-label="Удалить изображение"
-                                                        class="delete__button"
-                                                        @click="onDeleteImage(image.id)">
-                                                    <IconDelete/>
-                                                </button>
-                                            </div>
-                                        </div>
+                                <div class="d-flex flex-wrap px-3">
+                                    <GridGallery v-if="photoAlbum && photoAlbum.images && photoAlbum.images.length"
+                                                 :images="photoAlbum.images"
+                                                 @onDelete="onDeleteImage"/>
+                                    <div v-else class="alert alert-info bg-transparent border-0 text-secondary w-100 p-5 text-center mb-0">
+                                        Нет изображений.
                                     </div>
                                 </div>
                             </div>
@@ -61,6 +45,8 @@
     import PhotoalbumItem from "../components/PhotoalbumsPage/PhotoalbumItem.vue";
     import PhotoalbumEditBlock from "../components/PhotoalbumsPage/PhotoalbumEditBlock.vue";
     import IconDelete from "../icons/IconDelete.vue";
+    import SmallSpinner from "../common/SmallSpinner.vue";
+    import GridGallery from "../common/Gallery/GridGallery.vue";
 
     import PliziPhotoAlbum from "../classes/PliziPhotoAlbum.js";
     import PliziAttachment from "../classes/PliziAttachment.js";
@@ -75,6 +61,8 @@
             PhotoalbumItem,
             PhotoalbumEditBlock,
             IconDelete,
+            SmallSpinner,
+            GridGallery,
         },
         data() {
             return {
@@ -87,14 +75,13 @@
                 this.photoAlbum.title = title;
                 this.photoAlbum.description = description;
             },
-            addNewImages(images) {
+            addNewImages(image) {
                 if (!this.photoAlbum.images) {
                     this.photoAlbum.images = [];
                 }
 
-                images.forEach((image) => {
-                    this.photoAlbum.images.unshift(new PliziAttachment(image))
-                });
+                let loadImageIndex = this.photoAlbum.images.findIndex(loadImage => (loadImage.originalName === image.originalName) && loadImage.isBlob);
+                Vue.set(this.photoAlbum.images, loadImageIndex, new PliziAttachment(image));
 
                 // TODO: @YZ сделать по нормальному после MVP
                 let lsUser = JSON.parse(localStorage.getItem('pliziUser'));
@@ -106,6 +93,13 @@
                 }
 
                 localStorage.setItem('pliziUser', JSON.stringify(lsUser));
+            },
+            uploadingImage(image) {
+                if (!this.photoAlbum.images) {
+                    this.photoAlbum.images = []
+                }
+
+                this.photoAlbum.images.unshift(image);
             },
 
             async onDeleteImage(id) {
@@ -155,26 +149,5 @@
     }
 </script>
 
-<style lang="scss">
-    .photo-album-images-content {
-        .photo-album-image {
-            &:hover {
-                .delete__button {
-                    display: block;
-                }
-            }
 
-            img {
-                position: relative;
-            }
-
-            .delete__button {
-                display: none;
-                position: absolute;
-                top: 10px;
-                right: 20px;
-            }
-        }
-    }
-</style>
 

@@ -10,10 +10,12 @@
                  v-bind:key="`CentralColumn-`+shortFriendsUpdater">
 
                 <div class="container">
-                    <ProfileHeader v-bind:userData="userData" v-bind:isOwner="true"></ProfileHeader>
+                    <ProfileHeader v-bind:userData="userData()" v-bind:isOwner="true"></ProfileHeader>
 
+                    <template v-if="userPhotos.length > 0">
                     <ProfilePhotos v-if="isPhotosDataReady" v-bind:photos="userPhotos"></ProfilePhotos>
-                    <div v-else><SmallSpinner></SmallSpinner></div>
+                        <SmallSpinner v-else></SmallSpinner>
+                    </template>
 
                     <WhatsNewBlock @addNewPost="addNewPost"></WhatsNewBlock>
 
@@ -41,8 +43,8 @@
 
                     <template v-if="isStarted">
                         <div class="row plz-post-item mb-4 bg-white-br20 p-4">
-                            <div class="w-100 p-5 text-center mb-0">
-                                <SmallSpinner clazz="position-absolute"/>
+                            <div class="w-100 text-center mb-0">
+                                <SmallSpinner/>
                             </div>
                         </div>
                     </template>
@@ -61,15 +63,15 @@
 
             <PostEditModal v-if="postEditModal.isVisible"
                            :post="postForEdit"
-                           @hidePostEditModal="hidePostEditModal"/>
+                           @hidePostEditModal="hidePostEditModal"></PostEditModal>
 
             <PostVideoModal v-if="postVideoModal.isVisible"
                             :videoLink="postVideoModal.content.videoLink"
-                            @hideVideoModal="hideVideoModal"/>
+                            @hideVideoModal="hideVideoModal"></PostVideoModal>
 
             <PostLikeModal v-if="postLikeModal.isVisible"
                            :postId="postLikeModal.content.postId"
-                           @hideLikeModal="hideLikeModal"/>
+                           @hideLikeModal="hideLikeModal"></PostLikeModal>
 
             <PostRepostModal v-if="postRepostModal.isVisible"
                              v-bind:user="postRepostModal.content.postForRepost.author"
@@ -99,7 +101,7 @@ import PostLikeModal from '../common/Post/PostLikeModal.vue';
 import LazyLoadPosts from '../mixins/LazyLoadPosts.js';
 
 import PliziPost from '../classes/PliziPost.js';
-import PhotosListMixin from "../mixins/PhotosListMixin";
+import PhotosListMixin from '../mixins/PhotosListMixin.js';
 
 export default {
 name: 'ProfilePage',
@@ -146,10 +148,6 @@ data() {
 },
 
 computed : {
-    userData(){
-        return this.$root.$auth.user;
-    },
-
     shortFriendsUpdater(){
         return this.$root.$friendsKeyUpdater+'-'+this.$root.$favoritesKeyUpdater;
     },
@@ -160,7 +158,7 @@ computed : {
     filteredPosts(){
         switch ( this.filterMode ){
             case 'my':
-                return this.posts.filter( post => post.checkIsMinePost( this.$root.$auth.user.id ) );
+                return this.posts.filter( post => !post.sharedFrom );
 
             case 'archive':
                 return this.posts.filter( post => post.isArchivePost );
@@ -171,6 +169,10 @@ computed : {
 },
 
 methods : {
+    userData(){
+        return this.$root.$auth.user;
+    },
+
     calcCentralBlockClass(){
         return {
             'col-xl-8 pr-xl-3' : (this.$root.$auth.frm.size > 0),

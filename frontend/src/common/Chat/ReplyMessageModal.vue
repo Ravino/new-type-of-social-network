@@ -73,19 +73,22 @@ methods: {
     },
 
     hideReplyMessageModal() {
-        this.$emit('onHideReplyMessageModal', {});
+        this.$emit('HideReplyMessageModal', {});
     },
 
     onReplyPost(evData){
         /** @type {string} **/
         let msg = evData.postText.trim();
 
+        msg = (msg === '<p></p>') ? '' : msg;
+
         const config = {
-            chatId : this.dialogID,
+            chatId : this.currentDialog.id,
             userId : this.pickedMessage.userId // чтобы Reply получился
         };
 
         const fwdData = {
+            chatId: this.currentDialog.id,
             body : msg,
             replyOnMessageId : this.msgData.id,
             forwardFromChatId : this.currentDialog.id,
@@ -99,17 +102,33 @@ methods: {
             msg = this.killBrTrail(msg);
 
             if (msg !== '') {
-                this.replyOnMessage( config, fwdData );
+                this.replyMessageToChat( config, fwdData );
             }
         }
         else { // сообщение пустое - проверяем есть ли аттачи
             if (evData.attachments.length > 0) {
-                this.replyOnMessage( config, fwdData );
+                this.replyMessageToChat( config, fwdData );
             }
         }
     },
 
+    async replyMessageToChat(config, msgData){
+        msgData.event = 'new.message';
+
+        this.$root.$api.sendToChannel(msgData);
+        this.hideReplyMessageModal();
+    },
+
+    /**
+     * @deprecated
+     * @param config
+     * @param msgData
+     * @returns {Promise<void>}
+     */
     async replyOnMessage( config, msgData ){
+        window.console.warn(`replyOnMessage DEPRECATED`);
+        return;
+
         let apiResponse = null;
 
         try {
@@ -155,6 +174,14 @@ methods: {
 
 created(){
     this.msgData = this.pickedMessage;
+},
+
+mounted(){
+    setTimeout(()=>{
+        if (this.$refs.forwardMessageEditor) {
+            this.$refs.forwardMessageEditor.focus();
+        }
+    }, 100);
 }
 
 }

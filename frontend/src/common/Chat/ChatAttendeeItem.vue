@@ -1,8 +1,8 @@
 <template>
     <div class="d-flex align-items-start mb-3 w-100">
         <div class="mr-3 position-relative">
-            <div class="media-pic border rounded-circle ">
-                <img :src="companion.userPic" v-bind:alt="companion.fullName" />
+            <div class="media-pic border rounded-circle">
+                <img :src="companion.userPic" :alt="companion.fullName" />
             </div>
 
             <template v-if="isTyper">
@@ -25,7 +25,7 @@
         </div>
 
         <div class="align-self-end ml-5 mt-0">
-            <button type="button" class="btn btn-link border-0" @click.prevent="onRemoveAttendeeClick">
+            <button v-if="isCanDelete" type="button" class="btn btn-link border-0" @click.prevent="onRemoveAttendeeClick">
                 <IconUserX  style="height: 20px" />
             </button>
         </div>
@@ -39,10 +39,11 @@ import PliziAttendee from '../../classes/PliziAttendee.js';
 
 export default {
 name : 'ChatAttendeeItem',
+components: {IconUserX},
 props : {
     companion : PliziAttendee,
+    isCanDelete: Boolean
 },
-components: {IconUserX},
 
 data(){
     return {

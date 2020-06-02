@@ -79,6 +79,19 @@ class ImageUploadController extends Controller
 
     public function getUserImages(User $user)
     {
+        $isFriend = $user->isFriendWith(auth()->user());
+
+        if ($user->id !== \Auth::id()) {
+            if (($user->privacySettings->page_type === 2 && !$isFriend) ||
+                $user->privacySettings->page_type === 3) {
+                return [
+                    'data' => [
+                        'list' => []
+                    ]
+                ];
+            }
+        }
+
         $images = $user->images()
             ->orderByDesc('id')
             ->limit(20)

@@ -9,7 +9,7 @@
 
             <div class="row">
                 <div class="col-12 --col-sm-7 col-lg-8 col-xl-8">
-                    <div v-if="isDataReady"
+                    <div v-if="isDataReady && (communityData.description || communityData.website)"
                          id="communityInfoBlock"
                          class="plz-community-info-block bg-white-br20 d-none d-lg-block py-3 px-4 mb-4 text-left">
                         <h4 class="plz-community-header-title">Информация</h4>
@@ -17,7 +17,7 @@
                         <p class="plz-community-info-desc">{{communityData.description}}</p>
                         <p><a :href="communityData.website" target="_blank" class="plz-community-info-desc">{{communityData.website}}</a></p>
                     </div>
-                    <Spinner v-else/>
+                    <Spinner v-else-if="!isDataReady"/>
 
                     <CommunityEditor v-if="canPost"
                                      :community-id="communityData.id"
@@ -143,9 +143,11 @@ methods: {
         this.getCommunityInfo();
         window.scrollTo(0, 0);
     },
+
     addNewPost(post) {
         this.posts.unshift( new PliziPost( post ) );
     },
+
     /**
      * @TGA не понятно где используется и для чего
      */
@@ -158,6 +160,7 @@ methods: {
     //         console.log(videoWrap);
     //     }
     // },
+
     async getPosts(limit = 50, offset = 0) {
         let response = null;
         this.isStarted = true;
@@ -181,15 +184,29 @@ methods: {
             return response.length;
         }
     },
-    onNeedAddCommunityToHot(){
+
+    onNeedAddCommunityToHot(evData){
+        if (evData.communityId !== this.currentId)
+            return;
+
         this.keyUpdater++;
         const comm = this.communityData || null;
-        this.addCommunityToFavorites( this.currentId, comm );
+        this.addCommunityToFavorites( evData.communityId, comm );
 
         if (this.$refs  &&  this.$refs.hotCommunitiesBlock) {
             this.$refs.hotCommunitiesBlock.$forceUpdate();
         }
     },
+
+    setPageTitle(){
+        if (this.communityData && this.communityData.name) {
+            document.title = `Plizi: ${this.communityData.name}`;
+        }
+        else {
+            document.title = `Plizi: Сообщества`;
+        }
+    },
+
     async getCommunityInfo() {
         let apiResponse = null;
 
@@ -204,7 +221,7 @@ methods: {
         if (apiResponse) {
             this.communityData = new PliziCommunity(apiResponse);
             this.isDataReady = true;
-            document.title = `Plizi: ${this.communityData?.name}`;
+            this.setPageTitle();
 
             setTimeout(() => {
                 const getPosts = async () => {

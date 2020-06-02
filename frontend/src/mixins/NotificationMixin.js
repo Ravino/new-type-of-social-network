@@ -15,8 +15,8 @@ const NotificationMixin = {
     },
     methods: {
         addNotification(inputNotification) {
-            console.log(inputNotification);
             const uuid = uuidv4();
+
             let notification = {
                 id: uuid,
                 userPic: (inputNotification.data.sender) ? inputNotification.data.sender.userPic : null,
@@ -102,7 +102,7 @@ const NotificationMixin = {
             }
 
             if (inputNotification.data.notificationType === 'message.new') {
-                notification.body = inputNotification.data.sender.message;
+                    notification.body = inputNotification.data.sender.message;
             }
 
             if (inputNotification.data.notificationType === 'app.notification') {

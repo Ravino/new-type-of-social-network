@@ -5,23 +5,25 @@
                 <AccountToolbarLeft></AccountToolbarLeft>
             </div>
             <div class="col-12 col-md-11 col-lg-9 col-xl-10 px-0 px-md-3">
-                <div class="w-100">
+                <div class="row">
                     <div class="col-12">
                         <PhotoalbumsPageFilter/>
                     </div>
                     <div class="col-12">
-                        <div class="row">
-                            <div class="videos-content w-100">
-                                <div>
-                                    <div class="card mb-4">
-                                        <div class="card-body py-0">
-                                            <div class="row">
-                                                    <div v-for="(album, index) in photoAlbums"
-                                                         :key="index"
-                                                         class="col-12 col-sm-6 col-xl-3 my-3">
-                                                        <PhotoalbumItem :album="album" :key="album.id"></PhotoalbumItem>
-                                                    </div>
+                        <div class="videos-content w-100">
+                            <div class="card mb-4">
+                                <div class="card-body py-0">
+                                    <div class="row">
+                                        <template v-if="photoAlbums && photoAlbums.length">
+                                            <div v-for="(album, index) in photoAlbums"
+                                                 :key="index"
+                                                 class="col-12 col-sm-6 col-xl-3 my-3">
+                                                <PhotoalbumItem :album="album" :key="album.id"></PhotoalbumItem>
                                             </div>
+                                        </template>
+
+                                        <div v-else class="alert alert-info bg-transparent border-0 text-secondary w-100 p-5 text-center mb-0">
+                                            Нет альбомов.
                                         </div>
                                     </div>
                                 </div>

@@ -4,8 +4,9 @@
             class="d-flex align-items-stretch offset-1 col-10 offset-sm-3 col-sm-6 offset-md-4 col-md-4 offset-lg-0 col-lg-4 col-xl-3 pl-lg-0 mb-4 mb-lg-0">
             <div class="plz-profile-userpic-container d-flex flex-column  bg-white-br20 overflow-hidden">
                 <div
-                    class="plz-profile-userpic-wrapper overflow-hidden position-relative d-flex align-items-center justify-content-center mx-auto m-lg-0">
-                    <img ref="userAvatar" :src="userAvatar" :alt="userData.fullName"/>
+                    class="plz-profile-userpic-wrapper overflow-hidden position-relative d-flex align-items-center justify-content-center mx-auto m-lg-0"
+                    :class="{'flex-grow-1': userData.privacySettings.pageType === 3}">
+                    <img ref="userAvatar" :src="userAvatar" :alt="userData.fullName" :class="{'plz-profile-userpic-img': userData.privacySettings.pageType === 3}"/>
                     <label v-if="isOwner===true" for="userAvatarFile"
                            class="user-avatar-file-label m-0 cursor-pointer"></label>
                     <input id="userAvatarFile" ref="userAvatarFile" type="file" @change="uploadUserAvatar()"
@@ -31,9 +32,9 @@
                             <span class="ps-dot"></span>
                         </button>
 
-                        <div class="dropdown-menu dropdown-menu-right py-3" aria-labelledby="configurationMenuUser">
+                        <div class="dropdown-menu dropdown-menu-right py-3" :aria-labelledby="configurationMenuID">
                             <div class="nav-item ">
-                                <router-link tag="a" class="dropdown-item px-0 py-1 px-3" to="/account">Настройки </router-link>
+                                <router-link tag="a" class="dropdown-item px-0 py-1 px-3" to="/account">Настройки</router-link>
                             </div>
                             <div class="nav-item">
                                 <router-link tag="a" class="dropdown-item px-0 py-1 px-3" to="/black-list">Чёрный список</router-link>
@@ -51,52 +52,56 @@
                     </div>
                 </div>
 
-                <div v-else class="plz-profile-userpic-footer mt-auto">
-                    <div class="plz-profile-userpic-edit file-label d-flex align-items-center justify-content-between">
-                        <button v-bind:style="{ width: fullWidth }"
-                                class="btn align-items-center justify-content-center d-flex w-75 border-right m-0"
-                                @click="showPersonalMsgDialog()">Написать</button>
+                <template v-else>
+                    <div v-if="userData.privacySettings.pageType !== 3"
+                         class="plz-profile-userpic-footer mt-auto">
+                        <div class="plz-profile-userpic-edit file-label d-flex align-items-center justify-content-between">
+                            <button v-bind:style="{ width: fullWidth }"
+                                    class="btn align-items-center justify-content-center d-flex w-75 border-right m-0"
+                                    @click="showPersonalMsgDialog()">Написать</button>
 
-                        <button class="btn dropdown-menu-btn align-items-center justify-content-center d-flex w-25"
-                                :id="configurationMenuID"
-                                type="button"
-                                data-toggle="dropdown"
-                                aria-haspopup="true"
-                                aria-expanded="false"
-                                title="опции">
-                            <span class="ps-dot"></span>
-                            <span class="ps-dot"></span>
-                            <span class="ps-dot"></span>
-                        </button>
+                            <button class="btn dropdown-menu-btn align-items-center justify-content-center d-flex w-25"
+                                    :id="configurationMenuID"
+                                    type="button"
+                                    data-toggle="dropdown"
+                                    aria-haspopup="true"
+                                    aria-expanded="false"
+                                    title="меню">
+                                <span class="ps-dot"></span>
+                                <span class="ps-dot"></span>
+                                <span class="ps-dot"></span>
+                            </button>
 
-                        <div class="dropdown-menu dropdown-menu-right py-3 " aria-labelledby="configurationMenuUser" :key="`userActionBlock-`+$root.$friendsKeyUpdater">
-                            <div class="nav-item ">
-                                <p v-if="isCanAddToFriends()"
-                                    class="dropdown-item px-0 py-1 m-0 px-3"
-                                    @click="sendFriendshipInvitation(userData.id, userData.fullName)"
-                                    title="Добавить в друзья" >Добавить в друзья</p>
-                                <p v-else
-                                    class="dropdown-item px-0 py-1 m-0 px-3"
-                                    @click="stopFriendship(userData.id)"
-                                    title="Удалить из друзей" >Удалить из друзей</p>
-                            </div>
-                            <div class="nav-item">
-                                <p v-if="userData.stats.isFollow" class="dropdown-item px-0 py-1 m-0 px-3"
-                                   @click="unFollow" title="Отписаться">Отписаться</p>
-                                <p v-else class="dropdown-item px-0 py-1 m-0 px-3"
-                                   @click="follow" title="Подписаться">Подписаться</p>
-                            </div>
-                            <div v-if="!userData.isOwner" class="nav-item">
-                                <p v-if="isAddedToBlacklist" class="dropdown-item px-0 py-1 m-0 px-3"
-                                   @click="deleteFromBlacklist(userData.id)"  title="Удалить с чёрного списка">Удалить с чёрного списка</p>
-                                <p v-else class="dropdown-item px-0 py-1 m-0 px-3"
-                                   @click="addToBlacklist"  title="Добавить в чёрный список">Добавить в чёрный список</p>
-                            </div>
+                            <div class="dropdown-menu dropdown-menu-right py-3 " :aria-labelledby="configurationMenuID"
+                                 :key="`userActionBlock-`+$root.$friendsKeyUpdater">
 
+                                <div class="nav-item ">
+                                    <p v-if="isCanAddToFriends()"
+                                       class="dropdown-item px-0 py-1 m-0 px-3"
+                                       @click="sendFriendshipInvitation(userData.id, userData.fullName)"
+                                       title="Добавить в друзья" >Добавить в друзья</p>
+                                    <p v-else
+                                       class="dropdown-item px-0 py-1 m-0 px-3"
+                                       @click="stopFriendship(userData.id)"
+                                       title="Удалить из друзей" >Удалить из друзей</p>
+                                </div>
+                                <div class="nav-item">
+                                    <p v-if="userData.stats.isFollow" class="dropdown-item px-0 py-1 m-0 px-3"
+                                       @click="unFollow" title="Отписаться">Отписаться</p>
+                                    <p v-else class="dropdown-item px-0 py-1 m-0 px-3"
+                                       @click="follow" title="Подписаться">Подписаться</p>
+                                </div>
+                                <div v-if="!userData.isOwner" class="nav-item">
+                                    <p v-if="isAddedToBlacklist" class="dropdown-item px-0 py-1 m-0 px-3"
+                                       @click="deleteFromBlacklist(userData.id)"  title="Удалить с чёрного списка">Удалить с чёрного списка</p>
+                                    <p v-else class="dropdown-item px-0 py-1 m-0 px-3"
+                                       @click="addToBlacklist"  title="Добавить в чёрный список">Добавить в чёрный список</p>
+                                </div>
+
+                            </div>
                         </div>
                     </div>
-                </div>
-
+                </template>
             </div>
         </div>
 
@@ -143,57 +148,16 @@
                 </table>
             </div>
 
-            <div class="plz-profile-userdetails-footer d-flex justify-content-around px-2 px-md-4">
-                <div v-if="usrFollowersNumber > 0" class="plz-profile-userdetails-numbers text-center py-2 px-2 py-md-4 px-md-4">
-                    <span class="numbers-top" v-html="sBeaty(usrFollowersNumber)"></span>
-                    <span class="numbers-bottom">Подписчиков</span>
-                </div>
-                <div v-else class="plz-profile-userdetails-numbers text-center py-2 px-2 py-md-4 px-md-4">
-                    <span class="numbers-bottom mt-auto">Нет подписчиков</span>
-                </div>
-                <router-link tag="a" class="p-0 d-flex" to="/friends">
-                    <div v-if="usrFriendsNumber > 0" class="plz-profile-userdetails-numbers text-center py-2 px-2 py-md-4 px-md-4 mt-auto">
-                        <span class="numbers-top" v-html="sBeaty(usrFriendsNumber)"></span>
-                        <span class="numbers-bottom">Друзей</span>
-                    </div>
-                    <div v-else class="plz-profile-userdetails-numbers text-center py-2 px-2 py-md-4 px-md-4 mt-auto">
-                        <span class="numbers-bottom">Нет друзей</span>
-                    </div>
-                </router-link>
-                <router-link tag="a" class="p-0 d-flex" to="/photoalbums-list">
-                    <div class="plz-profile-userdetails-numbers text-center py-2 px-2 py-md-4 px-md-4 mt-auto">
-                        <template v-if="userImageNumber">
-                            <span class="numbers-top" v-html="sBeaty(userImageNumber)"></span>
-                            <span class="numbers-bottom">Фотографий</span>
-                        </template>
-                        <template v-else>
-                            <span class="numbers-bottom">Нет фотографий</span>
-                        </template>
-                    </div>
-                </router-link>
-                <router-link tag="a" class="p-0 d-flex" to="/videos">
-                    <div v-if="usrVideosNumber > 0" class="plz-profile-userdetails-numbers text-center py-2 px-2 py-md-4 px-md-4 mt-auto">
-                        <span class="numbers-top" v-html="sBeaty(usrVideosNumber)"></span>
-                        <span class="numbers-bottom">Видео</span>
-                    </div>
-                    <div v-else class="plz-profile-userdetails-numbers text-center py-2 px-2 py-md-4 px-md-4 mt-auto">
-                        <span class="numbers-bottom">Нет видео</span>
-                    </div>
-                </router-link>
-                <!--
-                <div class="plz-profile-userdetails-numbers text-center pt-4 px-4">
-                    <span class="numbers-top" v-html="sBeaty(userData.audiosNumber)"></span>
-                    <span class="numbers-bottom">Аудио</span>
-                </div>
-                -->
-            </div>
+            <ProfileStats v-bind:userData="userData"
+                          v-bind:isOwner="isOwner"
+                          v-bind:key="'ProfileStats'+$root.$friendsKeyUpdater"></ProfileStats>
         </div>
     </div>
 </template>
 
 <script>
-import IconAddUser from '../icons/IconAddUser.vue';
 import IconLocation from '../icons/IconLocation.vue';
+import ProfileStats from './ProfileStats.vue';
 
 import FriendshipInvitationMixin from '../mixins/FriendshipInvitationMixin.js';
 import BlackListMixin from '../mixins/BlackListMixin.js';
@@ -205,7 +169,7 @@ import PliziAvatar from '../classes/User/PliziAvatar.js';
 
 export default {
 name: 'ProfileHeader',
-components: { IconLocation, IconAddUser},
+components: { ProfileStats, IconLocation},
 mixins: [FriendshipInvitationMixin, BlackListMixin],
 props: {
     userData: PliziUser | PliziAuthUser,
@@ -222,37 +186,27 @@ data(){
 computed: {
     fullWidth: function () {
         return this.isCanAddToFriends ? 'full-width' : '100%';
-
-    },
-
-    usrFriendsNumber() {
-        return this.userData.stats.totalFriendsCount;
-    },
-
-    usrFollowersNumber() {
-        return this.userData.stats.followCount;
-    },
-
-    usrVideosNumber() {
-        return this.userData.stats.videosCount;
     },
 
     userAvatar() {
         return this.userData.avatar?.image?.medium.path || this.userData.userPic;
     },
 
-    userImageNumber() {
-        return this.userData.stats.imageCount;
+    isLockedProfile() {
+        if (this.userData && this.userData.privacySettings && this.userData.stats) {
+            if ((this.userData.privacySettings.pageType === 2 && !this.userData.stats.isFriend) ||
+                this.userData.privacySettings.pageType === 3) {
+                return true;
+            }
+        }
+
+        return false;
     },
 },
 
 methods: {
     isCanAddToFriends() {
         return !(!!this.$root.$auth.frm.get(this.userData.id));
-    },
-
-    sBeaty(param) {
-        return this.$options.filters.statsBeauty(param);
     },
 
     showPersonalMsgDialog() {
@@ -290,11 +244,11 @@ methods: {
         }
 
         if (apiResponse !== null) {
-            this.$root.$auth.user.userPic = apiResponse.data.path;
             this.$root.$auth.user.avatar = new PliziAvatar(apiResponse.data);
+            this.$root.$auth.user.userPic = this.$root.$auth.user.avatar?.image?.thumb.path;
             this.$refs.userAvatar.src = this.$root.$auth.user.avatar?.image?.medium.path || this.$root.$auth.user.userPic;
             this.$root.$auth.storeUserData();
-            this.$root.$emit('updateUserAvatar', {userPic: this.$root.$auth.user.userPic});
+            this.$root.$emit('updateUserAvatar', {});
         }
     },
 

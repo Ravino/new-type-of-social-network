@@ -53,6 +53,7 @@ class User extends JsonResource
             'isOnline' => $this->isOnline,
             'lastActivity' => $this->last_activity_dt,
             'profile' => new Profile($this->profile),
+            'privacySettings' => new PrivacySettings($this->privacySettings),
             'stats' => [
                 'totalFriendsCount' => $this->totalFriendsCount,
                 'followCount' => $this->profile->follower_count,
@@ -63,6 +64,7 @@ class User extends JsonResource
                     'user_id' => auth()->id(),
                     'blacklisted_id' => $this->id,
                 ])->exists(),
+                'imageCount' => $this->profile->image_count,
             ],
         ];
         if($this->appendMutual) {

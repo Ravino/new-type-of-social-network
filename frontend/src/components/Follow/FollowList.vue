@@ -1,6 +1,6 @@
 <template>
     <div class="plizi-search-results-list">
-        <ul v-if="followsNumber>0" class="list-unstyled mb-0">
+        <ul v-if="followsNumber>0" class="d-block w-100 p-0 pt-2">
             <FollowItem v-for="invItem in follows"
                         @unFollow="unFollow"
                         :follow="invItem"

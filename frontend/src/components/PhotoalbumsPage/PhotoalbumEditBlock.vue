@@ -1,13 +1,13 @@
 <template>
-    <div v-if="photoAlbum" class="photoalbum-page-description">
-        <h6>{{ photoAlbum.title }}</h6>
-        <p>{{ photoAlbum.description }}</p>
-        <div class="d-flex">
+    <div v-if="photoAlbum" class="photoalbum-page-description text-center">
+        <h6 class="photoalbum-page-album-name">{{ photoAlbum.title }}</h6>
+        <p  class="photoalbum-page-album-desc">{{ photoAlbum.description }}</p>
+        <div class="photoalbum-page-album-btns d-flex flex-wrap justify-content-center mb-3">
             <button @click="showPhotoalbumEditModal"
-                    class="btn plz-btn-primary edit-album">
+                    class="btn plz-btn-primary edit-album mx-3 mb-2">
                 Редактировать альбом
             </button>
-            <button class="btn btn-outline-danger delete-album"
+            <button class="btn btn-outline-danger delete-album mx-3 mb-2"
                     @click="onShowDeletePhotoAlbumModal">
                 Удалить альбом
             </button>
@@ -19,7 +19,6 @@
 
         <DeletePhotoAlbumModal v-if="deletePhotoAlbumModal.isVisible"
                                :id="deletePhotoAlbumModal.content.id"
-                               :isSuccess="isSuccessDelete"
                                :isShipped="isShippedDelete"
                                @onSuccessDelete="deletePhotoAlbum"
                                @onHide="onHideDeletePhotoAlbumModal"/>
@@ -84,11 +83,8 @@
                 }
 
                 if (apiResponse) {
-                    this.isSuccessDelete = true;
-
-                    setTimeout(() => {
-                        this.$router.push({path: '/photoalbums-list'});
-                    }, 3000);
+                    this.$notify(`Альбом "${this.photoAlbum.title}" успешно удален.`);
+                    await this.$router.push({path: '/photoalbums-list'});
                 }
             },
         }

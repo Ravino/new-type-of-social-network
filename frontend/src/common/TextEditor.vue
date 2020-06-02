@@ -57,7 +57,7 @@
                     </label>-->
 
                     <button class="btn btn-link w-100 mx-0 p-0 btn-add-smile position-relative" type="button">
-                        <EmojiPicker @addEmoji="onAddEmoji" v-bind:transform="emojiTransform"></EmojiPicker>
+                        <EmojiPicker @addEmoji="onAddEmoji" v-bind:transform="emojiTransform" refs="emojiPicker"></EmojiPicker>
                     </button>
                 </div>
             </div>
@@ -81,6 +81,8 @@
 </template>
 
 <script>
+import {isEmoji} from '../utils/StringUtils.js';
+
 import IconAddFile from '../icons/IconAddFile.vue';
 import IconAddCamera from '../icons/IconAddCamera.vue';
 import IconSend from "../icons/IconSend.vue";
@@ -191,7 +193,13 @@ computed: {
 
 methods: {
     focus(){
-        this.$refs.editor.focus();
+        if (this.$refs.emojiPicker) {
+            this.$refs.emojiPicker.hidePicker();
+        }
+
+        if (this.$refs.editor) {
+            this.$refs.editor.focus();
+        }
     },
 
     getContent() {
@@ -256,6 +264,16 @@ methods: {
         }
 
         let str = evData.postText.replace(/<\/?[^>]+>/g, ' ').trim();
+
+        if ((str.length === 1 ||  str.length === 2)  &&  isEmoji(str))
+        {
+            const be = `<p class="big-emoji">${str}</p>`;
+            this.emitPost(be, attachmentsIds, attachmentsData, null);
+            this.attachFiles = [];
+            this.attachmentsData.clear();
+            return;
+        }
+
         let youtubeLinksMatch = this.detectYoutubeLinks(str);
         let attachmentsIds = this.getAttachmentsIDs();
         let attachmentsData = this.attachmentsData.asArray();

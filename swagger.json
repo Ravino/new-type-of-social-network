@@ -640,6 +640,49 @@
       }
     },
     "/user/images/{imageId}/comment": {
+        "get": {
+            "tags": [
+              "Comments"
+            ],
+            "operationId": "GetCommentUserImage",
+            "description": "Получаем комментарии к изображению пользователя",
+            "parameters": [
+                {
+                    "name": "imageId",
+                    "in": "path",
+                    "description": "ID изображения пользователя",
+                    "required": true,
+                    "schema": {
+                        "type": "integer"
+                    }
+                }
+            ],
+            "responses": {
+                "200": {
+                    "description": "OK",
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "type": "object",
+                                "properties": {
+                                    "list": {
+                                        "type": "array",
+                                        "items": {
+                                            "$ref": "#/components/schemas/Comment"
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            "security": [
+                {
+                    "Authorization": []
+                }
+            ]
+        },
       "post": {
         "tags": [
           "Comments"
@@ -693,6 +736,49 @@
       }
     },
     "/posts/attachments/{attachmentId}/comment": {
+        "get": {
+            "tags": [
+                "Comments"
+            ],
+            "operationId": "GetCommentPostImage",
+            "description": "Получаем комментарии к изображению поста",
+            "parameters": [
+                {
+                    "name": "imageId",
+                    "in": "path",
+                    "description": "ID изображения поста",
+                    "required": true,
+                    "schema": {
+                        "type": "integer"
+                    }
+                }
+            ],
+            "responses": {
+                "200": {
+                    "description": "OK",
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "type": "object",
+                                "properties": {
+                                    "list": {
+                                        "type": "array",
+                                        "items": {
+                                            "$ref": "#/components/schemas/Comment"
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            "security": [
+                {
+                    "Authorization": []
+                }
+            ]
+        },
       "post": {
         "tags": [
           "Comments"

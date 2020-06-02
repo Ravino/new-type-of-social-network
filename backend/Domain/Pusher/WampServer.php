@@ -79,7 +79,11 @@ class WampServer implements WampServerInterface
                 if($params['event'] === 'user.typing') {
                     event(new UserTypingEvent($params['userId'], $params['chatId']));
                 } else if($params['event'] === 'new.message') {
-                    event(new NewMessageEvent($params['body'], $user_id, $params['chatId'], $params['attachments'], $params['parentId'] ?? null, $params['parentChatId'] ?? null));
+                    event(new NewMessageEvent($params['body'], $user_id, $params['chatId'], $params['attachments'],
+                        $params['replyOnMessageId'] ?? null,
+                        $params['forwardFromChatId'] ?? null,
+                        $params['toUserId'] ?? null
+                    ));
                 }
             }
         } catch (Exception $ex) {

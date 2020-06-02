@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\Api\CommunityController;
+use App\Http\Controllers\Api\PostController;
 use App\Http\Controllers\Api\UserController;
 use App\Http\Controllers\Api\UserSubscribeController;
 use Illuminate\Support\Facades\Route;
@@ -97,6 +98,7 @@ Route::group(['middleware' => ['auth.jwt', 'track.activity']], function () {
     });
 
     Route::post('user/images/{imageUpload}', 'Api\LikeController@likeUserImage');
+    Route::get('user/images/{imageUpload}/comment', 'Api\CommentController@getCommentUserImage');
     Route::post('user/images/{imageUpload}/comment', 'Api\CommentController@commentUserImage');
     Route::get('/user/{user}/photos', 'Api\ImageUploadController@getUserImages');
 
@@ -109,6 +111,8 @@ Route::group(['middleware' => ['auth.jwt', 'track.activity']], function () {
 
             Route::post('{groupId}/notify', [CommunityController::class, 'subscribeNotify']);
             Route::delete('{groupId}/notify', [CommunityController::class, 'unsubscribeNotify']);
+
+            Route::get('{groupId}/posts', [PostController::class, 'communityPosts']);
         });
 
         Route::patch('{id}', 'Api\CommunityController@update');
@@ -141,7 +145,6 @@ Route::group(['middleware' => ['auth.jwt', 'track.activity']], function () {
             });
         });
     });
-    Route::get('communities/{community_id}/posts', 'Api\PostController@communityPosts');
 
     Route::prefix('posts')->group(function () {
         Route::delete('{post}', 'Api\PostController@delete');
@@ -152,6 +155,7 @@ Route::group(['middleware' => ['auth.jwt', 'track.activity']], function () {
         Route::post('{post}/image/like', 'Api\LikeController@likePostImage');
         Route::post('/view', 'Api\PostController@markViewed');
         Route::get('{id}/viewed', 'Api\PostController@getViewedUsers');
+        Route::get('attachments/{postAttachment}/comment', 'Api\CommentController@getCommentPostImage');
         Route::post('attachments/{postAttachment}/comment', 'Api\CommentController@commentPostImage');
     });
 

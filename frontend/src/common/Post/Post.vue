@@ -62,8 +62,7 @@
                 <div v-for="(recursivePost, index) in recursivePosts"
                      :key="index" class="sharedFrom pt-3 pl-3">
 
-                    <template v-if="recursivePost.body && recursivePost.attachments">
-                        <div class="col-12 plz-post-item-header">
+                    <div class="col-12 plz-post-item-header">
 
                             <div class="post-news-item d-flex flex-row align-content-center shared  pb-2">
 
@@ -97,7 +96,7 @@
                             </div>
                         </div>
 
-                        <div class="col-12 plz-post-item-body pt-2">
+                    <div v-if="recursivePost.body" class="col-12 plz-post-item-body pt-2">
                             <template v-if="recursivePost.livePreview && typeof recursivePost.livePreview === 'object'">
                                 <p v-if="recursivePost.livePreview.text"
                                    class="post-main-text shared mb-0"
@@ -128,9 +127,9 @@
                             </template>
                         </div>
 
-                        <div class="col-12 plz-post-item-images">
+                    <div v-if="recursivePost.attachments" class="col-12 plz-post-item-images">
                             <div class="post-images shared">
-                                <Gallery :post="post" v-if="recursivePost.imageAttachments.length > 0" :images="recursivePost.imageAttachments"></Gallery>
+                                <Gallery type="post" :post="post" v-if="recursivePost.imageAttachments.length > 0" :images="recursivePost.imageAttachments"></Gallery>
 
                                 <template v-for="(postAttachment) in recursivePost.attachments">
                                     <template v-if="!postAttachment.isImage">
@@ -139,7 +138,6 @@
                                 </template>
                             </div>
                         </div>
-                    </template>
 
                 </div>
             </template>
@@ -174,7 +172,7 @@
 
             <div class="col-12 plz-post-item-images">
                 <div class="post-images">
-                    <Gallery :post="post" v-if="imageAttachments.length > 0" :images="imageAttachments"></Gallery>
+                    <Gallery type="post" :post="post" v-if="imageAttachments.length > 0" :images="imageAttachments"></Gallery>
 
                     <template v-for="(postAttachment) in post.attachments">
                         <template v-if="!postAttachment.isImage">
@@ -188,9 +186,9 @@
                 <div class="d-flex">
                     <div class="d-flex">
                         <div class="post-watched-counter"
-                             :class="{'is-active': postLikes}"
+                             :class="{'is-active': post.alreadyLiked}"
                              @click="onLike">
-                            <IconFillHeard v-if="postLikes"/>
+                            <IconFillHeard v-if="post.alreadyLiked"/>
                             <IconHeard v-else/>
                             <span>{{ postLikes | space1000 }}</span>
                             <div v-if="post.usersLikes && post.usersLikes.length" class="usersLikes p-3" @click.stop="">
@@ -236,6 +234,7 @@
                     <div class="plz-comments" v-for="comment in comments">
                         <CommentItem
                             :key="comment.id"
+                            type="post"
                             :comment="comment"
                             :postId="postIdForComment"
                             @onDelete="removeComment"
@@ -277,8 +276,8 @@
     import PliziPost from '../../classes/PliziPost.js';
     import Gallery from '../Gallery.vue';
     import LinkMixin from '../../mixins/LinkMixin.js';
-    import CommentPost from "../../components/CommentPost.vue";
-    import CommentItem from "../../components/CommentItem.vue";
+    import CommentPost from "../../components/Comments/CommentPost.vue";
+    import CommentItem from "../../components/Comments/CommentItem.vue";
     import AvatarMixin from '../../mixins/AvatarMixin.js';
     import PliziComment from "../../classes/PliziComment.js";
 
@@ -353,16 +352,16 @@
                 return this.getCommunityAvatar(this.post?.sharedFrom?.community);
             },
             postLikes() {
-                return parseInt(this.post?.likes || this.post?.sharedFrom?.likes);
+                return parseInt(this.post?.likes);
             },
             postCommentCount() {
-                return parseInt(this.post?.commentsCount || this.post?.sharedFrom?.commentsCount);
+                return parseInt(this.post?.commentsCount);
             },
             postSharesCount() {
-                return parseInt(this.post?.sharesCount || this.post?.sharedFrom?.sharesCount);
+                return parseInt(this.post?.sharesCount);
             },
             postViewsCount() {
-                return parseInt(this.post?.views || this.post?.sharedFrom?.views);
+                return parseInt(this.post?.views);
             },
             postIdForComment() {
                 return this.post?.sharedFrom?.id || this.post.id;

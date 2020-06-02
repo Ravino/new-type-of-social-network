@@ -71,7 +71,7 @@ class LoginController extends Controller
 
         try {
             if (!$token = $this->guard->attempt($credentials)) {
-                return response()->json(['message' => 'invalid credentials'], 400);
+                return response()->json(['message' => 'Неверные данные'], 400);
             }
         } catch (JWTException $e) {
             return response()->json(['message' => 'could not create token'], 500);

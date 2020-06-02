@@ -82,11 +82,14 @@ methods: {
 
             if (msg !== '' || evData.videoLink) {
                 this.addMessageToChat( msg, evData.attachments, evData.attachmentsData, evData.videoLink);
-            } else if (evData.attachments.length > 0) {
-                this.addMessageToChat( '', evData.attachments, evData.attachmentsData, evData.videoLink);
             }
-        } else {
-            // сообщение пустое - проверяем есть ли аттачи
+            else {
+                if (evData.attachments.length > 0) {
+                    this.addMessageToChat( '', evData.attachments, evData.attachmentsData, evData.videoLink);
+                }
+            }
+        }
+        else { // сообщение пустое - проверяем есть ли аттачи
             if (evData.attachments.length > 0) {
                 this.addMessageToChat( '', evData.attachments, evData.attachmentsData );
             }

@@ -10,7 +10,7 @@
                     <button class="btn plz-btn plz-btn-primary p-0 mr-3"
                             :disabled="isShipped"
                             @click.stop="onSuccessDelete">
-                        Да, я уверен
+                        Да
                     </button>
                     <button class="btn plz-btn plz-btn-primary p-0 mr-3"
                             :disabled="isShipped"
@@ -18,9 +18,6 @@
                         Нет
                     </button>
                 </div>
-                <p v-if="isSuccess" class="text-success text-center mt-3 mb-0">
-                    Фотоальбом был успешно удален.
-                </p>
             </div>
         </div>
     </div>
@@ -31,7 +28,6 @@
         name: "DeletePhotoAlbumModal",
         props: {
             id: Number,
-            isSuccess: Boolean,
             isShipped: Boolean,
         },
         methods: {

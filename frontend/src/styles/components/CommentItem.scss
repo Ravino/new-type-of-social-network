@@ -44,6 +44,7 @@ $commentPicSize: 50px;
             transform: translate(-50%, -50%);
             min-height: $commentPicSize;
             min-width: $commentPicSize;
+            object-fit: contain;
         }
 
         &-name {

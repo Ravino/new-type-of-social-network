@@ -56,7 +56,7 @@
                         </div>
                     </div>
 
-                    <button type="button" class="btn plz-btn plz-btn-primary mt-4" @click.prevent="startForwardMessage()">
+                    <button type="button" :disabled="isBtnSendDisabled" class="btn plz-btn plz-btn-primary mt-4" @click.prevent="startForwardMessage()">
                         Отправить
                     </button>
                 </div>
@@ -93,21 +93,30 @@ data() {
         recipients :null,
         msgData : null,
         /** @var PliziRecipient */
-        selectedFriend: null
+        selectedFriend: null,
+        isStartSend: false
     }
 },
 
 computed: {
+    isBtnSendDisabled(){
+        if (this.isStartSend)
+            return true;
+
+        return this.selectedFriend === null;
+    },
+
     getFriendsCombo(){
         this.recipients = new PliziRecipientsCollection();
 
-        /** @TGA сначала диалоги - это важно **/
-        this.$root.$auth.dm.asArray().map( (dItem) => {
-            this.recipients.add(dItem.companion, dItem.id);
-        });
-
+        /**
+         * TODO Друзья выключены потомучто бэк не создает под них диалоги
+         **/
         this.$root.$auth.frm.asArray().map( (frItem) => {
             this.recipients.add(frItem, null);
+        });
+        this.$root.$auth.dm.asArray().map( (dItem) => {
+            this.recipients.add(dItem.companion, dItem.id);
         });
 
         return this.recipients.asArray();
@@ -115,29 +124,6 @@ computed: {
 },
 
 methods: {
-    startForwardMessage(){
-        const msgData = this.$refs.forwardMessageEditor.getContent();
-
-        const config = {
-            chatId : this.selectedFriend.chatId,
-            userId : this.selectedFriend.id,
-        }
-
-        const fwdData = {
-            body : msgData.postText,
-            replyOnMessageId : this.msgData.id,
-            forwardFromChatId : this.currentDialog.id,
-            attachments : msgData.attachments,
-            isForward: true
-        };
-
-        this.forwardChatMessage(config, fwdData);
-    },
-
-    hideMessageResendModal() {
-        this.$emit('HideMessageResendModal', {});
-    },
-
     onTextPost(evData){
         /** @type {string} **/
         let msg = evData.postText.trim();
@@ -147,13 +133,73 @@ methods: {
             msg = msg.replace(/<p><\/p>/g, brExample);
             msg = this.killBrTrail(msg);
 
-            if (msg !== '') {
-                this.forwardChatMessage();
+            if (msg!==''  &&  msg!=='<p></p>') {
+                this.startForwardMessage(evData);
             }
         }
     },
 
+    startForwardMessage(evData){
+        this.isStartSend = true;
+
+        const config = {
+            chatId : this.selectedFriend.chatId,
+            userId : this.selectedFriend.id,
+        }
+
+        let fwdData = {};
+
+        if (evData){
+            fwdData = {
+                toUserId: this.selectedFriend.id,
+                chatId : this.selectedFriend.chatId,
+                body : evData.postText,
+                replyOnMessageId : this.msgData.id,
+                forwardFromChatId : this.currentDialog.id,
+                attachments : evData.attachments,
+                isForward: true
+            };
+        }
+        else {
+            const msgData = this.$refs.forwardMessageEditor.getContent();
+
+            fwdData = {
+                toUserId: this.selectedFriend.id,
+                chatId : this.selectedFriend.chatId,
+                body : msgData.postText,
+                replyOnMessageId : this.msgData.id,
+                forwardFromChatId : this.currentDialog.id,
+                attachments : msgData.attachments,
+                isForward: true
+            };
+        }
+
+        this.forwardMessageToChat(config, fwdData);
+    },
+
+    hideMessageResendModal() {
+        this.$emit('HideMessageResendModal', {});
+    },
+
+    async forwardMessageToChat(config, msgData){
+        msgData.event = 'new.message';
+
+        //window.console.dir( JSON.parse( JSON.stringify(msgData) ),  `forwardMessageToChat`);
+
+        this.$root.$api.sendToChannel(msgData);
+        this.hideMessageResendModal();
+    },
+
+    /**
+     * @deprecated
+     * @param config
+     * @param msgData
+     * @returns {Promise<void>}
+     */
     async forwardChatMessage( config, msgData ){
+        window.console.warn(`forwardChatMessage DEPRECATED`);
+        return;
+
         let apiResponse = null;
 
         try {
@@ -180,7 +226,16 @@ methods: {
 
 created(){
     this.msgData = this.pickedMessage;
+},
+
+mounted(){
+    setTimeout(()=>{
+        if (this.$refs.forwardMessageEditor) {
+            this.$refs.forwardMessageEditor.focus();
+        }
+    }, 100);
 }
+
 
 }
 </script>

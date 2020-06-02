@@ -5,17 +5,17 @@
                 <AccountToolbarLeft></AccountToolbarLeft>
             </div>
             <div class="col-12 col-md-11 col-lg-9 col-xl-10 px-0 px-md-3">
-                <div class="w-100">
+                <div class="row">
                     <div class="col-12">
                         <VideosPageFilter @wallPostsSelect="wallPostsSelectHandler"/>
                     </div>
                     <div class="col-12">
-                        <div class="row">
-                            <div class="videos-content w-100">
-                                <template v-if="filterMode === 'my'">
-                                    <div class="card mb-4">
-                                        <div class="card-body py-0">
-                                            <div class="row">
+                        <div class="videos-content w-100">
+                            <template v-if="filterMode === 'my'">
+                                <div class="card mb-4">
+                                    <div class="card-body py-0">
+                                        <div class="row">
+                                            <template v-if="userVideos && userVideos.length">
                                                 <div v-for="(video, index) in userVideos"
                                                      :key="index"
                                                      class="col-12 col-sm-6 col-xl-3 my-3">
@@ -32,27 +32,109 @@
                                                                 <IconYoutube/>
                                                             </button>
                                                             <button type="button"
-                                                                    aria-label="Удалить видео"
-                                                                    class="delete__button"
-                                                                    @click="onDelete(video.id)">
-                                                                <IconDelete/>
+                                                                    @click.prevent="onDelete(video.id)"
+                                                                    class="btn btn-close btn-link border-0 border-danger bg-danger text-white rounded-circle delete__button"
+                                                                    aria-label="Удалить видео">
+                                                                <i class="fa fa-plus" aria-hidden="true"></i>
                                                             </button>
                                                             <div class="video-time d-none">0:32</div>
                                                         </div>
-                                                        <a href="/user-1" class="video-desc d-none mb-0">Sunrise </a>
+                                                        <a href="/user-1" class="video-desc d-none mb-0">Sunrise</a>
                                                     </div>
                                                 </div>
+                                            </template>
+
+                                            <div v-else class="alert alert-info bg-transparent border-0 text-secondary w-100 p-5 text-center mb-0">
+                                                Нет видео.
                                             </div>
                                         </div>
                                     </div>
-                                </template>
-                                <template v-else>
-                                    <div class="card mb-4">
-                                        <div class="card-header pb-0 bg-white border-bottom-0">Мои видео</div>
-                                        <div class="card-body py-0 pr-0">
-                                        <div class="ml-n3 clearfix">
-                                            <div class="col-12 col-xl-6 my-3 float-left ">
-                                                <div class="videos-item videos-item-wide">
+                                </div>
+                            </template>
+                            <template v-else>
+                                <div class="card mb-4">
+                                    <div class="card-header pb-0 bg-white border-bottom-0">Мои видео</div>
+                                    <div class="card-body py-0 pr-0">
+                                    <div class="ml-n3 clearfix">
+                                        <div class="col-12 col-xl-6 my-3 float-left ">
+                                            <div class="videos-item videos-item-wide">
+                                                <div class="video mb-2">
+                                                    <div class="video-wrap-pre">
+                                                        <img alt="image" src="https://cdn.pixabay.com/photo/2019/06/27/06/49/plane-4301615_960_720.png">
+                                                    </div>
+                                                    <button type="button" aria-label="Запустить видео" class="video__button">
+                                                        <IconYoutube/>
+                                                    </button>
+                                                    <div class="video-time">0:32</div>
+                                                </div>
+                                                <a href="/user-1" class="video-desc mb-0">Sunrise </a>
+                                            </div>
+                                        </div>
+                                        <div class="col-12 col-sm-6 col-xl-3 my-3 float-left ">
+                                            <div class="videos-item ">
+                                                <div class="video mb-2">
+                                                    <div class="video-wrap-pre">
+                                                        <img alt="image" src="https://cdn.pixabay.com/photo/2019/06/27/06/49/plane-4301615_960_720.png">
+                                                    </div>
+                                                    <button type="button" aria-label="Запустить видео" class="video__button">
+                                                        <IconPlayVideo/>
+                                                    </button>
+                                                    <div class="video-time">0:32</div>
+                                                </div>
+                                                <a href="/user-1" class="video-desc mb-0">Sunrise </a>
+                                            </div>
+                                        </div>
+                                        <div class="col-12 col-sm-6 col-xl-3 my-3 float-left ">
+                                            <div class="videos-item ">
+                                                <div class="video mb-2">
+                                                    <div class="video-wrap-pre">
+                                                        <img alt="image" src="https://cdn.pixabay.com/photo/2019/06/27/06/49/plane-4301615_960_720.png">
+                                                    </div>
+                                                    <button type="button" aria-label="Запустить видео" class="video__button">
+                                                        <IconYoutube/>
+                                                    </button>
+                                                    <div class="video-time">0:32</div>
+                                                </div>
+                                                <a href="/user-1" class="video-desc mb-0">Sunrise </a>
+                                            </div>
+                                        </div>
+                                        <div class="col-12 col-sm-6 col-xl-3 my-3 float-left ">
+                                            <div class="videos-item ">
+                                                <div class="video mb-2">
+                                                    <div class="video-wrap-pre">
+                                                        <img alt="image" src="https://cdn.pixabay.com/photo/2019/06/27/06/49/plane-4301615_960_720.png">
+                                                    </div>
+                                                    <button type="button" aria-label="Запустить видео" class="video__button">
+                                                        <IconPlayVideo/>
+                                                    </button>
+                                                    <div class="video-time">0:32</div>
+                                                </div>
+                                                <a href="/user-1" class="video-desc mb-0">Sunrise </a>
+                                            </div>
+                                        </div>
+                                        <div class="col-12 col-sm-6 col-xl-3 my-3 float-left ">
+                                            <div class="videos-item ">
+                                                <div class="video mb-2">
+                                                    <div class="video-wrap-pre">
+                                                        <img alt="image" src="https://cdn.pixabay.com/photo/2019/06/27/06/49/plane-4301615_960_720.png">
+                                                    </div>
+                                                    <button type="button" aria-label="Запустить видео" class="video__button">
+                                                        <IconPlayVideo/>
+                                                    </button>
+                                                    <div class="video-time">0:32</div>
+                                                </div>
+                                                <a href="/user-1" class="video-desc mb-0">Sunrise </a>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                </div>
+                                <div class="card mb-4">
+                                    <div class="card-header pb-0 bg-white border-bottom-0">Прямые трансляции</div>
+                                    <div class="card-body py-0">
+                                        <div class="row">
+                                            <div class="col-12 col-sm-6 col-xl-3 my-3">
+                                                <div class="videos-item ">
                                                     <div class="video mb-2">
                                                         <div class="video-wrap-pre">
                                                             <img alt="image" src="https://cdn.pixabay.com/photo/2019/06/27/06/49/plane-4301615_960_720.png">
@@ -65,7 +147,7 @@
                                                     <a href="/user-1" class="video-desc mb-0">Sunrise </a>
                                                 </div>
                                             </div>
-                                            <div class="col-12 col-sm-6 col-xl-3 my-3 float-left ">
+                                            <div class="col-12 col-sm-6 col-xl-3 my-3">
                                                 <div class="videos-item ">
                                                     <div class="video mb-2">
                                                         <div class="video-wrap-pre">
@@ -79,7 +161,7 @@
                                                     <a href="/user-1" class="video-desc mb-0">Sunrise </a>
                                                 </div>
                                             </div>
-                                            <div class="col-12 col-sm-6 col-xl-3 my-3 float-left ">
+                                            <div class="col-12 col-sm-6 col-xl-3 my-3">
                                                 <div class="videos-item ">
                                                     <div class="video mb-2">
                                                         <div class="video-wrap-pre">
@@ -93,21 +175,7 @@
                                                     <a href="/user-1" class="video-desc mb-0">Sunrise </a>
                                                 </div>
                                             </div>
-                                            <div class="col-12 col-sm-6 col-xl-3 my-3 float-left ">
-                                                <div class="videos-item ">
-                                                    <div class="video mb-2">
-                                                        <div class="video-wrap-pre">
-                                                            <img alt="image" src="https://cdn.pixabay.com/photo/2019/06/27/06/49/plane-4301615_960_720.png">
-                                                        </div>
-                                                        <button type="button" aria-label="Запустить видео" class="video__button">
-                                                            <IconPlayVideo/>
-                                                        </button>
-                                                        <div class="video-time">0:32</div>
-                                                    </div>
-                                                    <a href="/user-1" class="video-desc mb-0">Sunrise </a>
-                                                </div>
-                                            </div>
-                                            <div class="col-12 col-sm-6 col-xl-3 my-3 float-left ">
+                                            <div class="col-12 col-sm-6 col-xl-3 my-3">
                                                 <div class="videos-item ">
                                                     <div class="video mb-2">
                                                         <div class="video-wrap-pre">
@@ -123,198 +191,134 @@
                                             </div>
                                         </div>
                                     </div>
-                                    </div>
-                                    <div class="card mb-4">
-                                        <div class="card-header pb-0 bg-white border-bottom-0">Прямые трансляции</div>
-                                        <div class="card-body py-0">
-                                            <div class="row">
-                                                <div class="col-12 col-sm-6 col-xl-3 my-3">
-                                                    <div class="videos-item ">
-                                                        <div class="video mb-2">
-                                                            <div class="video-wrap-pre">
-                                                                <img alt="image" src="https://cdn.pixabay.com/photo/2019/06/27/06/49/plane-4301615_960_720.png">
-                                                            </div>
-                                                            <button type="button" aria-label="Запустить видео" class="video__button">
-                                                                <IconYoutube/>
-                                                            </button>
-                                                            <div class="video-time">0:32</div>
+                                </div>
+                                <div class="card mb-4">
+                                    <div class="card-header pb-0 bg-white border-bottom-0">Рекомендуемое видео</div>
+                                    <div class="card-body py-0">
+                                        <div class="row">
+                                            <div class="col-12 col-sm-6 col-xl-3 my-3">
+                                                <div class="videos-item ">
+                                                    <div class="video mb-2">
+                                                        <div class="video-wrap-pre">
+                                                            <img alt="image" src="https://cdn.pixabay.com/photo/2019/06/27/06/49/plane-4301615_960_720.png">
                                                         </div>
-                                                        <a href="/user-1" class="video-desc mb-0">Sunrise </a>
+                                                        <button type="button" aria-label="Запустить видео" class="video__button">
+                                                            <IconYoutube/>
+                                                        </button>
+                                                        <div class="video-time">0:32</div>
                                                     </div>
+                                                    <a href="/user-1" class="video-desc mb-0">Sunrise </a>
                                                 </div>
-                                                <div class="col-12 col-sm-6 col-xl-3 my-3">
-                                                    <div class="videos-item ">
-                                                        <div class="video mb-2">
-                                                            <div class="video-wrap-pre">
-                                                                <img alt="image" src="https://cdn.pixabay.com/photo/2019/06/27/06/49/plane-4301615_960_720.png">
-                                                            </div>
-                                                            <button type="button" aria-label="Запустить видео" class="video__button">
-                                                                <IconPlayVideo/>
-                                                            </button>
-                                                            <div class="video-time">0:32</div>
+                                            </div>
+                                            <div class="col-12 col-sm-6 col-xl-3 my-3">
+                                                <div class="videos-item ">
+                                                    <div class="video mb-2">
+                                                        <div class="video-wrap-pre">
+                                                            <img alt="image" src="https://cdn.pixabay.com/photo/2019/06/27/06/49/plane-4301615_960_720.png">
                                                         </div>
-                                                        <a href="/user-1" class="video-desc mb-0">Sunrise </a>
+                                                        <button type="button" aria-label="Запустить видео" class="video__button">
+                                                            <IconPlayVideo/>
+                                                        </button>
+                                                        <div class="video-time">0:32</div>
                                                     </div>
+                                                    <a href="/user-1" class="video-desc mb-0">Sunrise </a>
                                                 </div>
-                                                <div class="col-12 col-sm-6 col-xl-3 my-3">
-                                                    <div class="videos-item ">
-                                                        <div class="video mb-2">
-                                                            <div class="video-wrap-pre">
-                                                                <img alt="image" src="https://cdn.pixabay.com/photo/2019/06/27/06/49/plane-4301615_960_720.png">
-                                                            </div>
-                                                            <button type="button" aria-label="Запустить видео" class="video__button">
-                                                                <IconYoutube/>
-                                                            </button>
-                                                            <div class="video-time">0:32</div>
+                                            </div>
+                                            <div class="col-12 col-sm-6 col-xl-3 my-3">
+                                                <div class="videos-item ">
+                                                    <div class="video mb-2">
+                                                        <div class="video-wrap-pre">
+                                                            <img alt="image" src="https://cdn.pixabay.com/photo/2019/06/27/06/49/plane-4301615_960_720.png">
                                                         </div>
-                                                        <a href="/user-1" class="video-desc mb-0">Sunrise </a>
+                                                        <button type="button" aria-label="Запустить видео" class="video__button">
+                                                            <IconYoutube/>
+                                                        </button>
+                                                        <div class="video-time">0:32</div>
                                                     </div>
+                                                    <a href="/user-1" class="video-desc mb-0">Sunrise </a>
                                                 </div>
-                                                <div class="col-12 col-sm-6 col-xl-3 my-3">
-                                                    <div class="videos-item ">
-                                                        <div class="video mb-2">
-                                                            <div class="video-wrap-pre">
-                                                                <img alt="image" src="https://cdn.pixabay.com/photo/2019/06/27/06/49/plane-4301615_960_720.png">
-                                                            </div>
-                                                            <button type="button" aria-label="Запустить видео" class="video__button">
-                                                                <IconPlayVideo/>
-                                                            </button>
-                                                            <div class="video-time">0:32</div>
+                                            </div>
+                                            <div class="col-12 col-sm-6 col-xl-3 my-3">
+                                                <div class="videos-item ">
+                                                    <div class="video mb-2">
+                                                        <div class="video-wrap-pre">
+                                                            <img alt="image" src="https://cdn.pixabay.com/photo/2019/06/27/06/49/plane-4301615_960_720.png">
                                                         </div>
-                                                        <a href="/user-1" class="video-desc mb-0">Sunrise </a>
+                                                        <button type="button" aria-label="Запустить видео" class="video__button">
+                                                            <IconPlayVideo/>
+                                                        </button>
+                                                        <div class="video-time">0:32</div>
                                                     </div>
+                                                    <a href="/user-1" class="video-desc mb-0">Sunrise </a>
                                                 </div>
                                             </div>
                                         </div>
                                     </div>
-                                    <div class="card mb-4">
-                                        <div class="card-header pb-0 bg-white border-bottom-0">Рекомендуемое видео</div>
-                                        <div class="card-body py-0">
-                                            <div class="row">
-                                                <div class="col-12 col-sm-6 col-xl-3 my-3">
-                                                    <div class="videos-item ">
-                                                        <div class="video mb-2">
-                                                            <div class="video-wrap-pre">
-                                                                <img alt="image" src="https://cdn.pixabay.com/photo/2019/06/27/06/49/plane-4301615_960_720.png">
-                                                            </div>
-                                                            <button type="button" aria-label="Запустить видео" class="video__button">
-                                                                <IconYoutube/>
-                                                            </button>
-                                                            <div class="video-time">0:32</div>
+                                </div>
+                                <div class="card mb-4">
+                                    <div class="card-header pb-0 bg-white border-bottom-0">Лучшее за неделю</div>
+                                    <div class="card-body py-0">
+                                        <div class="row">
+                                            <div class="col-12 col-sm-6 col-xl-3 my-3">
+                                                <div class="videos-item ">
+                                                    <div class="video mb-2">
+                                                        <div class="video-wrap-pre">
+                                                            <img alt="image" src="https://cdn.pixabay.com/photo/2019/06/27/06/49/plane-4301615_960_720.png">
                                                         </div>
-                                                        <a href="/user-1" class="video-desc mb-0">Sunrise </a>
+                                                        <button type="button" aria-label="Запустить видео" class="video__button">
+                                                            <IconYoutube/>
+                                                        </button>
+                                                        <div class="video-time">0:32</div>
                                                     </div>
+                                                    <a href="/user-1" class="video-desc mb-0">Sunrise </a>
                                                 </div>
-                                                <div class="col-12 col-sm-6 col-xl-3 my-3">
-                                                    <div class="videos-item ">
-                                                        <div class="video mb-2">
-                                                            <div class="video-wrap-pre">
-                                                                <img alt="image" src="https://cdn.pixabay.com/photo/2019/06/27/06/49/plane-4301615_960_720.png">
-                                                            </div>
-                                                            <button type="button" aria-label="Запустить видео" class="video__button">
-                                                                <IconPlayVideo/>
-                                                            </button>
-                                                            <div class="video-time">0:32</div>
+                                            </div>
+                                            <div class="col-12 col-sm-6 col-xl-3 my-3">
+                                                <div class="videos-item ">
+                                                    <div class="video mb-2">
+                                                        <div class="video-wrap-pre">
+                                                            <img alt="image" src="https://cdn.pixabay.com/photo/2019/06/27/06/49/plane-4301615_960_720.png">
                                                         </div>
-                                                        <a href="/user-1" class="video-desc mb-0">Sunrise </a>
+                                                        <button type="button" aria-label="Запустить видео" class="video__button">
+                                                            <IconPlayVideo/>
+                                                        </button>
+                                                        <div class="video-time">0:32</div>
                                                     </div>
+                                                    <a href="/user-1" class="video-desc mb-0">Sunrise </a>
                                                 </div>
-                                                <div class="col-12 col-sm-6 col-xl-3 my-3">
-                                                    <div class="videos-item ">
-                                                        <div class="video mb-2">
-                                                            <div class="video-wrap-pre">
-                                                                <img alt="image" src="https://cdn.pixabay.com/photo/2019/06/27/06/49/plane-4301615_960_720.png">
-                                                            </div>
-                                                            <button type="button" aria-label="Запустить видео" class="video__button">
-                                                                <IconYoutube/>
-                                                            </button>
-                                                            <div class="video-time">0:32</div>
+                                            </div>
+                                            <div class="col-12 col-sm-6 col-xl-3 my-3">
+                                                <div class="videos-item ">
+                                                    <div class="video mb-2">
+                                                        <div class="video-wrap-pre">
+                                                            <img alt="image" src="https://cdn.pixabay.com/photo/2019/06/27/06/49/plane-4301615_960_720.png">
                                                         </div>
-                                                        <a href="/user-1" class="video-desc mb-0">Sunrise </a>
+                                                        <button type="button" aria-label="Запустить видео" class="video__button">
+                                                            <IconYoutube/>
+                                                        </button>
+                                                        <div class="video-time">0:32</div>
                                                     </div>
+                                                    <a href="/user-1" class="video-desc mb-0">Sunrise </a>
                                                 </div>
-                                                <div class="col-12 col-sm-6 col-xl-3 my-3">
-                                                    <div class="videos-item ">
-                                                        <div class="video mb-2">
-                                                            <div class="video-wrap-pre">
-                                                                <img alt="image" src="https://cdn.pixabay.com/photo/2019/06/27/06/49/plane-4301615_960_720.png">
-                                                            </div>
-                                                            <button type="button" aria-label="Запустить видео" class="video__button">
-                                                                <IconPlayVideo/>
-                                                            </button>
-                                                            <div class="video-time">0:32</div>
+                                            </div>
+                                            <div class="col-12 col-sm-6 col-xl-3 my-3">
+                                                <div class="videos-item ">
+                                                    <div class="video mb-2">
+                                                        <div class="video-wrap-pre">
+                                                            <img alt="image" src="https://cdn.pixabay.com/photo/2019/06/27/06/49/plane-4301615_960_720.png">
                                                         </div>
-                                                        <a href="/user-1" class="video-desc mb-0">Sunrise </a>
+                                                        <button type="button" aria-label="Запустить видео" class="video__button">
+                                                            <IconPlayVideo/>
+                                                        </button>
+                                                        <div class="video-time">0:32</div>
                                                     </div>
+                                                    <a href="/user-1" class="video-desc mb-0">Sunrise </a>
                                                 </div>
                                             </div>
                                         </div>
                                     </div>
-                                    <div class="card mb-4">
-                                        <div class="card-header pb-0 bg-white border-bottom-0">Лучшее за неделю</div>
-                                        <div class="card-body py-0">
-                                            <div class="row">
-                                                <div class="col-12 col-sm-6 col-xl-3 my-3">
-                                                    <div class="videos-item ">
-                                                        <div class="video mb-2">
-                                                            <div class="video-wrap-pre">
-                                                                <img alt="image" src="https://cdn.pixabay.com/photo/2019/06/27/06/49/plane-4301615_960_720.png">
-                                                            </div>
-                                                            <button type="button" aria-label="Запустить видео" class="video__button">
-                                                                <IconYoutube/>
-                                                            </button>
-                                                            <div class="video-time">0:32</div>
-                                                        </div>
-                                                        <a href="/user-1" class="video-desc mb-0">Sunrise </a>
-                                                    </div>
-                                                </div>
-                                                <div class="col-12 col-sm-6 col-xl-3 my-3">
-                                                    <div class="videos-item ">
-                                                        <div class="video mb-2">
-                                                            <div class="video-wrap-pre">
-                                                                <img alt="image" src="https://cdn.pixabay.com/photo/2019/06/27/06/49/plane-4301615_960_720.png">
-                                                            </div>
-                                                            <button type="button" aria-label="Запустить видео" class="video__button">
-                                                                <IconPlayVideo/>
-                                                            </button>
-                                                            <div class="video-time">0:32</div>
-                                                        </div>
-                                                        <a href="/user-1" class="video-desc mb-0">Sunrise </a>
-                                                    </div>
-                                                </div>
-                                                <div class="col-12 col-sm-6 col-xl-3 my-3">
-                                                    <div class="videos-item ">
-                                                        <div class="video mb-2">
-                                                            <div class="video-wrap-pre">
-                                                                <img alt="image" src="https://cdn.pixabay.com/photo/2019/06/27/06/49/plane-4301615_960_720.png">
-                                                            </div>
-                                                            <button type="button" aria-label="Запустить видео" class="video__button">
-                                                                <IconYoutube/>
-                                                            </button>
-                                                            <div class="video-time">0:32</div>
-                                                        </div>
-                                                        <a href="/user-1" class="video-desc mb-0">Sunrise </a>
-                                                    </div>
-                                                </div>
-                                                <div class="col-12 col-sm-6 col-xl-3 my-3">
-                                                    <div class="videos-item ">
-                                                        <div class="video mb-2">
-                                                            <div class="video-wrap-pre">
-                                                                <img alt="image" src="https://cdn.pixabay.com/photo/2019/06/27/06/49/plane-4301615_960_720.png">
-                                                            </div>
-                                                            <button type="button" aria-label="Запустить видео" class="video__button">
-                                                                <IconPlayVideo/>
-                                                            </button>
-                                                            <div class="video-time">0:32</div>
-                                                        </div>
-                                                        <a href="/user-1" class="video-desc mb-0">Sunrise </a>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </template>
-                            </div>
+                                </div>
+                            </template>
                         </div>
                     </div>
                 </div>
@@ -330,7 +334,6 @@
 
         <DeleteVideoModal v-if="deleteVideoModal.isVisible"
                           :id="deleteVideoModal.content.id"
-                          :isSuccess="isSuccess"
                           @onHideDeleteVideoModal="hideDeleteVideoModal"
                           @onSuccessDeleteVideoModal="onSuccessDeleteVideoModal"/>
     </div>
@@ -348,7 +351,6 @@
     import IconYoutube from "../icons/IconYoutube.vue";
     import IconPlayVideo from "../icons/IconPlayVideo.vue";
     import IconDelete from "../icons/IconDelete.vue";
-    import {debounce} from "../utils/Debonce.js";
 
     export default {
 name: "VideosPage",
@@ -380,6 +382,7 @@ data() {
             },
         },
         isSuccess: false,
+        isDeleteRequest: false,
     }
 },
 methods: {
@@ -407,7 +410,11 @@ methods: {
         this.openDeleteVideoModal(id);
     },
 
-    onSuccessDeleteVideoModal: debounce(async function() {
+    async onSuccessDeleteVideoModal() {
+        if (this.isDeleteRequest) {
+            return;
+        }
+        this.isDeleteRequest = true;
         let response;
 
         try {
@@ -419,14 +426,15 @@ methods: {
         if (response) {
             let userVideoIndex = this.userVideos.findIndex(userVideo => userVideo.id === this.deleteVideoModal.content.id);
             this.userVideos.splice(userVideoIndex, 1);
-            this.isSuccess = true;
 
-            setTimeout(() => {
-                this.isSuccess = false;
-                this.hideDeleteVideoModal();
-            }, 3000);
+            this.hideDeleteVideoModal();
+            this.isDeleteRequest = false;
+            this.$notify('Видео успешно удалено.');
+        } else {
+            this.isDeleteRequest = false;
         }
-    }, 5000),
+    },
+
     async getUserVideo() {
         let response;
 

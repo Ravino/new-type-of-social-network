@@ -35,6 +35,7 @@ use Spiritix\LadaCache\Database\LadaCacheTrait;
  * @property int $theme_id
  * @property int $privacy
  * @property int|null $geo_city_id
+ * @property int $video_count
  * @property-read Collection|User[] $admins
  * @property-read int|null $admins_count
  * @property-read Collection|User[] $authors

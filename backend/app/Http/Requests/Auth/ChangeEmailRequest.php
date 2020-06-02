@@ -44,6 +44,7 @@ class ChangeEmailRequest extends FormRequest
                     }
                 },
                 'min:8',
+                'unique:users,email',
             ],
             'newEmailConfirmation' => ['required', 'email', 'same:newEmail'],
         ];
