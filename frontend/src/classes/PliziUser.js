@@ -24,7 +24,7 @@ class PliziUser {
     _isOwner = false;
 
     /**
-     * метка времени когда у юзера была последняя актиновсть
+     * метка времени когда у юзера была последняя активность
      * @type {Date}
      * @private
      */
@@ -110,13 +110,6 @@ class PliziUser {
         this._stats = inputData.stats ? new PliziUserStats(inputData.stats) : this.stats;
         this._privacySettings = inputData.privacySettings ? new PliziUserPrivacySettings(inputData.privacySettings) :
             this.privacySettings;
-
-        // TODO: @TGA переписать потом на загрузку реальных данных
-        this._subscribersNumber = Math.floor(Math.random() * 10000);
-        this._friendsNumber = Math.floor(Math.random() * 3000);
-        this._photosNumber = Math.floor(Math.random() * 10000);
-        this._videosNumber = Math.floor(Math.random() * 100);
-        this._audiosNumber = Math.floor(Math.random() * 5000);
     }
 
     /**
@@ -223,6 +216,17 @@ class PliziUser {
      */
     get location(){
         return this.profile.location;
+    }
+
+    /**
+     * location юзера в текстовом виде (если он есть)
+     * @returns {string}
+     */
+    get locationText(){
+        if (this.location && this.city.title && this.country.title)
+            return this.city.title.ru +', '+  this.country.title.ru;
+
+        return 'Не указано';
     }
 
     /**
@@ -349,27 +353,6 @@ class PliziUser {
             mutualFriendsCount: this.mutualFriendsCount
         };
     }
-
-    get subscribersNumber(){
-        return this._subscribersNumber;
-    }
-
-    get friendsNumber(){
-        return this._friendsNumber;
-    }
-
-    get photosNumber(){
-        return this._photosNumber;
-    }
-
-    get videosNumber(){
-        return this._videosNumber;
-    }
-
-    get audiosNumber(){
-        return this._audiosNumber;
-    }
-
 }
 
 export {PliziUser as default}
