@@ -1,4 +1,3 @@
-
 $userPicSize: 32px;
 
 .find-in-chat-list {
@@ -170,6 +169,10 @@ $userPicSize: 32px;
         color: #363636;
         line-height: 20px;
         cursor: pointer;
+
+        &.group-chat-name {
+            color: $pliziBlueColor;
+        }
 
         &:hover{
             text-decoration: underline;
