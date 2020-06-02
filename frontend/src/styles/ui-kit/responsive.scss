@@ -89,8 +89,8 @@
 
     .chat-dialogs-list {
         border: 0;
-        height: calc(100vh - 140px);
-        flex: 0 0 200px
+        //height: calc(100vh - 140px);
+        //flex: 0 0 200px
     }
 
     #chatMain {
@@ -127,11 +127,21 @@
     }
 
     #chatMessagesBody {
-        padding-bottom: 180px;
+        //padding-bottom: 180px;
 
         .chat-messages-scroll {
             min-height: 115px;
         }
+    }
+
+    .chat-pick-attendees-document {
+        padding-top: 15px;
+        align-items: flex-start;
+    }
+    .chat-members-scroll {
+        height: auto;
+        max-height: calc(100vh - 220px);
+        overflow: auto;
     }
 
     .plz-gallery-viewer-nav-btn {
@@ -299,6 +309,15 @@
                 height: auto;
             }
         }
+    }
+
+    .chat-pick-attendees-document {
+        padding-top: 30px;
+    }
+    .chat-members-scroll {
+        height: auto;
+        max-height: calc(100vh - 260px);
+        overflow: auto;
     }
 
 

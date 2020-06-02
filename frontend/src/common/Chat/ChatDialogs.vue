@@ -1,5 +1,5 @@
 <template>
-    <div class="chat-dialogs-list col-sm-12 col-md-12 col-lg-4 col-xl-4 col-auto px-0">
+    <div class="chat-dialogs-list col-sm-12 col-md-12 col-lg-4 col-xl-4 col-auto px-0 d-flex flex-column align-items-stretch ">
 
         <ChatDialogsFilter @ChatDialogsFilter="onChatDialogsFilter"></ChatDialogsFilter>
         <div class="chat-list-scroll pb-0 pb-lg-0">

@@ -65,3 +65,10 @@
             }}
     }
 }
+
+
+.chat-members-scroll {
+    height: auto;
+    max-height: calc(100vh - 260px);
+    overflow: auto;
+}
