@@ -1,8 +1,8 @@
 <template>
     <div id="chatFooter" class="chat-footer">
-        <div class="companion-is-typing pl-2" style="min-height: 20px;">
+        <!--<div class="companion-is-typing pl-2 d-flex w-100 align-items-center" >
             <span v-show="isTyper">{{typerName}} печатает...</span>
-        </div>
+        </div>-->
 
         <TextEditor :showAvatar="false"
                     :dropToDown="false"
@@ -45,7 +45,9 @@ data() {
         timeout: 0,
         errors: null,
         isTyper: false,
-        currentTyper:null
+        currentTyper: null,
+        lastTypeTime: null,
+        typerDelay: 2500
     }
 },
 
@@ -68,6 +70,9 @@ methods: {
         if (disabledKeys.includes(e.which))
             return;
 
+        if ( ((new Date()).valueOf() - this.lastTypeTime) < this.typerDelay )
+            return;
+
         /** через сокеты отправляем инфу о том, что печатаем **/
         const keyPressData = {
             channel: window.localStorage.getItem('pliziChatChannel'),
@@ -77,6 +82,7 @@ methods: {
         };
 
         this.$root.$api.sendToChannel(keyPressData);
+        this.lastTypeTime = (new Date()).valueOf();
     },
 
     onAddAttachToTextEditor(evData){
@@ -156,6 +162,8 @@ methods: {
 
 mounted(){
     this.$root.$on('userIsTyping', this.onCompanionTyping);
+
+    this.lastTypeTime = (new Date()).valueOf();
 }
 
 }

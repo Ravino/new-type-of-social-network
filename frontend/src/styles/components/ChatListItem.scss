@@ -39,7 +39,7 @@ $userPicSize: 32px;
     border-right: 1px solid $borderColor;
 
     .chat-list-scroll {
-        height: calc(100% - 76px);
+        //height: calc(100% - 76px);
 
         &-scroll {
             position: relative;
@@ -49,6 +49,7 @@ $userPicSize: 32px;
 
     > .find-in-dialogs-form {
         height: 76px;
+        min-height: 76px;
 
         .find-in-chat-list {
             width: calc(100% - 36px - 15px);

@@ -25,5 +25,15 @@ $chatMessageUserPicSize: 32px;
         min-width: $chatMessageUserPicSize;
     }
 
+    .companion-is-typing {
+        height: 20px;
+        min-height: 20px;
+
+        span {
+            font-size: 10px;
+            line-height: 2;
+        }
+    }
+
 }
 

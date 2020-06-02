@@ -579,7 +579,7 @@ class PliziAPIClass {
             }
             else {
                 if (data) {
-                    //window.console.dir( JSON.parse( JSON.stringify(data) ), 'from WebSockets server');
+                    this.$dir( JSON.parse( JSON.stringify(data) ), 'from WebSockets server');
                 }
             }
 

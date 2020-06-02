@@ -6,22 +6,28 @@
                                 v-bind:key="'chatHeaderAttendeeItem-'+attItem.id+'-'+keyUpdater">
         </ChatHeaderAttendeeItem>
 
-        <ChatHeaderAttendeePlus @ShowAddAttendeeModal="onShowAttendeesModal"></ChatHeaderAttendeePlus>
+        <ChatHeaderAttendeePlus v-if="meIsChatAdmin"
+                                @ShowAddAttendeeModal="onShowAttendeesModal"></ChatHeaderAttendeePlus>
     </div>
 </template>
 <script>
 import ChatHeaderAttendeeItem from './ChatHeaderAttendeeItem.vue';
 import ChatHeaderAttendeePlus from './ChatHeaderAttendeePlus.vue';
 
+import ChatAdminMixin from '../../mixins/ChatAdminMixin.js';
+
 import PliziDialog from '../../classes/PliziDialog.js';
 
 export default {
 name : 'GroupChatAttendeesList',
 components : { ChatHeaderAttendeeItem, ChatHeaderAttendeePlus },
+mixins: [ChatAdminMixin],
 props : {
     currentDialog : PliziDialog,
     keyUpdater: Number
 },
+
+
 
 methods: {
     onShowAttendeesModal(){
