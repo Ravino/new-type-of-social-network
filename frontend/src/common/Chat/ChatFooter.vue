@@ -45,7 +45,9 @@ data() {
         timeout: 0,
         errors: null,
         isTyper: false,
-        currentTyper:null
+        currentTyper: null,
+        lastTypeTime: null,
+        typerDelay: 2500
     }
 },
 
@@ -68,6 +70,9 @@ methods: {
         if (disabledKeys.includes(e.which))
             return;
 
+        if ( ((new Date()).valueOf() - this.lastTypeTime) < this.typerDelay )
+            return;
+
         /** через сокеты отправляем инфу о том, что печатаем **/
         const keyPressData = {
             channel: window.localStorage.getItem('pliziChatChannel'),
@@ -77,6 +82,7 @@ methods: {
         };
 
         this.$root.$api.sendToChannel(keyPressData);
+        this.lastTypeTime = (new Date()).valueOf();
     },
 
     onAddAttachToTextEditor(evData){
@@ -156,6 +162,8 @@ methods: {
 
 mounted(){
     this.$root.$on('userIsTyping', this.onCompanionTyping);
+
+    this.lastTypeTime = (new Date()).valueOf();
 }
 
 }
