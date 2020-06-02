@@ -15,11 +15,12 @@ const NotificationMixin = {
     },
     methods: {
         addNotification(inputNotification) {
+            console.log(inputNotification);
             const uuid = uuidv4();
 
             let notification = {
                 id: uuid,
-                userPic: (inputNotification.data.sender.userPic) ? inputNotification.data.sender.userPic : this.$root.$defaultAvatarPath,
+                userPic: this.senderUserPic(inputNotification),
                 firstName: (inputNotification.data.sender) ? inputNotification.data.sender.firstName : null,
                 lastName: (inputNotification.data.sender) ? inputNotification.data.sender.lastName : null,
                 name: (inputNotification.data.name) ? inputNotification.data.name : null,
@@ -129,6 +130,14 @@ const NotificationMixin = {
                 setTimeout(() => {
                     this.removeNotification({uuid});
                 }, this.timeoutNotification * 1000);
+            }
+        },
+
+        senderUserPic(inputNotification) {
+            if (inputNotification.data.sender && inputNotification.data.sender.userPic) {
+                return inputNotification.data.sender.userPic;
+            } else {
+                return this.$root.$defaultAvatarPath;
             }
         },
 
