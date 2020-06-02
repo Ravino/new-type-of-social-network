@@ -11,10 +11,10 @@
 
                     <div class="row mb-4 pt-0">
                         <PostFilter @lastSearchChange="lastSearchChange"/>
-                        <PostInterest/>
+                        <PostInterest @interestSwitch="interestSwitch"/>
                     </div>
 
-                    <template v-if="posts && posts.length > 0">
+                    <template v-if="filteredPost && filteredPost.length > 0">
                         <Post v-for="postData in posts"
                               :key="postData.id"
                               :post="postData"
@@ -125,9 +125,16 @@ data() {
             },
         },
         lastSearch: '',
+        filter: {
+            interest: false,
+        },
     }
 },
-
+computed: {
+    filteredPost() {
+        return this.posts;
+    }
+},
 methods: {
     addNewPost(post) {
         this.posts.unshift(new PliziPost(post));
@@ -234,6 +241,9 @@ methods: {
             post.deleted = false;
         }
     },
+    interestSwitch(state) {
+        this.filter.interest = state;
+    }
 },
 
 async mounted() {
