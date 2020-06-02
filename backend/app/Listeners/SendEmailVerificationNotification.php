@@ -30,7 +30,11 @@ class SendEmailVerificationNotification
         $data = [
             'confirmLink' => route('auth.confirm', $user->token),
             'password' => $event->rawPassword,
-            'restoreLink' => route('password.reset.token', $user->token)
+            'restoreLink' => route('password.reset.token', $user->token),
+            'confirmEmailLink' => config('app.api_url') . 'approve-email',
+            'loginLink' => config('app.api_url') . 'login',
+            'offerLink' => config('app.api_url') . 'offer',
+            'confidentialityLink' => config('app.api_url') . 'confidentiality',
         ];
 
         Mail::send('emails.register', $data, function ($message) use ($user) {

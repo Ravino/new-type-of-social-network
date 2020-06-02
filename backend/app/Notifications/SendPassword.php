@@ -52,6 +52,8 @@ class SendPassword extends Notification
                 'emails.reset_password_success',
                 [
                     'password' => $password,
+                    'offerLink' => config('app.api_url') . 'offer',
+                    'confidentialityLink' => config('app.api_url') . 'confidentiality',
                 ]
             )->subject('PLIZI: Ваш новый пароль');
     }
