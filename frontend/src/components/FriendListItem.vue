@@ -26,12 +26,12 @@
 
                         <IconLocation style="height: 14px;" />
 
-                        <span v-if="friend.location && friend.city.title && friend.country.title">
-                            {{ friend.city.title.ru +', '+  friend.country.title.ru }}
-                        </span>
-                        <span v-else>
-                            Не указано
-                        </span>
+<!--                        <span v-if="friend.location && friend.city.title && friend.country.title">-->
+<!--                            {{ friend.city.title.ru +', '+  friend.country.title.ru }}-->
+<!--                        </span>-->
+<!--                        <span v-else>-->
+<!--                            Не указано-->
+<!--                        </span>-->
                     </p>
                 </div>
             </div>

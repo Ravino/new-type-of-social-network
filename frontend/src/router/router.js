@@ -8,6 +8,7 @@ import LogoutPage from '../pages/LogoutPage.vue';
 import NewsPage from '../pages/NewsPage.vue';
 import ProfilePage from '../pages/ProfilePage.vue';
 import PersonalPage from '../pages/PersonalPage.vue';
+import PersonalPageInfo from '../pages/PersonalPageInfo.vue';
 import AccountPage from '../pages/AccountPage.vue';
 import BlackListPage from "../pages/BlackListPage.vue";
 import ChatsListPage from '../pages/ChatsListPage.vue';
@@ -39,6 +40,7 @@ import ActiveSessionsPage from "../pages/ActiveSessionsPage.vue";
 import GuestSearchResultsPage from "../pages/GuestSearchResultsPage";
 import CommunityMembersPage from "../pages/CommunityMembersPage.vue";
 import CommunityVideosPage from "../pages/CommunityVideosPage.vue";
+import UserFriendsAllList from "../components/UserFriendsAllList.vue";
 
 const routes = [
     {path: '/', redirect: '/login', isGuest: true},
@@ -58,6 +60,12 @@ const routes = [
     {path: '/chats', component: ChatsListPage, name: 'ChatsListPage', meta: {title: 'Plizi: Чаты'}, props: true},
     {path: '/search-results', component: SearchResultsPage, name: 'SearchResultsPage', meta: {title: 'Plizi: Результаты поиска'}, props: true },
     {path: '/user-:id', component: PersonalPage, name: 'PersonalPage', meta: {title: 'Plizi:'}, props: true},
+    {path: '/user-info-:id', component: PersonalPageInfo, name: 'PersonalPageInfo', meta: {title: 'Plizi:'}, props: true, children: [
+            {
+                path: 'friends',
+                component: UserFriendsAllList
+            },
+        ]},
     {path: '/friends', component: FriendsListPage, name: 'FriendsListPage', meta: {title: 'Plizi: мои друзья'}, props: true },
     {path: '/invitations', component: InvitationsPage, name: 'InvitationsPage', meta: {title: 'Plizi: приглашения дружбы'}, props: true },
     {path: '/friends-recent', component: FriendsRecentPage, name: 'FriendsRecentPage', meta: {title: 'Plizi: новые друзья'}, props: true },
