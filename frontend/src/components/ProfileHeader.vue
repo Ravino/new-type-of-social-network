@@ -85,7 +85,7 @@
                                        @click="stopFriendship(userData.id)"
                                        title="Удалить из друзей" >Удалить из друзей</p>
                                 </div>
-                                <div class="nav-item">
+                                <div v-if="!userData.stats.isFriend" class="nav-item">
                                     <p v-if="userData.stats.isFollow" class="dropdown-item px-0 py-1 m-0 px-3"
                                        @click="unFollow" title="Отписаться">Отписаться</p>
                                     <p v-else class="dropdown-item px-0 py-1 m-0 px-3"
