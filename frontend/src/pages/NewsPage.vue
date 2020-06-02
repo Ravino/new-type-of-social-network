@@ -10,13 +10,13 @@
                     <WhatsNewBlock @addNewPost="addNewPost"></WhatsNewBlock>
 
                     <div class="row mb-4 pt-0">
-                        <PostFilter></PostFilter>
-                        <PostInterest></PostInterest>
+                        <PostFilter @lastSearchChange="lastSearchChange"/>
+                        <PostInterest/>
                     </div>
 
                     <template v-if="posts && posts.length > 0">
-                        <Post v-for="(postData, postIndex) in posts"
-                              :key="postIndex"
+                        <Post v-for="postData in posts"
+                              :key="postData.id"
                               :post="postData"
                               @onEditPost="onEditPost"
                               @onDeletePost="onDeletePost"
@@ -98,7 +98,7 @@ components: {
     SmallSpinner,
     PostLikeModal,
 },
-    mixins: [LazyLoadPosts],
+mixins: [LazyLoadPosts],
 data() {
     return {
         posts: [],
@@ -124,6 +124,7 @@ data() {
                 postId: null,
             },
         },
+        lastSearch: '',
     }
 },
 
@@ -176,7 +177,7 @@ methods: {
         this.isStarted = true;
 
         try {
-            response = await this.$root.$api.$post.getNews(limit, offset);
+            response = await this.$root.$api.$post.getNews(limit, offset, this.startSearch);
         } catch (e) {
             this.isStarted = false;
             console.warn(e.message);
@@ -184,12 +185,19 @@ methods: {
 
         if (response !== null) {
             this.isStarted = false;
+            if (offset === 0) {
+                this.posts = [];
+            }
             response.map((post) => {
                 this.posts.push(new PliziPost(post));
             });
 
             return response.length;
         }
+    },
+    lastSearchChange(sText) {
+        this.startSearch = sText;
+        this.getPosts();
     },
     async onDeletePost(id) {
         let response;

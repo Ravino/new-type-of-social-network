@@ -63,7 +63,7 @@ methods : {
 
         this.typingTimeout = setTimeout(() => {
             this.isTyper = false;
-        }, 2000);
+        }, 3000);
     }
 },
 

@@ -35,15 +35,16 @@ class PliziPostAPI extends PliziBaseAPI {
      * @returns {object[]|null}
      * @throws PliziAPIError
      */
-    async getNews(limit, offset){
+    async getNews(limit, offset, search){
         let path = 'api/user/news';
-        let qParams = '';
 
-        if (limit && offset) {
-            qParams = `?limit=${limit}&offset=${offset}`;
-        }
+        const params = new URLSearchParams({
+            limit: limit || 50,
+            offset: offset || 0,
+            search: search || '',
+        });
 
-        let response = await this.axios.get( path + qParams, this.authHeaders )
+        let response = await this.axios.get( path + '?' + params.toString(), this.authHeaders )
             .catch( ( error ) => {
                 this.checkIsTokenExpires( error, `getNews` );
                 throw new PliziAPIError( `getNews`, error.response );
