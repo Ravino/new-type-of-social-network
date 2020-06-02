@@ -9,7 +9,7 @@
                 <span v-else class="plizi-invitation-item-isoffline"></span>
             </router-link>
 
-            <div class="plizi-invitation-item-body m-0 pr-5">
+            <div class="plizi-invitation-item-body m-0  pr-3 pr-md-5">
                 <div class="plizi-invitation-item-top d-flex align-items-start justify-content-between">
                     <router-link :to="`/user-`+invitation.id" tag="h6" class="plizi-invitation-item-name my-0"
                                  :title="invitation.fullName">
@@ -21,7 +21,7 @@
                     <p class="plizi-invitation-item-desc mb-1">хочет к Вам в друзья</p>
                 </div>
 
-                <div class="plizi-invitation-item-body-bottom d-flex pr-5">
+                <div class="plizi-invitation-item-body-bottom d-flex pr-3 pr-md-5">
                     <p class="plizi-invitation-item-subdesc p-0 my-0  d-inline-block ">
                         <time :datetime="invitation.lastActivity" class="">
                             {{ invitation.lastActivity | lastEventTime }}
