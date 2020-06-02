@@ -64,7 +64,8 @@ class PostController extends Controller
             false,
             $request->get('onlyLiked', false),
             $request->get('orderBy'),
-            $request->get('search')
+            $request->get('search'),
+            $request->get('parts')
         );
 
         return new PostCollection($posts);

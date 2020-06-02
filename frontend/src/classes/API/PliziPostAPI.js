@@ -35,7 +35,7 @@ class PliziPostAPI extends PliziBaseAPI {
      * @returns {object[]|null}
      * @throws PliziAPIError
      */
-    async getNews(limit, offset, search){
+    async getNews(limit, offset, search = '', parts = []){
         let path = 'api/user/news';
 
         const params = new URLSearchParams({
@@ -43,6 +43,12 @@ class PliziPostAPI extends PliziBaseAPI {
             offset: offset || 0,
             search: search || '',
         });
+        parts.map((part) => {
+            params.append('parts[]', part);
+        })
+        // params.append('parts[]', 'own');
+        // params.append('parts[]', 'friends');
+        // params.append('parts[]', 'communities');
 
         let response = await this.axios.get( path + '?' + params.toString(), this.authHeaders )
             .catch( ( error ) => {

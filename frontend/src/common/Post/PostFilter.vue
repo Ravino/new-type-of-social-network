@@ -7,29 +7,29 @@
                     <i class="fas fa-chevron-down ml-2"></i>
                 </span>
 
-                <span class="nav-link py-2 py-sm-3 px-1 mr-2 mr-lg-4">Понравилось</span>
+                <span class="nav-link py-2 py-sm-3 px-1 mr-2 mr-lg-4" :class="{'active': liked}" @click="likedClick">Понравилось</span>
                 <!-- TODO: @YZ восстановить после MVP -->
                 <span class="nav-link py-3 px-1 mr-2 mr-lg-4 ml-auto ml-lg-4 d-none #d-md-inline-block">
                     <button class="btn px-2 py-0 ">
                         <IconSearch style="width: 15px; height: 16px;"/>
                     </button>
                 </span>
-                <div class="d-flex align-items-center form-inline mb-3 pl-0 pr-0 position-relative overflow-hidden rounded-pill mt-4 ml-auto">
-                    <div class="form-inline  position-relative w-100"
-                         :class="{'isFocused' : isFocused}">
-                        <input v-model="lastSearch"
-                               id="txtNewsListSearch"
-                               ref="txtNewsListSearch"
-                               @keydown.stop="searchKeyDownCheck($event)"
-                               @blur="onBlur"
-                               @focus="onFocus"
-                               class="top-search form-control form-control  w-100"
-                               type="text" placeholder="Поиск" aria-label="Поиск" />
-                        <button class="btn btn-search h-100" type="button" @click="startSearch()">
-                            <IconSearch style="width: 15px; height: 15px;"/>
-                        </button>
-                    </div>
-                </div>
+<!--                <div class="d-flex align-items-center form-inline mb-3 pl-0 pr-0 position-relative overflow-hidden rounded-pill mt-4 ml-auto">-->
+<!--                    <div class="form-inline  position-relative w-100"-->
+<!--                         :class="{'isFocused' : isFocused}">-->
+<!--                        <input v-model="lastSearch"-->
+<!--                               id="txtNewsListSearch"-->
+<!--                               ref="txtNewsListSearch"-->
+<!--                               @keydown.stop="searchKeyDownCheck($event)"-->
+<!--                               @blur="onBlur"-->
+<!--                               @focus="onFocus"-->
+<!--                               class="top-search form-control form-control  w-100"-->
+<!--                               type="text" placeholder="Поиск" aria-label="Поиск" />-->
+<!--                        <button class="btn btn-search h-100" type="button" @click="startSearch()">-->
+<!--                            <IconSearch style="width: 15px; height: 15px;"/>-->
+<!--                        </button>-->
+<!--                    </div>-->
+<!--                </div>-->
             </nav>
 
             <div class="newsViewModes col-lg-4 justify-content-end d-none ">
@@ -55,11 +55,14 @@ import IconSingleViewMode from '../../icons/IconSingleViewMode.vue';
 export default {
 name : 'PostFilter',
 components : { IconMultipleViewMode, IconSearch, IconSingleViewMode },
-
+props: {
+    filter: Object,
+},
 data() {
     return {
         isFocused: false,
-        lastSearch : ''
+        lastSearch : '',
+        liked: false,
     }
 },
 
@@ -78,6 +81,13 @@ methods: {
     startSearch() {
         this.$emit('lastSearchChange', this.lastSearch);
     },
+    likedClick() {
+        this.liked = !this.liked;
+        this.$emit('likedClick', this.liked);
+    },
+},
+mounted() {
+    this.liked = this.filter.liked;
 }
 
 }
