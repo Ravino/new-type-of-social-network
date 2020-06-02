@@ -50,14 +50,15 @@ class ResetPassword extends Notification
     {
         $token = $this->token;
         $email = $notifiable->getEmailForPasswordReset();
-        $url = url(config('app.api_url') . 'password/update?token=' . $token . '&email=' . $email);
 
         return (new MailMessage)
             ->view(
                 'emails.reset_password_link',
                 [
-                    'url' => $url,
-                    'minutes' => config('auth.passwords.'.config('auth.defaults.passwords').'.expire')
+                    'url' => config('app.url') . 'password/update?token=' . $token . '&email=' . $email,
+                    'minutes' => config('auth.passwords.'.config('auth.defaults.passwords').'.expire'),
+                    'offerLink' => config('app.url') . 'offer',
+                    'confidentialityLink' => config('app.url') . 'confidentiality',
                 ]
             )->subject('PLIZI: Восстановление пароля');
     }

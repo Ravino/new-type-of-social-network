@@ -63,7 +63,8 @@ class PostController extends Controller
             $request->query('offset'),
             false,
             $request->get('onlyLiked', false),
-            $request->get('orderBy')
+            $request->get('orderBy'),
+            $request->get('search')
         );
 
         return new PostCollection($posts);
