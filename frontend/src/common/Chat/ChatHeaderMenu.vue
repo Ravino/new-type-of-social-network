@@ -18,22 +18,28 @@
 
             <div class="dropdown-divider"></div>
 
-            <div class="nav-item">
+            <div v-if="meIsChatAdmin" class="nav-item">
                 <span class="dropdown-item px-3 py-1 cursor-pointer" @click.prevent="onAddAttendeeClick">
                     Добавить собеседника в чат
                 </span>
             </div>
 
-            <div class="nav-item">
+            <div v-if="meIsChatAdmin" class="nav-item">
                 <span class="dropdown-item px-3 py-1 cursor-pointer" @click.prevent="onRemoveAttendeeClick">
                     Удалить собеседника из чата
                 </span>
             </div>
 
-            <div class="dropdown-divider"></div>
+            <div v-if="!meIsChatAdmin" class="nav-item">
+                <span class="dropdown-item px-3 py-1 cursor-pointer" @click.prevent="onAttendeeListClick">
+                    Собеседники в чате
+                </span>
+            </div>
+
+            <div v-if="currentDialog.isPrivate  ||  (currentDialog.isGroup  &&  meIsChatAdmin)" class="dropdown-divider"></div>
 
             <div class="nav-item">
-                <span class="dropdown-item px-3 py-1 cursor-pointer" @click.prevent="onRemoveCurrentChatClick">
+                <span v-if="currentDialog.isPrivate  ||  (currentDialog.isGroup  &&  meIsChatAdmin)" class="dropdown-item px-3 py-1 cursor-pointer" @click.prevent="onRemoveCurrentChatClick">
                     Удалить этот чат
                 </span>
             </div>
@@ -42,8 +48,15 @@
 </template>
 
 <script>
+import ChatAdminMixin from '../../mixins/ChatAdminMixin.js';
+import PliziDialog from '../../classes/PliziDialog.js';
+
 export default {
 name : 'ChatHeaderMenu',
+mixins: [ChatAdminMixin],
+props : {
+    currentDialog : PliziDialog,
+},
 
 methods: {
     onCreateGroupChatClick(){
@@ -52,6 +65,10 @@ methods: {
 
     onRemoveCurrentChatClick(){
         this.$emit(`ShowRemoveCurrentChatModal`, {});
+    },
+
+    onAttendeeListClick(){
+        this.$emit(`ShowAttendeeListModal`, {});
     },
 
     onAddAttendeeClick(){

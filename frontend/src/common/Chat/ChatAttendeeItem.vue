@@ -3,6 +3,10 @@
         <div class="mr-3 position-relative">
             <div class="media-pic border rounded-circle">
                 <img :src="companion.userPic" :alt="companion.fullName" />
+
+                <span v-if="companion.isAdmin" class="plz-chat-attendee-admin" title="администратор чата">
+                    <i class="fas fa-star"></i>
+                </span>
             </div>
 
             <template v-if="isTyper">
@@ -25,7 +29,7 @@
         </div>
 
         <div class="align-self-end ml-5 mt-0">
-            <button v-if="isCanDelete" type="button" class="btn btn-link border-0" @click.prevent="onRemoveAttendeeClick">
+            <button v-if="isCanDelete &&  meIsChatAdmin" type="button" class="btn btn-link border-0" @click.prevent="onRemoveAttendeeClick">
                 <IconUserX  style="height: 20px" />
             </button>
         </div>
@@ -42,7 +46,8 @@ name : 'ChatAttendeeItem',
 components: {IconUserX},
 props : {
     companion : PliziAttendee,
-    isCanDelete: Boolean
+    meIsChatAdmin: Boolean,
+    isCanDelete: Boolean,
 },
 
 data(){
