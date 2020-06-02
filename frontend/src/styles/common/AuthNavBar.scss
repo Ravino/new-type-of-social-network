@@ -122,9 +122,10 @@ $plzNavBarProfileColor: #A6A7A9;
 
         span {
             display: inline-block;
-            line-height: $plzNavBarAvatarSize;
+            //line-height: $plzNavBarAvatarSize;
             color: $plzNavBarProfileColor;
             margin-right: 15px;
+            line-height: 1;
         }
 
         img {
