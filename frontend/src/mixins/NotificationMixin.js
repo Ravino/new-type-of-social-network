@@ -19,7 +19,7 @@ const NotificationMixin = {
 
             let notification = {
                 id: uuid,
-                userPic: (inputNotification.data.sender) ? inputNotification.data.sender.userPic : null,
+                userPic: (inputNotification.data.sender.userPic) ? inputNotification.data.sender.userPic : this.$root.$defaultAvatarPath,
                 firstName: (inputNotification.data.sender) ? inputNotification.data.sender.firstName : null,
                 lastName: (inputNotification.data.sender) ? inputNotification.data.sender.lastName : null,
                 name: (inputNotification.data.name) ? inputNotification.data.name : null,
@@ -55,6 +55,11 @@ const NotificationMixin = {
                 notification.isHuman = false;
                 notification.body = `Сообщество <b class="community-name">${inputNotification.data.community.name}</b> опубликовало новый пост`;
                 notification.primaryImage = inputNotification.data.community.primaryImage;
+            }
+
+            if (inputNotification.data.notificationType === 'user.post.created') {
+                notification.body = this.senderFullName(inputNotification) +
+                    ('f' === inputNotification.data.sender.sex ? 'опубликовала новость' : 'опубликовал новость');
             }
 
             if (inputNotification.data.notificationType === 'chat.created') {
@@ -102,7 +107,7 @@ const NotificationMixin = {
             }
 
             if (inputNotification.data.notificationType === 'message.new') {
-                    notification.body = inputNotification.data.sender.message;
+                notification.body = inputNotification.data.sender.message;
             }
 
             if (inputNotification.data.notificationType === 'app.notification') {

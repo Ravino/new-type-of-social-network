@@ -248,6 +248,7 @@ methods : {
         try{
             response = await this.$root.$api.$post.getPosts(limit, offset);
         } catch (e){
+
             this.isStarted = false;
         }
 
