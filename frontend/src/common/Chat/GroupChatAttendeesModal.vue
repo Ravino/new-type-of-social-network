@@ -3,23 +3,25 @@
          role="dialog" aria-labelledby="groupChatAttendeesModal" @click.stop="hideGroupChatAttendeesModal"
          aria-hidden="true" style="display: block; background-color: rgba(0, 0, 0, .7);">
 
-        <div class="modal-dialog modal-dialog-centered" role="document" @click.stop="">
+        <div class="chat-pick-attendees-document modal-dialog modal-dialog-centered" role="document" @click.stop="">
             <div class="modal-content bg-white-br20">
 
                 <div id="groupChatAttendeesModalBody" class="modal-body d-flex flex-column p-4">
                     <h5 class="resend-message-title text-left mb-4">Участники группового чата</h5>
 
-                    <form id="chatPickAttendeesForm" novalidate="novalidate" class="mb-4">
+                    <form id="chatPickAttendeesForm" novalidate="novalidate" class="chat-pick-attendees-form mb-4">
 
-                        <div class="form-group">
-                            <div class="d-flex flex-column align-items-start" ref="attendeesList" :key="'attendeesList-'+keyUpdater">
-                                <ChatAttendeeItem v-for="attItem in getAttendeesList()"
-                                                  @RemoveAttendeeFromChat="onRemoveAttendeeFromChat"
-                                                  v-bind:companion="attItem"
-                                                  v-bind:isCanDelete="isCanDelete"
-                                                  v-bind:key="'attendeeItem-'+attItem.id+'-'+keyUpdater">
-                                </ChatAttendeeItem>
-                            </div>
+                        <div class="form-group" id="groupChatAttendeesModalMembers">
+                            <vue-custom-scrollbar class="chat-members-scroll py-4" :settings="customScrollbarSettings">
+                                <div class="d-flex flex-column align-items-start" ref="attendeesList" :key="'attendeesList-'+keyUpdater">
+                                    <ChatAttendeeItem v-for="attItem in getAttendeesList()"
+                                                      @RemoveAttendeeFromChat="onRemoveAttendeeFromChat"
+                                                      v-bind:companion="attItem"
+                                                      v-bind:isCanDelete="isCanDelete"
+                                                      v-bind:key="'attendeeItem-'+attItem.id+'-'+keyUpdater">
+                                    </ChatAttendeeItem>
+                                </div>
+                            </vue-custom-scrollbar>
                         </div>
 
                         <div class="form-group">
@@ -69,9 +71,13 @@ import ChatAttendeeItem from './ChatAttendeeItem.vue';
 import PliziDialog from '../../classes/PliziDialog.js';
 import PliziRecipientsCollection from '../../classes/Collection/PliziRecipientsCollection.js';
 
+
+/** @link https://binaryify.github.io/vue-custom-scrollbar/en/#why-custom-scrollbar **/
+import vueCustomScrollbar from 'vue-custom-scrollbar';
+
 export default {
 name: 'GroupChatAttendeesModal',
-components: { ChatAttendeeItem },
+components: { ChatAttendeeItem, vueCustomScrollbar },
 props: {
     currentDialog: PliziDialog
 },
@@ -84,7 +90,11 @@ data() {
             selectedRecipients: null
         },
         hasNoAttendees: false,
-        keyUpdater: 0
+        keyUpdater: 0,
+        customScrollbarSettings: {
+            suppressScrollX: true, // rm scroll x
+            wheelPropagation: false
+        },
     }
 },
 

@@ -52,7 +52,8 @@
                     <span v-if="message.isMine &&  message.isEdited" class="message-edited">
                         <IconPencilEdit />
                     </span>
-                    <span v-if="message.isMine" class="message-delivery ml-3" :class="{ 'message-readed': message.isRead }">
+                    <!--    :class="{ 'message-readed': message.isRead }"  -->
+                    <span v-if="message.isMine" class="message-delivery ml-3" :class="{ 'message-readed': true }">
                         <IconCheckedDouble />
                     </span>
                 </div>

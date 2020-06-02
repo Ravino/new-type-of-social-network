@@ -165,7 +165,7 @@ class UserNeo4jRepository extends BaseRepository
      */
     public function isFollowed($owner_oid, $user_oid)
     {
-        $query = "MATCH (:User {oid: '{$owner_oid}'})-[r:FOLLOWS]-(:User {oid: '{$user_oid}'})
+        $query = "MATCH (:User {oid: '{$owner_oid}'})-[r:FOLLOWS]->(:User {oid: '{$user_oid}'})
                   RETURN COUNT(r) AS count";
         try {
             $result = $this->client->run($query)->firstRecord();

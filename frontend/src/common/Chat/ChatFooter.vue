@@ -1,5 +1,9 @@
 <template>
     <div id="chatFooter" class="chat-footer">
+        <div class="companion-is-typing pl-2" style="min-height: 20px;">
+            <span v-show="isTyper">{{typerName}} печатает...</span>
+        </div>
+
         <TextEditor :showAvatar="false"
                     :dropToDown="false"
                     :clazz="`d-flex bg-white w-100 border-top position-relative mt-auto align-items-start px-3 py-3`"
@@ -18,10 +22,12 @@
 
 <script>
 import TextEditor from '../TextEditor.vue';
-import PliziDialog from '../../classes/PliziDialog.js';
 
 import ChatMixin from '../../mixins/ChatMixin.js';
 import LinkMixin from '../../mixins/LinkMixin.js';
+
+import PliziDialog from '../../classes/PliziDialog.js';
+import PliziUser from '../../classes/PliziUser.js';
 
 export default {
 name: 'ChatFooter',
@@ -38,6 +44,18 @@ data() {
         placeholder: 'Написать сообщение...',
         timeout: 0,
         errors: null,
+        isTyper: false,
+        currentTyper:null
+    }
+},
+
+computed: {
+    typerName(){
+        if (this.currentTyper)
+            return this.currentTyper.fullName;
+
+        this.isTyper = false;
+        return '';
     }
 },
 
@@ -100,6 +118,24 @@ methods: {
         this.errors = null;
     },
 
+    onCompanionTyping(evData) {
+        this.currentTyper = new PliziUser(evData.user);
+
+        if ( this.$root.$auth.user.id === this.currentTyper.id)
+            return;
+
+        if (this.typingTimeout) {
+            clearTimeout(this.typingTimeout);
+        }
+
+        this.isTyper = true;
+
+        this.typingTimeout = setTimeout(() => {
+            this.isTyper = false;
+            this.currentTyper = null;
+        }, 3000);
+    },
+
     async addMessageToChat( msgText, attachmentsIds, attachmentsFiles, videoLink = null){
         const chatId = (this.currentDialog) ? this.currentDialog.id : 'unknown';
 
@@ -116,6 +152,10 @@ methods: {
 
         this.$root.$api.sendToChannel(sendData);
     },
+},
+
+mounted(){
+    this.$root.$on('userIsTyping', this.onCompanionTyping);
 }
 
 }
