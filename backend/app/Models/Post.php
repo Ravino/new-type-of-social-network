@@ -142,11 +142,12 @@ class Post extends Model
                         ->where('created_at', '>', Carbon::parse($friend->created_at)->timestamp);
                 }
 
-                if ($friend->recipient_id !== $user->id) {
+                // TODO: @YZ Из за этого ошибка на /news.
+                /*if ($friend->recipient_id !== $user->id) {
                     $posts->orWhere('postable_type', User::class)
                         ->where('postable_id', $friend->recipient_id)
                         ->where('created_at', '>', Carbon::parse($friend->created_at)->timestamp);
-                }
+                }*/
             }
         }
 
