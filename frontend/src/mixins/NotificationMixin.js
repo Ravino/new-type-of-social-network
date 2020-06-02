@@ -19,7 +19,7 @@ const NotificationMixin = {
 
             let notification = {
                 id: uuid,
-                userPic: (inputNotification.data.sender) ? inputNotification.data.sender.userPic : null,
+                userPic: this.senderUserPic(inputNotification),
                 firstName: (inputNotification.data.sender) ? inputNotification.data.sender.firstName : null,
                 lastName: (inputNotification.data.sender) ? inputNotification.data.sender.lastName : null,
                 name: (inputNotification.data.name) ? inputNotification.data.name : null,
@@ -107,7 +107,7 @@ const NotificationMixin = {
             }
 
             if (inputNotification.data.notificationType === 'message.new') {
-                    notification.body = inputNotification.data.sender.message;
+                notification.body = inputNotification.data.sender.message;
             }
 
             if (inputNotification.data.notificationType === 'app.notification') {
@@ -129,6 +129,14 @@ const NotificationMixin = {
                 setTimeout(() => {
                     this.removeNotification({uuid});
                 }, this.timeoutNotification * 1000);
+            }
+        },
+
+        senderUserPic(inputNotification) {
+            if (inputNotification.data.sender && inputNotification.data.sender.userPic) {
+                return inputNotification.data.sender.userPic;
+            } else {
+                return this.$root.$defaultAvatarPath;
             }
         },
 

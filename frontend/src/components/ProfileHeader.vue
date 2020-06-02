@@ -108,8 +108,8 @@
         <div class="col-12  col-lg-8 col-xl-9 px-0 pt-4 plz-profile-userdetails">
             <div class="w-100 bg-white-br20 px-3 px-md-5 pb-3">
                 <div class="d-flex justify-content-between align-items-center mb-2">
-                    <h2 class="plz-user-name">{{userData.fullName}}</h2>
-                    <span v-if="userData.isOnline" class="online">В сети</span>
+                    <h2 class="plz-user-name mb-0 pr-4">{{userData.fullName}}</h2>
+                    <span v-if="userData.isOnline" class="online text-nowrap">В сети</span>
                 </div>
 
                 <table class="plz-user-profile-details table table-borderless mt-2">
