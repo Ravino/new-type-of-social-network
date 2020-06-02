@@ -34,6 +34,7 @@
         "predis/predis": "^1.1",
         "react/zmq": "^0.4.0",
         "santigarcor/laratrust": "5.2.*",
+        "sentry/sentry-laravel": "^1.7",
         "socialiteproviders/instagram": "^3.0",
         "socialiteproviders/twitter": "^3.0",
         "socialiteproviders/vkontakte": "^4.0",
