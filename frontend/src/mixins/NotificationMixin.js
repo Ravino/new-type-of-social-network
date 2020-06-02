@@ -19,7 +19,7 @@ const NotificationMixin = {
 
             let notification = {
                 id: uuid,
-                userPic: (inputNotification.data.sender.userPic) ? inputNotification.data.sender.userPic : '../images/noavatar-256.png',
+                userPic: (inputNotification.data.sender.userPic) ? inputNotification.data.sender.userPic : this.$root.$defaultAvatarPath,
                 firstName: (inputNotification.data.sender) ? inputNotification.data.sender.firstName : null,
                 lastName: (inputNotification.data.sender) ? inputNotification.data.sender.lastName : null,
                 name: (inputNotification.data.name) ? inputNotification.data.name : null,
