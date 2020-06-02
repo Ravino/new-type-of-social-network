@@ -14,18 +14,18 @@
                         <IconSearch style="width: 15px; height: 16px;"/>
                     </button>
                 </span>
-                <div class="col-12 d-flex d-md-none align-items-center form-inline mb-3 pl-0 pr-0 position-relative overflow-hidden rounded-pill mt-4">
+                <div class="d-flex align-items-center form-inline mb-3 pl-0 pr-0 position-relative overflow-hidden rounded-pill mt-4 ml-auto">
                     <div class="form-inline  position-relative w-100"
                          :class="{'isFocused' : isFocused}">
-                        <input :value="lastSearch"
+                        <input v-model="lastSearch"
                                id="txtNewsListSearch"
                                ref="txtNewsListSearch"
-
+                               @keydown.stop="searchKeyDownCheck($event)"
                                @blur="onBlur"
                                @focus="onFocus"
                                class="top-search form-control form-control  w-100"
                                type="text" placeholder="Поиск" aria-label="Поиск" />
-                        <button class="btn btn-search h-100" type="button">
+                        <button class="btn btn-search h-100" type="button" @click="startSearch()">
                             <IconSearch style="width: 15px; height: 15px;"/>
                         </button>
                     </div>
@@ -69,7 +69,15 @@ methods: {
     },
     onBlur() {
         this.isFocused = false
-    }
+    },
+    searchKeyDownCheck(ev) {
+        if (13 === ev.keyCode) {
+            return this.startSearch();
+        }
+    },
+    startSearch() {
+        this.$emit('lastSearchChange', this.lastSearch);
+    },
 }
 
 }
