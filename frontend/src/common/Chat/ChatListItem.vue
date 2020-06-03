@@ -2,7 +2,7 @@
     <li class="chat-list-user media m-0 px-4 py-2"
         :class="{ 'bg-light':  dialog.id === currentDialogID, 'bg-white': dialog.id !== currentDialogID  }">
 
-        <div class="user-friend d-flex w-100 px-0 overflow-hidden" @click.prevent="pickChat()">
+        <div class="user-friend d-flex w-100 px-0 --overflow-hidden" @click.prevent="pickChat()">
 
             <div v-if="dialog.isPrivate" class="user-friend-pic mr-3">
                 <img class="user-friend-img rounded-circle overflow-hidden"
@@ -24,13 +24,15 @@
 <!--            </template>-->
 
             <template v-if="dialog.isGroup"> <!-- @TGA на самом деле "dialog.isGroup" -->
-                <div class="user-friend-pic is-group-chat">
-                    <img v-for="attende in threeAttendess()"
-                         :src="attende.userPic"
-                         :alt="attende.fullName"
-                         :key="attende.id"
-                         class="user-friend-img rounded-circle overflow-hidden" />
-                </div>/
+                <div class="is-group-chat position-relative mr-3">
+                    <div v-for="attende in threeAttendess()" class="user-friend-pic" >
+                        <img
+                             :src="attende.userPic"
+                             :alt="attende.fullName"
+                             :key="attende.id"
+                             class="user-friend-img rounded-circle overflow-hidden" />
+                    </div>
+                </div>
             </template>
 
             <div class="user-friend-body flex-fill m-0">
