@@ -26,6 +26,8 @@
     .ps__rail-x {
         height: 10px;
         border-radius: 6px;
+        opacity: .4;
+        background-color: #e3e3e3;
     }
     .ps__rail-x.ps--clicking .ps__thumb-x,
     .ps__rail-x:focus>.ps__thumb-x,
