@@ -10,10 +10,9 @@
                         <VideosPageFilter @wallPostsSelect="wallPostsSelectHandler"/>
                     </div>
                     <div class="col-12">
-                        <div class="videos-content w-100">
+                        <div class="videos-content w-100 pt-4 px-3 mb-4 bg-white-br20">
                             <template v-if="filterMode === 'my'">
-                                <div class="card mb-4">
-                                    <div class="card-body py-0">
+
                                         <div class="row">
                                             <template v-if="userVideos && userVideos.length">
                                                 <div v-for="(video, index) in userVideos"
@@ -33,7 +32,7 @@
                                                             </button>
                                                             <button type="button"
                                                                     @click.prevent="onDelete(video.id)"
-                                                                    class="btn btn-close btn-link border-0 border-danger bg-danger text-white rounded-circle delete__button"
+                                                                    class="btn btn-close btn-link border-0 border-danger bg-danger text-white rounded-circle delete-button"
                                                                     aria-label="Удалить видео">
                                                                 <i class="fa fa-plus" aria-hidden="true"></i>
                                                             </button>
@@ -48,8 +47,7 @@
                                                 Нет видео.
                                             </div>
                                         </div>
-                                    </div>
-                                </div>
+
                             </template>
                             <template v-else>
                                 <div class="card mb-4">
