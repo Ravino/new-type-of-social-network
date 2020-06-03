@@ -65,28 +65,45 @@
             async sendComment(msg, attachments) {
                 let response = null;
 
-                if(this.type === "gallery") {
-                    try {
-                        response = await this.$root.$api.$post.setGalleryComments(msg, this.postId, this.imageId, attachments);
-                        this.$emit('updateComments', response.data);
-                    } catch (e) {
-                        console.warn(e.detailMessage);
-                    }
-                } else if (this.type === "album") {
-                    try {
-                        response = await this.$root.$api.$post.sendCommentToAlbum(msg, this.imageId, attachments);
-                        this.$emit('updateComments', response.data);
-                    } catch (e) {
-                        console.warn(e.detailMessage);
-                    }
-                } else if (this.type === "post") {
-                    try {
-                        let response = await this.$root.$api.$post.setPostComments(msg, this.postId, attachments);
-                        this.$emit('updateComments', response.data);
-                    } catch (e) {
-                        console.warn(e.detailMessage);
-                    }
+                switch (this.type) {
+                    case 'gallery':
+                        try {
+                            response = await this.$root.$api.$post.setGalleryComments(
+                             msg,
+                             this.postId,
+                             this.imageId,
+                             attachments
+                            );
+                        } catch (e) {
+                            console.warn(e.detailMessage);
+                        }
+                        break;
+                    case 'album':
+                        try {
+                            response = await this.$root.$api.$post.sendCommentToAlbum(
+                             msg,
+                             this.imageId,
+                             attachments
+                            );
+                        } catch (e) {
+                            console.warn(e.detailMessage);
+                        }
+                        break;
+                    case 'post':
+                        try {
+                             response = await this.$root.$api.$post.setPostComments(
+                             msg,
+                             this.postId,
+                             attachments
+                            );
+                        } catch (e) {
+                            console.warn(e.detailMessage);
+                        }
+                        break;
+
+                    default: return;
                 }
+                this.$emit('updateComments', response.data);
             },
         },
     }

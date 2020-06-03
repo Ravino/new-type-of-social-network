@@ -84,8 +84,8 @@
                      @update="editComment">
                  </CommentItem>
              </div>
-            <div class="plz-comment-item-wrapper-close">
-                <button class="plz-comment-item-close-btn" v-if="isAuthor" @click="deleteComment"></button>
+            <div class="plz-comment-item-wrapper-close" @click="deleteComment">
+                <button class="plz-comment-item-close-btn" v-if="isAuthor"></button>
             </div>
             <CommentReply
                 v-if="isAnswer"
