@@ -34,7 +34,7 @@
 
                         <CommunityShortMembers v-if="isDataReady" v-bind:community="communityData"/>
 
-                        <CommunityVideoBlock
+                        <CommunityVideoBlock v-if="isDataReady && hasAccess"
                                              :key="'cv' + communityData.id"
                                              :avatarMedium="avatarMedium"
                                              :communityId="parseInt(id)"

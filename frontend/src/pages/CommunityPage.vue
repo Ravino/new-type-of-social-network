@@ -32,7 +32,7 @@
                         :subscribe-type="subscribeType"
                         @openVideoModal="openVideoModal"/>
 
-                    <template v-if="isStarted">
+                    <template v-if="isStarted && hasAccess">
                         <div class="plz-post-item mb-4 bg-white-br20 p-4">
                             <div class="w-100 p-5 text-center mb-0">
                                 <SmallSpinner/>
@@ -52,7 +52,7 @@
 
                     <CommunityShortMembers v-if="isDataReady" v-bind:community="communityData"/>
 
-                    <CommunityVideoBlock
+                    <CommunityVideoBlock v-if="isDataReady && hasAccess"
                              :key="'cv' + communityData.id"
                              :avatarMedium="avatarMedium"
                              :communityId="parseInt(id)"
@@ -129,6 +129,9 @@ computed: {
         return this.communityData?.avatar?.image.medium.path || this.communityData?.primaryImage;
     },
     hasAccess() {
+        if (!this.communityData) {
+            return true;
+        }
         // Opened
         if (this.communityData?.privacy === 1) {
             return true;
