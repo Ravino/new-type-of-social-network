@@ -12,6 +12,7 @@
                     <div class="row mb-4 pt-0">
                         <PostFilter
                             :filter="filter"
+                            @partsChange="partsChange"
                             @likedClick="likedClick"
                             @lastSearchChange="lastSearchChange"/>
                         <PostInterest
@@ -134,6 +135,7 @@ data() {
         filter: {
             interest: false,
             liked: false,
+            parts: [],
         },
     }
 },
@@ -201,7 +203,7 @@ methods: {
         this.isStarted = true;
 
         try {
-            response = await this.$root.$api.$post.getNews(limit, offset, this.startSearch);
+            response = await this.$root.$api.$post.getNews(limit, offset, this.startSearch, this.filter.parts);
         } catch (e) {
             this.isStarted = false;
             console.warn(e.message);
@@ -267,7 +269,11 @@ methods: {
     likedClick(state) {
         this.filter.liked = state;
         this.filterPost();
-    }
+    },
+    partsChange(state) {
+        this.filter.parts = state;
+        this.getPosts();
+    },
 },
 
 async mounted() {
