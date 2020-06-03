@@ -5,7 +5,7 @@
                 <AccountToolbarLeft></AccountToolbarLeft>
             </div>
 
-            <div class="col-12 col-md-11 pr-0 px-0 px-md-3"
+            <div class="col-12 col-md-11 col-lg-11 col-xl-8 pr-0 px-0 px-md-3"
                  :class="calcCentralBlockClass()"
                  v-bind:key="`CentralColumn-`+$root.$friendsKeyUpdater">
 
