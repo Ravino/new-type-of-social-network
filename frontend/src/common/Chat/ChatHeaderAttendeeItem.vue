@@ -3,12 +3,11 @@
         <router-link :to="`/user-`+attendee.id" tag="div"
                      :title="attendee.fullName"
                      class="mr-3 cursor-pointer position-relative">
+            <span v-if="attendee.isAdmin" class="plz-chat-attendee-admin " title="администратор чата">
+                <i class="fas fa-star"></i>
+            </span>
             <div class="media-pic border rounded-circle">
                 <img :src="attendee.userPic" :alt="attendee.fullName" />
-
-                <span v-if="attendee.isAdmin" class="plz-chat-attendee-admin" title="администратор чата">
-                    <i class="fas fa-star"></i>
-                </span>
             </div>
 
             <template v-if="isTyper">
