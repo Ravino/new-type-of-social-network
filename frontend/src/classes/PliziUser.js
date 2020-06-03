@@ -44,36 +44,6 @@ class PliziUser {
     _mutualFriendsCount = null;
 
     /**
-     * @type {number}
-     * @private
-     */
-    _subscribersNumber = 0;
-
-    /**
-     * @type {number}
-     * @private
-     */
-    _friendsNumber = 0;
-
-    /**
-     * @type {number}
-     * @private
-     */
-    _photosNumber = 0;
-
-    /**
-     * @type {number}
-     * @private
-     */
-    _videosNumber = 0;
-
-    /**
-     * @type {number}
-     * @private
-     */
-    _audiosNumber = 0;
-
-    /**
      * статистика
      * @type {PliziUserStats}
      * @private
