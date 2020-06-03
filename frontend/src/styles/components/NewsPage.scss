@@ -119,3 +119,98 @@ $transition-default: 0.25s ease-out 0.10s;
         }
     }
 }
+
+
+#postFilter {
+    .nav-link,
+    .btn {
+        &:hover {
+            background-color: transparent;
+            color: $textColor;
+        }
+    }
+
+    /*- Radio button -*/
+    $radioTop: 3px;
+    $radioLeft: 25px;
+    $borderRadius: 4px;
+    $radioWidth: 18px;
+
+    .radio {
+        width: 100%;
+        color: red;
+        input {
+            position: absolute;
+            left: 0;
+            bottom: $radioTop;
+            opacity: 0;
+            z-index: 2;
+        }
+
+        input:checked {
+            + span {
+                color: #ffffff;
+
+                &:after {
+                    content: "";
+                    position: absolute;
+                    left: -$radioLeft;
+                    bottom: $radioTop;
+                    width: $radioWidth;
+                    display: inline-block;
+                    height: $radioWidth;
+                    z-index: 12;
+                    background-color: $blueBtnHover;
+                    background-image: url('../images/checked.svg');
+                    background-size: 12px 9px;
+                    background-repeat: no-repeat;
+                    background-position: 50%;
+                    border-radius: $borderRadius;
+                }
+            }
+            ~ p {
+                //font-family: $bold;
+                color: #ffffff;
+            }
+        }
+
+        span {
+            position: relative;
+            display: inline-block;
+            padding-left: 0;
+            margin-left: $radioLeft;
+            margin-bottom: 5px;
+
+            font-size: 16px;
+            line-height: 24px;
+            //font-family: $bold;
+            width: 100%;
+            color: #FFFFFF;
+
+            &:hover {
+                background-color: transparent;
+                color: $textGreyColor;
+            }
+        }
+
+        span:before {
+            content: "";
+            position: absolute;
+            left: -$radioLeft;
+            top: $radioTop;
+            bottom: auto;
+            width: $radioWidth;
+            height: $radioWidth;
+            z-index: 10;
+            background-color: #5e5e5e;
+            border-radius: $borderRadius;
+        }
+        p {
+            font-size: 16px;
+            line-height: 24px;
+            color: #828282;
+            margin-left: auto;
+        }
+    }
+
+}

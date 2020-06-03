@@ -3,9 +3,52 @@
         <div class="row mr-xl-0 bg-white-br20 align-items-center justify-content-between">
 
             <nav class="col-lg-8 nav profile-filter-links align-items-center  pl-3 mb-lg-0" role="tablist">
-                <span class="nav-link py-2 py-sm-3 px-1 mr-2 mr-lg-4 active">Новости
-                    <i class="fas fa-chevron-down ml-2"></i>
-                </span>
+                <div class="nav-link py-0 px-1 mr-2 mr-lg-4 position-relative active">
+                    <button
+                        class="btn dropdown-menu-btn py-2 py-sm-3"
+                        id="dropdownNews"
+                        type="button"
+                        data-toggle="dropdown"
+                        aria-haspopup="true"
+                        data-offset="-5,0"
+                        aria-expanded="false">
+                        Новости
+                        <i class="fas fa-chevron-down ml-2"></i>
+                    </button>
+
+                    <div class="dropdown-menu dropdown-menu-left py-3 px-3" aria-labelledby="dropdownNews">
+
+                        <div class="nav-item ">
+                            <label for="ownNews" class="radio mb-3 mb-md-0">
+                                <input class="mb-0"
+                                       type="checkbox"
+                                       name="ownNews"
+                                       id="ownNews"/>
+                                <span class="mb-0">Все </span>
+                            </label>
+                        </div>
+                        <div class="nav-item ">
+                            <label for="friendsNews" class="radio mb-3 mb-md-0">
+                                <input class="mb-0"
+                                       type="checkbox"
+                                       name="friendsNews"
+                                       id="friendsNews"/>
+                                <span class="mb-0">Друзья </span>
+                            </label>
+                        </div>
+                        <div class="nav-item ">
+                            <label for="communitiesNews" class="radio mb-3 mb-md-0">
+                                <input class="mb-0"
+                                       type="checkbox"
+                                       name="communitiesNews"
+                                       id="communitiesNews"/>
+                                <span class="mb-0">Сообщества </span>
+                            </label>
+                        </div>
+                    </div>
+
+
+                </div>
 
                 <span class="nav-link py-2 py-sm-3 px-1 mr-2 mr-lg-4" :class="{'active': liked}" @click="likedClick">Понравилось</span>
                 <!-- TODO: @YZ восстановить после MVP -->
