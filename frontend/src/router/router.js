@@ -69,6 +69,7 @@ const routes = [
                 }
             } ,
             { path: 'friends', components: { userFriendsList : UserFriendsAllList } },
+            { path: 'communities', components: { userCommunities : CommunitiesListPage } },
         ]},
     {path: '/friends', component: FriendsListPage, name: 'FriendsListPage', meta: {title: 'Plizi: мои друзья'}, props: true },
     {path: '/invitations', component: InvitationsPage, name: 'InvitationsPage', meta: {title: 'Plizi: приглашения дружбы'}, props: true },
