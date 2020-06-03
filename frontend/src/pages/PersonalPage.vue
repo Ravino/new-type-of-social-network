@@ -40,6 +40,7 @@
                     <template v-else>
                         <router-view name="userLastPhotos"
                                      :profileData="profileData"
+                                     :isPhotosDataReady="isPhotosDataReady"
                                      :photos="userPhotos"></router-view>
                         <router-view name="userLastPost"
                                      :filter-mode="filterMode" :filtered-posts="filteredPosts"
@@ -130,7 +131,7 @@
                 posts: [],
                 userCommunities: null,
                 footerLink: null,
-                isPhotosDataReady: false,
+                // isPhotosDataReady: false,
                 userPhotos: [],
                 filterMode: 'all',
                 postRepostModal: {
@@ -179,6 +180,7 @@
                 if (!this.isLockedProfile) {
                     await this.getUserInfo();
                     await this.getPosts();
+                    await this.getUserPhotos(this.id);
                 }
 
                 window.scrollTo(0, 0);
