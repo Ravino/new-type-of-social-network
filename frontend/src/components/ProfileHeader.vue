@@ -124,8 +124,7 @@
                         <td class="">Город:</td>
                         <td class="">
                             <template v-if="userData.country && userData.city.title">
-                                <IconLocation/>
-                                {{userData.country.title.ru}}, {{userData.city.title.ru}}
+                                <IconLocation/> {{userData.locationText}}
                             </template>
                             <template v-else>
                                 Не указано

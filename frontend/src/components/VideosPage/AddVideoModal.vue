@@ -41,87 +41,90 @@
 </template>
 
 <script>
-    import {required, url} from 'vuelidate/lib/validators';
-    import {isValidYoutubeLink} from '../../validators/validators.js';
-    import LinkMixin from "../../mixins/LinkMixin.js";
+import {required, url} from 'vuelidate/lib/validators';
+import {isValidYoutubeLink} from '../../validators/validators.js';
 
-    export default {
-        name: "AddVideoModal",
-        computed: {
-            isLinkError() {
-                return (this.errors && this.errors.link) || this.$v.form.link.$error;
-            },
+import LinkMixin from "../../mixins/LinkMixin.js";
+
+export default {
+name: "AddVideoModal",
+mixins: [LinkMixin],
+data() {
+    return {
+        form: {
+            link: null,
         },
-        mixins: [LinkMixin],
-        data() {
-            return {
-                form: {
-                    link: null,
-                },
-                errors: null,
-                isStoreRequest: false,
-            }
-        },
-        validations() {
-           return {
-               form: {
-                   link: {
-                       required,
-                       url,
-                       isValidYoutubeLink,
-                   },
-               },
-           }
-        },
-        methods: {
-            onHide() {
-                this.$emit('onHide');
+        errors: null,
+        isStoreRequest: false,
+    }
+},
+
+validations() {
+    return {
+        form: {
+            link: {
+                required,
+                url,
+                isValidYoutubeLink,
             },
-            onInput(fieldName) {
-                if (this.errors && this.errors[fieldName]) {
-                    this.errors[fieldName] = null;
-                }
-            },
-
-            async store() {
-                if (this.isStoreRequest) {
-                    return ;
-                }
-                this.isStoreRequest = true;
-                this.errors = null;
-
-                let response;
-                let formData = {
-                    link: this.form.link
-                };
-
-                try {
-                    response = await this.$root.$api.$video.storeVideo(formData);
-                } catch (e) {
-                    console.warn(e.detailMessage);
-                    this.errors = e.data.errors;
-                }
-
-                if (response) {
-                    this.onHide();
-                    this.$root.$emit('onAddVideo', {
-                        id: response.id,
-                        link: this.form.link,
-                    });
-                    this.$notify('Видео успешно добавлено.');
-                } else {
-                    this.isStoreRequest = false;
-                }
-            },
-        },
-        mounted() {
-            setTimeout(() => {
-                this.$refs.videoLink.focus();
-            }, 100);
         },
     }
+},
+
+computed: {
+    isLinkError() {
+        return (this.errors && this.errors.link) || this.$v.form.link.$error;
+    },
+},
+
+methods: {
+    onHide() {
+        this.$emit('onHide');
+    },
+    onInput(fieldName) {
+        if (this.errors && this.errors[fieldName]) {
+            this.errors[fieldName] = null;
+        }
+    },
+
+    async store() {
+        if (this.isStoreRequest) {
+            return ;
+        }
+        this.isStoreRequest = true;
+        this.errors = null;
+
+        let response;
+        let formData = {
+            link: this.form.link
+        };
+
+        try {
+            response = await this.$root.$api.$video.storeVideo(formData);
+        } catch (e) {
+            console.warn(e.detailMessage);
+            this.errors = e.data.errors;
+        }
+
+        if (response) {
+            this.onHide();
+            this.$root.$emit('onAddVideo', {
+                id: response.id,
+                link: this.form.link,
+            });
+            this.$notify('Видео успешно добавлено.');
+            this.$root.$auth.videosIncrease();
+        }
+        else {
+            this.isStoreRequest = false;
+        }
+    },
+},
+
+mounted() {
+    setTimeout(() => {
+        this.$refs.videoLink.focus();
+    }, 100);
+},
+}
 </script>
-
-<style scoped>
-
-</style>

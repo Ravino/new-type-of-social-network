@@ -24,7 +24,7 @@
                                                             <div class="video-wrap-pre">
                                                                 <img alt="image"
                                                                      :src="`//img.youtube.com/vi/${video.youtubeId}/mqdefault.jpg`"
-                                                                     @click.stop="openVideoModal(video.link)">
+                                                                     @click.stop="openVideoModal(video.link)" />
                                                             </div>
                                                             <button type="button"
                                                                     aria-label="Запустить видео"
@@ -340,19 +340,20 @@
 </template>
 
 <script>
-    import AccountToolbarLeft from "../common/AccountToolbarLeft.vue";
-    import FavoriteFriends from "../common/FavoriteFriends.vue";
-    import VideosPageFilter from "../components/VideosPage/VideosPageFilter.vue";
-    import VideoPageModal from "../components/VideosPage/VideoPageModal.vue";
-    import DeleteVideoModal from "../components/VideosPage/DeleteVideoModal.vue";
+import IconYoutube from "../icons/IconYoutube.vue";
+import IconPlayVideo from "../icons/IconPlayVideo.vue";
+import IconDelete from "../icons/IconDelete.vue";
 
-    import LinkMixin from "../mixins/LinkMixin.js";
-    import PliziVideo from '../classes/PliziVideo.js';
-    import IconYoutube from "../icons/IconYoutube.vue";
-    import IconPlayVideo from "../icons/IconPlayVideo.vue";
-    import IconDelete from "../icons/IconDelete.vue";
+import AccountToolbarLeft from "../common/AccountToolbarLeft.vue";
+import FavoriteFriends from "../common/FavoriteFriends.vue";
+import VideosPageFilter from "../components/VideosPage/VideosPageFilter.vue";
+import VideoPageModal from "../components/VideosPage/VideoPageModal.vue";
+import DeleteVideoModal from "../components/VideosPage/DeleteVideoModal.vue";
 
-    export default {
+import LinkMixin from "../mixins/LinkMixin.js";
+import PliziVideo from '../classes/PliziVideo.js';
+
+export default {
 name: "VideosPage",
 components: {
     IconPlayVideo,
@@ -385,6 +386,7 @@ data() {
         isDeleteRequest: false,
     }
 },
+
 methods: {
     wallPostsSelectHandler(evData) {
         this.filterMode = evData.wMode;
@@ -430,7 +432,9 @@ methods: {
             this.hideDeleteVideoModal();
             this.isDeleteRequest = false;
             this.$notify('Видео успешно удалено.');
-        } else {
+            this.$root.$auth.videosDecrease();
+        }
+        else {
             this.isDeleteRequest = false;
         }
     },
@@ -440,7 +444,8 @@ methods: {
 
         try {
             response = await this.$root.$api.$video.getUserVideo();
-        } catch (e) {
+        }
+        catch (e) {
             console.log(e.detailMessage);
         }
 
@@ -448,9 +453,12 @@ methods: {
             response.map((video) => {
                 this.userVideos.push(new PliziVideo(video));
             });
+
+            this.$root.$auth.setVideosNumber( this.userVideos.length );
         }
     },
 },
+
 async mounted() {
     await this.getUserVideo();
 
