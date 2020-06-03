@@ -1,12 +1,11 @@
 <template>
     <div class="d-flex align-items-start mb-3 w-100 pr-3">
         <div class="mr-3 position-relative">
+            <span v-if="companion.isAdmin" class="plz-chat-attendee-admin" title="администратор чата">
+                <i class="fas fa-star"></i>
+            </span>
             <div class="media-pic border rounded-circle">
                 <img :src="companion.userPic" :alt="companion.fullName" />
-
-                <span v-if="companion.isAdmin" class="plz-chat-attendee-admin" title="администратор чата">
-                    <i class="fas fa-star"></i>
-                </span>
             </div>
 
             <template v-if="isTyper">
