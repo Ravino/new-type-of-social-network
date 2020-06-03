@@ -159,6 +159,7 @@ data() {
         defaultClasses: `bg-white w-100 border-top position-relative mt-auto`,
         editorContainerHeight: 32,
         isMaximumCharacterLimit: false,
+        valueToContainerHeight: 0
     }
 },
 
@@ -347,11 +348,11 @@ methods: {
     },
 
     getStartContainerHeight () {
-        this.editorContainerHeight = this.$refs.editorContainer.offsetHeight;
+        this.editorContainerHeight = this.$refs.editorContainer.offsetHeight ;
     },
 
     checkUpdatedChatContainerHeight() {
-        const updatedChatContainerHeight = this.$refs.editorContainer.offsetHeight;
+        const updatedChatContainerHeight = this.$refs.editorContainer.offsetHeight + this.valueToContainerHeight;
 
         if (this.editorContainerHeight !== updatedChatContainerHeight) {
             this.editorContainerHeight = updatedChatContainerHeight;
@@ -381,6 +382,15 @@ methods: {
 
         const $file = $btn.find('input.plz-text-editor-file-picker');
         $file.click();
+    },
+
+    addValueToContainerHeight() {
+
+        let workMode = this.getContent().workMode;
+
+        if( workMode == 'chat' ) {
+            this.valueToContainerHeight = 20;
+        };
     },
 
     async addUploadAttachment(picsArr) {
@@ -482,6 +492,7 @@ methods: {
 },
 mounted() {
     this.getStartContainerHeight();
+    this.addValueToContainerHeight();
 }
 }
 
