@@ -2,24 +2,16 @@
 
 namespace App\Http\Controllers\Auth;
 
-use App\Events\RegisteredConfirm;
 use App\Http\Controllers\Controller;
 use App\Providers\RouteServiceProvider;
 use App\Models\User;
 use Carbon\Carbon;
 use Domain\Pusher\Models\Profile;
 use Illuminate\Foundation\Auth\RegistersUsers;
-use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
 use App\Events\Registered;
-use Illuminate\Validation\Rule;
-use Mail;
+use Illuminate\Support\Str;
 use Illuminate\Http\Request;
-use Auth;
-use App\Events\UserCreated;
-
-use JWTAuth;
-use Ramsey\Uuid\Uuid;
 
 class RegisterController extends Controller
 {
@@ -105,7 +97,7 @@ class RegisterController extends Controller
      */
     protected function create(array $data)
     {
-        $this->rawPassword = uniqid();
+        $this->rawPassword = Str::random(10);
 
         $data['token'] = $token = bcrypt($this->rawPassword);
 
