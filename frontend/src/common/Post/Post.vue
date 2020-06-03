@@ -239,10 +239,11 @@
                             :postId="postIdForComment"
                             @onDelete="removeComment"
                             @update="editComment"
+                            :attachments="comment.attachments"
                         ></CommentItem>
                     </div>
 
-                    <CommentPost :postId="postIdForComment" @updateComments="addNewComment"></CommentPost>
+                    <CommentTextField type="post" :postId="postIdForComment" @updateComments="addNewComment"></CommentTextField>
                 </template>
             </div>
         </template>
@@ -269,23 +270,22 @@
     import IconMessageUserPost from '../../icons/IconMessageUserPost.vue';
     import IconShare from '../../icons/IconShare.vue';
     import IconYoutube from "../../icons/IconYoutube.vue";
-
-    import PostImage from './PostImage.vue';
-    import AttachmentFile from "../AttachmentFile.vue";
-
-    import PliziPost from '../../classes/PliziPost.js';
     import Gallery from '../Gallery.vue';
-    import LinkMixin from '../../mixins/LinkMixin.js';
-    import CommentPost from "../../components/Comments/CommentPost.vue";
+    import CommentTextField from "../../components/Comments/CommentTextField.vue";
     import CommentItem from "../../components/Comments/CommentItem.vue";
+    import PostImage from './PostImage.vue';
+
+    import AttachmentFile from "../AttachmentFile.vue";
+    import PliziPost from '../../classes/PliziPost.js';
+    import LinkMixin from '../../mixins/LinkMixin.js';
     import AvatarMixin from '../../mixins/AvatarMixin.js';
     import PliziComment from "../../classes/PliziComment.js";
 
     export default {
         name: 'Post',
         components: {
+            CommentTextField,
             CommentItem,
-            CommentPost,
             Gallery,
             IconShare,
             IconMessage,

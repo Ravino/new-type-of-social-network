@@ -22,7 +22,7 @@
     import TextEditor from "../../common/TextEditor.vue";
     import ChatMixin from "../../mixins/ChatMixin.js";
     export default {
-        name: "CommentGallery",
+        name: "CommentTextField",
         components: {TextEditor},
         mixins: [ChatMixin],
         props: {
@@ -31,6 +31,9 @@
             },
             imageId: {
                 type: Number|String,
+            },
+            type: {
+                type: String,
             },
         },
         computed: {
@@ -48,24 +51,59 @@
                     msg = this.killBrTrail(msg);
 
                     if (msg !== '') {
-                        this.sendCommentToGallery(msg, evData.attachments);
+                        this.sendComment(msg, evData.attachments);
                     } else if (evData.attachments.length > 0) {
-                        this.sendCommentToGallery('', evData.attachments);
+                        this.sendComment('', evData.attachments);
                     }
                 else {
                     if (evData.attachments.length > 0) {
-                        this.sendCommentToGallery('', evData.attachments );
+                        this.sendComment('', evData.attachments );
                     }
                 }
                 }
             },
-            async sendCommentToGallery(msg, attachments) {
-                try {
-                    let response = await this.$root.$api.$post.setGalleryComments(msg, this.postId, this.imageId, attachments);
-                    this.$emit('updateComments', response.data);
-                } catch (e) {
-                    console.warn(e.detailMessage);
+            async sendComment(msg, attachments) {
+                let response = null;
+
+                switch (this.type) {
+                    case 'gallery':
+                        try {
+                            response = await this.$root.$api.$post.setGalleryComments(
+                             msg,
+                             this.postId,
+                             this.imageId,
+                             attachments
+                            );
+                        } catch (e) {
+                            console.warn(e.detailMessage);
+                        }
+                        break;
+                    case 'album':
+                        try {
+                            response = await this.$root.$api.$post.sendCommentToAlbum(
+                             msg,
+                             this.imageId,
+                             attachments
+                            );
+                        } catch (e) {
+                            console.warn(e.detailMessage);
+                        }
+                        break;
+                    case 'post':
+                        try {
+                             response = await this.$root.$api.$post.setPostComments(
+                             msg,
+                             this.postId,
+                             attachments
+                            );
+                        } catch (e) {
+                            console.warn(e.detailMessage);
+                        }
+                        break;
+
+                    default: return;
                 }
+                this.$emit('updateComments', response.data);
             },
         },
     }

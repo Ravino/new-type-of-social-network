@@ -159,6 +159,7 @@ data() {
         defaultClasses: `bg-white w-100 border-top position-relative mt-auto`,
         editorContainerHeight: 32,
         isMaximumCharacterLimit: false,
+        valueToContainerHeight: 0
     }
 },
 
@@ -347,11 +348,11 @@ methods: {
     },
 
     getStartContainerHeight () {
-        this.editorContainerHeight = this.$refs.editorContainer.offsetHeight;
+        this.editorContainerHeight = this.$refs.editorContainer.offsetHeight ;
     },
 
     checkUpdatedChatContainerHeight() {
-        const updatedChatContainerHeight = this.$refs.editorContainer.offsetHeight;
+        const updatedChatContainerHeight = this.$refs.editorContainer.offsetHeight + this.valueToContainerHeight;
 
         if (this.editorContainerHeight !== updatedChatContainerHeight) {
             this.editorContainerHeight = updatedChatContainerHeight;
@@ -381,6 +382,15 @@ methods: {
 
         const $file = $btn.find('input.plz-text-editor-file-picker');
         $file.click();
+    },
+
+    addValueToContainerHeight() {
+
+        let workMode = this.getContent().workMode;
+
+        if( workMode == 'chat' ) {
+            this.valueToContainerHeight = 20;
+        };
     },
 
     async addUploadAttachment(picsArr) {
@@ -434,28 +444,29 @@ methods: {
 
             reader.readAsDataURL(file);
 
-            let apiResponse = null;
+            let apiResponse = [];
 
             /** TODO: @TGA надо потом перенести отсюда загрузку аттачей **/
+            const delay = ms => new Promise(resolve => setTimeout(resolve, ms));
+            await delay(50);
             switch (this.workMode) {
                 case 'chat':
-                    apiResponse = this.$root.$api.$chat.attachment([file]);
+                    apiResponse = await this.$root.$api.$chat.attachment([file]);
                     break;
 
                 case 'comment':
-                    apiResponse = this.$root.$api.$post.addAttachmentsToComment([file]);
+                    apiResponse = await this.$root.$api.$post.addAttachmentsToComment([file]);
                     break;
 
                 case 'post':
-                    apiResponse = this.$root.$api.$post.storePostAttachments([file]);
+                    apiResponse = await this.$root.$api.$post.storePostAttachments([file]);
                     break;
 
                 default:
                     console.warn('TextEditor::addUploadAttachment - No matches in switch.');
             }
 
-            apiResponse.then(response => {
-                response.map((attItem) => {
+                apiResponse.map((attItem) => {
                     const newAtt = new PliziAttachment(attItem);
 
                     this.attachFiles = this.attachFiles.map(foundFile => {
@@ -473,15 +484,12 @@ methods: {
 
                     this.$emit('newAttach', {attach: newAtt});
                 })
-            }).catch((e) => {
-                window.console.warn(e.detailMessage);
-                throw e;
-            });
         }
     },
 },
 mounted() {
     this.getStartContainerHeight();
+    this.addValueToContainerHeight();
 }
 }
 

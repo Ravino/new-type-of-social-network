@@ -3,7 +3,9 @@
          :class="[`plz-gallery-${galleryType}`,
          {'plz-gallery-single': isSingleImage},
          {'plz-gallery-double': isDoubleImages},
-         {'plz-gallery-fourth': isFourthImages}]">
+         {'plz-gallery-triple': isTripleImages},
+         {'plz-gallery-fourth': isFourthImages},
+         {'plz-gallery-fifth': isFifthImages}]">
 
         <div v-if="galleryType === 'album'" class="plz-gallery-wrap plz-gallery-wrap-album">
             <template v-for="image in imagesWithClasses">
@@ -40,8 +42,8 @@
             <GalleryViewer
                 :images="images"
                 :active-image="activeImage"
-                @close="closeGalleryModal"
-                @showImage="showImage">
+                @showImage="showImage"
+                @close="closeGalleryModal">
             </GalleryViewer>
 
             <GalleryDescription
@@ -49,6 +51,7 @@
                 :post="post"
                 :comments="comments"
                 :image="activeImage"
+                :type="type"
                 @updateComments="updateComments">
             </GalleryDescription>
         </div>
@@ -100,8 +103,16 @@ computed : {
         return this.countImages === 2;
     },
 
+    isTripleImages(){
+        return this.countImages === 3;
+    },
+
     isFourthImages(){
         return this.countImages === 4;
+    },
+
+    isFifthImages() {
+        return this.countImages >= 5;
     },
 
     countImagesMore(){
