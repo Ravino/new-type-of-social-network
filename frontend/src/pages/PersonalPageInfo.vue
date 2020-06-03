@@ -121,9 +121,11 @@ methods: {
     },
 
     calcCentralBlockClass(){
+        const isCentralNarrow = (this.$root.$auth.fm.size > 0 || this.profileData.communities || this.profileData.videos);
+
         return {
-            'col-lg-8 col-xl-8'   : (this.$root.$auth.fm.size > 0), // есть фавориты
-            'col-lg-11 col-xl-11' : (this.$root.$auth.fm.size === 0), // нет фаворитов
+            'col-lg-8 col-xl-8'   : isCentralNarrow,
+            'col-lg-11 col-xl-11' : !isCentralNarrow,
         };
     },
 
