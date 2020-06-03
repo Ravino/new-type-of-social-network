@@ -21,7 +21,7 @@
                     <!--<div id="playerWrapper" class="plz-top-player col-lg-2 col-xl-2 d-sm-none d-md-none d-lg-block d-xl-block text-center ">
                         <NavBarPlayer></NavBarPlayer>
                     </div>-->
-                    <div id="watcherWrapper" class="plz-top-watcher col-6 col-sm-4 col-lg-3 col-xl-2 w-auto m-auto ml-md-auto mr-md-0 text-center">
+                    <div id="watcherWrapper" class="plz-top-watcher col-6 col-sm-4 col-lg-3 col-xl-2 w-auto m-auto text-center">
                         <div class="--btn-block mt-2 d-inline-block">
                             <NavBarNotifications></NavBarNotifications>
 
