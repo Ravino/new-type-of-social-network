@@ -23,30 +23,23 @@
                                 <input class="mb-0"
                                        type="checkbox"
                                        name="ownNews"
+                                       @click="selectAll" v-model="allSelected"
                                        id="ownNews"/>
                                 <span class="mb-0">Все </span>
                             </label>
                         </div>
-                        <div class="nav-item ">
-                            <label for="friendsNews" class="radio mb-3 mb-md-0">
+                        <div class="nav-item" v-for="part in parts" :key="part.key">
+                            <label class="radio mb-3 mb-md-0">
                                 <input class="mb-0"
                                        type="checkbox"
-                                       name="friendsNews"
-                                       id="friendsNews"/>
-                                <span class="mb-0">Друзья </span>
-                            </label>
-                        </div>
-                        <div class="nav-item ">
-                            <label for="communitiesNews" class="radio mb-3 mb-md-0">
-                                <input class="mb-0"
-                                       type="checkbox"
-                                       name="communitiesNews"
-                                       id="communitiesNews"/>
-                                <span class="mb-0">Сообщества </span>
+                                       :value="part.key"
+                                       v-model="checked"
+                                       @change="doEvent"
+                                       @click="select"/>
+                                <span class="mb-0">{{part.title}}</span>
                             </label>
                         </div>
                     </div>
-
 
                 </div>
 
@@ -106,6 +99,13 @@ data() {
         isFocused: false,
         lastSearch : '',
         liked: false,
+        parts: [
+            {key: 'own', title: 'Свои'},
+            {key: 'friends', title: 'Друзья'},
+            {key: 'communities', title: 'Сообщества'},
+        ],
+        checked: ['own', 'friends', 'communities'],
+        allSelected: true,
     }
 },
 
@@ -127,6 +127,24 @@ methods: {
     likedClick() {
         this.liked = !this.liked;
         this.$emit('likedClick', this.liked);
+    },
+    selectAll() {
+        this.checked = [];
+
+        if (!this.allSelected) {
+            this.parts.map((part) => {
+                this.checked.push(part.key);
+            });
+            this.doEvent();
+        }
+    },
+    select() {
+        this.allSelected = false;
+    },
+    doEvent() {
+        this.$nextTick(() => {
+            this.$emit('partsChange', this.checked);
+        });
     },
 },
 mounted() {
