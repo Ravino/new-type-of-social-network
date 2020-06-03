@@ -158,11 +158,17 @@ methods: {
         }
 
         if ( apiResponse ) {
+            apiResponse.lastMessageDT = ((new Date()).valueOf()/1000 ) >>> 0;
+            apiResponse.lastMessageText = '<i class="text-black-50">новый групповой чат</ic>';
+
             this.$root.$emit('NewChatDialog', apiResponse);
 
             window.localStorage.setItem('pliziActiveDialog', apiResponse.id);
 
             this.hideCreateGroupChatModal();
+
+            apiResponse.chatId = apiResponse.id;
+            this.$emit('SwitchToChat', apiResponse);
         }
     }
 },

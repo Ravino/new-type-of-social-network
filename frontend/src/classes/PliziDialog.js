@@ -160,7 +160,10 @@ class PliziDialog{
             userData = new PliziAttendee(userData);
         }
 
-        this.attendees.push( userData );
+        const attIsExists = this.getAttendee(userData.id);
+        if ( !(!!attIsExists) ) {
+            this.attendees.push( userData );
+        }
     }
 
     set lastMessageText( value ){
