@@ -49,14 +49,16 @@
 
                     if (msg !== '') {
                         this.sendCommentToGallery(msg, evData.attachments);
-                    } else if (evData.attachments.length > 0) {
-                        this.sendCommentToGallery('', evData.attachments);
-                    }
-                else {
-                    if (evData.attachments.length > 0) {
-                        this.sendCommentToGallery('', evData.attachments );
+                    } else {
+                        if (evData.attachments.length > 0) {
+                            this.sendCommentToGallery('', evData.attachments);
+                        }
                     }
                 }
+                else {
+                    if (evData.attachments.length > 0) {
+                        this.sendCommentToGallery(' ', evData.attachments);
+                    }
                 }
             },
             async sendCommentToGallery(msg, attachments) {

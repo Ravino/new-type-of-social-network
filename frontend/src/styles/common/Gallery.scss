@@ -5,6 +5,17 @@ $portraitFullHeight: 750px;
     height: auto !important;
 }
 
+.plz-gallery-album.plz-gallery-fifth,
+.plz-gallery-album.plz-gallery-fourth,
+.plz-gallery-album.plz-gallery-triple {
+    height: 100%;
+    .plz-gallery-wrapper {
+        img {
+            height: 250px;
+        }
+    }
+}
+
 .plz-gallery {
     position: relative;
     height: $portraitFullHeight;
@@ -31,16 +42,6 @@ $portraitFullHeight: 750px;
 
     &-wrapper {
       display: inline;
-    }
-
-    &-fourth {
-        .plz-gallery-wrap-album {
-            .plz-gallery-wrapper {
-                .plz-gallery-image-album-full {
-                    height: 53.5%;
-                }
-            }
-        }
     }
 
     &-double {
@@ -240,7 +241,7 @@ $portraitFullHeight: 750px;
             .plz-gallery-wrap-album {
                 .plz-gallery-wrapper {
                     .plz-gallery-image-album-full {
-                        height: 53.5%;
+                        height: 170px;
                     }
                 }
             }
