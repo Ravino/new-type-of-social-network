@@ -43,6 +43,7 @@ import CommunityVideosPage from "../pages/CommunityVideosPage.vue";
 import UserFriendsAllList from "../components/UserFriendsAllList.vue";
 import ProfilePhotos from "../components/ProfilePhotos.vue";
 import UserPosts from "../components/UserPosts.vue";
+import CommunityTemplate from "../components/CommunityTemplate.vue";
 
 const routes = [
     {path: '/', redirect: '/login', isGuest: true},
@@ -69,7 +70,7 @@ const routes = [
                 }
             } ,
             { path: 'friends', components: { userFriendsList : UserFriendsAllList } },
-            { path: 'communities', components: { userCommunities : CommunitiesListPage } },
+            { path: 'communities', components: { userCommunities : CommunityTemplate } },
         ]},
     {path: '/friends', component: FriendsListPage, name: 'FriendsListPage', meta: {title: 'Plizi: мои друзья'}, props: true },
     {path: '/invitations', component: InvitationsPage, name: 'InvitationsPage', meta: {title: 'Plizi: приглашения дружбы'}, props: true },
