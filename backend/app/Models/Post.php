@@ -4,6 +4,8 @@ namespace App\Models;
 
 use App\Traits\Likeable;
 use App\Traits\Commentable;
+use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Support\Carbon;
@@ -90,11 +92,21 @@ class Post extends Model
         return 'U';
     }
 
-    public static function getWithoutOldPosts($user, $limit, $offset, $isMyPosts = false, $onlyLiked = false, $orderBy = null)
+    /**
+     * @param User $user
+     * @param int $limit
+     * @param int $offset
+     * @param bool $isMyPosts
+     * @param bool $onlyLiked
+     * @param null $orderBy
+     * @param string $search
+     * @param array $parts
+     * @return array|Builder[]|Collection
+     */
+    public static function getWithoutOldPosts($user, $limit, $offset, $isMyPosts = false, $onlyLiked = false, $orderBy = null, $search = '', $parts = [])
     {
-        $isFriend = $user->isFriendWith(auth()->user());
-
         if ($user->id !== \Auth::id()) {
+            $isFriend = $user->isFriendWith(auth()->user());
             if (($user->privacySettings->page_type === 2 && !$isFriend) ||
                 $user->privacySettings->page_type === 3) {
                 return [];
@@ -104,7 +116,7 @@ class Post extends Model
         if ($isMyPosts) {
             $userPosts = $user->posts()->pluck('id');
 
-            return Post::whereIn('id', $userPosts)
+            return self::whereIn('id', $userPosts)
                 ->with(['postable', 'author', 'usersLikes' => function ($query) {
                     return $query->limit(8)->get();
                 }, 'parent' => function ($query) {
@@ -112,65 +124,122 @@ class Post extends Model
                 }, 'attachments' => function ($query) {
                     return $query->withCount('comments');
                 }])->withCount('comments', 'children')
+                ->search($search)
                 ->limit($limit ?? 20)
                 ->offset($offset ?? 0)
                 ->orderBy('id', 'desc')
                 ->get();
         }
 
-        $communities = $user->communities()->select('id')->get();
-        $friends = DB::table('friendships')
-            ->where('sender_id', $user->id)
-            ->orWhere('recipient_id', $user->id)
-            ->select('id', 'sender_id', 'recipient_id', 'status', 'created_at')
+        return self::with([
+            'attachments',
+            'postable',
+            'author',
+            'usersLikes' => static function ($query) {
+                return $query->limit(8)->get();
+            },
+            'parent' => static function ($query) {
+                return $query->withTrashed()->get();
+            },
+            'attachments' => static function ($query) {
+                return $query->withCount('comments');
+            }
+        ])
+            ->withCount('comments')
+            ->withCount('children')
+            ->where(static function ($query) use ($onlyLiked) {
+                if ($onlyLiked) {
+                    $query->where('likes', '>', 0);
+                }
+            })
+            ->own($parts)
+            ->communities($user, $parts)
+            ->friends($user, $parts)
+            ->search($search)
+            ->limit($limit ?? 20)
+            ->offset($offset ?? 0)
+            ->orderBy($orderBy ?? 'id', 'desc')
+            ->get();
+    }
+
+    public function scopeOwn(Builder $query, $parts)
+    {
+        if ($parts && !in_array('own', $parts, true)) {
+            return;
+        }
+        $query->orWhere(static function ($query) {
+            $query->where('postable_type', User::class)
+                ->where('postable_id', \Auth::user()->id);
+        });
+    }
+
+    /**
+     * @param Builder $query
+     * @param User $user
+     * @param $parts
+     */
+    public function scopeFriends(Builder $query, $user, $parts)
+    {
+        if ($parts && !in_array('friends', $parts, true)) {
+            return;
+        }
+        DB::table('friendships')
+            ->where('status', 1)
+            ->where(static function($query) use ($user) {
+                $query->where('sender_id', $user->id)
+                    ->orWhere('recipient_id', $user->id);
+            })
+            ->select('id', 'sender_id', 'recipient_id', 'created_at')
             ->get()
-            ->toArray();
-
-        $posts = self::with(['attachments', 'postable', 'author', 'usersLikes' => function ($query) {
-            return $query->limit(8)->get();
-        }, 'parent' => function ($query) {
-            return $query->withTrashed()->get();
-        }, 'attachments' => function ($query) {
-            return $query->withCount('comments');
-        }])->withCount('comments')->withCount('children');
-
-        foreach($friends as $friend) {
-            if ($friend->status) {
+            ->each(static function ($friend, $key) use ($query, $user) {
                 if ($friend->sender_id !== $user->id) {
-                    $posts->orWhere('postable_type', User::class)
-                        ->where('postable_id', $friend->sender_id)
-                        ->where('created_at', '>', Carbon::parse($friend->created_at)->timestamp);
+                    $query->orWhere(static function ($query) use ($friend) {
+                        $query->where('postable_type', User::class)
+                            ->where('postable_id', $friend->sender_id)
+                            ->where('created_at', '>', Carbon::parse($friend->created_at)->timestamp);
+                    });
                 }
 
                 if ($friend->recipient_id !== $user->id) {
-                    $posts->orWhere('postable_type', User::class)
-                        ->where('postable_id', $friend->recipient_id)
-                        ->where('created_at', '>', Carbon::parse($friend->created_at)->timestamp);
+                    $query->orWhere(static function ($query) use ($friend) {
+                        $query->where('postable_type', User::class)
+                            ->where('postable_id', $friend->recipient_id)
+                            ->where('created_at', '>', Carbon::parse($friend->created_at)->timestamp);
+                    });
                 }
-            }
+            });
+    }
+
+    public function scopeCommunities(Builder $query, $user, $parts)
+    {
+        if ($parts && !in_array('communities', $parts, true)) {
+            return;
         }
+        $user->communities()
+            ->select('id')
+            ->get()
+            ->each(static function ($community, $key) use ($query) {
+                $query->orWhere(static function($query) use ($community) {
+                    $query->where('postable_type', Community::class)
+                        ->where('postable_id', $community->id)
+                        ->where('created_at', '>', Carbon::parse($community->pivot->created_at)->timestamp);
+                });
+            });
+    }
 
-        foreach($communities as $community) {
-            $posts->orWhere('postable_type', Community::class)
-                ->where('postable_id', $community->id)
-                ->where('created_at', '>', Carbon::parse($community->pivot->created_at)->timestamp);
+    /**
+     * @param Builder $query
+     * @param string $search
+     */
+    public function scopeSearch(Builder $query, $search)
+    {
+        if ($search && mb_strlen($search) >= 3) {
+            $query
+                ->where(static function ($query) use ($search) {
+                    $query->where('name', 'LIKE', "%{$search}%")
+                        ->orWhere('body', 'LIKE', "%{$search}%");
+                });
         }
-        $posts->orWhere('postable_type', User::class)
-            ->where('postable_id', \Auth::user()->id);
-        $orderByColumn = $orderBy ?? 'id';
-
-        return $posts
-            ->where(function ($query) use ($onlyLiked) {
-                if ($onlyLiked) {
-                    return $query->where('likes', '>', 0);
-                }
-
-                return $query;
-            })
-            ->limit($limit ?? 20)
-            ->offset($offset ?? 0)
-            ->orderBy($orderByColumn, 'desc')
-            ->get();
     }
 
     /**

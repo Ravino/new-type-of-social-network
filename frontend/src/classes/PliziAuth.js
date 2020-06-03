@@ -280,6 +280,19 @@ class PliziAuthClass {
         this.storeUserData();
     }
 
+    videosIncrease(){
+        this.setVideosNumber(this.user.stats.videosCount + 1);
+    }
+
+    videosDecrease(){
+        this.setVideosNumber(this.user.stats.videosCount - 1);
+    }
+
+    setVideosNumber(newValue){
+        this.user.stats.videosCount = (newValue >= 0) ? newValue : 0;
+        this.storeUserData();
+    }
+
     set channel(val){
         this._channel = val;
 

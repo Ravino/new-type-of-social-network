@@ -40,6 +40,10 @@ import GuestSearchResultsPage from "../pages/GuestSearchResultsPage";
 import CommunityMembersPage from "../pages/CommunityMembersPage.vue";
 import CommunityVideosPage from "../pages/CommunityVideosPage.vue";
 
+import UserFriendsAllList from "../components/UserFriendsAllList.vue";
+import ProfilePhotos from "../components/ProfilePhotos.vue";
+import UserPosts from "../components/UserPosts.vue";
+
 const routes = [
     {path: '/', redirect: '/login', isGuest: true},
     {path: '/', component: HomePage, name: 'HomePage', meta: {title: 'Plizi: Стартовая', isGuest: true}},
@@ -57,7 +61,16 @@ const routes = [
     {path: '/profile', component: ProfilePage, name: 'ProfilePage', meta: {title: 'Plizi: Домашняя'}, props: true},
     {path: '/chats', component: ChatsListPage, name: 'ChatsListPage', meta: {title: 'Plizi: Чаты'}, props: true},
     {path: '/search-results', component: SearchResultsPage, name: 'SearchResultsPage', meta: {title: 'Plizi: Результаты поиска'}, props: true },
-    {path: '/user-:id', component: PersonalPage, name: 'PersonalPage', meta: {title: 'Plizi:'}, props: true},
+    {path: '/user-:id', component: PersonalPage, name: 'PersonalPage', meta: {title: 'Plizi:'}, props: true,
+        children: [
+            { path: '', components: {
+                    userLastPhotos: ProfilePhotos,
+                    userLastPost: UserPosts,
+                }
+            } ,
+            { path: 'friends', components: { userFriendsList : UserFriendsAllList } },
+            { path: 'communities', components: { userCommunities : CommunitiesListPage } },
+        ]},
     {path: '/friends', component: FriendsListPage, name: 'FriendsListPage', meta: {title: 'Plizi: мои друзья'}, props: true },
     {path: '/invitations', component: InvitationsPage, name: 'InvitationsPage', meta: {title: 'Plizi: приглашения дружбы'}, props: true },
     {path: '/friends-recent', component: FriendsRecentPage, name: 'FriendsRecentPage', meta: {title: 'Plizi: новые друзья'}, props: true },

@@ -85,7 +85,7 @@
                                        @click="stopFriendship(userData.id)"
                                        title="Удалить из друзей" >Удалить из друзей</p>
                                 </div>
-                                <div class="nav-item">
+                                <div v-if="!userData.stats.isFriend" class="nav-item">
                                     <p v-if="userData.stats.isFollow" class="dropdown-item px-0 py-1 m-0 px-3"
                                        @click="unFollow" title="Отписаться">Отписаться</p>
                                     <p v-else class="dropdown-item px-0 py-1 m-0 px-3"
@@ -108,8 +108,8 @@
         <div class="col-12  col-lg-8 col-xl-9 px-0 pt-4 plz-profile-userdetails">
             <div class="w-100 bg-white-br20 px-3 px-md-5 pb-3">
                 <div class="d-flex justify-content-between align-items-center mb-2">
-                    <h2 class="plz-user-name">{{userData.fullName}}</h2>
-                    <span v-if="userData.isOnline" class="online">В сети</span>
+                    <h2 class="plz-user-name mb-0 pr-4">{{userData.fullName}}</h2>
+                    <span v-if="userData.isOnline" class="online text-nowrap">В сети</span>
                 </div>
 
                 <table class="plz-user-profile-details table table-borderless mt-2">
@@ -124,8 +124,7 @@
                         <td class="">Город:</td>
                         <td class="">
                             <template v-if="userData.country && userData.city.title">
-                                <IconLocation/>
-                                {{userData.country.title.ru}}, {{userData.city.title.ru}}
+                                <IconLocation/> {{userData.locationText}}
                             </template>
                             <template v-else>
                                 Не указано

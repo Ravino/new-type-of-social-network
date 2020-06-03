@@ -72,6 +72,13 @@ class PliziCommunity {
     _totalMembers = null;
 
     /**
+     * кол-во видео сообщества
+     * @type {number}
+     * @private
+     */
+    _totalVideos = null;
+
+    /**
      * кол-во друзей в сообществе
      * @type {number}
      * @private
@@ -169,6 +176,7 @@ class PliziCommunity {
 
         this._role = inputData.role;
         this._totalMembers = inputData.totalMembers;
+        this._totalVideos = inputData.totalVideos;
         this._requestsCount = inputData.requestsCount;
         this._subscribed = inputData.subscribed;
 
@@ -243,6 +251,10 @@ class PliziCommunity {
 
     get totalMembers(){
         return this._totalMembers;
+    }
+
+    get totalVideos(){
+        return this._totalVideos;
     }
 
     get role(){

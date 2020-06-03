@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Api;
 
+use App\Events\Followers\SubFollower;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\User\AddToFriend;
 use App\Http\Requests\User\MarkNotificationsAsRead;
@@ -9,6 +10,7 @@ use App\Http\Resources\Notification\NotificationCollection;
 use App\Http\Resources\User\UserCollection;
 use App\Http\Resources\User\UserSearchCollection;
 use App\Models\User;
+use Domain\Neo4j\Service\UserService;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -83,6 +85,16 @@ class UserController extends Controller
         $sender = User::find($request->userId);
         if(Auth::user()->hasFriendRequestFrom($sender)) {
             Auth::user()->acceptFriendRequest($sender);
+            /**
+             * удаляются взаимные подписки
+             */
+            $userService = new UserService();
+            if ($userService->unfollow(Auth::user()->id, $sender->id)) {
+                event(new SubFollower($sender));
+            }
+            if ($userService->unfollow($sender->id, Auth::user()->id)) {
+                event(new SubFollower(Auth::user()));
+            }
             return response()->json(['message' => 'Вы приняли пользователя в друзья'], 200);
         }
         return response()->json(['message' => 'Данный пользователь не отправлял вам запрос в друзья'], 422);

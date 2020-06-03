@@ -1,8 +1,12 @@
 <template>
-    <div id="chatFooter" class="chat-footer">
+    <div id="chatFooter" class="chat-footer border-top">
+        <div class="companion-is-typing pl-2 d-flex w-100 align-items-center overflow-hidden" >
+            <span v-show="isTyper">{{typerName}} печатает...</span>
+        </div>
+
         <TextEditor :showAvatar="false"
                     :dropToDown="false"
-                    :clazz="`d-flex bg-white w-100 border-top position-relative mt-auto align-items-start px-3 py-3`"
+                    :clazz="`d-flex bg-white w-100  position-relative mt-auto align-items-start px-3 pb-3 pt-1`"
                     workMode="chat"
                     :editorPlaceholder="placeholder"
                     :maximumCharacterLimit="500"
@@ -18,10 +22,12 @@
 
 <script>
 import TextEditor from '../TextEditor.vue';
-import PliziDialog from '../../classes/PliziDialog.js';
 
 import ChatMixin from '../../mixins/ChatMixin.js';
 import LinkMixin from '../../mixins/LinkMixin.js';
+
+import PliziDialog from '../../classes/PliziDialog.js';
+import PliziUser from '../../classes/PliziUser.js';
 
 export default {
 name: 'ChatFooter',
@@ -38,6 +44,20 @@ data() {
         placeholder: 'Написать сообщение...',
         timeout: 0,
         errors: null,
+        isTyper: false,
+        currentTyper: null,
+        lastTypeTime: null,
+        typerDelay: 2500
+    }
+},
+
+computed: {
+    typerName(){
+        if (this.currentTyper)
+            return this.currentTyper.fullName;
+
+        this.isTyper = false;
+        return '';
     }
 },
 
@@ -50,6 +70,9 @@ methods: {
         if (disabledKeys.includes(e.which))
             return;
 
+        if ( ((new Date()).valueOf() - this.lastTypeTime) < this.typerDelay )
+            return;
+
         /** через сокеты отправляем инфу о том, что печатаем **/
         const keyPressData = {
             channel: window.localStorage.getItem('pliziChatChannel'),
@@ -59,6 +82,7 @@ methods: {
         };
 
         this.$root.$api.sendToChannel(keyPressData);
+        this.lastTypeTime = (new Date()).valueOf();
     },
 
     onAddAttachToTextEditor(evData){
@@ -100,6 +124,24 @@ methods: {
         this.errors = null;
     },
 
+    onCompanionTyping(evData) {
+        this.currentTyper = new PliziUser(evData.user);
+
+        if ( this.$root.$auth.user.id === this.currentTyper.id)
+            return;
+
+        if (this.typingTimeout) {
+            clearTimeout(this.typingTimeout);
+        }
+
+        this.isTyper = true;
+
+        this.typingTimeout = setTimeout(() => {
+            this.isTyper = false;
+            this.currentTyper = null;
+        }, 3000);
+    },
+
     async addMessageToChat( msgText, attachmentsIds, attachmentsFiles, videoLink = null){
         const chatId = (this.currentDialog) ? this.currentDialog.id : 'unknown';
 
@@ -116,6 +158,12 @@ methods: {
 
         this.$root.$api.sendToChannel(sendData);
     },
+},
+
+mounted(){
+    this.$root.$on('userIsTyping', this.onCompanionTyping);
+
+    this.lastTypeTime = (new Date()).valueOf();
 }
 
 }

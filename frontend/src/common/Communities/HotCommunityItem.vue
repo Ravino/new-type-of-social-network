@@ -1,6 +1,6 @@
 <template>
     <router-link tag="a" :to="`community-`+community.id"
-                 class="d-inline-block d-sm-block text-center mx-sm-auto mb-4 mx-1">
+                 class="d-inline-block d-sm-block text-center mx-2 mx-md-auto mb-2 mb-md-4 ">
 
         <button class="btn-remove-from-hot" aria-label="удалить" @click.stop.prevent="onRemoveCommunityFromHot(community.id)">
             <i class="fa fa-plus"></i>

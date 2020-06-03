@@ -79,6 +79,8 @@ $notificationPicSize: 50px;
     }
 
     &-body {
+        max-width: calc(100% - 120px);
+
         &-top {
             time {
                 font-size: 11px;

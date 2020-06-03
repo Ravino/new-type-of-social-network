@@ -1,9 +1,14 @@
 <template>
-    <div id="videoPageFilter" class="bg-white-br20 col-12 d-flex flex-wrap flex-sm-nowrap align-items-center justify-content-between mb-4">
+    <div id="videoPageFilter"
+         class="bg-white-br20 col-12 d-flex flex-wrap flex-sm-nowrap align-items-center justify-content-between mb-4">
+
         <nav class="videos-filter-links col-lg-7 nav pt-2 pt-sm-0" role="tablist">
-            <span class="nav-link py-2 py-sm-3 py-xl-4 px-1 mr-2 mr-xl-4" :class="{ 'active': wMode === 'my' }" id="tabMyVideos" role="tab"
+            <span class="nav-link py-2 py-sm-3 py-xl-4 px-1 mr-2 mr-xl-4"
+                  :class="{ 'active': wMode === 'my' }" id="tabMyVideos" role="tab"
                   @click.stop="wallPostsSelect(`my`)">Мои видео</span>
-            <span class="nav-link py-2 py-sm-3 py-xl-4 px-1 mr-2 mr-xl-4 d-none" :class="{ 'active': wMode === 'all' }" id="tabAllVideos" role="tab"
+
+            <span class="nav-link py-2 py-sm-3 py-xl-4 px-1 mr-2 mr-xl-4 d-none"
+                  :class="{ 'active': wMode === 'all' }" id="tabAllVideos" role="tab"
                   @click.stop="wallPostsSelect(`all`)">Видеокаталог</span>
         </nav>
 
@@ -14,7 +19,7 @@
         </div>
 
         <AddVideoModal v-if="addVideoModal.isVisible"
-                        @onHide="hideAddVideoModal"/>
+                       @onHide="hideAddVideoModal"></AddVideoModal>
     </div>
 </template>
 
@@ -22,30 +27,32 @@
 import AddVideoModal from "../../components/VideosPage/AddVideoModal.vue";
 
 export default {
-    name: "VideosPageFilter",
-    components: {
-        AddVideoModal,
-    },
-    data() {
-        return {
-            wMode: `my`,
-            addVideoModal: {
-                isVisible: false,
-            },
-        }
-    },
-    methods: {
-        wallPostsSelect(wMode) {
-            this.wMode = wMode;
-            this.$emit('wallPostsSelect', {wMode: wMode});
+name: "VideosPageFilter",
+components: {
+    AddVideoModal,
+},
+data() {
+    return {
+        wMode: `my`,
+        addVideoModal: {
+            isVisible: false,
         },
-        openAddVideoModal() {
-            this.addVideoModal.isVisible = true;
-        },
-        hideAddVideoModal(){
-            this.addVideoModal.isVisible = false;
-        },
+    }
+},
+methods: {
+    wallPostsSelect(wMode) {
+        this.wMode = wMode;
+        this.$emit('wallPostsSelect', {wMode: wMode});
     },
+
+    openAddVideoModal() {
+        this.addVideoModal.isVisible = true;
+    },
+
+    hideAddVideoModal(){
+        this.addVideoModal.isVisible = false;
+    },
+},
 }
 </script>
 

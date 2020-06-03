@@ -5,6 +5,7 @@ namespace App\Models;
 use App\Traits\Commentable;
 use App\Traits\Likeable;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Query\Builder;
 use Illuminate\Support\Facades\Event;
 use Spiritix\LadaCache\Database\LadaCacheTrait;
 use Storage;
@@ -105,5 +106,24 @@ class ImageUpload extends Model
             'id',
             'user_id'
         )->where('likeable_type', ImageUpload::class);
+    }
+
+    public function deleteDublicatesForAvatar()
+    {
+        /** @var Builder $query */
+        $query = self::where([
+            'original_name' => $this->original_name,
+            'size' => $this->size,
+            'tag' => 'secondary',
+            'mime_type' => $this->mime_type,
+            'image_original_width' => $this->image_original_width,
+            'image_original_height' => $this->image_original_height,
+        ]);
+            return $query
+                ->where('id', '!=', $this->id)
+                ->leftJoin('image_upload_photo_album', 'image_uploads.id', '=', 'image_upload_photo_album.image_upload_id')
+                ->whereNull('image_upload_id')
+                ->delete();
+
     }
 }

@@ -5,7 +5,7 @@
         <div class="plizi-friend-item d-flex w-100 align-items-center">
             <router-link :to="`/user-`+friend.id" tag="div" class="plizi-friend-item-pic mr-3 " >
                 <img class="plizi-friend-item-img rounded-circle overflow-hidden"
-                     v-bind:src="friend.userPic" v-bind:alt="friend.fullName" />
+                     :src="friend.userPic" :alt="friend.fullName" />
 
                 <span v-if="isFavorite" class="plizi-friend-item-isfavorite" :title="favoriteTitle">
                     <i class="fas fa-star"></i>
@@ -23,15 +23,7 @@
 
                 <div class="plizi-friend-item-body-bottom d-flex ">
                     <p class="plizi-friend-item-desc p-0 my-0 d-inline">
-
-                        <IconLocation style="height: 14px;" />
-
-                        <span v-if="friend.location && friend.city.title && friend.country.title">
-                            {{ friend.city.title.ru +', '+  friend.country.title.ru }}
-                        </span>
-                        <span v-else>
-                            Не указано
-                        </span>
+                        <IconLocation style="height: 14px;" /> {{friend.locationText}}
                     </p>
                 </div>
             </div>

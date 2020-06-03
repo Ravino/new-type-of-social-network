@@ -59,6 +59,7 @@ class ImageUploadController extends Controller
         $request->merge($uploaded);
         $request->merge($creatable);
 
+        /** @var ImageUpload $image_upload */
         $image_upload = $this->imageUpload->create($request->only('original_name', 'path', 'title', 'size', 'tag', 'mime_type',
             'image_original_width',
             'image_original_height',
@@ -73,6 +74,8 @@ class ImageUploadController extends Controller
             'image_thumb_height',
             'creatable_id',
             'creatable_type'));
+
+        $image_upload->deleteDublicatesForAvatar();
 
         return new Image($image_upload);
     }
