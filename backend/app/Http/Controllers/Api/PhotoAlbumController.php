@@ -86,13 +86,17 @@ class PhotoAlbumController extends Controller
 
     public function storePhotoInAlbum(UploadFileRequest $request, $id)
     {
+        if (!$photoAlbum = auth()->user()->photoAlbums()->find($id)) {
+            return response()->json([
+                'message' => 'У вас нет доступа'
+            ], 403);
+        }
         $additionalData = [
            'creatable_id' => \Auth::id(),
            'creatable_type' => User::class,
         ];
         $photo_ids = $this->uploadService->uploadFiles(new ImageUpload(), 'photoAlbum', $request->allFiles(), 'public', [], $additionalData);
         $photos = ImageUpload::whereIn('id', $photo_ids)->get();
-        $photoAlbum = PhotoAlbum::find($id);
         $photoAlbum->images()->attach($photo_ids);
         \Auth::user()->profile()->increment('image_count');
 
