@@ -1,17 +1,14 @@
 <template>
     <div>
-        <template v-if="photos.length > 0">
-            <div id="profilePhotos" class="row bg-white-br20 p-4 mb-4">
+        <template v-if="photos.length || isPhotosDataReady">
+            <div v-if="photos.length" id="profilePhotos" class="row bg-white-br20 p-4 mb-4">
                 <div class="col-12 bg-white-br20 p-0">
                     <div class="w-100 d-flex flex-row justify-content-between align-items-center">
                         <div class="">
-                            <template v-if="userImageNumber">
+                            <template v-if="userImageNumber > 0">
                                 <h6 class="profilePhotos-title my-0">Фотографии
                                     <span class="profilePhotos-desc" v-html="sBeaty(userImageNumber)"></span>
                                 </h6>
-                            </template>
-                            <template v-else>
-                                <span class="numbers-bottom">Нет фотографий</span>
                             </template>
                         </div>
 
@@ -50,6 +47,7 @@ name: 'ProfilePhotos',
     },
 props: {
     photos: Array,
+    isPhotosDataReady: Boolean,
     profileData: PliziUser | PliziAuthUser,
     isOwner: Boolean,
 },

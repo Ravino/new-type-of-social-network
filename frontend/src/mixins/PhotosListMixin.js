@@ -9,6 +9,7 @@ data(){
 },
 methods: {
     async getUserPhotos(userId) {
+        this.userPhotos = [];
         let apiResponse = null;
         try {
             apiResponse = await this.$root.$api.$users.lastPhotos(userId);
