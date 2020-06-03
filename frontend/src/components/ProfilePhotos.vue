@@ -1,31 +1,37 @@
 <template>
-    <div id="profilePhotos" class="row bg-white-br20 p-4 mb-4">
-        <div class="col-12 bg-white-br20 p-0">
-            <div class="w-100 d-flex flex-row justify-content-between align-items-center">
-                <div class="">
-                    <template v-if="userImageNumber">
-                        <h6 class="profilePhotos-title my-0">Фотографии
-                        <span class="profilePhotos-desc" v-html="sBeaty(userImageNumber)"></span>
-                        </h6>
-                    </template>
-                    <template v-else>
-                        <span class="numbers-bottom">Нет фотографий</span>
-                    </template>
-                </div>
+    <div>
+        <template v-if="photos.length > 0">
+            <div id="profilePhotos" class="row bg-white-br20 p-4 mb-4">
+                <div class="col-12 bg-white-br20 p-0">
+                    <div class="w-100 d-flex flex-row justify-content-between align-items-center">
+                        <div class="">
+                            <template v-if="userImageNumber">
+                                <h6 class="profilePhotos-title my-0">Фотографии
+                                    <span class="profilePhotos-desc" v-html="sBeaty(userImageNumber)"></span>
+                                </h6>
+                            </template>
+                            <template v-else>
+                                <span class="numbers-bottom">Нет фотографий</span>
+                            </template>
+                        </div>
 
-                <div class="profilePhotos-desc d-none" >
-                    <a href="#onmap">Показать на карте</a>
+                        <div class="profilePhotos-desc d-none" >
+                            <a href="#onmap">Показать на карте</a>
+                        </div>
+                    </div>
+                    <div class="w-100 d-flex flex-row plz-profile-photos-list pt-3">
+                        <vue-custom-scrollbar class="plz-latest-entries-list d-flex justify-content-between justify-content-sm-start pb-3"
+                                              :settings="customScrollbarSettings">
+                            <ProfileGallery v-if="photos.length > 0" :profilePhotos="profilePhotos" :images="photos"></ProfileGallery>
+                            <div v-else class="mx-auto">Нет фотографий</div>
+                        </vue-custom-scrollbar>
+                    </div>
                 </div>
             </div>
-            <div class="w-100 d-flex flex-row plz-profile-photos-list pt-3">
-                <vue-custom-scrollbar class="plz-latest-entries-list d-flex justify-content-between justify-content-sm-start pb-3"
-                                      :settings="customScrollbarSettings">
-                    <ProfileGallery v-if="photos.length > 0" :profilePhotos="profilePhotos" :images="photos"></ProfileGallery>
-                    <div v-else class="mx-auto">Нет фотографий</div>
-                </vue-custom-scrollbar>
-            </div>
-        </div>
+        </template>
+        <Spinner v-else></Spinner>
     </div>
+
 </template>
 
 <script>
@@ -33,12 +39,14 @@
     import PliziUser from "../classes/PliziUser";
     import PliziAuthUser from "../classes/PliziAuthUser";
     import vueCustomScrollbar from "vue-custom-scrollbar";
+    import Spinner from '../common/Spinner.vue';
 
 export default {
 name: 'ProfilePhotos',
     components: {
         ProfileGallery,
-        vueCustomScrollbar
+        vueCustomScrollbar,
+        Spinner
     },
 props: {
     photos: Array,

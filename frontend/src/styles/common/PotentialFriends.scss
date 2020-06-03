@@ -1,4 +1,10 @@
 .plz-potential-friends {
+    .plz-potential-friend-title {
+        text-overflow: ellipsis;
+        white-space: nowrap;
+        overflow: hidden;
+    }
+
     .plz-potential-friends-item {
         transition: .4s;
     }

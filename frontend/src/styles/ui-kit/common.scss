@@ -55,6 +55,22 @@ body {
     }
 }
 
+#recommendedCommunities {
+    height: fit-content;
+    .footer-link {
+        a {
+            color: #1554f7;
+            transition: .2s linear;
+
+            &:hover {
+                color: darken(#1554f7, 20);
+                text-decoration: none;
+                transition: .2s linear;
+            }
+        }
+    }
+}
+
 /* TODO: @TGA - прописать более детально */
 h1, h2, h3, h4, h5, h6 {
     font-weight: 600;
