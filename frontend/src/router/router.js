@@ -62,11 +62,11 @@ const routes = [
     {path: '/profile', component: ProfilePage, name: 'ProfilePage', meta: {title: 'Plizi: Домашняя'}, props: true},
     {path: '/chats', component: ChatsListPage, name: 'ChatsListPage', meta: {title: 'Plizi: Чаты'}, props: true},
     {path: '/search-results', component: SearchResultsPage, name: 'SearchResultsPage', meta: {title: 'Plizi: Результаты поиска'}, props: true },
-    {path: '/user-:id', component: PersonalPage, name: 'PersonalPage', meta: {title: 'Plizi:'}, props: true,
+    {path: '/user-:id', component: resolve => resolve(PersonalPage), name: 'PersonalPage', meta: {title: 'Plizi:'}, props: true,
         children: [
-            { path: '', components: {
-                    userLastPhotos: ProfilePhotos,
-                    userLastPost: UserPosts,
+            { path: '', name: 'PersonalPage', components: {
+                    userLastPhotos: resolve => resolve(ProfilePhotos),
+                    userLastPost: resolve => resolve(UserPosts),
                 }, meta: {title: 'Plizi: '}
             } ,
             { path: 'friends', components: { userFriendsList : UserFriendsAllList },  meta: {title: 'Plizi: '} },
