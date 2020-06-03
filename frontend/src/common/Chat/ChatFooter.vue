@@ -1,12 +1,12 @@
 <template>
-    <div id="chatFooter" class="chat-footer">
-        <!--<div class="companion-is-typing pl-2 d-flex w-100 align-items-center" >
+    <div id="chatFooter" class="chat-footer border-top">
+        <div class="companion-is-typing pl-2 d-flex w-100 align-items-center overflow-hidden" >
             <span v-show="isTyper">{{typerName}} печатает...</span>
-        </div>-->
+        </div>
 
         <TextEditor :showAvatar="false"
                     :dropToDown="false"
-                    :clazz="`d-flex bg-white w-100 border-top position-relative mt-auto align-items-start px-3 py-3`"
+                    :clazz="`d-flex bg-white w-100  position-relative mt-auto align-items-start px-3 pb-3 pt-1`"
                     workMode="chat"
                     :editorPlaceholder="placeholder"
                     :maximumCharacterLimit="500"
