@@ -33,16 +33,6 @@ $portraitFullHeight: 750px;
       display: inline;
     }
 
-    &-fourth {
-        .plz-gallery-wrap-album {
-            .plz-gallery-wrapper {
-                .plz-gallery-image-album-full {
-                    height: 53.5%;
-                }
-            }
-        }
-    }
-
     &-double {
         img {
             //height: $portraitFullHeight;
@@ -240,7 +230,7 @@ $portraitFullHeight: 750px;
             .plz-gallery-wrap-album {
                 .plz-gallery-wrapper {
                     .plz-gallery-image-album-full {
-                        height: 53.5%;
+                        height: 170px;
                     }
                 }
             }
