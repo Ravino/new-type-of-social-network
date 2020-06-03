@@ -7,7 +7,7 @@ import Spinner from '../common/Spinner.vue';
 import CommunitiesListHeader from '../common/Communities/CommunitiesListHeader.vue';
 import CommunityCreateBlock from '../common/Communities/CommunityCreateBlock.vue';
 import CommunityItem from '../common/Communities/CommunityItem.vue';
-import RecommendedCommunities from '../common/Communities/RecommendedCommunities.vue';
+import CommunitiesSmallBlock from '../common/Communities/CommunitiesSmallBlock.vue';
 
 const CommunitiesListMixin = {
     components: {
@@ -16,7 +16,7 @@ const CommunitiesListMixin = {
         CommunitiesListHeader,
         CommunityItem,
         CommunityCreateBlock,
-        RecommendedCommunities,
+        CommunitiesSmallBlock,
         FavoriteFriends,
     },
 
@@ -32,6 +32,7 @@ const CommunitiesListMixin = {
             managedCommunities: [],
 
             recommendedCommunities: null,
+            userCommunities: null,
 
             noMore: false,
             enabledLoader: true,
@@ -175,6 +176,46 @@ const CommunitiesListMixin = {
             }
 
             return 0;
+        },
+
+        async loadRecommendedCommunities() {
+            this.isDataReady = false;
+            // this.communities = [];
+            let apiResponse = null;
+
+            try {
+                apiResponse = await this.$root.$api.$communities.recommended()
+            } catch (e) {
+                window.console.warn(e.detailMessage);
+            }
+
+            if (apiResponse !== null) {
+                // this.communities = [];
+                this.recommendedCommunities = apiResponse;
+                // apiResponse.list.map((srItem) => {
+                //     this.recommendedCommunities.push(new PliziCommunity(srItem));
+                // });
+
+                this.isDataReady = true;
+            }
+        },
+
+        async getUserCommunitiesList() {
+            let apiResponse = null;
+
+            try {
+                apiResponse = await this.$root.$api.$users.getUserCommunities(this.userId);
+            }
+            catch (e){
+                this.isStarted = false;
+                window.console.warn(e.detailMessage);
+                throw e;
+            }
+
+            if (apiResponse) {
+                this.userCommunities = apiResponse;
+                this.isDataReady = true;
+            }
         },
 
         async lazyLoad(listName = null) {

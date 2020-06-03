@@ -86,20 +86,7 @@ data() {
         profileData: {},
         isDataReady: false,
         isShowMessageDialog: false,
-        posts: [],
-        isPhotosDataReady: false,
-        userPhotos: [],
-        filterMode: 'all',
-        postRepostModal: {
-            isVisible: false,
-        },
-        postForRepost: null,
-        postLikeModal: {
-            isVisible: false,
-            content: {
-                postId: null,
-            },
-        },
+        communities: null
     }
 },
 
@@ -110,7 +97,8 @@ watch: {
 methods: {
     async afterRouteUpdate(ev){
         this.userId = ev.params.id;
-        this.posts = [];
+        // this.posts = [];
+        this.communities = null;
         this.isStarted = true;
 
         if (!this.isLockedProfile) {
@@ -121,7 +109,7 @@ methods: {
     },
 
     calcCentralBlockClass(){
-        const isCentralNarrow = (this.$root.$auth.fm.size > 0 || this.profileData.communities || this.profileData.videos);
+        const isCentralNarrow = (this.$root.$auth.fm.size > 0 || this.communities || this.profileData.videos);
 
         return {
             'col-lg-8 col-xl-8'   : isCentralNarrow,
@@ -178,26 +166,20 @@ methods: {
         }
     },
 
-    async getPosts(limit = 50, offset = 0) {
-        if ( !(this.profileData &&  this.profileData.id))
-            return;
-
-        let response = null;
+    async getUserCommunitiesList() {
+        let apiResponse = null;
 
         try {
-            response = await this.$root.$api.$post.getPostsByUserId(this.profileData.id, limit, offset);
-        } catch (e) {
+            apiResponse = await this.$root.$api.$users.getUserCommunities(this.userId);
+        }
+        catch (e){
             this.isStarted = false;
-            console.warn(e.detailMessage);
+            window.console.warn(e.detailMessage);
+            throw e;
         }
 
-        if (response !== null) {
-            this.isStarted = false;
-            response.map((post) => {
-                this.posts.push(new PliziPost(post));
-            });
-
-            return response.length;
+        if (apiResponse) {
+            this.communities = apiResponse;
         }
     },
 },
@@ -216,11 +198,7 @@ created(){
 async mounted() {
     this.isStarted = true;
     await this.getUserInfo();
-
-    if (!this.isLockedProfile) {
-        await this.getUserPhotos(this.userId);
-        await this.getPosts();
-    }
+    await this.getUserCommunitiesList();
 
     window.scrollTo(0, 0);
 },

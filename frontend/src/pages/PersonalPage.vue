@@ -92,6 +92,10 @@
                  v-bind:key="`RightColumn-`+$root.$favoritesKeyUpdater">
 
                 <FavoriteFriends></FavoriteFriends>
+                <CommunitiesSmallBlock
+                    :footer="footerLink"
+                    :title="`Сообщества пользователя`"
+                    :communities="communitiesList.slice(0, 5)"></CommunitiesSmallBlock>
             </div>
 
         </div>
@@ -101,6 +105,7 @@
 <script>
 import AccountToolbarLeft from '../common/AccountToolbarLeft.vue';
 import FavoriteFriends from '../common/FavoriteFriends.vue';
+import UserCommunitiesList from '../common/UserCommunitiesList.vue';
 import ShortFriends from '../common/ShortFriends.vue';
 import Spinner from '../common/Spinner.vue';
 import SmallSpinner from '../common/SmallSpinner.vue';
@@ -119,9 +124,11 @@ import DialogMixin from '../mixins/DialogMixin.js';
 import LazyLoadPosts from '../mixins/LazyLoadPosts.js';
 import BlackListMixin from '../mixins/BlackListMixin.js';
 import PhotosListMixin from '../mixins/PhotosListMixin.js';
+import CommunitiesListMixin from '../mixins/CommunitiesListMixin.js';
 
 import PliziUser from '../classes/PliziUser.js';
 import PliziPost from '../classes/PliziPost.js';
+import CommunitiesSmallBlock from "../common/Communities/CommunitiesSmallBlock";
 
 export default {
 name: 'PersonalPage',
@@ -129,8 +136,9 @@ props: {
     id : Number|String
 },
 components: {
+    CommunitiesSmallBlock,
     Spinner,
-    AccountToolbarLeft, FavoriteFriends, ShortFriends,
+    AccountToolbarLeft, FavoriteFriends, UserCommunitiesList, ShortFriends,
     ProfileHeader, NewPersonalMessageModal,
     Post,
     ProfilePhotos,
@@ -140,7 +148,7 @@ components: {
     PostLikeModal,
     IconUnlock,
 },
-mixins: [DialogMixin, LazyLoadPosts, BlackListMixin, PhotosListMixin],
+mixins: [DialogMixin, LazyLoadPosts, BlackListMixin, PhotosListMixin, CommunitiesListMixin],
 data() {
     return {
         userId: null,
@@ -148,6 +156,8 @@ data() {
         isDataReady: false,
         isShowMessageDialog: false,
         posts: [],
+        userCommunities: null,
+        footerLink: null,
         isPhotosDataReady: false,
         userPhotos: [],
         filterMode: 'all',
@@ -203,7 +213,7 @@ methods: {
     },
 
     calcCentralBlockClass(){
-        const isCentralNarrow = (this.$root.$auth.fm.size > 0 || this.profileData.communities || this.profileData.videos);
+        const isCentralNarrow = (this.$root.$auth.fm.size > 0 || this.communities || this.profileData.videos);
 
         return {
             'col-lg-8 col-xl-8'   : isCentralNarrow,
@@ -284,6 +294,23 @@ methods: {
         }
     },
 
+    // async getUserCommunitiesList() {
+    //     let apiResponse = null;
+    //
+    //     try {
+    //         apiResponse = await this.$root.$api.$users.getUserCommunities(this.userId);
+    //     }
+    //     catch (e){
+    //         this.isStarted = false;
+    //         window.console.warn(e.detailMessage);
+    //         throw e;
+    //     }
+    //
+    //     if (apiResponse) {
+    //         this.communities = apiResponse;
+    //     }
+    // },
+
     async getPosts(limit = 50, offset = 0) {
         if ( !(this.profileData &&  this.profileData.id))
             return;
@@ -322,10 +349,17 @@ created(){
 async mounted() {
     this.isStarted = true;
     await this.getUserInfo();
+    await this.getUserCommunitiesList();
 
     if (!this.isLockedProfile) {
         await this.getUserPhotos(this.userId);
         await this.getPosts();
+
+        this.userCommunities = await this.loadCommunities(7);
+
+        if (this.communitiesList.length === 7) {
+            this.footerLink = {title: 'Все сообщества', path: `/user-${this.id}/communities`};
+        }
     }
 
     window.scrollTo(0, 0);
