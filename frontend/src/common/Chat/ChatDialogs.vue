@@ -3,7 +3,7 @@
 
         <ChatDialogsFilter @ChatDialogsFilter="onChatDialogsFilter"></ChatDialogsFilter>
         <div class="chat-list-scroll pb-0 pb-lg-0">
-            <vue-custom-scrollbar class="chat-list-scroll-scroll"
+            <vue-custom-scrollbar class="chat-list-scroll-scroll w-100"
                                   :settings="customScrollBarSettings">
                 <ul id="chatDialogsList" class="list-unstyled mb-0">
                     <ChatListItem v-for="dialog in dialogsList()"
