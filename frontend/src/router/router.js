@@ -67,10 +67,10 @@ const routes = [
             { path: '', components: {
                     userLastPhotos: ProfilePhotos,
                     userLastPost: UserPosts,
-                }
+                }, meta: {title: 'Plizi: '}
             } ,
-            { path: 'friends', components: { userFriendsList : UserFriendsAllList } },
-            { path: 'communities', components: { userCommunities : CommunityTemplate } },
+            { path: 'friends', components: { userFriendsList : UserFriendsAllList },  meta: {title: 'Plizi: '} },
+            { path: 'communities', components: { userCommunities : CommunityTemplate }, meta: {title: 'Plizi: '} },
         ]},
     {path: '/friends', component: FriendsListPage, name: 'FriendsListPage', meta: {title: 'Plizi: мои друзья'}, props: true },
     {path: '/invitations', component: InvitationsPage, name: 'InvitationsPage', meta: {title: 'Plizi: приглашения дружбы'}, props: true },
