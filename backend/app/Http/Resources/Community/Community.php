@@ -6,6 +6,7 @@ use App\Http\Resources\Geo\City as CityResource;
 use App\Http\Resources\User\Image;
 use App\Models\CommunityRequest;
 use App\Models\User;
+use App\Models\Video;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
 use Illuminate\Support\Arr;
@@ -32,7 +33,8 @@ class Community extends JsonResource
             'type' => $this->type,
             'themeId' => $this->theme_id,
             'location' => $this->city ? new CityResource($this->city) : null,
-            'totalMembers' => $this->members->count(),
+            'totalMembers' => $this->members_count,
+            'totalVideos' => Video::specialForCommunity($this->id)->count(),
             'role' => $this->role ? $this->role->role : null,
             'avatar' => $this->avatar ? new Image($this->avatar) : null,
             'headerImage' => $this->headerImage ? new Image($this->headerImage) : null,
