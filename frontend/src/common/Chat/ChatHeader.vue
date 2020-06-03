@@ -54,6 +54,7 @@
             </div>
 
         <CreateGroupChatModal v-if="createGroupChatModalShow"
+                              @SwitchToChat="onSwitchToChat"
                               @HideCreateGroupChatModal="onHideCreateGroupChatModal"
                               v-bind:currentDialog="currentDialog">
         </CreateGroupChatModal>
@@ -148,6 +149,10 @@ computed: {
 },
 
 methods: {
+    onSwitchToChat(evData){
+        this.$emit('SwitchToChat', evData);
+    },
+
     onShowRemoveCurrentChatModal(){
         this.removeDialogModalShow = true;
     },
