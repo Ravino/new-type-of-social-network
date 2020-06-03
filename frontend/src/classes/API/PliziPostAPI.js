@@ -517,8 +517,6 @@ class PliziPostAPI extends PliziBaseAPI {
     async getAlbumComments(imageId) {
         const response = await this.axios.get(`api/user/images/${imageId}/comment`, this.authHeaders);
 
-        console.log(response, 'getAlbumComments');
-
         if (response.status === 200) {
             return response.data;
         }
@@ -542,8 +540,6 @@ class PliziPostAPI extends PliziBaseAPI {
                 attachmentIds,
             }, this.authHeaders
         );
-
-        console.log(response, '1231231231');
 
         if (response.status === 200) {
             return response.data

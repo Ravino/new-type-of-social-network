@@ -22,13 +22,15 @@
                 :images="images"
                 :active-image="activeImage"
                 @showImage="showImage"
-                @close="activeImage = null">
+                @close="closeAlbumModal">
             </GalleryViewer>
-            <ProfileGalleryDescription
+            <GalleryDescription
                 :comments="comments"
+                :post="{id:0}"
                 :image="activeImage"
+                :type="type"
                 @updateComments="updateComments">
-            </ProfileGalleryDescription>
+            </GalleryDescription>
         </div>
     </div>
 </template>
@@ -36,17 +38,19 @@
 <script>
     import GalleryViewer from './GalleryViewer.vue';
     import GalleryDescription from "./GalleryDescription.vue";
-    import ProfileGalleryDescription from "./ProfileGalleryDescription.vue";
     import PliziComment from "../classes/PliziComment";
 
     export default {
         name: 'ProfileGallery',
-        components: {ProfileGalleryDescription, GalleryDescription, GalleryViewer},
+        components: {GalleryDescription, GalleryViewer},
         props: {
             profilePhotos: Boolean,
             images: {
                 type: Array,
                 default: () => [],
+            },
+            type: {
+                type: String,
             },
         },
 
@@ -69,7 +73,6 @@
             lastImageView() {
                 return this.viewImages.slice(-1).pop();
             },
-
         },
 
         methods: {
@@ -87,10 +90,31 @@
                 }
             },
             showImage(image) {
-                this.activeImage = this.images.find(attach => attach.id === image.id);
                 this.getCommentsOfAlbum( image.id );
+                this.activeImage = this.images.find(attach => attach.id === image.id);
 
+                const link = `${this.$router.currentRoute.path}?activeImageId=${image.id}&galleryType=${this.type}`;
+                history.pushState({url: link}, '', link);
             },
+
+            closeAlbumModal() {
+                this.activeImage = null;
+                this.$router.replace({query: ''});
+            },
+        },
+        created() {
+            const activeId = this.$router.history.current.query.activeImageId;
+            const typeGallery = this.$router.history.current.query.galleryType;
+
+            if (typeGallery !== this.type || !activeId) {
+                return;
+            }
+
+            const foundImage = this.images.find(image => image.id.toString() === activeId);
+
+            if (foundImage) {
+                this.showImage(foundImage);
+            }
         },
     }
 </script>

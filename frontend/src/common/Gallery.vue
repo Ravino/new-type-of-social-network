@@ -40,8 +40,8 @@
             <GalleryViewer
                 :images="images"
                 :active-image="activeImage"
-                @close="closeGalleryModal"
-                @showImage="showImage">
+                @showImage="showImage"
+                @close="closeGalleryModal">
             </GalleryViewer>
 
             <GalleryDescription
@@ -49,6 +49,7 @@
                 :post="post"
                 :comments="comments"
                 :image="activeImage"
+                :type="type"
                 @updateComments="updateComments">
             </GalleryDescription>
         </div>

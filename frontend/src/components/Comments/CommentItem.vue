@@ -23,6 +23,7 @@
                         workMode="comment"
                         @editorPost="onTextPost"
                         :input-editor-text="comment.body"
+                        :inputEditorAttachment="attachments"
                     ></TextEditor>
                     <template v-else>
                         <p v-html="livePreview">{{comment.body}}</p>
@@ -78,6 +79,7 @@
                      :key="answer.id"
                      :postId="postId"
                      :comment="answer"
+                     :attachments="answer.attachments"
                      @onDelete="removeComment"
                      @update="editComment">
                  </CommentItem>
@@ -119,6 +121,9 @@ export default {
         },
         type: {
             type: String,
+        },
+        attachments: {
+            type: Array,
         },
     },
     data() {
@@ -172,9 +177,18 @@ export default {
                 msg = msg.replace(/<p><\/p>/g, brExample);
                 msg = this.killBrTrail(msg);
 
-                this.updateComment(msg);
-                this.isEdit = false;
+                if (msg !== '') {
+                    this.updateComment(msg, evData.attachments);
+                } else if (evData.attachments.length > 0) {
+                    this.updateComment('', evData.attachments);
+                }
+            } else {
+                if (evData.attachments.length > 0) {
+                    this.updateComment('', evData.attachments);
+                }
             }
+
+            this.isEdit = false;
         },
         async deleteComment() {
             try {
@@ -184,9 +198,9 @@ export default {
                 console.warn(e.detailMessage);
             }
         },
-        async updateComment(msg) {
+        async updateComment(msg, attachmentIds) {
             try {
-                let response = await this.$root.$api.$post.editCommentById(this.comment.id, msg);
+                let response = await this.$root.$api.$post.editCommentById(this.comment.id, msg, attachmentIds);
                 this.$emit('update', response.data);
             } catch (e) {
                 console.warn(e.detailMessage);

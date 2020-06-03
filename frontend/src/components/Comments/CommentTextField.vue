@@ -22,7 +22,7 @@
     import TextEditor from "../../common/TextEditor.vue";
     import ChatMixin from "../../mixins/ChatMixin.js";
     export default {
-        name: "CommentGallery",
+        name: "CommentTextField",
         components: {TextEditor},
         mixins: [ChatMixin],
         props: {
@@ -51,18 +51,18 @@
                     msg = this.killBrTrail(msg);
 
                     if (msg !== '') {
-                        this.sendCommentToGallery(msg, evData.attachments);
+                        this.sendComment(msg, evData.attachments);
                     } else if (evData.attachments.length > 0) {
-                        this.sendCommentToGallery('', evData.attachments);
+                        this.sendComment('', evData.attachments);
                     }
                 else {
                     if (evData.attachments.length > 0) {
-                        this.sendCommentToGallery('', evData.attachments );
+                        this.sendComment('', evData.attachments );
                     }
                 }
                 }
             },
-            async sendCommentToGallery(msg, attachments) {
+            async sendComment(msg, attachments) {
                 let response = null;
 
                 if(this.type === "gallery") {
@@ -74,9 +74,15 @@
                     }
                 } else if (this.type === "album") {
                     try {
-                        console.log(this.imageId);
                         response = await this.$root.$api.$post.sendCommentToAlbum(msg, this.imageId, attachments);
-                        this.$emit('updateNewComments', response.data);
+                        this.$emit('updateComments', response.data);
+                    } catch (e) {
+                        console.warn(e.detailMessage);
+                    }
+                } else if (this.type === "post") {
+                    try {
+                        let response = await this.$root.$api.$post.setPostComments(msg, this.postId, attachments);
+                        this.$emit('updateComments', response.data);
                     } catch (e) {
                         console.warn(e.detailMessage);
                     }

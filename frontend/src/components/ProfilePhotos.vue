@@ -20,7 +20,7 @@
             <div class="d-flex flex-row plz-profile-photos-list pt-3">
                 <vue-custom-scrollbar class="plz-latest-entries-list d-flex justify-content-between justify-content-sm-start pb-3"
                                       :settings="customScrollbarSettings">
-                    <ProfileGallery v-if="photos.length > 0" :profilePhotos="profilePhotos" :images="photos"></ProfileGallery>
+                    <ProfileGallery type="album" v-if="photos.length > 0" :profilePhotos="profilePhotos" :images="photos"></ProfileGallery>
                     <div v-else class="mx-auto">Нет фотографий</div>
                 </vue-custom-scrollbar>
             </div>
