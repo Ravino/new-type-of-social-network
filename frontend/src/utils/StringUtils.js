@@ -10,5 +10,5 @@ export function isEmoji(tst) {
 
     let res = tst.match(eRE);
 
-    return (res.length >= 1);
+    return (res && res.length >= 1);
 }

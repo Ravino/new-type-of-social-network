@@ -5,31 +5,33 @@
 
         <div class="modal-dialog modal-xl modal-dialog-centered" role="document" @click.stop="">
             <div class="modal-content bg-white-br20">
-                <VideoPlayer :videoLink="videoLink"/>
+                <VideoPlayer :videoLink="videoLink" />
             </div>
         </div>
     </div>
 </template>
 
 <script>
-    import VideoPlayer from "../../common/VideoPlayer";
+import VideoPlayer from "../../common/VideoPlayer.vue";
 
-    export default {
-        name: "VideoPageModal",
-        props: {
-            videoLink: {
-                type: String,
-                default: null,
-            },
-        },
-        components: {
-            VideoPlayer,
-        },
-        methods: {
-            hideVideoModal() {
-                this.$emit('hideVideoModal');
-            },
-        },
-    }
+export default {
+name: "VideoPageModal",
+components: {
+    VideoPlayer,
+},
+props: {
+    videoLink: {
+        type: String,
+        default: null,
+    },
+},
+
+methods: {
+    hideVideoModal() {
+        this.$emit('hideVideoModal');
+    },
+},
+
+}
 </script>
 

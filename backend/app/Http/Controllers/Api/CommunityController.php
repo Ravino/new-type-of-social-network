@@ -117,9 +117,11 @@ class CommunityController extends Controller
      * @return CommunityResource|JsonResponse
      */
     public function get(int $id) {
-        $community = Community::with(['users' => function($u) {
+        $community = Community::with(['users' => static function($u) {
             $u->limit(5);
-        }, 'users.profile', 'members', 'avatar', 'city', 'headerImage', 'supers'])->find($id);
+        }, 'users.profile', 'members', 'avatar', 'city', 'headerImage', 'supers'])
+            ->withCount('members')
+            ->find($id);
         if($community) {
             return new CommunityResource($community);
         }

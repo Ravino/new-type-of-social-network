@@ -31,6 +31,7 @@
                                     <IconSend style="height: 20px" />
                                 </button>
                             </div>
+
                             <div v-if="isMaximumCharacterLimit" class="col-12">
                                 <p class="text-danger">Превышено максимально допустимое количество символов.</p>
                             </div>

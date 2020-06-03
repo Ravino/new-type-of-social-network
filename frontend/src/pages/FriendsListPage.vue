@@ -21,6 +21,9 @@
                                           :class="{ 'active': wMode==='online' }" id="tabOnlineFriends" role="tab"
                                           @click.stop="friendsListSelect(`online`)">Друзья онлайн</span>
                                     <span class="nav-link position-relative py-2 py-sm-3  py-lg-4 px-1 mr-2 mr-lg-4"
+                                          :class="{ 'active': wMode==='recent' }" id="tabRecentFriends" role="tab"
+                                          @click.stop="friendsListSelect(`recent`)">Новые друзья</span>
+                                    <span class="nav-link position-relative py-2 py-sm-3  py-lg-4 px-1 mr-2 mr-lg-4"
                                           :class="{ 'active': wMode==='favorites' }" id="tabFavoritesFriends" role="tab"
                                           @click.stop="friendsListSelect(`favorites`)">Избранные</span>
                                 </nav>
@@ -108,6 +111,15 @@ methods : {
             this.$root.$auth.frm.asArray()
                 .map(frItem => {
                     if (frItem.isOnline === true){
+                        ret.push(frItem);
+                    }
+                });
+        }
+
+        if (this.wMode === 'recent'){
+            this.$root.$auth.frm.asArray()
+                .map(frItem => {
+                    if ( frItem.friendshipLivingTime <= (3 * 86400) ){
                         ret.push(frItem);
                     }
                 });

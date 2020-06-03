@@ -17,75 +17,14 @@
                     </ProfileHeader>
                     <Spinner v-else></Spinner>
 
-                    <template v-if="isLockedProfile">
-                        <div class="row">
-                            <div class="card locked-profile-notify bg-white-br20 border-0 w-100">
-                                <div class="card-body d-flex flex-column justify-content-center align-items-center">
-                                    <div class="mb-3">
-                                        <IconUnlock/>
-                                    </div>
-                                    <div class="font-weight-bold text-uppercase">
-                                        Это закрытый профиль
-                                    </div>
-                                    <div v-if="this.profileData.privacySettings.pageType !== 3"
-                                         class="text-center text-secondary mt-2 w-50">
-                                        Добавьте пользователя {{ this.profileData.profile.firstName }} в друзья,
-                                        чтобы смотреть записи, фотографии и другие материалы
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </template>
+                    <router-view></router-view>
 
-                    <template v-else>
-                        <template v-if="userPhotos.length > 0">
-                        <ProfilePhotos v-if="isPhotosDataReady"
-                                       :profileData="profileData"
-                                       v-bind:photos="userPhotos"></ProfilePhotos>
-                        <Spinner v-else></Spinner>
-                    </template>
-
-                        <ProfileFilter v-if="(filteredPosts && filteredPosts.length > 1) || filterMode !== 'all'"
-                                       v-bind:firstName="profileData.firstName"
-                                       @wallPostsSelect="wallPostsSelectHandler"/>
-
-                        <template v-if="filteredPosts && filteredPosts.length > 0">
-                            <Post v-for="postItem in filteredPosts"
-                                  :key="`userPost-`+postItem.id"
-                                  :post="postItem"
-                                  @onShare="onSharePost"
-                                  @onShowUsersLikes="openLikeModal"></Post>
-                        </template>
-
-                        <div v-else-if="!isStarted"  class="row plz-post-item mb-4 bg-white-br20 p-4">
-                            <div class="alert alert-info w-100 p-5 text-center mb-0">
-                                Пользователь {{ profileData.firstName }} не создал ни одной записи.
-                            </div>
-                        </div>
-
-                        <template v-if="isStarted">
-                            <div class="row plz-post-item mb-4 bg-white-br20 p-4">
-                                <div class="w-100 p-5 text-center mb-0">
-                                    <SmallSpinner />
-                                </div>
-                            </div>
-                        </template>
-                    </template>
                 </div>
 
                 <NewPersonalMessageModal v-if="isShowMessageDialog"
                                          @HidePersonalMsgModal="onHidePersonalMsgModal"
                                          @SendPersonalMessage="handlePersonalMessage"
                                          v-bind:user="profileData"></NewPersonalMessageModal>
-
-                <PostRepostModal v-if="postRepostModal.isVisible"
-                                 v-bind:user="profileData"
-                                 v-bind:post="postForRepost"
-                                 @hidePostRepostModal="hidePostRepostModal"></PostRepostModal>
-
-                <PostLikeModal v-if="postLikeModal.isVisible"
-                               :postId="postLikeModal.content.postId"
-                               @hideLikeModal="hideLikeModal"/>
             </div>
 
             <div v-if="$root.$auth.fm.size>0" class="col-sm-3 col-md-3 col-lg-3 col-xl-3 pr-0 d-none d-xl-block"
@@ -124,7 +63,7 @@ import PliziUser from '../classes/PliziUser.js';
 import PliziPost from '../classes/PliziPost.js';
 
 export default {
-name: 'PersonalPage',
+name: 'PersonalPageInfo',
 props: {
     id : Number|String
 },
@@ -168,26 +107,6 @@ watch: {
     $route: 'afterRouteUpdate' // при изменениях маршрута запрашиваем данные снова
 },
 
-computed: {
-    filteredPosts(){
-        if (this.filterMode === 'user') {
-            return this.posts.filter(post => post.checkIsMinePost(this.profileData.id));
-        }
-
-        return this.posts;
-    },
-    isLockedProfile() {
-        if (this.profileData && this.profileData.privacySettings && this.profileData.stats) {
-            if ((this.profileData.privacySettings.pageType === 2 && !this.profileData.stats.isFriend) ||
-                this.profileData.privacySettings.pageType === 3) {
-                return true;
-            }
-        }
-
-        return false;
-    },
-},
-
 methods: {
     async afterRouteUpdate(ev){
         this.userId = ev.params.id;
@@ -196,7 +115,6 @@ methods: {
 
         if (!this.isLockedProfile) {
             await this.getUserInfo();
-            await this.getPosts();
         }
 
         window.scrollTo(0, 0);
@@ -211,36 +129,12 @@ methods: {
         };
     },
 
-    wallPostsSelectHandler(evData) {
-        this.filterMode = evData.wMode;
-    },
-
-    onSharePost(post) {
-        this.postRepostModal.isVisible = true;
-        this.postForRepost = post;
-    },
-
-    hidePostRepostModal() {
-        this.postRepostModal.isVisible = false;
-        this.postForRepost = null;
-    },
-
     onHidePersonalMsgModal(){
         this.isShowMessageDialog = false;
     },
 
     onShowPersonalMsgModal(){
         this.isShowMessageDialog = true;
-    },
-
-    hideLikeModal() {
-        this.postLikeModal.isVisible = false;
-        this.postLikeModal.content.postId = null;
-    },
-
-    openLikeModal(postId) {
-        this.postLikeModal.isVisible = true;
-        this.postLikeModal.content.postId = postId;
     },
 
     async handlePersonalMessage(evData){
@@ -270,7 +164,7 @@ methods: {
         let apiResponse = null;
 
         try {
-            apiResponse = await this.$root.$api.$users.getUser(this.userId);
+            apiResponse = await this.$root.$api.$users.getUser(this.id);
         }
         catch (e){
             this.isStarted = false;

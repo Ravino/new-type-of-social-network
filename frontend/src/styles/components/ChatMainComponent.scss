@@ -26,12 +26,15 @@
     .ps__rail-x {
         height: 10px;
         border-radius: 6px;
+        opacity: .4;
+        background-color: #e3e3e3;
     }
     .ps__rail-x.ps--clicking .ps__thumb-x,
     .ps__rail-x:focus>.ps__thumb-x,
     .ps__rail-x:hover>.ps__thumb-x {
         height: 6px;
-    }ps__rail-y.ps--clicking .ps__thumb-y,
+    }
+    .ps__rail-y.ps--clicking .ps__thumb-y,
     .ps__rail-y:focus>.ps__thumb-y,
     .ps__rail-y:hover>.ps__thumb-y {
         width: 6px;
@@ -75,6 +78,13 @@
 
 .chat-members-scroll {
     height: auto;
-    max-height: calc(100vh - 260px);
+    max-height: calc(100vh - 305px);
     overflow: auto;
+
+    .ps__rail-y {
+        width: 10px;
+        border-radius: 6px;
+        opacity: .4;
+        background-color: #e3e3e3;
+    }
 }
