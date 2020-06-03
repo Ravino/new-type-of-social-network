@@ -1,5 +1,5 @@
 <template>
-    <div class="row plizi-friends-list bg-white">
+    <div class="row plizi-friends-list bg-white-br20 bg-white">
         <h6 class="w-100 media m-0 py-4 px-4 border-bottom">Список друзей</h6>
 
         <ul v-if="hasFriends" class="d-block w-100 p-0">
