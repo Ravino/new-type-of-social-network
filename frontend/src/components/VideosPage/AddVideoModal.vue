@@ -22,18 +22,22 @@
                             <p v-if="this.errors && this.errors.link">
                                 {{ this.errors.link[0] }}
                             </p>
-                            <p v-if="!this.$v.form.link.required">
+                            <p v-else-if="!this.$v.form.link.required">
                                 Поле Ссылка на видео обязательно для заполнения.
                             </p>
-                            <p v-if="!this.$v.form.link.url">
+                            <p v-else-if="!this.$v.form.link.url">
                                 Значение поле Ссылка на видео не является корректной ссылкой.
                             </p>
-                            <p v-if="!this.$v.form.link.isValidYoutubeLink">
+                            <p v-else-if="!this.$v.form.link.isValidYoutubeLink">
                                 Значение поле Ссылка на видео не является корректной ссылкой на сервис youtube.
                             </p>
                         </div>
                     </div>
-                    <button type="submit" class="btn plz-btn plz-btn-primary">Сохранить</button>
+                    <button type="submit"
+                            class="btn plz-btn plz-btn-primary"
+                            :disabled="$v.$invalid">
+                        Сохранить
+                    </button>
                 </form>
             </div>
         </div>
@@ -88,7 +92,7 @@ methods: {
     },
 
     async store() {
-        if (this.isStoreRequest) {
+        if (this.isStoreRequest || this.$v.$invalid) {
             return ;
         }
         this.isStoreRequest = true;

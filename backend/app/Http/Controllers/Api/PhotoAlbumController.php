@@ -59,6 +59,16 @@ class PhotoAlbumController extends Controller
         return new PhotoAlbumCollection($photo_albums);
     }
 
+    public function getByUserId(User $user)
+    {
+        $photo_albums = $user->photoAlbums()
+            ->with(['creatable', 'author'])
+            ->orderByDesc('id')
+            ->get();
+
+        return new PhotoAlbumCollection($photo_albums);
+    }
+
     /**
      * Store a newly created resource in storage.
      *
@@ -103,19 +113,28 @@ class PhotoAlbumController extends Controller
         return new AttachmentsCollection($photos);
     }
 
-    /**
-     * Display the specified resource.
-     *
-     * @param PhotoAlbum $photoAlbum
-     * @return \App\Http\Resources\PhotoAlbum\PhotoAlbum
-     */
-    public function show($id)
+    public function show(PhotoAlbum $photoAlbum)
     {
-        $photoAlbum = PhotoAlbum::find($id);
+        $author = $photoAlbum->author;
 
-        if ($photoAlbum->author->id === \Auth::id()) {
-            return new PhotoAlbumJsonResource($photoAlbum);
+        if (\Auth::id() !== $author->id) {
+            $isFriend = $author->isFriendWith(auth()->user());
+
+            if (($author->privacySettings->page_type === 2 && !$isFriend) ||
+                $author->privacySettings->page_type === 3) {
+                return [
+                    'data' => [
+                        'list' => []
+                    ]
+                ];
+            }
         }
+
+        $photo_album = $author->photoAlbums()
+            ->where('id', $photoAlbum->id)
+            ->first();
+
+        return new PhotoAlbumJsonResource($photo_album);
     }
 
     /**
@@ -183,20 +202,5 @@ class PhotoAlbumController extends Controller
         return response()->json([
             'message' => 'Фотоальбом успешно удален.',
         ]);
-    }
-
-    public function destroyImageInAlbum($photo_album_id, $image_id)
-    {
-        $photoAlbum = PhotoAlbum::find($photo_album_id);
-
-        if ($photoAlbum->author->id === \Auth::id()) {
-            $photoAlbum->images()->where('id', $image_id)->delete();
-            $photoAlbum->images()->detach($image_id);
-            \Auth::user()->profile()->decrement('image_count');
-
-            return response()->json([
-                'message' => 'Изображение успешно удалено.',
-            ]);
-        }
     }
 }

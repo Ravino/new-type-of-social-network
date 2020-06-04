@@ -105,6 +105,8 @@ Route::group(['middleware' => ['auth.jwt', 'track.activity']], function () {
     Route::post('user/images/{imageUpload}/comment', 'Api\CommentController@commentUserImage');
     Route::get('/user/{user}/photos', 'Api\ImageUploadController@getUserImages');
 
+    Route::get('/user/{user}/photo-albums', 'Api\PhotoAlbumController@getByUserId');
+
     /**
      * Communities Resource
      */
@@ -185,7 +187,10 @@ Route::group(['middleware' => ['auth.jwt', 'track.activity']], function () {
 
         Route::get('{photoAlbum}', 'Api\PhotoAlbumController@show');
         Route::post('{id}/photos', 'Api\PhotoAlbumController@storePhotoInAlbum');
-        Route::delete('{photoAlbum}/photos/{imageUpload}', 'Api\PhotoAlbumController@destroyImageInAlbum');
+    });
+
+    Route::prefix('photos')->group(function () {
+        Route::delete('{imageUpload}', 'Api\ImageUploadController@delete');
     });
 
     /**

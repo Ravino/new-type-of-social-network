@@ -142,6 +142,76 @@
                 ]
             }
         },
+        "/photos/{imageUpload}": {
+            "delete": {
+                "tags": [
+                    "Photo"
+                ],
+                "operationId": "DeletePhoto",
+                "description": "Удаление изображения.",
+                "parameters": [
+                    {
+                        "name": "imageUpload",
+                        "in": "path",
+                        "description": "ID изображения",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "description": "Сообщение об успешном удалении."
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "403": {
+                        "description": "",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "description": "Сообщение о недостке прав на удаление."
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "description": "Изображение по каким-то причинам не было удалено. Возможно оно не принадлежит ни пользователю, ни сообществу."
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
         "/user/images/{imageId}": {
             "post": {
                 "tags": [
@@ -231,27 +301,18 @@
                 ]
             }
         },
-        "/photo-albums/{id}/photos/{imageId}": {
-            "delete": {
+        "/user/{user}/photo-albums": {
+            "get": {
                 "tags": [
-                    "Photo"
+                    "Photo Albums"
                 ],
-                "description": "Удалить изображение из альбома",
-                "operationId": "PhotoAlbumDeletePhoto",
+                "description": "Получить фотоальбомы пользователя по ID.",
+                "operationId": "GetPhotoAlbumsById",
                 "parameters": [
                     {
-                        "name": "id",
                         "in": "path",
-                        "description": "ID фотоальбома",
-                        "required": true,
-                        "schema": {
-                            "type": "integer"
-                        }
-                    },
-                    {
-                        "name": "imageId",
-                        "in": "path",
-                        "description": "ID изображения",
+                        "name": "user",
+                        "description": "ID пользователя",
                         "required": true,
                         "schema": {
                             "type": "integer"
@@ -260,7 +321,7 @@
                 ],
                 "responses": {
                     "200": {
-                        "description": "OK",
+                        "description": "",
                         "content": {
                             "application/json": {
                                 "schema": {
@@ -268,9 +329,8 @@
                                     "properties": {
                                         "data": {
                                             "properties": {
-                                                "message": {
-                                                    "type": "string",
-                                                    "description": "Уведомление об успешном удалении."
+                                                "list": {
+                                                    "$ref": "#/components/schemas/PhotoAlbumUserList"
                                                 }
                                             }
                                         }

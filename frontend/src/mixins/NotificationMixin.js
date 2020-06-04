@@ -62,6 +62,18 @@ const NotificationMixin = {
                 notification.primaryImage = inputNotification.data.community.primaryImage;
             }
 
+            if (inputNotification.data.notificationType === 'community.request.rejected') {
+                notification.isHuman = false;
+                notification.body = `Сообщество <b class="community-name">${inputNotification.data.community.name}</b> отклонило Ваш запрос`;
+                notification.primaryImage = inputNotification.data.community.primaryImage;
+            }
+
+            if (inputNotification.data.notificationType === 'community.request.accepted') {
+                notification.isHuman = false;
+                notification.body = `Сообщество <b class="community-name">${inputNotification.data.community.name}</b> одобрило Ваш запрос`;
+                notification.primaryImage = inputNotification.data.community.primaryImage;
+            }
+
             if (inputNotification.data.notificationType === 'user.post.created') {
                 notification.body = this.senderFullName(inputNotification) +
                     ('f' === inputNotification.data.sender.sex ? 'опубликовала новость' : 'опубликовал новость');
