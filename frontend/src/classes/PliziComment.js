@@ -120,7 +120,6 @@ class PliziComment {
     }
 
     removeComment(commentId) {
-        console.log(12312312);
         return this._thread = this._thread.filter(comment => comment.id !== commentId);
     }
 
