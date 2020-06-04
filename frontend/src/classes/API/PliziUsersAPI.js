@@ -272,8 +272,13 @@ class PliziUsersAPI extends PliziBaseAPI{
      // * @param offset
      * @returns {Promise<null|*>}
      */
-    async getUserCommunities(userId) {
-        let response = await this.axios.get(`/api/user/${userId}/communities`, this.authHeaders)
+    async getUserCommunities(userId, limit = 10, offset = 0) {
+        let path = `/api/user/${userId}/communities`;
+        const params = new URLSearchParams({
+            limit: limit || 50,
+            offset: offset || 0,
+        });
+        let response = await this.axios.get(path  + '?' + params.toString(), this.authHeaders)
             .catch((error) => {
                 this.checkIsTokenExpires(error, '$users.getUserCommunities');
                 throw new PliziAPIError('$users.getUserCommunities', error.response);

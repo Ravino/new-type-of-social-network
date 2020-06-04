@@ -75,7 +75,7 @@
                 <CommunitiesSmallBlock v-if="isUserCommunitiesDataReady"
                     :footer="footerLink"
                     :title="`Сообщества пользователя`"
-                    :communities="userCommunities"></CommunitiesSmallBlock>
+                    :communities="userCommunities.slice(0, 5)"></CommunitiesSmallBlock>
             </div>
 
         </div>
@@ -309,9 +309,9 @@
                 await this.getUserPhotos(this.userId);
                 await this.getPosts();
 
-                await this.getUserCommunitiesList();
+                await this.getUserCommunitiesList(6);
 
-                if (this.userCommunities.length === 7) {
+                if (this.userCommunities.length > 5) {
                     this.footerLink = {title: 'Все сообщества', path: `/user-${this.id}/communities`};
                 }
             }

@@ -90,6 +90,8 @@ const CommunitiesListMixin = {
                     await this.lazyLoad('manage');
                 } else if (this.$route.name === 'CommunitiesPopularPage') {
                     await this.lazyLoad('popular');
+                } else if (this.$route.name === 'userCommunities') {
+                    await this.lazyLoad('userCommunities');
                 } else {
                     await this.lazyLoad();
                 }
@@ -204,12 +206,12 @@ const CommunitiesListMixin = {
             }
         },
 
-        async getUserCommunitiesList() {
+        async getUserCommunitiesList(limit = 10, offset = 0) {
             let apiResponse = null;
             this.isUserCommunitiesDataReady = false;
 
             try {
-                apiResponse = await this.$root.$api.$users.getUserCommunities(this.userId);
+                apiResponse = await this.$root.$api.$users.getUserCommunities(this.userId, limit, offset);
             }
             catch (e){
                 this.isStarted = false;
@@ -217,12 +219,10 @@ const CommunitiesListMixin = {
                 throw e;
             }
 
-            if (apiResponse) {
-                apiResponse.list.map((srItem) => {
-                    this.userCommunities.push(new PliziCommunity(srItem));
-                });
-                this.isUserCommunitiesDataReady = true;
-            }
+            this.isUserCommunitiesDataReady = true;
+            this.enabledLoader = false;
+
+            return this.processApiResponce(offset, apiResponse.list, 'userCommunities');
         },
 
         async lazyLoad(listName = null) {
@@ -242,6 +242,11 @@ const CommunitiesListMixin = {
 
                 if(oldSize)
                     added = await this.loadPopularCommunities(20, oldSize++);
+            } else if (listName === 'userCommunities') {
+                oldSize = this.userCommunities.length;
+
+                if(oldSize)
+                    added = await this.getUserCommunitiesList(20, oldSize++);
             } else {
                 oldSize = this.communitiesList.length;
 
