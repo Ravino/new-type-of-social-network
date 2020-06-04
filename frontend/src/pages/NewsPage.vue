@@ -143,7 +143,7 @@ methods: {
     filterPost() {
         this.filteredPosts = [...this.posts];
         if (this.filter.interest) {
-            this.filteredPosts.sort(function (a, b) {
+            this.filteredPosts.sort((a, b) => {
                 return (b.commentsCount + b.likes) - (a.commentsCount + a.likes);
             });
         }

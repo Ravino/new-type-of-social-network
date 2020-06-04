@@ -68,14 +68,14 @@
                                @hideLikeModal="hideLikeModal"/>
             </div>
 
-            <div v-if="$root.$auth.fm.size>0" class="col-sm-3 col-md-3 col-lg-3 col-xl-3 pr-0 d-none d-xl-block"
+            <div v-if="(this.$root.$auth.fm.size > 0 || this.userCommunities || this.profileData.videos)" class="col-sm-3 col-md-3 col-lg-3 col-xl-3 pr-0 d-xl-block"
                  v-bind:key="`RightColumn-`+$root.$favoritesKeyUpdater">
 
                 <FavoriteFriends></FavoriteFriends>
-                <CommunitiesSmallBlock
+                <CommunitiesSmallBlock v-if="isUserCommunitiesDataReady"
                     :footer="footerLink"
                     :title="`Сообщества пользователя`"
-                    :communities="communitiesList.slice(0, 5)"></CommunitiesSmallBlock>
+                    :communities="userCommunities.slice(0, 5)"></CommunitiesSmallBlock>
             </div>
 
         </div>
@@ -129,7 +129,6 @@
                 isDataReady: false,
                 isShowMessageDialog: false,
                 posts: [],
-                userCommunities: null,
                 footerLink: null,
                 // isPhotosDataReady: false,
                 userPhotos: [],
@@ -187,7 +186,7 @@
             },
 
             calcCentralBlockClass() {
-                const isCentralNarrow = (this.$root.$auth.fm.size > 0 || this.communities || this.profileData.videos);
+                const isCentralNarrow = (this.$root.$auth.fm.size > 0 || this.userCommunities || this.profileData.videos);
 
                 return {
                     'col-lg-8 col-xl-8': isCentralNarrow,
@@ -305,15 +304,14 @@
         async mounted() {
             this.isStarted = true;
             await this.getUserInfo();
-            await this.getUserCommunitiesList();
 
             if (!this.isLockedProfile) {
                 await this.getUserPhotos(this.userId);
                 await this.getPosts();
 
-                this.userCommunities = await this.loadCommunities(7);
+                await this.getUserCommunitiesList(6);
 
-                if (this.communitiesList.length === 7) {
+                if (this.userCommunities.length > 5) {
                     this.footerLink = {title: 'Все сообщества', path: `/user-${this.id}/communities`};
                 }
             }
