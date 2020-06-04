@@ -179,7 +179,7 @@ export default {
                 }
             } else {
                 if (evData.attachments.length > 0) {
-                    this.updateComment('', evData.attachments);
+                    this.updateComment(' ', evData.attachments);
                 }
             }
 
