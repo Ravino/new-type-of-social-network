@@ -1,6 +1,8 @@
+import { convertToDate } from '../utils/DateUtils.js';
+
 import PliziUser from './PliziUser.js';
 import PliziCommunity from './PliziCommunity.js';
-import PliziAttachment from "./PliziAttachment";
+import PliziAttachment from './PliziAttachment.js';
 
 class PliziPost {
     /**
@@ -42,7 +44,7 @@ class PliziPost {
     _likes = null;
 
     /**
-     * Лайкнутый ли этот пост текущим пользователем.
+     * лайкнул ли этот пост текущий пользователь
      * @type {boolean}
      * @private
      */
@@ -77,7 +79,7 @@ class PliziPost {
 
     /**
      * автор-юзер
-     * @type {PliziUzer|null}
+     * @type {PliziUser|null}
      * @private
      */
     _user = null;
@@ -190,7 +192,7 @@ class PliziPost {
     }
 
     /**
-     * @returns {PliziUzer}
+     * @returns {PliziUser}
      */
     get user() {
         return this._user;
@@ -286,8 +288,11 @@ class PliziPost {
         this._author = value;
     }
 
+    /**
+     * @param {Date|String|Number} value
+     */
     set createdAt(value) {
-        this._createdAt = new Date(value * 1000);
+        this._createdAt = value ? convertToDate(value) : value;
     }
 
     set deleted(value) {
@@ -357,11 +362,11 @@ class PliziPost {
 
     /**
      * Возвращает флаг - принадлежит или нет пост текущему юзеру
-     * @param user_id
+     * @param userId
      * @returns {boolean}
      */
-    checkIsMinePost(user_id) {
-        return (this.user && this.user.id) === user_id;
+    checkIsMinePost(userId) {
+        return (this.user && this.user.id) === userId;
     }
 }
 

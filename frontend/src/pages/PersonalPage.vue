@@ -46,9 +46,11 @@
                                      :filter-mode="filterMode" :filtered-posts="filteredPosts"
                                      :on-share-post="onSharePost" :open-like-modal="openLikeModal"
                                      :isStarted="isStarted"
-                                     :profile-data="profileData" :wall-posts-select-handler="wallPostsSelectHandler"></router-view>
+                                     :profile-data="profileData"
+                                     :wall-posts-select-handler="wallPostsSelectHandler"></router-view>
                         <router-view name="userFriendsList"></router-view>
                         <router-view name="userCommunities"></router-view>
+                        <router-view name="userVideoList"></router-view>
 
                     </template>
                 </div>
@@ -68,14 +70,16 @@
                                @hideLikeModal="hideLikeModal"/>
             </div>
 
-            <div v-if="(this.$root.$auth.fm.size > 0 || this.userCommunities || this.profileData.videos)" class="col-sm-3 col-md-3 col-lg-3 col-xl-3 pr-0 d-xl-block"
+            <div v-if="(this.$root.$auth.fm.size > 0 || this.userCommunities || this.profileData.videos)"
+                 class="col-sm-3 col-md-3 col-lg-3 col-xl-3 pr-0 d-xl-block"
                  v-bind:key="`RightColumn-`+$root.$favoritesKeyUpdater">
 
                 <FavoriteFriends></FavoriteFriends>
-                <CommunitiesSmallBlock v-if="isUserCommunitiesDataReady"
-                    :footer="footerLink"
-                    :title="`Сообщества пользователя`"
-                    :communities="userCommunities.slice(0, 5)"></CommunitiesSmallBlock>
+                <CommunitiesSmallBlock v-if="userCommunities.length"
+                                       :footer="footerLink"
+                                       :title="`Сообщества пользователя`"
+                                       :clazz="`bg-white-br20`"
+                                       :communities="userCommunities.slice(0, 5)"></CommunitiesSmallBlock>
             </div>
 
         </div>
@@ -83,241 +87,245 @@
 </template>
 
 <script>
-    import AccountToolbarLeft from '../common/AccountToolbarLeft.vue';
-    import FavoriteFriends from '../common/FavoriteFriends.vue';
-    import Spinner from '../common/Spinner.vue';
+import AccountToolbarLeft from '../common/AccountToolbarLeft.vue';
+import FavoriteFriends from '../common/FavoriteFriends.vue';
+import Spinner from '../common/Spinner.vue';
 
-    import ProfileHeader from '../components/ProfileHeader.vue';
-    import ProfilePhotos from '../components/ProfilePhotos.vue';
+import ProfileHeader from '../components/ProfileHeader.vue';
+import ProfilePhotos from '../components/ProfilePhotos.vue';
 
-    import NewPersonalMessageModal from '../components/NewPersonalMessageModal.vue';
-    import PostRepostModal from '../common/Post/PostRepostModal.vue';
-    import PostLikeModal from '../common/Post/PostLikeModal.vue';
-    import IconUnlock from "../icons/IconUnlock.vue";
+import NewPersonalMessageModal from '../components/NewPersonalMessageModal.vue';
+import PostRepostModal from '../common/Post/PostRepostModal.vue';
+import PostLikeModal from '../common/Post/PostLikeModal.vue';
+import IconUnlock from "../icons/IconUnlock.vue";
 
-    import DialogMixin from '../mixins/DialogMixin.js';
-    import LazyLoadPosts from '../mixins/LazyLoadPosts.js';
-    import BlackListMixin from '../mixins/BlackListMixin.js';
-    import PhotosListMixin from '../mixins/PhotosListMixin.js';
-    import CommunitiesListMixin from '../mixins/CommunitiesListMixin.js';
+import DialogMixin from '../mixins/DialogMixin.js';
+import LazyLoadPosts from '../mixins/LazyLoadPosts.js';
+import BlackListMixin from '../mixins/BlackListMixin.js';
+import PhotosListMixin from '../mixins/PhotosListMixin.js';
+import CommunitiesListMixin from '../mixins/CommunitiesListMixin.js';
 
-    import PliziUser from '../classes/PliziUser.js';
-    import PliziPost from '../classes/PliziPost.js';
-    import CommunitiesSmallBlock from "../common/Communities/CommunitiesSmallBlock";
-    import UserPosts from "../components/UserPosts";
+import PliziUser from '../classes/PliziUser.js';
+import PliziPost from '../classes/PliziPost.js';
+import CommunitiesSmallBlock from "../common/Communities/CommunitiesSmallBlock";
+import UserPosts from "../components/UserPosts";
 
-    export default {
-        name: 'PersonalPage',
-        props: {
-            id: Number | String
-        },
-        components: {
-            UserPosts,
-            CommunitiesSmallBlock,
-            Spinner,
-            AccountToolbarLeft, FavoriteFriends, ProfileHeader, NewPersonalMessageModal,
-            ProfilePhotos,
-            PostRepostModal,
-            PostLikeModal,
-            IconUnlock,
-        },
-        mixins: [DialogMixin, LazyLoadPosts, BlackListMixin, PhotosListMixin, CommunitiesListMixin],
-        data() {
-            return {
-                userId: null,
-                profileData: {},
-                isDataReady: false,
-                isShowMessageDialog: false,
-                posts: [],
-                footerLink: null,
-                // isPhotosDataReady: false,
-                userPhotos: [],
-                filterMode: 'all',
-                postRepostModal: {
-                    isVisible: false,
+export default {
+    name: 'PersonalPage',
+    props: {
+        id: Number | String
+    },
+    components: {
+        UserPosts,
+        CommunitiesSmallBlock,
+        Spinner,
+        AccountToolbarLeft, FavoriteFriends, ProfileHeader, NewPersonalMessageModal,
+        ProfilePhotos,
+        PostRepostModal,
+        PostLikeModal,
+        IconUnlock,
+    },
+    mixins: [DialogMixin, LazyLoadPosts, BlackListMixin, PhotosListMixin, CommunitiesListMixin],
+    data() {
+        return {
+            userId: null,
+            profileData: {},
+            isDataReady: false,
+            isShowMessageDialog: false,
+            posts: [],
+            footerLink: null,
+            // isPhotosDataReady: false,
+            userPhotos: [],
+            filterMode: 'all',
+            postRepostModal: {
+                isVisible: false,
+            },
+            postForRepost: null,
+            postLikeModal: {
+                isVisible: false,
+                content: {
+                    postId: null,
                 },
-                postForRepost: null,
-                postLikeModal: {
-                    isVisible: false,
-                    content: {
-                        postId: null,
-                    },
-                },
+            },
+        }
+    },
+
+    watch: {
+        $route: 'afterRouteUpdate' // при изменениях маршрута запрашиваем данные снова
+    },
+
+    computed: {
+        filteredPosts() {
+            if (this.filterMode === 'user') {
+                return this.posts.filter(post => post.checkIsMinePost(this.profileData.id));
             }
+
+            return this.posts;
         },
+        isLockedProfile() {
+            if (this.profileData && this.profileData.privacySettings && this.profileData.stats) {
+                if ((this.profileData.privacySettings.pageType === 2 && !this.profileData.stats.isFriend) ||
+                    this.profileData.privacySettings.pageType === 3) {
+                    return true;
+                }
+            }
 
-        watch: {
-            $route: 'afterRouteUpdate' // при изменениях маршрута запрашиваем данные снова
+            return false;
         },
+    },
 
-        computed: {
-            filteredPosts() {
-                if (this.filterMode === 'user') {
-                    return this.posts.filter(post => post.checkIsMinePost(this.profileData.id));
-                }
-
-                return this.posts;
-            },
-            isLockedProfile() {
-                if (this.profileData && this.profileData.privacySettings && this.profileData.stats) {
-                    if ((this.profileData.privacySettings.pageType === 2 && !this.profileData.stats.isFriend) ||
-                        this.profileData.privacySettings.pageType === 3) {
-                        return true;
-                    }
-                }
-
-                return false;
-            },
-        },
-
-        methods: {
-            async afterRouteUpdate(ev) {
-                this.userId = ev.params.id;
-                this.posts = [];
-                this.isStarted = true;
-
-                if (!this.isLockedProfile) {
-                    await this.getUserInfo();
-                    await this.getPosts();
-                    await this.getUserPhotos(this.id);
-                }
-
-                window.scrollTo(0, 0);
-            },
-
-            calcCentralBlockClass() {
-                const isCentralNarrow = (this.$root.$auth.fm.size > 0 || this.userCommunities || this.profileData.videos);
-
-                return {
-                    'col-lg-8 col-xl-8': isCentralNarrow,
-                    'col-lg-11 col-xl-11': !isCentralNarrow,
-                };
-            },
-
-            wallPostsSelectHandler(evData) {
-                this.filterMode = evData.wMode;
-            },
-
-            onSharePost(post) {
-                this.postRepostModal.isVisible = true;
-                this.postForRepost = post;
-            },
-
-            hidePostRepostModal() {
-                this.postRepostModal.isVisible = false;
-                this.postForRepost = null;
-            },
-
-            onHidePersonalMsgModal() {
-                this.isShowMessageDialog = false;
-            },
-
-            onShowPersonalMsgModal() {
-                this.isShowMessageDialog = true;
-            },
-
-            hideLikeModal() {
-                this.postLikeModal.isVisible = false;
-                this.postLikeModal.content.postId = null;
-            },
-
-            openLikeModal(postId) {
-                this.postLikeModal.isVisible = true;
-                this.postLikeModal.content.postId = postId;
-            },
-
-            async handlePersonalMessage(evData) {
-                this.onHidePersonalMsgModal();
-
-                this.$root.$once('NewChatDialog', (dlgData) => {
-                    this.sendPrivateMessageToUser(dlgData, evData.message);
-                });
-
-                await this.openDialogWithFriend({
-                    id: this.profileData.id,
-                    fullName: this.profileData.fullName
-                });
-            },
-
-            async sendPrivateMessageToUser(chatData, msgData) {
-                const sendData = {
-                    chatId: chatData.id,
-                    body: msgData.postText,
-                    attachments: msgData.attachments,
-                    event: 'new.message'
-                };
-                this.$root.$api.sendToChannel(sendData);
-            },
-
-            async getUserInfo() {
-                let apiResponse = null;
-
-                try {
-                    apiResponse = await this.$root.$api.$users.getUser(this.userId);
-                } catch (e) {
-                    this.isStarted = false;
-                    window.console.warn(e.detailMessage);
-                    throw e;
-                }
-
-                if (apiResponse) {
-                    this.profileData = new PliziUser(apiResponse.data);
-                    this.isDataReady = true;
-                }
-            },
-
-            async getPosts(limit = 50, offset = 0) {
-                if (!(this.profileData && this.profileData.id))
-                    return;
-
-                let response = null;
-
-                try {
-                    response = await this.$root.$api.$post.getPostsByUserId(this.profileData.id, limit, offset);
-                } catch (e) {
-                    this.isStarted = false;
-                    console.warn(e.detailMessage);
-                }
-
-                if (response !== null) {
-                    this.isStarted = false;
-                    response.map((post) => {
-                        this.posts.push(new PliziPost(post));
-                    });
-
-                    return response.length;
-                }
-            },
-        },
-
-        created() {
-            this.userId = this.id;
-
-            this.$root.$on(this.$root.$auth.frm.updateEventName, () => {
-                if (this.$refs && this.$refs.personalProfileHeader) {
-                    this.$refs.personalProfileHeader.$forceUpdate();
-                }
-            });
-        },
-
-
-        async mounted() {
+    methods: {
+        async afterRouteUpdate(ev) {
+            this.userId = ev.params.id;
+            this.posts = [];
             this.isStarted = true;
-            await this.getUserInfo();
 
             if (!this.isLockedProfile) {
-                await this.getUserPhotos(this.userId);
-                await this.getPosts();
+                await this.getUserInfo();
 
-                await this.getUserCommunitiesList(6);
-
-                if (this.userCommunities.length > 5) {
-                    this.footerLink = {title: 'Все сообщества', path: `/user-${this.id}/communities`};
+                if (this.$root.$router.currentRoute.name === "PersonalPage") {
+                    await this.getPosts();
+                    await this.getUserPhotos(this.id);
                 }
             }
 
             window.scrollTo(0, 0);
         },
+
+        calcCentralBlockClass() {
+            const isCentralNarrow = (this.$root.$auth.fm.size > 0 || this.userCommunities || this.profileData.videos);
+
+            return {
+                'col-lg-8 col-xl-8': isCentralNarrow,
+                'col-lg-11 col-xl-11': !isCentralNarrow,
+            };
+        },
+
+        wallPostsSelectHandler(evData) {
+            this.filterMode = evData.wMode;
+        },
+
+        onSharePost(post) {
+            this.postRepostModal.isVisible = true;
+            this.postForRepost = post;
+        },
+
+        hidePostRepostModal() {
+            this.postRepostModal.isVisible = false;
+            this.postForRepost = null;
+        },
+
+        onHidePersonalMsgModal() {
+            this.isShowMessageDialog = false;
+        },
+
+        onShowPersonalMsgModal() {
+            this.isShowMessageDialog = true;
+        },
+
+        hideLikeModal() {
+            this.postLikeModal.isVisible = false;
+            this.postLikeModal.content.postId = null;
+        },
+
+        openLikeModal(postId) {
+            this.postLikeModal.isVisible = true;
+            this.postLikeModal.content.postId = postId;
+        },
+
+        async handlePersonalMessage(evData) {
+            this.onHidePersonalMsgModal();
+
+            this.$root.$once('NewChatDialog', (dlgData) => {
+                this.sendPrivateMessageToUser(dlgData, evData.message);
+            });
+
+            await this.openDialogWithFriend({
+                id: this.profileData.id,
+                fullName: this.profileData.fullName
+            });
+        },
+
+        async sendPrivateMessageToUser(chatData, msgData) {
+            const sendData = {
+                chatId: chatData.id,
+                body: msgData.postText,
+                attachments: msgData.attachments,
+                event: 'new.message'
+            };
+            this.$root.$api.sendToChannel(sendData);
+        },
+
+        async getUserInfo() {
+            let apiResponse = null;
+
+            try {
+                apiResponse = await this.$root.$api.$users.getUser(this.userId);
+            } catch (e) {
+                this.isStarted = false;
+                window.console.warn(e.detailMessage);
+                throw e;
+            }
+
+            if (apiResponse) {
+                this.profileData = new PliziUser(apiResponse.data);
+                this.isDataReady = true;
+            }
+        },
+
+        async getPosts(limit = 50, offset = 0) {
+            if (!(this.profileData && this.profileData.id))
+                return;
+
+            let response = null;
+
+            try {
+                response = await this.$root.$api.$post.getPostsByUserId(this.profileData.id, limit, offset);
+            } catch (e) {
+                this.isStarted = false;
+                console.warn(e.detailMessage);
+            }
+
+            if (response !== null) {
+                this.isStarted = false;
+                response.map((post) => {
+                    this.posts.push(new PliziPost(post));
+                });
+
+                return response.length;
+            }
+        },
+    },
+
+    created() {
+        this.userId = this.id;
+
+        this.$root.$on(this.$root.$auth.frm.updateEventName, () => {
+            if (this.$refs && this.$refs.personalProfileHeader) {
+                this.$refs.personalProfileHeader.$forceUpdate();
+            }
+        });
+    },
+
+
+    async mounted() {
+        this.isStarted = true;
+        await this.getUserInfo();
+
+        if (!this.isLockedProfile) {
+            if (this.$root.$router.currentRoute.name === "PersonalPage") {
+                await this.getUserPhotos(this.userId);
+                await this.getPosts();
+            }
+            await this.getUserCommunitiesList(6);
+
+            if (this.userCommunities.length > 5) {
+                this.footerLink = {title: 'Все сообщества', path: `/user-${this.id}/communities`};
+            }
+        }
+
+        window.scrollTo(0, 0);
+    },
 
         /**
          * @TGA закоменченное ниже - ошибка но пусть пока будет
