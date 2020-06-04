@@ -65,7 +65,7 @@ const LinkMixin = {
             let youtubeLinks = this.detectYoutubeLinks(str);
             let links = this.detectLink(str);
             //TODO Лучьше сразу установить значение 'mqdefault' без переменной
-            if(imgName == 'hqdefault') {
+            if (imgName == 'hqdefault') {
                 imgName = 'mqdefault';
             }
 
@@ -92,6 +92,18 @@ const LinkMixin = {
                 return str;
             }
         },
+
+        getParameterByName(name, url) {
+            name = name.replace(/[\[\]]/g, '\\$&');
+
+            let regex = new RegExp('[?&]' + name + '(=([^&#]*)|&|#|$)'),
+                results = regex.exec(url);
+
+            if (!results) return null;
+            if (!results[2]) return '';
+
+            return decodeURIComponent(results[2].replace(/\+/g, ' '));
+        }
     }
 };
 
