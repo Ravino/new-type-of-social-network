@@ -1,5 +1,7 @@
 <template>
     <videoPlayer :options="generatePlayerOptions"
+                 @play="onPlay($event)"
+                 @ready="playerReady"
                  class="w-100"/>
 </template>
 
@@ -10,11 +12,14 @@
     import {videoPlayer} from 'vue-video-player';
     import 'videojs-youtube/dist/Youtube.min';
 
+    import LinkMixin from "../mixins/LinkMixin.js";
+
     export default {
         name: "VideoPlayer",
         components: {
             videoPlayer,
         },
+        mixins: [LinkMixin],
         props: {
             videoLink: {
                 type: String,
@@ -39,18 +44,23 @@
                     youtube: this.detectYoutubeLink ? { "iv_load_policy": 1 } : null,
                 }
             },
+            getTime() {
+                return Number(this.getParameterByName('t', this.detectYoutubeLink));
+            },
         },
         data() {
             return {
-                playerOptions: {
-                    sources: [{
-                        type: "video/youtube",
-                        src: "https://www.youtube.com/watch?v=xjS6SftYQaQ"
-                    }],
-                    techOrder: ["youtube"],
-                    youtube: { "iv_load_policy": 1 },
-                },
+                isSetStatedTime: false,
             }
+        },
+        methods: {
+            onPlay(player) {
+                if (!this.isSetStatedTime) {
+                    player.currentTime(this.getTime);
+                    this.isSetStatedTime = true;
+                }
+            },
+            playerReady(player) {},
         },
     }
 </script>
