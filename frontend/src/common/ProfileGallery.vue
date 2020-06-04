@@ -10,7 +10,7 @@
                          :src="photo.medium.path"
                          :alt="photo.name"/>
                 </div>
-                <button class="btn-close"  aria-label="delete" @click="onDeleteImage(photo.id)">
+                <button v-if="isOwner" class="btn-close"  aria-label="delete" @click="onDeleteImage(photo.id)">
                     <i class="fa fa-plus" aria-hidden="true"></i>
                 </button>
 
@@ -52,6 +52,7 @@
             type: {
                 type: String,
             },
+            isOwner: Boolean
         },
 
         data() {
@@ -89,7 +90,7 @@
                     let deletedImageIndex = this.images.findIndex(image => image.id === id);
                     this.images.splice(deletedImageIndex, 1);
 
-                    // TODO: @YZ сделать по нормальному после MVP
+                    // TODO: сделать по нормальному после MVP
                     let lsUser = JSON.parse(localStorage.getItem('pliziUser'));
 
                     if (!lsUser.data.stats.imageCount) {

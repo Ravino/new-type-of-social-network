@@ -41,7 +41,8 @@
                         <router-view name="userLastPhotos"
                                      :profileData="profileData"
                                      :isPhotosDataReady="isPhotosDataReady"
-                                     :photos="userPhotos"></router-view>
+                                     :photos="userPhotos"
+                                     :isOwner="false"></router-view>
                         <router-view name="userLastPost"
                                      :filter-mode="filterMode" :filtered-posts="filteredPosts"
                                      :on-share-post="onSharePost" :open-like-modal="openLikeModal"
