@@ -60,16 +60,16 @@
                                     {{ comment.likes }} пользователям
                                 </p>
                                 <div class="d-flex mb-0">
-                                    <router-link v-for="(user, index) in shortUsersLikes"
-                                                 :key="index"
-                                                 class="usersLikes-user"
-                                                 :to="{ name: 'PersonalPage', params: { id: user.id } }">
-                                        <img :src="user.profile.userPic"
-                                             :alt="user.profile.firstName + ' ' + user.profile.lastName"
-                                             :title="user.profile.firstName + ' ' + user.profile.lastName"
-                                             class="rounded-circle">
-                                    </router-link>
-                                </div>
+                                <router-link v-for="(user, index) in shortUsersLikes"
+                                             :key="index"
+                                             class="usersLikes-user"
+                                             :to="{ name: 'PersonalPage', params: { id: user.id } }">
+                                    <img :src="user.profile.userPic"
+                                         :alt="user.profile.firstName + ' ' + user.profile.lastName"
+                                         :title="user.profile.firstName + ' ' + user.profile.lastName"
+                                         class="rounded-circle">
+                                </router-link>
+                            </div>
                             </div>
                         </div>
                 </div>
@@ -156,7 +156,8 @@ export default {
         },
 
         shortUsersLikes() {
-            return this._usersLikes && this._usersLikes.length ? this._usersLikes.slice(0, 8) : null;
+            console.log(this._usersLikes);
+            return this.comment._usersLikes && this.comment._usersLikes.length ? this.comment._usersLikes.slice(0, 8) : null;
         }
     },
     methods: {
