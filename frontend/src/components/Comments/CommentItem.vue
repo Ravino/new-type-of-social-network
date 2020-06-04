@@ -156,7 +156,6 @@ export default {
         },
 
         shortUsersLikes() {
-            console.log(this._usersLikes);
             return this.comment._usersLikes && this.comment._usersLikes.length ? this.comment._usersLikes.slice(0, 8) : null;
         }
     },
