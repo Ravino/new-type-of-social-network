@@ -51,6 +51,13 @@ class PliziPost {
     _alreadyLiked = false;
 
     /**
+     * Просмотрел ли этот пост текущий пользователь
+     * @type {boolean}
+     * @private
+     */
+    _alreadyViewed = false;
+
+    /**
      * @type {Array}
      * @private
      */
@@ -183,6 +190,10 @@ class PliziPost {
         return this._alreadyLiked;
     }
 
+    get alreadyViewed() {
+        return this._alreadyViewed;
+    }
+
     get usersLikes() {
         return this._usersLikes;
     }
@@ -260,6 +271,10 @@ class PliziPost {
         this._alreadyLiked = value;
     }
 
+    set alreadyViewed(value) {
+        this._alreadyViewed = value;
+    }
+
     set usersLikes(value) {
         this._usersLikes = value;
     }
@@ -325,6 +340,7 @@ class PliziPost {
         this.primaryImage = post.primaryImage;
         this.likes = post.likes;
         this.alreadyLiked = post.alreadyLiked;
+        this.alreadyViewed = post.alreadyViewed;
         this.usersLikes = post.usersLikes ? post.usersLikes.list.map((user) => {
             return new PliziUser(user);
         }) : [];
@@ -358,6 +374,32 @@ class PliziPost {
         const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
 
         return diffDays > 7;
+    }
+
+    get imageAttachments() {
+        return this.attachments.filter(attachment => attachment.isImage);
+    }
+
+    // TODO: @YZ Доработать.
+    toJSON() {
+        return {
+            id: this._id,
+            name: this._name,
+            body: this._body,
+            primaryImage: this._primaryImage,
+            likes: this._likes,
+            alreadyLiked: this._alreadyLiked,
+            usersLikes: this._usersLikes,
+            views: this._views,
+            commentsCount: this._commentsCount,
+            sharesCount: this._sharesCount,
+            user: this._user,
+            community: this._community,
+            createdAt: this._createdAt,
+            attachments: this._attachments,
+            sharedFrom: this._sharedFrom,
+            author: this._author,
+        }
     }
 
     /**

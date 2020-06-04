@@ -172,7 +172,10 @@
 
             <div class="col-12 plz-post-item-images">
                 <div class="post-images">
-                    <Gallery type="gallery" :post="post" v-if="imageAttachments.length > 0" :images="imageAttachments"></Gallery>
+                    <Gallery v-if="post.imageAttachments.length > 0"
+                             type="gallery"
+                             :post="post"
+                             :images="post.imageAttachments"/>
 
                     <template v-for="(postAttachment) in post.attachments">
                         <template v-if="!postAttachment.isImage">
@@ -190,14 +193,14 @@
                              @click="onLike">
                             <IconFillHeard v-if="post.alreadyLiked"/>
                             <IconHeard v-else/>
-                            <span>{{ postLikes | space1000 }}</span>
+                            <span>{{ post.likes | space1000 }}</span>
                             <div v-if="post.usersLikes && post.usersLikes.length" class="usersLikes p-3" @click.stop="">
                                 <p class="mb-1">
                                     <b @click.stop="$emit('onShowUsersLikes', postIdForComment)"
                                        style="cursor: pointer">
                                         Понравилось
                                     </b>
-                                    {{ postLikes }} пользователям
+                                    {{ post.likes }} пользователям
                                 </p>
                                 <div class="d-flex mb-0">
                                     <router-link v-for="(user, index) in shortUsersLikes"
@@ -214,18 +217,18 @@
                         </div>
                         <div class="post-watched-counter ml-4" @click="getCommentsByPostId">
                             <IconMessage/>
-                            <span>{{ postCommentCount | space1000 }}</span>
+                            <span>{{ post.commentsCount | space1000 }}</span>
                         </div>
 
                         <div class="post-watched-counter ml-4" @click="$emit('onShare', post)">
                             <IconShare/>
-                            <span>{{ postSharesCount | space1000 }}</span>
+                            <span>{{ post.sharesCount | space1000 }}</span>
                         </div>
                     </div>
 
                     <div class="ml-auto d-flex align-items-center">
                         <div class="post-watched-counter">
-                            <span>{{ postViewsCount | space1000 }}</span>
+                            <span>{{ post.views | space1000 }}</span>
                             <IconEye/>
                         </div>
                     </div>
@@ -236,14 +239,14 @@
                             :key="comment.id"
                             type="post"
                             :comment="comment"
-                            :postId="postIdForComment"
+                            :postId="post.id"
                             @onDelete="removeComment"
                             @update="editComment"
                             :attachments="comment.attachments"
                         ></CommentItem>
                     </div>
 
-                    <CommentTextField type="post" :postId="postIdForComment" @updateComments="addNewComment"></CommentTextField>
+                    <CommentTextField type="post" :postId="post.id" @updateComments="addNewComment"></CommentTextField>
                 </template>
             </div>
         </template>
@@ -322,12 +325,12 @@
             hasYoutubeLinks() {
                 let str = this.post.body.replace(/<\/?[^>]+>/g, '').trim();
 
-                return this.detectYoutubeLinks(str);
+                return str ? this.detectYoutubeLinks(str) : null;
             },
             livePreview() {
                 let str = this.post.body.replace(/<\/?[^>]+>/g, '').trim();
 
-                return this.transformStrWithLinks(str, 'hqdefault');
+                return str ? this.transformStrWithLinks(str, 'hqdefault') : null;
             },
             postable() {
                 if (this.post.community) {
@@ -335,9 +338,6 @@
                 }
 
                 return this.post.author;
-            },
-            imageAttachments() {
-                return this.post.attachments.filter(attachment => attachment.isImage);
             },
             user() {
                 return this.$root.$auth.user;
@@ -351,21 +351,6 @@
             recursiveCommunityAvatar() {
                 return this.getCommunityAvatar(this.post?.sharedFrom?.community);
             },
-            postLikes() {
-                return parseInt(this.post?.likes);
-            },
-            postCommentCount() {
-                return parseInt(this.post?.commentsCount);
-            },
-            postSharesCount() {
-                return parseInt(this.post?.sharesCount);
-            },
-            postViewsCount() {
-                return parseInt(this.post?.views);
-            },
-            postIdForComment() {
-                return this.post?.sharedFrom?.id || this.post.id;
-            },
         },
         methods: {
             editComment(newComment) {
@@ -378,18 +363,6 @@
             addNewComment(newComment) {
                 this.comments.push(new PliziComment(newComment));
                 this.post.commentsCount = this.comments.length;
-            },
-            async getCommentsByPostId() {
-                this.isShowComment = !this.isShowComment;
-                if (this.isShowComment) {
-                    return;
-                }
-                try {
-                    let response = await this.$root.$api.$post.getCommentsById(this.postIdForComment);
-                    this.comments = response.data.list.map(comment => new PliziComment(comment));
-                } catch (e) {
-                    console.warn(e.detailMessage);
-                }
             },
             openVideoModal(shared = false) {
                 let videoLink;
@@ -473,6 +446,18 @@
                         this.post.likes++;
                         this.post.usersLikes.push(this.$root.$auth.user);
                     }
+                }
+            },
+            async getCommentsByPostId() {
+                this.isShowComment = !this.isShowComment;
+                if (this.isShowComment) {
+                    return;
+                }
+                try {
+                    let response = await this.$root.$api.$post.getCommentsById(this.post.id);
+                    this.comments = response.data.list.map(comment => new PliziComment(comment));
+                } catch (e) {
+                    console.warn(e.detailMessage);
                 }
             },
         },
