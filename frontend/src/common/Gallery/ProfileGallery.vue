@@ -38,7 +38,7 @@
 <script>
     import GalleryViewer from './GalleryViewer.vue';
     import GalleryDescription from "./GalleryDescription.vue";
-    import PliziComment from "../classes/PliziComment";
+    import PliziComment from "../../classes/PliziComment";
 
     export default {
         name: 'ProfileGallery',

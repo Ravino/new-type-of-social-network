@@ -100,10 +100,12 @@
 
 <script>
 import moment from "moment";
-import CommentReply from "./CommentReply.vue";
-import TextEditor from "../../common/TextEditor.vue";
 import IconHeard from "../../icons/IconHeard.vue";
 import IconFillHeard from "../../icons/IconFillHeard.vue";
+
+import CommentReply from "./CommentReply.vue";
+import TextEditor from "../../common/TextEditor.vue";
+
 import LinkMixin from '../../mixins/LinkMixin.js';
 import ChatMixin from "../../mixins/ChatMixin.js";
 import PliziComment from "../../classes/PliziComment.js";
