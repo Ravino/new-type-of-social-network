@@ -67,7 +67,7 @@ const routes = [
     {path: '/user-:id', component: resolve => resolve(PersonalPage), name: 'PersonalPage', meta: {title: 'Plizi:'}, props: true,
         children: [
             {
-                path: '', meta: {title: 'Plizi: '}, components: {
+                path: '', meta: {title: 'Plizi: '}, name: 'PersonalPage', components: {
                     userLastPhotos: resolve => resolve(ProfilePhotos),
                     userLastPost: resolve => resolve(UserPosts),
                 },

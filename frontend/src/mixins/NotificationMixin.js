@@ -26,6 +26,11 @@ const NotificationMixin = {
                 isHuman: true
             };
 
+            if (inputNotification.data.notificationType === 'user.profile.image.created') {
+                notification.body = this.senderFullName(inputNotification) +
+                    (inputNotification.data.sender.sex === 'f' ? 'сменила аватарку' : 'сменил аватарку');
+            }
+
             if (inputNotification.data.notificationType === 'user.profile.image.updated') {
                 notification.body = this.senderFullName(inputNotification) +
                     (inputNotification.data.sender.sex === 'f' ? 'сменила аватарку' : 'сменил аватарку');
@@ -168,7 +173,8 @@ const NotificationMixin = {
                 data: {
                     notificationType: data.type,
                     sender: {
-                        userPic: userOwner.userPic ? userOwner.userPic : null,
+                        // userPic: userOwner.userPic ? userOwner.userPic : null,
+                        userPic: 'images/plizi-icon-64.png',
                         message: data.message ? data.message : null
                     }
                 }
