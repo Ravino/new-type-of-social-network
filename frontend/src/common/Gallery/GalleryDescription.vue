@@ -112,15 +112,10 @@ import PliziComment from "../../classes/PliziComment.js";
        type: String,
   },
   },
-  data() {
-      return {
-        noAvatar: '../images/noavatar-256.png',
-      };
-  },
   computed: {
    userAvatar() {
        if (this.getUserData.profile.avatar === null) {
-           return this.noAvatar;
+           return this.image.__defaultAvatarPath;
        }
 
        return this.getUserData.profile.avatar.image.thumb.path;

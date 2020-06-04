@@ -79,8 +79,8 @@
                      :key="answer.id"
                      :postId="postId"
                      :comment="answer"
-                     @onDelete="removeComment"
-                     @update="editComment"
+                     @onDelete="comment.removeComment"
+                     @update="comment.editComment"
                      :attachments="answer.attachments">
                  </CommentItem>
              </div>
@@ -142,7 +142,7 @@ export default {
             return str === returnedStr ? this.comment.body : this.transformStrWithLinks(str);
         },
         checkAuthorAvatar() {
-            if (this.comment.author.profile.avatar.image.medium.path === null) {
+            if (this.comment.author.profile.avatar.image === null) {
                 return this.comment.defaultAvatarPath;
             }
 
@@ -160,16 +160,8 @@ export default {
         }
     },
     methods: {
-        editComment(newComment) {
-            this.comment.thread = this.comment.thread.map(comment => comment.id === newComment.id ? comment.update(newComment) : comment);
-        },
-
         addComment(comment) {
             this.comment.thread.push(new PliziComment(comment));
-        },
-
-        removeComment(commentId) {
-            this.comment.thread = this.comment.thread.filter(comment => comment.id !== commentId);
         },
 
         async onTextPost(evData) {

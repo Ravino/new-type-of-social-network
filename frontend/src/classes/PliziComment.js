@@ -115,6 +115,15 @@ class PliziComment {
         return this.__defaultAvatarPath;
     }
 
+    editComment(newComment) {
+        return this._thread = this._thread.map(comment => comment.id === newComment.id ? comment.update(newComment) : comment);
+    }
+
+    removeComment(commentId) {
+        console.log(12312312);
+        return this._thread = this._thread.filter(comment => comment.id !== commentId);
+    }
+
     set id(value) {
         this._id = value;
     }
