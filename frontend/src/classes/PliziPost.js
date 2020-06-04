@@ -360,6 +360,32 @@ class PliziPost {
         return diffDays > 7;
     }
 
+    get imageAttachments() {
+        return this.attachments.filter(attachment => attachment.isImage);
+    }
+
+    // TODO: @YZ Доработать.
+    toJSON() {
+        return {
+            id: this._id,
+            name: this._name,
+            body: this._body,
+            primaryImage: this._primaryImage,
+            likes: this._likes,
+            alreadyLiked: this._alreadyLiked,
+            usersLikes: this._usersLikes,
+            views: this._views,
+            commentsCount: this._commentsCount,
+            sharesCount: this._sharesCount,
+            user: this._user,
+            community: this._community,
+            createdAt: this._createdAt,
+            attachments: this._attachments,
+            sharedFrom: this._sharedFrom,
+            author: this._author,
+        }
+    }
+
     /**
      * Возвращает флаг - принадлежит или нет пост текущему юзеру
      * @param userId
