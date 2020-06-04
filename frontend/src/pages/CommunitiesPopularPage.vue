@@ -43,7 +43,7 @@
                     </div>
 
                     <div class="col-12 col-lg-4 col-xl-3  mb-4  d-flex pl-3 pl-lg-0 ">
-                        <CommunitiesSmallBlock
+                        <CommunitiesSmallBlock v-if="isRecommendedCommunitiesDataReady"
                             :title="`Рекомендованные`"
                             :communities="recommendedCommunities"></CommunitiesSmallBlock>
                     </div>

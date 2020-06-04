@@ -280,7 +280,7 @@ class PliziUsersAPI extends PliziBaseAPI{
             });
 
         if (200 === response.status) {
-            return response.data.data.list;
+            return response.data.data;
         }
         return null;
     }

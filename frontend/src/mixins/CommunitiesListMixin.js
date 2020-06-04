@@ -31,13 +31,18 @@ const CommunitiesListMixin = {
             isManagedCommunitiesLoaded: false,
             managedCommunities: [],
 
-            recommendedCommunities: null,
-            userCommunities: null,
+            isRecommendedCommunitiesDataReady: false,
+            recommendedCommunities: [],
+
+            isUserCommunitiesDataReady: false,
+            userCommunities: [],
 
             noMore: false,
             enabledLoader: true,
 
             searchString: '',
+
+            isDataReady: false,
         }
     },
     mounted() {
@@ -179,7 +184,7 @@ const CommunitiesListMixin = {
         },
 
         async loadRecommendedCommunities() {
-            this.isDataReady = false;
+            this.isRecommendedCommunitiesDataReady = false;
             // this.communities = [];
             let apiResponse = null;
 
@@ -190,18 +195,18 @@ const CommunitiesListMixin = {
             }
 
             if (apiResponse !== null) {
-                // this.communities = [];
-                this.recommendedCommunities = apiResponse;
-                // apiResponse.list.map((srItem) => {
-                //     this.recommendedCommunities.push(new PliziCommunity(srItem));
-                // });
+                this.communities = [];
+                apiResponse.list.map((srItem) => {
+                    this.recommendedCommunities.push(new PliziCommunity(srItem));
+                });
 
-                this.isDataReady = true;
+                this.isRecommendedCommunitiesDataReady = true;
             }
         },
 
         async getUserCommunitiesList() {
             let apiResponse = null;
+            this.isUserCommunitiesDataReady = false;
 
             try {
                 apiResponse = await this.$root.$api.$users.getUserCommunities(this.userId);
@@ -213,8 +218,10 @@ const CommunitiesListMixin = {
             }
 
             if (apiResponse) {
-                this.userCommunities = apiResponse;
-                this.isDataReady = true;
+                apiResponse.list.map((srItem) => {
+                    this.userCommunities.push(new PliziCommunity(srItem));
+                });
+                this.isUserCommunitiesDataReady = true;
             }
         },
 
