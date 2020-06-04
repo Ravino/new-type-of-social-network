@@ -49,6 +49,7 @@
         </router-link>
         </template>
         <template v-else>
+            <router-link tag="a" class="p-0 d-flex" :to="{path: `/user-${userData.id}/albums`, params: {id: userData.id}}">
             <div class="plz-profile-userdetails-numbers text-center py-2 px-2 py-md-4 px-md-4 mt-auto">
                 <template v-if="userImageNumber()">
                     <span class="numbers-top" v-html="sBeaty(userImageNumber())"></span>
@@ -58,6 +59,7 @@
                     <span class="numbers-bottom">Нет фотографий</span>
                 </template>
             </div>
+            </router-link>
         </template>
 
         <template v-if="isOwner">

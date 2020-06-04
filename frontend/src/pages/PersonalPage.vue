@@ -51,6 +51,8 @@
                                      :wall-posts-select-handler="wallPostsSelectHandler"></router-view>
                         <router-view name="userFriendsList"></router-view>
                         <router-view name="userCommunities"></router-view>
+                        <router-view name="userPhotoalbums"></router-view>
+                        <router-view name="userPhotoalbum"></router-view>
                         <router-view name="userVideoList"></router-view>
                         <router-view name="followersList"></router-view>
 
