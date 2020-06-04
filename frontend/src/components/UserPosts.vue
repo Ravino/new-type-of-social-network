@@ -5,6 +5,7 @@
                        @wallPostsSelect="wallPostsSelectHandler"/>
         <template v-if="filteredPosts && filteredPosts.length > 0">
             <Post v-for="postItem in filteredPosts"
+                  v-waypoint="{ active: true, callback: ({ el, going, direction })=>{ postIsRead(postData, going, direction); }, options: { threshold: [0.5] } }"
                   :key="`userPost-`+postItem.id"
                   :post="postItem"
                   @onShare="onSharePost"
@@ -25,22 +26,29 @@
     </div>
 
 </template>
-<script>
-    import Post from '../common/Post/Post.vue'
-    import ProfileFilter from './ProfileFilter.vue'
-    import SmallSpinner from '../common/SmallSpinner.vue'
 
-    export default {
-        name: 'UserPosts',
-        components: {Post, ProfileFilter, SmallSpinner},
-        props: {
-            isStarted: Boolean,
-            filterMode: {},
-            filteredPosts: {},
-            onSharePost: {},
-            openLikeModal: {},
-            profileData: {},
-            wallPostsSelectHandler: {}
-        }
-    }
+<script>
+import SmallSpinner from '../common/SmallSpinner.vue';
+
+import Post from '../common/Post/Post.vue';
+import ProfileFilter from './ProfileFilter.vue';
+
+import PostViewMixin from '../mixins/PostViewMixin.js';
+
+export default {
+name: 'UserPosts',
+components: {Post, ProfileFilter, SmallSpinner},
+mixins: [PostViewMixin],
+
+props: {
+    isStarted: Boolean,
+    filterMode: {},
+    filteredPosts: {},
+    onSharePost: {},
+    openLikeModal: {},
+    profileData: {},
+    wallPostsSelectHandler: {}
+}
+
+}
 </script>

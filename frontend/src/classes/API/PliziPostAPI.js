@@ -434,7 +434,6 @@ class PliziPostAPI extends PliziBaseAPI {
      * @returns {object[]|null}
      * @throws PliziAPIError
      */
-
     async addAttachmentsToComment( picsArr ){
         const formData = new FormData();
 
@@ -550,6 +549,24 @@ class PliziPostAPI extends PliziBaseAPI {
 
         if (response.status === 200) {
             return response.data
+        }
+
+        return null;
+    }
+
+
+    async addView(postId, userId) {
+        const sendData = {
+            postId : postId
+        };
+        let response = await this.axios.post( `api/posts/view`, sendData, this.authHeaders )
+            .catch( ( error ) => {
+                this.checkIsTokenExpires( error, `$post.addView` );
+                throw new PliziAPIError( `$post.addView`, error.response );
+            });
+
+        if ( response.status === 200 ){
+            return response.data;
         }
 
         return null;

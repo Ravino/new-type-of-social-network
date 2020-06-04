@@ -5,7 +5,7 @@
         </div>
 
         <div class="col-sm-12 col-md-11 col-lg-9 col-xl-10">
-            <CommunityHeader :community="communityData" :subscribe-type="subscribeType"/>
+            <CommunityHeader :community="communityData" :subscribeType="subscribeType"/>
 
             <div class="row">
                 <div class="col-12 --col-sm-7 col-lg-8 col-xl-8">
@@ -78,22 +78,23 @@ import PliziCommunity from '../classes/PliziCommunity.js';
 import PliziPost from '../classes/PliziPost.js';
 
 import CommunitiesSubscribeMixin from '../mixins/CommunitiesSubscribeMixin.js';
-import CommunityPageMixin from "../mixins/CommunityPageMixin.js";
+import CommunityPageMixin from '../mixins/CommunityPageMixin.js';
 import HotCommunitiesMixin from '../mixins/HotCommunitiesMixin.js';
 import LazyLoadPosts from '../mixins/LazyLoadPosts.js';
+import PostViewMixin from '../mixins/PostViewMixin.js';
 
 import AccountToolbarLeft from '../common/AccountToolbarLeft.vue';
 import FavoriteFriends from '../common/FavoriteFriends.vue';
 
 import CommunityEditor from '../common/Communities/CommunityEditor.vue';
-import CommunityPostsList from "../components/Community/CommunityPostsList.vue";
+import CommunityPostsList from '../components/Community/CommunityPostsList.vue';
 
 export default {
 name: 'CommunityPage',
 props: {
     id : Number|String
 },
-mixins: [CommunitiesSubscribeMixin, LazyLoadPosts, HotCommunitiesMixin, CommunityPageMixin],
+mixins: [CommunitiesSubscribeMixin, LazyLoadPosts, PostViewMixin, HotCommunitiesMixin, CommunityPageMixin],
 components : {
     CommunityPostsList,
     AccountToolbarLeft,
