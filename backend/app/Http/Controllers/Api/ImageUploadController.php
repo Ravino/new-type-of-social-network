@@ -5,8 +5,10 @@ namespace App\Http\Controllers\Api;
 use App\Http\Controllers\Controller;
 use App\Http\Resources\User\Image;
 use App\Http\Resources\User\ImagesCollection;
+use App\Models\Community;
 use App\Models\ImageUpload;
 use App\Http\Requests\ImageUpload\StoreImage;
+use App\Models\PhotoAlbum;
 use App\Models\User;
 use App\Services\S3UploadService;
 use Exception;
@@ -101,5 +103,64 @@ class ImageUploadController extends Controller
             ->get();
 
         return new ImagesCollection($images);
+    }
+
+    public function delete(ImageUpload $imageUpload)
+    {
+        $user = \Auth::user();
+
+        if ($imageUpload->creatable instanceof User) {
+            if ($imageUpload->user->id === \Auth::id()) {
+                try {
+                    $imageUpload->delete();
+                } catch (Exception $e) {
+                    return response()->json([
+                        'message' => 'Ошибка удаления изображения.',
+                    ], 422);
+                }
+
+                $imageUpload->albums()->detach();
+                \Auth::user()->profile()->decrement('image_count');
+
+                return response()->json([
+                    'message' => 'Изображение успешно удалено.',
+                ]);
+            }
+
+            return response()->json([
+                'message' => 'У вас нет доступа.',
+            ], 403);
+        }
+
+        if ($imageUpload->creatable instanceof Community) {
+            $community = $user->community()
+                ->where('id', $imageUpload->creatable->id)
+                ->first();
+
+            if ($community && $community->pivot->role === 'author') {
+                try {
+                    $imageUpload->delete();
+                } catch (Exception $e) {
+                    return response()->json([
+                        'message' => 'Ошибка удаления изображения.',
+                    ], 422);
+                }
+
+                $imageUpload->albums()->detach();
+//                $community->decrement('image_count');
+
+                return response()->json([
+                    'message' => 'Изображение успешно удалено.',
+                ]);
+            }
+
+            return response()->json([
+                'message' => 'У вас нет доступа.',
+            ], 403);
+        }
+
+        return response()->json([
+            'message' => 'Неизвестая ошибка',
+        ], 422);
     }
 }
