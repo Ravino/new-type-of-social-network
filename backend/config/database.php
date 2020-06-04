@@ -100,6 +100,7 @@ return [
             'password' => env('MONGO_DB_PASSWORD', 'rootpassword'),
             'options' => [
                 'database' => env('DB_AUTHENTICATION_DATABASE', 'admin'), // required with Mongo 3+
+                'authSource' => 'admin'
             ],
         ],
 
