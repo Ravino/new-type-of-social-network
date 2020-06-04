@@ -106,7 +106,7 @@
                 let apiResponse = null;
 
                 try {
-                    apiResponse = await this.$root.$api.$photoalbums.deleteImageInPhotoAlbum(this.photoAlbumId, id);
+                    apiResponse = await this.$root.$api.$photoalbums.deleteImage(id);
                 } catch (e) {
                     console.warn(e.detailMessage);
                 }
