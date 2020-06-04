@@ -12,12 +12,12 @@
                                                @uploadingImage="uploadingImage"/>
                     </div>
                     <div class="col-12">
-                        <div class="row photoalbum-images-content pt-4 mb-4 bg-white-br20">
+                        <div class="photoalbum-images-content  pt-4 mb-4 bg-white-br20">
                             <div class="col-12">
                                 <div class="photo-album-description-block">
                                     <PhotoalbumEditBlock :photoAlbum="photoAlbum"/>
                                 </div>
-                                <div class="d-flex flex-wrap px-3">
+                                <div class="row">
                                     <GridGallery v-if="photoAlbum && photoAlbum.images && photoAlbum.images.length"
                                                  :images="photoAlbum.images"
                                                  @onDelete="onDeleteImage"/>
@@ -106,7 +106,7 @@
                 let apiResponse = null;
 
                 try {
-                    apiResponse = await this.$root.$api.$photoalbums.deleteImageInPhotoAlbum(this.photoAlbumId, id);
+                    apiResponse = await this.$root.$api.$photoalbums.deleteImage(id);
                 } catch (e) {
                     console.warn(e.detailMessage);
                 }

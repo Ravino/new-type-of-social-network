@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Http\Resources\Community\CommunityCollection;
 use App\Models\User;
 use Domain\Pusher\WampServer;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use App\Http\Resources\User\User as UserResource;
@@ -38,12 +39,18 @@ class ProfileController extends Controller
     }
 
     /**
+     * @param Request $request
      * @param $id
      * @return CommunityCollection
      */
-    public function userCommunities($id)
+    public function userCommunities(Request $request, $id)
     {
-        $user = User::with('communities')->find($id);
+        $user = User::with(['communities' => static function($query) use ($request) {
+                $query
+                    ->limit($request->query('limit', 30))
+                    ->offset($request->query('offset', 0));
+            }])
+            ->find($id);
         return new CommunityCollection($user->communities);
     }
 

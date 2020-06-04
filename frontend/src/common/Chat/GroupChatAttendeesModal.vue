@@ -11,19 +11,13 @@
 
                     <form id="chatPickAttendeesForm" novalidate="novalidate" class="chat-pick-attendees-form mb-4">
 
-                        <div class="form-group" id="groupChatAttendeesModalMembers">
-                            <vue-custom-scrollbar class="chat-members-scroll py-4" :settings="customScrollbarSettings">
-                                <div class="d-flex flex-column align-items-start" ref="attendeesList" :key="'attendeesList-'+keyUpdater">
-                                    <ChatAttendeeItem v-for="attItem in getAttendeesList()"
-                                                      @RemoveAttendeeFromChat="onRemoveAttendeeFromChat"
-                                                      v-bind:companion="attItem"
-                                                      v-bind:meIsChatAdmin="meIsChatAdmin"
-                                                      v-bind:isCanDelete="isCanDelete"
-                                                      v-bind:key="'attendeeItem-'+attItem.id+'-'+keyUpdater">
-                                    </ChatAttendeeItem>
-                                </div>
-                            </vue-custom-scrollbar>
-                        </div>
+                        <GroupChatMembersList
+                                      ref="attendeesList"
+                                      v-bind:attendees="getAttendeesList(keyUpdater)"
+                                      v-bind:isCanDelete="isCanDelete"
+                                      v-bind:meIsChatAdmin="meIsChatAdmin"
+                                      v-bind:keyUpdater="keyUpdater"
+                                      @RemoveAttendeeFromChat="onRemoveAttendeeFromChat"></GroupChatMembersList>
 
                         <div v-if="meIsChatAdmin" class="form-group">
                             <label class="">Добавить нового участника</label>
@@ -67,10 +61,7 @@
 </template>
 
 <script>
-/** @link https://binaryify.github.io/vue-custom-scrollbar/en/#why-custom-scrollbar **/
-import vueCustomScrollbar from 'vue-custom-scrollbar';
-
-import ChatAttendeeItem from './ChatAttendeeItem.vue';
+import GroupChatMembersList from './GroupChatMembersList.vue';
 
 import ChatAdminMixin from '../../mixins/ChatAdminMixin.js';
 
@@ -80,7 +71,7 @@ import PliziRecipientsCollection from '../../classes/Collection/PliziRecipientsC
 
 export default {
 name: 'GroupChatAttendeesModal',
-components: { ChatAttendeeItem, vueCustomScrollbar },
+components: { GroupChatMembersList},
 mixins: [ChatAdminMixin],
 props: {
     currentDialog: PliziDialog
@@ -95,10 +86,6 @@ data() {
         },
         hasNoAttendees: false,
         keyUpdater: 0,
-        customScrollbarSettings: {
-            suppressScrollX: true, // rm scroll x
-            wheelPropagation: false
-        },
     }
 },
 
@@ -144,8 +131,14 @@ methods: {
         this.removeAttendeeFromChat( evData.userId );
     },
 
-
     async addAttendeeToChat( user ){
+        const attIsExists = this.currentDialog.getAttendee(user.id);
+
+        if (attIsExists) {
+            this.$root.$alert(`${user.fullName} уже есть в этом чате!`, 'bg-danger', 5);
+            return;
+        }
+
         let apiResponse = null;
 
         try {
@@ -159,8 +152,6 @@ methods: {
         if ( apiResponse ) {
             this.$emit( 'AddAttendeeToDialog', { chatId : this.currentDialog.id, userId : user.id } );
             this.$root.$auth.dm.addAttendeeToDialog(this.currentDialog.id, user);
-            this.$root.$dialogsKeyUpdater++;
-            this.keyUpdater++;
         }
     },
 
@@ -179,12 +170,27 @@ methods: {
         if ( apiResponse ) {
             this.$emit( 'RemoveAttendeeFromDialog', { chatId : this.currentDialog.id, userId : userId } );
             this.$root.$auth.dm.removeAttendeeFromDialog(this.currentDialog.id, userId);
-            this.$root.$dialogsKeyUpdater++;
-            this.keyUpdater++;
         }
     }
-
 },
+
+created(){
+    this.$root.$on( this.$root.$auth.dm.updateEventName, () => {
+        this.$root.$emit('UpdateCurrentDialog', {});
+
+        this.$root.$dialogsKeyUpdater++;
+        this.keyUpdater++;
+
+        if (this.$refs &&  this.$refs.attendeesList) {
+            this.$refs.attendeesList.$forceUpdate();
+        }
+    });
+},
+
+beforeDestroy() {
+    this.$root.$off(this.$root.$auth.dm.updateEventName, ()=>{});
+}
+
 
 }
 </script>

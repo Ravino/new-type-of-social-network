@@ -32,6 +32,10 @@ Vue.use(vuetwemoji, {
 import Multiselect from 'vue-multiselect';
 Vue.component('multiselect', Multiselect);
 
+/** @link https://github.com/scaccogatto/vue-waypoint **/
+import VueWaypoint from 'vue-waypoint';
+Vue.use(VueWaypoint);
+
 import './libs/extra';
 import router from './router/router.js';
 import './libs/filters.js';

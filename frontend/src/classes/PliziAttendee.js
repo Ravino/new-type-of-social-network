@@ -10,7 +10,7 @@ class PliziAttendee {
 
     /**
      * ID собеседника
-     * @type {number}
+     * @type {string}
      * @private
      */
     _id = null;

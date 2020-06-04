@@ -1,6 +1,8 @@
+import { convertToDate } from '../utils/DateUtils.js';
+
 import PliziUser from './PliziUser.js';
 import PliziCommunity from './PliziCommunity.js';
-import PliziAttachment from "./PliziAttachment";
+import PliziAttachment from './PliziAttachment.js';
 
 class PliziPost {
     /**
@@ -42,11 +44,18 @@ class PliziPost {
     _likes = null;
 
     /**
-     * Лайкнутый ли этот пост текущим пользователем.
+     * лайкнул ли этот пост текущий пользователь
      * @type {boolean}
      * @private
      */
     _alreadyLiked = false;
+
+    /**
+     * Просмотрел ли этот пост текущий пользователь
+     * @type {boolean}
+     * @private
+     */
+    _alreadyViewed = false;
 
     /**
      * @type {Array}
@@ -77,7 +86,7 @@ class PliziPost {
 
     /**
      * автор-юзер
-     * @type {PliziUzer|null}
+     * @type {PliziUser|null}
      * @private
      */
     _user = null;
@@ -181,6 +190,10 @@ class PliziPost {
         return this._alreadyLiked;
     }
 
+    get alreadyViewed() {
+        return this._alreadyViewed;
+    }
+
     get usersLikes() {
         return this._usersLikes;
     }
@@ -190,7 +203,7 @@ class PliziPost {
     }
 
     /**
-     * @returns {PliziUzer}
+     * @returns {PliziUser}
      */
     get user() {
         return this._user;
@@ -258,6 +271,10 @@ class PliziPost {
         this._alreadyLiked = value;
     }
 
+    set alreadyViewed(value) {
+        this._alreadyViewed = value;
+    }
+
     set usersLikes(value) {
         this._usersLikes = value;
     }
@@ -286,8 +303,11 @@ class PliziPost {
         this._author = value;
     }
 
+    /**
+     * @param {Date|String|Number} value
+     */
     set createdAt(value) {
-        this._createdAt = new Date(value * 1000);
+        this._createdAt = value ? convertToDate(value) : value;
     }
 
     set deleted(value) {
@@ -320,6 +340,7 @@ class PliziPost {
         this.primaryImage = post.primaryImage;
         this.likes = post.likes;
         this.alreadyLiked = post.alreadyLiked;
+        this.alreadyViewed = post.alreadyViewed;
         this.usersLikes = post.usersLikes ? post.usersLikes.list.map((user) => {
             return new PliziUser(user);
         }) : [];
@@ -355,13 +376,39 @@ class PliziPost {
         return diffDays > 7;
     }
 
+    get imageAttachments() {
+        return this.attachments.filter(attachment => attachment.isImage);
+    }
+
+    // TODO: @YZ Доработать.
+    toJSON() {
+        return {
+            id: this._id,
+            name: this._name,
+            body: this._body,
+            primaryImage: this._primaryImage,
+            likes: this._likes,
+            alreadyLiked: this._alreadyLiked,
+            usersLikes: this._usersLikes,
+            views: this._views,
+            commentsCount: this._commentsCount,
+            sharesCount: this._sharesCount,
+            user: this._user,
+            community: this._community,
+            createdAt: this._createdAt,
+            attachments: this._attachments,
+            sharedFrom: this._sharedFrom,
+            author: this._author,
+        }
+    }
+
     /**
      * Возвращает флаг - принадлежит или нет пост текущему юзеру
-     * @param user_id
+     * @param userId
      * @returns {boolean}
      */
-    checkIsMinePost(user_id) {
-        return (this.user && this.user.id) === user_id;
+    checkIsMinePost(userId) {
+        return (this.user && this.user.id) === userId;
     }
 }
 

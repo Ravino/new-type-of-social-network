@@ -97,7 +97,12 @@
                                     <p v-else class="dropdown-item px-0 py-1 m-0 px-3"
                                        @click="addToBlacklist"  title="Добавить в чёрный список">Добавить в чёрный список</p>
                                 </div>
-
+                                <div v-if="!userData.isOwner" class="nav-item">
+                                    <router-link tag="a" class="dropdown-item px-0 py-1 m-0 px-3"
+                                                 :to="{path: `/user-${userData.id}/followers`, params: {id: userData.id}}">
+                                        На кого подписан
+                                    </router-link>
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -108,7 +113,10 @@
         <div class="col-12  col-lg-8 col-xl-9 px-0 pt-4 plz-profile-userdetails">
             <div class="w-100 bg-white-br20 px-3 px-md-5 pb-3">
                 <div class="d-flex justify-content-between align-items-center mb-2">
-                    <h2 class="plz-user-name mb-0 pr-4">{{userData.fullName}}</h2>
+                    <h2 v-if="isOwner" class="plz-user-name mb-0 pr-4">{{userData.fullName}}</h2>
+                    <router-link v-else :to="{ name: 'PersonalPage', params: { id: userData.id }}" tag="h2"
+                                 class="plz-user-name mb-0 pr-4">{{userData.fullName}}</router-link>
+
                     <span v-if="userData.isOnline" class="online text-nowrap">В сети</span>
                 </div>
 
@@ -116,9 +124,7 @@
                     <tbody>
                     <tr v-if="!!userData.profile.birthday">
                         <td class="">Дата рождения:</td>
-                        <td class="">
-                            {{ userData.profile.birthday | toLongDate }}
-                        </td>
+                        <td class="">{{ userData.profile.birthday | toLongDate }}</td>
                     </tr>
                     <tr>
                         <td class="">Город:</td>
@@ -126,9 +132,7 @@
                             <template v-if="userData.country && userData.city.title">
                                 <IconLocation/> {{userData.locationText}}
                             </template>
-                            <template v-else>
-                                Не указано
-                            </template>
+                            <template v-else>Не указано</template>
                         </td>
                     </tr>
                     <tr v-if="!!userData.relationshipId">
@@ -162,16 +166,15 @@ import FriendshipInvitationMixin from '../mixins/FriendshipInvitationMixin.js';
 import BlackListMixin from '../mixins/BlackListMixin.js';
 
 import PliziUser from '../classes/PliziUser.js';
-import PliziAuthUser from '../classes/PliziAuthUser.js';
+//import PliziAuthUser from '../classes/PliziAuthUser.js';
 import PliziAvatar from '../classes/User/PliziAvatar.js';
-
 
 export default {
 name: 'ProfileHeader',
 components: { ProfileStats, IconLocation},
 mixins: [FriendshipInvitationMixin, BlackListMixin],
 props: {
-    userData: PliziUser | PliziAuthUser,
+    userData: PliziUser,
     isOwner: Boolean,
     isInBlacklist: Boolean,
 },

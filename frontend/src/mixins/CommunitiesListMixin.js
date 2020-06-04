@@ -31,13 +31,18 @@ const CommunitiesListMixin = {
             isManagedCommunitiesLoaded: false,
             managedCommunities: [],
 
-            recommendedCommunities: null,
-            userCommunities: null,
+            isRecommendedCommunitiesDataReady: false,
+            recommendedCommunities: [],
+
+            isUserCommunitiesDataReady: false,
+            userCommunities: [],
 
             noMore: false,
             enabledLoader: true,
 
             searchString: '',
+
+            isDataReady: false,
         }
     },
     mounted() {
@@ -85,6 +90,8 @@ const CommunitiesListMixin = {
                     await this.lazyLoad('manage');
                 } else if (this.$route.name === 'CommunitiesPopularPage') {
                     await this.lazyLoad('popular');
+                } else if (this.$route.name === 'userCommunities') {
+                    await this.lazyLoad('userCommunities');
                 } else {
                     await this.lazyLoad();
                 }
@@ -179,7 +186,7 @@ const CommunitiesListMixin = {
         },
 
         async loadRecommendedCommunities() {
-            this.isDataReady = false;
+            this.isRecommendedCommunitiesDataReady = false;
             // this.communities = [];
             let apiResponse = null;
 
@@ -190,21 +197,21 @@ const CommunitiesListMixin = {
             }
 
             if (apiResponse !== null) {
-                // this.communities = [];
-                this.recommendedCommunities = apiResponse;
-                // apiResponse.list.map((srItem) => {
-                //     this.recommendedCommunities.push(new PliziCommunity(srItem));
-                // });
+                this.communities = [];
+                apiResponse.list.map((srItem) => {
+                    this.recommendedCommunities.push(new PliziCommunity(srItem));
+                });
 
-                this.isDataReady = true;
+                this.isRecommendedCommunitiesDataReady = true;
             }
         },
 
-        async getUserCommunitiesList() {
+        async getUserCommunitiesList(limit = 10, offset = 0) {
             let apiResponse = null;
+            this.isUserCommunitiesDataReady = false;
 
             try {
-                apiResponse = await this.$root.$api.$users.getUserCommunities(this.userId);
+                apiResponse = await this.$root.$api.$users.getUserCommunities(this.userId, limit, offset);
             }
             catch (e){
                 this.isStarted = false;
@@ -212,10 +219,10 @@ const CommunitiesListMixin = {
                 throw e;
             }
 
-            if (apiResponse) {
-                this.userCommunities = apiResponse;
-                this.isDataReady = true;
-            }
+            this.isUserCommunitiesDataReady = true;
+            this.enabledLoader = false;
+
+            return this.processApiResponce(offset, apiResponse.list, 'userCommunities');
         },
 
         async lazyLoad(listName = null) {
@@ -235,6 +242,11 @@ const CommunitiesListMixin = {
 
                 if(oldSize)
                     added = await this.loadPopularCommunities(20, oldSize++);
+            } else if (listName === 'userCommunities') {
+                oldSize = this.userCommunities.length;
+
+                if(oldSize)
+                    added = await this.getUserCommunitiesList(20, oldSize++);
             } else {
                 oldSize = this.communitiesList.length;
 
