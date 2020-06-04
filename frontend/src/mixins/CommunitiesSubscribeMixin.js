@@ -111,7 +111,7 @@ const CommunitiesSubscribeMixin = {
             }
 
             if (apiResponse) {
-                this.$root.$alert(apiResponse.message, 'bg-success', 3);
+                this.$root.$notify(apiResponse.message, 'bg-success', 3);
             } else {
                 this.$root.$alert(`Ошибка отправки запроса`, 'bg-warning', 3);
             }
