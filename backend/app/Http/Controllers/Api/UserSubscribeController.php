@@ -34,8 +34,10 @@ class UserSubscribeController extends Controller
      */
     public function list(Request $request)
     {
+        /** @var User $user */
+        $user = $request->user ?: auth()->user();
         if (!$user_ids = $this->userService->followList(
-            auth()->user()->id,
+            $user->id,
             $request->query('limit', 20),
             $request->query('offset', 0)
         )) {

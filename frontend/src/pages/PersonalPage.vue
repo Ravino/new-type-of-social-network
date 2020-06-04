@@ -51,6 +51,7 @@
                         <router-view name="userFriendsList"></router-view>
                         <router-view name="userCommunities"></router-view>
                         <router-view name="userVideoList"></router-view>
+                        <router-view name="followersList"></router-view>
 
                     </template>
                 </div>

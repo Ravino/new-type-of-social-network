@@ -248,6 +248,28 @@ class PliziUsersAPI extends PliziBaseAPI{
     }
 
     /**
+     * Список тех, на кого я подписан
+     * @param userId
+     * @param limit
+     * @param offset
+     * @returns {Promise<null|*>}
+     */
+    async userFollowList(userId, limit = 20, offset = 0) {
+        let path = `api/user/${userId}/follow/list?limit=${limit}&offset=${offset}`;
+        let response = await this.axios.get(path, this.authHeaders)
+            .catch((error) => {
+                this.checkIsTokenExpires(error, `$users.followList`);
+                throw new PliziAPIError(`$users.followList`, error.response);
+            });
+
+        if (response.status === 200) {
+            return response.data.data;
+        }
+
+        return null;
+    }
+
+    /**
      * Список последних фотографий
      // * @param limit
      // * @param offset
