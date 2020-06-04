@@ -10,9 +10,9 @@
                          :src="photo.medium.path"
                          :alt="photo.name"/>
                 </div>
-<!--                <button class="btn-close"  aria-label="delete" @click="onDeleteImage(photo.id)">-->
-<!--                    <i class="fa fa-plus" aria-hidden="true"></i>-->
-<!--                </button>-->
+                <button class="btn-close"  aria-label="delete" @click="onDeleteImage(photo.id)">
+                    <i class="fa fa-plus" aria-hidden="true"></i>
+                </button>
 
             </div>
 
@@ -76,6 +76,32 @@
         },
 
         methods: {
+            async onDeleteImage(id) {
+                let apiResponse = null;
+
+                try {
+                    apiResponse = await this.$root.$api.$photoalbums.deleteImage(id);
+                } catch (e) {
+                    console.warn(e.detailMessage);
+                }
+
+                if (apiResponse) {
+                    let deletedImageIndex = this.images.findIndex(image => image.id === id);
+                    this.images.splice(deletedImageIndex, 1);
+
+                    // TODO: @YZ сделать по нормальному после MVP
+                    let lsUser = JSON.parse(localStorage.getItem('pliziUser'));
+
+                    if (!lsUser.data.stats.imageCount) {
+                        lsUser.data.stats.imageCount = 0;
+                    } else {
+                        lsUser.data.stats.imageCount--;
+                    }
+
+                    localStorage.setItem('pliziUser', JSON.stringify(lsUser));
+                }
+            },
+
             async getCommentsOfAlbum( activeImageId ) {
                 try {
                     let response = await this.$root.$api.$post.getAlbumComments(activeImageId);
