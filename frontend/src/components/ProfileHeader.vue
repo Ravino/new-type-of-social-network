@@ -97,7 +97,12 @@
                                     <p v-else class="dropdown-item px-0 py-1 m-0 px-3"
                                        @click="addToBlacklist"  title="Добавить в чёрный список">Добавить в чёрный список</p>
                                 </div>
-
+                                <div v-if="!userData.isOwner" class="nav-item">
+                                    <router-link tag="a" class="dropdown-item px-0 py-1 m-0 px-3"
+                                                 :to="{path: `/user-${userData.id}/followers`, params: {id: userData.id}}">
+                                        На кого подписан
+                                    </router-link>
+                                </div>
                             </div>
                         </div>
                     </div>

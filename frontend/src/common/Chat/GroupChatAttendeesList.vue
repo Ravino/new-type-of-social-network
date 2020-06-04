@@ -1,5 +1,5 @@
 <template>
-    <div class="d-flex align-items-center h-100">
+    <div class="d-flex align-items-center">
         <ChatHeaderAttendeeItem v-for="attItem in currentDialog.attendees"
                                 v-bind:attendee="attItem"
                                 v-bind:keyUpdater="keyUpdater"

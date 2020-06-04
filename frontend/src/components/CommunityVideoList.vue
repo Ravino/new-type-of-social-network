@@ -2,6 +2,7 @@
     <div class="row">
         <div class="col-12">
             <div class="row plz-post-item mb-4 bg-white-br20 p-4" v-if="isDataReady">
+                <h6 class="w-100 media m-0 py-4 px-4 border-bottom">Список видео</h6>
                 <div v-if="userVideoList  &&  userVideoList.length > 0"
                     class="plizi-communities-list w-100 d-flex justify-content-between flex-wrap p-0">
                     <div class="card-body py-0" v-if="userVideoList">
