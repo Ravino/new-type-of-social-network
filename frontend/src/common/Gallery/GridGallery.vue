@@ -50,7 +50,7 @@
 </template>
 
 <script>
-    import GalleryViewer from '../GalleryViewer.vue';
+    import GalleryViewer from './GalleryViewer.vue';
     import SmallSpinner from "../../common/SmallSpinner.vue";
 
     export default {
@@ -79,7 +79,3 @@
         },
     }
 </script>
-
-<style scoped>
-
-</style>

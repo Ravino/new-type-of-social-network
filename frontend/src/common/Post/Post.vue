@@ -274,7 +274,7 @@
     import AttachmentFile from "../AttachmentFile.vue";
 
     import PliziPost from '../../classes/PliziPost.js';
-    import Gallery from '../Gallery.vue';
+    import Gallery from '../Gallery/Gallery.vue';
     import LinkMixin from '../../mixins/LinkMixin.js';
     import CommentPost from "../../components/Comments/CommentPost.vue";
     import CommentItem from "../../components/Comments/CommentItem.vue";

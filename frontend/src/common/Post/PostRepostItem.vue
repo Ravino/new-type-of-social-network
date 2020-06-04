@@ -139,7 +139,7 @@
     import PliziPost from '../../classes/PliziPost.js';
     import LinkMixin from '../../mixins/LinkMixin.js';
 
-    import Gallery from '../Gallery.vue';
+    import Gallery from '../Gallery/Gallery.vue';
     import AttachmentFile from "../AttachmentFile.vue";
     import IconYoutube from "../../icons/IconYoutube.vue";
 

@@ -76,15 +76,15 @@
 
 <script>
 import moment from "moment";
-import IconHeard from "../icons/IconHeard.vue";
-import IconFillHeard from '../icons/IconFillHeard.vue';
-import IconMessage from "../icons/IconMessage.vue";
-import IconShare from "../icons/IconShare.vue";
-import TextEditor from "./TextEditor.vue";
-import PliziAttachment from '../classes/PliziAttachment.js';
-import CommentGallery from "../components/Comments/CommentGallery.vue";
-import CommentItem from "../components/Comments/CommentItem.vue";
-import PliziComment from "../classes/PliziComment.js";
+import IconHeard from "../../icons/IconHeard.vue";
+import IconFillHeard from '../../icons/IconFillHeard.vue';
+import IconMessage from "../../icons/IconMessage.vue";
+import IconShare from "../../icons/IconShare.vue";
+import TextEditor from "../TextEditor.vue";
+import PliziAttachment from '../../classes/PliziAttachment.js';
+import CommentGallery from "../../components/Comments/CommentGallery.vue";
+import CommentItem from "../../components/Comments/CommentItem.vue";
+import PliziComment from "../../classes/PliziComment.js";
 
  export default {
   name: "GalleryDescription",

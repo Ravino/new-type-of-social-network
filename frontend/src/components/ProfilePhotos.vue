@@ -29,7 +29,7 @@
 </template>
 
 <script>
-    import ProfileGallery from '../common/ProfileGallery.vue';
+    import ProfileGallery from '../common/Gallery/ProfileGallery.vue';
     import PliziUser from "../classes/PliziUser";
     import PliziAuthUser from "../classes/PliziAuthUser";
     import vueCustomScrollbar from "vue-custom-scrollbar";

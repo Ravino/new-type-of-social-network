@@ -107,12 +107,32 @@ class PliziComment {
         return this._thread;
     }
 
+    get imageList() {
+        return this._attachments.filter(attachment => attachment.isImage);
+    }
+
     get defaultAvatarPath() {
         return this.__defaultAvatarPath;
     }
 
+    get shortUsersLikes() {
+        return this._usersLikes && this._usersLikes.length ? this._usersLikes.slice(0, 8) : null;
+    }
+
     set id(value) {
         this._id = value;
+    }
+
+    set editComment(newComment) {
+        this._thread = this._thread.map(comment => comment.id === newComment.id ? comment.update(newComment) : comment);
+    }
+
+    set addComment(comment) {
+        this._thread.push(new PliziComment(comment));
+    }
+
+    set removeComment(commentId) {
+        this._thread = this._thread.filter(comment => comment.id !== commentId);
     }
 
     set body(value) {

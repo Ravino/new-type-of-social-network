@@ -12,7 +12,7 @@
                 <div class="plz-comment-item-data-info">
                     <h6>
                         <a class="plz-comment-item-data-name" :href="`user-${comment.author.id}`">
-                           <b>{{comment.author.profile.firstName}}&nbsp;{{comment.author.profile.lastName}}</b>
+                           <b>{{comment.author.fullName}}</b>
                         </a>
                     </h6>
                     <TextEditor
@@ -26,7 +26,7 @@
                     ></TextEditor>
                     <template v-else>
                         <p v-html="livePreview">{{comment.body}}</p>
-                        <Gallery type="comment" v-if="imageList.length > 0" :images="imageList"></Gallery>
+                        <Gallery type="comment" v-if="comment.imageList.length > 0" :images="comment.imageList"></Gallery>
                     </template>
                 </div>
                 <div class="plz-comment-item-data-comment">
@@ -59,7 +59,7 @@
                                     {{ comment.likes }} пользователям
                                 </p>
                                 <div class="d-flex mb-0">
-                                    <router-link v-for="(user, index) in shortUsersLikes"
+                                    <router-link v-for="(user, index) in comment.shortUsersLikes"
                                                  :key="index"
                                                  class="usersLikes-user"
                                                  :to="{ name: 'PersonalPage', params: { id: user.id } }">
@@ -78,8 +78,8 @@
                      :key="answer.id"
                      :postId="postId"
                      :comment="answer"
-                     @onDelete="removeComment"
-                     @update="editComment">
+                     @onDelete="comment.removeComment"
+                     @update="comment.editComment">
                  </CommentItem>
              </div>
             <div class="plz-comment-item-wrapper-close">
@@ -90,7 +90,7 @@
                 :commentId="comment.id"
                 :postId="postId"
                 :name="comment.author.profile.firstName"
-                @addComment="addComment">
+                @addComment="comment.addComment">
             </CommentReply>
         </div>
     </div>
@@ -98,17 +98,20 @@
 
 <script>
 import moment from "moment";
-import CommentReply from "./CommentReply.vue";
-import TextEditor from "../../common/TextEditor.vue";
 import IconHeard from "../../icons/IconHeard.vue";
 import IconFillHeard from "../../icons/IconFillHeard.vue";
+
+import CommentReply from "./CommentReply.vue";
+import TextEditor from "../../common/TextEditor.vue";
+
 import LinkMixin from '../../mixins/LinkMixin.js';
 import ChatMixin from "../../mixins/ChatMixin.js";
+
 import PliziComment from "../../classes/PliziComment.js";
 
 export default {
     name: "CommentItem",
-    components: {IconFillHeard, Gallery: () => import('../../common/Gallery.vue'), TextEditor, CommentReply, IconHeard},
+    components: {IconFillHeard, /*Для фикса рекурсии -->*/ Gallery: () => import('../../common/Gallery/Gallery.vue'), TextEditor, CommentReply, IconHeard},
     mixins: [LinkMixin, ChatMixin],
     props: {
         comment: {
@@ -128,12 +131,6 @@ export default {
         };
     },
     computed: {
-        shortUsersLikes() {
-            return this.comment.usersLikes && this.comment.usersLikes.length ? this.comment.usersLikes.slice(0, 8) : null;
-        },
-        imageList() {
-            return this.comment.attachments.filter(attachment => attachment.isImage);
-        },
         livePreview() {
             let str = this.comment.body.replace(/<\/?[^>]+>/g, '').trim();
             let returnedStr = this.transformStrWithLinks(str);
@@ -155,15 +152,6 @@ export default {
         },
     },
     methods: {
-        editComment(newComment) {
-            this.comment.thread = this.comment.thread.map(comment => comment.id === newComment.id ? comment.update(newComment) : comment);
-        },
-        addComment(comment) {
-            this.comment.thread.push(new PliziComment(comment));
-        },
-        removeComment(commentId) {
-            this.comment.thread = this.comment.thread.filter(comment => comment.id !== commentId);
-        },
         async onTextPost(evData) {
             let msg = evData.postText.trim();
 
