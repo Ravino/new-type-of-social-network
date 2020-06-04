@@ -51,6 +51,13 @@ class PliziPost {
     _alreadyLiked = false;
 
     /**
+     * Просмотрел ли этот пост текущий пользователь
+     * @type {boolean}
+     * @private
+     */
+    _alreadyViewed = false;
+
+    /**
      * @type {Array}
      * @private
      */
@@ -183,6 +190,10 @@ class PliziPost {
         return this._alreadyLiked;
     }
 
+    get alreadyViewed() {
+        return this._alreadyViewed;
+    }
+
     get usersLikes() {
         return this._usersLikes;
     }
@@ -260,6 +271,10 @@ class PliziPost {
         this._alreadyLiked = value;
     }
 
+    set alreadyViewed(value) {
+        this._alreadyViewed = value;
+    }
+
     set usersLikes(value) {
         this._usersLikes = value;
     }
@@ -325,6 +340,7 @@ class PliziPost {
         this.primaryImage = post.primaryImage;
         this.likes = post.likes;
         this.alreadyLiked = post.alreadyLiked;
+        this.alreadyViewed = post.alreadyViewed;
         this.usersLikes = post.usersLikes ? post.usersLikes.list.map((user) => {
             return new PliziUser(user);
         }) : [];

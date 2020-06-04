@@ -18,6 +18,9 @@ methods: {
         if (direction !== 'top')
             return;
 
+        if (post.alreadyViewed)
+            return;
+
         const sendData= {
             postId : post.id,
             userId : this.$root.$auth.user.id,
