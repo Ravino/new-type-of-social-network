@@ -20,17 +20,18 @@
                             @interestSwitch="interestSwitch"/>
                     </div>
 
-                    <template v-if="filteredPosts && filteredPosts.length > 0">
+                    <div v-if="filteredPosts && filteredPosts.length > 0">
                         <Post v-for="postData in filteredPosts"
-                              :key="postData.id"
-                              :post="postData"
+                              v-waypoint="{ active: true, callback: ({ el, going, direction })=>{ postIsRead(postData, going, direction); }, options: { threshold: [0.5] } }"
+                              v-bind:post="postData"
+                              v-bind:key="'post-'+postData.id"
                               @onEditPost="onEditPost"
                               @onDeletePost="onDeletePost"
                               @onRestorePost="onRestorePost"
                               @openVideoModal="openVideoModal"
                               @onShare="onSharePost"
-                              @onShowUsersLikes="openLikeModal"/>
-                    </template>
+                              @onShowUsersLikes="openLikeModal"></Post>
+                    </div>
 
                     <div v-else-if="!isStarted"  class="row plz-post-item mb-4 bg-white-br20 p-4">
                         <div class="alert alert-info w-100 p-5 text-center mb-0">
@@ -74,7 +75,9 @@
 
 <script>
 import AccountToolbarLeft from '../common/AccountToolbarLeft.vue';
+import SmallSpinner from '../common/SmallSpinner.vue';
 import FavoriteFriends from '../common/FavoriteFriends.vue';
+
 import WhatsNewBlock from '../common/WhatsNewBlock.vue';
 
 import Post from '../common/Post/Post.vue';
@@ -83,11 +86,12 @@ import PostInterest from '../common/Post/PostInterest.vue';
 import PostEditModal from '../common/Post/PostEditModal.vue';
 import PostVideoModal from '../common/Post/PostVideoModal.vue';
 import PostRepostModal from '../common/Post/PostRepostModal.vue';
-import SmallSpinner from "../common/SmallSpinner.vue";
 import PostLikeModal from '../common/Post/PostLikeModal.vue';
 
+import LazyLoadPosts from '../mixins/LazyLoadPosts.js';
+import PostViewMixin from '../mixins/PostViewMixin.js';
+
 import PliziPost from '../classes/PliziPost.js';
-import LazyLoadPosts from "../mixins/LazyLoadPosts.js";
 
 export default {
 name: 'NewsPage',
@@ -104,7 +108,8 @@ components: {
     SmallSpinner,
     PostLikeModal,
 },
-mixins: [LazyLoadPosts],
+mixins: [LazyLoadPosts, PostViewMixin],
+
 data() {
     return {
         posts: [],
@@ -139,7 +144,9 @@ data() {
         },
     }
 },
+
 methods: {
+
     filterPost() {
         this.filteredPosts = [...this.posts];
         if (this.filter.interest) {
