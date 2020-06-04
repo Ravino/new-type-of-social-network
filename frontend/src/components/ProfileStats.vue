@@ -74,11 +74,14 @@
         </template>
 
         <template v-else>
-            <div v-if="usrVideosNumber() > 0"
+            <router-link tag="a" class="p-0 d-flex" v-if="usrVideosNumber() > 0"
+                         :to="{path: `/user-${userData.id}/videos`, params: {id: userData.id}}">
+            <div
                  class="plz-profile-userdetails-numbers text-center py-2 px-2 py-md-4 px-md-4 mt-auto">
                 <span class="numbers-top" v-html="sBeaty(usrVideosNumber())"></span>
                 <span class="numbers-bottom">Видео</span>
             </div>
+            </router-link>
             <div v-else class="plz-profile-userdetails-numbers text-center py-2 px-2 py-md-4 px-md-4 mt-auto">
                 <span class="numbers-bottom">Нет видео</span>
             </div>

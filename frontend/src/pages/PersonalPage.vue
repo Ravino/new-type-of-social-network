@@ -49,6 +49,7 @@
                                      :profile-data="profileData" :wall-posts-select-handler="wallPostsSelectHandler"></router-view>
                         <router-view name="userFriendsList"></router-view>
                         <router-view name="userCommunities"></router-view>
+                        <router-view name="userVideoList"></router-view>
 
                     </template>
                 </div>
