@@ -22,17 +22,17 @@
                 Рассказать друзьям
             </span>
         </div>
-        <div class="nav-item border-top d-block d-lg-none">
-            <span @click="onVideoInformationClick"
-                  class="community-options-link px-3 py-1 cursor-pointer">
+        <div class="nav-item border-top d-block" v-if="community.totalVideos > 0">
+            <router-link :to="{name: 'CommunityVideosPage', params: {id: community.id}}"
+                         class="community-options-link px-3 py-1">
                 Видео сообщества
-            </span>
+            </router-link>
         </div>
-        <div class="nav-item  d-block d-lg-none">
-            <span @click="onMembersInformationClick"
-                  class="community-options-link px-3 py-1 cursor-pointer">
+        <div class="nav-item  d-block">
+            <router-link :to="{name: 'CommunityMembersPage', params: {id: community.id}}"
+                         class="community-options-link px-3 py-1">
                 Участники сообщества
-            </span>
+            </router-link>
         </div>
     </div>
 </template>
@@ -95,12 +95,6 @@ methods: {
 
     onFriendInformationClick(){
         this.$root.$alert(`Рассказываю друзьям`, 'bg-info', 3);
-    },
-    onVideoInformationClick(){
-        this.$root.$alert(`Показываю видео этого сообщества`, 'bg-info', 3);
-    },
-    onMembersInformationClick(){
-        this.$root.$alert(`Показываю участников этого сообщества`, 'bg-info', 3);
     },
 }
 

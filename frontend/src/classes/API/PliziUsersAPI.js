@@ -267,6 +267,25 @@ class PliziUsersAPI extends PliziBaseAPI{
     }
 
     /**
+     * Список сообществ пользователя
+     // * @param limit
+     // * @param offset
+     * @returns {Promise<null|*>}
+     */
+    async getUserCommunities(userId) {
+        let response = await this.axios.get(`/api/user/${userId}/communities`, this.authHeaders)
+            .catch((error) => {
+                this.checkIsTokenExpires(error, '$users.getUserCommunities');
+                throw new PliziAPIError('$users.getUserCommunities', error.response);
+            });
+
+        if (200 === response.status) {
+            return response.data.data.list;
+        }
+        return null;
+    }
+
+    /**
      * Получение списка активных сессий.
      *
      * @returns {object[]|null}

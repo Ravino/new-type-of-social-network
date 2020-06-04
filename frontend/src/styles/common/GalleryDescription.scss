@@ -33,19 +33,32 @@ $usersPicSize: 32px;
     }
 
     .plz-comment-item-data-info {
-         .plz-gallery-fourth {
-             height: 365px;
+        .plz-gallery-album.plz-gallery-single,
+        .plz-gallery-album.plz-gallery-double,
+        .plz-gallery-album.plz-gallery-triple {
+            .plz-gallery-wrapper {
+                img {
+                    height: 160px;
+                }
+            }
+        }
+        .plz-gallery-album.plz-gallery-fifth, .plz-gallery-album.plz-gallery-fourth {
+            height: 100%;
+            .plz-gallery-image-mores {
+                &:before {
+                    font-size: 18px;
+                }
+            }
+            .plz-gallery-wrapper {
+                img {
+                    height: 120px;
+                }
+            }
         }
     }
 
     .plz-gallery-album {
         height: auto;
-    }
-
-    .plz-gallery-wrapper {
-        img {
-            height: 170px;
-        }
     }
 
     &-header-body {

@@ -44,7 +44,9 @@
                     </div>
 
                     <div class="col-12 col-lg-4 col-xl-3  mb-4  d-flex pl-3 pl-lg-0 ">
-                        <RecommendedCommunities></RecommendedCommunities>
+                        <CommunitiesSmallBlock
+                            :title="`Рекомендованные`"
+                            :communities="recommendedCommunities"></CommunitiesSmallBlock>
                     </div>
                 </div>
             </div>
@@ -78,6 +80,7 @@ methods : {
 
 async mounted(){
     await this.loadCommunities(30);
+    await this.loadRecommendedCommunities();
 },
 }
 </script>

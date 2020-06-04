@@ -5,6 +5,17 @@ $portraitFullHeight: 750px;
     height: auto !important;
 }
 
+.plz-gallery-album.plz-gallery-fifth,
+.plz-gallery-album.plz-gallery-fourth,
+.plz-gallery-album.plz-gallery-triple {
+    height: 100%;
+    .plz-gallery-wrapper {
+        img {
+            height: 250px;
+        }
+    }
+}
+
 .plz-gallery {
     position: relative;
     height: $portraitFullHeight;

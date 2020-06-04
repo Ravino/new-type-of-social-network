@@ -23,7 +23,7 @@
         </template>
         <template v-else>
             <router-link tag="a" class="p-0 d-flex"
-                         :to="{path: `/user-info-${userData.id}/friends`, params: {id: userData.id}}">
+                         :to="{path: `/user-${userData.id}/friends`, params: {id: userData.id}}">
                 <div v-if="usrFriendsNumber() > 0"
                      class="plz-profile-userdetails-numbers text-center py-2 px-2 py-md-4 px-md-4 mt-auto">
                     <span class="numbers-top" v-html="sBeaty(usrFriendsNumber())"></span>
