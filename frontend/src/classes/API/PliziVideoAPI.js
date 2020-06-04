@@ -3,13 +3,13 @@ import PliziAPIError from './PliziAPIError.js';
 
 class PliziVideoAPI extends PliziBaseAPI {
     /**
-     * Получение видео пользователя.
+     * Получение видео текущего пользователя.
      * @public
      * @returns {object[]|null}
      * @throws PliziAPIError
      */
-    async getUserVideo() {
-        let response = await this.axios.get('api/user/videos', this.authHeaders)
+    async getUserVideo(limit = 20, offset = 0) {
+        let response = await this.axios.get(`api/user/videos?limit=${limit}&offset=${offset}`, this.authHeaders)
           .catch( ( error ) => {
               this.checkIsTokenExpires( error, `getUserVideo` );
               throw new PliziAPIError( `getUserVideo`, error.response );
@@ -17,6 +17,26 @@ class PliziVideoAPI extends PliziBaseAPI {
 
         if ( response.status === 200 ){
             return response.data.data.list;
+        }
+
+        return null;
+    }
+
+    /**
+     * Получение видео пользователя.
+     * @public
+     * @returns {object[]|null}
+     * @throws PliziAPIError
+     */
+    async getUserVideoById(userId, limit = 20, offset = 0) {
+        let response = await this.axios.get(`api/user/${userId}/videos?limit=${limit}&offset=${offset}`, this.authHeaders)
+            .catch( ( error ) => {
+                this.checkIsTokenExpires( error, `getUserVideo` );
+                throw new PliziAPIError( `getUserVideo`, error.response );
+            } );
+
+        if ( response.status === 200 ){
+            return response.data.data;
         }
 
         return null;

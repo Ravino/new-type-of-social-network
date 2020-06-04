@@ -64,7 +64,7 @@
                 </div>
             </div>
 
-            <div class="form-group d-xl-none"
+            <div v-if="false" class="form-group d-xl-none"
                  :class="{ 'has-error': !!birthdayError, 'has-success': isSuccessBirthday }">
                 <i class="icon icon-calendar"></i>
                 <label for="userBirth" class="d-none">Дата рождения</label>
@@ -85,7 +85,7 @@
                 </div>
             </div>
 
-            <div class="form-group d-xl-block d-none"
+            <div v-if="false" class="form-group d-xl-block d-none"
                  :class="{ 'has-error': !!birthdayError, 'has-success': isSuccessBirthday }">
                 <i class="icon icon-calendar"></i>
                 <label for="userBirth" class="d-none">Дата рождения</label>
@@ -111,7 +111,7 @@
                         class="btn plz-btn plz-btn-primary text-center"
                         :class="{disabled: isLoad}">
                     <template v-if="isLoad">
-                        <i class="fas fa-spinner fa-3x fa-spin text-white"></i>
+                        <SmallSpinner clazz="text-white"/>
                     </template>
                     <template v-else>
                         Регистрация
@@ -128,12 +128,15 @@
 <script>
     import {required, minLength, maxLength, email} from 'vuelidate/lib/validators';
     import {isCorrectHumanName, isValidRegistrationBirthDay, notHaveSpace} from '../validators/validators.js';
+
     import PickerDate from "../common/PickerDate.vue";
+    import SmallSpinner from "../common/SmallSpinner.vue";
 
     export default {
         name: 'RegistrationForm',
         components: {
             PickerDate,
+            SmallSpinner,
         },
         computed: {
             isSuccessFirstName() {

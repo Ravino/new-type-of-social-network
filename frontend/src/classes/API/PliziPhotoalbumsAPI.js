@@ -131,15 +131,14 @@ class PliziPhotoalbumsAPI extends PliziBaseAPI {
 
     /**
      *
-     * @param {number} photoAlbumId
      * @param {number} imageId
      * @return {object[]|null}
      */
-    async deleteImageInPhotoAlbum(photoAlbumId, imageId) {
-        let response = await this.axios.delete(`api/photo-albums/${photoAlbumId}/photos/${imageId}`, this.authFileHeaders)
+    async deleteImage(imageId) {
+        let response = await this.axios.delete(`api/photos/${imageId}`, this.authFileHeaders)
             .catch((error) => {
-                this.checkIsTokenExpires(error, `$photoAlbums.deleteImageInPhotoAlbum`);
-                throw new PliziAPIError(`$photoAlbums.deleteImageInPhotoAlbum`, error.response);
+                this.checkIsTokenExpires(error, `$photoAlbums.deleteImage`);
+                throw new PliziAPIError(`$photoAlbums.deleteImage`, error.response);
             });
 
         if (response.status === 200) {

@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\Video\VideoStore;
 use App\Http\Resources\Video\VideoCollection;
 use App\Models\Community;
+use App\Models\User;
 use App\Models\Video;
 use Illuminate\Http\Request;
 
@@ -21,11 +22,19 @@ class VideoController extends Controller
         //
     }
 
-    public function getUserVideo()
+    public function getUserVideo(Request $request)
     {
-        $videos = auth()->user()->videos()->with(['creatableby' => function ($query) {
-            return $query->withTrashed()->get();
-        }])->latest()->get();
+        /** @var User $user */
+        $user = $request->user ?: auth()->user();
+        $videos = $user->videos()->with(['creatableby' => static function ($query) use ($user) {
+            if ($user->id === auth()->id()) {
+                $query->withTrashed()->get();
+            }
+        }])
+            ->limit($request->query('limit', 20))
+            ->offset($request->query('offset', 0))
+            ->latest()
+            ->get();
 
         return new VideoCollection($videos);
     }
