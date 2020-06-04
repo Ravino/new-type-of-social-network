@@ -44,6 +44,7 @@ import UserFriendsAllList from "../components/UserFriendsAllList.vue";
 import ProfilePhotos from "../components/ProfilePhotos.vue";
 import UserPosts from "../components/UserPosts.vue";
 import CommunityTemplate from "../components/CommunityTemplate.vue";
+import CommunityVideoList from "../components/CommunityVideoList.vue";
 
 const routes = [
     {path: '/', redirect: '/login', isGuest: true},
@@ -74,6 +75,7 @@ const routes = [
             } ,
             { path: 'friends', components: { userFriendsList : UserFriendsAllList },  meta: {title: 'Plizi: '} },
             { path: 'communities', components: { userCommunities : CommunityTemplate }, name: 'userCommunities', meta: {title: 'Plizi: '} },
+            { path: 'videos', components: { userVideoList : CommunityVideoList }, name: 'userVideoList', meta: {title: 'Plizi: '} },
         ]},
 
     {path: '/friends', component: FriendsListPage, name: 'FriendsListPage', meta: {title: 'Plizi: мои друзья'}, props: true },

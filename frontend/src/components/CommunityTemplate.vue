@@ -6,7 +6,7 @@
                     class="plizi-communities-list w-100 d-flex justify-content-between flex-wrap p-0">
                     <CommunityItem v-for="comItem in userCommunities"
                                    :community="comItem"
-                                   :key="comItem.id">
+                                   :key="`ucl_` + comItem.id">
                     </CommunityItem>
                 </ul>
 
