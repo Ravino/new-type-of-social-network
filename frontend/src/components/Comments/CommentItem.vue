@@ -60,7 +60,7 @@
                                     {{ comment.likes }} пользователям
                                 </p>
                                 <div class="d-flex mb-0">
-                                    <router-link v-for="(user, index) in comment.shortUsersLikes"
+                                    <router-link v-for="(user, index) in shortUsersLikes"
                                                  :key="index"
                                                  class="usersLikes-user"
                                                  :to="{ name: 'PersonalPage', params: { id: user.id } }">
@@ -79,8 +79,8 @@
                      :key="answer.id"
                      :postId="postId"
                      :comment="answer"
-                     @onDelete="comment.removeComment"
-                     @update="comment.editComment"
+                     @onDelete="removeComment"
+                     @update="editComment"
                      :attachments="answer.attachments">
                  </CommentItem>
              </div>
@@ -92,7 +92,7 @@
                 :commentId="comment.id"
                 :postId="postId"
                 :name="comment.author.profile.firstName"
-                @addComment="comment.addComment">
+                @addComment="addComment">
             </CommentReply>
         </div>
     </div>
@@ -154,8 +154,24 @@ export default {
         isAuthor() {
             return this.$root.$auth.user.id === this.comment.author.id;
         },
+
+        shortUsersLikes() {
+            return this._usersLikes && this._usersLikes.length ? this._usersLikes.slice(0, 8) : null;
+        }
     },
     methods: {
+        editComment(newComment) {
+            this.comment.thread = this.comment.thread.map(comment => comment.id === newComment.id ? comment.update(newComment) : comment);
+        },
+
+        addComment(comment) {
+            this.comment.thread.push(new PliziComment(comment));
+        },
+
+        removeComment(commentId) {
+            this.comment.thread = this.comment.thread.filter(comment => comment.id !== commentId);
+        },
+
         async onTextPost(evData) {
             let msg = evData.postText.trim();
 

@@ -244,7 +244,7 @@ computed : {
 },
 
 methods : {
-    async getCommentsOnGallery( activeImageId ) {
+    async getCommentsOnGallery(activeImageId) {
         try {
             let response = await this.$root.$api.$post.getCommentsByIdOnGallery(activeImageId);
             this.comments = response.data.list.map(comment => new PliziComment(comment));
@@ -252,7 +252,7 @@ methods : {
             console.warn(e.detailMessage);
         }
     },
-    updateComments({ comments, id }) {
+    updateComments({comments, id}) {
         if (this.activeImage.id === id) {
             this.comments = comments;
         }
@@ -374,8 +374,8 @@ methods : {
                 return null;
         }
     },
-
-    created() {
+},
+    mounted() {
         const activeId = this.$router.history.current.query.activeImageId;
         const typeGallery = this.$router.history.current.query.galleryType;
 
@@ -389,6 +389,5 @@ methods : {
             this.showImage(foundImage);
         }
     }
-  }
 }
 </script>

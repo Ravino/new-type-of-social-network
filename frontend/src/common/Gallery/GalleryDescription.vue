@@ -48,7 +48,7 @@
                 </div>
                 <div class="plz-gallery-description--post-data-option post-watched-counter ml-4">
                     <IconMessage/>
-                    <span>{{  post.commentsCount ? !post.commentsCount : comments.length }}</span>
+                    <span>{{ comments.length }}</span>
                 </div>
                 <div class="plz-gallery-description--post-data-option post-watched-counter ml-4">
                     <IconShare/>
