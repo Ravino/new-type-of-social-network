@@ -4,6 +4,12 @@
     box-shadow: 0px 2px 5px 0px rgba(0, 0, 0, 0.05);
     background-color: white;
     border-radius: 20px;
+
+    .plz-comment-item-data-info {
+        p {
+            color: black;
+        }
+    }
 }
 
 .profilePhotos-userpic {
@@ -44,6 +50,8 @@
 }
 
 .profile-photos {
+
+
     .profile-photos-item {
         position: relative;
         cursor: pointer;

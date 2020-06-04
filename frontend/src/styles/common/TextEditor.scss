@@ -86,10 +86,12 @@ $editorSize: 48px;
 }
 
 .plz-attachment-images {
-    img {
-        height: auto;
-        min-width: 55px;
-        max-width: 60px;
+    .plz-attachment-images-list {
+        img {
+            height: 50px;
+            min-width: 55px;
+            max-width: 60px;
+        }
     }
     .media {
         position: relative;

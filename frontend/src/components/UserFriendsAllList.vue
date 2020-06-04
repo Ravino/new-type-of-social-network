@@ -5,7 +5,8 @@
         <ul v-if="hasFriends" class="d-block w-100 p-0">
             <template v-if="isDataReady">
                 <UserFriendsListItem v-for="friendItem in friendsList"
-                                     v-bind:friend="friendItem">
+                                     :key="friendItem.id"
+                                     :friend="friendItem">
                 </UserFriendsListItem>
             </template>
                 <Spinner v-else></Spinner>

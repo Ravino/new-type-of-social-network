@@ -225,6 +225,16 @@ class PliziCommunity {
     get notice(){
         return this._notice;
     }
+    get noticeShort(){
+        if (!this._notice)
+            return '';
+
+        if (this._notice.length <= 16) {
+            return this._notice;
+        }
+
+        return this._notice.substr(0, 16).trim()+ '...';
+    }
 
     get primaryImage(){
         if (this._primaryImage)

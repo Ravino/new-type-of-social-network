@@ -53,7 +53,8 @@
         "vue-video-player": "^5.0.2",
         "emoji-vue": "^0.2.4",
         "v-calendar": "^1.0.5",
-        "videojs-youtube": "^2.6.1"
+        "videojs-youtube": "^2.6.1",
+        "vue-waypoint": "^3.4.1"
     },
     "browserslist": [
         "> 1%",

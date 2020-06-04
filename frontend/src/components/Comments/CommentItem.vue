@@ -23,6 +23,7 @@
                         workMode="comment"
                         @editorPost="onTextPost"
                         :input-editor-text="comment.body"
+                        :inputEditorAttachment="attachments"
                     ></TextEditor>
                     <template v-else>
                         <p v-html="livePreview">{{comment.body}}</p>
@@ -79,11 +80,12 @@
                      :postId="postId"
                      :comment="answer"
                      @onDelete="comment.removeComment"
-                     @update="comment.editComment">
+                     @update="comment.editComment"
+                     :attachments="answer.attachments">
                  </CommentItem>
              </div>
-            <div class="plz-comment-item-wrapper-close">
-                <button class="plz-comment-item-close-btn" v-if="isAuthor" @click="deleteComment"></button>
+            <div class="plz-comment-item-wrapper-close" @click="deleteComment">
+                <button class="plz-comment-item-close-btn" v-if="isAuthor"></button>
             </div>
             <CommentReply
                 v-if="isAnswer"
@@ -98,15 +100,12 @@
 
 <script>
 import moment from "moment";
-import IconHeard from "../../icons/IconHeard.vue";
-import IconFillHeard from "../../icons/IconFillHeard.vue";
-
 import CommentReply from "./CommentReply.vue";
 import TextEditor from "../../common/TextEditor.vue";
-
+import IconHeard from "../../icons/IconHeard.vue";
+import IconFillHeard from "../../icons/IconFillHeard.vue";
 import LinkMixin from '../../mixins/LinkMixin.js';
 import ChatMixin from "../../mixins/ChatMixin.js";
-
 import PliziComment from "../../classes/PliziComment.js";
 
 export default {
@@ -122,6 +121,9 @@ export default {
         },
         type: {
             type: String,
+        },
+        attachments: {
+            type: Array,
         },
     },
     data() {
@@ -160,9 +162,18 @@ export default {
                 msg = msg.replace(/<p><\/p>/g, brExample);
                 msg = this.killBrTrail(msg);
 
-                this.updateComment(msg);
-                this.isEdit = false;
+                if (msg !== '') {
+                    this.updateComment(msg, evData.attachments);
+                } else if (evData.attachments.length > 0) {
+                    this.updateComment('', evData.attachments);
+                }
+            } else {
+                if (evData.attachments.length > 0) {
+                    this.updateComment('', evData.attachments);
+                }
             }
+
+            this.isEdit = false;
         },
         async deleteComment() {
             try {
@@ -172,9 +183,9 @@ export default {
                 console.warn(e.detailMessage);
             }
         },
-        async updateComment(msg) {
+        async updateComment(msg, attachmentIds) {
             try {
-                let response = await this.$root.$api.$post.editCommentById(this.comment.id, msg);
+                let response = await this.$root.$api.$post.editCommentById(this.comment.id, msg, attachmentIds);
                 this.$emit('update', response.data);
             } catch (e) {
                 console.warn(e.detailMessage);

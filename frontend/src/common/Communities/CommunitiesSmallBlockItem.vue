@@ -11,7 +11,7 @@
             </router-link>
 
             <div class="plz-potential-friend-status">
-                <p v-html="community.notice"></p>
+                <p v-html="community.noticeShort"></p>
             </div>
         </div>
     </div>
@@ -22,7 +22,7 @@
     import AvatarMixin from "../../mixins/AvatarMixin.js";
 
     export default {
-        name: 'RecommendedItem',
+        name: 'CommunitiesSmallBlockItem',
         mixins: [AvatarMixin],
         props: {
             community : PliziCommunity

@@ -94,6 +94,7 @@
                 .btn {
                     width: 100%;
                     max-width: 300px;
+                    font-size: 12px;
                 }
 
             }
@@ -132,12 +133,12 @@
 
     &-image {
         &:hover {
-            .delete__button {
+            .delete-button {
                 opacity: 1;
             }
         }
 
-        .delete__button {
+        .delete-button {
             position: absolute;
             top: -5px;
             right: 0;

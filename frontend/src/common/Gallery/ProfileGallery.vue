@@ -17,37 +17,47 @@
             </div>
 
         </div>
-        <div class="plz-gallery__show" v-if="activeImageId">
+        <div class="plz-gallery__show" v-if="activeImage">
             <GalleryViewer
-                class="w-100"
                 :images="images"
                 :active-image="activeImage"
                 @showImage="showImage"
-                @close="activeImageId = null">
+                @close="closeAlbumModal">
             </GalleryViewer>
-
+            <GalleryDescription
+                :comments="comments"
+                :post="{id:0}"
+                :image="activeImage"
+                :type="type"
+                @updateComments="updateComments">
+            </GalleryDescription>
         </div>
     </div>
 </template>
 
 <script>
     import GalleryViewer from './GalleryViewer.vue';
+    import GalleryDescription from "./GalleryDescription.vue";
+    import PliziComment from "../classes/PliziComment";
 
     export default {
         name: 'ProfileGallery',
-        components: {GalleryViewer},
+        components: {GalleryDescription, GalleryViewer},
         props: {
             profilePhotos: Boolean,
             images: {
                 type: Array,
                 default: () => [],
             },
+            type: {
+                type: String,
+            },
         },
 
         data() {
             return {
-                activeImageId: null,
                 activeImage: null,
+                comments: [],
             };
         },
 
@@ -63,14 +73,48 @@
             lastImageView() {
                 return this.viewImages.slice(-1).pop();
             },
-
         },
 
         methods: {
-            showImage(image) {
-                this.activeImageId = image.id;
-                this.activeImage = this.images.find(attach => attach.id === image.id);
+            async getCommentsOfAlbum( activeImageId ) {
+                try {
+                    let response = await this.$root.$api.$post.getAlbumComments(activeImageId);
+                    this.comments = response.data.list.map(comment => new PliziComment(comment));
+                } catch (e) {
+                    console.warn(e.detailMessage);
+                }
             },
+            updateComments({ comments, id }) {
+                if (this.activeImage.id === id) {
+                    this.comments = comments;
+                }
+            },
+            showImage(image) {
+                this.getCommentsOfAlbum( image.id );
+                this.activeImage = this.images.find(attach => attach.id === image.id);
+
+                const link = `${this.$router.currentRoute.path}?activeImageId=${image.id}&galleryType=${this.type}`;
+                history.pushState({url: link}, '', link);
+            },
+
+            closeAlbumModal() {
+                this.activeImage = null;
+                this.$router.replace({query: ''});
+            },
+        },
+        created() {
+            const activeId = this.$router.history.current.query.activeImageId;
+            const typeGallery = this.$router.history.current.query.galleryType;
+
+            if (typeGallery !== this.type || !activeId) {
+                return;
+            }
+
+            const foundImage = this.images.find(image => image.id.toString() === activeId);
+
+            if (foundImage) {
+                this.showImage(foundImage);
+            }
         },
     }
 </script>

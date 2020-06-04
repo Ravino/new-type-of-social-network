@@ -9,8 +9,7 @@
                     :maximumCharacterLimit="500"
                     workMode="comment"
                     @editorPost="onTextPost"
-                    :input-editor-text="name + ','"
-        >
+                    :input-editor-text="name + ','">
         </TextEditor>
     </div>
 </div>

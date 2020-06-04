@@ -30,10 +30,10 @@ import VideosPage from "../pages/VideosPage.vue";
 import CommunityFriendsPage from "../pages/CommunityFriendsPage.vue";
 import CommunitySettingsPage from "../pages/CommunitySettingsPage.vue";
 import CommunityRequestsPage from "../pages/CommunityRequestsPage.vue";
-import AboutPage from "../pages/AboutPage.vue";
-import RulesPage from "../pages/RulesPage.vue";
-import AdvertisementPage from "../pages/AdvertisementPage.vue";
-import ForDevelopersPage from "../pages/ForDevelopersPage.vue";
+//import AboutPage from "../pages/AboutPage.vue";
+//import RulesPage from "../pages/RulesPage.vue";
+//import AdvertisementPage from "../pages/AdvertisementPage.vue";
+//import ForDevelopersPage from "../pages/ForDevelopersPage.vue";
 import FollowListPage from "../pages/FollowListPage.vue";
 import ActiveSessionsPage from "../pages/ActiveSessionsPage.vue";
 import GuestSearchResultsPage from "../pages/GuestSearchResultsPage";
@@ -43,6 +43,7 @@ import CommunityVideosPage from "../pages/CommunityVideosPage.vue";
 import UserFriendsAllList from "../components/UserFriendsAllList.vue";
 import ProfilePhotos from "../components/ProfilePhotos.vue";
 import UserPosts from "../components/UserPosts.vue";
+import CommunityTemplate from "../components/CommunityTemplate.vue";
 
 const routes = [
     {path: '/', redirect: '/login', isGuest: true},
@@ -55,22 +56,26 @@ const routes = [
     // {path: '/rules', component: RulesPage, name: 'RulesPage', meta: {title: 'Plizi: Правила', isGuest: true}},
     // {path: '/advertisement', component: AdvertisementPage, name: 'AdvertisementPage', meta: {title: 'Plizi: Реклама', isGuest: true}},
     // {path: '/for-developers', component: ForDevelopersPage, name: 'ForDevelopersPage', meta: {title: 'Plizi: Для разработчиков', isGuest: true}},
-// Auth
+
+/** Auth ******************************************************************************************************** **/
     {path: '/account', component: AccountPage, name: 'AccountPage', meta: {title: 'Plizi: Настройки аккаунта'}, props: true },
     {path: '/black-list', component: BlackListPage, name: 'BlackList', meta: {title: 'Plizi: Черный список'}, props: true },
     {path: '/profile', component: ProfilePage, name: 'ProfilePage', meta: {title: 'Plizi: Домашняя'}, props: true},
     {path: '/chats', component: ChatsListPage, name: 'ChatsListPage', meta: {title: 'Plizi: Чаты'}, props: true},
     {path: '/search-results', component: SearchResultsPage, name: 'SearchResultsPage', meta: {title: 'Plizi: Результаты поиска'}, props: true },
-    {path: '/user-:id', component: PersonalPage, name: 'PersonalPage', meta: {title: 'Plizi:'}, props: true,
+
+    {path: '/user-:id', component: resolve => resolve(PersonalPage), name: 'PersonalPage', meta: {title: 'Plizi:'}, props: true,
         children: [
-            { path: '', components: {
-                    userLastPhotos: ProfilePhotos,
-                    userLastPost: UserPosts,
-                }
+            {
+                path: '', meta: {title: 'Plizi: '}, name: 'PersonalPage', components: {
+                    userLastPhotos: resolve => resolve(ProfilePhotos),
+                    userLastPost: resolve => resolve(UserPosts),
+                },
             } ,
-            { path: 'friends', components: { userFriendsList : UserFriendsAllList } },
-            { path: 'communities', components: { userCommunities : CommunitiesListPage } },
+            { path: 'friends', components: { userFriendsList : UserFriendsAllList },  meta: {title: 'Plizi: '} },
+            { path: 'communities', components: { userCommunities : CommunityTemplate }, name: 'userCommunities', meta: {title: 'Plizi: '} },
         ]},
+
     {path: '/friends', component: FriendsListPage, name: 'FriendsListPage', meta: {title: 'Plizi: мои друзья'}, props: true },
     {path: '/invitations', component: InvitationsPage, name: 'InvitationsPage', meta: {title: 'Plizi: приглашения дружбы'}, props: true },
     {path: '/friends-recent', component: FriendsRecentPage, name: 'FriendsRecentPage', meta: {title: 'Plizi: новые друзья'}, props: true },

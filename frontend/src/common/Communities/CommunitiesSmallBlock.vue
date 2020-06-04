@@ -1,21 +1,14 @@
 <template>
-    <div id="recommendedCommunities" class="plz-potential-friends bg-white-br20">
+    <div id="recommendedCommunities" class="plz-potential-friends" :class="clazz">
 
         <div v-if="title" class="d-flex flex-row justify-content-start pb-3 --pt-5">
             <h6 class="plz-sf-title w-auto mt-3 ml-3">{{ title }}</h6>
         </div>
 
         <div class="plz-recommended-communities-list pb-2">
-            <template v-if="communities.list">
-                <RecommendedItem v-for="community in communities.list"
-                                 :key="community.id"
-                                 :community="community"/>
-            </template>
-           <template v-else>
-               <RecommendedItem v-for="community in communities"
+               <CommunitiesSmallBlockItem v-for="community in communities"
                                 :key="community.id"
                                 :community="community"/>
-           </template>
 
         </div>
 
@@ -26,15 +19,16 @@
 </template>
 
 <script>
-    import RecommendedItem from "./RecommendedItem.vue";
+    import CommunitiesSmallBlockItem from "./CommunitiesSmallBlockItem.vue";
 
     export default {
         name: 'CommunitiesSmallBlock',
-        components: {RecommendedItem},
+        components: {CommunitiesSmallBlockItem},
         props: {
           communities: Array,
             title: String,
-            footer: Object
+            footer: Object,
+            clazz: String
         },
         data() {
             return {

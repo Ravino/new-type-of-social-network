@@ -346,7 +346,7 @@ class PliziPostAPI extends PliziBaseAPI {
     }
 
     /**
-     * Оставить комментарий
+     * получить ответы к комментарию
      *
      * @param {string} body
      * @param {number} postId
@@ -540,6 +540,65 @@ class PliziPostAPI extends PliziBaseAPI {
         return null;
     };
 
+    /**
+     * Получить коментарии к посту
+     *
+     * @param {number} imageId
+     * @return {object[]|null}
+     * @throws PliziAPIError
+     */
+
+    async getAlbumComments(imageId) {
+        const response = await this.axios.get(`api/user/images/${imageId}/comment`, this.authHeaders);
+
+        if (response.status === 200) {
+            return response.data;
+        }
+
+        return null;
+    };
+
+    /**
+     * Оставить комментарий
+     *
+     * @param {string} body
+     * @param {number} imageId
+     * @param {number[]} attachmentIds
+     * @return {object[]|null}
+     * @throws PliziAPIError
+     */
+    async sendCommentToAlbum(body, imageId, attachmentIds = []) {
+        const response = await this.axios.post(`api/user/images/${imageId}/comment`,  {
+                body,
+                imageId,
+                attachmentIds,
+            }, this.authHeaders
+        );
+
+        if (response.status === 200) {
+            return response.data
+        }
+
+        return null;
+    }
+
+
+    async addView(postId, userId) {
+        const sendData = {
+            postId : postId
+        };
+        let response = await this.axios.post( `api/posts/view`, sendData, this.authHeaders )
+            .catch( ( error ) => {
+                this.checkIsTokenExpires( error, `$post.addView` );
+                throw new PliziAPIError( `$post.addView`, error.response );
+            });
+
+        if ( response.status === 200 ){
+            return response.data;
+        }
+
+        return null;
+    }
 
 }
 
