@@ -62,6 +62,12 @@ class Post extends Model
             ->where('user_id', \Auth::user()->id);
     }
 
+    public function alreadyViewed()
+    {
+        return $this->morphMany(View::class, 'viewable')
+            ->where('user_id', \Auth::user()->id);
+    }
+
     public function usersLikes()
     {
         return $this->hasManyThrough(

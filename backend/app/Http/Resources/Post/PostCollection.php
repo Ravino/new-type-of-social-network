@@ -46,6 +46,7 @@ class PostCollection extends ResourceCollection
                             'sharesCount' => $post->children_count,
                             'commentsCount' => $post->comments_count,
                             'alreadyLiked' => (bool)count($post->like),
+                            'alreadyViewed' => (bool) count($post->alreadyViewed),
                             'attachments' => new AttachmentsCollection($post->attachments),
                             'user' => new SimpleUser($post->postable),
                             'createdAt' => $post->created_at,
@@ -68,6 +69,7 @@ class PostCollection extends ResourceCollection
                             'sharesCount' => $post->children_count,
                             'commentsCount' => $post->comments_count,
                             'alreadyLiked' => (bool)count($post->like),
+                            'alreadyViewed' => (bool) count($post->alreadyViewed),
                             'attachments' => new AttachmentsCollection($post->attachments),
                             'community' => new Community($post->postable),
                             'createdAt' => $post->created_at,
@@ -89,6 +91,7 @@ class PostCollection extends ResourceCollection
                         'sharesCount' => $post->children_count,
                         'commentsCount' => $post->comments_count,
                         'alreadyLiked' => (bool)count($post->like),
+                        'alreadyViewed' => (bool) count($post->alreadyViewed),
                         'createdAt' => $post->created_at,
                         'attachments' => new AttachmentsCollection($post->attachments),
                         'sharedFrom' => $post->parent_id

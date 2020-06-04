@@ -18,7 +18,7 @@ class Post extends JsonResource
      */
     public function toArray($request)
     {
-        if($this->postable instanceof UserModel) {
+        if(isset($this->postable) && $this->postable instanceof UserModel) {
             return [
                 'id' => $this->id,
                 'name' => $this->name,
@@ -35,7 +35,7 @@ class Post extends JsonResource
                 'createdAt' => $this->created_at,
                 'author' => new SimpleUser($this->author),
             ];
-        } else if($this->postable instanceof CommunityModel) {
+        } else if(isset($this->postable) && $this->postable instanceof CommunityModel) {
             return [
                 'id' => $this->id,
                 'name' => $this->name,
