@@ -13,7 +13,7 @@
                     <ProfileHeader v-bind:userData="userData()" v-bind:isOwner="true"></ProfileHeader>
 
                     <template v-if="userPhotos.length > 0">
-                    <ProfilePhotos v-if="isPhotosDataReady" v-bind:photos="userPhotos"></ProfilePhotos>
+                    <ProfilePhotos v-if="isPhotosDataReady" v-bind:photos="userPhotos" v-bind:isOwner="true"></ProfilePhotos>
                         <SmallSpinner v-else></SmallSpinner>
                     </template>
 

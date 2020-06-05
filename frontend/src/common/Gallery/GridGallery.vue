@@ -1,8 +1,8 @@
 <template>
     <div v-if="images" class="gallery grid-gallery col-12">
         <div class="row">
-            <div v-for="(image, index) in images"
-                 :key="index"
+            <div v-for="image in images"
+                 :key="image.id"
                  class="gallery-item col-12 col-sm-6 col-xl-3 my-3 d-flex align-items-stretch position-relative">
                 <div v-if="image.image && image.image.original.path"
                      class="gallery-image-wrapper d-flex flex-column position-relative overflow-hidden">
@@ -24,7 +24,7 @@
                     </div>
                 </div>
 
-                    <button type="button"
+                    <button v-if="isOwner" type="button"
                             aria-label="Удалить изображение"
                             class="delete-button"
                             @click.prevent="$emit('onDelete', image.id)">
@@ -62,6 +62,7 @@
                 type: Array,
                 default: null,
             },
+            isOwner: Boolean
         },
         data() {
             return {

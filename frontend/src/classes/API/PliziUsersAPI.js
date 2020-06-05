@@ -289,6 +289,27 @@ class PliziUsersAPI extends PliziBaseAPI{
     }
 
     /**
+     * Получение фотоальбомов пользователя по ID.
+     * @param {string} userId
+     * @public
+     * @returns {object[]|null}
+     * @throws PliziAPIError
+     */
+    async getUserPhotoalbums(userId) {
+        let response = await this.axios.get(`api/user/${userId}/photo-albums`, this.authHeaders)
+            .catch( ( error ) => {
+                this.checkIsTokenExpires( error, `getUserPhotoalbums` );
+                throw new PliziAPIError( `getUserPhotoalbums`, error.response );
+            } );
+
+        if ( response.status === 200 ){
+            return response.data.data.list;
+        }
+
+        return null;
+    }
+
+    /**
      * Список сообществ пользователя
      // * @param limit
      // * @param offset
