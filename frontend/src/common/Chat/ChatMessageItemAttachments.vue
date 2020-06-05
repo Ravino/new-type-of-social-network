@@ -20,7 +20,7 @@
 
 <script>
 import IconZip from '../../icons/IconZip.vue';
-import Gallery from '../Gallery.vue';
+import Gallery from '../Gallery/Gallery.vue';
 
 import PliziMessage from '../../classes/PliziMessage.js';
 

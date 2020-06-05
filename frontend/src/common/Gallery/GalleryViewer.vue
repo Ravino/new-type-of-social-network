@@ -6,16 +6,19 @@
              `linear-gradient(to right, rgba(0, 0, 0, .85) 0%, rgba(0, 0, 0, .85) 100%),
              url('${activeImage.image.normal.path}'),
              linear-gradient(to right, rgba(0, 0, 0, 1) 0%, rgba(0, 0, 0, 1) 100%)`}"
-             @click="close"
         >
         </div>
         <div class="plz-gallery-viewer-nav">
-            <div v-if="images.length > 1" class="plz-gallery-viewer-nav-btn plz-gallery-viewer-nav-btn-prev" @click="prevImage">
-                <IconArrowLeft></IconArrowLeft>
+            <div class="plz-gallery-viewer-nav-desktop" @click="prevImage">
+                <div v-if="images.length > 1" class="plz-gallery-viewer-nav-btn plz-gallery-viewer-nav-btn-prev">
+                    <IconArrowLeft></IconArrowLeft>
+                </div>
             </div>
-            <div v-if="images.length > 1" class="plz-gallery-viewer-nav-btn plz-gallery-viewer-nav-btn-next" @click="nextImage">
-                <IconArrowRight></IconArrowRight>
-            </div>
+            <div class="plz-gallery-viewer-nav-desktop" @click="nextImage">
+                <div v-if="images.length > 1" class="plz-gallery-viewer-nav-btn plz-gallery-viewer-nav-btn-next">
+                    <IconArrowRight></IconArrowRight>
+                </div>
+             </div>
         </div>
         <div class="plz-gallery-viewer-current">
             <img :src="activeImage.image.original.path" :alt="activeImage.originalName">
@@ -24,8 +27,8 @@
 </template>
 
 <script>
-import IconArrowRight from "../icons/IconArrowRight.vue";
-import IconArrowLeft from "../icons/IconArrowLeft.vue";
+import IconArrowRight from "../../icons/IconArrowRight.vue";
+import IconArrowLeft from "../../icons/IconArrowLeft.vue";
 
 export default {
     name: 'GalleryViewer',
@@ -33,7 +36,7 @@ export default {
     props: {
         images: {
             type: Array,
-            default: () => [],
+            required: true,
         },
         activeImage: null,
     },

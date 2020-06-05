@@ -107,8 +107,20 @@ class PliziComment {
         return this._thread;
     }
 
+    get imageList() {
+        return this._attachments.filter(attachment => attachment.isImage);
+    }
+
     get defaultAvatarPath() {
         return this.__defaultAvatarPath;
+    }
+
+    editComment(newComment) {
+        return this._thread = this._thread.map(comment => comment.id === newComment.id ? comment.update(newComment) : comment);
+    }
+
+    removeComment(commentId) {
+        return this._thread = this._thread.filter(comment => comment.id !== commentId);
     }
 
     set id(value) {

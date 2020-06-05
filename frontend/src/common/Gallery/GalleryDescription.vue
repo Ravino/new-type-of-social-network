@@ -48,7 +48,7 @@
                 </div>
                 <div class="plz-gallery-description--post-data-option post-watched-counter ml-4">
                     <IconMessage/>
-                    <span>{{  post.commentsCount ? !post.commentsCount : comments.length }}</span>
+                    <span>{{ comments.length }}</span>
                 </div>
                 <div class="plz-gallery-description--post-data-option post-watched-counter ml-4">
                     <IconShare/>
@@ -78,15 +78,18 @@
 
 <script>
 import moment from "moment";
-import IconHeard from "../icons/IconHeard.vue";
-import IconFillHeard from '../icons/IconFillHeard.vue';
-import IconMessage from "../icons/IconMessage.vue";
-import IconShare from "../icons/IconShare.vue";
-import TextEditor from "./TextEditor.vue";
-import PliziAttachment from '../classes/PliziAttachment.js';
-import CommentItem from "../components/Comments/CommentItem.vue";
-import PliziComment from "../classes/PliziComment.js";
-import CommentTextField from "../components/Comments/CommentTextField";
+
+import CommentTextField from "../../components/Comments/CommentTextField.vue";
+import CommentItem from "../../components/Comments/CommentItem.vue";
+import TextEditor from "../TextEditor.vue";
+
+import IconHeard from "../../icons/IconHeard.vue";
+import IconFillHeard from '../../icons/IconFillHeard.vue';
+import IconMessage from "../../icons/IconMessage.vue";
+import IconShare from "../../icons/IconShare.vue";
+
+import PliziAttachment from '../../classes/PliziAttachment.js';
+import PliziComment from "../../classes/PliziComment.js";
 
  export default {
   name: "GalleryDescription",
@@ -109,15 +112,10 @@ import CommentTextField from "../components/Comments/CommentTextField";
        type: String,
   },
   },
-  data() {
-      return {
-        noAvatar: '../images/noavatar-256.png',
-      };
-  },
   computed: {
    userAvatar() {
        if (this.getUserData.profile.avatar === null) {
-           return this.noAvatar;
+           return this.image.__defaultAvatarPath;
        }
 
        return this.getUserData.profile.avatar.image.thumb.path;
