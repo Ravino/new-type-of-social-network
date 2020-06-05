@@ -11,9 +11,11 @@ use App\Http\Resources\User\UserCollection;
 use App\Http\Resources\User\UserSearchCollection;
 use App\Models\User;
 use Domain\Neo4j\Service\UserService;
+use Exception;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use JWTAuth;
 
 class UserController extends Controller
 {
@@ -27,6 +29,12 @@ class UserController extends Controller
     {
         if (mb_strlen($search) < 3) {
             return new UserSearchCollection([]);
+        }
+
+        if (\auth()->guest()) {
+            try {
+                JWTAuth::parseToken()->authenticate();
+            } catch (Exception $e) {}
         }
 
         /** @var Builder $query */
@@ -49,7 +57,7 @@ class UserController extends Controller
             $query->limit(10);
         } else {
             $query
-                ->where('id', '<>', Auth::user()->id)
+                ->where('id', '<>', Auth::id())
                 ->limit($request->query('limit', 10))
                 ->offset($request->query('offset', 0));
         }

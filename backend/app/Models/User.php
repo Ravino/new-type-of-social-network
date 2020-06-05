@@ -6,6 +6,7 @@ use App\Models\Rbac\Role;
 use App\Models\User\Blacklisted;
 use App\Models\User\PrivacySettings;
 use App\Notifications\ResetPassword as ResetPasswordNotification;
+use App\Scopes\BlackListScope;
 use App\Traits\Friendable;
 use Domain\Neo4j\Service\UserService;
 use Illuminate\Foundation\Auth\User as Authenticatable;
@@ -246,12 +247,24 @@ class User extends Authenticatable implements JWTSubject
     public function blacklistUsers()
     {
         return $this->hasManyThrough(
-            User::class,
+            __CLASS__,
             Blacklisted::class,
             'user_id',
             'id',
             'id',
             'blacklisted_id'
+        );
+    }
+
+    public function inBlacklistUsers()
+    {
+        return $this->hasManyThrough(
+            __CLASS__,
+            Blacklisted::class,
+            'blacklisted_id',
+            'id',
+            'id',
+            'user_id'
         );
     }
 
@@ -284,5 +297,6 @@ class User extends Authenticatable implements JWTSubject
         self::creating(function($model){
             $model->id = new ObjectId();
         });
+        self::addGlobalScope(new BlackListScope());
     }
 }
