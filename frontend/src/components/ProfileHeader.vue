@@ -151,9 +151,12 @@
                 </table>
             </div>
 
-            <ProfileStats v-bind:userData="userData"
-                          v-bind:isOwner="isOwner"
-                          v-bind:key="'ProfileStats'+$root.$friendsKeyUpdater"></ProfileStats>
+            <ProfileStats
+                ref="profileStats"
+                v-bind:userData="userData"
+                v-bind:isOwner="isOwner"
+                v-bind:keyUpdater="profileStatsKeyUpdater"
+                v-bind:key="'ProfileStats-'+profileStatsKeyUpdater"></ProfileStats>
         </div>
     </div>
 </template>
@@ -166,7 +169,6 @@ import FriendshipInvitationMixin from '../mixins/FriendshipInvitationMixin.js';
 import BlackListMixin from '../mixins/BlackListMixin.js';
 
 import PliziUser from '../classes/PliziUser.js';
-//import PliziAuthUser from '../classes/PliziAuthUser.js';
 import PliziAvatar from '../classes/User/PliziAvatar.js';
 
 export default {
@@ -182,6 +184,7 @@ props: {
 data(){
     return {
         configurationMenuID : 'configurationMenuUser',
+        profileStatsKeyUpdater: 0
     }
 },
 
@@ -304,12 +307,14 @@ methods: {
         if (apiResponse) {
             if (apiResponse.status && apiResponse.status === 422) {
                 this.$root.$alert(apiResponse.message, 'bg-info', 3);
-            } else {
+            }
+            else {
                 this.userData.stats.isFollow = true;
                 this.userData.stats.followCount = this.userData.stats.followCount + 1;
                 this.$root.$notify(apiResponse.message);
             }
-        } else {
+        }
+        else {
             this.$root.$alert(`Не получилось подписаться`, 'bg-warning', 3);
         }
 
@@ -344,9 +349,18 @@ methods: {
     },
 },
 
+created(){
+    this.$root.$on( 'UserIsUpdated', ()=>{
+        if (this.$refs  &&  this.$refs.profileStats){
+            this.profileStatsKeyUpdater++;
+            this.$refs.profileStats.$forceUpdate();
+        }
+    });
+},
+
 async mounted() {
     this.isAddedToBlacklist = this.isInBlacklist;
-},
+}
 
 }
 </script>

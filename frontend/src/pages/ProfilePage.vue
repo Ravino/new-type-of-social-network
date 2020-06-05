@@ -10,7 +10,11 @@
                  v-bind:key="`CentralColumn-`+shortFriendsUpdater">
 
                 <div class="container">
-                    <ProfileHeader v-bind:userData="userData()" v-bind:isOwner="true"></ProfileHeader>
+                    <ProfileHeader
+                        refs="profileHeader"
+                        v-bind:userData="userData(profileHeaderKeyUpdater)"
+                        v-bind:isOwner="true"
+                        v-bind:key="'profileHeader-'+profileHeaderKeyUpdater"></ProfileHeader>
 
                     <template v-if="userPhotos.length > 0">
                     <ProfilePhotos v-if="isPhotosDataReady" v-bind:photos="userPhotos" v-bind:isOwner="true"></ProfilePhotos>
@@ -54,29 +58,30 @@
             <div v-if="$root.$auth.frm.size > 0" class="col-sm-3 col-md-3 col-lg-3 col-xl-3 pr-0 d-none d-xl-block"
                  v-bind:key="`RightColumn-`+shortFriendsUpdater">
 
-                <FavoriteFriends :isNarrow="false"></FavoriteFriends>
+                <FavoriteFriends ref="favoriteFriends" :isNarrow="false"></FavoriteFriends>
                 <ShortFriends
+                    ref="shortFriends"
                     v-bind:key="`shortFriendsBlock-`+shortFriendsUpdater"
                     v-bind:friends="getAllFriends()">
                     </ShortFriends>
             </div>
 
             <PostEditModal v-if="postEditModal.isVisible"
-                           :post="postForEdit"
+                           v-bind:post="postForEdit"
                            @hidePostEditModal="hidePostEditModal"></PostEditModal>
 
             <PostVideoModal v-if="postVideoModal.isVisible"
-                            :videoLink="postVideoModal.content.videoLink"
+                            v-bind:videoLink="postVideoModal.content.videoLink"
                             @hideVideoModal="hideVideoModal"></PostVideoModal>
 
             <PostLikeModal v-if="postLikeModal.isVisible"
-                           :postId="postLikeModal.content.postId"
+                           v-bind:postId="postLikeModal.content.postId"
                            @hideLikeModal="hideLikeModal"></PostLikeModal>
 
             <PostRepostModal v-if="postRepostModal.isVisible"
-                             v-bind:user="postRepostModal.content.postForRepost.author"
-                             v-bind:post="postRepostModal.content.postForRepost"
-                             @hidePostRepostModal="hidePostRepostModal"></PostRepostModal>
+                           v-bind:user="postRepostModal.content.postForRepost.author"
+                           v-bind:post="postRepostModal.content.postForRepost"
+                           @hidePostRepostModal="hidePostRepostModal"></PostRepostModal>
         </div>
     </div>
 </template>
@@ -98,10 +103,11 @@ import PostVideoModal from '../common/Post/PostVideoModal.vue';
 import PostRepostModal from '../common/Post/PostRepostModal.vue';
 
 import PostLikeModal from '../common/Post/PostLikeModal.vue';
+
 import LazyLoadPosts from '../mixins/LazyLoadPosts.js';
+import PhotosListMixin from '../mixins/PhotosListMixin.js';
 
 import PliziPost from '../classes/PliziPost.js';
-import PhotosListMixin from '../mixins/PhotosListMixin.js';
 
 export default {
 name: 'ProfilePage',
@@ -114,7 +120,9 @@ components: {
     PostRepostModal,
     SmallSpinner,
 },
+
 mixins: [LazyLoadPosts, PhotosListMixin],
+
 data() {
     return {
         posts: [],
@@ -144,6 +152,7 @@ data() {
                 postForRepost: null,
             },
         },
+        profileHeaderKeyUpdater: 0
     }
 },
 
@@ -296,6 +305,14 @@ methods : {
             post.deleted = false;
         }
     },
+},
+
+created(){
+    this.$root.$on( 'UserIsUpdated', ()=>{
+        if (this.$refs  &&  this.$refs.shortFriends){
+            this.$refs.shortFriends.$forceUpdate();
+        }
+    });
 },
 
 async mounted() {

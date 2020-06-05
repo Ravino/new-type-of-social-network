@@ -84,7 +84,7 @@ methods: {
             const newFriend = this.invitation.toJSON();
             this.$root.$auth.im.removeInvitation( this.invitation.id );
             this.$root.$auth.frm.onAddAcceptFriendsShip(newFriend);
-            this.$root.$auth.freindsIncrease();
+            this.$root.$auth.friendsIncrease();
             this.$root.$friendsKeyUpdater++;
         }
         else {

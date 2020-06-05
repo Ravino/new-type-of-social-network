@@ -26,7 +26,7 @@
                          :to="{path: `/user-${userData.id}/friends`, params: {id: userData.id}}">
                 <div v-if="usrFriendsNumber() > 0"
                      class="plz-profile-userdetails-numbers text-center py-2 px-2 py-md-4 px-md-4 mt-auto">
-                    <span class="numbers-top" v-html="sBeaty(usrFriendsNumber())"></span>
+                    <span class="numbers-top" v-html="sBeaty(userData.stats.totalFriendsCount)"></span>
                     <span class="numbers-bottom">Друзей</span>
                 </div>
                 <div v-else class="plz-profile-userdetails-numbers text-center py-2 px-2 py-md-4 px-md-4 mt-auto">
@@ -78,8 +78,7 @@
         <template v-else>
             <router-link tag="a" class="p-0 d-flex" v-if="usrVideosNumber() > 0"
                          :to="{path: `/user-${userData.id}/videos`, params: {id: userData.id}}">
-            <div
-                 class="plz-profile-userdetails-numbers text-center py-2 px-2 py-md-4 px-md-4 mt-auto">
+            <div class="plz-profile-userdetails-numbers text-center py-2 px-2 py-md-4 px-md-4 mt-auto">
                 <span class="numbers-top" v-html="sBeaty(usrVideosNumber())"></span>
                 <span class="numbers-bottom">Видео</span>
             </div>
@@ -105,6 +104,7 @@ name : 'ProfileStats',
 props : {
     userData: PliziUser,
     isOwner: Boolean,
+    keyUpdater: Number
 },
 
 methods: {
@@ -128,5 +128,6 @@ methods: {
         return this.userData.stats.imageCount;
     },
 }
+
 }
 </script>
