@@ -266,6 +266,9 @@ span.bg-warning {
     }
 }
 
+.plz-box-shadow {
+    box-shadow: 0 2px 5px 0 rgba(0, 0, 0, 0.05);
+}
 
 .plz-br20 {
     border-radius: $plzRoundRadius;
@@ -715,3 +718,29 @@ $dotSize: 2px;
     }
 }
 
+.user-photoalbum-header {
+    a {
+        border: 1px solid #e4e4ea;
+        color: darken(#e4e4ea, 10);
+        border-radius: 20px;
+        font-size: 13px;
+        padding: 5px 10px;
+        transition: .2s linear;
+
+        i {
+            transition: .2s linear;
+            color: #e4e4ea;
+        }
+
+        &:hover {
+            transition: .2s linear;
+            color: darken(#e4e4ea, 30) !important;
+            border-color: darken(#e4e4ea, 30) !important;
+
+            i {
+                transition: .2s linear;
+                color: darken(#e4e4ea, 30);
+            }
+        }
+    }
+}

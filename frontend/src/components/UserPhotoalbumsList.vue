@@ -1,97 +1,69 @@
 <template>
-    <div class="container-fluid pl-md-0">
-        <div class="row">
-            <div class="col-12 col-md-1 px-0 px-md-3 ">
-                <AccountToolbarLeft></AccountToolbarLeft>
-            </div>
-            <div class="col-12 col-md-11 col-lg-9 col-xl-10 px-0 px-md-3">
-                <div class="row">
-                    <div class="col-12">
-                        <PhotoalbumsPageFilter/>
-                    </div>
-                    <div class="col-12">
-                        <div class="videos-content w-100">
-                            <div class="card mb-4">
-                                <div class="card-body py-0">
-                                    <div class="row">
-                                        <template v-if="photoAlbums && photoAlbums.length">
-                                            <div v-for="(album, index) in photoAlbums"
-                                                 :key="index"
-                                                 class="col-12 col-sm-6 col-xl-3 my-3">
-                                                <PhotoalbumItem :album="album" :key="album.id"></PhotoalbumItem>
-                                            </div>
-                                        </template>
-
-                                        <div v-else class="alert alert-info bg-transparent border-0 text-secondary w-100 p-5 text-center mb-0">
-                                            Нет альбомов.
-                                        </div>
-                                    </div>
-                                </div>
+    <div class="row">
+        <div class="col-12">
+            <div class="row plz-post-item plz-box-shadow mb-4 bg-white-br20 p-4" v-if="isDataReady">
+                <h6 class="w-100 media m-0 pb-4 px-4 border-bottom">Фотоальбомы</h6>
+                <div v-if="photoAlbums  &&  photoAlbums.length > 0"
+                     class="plizi-communities-list w-100 d-flex justify-content-between flex-wrap p-0">
+                    <div class="card-body py-0" v-if="photoAlbums">
+                        <div class="row">
+                            <div v-for="(album) in photoAlbums"
+                                 :key="album.id"
+                                 class="col-12 col-sm-6 col-xl-3 my-3">
+                                <UserPhotoalbumItem :album="album"
+                                                :key="album.id"
+                                                :userId="userId"></UserPhotoalbumItem>
                             </div>
                         </div>
                     </div>
                 </div>
+
+                <div v-else class="container px-2 ">
+                    <div class=" bg-white-br20 p-3">
+                        <div class="alert alert-info w-100 py-4 text-center m-0">
+                            Пользователь еще не создал ни одного альбома.
+                        </div>
+                    </div>
+                </div>
             </div>
-            <div class="col-lg-2 col-xl-1 d-none d-lg-block pr-0">
-                <FavoriteFriends :isNarrow="true"></FavoriteFriends>
-            </div>
+
+            <template v-else>
+                <div class="row plz-post-item mb-4 bg-white-br20 p-4">
+                    <div class="w-100 p-5 text-center mb-0">
+                        <SmallSpinner/>
+                    </div>
+                </div>
+            </template>
         </div>
     </div>
 </template>
 
 <script>
-    import AccountToolbarLeft from "../common/AccountToolbarLeft.vue";
-    import FavoriteFriends from "../common/FavoriteFriends.vue";
-    import PhotoalbumsPageFilter from "./PhotoalbumsPage/PhotoalbumsPageFilter.vue";
-    import PhotoalbumsPageModal from "./PhotoalbumsPage/PhotoalbumsPageModal.vue";
-    import PhotoalbumItem from "./PhotoalbumsPage/PhotoalbumItem.vue";
+    import UserPhotoalbumItem from "../components/UserPhotoalbumItem.vue";
     import SmallSpinner from "../common/SmallSpinner.vue";
 
-    import PliziPhotoAlbum from "../classes/PliziPhotoAlbum.js";
+    import PhotosListMixin from "../mixins/PhotosListMixin.js";
 
     export default {
-        name: "PhotoalbumsListPage",
+        name: "UserPhotoalbumsList",
         components: {
-            AccountToolbarLeft,
-            FavoriteFriends,
-            PhotoalbumsPageFilter,
-            PhotoalbumsPageModal,
-            PhotoalbumItem,
+            UserPhotoalbumItem,
             SmallSpinner
         },
+        mixins: [PhotosListMixin],
         data() {
             return {
-                photoAlbums: null,
-                filterMode: 'my'
+                userId: null,
             }
         },
-        methods: {
-            onAddPhotoAlbum(photoAlbum) {
-                this.photoAlbums.unshift(new PliziPhotoAlbum(photoAlbum));
-            },
-
-            async getPhotoAlbums() {
-                let apiResponse = null;
-
-                try {
-                    apiResponse = await this.$root.$api.$photoalbums.list();
-                    this.hidePhotoalbumCreateModal();
-                } catch (e) {
-                    console.warn(e.detailMessage);
-                }
-
-                if (apiResponse) {
-                    this.photoAlbums = apiResponse.map((photoAlbum) => {
-                        return new PliziPhotoAlbum(photoAlbum);
-                    });
-                }
+        computed: {
+            isOwner() {
+                return this.userId === this.$root.$auth.user.id;
             }
         },
         async mounted() {
-            await this.getPhotoAlbums();
-
-            this.$root.$on('onAddPhotoAlbum', this.onAddPhotoAlbum);
+            this.userId = this.$route.params.id;
+            await this.getPhotoAlbums(this.userId);
         },
     }
 </script>
-
