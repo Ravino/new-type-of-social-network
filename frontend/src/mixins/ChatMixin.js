@@ -23,6 +23,11 @@ methods: {
         if (!this.isCanLoadMoreMessages)
             return;
 
+
+
+        if (this.isMessagesLazyLoad)
+            return;
+
         this.isMessagesLazyLoad = true;
         let msgsResponse = null;
 
