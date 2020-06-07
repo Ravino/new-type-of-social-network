@@ -40,7 +40,8 @@
         "socialiteproviders/vkontakte": "^4.0",
         "spiritix/lada-cache": "4.x",
         "swooletw/laravel-swoole": "^2.6",
-        "tymon/jwt-auth": "^1.0"
+        "tymon/jwt-auth": "^1.0",
+        "vladimir-yuldashev/laravel-queue-rabbitmq": "^10.2"
     },
     "require-dev": {
         "barryvdh/laravel-ide-helper": "^2.6",

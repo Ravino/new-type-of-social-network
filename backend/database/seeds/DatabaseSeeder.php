@@ -15,8 +15,6 @@ class DatabaseSeeder extends Seeder
     {
         Model::unguard();
         if (in_array(App::environment(), ['staging', 'local', 'testing'])) {
-            $this->doSeed(UsersTableSeeder::class);
-            $this->doSeed(ChatSeeder::class);
             $this->doSeed(ProfileRelationshipsSeeder::class);
             $this->doSeed(PostsTableSeeder::class);
             $this->doSeed(FriendshipTableSeeder::class);
@@ -24,6 +22,8 @@ class DatabaseSeeder extends Seeder
             $this->doSeed(CommunityThemeSeeder::class);
             $this->doSeed(CommunitiesTableSeeder::class);
         }
+        $this->doSeed(UsersTableSeeder::class);
+        $this->doSeed(ChatSeeder::class);
         $this->doSeed(CountriesGeoSeeder::class);
         $this->doSeed(RegionsGeoSeeder::class);
         $this->doSeed(CitiesGeoSeeder::class);

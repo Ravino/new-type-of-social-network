@@ -1,5 +1,6 @@
 <?php
 
+use Carbon\Carbon;
 use Illuminate\Database\Seeder;
 
 use App\Models\Profile;
@@ -15,9 +16,16 @@ class UsersTableSeeder extends Seeder
      */
     public function run()
     {
-        $email1 = 'test@gmail.com';
-        $email2 = 'admin@mail.com';
-        $email3 = 'user@mail.com';
+
+        $emails = [
+            'viktoria.mamontova@arma3.in.ua',
+            'alex@arma3.in.ua',
+            'marianka.kabanova@arma3.in.ua',
+            'everon@arma3.in.ua',
+            'everon@arma3.in.ua',
+            'gastovsky@arma3.in.ua',
+            'targettius@gmail.com'
+        ];
         $countOfUsers = App::environment() != 'testing' ? 10 : 1;
 
         if (App::environment() != 'testing') {
@@ -25,69 +33,14 @@ class UsersTableSeeder extends Seeder
             $email2 = $this->command->ask('Enter email of admin user', 'admin@mail.com');
             $countOfUsers = $this->command->ask('How many users you want to generate', 10);
         }
-
-        $user1 = User::where('email', $email1)->first();
-        if (!$user1) {
-            /** @var User $user1 */
-            $user1 = User::create([
-                'email' => $email1,
-                'password' => bcrypt('secret'),
-                'token' => bcrypt('secret'),
-                'last_activity_dt' => time(),
-                'created_at' => time(),
-                'updated_at' => time(),
-            ]);
-            $user1->profile()->create($this->generateProfile());
-            $user1->refresh();
-            $this->command->line("Generate user with email {$email1}");
-        } else {
-            $this->command->line("User with email {$email1} already exists");
-        }
-
-        $user2 = User::where('email', $email2)->first();
-        if (!$user2) {
-            /** @var User $user2 */
-            $user2 = User::create([
-                'email' => $email2,
-                'password' => bcrypt('secret'),
-                'token' => bcrypt('secret'),
-                'last_activity_dt' => time(),
-                'is_admin' => true,
-                'created_at' => time(),
-                'updated_at' => time(),
-            ]);
-            $user2->profile()->create($this->generateProfile());
-            $this->command->line("Generate user with email {$email2}");
-        } else {
-            $this->command->line("User with email {$email2} already exists");
-        }
-
-        $user3 = User::where('email', $email3)->first();
-        if (!$user3) {
-            /** @var User $user3 */
-            $user3 = User::create([
-                'email' => $email3,
-                'password' => bcrypt('secret'),
-                'token' => bcrypt('secret'),
-                'last_activity_dt' => time(),
-                'is_admin' => true,
-                'created_at' => time(),
-                'updated_at' => time(),
-            ]);
-            $user3->profile()->create($this->generateProfile());
-            $this->command->line("Generate user with email {$email3}");
-        } else {
-            $this->command->line("User with email {$email3} already exists");
-        }
-
         $faker = Faker\Factory::create();
-        for ($i = 0; $i <= $countOfUsers; $i++) {
+        for ($i = 0; $i <= 7; $i++) {
             $fakeEmail = $faker->email;
             $user = User::where('email', $fakeEmail)->first();
             if (!$user) {
                 /** @var User $user */
                 $user = User::create([
-                    'email' => $faker->email,
+                    'email' => $emails[$i],
                     'password' => bcrypt('secret'),
                     'token' => bcrypt('secret'),
                     'last_activity_dt' => time(),
@@ -95,6 +48,7 @@ class UsersTableSeeder extends Seeder
                     'updated_at' => time(),
                 ]);
                 $user->profile()->create($this->generateProfile());
+                $this->createInMongo($user);
                 $this->command->line("Generate user with email {$user->email}");
             } else {
                 $i--;
@@ -115,5 +69,20 @@ class UsersTableSeeder extends Seeder
             'created_at' => time(),
             'updated_at' => time(),
         ];
+    }
+
+    protected function createInMongo($user) {
+        $user = User::with('profile')->find($user->id);
+        $user = $user->toArray();
+        $profile = $user['profile'];
+        $user = array_diff_key($user, array_flip(['profile']));
+        $user['created_at'] = new Carbon($user['created_at']);
+        $user['updated_at'] = new Carbon($user['updated_at']);
+        $profile['created_at'] = new Carbon($profile['created_at']);
+        $profile['updated_at'] = new Carbon($profile['updated_at']);
+        $user = \Domain\Pusher\Models\User::create($user);
+        $user->profile()->save(
+            new \Domain\Pusher\Models\Profile($profile)
+        );
     }
 }

@@ -1,4 +1,5 @@
 FROM 884088487044.dkr.ecr.eu-central-1.amazonaws.com/centos7-php7.4
+RUN yum -y install make
 RUN yum install php-pecl-swoole -y
 RUN yum install php-pecl-zmq -y
 WORKDIR /app
@@ -11,7 +12,10 @@ RUN yum install php-pecl-mongodb -y
 RUN yum install php-bcmath -y
 COPY . .
 RUN composer install
-EXPOSE 7070
+
+COPY docker-entrypoint.sh /usr/local/bin/
+RUN chmod +x /usr/local/bin/docker-entrypoint.sh
+RUN ln -s /usr/local/bin/docker-entrypoint.sh /
 COPY docker-entrypoint.sh /usr/share/docker-laravel/bin/
 RUN chmod +x /usr/share/docker-laravel/bin/docker-entrypoint.sh
 
