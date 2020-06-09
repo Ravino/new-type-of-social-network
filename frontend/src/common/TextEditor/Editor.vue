@@ -121,6 +121,7 @@ methods: {
 
             this.editor.setContent( '' );
             this.$emit( 'editorPost', { postText : editorText } );
+            this.clearTextLength();
         }
     },
 
@@ -139,6 +140,10 @@ methods: {
         if ( !(!!str) ){
             this.isFocusedEditor = false;
         }
+    },
+
+    clearTextLength() {
+        this.textLength = 0;
     },
 
     onUpdate( event ){
