@@ -10,6 +10,7 @@
         <span v-if="isShowPlaceHolder" @click="setFocusEditor" class="placeholder">
             {{ placeholder }}
         </span>
+        <span class="editor-counter">{{ textLength }} / {{ maximumCharacterLimit }}</span>
     </div>
 </template>
 
@@ -69,6 +70,7 @@ data() {
         }),
         isFocusedEditor: false,
         cursorPosition: 1,
+        textLength: 0,
     }
 },
 
@@ -142,6 +144,7 @@ methods: {
     onUpdate( event ){
         let str = this.editor.getHTML().replace( /<\/?[^>]+>/g, '' ).trim();
         this.cursorPosition = event.state.selection.$anchor.pos;
+        this.textLength = str.length;
 
         this.$emit( 'onMaximumCharacterLimit', str );
         this.$emit( 'onUpdate' );
