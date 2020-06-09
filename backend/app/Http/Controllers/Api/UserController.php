@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Api;
 
+use App\Events\Followers\SubFollower;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\User\AddToFriend;
 use App\Http\Requests\User\MarkNotificationsAsRead;
@@ -9,9 +10,12 @@ use App\Http\Resources\Notification\NotificationCollection;
 use App\Http\Resources\User\UserCollection;
 use App\Http\Resources\User\UserSearchCollection;
 use App\Models\User;
+use Domain\Neo4j\Service\UserService;
+use Exception;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use JWTAuth;
 
 class UserController extends Controller
 {
@@ -25,6 +29,12 @@ class UserController extends Controller
     {
         if (mb_strlen($search) < 3) {
             return new UserSearchCollection([]);
+        }
+
+        if (\auth()->guest()) {
+            try {
+                JWTAuth::parseToken()->authenticate();
+            } catch (Exception $e) {}
         }
 
         /** @var Builder $query */
@@ -47,7 +57,7 @@ class UserController extends Controller
             $query->limit(10);
         } else {
             $query
-                ->where('id', '<>', Auth::user()->id)
+                ->where('id', '<>', Auth::id())
                 ->limit($request->query('limit', 10))
                 ->offset($request->query('offset', 0));
         }
@@ -83,6 +93,16 @@ class UserController extends Controller
         $sender = User::find($request->userId);
         if(Auth::user()->hasFriendRequestFrom($sender)) {
             Auth::user()->acceptFriendRequest($sender);
+            /**
+             * удаляются взаимные подписки
+             */
+            $userService = new UserService();
+            if ($userService->unfollow(Auth::user()->id, $sender->id)) {
+                event(new SubFollower($sender));
+            }
+            if ($userService->unfollow($sender->id, Auth::user()->id)) {
+                event(new SubFollower(Auth::user()));
+            }
             return response()->json(['message' => 'Вы приняли пользователя в друзья'], 200);
         }
         return response()->json(['message' => 'Данный пользователь не отправлял вам запрос в друзья'], 422);

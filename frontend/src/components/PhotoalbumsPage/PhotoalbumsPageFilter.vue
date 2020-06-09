@@ -120,23 +120,15 @@ export default {
 
                 reader.readAsDataURL(file);
 
-                let apiResponse = null;
+                let apiResponse = [];
+                const delay = ms => new Promise(resolve => setTimeout(resolve, ms));
+                await delay(1000);
+                    apiResponse = await this.$root.$api.$photoalbums.uploadImagesInPhotoAlbum(this.photoAlbum.id, [file]);
 
-                try {
-                    apiResponse = this.$root.$api.$photoalbums.uploadImagesInPhotoAlbum(this.photoAlbum.id, [file]);
-                } catch (e) {
-                    console.warn(e.detailMessage);
-                }
-
-                apiResponse.then((response) => {
-                    response.map((attItem) => {
+                    apiResponse.map((attItem) => {
                         this.$emit('addNewImages', attItem);
                     });
-                }).catch((e) => {
-                    window.console.warn(e.detailMessage);
-                    throw e;
-                });
-            }
+                }
         },
     },
     mounted() {

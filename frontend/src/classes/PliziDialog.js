@@ -143,6 +143,14 @@ class PliziDialog{
         return this.attendees.find( aItem => aItem.id === userId );
     }
 
+    /**
+     * возвращает админа чата
+     * @returns {PliziAttendee}
+     */
+    getAdmin(){
+        return this.attendees.find( aItem => aItem.isAdmin === true );
+    }
+
     removeAttendee(userId){
         this._attendees = this._attendees.filter( aItem => aItem.id !== userId );
     }
@@ -152,7 +160,10 @@ class PliziDialog{
             userData = new PliziAttendee(userData);
         }
 
-        this.attendees.push( userData );
+        const attIsExists = this.getAttendee(userData.id);
+        if ( !(!!attIsExists) ) {
+            this.attendees.push( userData );
+        }
     }
 
     set lastMessageText( value ){

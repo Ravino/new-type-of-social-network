@@ -27,7 +27,6 @@ class PliziFriendsCollection extends PliziStoredCollection {
         return d1.compareName < d2.compareName ? -1 : 1;
     }
 
-
     onAddAcceptFriendsShip(evData){
         this.add(evData);
         this.storeData();

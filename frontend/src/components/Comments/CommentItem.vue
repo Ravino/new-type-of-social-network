@@ -12,7 +12,7 @@
                 <div class="plz-comment-item-data-info">
                     <h6>
                         <a class="plz-comment-item-data-name" :href="`user-${comment.author.id}`">
-                           <b>{{comment.author.profile.firstName}}&nbsp;{{comment.author.profile.lastName}}</b>
+                           <b>{{comment.author.fullName}}</b>
                         </a>
                     </h6>
                     <TextEditor
@@ -23,10 +23,11 @@
                         workMode="comment"
                         @editorPost="onTextPost"
                         :input-editor-text="comment.body"
+                        :inputEditorAttachment="attachments"
                     ></TextEditor>
                     <template v-else>
                         <p v-html="livePreview">{{comment.body}}</p>
-                        <Gallery type="comment" v-if="imageList.length > 0" :images="imageList"></Gallery>
+                        <Gallery type="comment" v-if="comment.imageList.length > 0" :images="comment.imageList"></Gallery>
                     </template>
                 </div>
                 <div class="plz-comment-item-data-comment">
@@ -59,16 +60,16 @@
                                     {{ comment.likes }} пользователям
                                 </p>
                                 <div class="d-flex mb-0">
-                                    <router-link v-for="(user, index) in shortUsersLikes"
-                                                 :key="index"
-                                                 class="usersLikes-user"
-                                                 :to="{ name: 'PersonalPage', params: { id: user.id } }">
-                                        <img :src="user.profile.userPic"
-                                             :alt="user.profile.firstName + ' ' + user.profile.lastName"
-                                             :title="user.profile.firstName + ' ' + user.profile.lastName"
-                                             class="rounded-circle">
-                                    </router-link>
-                                </div>
+                                <router-link v-for="(user, index) in shortUsersLikes"
+                                             :key="index"
+                                             class="usersLikes-user"
+                                             :to="{ name: 'PersonalPage', params: { id: user.id } }">
+                                    <img :src="user.profile.userPic"
+                                         :alt="user.profile.firstName + ' ' + user.profile.lastName"
+                                         :title="user.profile.firstName + ' ' + user.profile.lastName"
+                                         class="rounded-circle">
+                                </router-link>
+                            </div>
                             </div>
                         </div>
                 </div>
@@ -78,12 +79,13 @@
                      :key="answer.id"
                      :postId="postId"
                      :comment="answer"
-                     @onDelete="removeComment"
-                     @update="editComment">
+                     @onDelete="comment.removeComment"
+                     @update="comment.editComment"
+                     :attachments="answer.attachments">
                  </CommentItem>
              </div>
-            <div class="plz-comment-item-wrapper-close">
-                <button class="plz-comment-item-close-btn" v-if="isAuthor" @click="deleteComment"></button>
+            <div class="plz-comment-item-wrapper-close" @click="deleteComment">
+                <button class="plz-comment-item-close-btn" v-if="isAuthor"></button>
             </div>
             <CommentReply
                 v-if="isAnswer"
@@ -98,17 +100,19 @@
 
 <script>
 import moment from "moment";
-import CommentReply from "./CommentReply.vue";
-import TextEditor from "../../common/TextEditor.vue";
 import IconHeard from "../../icons/IconHeard.vue";
 import IconFillHeard from "../../icons/IconFillHeard.vue";
+
+import CommentReply from "./CommentReply.vue";
+import TextEditor from "../../common/TextEditor.vue";
+
 import LinkMixin from '../../mixins/LinkMixin.js';
 import ChatMixin from "../../mixins/ChatMixin.js";
 import PliziComment from "../../classes/PliziComment.js";
 
 export default {
     name: "CommentItem",
-    components: {IconFillHeard, Gallery: () => import('../../common/Gallery.vue'), TextEditor, CommentReply, IconHeard},
+    components: {IconFillHeard, /*Для фикса рекурсии -->*/ Gallery: () => import('../../common/Gallery/Gallery.vue'), TextEditor, CommentReply, IconHeard},
     mixins: [LinkMixin, ChatMixin],
     props: {
         comment: {
@@ -120,6 +124,9 @@ export default {
         type: {
             type: String,
         },
+        attachments: {
+            type: Array,
+        },
     },
     data() {
         return {
@@ -128,12 +135,6 @@ export default {
         };
     },
     computed: {
-        shortUsersLikes() {
-            return this.comment.usersLikes && this.comment.usersLikes.length ? this.comment.usersLikes.slice(0, 8) : null;
-        },
-        imageList() {
-            return this.comment.attachments.filter(attachment => attachment.isImage);
-        },
         livePreview() {
             let str = this.comment.body.replace(/<\/?[^>]+>/g, '').trim();
             let returnedStr = this.transformStrWithLinks(str);
@@ -141,7 +142,7 @@ export default {
             return str === returnedStr ? this.comment.body : this.transformStrWithLinks(str);
         },
         checkAuthorAvatar() {
-            if (this.comment.author.profile.avatar.image.medium.path === null) {
+            if (this.comment.author.profile.avatar.image === null) {
                 return this.comment.defaultAvatarPath;
             }
 
@@ -153,17 +154,16 @@ export default {
         isAuthor() {
             return this.$root.$auth.user.id === this.comment.author.id;
         },
+
+        shortUsersLikes() {
+            return this.comment._usersLikes && this.comment._usersLikes.length ? this.comment._usersLikes.slice(0, 8) : null;
+        }
     },
     methods: {
-        editComment(newComment) {
-            this.comment.thread = this.comment.thread.map(comment => comment.id === newComment.id ? comment.update(newComment) : comment);
-        },
         addComment(comment) {
             this.comment.thread.push(new PliziComment(comment));
         },
-        removeComment(commentId) {
-            this.comment.thread = this.comment.thread.filter(comment => comment.id !== commentId);
-        },
+
         async onTextPost(evData) {
             let msg = evData.postText.trim();
 
@@ -172,9 +172,18 @@ export default {
                 msg = msg.replace(/<p><\/p>/g, brExample);
                 msg = this.killBrTrail(msg);
 
-                this.updateComment(msg);
-                this.isEdit = false;
+                if (msg !== '') {
+                    this.updateComment(msg, evData.attachments);
+                } else if (evData.attachments.length > 0) {
+                    this.updateComment('', evData.attachments);
+                }
+            } else {
+                if (evData.attachments.length > 0) {
+                    this.updateComment(' ', evData.attachments);
+                }
             }
+
+            this.isEdit = false;
         },
         async deleteComment() {
             try {
@@ -184,9 +193,9 @@ export default {
                 console.warn(e.detailMessage);
             }
         },
-        async updateComment(msg) {
+        async updateComment(msg, attachmentIds) {
             try {
-                let response = await this.$root.$api.$post.editCommentById(this.comment.id, msg);
+                let response = await this.$root.$api.$post.editCommentById(this.comment.id, msg, attachmentIds);
                 this.$emit('update', response.data);
             } catch (e) {
                 console.warn(e.detailMessage);

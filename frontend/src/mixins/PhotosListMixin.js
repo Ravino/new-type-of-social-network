@@ -1,14 +1,20 @@
 import PliziAttachment from "../classes/PliziAttachment";
+import PliziPhotoAlbum from "../classes/PliziPhotoAlbum";
 
 const PhotosListMixin = {
 data(){
     return {
         userPhotos: [],
-        isPhotosDataReady: false
+        isPhotosDataReady: false,
+        photoAlbums: null,
+        isDataReady: false,
+        isAlbumDataReady: false,
+        photoAlbum: null
     }
 },
 methods: {
     async getUserPhotos(userId) {
+        this.userPhotos = [];
         let apiResponse = null;
         try {
             apiResponse = await this.$root.$api.$users.lastPhotos(userId);
@@ -24,6 +30,38 @@ methods: {
             this.isPhotosDataReady = true;
         }
     },
+
+    async getPhotoAlbums(userId) {
+        let apiResponse = null;
+
+        try {
+            apiResponse = await this.$root.$api.$users.getUserPhotoalbums(userId);
+        } catch (e) {
+            console.warn(e.detailMessage);
+        }
+
+        if (apiResponse) {
+            this.photoAlbums = apiResponse.map((photoAlbum) => {
+                return new PliziPhotoAlbum(photoAlbum);
+            });
+            this.isDataReady = true;
+        }
+    },
+
+    async getPhotoAlbum(photoAlbumId) {
+        let apiResponse = null;
+
+        try {
+            apiResponse = await this.$root.$api.$photoalbums.getPhotoAlbum(photoAlbumId);
+        } catch (e) {
+            console.warn(e.detailMessage);
+        }
+
+        if (apiResponse) {
+            this.photoAlbum = new PliziPhotoAlbum(apiResponse);
+            this.isAlbumDataReady = true;
+        }
+    }
 }
 
 };

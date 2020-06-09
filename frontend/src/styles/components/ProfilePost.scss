@@ -10,7 +10,7 @@ $postPosterPicSize: 48px;
     font-size: 13px;
 }
 
-.plz-post-item {
+.plz-post-item, .profile-photos {
     .post-poster-pic {
         position: relative;
         display: inline-block;
@@ -162,6 +162,7 @@ $postPosterPicSize: 48px;
                     left: 50%;
                     transform: translate(-50%, -50%);
                     min-height: 30px;
+                    height: 30px;
                     min-width: 30px;
                 }
             }

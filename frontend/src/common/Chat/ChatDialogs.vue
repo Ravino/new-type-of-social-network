@@ -1,9 +1,9 @@
 <template>
-    <div class="chat-dialogs-list col-sm-12 col-md-12 col-lg-4 col-xl-4 col-auto px-0">
+    <div class="chat-dialogs-list col-sm-12 col-md-12 col-lg-4 col-xl-4 col-auto px-0 d-flex flex-column align-items-stretch ">
 
         <ChatDialogsFilter @ChatDialogsFilter="onChatDialogsFilter"></ChatDialogsFilter>
         <div class="chat-list-scroll pb-0 pb-lg-0">
-            <vue-custom-scrollbar class="chat-list-scroll-scroll"
+            <vue-custom-scrollbar class="chat-list-scroll-scroll w-100"
                                   :settings="customScrollBarSettings">
                 <ul id="chatDialogsList" class="list-unstyled mb-0">
                     <ChatListItem v-for="dialog in dialogsList()"

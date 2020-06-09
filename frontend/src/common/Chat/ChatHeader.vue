@@ -1,9 +1,14 @@
 <template>
     <div id="chatHeader" class="bg-white w-100 border-bottom d-flex justify-content-between">
             <div class="col-11 col-md-6 d-flex">
-                <vue-custom-scrollbar class="plz-latest-entries-list d-flex justify-content-between justify-content-sm-start pb-3"
-                                      :settings="customScrollbarSettings">
-                    <ChatHeaderCompanion v-if="currentDialog.isPrivate" v-bind:companion="companion"></ChatHeaderCompanion>
+                <ChatHeaderAttendeePlus v-if="meIsChatAdmin"
+                                        @ShowAddAttendeeModal="onShowAttendeesModal"></ChatHeaderAttendeePlus>
+                <vue-custom-scrollbar
+                        class="plz-latest-entries-list d-flex justify-content-between justify-content-sm-start pb-3"
+                        :settings="customScrollbarSettings">
+
+                    <ChatHeaderCompanion v-if="currentDialog.isPrivate"
+                         v-bind:companion="companion"></ChatHeaderCompanion>
 
                     <GroupChatAttendeesList v-if="currentDialog.isGroup"
                                           v-bind:key="'groupChatAttendeesList'+attendeeKeyUpdater"
@@ -39,8 +44,10 @@
 
                         <div class="col-md-auto">
                             <ChatHeaderMenu
+                                v-bind:currentDialog="currentDialog"
                                 @ShowRemoveCurrentChatModal="onShowRemoveCurrentChatModal"
                                 @ShowCreateGroupChatModal="onShowCreateGroupChatModal"
+                                @ShowAttendeeListModal="onShowAttendeesModal"
                                 @ShowAddAttendeeModal="onShowAttendeesModal"
                                 @ShowRemoveAttendeeModal="onShowAttendeesModal"></ChatHeaderMenu>
                         </div>
@@ -49,6 +56,7 @@
             </div>
 
         <CreateGroupChatModal v-if="createGroupChatModalShow"
+                              @SwitchToChat="onSwitchToChat"
                               @HideCreateGroupChatModal="onHideCreateGroupChatModal"
                               v-bind:currentDialog="currentDialog">
         </CreateGroupChatModal>
@@ -78,6 +86,7 @@ import ChatHeaderMenu from './ChatHeaderMenu.vue';
 import CreateGroupChatModal from './CreateGroupChatModal.vue';
 import RemoveCurrentDialogModal from './RemoveCurrentDialogModal.vue';
 import GroupChatAttendeesModal from './GroupChatAttendeesModal.vue';
+import ChatHeaderAttendeePlus from './ChatHeaderAttendeePlus.vue';
 
 import GroupChatAttendeesList from './GroupChatAttendeesList.vue';
 import ChatHeaderCompanion from './ChatHeaderCompanion.vue';
@@ -86,6 +95,8 @@ import ChatHeaderCompanion from './ChatHeaderCompanion.vue';
 import vueCustomScrollbar from 'vue-custom-scrollbar';
 
 import PliziDialog from '../../classes/PliziDialog.js';
+
+import ChatAdminMixin from '../../mixins/ChatAdminMixin.js';
 
 export default {
 name: 'ChatHeader',
@@ -98,8 +109,10 @@ components: {
     CreateGroupChatModal,
     RemoveCurrentDialogModal,
     GroupChatAttendeesModal,
-    vueCustomScrollbar
+    vueCustomScrollbar,
+    ChatHeaderAttendeePlus
 },
+mixins: [ChatAdminMixin],
 props: {
     currentDialog: {
         type: PliziDialog | null,
@@ -143,6 +156,10 @@ computed: {
 },
 
 methods: {
+    onSwitchToChat(evData){
+        this.$emit('SwitchToChat', evData);
+    },
+
     onShowRemoveCurrentChatModal(){
         this.removeDialogModalShow = true;
     },
@@ -212,7 +229,6 @@ methods: {
         this.showDatePicker = false;
         this.$refs.chatDatePicker.clearDateSelected();
     },
-
 },
 
 created(){
@@ -222,8 +238,6 @@ created(){
 beforeDestroy() {
     this.$root.$off('ChatDialogsNew', ()=>{});
 }
-
-
 
 }
 </script>

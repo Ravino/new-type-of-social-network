@@ -35,15 +35,22 @@ class PliziPostAPI extends PliziBaseAPI {
      * @returns {object[]|null}
      * @throws PliziAPIError
      */
-    async getNews(limit, offset){
+    async getNews(limit, offset, search = '', parts = []){
         let path = 'api/user/news';
-        let qParams = '';
 
-        if (limit && offset) {
-            qParams = `?limit=${limit}&offset=${offset}`;
-        }
+        const params = new URLSearchParams({
+            limit: limit || 50,
+            offset: offset || 0,
+            search: search || '',
+        });
+        parts.map((part) => {
+            params.append('parts[]', part);
+        })
+        // params.append('parts[]', 'own');
+        // params.append('parts[]', 'friends');
+        // params.append('parts[]', 'communities');
 
-        let response = await this.axios.get( path + qParams, this.authHeaders )
+        let response = await this.axios.get( path + '?' + params.toString(), this.authHeaders )
             .catch( ( error ) => {
                 this.checkIsTokenExpires( error, `getNews` );
                 throw new PliziAPIError( `getNews`, error.response );
@@ -326,7 +333,10 @@ class PliziPostAPI extends PliziBaseAPI {
              postId,
              attachmentIds,
         }, this.authHeaders
-     );
+     ).catch((error) => {
+             this.checkIsTokenExpires(error, `$comment.sendComment`);
+             throw new PliziAPIError(`$comment.sendComment`, error.response);
+         });
 
       if (response.status === 200) {
           return response.data
@@ -336,7 +346,7 @@ class PliziPostAPI extends PliziBaseAPI {
     }
 
     /**
-     * Оставить комментарий
+     * получить ответы к комментарию
      *
      * @param {string} body
      * @param {number} postId
@@ -345,7 +355,6 @@ class PliziPostAPI extends PliziBaseAPI {
      * @return {object[]|null}
      * @throws PliziAPIError
      */
-
     async getAnswerToComment(body, postId, attachmentIds = [], replyOn) {
         const response = await this.axios.post(`api/comment/post`, {
                 body,
@@ -353,7 +362,10 @@ class PliziPostAPI extends PliziBaseAPI {
                 attachmentIds,
                 replyOn
             }, this.authHeaders
-        );
+        ).catch((error) => {
+            this.checkIsTokenExpires(error, `$comment.getAnswer`);
+            throw new PliziAPIError(`$comment.getAnswer`, error.response);
+        });
 
         if (response.status === 200) {
             return response.data
@@ -369,9 +381,12 @@ class PliziPostAPI extends PliziBaseAPI {
      * @return {object[]|null}
      * @throws PliziAPIError
      */
-
     async getCommentsById(postId) {
-        const response = await this.axios.get(`api/comment/post/${postId}`, this.authHeaders);
+        const response = await this.axios.get(`api/comment/post/${postId}`, this.authHeaders)
+            .catch((error) => {
+                this.checkIsTokenExpires(error, `$comment.getComment`);
+                throw new PliziAPIError(`$comment.getComment`, error.response);
+            });
 
         if (response.status === 200) {
             return response.data;
@@ -387,9 +402,12 @@ class PliziPostAPI extends PliziBaseAPI {
      * @return {object[]|null}
      * @throws PliziAPIError
      */
-
     async deleteCommentById(commentId) {
-        const response = await this.axios.delete(`api/comment/${commentId}`, this.authHeaders);
+        const response = await this.axios.delete(`api/comment/${commentId}`, this.authHeaders)
+            .catch((error) => {
+                this.checkIsTokenExpires(error, `$comment.deleteComment`);
+                throw new PliziAPIError(`$comment.deleteComment`, error.response);
+            });
 
         if (response.status === 200) {
             return response.data;
@@ -406,13 +424,16 @@ class PliziPostAPI extends PliziBaseAPI {
      * @return {object[]|null}
      * @throws PliziAPIError
      */
-
     async editCommentById(commentId, body, attachmentIds = []) {
         const response = await this.axios.patch(`api/comment/${commentId}`, {
             commentId,
             body,
             attachmentIds,
-        }, this.authHeaders);
+        }, this.authHeaders)
+            .catch((error) => {
+                this.checkIsTokenExpires(error, `$comment.editComment`);
+                throw new PliziAPIError(`$comment.editComment`, error.response);
+            });
 
         if (response.status === 200) {
             return response.data;
@@ -427,7 +448,6 @@ class PliziPostAPI extends PliziBaseAPI {
      * @returns {object[]|null}
      * @throws PliziAPIError
      */
-
     async addAttachmentsToComment( picsArr ){
         const formData = new FormData();
 
@@ -435,7 +455,11 @@ class PliziPostAPI extends PliziBaseAPI {
             formData.append( 'files[]', picsArr[i] );
         }
 
-        let response = await this.axios.post( 'api/comment/attachments', formData, this.authHeaders );
+        let response = await this.axios.post( 'api/comment/attachments', formData, this.authHeaders )
+            .catch((error) => {
+                this.checkIsTokenExpires(error, `$comment.uploadAttachments`);
+                throw new PliziAPIError(`$comment.uploadAttachments`, error.response);
+            });
 
         if ( response.status === 200 ){
             return response.data.data.list;
@@ -452,7 +476,11 @@ class PliziPostAPI extends PliziBaseAPI {
      * @throws PliziAPIError
      */
     async likeComment(commentId) {
-        let response = await this.axios.post( `api/comment/${commentId}/like`, {}, this.authHeaders );
+        let response = await this.axios.post( `api/comment/${commentId}/like`, {}, this.authHeaders )
+            .catch((error) => {
+                this.checkIsTokenExpires(error, `$comment.likeComment`);
+                throw new PliziAPIError(`$comment.likeComment`, error.response);
+            });
 
         if ( response.status === 200 ){
             return response.data.data;
@@ -478,7 +506,10 @@ class PliziPostAPI extends PliziBaseAPI {
                 attachmentId,
                 attachmentIds,
             }, this.authHeaders
-        );
+        ).catch((error) => {
+            this.checkIsTokenExpires(error, `$comment.sendCommentToGallery`);
+            throw new PliziAPIError(`$comment.sendCommentToGallery`, error.response);
+        });
 
         if (response.status === 200) {
             return response.data
@@ -495,9 +526,12 @@ class PliziPostAPI extends PliziBaseAPI {
      * @return {object[]|null}
      * @throws PliziAPIError
      */
-
     async getCommentsByIdOnGallery(attachmentId) {
-        const response = await this.axios.get(`api/posts/attachments/${attachmentId}/comment`, this.authHeaders);
+        const response = await this.axios.get(`api/posts/attachments/${attachmentId}/comment`, this.authHeaders)
+        .catch((error) => {
+            this.checkIsTokenExpires(error, `$comment.getCommentToGallery`);
+            throw new PliziAPIError(`$comment.getCommentToGallery`, error.response);
+        });
 
         if (response.status === 200) {
             return response.data;
@@ -506,6 +540,65 @@ class PliziPostAPI extends PliziBaseAPI {
         return null;
     };
 
+    /**
+     * Получить коментарии к посту
+     *
+     * @param {number} imageId
+     * @return {object[]|null}
+     * @throws PliziAPIError
+     */
+
+    async getAlbumComments(imageId) {
+        const response = await this.axios.get(`api/user/images/${imageId}/comment`, this.authHeaders);
+
+        if (response.status === 200) {
+            return response.data;
+        }
+
+        return null;
+    };
+
+    /**
+     * Оставить комментарий
+     *
+     * @param {string} body
+     * @param {number} imageId
+     * @param {number[]} attachmentIds
+     * @return {object[]|null}
+     * @throws PliziAPIError
+     */
+    async sendCommentToAlbum(body, imageId, attachmentIds = []) {
+        const response = await this.axios.post(`api/user/images/${imageId}/comment`,  {
+                body,
+                imageId,
+                attachmentIds,
+            }, this.authHeaders
+        );
+
+        if (response.status === 200) {
+            return response.data
+        }
+
+        return null;
+    }
+
+
+    async addView(postId, userId) {
+        const sendData = {
+            postId : postId
+        };
+        let response = await this.axios.post( `api/posts/view`, sendData, this.authHeaders )
+            .catch( ( error ) => {
+                this.checkIsTokenExpires( error, `$post.addView` );
+                throw new PliziAPIError( `$post.addView`, error.response );
+            });
+
+        if ( response.status === 200 ){
+            return response.data;
+        }
+
+        return null;
+    }
 
 }
 

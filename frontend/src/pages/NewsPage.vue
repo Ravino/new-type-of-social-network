@@ -10,21 +10,28 @@
                     <WhatsNewBlock @addNewPost="addNewPost"></WhatsNewBlock>
 
                     <div class="row mb-4 pt-0">
-                        <PostFilter></PostFilter>
-                        <PostInterest></PostInterest>
+                        <PostFilter
+                            :filter="filter"
+                            @partsChange="partsChange"
+                            @likedClick="likedClick"
+                            @lastSearchChange="lastSearchChange"/>
+                        <PostInterest
+                            :filter="filter"
+                            @interestSwitch="interestSwitch"/>
                     </div>
 
-                    <template v-if="posts && posts.length > 0">
-                        <Post v-for="(postData, postIndex) in posts"
-                              :key="postIndex"
-                              :post="postData"
+                    <div v-if="filteredPosts && filteredPosts.length > 0">
+                        <Post v-for="postData in filteredPosts"
+                              v-waypoint="{ active: true, callback: ({ el, going, direction })=>{ postIsRead(postData, going, direction); }, options: { threshold: [0.5] } }"
+                              v-bind:post="postData"
+                              v-bind:key="'post-'+postData.id"
                               @onEditPost="onEditPost"
                               @onDeletePost="onDeletePost"
                               @onRestorePost="onRestorePost"
                               @openVideoModal="openVideoModal"
                               @onShare="onSharePost"
-                              @onShowUsersLikes="openLikeModal"/>
-                    </template>
+                              @onShowUsersLikes="openLikeModal"></Post>
+                    </div>
 
                     <div v-else-if="!isStarted"  class="row plz-post-item mb-4 bg-white-br20 p-4">
                         <div class="alert alert-info w-100 p-5 text-center mb-0">
@@ -68,7 +75,9 @@
 
 <script>
 import AccountToolbarLeft from '../common/AccountToolbarLeft.vue';
+import SmallSpinner from '../common/SmallSpinner.vue';
 import FavoriteFriends from '../common/FavoriteFriends.vue';
+
 import WhatsNewBlock from '../common/WhatsNewBlock.vue';
 
 import Post from '../common/Post/Post.vue';
@@ -77,11 +86,12 @@ import PostInterest from '../common/Post/PostInterest.vue';
 import PostEditModal from '../common/Post/PostEditModal.vue';
 import PostVideoModal from '../common/Post/PostVideoModal.vue';
 import PostRepostModal from '../common/Post/PostRepostModal.vue';
-import SmallSpinner from "../common/SmallSpinner.vue";
 import PostLikeModal from '../common/Post/PostLikeModal.vue';
 
+import LazyLoadPosts from '../mixins/LazyLoadPosts.js';
+import PostViewMixin from '../mixins/PostViewMixin.js';
+
 import PliziPost from '../classes/PliziPost.js';
-import LazyLoadPosts from "../mixins/LazyLoadPosts.js";
 
 export default {
 name: 'NewsPage',
@@ -98,10 +108,12 @@ components: {
     SmallSpinner,
     PostLikeModal,
 },
-    mixins: [LazyLoadPosts],
+mixins: [LazyLoadPosts, PostViewMixin],
+
 data() {
     return {
         posts: [],
+        filteredPosts: [],
         postEditModal: {
             isVisible: false,
         },
@@ -124,12 +136,33 @@ data() {
                 postId: null,
             },
         },
+        lastSearch: '',
+        filter: {
+            interest: false,
+            liked: false,
+            parts: [],
+        },
     }
 },
 
 methods: {
+
+    filterPost() {
+        this.filteredPosts = [...this.posts];
+        if (this.filter.interest) {
+            this.filteredPosts.sort((a, b) => {
+                return (b.commentsCount + b.likes) - (a.commentsCount + a.likes);
+            });
+        }
+        if (this.filter.liked) {
+            this.filteredPosts = this.filteredPosts.filter((post) => {
+                return post.alreadyLiked;
+            });
+        }
+    },
     addNewPost(post) {
         this.posts.unshift(new PliziPost(post));
+        this.filterPost();
     },
     onEditPost(post){
         this.postEditModal.isVisible = true;
@@ -151,6 +184,7 @@ methods: {
     startTimer(postIndex) {
         setTimeout(() => {
             this.posts.splice(postIndex, 1);
+            this.filterPost();
         }, 5000);
     },
     onSharePost(post) {
@@ -176,7 +210,7 @@ methods: {
         this.isStarted = true;
 
         try {
-            response = await this.$root.$api.$post.getNews(limit, offset);
+            response = await this.$root.$api.$post.getNews(limit, offset, this.startSearch, this.filter.parts);
         } catch (e) {
             this.isStarted = false;
             console.warn(e.message);
@@ -184,12 +218,20 @@ methods: {
 
         if (response !== null) {
             this.isStarted = false;
+            if (offset === 0) {
+                this.posts = [];
+            }
             response.map((post) => {
                 this.posts.push(new PliziPost(post));
             });
+            this.filterPost();
 
             return response.length;
         }
+    },
+    lastSearchChange(sText) {
+        this.startSearch = sText;
+        this.getPosts();
     },
     async onDeletePost(id) {
         let response;
@@ -224,7 +266,20 @@ methods: {
             });
 
             post.deleted = false;
+            this.filterPost();
         }
+    },
+    interestSwitch(state) {
+        this.filter.interest = state;
+        this.filterPost();
+    },
+    likedClick(state) {
+        this.filter.liked = state;
+        this.filterPost();
+    },
+    partsChange(state) {
+        this.filter.parts = state;
+        this.getPosts();
     },
 },
 

@@ -3,26 +3,23 @@
          role="dialog" aria-labelledby="groupChatAttendeesModal" @click.stop="hideGroupChatAttendeesModal"
          aria-hidden="true" style="display: block; background-color: rgba(0, 0, 0, .7);">
 
-        <div class="modal-dialog modal-dialog-centered" role="document" @click.stop="">
+        <div class="chat-pick-attendees-document modal-dialog modal-dialog-centered" role="document" @click.stop="">
             <div class="modal-content bg-white-br20">
 
                 <div id="groupChatAttendeesModalBody" class="modal-body d-flex flex-column p-4">
                     <h5 class="resend-message-title text-left mb-4">Участники группового чата</h5>
 
-                    <form id="chatPickAttendeesForm" novalidate="novalidate" class="mb-4">
+                    <form id="chatPickAttendeesForm" novalidate="novalidate" class="chat-pick-attendees-form mb-4">
 
-                        <div class="form-group">
-                            <div class="d-flex flex-column align-items-start" ref="attendeesList" :key="'attendeesList-'+keyUpdater">
-                                <ChatAttendeeItem v-for="attItem in getAttendeesList()"
-                                                  @RemoveAttendeeFromChat="onRemoveAttendeeFromChat"
-                                                  v-bind:companion="attItem"
-                                                  v-bind:isCanDelete="isCanDelete"
-                                                  v-bind:key="'attendeeItem-'+attItem.id+'-'+keyUpdater">
-                                </ChatAttendeeItem>
-                            </div>
-                        </div>
+                        <GroupChatMembersList
+                                      ref="attendeesList"
+                                      v-bind:attendees="getAttendeesList(keyUpdater)"
+                                      v-bind:isCanDelete="isCanDelete"
+                                      v-bind:meIsChatAdmin="meIsChatAdmin"
+                                      v-bind:keyUpdater="keyUpdater"
+                                      @RemoveAttendeeFromChat="onRemoveAttendeeFromChat"></GroupChatMembersList>
 
-                        <div class="form-group">
+                        <div v-if="meIsChatAdmin" class="form-group">
                             <label class="">Добавить нового участника</label>
                             <multiselect v-model="model.selectedRecipients"
                                          :options="getFriendsCombo"
@@ -64,14 +61,18 @@
 </template>
 
 <script>
-import ChatAttendeeItem from './ChatAttendeeItem.vue';
+import GroupChatMembersList from './GroupChatMembersList.vue';
+
+import ChatAdminMixin from '../../mixins/ChatAdminMixin.js';
 
 import PliziDialog from '../../classes/PliziDialog.js';
 import PliziRecipientsCollection from '../../classes/Collection/PliziRecipientsCollection.js';
 
+
 export default {
 name: 'GroupChatAttendeesModal',
-components: { ChatAttendeeItem },
+components: { GroupChatMembersList},
+mixins: [ChatAdminMixin],
 props: {
     currentDialog: PliziDialog
 },
@@ -84,7 +85,7 @@ data() {
             selectedRecipients: null
         },
         hasNoAttendees: false,
-        keyUpdater: 0
+        keyUpdater: 0,
     }
 },
 
@@ -130,8 +131,14 @@ methods: {
         this.removeAttendeeFromChat( evData.userId );
     },
 
-
     async addAttendeeToChat( user ){
+        const attIsExists = this.currentDialog.getAttendee(user.id);
+
+        if (attIsExists) {
+            this.$root.$alert(`${user.fullName} уже есть в этом чате!`, 'bg-danger', 5);
+            return;
+        }
+
         let apiResponse = null;
 
         try {
@@ -145,8 +152,6 @@ methods: {
         if ( apiResponse ) {
             this.$emit( 'AddAttendeeToDialog', { chatId : this.currentDialog.id, userId : user.id } );
             this.$root.$auth.dm.addAttendeeToDialog(this.currentDialog.id, user);
-            this.$root.$dialogsKeyUpdater++;
-            this.keyUpdater++;
         }
     },
 
@@ -165,12 +170,27 @@ methods: {
         if ( apiResponse ) {
             this.$emit( 'RemoveAttendeeFromDialog', { chatId : this.currentDialog.id, userId : userId } );
             this.$root.$auth.dm.removeAttendeeFromDialog(this.currentDialog.id, userId);
-            this.$root.$dialogsKeyUpdater++;
-            this.keyUpdater++;
         }
     }
-
 },
+
+created(){
+    this.$root.$on( this.$root.$auth.dm.updateEventName, () => {
+        this.$root.$emit('UpdateCurrentDialog', {});
+
+        this.$root.$dialogsKeyUpdater++;
+        this.keyUpdater++;
+
+        if (this.$refs &&  this.$refs.attendeesList) {
+            this.$refs.attendeesList.$forceUpdate();
+        }
+    });
+},
+
+beforeDestroy() {
+    this.$root.$off(this.$root.$auth.dm.updateEventName, ()=>{});
+}
+
 
 }
 </script>

@@ -10,7 +10,7 @@ class PliziAttendee {
 
     /**
      * ID собеседника
-     * @type {number}
+     * @type {string}
      * @private
      */
     _id = null;
@@ -24,8 +24,8 @@ class PliziAttendee {
     _lastActivity = null;
 
     /**
-     * флаг собеседник
-     * @type {Date}
+     * флаг собеседник онлайн или нет
+     * @type {Boolean}
      * @private
      */
     _isOnline = null;
@@ -58,6 +58,13 @@ class PliziAttendee {
      */
     _sex = null;
 
+    /**
+     * флаг, админ этот себеседник или нет
+     * @type {Boolean}
+     * @private
+     */
+    _isAdmin = false;
+
     constructor( attData ){
         this._id = attData.id;
         this._lastActivity = attData.lastActivity ? convertToDate(attData.lastActivity) : this.lastActivity;
@@ -66,6 +73,7 @@ class PliziAttendee {
         this._firstName = attData.firstName;
         this._lastName = attData.lastName;
         this._sex = attData.sex;
+        this._isAdmin = !!attData.isAdmin;
     }
 
 
@@ -79,6 +87,10 @@ class PliziAttendee {
 
     set lastActivity(tValue){
         this._lastActivity = convertToDate(tValue);
+    }
+
+    get isAdmin(){
+        return this._isAdmin;
     }
 
     get isOnline(){
@@ -120,6 +132,7 @@ class PliziAttendee {
             firstName: this.firstName,
             lastName: this.lastName,
             isOnline: this.isOnline,
+            isAdmin: this.isAdmin,
             sex : this.sex
         }
     }

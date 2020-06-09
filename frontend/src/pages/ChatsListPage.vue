@@ -16,7 +16,7 @@
                 </div>
             </div>
 
-            <div v-else class="chat-page-height chat-page-height-body col-12 col-md-11 px-0 pl-md-3 ">
+            <div v-else class="chat-page-height chat-page-height-body col-12 col-md-11 px-0 pl-md-3 f-flex align-items-stretch">
 
                 <div v-if="isDialogsLoaded" id="chatMain"
                      class="d-flex flex-column flex-lg-row flex bg-white-br20 overflow-hidden in-shadow">
@@ -30,6 +30,7 @@
                          class="col-12 col-lg-8 bg-light d-lg-flex flex-column p-0">
 
                         <ChatHeader v-if="currentDialog" v-bind:currentDialog="getCurrentDialog()"
+                                    @SwitchToChat="onSwitchToChat"
                                     @ChatMessagesFilter="onUpdateMessagesFilterText"
                                     ref="chatHeader">
                         </ChatHeader>
@@ -298,6 +299,10 @@ methods: {
         });
 
         this.$root.$on('newMessageInDialog', this.addNewChatMessageToList);
+
+        this.$root.$on('UpdateCurrentDialog', ()=>{
+            this.currentDialog = this.$root.$auth.dm.get(this.currentDialog.id);
+        });
 
         this.$root.$on('removeMessageInDialog', (evData)=>{
             if (this.removeMessageInList) {

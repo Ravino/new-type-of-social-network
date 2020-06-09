@@ -3,6 +3,9 @@
         <router-link :to="`/user-`+attendee.id" tag="div"
                      :title="attendee.fullName"
                      class="mr-3 cursor-pointer position-relative">
+            <span v-if="attendee.isAdmin" class="plz-chat-attendee-admin " title="администратор чата">
+                <i class="fas fa-star"></i>
+            </span>
             <div class="media-pic border rounded-circle">
                 <img :src="attendee.userPic" :alt="attendee.fullName" />
             </div>
@@ -52,7 +55,7 @@ methods : {
 
         this.typingTimeout = setTimeout(() => {
             this.isTyper = false;
-        }, 2000);
+        }, 3000);
     }
 },
 

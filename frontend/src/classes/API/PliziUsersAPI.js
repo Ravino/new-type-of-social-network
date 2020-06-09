@@ -248,6 +248,28 @@ class PliziUsersAPI extends PliziBaseAPI{
     }
 
     /**
+     * Список тех, на кого я подписан
+     * @param userId
+     * @param limit
+     * @param offset
+     * @returns {Promise<null|*>}
+     */
+    async userFollowList(userId, limit = 20, offset = 0) {
+        let path = `api/user/${userId}/follow/list?limit=${limit}&offset=${offset}`;
+        let response = await this.axios.get(path, this.authHeaders)
+            .catch((error) => {
+                this.checkIsTokenExpires(error, `$users.followList`);
+                throw new PliziAPIError(`$users.followList`, error.response);
+            });
+
+        if (response.status === 200) {
+            return response.data.data;
+        }
+
+        return null;
+    }
+
+    /**
      * Список последних фотографий
      // * @param limit
      // * @param offset
@@ -262,6 +284,51 @@ class PliziUsersAPI extends PliziBaseAPI{
 
         if (200 === response.status) {
             return response.data.data.list;
+        }
+        return null;
+    }
+
+    /**
+     * Получение фотоальбомов пользователя по ID.
+     * @param {string} userId
+     * @public
+     * @returns {object[]|null}
+     * @throws PliziAPIError
+     */
+    async getUserPhotoalbums(userId) {
+        let response = await this.axios.get(`api/user/${userId}/photo-albums`, this.authHeaders)
+            .catch( ( error ) => {
+                this.checkIsTokenExpires( error, `getUserPhotoalbums` );
+                throw new PliziAPIError( `getUserPhotoalbums`, error.response );
+            } );
+
+        if ( response.status === 200 ){
+            return response.data.data.list;
+        }
+
+        return null;
+    }
+
+    /**
+     * Список сообществ пользователя
+     // * @param limit
+     // * @param offset
+     * @returns {Promise<null|*>}
+     */
+    async getUserCommunities(userId, limit = 10, offset = 0) {
+        let path = `/api/user/${userId}/communities`;
+        const params = new URLSearchParams({
+            limit: limit || 50,
+            offset: offset || 0,
+        });
+        let response = await this.axios.get(path  + '?' + params.toString(), this.authHeaders)
+            .catch((error) => {
+                this.checkIsTokenExpires(error, '$users.getUserCommunities');
+                throw new PliziAPIError('$users.getUserCommunities', error.response);
+            });
+
+        if (200 === response.status) {
+            return response.data.data;
         }
         return null;
     }

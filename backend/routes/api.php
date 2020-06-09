@@ -92,15 +92,20 @@ Route::group(['middleware' => ['auth.jwt', 'track.activity']], function () {
 
     Route::get('user/follow/list', [UserSubscribeController::class, 'list']);
     Route::middleware(['user.get'])->group(static function() {
+        Route::get('user/{userId}/follow/list', [UserSubscribeController::class, 'list']);
         Route::get('user/{userId}/follow', [UserSubscribeController::class, 'exists']);
         Route::post('user/{userId}/follow', [UserSubscribeController::class, 'follow']);
         Route::delete('user/{userId}/follow', [UserSubscribeController::class, 'unfollow']);
+
+        Route::get('user/{userId}/videos', 'Api\VideoController@getUserVideo');
     });
 
     Route::post('user/images/{imageUpload}', 'Api\LikeController@likeUserImage');
     Route::get('user/images/{imageUpload}/comment', 'Api\CommentController@getCommentUserImage');
     Route::post('user/images/{imageUpload}/comment', 'Api\CommentController@commentUserImage');
     Route::get('/user/{user}/photos', 'Api\ImageUploadController@getUserImages');
+
+    Route::get('/user/{user}/photo-albums', 'Api\PhotoAlbumController@getByUserId');
 
     /**
      * Communities Resource
@@ -182,7 +187,10 @@ Route::group(['middleware' => ['auth.jwt', 'track.activity']], function () {
 
         Route::get('{photoAlbum}', 'Api\PhotoAlbumController@show');
         Route::post('{id}/photos', 'Api\PhotoAlbumController@storePhotoInAlbum');
-        Route::delete('{photoAlbum}/photos/{imageUpload}', 'Api\PhotoAlbumController@destroyImageInAlbum');
+    });
+
+    Route::prefix('photos')->group(function () {
+        Route::delete('{imageUpload}', 'Api\ImageUploadController@delete');
     });
 
     /**

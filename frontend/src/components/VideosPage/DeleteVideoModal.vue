@@ -7,11 +7,11 @@
             <div class="modal-content bg-white-br20 p-5">
                 <h6 class="text-center mb-3">Вы уверены что хотите удалить видео?</h6>
                 <div class="d-flex">
-                    <button class="btn plz-btn plz-btn-primary p-0 mr-3"
+                    <button class="btn plz-btn plz-btn-primary p-0 ml-auto mr-2"
                             @click.stop="deleteVideo">
                         Да
                     </button>
-                    <button class="btn plz-btn plz-btn-primary p-0 mr-3"
+                    <button class="btn plz-btn plz-btn-outline btn-registration p-0 mt-0 ml-2 mr-auto"
                             @click.stop="onHide">
                         Нет
                     </button>
@@ -38,7 +38,3 @@
         },
     }
 </script>
-
-<style scoped>
-
-</style>

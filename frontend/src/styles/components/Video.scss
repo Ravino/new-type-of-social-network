@@ -13,6 +13,20 @@
     }
 }
 
+#chatVideoModal {
+    .plz-btn {
+        width: 120px;
+        font-size: 12px;
+        font-weight: 700;
+        box-shadow: 0 2px 8px rgba(61, 81, 222, 0.4);
+        transition: 0.4s;
+
+        &:hover {
+            box-shadow: none;
+        }
+    }
+}
+
 
 .videos {
     &-content {
@@ -71,7 +85,7 @@
         }
 
         &:hover {
-            .delete__button {
+            .delete-button {
                 opacity: 1;
             }
         }
@@ -207,7 +221,7 @@
 
 
 .videos-content {
-    .delete__button {
+    .delete-button {
         position: absolute;
         top: -5px;
         left: 100%;

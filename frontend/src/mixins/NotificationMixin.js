@@ -19,12 +19,17 @@ const NotificationMixin = {
 
             let notification = {
                 id: uuid,
-                userPic: (inputNotification.data.sender) ? inputNotification.data.sender.userPic : null,
+                userPic: this.senderUserPic(inputNotification),
                 firstName: (inputNotification.data.sender) ? inputNotification.data.sender.firstName : null,
                 lastName: (inputNotification.data.sender) ? inputNotification.data.sender.lastName : null,
                 name: (inputNotification.data.name) ? inputNotification.data.name : null,
                 isHuman: true
             };
+
+            if (inputNotification.data.notificationType === 'user.profile.image.created') {
+                notification.body = this.senderFullName(inputNotification) +
+                    (inputNotification.data.sender.sex === 'f' ? 'сменила аватарку' : 'сменил аватарку');
+            }
 
             if (inputNotification.data.notificationType === 'user.profile.image.updated') {
                 notification.body = this.senderFullName(inputNotification) +
@@ -55,6 +60,23 @@ const NotificationMixin = {
                 notification.isHuman = false;
                 notification.body = `Сообщество <b class="community-name">${inputNotification.data.community.name}</b> опубликовало новый пост`;
                 notification.primaryImage = inputNotification.data.community.primaryImage;
+            }
+
+            if (inputNotification.data.notificationType === 'community.request.rejected') {
+                notification.isHuman = false;
+                notification.body = `Сообщество <b class="community-name">${inputNotification.data.community.name}</b> отклонило Ваш запрос`;
+                notification.primaryImage = inputNotification.data.community.primaryImage;
+            }
+
+            if (inputNotification.data.notificationType === 'community.request.accepted') {
+                notification.isHuman = false;
+                notification.body = `Сообщество <b class="community-name">${inputNotification.data.community.name}</b> одобрило Ваш запрос`;
+                notification.primaryImage = inputNotification.data.community.primaryImage;
+            }
+
+            if (inputNotification.data.notificationType === 'user.post.created') {
+                notification.body = this.senderFullName(inputNotification) +
+                    ('f' === inputNotification.data.sender.sex ? 'опубликовала новость' : 'опубликовал новость');
             }
 
             if (inputNotification.data.notificationType === 'chat.created') {
@@ -102,7 +124,7 @@ const NotificationMixin = {
             }
 
             if (inputNotification.data.notificationType === 'message.new') {
-                    notification.body = inputNotification.data.sender.message;
+                notification.body = inputNotification.data.sender.message;
             }
 
             if (inputNotification.data.notificationType === 'app.notification') {
@@ -124,6 +146,14 @@ const NotificationMixin = {
                 setTimeout(() => {
                     this.removeNotification({uuid});
                 }, this.timeoutNotification * 1000);
+            }
+        },
+
+        senderUserPic(inputNotification) {
+            if (inputNotification.data.sender && inputNotification.data.sender.userPic) {
+                return inputNotification.data.sender.userPic;
+            } else {
+                return this.$root.$defaultAvatarPath;
             }
         },
 
@@ -155,7 +185,8 @@ const NotificationMixin = {
                 data: {
                     notificationType: data.type,
                     sender: {
-                        userPic: userOwner.userPic ? userOwner.userPic : null,
+                        // userPic: userOwner.userPic ? userOwner.userPic : null,
+                        userPic: 'images/plizi-icon-64.png',
                         message: data.message ? data.message : null
                     }
                 }

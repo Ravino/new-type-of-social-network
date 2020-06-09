@@ -101,7 +101,7 @@
                                                     {{$url}}
                                                 </p>
                                                 <hr>
-                                                <div style="text-align: center;"><span style="font-size:18px"><strong><a href="https://plizi.info/offer" target="_blank" style="mso-line-height-rule: exactly;-ms-text-size-adjust: 100%;-webkit-text-size-adjust: 100%;color: #007C89;font-weight: normal;text-decoration: underline;">Оферта</a>&nbsp; |&nbsp;</strong></span> <strong><span style="font-size:18px"><a href="https://plizi.info/confidentiality" target="_blank" style="mso-line-height-rule: exactly;-ms-text-size-adjust: 100%;-webkit-text-size-adjust: 100%;color: #007C89;font-weight: normal;text-decoration: underline;">Политика конфиденциальности</a></span></strong></div>
+                                                <div style="text-align: center;"><span style="font-size:18px"><strong><a href="{{ $offerLink }}" target="_blank" style="mso-line-height-rule: exactly;-ms-text-size-adjust: 100%;-webkit-text-size-adjust: 100%;color: #007C89;font-weight: normal;text-decoration: underline;">Оферта</a>&nbsp; |&nbsp;</strong></span> <strong><span style="font-size:18px"><a href="{{ $confidentialityLink }}" target="_blank" style="mso-line-height-rule: exactly;-ms-text-size-adjust: 100%;-webkit-text-size-adjust: 100%;color: #007C89;font-weight: normal;text-decoration: underline;">Политика конфиденциальности</a></span></strong></div>
 
                                             </td>
                                         </tr>

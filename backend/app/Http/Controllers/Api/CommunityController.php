@@ -21,7 +21,6 @@ use App\Models\CommunityHeader;
 use App\Models\CommunityMember;
 use App\Models\CommunityRequest as CommunityRequestModel;
 use App\Models\CommunityTheme;
-use App\Models\Post;
 use App\Models\Video;
 use App\Services\CommunityService;
 use App\Services\S3UploadService;
@@ -31,6 +30,7 @@ use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use App\Http\Resources\Post\AttachmentsCollection;
+use JWTAuth;
 
 class CommunityController extends Controller
 {
@@ -96,6 +96,13 @@ class CommunityController extends Controller
                 break;
         }
 
+        if (auth()->guest()) {
+            try {
+                JWTAuth::parseToken()->authenticate();
+            } catch (Exception $e) {
+            }
+        }
+
         if (Auth::guest()) {
             $query->limit(10);
         } else {
@@ -117,9 +124,11 @@ class CommunityController extends Controller
      * @return CommunityResource|JsonResponse
      */
     public function get(int $id) {
-        $community = Community::with(['users' => function($u) {
+        $community = Community::with(['users' => static function($u) {
             $u->limit(5);
-        }, 'users.profile', 'members', 'avatar', 'city', 'headerImage', 'supers'])->find($id);
+        }, 'users.profile', 'members', 'avatar', 'city', 'headerImage', 'supers'])
+            ->withCount('members')
+            ->find($id);
         if($community) {
             return new CommunityResource($community);
         }

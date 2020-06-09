@@ -91,7 +91,7 @@ methods: {
         let currText = this.editor.getHTML();
         currText = (currText.toLowerCase() === `<p></p>`) ? '' : currText;
 
-        if ( `` === currText ){
+        if ( '' === currText ){
             this.editor.setContent( `<p class="big-emoji">${emoji}</p>` );
         }
 
@@ -117,7 +117,7 @@ methods: {
                 }
             }
 
-            this.editor.setContent( `` );
+            this.editor.setContent( '' );
             this.$emit( 'editorPost', { postText : editorText } );
         }
     },
@@ -159,9 +159,10 @@ methods: {
         this.editor.focus();
     },
 },
-    beforeDestroy(){
-        this.editor.destroy();
-    }
+
+beforeDestroy(){
+    this.editor.destroy();
+}
 }
 </script>
 

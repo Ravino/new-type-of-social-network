@@ -21,8 +21,8 @@ beforeMount() {
     window.localStorage.removeItem('pliziInvitations');
     window.localStorage.removeItem('pliziNotifications');
 
-    //this.$router.push({path: '/login'});
-    window.location = window.location.origin + '/login'; // @TGA: for app restart
+    this.$router.push({path: '/login'});
+    //window.location = window.location.origin + '/login'; // @TGA: for app restart
 },
 
 

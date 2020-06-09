@@ -45,6 +45,7 @@ $commentPicSize: 50px;
             min-height: $commentPicSize;
             min-width: $commentPicSize;
             object-fit: contain;
+            height: $commentPicSize;
         }
 
         &-name {
@@ -111,7 +112,7 @@ $commentPicSize: 50px;
         width: calc( 100% - 45px );
 
         &-date {
-            font-size: 11px;
+            font-size: 10.9px;
             color: #333336;
             opacity: 0.7;
         }

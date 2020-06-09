@@ -7,7 +7,7 @@ import Spinner from '../common/Spinner.vue';
 import CommunitiesListHeader from '../common/Communities/CommunitiesListHeader.vue';
 import CommunityCreateBlock from '../common/Communities/CommunityCreateBlock.vue';
 import CommunityItem from '../common/Communities/CommunityItem.vue';
-import RecommendedCommunities from '../common/Communities/RecommendedCommunities.vue';
+import CommunitiesSmallBlock from '../common/Communities/CommunitiesSmallBlock.vue';
 
 const CommunitiesListMixin = {
     components: {
@@ -16,7 +16,7 @@ const CommunitiesListMixin = {
         CommunitiesListHeader,
         CommunityItem,
         CommunityCreateBlock,
-        RecommendedCommunities,
+        CommunitiesSmallBlock,
         FavoriteFriends,
     },
 
@@ -31,12 +31,18 @@ const CommunitiesListMixin = {
             isManagedCommunitiesLoaded: false,
             managedCommunities: [],
 
-            recommendedCommunities: null,
+            isRecommendedCommunitiesDataReady: false,
+            recommendedCommunities: [],
+
+            isUserCommunitiesDataReady: false,
+            userCommunities: [],
 
             noMore: false,
             enabledLoader: true,
 
             searchString: '',
+
+            isDataReady: false,
         }
     },
     mounted() {
@@ -84,6 +90,8 @@ const CommunitiesListMixin = {
                     await this.lazyLoad('manage');
                 } else if (this.$route.name === 'CommunitiesPopularPage') {
                     await this.lazyLoad('popular');
+                } else if (this.$route.name === 'userCommunities') {
+                    await this.lazyLoad('userCommunities');
                 } else {
                     await this.lazyLoad();
                 }
@@ -177,6 +185,46 @@ const CommunitiesListMixin = {
             return 0;
         },
 
+        async loadRecommendedCommunities() {
+            this.isRecommendedCommunitiesDataReady = false;
+            // this.communities = [];
+            let apiResponse = null;
+
+            try {
+                apiResponse = await this.$root.$api.$communities.recommended()
+            } catch (e) {
+                window.console.warn(e.detailMessage);
+            }
+
+            if (apiResponse !== null) {
+                this.communities = [];
+                apiResponse.list.map((srItem) => {
+                    this.recommendedCommunities.push(new PliziCommunity(srItem));
+                });
+
+                this.isRecommendedCommunitiesDataReady = true;
+            }
+        },
+
+        async getUserCommunitiesList(limit = 10, offset = 0) {
+            let apiResponse = null;
+            this.isUserCommunitiesDataReady = false;
+
+            try {
+                apiResponse = await this.$root.$api.$users.getUserCommunities(this.userId, limit, offset);
+            }
+            catch (e){
+                this.isStarted = false;
+                window.console.warn(e.detailMessage);
+                throw e;
+            }
+
+            this.isUserCommunitiesDataReady = true;
+            this.enabledLoader = false;
+
+            return this.processApiResponce(offset, apiResponse.list, 'userCommunities');
+        },
+
         async lazyLoad(listName = null) {
             if (this.noMore || this.enabledLoader) return;
 
@@ -194,6 +242,11 @@ const CommunitiesListMixin = {
 
                 if(oldSize)
                     added = await this.loadPopularCommunities(20, oldSize++);
+            } else if (listName === 'userCommunities') {
+                oldSize = this.userCommunities.length;
+
+                if(oldSize)
+                    added = await this.getUserCommunitiesList(20, oldSize++);
             } else {
                 oldSize = this.communitiesList.length;
 

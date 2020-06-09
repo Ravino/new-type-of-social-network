@@ -21,17 +21,11 @@
                 <i class="fas fa-mail-bulk mr-2"></i>Сообщения
             </span>
         </div>
-        <div class="nav-item border-top d-block d-lg-none">
-            <span @click="onVideoInformationClick"
-                  class="community-options-link px-3 py-1 cursor-pointer">
+        <div class="nav-item border-top d-block" v-if="community.totalVideos > 0">
+            <router-link :to="{name: 'CommunityVideosPage', params: {id: community.id}}"
+                         class="community-options-link px-3 py-1">
                 Видео сообщества
-            </span>
-        </div>
-        <div class="nav-item  d-block d-lg-none">
-            <span @click="onMembersInformationClick"
-                  class="community-options-link px-3 py-1 cursor-pointer">
-                Участники сообщества
-            </span>
+            </router-link>
         </div>
     </div>
 </template>
@@ -46,12 +40,6 @@ props: {
 methods: {
     onMessageClick(){
         this.$root.$alert(`Сообщение`, 'bg-info', 3);
-    },
-    onVideoInformationClick(){
-        this.$root.$alert(`Показываю видео этого сообщества`, 'bg-info', 3);
-    },
-    onMembersInformationClick(){
-        this.$root.$alert(`Показываю участников этого сообщества`, 'bg-info', 3);
     },
 }
 }

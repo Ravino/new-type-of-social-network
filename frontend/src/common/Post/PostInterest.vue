@@ -5,7 +5,7 @@
             <p class="my-0">Сначала Интересные</p>
         </div>
         <div class="button-switch d-flex align-items-center justify-content-center ml-2 ml-lg-auto">
-            <input type="checkbox" id="switch-blue" class="switch" checked/>
+            <input type="checkbox" id="switch-blue" class="switch" :value="filter.interest" @click="interestSwitch"/>
             <label for="switch-blue" class="lbl-off">Off</label>
             <label for="switch-blue" class="lbl-on">On</label>
         </div>
@@ -16,6 +16,18 @@ import IconFire from '../../icons/IconFire.vue';
 
 export default {
     name : 'PostInterest',
-    components : { IconFire }
+    components : { IconFire },
+    props: {
+        filter: Object,
+    },
+    data() {
+        return {
+        }
+    },
+    methods: {
+        interestSwitch() {
+            this.$emit('interestSwitch', !this.filter.interest);
+        }
+    }
 }
 </script>

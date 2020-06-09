@@ -94,6 +94,10 @@ class PliziAuthClass {
 
     __isInit = false;
 
+    __restoreEventName = 'UserIsRestored';
+    __loadEventName    = 'UserIsLoaded';
+    __updateEventName  = 'UserIsUpdated';
+
     /**
      * @param {PliziAPI|PliziAPIClass} apiObj
      */
@@ -103,7 +107,8 @@ class PliziAuthClass {
 
         this._api = apiObj;
 
-        this._user = new PliziAuthUser(null);
+        //this._user = new PliziAuthUser(null);
+        Vue.set(this, '_user', new PliziAuthUser(null)); /** https://ru.vuejs.org/v2/guide/reactivity.html#Для-объектов **/
 
         this._frm= new PliziFriendsCollection(apiObj);
         this._fm = new PliziFavoritesCollection(apiObj);
@@ -148,6 +153,8 @@ class PliziAuthClass {
 
         window.localStorage.setItem( this.__localStorageKey, sData );
 
+        this.emit(this.__updateEventName);
+
         return sData;
     }
 
@@ -190,7 +197,7 @@ class PliziAuthClass {
 
     /**
      * ссылка на менеджер друзей
-     * @returns {PliziFavoritesCollection}
+     * @returns {PliziFriendsCollection}
      */
     get frm(){
         return this._frm;
@@ -236,6 +243,13 @@ class PliziAuthClass {
         return this._cm;
     }
 
+    /**
+     * @returns {PliziAPI}
+     */
+    get api(){
+        return this._api;
+    }
+
     get isLoaded(){
         return this._isLoaded;
     }
@@ -267,16 +281,29 @@ class PliziAuthClass {
         return this._channel;
     }
 
-    freindsIncrease(){
-        this.setFreindsNumber(this.user.stats.totalFriendsCount + 1);
+    friendsIncrease(){
+        this.setFriendsNumber(this.user.stats.totalFriendsCount + 1);
     }
 
-    freindsDecrease(){
-        this.setFreindsNumber(this.user.stats.totalFriendsCount - 1);
+    friendsDecrease(){
+        this.setFriendsNumber(this.user.stats.totalFriendsCount - 1);
     }
 
-    setFreindsNumber(newValue){
+    setFriendsNumber(newValue){
         this.user.stats.totalFriendsCount = (newValue >= 0) ? newValue : 0;
+        this.storeUserData();
+    }
+
+    videosIncrease(){
+        this.setVideosNumber(this.user.stats.videosCount + 1);
+    }
+
+    videosDecrease(){
+        this.setVideosNumber(this.user.stats.videosCount - 1);
+    }
+
+    setVideosNumber(newValue){
+        this.user.stats.videosCount = (newValue >= 0) ? newValue : 0;
         this.storeUserData();
     }
 
@@ -284,6 +311,12 @@ class PliziAuthClass {
         this._channel = val;
 
         localStorage.setItem('pliziChatChannel', this._channel);
+    }
+
+    emit(eventName, eventData){
+        if (eventName) {
+            this.api.emit(eventName, eventData || {});
+        }
     }
 }
 

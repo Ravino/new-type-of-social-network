@@ -48,7 +48,7 @@
                 </div>
                 <div class="plz-gallery-description--post-data-option post-watched-counter ml-4">
                     <IconMessage/>
-                    <span>{{  comments.length | space1000 }}</span>
+                    <span>{{ comments.length }}</span>
                 </div>
                 <div class="plz-gallery-description--post-data-option post-watched-counter ml-4">
                     <IconShare/>
@@ -62,33 +62,40 @@
                                  :post-id="postIdForComment"
                                  @onDelete="removeComment"
                                  @update="editComment"
-                    ></CommentItem>
+                                 :attachments="comment.attachments">
+                    </CommentItem>
                 </div>
             </div>
         </div>
-        <CommentGallery class="plz-gallery-description-write-comment"
+        <CommentTextField class="plz-gallery-description-write-comment"
                         :post-id="postIdForComment"
                         @updateComments="addNewComment"
-                        :imageId="image.id">
-        </CommentGallery>
+                        :imageId="image.id"
+                        :type="type">
+        </CommentTextField>
     </div>
 </template>
 
 <script>
 import moment from "moment";
-import IconHeard from "../icons/IconHeard.vue";
-import IconFillHeard from '../icons/IconFillHeard.vue';
-import IconMessage from "../icons/IconMessage.vue";
-import IconShare from "../icons/IconShare.vue";
-import TextEditor from "./TextEditor.vue";
-import PliziAttachment from '../classes/PliziAttachment.js';
-import CommentGallery from "../components/Comments/CommentGallery.vue";
-import CommentItem from "../components/Comments/CommentItem.vue";
-import PliziComment from "../classes/PliziComment.js";
+
+import CommentTextField from "../../components/Comments/CommentTextField.vue";
+import CommentItem from "../../components/Comments/CommentItem.vue";
+import TextEditor from "../TextEditor.vue";
+
+import IconHeard from "../../icons/IconHeard.vue";
+import IconFillHeard from '../../icons/IconFillHeard.vue';
+import IconMessage from "../../icons/IconMessage.vue";
+import IconShare from "../../icons/IconShare.vue";
+
+import PliziAttachment from '../../classes/PliziAttachment.js';
+import PliziComment from "../../classes/PliziComment.js";
 
  export default {
   name: "GalleryDescription",
-  components: {CommentItem, CommentGallery, TextEditor, IconShare, IconMessage, IconHeard, IconFillHeard},
+  components: {
+      CommentTextField,
+      CommentItem, TextEditor, IconShare, IconMessage, IconHeard, IconFillHeard},
   props: {
    comments: {
        type: Array,
@@ -101,16 +108,14 @@ import PliziComment from "../classes/PliziComment.js";
       type: PliziAttachment,
       default: null,
   },
+  type: {
+       type: String,
   },
-  data() {
-      return {
-        noAvatar: '../images/noavatar-256.png',
-      };
   },
   computed: {
    userAvatar() {
        if (this.getUserData.profile.avatar === null) {
-           return this.noAvatar;
+           return this.image.__defaultAvatarPath;
        }
 
        return this.getUserData.profile.avatar.image.thumb.path;
