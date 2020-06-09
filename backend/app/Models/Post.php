@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Scopes\BlackListScope;
 use App\Traits\Likeable;
 use App\Traits\Commentable;
 use Illuminate\Database\Eloquent\Builder;
@@ -52,6 +53,13 @@ class Post extends Model
      */
     public function attachments() {
         return $this->hasMany(PostAttachment::class, 'post_id', 'id');
+    }
+
+    /**
+     * @return \Illuminate\Database\Eloquent\Relations\MorphMany
+     */
+    public function likes() {
+        return $this->morphMany(Like::class, 'likeable');
     }
 
     /**
@@ -123,12 +131,12 @@ class Post extends Model
             $userPosts = $user->posts()->pluck('id');
 
             return self::whereIn('id', $userPosts)
-                ->with(['postable', 'author', 'usersLikes' => function ($query) {
-                    return $query->limit(8)->get();
-                }, 'parent' => function ($query) {
-                    return $query->withTrashed()->get();
-                }, 'attachments' => function ($query) {
-                    return $query->withCount('comments');
+                ->with(['like', 'alreadyViewed', 'postable', 'author', 'usersLikes' => static function ($query) {
+                    $query->limit(8)->get();
+                }, 'parent' => static function ($query) {
+                    $query->withTrashed()->get();
+                }, 'attachments' => static function ($query) {
+                    $query->withCount('comments');
                 }])->withCount('comments', 'children')
                 ->search($search)
                 ->limit($limit ?? 20)
@@ -138,7 +146,8 @@ class Post extends Model
         }
 
         return self::with([
-            'attachments',
+            'like',
+            'alreadyViewed',
             'postable',
             'author',
             'usersLikes' => static function ($query) {
@@ -151,8 +160,7 @@ class Post extends Model
                 return $query->withCount('comments');
             }
         ])
-            ->withCount('comments')
-            ->withCount('children')
+            ->withCount('comments', 'children')
             ->where(static function ($query) use ($onlyLiked) {
                 if ($onlyLiked) {
                     $query->where('likes', '>', 0);
@@ -261,5 +269,11 @@ class Post extends Model
         }
 
         return $this->author_id === $user->id;
+    }
+
+    public static function boot()
+    {
+        parent::boot();
+        self::addGlobalScope(new BlackListScope());
     }
 }
