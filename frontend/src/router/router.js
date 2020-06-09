@@ -72,8 +72,8 @@ const routes = [
         children: [
             {
                 path: '', meta: {title: 'Plizi: '}, name: 'PersonalPage', components: {
-                    userLastPhotos: resolve => resolve(ProfilePhotos),
-                    userLastPost: resolve => resolve(UserPosts),
+                    userLastPhotos: ProfilePhotos,
+                    userLastPost: UserPosts,
                 },
             } ,
             { path: 'friends', components: { userFriendsList : UserFriendsAllList },  meta: {title: 'Plizi: '} },
