@@ -47,7 +47,7 @@
             profilePhotos: Boolean,
             images: {
                 type: Array,
-                default: () => [],
+                required: true,
             },
             type: {
                 type: String,
