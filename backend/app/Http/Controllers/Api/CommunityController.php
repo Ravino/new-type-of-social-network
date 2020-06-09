@@ -21,7 +21,6 @@ use App\Models\CommunityHeader;
 use App\Models\CommunityMember;
 use App\Models\CommunityRequest as CommunityRequestModel;
 use App\Models\CommunityTheme;
-use App\Models\Post;
 use App\Models\Video;
 use App\Services\CommunityService;
 use App\Services\S3UploadService;
@@ -31,6 +30,7 @@ use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use App\Http\Resources\Post\AttachmentsCollection;
+use JWTAuth;
 
 class CommunityController extends Controller
 {
@@ -94,6 +94,13 @@ class CommunityController extends Controller
             default:
                 $query->showedForAll();
                 break;
+        }
+
+        if (auth()->guest()) {
+            try {
+                JWTAuth::parseToken()->authenticate();
+            } catch (Exception $e) {
+            }
         }
 
         if (Auth::guest()) {
