@@ -307,6 +307,19 @@ class PliziAuthClass {
         this.storeUserData();
     }
 
+    followersIncrease(){
+        this.setFollowersNumber(this.user.stats.followCount + 1);
+    }
+
+    followersDecrease(){
+        this.setFollowersNumber(this.user.stats.followCount - 1);
+    }
+
+    setFollowersNumber(newValue){
+        this.user.stats.followCount = (newValue >= 0) ? newValue : 0;
+        this.storeUserData();
+    }
+
     set channel(val){
         this._channel = val;
 
