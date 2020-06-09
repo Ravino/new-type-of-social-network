@@ -1,6 +1,5 @@
 <template>
-    <li class="plizi-friend-item-user media m-0 py-4 px-4"
-        :class="{ 'bg-danger': isPrepareToRemoved, 'd-none': isRemoved }">
+    <li class="plizi-friend-item-user media m-0 py-4 px-4">
 
         <div class="plizi-friend-item d-flex w-100 align-items-center">
             <router-link :to="`/user-`+follow.id" tag="div" class="plizi-friend-item-pic mr-3 " >
