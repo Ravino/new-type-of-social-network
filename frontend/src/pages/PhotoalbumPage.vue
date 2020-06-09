@@ -19,6 +19,7 @@
                                 </div>
                                 <div class="row">
                                     <GridGallery v-if="photoAlbum && photoAlbum.images && photoAlbum.images.length"
+                                                 type="album"
                                                  :images="photoAlbum.images"
                                                  @onDelete="onDeleteImage"
                                                  :isOwner="true"/>
