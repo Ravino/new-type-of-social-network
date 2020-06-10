@@ -196,7 +196,7 @@
                             <span>{{ post.likes | space1000 }}</span>
                             <div v-if="post.usersLikes && post.usersLikes.length" class="usersLikes p-3" @click.stop="">
                                 <p class="mb-1">
-                                    <b @click.stop="$emit('onShowUsersLikes', postIdForComment)"
+                                    <b @click.stop="$emit('onShowUsersLikes', post.id)"
                                        style="cursor: pointer">
                                         Понравилось
                                     </b>
@@ -465,6 +465,10 @@
             if (this.post) {
                 this.recursiveParent(this.post);
             }
+
+            console.log(post);
+            console.log(post.usersLikes);
+            console.log(post.usersLikes && post.usersLikes.length);
         },
     }
 </script>
