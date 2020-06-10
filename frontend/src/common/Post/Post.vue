@@ -464,11 +464,11 @@
         mounted() {
             if (this.post) {
                 this.recursiveParent(this.post);
-            }
 
-            console.log(post);
-            console.log(post.usersLikes);
-            console.log(post.usersLikes && post.usersLikes.length);
+                console.log(post);
+                console.log(post.usersLikes);
+                console.log(post.usersLikes && post.usersLikes.length);
+            }
         },
     }
 </script>
