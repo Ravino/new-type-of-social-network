@@ -419,6 +419,14 @@ $chatMessagesBodyHeight: calc(100% - 139px);
         }
     }
 
+    .plz-gallery-portrait.plz-gallery-triple {
+        .plz-gallery-image-portrait-block-1 {
+            .plz-gallery-image-mores-div {
+                height: 350px;
+            }
+        }
+    }
+
     .plz-gallery-wrap-album {
         width: 100%;
         display: flex;
