@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Scopes\BlackListScope;
 use App\Traits\Likeable;
 use App\Traits\Commentable;
 use Illuminate\Database\Eloquent\Builder;
@@ -57,6 +58,13 @@ class Post extends Model
     /**
      * @return \Illuminate\Database\Eloquent\Relations\MorphMany
      */
+    public function likes() {
+        return $this->morphMany(Like::class, 'likeable');
+    }
+
+    /**
+     * @return \Illuminate\Database\Eloquent\Relations\MorphMany
+     */
     public function like() {
         return $this->morphMany(Like::class, 'likeable')
             ->where('user_id', \Auth::user()->id);
@@ -78,6 +86,20 @@ class Post extends Model
             'id',
             'user_id'
         )->where('likeable_type', Post::class);
+    }
+
+    public function shortUsersLikes()
+    {
+        return $this->hasManyThrough(
+            User::class,
+            Like::class,
+            'likeable_id',
+            'id',
+            'id',
+            'user_id'
+        )
+            ->where('likeable_type', Post::class)
+            ->take(8);
     }
 
     public function video()
@@ -122,14 +144,17 @@ class Post extends Model
         if ($isMyPosts) {
             $userPosts = $user->posts()->pluck('id');
 
-            return self::whereIn('id', $userPosts)
-                ->with(['postable', 'author', 'usersLikes' => function ($query) {
-                    return $query->limit(8)->get();
-                }, 'parent' => function ($query) {
+            return self::whereIn('id', $userPosts)->with([
+                    'like',
+                    'alreadyViewed',
+                    'postable',
+                    'author',
+                    'shortUsersLikes',
+                    'parent' => static function ($query) {
                     return $query->withTrashed()->get();
-                }, 'attachments' => function ($query) {
+                }, 'attachments' => static function ($query) {
                     return $query->withCount('comments');
-                }])->withCount('comments', 'children')
+            }])->withCount('comments', 'children')
                 ->search($search)
                 ->limit($limit ?? 20)
                 ->offset($offset ?? 0)
@@ -138,12 +163,11 @@ class Post extends Model
         }
 
         return self::with([
-            'attachments',
+            'like',
+            'alreadyViewed',
             'postable',
             'author',
-            'usersLikes' => static function ($query) {
-                return $query->limit(8)->get();
-            },
+            'shortUsersLikes',
             'parent' => static function ($query) {
                 return $query->withTrashed()->get();
             },
@@ -151,8 +175,7 @@ class Post extends Model
                 return $query->withCount('comments');
             }
         ])
-            ->withCount('comments')
-            ->withCount('children')
+            ->withCount('comments', 'children')
             ->where(static function ($query) use ($onlyLiked) {
                 if ($onlyLiked) {
                     $query->where('likes', '>', 0);
@@ -261,5 +284,11 @@ class Post extends Model
         }
 
         return $this->author_id === $user->id;
+    }
+
+    public static function boot()
+    {
+        parent::boot();
+        self::addGlobalScope(new BlackListScope());
     }
 }

@@ -4,6 +4,13 @@ import PliziUser from "./PliziUser";
 
 class PliziAttachment{
     /**
+     * путь к дефолтной аватарке, которую показываем если нет своей
+     * @type {string}
+     * @private
+     */
+    __defaultAvatarPath = '/images/plizi-noPrimaryImage-256.png';
+
+    /**
      * ID аттачмента
      * @type {number}
      * @private

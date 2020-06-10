@@ -55,11 +55,10 @@
                     } else if (evData.attachments.length > 0) {
                         this.sendComment('', evData.attachments);
                     }
-                else {
+                } else {
                     if (evData.attachments.length > 0) {
-                        this.sendComment('', evData.attachments );
+                        this.sendComment(' ', evData.attachments );
                     }
-                }
                 }
             },
             async sendComment(msg, attachments) {

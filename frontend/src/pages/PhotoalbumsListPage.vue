@@ -75,7 +75,6 @@
 
                 try {
                     apiResponse = await this.$root.$api.$photoalbums.list();
-                    this.hidePhotoalbumCreateModal();
                 } catch (e) {
                     console.warn(e.detailMessage);
                 }

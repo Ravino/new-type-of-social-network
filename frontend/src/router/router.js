@@ -43,6 +43,8 @@ import CommunityVideosPage from "../pages/CommunityVideosPage.vue";
 import UserFriendsAllList from "../components/UserFriendsAllList.vue";
 import ProfilePhotos from "../components/ProfilePhotos.vue";
 import UserPosts from "../components/UserPosts.vue";
+import UserPhotoalbumsList from "../components/UserPhotoalbumsList.vue";
+import UserPhotoalbum from "../components/UserPhotoalbum.vue";
 import CommunityTemplate from "../components/CommunityTemplate.vue";
 import CommunityVideoList from "../components/CommunityVideoList.vue";
 import FollowersList from "../components/FollowersList.vue";
@@ -70,12 +72,14 @@ const routes = [
         children: [
             {
                 path: '', meta: {title: 'Plizi: '}, name: 'PersonalPage', components: {
-                    userLastPhotos: resolve => resolve(ProfilePhotos),
-                    userLastPost: resolve => resolve(UserPosts),
+                    userLastPhotos: ProfilePhotos,
+                    userLastPost: UserPosts,
                 },
             } ,
             { path: 'friends', components: { userFriendsList : UserFriendsAllList },  meta: {title: 'Plizi: '} },
             { path: 'communities', components: { userCommunities : CommunityTemplate }, name: 'userCommunities', meta: {title: 'Plizi: '} },
+            { path: 'albums', components: { userPhotoalbums : UserPhotoalbumsList }, name: 'userPhotoalbums', meta: {title: 'Plizi: '} },
+            { path: '/user-:id/album-:albumId', components: { userPhotoalbum : UserPhotoalbum }, name: 'userPhotoalbum', meta: {title: 'Plizi: '} },
             { path: 'videos', components: { userVideoList : CommunityVideoList }, name: 'userVideoList', meta: {title: 'Plizi: '} },
             { path: 'followers', components: { followersList : FollowersList }, name: 'followersList', meta: {title: 'Plizi: '} },
         ]},

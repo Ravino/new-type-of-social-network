@@ -41,7 +41,8 @@
                         <router-view name="userLastPhotos"
                                      :profileData="profileData"
                                      :isPhotosDataReady="isPhotosDataReady"
-                                     :photos="userPhotos"></router-view>
+                                     :photos="userPhotos"
+                                     :isOwner="false"></router-view>
                         <router-view name="userLastPost"
                                      :filter-mode="filterMode" :filtered-posts="filteredPosts"
                                      :on-share-post="onSharePost" :open-like-modal="openLikeModal"
@@ -50,6 +51,8 @@
                                      :wall-posts-select-handler="wallPostsSelectHandler"></router-view>
                         <router-view name="userFriendsList"></router-view>
                         <router-view name="userCommunities"></router-view>
+                        <router-view name="userPhotoalbums"></router-view>
+                        <router-view name="userPhotoalbum"></router-view>
                         <router-view name="userVideoList"></router-view>
                         <router-view name="followersList"></router-view>
 

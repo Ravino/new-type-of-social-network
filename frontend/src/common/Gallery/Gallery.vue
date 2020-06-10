@@ -61,7 +61,8 @@
 <script>
 import GalleryViewer from './GalleryViewer.vue';
 import GalleryDescription from './GalleryDescription.vue';
-import PliziComment from "../classes/PliziComment.js";
+
+import PliziComment from "../../classes/PliziComment.js";
 
 export default {
 name : 'Gallery',
@@ -69,7 +70,7 @@ components : { GalleryDescription, GalleryViewer },
 props : {
     images : {
         type : Array,
-        default : () => [],
+        required: true,
     },
     post : {
         type : Object,
@@ -185,27 +186,32 @@ computed : {
 
         for ( const image of this.imagesWithClasses ){
             /** TODO: @TGA вопрос: использовать тут SWITCH CASE религия запрещает? **/
-            if ( index === 1 ){
-                first.push( image );
-            }
-            else if ( index === 2 ){
-                if ( countImages === 4 ){
-                    first.push( image );
-                }
-                else{
-                    second.push( image );
-                }
-            }
-            else if ( index === 3 ){
-                second.push( image );
-            }
-            else if ( index === 4 ){
-                second.push( image );
+            switch (index) {
+                case 1:
+                    first.push(image);
+                    break;
+
+                case 2:
+                    if (countImages === 4) {
+                        first.push(image);
+                    } else {
+                        second.push(image);
+                    }
+                    break;
+
+                case 3:
+                    second.push(image);
+                    break;
+
+                case 4:
+                    second.push(image);
+                    break;
+
+                default: return null;
             }
 
             index++;
         }
-
         const blocks = [];
         let indexBlock = 1;
 
@@ -238,7 +244,7 @@ computed : {
 },
 
 methods : {
-    async getCommentsOnGallery( activeImageId ) {
+    async getCommentsOnGallery(activeImageId) {
         try {
             let response = await this.$root.$api.$post.getCommentsByIdOnGallery(activeImageId);
             this.comments = response.data.list.map(comment => new PliziComment(comment));
@@ -246,7 +252,7 @@ methods : {
             console.warn(e.detailMessage);
         }
     },
-    updateComments({ comments, id }) {
+    updateComments({comments, id}) {
         if (this.activeImage.id === id) {
             this.comments = comments;
         }
@@ -260,8 +266,10 @@ methods : {
     },
 
     closeGalleryModal() {
+        const link = this.$router.currentRoute.path;
+
+        history.pushState({url: link}, '', link);
         this.activeImage = null;
-        this.$router.replace({query: ''});
     },
 
     isAlbum( image ){
@@ -275,96 +283,101 @@ methods : {
         return this.isAlbum( file.image ) ? 'album' : 'portrait';
     },
 
-    getAlbumImageClass( index, countImages ){
-        if ( index === 1 ){
-            if ( countImages === 1 ){
-                return `plz-gallery-image-album-full`;
-            }
-            else if ( countImages === 2 ){
-                return `plz-gallery-image-album-full`;
-            }
-            else if ( countImages === 3 ){
-                return `plz-gallery-image-album-full`;
-            }
-            else if ( countImages === 4 ){
-                return `plz-gallery-image-album-full`;
-            }
-            else if ( countImages === 5 ){
-                return `plz-gallery-image-album-half`;
-            }
-        }
-        else if ( index === 2 ){
-            if ( countImages === 2 ){
-                return `plz-gallery-image-album-full`;
-            }
-            else if ( countImages === 3 ){
-                return `plz-gallery-image-album-half`;
-            }
-            else if ( countImages === 4 ){
+    getAlbumImageClass( index, countImages ) {
+        switch (index) {
+            case 1:
+                switch (countImages) {
+                    case 1:
+                        return `plz-gallery-image-album-full`;
+                    case 2:
+                        return `plz-gallery-image-album-full`;
+                    case 3:
+                        return `plz-gallery-image-album-full`;
+                    case 4:
+                        return `plz-gallery-image-album-full`;
+                    case 5:
+                        return `plz-gallery-image-album-half`;
+                }
+                break;
+
+            case 2:
+                switch (countImages) {
+                    case 2:
+                        return `plz-gallery-image-album-full`;
+                    case 3:
+                        return `plz-gallery-image-album-half`;
+                    case 4:
+                        return `plz-gallery-image-album-third`;
+                    case 5:
+                        return `plz-gallery-image-album-half`;
+                }
+                break;
+
+            case 3:
+                switch (countImages) {
+                    case 3:
+                        return `plz-gallery-image-album-half`;
+                    case 4:
+                        return `plz-gallery-image-album-third`;
+                    case 5:
+                        return `plz-gallery-image-album-third`;
+                }
+                break;
+
+            case 4:
+                switch (countImages) {
+                    case 4:
+                        return `plz-gallery-image-album-third`;
+                    case 5:
+                        return `plz-gallery-image-album-third`;
+                }
+                break;
+
+            case 5:
                 return `plz-gallery-image-album-third`;
-            }
-            else if ( countImages === 5 ){
-                return `plz-gallery-image-album-half`;
-            }
-        }
-        else if ( index === 3 ){
-            if ( countImages === 3 ){
-                return `plz-gallery-image-album-half`;
-            }
-            else if ( countImages === 4 ){
-                return `plz-gallery-image-album-third`;
-            }
-            else if ( countImages === 5 ){
-                return `plz-gallery-image-album-third`;
-            }
-        }
-        else if ( index === 4 ){
-            if ( countImages === 4 ){
-                return `plz-gallery-image-album-third`;
-            }
-            else if ( countImages === 5 ){
-                return `plz-gallery-image-album-third`;
-            }
-        }
-        else if ( index === 5 ){
-            return `plz-gallery-image-album-third`;
+            default:
+                return null;
         }
     },
+    getPortraitImageClass( index, countImages ) {
+        switch (index) {
+            case 1:
+                switch (countImages) {
+                    case 4:
+                        return `plz-gallery-image-portrait-half`;
+                    default:
+                        return `plz-gallery-image-portrait-full`;
+                }
 
-    getPortraitImageClass( index, countImages ){
-        if ( index === 1 ){
-            if ( countImages === 4 ){
+            case 2:
+                switch (countImages) {
+                    case 2:
+                        return `plz-gallery-image-portrait-full`;
+                    case 3:
+                        return `plz-gallery-image-portrait-half`;
+                    case 4:
+                        return `plz-gallery-image-portrait-half`;
+                }
+                break;
+
+            case 3:
+                switch (countImages) {
+                    case 3:
+                        return `plz-gallery-image-portrait-half`;
+                    case 4:
+                        return `plz-gallery-image-portrait-half`;
+                }
+                break;
+
+            case 4:
                 return `plz-gallery-image-portrait-half`;
-            }
-            else{
-                return `plz-gallery-image-portrait-full`;
-            }
+
+            default:
+                return null;
         }
-        else if ( index === 2 ){
-            if ( countImages === 2 ){
-                return `plz-gallery-image-portrait-full`;
-            }
-            else if ( countImages === 3 ){
-                return `plz-gallery-image-portrait-half`;
-            }
-            else if ( countImages === 4 ){
-                return `plz-gallery-image-portrait-half`;
-            }
-        }
-        else if ( index === 3 ){
-            if ( countImages === 3 ){
-                return `plz-gallery-image-portrait-half`;
-            }
-            else if ( countImages === 4 ){
-                return `plz-gallery-image-portrait-half`;
-            }
-        }
-        else if ( index === 4 ){
-            return `plz-gallery-image-portrait-half`;
-        }
-    }
+    },
 },
-    created() {
+    mounted() {
         const activeId = this.$router.history.current.query.activeImageId;
         const typeGallery = this.$router.history.current.query.galleryType;
 

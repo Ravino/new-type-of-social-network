@@ -21,18 +21,31 @@
                 </div>
             </router-link>
         </template>
-        <template v-else>
+        <template v-else-if="userData.stats.isFriend">
             <router-link tag="a" class="p-0 d-flex"
                          :to="{path: `/user-${userData.id}/friends`, params: {id: userData.id}}">
                 <div v-if="usrFriendsNumber() > 0"
                      class="plz-profile-userdetails-numbers text-center py-2 px-2 py-md-4 px-md-4 mt-auto">
-                    <span class="numbers-top" v-html="sBeaty(usrFriendsNumber())"></span>
+                    <span class="numbers-top" v-html="sBeaty(userData.stats.totalFriendsCount)"></span>
                     <span class="numbers-bottom">Друзей</span>
                 </div>
                 <div v-else class="plz-profile-userdetails-numbers text-center py-2 px-2 py-md-4 px-md-4 mt-auto">
                     <span class="numbers-bottom">Нет друзей</span>
                 </div>
             </router-link>
+        </template>
+        <template v-else>
+            <div>
+                <div v-if="usrFriendsNumber() > 0"
+                     class="plz-profile-userdetails-numbers text-center py-2 px-2 py-md-4 px-md-4 mt-auto">
+                    <span class="numbers-top" v-html="sBeaty(userData.stats.totalFriendsCount)"></span>
+                    <span class="numbers-bottom">Друзей</span>
+                </div>
+                <div v-else class="plz-profile-userdetails-numbers text-center py-2 px-2 py-md-4 px-md-4 mt-auto">
+                    <span class="numbers-bottom">Нет друзей</span>
+                </div>
+            </div>
+
         </template>
 
         <template v-if="isOwner">
@@ -48,7 +61,8 @@
             </div>
         </router-link>
         </template>
-        <template v-else>
+        <template v-else-if="userData.stats.isFriend">
+            <router-link tag="a" class="p-0 d-flex" :to="{path: `/user-${userData.id}/albums`, params: {id: userData.id}}">
             <div class="plz-profile-userdetails-numbers text-center py-2 px-2 py-md-4 px-md-4 mt-auto">
                 <template v-if="userImageNumber()">
                     <span class="numbers-top" v-html="sBeaty(userImageNumber())"></span>
@@ -57,6 +71,20 @@
                 <template v-else>
                     <span class="numbers-bottom">Нет фотографий</span>
                 </template>
+            </div>
+            </router-link>
+        </template>
+        <template v-else>
+            <div>
+                <div class="plz-profile-userdetails-numbers text-center py-2 px-2 py-md-4 px-md-4 mt-auto">
+                    <template v-if="userImageNumber()">
+                        <span class="numbers-top" v-html="sBeaty(userImageNumber())"></span>
+                        <span class="numbers-bottom">Фотографий</span>
+                    </template>
+                    <template v-else>
+                        <span class="numbers-bottom">Нет фотографий</span>
+                    </template>
+                </div>
             </div>
         </template>
 
@@ -73,11 +101,10 @@
         </router-link>
         </template>
 
-        <template v-else>
+        <template v-else-if="userData.stats.isFriend">
             <router-link tag="a" class="p-0 d-flex" v-if="usrVideosNumber() > 0"
                          :to="{path: `/user-${userData.id}/videos`, params: {id: userData.id}}">
-            <div
-                 class="plz-profile-userdetails-numbers text-center py-2 px-2 py-md-4 px-md-4 mt-auto">
+            <div class="plz-profile-userdetails-numbers text-center py-2 px-2 py-md-4 px-md-4 mt-auto">
                 <span class="numbers-top" v-html="sBeaty(usrVideosNumber())"></span>
                 <span class="numbers-bottom">Видео</span>
             </div>
@@ -85,6 +112,20 @@
             <div v-else class="plz-profile-userdetails-numbers text-center py-2 px-2 py-md-4 px-md-4 mt-auto">
                 <span class="numbers-bottom">Нет видео</span>
             </div>
+        </template>
+        <template v-else>
+            <div>
+                <div v-if="usrVideosNumber() > 0">
+                    <div class="plz-profile-userdetails-numbers text-center py-2 px-2 py-md-4 px-md-4 mt-auto">
+                        <span class="numbers-top" v-html="sBeaty(usrVideosNumber())"></span>
+                        <span class="numbers-bottom">Видео</span>
+                    </div>
+                </div>
+                <div v-else class="plz-profile-userdetails-numbers text-center py-2 px-2 py-md-4 px-md-4 mt-auto">
+                    <span class="numbers-bottom">Нет видео</span>
+                </div>
+            </div>
+
         </template>
         <!--
         <div class="plz-profile-userdetails-numbers text-center pt-4 px-4">
@@ -103,6 +144,7 @@ name : 'ProfileStats',
 props : {
     userData: PliziUser,
     isOwner: Boolean,
+    keyUpdater: Number
 },
 
 methods: {
@@ -126,5 +168,6 @@ methods: {
         return this.userData.stats.imageCount;
     },
 }
+
 }
 </script>

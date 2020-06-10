@@ -12,6 +12,9 @@ methods: {
         if (! direction)
             return;
 
+        if (! post)
+            return;
+
         if (going !== 'in')
             return;
 

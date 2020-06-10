@@ -5,7 +5,7 @@
                        @wallPostsSelect="wallPostsSelectHandler"/>
         <template v-if="filteredPosts && filteredPosts.length > 0">
             <Post v-for="postItem in filteredPosts"
-                  v-waypoint="{ active: true, callback: ({ el, going, direction })=>{ postIsRead(postData, going, direction); }, options: { threshold: [0.5] } }"
+                  v-waypoint="{ active: true, callback: ({ el, going, direction })=>{ postIsRead(el, going, direction); }, options: { threshold: [0.5] } }"
                   :key="`userPost-`+postItem.id"
                   :post="postItem"
                   @onShare="onSharePost"

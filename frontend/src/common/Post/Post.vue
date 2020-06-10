@@ -129,7 +129,7 @@
 
                     <div v-if="recursivePost.attachments" class="col-12 plz-post-item-images">
                             <div class="post-images shared">
-                                <Gallery type="post" :post="post" v-if="recursivePost.imageAttachments.length > 0" :images="recursivePost.imageAttachments"></Gallery>
+                                <Gallery type="gallery" :post="post" v-if="recursivePost.imageAttachments.length > 0" :images="recursivePost.imageAttachments"></Gallery>
 
                                 <template v-for="(postAttachment) in recursivePost.attachments">
                                     <template v-if="!postAttachment.isImage">
@@ -173,7 +173,7 @@
             <div class="col-12 plz-post-item-images">
                 <div class="post-images">
                     <Gallery v-if="post.imageAttachments.length > 0"
-                             type="post"
+                             type="gallery"
                              :post="post"
                              :images="post.imageAttachments"/>
 
@@ -196,7 +196,7 @@
                             <span>{{ post.likes | space1000 }}</span>
                             <div v-if="post.usersLikes && post.usersLikes.length" class="usersLikes p-3" @click.stop="">
                                 <p class="mb-1">
-                                    <b @click.stop="$emit('onShowUsersLikes', postIdForComment)"
+                                    <b @click.stop="$emit('onShowUsersLikes', post.id)"
                                        style="cursor: pointer">
                                         Понравилось
                                     </b>
@@ -273,13 +273,13 @@
     import IconMessageUserPost from '../../icons/IconMessageUserPost.vue';
     import IconShare from '../../icons/IconShare.vue';
     import IconYoutube from "../../icons/IconYoutube.vue";
-    import Gallery from '../Gallery.vue';
     import CommentTextField from "../../components/Comments/CommentTextField.vue";
     import CommentItem from "../../components/Comments/CommentItem.vue";
     import PostImage from './PostImage.vue';
 
     import AttachmentFile from "../AttachmentFile.vue";
     import PliziPost from '../../classes/PliziPost.js';
+    import Gallery from '../Gallery/Gallery.vue';
     import LinkMixin from '../../mixins/LinkMixin.js';
     import AvatarMixin from '../../mixins/AvatarMixin.js';
     import PliziComment from "../../classes/PliziComment.js";
