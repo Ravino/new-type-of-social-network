@@ -43,8 +43,8 @@ methods: {
 
             this.$root.$auth.friendsDecrease();
 
-            this.$root.$friendsKeyUpdater++;
-            this.$root.$favoritesKeyUpdater++;
+            this.$root.$friendsKeyUpdater--;
+            this.$root.$favoritesKeyUpdater--;
 
             this.$emit( 'FriendshipStop', {
                 friendId: friendId

@@ -257,6 +257,7 @@ methods: {
         this.onEditorNewPost({
             postText: cont
         });
+        this.$refs.editor.clearTextLength();
     },
 
     onEditorNewPost(evData) {

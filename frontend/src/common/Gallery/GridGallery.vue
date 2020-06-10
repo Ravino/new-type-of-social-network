@@ -7,7 +7,7 @@
                 <div v-if="image.image && image.image.original.path"
                      class="gallery-image-wrapper d-flex flex-column position-relative overflow-hidden">
                     <img :src="image.image.original.path"
-                         @click="show(image)"
+                         @click="showImage(image)"
                          class="gallery-image img-fluid"
                          alt=""/>
                 </div>
@@ -34,30 +34,44 @@
             </div>
         </div>
 
-        <div class="plz-gallery__show" v-if="activeImageId">
+        <div class="plz-gallery__show" v-if="activeImage">
             <GalleryViewer
-                class="w-100"
                 :images="images"
                 :active-image="activeImage"
-                @showImage="show"
-                @close="activeImageId = null">
+                @showImage="showImage"
+                @close="closeModal">
             </GalleryViewer>
+            <GalleryDescription
+                :comments="comments"
+                :post="{id:0}"
+                :image="activeImage"
+                :type="type"
+                @updateComments="updateComments">
+            </GalleryDescription>
 
         </div>
     </div>
 </template>
 
 <script>
-    import GalleryViewer from './GalleryViewer.vue';
     import SmallSpinner from "../../common/SmallSpinner.vue";
+
+    import GalleryDescription from "./GalleryDescription.vue";
+    import GalleryViewer from './GalleryViewer.vue';
+
+    import PliziComment from "../../classes/PliziComment.js";
 
     export default {
         name: "GridGallery",
         components: {
+            GalleryDescription,
             GalleryViewer,
             SmallSpinner,
         },
         props: {
+            type: {
+                type: String,
+            },
             images: {
                 type: Array,
                 default: null,
@@ -66,15 +80,57 @@
         },
         data() {
             return {
-                activeImageId: null,
                 activeImage: null,
+                comments: [],
             }
         },
         methods: {
-            show(image) {
-                this.activeImageId = image.id;
-                this.activeImage = this.images.find(attach => attach.id === image.id);
+            async getCommentsOfAlbum( activeImageId ) {
+                try {
+                    let response = await this.$root.$api.$post.getAlbumComments(activeImageId);
+                    this.comments = response.data.list.map(comment => new PliziComment(comment));
+                } catch (e) {
+                    console.warn(e.detailMessage);
+                }
             },
+
+            updateComments({ comments, id }) {
+                if (this.activeImage.id === id) {
+                    this.comments = comments;
+                }
+            },
+
+            showImage(image) {
+                this.getCommentsOfAlbum( image.id );
+
+
+                this.activeImage = this.images.find(attach => attach.id === image.id);
+
+                const link = `${this.$router.currentRoute.path}?activeImageId=${image.id}&galleryType=${this.type}`;
+                history.pushState({url: link}, '', link);
+            },
+
+            closeModal() {
+                const link = this.$router.currentRoute.path;
+
+                history.pushState({url: link}, '', link);
+                this.activeImage = null;
+            },
+        },
+
+        created() {
+            const activeId = this.$router.history.current.query.activeImageId;
+            const typeGallery = this.$router.history.current.query.galleryType;
+
+            if (typeGallery !== this.type || !activeId) {
+                return;
+            }
+
+            const foundImage = this.images.find(image => image.id.toString() === activeId);
+
+            if (foundImage) {
+                this.showImage(foundImage);
+            }
         },
     }
 </script>

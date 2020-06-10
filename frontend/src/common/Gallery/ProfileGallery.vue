@@ -47,7 +47,7 @@
             profilePhotos: Boolean,
             images: {
                 type: Array,
-                default: () => [],
+                required: true,
             },
             type: {
                 type: String,
@@ -125,8 +125,10 @@
             },
 
             closeAlbumModal() {
-                this.activeImage = null;
-                this.$router.replace({query: ''});
+                    const link = this.$router.currentRoute.path;
+
+                    history.pushState({url: link}, '', link);
+                    this.activeImage = null;
             },
         },
         created() {
