@@ -464,10 +464,6 @@
         mounted() {
             if (this.post) {
                 this.recursiveParent(this.post);
-
-                console.log(this.post);
-                console.log(this.post.usersLikes);
-                console.log(this.post.usersLikes && post.usersLikes.length);
             }
         },
     }
