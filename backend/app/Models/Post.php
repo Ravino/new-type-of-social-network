@@ -88,6 +88,20 @@ class Post extends Model
         )->where('likeable_type', Post::class);
     }
 
+    public function shortUsersLikes()
+    {
+        return $this->hasManyThrough(
+            User::class,
+            Like::class,
+            'likeable_id',
+            'id',
+            'id',
+            'user_id'
+        )
+            ->where('likeable_type', Post::class)
+            ->take(8);
+    }
+
     public function video()
     {
         return $this->morphOne(Video::class, 'creatableby');
@@ -130,14 +144,17 @@ class Post extends Model
         if ($isMyPosts) {
             $userPosts = $user->posts()->pluck('id');
 
-            return self::whereIn('id', $userPosts)
-                ->with(['like', 'alreadyViewed', 'postable', 'author', 'usersLikes' => static function ($query) {
-                    $query->limit(8)->get();
-                }, 'parent' => static function ($query) {
-                    $query->withTrashed()->get();
+            return self::whereIn('id', $userPosts)->with([
+                    'like',
+                    'alreadyViewed',
+                    'postable',
+                    'author',
+                    'shortUsersLikes',
+                    'parent' => static function ($query) {
+                    return $query->withTrashed()->get();
                 }, 'attachments' => static function ($query) {
-                    $query->withCount('comments');
-                }])->withCount('comments', 'children')
+                    return $query->withCount('comments');
+            }])->withCount('comments', 'children')
                 ->search($search)
                 ->limit($limit ?? 20)
                 ->offset($offset ?? 0)
@@ -150,9 +167,7 @@ class Post extends Model
             'alreadyViewed',
             'postable',
             'author',
-            'usersLikes' => static function ($query) {
-                return $query->limit(8)->get();
-            },
+            'shortUsersLikes',
             'parent' => static function ($query) {
                 return $query->withTrashed()->get();
             },
