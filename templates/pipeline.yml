@@ -396,8 +396,7 @@ Resources:
                 Capabilities: CAPABILITY_IAM
                 ParameterOverrides: !Sub |
                   {
-                    "EnvironmentName": "${EnvironmentName}",
-                    "CertificateArn": "${CertificateArn}"
+                    "EnvironmentName": "${EnvironmentName}"
                   }
               InputArtifacts:
                 - Name: Source
