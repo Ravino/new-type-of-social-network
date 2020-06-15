@@ -92,20 +92,20 @@ Resources:
   ##
   ## DocumentDB (Mongo)
   ##
-  DBCluster:
-    Type: 'AWS::DocDB::DBCluster'
-    Properties:
-      DBClusterIdentifier: MongoDbHost
-      MasterUsername: MongoDbUsername
-      MasterUserPassword: MongoDbPassword
-    DeletionPolicy: Delete
-  DBInstance:
-    Type: 'AWS::DocDB::DBInstance'
-    Properties:
-      DBClusterIdentifier: !Ref DBCluster
-      DBInstanceIdentifier: !Ref DBInstanceName
-      DBInstanceClass: !Ref DBInstanceClass
-    DeletionPolicy: Delete
+  # DBCluster:
+  #   Type: 'AWS::DocDB::DBCluster'
+  #   Properties:
+  #     DBClusterIdentifier: MongoDbHost
+  #     MasterUsername: MongoDbUsername
+  #     MasterUserPassword: MongoDbPassword
+  #   DeletionPolicy: Delete
+  # DBInstance:
+  #   Type: 'AWS::DocDB::DBInstance'
+  #   Properties:
+  #     DBClusterIdentifier: !Ref DBCluster
+  #     DBInstanceIdentifier: !Ref DBInstanceName
+  #     DBInstanceClass: !Ref DBInstanceClass
+  #   DeletionPolicy: Delete
   ## 
   ## ROLES
   ## 
