@@ -1,0 +1,588 @@
+Parameters:
+  GitHubRepo:
+    Type: String
+    Default: socnet_plizi
+  GitHubBranch:
+    Type: String
+    Default: aws_deploy
+  GitHubToken:
+    Type: String
+    Default: 503ea673baa2189031f13ebb1cf778c5efe7169c
+    NoEcho: true
+  GitHubUser:
+    Type: String
+    Default: jadebrrltd
+  EnvironmentName:
+    Type: String
+    Default: production
+  CertificateArn:
+    Type: String
+    Default: arn:aws:acm:eu-central-1:884088487044:certificate/4444446f-1db7-46ee-b983-cca853830df1
+    Description: ARN of the Amazon Certificate Manager SSL certificate to use for this app
+
+Resources:
+  # Create the ECR respository to hold built docker images
+  BackWSRepository:
+    Type: AWS::ECR::Repository
+    DeletionPolicy: Retain
+    Properties:
+      RepositoryName: !Sub ${EnvironmentName}-back-ws
+  
+  BackQueueWorkerRepository:
+    Type: AWS::ECR::Repository
+    DeletionPolicy: Retain
+    Properties:
+      RepositoryName: !Sub ${EnvironmentName}-back-queue-worker
+
+  FrontNginxRepository:
+    Type: AWS::ECR::Repository
+    DeletionPolicy: Retain
+    Properties:
+      RepositoryName: !Sub ${EnvironmentName}-front-nginx
+    
+  BackApiRepository:
+    Type: AWS::ECR::Repository
+    DeletionPolicy: Retain
+    Properties:
+      RepositoryName: !Sub ${EnvironmentName}-back-api
+
+  # A role used to give CodeBuild permission to access code,
+  # build it, and upload the build results to ECR
+  CodeBuildServiceRole:
+    Type: AWS::IAM::Role
+    Properties:
+      Path: /
+      AssumeRolePolicyDocument:
+        Version: 2012-10-17
+        Statement:
+          - Effect: Allow
+            Principal:
+              Service: codebuild.amazonaws.com
+            Action: sts:AssumeRole
+      Policies:
+        - PolicyName: root
+          PolicyDocument:
+            Version: 2012-10-17
+            Statement:
+              - Resource: "*"
+                Effect: Allow
+                Action:
+                  - logs:CreateLogGroup
+                  - logs:CreateLogStream
+                  - logs:PutLogEvents 
+                  - ecr:GetAuthorizationToken
+              - Resource: !Sub arn:aws:s3:::${ArtifactBucket}/*
+                Effect: Allow
+                Action:
+                  - s3:GetObject
+                  - s3:PutObject
+                  - s3:GetObjectVersion
+              - Resource: !Sub arn:aws:ecr:${AWS::Region}:${AWS::AccountId}:repository/${BackWSRepository}
+                Effect: Allow
+                Action:
+                  - ecr:GetDownloadUrlForLayer
+                  - ecr:BatchGetImage
+                  - ecr:BatchCheckLayerAvailability
+                  - ecr:PutImage
+                  - ecr:InitiateLayerUpload
+                  - ecr:UploadLayerPart
+                  - ecr:CompleteLayerUpload
+              - Resource: !Sub arn:aws:ecr:${AWS::Region}:${AWS::AccountId}:repository/${BackQueueWorkerRepository}
+                Effect: Allow
+                Action:
+                  - ecr:GetDownloadUrlForLayer
+                  - ecr:BatchGetImage
+                  - ecr:BatchCheckLayerAvailability
+                  - ecr:PutImage
+                  - ecr:InitiateLayerUpload
+                  - ecr:UploadLayerPart
+                  - ecr:CompleteLayerUpload
+
+  # Role used to give CodePipeline to release a build.
+  CodePipelineServiceRole:
+    Type: AWS::IAM::Role
+    Properties:
+      Path: /
+      AssumeRolePolicyDocument:
+        Version: 2012-10-17
+        Statement:
+          - Effect: Allow
+            Principal:
+              Service: codepipeline.amazonaws.com
+            Action: sts:AssumeRole
+      Policies:
+        - PolicyName: root
+          PolicyDocument:
+            Version: 2012-10-17
+            Statement:
+              # Allow codepipeline to put artifacts in the S3 bucket
+              # as well as get artifacts back out of it.
+              - Resource:
+                  - !Sub arn:aws:s3:::${ArtifactBucket}/*
+                Effect: Allow
+                Action:
+                  - s3:PutObject
+                  - s3:GetObject
+                  - s3:GetObjectVersion
+                  - s3:GetBucketVersioning
+              # Allow codepipeline to build code builds
+              - Resource: "*"
+                Effect: Allow
+                Action:
+                  - codebuild:StartBuild
+                  - codebuild:BatchGetBuilds
+                  - iam:PassRole
+              # Allow codepipeline to deploy cloudformation stacks
+              - Effect: Allow
+                Action:
+                  - cloudformation:CreateChangeSet
+                  - cloudformation:CreateStack
+                  - cloudformation:CreateUploadBucket
+                  - cloudformation:DeleteStack
+                  - cloudformation:Describe*
+                  - cloudformation:List*
+                  - cloudformation:UpdateStack
+                  - cloudformation:ValidateTemplate
+                  - cloudformation:ExecuteChangeSet
+                Resource: "*"
+
+  # CloudFormation deployment role. This role is passed by CodeBuild to
+  # CloudFormation to use when setting up the application resources
+  CloudFormationDeployRole:
+    Type: AWS::IAM::Role
+    Properties:
+      Path: /
+      AssumeRolePolicyDocument:
+        Version: 2012-10-17
+        Statement:
+          - Effect: Allow
+            Principal:
+              Service: cloudformation.amazonaws.com
+            Action: sts:AssumeRole
+      Policies:
+        - PolicyName: deploy-stack
+          PolicyDocument:
+            Statement:
+              - Effect: Allow
+                Action:
+                  - "iam:*"
+                  - "ec2:*"
+                  - "ecs:*"
+                  - "elasticloadbalancing:*"
+                  - "autoscaling:*"
+                  - "dynamodb:*"
+                  - "elasticache:*"
+                  - "logs:*"
+                  - "application-autoscaling:*"
+                  - "cloudwatch:*"
+                  - "route53:*"
+                  - "sns:*"
+                  - "sqs:*"
+                  - "ssm:*"
+                Resource: "*"
+
+  # While the build is in progress we need a place to store artifacts
+  ArtifactBucket:
+    Type: AWS::S3::Bucket
+    DeletionPolicy: Retain
+
+  # This is the definition of how to build the code in the repository
+  BackWS:
+    Type: AWS::CodeBuild::Project
+    Properties:
+      Artifacts:
+        Type: CODEPIPELINE
+      Source:
+        Type: CODEPIPELINE
+        BuildSpec: |
+          version: 0.2
+          phases:
+            pre_build:
+              commands:
+                - $(aws ecr get-login --no-include-email)
+                - TAG="$(echo $CODEBUILD_RESOLVED_SOURCE_VERSION | head -c 8)"
+                - IMAGE_URI="${REPOSITORY_URI}:${TAG}"
+            build:
+              commands:
+                - docker build --tag "${IMAGE_URI}" ./services/back-ws
+            post_build:
+              commands:
+                - docker push "$IMAGE_URI"
+                - printf '{"ImageUri":"%s"}' "$IMAGE_URI" > build.json
+          artifacts:
+            files: build.json
+      Environment:
+        ComputeType: BUILD_GENERAL1_SMALL
+        Image: aws/codebuild/docker:19.03.8
+        Type: LINUX_CONTAINER
+        EnvironmentVariables:
+          - Name: AWS_DEFAULT_REGION
+            Value: !Ref AWS::Region
+          - Name: REPOSITORY_URI
+            Value: !Sub ${AWS::AccountId}.dkr.ecr.${AWS::Region}.amazonaws.com/${BackWSRepository}
+      #CloudWatchLogs: 
+      #  GroupName: /code-build/${AWS::StackName}/back-ws
+      #  Status: ENABLED
+      #  StreamName: /code-build/${AWS::StackName}
+      Name: !Sub ${AWS::StackName}-back-ws
+      ServiceRole: !Ref CodeBuildServiceRole
+
+  # This is the definition of how to build the code in the repository
+  BackQueueWorker:
+    Type: AWS::CodeBuild::Project
+    Properties:
+      Artifacts:
+        Type: CODEPIPELINE
+      Source:
+        Type: CODEPIPELINE
+        BuildSpec: |
+          version: 0.2
+          phases:
+            pre_build:
+              commands:
+                - $(aws ecr get-login --no-include-email)
+                - TAG="$(echo $CODEBUILD_RESOLVED_SOURCE_VERSION | head -c 8)"
+                - IMAGE_URI="${REPOSITORY_URI}:${TAG}"
+            build:
+              commands:
+                - docker build --tag "${IMAGE_URI}" ./services/back-queue-worker
+            post_build:
+              commands:
+                - docker push "$IMAGE_URI"
+                - printf '{"ImageUri":"%s"}' "$IMAGE_URI" > build.json
+          artifacts:
+            files: build.json
+      Environment:
+        ComputeType: BUILD_GENERAL1_SMALL
+        Image: aws/codebuild/docker:19.03.8
+        Type: LINUX_CONTAINER
+        EnvironmentVariables:
+          - Name: AWS_DEFAULT_REGION
+            Value: !Ref AWS::Region
+          - Name: REPOSITORY_URI
+            Value: !Sub ${AWS::AccountId}.dkr.ecr.${AWS::Region}.amazonaws.com/${BackQueueWorkerRepository}
+      #CloudWatchLogs: 
+      #  GroupName: /code-build/${AWS::StackName}/back-queue-worker
+      #  Status: ENABLED
+      #  StreamName: /code-build/${AWS::StackName}
+      Name: !Sub ${AWS::StackName}-back-queue-worker
+      ServiceRole: !Ref CodeBuildServiceRole
+
+  # Back api pipeline
+  BackApi:
+    Type: AWS::CodeBuild::Project
+    Properties:
+      Artifacts:
+        Type: CODEPIPELINE
+      Source:
+        Type: CODEPIPELINE
+        BuildSpec: |
+          version: 0.2
+          phases:
+            pre_build:
+              commands:
+                - $(aws ecr get-login --no-include-email)
+                - TAG="$(echo $CODEBUILD_RESOLVED_SOURCE_VERSION | head -c 8)"
+                - IMAGE_URI="${REPOSITORY_URI}:${TAG}"
+            build:
+              commands:
+                - docker build --tag "${IMAGE_URI}" ./services/back-api
+            post_build:
+              commands:
+                - docker push "$IMAGE_URI"
+                - printf '{"ImageUri":"%s"}' "$IMAGE_URI" > build.json
+          artifacts:
+            files: build.json
+      Environment:
+        ComputeType: BUILD_GENERAL1_SMALL
+        Image: aws/codebuild/docker:19.03.8
+        Type: LINUX_CONTAINER
+        EnvironmentVariables:
+          - Name: AWS_DEFAULT_REGION
+            Value: !Ref AWS::Region
+          - Name: REPOSITORY_URI
+            Value: !Sub ${AWS::AccountId}.dkr.ecr.${AWS::Region}.amazonaws.com/${BackApiRepository}
+      #CloudWatchLogs: 
+      #  GroupName: /code-build/${AWS::StackName}/back-api
+      #  Status: ENABLED
+      #  StreamName: /code-build/${AWS::StackName}
+      Name: !Sub ${AWS::StackName}-back-api
+      ServiceRole: !Ref CodeBuildServiceRole
+
+  # Back api pipeline
+  FrontNginx:
+    Type: AWS::CodeBuild::Project
+    Properties:
+      Artifacts:
+        Type: CODEPIPELINE
+      Source:
+        Type: CODEPIPELINE
+        BuildSpec: |
+          version: 0.2
+          phases:
+            pre_build:
+              commands:
+                - $(aws ecr get-login --no-include-email)
+                - TAG="$(echo $CODEBUILD_RESOLVED_SOURCE_VERSION | head -c 8)"
+                - IMAGE_URI="${REPOSITORY_URI}:${TAG}"
+            build:
+              commands:
+                - docker build --tag "${IMAGE_URI}" ./services/front-nginx
+            post_build:
+              commands:
+                - docker push "$IMAGE_URI"
+                - printf '{"ImageUri":"%s"}' "$IMAGE_URI" > build.json
+          artifacts:
+            files: build.json
+      Environment:
+        ComputeType: BUILD_GENERAL1_SMALL
+        Image: aws/codebuild/docker:19.03.8
+        Type: LINUX_CONTAINER
+        EnvironmentVariables:
+          - Name: AWS_DEFAULT_REGION
+            Value: !Ref AWS::Region
+          - Name: REPOSITORY_URI
+            Value: !Sub ${AWS::AccountId}.dkr.ecr.${AWS::Region}.amazonaws.com/${FrontNginxRepository}
+      #CloudWatchLogs: 
+      #  GroupName: /code-build/${AWS::StackName}/front-nginx
+      #  Status: ENABLED
+      #  StreamName: /code-build/${AWS::StackName}
+      Name: !Sub ${AWS::StackName}-front-nginx
+      ServiceRole: !Ref CodeBuildServiceRole
+
+  # This pipeline defines the steps to build, deploy, and release the application
+  Pipeline:
+    Type: AWS::CodePipeline::Pipeline
+    Properties:
+      RoleArn: !GetAtt CodePipelineServiceRole.Arn
+      ArtifactStore:
+        Type: S3
+        Location: !Ref ArtifactBucket
+      Stages:
+
+        # First we have to pull the source code from the Github repository.
+        - Name: Source
+          Actions:
+            - Name: Fetch-source
+              ActionTypeId:
+                Category: Source
+                Owner: ThirdParty
+                Version: 1
+                Provider: GitHub
+              Configuration:
+                Owner: !Ref GitHubUser
+                Repo: !Ref GitHubRepo
+                Branch: !Ref GitHubBranch
+                OAuthToken: !Ref GitHubToken
+              OutputArtifacts:
+                - Name: Source
+              RunOrder: 1
+
+        # Now we deploy the base resources: the cluster and VPC itself.
+        - Name: Create-network
+          Actions:
+            - Name: Deploy
+              ActionTypeId:
+                Category: Deploy
+                Owner: AWS
+                Version: 1
+                Provider: CloudFormation
+              Configuration:
+                ActionMode: CREATE_UPDATE
+                RoleArn: !GetAtt CloudFormationDeployRole.Arn
+                StackName: !Sub ${EnvironmentName}-base-resources
+                TemplatePath: Source::templates/cluster.yml
+                Capabilities: CAPABILITY_IAM
+                ParameterOverrides: !Sub |
+                  {
+                    "EnvironmentName": "${EnvironmentName}",
+                    "CertificateArn": "${CertificateArn}"
+                  }
+              InputArtifacts:
+                - Name: Source
+              OutputArtifacts:
+                - Name: BaseResources
+
+        # And we deploy the application resources (Elasticache, DynamoDB, etc)
+        - Name: Build-dependencies-and-containers
+          Actions:
+            # Deploy the chat resources
+            - Name: Queues-roles-and-tables
+              ActionTypeId:
+                Category: Deploy
+                Owner: AWS
+                Version: 1
+                Provider: CloudFormation
+              Configuration:
+                ActionMode: CREATE_UPDATE
+                RoleArn: !GetAtt CloudFormationDeployRole.Arn
+                StackName: !Sub ${EnvironmentName}-chat-resources
+                TemplatePath: Source::templates/resources.yml
+                Capabilities: CAPABILITY_IAM
+                ParameterOverrides: !Sub |
+                  {
+                    "EnvironmentName": "${EnvironmentName}"
+                  }
+              InputArtifacts:
+                - Name: Source
+              OutputArtifacts:
+                - Name: ChatResources
+
+            # Build the chat frontend docker image
+            - Name: Build-service-image-new-back-ws
+              ActionTypeId:
+                Category: Build
+                Owner: AWS
+                Version: 1
+                Provider: CodeBuild
+              Configuration:
+                ProjectName: !Ref BackWS
+              InputArtifacts:
+                - Name: Source
+              OutputArtifacts:
+                - Name: BackWSOutput
+              RunOrder: 1
+
+            # Build the backend worker image
+            - Name: Build-service-image-back-queue-worker
+              ActionTypeId:
+                Category: Build
+                Owner: AWS
+                Version: 1
+                Provider: CodeBuild
+              Configuration:
+                ProjectName: !Ref BackQueueWorker
+              InputArtifacts:
+                - Name: Source
+              OutputArtifacts:
+                - Name: BackQueueWorkerOutput
+              RunOrder: 1
+
+            # Build the backend worker image
+            - Name: Build-service-image-back-api
+              ActionTypeId:
+                Category: Build
+                Owner: AWS
+                Version: 1
+                Provider: CodeBuild
+              Configuration:
+                ProjectName: !Ref BackApi
+              InputArtifacts:
+                - Name: Source
+              OutputArtifacts:
+                - Name: BackApiOutput
+              RunOrder: 1
+
+            # Build the backend worker image
+            - Name: Build-service-image-front-nginx
+              ActionTypeId:
+                Category: Build
+                Owner: AWS
+                Version: 1
+                Provider: CodeBuild
+              Configuration:
+                ProjectName: !Ref FrontNginx
+              InputArtifacts:
+                - Name: Source
+              OutputArtifacts:
+                - Name: FrontNginxOutput
+              RunOrder: 1
+
+        # Finally we deploy the Fargate service to the cluster
+        - Name: Deploy-containers
+          Actions:
+            - Name: Deploy-back-ws-container
+              ActionTypeId:
+                Category: Deploy
+                Owner: AWS
+                Version: 1
+                Provider: CloudFormation
+              Configuration:
+                ActionMode: CREATE_UPDATE
+                RoleArn: !GetAtt CloudFormationDeployRole.Arn
+                StackName: !Sub ${EnvironmentName}-back-ws
+                TemplatePath: Source::templates/back-ws.yml
+                Capabilities: CAPABILITY_IAM
+                ParameterOverrides: !Sub |
+                  {
+                    "EnvironmentName": "${EnvironmentName}",
+                    "ImageUrl": {
+                      "Fn::GetParam" : ["BackWSOutput", "build.json", "ImageUri"]
+                    }
+                  }
+              InputArtifacts:
+                - Name: Source
+                - Name: BackWSOutput
+            
+            - Name: Deploy-back-queue-worker-container
+              ActionTypeId:
+                Category: Deploy
+                Owner: AWS
+                Version: 1
+                Provider: CloudFormation
+              Configuration:
+                ActionMode: CREATE_UPDATE
+                RoleArn: !GetAtt CloudFormationDeployRole.Arn
+                StackName: !Sub ${EnvironmentName}-back-queue-worker
+                TemplatePath: Source::templates/back-queue-worker.yml
+                Capabilities: CAPABILITY_IAM
+                ParameterOverrides: !Sub |
+                  {
+                    "EnvironmentName": "${EnvironmentName}",
+                    "ImageUrl": {
+                      "Fn::GetParam" : ["BackQueueWorkerOutput", "build.json", "ImageUri"]
+                    }
+                  }
+              InputArtifacts:
+                - Name: Source
+                - Name: BackQueueWorkerOutput
+            
+            - Name: Deploy-back-api-container
+              ActionTypeId:
+                Category: Deploy
+                Owner: AWS
+                Version: 1
+                Provider: CloudFormation
+              Configuration:
+                ActionMode: CREATE_UPDATE
+                RoleArn: !GetAtt CloudFormationDeployRole.Arn
+                StackName: !Sub ${EnvironmentName}-back-api
+                TemplatePath: Source::templates/back-api.yml
+                Capabilities: CAPABILITY_IAM
+                ParameterOverrides: !Sub |
+                  {
+                    "EnvironmentName": "${EnvironmentName}",
+                    "ImageUrl": {
+                      "Fn::GetParam" : ["BackApiOutput", "build.json", "ImageUri"]
+                    }
+                  }
+              InputArtifacts:
+                - Name: Source
+                - Name: BackApiOutput
+            
+            - Name: Deploy-front-nginx-container
+              ActionTypeId:
+                Category: Deploy
+                Owner: AWS
+                Version: 1
+                Provider: CloudFormation
+              Configuration:
+                ActionMode: CREATE_UPDATE
+                RoleArn: !GetAtt CloudFormationDeployRole.Arn
+                StackName: !Sub ${EnvironmentName}-front-nginx
+                TemplatePath: Source::templates/front-nginx.yml
+                Capabilities: CAPABILITY_IAM
+                ParameterOverrides: !Sub |
+                  {
+                    "EnvironmentName": "${EnvironmentName}",
+                    "ImageUrl": {
+                      "Fn::GetParam" : ["FrontNginxOutput", "build.json", "ImageUri"]
+                    }
+                  }
+              InputArtifacts:
+                - Name: Source
+                - Name: FrontNginxOutput
+
+Outputs:
+  PipelineUrl:
+    Value: !Sub https://console.aws.amazon.com/codepipeline/home?region=${AWS::Region}#/view/${Pipeline}
