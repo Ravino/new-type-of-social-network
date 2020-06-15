@@ -90,22 +90,38 @@ Resources:
     DeletionPolicy: Snapshot
 
   ##
-  ## DocumentDB (Mongo)
+  ## DocumentDB (Mongo) Port 27017
   ##
-  # DBCluster:
-  #   Type: 'AWS::DocDB::DBCluster'
-  #   Properties:
-  #     DBClusterIdentifier: MongoDbHost
-  #     MasterUsername: MongoDbUsername
-  #     MasterUserPassword: MongoDbPassword
-  #   DeletionPolicy: Delete
-  # DBInstance:
-  #   Type: 'AWS::DocDB::DBInstance'
-  #   Properties:
-  #     DBClusterIdentifier: !Ref DBCluster
-  #     DBInstanceIdentifier: !Ref DBInstanceName
-  #     DBInstanceClass: !Ref DBInstanceClass
-  #   DeletionPolicy: Delete
+  MongoSubnetGroup:
+    Type: "AWS::DocDB::DBSubnetGroup"
+    Properties:
+      SubnetIds: #required
+        - Fn::ImportValue:
+            !Join [':', [!Ref 'EnvironmentName', 'PublicSubnetOne']]
+        - Fn::ImportValue:
+            !Join [':', [!Ref 'EnvironmentName', 'PublicSubnetTwo']]
+  MongoInstance:
+    Type: "AWS::DocDB::DBInstance"
+    Properties:
+      DBInstanceClass: db.m4.large #required
+      DBClusterIdentifier: MongoDB #required
+  MongoDB:
+    Type: "AWS::DocDB::DBCluster"
+    Properties:
+      StorageEncrypted: true
+      AvailabilityZones:
+        - eu-central-1a
+        - eu-central-1b
+       #- eu-central-1c  # TODO
+      Port: 27017
+      #DBClusterIdentifier: String
+      DBSubnetGroupName: MongoSubnetGroup
+      DeletionProtection: false
+      MasterUsername: 'plizi' #required
+      MasterUserPassword: 'Tksx2PPDba8Ny0lZ' #required
+      VpcSecurityGroupIds:
+        Fn::ImportValue:
+          !Join [':', [!Ref 'EnvironmentName', 'VPCId']]
   ## 
   ## ROLES
   ## 
