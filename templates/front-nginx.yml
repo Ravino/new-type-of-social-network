@@ -3,7 +3,7 @@ Description: Service sample builder
 Parameters:
   EnvironmentName:
     Type: String
-    Default: production
+    Default: prod
     Description: A name for the environment that this cloudformation will be part of.
                  Used to locate other resources in the same environment.
   ServiceName:
