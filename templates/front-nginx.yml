@@ -87,7 +87,7 @@ Resources:
     Type: AWS::ECS::Service
     DependsOn:
       - HTTPRule
-      - HTTPSRule
+#      - HTTPSRule
     Properties:
       ServiceName: !Ref 'ServiceName'
       Cluster:

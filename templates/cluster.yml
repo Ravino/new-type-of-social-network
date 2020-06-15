@@ -321,11 +321,11 @@ Outputs:
     Value: !Ref PublicLoadBalancerListenerHTTP
     Export:
       Name: !Join [ ':', [ !Ref 'EnvironmentName', 'PublicListenerHTTP' ] ]
-  HTTPSListener:
-    Description: The ARN of the public load balancer's HTTPS Listener
-    Value: !Ref PublicLoadBalancerListenerHTTPS
-    Export:
-      Name: !Join [ ':', [ !Ref 'EnvironmentName', 'PublicListenerHTTPS' ] ]
+#  HTTPSListener:
+#    Description: The ARN of the public load balancer's HTTPS Listener
+#    Value: !Ref PublicLoadBalancerListenerHTTPS
+#    Export:
+#      Name: !Join [ ':', [ !Ref 'EnvironmentName', 'PublicListenerHTTPS' ] ]
   VPCId:
     Description: The ID of the VPC that this stack is deployed in
     Value: !Ref 'VPC'
