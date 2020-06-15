@@ -7,7 +7,9 @@ Parameters:
     Description: The environment name, used for locating outputs from the
                  prerequisite stacks
 Resources:
-  # Subnet group to control where the Redis gets placed
+  ##
+  ## REDIS (AWS ElasticCache), Port: 6376
+  ##
   RedisSubnetGroup:
     Type: AWS::ElastiCache::SubnetGroup
     Properties:
@@ -17,9 +19,6 @@ Resources:
             !Join [':', [!Ref 'EnvironmentName', 'PublicSubnetOne']]
         - Fn::ImportValue:
             !Join [':', [!Ref 'EnvironmentName', 'PublicSubnetTwo']]
-
-  # Security group to add the Redis cluster to the VPC,
-  # and to allow the Fargate containers to talk to Redis on port 6379
   RedisSecurityGroup:
     Type: AWS::EC2::SecurityGroup
     Properties:
@@ -38,55 +37,23 @@ Resources:
       SourceSecurityGroupId:
         Fn::ImportValue:
           !Join [':', [!Ref 'EnvironmentName', 'FargateContainerSecurityGroup']]
-
-  # The cluster itself.
   Redis:
     Type: AWS::ElastiCache::CacheCluster
     Properties:
       Engine: redis
-      CacheNodeType: cache.m4.large
-      NumCacheNodes: 1
+      CacheNodeType: cache.m4.large # TODO increase volume
+      NumCacheNodes: 2 # TODO change to 3
       CacheSubnetGroupName: !Ref 'RedisSubnetGroup'
       VpcSecurityGroupIds:
         - !GetAtt 'RedisSecurityGroup.GroupId'
+      PreferredAvailabilityZones:
+        - eu-central-1a
+        - eu-central-1b
+       #- eu-central-1c  # TODO
 
-  
-
-  # Table for storing user info
-  UsersTable:
-    Type: AWS::DynamoDB::Table
-    Properties:
-      TableName: !Join ['_', [!Ref 'EnvironmentName', 'Users']]
-      AttributeDefinitions:
-        - AttributeName: username
-          AttributeType: S
-      KeySchema:
-        - AttributeName: username
-          KeyType: HASH
-      ProvisionedThroughput:
-        ReadCapacityUnits: 10
-        WriteCapacityUnits: 10
-
-  # Table for storing the messages
-  MessagesTable:
-    Type: AWS::DynamoDB::Table
-    Properties:
-      TableName: !Join ['_', [!Ref 'EnvironmentName', 'Messages']]
-      AttributeDefinitions:
-        - AttributeName: room
-          AttributeType: S
-        - AttributeName: message
-          AttributeType: S
-      KeySchema:
-        - AttributeName: room
-          KeyType: HASH
-        - AttributeName: message
-          KeyType: RANGE
-      ProvisionedThroughput:
-        ReadCapacityUnits: 10
-        WriteCapacityUnits: 10
-
-  # A role for the service so it can access the tables
+  ## 
+  ## ROLES
+  ## 
   BackWSRole:
     Type: AWS::IAM::Role
     Properties:
@@ -98,30 +65,30 @@ Resources:
           Action: ['sts:AssumeRole']
       Path: /
       Policies:
-        - PolicyName: users-dynamodb-table
+        - PolicyName: rds-full-access
           PolicyDocument:
             Statement:
             - Effect: Allow
               Action:
-                - "dynamodb:PutItem"
-                - "dynamodb:GetItem"
-                - "dynamodb:Query"
-                - "dynamodb:Scan"
-                - "dynamodb:UpdateItem"
-                - "dynamodb:DeleteItem"
+                - "rds:*"
               Resource:
-                - !Join ['', ['arn:aws:dynamodb:*:*:table/', !Ref 'UsersTable']]
-                - !Join ['', ['arn:aws:dynamodb:*:*:table/', !Ref 'MessagesTable']]
-        - PolicyName: publish-to-messagesent-topic
+                - "*"
+        - PolicyName: docdb-full-access
           PolicyDocument:
             Statement:
             - Effect: Allow
               Action:
-                - "sns:publish"
+                - "docdb:*"
               Resource:
-                - !Ref MessageSentTopic
-
-  # Role for the service that generates message cards
+                - "*"
+        - PolicyName: elasticache-full-access
+          PolicyDocument:
+            Statement:
+            - Effect: Allow
+              Action:
+                - "elasticache:*"
+              Resource:
+                - "*"
   BackQueueWorkerRole:
     Type: AWS::IAM::Role
     Properties:
@@ -133,61 +100,106 @@ Resources:
           Action: ['sts:AssumeRole']
       Path: /
       Policies:
-        - PolicyName: use-messages-queue
+        - PolicyName: rds-full-access
           PolicyDocument:
             Statement:
             - Effect: Allow
               Action:
-                - "sqs:*"
+                - "rds:*"
               Resource:
-                - !GetAtt MessagesToCardifyQueue.Arn
-
-  # An SNS topic for the chat service to publish to
-  MessageSentTopic:
-    Type: AWS::SNS::Topic
+                - "*"
+        - PolicyName: docdb-full-access
+          PolicyDocument:
+            Statement:
+            - Effect: Allow
+              Action:
+                - "docdb:*"
+              Resource:
+                - "*"
+        - PolicyName: elasticache-full-access
+          PolicyDocument:
+            Statement:
+            - Effect: Allow
+              Action:
+                - "elasticache:*"
+              Resource:
+                - "*"
+  BackApiRole:
+    Type: AWS::IAM::Role
     Properties:
-      DisplayName: A message has been sent
-      TopicName: !Sub ${EnvironmentName}-MessageSent
-
-  # An SQS queue that holds sent messages
-  MessagesToCardifyQueue:
-    Type: AWS::SQS::Queue
-    Properties:
-      QueueName: !Sub ${EnvironmentName}-MessagesToCardify
-
-  # Add a policy which allows SNS to send traffic to the SQS queue
-  MessageSentToMessageCardQueuePolicy:
-    Type: AWS::SQS::QueuePolicy
-    Properties:
-      Queues:
-        - !Ref MessagesToCardifyQueue
-      PolicyDocument:
-        Version: 2012-10-17
+      AssumeRolePolicyDocument:
         Statement:
-          - Effect: Allow
-            Principal: "*"
-            Action: "sqs:SendMessage"
-            Resource: !GetAtt MessagesToCardifyQueue.Arn
-            Condition:
-              ArnEquals:
-                aws:SourceArn: !Ref MessageSentTopic
-
-  # A subscription so that the MessagesToCardify queue receives messages sent to the MessageSent topic
-  MessagesSentToCardifySubscription:
-    Type: AWS::SNS::Subscription
+        - Effect: Allow
+          Principal:
+            Service: "ecs-tasks.amazonaws.com"
+          Action: ['sts:AssumeRole']
+      Path: /
+      Policies:
+        - PolicyName: rds-full-access
+          PolicyDocument:
+            Statement:
+            - Effect: Allow
+              Action:
+                - "rds:*"
+              Resource:
+                - "*"
+        - PolicyName: docdb-full-access
+          PolicyDocument:
+            Statement:
+            - Effect: Allow
+              Action:
+                - "docdb:*"
+              Resource:
+                - "*"
+        - PolicyName: elasticache-full-access
+          PolicyDocument:
+            Statement:
+            - Effect: Allow
+              Action:
+                - "elasticache:*"
+              Resource:
+                - "*"
+  FrontNginxRole:
+    Type: AWS::IAM::Role
     Properties:
-      Endpoint: !GetAtt MessagesToCardifyQueue.Arn
-      Protocol: sqs
-      TopicArn: !Ref MessageSentTopic
-
+      AssumeRolePolicyDocument:
+        Statement:
+        - Effect: Allow
+          Principal:
+            Service: "ecs-tasks.amazonaws.com"
+          Action: ['sts:AssumeRole']
+      Path: /
+      Policies:
+        - PolicyName: rds-full-access
+          PolicyDocument:
+            Statement:
+            - Effect: Allow
+              Action:
+                - "rds:*"
+              Resource:
+                - "*"
+        - PolicyName: docdb-full-access
+          PolicyDocument:
+            Statement:
+            - Effect: Allow
+              Action:
+                - "docdb:*"
+              Resource:
+                - "*"
+        - PolicyName: elasticache-full-access
+          PolicyDocument:
+            Statement:
+            - Effect: Allow
+              Action:
+                - "elasticache:*"
+              Resource:
+                - "*"
 Outputs:
   RedisEndpoint:
-    Description: The endpoint of the redis cluster
     Value: !GetAtt 'Redis.RedisEndpoint.Address'
     Export:
       Name: !Join [ ':', [ !Ref 'EnvironmentName', 'RedisEndpoint' ] ]
   BackWSRole:
-    Description: The role of the chat service
     Value: !GetAtt 'BackWSRole.Arn'
     Export:
       Name: !Join [ ':', [ !Ref 'EnvironmentName', 'BackWSRole' ] ]
@@ -196,7 +208,6 @@ Outputs:
     Export:
       Name: !Join [ ':', [ !Ref 'EnvironmentName', 'BackQueueWorkerRole' ] ]
   BackApiRole:
-    Description: The role of the chat service
     Value: !GetAtt 'BackApiRole.Arn'
     Export:
       Name: !Join [ ':', [ !Ref 'EnvironmentName', 'BackApiRole' ] ]

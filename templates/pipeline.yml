@@ -170,7 +170,8 @@ Resources:
                   - "ecs:*"
                   - "elasticloadbalancing:*"
                   - "autoscaling:*"
-                  - "dynamodb:*"
+                  - "rds:*"
+                  - "docdb:*"
                   - "elasticache:*"
                   - "logs:*"
                   - "application-autoscaling:*"
@@ -403,7 +404,7 @@ Resources:
               OutputArtifacts:
                 - Name: BaseResources
 
-        # And we deploy the application resources (Elasticache, DynamoDB, etc)
+        # And we deploy the application resources (Elasticache, RDS, DocumentDB, etc)
         - Name: Build-dependencies-and-containers
           Actions:
             # Deploy the chat resources

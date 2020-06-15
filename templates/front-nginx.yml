@@ -67,7 +67,7 @@ Resources:
           !Join [':', [!Ref 'EnvironmentName', 'ECSTaskExecutionRole']]
       TaskRoleArn:
         Fn::ImportValue:
-          !Join [':', [!Ref 'EnvironmentName', 'BackWSRole']]
+          !Join [':', [!Ref 'EnvironmentName', 'FrontNginxRole']]
       ContainerDefinitions:
         - Name: !Ref 'ServiceName'
           Image: !Ref 'ImageUrl'

@@ -232,7 +232,7 @@ Resources:
           !Join [':', [!Ref 'EnvironmentName', 'ECSTaskExecutionRole']]
       TaskRoleArn:
         Fn::ImportValue:
-          !Join [':', [!Ref 'EnvironmentName', 'BackWSRole']]
+          !Join [':', [!Ref 'EnvironmentName', 'BackApiRole']]
       ContainerDefinitions:
         - Name: !Ref 'ServiceName'
           Image: !Ref 'ImageUrl'
