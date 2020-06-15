@@ -23,5 +23,9 @@ EXPOSE 1215
 COPY docker-entrypoint.sh /usr/share/docker-laravel/bin/
 RUN chmod +x /usr/share/docker-laravel/bin/docker-entrypoint.sh
 
+HEALTHCHECK --interval=5s --timeout=10s \
+  CMD curl --include --no-buffer \
+          http://localhost:1215 || exit 1
+
 # start and setup scripts
 ENTRYPOINT ["/usr/share/docker-laravel/bin/docker-entrypoint.sh"]

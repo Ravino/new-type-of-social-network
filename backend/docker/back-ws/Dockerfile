@@ -20,5 +20,12 @@ EXPOSE 5555
 COPY docker-entrypoint.sh /usr/share/docker-laravel/bin/
 RUN chmod +x /usr/share/docker-laravel/bin/docker-entrypoint.sh
 
+HEALTHCHECK --interval=5s --timeout=10s \
+  CMD curl --include --no-buffer \
+          --header "Connection: close" \
+          --header "Upgrade: websocket" \
+          --header "Sec-WebSocket-Version: 13" \
+          http://localhost:7070 || exit 1
+
 # start and setup scripts
 ENTRYPOINT ["/usr/share/docker-laravel/bin/docker-entrypoint.sh"]
