@@ -366,7 +366,7 @@ Resources:
             - Fn::ImportValue:
                 !Join [':', [!Ref 'EnvironmentName', 'PublicSubnetTwo']]
       TaskDefinition: !Ref 'TaskDefinition'
-      LoadBalancers:
-        - ContainerName: !Ref 'ServiceName'
-          ContainerPort: !Ref 'ContainerPort'
-          TargetGroupArn: !Ref 'TargetGroup'
+      # LoadBalancers:
+      #   - ContainerName: !Ref 'ServiceName'
+      #     ContainerPort: !Ref 'ContainerPort'
+      #     TargetGroupArn: !Ref 'TargetGroup'

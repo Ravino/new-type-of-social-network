@@ -507,6 +507,7 @@ Resources:
                   }
               InputArtifacts:
                 - Name: Source
+              OutputArtifacts:
                 - Name: BackWSOutput
             
             - Name: Deploy-back-queue-worker-container
@@ -530,6 +531,7 @@ Resources:
                   }
               InputArtifacts:
                 - Name: Source
+              OutputArtifacts:
                 - Name: BackQueueWorkerOutput
             
             - Name: Deploy-back-api-container
@@ -553,6 +555,7 @@ Resources:
                   }
               InputArtifacts:
                 - Name: Source
+              OutputArtifacts:
                 - Name: BackApiOutput
             
             - Name: Deploy-front-nginx-container
@@ -576,6 +579,7 @@ Resources:
                   }
               InputArtifacts:
                 - Name: Source
+              OutputArtifacts:
                 - Name: FrontNginxOutput
 
 Outputs:
