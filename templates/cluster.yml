@@ -6,7 +6,7 @@ Parameters:
     Type: String
     Default: prod
     Description: A name for the environment that this cloudformation will be part of.
-    
+
 Mappings:
   # Hard values for the subnet masks. These masks define
   # the range of internal IP addresses that can be assigned.
@@ -181,19 +181,19 @@ Resources:
       LoadBalancerArn: !Ref 'PublicLoadBalancer'
       Port: 80
       Protocol: HTTP
-  PublicLoadBalancerListenerHTTPS:
-    Type: AWS::ElasticLoadBalancingV2::Listener
-    DependsOn:
-      - PublicLoadBalancer
-    Properties:
-      DefaultActions:
-        - TargetGroupArn: !Ref 'DummyTargetGroupPublic'
-          Type: 'forward'
-      LoadBalancerArn: !Ref 'PublicLoadBalancer'
-      Port: 443
-      Protocol: HTTPS
-      Certificates:
-        - CertificateArn: !Ref 'CertificateArn'
+ # PublicLoadBalancerListenerHTTPS:
+ #   Type: AWS::ElasticLoadBalancingV2::Listener
+ #   DependsOn:
+ #     - PublicLoadBalancer
+ #   Properties:
+ #     DefaultActions:
+ #       - TargetGroupArn: !Ref 'DummyTargetGroupPublic'
+ #         Type: 'forward'
+ #     LoadBalancerArn: !Ref 'PublicLoadBalancer'
+ #     Port: 443
+#      Protocol: HTTPS
+#      Certificates:
+#        - CertificateArn: !Ref 'CertificateArn'
 
   # This is an IAM role which authorizes ECS to manage resources on your
   # account on your behalf, such as updating your load balancer with the
