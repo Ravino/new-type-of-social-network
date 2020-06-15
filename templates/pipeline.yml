@@ -204,7 +204,7 @@ Resources:
                 - IMAGE_URI="${REPOSITORY_URI}:${TAG}"
             build:
               commands:
-                - docker build --tag "${IMAGE_URI}" ./services/back-ws
+                - docker build --tag "${IMAGE_URI}" ./backend/docker/back-ws
             post_build:
               commands:
                 - docker push "$IMAGE_URI"
@@ -245,7 +245,7 @@ Resources:
                 - IMAGE_URI="${REPOSITORY_URI}:${TAG}"
             build:
               commands:
-                - docker build --tag "${IMAGE_URI}" ./services/back-queue-worker
+                - docker build --tag "${IMAGE_URI}" ./backend/docker/back-queue-worker
             post_build:
               commands:
                 - docker push "$IMAGE_URI"
@@ -286,7 +286,7 @@ Resources:
                 - IMAGE_URI="${REPOSITORY_URI}:${TAG}"
             build:
               commands:
-                - docker build --tag "${IMAGE_URI}" ./services/back-api
+                - docker build --tag "${IMAGE_URI}" ./backend/docker/back-api
             post_build:
               commands:
                 - docker push "$IMAGE_URI"
@@ -327,7 +327,7 @@ Resources:
                 - IMAGE_URI="${REPOSITORY_URI}:${TAG}"
             build:
               commands:
-                - docker build --tag "${IMAGE_URI}" ./services/front-nginx
+                - docker build --tag "${IMAGE_URI}" ./frontend/docker/front-nginx
             post_build:
               commands:
                 - docker push "$IMAGE_URI"
