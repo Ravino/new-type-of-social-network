@@ -167,7 +167,6 @@ Resources:
                   - "elasticloadbalancing:*"
                   - "autoscaling:*"
                   - "rds:*"
-                  - "docdb:*"
                   - "elasticache:*"
                   - "logs:*"
                   - "application-autoscaling:*"

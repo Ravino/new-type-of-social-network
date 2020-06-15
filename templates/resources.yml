@@ -54,7 +54,7 @@ Resources:
   ## RDS (MySQL) Port: 3306
   ##
   MySQLSubnetGroup:
-    Type: AWS::RDS::SubnetGroup
+    Type: AWS::RDS::DBSubnetGroup
     Properties:
       SubnetIds:
         - Fn::ImportValue:
@@ -82,7 +82,7 @@ Resources:
     Properties:
       DBSecurityGroups:
       - !GetAtt 'MySQLSecurityGroup.GroupID'
-      AllocatedStorage: '5'
+      AllocatedStorage: 5
       DBInstanceClass: db.m4.large
       Engine: MySQL
       MasterUsername: 'root'
@@ -92,8 +92,20 @@ Resources:
   ##
   ## DocumentDB (Mongo)
   ##
-  
-
+  DBCluster:
+    Type: 'AWS::DocDB::DBCluster'
+    Properties:
+      DBClusterIdentifier: MongoDbHost
+      MasterUsername: MongoDbUsername
+      MasterUserPassword: MongoDbPassword
+    DeletionPolicy: Delete
+  DBInstance:
+    Type: 'AWS::DocDB::DBInstance'
+    Properties:
+      DBClusterIdentifier: !Ref DBCluster
+      DBInstanceIdentifier: !Ref DBInstanceName
+      DBInstanceClass: !Ref DBInstanceClass
+    DeletionPolicy: Delete
   ## 
   ## ROLES
   ## 
