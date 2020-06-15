@@ -50,6 +50,49 @@ Resources:
         - eu-central-1a
         - eu-central-1b
        #- eu-central-1c  # TODO
+  ## 
+  ## RDS (MySQL) Port: 3306
+  ##
+  MySQLSubnetGroup:
+    Type: AWS::RDS::SubnetGroup
+    Properties:
+      SubnetIds:
+        - Fn::ImportValue:
+            !Join [':', [!Ref 'EnvironmentName', 'PublicSubnetOne']]
+        - Fn::ImportValue:
+            !Join [':', [!Ref 'EnvironmentName', 'PublicSubnetTwo']]
+  MySQLSecurityGroup:
+    Type: AWS::EC2::SecurityGroup
+    Properties:
+      VpcId:
+        Fn::ImportValue:
+          !Join [':', [!Ref 'EnvironmentName', 'VPCId']]
+  MySQLIngress:
+    Type: AWS::EC2::SecurityGroupIngress
+    Properties:
+      GroupId: !Ref 'MySQLSecurityGroup'
+      IpProtocol: tcp
+      FromPort: 3306
+      ToPort: 3306
+      SourceSecurityGroupId:
+        Fn::ImportValue:
+          !Join [':', [!Ref 'EnvironmentName', 'FargateContainerSecurityGroup']]
+  MySQL:
+    Type: AWS::RDS::DBInstance
+    Properties:
+      DBSecurityGroups:
+      - !GetAtt 'MySQLSecurityGroup.GroupID'
+      AllocatedStorage: '5'
+      DBInstanceClass: db.m4.large
+      Engine: MySQL
+      MasterUsername: 'root'
+      MasterUserPassword: 'ecugVWHKatKQd657'
+    DeletionPolicy: Snapshot
+
+  ##
+  ## DocumentDB (Mongo)
+  ##
+  
 
   ## 
   ## ROLES
@@ -65,30 +108,15 @@ Resources:
           Action: ['sts:AssumeRole']
       Path: /
       Policies:
-        - PolicyName: rds-full-access
+        - PolicyName: database-full-access
           PolicyDocument:
             Statement:
             - Effect: Allow
               Action:
-                - "rds:*"
-              Resource:
-                - "*"
-        - PolicyName: docdb-full-access
-          PolicyDocument:
-            Statement:
-            - Effect: Allow
-              Action:
-                - "docdb:*"
-              Resource:
-                - "*"
-        - PolicyName: elasticache-full-access
-          PolicyDocument:
-            Statement:
-            - Effect: Allow
-              Action:
-                - "elasticache:*"
-              Resource:
-                - "*"
+                - rds:*
+                - docdb:*
+                - elasticache:*
+              Resource: "*"
   BackQueueWorkerRole:
     Type: AWS::IAM::Role
     Properties:
@@ -100,30 +128,15 @@ Resources:
           Action: ['sts:AssumeRole']
       Path: /
       Policies:
-        - PolicyName: rds-full-access
+        - PolicyName: database-full-access
           PolicyDocument:
             Statement:
             - Effect: Allow
               Action:
-                - "rds:*"
-              Resource:
-                - "*"
-        - PolicyName: docdb-full-access
-          PolicyDocument:
-            Statement:
-            - Effect: Allow
-              Action:
-                - "docdb:*"
-              Resource:
-                - "*"
-        - PolicyName: elasticache-full-access
-          PolicyDocument:
-            Statement:
-            - Effect: Allow
-              Action:
-                - "elasticache:*"
-              Resource:
-                - "*"
+                - rds:*
+                - docdb:*
+                - elasticache:*
+              Resource: "*"
   BackApiRole:
     Type: AWS::IAM::Role
     Properties:
@@ -135,30 +148,15 @@ Resources:
           Action: ['sts:AssumeRole']
       Path: /
       Policies:
-        - PolicyName: rds-full-access
+        - PolicyName: database-full-access
           PolicyDocument:
             Statement:
             - Effect: Allow
               Action:
-                - "rds:*"
-              Resource:
-                - "*"
-        - PolicyName: docdb-full-access
-          PolicyDocument:
-            Statement:
-            - Effect: Allow
-              Action:
-                - "docdb:*"
-              Resource:
-                - "*"
-        - PolicyName: elasticache-full-access
-          PolicyDocument:
-            Statement:
-            - Effect: Allow
-              Action:
-                - "elasticache:*"
-              Resource:
-                - "*"
+                - rds:*
+                - docdb:*
+                - elasticache:*
+              Resource: "*"
   FrontNginxRole:
     Type: AWS::IAM::Role
     Properties:
@@ -170,30 +168,15 @@ Resources:
           Action: ['sts:AssumeRole']
       Path: /
       Policies:
-        - PolicyName: rds-full-access
+        - PolicyName: database-full-access
           PolicyDocument:
             Statement:
             - Effect: Allow
               Action:
-                - "rds:*"
-              Resource:
-                - "*"
-        - PolicyName: docdb-full-access
-          PolicyDocument:
-            Statement:
-            - Effect: Allow
-              Action:
-                - "docdb:*"
-              Resource:
-                - "*"
-        - PolicyName: elasticache-full-access
-          PolicyDocument:
-            Statement:
-            - Effect: Allow
-              Action:
-                - "elasticache:*"
-              Resource:
-                - "*"
+                - rds:*
+                - docdb:*
+                - elasticache:*
+              Resource: "*"
 Outputs:
   RedisEndpoint:
     Value: !GetAtt 'Redis.RedisEndpoint.Address'
