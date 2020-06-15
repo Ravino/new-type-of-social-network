@@ -389,10 +389,7 @@ Resources:
                 StackName: !Sub ${EnvironmentName}-base-resources
                 TemplatePath: Source::templates/cluster.yml
                 Capabilities: CAPABILITY_IAM
-                ParameterOverrides: !Sub |
-                  {
-                    "EnvironmentName": "${EnvironmentName}"
-                  }
+                ParameterOverrides: '{"EnvironmentName": "${EnvironmentName}"}'
               InputArtifacts:
                 - Name: Source
               OutputArtifacts:
@@ -414,10 +411,7 @@ Resources:
                 StackName: !Sub ${EnvironmentName}-chat-resources
                 TemplatePath: Source::templates/resources.yml
                 Capabilities: CAPABILITY_IAM
-                ParameterOverrides: !Sub |
-                  {
-                    "EnvironmentName": "${EnvironmentName}"
-                  }
+                ParameterOverrides: '{"EnvironmentName": "${EnvironmentName}"}'
               InputArtifacts:
                 - Name: Source
               OutputArtifacts:
@@ -498,13 +492,7 @@ Resources:
                 StackName: !Sub ${EnvironmentName}-back-ws
                 TemplatePath: Source::templates/back-ws.yml
                 Capabilities: CAPABILITY_IAM
-                ParameterOverrides: !Sub |
-                  {
-                    "EnvironmentName": "${EnvironmentName}",
-                    "ImageUrl": {
-                      "Fn::GetParam" : ["BackWSOutput", "build.json", "ImageUri"]
-                    }
-                  }
+                ParameterOverrides: '{"EnvironmentName":"${EnvironmentName}","ImageUrl":{"Fn::GetParam":["BackWSOutput","build.json","ImageUri"]}}'
               InputArtifacts:
                 - Name: Source
               OutputArtifacts:
@@ -522,13 +510,7 @@ Resources:
                 StackName: !Sub ${EnvironmentName}-back-queue-worker
                 TemplatePath: Source::templates/back-queue-worker.yml
                 Capabilities: CAPABILITY_IAM
-                ParameterOverrides: !Sub |
-                  {
-                    "EnvironmentName": "${EnvironmentName}",
-                    "ImageUrl": {
-                      "Fn::GetParam" : ["BackQueueWorkerOutput", "build.json", "ImageUri"]
-                    }
-                  }
+                ParameterOverrides: '{"EnvironmentName":"${EnvironmentName}","ImageUrl":{"Fn::GetParam":["BackQueueWorkerOutput","build.json","ImageUri"]}}'
               InputArtifacts:
                 - Name: Source
               OutputArtifacts:
@@ -546,13 +528,7 @@ Resources:
                 StackName: !Sub ${EnvironmentName}-back-api
                 TemplatePath: Source::templates/back-api.yml
                 Capabilities: CAPABILITY_IAM
-                ParameterOverrides: !Sub |
-                  {
-                    "EnvironmentName": "${EnvironmentName}",
-                    "ImageUrl": {
-                      "Fn::GetParam" : ["BackApiOutput", "build.json", "ImageUri"]
-                    }
-                  }
+                ParameterOverrides: '{"EnvironmentName":"${EnvironmentName}","ImageUrl":{"Fn::GetParam":["BackApiOutput","build.json","ImageUri"]}}'
               InputArtifacts:
                 - Name: Source
               OutputArtifacts:
@@ -570,13 +546,7 @@ Resources:
                 StackName: !Sub ${EnvironmentName}-front-nginx
                 TemplatePath: Source::templates/front-nginx.yml
                 Capabilities: CAPABILITY_IAM
-                ParameterOverrides: !Sub |
-                  {
-                    "EnvironmentName": "${EnvironmentName}",
-                    "ImageUrl": {
-                      "Fn::GetParam" : ["FrontNginxOutput", "build.json", "ImageUri"]
-                    }
-                  }
+                ParameterOverrides: '{"EnvironmentName":"${EnvironmentName}","ImageUrl":{"Fn::GetParam":["FrontNginxOutput","build.json","ImageUri"]}}'
               InputArtifacts:
                 - Name: Source
               OutputArtifacts:
