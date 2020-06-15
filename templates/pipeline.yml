@@ -164,6 +164,7 @@ Resources:
                   - "iam:*"
                   - "ec2:*"
                   - "ecs:*"
+                  - "ecr:*"
                   - "elasticloadbalancing:*"
                   - "autoscaling:*"
                   - "rds:*"
