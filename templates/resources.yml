@@ -81,7 +81,7 @@ Resources:
     Type: AWS::RDS::DBInstance
     Properties:
       DBSecurityGroups:
-      - !GetAtt 'MySQLSecurityGroup.GroupID'
+      - !Ref 'MySQLSecurityGroup'
       AllocatedStorage: 5
       DBInstanceClass: db.m4.large
       Engine: MySQL
