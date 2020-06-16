@@ -93,8 +93,10 @@ Resources:
       AllocatedStorage: 5
       DBInstanceClass: db.m4.large
       Engine: MySQL
+      DBName: 'dev-plizi'
       MasterUsername: 'root'
       MasterUserPassword: 'ecugVWHKatKQd657'
+
     DeletionPolicy: Snapshot
   ##
   ## DocumentDB (Mongo) Port 27017
@@ -215,6 +217,28 @@ Resources:
               Resource: "*"
               
 Outputs:
+  MySQLDBName: 
+    Value: !GetAtt 'MySQL.DBName'
+    Export:
+      Name: !Join [ ':', [ !Ref 'EnvironmentName', 'MySQLDBName' ] ]
+  MySQLDBUserName: 
+    Value: !GetAtt 'MySQL.MasterUsername'
+    Export:
+      Name: !Join [ ':', [ !Ref 'EnvironmentName', 'MySQLDBUser' ] ]
+  MySQLDBUserPass: 
+    Value: !GetAtt 'MySQL.MasterUserPassword'
+    Export:
+      Name: !Join [ ':', [ !Ref 'EnvironmentName', 'MySQLDBPass' ] ]
+  MySQLDBHost: 
+    Value: !GetAtt 'MySQL.Endpoint.Host'
+    Export:
+      Name: !Join [ ':', [ !Ref 'EnvironmentName', 'MySQLDBHost' ] ]
+  MySQLDBPort: 
+    Value: !GetAtt 'MySQL.Endpoint.Port'
+    Export:
+      Name: !Join [ ':', [ !Ref 'EnvironmentName', 'MySQLDBPort' ] ]
+
+
   RedisHost:
     Value: !GetAtt 'Redis.RedisEndpoint.Address'
     Export:

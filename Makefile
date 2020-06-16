@@ -13,7 +13,7 @@ create:
 		--parameters ParameterKey=EnvironmentName,ParameterValue=$(ENV) \
 		--capabilities CAPABILITY_IAM  \
 		--disable-rollback \
-		--no-enable-termination-protection \ 
+		--no-enable-termination-protection \
 		--client-request-token $(TOKEN)
 delete:
 	aws cloudformation delete-stack --stack-name $(STACK_NAME)
