@@ -574,7 +574,7 @@ Resources:
         - !Ref ScaleUpPolicy
 
 Outputs:
-  BackWsEndpoint:
-    Value: !GetAtt 'BackWS.Address'
+  BackWSServiceAddress:
+    Value: !Join ['', ['http://', !GetAtt 'PublicLoadBalancer.DNSName']]
     Export:
-      Name: !Join [ '-', [ !Ref 'EnvironmentName', 'ClusterName' ] ]
+      Name: !Join [ ':', [ !Ref 'AWS::StackName', 'ExternalUrl' ] ]
