@@ -184,19 +184,19 @@ Resources:
       LoadBalancerArn: !Ref 'PublicLoadBalancer'
       Port: 80
       Protocol: HTTP
- # PublicLoadBalancerListenerHTTPS:
- #   Type: AWS::ElasticLoadBalancingV2::Listener
- #   DependsOn:
- #     - PublicLoadBalancer
- #   Properties:
- #     DefaultActions:
- #       - TargetGroupArn: !Ref 'DummyTargetGroupPublic'
- #         Type: 'forward'
- #     LoadBalancerArn: !Ref 'PublicLoadBalancer'
- #     Port: 443
-#      Protocol: HTTPS
-#      Certificates:
-#        - CertificateArn: !Ref 'CertificateArn'
+  PublicLoadBalancerListenerHTTPS:
+    Type: AWS::ElasticLoadBalancingV2::Listener
+    DependsOn:
+      - PublicLoadBalancer
+    Properties:
+      DefaultActions:
+        - TargetGroupArn: !Ref 'DummyTargetGroupPublic'
+          Type: 'forward'
+      LoadBalancerArn: !Ref 'PublicLoadBalancer'
+      Port: 443
+      Protocol: HTTPS
+      Certificates:
+        - CertificateArn: !Ref 'CertificateArn'
 
   # This is an IAM role which authorizes ECS to manage resources on your
   # account on your behalf, such as updating your load balancer with the
