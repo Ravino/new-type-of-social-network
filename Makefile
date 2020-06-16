@@ -9,7 +9,7 @@ create:
 	aws cloudformation create-stack --stack-name $(STACK_NAME) \
 		--template-body=file://templates/pipeline.yml \
 		--parameters ParameterKey=EnvironmentName,ParameterValue=$(ENV) \
-		--capabilities CAPABILITY_IAM \
+		--capabilities CAPABILITY_IAM CAPABILITY_AUTO_EXPAND \
 		--disable-rollback \
 		--no-enable-termination-protection
 delete:
