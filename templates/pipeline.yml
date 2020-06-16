@@ -587,4 +587,4 @@ Resources:
 
 Outputs:
   PipelineId:
-    Value: ${Pipeline}
+    Value: !Sub https://console.aws.amazon.com/codepipeline/home?region=${AWS::Region}#/view/${Pipeline}

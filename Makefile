@@ -31,7 +31,7 @@ status:
 events:
 	aws cloudformation describe-stack-events --stack-name $(STACK_NAME)
 deploy:
-	aws cloudformation deploy 
+	aws cloudformation deploy  --stack-name $(STACK_NAME) --template-file=file://templates/pipeline.yml 
 	cea9cf10-afe8-11ea-84ed-0a0c9a06689c
 hotfix:
 	git commit -a -m "Hotfix deploy" && git push
