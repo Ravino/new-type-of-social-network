@@ -114,7 +114,7 @@ Resources:
               Service: codepipeline.amazonaws.com
             Action: sts:AssumeRole
       Policies:
-        -   : root
+        - PolicyName: root
           PolicyDocument:
             Version: 2012-10-17
             Statement:
