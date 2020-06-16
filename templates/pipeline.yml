@@ -586,5 +586,5 @@ Resources:
                 - Name: FrontNginxDeployOutput
 
 Outputs:
-  PipelineId:
+  PipelineUrl:
     Value: !Sub https://console.aws.amazon.com/codepipeline/home?region=${AWS::Region}#/view/${Pipeline}
