@@ -394,7 +394,7 @@ Resources:
               InputArtifacts:
                 - Name: Source
               OutputArtifacts:
-                - Name: BaseResources
+                - Name: BaseResourcesDeployOutput
 
         # And we deploy the application resources (Elasticache, RDS, DocumentDB, etc)
         - Name: Build-dependencies-and-containers
@@ -416,7 +416,7 @@ Resources:
               InputArtifacts:
                 - Name: Source
               OutputArtifacts:
-                - Name: ChatResources
+                - Name: ChatResourcesDeployOutput
 
             # Build the chat frontend docker image
             - Name: Build-service-image-new-back-ws
@@ -430,7 +430,7 @@ Resources:
               InputArtifacts:
                 - Name: Source
               OutputArtifacts:
-                - Name: BackWSOutput
+                - Name: BackWSBuildOutput
               RunOrder: 1
 
             # Build the backend worker image
@@ -445,7 +445,7 @@ Resources:
               InputArtifacts:
                 - Name: Source
               OutputArtifacts:
-                - Name: BackQueueWorkerOutput
+                - Name: BackQueueWorkerBuildOutput
               RunOrder: 1
 
             # Build the backend worker image
@@ -460,7 +460,7 @@ Resources:
               InputArtifacts:
                 - Name: Source
               OutputArtifacts:
-                - Name: BackApiOutput
+                - Name: BackApiBuildOutput
               RunOrder: 1
 
             # Build the backend worker image
@@ -475,7 +475,7 @@ Resources:
               InputArtifacts:
                 - Name: Source
               OutputArtifacts:
-                - Name: FrontNginxOutput
+                - Name: FrontNginxBuildOutput
               RunOrder: 1
 
         # Finally we deploy the Fargate service to the cluster
@@ -497,7 +497,7 @@ Resources:
               InputArtifacts:
                 - Name: Source
               OutputArtifacts:
-                - Name: BackWSOutput
+                - Name: BackWSDeployOutput
             
             - Name: Deploy-back-queue-worker-container
               ActionTypeId:
@@ -515,7 +515,7 @@ Resources:
               InputArtifacts:
                 - Name: Source
               OutputArtifacts:
-                - Name: BackQueueWorkerOutput
+                - Name: BackQueueWorkerDeployOutput
             
             - Name: Deploy-back-api-container
               ActionTypeId:
@@ -533,7 +533,7 @@ Resources:
               InputArtifacts:
                 - Name: Source
               OutputArtifacts:
-                - Name: BackApiOutput
+                - Name: BackApiDeployOutput
             
             - Name: Deploy-front-nginx-container
               ActionTypeId:
@@ -551,8 +551,8 @@ Resources:
               InputArtifacts:
                 - Name: Source
               OutputArtifacts:
-                - Name: FrontNginxOutput
+                - Name: FrontNginxDeployOutput
 
 Outputs:
-  PipelineUrl:
-    Value: !Sub https://console.aws.amazon.com/codepipeline/home?region=${AWS::Region}#/view/${Pipeline}
+  PipelineId:
+    Value: ${Pipeline}

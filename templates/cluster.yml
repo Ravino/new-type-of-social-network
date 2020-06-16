@@ -298,32 +298,38 @@ Outputs:
     Description: The name of the ECS cluster
     Value: !Ref 'ECSCluster'
     Export:
-      Name: !Join [ ':', [ !Ref 'EnvironmentName', 'ClusterName' ] ]
+      Name: Test10
+      #Name: !Join [ ':', [ !Ref 'EnvironmentName', 'ClusterName' ] ]
   ExternalUrl:
     Description: The url of the external load balancer
     Value: !Join ['', ['http://', !GetAtt 'PublicLoadBalancer.DNSName']]
     Export:
-      Name: !Join [ ':', [ !Ref 'EnvironmentName', 'ExternalUrl' ] ]
+      Name: Test9
+      #Name: !Join [ ':', [ !Ref 'EnvironmentName', 'ExternalUrl' ] ]
   ECSRole:
     Description: The ARN of the ECS role
     Value: !GetAtt 'ECSRole.Arn'
     Export:
-      Name: !Join [ ':', [ !Ref 'EnvironmentName', 'ECSRole' ] ]
+      Name: Test8
+      #Name: !Join [ ':', [ !Ref 'EnvironmentName', 'ECSRole' ] ]
   ECSTaskExecutionRole:
     Description: The ARN of the ECS role
     Value: !GetAtt 'ECSTaskExecutionRole.Arn'
     Export:
-      Name: !Join [ ':', [ !Ref 'EnvironmentName', 'ECSTaskExecutionRole' ] ]
+      Name: Test7
+      #Name: !Join [ ':', [ !Ref 'EnvironmentName', 'ECSTaskExecutionRole' ] ]
   AutoscalingRole:
     Description: The ARN of the ECS role
     Value: !GetAtt 'ECSTaskExecutionRole.Arn'
     Export:
-      Name: !Join [ ':', [ !Ref 'EnvironmentName', 'AutoscalingRole' ] ]
+      Name: Test6
+      #Name: !Join [ ':', [ !Ref 'EnvironmentName', 'AutoscalingRole' ] ]
   HTTPListener:
     Description: The ARN of the public load balancer's HTTP Listener
     Value: !Ref PublicLoadBalancerListenerHTTP
     Export:
-      Name: !Join [ ':', [ !Ref 'EnvironmentName', 'PublicListenerHTTP' ] ]
+      Name: Test5
+      #Name: !Join [ ':', [ !Ref 'EnvironmentName', 'PublicListenerHTTP' ] ]
 #  HTTPSListener:
 #    Description: The ARN of the public load balancer's HTTPS Listener
 #    Value: !Ref PublicLoadBalancerListenerHTTPS
@@ -333,19 +339,23 @@ Outputs:
     Description: The ID of the VPC that this stack is deployed in
     Value: !Ref 'VPC'
     Export:
-      Name: !Join [ ':', [ !Ref 'EnvironmentName', 'VPCId' ] ]
+      Name: Test4
+      #Name: !Join [ ':', [ !Ref 'EnvironmentName', 'VPCId' ] ]
   PublicSubnetOne:
     Description: Public subnet one
     Value: !Ref 'PublicSubnetOne'
     Export:
-      Name: !Join [ ':', [ !Ref 'EnvironmentName', 'PublicSubnetOne' ] ]
+      Name: Test3
+      #Name: !Join [ ':', [ !Ref 'EnvironmentName', 'PublicSubnetOne' ] ]
   PublicSubnetTwo:
     Description: Public subnet two
     Value: !Ref 'PublicSubnetTwo'
     Export:
-      Name: !Join [ ':', [ !Ref 'EnvironmentName', 'PublicSubnetTwo' ] ]
+      Name: Test2
+      #Name: !Join [ ':', [ !Ref 'EnvironmentName', 'PublicSubnetTwo' ] ]
   FargateContainerSecurityGroup:
     Description: A security group used to allow Fargate containers to receive traffic
     Value: !Ref 'FargateContainerSecurityGroup'
     Export:
-      Name: !Join [ ':', [ !Ref 'EnvironmentName', 'FargateContainerSecurityGroup' ] ]
+      Name: Test1
+      #Name: !Join [ ':', [ !Ref 'EnvironmentName', 'FargateContainerSecurityGroup' ] ]
