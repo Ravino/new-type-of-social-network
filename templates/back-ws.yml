@@ -3,7 +3,7 @@ Description: Service sample builder
 Parameters:
   EnvironmentName:
     Type: String
-    Default: prod
+    Default: dev
     Description: A name for the environment that this cloudformation will be part of.
                  Used to locate other resources in the same environment.
   ServiceName:
@@ -54,7 +54,7 @@ Parameters:
     Description: Is application in debug mode?
   AppEnv:
     Type: String
-    Default: "production"
+    Default: "devuction"
     Description: Type of environment that service running on.
   AppKey:
     Type: String

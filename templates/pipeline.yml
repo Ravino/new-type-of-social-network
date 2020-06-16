@@ -17,7 +17,7 @@ Parameters:
     Default: jadebrrltd
   EnvironmentName:
     Type: String
-    Default: prod
+    Default: dev
 
 Resources:
   # Create the ECR respository to hold built docker images
@@ -392,7 +392,7 @@ Resources:
                 RoleArn: !GetAtt CloudFormationDeployRole.Arn
                 StackName: !Sub ${EnvironmentName}-base-resources
                 TemplatePath: Source::templates/cluster.yml
-                Capabilities: CAPABILITY_IAM
+                Capabilities: CAPABILITY_IAM, CAPABILITY_NAMED_IAM, CAPABILITY_AUTO_EXPAND
                 ParameterOverrides: !Sub |
                   {
                     "EnvironmentName": "${EnvironmentName}"
@@ -417,7 +417,7 @@ Resources:
                 RoleArn: !GetAtt CloudFormationDeployRole.Arn
                 StackName: !Sub ${EnvironmentName}-chat-resources
                 TemplatePath: Source::templates/resources.yml
-                Capabilities: CAPABILITY_IAM
+                Capabilities: CAPABILITY_IAM, CAPABILITY_NAMED_IAM, CAPABILITY_AUTO_EXPAND
                 ParameterOverrides: !Sub |
                   {
                     "EnvironmentName": "${EnvironmentName}"
@@ -501,8 +501,12 @@ Resources:
                 RoleArn: !GetAtt CloudFormationDeployRole.Arn
                 StackName: !Sub ${EnvironmentName}-back-ws
                 TemplatePath: Source::templates/back-ws.yml
-                Capabilities: CAPABILITY_IAM
-                ParameterOverrides: '{"EnvironmentName":"${EnvironmentName}","ImageUrl":{"Fn::GetParam":["BackWSOutput","build.json","ImageUri"]}}'
+                Capabilities: CAPABILITY_IAM, CAPABILITY_NAMED_IAM, CAPABILITY_AUTO_EXPAND
+                ParameterOverrides: !Sub |
+                  {
+                    "EnvironmentName": "${EnvironmentName}",
+                    "ImageUrl":{"Fn::GetParam":["BackWSBuildOutput","build.json","ImageUri"]}
+                  }
               InputArtifacts:
                 - Name: Source
               OutputArtifacts:
@@ -516,11 +520,17 @@ Resources:
                 Provider: CloudFormation
               Configuration:
                 ActionMode: CREATE_UPDATE
+                OutputFileName: Source::back-queue-worker/output.json
                 RoleArn: !GetAtt CloudFormationDeployRole.Arn
                 StackName: !Sub ${EnvironmentName}-back-queue-worker
+                TemplateConfiguration: Source::back-queue-worker/configuration.json
                 TemplatePath: Source::templates/back-queue-worker.yml
-                Capabilities: CAPABILITY_IAM
-                ParameterOverrides: '{"EnvironmentName":"${EnvironmentName}","ImageUrl":{"Fn::GetParam":["BackQueueWorkerOutput","build.json","ImageUri"]}}'
+                Capabilities: CAPABILITY_IAM,CAPABILITY_NAMED_IAM,CAPABILITY_AUTO_EXPAND, CAPABILITY_NAMED_IAM, CAPABILITY_AUTO_EXPAND
+                ParameterOverrides: !Sub |
+                  {
+                    "EnvironmentName": "${EnvironmentName}",
+                    "ImageUrl":{"Fn::GetParam":["BackQueueWorkerBuildOutput","build.json","ImageUri"]}
+                  }
               InputArtifacts:
                 - Name: Source
               OutputArtifacts:
@@ -537,8 +547,12 @@ Resources:
                 RoleArn: !GetAtt CloudFormationDeployRole.Arn
                 StackName: !Sub ${EnvironmentName}-back-api
                 TemplatePath: Source::templates/back-api.yml
-                Capabilities: CAPABILITY_IAM
-                ParameterOverrides: '{"EnvironmentName":"${EnvironmentName}","ImageUrl":{"Fn::GetParam":["BackApiOutput","build.json","ImageUri"]}}'
+                Capabilities: CAPABILITY_IAM, CAPABILITY_NAMED_IAM, CAPABILITY_AUTO_EXPAND
+                ParameterOverrides: !Sub |
+                  {
+                    "EnvironmentName": "${EnvironmentName}",
+                    "ImageUrl":{"Fn::GetParam":["BackApiBuildOutput","build.json","ImageUri"]}
+                  }
               InputArtifacts:
                 - Name: Source
               OutputArtifacts:
@@ -555,8 +569,12 @@ Resources:
                 RoleArn: !GetAtt CloudFormationDeployRole.Arn
                 StackName: !Sub ${EnvironmentName}-front-nginx
                 TemplatePath: Source::templates/front-nginx.yml
-                Capabilities: CAPABILITY_IAM
-                ParameterOverrides: '{"EnvironmentName":"${EnvironmentName}","ImageUrl":{"Fn::GetParam":["FrontNginxOutput","build.json","ImageUri"]}}'
+                Capabilities: CAPABILITY_IAM, CAPABILITY_NAMED_IAM, CAPABILITY_AUTO_EXPAND
+                ParameterOverrides: !Sub |
+                  {
+                    "EnvironmentName": "${EnvironmentName}",
+                    "ImageUrl":{"Fn::GetParam":["FrontNginxBuildOutput","build.json","ImageUri"]}
+                  }
               InputArtifacts:
                 - Name: Source
               OutputArtifacts:

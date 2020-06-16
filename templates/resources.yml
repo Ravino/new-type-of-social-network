@@ -3,7 +3,7 @@ Description: Redis, and any other resources that the chat app needs.
 Parameters:
   EnvironmentName:
     Type: String
-    Default: prod
+    Default: dev
     Description: The environment name, used for locating outputs from the
                  prerequisite stacks
 Resources:
