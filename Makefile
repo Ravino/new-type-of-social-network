@@ -1,8 +1,8 @@
 # configuration
-ENV="dev"
-STACK_NAME=dev-plizi-fun
+ENV="test"
+STACK_NAME=test-plizi-fun
 USERNAME=admin
-TOKEN=Console-CreateStack-988ec83f-9ffc-d8ef-99b7-e8763c8da9c8
+TOKEN=/c5e12905-bd91-c060-e794-70e2a80a116e
 
 # scripts
 run:
@@ -14,7 +14,8 @@ create:
 		--capabilities CAPABILITY_IAM  \
 		--disable-rollback \
 		--no-enable-termination-protection \
-		--client-request-token $(TOKEN)
+		--client-request-token cea9cf10-afe8-11ea-84ed-0a0c9a06689c
+		#StackId": "arn:aws:cloudformation:eu-central-1:884088487044:stack/test-plizi-fun/82bf5740-afe9-11ea-93d6-0a58cd169056"
 delete:
 	aws cloudformation delete-stack --stack-name $(STACK_NAME)
 purge:
@@ -29,3 +30,6 @@ status:
 	aws cloudformation describe-stacks --output table
 events:
 	aws cloudformation describe-stack-events --stack-name $(STACK_NAME)
+deploy:
+	aws cloudformation deploy 
+	cea9cf10-afe8-11ea-84ed-0a0c9a06689c
