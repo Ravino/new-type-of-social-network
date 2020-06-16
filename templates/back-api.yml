@@ -54,7 +54,7 @@ Parameters:
     Description: Is application in debug mode?
   AppEnv:
     Type: String
-    Default: "production"
+    Default: "devuction"
     Description: Type of environment that service running on.
   AppKey:
     Type: String
@@ -86,23 +86,23 @@ Parameters:
     Description: Database connection type.
   DbDatabase:
     Type: String
-    Default: !Join [':', [!Ref 'EnvironmentName', 'MySQLDBName']]
+    Default: "dev-plizi"
     Description: Database name.
   DbHost:
     Type: String
-    Default: !Join [':', [!Ref 'EnvironmentName', 'MySQLDBHost']]
+    Default: "new-back-mysql.dev"
     Description: Database host address.
   DbPassword:
     Type: String
-    Default: !Join [':', [!Ref 'EnvironmentName', 'MySQLPass']]
+    Default: "ecugVWHKatKQd657"
     Description: Database connection password.
   DbPort:
     Type: Number
-    Default: !Join [':', [!Ref 'EnvironmentName', 'MySQLDBPort']]
+    Default: 3306
     Description: Database connection port.
   DbUsername:
     Type: String
-    Default: !Join [':', [!Ref 'EnvironmentName', 'MySQLUser']]
+    Default: "root"
     Description: Database connection username.
   JwtBlacklistEnabled:
     Type: Number
@@ -150,19 +150,19 @@ Parameters:
     Description: Mail username.
   MongoDbDatabase:
     Type: String
-    Default: !Join [':', [!Ref 'EnvironmentName', 'MongoDBName']]
+    Default: "admin"
     Description: MongoDB database name.
   MongoDbHost:
     Type: String
-    Default: !Join [':', [!Ref 'EnvironmentName', 'MongoDBHost']]
+    Default: "new-back-mongo.dev"
     Description: MongoDB database host.
   MongoDbPassword:
     Type: String
-    Default: !Join [':', [!Ref 'EnvironmentName', 'MongoDBPass']]
+    Default: "Tksx2PPDba8Ny0lZ"
     Description: MongoDB database password.
   MongoDbUsername:
     Type: String
-    Default: !Join [':', [!Ref 'EnvironmentName', 'MongoDBUser']]
+    Default: "plizi"
     Description: MongoDB database username.
   Neo4DbBoltPort:
     Type: Number
@@ -190,11 +190,11 @@ Parameters:
     Description: Queue connection type [sync, redis, rebbitmq].
   RedisHost:
     Type: String
-    Default: !Join [ ':', [ !Ref 'EnvironmentName', 'RedisHost' ]]
+    Default: "new-redis.dev"
     Description: Redis host.
   RedisPort:
     Type: Number
-    Default: !Join [ ':', [ !Ref 'EnvironmentName', 'RedisPort' ]]
+    Default: 6379
     Description: Redis port.
   SentryLaravelDsn:
     Type: String
@@ -206,7 +206,7 @@ Parameters:
     Description: Swoole http host.
   ZmqSubHost:
     Type: String
-    Default: !Join [':', [!Ref 'EnvironmentName', 'BackWSServiceAddress']]
+    Default: "new-back-ws.dev"
     Description: ZeroMQ sub host
 
 Resources:
@@ -323,10 +323,6 @@ Resources:
               Value: !Ref 'EnvironmentName'
             - Name: REGION
               Value: !Ref 'AWS::Region'
-            - Name: REDIS_ENDPOINT
-              Value:
-                Fn::ImportValue:
-                  !Join [':', [!Ref 'EnvironmentName', 'RedisEndpoint']]
           PortMappings:
             - ContainerPort: !Ref 'ContainerPort'
           LogConfiguration:
