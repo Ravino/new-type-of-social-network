@@ -44,17 +44,17 @@ Parameters:
     Default: 1
     Description: How many copies of the service task to run
 
-  ApiUri:
+  ApiUrl:
     Type: String
     Default: "https://dev.plizi.fun/"
     Description: Path to external api dns.
   AppDebug:
-    Type: Boolean
-    Default: true
+    Type: Number
+    Default: 1
     Description: Is application in debug mode?
   AppEnv:
     Type: String
-    Default: "prod"
+    Default: "production"
     Description: Type of environment that service running on.
   AppKey:
     Type: String
@@ -64,7 +64,7 @@ Parameters:
     Type: String
     Default: "PLIZI: Социальная сеть"
     Description: Application displayable name.
-  AwsAccessKeyID:
+  AwsAccessKeyId:
     Type: String
     Default: "AKIAIBMISJ3W5T6P3ULA"
     Description: AWS access key id.
@@ -105,16 +105,16 @@ Parameters:
     Default: "root"
     Description: Database connection username.
   JwtBlacklistEnabled:
-    Type: Boolean
-    Default: true
+    Type: Number
+    Default: 1
     Description: JWT blacklist.
   JwtTtl:
     Type: Number
     Default: 4320
     Description: JWT TTL.
   LadaCacheActive:
-    Type: Boolean
-    Default: false
+    Type: Number
+    Default: 0
     Description: Caching dublicated queries.
   MailEncryption:
     Type: String
@@ -238,7 +238,7 @@ Resources:
           Image: !Ref 'ImageUrl'
           Environment:
             - Name: API_URL
-              Value: !Ref 'AppUrl'
+              Value: !Ref 'ApiUrl'
             - Name: APP_DEBUG
               Value: !Ref 'AppDebug'
             - Name: APP_ENV
@@ -343,7 +343,7 @@ Resources:
     Type: AWS::ECS::Service
     DependsOn:
       - HTTPRule
-      - HTTPSRule
+    #  - HTTPSRule
     Properties:
       ServiceName: !Ref 'ServiceName'
       Cluster:
