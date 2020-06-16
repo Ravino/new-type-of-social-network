@@ -149,6 +149,9 @@ Resources:
       LoadBalancerAttributes:
         - Key: idle_timeout.timeout_seconds
           Value: '30'
+        # TODO add netwrk load balancer
+        #-Key: load_balancing.cross_zone.enabled
+        #  Value: true
       Subnets:
         # The load balancer is placed into the public subnets, so that traffic
         # from the internet can reach the load balancer directly via the internet gateway
