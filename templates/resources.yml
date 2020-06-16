@@ -70,7 +70,7 @@ Resources:
           EC2SecurityGroupId: 
             Fn::ImportValue:
               !Join [':', [!Ref 'EnvironmentName', 'FargateContainerSecurityGroup']]
-          EC2SecurityGroupName: !Ref 'FargateContainerSecurityGroup'
+          #EC2SecurityGroupName: !Ref 'FargateContainerSecurityGroup'
       EC2VpcId: 
         Fn::ImportValue:
           !Join [':', [!Ref 'EnvironmentName', 'VPCId']]
