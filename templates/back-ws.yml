@@ -90,7 +90,9 @@ Parameters:
     Description: Database name.
   DbHost:
     Type: String
-    Default: "new-back-mysql.dev"
+    Default:
+      Fn::ImportValue:
+        !Join [':', [!Ref 'EnvironmentName', 'RedisEndpoint']]
     Description: Database host address.
   DbPassword:
     Type: String
@@ -190,11 +192,11 @@ Parameters:
     Description: Queue connection type [sync, redis, rebbitmq].
   RedisHost:
     Type: String
-    Default: "new-redis.dev"
+    Default: !Join [ ':', [ !Ref 'EnvironmentName', 'RedisHost' ]]
     Description: Redis host.
   RedisPort:
     Type: Number
-    Default: 6379
+    Default: !Join [ ':', [ !Ref 'EnvironmentName', 'RedisPort' ]]
     Description: Redis port.
   SentryLaravelDsn:
     Type: String
@@ -572,3 +574,9 @@ Resources:
       ComparisonOperator: GreaterThanOrEqualToThreshold
       AlarmActions:
         - !Ref ScaleUpPolicy
+
+Outputs:
+  BackWsEndpoint:
+    Value: !GetAtt 'BackWS.Address'
+    Export:
+      Name: !Join [ '-', [ !Ref 'EnvironmentName', 'ClusterName' ] ]
