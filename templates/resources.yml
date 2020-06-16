@@ -54,19 +54,27 @@ Resources:
   ## RDS (MySQL) Port: 3306
   ##
   MySQLSubnetGroup:
-    Type: AWS::RDS::DBSubnetGroup
+    Type: "AWS::RDS::DBSubnetGroup"
     Properties:
-      SubnetIds:
+      DBSubnetGroupDescription: description #required
+      SubnetIds: #required
         - Fn::ImportValue:
             !Join [':', [!Ref 'EnvironmentName', 'PublicSubnetOne']]
         - Fn::ImportValue:
-            !Join [':', [!Ref 'EnvironmentName', 'PublicSubnetTwo']]
+            !Join [':', [!Ref 'EnvironmentName', 'PublicSubnetTwo']]       
   MySQLSecurityGroup:
-    Type: AWS::EC2::SecurityGroup
+    Type: "AWS::RDS::DBSecurityGroup"
     Properties:
-      VpcId:
+      DBSecurityGroupIngress: #required
+        - 
+          EC2SecurityGroupId: 
+            Fn::ImportValue:
+              !Join [':', [!Ref 'EnvironmentName', 'FargateContainerSecurityGroup']]
+          EC2SecurityGroupName: !Ref 'FargateContainerSecurityGroup'
+      EC2VpcId: 
         Fn::ImportValue:
           !Join [':', [!Ref 'EnvironmentName', 'VPCId']]
+      GroupDescription: description #required
   MySQLIngress:
     Type: AWS::EC2::SecurityGroupIngress
     Properties:
@@ -88,7 +96,6 @@ Resources:
       MasterUsername: 'root'
       MasterUserPassword: 'ecugVWHKatKQd657'
     DeletionPolicy: Snapshot
-
   ##
   ## DocumentDB (Mongo) Port 27017
   ##
@@ -100,6 +107,7 @@ Resources:
             !Join [':', [!Ref 'EnvironmentName', 'PublicSubnetOne']]
         - Fn::ImportValue:
             !Join [':', [!Ref 'EnvironmentName', 'PublicSubnetTwo']]
+
   MongoInstance:
     Type: "AWS::DocDB::DBInstance"
     Properties:
@@ -205,6 +213,7 @@ Resources:
                 - docdb:*
                 - elasticache:*
               Resource: "*"
+              
 Outputs:
   RedisEndpoint:
     Value: !GetAtt 'Redis.RedisEndpoint.Address'
