@@ -1,3 +1,6 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Description: Common pipeline for application assembling and deployment.
+
 Parameters:
   GitHubRepo:
     Type: String
@@ -393,7 +396,7 @@ Resources:
                 ParameterOverrides: '{"EnvironmentName": "${EnvironmentName}"}'
               InputArtifacts:
                 - Name: Source
-              OutputArtifacts:
+              OutputArtifacts:  
                 - Name: BaseResourcesDeployOutput
 
         # And we deploy the application resources (Elasticache, RDS, DocumentDB, etc)
