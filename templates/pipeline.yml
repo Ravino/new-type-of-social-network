@@ -18,6 +18,10 @@ Parameters:
   EnvironmentName:
     Type: String
     Default: dev
+  CertificateArn:
+    Type: String
+    Default: arn:aws:acm:eu-central-1:884088487044:certificate/4444446f-1db7-46ee-b983-cca853830df1
+    Description: ARN of the Amazon Certificate Manager SSL certificate to use for this app
 
 Resources:
   # Create the ECR respository to hold built docker images
@@ -581,7 +585,5 @@ Resources:
                 - Name: FrontNginxDeployOutput
 
 Outputs:
-  PipelineUrl:
-    Value: !Sub https://console.aws.amazon.com/codepipeline/home?region=${AWS::Region}#/view/${Pipeline}
   PipelineId:
     Value: ${Pipeline}

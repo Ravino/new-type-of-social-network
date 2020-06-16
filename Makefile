@@ -1,6 +1,8 @@
 # configuration
 ENV="dev"
 STACK_NAME=dev-plizi-fun
+USERNAME=admin
+TOKEN=Console-CreateStack-988ec83f-9ffc-d8ef-99b7-e8763c8da9c8
 
 # scripts
 run:
@@ -9,9 +11,10 @@ create:
 	aws cloudformation create-stack --stack-name $(STACK_NAME) \
 		--template-body=file://templates/pipeline.yml \
 		--parameters ParameterKey=EnvironmentName,ParameterValue=$(ENV) \
-		--capabilities CAPABILITY_IAM CAPABILITY_NAMED_IAM CAPABILITY_AUTO_EXPAND  \
+		--capabilities CAPABILITY_IAM  \
 		--disable-rollback \
-		--no-enable-termination-protection
+		--no-enable-termination-protection \ 
+		--client-request-token $(TOKEN)
 delete:
 	aws cloudformation delete-stack --stack-name $(STACK_NAME)
 purge:
