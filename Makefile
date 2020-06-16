@@ -34,4 +34,4 @@ deploy:
 	aws cloudformation deploy 
 	cea9cf10-afe8-11ea-84ed-0a0c9a06689c
 hotfix:
-	git commit -a -m "Hotfix deploy" && git-push
+	git commit -a -m "Hotfix deploy" && git push
