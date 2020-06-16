@@ -217,6 +217,23 @@ Resources:
               Resource: "*"
               
 Outputs:
+  MongoDBName: 
+    Value: 'admin'
+    Export:
+      Name: !Join [ ':', [ !Ref 'EnvironmentName', 'MongoDBName' ] ]
+  MongoDBHost: 
+    Value: !GetAtt 'MongoDBHost.Endpoint.Host'
+    Export:
+      Name: !Join [ ':', [ !Ref 'EnvironmentName', 'MongoDBHost' ] ]
+  MongoDBUser: 
+    Value: !GetAtt 'MongoDB.MasterUsername'
+    Export:
+      Name: !Join [ ':', [ !Ref 'EnvironmentName', 'MongoDBUser' ] ]
+  MongoDBPass: 
+    Value: !GetAtt 'MongoDB.MasterUserPassword'
+    Export:
+      Name: !Join [ ':', [ !Ref 'EnvironmentName', 'MongoDBPass' ] ]
+
   MySQLDBName: 
     Value: !GetAtt 'MySQL.DBName'
     Export:
