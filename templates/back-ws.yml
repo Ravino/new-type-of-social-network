@@ -90,9 +90,7 @@ Parameters:
     Description: Database name.
   DbHost:
     Type: String
-    Default:
-      Fn::ImportValue:
-        !Join [':', [!Ref 'EnvironmentName', 'RedisEndpoint']]
+    Default: "host"
     Description: Database host address.
   DbPassword:
     Type: String
