@@ -323,10 +323,6 @@ Resources:
               Value: !Ref 'EnvironmentName'
             - Name: REGION
               Value: !Ref 'AWS::Region'
-            - Name: REDIS_ENDPOINT
-              Value:
-                Fn::ImportValue:
-                  !Join [':', [!Ref 'EnvironmentName', 'RedisEndpoint']]
           PortMappings:
             - ContainerPort: !Ref 'ContainerPort'
           LogConfiguration:

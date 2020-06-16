@@ -215,10 +215,14 @@ Resources:
               Resource: "*"
               
 Outputs:
-  RedisEndpoint:
+  RedisHost:
     Value: !GetAtt 'Redis.RedisEndpoint.Address'
     Export:
-      Name: !Join [ ':', [ !Ref 'EnvironmentName', 'RedisEndpoint' ] ]
+      Name: !Join [ ':', [ !Ref 'EnvironmentName', 'RedisHost' ] ]
+  RedisPort:
+    Value: !GetAtt 'Redis.RedisEndpoint.Port'
+    Export:
+      Name: !Join [ ':', [ !Ref 'EnvironmentName', 'RedisPort' ] ]
   BackWSRole:
     Value: !GetAtt 'BackWSRole.Arn'
     Export:
