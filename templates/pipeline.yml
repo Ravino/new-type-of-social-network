@@ -393,7 +393,10 @@ Resources:
                 StackName: !Sub ${EnvironmentName}-base-resources
                 TemplatePath: Source::templates/cluster.yml
                 Capabilities: CAPABILITY_IAM
-                ParameterOverrides: '{"EnvironmentName": "${EnvironmentName}"}'
+                ParameterOverrides: !Sub |
+                  {
+                    "EnvironmentName": "${EnvironmentName}"
+                  }
               InputArtifacts:
                 - Name: Source
               OutputArtifacts:  
