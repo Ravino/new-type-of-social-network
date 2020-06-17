@@ -214,8 +214,106 @@ Resources:
   # While the build is in progress we need a place to store artifacts
   ArtifactBucket:
     Type: AWS::S3::Bucket
+    Properties:
+      BucketName: !Sub '${AWS::StackName}-${AWS::Region}-${AWS::StackName}'
+      Tags: 
+        - Key: Type
+          Value: Project
+        - Key: Name
+          Value: !Ref 'AWS::StackName'
+        - Key: Region
+          Value: !Ref 'AWS::Region'
+        - Key: Environment
+          Value: !Ref 'EnvironmentName'
+      # Replication bucket should be in different region then current
+      # ReplicationConfiguration:
+      #   Role: !GetAtt [ArtifactBucketBackupRole, Arn]
+      #   Rules:
+      #   - Destination:
+      #       BucketArn: !GetAtt ['ArtifactBucketMetadata', 'Arn']
+      #       StorageClass: GLACIER
+      #       Prefix: 'backup'
+      #     Status: Enabled
+      #   - Destination:
+      #       BucketArn: !GetAtt ['ArtifactBucketMetadata', 'Arn']
+      #       StorageClass: STANDARD
+      #       Prefix: 'replica'
+      #     Status: Enabled
+      InventoryConfigurations:
+        - Id: WeeklyInventoryConfiguration
+          Destination:
+            BucketArn: !Join ['-', ['arn:aws:s3:::', !Ref 'AWS::StackName', !Ref 'AWS::Region', !Ref 'AWS::StackName']] # TODO Possible round-dependency
+            Format: CSV
+            Prefix: Inventory
+          IncludedObjectVersions: Current
+          Prefix: Weekly
+          ScheduleFrequency: Weekly
+          Enabled: true
+        - Id: DailyInventoryConfiguration
+          Destination:
+            BucketArn: !Join ['-', ['arn:aws:s3:::', !Ref 'AWS::StackName', !Ref 'AWS::Region', !Ref 'AWS::StackName']] # TODO Possible round-dependency
+            Format: CSV
+            Prefix: Inventory
+          IncludedObjectVersions: Current
+          Prefix: Daily
+          ScheduleFrequency: Daily
+          Enabled: true
+      LifecycleConfiguration:
+        Rules:
+          - Id: AbortBrokenData
+            AbortIncompleteMultipartUpload: 
+              DaysAfterInitiation: 1
+            Status: Enabled
+          - Id: DeleteAfterBecomingNonCurrent
+            NoncurrentVersionExpirationInDays: 100
+            NoncurrentVersionTransitions: 
+              - StorageClass: GLACIER
+                TransitionInDays: 182
+              - StorageClass: DEEP_ARCHIVE
+                TransitionInDays: 365
+            #TagFilters: 
+            #  - Key: Type
+            #    Value: Artifact
+            Status: Enabled
+      #LoggingConfiguration: 
+      #AnalyticsConfiguration:
+      #QueueConfiguration:
     DeletionPolicy: Retain
     UpdateReplacePolicy: Retain
+
+  # Role for artifact backup managent
+  # ArtifactBucketBackupRole:
+  #   Type: AWS::IAM::Role
+  #   Properties:
+  #     Path: /
+  #     AssumeRolePolicyDocument:
+  #       Version: 2012-10-17
+  #       Statement:
+  #         - Effect: Allow
+  #           Principal:
+  #             Service: s3.amazonaws.com
+  #           Action: sts:AssumeRole
+  
+  # Policy for artifact backup managent (separate to prevent circular dependency)
+  # BucketBackupPolicy:
+  #   Type: AWS::IAM::Policy
+  #   Properties:
+  #     Path: /
+  #     PolicyDocument:
+  #       Statement:
+  #         - Effect: Allow
+  #           Action: ['s3:GetReplicationConfiguration', 's3:ListBucket']
+  #           Resource:
+  #           - !Join ['', ['arn:aws:s3:::', !Ref 'RecordServiceS3Bucket']]
+  #         - Effect: Allow
+  #           Action: ['s3:GetObjectVersion', 's3:GetObjectVersionAcl']
+  #           Resource:
+  #           - !Join ['', ['arn:aws:s3:::', !Ref 'RecordServiceS3Bucket', /*]]
+  #         - Effect: Allow
+  #           Action: ['s3:ReplicateObject', 's3:ReplicateDelete']
+  #           Resource:
+  #           - !Join ['', ['arn:aws:s3:::', !Join ['-', [!Ref 'AWS::Region', !Ref 'AWS::StackName',
+  #                   replicationbucket]], /*]]
 
   # This is the definition of how to build the code in the repository
   BackWS:
