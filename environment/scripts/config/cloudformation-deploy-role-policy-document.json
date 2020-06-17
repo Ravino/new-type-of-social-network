@@ -1,0 +1,26 @@
+{
+    "Version": "2012-10-17",
+    "Statement": [
+        {
+            "Action": [
+                "iam:*",
+                "ec2:*",
+                "ecs:*",
+                "ecr:*",
+                "elasticloadbalancing:*",
+                "autoscaling:*",
+                "application-autoscaling:*",
+                "rds:*",
+                "elasticache:*",
+                "logs:*",
+                "cloudwatch:*",
+                "route53:*",
+                "sns:*",
+                "sqs:*",
+                "ssm:*"
+            ],
+            "Resource": "*",
+            "Effect": "Allow"
+        }
+    ]
+}
