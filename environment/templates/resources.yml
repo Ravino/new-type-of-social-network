@@ -3,7 +3,7 @@ Description: Redis, and any other resources that the chat app needs.
 Parameters:
   EnvironmentName:
     Type: String
-    Default: dev
+    Default: test
     Description: The environment name, used for locating outputs from the
                  prerequisite stacks
 
@@ -279,7 +279,7 @@ Outputs:
     Value: !GetAtt 'MySQL.Endpoint.Port'
     Export:
       Name: !Join [ ':', [ !Ref 'EnvironmentName', 'MySQLDBPort' ] ]
-      
+
   RedisHost:
     Value: !GetAtt 'Redis.RedisEndpoint.Address'
     Export:

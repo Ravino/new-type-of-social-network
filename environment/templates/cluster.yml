@@ -4,7 +4,7 @@ Description: The baseline resources used to create a Fargate environment
 Parameters:
   EnvironmentName:
     Type: String
-    Default: dev
+    Default: test
     Description: A name for the environment that this cloudformation will be part of.
   CertificateArn:
     Type: String
