@@ -117,7 +117,7 @@ Resources:
       AllocatedStorage: '10' # TODO Adjust for highload. GB of storage
       DBInstanceClass: db.m4.large
       Engine: MySQL
-      DBSnapshotIdentifier: !Ref 'MySQLDBName'
+      #DBSnapshotIdentifier: !Ref 'MySQLDBName'
       DBName: !Ref 'MySQLDBName'
       MasterUsername: !Ref 'MySQLDBMasterUsername'
       MasterUserPassword: !Ref 'MySQLDBMasterUserPassword'
