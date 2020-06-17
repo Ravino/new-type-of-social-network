@@ -30,6 +30,8 @@ Parameters:
     Default: 'Tksx2PPDba8Ny0lZ'
     NoEcho: true
     Description: MongoDB admin user password.
+# TODO Highload: UPDATE Service cluster Resources and IO
+# TODO Highload: UPDATE DB-cluster Resources and IO
 Resources:
   ##
   ## REDIS (AWS ElasticCache), Port: 6376
@@ -69,7 +71,7 @@ Resources:
       NumCacheNodes: 2 # TODO change to 3
       CacheSubnetGroupName: !Ref 'RedisSubnetGroup'
       VpcSecurityGroupIds:
-        - !GetAtt 'RedisSecurityGroup.GroupId'
+        - !GetAtt 'RedisSecurityGroup.GroupId'    # TIDO consider about using FargateContainerSecurityGroup instead
       PreferredAvailabilityZones:
         - eu-central-1a
         - eu-central-1b
@@ -112,9 +114,6 @@ Resources:
   MySQL:
     Type: AWS::RDS::DBInstance
     Properties:
-      DBSecurityGroups:
-      - Fn::ImportValue:
-          !Join [':', [!Ref 'EnvironmentName', 'FargateContainerSecurityGroup']]
       AllocatedStorage: '10' # TODO Adjust for highload. GB of storage
       DBInstanceClass: db.m4.large
       Engine: MySQL
@@ -122,6 +121,9 @@ Resources:
       DBName: !Ref 'MySQLDBName'
       MasterUsername: !Ref 'MySQLDBMasterUsername'
       MasterUserPassword: !Ref 'MySQLDBMasterUserPassword'
+      VPCSecurityGroups:
+        - Fn::ImportValue:
+            !Join [':', [!Ref 'EnvironmentName', 'FargateContainerSecurityGroup']] # Possibly have to provide VPCid itself
     DeletionPolicy: Snapshot
     UpdateReplacePolicy: Snapshot # TODO Check how does it works with table updates
   ##
@@ -151,8 +153,8 @@ Resources:
       MasterUsername: !Ref 'MongoDBMasterUsername' #required
       MasterUserPassword: !Ref 'MongoDBMasterUserPassword' #required
       VpcSecurityGroupIds:
-        Fn::ImportValue:
-          !Join [':', [!Ref 'EnvironmentName', 'VPCId']]
+        - Fn::ImportValue:
+            !Join [':', [!Ref 'EnvironmentName', 'FargateContainerSecurityGroup']] # Possibly have to provide VPCid itself
   MongoInstance:
     Type: "AWS::DocDB::DBInstance"
     Properties:
