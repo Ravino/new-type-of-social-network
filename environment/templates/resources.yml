@@ -9,7 +9,7 @@ Parameters:
 
   MySQLDBName:
     Type: String
-    Default: 'dev-plizi'
+    Default: 'devplizi'
     Description: MySQLDB database default name.
   MySQLDBMasterUsername:
     Type: String
