@@ -24,28 +24,34 @@ Parameters:
     Description: ARN of the Amazon Certificate Manager SSL certificate to use for this app
 
 Resources:
+  # TODO: DeletionPolicy for prod put 'Retain' or 'Snapshot'
+
   # Create the ECR respository to hold built docker images
   BackWSRepository:
     Type: AWS::ECR::Repository
-    DeletionPolicy: Retain
+    DeletionPolicy: Delete
+    UpdateReplacePolicy: Retain
     Properties:
       RepositoryName: !Sub ${EnvironmentName}-back-ws
 
   BackQueueWorkerRepository:
     Type: AWS::ECR::Repository
-    DeletionPolicy: Retain
+    DeletionPolicy: Delete
+    UpdateReplacePolicy: Retain
     Properties:
       RepositoryName: !Sub ${EnvironmentName}-back-queue-worker
 
   FrontNginxRepository:
     Type: AWS::ECR::Repository
-    DeletionPolicy: Retain
+    DeletionPolicy: Delete
+    UpdateReplacePolicy: Retain
     Properties:
       RepositoryName: !Sub ${EnvironmentName}-front-nginx
 
   BackApiRepository:
     Type: AWS::ECR::Repository
-    DeletionPolicy: Retain
+    DeletionPolicy: Delete
+    UpdateReplacePolicy: Retain
     Properties:
       RepositoryName: !Sub ${EnvironmentName}-back-api
 
@@ -91,6 +97,26 @@ Resources:
                   - ecr:UploadLayerPart
                   - ecr:CompleteLayerUpload
               - Resource: !Sub arn:aws:ecr:${AWS::Region}:${AWS::AccountId}:repository/${BackQueueWorkerRepository}
+                Effect: Allow
+                Action:
+                  - ecr:GetDownloadUrlForLayer
+                  - ecr:BatchGetImage
+                  - ecr:BatchCheckLayerAvailability
+                  - ecr:PutImage
+                  - ecr:InitiateLayerUpload
+                  - ecr:UploadLayerPart
+                  - ecr:CompleteLayerUpload
+              - Resource: !Sub arn:aws:ecr:${AWS::Region}:${AWS::AccountId}:repository/${BackApiRepository}
+                Effect: Allow
+                Action:
+                  - ecr:GetDownloadUrlForLayer
+                  - ecr:BatchGetImage
+                  - ecr:BatchCheckLayerAvailability
+                  - ecr:PutImage
+                  - ecr:InitiateLayerUpload
+                  - ecr:UploadLayerPart
+                  - ecr:CompleteLayerUpload
+              - Resource: !Sub arn:aws:ecr:${AWS::Region}:${AWS::AccountId}:repository/${FrontNginxRepository}
                 Effect: Allow
                 Action:
                   - ecr:GetDownloadUrlForLayer
@@ -188,7 +214,8 @@ Resources:
   # While the build is in progress we need a place to store artifacts
   ArtifactBucket:
     Type: AWS::S3::Bucket
-    DeletionPolicy: Retain
+    DeletionPolicy: Delete
+    UpdateReplacePolicy: Retain
 
   # This is the definition of how to build the code in the repository
   BackWS:
@@ -371,7 +398,7 @@ Resources:
               ActionTypeId:
                 Category: Source
                 Owner: ThirdParty
-                Version: 1
+                Version: '1'
                 Provider: GitHub
               Configuration:
                 Owner: !Ref GitHubUser
@@ -389,7 +416,7 @@ Resources:
               ActionTypeId:
                 Category: Deploy
                 Owner: AWS
-                Version: 1
+                Version: '1'
                 Provider: CloudFormation
               Configuration:
                 ActionMode: CREATE_UPDATE
@@ -415,7 +442,7 @@ Resources:
               ActionTypeId:
                 Category: Deploy
                 Owner: AWS
-                Version: 1
+                Version: '1'
                 Provider: CloudFormation
               Configuration:
                 ActionMode: CREATE_UPDATE
@@ -437,7 +464,7 @@ Resources:
               ActionTypeId:
                 Category: Build
                 Owner: AWS
-                Version: 1
+                Version: '1'
                 Provider: CodeBuild
               Configuration:
                 ProjectName: !Ref BackWS
@@ -452,7 +479,7 @@ Resources:
               ActionTypeId:
                 Category: Build
                 Owner: AWS
-                Version: 1
+                Version: '1'
                 Provider: CodeBuild
               Configuration:
                 ProjectName: !Ref BackQueueWorker
@@ -467,7 +494,7 @@ Resources:
               ActionTypeId:
                 Category: Build
                 Owner: AWS
-                Version: 1
+                Version: '1'
                 Provider: CodeBuild
               Configuration:
                 ProjectName: !Ref BackApi
@@ -482,7 +509,7 @@ Resources:
               ActionTypeId:
                 Category: Build
                 Owner: AWS
-                Version: 1
+                Version: '1'
                 Provider: CodeBuild
               Configuration:
                 ProjectName: !Ref FrontNginx
@@ -499,7 +526,7 @@ Resources:
               ActionTypeId:
                 Category: Deploy
                 Owner: AWS
-                Version: 1
+                Version: '1'
                 Provider: CloudFormation
               Configuration:
                 ActionMode: CREATE_UPDATE
@@ -521,7 +548,7 @@ Resources:
               ActionTypeId:
                 Category: Deploy
                 Owner: AWS
-                Version: 1
+                Version: '1'
                 Provider: CloudFormation
               Configuration:
                 ActionMode: CREATE_UPDATE
@@ -545,7 +572,7 @@ Resources:
               ActionTypeId:
                 Category: Deploy
                 Owner: AWS
-                Version: 1
+                Version: '1'
                 Provider: CloudFormation
               Configuration:
                 ActionMode: CREATE_UPDATE
@@ -567,7 +594,7 @@ Resources:
               ActionTypeId:
                 Category: Deploy
                 Owner: AWS
-                Version: 1
+                Version: '1'
                 Provider: CloudFormation
               Configuration:
                 ActionMode: CREATE_UPDATE
