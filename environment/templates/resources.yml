@@ -77,43 +77,44 @@ Resources:
   ## 
   # ## RDS (MySQL) Port: 3306
   # ##
-  MySQLSubnetGroup:
-    Type: "AWS::RDS::DBSubnetGroup"
-    Properties:
-      DBSubnetGroupDescription: description #required
-      SubnetIds: #required
-        - Fn::ImportValue:
-            !Join [':', [!Ref 'EnvironmentName', 'PublicSubnetOne']]
-        - Fn::ImportValue:
-            !Join [':', [!Ref 'EnvironmentName', 'PublicSubnetTwo']]       
-  MySQLSecurityGroup:
-    Type: "AWS::RDS::DBSecurityGroup"
-    Properties:
-      DBSecurityGroupIngress: #required
-        - 
-          EC2SecurityGroupId: 
-            Fn::ImportValue:
-              !Join [':', [!Ref 'EnvironmentName', 'FargateContainerSecurityGroup']]
-          #EC2SecurityGroupName: !Ref 'FargateContainerSecurityGroup'
-      EC2VpcId: 
-        Fn::ImportValue:
-          !Join [':', [!Ref 'EnvironmentName', 'VPCId']]
-      GroupDescription: description #required
-  MySQLIngress:
-    Type: AWS::EC2::SecurityGroupIngress
-    Properties:
-      GroupId: !Ref 'MySQLSecurityGroup'
-      IpProtocol: tcp
-      FromPort: 3306
-      ToPort: 3306
-      SourceSecurityGroupId:
-        Fn::ImportValue:
-          !Join [':', [!Ref 'EnvironmentName', 'FargateContainerSecurityGroup']]
+  # MySQLSubnetGroup:
+  #   Type: "AWS::RDS::DBSubnetGroup"
+  #   Properties:
+  #     DBSubnetGroupDescription: description #required
+  #     SubnetIds: #required
+  #       - Fn::ImportValue:
+  #           !Join [':', [!Ref 'EnvironmentName', 'PublicSubnetOne']]
+  #       - Fn::ImportValue:
+  #           !Join [':', [!Ref 'EnvironmentName', 'PublicSubnetTwo']]       
+  # MySQLSecurityGroup:
+  #   Type: "AWS::RDS::DBSecurityGroup"
+  #   Properties:
+  #     DBSecurityGroupIngress: #required
+  #       - 
+  #         EC2SecurityGroupId: 
+  #           Fn::ImportValue:
+  #             !Join [':', [!Ref 'EnvironmentName', 'FargateContainerSecurityGroup']]
+  #         #EC2SecurityGroupName: !Ref 'FargateContainerSecurityGroup'
+  #     EC2VpcId: 
+  #       Fn::ImportValue:
+  #         !Join [':', [!Ref 'EnvironmentName', 'VPCId']]
+  #     GroupDescription: description #required
+  # MySQLIngress:
+  #   Type: AWS::EC2::SecurityGroupIngress
+  #   Properties:
+  #     GroupId: !Ref 'MySQLSecurityGroup'
+  #     IpProtocol: tcp
+  #     FromPort: 3306
+  #     ToPort: 3306
+  #     SourceSecurityGroupId:
+  #       Fn::ImportValue:
+  #         !Join [':', [!Ref 'EnvironmentName', 'FargateContainerSecurityGroup']]
   MySQL:
     Type: AWS::RDS::DBInstance
     Properties:
       DBSecurityGroups:
-      - !Ref 'MySQLSecurityGroup'
+      - Fn::ImportValue:
+          !Join [':', [!Ref 'EnvironmentName', 'FargateContainerSecurityGroup']]
       AllocatedStorage: '10' # TODO Adjust for highload. GB of storage
       DBInstanceClass: db.m4.large
       Engine: MySQL
