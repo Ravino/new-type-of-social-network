@@ -30,28 +30,28 @@ Resources:
   BackWSRepository:
     Type: AWS::ECR::Repository
     DeletionPolicy: Delete
-    UpdateReplacePolicy: Retain
+    UpdateReplacePolicy: Delete
     Properties:
       RepositoryName: !Sub ${EnvironmentName}-back-ws
 
   BackQueueWorkerRepository:
     Type: AWS::ECR::Repository
     DeletionPolicy: Delete
-    UpdateReplacePolicy: Retain
+    UpdateReplacePolicy: Delete
     Properties:
       RepositoryName: !Sub ${EnvironmentName}-back-queue-worker
 
   FrontNginxRepository:
     Type: AWS::ECR::Repository
     DeletionPolicy: Delete
-    UpdateReplacePolicy: Retain
+    UpdateReplacePolicy: Delete
     Properties:
       RepositoryName: !Sub ${EnvironmentName}-front-nginx
 
   BackApiRepository:
     Type: AWS::ECR::Repository
     DeletionPolicy: Delete
-    UpdateReplacePolicy: Retain
+    UpdateReplacePolicy: Delete
     Properties:
       RepositoryName: !Sub ${EnvironmentName}-back-api
 
@@ -214,8 +214,8 @@ Resources:
   # While the build is in progress we need a place to store artifacts
   ArtifactBucket:
     Type: AWS::S3::Bucket
-    DeletionPolicy: Retain
-    UpdateReplacePolicy: Retain
+    DeletionPolicy: Delete
+    UpdateReplacePolicy: Delete
 
   # This is the definition of how to build the code in the repository
   BackWS:
@@ -257,6 +257,7 @@ Resources:
       #  StreamName: /code-build/${AWS::StackName}
       Name: !Sub ${AWS::StackName}-back-ws
       ServiceRole: !Ref CodeBuildServiceRole
+      DeletionPolicy: 
 
   # This is the definition of how to build the code in the repository
   BackQueueWorker:
