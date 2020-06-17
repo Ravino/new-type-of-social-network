@@ -40,3 +40,5 @@ hotfix:
 	git commit -a -m "Hotfix deploy" && git push
 unstuck:
 	 aws cloudformation continue-update-rollback --stack-name $(STACK_NAME)
+	 aws cloudformation continue-update-rollback --stack-name $(STACK_NAME)-base-resources
+	 aws cloudformation continue-update-rollback --stack-name $(STACK_NAME)-chat-resources

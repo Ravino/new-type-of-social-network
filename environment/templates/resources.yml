@@ -139,6 +139,24 @@ Resources:
             !Join [':', [!Ref 'EnvironmentName', 'PublicSubnetOne']]
         - Fn::ImportValue:
             !Join [':', [!Ref 'EnvironmentName', 'PublicSubnetTwo']]
+  MongoSecurityGroup:
+    Type: AWS::EC2::SecurityGroup
+    Properties:
+      GroupDescription: "Redis Security Group"
+      VpcId:
+        Fn::ImportValue:
+          !Join [':', [!Ref 'EnvironmentName', 'VPCId']]
+  MongoIngress:
+    Type: AWS::EC2::SecurityGroupIngress
+    Properties:
+      Description: Ingress from Fargate containers
+      GroupId: !Ref 'MongoSecurityGroup'
+      IpProtocol: tcp
+      FromPort: 27017
+      ToPort: 27017
+      SourceSecurityGroupId:
+        Fn::ImportValue:
+          !Join [':', [!Ref 'EnvironmentName', 'FargateContainerSecurityGroup']]
   MongoDB:
     Type: "AWS::DocDB::DBCluster"
     Properties:
@@ -149,13 +167,13 @@ Resources:
        #- eu-central-1c  # TODO
       Port: 27017
       #DBClusterIdentifier: String
-      DBSubnetGroupName: MongoSubnetGroup
-      DeletionProtection: false
       MasterUsername: !Ref 'MongoDBMasterUsername' #required
       MasterUserPassword: !Ref 'MongoDBMasterUserPassword' #required
+      DBSubnetGroupName: MongoSubnetGroup
       VpcSecurityGroupIds:
         - Fn::ImportValue:
             !Join [':', [!Ref 'EnvironmentName', 'FargateContainerSecurityGroup']] # Possibly have to provide VPCid itself
+      DeletionProtection: false
   MongoInstance:
     Type: "AWS::DocDB::DBInstance"
     Properties:
