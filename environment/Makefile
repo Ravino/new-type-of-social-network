@@ -19,14 +19,16 @@ delete:
 	aws cloudformation delete-stack --stack-name $(STACK_NAME)
 sudo-delete:
 	aws cloudformation delete-stack --stack-name $(STACK_NAME) --role-arn $(ARN_ADMIN)
+	aws cloudformation delete-stack --stack-name $(ENV)-base-resources --role-arn $(ARN_ADMIN)
+	aws cloudformation delete-stack --stack-name $(ENV)-chat-resources --role-arn $(ARN_ADMIN)
 purge:
 	aws cloudformation delete-stack --stack-name $(STACK_NAME)
-	aws cloudformation delete-stack --stack-name "$(ENV)-base-resources"
-	aws cloudformation delete-stack --stack-name "$(ENV)-chat-resources"
-	aws ecr delete-repository --repository-name "$(ENV)-back-api"
-	aws ecr delete-repository --repository-name "$(ENV)-back-queue-worker"
-	aws ecr delete-repository --repository-name "$(ENV)-back-ws"
-	aws ecr delete-repository --repository-name "$(ENV)-front-nginx"
+	aws cloudformation delete-stack --stack-name $(ENV)-base-resources
+	aws cloudformation delete-stack --stack-name $(ENV)-chat-resources
+	aws ecr delete-repository --repository-name $(ENV)-back-api
+	aws ecr delete-repository --repository-name $(ENV)-back-queue-worker
+	aws ecr delete-repository --repository-name $(ENV)-back-ws
+	aws ecr delete-repository --repository-name $(ENV)-front-nginx
 status:
 	aws cloudformation describe-stacks --output table
 events:
