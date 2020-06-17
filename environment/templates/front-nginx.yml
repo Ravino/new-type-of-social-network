@@ -131,10 +131,8 @@ Resources:
       Protocol: HTTP
       UnhealthyThresholdCount: 2
       TargetGroupAttributes:
-        # - Key: stickiness.enabled
-        #   Value: true
         - Key: deregistration_delay.timeout_seconds
-          Value: 30
+          Value: '30' # TODO possible reason of issues for WebSockets are not forwarding messages
       VpcId:
         Fn::ImportValue:
           !Join [':', [!Ref 'EnvironmentName', 'VPCId']]
@@ -155,19 +153,19 @@ Resources:
         Fn::ImportValue:
           !Join [':', [!Ref 'EnvironmentName', 'PublicListenerHTTP']]
       Priority: !Ref 'Priority'
-   HTTPSRule:
-     Type: AWS::ElasticLoadBalancingV2::ListenerRule
-     Properties:
-       Actions:
-         - TargetGroupArn: !Ref 'TargetGroup'
-           Type: 'forward'
-       Conditions:
-         - Field: path-pattern
-           Values: [!Ref 'Path']
-       ListenerArn:
-         Fn::ImportValue:
-           !Join [':', [!Ref 'EnvironmentName', 'PublicListenerHTTPS']]
-       Priority: !Ref 'Priority'
+  HTTPSRule:
+    Type: AWS::ElasticLoadBalancingV2::ListenerRule
+    Properties:
+      Actions:
+        - TargetGroupArn: !Ref 'TargetGroup'
+          Type: 'forward'
+      Conditions:
+        - Field: path-pattern
+          Values: [!Ref 'Path']
+      ListenerArn:
+        Fn::ImportValue:
+          !Join [':', [!Ref 'EnvironmentName', 'PublicListenerHTTPS']]
+      Priority: !Ref 'Priority'
 
   # Enable autoscaling for this service
   ScalableTarget:

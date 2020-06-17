@@ -6,6 +6,30 @@ Parameters:
     Default: dev
     Description: The environment name, used for locating outputs from the
                  prerequisite stacks
+
+  MySQLDBName:
+    Type: String
+    Default: 'dev-plizi'
+    Description: MySQLDB database default name.
+  MySQLDBMasterUsername:
+    Type: String
+    Default: 'root'
+    Description: MySQLDB admin user name.
+  MySQLDBMasterUserPassword:
+    Type: String
+    Default: 'ecugVWHKatKQd657'
+    NoEcho: true
+    Description: MySQLDB admin user password.
+
+  MongoDBMasterUsername:
+    Type: String
+    Default: 'plizi'
+    Description: MongoDB admin user name.
+  MongoDBMasterUserPassword:
+    Type: String
+    Default: 'Tksx2PPDba8Ny0lZ'
+    NoEcho: true
+    Description: MongoDB admin user password.
 Resources:
   ##
   ## REDIS (AWS ElasticCache), Port: 6376
@@ -90,31 +114,27 @@ Resources:
     Properties:
       DBSecurityGroups:
       - !Ref 'MySQLSecurityGroup'
-      AllocatedStorage: 5
+      AllocatedStorage: '10' # TODO Adjust for highload. GB of storage
       DBInstanceClass: db.m4.large
       Engine: MySQL
-      DBName: 'dev-plizi'
-      MasterUsername: 'root'
-      MasterUserPassword: 'ecugVWHKatKQd657'
-
+      DBSnapshotIdentifier: !Ref 'MySQLDBName'
+      DBName: !Ref 'MySQLDBName'
+      MasterUsername: !Ref 'MySQLDBMasterUsername'
+      MasterUserPassword: !Ref 'MySQLDBMasterUserPassword'
     DeletionPolicy: Snapshot
+    UpdateReplacePolicy: Snapshot # TODO Check how does it works with table updates
   ##
   ## DocumentDB (Mongo) Port 27017
   ##
   MongoSubnetGroup:
     Type: "AWS::DocDB::DBSubnetGroup"
     Properties:
+      DBSubnetGroupDescription: 'Description of MongoSubnetGroup'
       SubnetIds: #required
         - Fn::ImportValue:
             !Join [':', [!Ref 'EnvironmentName', 'PublicSubnetOne']]
         - Fn::ImportValue:
             !Join [':', [!Ref 'EnvironmentName', 'PublicSubnetTwo']]
-
-  MongoInstance:
-    Type: "AWS::DocDB::DBInstance"
-    Properties:
-      DBInstanceClass: db.m4.large #required
-      DBClusterIdentifier: MongoDB #required
   MongoDB:
     Type: "AWS::DocDB::DBCluster"
     Properties:
@@ -127,11 +147,16 @@ Resources:
       #DBClusterIdentifier: String
       DBSubnetGroupName: MongoSubnetGroup
       DeletionProtection: false
-      MasterUsername: 'plizi' #required
-      MasterUserPassword: 'Tksx2PPDba8Ny0lZ' #required
+      MasterUsername: !Ref 'MongoDBMasterUsername' #required
+      MasterUserPassword: !Ref 'MongoDBMasterUserPassword' #required
       VpcSecurityGroupIds:
         Fn::ImportValue:
           !Join [':', [!Ref 'EnvironmentName', 'VPCId']]
+  MongoInstance:
+    Type: "AWS::DocDB::DBInstance"
+    Properties:
+      DBInstanceClass: db.r4.large # TODO: Adjust on highload results
+      DBClusterIdentifier: !Ref 'MongoDB' #required
   ## 
   ## ROLES
   ## 
@@ -222,40 +247,39 @@ Outputs:
     Export:
       Name: !Join [ ':', [ !Ref 'EnvironmentName', 'MongoDBName' ] ]
   MongoDBHost: 
-    Value: !GetAtt 'MongoDBHost.Endpoint.Host'
+    Value: !GetAtt 'MongoDB.Endpoint' # TODO Possibly should be changed to MongoInstance.Endpoint
     Export:
       Name: !Join [ ':', [ !Ref 'EnvironmentName', 'MongoDBHost' ] ]
   MongoDBUser: 
-    Value: !GetAtt 'MongoDB.MasterUsername'
+    Value: !Ref 'MongoDBMasterUsername'
     Export:
       Name: !Join [ ':', [ !Ref 'EnvironmentName', 'MongoDBUser' ] ]
   MongoDBPass: 
-    Value: !GetAtt 'MongoDB.MasterUserPassword'
+    Value: !Ref 'MongoDBMasterUserPassword'
     Export:
       Name: !Join [ ':', [ !Ref 'EnvironmentName', 'MongoDBPass' ] ]
 
   MySQLDBName: 
-    Value: !GetAtt 'MySQL.DBName'
+    Value: !Ref 'MySQLDBName'
     Export:
       Name: !Join [ ':', [ !Ref 'EnvironmentName', 'MySQLDBName' ] ]
   MySQLDBUserName: 
-    Value: !GetAtt 'MySQL.MasterUsername'
+    Value: !Ref 'MySQLDBMasterUsername'
     Export:
       Name: !Join [ ':', [ !Ref 'EnvironmentName', 'MySQLDBUser' ] ]
   MySQLDBUserPass: 
-    Value: !GetAtt 'MySQL.MasterUserPassword'
+    Value: !Ref 'MySQLDBMasterUserPassword'
     Export:
       Name: !Join [ ':', [ !Ref 'EnvironmentName', 'MySQLDBPass' ] ]
   MySQLDBHost: 
-    Value: !GetAtt 'MySQL.Endpoint.Host'
+    Value: !GetAtt 'MySQL.Endpoint.Address'
     Export:
       Name: !Join [ ':', [ !Ref 'EnvironmentName', 'MySQLDBHost' ] ]
   MySQLDBPort: 
     Value: !GetAtt 'MySQL.Endpoint.Port'
     Export:
       Name: !Join [ ':', [ !Ref 'EnvironmentName', 'MySQLDBPort' ] ]
-
-
+      
   RedisHost:
     Value: !GetAtt 'Redis.RedisEndpoint.Address'
     Export:
@@ -264,6 +288,7 @@ Outputs:
     Value: !GetAtt 'Redis.RedisEndpoint.Port'
     Export:
       Name: !Join [ ':', [ !Ref 'EnvironmentName', 'RedisPort' ] ]
+
   BackWSRole:
     Value: !GetAtt 'BackWSRole.Arn'
     Export:

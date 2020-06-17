@@ -23,18 +23,6 @@ Parameters:
     Type: Number
     Default: 2048
     Description: How much memory in megabytes to give the container
-  Path:
-    Type: String
-    Default: "*"
-    Description: A path on the public load balancer that this service
-                 should be connected to. Use * to send all load balancer
-                 traffic to this service.
-  Priority:
-    Type: Number
-    Default: 1
-    Description: The priority for the routing rule added to the load balancer.
-                 This only applies if your have multiple services which have been
-                 assigned to different paths on the load balancer.
   DesiredCount:
     Type: Number
     Default: 1
@@ -79,26 +67,6 @@ Parameters:
     Type: String
     Default: "mysql"
     Description: Database connection type.
-  DbDatabase:
-    Type: String
-    Default: !Join [':', [!Ref 'EnvironmentName', 'MySQLDBName']]
-    Description: Database name.
-  DbHost:
-    Type: String
-    Default: !Join [':', [!Ref 'EnvironmentName', 'MySQLDBHost']]
-    Description: Database host address.
-  DbPassword:
-    Type: String
-    Default: !Join [':', [!Ref 'EnvironmentName', 'MySQLPass']]
-    Description: Database connection password.
-  DbPort:
-    Type: Number
-    Default: !Join [':', [!Ref 'EnvironmentName', 'MySQLDBPort']]
-    Description: Database connection port.
-  DbUsername:
-    Type: String
-    Default: !Join [':', [!Ref 'EnvironmentName', 'MySQLUser']]
-    Description: Database connection username.
   JwtBlacklistEnabled:
     Type: Number
     Default: 1
@@ -143,22 +111,6 @@ Parameters:
     Type: String
     Default: "no-reply@plizi.info"
     Description: Mail username.
-  MongoDbDatabase:
-    Type: String
-    Default: !Join [':', [!Ref 'EnvironmentName', 'MongoDBName']]
-    Description: MongoDB database name.
-  MongoDbHost:
-    Type: String
-    Default: !Join [':', [!Ref 'EnvironmentName', 'MongoDBHost']]
-    Description: MongoDB database host.
-  MongoDbPassword:
-    Type: String
-    Default: !Join [':', [!Ref 'EnvironmentName', 'MongoDBPass']]
-    Description: MongoDB database password.
-  MongoDbUsername:
-    Type: String
-    Default: !Join [':', [!Ref 'EnvironmentName', 'MongoDBUser']]
-    Description: MongoDB database username.
   Neo4DbBoltPort:
     Type: Number
     Default: 7687
@@ -183,14 +135,6 @@ Parameters:
     Type: String
     Default: "redis"
     Description: Queue connection type [sync, redis, rebbitmq].
-  RedisHost:
-    Type: String
-    Default: !Join [ ':', [ !Ref 'EnvironmentName', 'RedisHost' ]]
-    Description: Redis host.
-  RedisPort:
-    Type: Number
-    Default: !Join [ ':', [ !Ref 'EnvironmentName', 'RedisPort' ]]
-    Description: Redis port.
   SentryLaravelDsn:
     Type: String
     Default: "http://89feb2eb67c741c29d06f1204b809e87@ec2-3-125-155-176.eu-central-1.compute.amazonaws.com/2"
@@ -199,10 +143,6 @@ Parameters:
     Type: String
     Default: "0.0.0.0"
     Description: Swoole http host.
-  ZmqSubHost:
-    Type: String
-    Default: !Join [':', [!Ref 'EnvironmentName', 'BackWSServiceAddress']]
-    Description: ZeroMQ sub host
 
 Resources:
   # A log group for storing the container logs for this service
@@ -255,15 +195,25 @@ Resources:
             - Name: DB_CONNECTION
               Value: !Ref 'DbConnection'
             - Name: DB_DATABASE
-              Value: !Ref 'DbDatabase'
+              Value: 
+                Fn::ImportValue:
+                  !Join [':', [!Ref 'EnvironmentName', 'MySQLDBName']]
             - Name: DB_HOST
-              Value: !Ref 'DbHost'
+              Value: 
+                Fn::ImportValue:
+                  !Join [':', [!Ref 'EnvironmentName', 'MySQLDBHost']]
             - Name: DB_PASSWORD
-              Value: !Ref 'DbPassword'
+              Value: 
+                Fn::ImportValue:
+                  !Join [':', [!Ref 'EnvironmentName', 'MySQLPass']]
             - Name: DB_PORT
-              Value: !Ref 'DbPort'
+              Value: 
+                Fn::ImportValue:
+                  !Join [':', [!Ref 'EnvironmentName', 'MySQLDBPort']]
             - Name: DB_USERNAME
-              Value: !Ref 'DbUsername'
+              Value: 
+                Fn::ImportValue:
+                  !Join [':', [!Ref 'EnvironmentName', 'MySQLUser']]
             - Name: JWT_BLACKLIST_ENABLED
               Value: !Ref 'JwtBlacklistEnabled'
             - Name: JWT_TTL
@@ -287,13 +237,21 @@ Resources:
             - Name: MAIL_USERNAME
               Value: !Ref 'MailUsername'
             - Name: MONGO_DB_DATABASE
-              Value: !Ref 'MongoDbDatabase'
+              Value: 
+                Fn::ImportValue:
+                  !Join [':', [!Ref 'EnvironmentName', 'MongoDBName']]
             - Name: MONGO_DB_HOST
-              Value: !Ref 'MongoDbHost'
+              Value: 
+                Fn::ImportValue:
+                  !Join [':', [!Ref 'EnvironmentName', 'MongoDBHost']]
             - Name: MONGO_DB_PASSWORD
-              Value: !Ref 'MongoDbPassword'
+              Value: 
+                Fn::ImportValue:
+                  !Join [':', [!Ref 'EnvironmentName', 'MongoDBUser']]
             - Name: MONGO_DB_USERNAME
-              Value: !Ref 'MongoDbUsername'
+              Value: 
+                Fn::ImportValue:
+                  !Join [':', [!Ref 'EnvironmentName', 'MongoDBPass']]
             - Name: NEO4_DB_BOLT_PORT
               Value: !Ref 'Neo4DbBoltPort'
             - Name: NEO4_DB_HOST
@@ -307,15 +265,21 @@ Resources:
             - Name: QUEUE_CONNECTION
               Value: !Ref 'QueueConnection'
             - Name: REDIS_HOST
-              Value: !Ref 'RedisHost'
+              Value: 
+                Fn::ImportValue:
+                  !Join [':', [!Ref 'EnvironmentName', 'RedisHost']]
             - Name: REDIS_PORT
-              Value: !Ref 'RedisPort'
+              Value: 
+                Fn::ImportValue:
+                  !Join [':', [!Ref 'EnvironmentName', 'RedisPort']]
             - Name: SENTRY_LARAVEL_DSN
               Value: !Ref 'SentryLaravelDsn'
             - Name: SWOOLE_HTTP_HOST
               Value: !Ref 'SwooleHttpHost'
             - Name: ZMQ_SUB_HOST
-              Value: !Ref 'ZmqSubHost'
+              Value: 
+                Fn::ImportValue:
+                  !Join [':', [!Ref 'EnvironmentName', 'BackWSServiceAddress']]
             - Name: ENV_NAME
               Value: !Ref 'EnvironmentName'
             - Name: REGION
