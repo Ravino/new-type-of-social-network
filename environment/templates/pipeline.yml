@@ -251,13 +251,15 @@ Resources:
             Value: !Ref AWS::Region
           - Name: REPOSITORY_URI
             Value: !Sub ${AWS::AccountId}.dkr.ecr.${AWS::Region}.amazonaws.com/${BackWSRepository}
-      #CloudWatchLogs:
-      #  GroupName: /code-build/${AWS::StackName}/back-ws
-      #  Status: ENABLED
-      #  StreamName: /code-build/${AWS::StackName}
+      LogsConfig:
+        CloudWatchLogs:
+          GroupName: !Sub /code-build/${AWS::StackName}/back-ws
+          Status: ENABLED
+          StreamName: !Sub /code-build/${AWS::StackName}
       Name: !Sub ${AWS::StackName}-back-ws
       ServiceRole: !Ref CodeBuildServiceRole
-      DeletionPolicy: 
+    DeletionPolicy: Delete
+    UpdateReplacePolicy: Delete
 
   # This is the definition of how to build the code in the repository
   BackQueueWorker:
@@ -293,12 +295,15 @@ Resources:
             Value: !Ref AWS::Region
           - Name: REPOSITORY_URI
             Value: !Sub ${AWS::AccountId}.dkr.ecr.${AWS::Region}.amazonaws.com/${BackQueueWorkerRepository}
-      #CloudWatchLogs:
-      #  GroupName: /code-build/${AWS::StackName}/back-queue-worker
-      #  Status: ENABLED
-      #  StreamName: /code-build/${AWS::StackName}
+      LogsConfig:
+        CloudWatchLogs:
+          GroupName: !Sub /code-build/${AWS::StackName}/back-queue-worker
+          Status: ENABLED
+          StreamName: !Sub /code-build/${AWS::StackName}
       Name: !Sub ${AWS::StackName}-back-queue-worker
       ServiceRole: !Ref CodeBuildServiceRole
+    DeletionPolicy: Delete
+    UpdateReplacePolicy: Delete
 
   # Back api pipeline
   BackApi:
@@ -334,12 +339,15 @@ Resources:
             Value: !Ref AWS::Region
           - Name: REPOSITORY_URI
             Value: !Sub ${AWS::AccountId}.dkr.ecr.${AWS::Region}.amazonaws.com/${BackApiRepository}
-      #CloudWatchLogs:
-      #  GroupName: /code-build/${AWS::StackName}/back-api
-      #  Status: ENABLED
-      #  StreamName: /code-build/${AWS::StackName}
+      LogsConfig:
+        CloudWatchLogs:
+          GroupName: !Sub /code-build/${AWS::StackName}/back-api
+          Status: ENABLED
+          StreamName: !Sub /code-build/${AWS::StackName}
       Name: !Sub ${AWS::StackName}-back-api
       ServiceRole: !Ref CodeBuildServiceRole
+    DeletionPolicy: Delete
+    UpdateReplacePolicy: Delete
 
   # Back api pipeline
   FrontNginx:
@@ -375,12 +383,15 @@ Resources:
             Value: !Ref AWS::Region
           - Name: REPOSITORY_URI
             Value: !Sub ${AWS::AccountId}.dkr.ecr.${AWS::Region}.amazonaws.com/${FrontNginxRepository}
-      #CloudWatchLogs:
-      #  GroupName: /code-build/${AWS::StackName}/front-nginx
-      #  Status: ENABLED
-      #  StreamName: /code-build/${AWS::StackName}
+      LogsConfig:
+        CloudWatchLogs:
+          GroupName: !Sub /code-build/${AWS::StackName}/front-nginx
+          Status: ENABLED
+          StreamName: !Sub /code-build/${AWS::StackName}
       Name: !Sub ${AWS::StackName}-front-nginx
       ServiceRole: !Ref CodeBuildServiceRole
+    DeletionPolicy: Delete
+    UpdateReplacePolicy: Delete
 
   # This pipeline defines the steps to build, deploy, and release the application
   Pipeline:
