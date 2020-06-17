@@ -215,7 +215,7 @@ Resources:
   ArtifactBucket:
     Type: AWS::S3::Bucket
     Properties:
-      BucketName: !Sub '${AWS::StackName}-${AWS::Region}-${AWS::StackName}'
+      BucketName: !Sub '${AWS::Region}-${AWS::StackName}'
       Tags: 
         - Key: Type
           Value: Project
@@ -242,7 +242,7 @@ Resources:
       InventoryConfigurations:
         - Id: WeeklyInventoryConfiguration
           Destination:
-            BucketArn: !Join ['-', ['arn:aws:s3:::', !Ref 'AWS::StackName', !Ref 'AWS::Region', !Ref 'AWS::StackName']] # TODO Possible round-dependency
+            BucketArn: !Join ['-', ['arn:aws:s3:::', !Ref 'AWS::Region', !Ref 'AWS::StackName']] # TODO Possible round-dependency
             Format: CSV
             Prefix: Inventory
           IncludedObjectVersions: Current
@@ -251,7 +251,7 @@ Resources:
           Enabled: true
         - Id: DailyInventoryConfiguration
           Destination:
-            BucketArn: !Join ['-', ['arn:aws:s3:::', !Ref 'AWS::StackName', !Ref 'AWS::Region', !Ref 'AWS::StackName']] # TODO Possible round-dependency
+            BucketArn: !Join ['-', ['arn:aws:s3:::', !Ref 'AWS::Region', !Ref 'AWS::StackName']] # TODO Possible round-dependency
             Format: CSV
             Prefix: Inventory
           IncludedObjectVersions: Current
