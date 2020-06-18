@@ -86,16 +86,10 @@ Resources:
                   - s3:GetObject
                   - s3:PutObject
                   - s3:GetObjectVersion
-              - Resource: !Sub arn:aws:ecr:${AWS::Region}:${AWS::AccountId}:*
+              - Resource: "*"
                 Effect: Allow
                 Action:
-                  - ecr:GetDownloadUrlForLayer
-                  - ecr:BatchGetImage
-                  - ecr:BatchCheckLayerAvailability
-                  - ecr:PutImage
-                  - ecr:InitiateLayerUpload
-                  - ecr:UploadLayerPart
-                  - ecr:CompleteLayerUpload
+                  - ecr:*
 
   # Role used to give CodePipeline to release a build.
   CodePipelineServiceRole:
@@ -144,6 +138,10 @@ Resources:
                   - cloudformation:ValidateTemplate
                   - cloudformation:ExecuteChangeSet
                 Resource: "*"
+              - Resource: "*"
+                Effect: Allow
+                Action:
+                  - ecr:*
 
   # CloudFormation deployment role. This role is passed by CodeBuild to
   # CloudFormation to use when setting up the application resources
@@ -512,7 +510,7 @@ Resources:
                 RoleArn: !GetAtt CloudFormationDeployRole.Arn
                 StackName: !Sub "${AWS::Region}-${AWS::StackName}-cluster"
                 TemplatePath: "Source::environment/templates/cluster.yml"
-                Capabilities: CAPABILITY_NAMED_IAM
+                Capabilities: CAPABILITY_IAM
                 ParameterOverrides: !Sub |
                   {
                     "EnvironmentName": "${EnvironmentName}",
@@ -537,7 +535,7 @@ Resources:
               Configuration:
                 ActionMode: REPLACE_ON_FAILURE
                 RoleArn: !GetAtt CloudFormationDeployRole.Arn
-                Capabilities: CAPABILITY_NAMED_IAM
+                Capabilities: CAPABILITY_IAM
                 StackName: !Sub "${AWS::Region}-${EnvironmentName}-resources"
                 TemplatePath: Source::environment/templates/resources.yml
                 ParameterOverrides: !Sub |
@@ -559,7 +557,7 @@ Resources:
               Configuration:
                 ActionMode: REPLACE_ON_FAILURE
                 RoleArn: !GetAtt CloudFormationDeployRole.Arn
-                Capabilities: CAPABILITY_NAMED_IAM
+                Capabilities: CAPABILITY_IAM
                 StackName: !Sub "${AWS::Region}-${EnvironmentName}-mongo"
                 TemplatePath: Source::environment/templates/res-mongo.yml
                 ParameterOverrides: !Sub |
@@ -581,7 +579,7 @@ Resources:
               Configuration:
                 ActionMode: REPLACE_ON_FAILURE
                 RoleArn: !GetAtt CloudFormationDeployRole.Arn
-                Capabilities: CAPABILITY_NAMED_IAM
+                Capabilities: CAPABILITY_IAM
                 StackName: !Sub "${AWS::Region}-${EnvironmentName}-mysql"
                 TemplatePath: Source::environment/templates/res-mysql.yml
                 ParameterOverrides: !Sub |
@@ -603,7 +601,7 @@ Resources:
               Configuration:
                 ActionMode: REPLACE_ON_FAILURE
                 RoleArn: !GetAtt CloudFormationDeployRole.Arn
-                Capabilities: CAPABILITY_NAMED_IAM
+                Capabilities: CAPABILITY_IAM
                 StackName: !Sub "${AWS::Region}-${EnvironmentName}-redis"
                 TemplatePath: Source::environment/templates/res-redis.yml
                 ParameterOverrides: !Sub |
@@ -693,7 +691,7 @@ Resources:
                 RoleArn: !GetAtt CloudFormationDeployRole.Arn
                 StackName: !Sub ${EnvironmentName}-back-ws
                 TemplatePath: Source::environment/templates/back-ws.yml
-                Capabilities: CAPABILITY_NAMED_IAM
+                Capabilities: CAPABILITY_IAM
                 ParameterOverrides: !Sub |
                   {
                     "EnvironmentName": "${EnvironmentName}",
@@ -718,7 +716,7 @@ Resources:
                 StackName: !Sub ${EnvironmentName}-back-queue-worker
                 #TemplateConfiguration: Source::back-queue-worker/configuration.json
                 TemplatePath: Source::environment/templates/back-queue-worker.yml
-                Capabilities: CAPABILITY_NAMED_IAM
+                Capabilities: CAPABILITY_IAM
                 ParameterOverrides: !Sub |
                   {
                     "EnvironmentName": "${EnvironmentName}",
@@ -741,7 +739,7 @@ Resources:
                 RoleArn: !GetAtt CloudFormationDeployRole.Arn
                 StackName: !Sub ${EnvironmentName}-back-api
                 TemplatePath: Source::environment/templates/back-api.yml
-                Capabilities: CAPABILITY_NAMED_IAM
+                Capabilities: CAPABILITY_IAM
                 ParameterOverrides: !Sub |
                   {
                     "EnvironmentName": "${EnvironmentName}",
@@ -764,7 +762,7 @@ Resources:
                 RoleArn: !GetAtt CloudFormationDeployRole.Arn
                 StackName: !Sub ${EnvironmentName}-front-nginx
                 TemplatePath: Source::environment/templates/front-nginx.yml
-                Capabilities: CAPABILITY_NAMED_IAM
+                Capabilities: CAPABILITY_IAM
                 ParameterOverrides: !Sub |
                   {
                     "EnvironmentName": "${EnvironmentName}",
