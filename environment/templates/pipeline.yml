@@ -508,7 +508,7 @@ Resources:
                 Version: '1'
                 Provider: CloudFormation
               Configuration:
-                ActionMode: CREATE_UPDATE
+                ActionMode: REPLACE_ON_FAILURE
                 RoleArn: !GetAtt CloudFormationDeployRole.Arn
                 StackName: !Sub "${AWS::Region}-${AWS::StackName}-cluster"
                 TemplatePath: "Source::environment/templates/cluster.yml"
@@ -535,7 +535,7 @@ Resources:
                 Version: '1'
                 Provider: CloudFormation
               Configuration:
-                ActionMode: CREATE_UPDATE
+                ActionMode: REPLACE_ON_FAILURE
                 RoleArn: !GetAtt CloudFormationDeployRole.Arn
                 Capabilities: CAPABILITY_NAMED_IAM
                 StackName: !Sub "${AWS::Region}-${EnvironmentName}-resources"
@@ -557,7 +557,7 @@ Resources:
                 Version: '1'
                 Provider: CloudFormation
               Configuration:
-                ActionMode: CREATE_UPDATE
+                ActionMode: REPLACE_ON_FAILURE
                 RoleArn: !GetAtt CloudFormationDeployRole.Arn
                 Capabilities: CAPABILITY_NAMED_IAM
                 StackName: !Sub "${AWS::Region}-${EnvironmentName}-mongo"
@@ -579,7 +579,7 @@ Resources:
                 Version: '1'
                 Provider: CloudFormation
               Configuration:
-                ActionMode: CREATE_UPDATE
+                ActionMode: REPLACE_ON_FAILURE
                 RoleArn: !GetAtt CloudFormationDeployRole.Arn
                 Capabilities: CAPABILITY_NAMED_IAM
                 StackName: !Sub "${AWS::Region}-${EnvironmentName}-mysql"
@@ -601,7 +601,7 @@ Resources:
                 Version: '1'
                 Provider: CloudFormation
               Configuration:
-                ActionMode: CREATE_UPDATE
+                ActionMode: REPLACE_ON_FAILURE
                 RoleArn: !GetAtt CloudFormationDeployRole.Arn
                 Capabilities: CAPABILITY_NAMED_IAM
                 StackName: !Sub "${AWS::Region}-${EnvironmentName}-redis"
@@ -689,7 +689,7 @@ Resources:
                 Version: '1'
                 Provider: CloudFormation
               Configuration:
-                ActionMode: CREATE_UPDATE
+                ActionMode: REPLACE_ON_FAILURE
                 RoleArn: !GetAtt CloudFormationDeployRole.Arn
                 StackName: !Sub ${EnvironmentName}-back-ws
                 TemplatePath: Source::environment/templates/back-ws.yml
@@ -712,7 +712,7 @@ Resources:
                 Version: '1'
                 Provider: CloudFormation
               Configuration:
-                ActionMode: CREATE_UPDATE
+                ActionMode: REPLACE_ON_FAILURE
                 OutputFileName: Source::back-queue-worker/output.json
                 RoleArn: !GetAtt CloudFormationDeployRole.Arn
                 StackName: !Sub ${EnvironmentName}-back-queue-worker
@@ -737,7 +737,7 @@ Resources:
                 Version: '1'
                 Provider: CloudFormation
               Configuration:
-                ActionMode: CREATE_UPDATE
+                ActionMode: REPLACE_ON_FAILURE
                 RoleArn: !GetAtt CloudFormationDeployRole.Arn
                 StackName: !Sub ${EnvironmentName}-back-api
                 TemplatePath: Source::environment/templates/back-api.yml
@@ -760,7 +760,7 @@ Resources:
                 Version: '1'
                 Provider: CloudFormation
               Configuration:
-                ActionMode: CREATE_UPDATE
+                ActionMode: REPLACE_ON_FAILURE
                 RoleArn: !GetAtt CloudFormationDeployRole.Arn
                 StackName: !Sub ${EnvironmentName}-front-nginx
                 TemplatePath: Source::environment/templates/front-nginx.yml

@@ -11,7 +11,7 @@ create:
 		--template-body=file://templates/pipeline.yml \
 		--parameters ParameterKey=EnvironmentName,ParameterValue=test \
 		--role-arn $(ARN_ADMIN)
-		--capabilities CAPABILITY_NAMED_IAM  \
+		--capabilities CAPABILITY_NAMED_IAM CAPABILITY_IAM \
 		--disable-rollback \
 		--no-enable-termination-protection \
 		--timeout-in-minutes 60
