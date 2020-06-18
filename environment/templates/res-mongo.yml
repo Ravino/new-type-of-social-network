@@ -43,10 +43,23 @@ Resources:
       SourceSecurityGroupId:
         Fn::ImportValue:
           !Join [':', [!Ref 'EnvironmentName', 'FargateContainerSecurityGroup']]
+  # MongoDBClusterParameterGroup:
+  #   Type: AWS::DocDB::DBClusterParameterGroup
+  #   Properties:
+  #     Description: MongoDB cluster parameters group
+  #     Family: "mongodb"
+  #     Name: "sampleParameterGroup"
+  #     Parameters: 
+  #           audit_logs: "disabled"
+  #           tls: "enabled"
+  #           ttl_monitor: "enabled"
+  #     Tags: 
+  #         - Key: "String"
+  #           Value: "String" 
   MongoDB:
     Type: "AWS::DocDB::DBCluster"
     Properties:
-      StorageEncrypted: true
+      #StorageEncrypted: true
       #AvailabilityZones:
        # - eu-central-1a
        # - eu-central-1b
@@ -63,7 +76,7 @@ Resources:
   MongoInstance:
     Type: "AWS::DocDB::DBInstance"
     Properties:
-      DBInstanceClass: db.r4.large # TODO: Adjust on highload results
+      DBInstanceClass: db.r5.large # TODO: Adjust on highload results
       DBClusterIdentifier: !Ref 'MongoDB' #required
 Outputs:
   MongoDBName: 
