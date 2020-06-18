@@ -7,14 +7,16 @@ ARN_ADMIN=arn:aws:iam::884088487044:role/CloudFormationDeployRole
 
 # scripts
 create:
-	aws cloudformation create-stack --stack-name $(STACK_NAME) \
+	aws cloudformation create-stack --stack-name prod-plizi-fun \
 		--template-body=file://templates/pipeline.yml \
-		--parameters ParameterKey=EnvironmentName,ParameterValue=$(ENV) \
-		--capabilities CAPABILITY_IAM  \
+		--parameters ParameterKey=EnvironmentName,ParameterValue=prod \
+		--role-arn $(ARN_ADMIN)
+		--capabilities CAPABILITY_NAMED_IAM  \
 		--disable-rollback \
 		--no-enable-termination-protection \
-		--client-request-token cea9cf10-afe8-11ea-84ed-0a0c9a06689c
+		--timeout-in-minutes 60
 		#StackId": "arn:aws:cloudformation:eu-central-1:884088487044:stack/test-plizi-fun/82bf5740-afe9-11ea-93d6-0a58cd169056"
+		#StackId": "arn:aws:cloudformation:eu-central-1:884088487044:stack/prod-plizi-fun/f7a0c3c0-b136-11ea-9126-0a1a4d297742"
 delete:
 	aws cloudformation delete-stack --stack-name $(STACK_NAME)
 sudo-delete:
@@ -41,8 +43,8 @@ events:
 deploy:
 	aws cloudformation deploy --template-file file://templates/pipeline.yml \
 	--stack-name test-plizi-fun --no-fail-on-empty-changeset \
-	--parameters ParameterKey=EnvironmentName,ParameterValue=$(ENV) \
-	--capabilities CAPABILITY_IAM # --role-arn 
+	--parameters ParameterKey=EnvironmentName,ParameterValue=dev \
+	--capabilities CAPABILITY_NAMED_IAM
 hotfix:
 	git commit -a -m "Hotfix deploy" && git push
 unstuck:
