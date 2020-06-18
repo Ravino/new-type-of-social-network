@@ -248,6 +248,8 @@ Resources:
       #LoggingConfiguration: 
       #AnalyticsConfiguration:
       #QueueConfiguration:
+      VersioningConfiguration:
+        Status: Enabled
     DeletionPolicy: Retain
     UpdateReplacePolicy: Retain
 
@@ -507,7 +509,7 @@ Resources:
                 ActionMode: CREATE_UPDATE
                 RoleArn: !GetAtt CloudFormationDeployRole.Arn
                 StackName: !Sub "${AWS::Region}-${AWS::StackName}-cluster"
-                TemplatePath: Source::environment/templates/cluster.yml
+                TemplatePath: "Source::environment/templates/cluster.yml"
                 Capabilities: CAPABILITY_IAM
                 ParameterOverrides: !Sub |
                   {
