@@ -464,15 +464,20 @@ Resources:
   # This pipeline defines the steps to build, deploy, and release the application
   Pipeline:
     Type: AWS::CodePipeline::Pipeline
-    Properties:
+    Properties: 
       RoleArn: !GetAtt CodePipelineServiceRole.Arn
       ArtifactStore:
         Type: S3
         Location: !Ref ArtifactBucket
+      DisableInboundStageTransitions: 
+        - StageName: Resources 
+          Reason: "Disabling ressources assembling before cluster would be ready."
+        - StageName: Services 
+          Reason: "Disabling services assembling before resources would be ready."
       Stages:
 
         # First we have to pull the source code from the Github repository.
-        - Name: Source
+        - Name: GitHub
           Actions:
             - Name: Fetch-source
               ActionTypeId:
@@ -490,7 +495,7 @@ Resources:
               RunOrder: 1
 
         # Now we deploy the base resources: the cluster and VPC itself.
-        - Name: Create-network
+        - Name: Cluster
           Actions:
             - Name: Deploy
               ActionTypeId:
@@ -501,7 +506,7 @@ Resources:
               Configuration:
                 ActionMode: CREATE_UPDATE
                 RoleArn: !GetAtt CloudFormationDeployRole.Arn
-                StackName: !Sub ${EnvironmentName}-base-resources
+                StackName: !Sub "${AWS::Region}-${AWS::StackName}-cluster"
                 TemplatePath: Source::environment/templates/cluster.yml
                 Capabilities: CAPABILITY_IAM
                 ParameterOverrides: !Sub |
@@ -513,12 +518,13 @@ Resources:
                 - Name: Source
               OutputArtifacts:
                 - Name: BaseResourcesDeployOutput
+              RunOrder: 1
 
         # And we deploy the application resources (Elasticache, RDS, DocumentDB, etc)
-        - Name: Build-dependencies-and-containers
+        - Name: Resources
           Actions:
-            # Deploy the chat resources
-            - Name: Queues-roles-and-tables
+
+            - Name: Roles
               ActionTypeId:
                 Category: Deploy
                 Owner: AWS
@@ -527,9 +533,9 @@ Resources:
               Configuration:
                 ActionMode: CREATE_UPDATE
                 RoleArn: !GetAtt CloudFormationDeployRole.Arn
-                StackName: !Sub ${EnvironmentName}-chat-resources
-                TemplatePath: Source::environment/templates/resources.yml
                 Capabilities: CAPABILITY_IAM
+                StackName: !Sub "${AWS::Region}-${EnvironmentName}-resources"
+                TemplatePath: Source::environment/templates/resources.yml
                 ParameterOverrides: !Sub |
                   {
                     "EnvironmentName": "${EnvironmentName}"
@@ -538,9 +544,79 @@ Resources:
                 - Name: Source
               OutputArtifacts:
                 - Name: ChatResourcesDeployOutput
+              RunOrder: 1
 
+            - Name: Mongo
+              ActionTypeId:
+                Category: Deploy
+                Owner: AWS
+                Version: '1'
+                Provider: CloudFormation
+              Configuration:
+                ActionMode: CREATE_UPDATE
+                RoleArn: !GetAtt CloudFormationDeployRole.Arn
+                Capabilities: CAPABILITY_IAM
+                StackName: !Sub "${AWS::Region}-${EnvironmentName}-mongo"
+                TemplatePath: Source::environment/templates/res-mongo.yml
+                ParameterOverrides: !Sub |
+                  {
+                    "EnvironmentName": "${EnvironmentName}"
+                  }
+              InputArtifacts:
+                - Name: Source
+              OutputArtifacts:
+                - Name: MongoDeployOutput
+              RunOrder: 2
+
+            - Name: MySQL
+              ActionTypeId:
+                Category: Deploy
+                Owner: AWS
+                Version: '1'
+                Provider: CloudFormation
+              Configuration:
+                ActionMode: CREATE_UPDATE
+                RoleArn: !GetAtt CloudFormationDeployRole.Arn
+                Capabilities: CAPABILITY_IAM
+                StackName: !Sub "${AWS::Region}-${EnvironmentName}-mysql"
+                TemplatePath: Source::environment/templates/res-mysql.yml
+                ParameterOverrides: !Sub |
+                  {
+                    "EnvironmentName": "${EnvironmentName}"
+                  }
+              InputArtifacts:
+                - Name: Source
+              OutputArtifacts:
+                - Name: MySQLDeployOutput
+              RunOrder: 2
+        
+            - Name: Redis
+              ActionTypeId:
+                Category: Deploy
+                Owner: AWS
+                Version: '1'
+                Provider: CloudFormation
+              Configuration:
+                ActionMode: CREATE_UPDATE
+                RoleArn: !GetAtt CloudFormationDeployRole.Arn
+                Capabilities: CAPABILITY_IAM
+                StackName: !Sub "${AWS::Region}-${EnvironmentName}-redis"
+                TemplatePath: Source::environment/templates/res-redis.yml
+                ParameterOverrides: !Sub |
+                  {
+                    "EnvironmentName": "${EnvironmentName}"
+                  }
+              InputArtifacts:
+                - Name: Source
+              OutputArtifacts:
+                - Name: RedisDeployOutput
+              RunOrder: 2
+
+        # And we deploy the application resources (Elasticache, RDS, DocumentDB, etc)
+        - Name: Services
+          Actions:
             # Build the chat frontend docker image
-            - Name: Build-service-image-back-ws
+            - Name: back-ws
               ActionTypeId:
                 Category: Build
                 Owner: AWS
@@ -555,7 +631,7 @@ Resources:
               RunOrder: 2
 
             # Build the backend worker image
-            - Name: Build-service-image-back-queue-worker
+            - Name: back-queue-worker
               ActionTypeId:
                 Category: Build
                 Owner: AWS
@@ -567,10 +643,10 @@ Resources:
                 - Name: Source
               OutputArtifacts:
                 - Name: BackQueueWorkerBuildOutput
-              RunOrder: 1
+              RunOrder: 2
 
             # Build the backend worker image
-            - Name: Build-service-image-back-api
+            - Name: back-api
               ActionTypeId:
                 Category: Build
                 Owner: AWS
@@ -585,7 +661,7 @@ Resources:
               RunOrder: 2
 
             # Build the backend worker image
-            - Name: Build-service-image-front-nginx
+            - Name: front-nginx
               ActionTypeId:
                 Category: Build
                 Owner: AWS
@@ -600,9 +676,9 @@ Resources:
               RunOrder: 2
 
         # Finally we deploy the Fargate service to the cluster
-        - Name: Deploy-containers
+        - Name: Deploy
           Actions:
-            - Name: Deploy-back-ws-container
+            - Name: back-ws
               ActionTypeId:
                 Category: Deploy
                 Owner: AWS
@@ -623,9 +699,9 @@ Resources:
                 - Name: Source
               OutputArtifacts:
                 - Name: BackWSDeployOutput
-              RunOrder: 2
+              RunOrder: 1
 
-            - Name: Deploy-back-queue-worker-container
+            - Name: back-queue-worker
               ActionTypeId:
                 Category: Deploy
                 Owner: AWS
@@ -636,7 +712,7 @@ Resources:
                 OutputFileName: Source::back-queue-worker/output.json
                 RoleArn: !GetAtt CloudFormationDeployRole.Arn
                 StackName: !Sub ${EnvironmentName}-back-queue-worker
-                TemplateConfiguration: Source::back-queue-worker/configuration.json
+                #TemplateConfiguration: Source::back-queue-worker/configuration.json
                 TemplatePath: Source::environment/templates/back-queue-worker.yml
                 Capabilities: CAPABILITY_IAM
                 ParameterOverrides: !Sub |
@@ -650,7 +726,7 @@ Resources:
                 - Name: BackQueueWorkerDeployOutput
               RunOrder: 1
 
-            - Name: Deploy-back-api-container
+            - Name: back-api
               ActionTypeId:
                 Category: Deploy
                 Owner: AWS
@@ -673,7 +749,7 @@ Resources:
                 - Name: BackApiDeployOutput
               RunOrder: 2
 
-            - Name: Deploy-front-nginx-container
+            - Name: front-nginx
               ActionTypeId:
                 Category: Deploy
                 Owner: AWS

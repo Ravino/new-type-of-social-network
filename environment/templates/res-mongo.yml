@@ -1,0 +1,84 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Description: MongoDB cluster.
+Parameters:
+  EnvironmentName:
+    Type: String
+    Default: test
+    Description: The environment name, used for locating outputs from the
+                 prerequisite stacks
+  MongoDBMasterUsername:
+    Type: String
+    Default: 'plizi'
+    Description: MongoDB admin user name.
+  MongoDBMasterUserPassword:
+    Type: String
+    Default: 'Tksx2PPDba8Ny0lZ'
+    NoEcho: true
+    Description: MongoDB admin user password.
+Resources:
+  MongoSubnetGroup:
+    Type: "AWS::DocDB::DBSubnetGroup"
+    Properties:
+      DBSubnetGroupDescription: 'Description of MongoSubnetGroup'
+      SubnetIds: #required
+        - Fn::ImportValue:
+            !Join [':', [!Ref 'EnvironmentName', 'PublicSubnetOne']]
+        - Fn::ImportValue:
+            !Join [':', [!Ref 'EnvironmentName', 'PublicSubnetTwo']]
+  MongoSecurityGroup:
+    Type: AWS::EC2::SecurityGroup
+    Properties:
+      GroupDescription: "Redis Security Group"
+      VpcId:
+        Fn::ImportValue:
+          !Join [':', [!Ref 'EnvironmentName', 'VPCId']]
+  MongoIngress:
+    Type: AWS::EC2::SecurityGroupIngress
+    Properties:
+      Description: Ingress from Fargate containers
+      GroupId: !Ref 'MongoSecurityGroup'
+      IpProtocol: tcp
+      FromPort: 27017
+      ToPort: 27017
+      SourceSecurityGroupId:
+        Fn::ImportValue:
+          !Join [':', [!Ref 'EnvironmentName', 'FargateContainerSecurityGroup']]
+  MongoDB:
+    Type: "AWS::DocDB::DBCluster"
+    Properties:
+      StorageEncrypted: true
+      #AvailabilityZones:
+       # - eu-central-1a
+       # - eu-central-1b
+       #- eu-central-1c  # TODO
+      Port: 27017
+      #DBClusterIdentifier: String
+      MasterUsername: !Ref 'MongoDBMasterUsername' #required
+      MasterUserPassword: !Ref 'MongoDBMasterUserPassword' #required
+      DBSubnetGroupName: !Ref 'MongoSubnetGroup'
+      VpcSecurityGroupIds:
+        - Fn::ImportValue:
+            !Join [':', [!Ref 'EnvironmentName', 'FargateContainerSecurityGroup']] # Possibly have to provide VPCid itself
+      DeletionProtection: false
+  MongoInstance:
+    Type: "AWS::DocDB::DBInstance"
+    Properties:
+      DBInstanceClass: db.r4.large # TODO: Adjust on highload results
+      DBClusterIdentifier: !Ref 'MongoDB' #required
+Outputs:
+  MongoDBName: 
+    Value: 'admin'
+    Export:
+      Name: !Join [ ':', [ !Ref 'EnvironmentName', 'MongoDBName' ] ]
+  MongoDBHost: 
+    Value: !GetAtt 'MongoDB.Endpoint' # TODO Possibly should be changed to MongoInstance.Endpoint
+    Export:
+      Name: !Join [ ':', [ !Ref 'EnvironmentName', 'MongoDBHost' ] ]
+  MongoDBUser: 
+    Value: !Ref 'MongoDBMasterUsername'
+    Export:
+      Name: !Join [ ':', [ !Ref 'EnvironmentName', 'MongoDBUser' ] ]
+  MongoDBPass: 
+    Value: !Ref 'MongoDBMasterUserPassword'
+    Export:
+      Name: !Join [ ':', [ !Ref 'EnvironmentName', 'MongoDBPass' ] ]

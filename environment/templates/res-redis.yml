@@ -1,0 +1,58 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Description: Redis cluster
+Parameters:
+  EnvironmentName:
+    Type: String
+    Default: test
+    Description: The environment name, used for locating outputs from the
+                 prerequisite stacks
+Resources:
+  RedisSubnetGroup:
+    Type: AWS::ElastiCache::SubnetGroup
+    Properties:
+      Description: Group of subnets to place Redis into
+      SubnetIds:
+        - Fn::ImportValue:
+            !Join [':', [!Ref 'EnvironmentName', 'PublicSubnetOne']]
+        - Fn::ImportValue:
+            !Join [':', [!Ref 'EnvironmentName', 'PublicSubnetTwo']]
+  RedisSecurityGroup:
+    Type: AWS::EC2::SecurityGroup
+    Properties:
+      GroupDescription: "Redis Security Group"
+      VpcId:
+        Fn::ImportValue:
+          !Join [':', [!Ref 'EnvironmentName', 'VPCId']]
+  RedisIngress:
+    Type: AWS::EC2::SecurityGroupIngress
+    Properties:
+      Description: Ingress from Fargate containers
+      GroupId: !Ref 'RedisSecurityGroup'
+      IpProtocol: tcp
+      FromPort: 6379
+      ToPort: 6379
+      SourceSecurityGroupId:
+        Fn::ImportValue:
+          !Join [':', [!Ref 'EnvironmentName', 'FargateContainerSecurityGroup']]
+  Redis:
+    Type: AWS::ElastiCache::CacheCluster
+    Properties:
+      Engine: redis
+      CacheNodeType: cache.m4.large # TODO increase volume
+      NumCacheNodes: 1 # Stricted to 1 for Engine: redis
+      CacheSubnetGroupName: !Ref 'RedisSubnetGroup'
+      VpcSecurityGroupIds:
+        - !GetAtt 'RedisSecurityGroup.GroupId'    # TIDO consider about using FargateContainerSecurityGroup instead
+      #PreferredAvailabilityZones:
+       # - eu-central-1a
+       # - eu-central-1b    # TODO: make replica here to unlock second AZ
+       #- eu-central-1c  # TODO
+Outputs:
+  RedisHost:
+    Value: !GetAtt 'Redis.RedisEndpoint.Address'
+    Export:
+      Name: !Join [ ':', [ !Ref 'EnvironmentName', 'RedisHost' ] ]
+  RedisPort:
+    Value: !GetAtt 'Redis.RedisEndpoint.Port'
+    Export:
+      Name: !Join [ ':', [ !Ref 'EnvironmentName', 'RedisPort' ] ]

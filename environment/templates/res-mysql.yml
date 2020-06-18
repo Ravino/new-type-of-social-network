@@ -1,0 +1,92 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Description: MySQL cluster
+Parameters:
+  EnvironmentName:
+    Type: String
+    Default: test
+    Description: The environment name, used for locating outputs from the
+                 prerequisite stacks
+
+  MySQLDBName:
+    Type: String
+    Default: 'devplizi'
+    Description: MySQLDB database default name.
+  MySQLDBMasterUsername:
+    Type: String
+    Default: 'root'
+    Description: MySQLDB admin user name.
+  MySQLDBMasterUserPassword:
+    Type: String
+    Default: 'ecugVWHKatKQd657'
+    NoEcho: true
+    Description: MySQLDB admin user password.
+Resources:
+  MySQLSubnetGroup:
+    Type: "AWS::RDS::DBSubnetGroup"
+    Properties:
+      DBSubnetGroupDescription: description #required
+      SubnetIds: #required
+        - Fn::ImportValue:
+            !Join [':', [!Ref 'EnvironmentName', 'PublicSubnetOne']]
+        - Fn::ImportValue:
+            !Join [':', [!Ref 'EnvironmentName', 'PublicSubnetTwo']]      
+    DeletionPolicy: Delete
+    UpdateReplacePolicy: Delete 
+  MySQLSecurityGroup:
+    Type: AWS::EC2::SecurityGroup
+    Properties:
+      GroupDescription: "MySQL Security Group"
+      VpcId:
+        Fn::ImportValue:
+          !Join [':', [!Ref 'EnvironmentName', 'VPCId']]
+    DeletionPolicy: Delete
+    UpdateReplacePolicy: Delete 
+  MySQLIngress:
+    Type: AWS::EC2::SecurityGroupIngress
+    Properties:
+      GroupId: !Ref 'MySQLSecurityGroup'
+      IpProtocol: tcp
+      FromPort: 3306
+      ToPort: 3306
+      SourceSecurityGroupId:
+        Fn::ImportValue:
+          !Join [':', [!Ref 'EnvironmentName', 'FargateContainerSecurityGroup']]
+    DeletionPolicy: Delete
+    UpdateReplacePolicy: Delete 
+  MySQL:
+    Type: AWS::RDS::DBInstance
+    Properties:
+      AllocatedStorage: '10' # TODO Adjust for highload. GB of storage
+      DBInstanceClass: db.m4.large
+      Engine: MySQL
+      #DBSnapshotIdentifier: !Ref 'MySQLDBName'
+      DBName: !Ref 'MySQLDBName'
+      MasterUsername: !Ref 'MySQLDBMasterUsername'
+      MasterUserPassword: !Ref 'MySQLDBMasterUserPassword'
+      DBSubnetGroupName: !Ref 'MySQLSubnetGroup'
+      VPCSecurityGroups:
+        - !GetAtt 'MySQLSecurityGroup.GroupId' 
+      MultiAZ: true
+    DeletionPolicy: Delete
+    UpdateReplacePolicy: Delete # TODO Check how does it works with table updates
+Outputs:
+  MySQLDBName: 
+    Value: !Ref 'MySQLDBName'
+    Export:
+      Name: !Join [ ':', [ !Ref 'EnvironmentName', 'MySQLDBName' ] ]
+  MySQLDBUserName: 
+    Value: !Ref 'MySQLDBMasterUsername'
+    Export:
+      Name: !Join [ ':', [ !Ref 'EnvironmentName', 'MySQLDBUser' ] ]
+  MySQLDBUserPass: 
+    Value: !Ref 'MySQLDBMasterUserPassword'
+    Export:
+      Name: !Join [ ':', [ !Ref 'EnvironmentName', 'MySQLDBPass' ] ]
+  MySQLDBHost: 
+    Value: !GetAtt 'MySQL.Endpoint.Address'
+    Export:
+      Name: !Join [ ':', [ !Ref 'EnvironmentName', 'MySQLDBHost' ] ]
+  MySQLDBPort: 
+    Value: !GetAtt 'MySQL.Endpoint.Port'
+    Export:
+      Name: !Join [ ':', [ !Ref 'EnvironmentName', 'MySQLDBPort' ] ]
