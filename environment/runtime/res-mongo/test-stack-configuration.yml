@@ -1,0 +1,16 @@
+{
+  "Parameters" : {
+    
+  },
+  "Tags" : {
+    "Type" : "NoSQL-DB",
+    "Name" : "MongoDB",
+    "Description" : "MongoDB cluster created and managed via CloudFormation",
+    "Environment" : "test"
+  }, 
+  "StackPolicy" : {
+    "Statement" : [
+      StackPolicyStatement
+    ]
+  }
+}

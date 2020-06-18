@@ -22,6 +22,7 @@ sudo-delete:
 	aws cloudformation delete-stack --stack-name eu-central-1-test-mysql --role-arn $(ARN_ADMIN)
 	aws cloudformation delete-stack --stack-name eu-central-1-test-redis --role-arn $(ARN_ADMIN)
 	aws cloudformation delete-stack --stack-name eu-central-1-test-resources --role-arn $(ARN_ADMIN)
+	aws cloudformation delete-stack --stack-name eu-central-1-test-plizi-fun-cluster --role-arn $(ARN_ADMIN)
 	aws cloudformation delete-stack --stack-name $(STACK_NAME) --role-arn $(ARN_ADMIN)
 purge:
 	aws cloudformation delete-stack --stack-name eu-central-1-test-mongo
@@ -38,8 +39,10 @@ status:
 events:
 	aws cloudformation describe-stack-events --stack-name $(STACK_NAME)
 deploy:
-	aws cloudformation deploy  --stack-name $(STACK_NAME) --template-file=file://templates/pipeline.yml 
-	cea9cf10-afe8-11ea-84ed-0a0c9a06689c
+	aws cloudformation deploy --template-file file://templates/pipeline.yml \
+	--stack-name test-plizi-fun --no-fail-on-empty-changeset \
+	--parameters ParameterKey=EnvironmentName,ParameterValue=$(ENV) \
+	--capabilities CAPABILITY_IAM # --role-arn 
 hotfix:
 	git commit -a -m "Hotfix deploy" && git push
 unstuck:
