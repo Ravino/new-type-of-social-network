@@ -169,7 +169,7 @@ Resources:
       #DBClusterIdentifier: String
       MasterUsername: !Ref 'MongoDBMasterUsername' #required
       MasterUserPassword: !Ref 'MongoDBMasterUserPassword' #required
-      DBSubnetGroupName: MongoSubnetGroup
+      DBSubnetGroupName: !Ref 'MongoSubnetGroup'
       VpcSecurityGroupIds:
         - Fn::ImportValue:
             !Join [':', [!Ref 'EnvironmentName', 'FargateContainerSecurityGroup']] # Possibly have to provide VPCid itself
