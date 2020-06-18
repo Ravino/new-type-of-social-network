@@ -30,8 +30,8 @@ Resources:
             !Join [':', [!Ref 'EnvironmentName', 'PublicSubnetOne']]
         - Fn::ImportValue:
             !Join [':', [!Ref 'EnvironmentName', 'PublicSubnetTwo']]      
-    DeletionPolicy: Delete
-    UpdateReplacePolicy: Delete 
+    DeletionPolicy: Retain
+    UpdateReplacePolicy: Retain 
   MySQLSecurityGroup:
     Type: AWS::EC2::SecurityGroup
     Properties:
@@ -39,8 +39,8 @@ Resources:
       VpcId:
         Fn::ImportValue:
           !Join [':', [!Ref 'EnvironmentName', 'VPCId']]
-    DeletionPolicy: Delete
-    UpdateReplacePolicy: Delete 
+    DeletionPolicy: Retain
+    UpdateReplacePolicy: Retain 
   MySQLIngress:
     Type: AWS::EC2::SecurityGroupIngress
     Properties:
@@ -51,8 +51,8 @@ Resources:
       SourceSecurityGroupId:
         Fn::ImportValue:
           !Join [':', [!Ref 'EnvironmentName', 'FargateContainerSecurityGroup']]
-    DeletionPolicy: Delete
-    UpdateReplacePolicy: Delete 
+    DeletionPolicy: Retain
+    UpdateReplacePolicy: Retain 
   MySQL:
     Type: AWS::RDS::DBInstance
     Properties:
@@ -67,8 +67,8 @@ Resources:
       VPCSecurityGroups:
         - !GetAtt 'MySQLSecurityGroup.GroupId' 
       MultiAZ: true
-    DeletionPolicy: Delete
-    UpdateReplacePolicy: Delete # TODO Check how does it works with table updates
+    DeletionPolicy: Retain
+    UpdateReplacePolicy: Retain # TODO Check how does it works with table updates
 Outputs:
   MySQLDBName: 
     Value: !Ref 'MySQLDBName'

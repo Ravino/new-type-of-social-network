@@ -7,14 +7,15 @@ ARN_ADMIN=arn:aws:iam::884088487044:role/CloudFormationDeployRole
 
 # scripts
 create:
-	aws cloudformation create-stack --stack-name prod-plizi-fun \
+	aws cloudformation create-stack --stack-name test-plizi-fun \
 		--template-body=file://templates/pipeline.yml \
-		--parameters ParameterKey=EnvironmentName,ParameterValue=prod \
+		--parameters ParameterKey=EnvironmentName,ParameterValue=test \
 		--role-arn $(ARN_ADMIN)
 		--capabilities CAPABILITY_NAMED_IAM  \
 		--disable-rollback \
 		--no-enable-termination-protection \
 		--timeout-in-minutes 60
+		--client-token 82bf5740-afe9-11ea-93d6-0a58cd169056
 		#StackId": "arn:aws:cloudformation:eu-central-1:884088487044:stack/test-plizi-fun/82bf5740-afe9-11ea-93d6-0a58cd169056"
 		#StackId": "arn:aws:cloudformation:eu-central-1:884088487044:stack/prod-plizi-fun/f7a0c3c0-b136-11ea-9126-0a1a4d297742"
 delete:
