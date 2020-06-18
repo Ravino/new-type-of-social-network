@@ -86,17 +86,7 @@ Resources:
                   - s3:GetObject
                   - s3:PutObject
                   - s3:GetObjectVersion
-              - Resource: !Sub arn:aws:ecr:${AWS::Region}:${AWS::AccountId}:repository/*
-                Effect: Allow
-                Action:
-                  - ecr:GetDownloadUrlForLayer
-                  - ecr:BatchGetImage
-                  - ecr:BatchCheckLayerAvailability
-                  - ecr:PutImage
-                  - ecr:InitiateLayerUpload
-                  - ecr:UploadLayerPart
-                  - ecr:CompleteLayerUpload
-              - Resource: !Sub ${AWS::AccountId}.dkr.ecr.${AWS::Region}.amazonaws.com/*
+              - Resource: !Sub arn:aws:ecr:${AWS::Region}:${AWS::AccountId}:*
                 Effect: Allow
                 Action:
                   - ecr:GetDownloadUrlForLayer
