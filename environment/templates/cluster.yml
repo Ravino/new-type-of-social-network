@@ -179,8 +179,6 @@ Resources:
       VpcId: !Ref 'VPC'
   PublicLoadBalancerListenerHTTP:
     Type: AWS::ElasticLoadBalancingV2::Listener
-    DependsOn:
-      - PublicLoadBalancer # TODO Won't fix: approving extra dependency declaration
     Properties:
       DefaultActions:
         - TargetGroupArn: !Ref 'DummyTargetGroupPublic'
@@ -190,8 +188,6 @@ Resources:
       Protocol: HTTP
   PublicLoadBalancerListenerHTTPS:
     Type: AWS::ElasticLoadBalancingV2::Listener
-    DependsOn:
-      - PublicLoadBalancer # TODO Won't fix: approving extra dependency declaration
     Properties:
       DefaultActions:
         - TargetGroupArn: !Ref 'DummyTargetGroupPublic'
