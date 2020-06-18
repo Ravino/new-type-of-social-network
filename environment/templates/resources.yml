@@ -72,8 +72,8 @@ Resources:
       CacheSubnetGroupName: !Ref 'RedisSubnetGroup'
       VpcSecurityGroupIds:
         - !GetAtt 'RedisSecurityGroup.GroupId'    # TIDO consider about using FargateContainerSecurityGroup instead
-      PreferredAvailabilityZones:
-        - eu-central-1a
+      #PreferredAvailabilityZones:
+       # - eu-central-1a
        # - eu-central-1b    # TODO: make replica here to unlock second AZ
        #- eu-central-1c  # TODO
   ## 
