@@ -68,13 +68,13 @@ Resources:
     Properties:
       Engine: redis
       CacheNodeType: cache.m4.large # TODO increase volume
-      NumCacheNodes: 2 # TODO change to 3
+      NumCacheNodes: 1 # Stricted to 1 for Engine: redis
       CacheSubnetGroupName: !Ref 'RedisSubnetGroup'
       VpcSecurityGroupIds:
         - !GetAtt 'RedisSecurityGroup.GroupId'    # TIDO consider about using FargateContainerSecurityGroup instead
       PreferredAvailabilityZones:
         - eu-central-1a
-        - eu-central-1b
+       # - eu-central-1b    # TODO: make replica here to unlock second AZ
        #- eu-central-1c  # TODO
   ## 
   # ## RDS (MySQL) Port: 3306
