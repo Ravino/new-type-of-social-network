@@ -361,9 +361,6 @@ Resources:
                 - echo Build completed on `date`
                 - echo Pushing the Docker image...
                 - docker push $IMAGE_URI
-                - printf '{"ImageUri":"%s"}' "$IMAGE_URI" > build.json
-          artifacts:
-            files: build.json
       Environment:
         ComputeType: BUILD_GENERAL1_SMALL
         Image: aws/codebuild/standard:4.0
@@ -423,9 +420,6 @@ Resources:
                 - echo Build completed on `date`
                 - echo Pushing the Docker image...
                 - docker push $IMAGE_URI
-                - printf '{"ImageUri":"%s"}' "$IMAGE_URI" > build.json
-          artifacts:
-            files: build.json
       Environment:
         ComputeType: BUILD_GENERAL1_SMALL
         Image: aws/codebuild/standard:4.0
@@ -485,9 +479,6 @@ Resources:
                 - echo Build completed on `date`
                 - echo Pushing the Docker image...
                 - docker push $IMAGE_URI
-                - printf '{"ImageUri":"%s"}' "$IMAGE_URI" > build.json
-          artifacts:
-            files: build.json
       Environment:
         ComputeType: BUILD_GENERAL1_SMALL
         Image: aws/codebuild/standard:4.0
@@ -547,9 +538,6 @@ Resources:
                 - echo Build completed on `date`
                 - echo Pushing the Docker image...
                 - docker push $IMAGE_URI
-                - printf '{"ImageUri":"%s"}' "$IMAGE_URI" > build.json
-          artifacts:
-            files: build.json
       Environment:
         ComputeType: BUILD_GENERAL1_SMALL
         Image: aws/codebuild/standard:4.0
@@ -812,12 +800,10 @@ Resources:
                 Capabilities: CAPABILITY_IAM
                 ParameterOverrides: !Sub |
                   {
-                    "EnvironmentName": "${EnvironmentName}",
-                    "ImageUrl":{"Fn::GetParam":["BackWSBuildOutput","build.json","ImageUri"]}
+                    "EnvironmentName": "${EnvironmentName}"
                   }
               InputArtifacts:
                 - Name: Source
-                - Name: BackWSBuildOutput
               OutputArtifacts:
                 - Name: BackWSDeployOutput
               RunOrder: 1
@@ -838,12 +824,10 @@ Resources:
                 Capabilities: CAPABILITY_IAM
                 ParameterOverrides: !Sub |
                   {
-                    "EnvironmentName": "${EnvironmentName}",
-                    "ImageUrl":{"Fn::GetParam":["BackQueueWorkerBuildOutput","build.json","ImageUri"]}
+                    "EnvironmentName": "${EnvironmentName}"
                   }
               InputArtifacts:
                 - Name: Source
-                - Name: BackQueueWorkerBuildOutput
               OutputArtifacts:
                 - Name: BackQueueWorkerDeployOutput
               RunOrder: 1
@@ -862,12 +846,10 @@ Resources:
                 Capabilities: CAPABILITY_IAM
                 ParameterOverrides: !Sub |
                   {
-                    "EnvironmentName": "${EnvironmentName}",
-                    "ImageUrl":{"Fn::GetParam":["BackApiBuildOutput","build.json","ImageUri"]}
+                    "EnvironmentName": "${EnvironmentName}"
                   }
               InputArtifacts:
                 - Name: Source
-                - Name: BackApiBuildOutput
               OutputArtifacts:
                 - Name: BackApiDeployOutput
               RunOrder: 2
@@ -886,12 +868,10 @@ Resources:
                 Capabilities: CAPABILITY_IAM
                 ParameterOverrides: !Sub |
                   {
-                    "EnvironmentName": "${EnvironmentName}",
-                    "ImageUrl":{"Fn::GetParam":["FrontNginxBuildOutput","build.json","ImageUri"]}
+                    "EnvironmentName": "${EnvironmentName}"
                   }
               InputArtifacts:
                 - Name: Source
-                - Name: FrontNginxBuildOutput
               OutputArtifacts:
                 - Name: FrontNginxDeployOutput
               RunOrder: 2
