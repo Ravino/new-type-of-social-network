@@ -17,7 +17,7 @@ COPY . .
 RUN composer install
 EXPOSE 7070
 EXPOSE 5555
-COPY docker-entrypoint.sh /usr/share/docker-laravel/bin/
+COPY docker/back-ws/docker-entrypoint.sh /usr/share/docker-laravel/bin/
 RUN chmod +x /usr/share/docker-laravel/bin/docker-entrypoint.sh
 
 HEALTHCHECK --interval=5s --timeout=10s \
