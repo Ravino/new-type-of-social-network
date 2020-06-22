@@ -70,7 +70,9 @@ Resources:
         Statement:
           - Effect: Allow
             Principal:
-              Service: codebuild.amazonaws.com
+              Service:
+               - cloudformation.amazonaws.com
+               - codebuild.amazonaws.com
             Action: sts:AssumeRole
       Policies:
         - PolicyName: root
@@ -821,12 +823,12 @@ Resources:
                 Provider: CloudFormation
               Configuration:
                 ActionMode: CREATE_UPDATE # CHANGE_SET_EXECUTE
-                #OutputFileName: Source::back-queue-worker/output.json
                 RoleArn: !GetAtt CloudFormationDeployRole.Arn
+                Capabilities: CAPABILITY_IAM,CAPABILITY_AUTO_EXPAND
                 StackName: !Sub ${AWS::Region}-${EnvironmentName}-${AWS::StackName}-back-queue-worker
+                #OutputFileName: Source::back-queue-worker/output.json
                 #TemplateConfiguration: Source::back-queue-worker/configuration.json
                 TemplatePath: Source::environment/templates/back-queue-worker.yml
-                Capabilities: CAPABILITY_IAM
                 ParameterOverrides: !Sub |
                   {
                     "EnvironmentName": "${EnvironmentName}"
@@ -846,9 +848,9 @@ Resources:
               Configuration:
                 ActionMode: CREATE_UPDATE # CHANGE_SET_EXECUTE
                 RoleArn: !GetAtt CloudFormationDeployRole.Arn
+                Capabilities: CAPABILITY_IAM,CAPABILITY_AUTO_EXPAND
                 StackName: !Sub ${AWS::Region}-${EnvironmentName}-${AWS::StackName}-back-api
                 TemplatePath: Source::environment/templates/back-api.yml
-                Capabilities: CAPABILITY_IAM
                 ParameterOverrides: !Sub |
                   {
                     "EnvironmentName": "${EnvironmentName}"
@@ -868,9 +870,9 @@ Resources:
               Configuration:
                 ActionMode: CREATE_UPDATE # CHANGE_SET_EXECUTE
                 RoleArn: !GetAtt CloudFormationDeployRole.Arn
+                Capabilities: CAPABILITY_IAM,CAPABILITY_AUTO_EXPAND
                 StackName: !Sub ${AWS::Region}-${EnvironmentName}-${AWS::StackName}-front-nginx
                 TemplatePath: Source::environment/templates/front-nginx.yml
-                Capabilities: CAPABILITY_IAM
                 ParameterOverrides: !Sub |
                   {
                     "EnvironmentName": "${EnvironmentName}"
