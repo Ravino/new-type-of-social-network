@@ -10,7 +10,7 @@ Parameters:
     Default: aws_deploy
   GitHubToken:
     Type: String
-    Default: 503ea673baa2189031f13ebb1cf778c5efe7169c
+    Default: 35a8ae052272bc09c13961af5ec868fa007fab1c
     NoEcho: true
   GitHubUser:
     Type: String
