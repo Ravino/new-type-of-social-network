@@ -286,10 +286,11 @@ Resources:
       #QueueConfiguration:
       VersioningConfiguration:
         Status: Enabled
-      ServerSideEncryptionConfiguration:
-        - ServerSideEncryptionByDefault:
-            SSEAlgorithm: aws:kms
-            KMSMasterKeyID: !Ref KMSs3KeyArn
+      BucketEncryption:
+        ServerSideEncryptionConfiguration:
+          - ServerSideEncryptionByDefault:
+              SSEAlgorithm: aws:kms
+              KMSMasterKeyID: !Ref KMSs3KeyArn
     DeletionPolicy: Retain
     UpdateReplacePolicy: Retain
 
