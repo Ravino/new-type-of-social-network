@@ -80,6 +80,14 @@ Resources:
                   - logs:CreateLogStream
                   - logs:PutLogEvents
                   - ecr:GetAuthorizationToken
+                  - ecr:GetDownloadUrlForLayer
+                  - ecr:BatchGetImage
+                  - ecr:BatchCheckLayerAvailability
+                  - ecr:CreateRepository
+                  - ecr:InitiateLayerUpload
+                  - ecr:CompleteLayerUpload
+                  - ecr:PutImage
+                  - ecr:UploadLayerPart
               - Resource: !Sub arn:aws:s3:::${ArtifactBucket}/*
                 Effect: Allow
                 Action:
@@ -89,7 +97,9 @@ Resources:
               - Resource: "*"
                 Effect: Allow
                 Action:
-                  - ecr:*
+                  - ecr:GetDownloadUrlForLayer
+                  - ecr:BatchGetImage
+                  - ecr:BatchCheckLayerAvailability
 
   # Role used to give CodePipeline to release a build.
   CodePipelineServiceRole:
@@ -302,27 +312,35 @@ Resources:
           phases:
             pre_build:
               commands:
-                - $(aws ecr get-login --no-include-email)
-                - TAG="$(echo $CODEBUILD_RESOLVED_SOURCE_VERSION | head -c 8)"
-                - IMAGE_URI="${REPOSITORY_URI}:${TAG}"
+                - echo Logging in to Amazon ECR...
+                - $(aws ecr get-login --no-include-email --region $AWS_DEFAULT_REGION)
             build:
               commands:
-                - docker build --tag "${IMAGE_URI}" ./backend/docker/back-ws
+                - echo Build started on `date`
+                - echo Building the Docker image...
+                - docker build -t $IMAGE_REPO_NAME:$IMAGE_TAG .
+                - docker tag $IMAGE_REPO_NAME:$IMAGE_TAG $AWS_ACCOUNT_ID.dkr.ecr.$AWS_DEFAULT_REGION.amazonaws.com/$IMAGE_REPO_NAME:$IMAGE_TAG
             post_build:
               commands:
-                - docker push "$IMAGE_URI"
-                - printf '{"ImageUri":"%s"}' "$IMAGE_URI" > build.json
+                - echo Build completed on `date`
+                - echo Pushing the Docker image...
+                - docker push $AWS_ACCOUNT_ID.dkr.ecr.$AWS_DEFAULT_REGION.amazonaws.com/$IMAGE_REPO_NAME:$IMAGE_TAG
           artifacts:
             files: build.json
       Environment:
         ComputeType: BUILD_GENERAL1_SMALL
-        Image: aws/codebuild/docker:19.03.8
+        Image: aws/codebuild/standard:4.0
+        ImagePullCredentialsType: CODEBUILD
         Type: LINUX_CONTAINER
         EnvironmentVariables:
           - Name: AWS_DEFAULT_REGION
             Value: !Ref AWS::Region
-          - Name: REPOSITORY_URI
-            Value: !Sub ${AWS::AccountId}.dkr.ecr.${AWS::Region}.amazonaws.com/${BackWSRepository}
+          - Name: AWS_ACCOUNT_ID
+            Value: !Ref AWS::AccountId
+          - Name: IMAGE_REPO_NAME
+            Value: !Ref BackWSRepository
+          - Name: IMAGE_TAG
+            Value: 'latest'
       LogsConfig:
         CloudWatchLogs:
           GroupName: !Sub /code-build/${AWS::StackName}/back-ws
@@ -346,27 +364,35 @@ Resources:
           phases:
             pre_build:
               commands:
-                - $(aws ecr get-login --no-include-email)
-                - TAG="$(echo $CODEBUILD_RESOLVED_SOURCE_VERSION | head -c 8)"
-                - IMAGE_URI="${REPOSITORY_URI}:${TAG}"
+                - echo Logging in to Amazon ECR...
+                - $(aws ecr get-login --no-include-email --region $AWS_DEFAULT_REGION)
             build:
               commands:
-                - docker build --tag "${IMAGE_URI}" ./backend/docker/back-queue-worker
+                - echo Build started on `date`
+                - echo Building the Docker image...
+                - docker build -t $IMAGE_REPO_NAME:$IMAGE_TAG .
+                - docker tag $IMAGE_REPO_NAME:$IMAGE_TAG $AWS_ACCOUNT_ID.dkr.ecr.$AWS_DEFAULT_REGION.amazonaws.com/$IMAGE_REPO_NAME:$IMAGE_TAG
             post_build:
               commands:
-                - docker push "$IMAGE_URI"
-                - printf '{"ImageUri":"%s"}' "$IMAGE_URI" > build.json
+                - echo Build completed on `date`
+                - echo Pushing the Docker image...
+                - docker push $AWS_ACCOUNT_ID.dkr.ecr.$AWS_DEFAULT_REGION.amazonaws.com/$IMAGE_REPO_NAME:$IMAGE_TAG
           artifacts:
             files: build.json
       Environment:
         ComputeType: BUILD_GENERAL1_SMALL
-        Image: aws/codebuild/docker:19.03.8
+        Image: aws/codebuild/standard:4.0
+        ImagePullCredentialsType: CODEBUILD
         Type: LINUX_CONTAINER
         EnvironmentVariables:
           - Name: AWS_DEFAULT_REGION
             Value: !Ref AWS::Region
-          - Name: REPOSITORY_URI
-            Value: !Sub ${AWS::AccountId}.dkr.ecr.${AWS::Region}.amazonaws.com/${BackQueueWorkerRepository}
+          - Name: AWS_ACCOUNT_ID
+            Value: !Ref AWS::AccountId
+          - Name: IMAGE_REPO_NAME
+            Value: !Ref BackQueueWorkerRepository
+          - Name: IMAGE_TAG
+            Value: 'latest'
       LogsConfig:
         CloudWatchLogs:
           GroupName: !Sub /code-build/${AWS::StackName}/back-queue-worker
@@ -390,27 +416,35 @@ Resources:
           phases:
             pre_build:
               commands:
-                - $(aws ecr get-login --no-include-email)
-                - TAG="$(echo $CODEBUILD_RESOLVED_SOURCE_VERSION | head -c 8)"
-                - IMAGE_URI="${REPOSITORY_URI}:${TAG}"
+                - echo Logging in to Amazon ECR...
+                - $(aws ecr get-login --no-include-email --region $AWS_DEFAULT_REGION)
             build:
               commands:
-                - docker build --tag "${IMAGE_URI}" ./backend/docker/back-api
+                - echo Build started on `date`
+                - echo Building the Docker image...
+                - docker build -t $IMAGE_REPO_NAME:$IMAGE_TAG .
+                - docker tag $IMAGE_REPO_NAME:$IMAGE_TAG $AWS_ACCOUNT_ID.dkr.ecr.$AWS_DEFAULT_REGION.amazonaws.com/$IMAGE_REPO_NAME:$IMAGE_TAG
             post_build:
               commands:
-                - docker push "$IMAGE_URI"
-                - printf '{"ImageUri":"%s"}' "$IMAGE_URI" > build.json
+                - echo Build completed on `date`
+                - echo Pushing the Docker image...
+                - docker push $AWS_ACCOUNT_ID.dkr.ecr.$AWS_DEFAULT_REGION.amazonaws.com/$IMAGE_REPO_NAME:$IMAGE_TAG
           artifacts:
             files: build.json
       Environment:
         ComputeType: BUILD_GENERAL1_SMALL
-        Image: aws/codebuild/docker:19.03.8
+        Image: aws/codebuild/standard:4.0
+        ImagePullCredentialsType: CODEBUILD
         Type: LINUX_CONTAINER
         EnvironmentVariables:
           - Name: AWS_DEFAULT_REGION
             Value: !Ref AWS::Region
-          - Name: REPOSITORY_URI
-            Value: !Sub ${AWS::AccountId}.dkr.ecr.${AWS::Region}.amazonaws.com/${BackApiRepository}
+          - Name: AWS_ACCOUNT_ID
+            Value: !Ref AWS::AccountId
+          - Name: IMAGE_REPO_NAME
+            Value: !Ref BackApiRepository
+          - Name: IMAGE_TAG
+            Value: 'latest'
       LogsConfig:
         CloudWatchLogs:
           GroupName: !Sub /code-build/${AWS::StackName}/back-api
@@ -434,27 +468,35 @@ Resources:
           phases:
             pre_build:
               commands:
-                - $(aws ecr get-login --no-include-email)
-                - TAG="$(echo $CODEBUILD_RESOLVED_SOURCE_VERSION | head -c 8)"
-                - IMAGE_URI="${REPOSITORY_URI}:${TAG}"
+                - echo Logging in to Amazon ECR...
+                - $(aws ecr get-login --no-include-email --region $AWS_DEFAULT_REGION)
             build:
               commands:
-                - docker build --tag "${IMAGE_URI}" ./frontend/docker/front-nginx
+                - echo Build started on `date`
+                - echo Building the Docker image...
+                - docker build -t $IMAGE_REPO_NAME:$IMAGE_TAG .
+                - docker tag $IMAGE_REPO_NAME:$IMAGE_TAG $AWS_ACCOUNT_ID.dkr.ecr.$AWS_DEFAULT_REGION.amazonaws.com/$IMAGE_REPO_NAME:$IMAGE_TAG
             post_build:
               commands:
-                - docker push "$IMAGE_URI"
-                - printf '{"ImageUri":"%s"}' "$IMAGE_URI" > build.json
+                - echo Build completed on `date`
+                - echo Pushing the Docker image...
+                - docker push $AWS_ACCOUNT_ID.dkr.ecr.$AWS_DEFAULT_REGION.amazonaws.com/$IMAGE_REPO_NAME:$IMAGE_TAG
           artifacts:
             files: build.json
       Environment:
         ComputeType: BUILD_GENERAL1_SMALL
-        Image: aws/codebuild/docker:19.03.8
+        Image: aws/codebuild/standard:4.0
+        ImagePullCredentialsType: CODEBUILD
         Type: LINUX_CONTAINER
         EnvironmentVariables:
           - Name: AWS_DEFAULT_REGION
             Value: !Ref AWS::Region
-          - Name: REPOSITORY_URI
-            Value: !Sub ${AWS::AccountId}.dkr.ecr.${AWS::Region}.amazonaws.com/${FrontNginxRepository}
+          - Name: AWS_ACCOUNT_ID
+            Value: !Ref AWS::AccountId
+          - Name: IMAGE_REPO_NAME
+            Value: !Ref FrontNginxRepository
+          - Name: IMAGE_TAG
+            Value: 'latest'
       LogsConfig:
         CloudWatchLogs:
           GroupName: !Sub /code-build/${AWS::StackName}/front-nginx
