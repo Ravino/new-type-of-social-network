@@ -366,6 +366,7 @@ Resources:
         Image: aws/codebuild/standard:4.0
         ImagePullCredentialsType: CODEBUILD
         Type: LINUX_CONTAINER
+        PrivilegedMode: true
         EnvironmentVariables:
           - Name: AWS_DEFAULT_REGION
             Value: !Ref AWS::Region
@@ -424,6 +425,7 @@ Resources:
         Image: aws/codebuild/standard:4.0
         ImagePullCredentialsType: CODEBUILD
         Type: LINUX_CONTAINER
+        PrivilegedMode: true
         EnvironmentVariables:
           - Name: AWS_DEFAULT_REGION
             Value: !Ref AWS::Region
@@ -482,6 +484,7 @@ Resources:
         Image: aws/codebuild/standard:4.0
         ImagePullCredentialsType: CODEBUILD
         Type: LINUX_CONTAINER
+        PrivilegedMode: true
         EnvironmentVariables:
           - Name: AWS_DEFAULT_REGION
             Value: !Ref AWS::Region
@@ -540,6 +543,7 @@ Resources:
         Image: aws/codebuild/standard:4.0
         ImagePullCredentialsType: CODEBUILD
         Type: LINUX_CONTAINER
+        PrivilegedMode: true
         EnvironmentVariables:
           - Name: AWS_DEFAULT_REGION
             Value: !Ref AWS::Region
