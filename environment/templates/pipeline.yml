@@ -339,6 +339,11 @@ Resources:
         BuildSpec: |
           version: 0.2
           phases:
+            install:
+              commands:
+                - echo Starting up dockerd and linking with socket-tcp endpoints
+                - nohup /usr/local/bin/dockerd --host=unix:///var/run/docker.sock --host=tcp://127.0.0.1:2375 --storage-driver=overlay2&
+                - timeout 15 sh -c "until docker info; do echo .; sleep 1; done"
             pre_build:
               commands:
                 - echo Logging in to Amazon ECR...
@@ -377,6 +382,7 @@ Resources:
           StreamName: !Sub /code-build/${AWS::StackName}
       Name: !Sub ${AWS::Region}-${EnvironmentName}-${AWS::StackName}-back-ws
       ServiceRole: !Ref CodeBuildServiceRole
+      EncryptionKey: !Ref KMSs3KeyArn
     DeletionPolicy: Retain
     UpdateReplacePolicy: Retain
 
@@ -391,6 +397,11 @@ Resources:
         BuildSpec: |
           version: 0.2
           phases:
+            install:
+              commands:
+                - echo Starting up dockerd and linking with socket-tcp endpoints
+                - nohup /usr/local/bin/dockerd --host=unix:///var/run/docker.sock --host=tcp://127.0.0.1:2375 --storage-driver=overlay2&
+                - timeout 15 sh -c "until docker info; do echo .; sleep 1; done"
             pre_build:
               commands:
                 - echo Logging in to Amazon ECR...
@@ -429,6 +440,7 @@ Resources:
           StreamName: !Sub /code-build/${AWS::StackName}
       Name: !Sub ${AWS::Region}-${EnvironmentName}-${AWS::StackName}-back-queue-worker
       ServiceRole: !Ref CodeBuildServiceRole
+      EncryptionKey: !Ref KMSs3KeyArn
     DeletionPolicy: Retain
     UpdateReplacePolicy: Retain
 
@@ -443,6 +455,11 @@ Resources:
         BuildSpec: |
           version: 0.2
           phases:
+            install:
+              commands:
+                - echo Starting up dockerd and linking with socket-tcp endpoints
+                - nohup /usr/local/bin/dockerd --host=unix:///var/run/docker.sock --host=tcp://127.0.0.1:2375 --storage-driver=overlay2&
+                - timeout 15 sh -c "until docker info; do echo .; sleep 1; done"
             pre_build:
               commands:
                 - echo Logging in to Amazon ECR...
@@ -481,6 +498,7 @@ Resources:
           StreamName: !Sub /code-build/${AWS::StackName}
       Name: !Sub ${AWS::Region}-${EnvironmentName}-${AWS::StackName}-back-api
       ServiceRole: !Ref CodeBuildServiceRole
+      EncryptionKey: !Ref KMSs3KeyArn
     DeletionPolicy: Retain
     UpdateReplacePolicy: Retain
 
@@ -495,6 +513,11 @@ Resources:
         BuildSpec: |
           version: 0.2
           phases:
+            install:
+              commands:
+                - echo Starting up dockerd and linking with socket-tcp endpoints
+                - nohup /usr/local/bin/dockerd --host=unix:///var/run/docker.sock --host=tcp://127.0.0.1:2375 --storage-driver=overlay2&
+                - timeout 15 sh -c "until docker info; do echo .; sleep 1; done"
             pre_build:
               commands:
                 - echo Logging in to Amazon ECR...
@@ -533,6 +556,7 @@ Resources:
           StreamName: !Sub /code-build/${AWS::StackName}
       Name: !Sub ${AWS::Region}-${EnvironmentName}-${AWS::StackName}-front-nginx
       ServiceRole: !Ref CodeBuildServiceRole
+      EncryptionKey: !Ref KMSs3KeyArn
     DeletionPolicy: Retain
     UpdateReplacePolicy: Retain
 
