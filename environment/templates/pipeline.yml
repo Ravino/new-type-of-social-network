@@ -183,8 +183,8 @@ Resources:
   ArtifactBucket:
     Type: AWS::S3::Bucket
     Properties:
-      BucketName: !Sub '${AWS::Region}-${AWS::StackName}'
-      Tags: 
+      BucketName: !Sub '${AWS::Region}-${EnvironmentName}-${AWS::StackName}'
+      Tags:
         - Key: Type
           Value: Project
         - Key: Name
@@ -210,7 +210,7 @@ Resources:
       InventoryConfigurations:
         - Id: WeeklyInventoryConfiguration
           Destination:
-            BucketArn: !Join ['-', ['arn:aws:s3:::', !Ref 'AWS::Region', !Ref 'AWS::StackName']] # TODO Possible round-dependency
+            BucketArn: !Join ['-', ['arn:aws:s3:::', !Ref 'AWS::Region', !Ref 'EnvironmentName', !Ref 'AWS::StackName']] # TODO Possible round-dependency
             Format: CSV
             Prefix: Inventory
           IncludedObjectVersions: Current
@@ -219,7 +219,7 @@ Resources:
           Enabled: true
         - Id: DailyInventoryConfiguration
           Destination:
-            BucketArn: !Join ['-', ['arn:aws:s3:::', !Ref 'AWS::Region', !Ref 'AWS::StackName']] # TODO Possible round-dependency
+            BucketArn: !Join ['-', ['arn:aws:s3:::', !Ref 'AWS::Region', !Ref 'EnvironmentName', !Ref 'AWS::StackName']] # TODO Possible round-dependency
             Format: CSV
             Prefix: Inventory
           IncludedObjectVersions: Current
@@ -229,21 +229,21 @@ Resources:
       LifecycleConfiguration:
         Rules:
           - Id: AbortBrokenData
-            AbortIncompleteMultipartUpload: 
+            AbortIncompleteMultipartUpload:
               DaysAfterInitiation: 1
             Status: Enabled
           - Id: DeleteAfterBecomingNonCurrent
             NoncurrentVersionExpirationInDays: 1095
-            NoncurrentVersionTransitions: 
+            NoncurrentVersionTransitions:
               - StorageClass: GLACIER
                 TransitionInDays: 182
               - StorageClass: DEEP_ARCHIVE
                 TransitionInDays: 365
-            #TagFilters: 
+            #TagFilters:
             #  - Key: Type
             #    Value: Artifact
             Status: Enabled
-      #LoggingConfiguration: 
+      #LoggingConfiguration:
       #AnalyticsConfiguration:
       #QueueConfiguration:
       VersioningConfiguration:
@@ -263,7 +263,7 @@ Resources:
   #           Principal:
   #             Service: s3.amazonaws.com
   #           Action: sts:AssumeRole
-  
+
   # Policy for artifact backup managent (separate to prevent circular dependency)
   # BucketBackupPolicy:
   #   Type: AWS::IAM::Policy
@@ -324,7 +324,7 @@ Resources:
           GroupName: !Sub /code-build/${AWS::StackName}/back-ws
           Status: ENABLED
           StreamName: !Sub /code-build/${AWS::StackName}
-      Name: !Sub ${AWS::StackName}-back-ws
+      Name: !Sub ${AWS::Region}-${EnvironmentName}-${AWS::StackName}-back-ws
       ServiceRole: !Ref CodeBuildServiceRole
     DeletionPolicy: Retain
     UpdateReplacePolicy: Retain
@@ -368,7 +368,7 @@ Resources:
           GroupName: !Sub /code-build/${AWS::StackName}/back-queue-worker
           Status: ENABLED
           StreamName: !Sub /code-build/${AWS::StackName}
-      Name: !Sub ${AWS::StackName}-back-queue-worker
+      Name: !Sub ${AWS::Region}-${EnvironmentName}-${AWS::StackName}-back-queue-worker
       ServiceRole: !Ref CodeBuildServiceRole
     DeletionPolicy: Retain
     UpdateReplacePolicy: Retain
@@ -412,7 +412,7 @@ Resources:
           GroupName: !Sub /code-build/${AWS::StackName}/back-api
           Status: ENABLED
           StreamName: !Sub /code-build/${AWS::StackName}
-      Name: !Sub ${AWS::StackName}-back-api
+      Name: !Sub ${AWS::Region}-${EnvironmentName}-${AWS::StackName}-back-api
       ServiceRole: !Ref CodeBuildServiceRole
     DeletionPolicy: Retain
     UpdateReplacePolicy: Retain
@@ -456,7 +456,7 @@ Resources:
           GroupName: !Sub /code-build/${AWS::StackName}/front-nginx
           Status: ENABLED
           StreamName: !Sub /code-build/${AWS::StackName}
-      Name: !Sub ${AWS::StackName}-front-nginx
+      Name: !Sub ${AWS::Region}-${EnvironmentName}-${AWS::StackName}-front-nginx
       ServiceRole: !Ref CodeBuildServiceRole
     DeletionPolicy: Retain
     UpdateReplacePolicy: Retain
@@ -464,15 +464,15 @@ Resources:
   # This pipeline defines the steps to build, deploy, and release the application
   Pipeline:
     Type: AWS::CodePipeline::Pipeline
-    Properties: 
+    Properties:
       RoleArn: !GetAtt CodePipelineServiceRole.Arn
       ArtifactStore:
         Type: S3
         Location: !Ref ArtifactBucket
-      DisableInboundStageTransitions: 
-        - StageName: Resources 
+      DisableInboundStageTransitions:
+        - StageName: Resources
           Reason: "Disabling ressources assembling before cluster would be ready."
-        - StageName: Services 
+        - StageName: Services
           Reason: "Disabling services assembling before resources would be ready."
         - StageName: Deploy
           Reason: "We have to make sure images are build in a right way."
@@ -506,9 +506,9 @@ Resources:
                 Version: '1'
                 Provider: CloudFormation
               Configuration:
-                ActionMode: REPLACE_ON_FAILURE
+                ActionMode: CREATE_UPDATE
                 RoleArn: !GetAtt CloudFormationDeployRole.Arn
-                StackName: !Sub "${AWS::Region}-${AWS::StackName}-cluster"
+                StackName: !Sub "${AWS::Region}-${EnvironmentName}-${AWS::StackName}-cluster"
                 TemplatePath: "Source::environment/templates/cluster.yml"
                 Capabilities: CAPABILITY_IAM
                 ParameterOverrides: !Sub |
@@ -533,10 +533,10 @@ Resources:
                 Version: '1'
                 Provider: CloudFormation
               Configuration:
-                ActionMode: REPLACE_ON_FAILURE
+                ActionMode: CREATE_UPDATE
                 RoleArn: !GetAtt CloudFormationDeployRole.Arn
                 Capabilities: CAPABILITY_IAM
-                StackName: !Sub "${AWS::Region}-${EnvironmentName}-resources"
+                StackName: !Sub "${AWS::Region}-${EnvironmentName}-${AWS::StackName}-resources"
                 TemplatePath: Source::environment/templates/resources.yml
                 ParameterOverrides: !Sub |
                   {
@@ -555,7 +555,7 @@ Resources:
                 Version: '1'
                 Provider: CloudFormation
               Configuration:
-                ActionMode: REPLACE_ON_FAILURE
+                ActionMode: CREATE_UPDATE
                 RoleArn: !GetAtt CloudFormationDeployRole.Arn
                 Capabilities: CAPABILITY_IAM
                 StackName: !Sub "${AWS::Region}-${EnvironmentName}-mongo"
@@ -577,7 +577,7 @@ Resources:
                 Version: '1'
                 Provider: CloudFormation
               Configuration:
-                ActionMode: REPLACE_ON_FAILURE
+                ActionMode: CREATE_UPDATE
                 RoleArn: !GetAtt CloudFormationDeployRole.Arn
                 Capabilities: CAPABILITY_IAM
                 StackName: !Sub "${AWS::Region}-${EnvironmentName}-mysql"
@@ -591,7 +591,7 @@ Resources:
               OutputArtifacts:
                 - Name: MySQLDeployOutput
               RunOrder: 2
-        
+
             - Name: Redis
               ActionTypeId:
                 Category: Deploy
@@ -599,7 +599,7 @@ Resources:
                 Version: '1'
                 Provider: CloudFormation
               Configuration:
-                ActionMode: REPLACE_ON_FAILURE
+                ActionMode: CREATE_UPDATE
                 RoleArn: !GetAtt CloudFormationDeployRole.Arn
                 Capabilities: CAPABILITY_IAM
                 StackName: !Sub "${AWS::Region}-${EnvironmentName}-redis"
@@ -687,9 +687,9 @@ Resources:
                 Version: '1'
                 Provider: CloudFormation
               Configuration:
-                ActionMode: REPLACE_ON_FAILURE
+                ActionMode: CREATE_UPDATE
                 RoleArn: !GetAtt CloudFormationDeployRole.Arn
-                StackName: !Sub ${EnvironmentName}-back-ws
+                StackName: !Sub ${AWS::Region}-${EnvironmentName}-${AWS::StackName}-back-ws
                 TemplatePath: Source::environment/templates/back-ws.yml
                 Capabilities: CAPABILITY_IAM
                 ParameterOverrides: !Sub |
@@ -710,10 +710,10 @@ Resources:
                 Version: '1'
                 Provider: CloudFormation
               Configuration:
-                ActionMode: REPLACE_ON_FAILURE
+                ActionMode: CREATE_UPDATE
                 OutputFileName: Source::back-queue-worker/output.json
                 RoleArn: !GetAtt CloudFormationDeployRole.Arn
-                StackName: !Sub ${EnvironmentName}-back-queue-worker
+                StackName: !Sub ${AWS::Region}-${EnvironmentName}-${AWS::StackName}-back-queue-worker
                 #TemplateConfiguration: Source::back-queue-worker/configuration.json
                 TemplatePath: Source::environment/templates/back-queue-worker.yml
                 Capabilities: CAPABILITY_IAM
@@ -735,9 +735,9 @@ Resources:
                 Version: '1'
                 Provider: CloudFormation
               Configuration:
-                ActionMode: REPLACE_ON_FAILURE
+                ActionMode: CREATE_UPDATE
                 RoleArn: !GetAtt CloudFormationDeployRole.Arn
-                StackName: !Sub ${EnvironmentName}-back-api
+                StackName: !Sub ${AWS::Region}-${EnvironmentName}-${AWS::StackName}-back-api
                 TemplatePath: Source::environment/templates/back-api.yml
                 Capabilities: CAPABILITY_IAM
                 ParameterOverrides: !Sub |
@@ -758,9 +758,9 @@ Resources:
                 Version: '1'
                 Provider: CloudFormation
               Configuration:
-                ActionMode: REPLACE_ON_FAILURE
+                ActionMode: CREATE_UPDATE
                 RoleArn: !GetAtt CloudFormationDeployRole.Arn
-                StackName: !Sub ${EnvironmentName}-front-nginx
+                StackName: !Sub ${AWS::Region}-${EnvironmentName}-${AWS::StackName}-front-nginx
                 TemplatePath: Source::environment/templates/front-nginx.yml
                 Capabilities: CAPABILITY_IAM
                 ParameterOverrides: !Sub |

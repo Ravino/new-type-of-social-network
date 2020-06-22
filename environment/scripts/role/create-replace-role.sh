@@ -61,7 +61,7 @@ elif [ $COUNT_DEL_ROLES -eq "1" ]; then
 
     if [ $COUNT_DEL_ROLE_POLICIES -eq "0" ]; then
         echo ":: No role-policiess with role-name ${COUNT_DEL_ROLE_POLICIES} found, skipping delete."
-    elif [ $COUNT_DEL_ROLES -eq "1" ]; then
+    elif [ $COUNT_DEL_ROLE_POLICIES -eq "1" ]; then
         echo ":: Removing role policies from old role ${ROLE_NAME}"
 
         echo ">> aws iam list-attached-role-policies \
