@@ -817,6 +817,7 @@ Resources:
                   }
               InputArtifacts:
                 - Name: Source
+                - Name: BackWSBuildOutput
               OutputArtifacts:
                 - Name: BackWSDeployOutput
               RunOrder: 1
@@ -842,6 +843,7 @@ Resources:
                   }
               InputArtifacts:
                 - Name: Source
+                - Name: BackQueueWorkerBuildOutput
               OutputArtifacts:
                 - Name: BackQueueWorkerDeployOutput
               RunOrder: 1
@@ -865,6 +867,7 @@ Resources:
                   }
               InputArtifacts:
                 - Name: Source
+                - Name: BackApiBuildOutput
               OutputArtifacts:
                 - Name: BackApiDeployOutput
               RunOrder: 2
@@ -888,6 +891,7 @@ Resources:
                   }
               InputArtifacts:
                 - Name: Source
+                - Name: FrontNginxBuildOutput
               OutputArtifacts:
                 - Name: FrontNginxDeployOutput
               RunOrder: 2
