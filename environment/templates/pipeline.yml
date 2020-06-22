@@ -649,7 +649,7 @@ Resources:
                 - Name: Source
               OutputArtifacts:
                 - Name: BackQueueWorkerBuildOutput
-              RunOrder: 2
+              RunOrder: 3
 
             # Build the backend worker image
             - Name: back-api
@@ -664,7 +664,7 @@ Resources:
                 - Name: Source
               OutputArtifacts:
                 - Name: BackApiBuildOutput
-              RunOrder: 2
+              RunOrder: 4
 
             # Build the backend worker image
             - Name: front-nginx
@@ -679,7 +679,7 @@ Resources:
                 - Name: Source
               OutputArtifacts:
                 - Name: FrontNginxBuildOutput
-              RunOrder: 2
+              RunOrder: 5
 
         # Finally we deploy the Fargate service to the cluster
         - Name: Deploy

@@ -16,38 +16,26 @@ create:
     --client-request-token $(CLIENT_TOKEN)
 delete:
 	echo "aws cloudformation delete-stack --stack-name $(STACK_NAME) --client-request-token $(CLIENT_TOKEN)"
-sudo-delete:
-	aws cloudformation delete-stack --stack-name eu-central-1-test-mongo --role-arn $(ARN_ADMIN)
-	aws cloudformation delete-stack --stack-name eu-central-1-test-mysql --role-arn $(ARN_ADMIN)
-	aws cloudformation delete-stack --stack-name eu-central-1-test-redis --role-arn $(ARN_ADMIN)
-	aws cloudformation delete-stack --stack-name eu-central-1-test-resources --role-arn $(ARN_ADMIN)
-	aws cloudformation delete-stack --stack-name eu-central-1-test-plizi-fun-cluster --role-arn $(ARN_ADMIN)
-	aws cloudformation delete-stack --stack-name $(STACK_NAME) --role-arn $(ARN_ADMIN)
 purge:
-	aws cloudformation delete-stack --stack-name eu-central-1-test-mongo
-	aws cloudformation delete-stack --stack-name eu-central-1-test-mysql
-	aws cloudformation delete-stack --stack-name eu-central-1-test-redis
-	aws cloudformation delete-stack --stack-name eu-central-1-test-resources
-	aws cloudformation delete-stack --stack-name $(STACK_NAME)
-delete-repo:
-	aws ecr delete-repository --repository-name $(STACK_FULL_NAME)-back-api --role-arn $(ARN_ADMIN)
-	aws ecr delete-repository --repository-name $(STACK_FULL_NAME)-back-queue-worker --role-arn $(ARN_ADMIN)
-	aws ecr delete-repository --repository-name $(STACK_FULL_NAME)-back-ws --role-arn $(ARN_ADMIN)
-	aws ecr delete-repository --repository-name $(STACK_FULL_NAME)-front-nginx --role-arn $(ARN_ADMIN)
-delete-dev-repo:
-	aws ecr delete-repository --repository-name dev-back-api
-	aws ecr delete-repository --repository-name dev-back-queue-worker
-	aws ecr delete-repository --repository-name dev-back-ws
-	aws ecr delete-repository --repository-name dev-front-nginx
+	aws cloudformation delete-stack --stack-name ${STACK_FULL_NAME}-mongo --role-arn $(ARN_ADMIN) --client-request-token $(CLIENT_TOKEN)
+	aws cloudformation delete-stack --stack-name ${STACK_FULL_NAME}-mysql --role-arn $(ARN_ADMIN) --client-request-token $(CLIENT_TOKEN)
+	aws cloudformation delete-stack --stack-name ${STACK_FULL_NAME}-redis --role-arn $(ARN_ADMIN) --client-request-token $(CLIENT_TOKEN)
+	aws cloudformation delete-stack --stack-name ${STACK_FULL_NAME}-resources --role-arn $(ARN_ADMIN) --client-request-token $(CLIENT_TOKEN)
+    aws cloudformation delete-stack --stack-name ${STACK_FULL_NAME}-cluster --role-arn $(ARN_ADMIN) --client-request-token $(CLIENT_TOKEN)
+	aws cloudformation delete-stack --stack-name $(STACK_NAME) --role-arn $(ARN_ADMIN) --client-request-token $(CLIENT_TOKEN)
+	aws ecr delete-repository --repository-name $(STACK_FULL_NAME)-back-api --role-arn $(ARN_ADMIN) --client-request-token $(CLIENT_TOKEN)
+	aws ecr delete-repository --repository-name $(STACK_FULL_NAME)-back-queue-worker --role-arn $(ARN_ADMIN) --client-request-token $(CLIENT_TOKEN)
+	aws ecr delete-repository --repository-name $(STACK_FULL_NAME)-back-ws --role-arn $(ARN_ADMIN) --client-request-token $(CLIENT_TOKEN)
+	aws ecr delete-repository --repository-name $(STACK_FULL_NAME)-front-nginx --role-arn $(ARN_ADMIN) --client-request-token $(CLIENT_TOKEN)
 status:
-	aws cloudformation describe-stacks --output table
+	aws cloudformation describe-stacks --output table --role-arn $(ARN_ADMIN) --client-request-token $(CLIENT_TOKEN)
 events:
 	aws cloudformation describe-stack-events --stack-name $(STACK_NAME)
 deploy:
 	aws cloudformation deploy --template-file file://templates/pipeline.yml \
 	--stack-name test-plizi-fun --no-fail-on-empty-changeset \
 	--parameters ParameterKey=EnvironmentName,ParameterValue=dev \
-	--capabilities CAPABILITY_IAM
+	--capabilities CAPABILITY_NAMED_IAM
 hotfix:
 	git commit -a -m "Hotfix deploy" && git push
 unstuck:
