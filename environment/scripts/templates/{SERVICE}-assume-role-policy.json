@@ -2,12 +2,12 @@
     "Version": "2012-10-17", 
     "Statement": [
       {
+        "Effect": "Allow",
         "Action": "sts:AssumeRole", 
         "Principal": {
-           "Service": "cloudformation.amazonaws.com"
+           "Service": "{SERVICE}.amazonaws.com"
         }, 
-        "Effect": "Allow", 
-        "Sid": ""
+        "Sid": "{SERVICE}-assume-role-policy"
       }
     ]
   }
