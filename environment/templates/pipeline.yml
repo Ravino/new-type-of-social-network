@@ -612,11 +612,12 @@ Resources:
                 Version: '1'
                 Provider: CloudFormation
               Configuration:
-                ActionMode: CREATE_UPDATE # CHANGE_SET_EXECUTE
+                ActionMode: CHANGE_SET_REPLACE
+                Capabilities: CAPABILITY_IAM
+                ChangeSetName: !Sub "${AWS::Region}-${EnvironmentName}-${AWS::StackName}-cluster-changeset"
                 RoleArn: !GetAtt CloudFormationDeployRole.Arn
                 StackName: !Sub "${AWS::Region}-${EnvironmentName}-${AWS::StackName}-cluster"
                 TemplatePath: "Source::environment/templates/cluster.yml"
-                Capabilities: CAPABILITY_IAM
                 ParameterOverrides: !Sub |
                   {
                     "EnvironmentName": "${EnvironmentName}",
@@ -639,9 +640,10 @@ Resources:
                 Version: '1'
                 Provider: CloudFormation
               Configuration:
-                ActionMode: CREATE_UPDATE # CHANGE_SET_EXECUTE
-                RoleArn: !GetAtt CloudFormationDeployRole.Arn
+                ActionMode: CHANGE_SET_REPLACE
                 Capabilities: CAPABILITY_IAM
+                ChangeSetName: !Sub "${AWS::Region}-${EnvironmentName}-${AWS::StackName}-resources-changeset"
+                RoleArn: !GetAtt CloudFormationDeployRole.Arn
                 StackName: !Sub "${AWS::Region}-${EnvironmentName}-${AWS::StackName}-resources"
                 TemplatePath: Source::environment/templates/resources.yml
                 ParameterOverrides: !Sub |
@@ -661,9 +663,10 @@ Resources:
                 Version: '1'
                 Provider: CloudFormation
               Configuration:
-                ActionMode: CREATE_UPDATE
-                RoleArn: !GetAtt CloudFormationDeployRole.Arn
+                ActionMode: CHANGE_SET_REPLACE
                 Capabilities: CAPABILITY_IAM
+                ChangeSetName: !Sub "${AWS::Region}-${EnvironmentName}-mongo-changeset"
+                RoleArn: !GetAtt CloudFormationDeployRole.Arn
                 StackName: !Sub "${AWS::Region}-${EnvironmentName}-mongo"
                 TemplatePath: Source::environment/templates/res-mongo.yml
                 ParameterOverrides: !Sub |
@@ -683,9 +686,10 @@ Resources:
                 Version: '1'
                 Provider: CloudFormation
               Configuration:
-                ActionMode: CREATE_UPDATE
-                RoleArn: !GetAtt CloudFormationDeployRole.Arn
+                ActionMode: CHANGE_SET_REPLACE
                 Capabilities: CAPABILITY_IAM
+                ChangeSetName: !Sub "${AWS::Region}-${EnvironmentName}-mysql-changeset"
+                RoleArn: !GetAtt CloudFormationDeployRole.Arn
                 StackName: !Sub "${AWS::Region}-${EnvironmentName}-mysql"
                 TemplatePath: Source::environment/templates/res-mysql.yml
                 ParameterOverrides: !Sub |
@@ -705,9 +709,10 @@ Resources:
                 Version: '1'
                 Provider: CloudFormation
               Configuration:
-                ActionMode: CREATE_UPDATE
-                RoleArn: !GetAtt CloudFormationDeployRole.Arn
+                ActionMode: CHANGE_SET_REPLACE
                 Capabilities: CAPABILITY_IAM
+                ChangeSetName: !Sub "${AWS::Region}-${EnvironmentName}-redis-changeset"
+                RoleArn: !GetAtt CloudFormationDeployRole.Arn
                 StackName: !Sub "${AWS::Region}-${EnvironmentName}-redis"
                 TemplatePath: Source::environment/templates/res-redis.yml
                 ParameterOverrides: !Sub |
@@ -794,7 +799,7 @@ Resources:
                 Provider: CloudFormation
               Configuration:
                 ActionMode: CREATE_UPDATE #CHANGE_SET_EXECUTE
-                RoleArn: !GetAtt CodeBuildServiceRole.Arn
+                RoleArn: !GetAtt CloudFormationDeployRole.Arn
                 StackName: !Sub ${AWS::Region}-${EnvironmentName}-${AWS::StackName}-back-ws
                 TemplatePath: Source::environment/templates/back-ws.yml
                 Capabilities: CAPABILITY_IAM
@@ -817,7 +822,7 @@ Resources:
               Configuration:
                 ActionMode: CREATE_UPDATE # CHANGE_SET_EXECUTE
                 #OutputFileName: Source::back-queue-worker/output.json
-                RoleArn: !GetAtt CodeBuildServiceRole.Arn
+                RoleArn: !GetAtt CloudFormationDeployRole.Arn
                 StackName: !Sub ${AWS::Region}-${EnvironmentName}-${AWS::StackName}-back-queue-worker
                 #TemplateConfiguration: Source::back-queue-worker/configuration.json
                 TemplatePath: Source::environment/templates/back-queue-worker.yml
@@ -840,7 +845,7 @@ Resources:
                 Provider: CloudFormation
               Configuration:
                 ActionMode: CREATE_UPDATE # CHANGE_SET_EXECUTE
-                RoleArn: !GetAtt CodeBuildServiceRole.Arn
+                RoleArn: !GetAtt CloudFormationDeployRole.Arn
                 StackName: !Sub ${AWS::Region}-${EnvironmentName}-${AWS::StackName}-back-api
                 TemplatePath: Source::environment/templates/back-api.yml
                 Capabilities: CAPABILITY_IAM
@@ -852,7 +857,7 @@ Resources:
                 - Name: Source
               OutputArtifacts:
                 - Name: BackApiDeployOutput
-              RunOrder: 2
+              RunOrder: 1
 
             - Name: front-nginx
               ActionTypeId:
@@ -862,7 +867,7 @@ Resources:
                 Provider: CloudFormation
               Configuration:
                 ActionMode: CREATE_UPDATE # CHANGE_SET_EXECUTE
-                RoleArn: !GetAtt CodeBuildServiceRole.Arn
+                RoleArn: !GetAtt CloudFormationDeployRole.Arn
                 StackName: !Sub ${AWS::Region}-${EnvironmentName}-${AWS::StackName}-front-nginx
                 TemplatePath: Source::environment/templates/front-nginx.yml
                 Capabilities: CAPABILITY_IAM
@@ -874,7 +879,7 @@ Resources:
                 - Name: Source
               OutputArtifacts:
                 - Name: FrontNginxDeployOutput
-              RunOrder: 2
+              RunOrder: 1
 
 Outputs:
   PipelineUrl:

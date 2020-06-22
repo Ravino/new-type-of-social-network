@@ -12,7 +12,7 @@ Parameters:
     Description: A name for the service
   ImageUrl:
     Type: String
-    Default: '884088487044.dkr.ecr.eu-central-1.amazonaws.com/php-back-queue-worker:latest'
+    Default: '884088487044.dkr.ecr.eu-central-1.amazonaws.com/eu-central-1-dev-plizi-back-queue-worker:latest'
     Description: The url of a docker image that contains the application process that
                  will handle the traffic for this service
   ContainerCpu:
@@ -195,23 +195,23 @@ Resources:
             - Name: DB_CONNECTION
               Value: !Ref 'DbConnection'
             - Name: DB_DATABASE
-              Value: 
+              Value:
                 Fn::ImportValue:
                   !Join [':', [!Ref 'EnvironmentName', 'MySQLDBName']]
             - Name: DB_HOST
-              Value: 
+              Value:
                 Fn::ImportValue:
                   !Join [':', [!Ref 'EnvironmentName', 'MySQLDBHost']]
             - Name: DB_PASSWORD
-              Value: 
+              Value:
                 Fn::ImportValue:
                   !Join [':', [!Ref 'EnvironmentName', 'MySQLPass']]
             - Name: DB_PORT
-              Value: 
+              Value:
                 Fn::ImportValue:
                   !Join [':', [!Ref 'EnvironmentName', 'MySQLDBPort']]
             - Name: DB_USERNAME
-              Value: 
+              Value:
                 Fn::ImportValue:
                   !Join [':', [!Ref 'EnvironmentName', 'MySQLUser']]
             - Name: JWT_BLACKLIST_ENABLED
@@ -237,19 +237,19 @@ Resources:
             - Name: MAIL_USERNAME
               Value: !Ref 'MailUsername'
             - Name: MONGO_DB_DATABASE
-              Value: 
+              Value:
                 Fn::ImportValue:
                   !Join [':', [!Ref 'EnvironmentName', 'MongoDBName']]
             - Name: MONGO_DB_HOST
-              Value: 
+              Value:
                 Fn::ImportValue:
                   !Join [':', [!Ref 'EnvironmentName', 'MongoDBHost']]
             - Name: MONGO_DB_PASSWORD
-              Value: 
+              Value:
                 Fn::ImportValue:
                   !Join [':', [!Ref 'EnvironmentName', 'MongoDBUser']]
             - Name: MONGO_DB_USERNAME
-              Value: 
+              Value:
                 Fn::ImportValue:
                   !Join [':', [!Ref 'EnvironmentName', 'MongoDBPass']]
             - Name: NEO4_DB_BOLT_PORT
@@ -265,11 +265,11 @@ Resources:
             - Name: QUEUE_CONNECTION
               Value: !Ref 'QueueConnection'
             - Name: REDIS_HOST
-              Value: 
+              Value:
                 Fn::ImportValue:
                   !Join [':', [!Ref 'EnvironmentName', 'RedisHost']]
             - Name: REDIS_PORT
-              Value: 
+              Value:
                 Fn::ImportValue:
                   !Join [':', [!Ref 'EnvironmentName', 'RedisPort']]
             - Name: SENTRY_LARAVEL_DSN
@@ -277,7 +277,7 @@ Resources:
             - Name: SWOOLE_HTTP_HOST
               Value: !Ref 'SwooleHttpHost'
             - Name: ZMQ_SUB_HOST
-              Value: 
+              Value:
                 Fn::ImportValue:
                   !Join [':', [!Ref 'EnvironmentName', 'BackWSServiceAddress']]
             - Name: ENV_NAME
