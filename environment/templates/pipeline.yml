@@ -32,28 +32,28 @@ Resources:
     DeletionPolicy: Retain
     UpdateReplacePolicy: Retain
     Properties:
-      RepositoryName: !Sub ${EnvironmentName}-back-ws
+      RepositoryName: !Sub ${AWS::Region}-${EnvironmentName}-${AWS::StackName}-back-ws
 
   BackQueueWorkerRepository:
     Type: AWS::ECR::Repository
     DeletionPolicy: Retain
     UpdateReplacePolicy: Retain
     Properties:
-      RepositoryName: !Sub ${EnvironmentName}-back-queue-worker
+      RepositoryName: !Sub ${AWS::Region}-${EnvironmentName}-${AWS::StackName}-back-queue-worker
 
   FrontNginxRepository:
     Type: AWS::ECR::Repository
     DeletionPolicy: Retain
     UpdateReplacePolicy: Retain
     Properties:
-      RepositoryName: !Sub ${EnvironmentName}-front-nginx
+      RepositoryName: !Sub ${AWS::Region}-${EnvironmentName}-${AWS::StackName}-front-nginx
 
   BackApiRepository:
     Type: AWS::ECR::Repository
     DeletionPolicy: Retain
     UpdateReplacePolicy: Retain
     Properties:
-      RepositoryName: !Sub ${EnvironmentName}-back-api
+      RepositoryName: !Sub ${AWS::Region}-${EnvironmentName}-${AWS::StackName}-back-api
 
   # A role used to give CodeBuild permission to access code,
   # build it, and upload the build results to ECR

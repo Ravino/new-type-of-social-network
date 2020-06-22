@@ -3,7 +3,7 @@ ENV=dev
 REGION=eu-central-1
 STACK_NAME=plizi
 STACK_FULL_NAME=$(REGION)-$(ENV)-$(STACK_NAME)
-CLIENT_TOKEN=f69eaf40-b466-11ea-af2d-064768627800
+CLIENT_TOKEN=a167a5d0-b471-11ea-8e7f-026925054f2e
 ARN_ADMIN=arn:aws:iam::884088487044:role/CloudFormationMasterRole
 
 #--client-token $(CLIENT_TOKEN)

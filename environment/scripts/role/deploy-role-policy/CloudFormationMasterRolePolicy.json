@@ -18,7 +18,9 @@
                 "sns:*",
                 "sqs:*",
                 "ssm:*",
-                "s3:*"
+                "s3:*",
+                "codebuild:*",
+                "codedeploy:*"
             ],
             "Resource": "*",
             "Effect": "Allow"
