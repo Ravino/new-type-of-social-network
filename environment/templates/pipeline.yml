@@ -350,9 +350,13 @@ Resources:
                 - $(aws ecr get-login --no-include-email --region $AWS_DEFAULT_REGION)
             build:
               commands:
+                - echo Current directory is `pwd`
+                - echo Changing directory to 'backend/docker/back-ws'
+                - cd ./backend/docker/back-ws
+                - echo Current directory is `pwd`
                 - echo Build started on `date`
                 - echo Building the Docker image...
-                - docker build -t $IMAGE_REPO_NAME:$IMAGE_TAG ./backend/docker/back-ws
+                - docker build -t $IMAGE_REPO_NAME:$IMAGE_TAG .
                 - docker tag $IMAGE_REPO_NAME:$IMAGE_TAG $AWS_ACCOUNT_ID.dkr.ecr.$AWS_DEFAULT_REGION.amazonaws.com/$IMAGE_REPO_NAME:$IMAGE_TAG
             post_build:
               commands:
@@ -409,9 +413,13 @@ Resources:
                 - $(aws ecr get-login --no-include-email --region $AWS_DEFAULT_REGION)
             build:
               commands:
+                - echo Current directory is `pwd`
+                - echo Changing directory to 'backend/docker/back-queue-worker'
+                - cd ./backend/docker/back-queue-worker
+                - echo Current directory is `pwd`
                 - echo Build started on `date`
                 - echo Building the Docker image...
-                - docker build -t $IMAGE_REPO_NAME:$IMAGE_TAG ./backend/docker/back-queue-worker
+                - docker build -t $IMAGE_REPO_NAME:$IMAGE_TAG .
                 - docker tag $IMAGE_REPO_NAME:$IMAGE_TAG $AWS_ACCOUNT_ID.dkr.ecr.$AWS_DEFAULT_REGION.amazonaws.com/$IMAGE_REPO_NAME:$IMAGE_TAG
             post_build:
               commands:
@@ -468,9 +476,13 @@ Resources:
                 - $(aws ecr get-login --no-include-email --region $AWS_DEFAULT_REGION)
             build:
               commands:
+                - echo Current directory is `pwd`
+                - echo Changing directory to 'backend/docker/back-api'
+                - cd ./backend/docker/back-api
+                - echo Current directory is `pwd`
                 - echo Build started on `date`
                 - echo Building the Docker image...
-                - docker build -t $IMAGE_REPO_NAME:$IMAGE_TAG ./backend/docker/back-api
+                - docker build -t $IMAGE_REPO_NAME:$IMAGE_TAG .
                 - docker tag $IMAGE_REPO_NAME:$IMAGE_TAG $AWS_ACCOUNT_ID.dkr.ecr.$AWS_DEFAULT_REGION.amazonaws.com/$IMAGE_REPO_NAME:$IMAGE_TAG
             post_build:
               commands:
@@ -527,9 +539,13 @@ Resources:
                 - $(aws ecr get-login --no-include-email --region $AWS_DEFAULT_REGION)
             build:
               commands:
+                - echo Current directory is `pwd`
+                - echo Changing directory to 'frontend/docker/front-nginx'
+                - cd ./frontend/docker/front-nginx
+                - echo Current directory is `pwd`
                 - echo Build started on `date`
                 - echo Building the Docker image...
-                - docker build -t $IMAGE_REPO_NAME:$IMAGE_TAG ./frontend/docker/front-nginx
+                - docker build -t $IMAGE_REPO_NAME:$IMAGE_TAG .
                 - docker tag $IMAGE_REPO_NAME:$IMAGE_TAG $AWS_ACCOUNT_ID.dkr.ecr.$AWS_DEFAULT_REGION.amazonaws.com/$IMAGE_REPO_NAME:$IMAGE_TAG
             post_build:
               commands:
