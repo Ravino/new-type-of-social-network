@@ -3,7 +3,7 @@ ENV=dev
 REGION=eu-central-1
 STACK_NAME=plizi
 STACK_FULL_NAME=$(REGION)-$(ENV)-$(STACK_NAME)
-CLIENT_TOKEN=a167a5d0-b471-11ea-8e7f-026925054f2e
+CLIENT_TOKEN="ClientRequestToken1"
 ARN_ADMIN=arn:aws:iam::884088487044:role/CloudFormationMasterRole
 
 #--client-token $(CLIENT_TOKEN)
@@ -12,9 +12,10 @@ create:
 	aws cloudformation create-stack --stack-name $(STACK_NAME) --template-body=file://templates/pipeline.yml \
 	--parameters ParameterKey=EnvironmentName,ParameterValue=$(ENV) --role-arn $(ARN_ADMIN) \
     --capabilities CAPABILITY_IAM CAPABILITY_NAMED_IAM \
-	--disable-rollback --no-enable-termination-protection --timeout-in-minutes 60
+	--disable-rollback --no-enable-termination-protection --timeout-in-minutes 60 \
+    --client-request-token $(CLIENT_TOKEN)
 delete:
-	aws cloudformation delete-stack --stack-name $(STACK_NAME)
+	echo "aws cloudformation delete-stack --stack-name $(STACK_NAME) --client-request-token $(CLIENT_TOKEN)"
 sudo-delete:
 	aws cloudformation delete-stack --stack-name eu-central-1-test-mongo --role-arn $(ARN_ADMIN)
 	aws cloudformation delete-stack --stack-name eu-central-1-test-mysql --role-arn $(ARN_ADMIN)

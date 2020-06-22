@@ -20,7 +20,8 @@
                 "ssm:*",
                 "s3:*",
                 "codebuild:*",
-                "codedeploy:*"
+                "codedeploy:*",
+                "codepipeline:*"
             ],
             "Resource": "*",
             "Effect": "Allow"

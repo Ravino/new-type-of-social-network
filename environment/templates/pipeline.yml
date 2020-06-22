@@ -177,6 +177,10 @@ Resources:
                   - "sns:*"
                   - "sqs:*"
                   - "ssm:*"
+                  - "s3:*"
+                  - "codebuild:*"
+                  - "codedeploy:*"
+                  - "codepipeline:*"
                 Resource: "*"
 
   # While the build is in progress we need a place to store artifacts
@@ -688,7 +692,7 @@ Resources:
                 Provider: CloudFormation
               Configuration:
                 ActionMode: CREATE_UPDATE
-                RoleArn: !GetAtt CloudFormationDeployRole.Arn
+                RoleArn: !GetAtt CodeBuildServiceRole.Arn
                 StackName: !Sub ${AWS::Region}-${EnvironmentName}-${AWS::StackName}-back-ws
                 TemplatePath: Source::environment/templates/back-ws.yml
                 Capabilities: CAPABILITY_IAM
@@ -711,8 +715,8 @@ Resources:
                 Provider: CloudFormation
               Configuration:
                 ActionMode: CREATE_UPDATE
-                OutputFileName: Source::back-queue-worker/output.json
-                RoleArn: !GetAtt CloudFormationDeployRole.Arn
+                #OutputFileName: Source::back-queue-worker/output.json
+                RoleArn: !GetAtt CodeBuildServiceRole.Arn
                 StackName: !Sub ${AWS::Region}-${EnvironmentName}-${AWS::StackName}-back-queue-worker
                 #TemplateConfiguration: Source::back-queue-worker/configuration.json
                 TemplatePath: Source::environment/templates/back-queue-worker.yml
@@ -736,7 +740,7 @@ Resources:
                 Provider: CloudFormation
               Configuration:
                 ActionMode: CREATE_UPDATE
-                RoleArn: !GetAtt CloudFormationDeployRole.Arn
+                RoleArn: !GetAtt CodeBuildServiceRole.Arn
                 StackName: !Sub ${AWS::Region}-${EnvironmentName}-${AWS::StackName}-back-api
                 TemplatePath: Source::environment/templates/back-api.yml
                 Capabilities: CAPABILITY_IAM
@@ -759,7 +763,7 @@ Resources:
                 Provider: CloudFormation
               Configuration:
                 ActionMode: CREATE_UPDATE
-                RoleArn: !GetAtt CloudFormationDeployRole.Arn
+                RoleArn: !GetAtt CodeBuildServiceRole.Arn
                 StackName: !Sub ${AWS::Region}-${EnvironmentName}-${AWS::StackName}-front-nginx
                 TemplatePath: Source::environment/templates/front-nginx.yml
                 Capabilities: CAPABILITY_IAM
