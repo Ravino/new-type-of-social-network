@@ -23,7 +23,7 @@ Parameters:
     Default: arn:aws:acm:eu-central-1:884088487044:certificate/4444446f-1db7-46ee-b983-cca853830df1
     Description: ARN of the Amazon Certificate Manager SSL certificate to use for this app
   KMSs3KeyArn:
-    Type: Strng
+    Type: String
     Default: arn:aws:kms:eu-central-1:884088487044:key/6d0fcf1c-caf6-487d-97ae-c503395b763d
     Description: ARN of the AWS KMS key for s3
 
