@@ -22,6 +22,10 @@ Parameters:
     Type: String
     Default: arn:aws:acm:eu-central-1:884088487044:certificate/4444446f-1db7-46ee-b983-cca853830df1
     Description: ARN of the Amazon Certificate Manager SSL certificate to use for this app
+  KMSs3KeyArn:
+    Type: Strng
+    Default: arn:aws:kms:eu-central-1:884088487044:key/6d0fcf1c-caf6-487d-97ae-c503395b763d
+    Description: ARN of the AWS KMS key for s3
 
 Resources:
   # TODO: DeletionPolicy for prod put 'Retain' or 'Snapshot'
@@ -100,6 +104,16 @@ Resources:
                   - ecr:GetDownloadUrlForLayer
                   - ecr:BatchGetImage
                   - ecr:BatchCheckLayerAvailability
+              - Sid: KMSAccess
+                Effect: Allow
+                Action:
+                  - kms:Decrypt
+                  - kms:DescribeKey
+                  - kms:Encrypt
+                  - kms:GenerateDataKey*
+                  - kms:ReEncrypt*
+                Resource: !Ref KMSs3KeyArn
+
 
   # Role used to give CodePipeline to release a build.
   CodePipelineServiceRole:
@@ -152,6 +166,15 @@ Resources:
                 Effect: Allow
                 Action:
                   - ecr:*
+              - Sid: KMSAccess
+                Effect: Allow
+                Action:
+                  - kms:Decrypt
+                  - kms:DescribeKey
+                  - kms:Encrypt
+                  - kms:GenerateDataKey*
+                  - kms:ReEncrypt*
+                Resource: !Ref KMSs3KeyArn
 
   # CloudFormation deployment role. This role is passed by CodeBuild to
   # CloudFormation to use when setting up the application resources
@@ -191,6 +214,7 @@ Resources:
                   - "codebuild:*"
                   - "codedeploy:*"
                   - "codepipeline:*"
+                  - "kms: *"
                 Resource: "*"
 
   # While the build is in progress we need a place to store artifacts
@@ -262,6 +286,10 @@ Resources:
       #QueueConfiguration:
       VersioningConfiguration:
         Status: Enabled
+      ServerSideEncryptionConfiguration:
+        - ServerSideEncryptionByDefault:
+            SSEAlgorithm: aws:kms
+            KMSMasterKeyID: !Ref KMSs3KeyArn
     DeletionPolicy: Retain
     UpdateReplacePolicy: Retain
 

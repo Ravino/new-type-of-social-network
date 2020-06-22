@@ -27,6 +27,10 @@ purge:
 	aws ecr delete-repository --repository-name $(STACK_FULL_NAME)-back-queue-worker --role-arn $(ARN_ADMIN) --client-request-token $(CLIENT_TOKEN)
 	aws ecr delete-repository --repository-name $(STACK_FULL_NAME)-back-ws --role-arn $(ARN_ADMIN) --client-request-token $(CLIENT_TOKEN)
 	aws ecr delete-repository --repository-name $(STACK_FULL_NAME)-front-nginx --role-arn $(ARN_ADMIN) --client-request-token $(CLIENT_TOKEN)
+update:
+	aws cloudformation update-stack --stack-name $(STACK_NAME) --template-body=file://templates/pipeline.yml \
+	--parameters ParameterKey=EnvironmentName,ParameterValue=$(ENV) --role-arn $(ARN_ADMIN) \
+    --capabilities CAPABILITY_IAM CAPABILITY_NAMED_IAM
 status:
 	aws cloudformation describe-stacks --output table --role-arn $(ARN_ADMIN) --client-request-token $(CLIENT_TOKEN)
 events:
