@@ -581,7 +581,7 @@ Resources:
                 Version: '1'
                 Provider: CloudFormation
               Configuration:
-                ActionMode: CHANGE_SET_EXECUTE
+                ActionMode: CREATE_UPDATE # CHANGE_SET_EXECUTE
                 RoleArn: !GetAtt CloudFormationDeployRole.Arn
                 StackName: !Sub "${AWS::Region}-${EnvironmentName}-${AWS::StackName}-cluster"
                 TemplatePath: "Source::environment/templates/cluster.yml"
@@ -608,7 +608,7 @@ Resources:
                 Version: '1'
                 Provider: CloudFormation
               Configuration:
-                ActionMode: CHANGE_SET_EXECUTE
+                ActionMode: CREATE_UPDATE # CHANGE_SET_EXECUTE
                 RoleArn: !GetAtt CloudFormationDeployRole.Arn
                 Capabilities: CAPABILITY_IAM
                 StackName: !Sub "${AWS::Region}-${EnvironmentName}-${AWS::StackName}-resources"
@@ -762,7 +762,7 @@ Resources:
                 Version: '1'
                 Provider: CloudFormation
               Configuration:
-                ActionMode: CHANGE_SET_EXECUTE
+                ActionMode: CREATE_UPDATE #CHANGE_SET_EXECUTE
                 RoleArn: !GetAtt CodeBuildServiceRole.Arn
                 StackName: !Sub ${AWS::Region}-${EnvironmentName}-${AWS::StackName}-back-ws
                 TemplatePath: Source::environment/templates/back-ws.yml
@@ -785,7 +785,7 @@ Resources:
                 Version: '1'
                 Provider: CloudFormation
               Configuration:
-                ActionMode: CHANGE_SET_EXECUTE
+                ActionMode: CREATE_UPDATE # CHANGE_SET_EXECUTE
                 #OutputFileName: Source::back-queue-worker/output.json
                 RoleArn: !GetAtt CodeBuildServiceRole.Arn
                 StackName: !Sub ${AWS::Region}-${EnvironmentName}-${AWS::StackName}-back-queue-worker
@@ -810,7 +810,7 @@ Resources:
                 Version: '1'
                 Provider: CloudFormation
               Configuration:
-                ActionMode: CHANGE_SET_EXECUTE
+                ActionMode: CREATE_UPDATE # CHANGE_SET_EXECUTE
                 RoleArn: !GetAtt CodeBuildServiceRole.Arn
                 StackName: !Sub ${AWS::Region}-${EnvironmentName}-${AWS::StackName}-back-api
                 TemplatePath: Source::environment/templates/back-api.yml
@@ -833,7 +833,7 @@ Resources:
                 Version: '1'
                 Provider: CloudFormation
               Configuration:
-                ActionMode: CHANGE_SET_EXECUTE
+                ActionMode: CREATE_UPDATE # CHANGE_SET_EXECUTE
                 RoleArn: !GetAtt CodeBuildServiceRole.Arn
                 StackName: !Sub ${AWS::Region}-${EnvironmentName}-${AWS::StackName}-front-nginx
                 TemplatePath: Source::environment/templates/front-nginx.yml
