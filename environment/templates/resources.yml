@@ -1,5 +1,5 @@
 AWSTemplateFormatVersion: '2010-09-09'
-Description: Basic roles and resources for services.
+Description: Application services and tasks roles
 Parameters:
   EnvironmentName:
     Type: String
@@ -7,7 +7,7 @@ Parameters:
     Description: The environment name, used for locating outputs from the
                  prerequisite stacks
 Resources:
-  BackWSRole:
+  BackWSTaskRole:
     Type: AWS::IAM::Role
     Properties:
       AssumeRolePolicyDocument:
@@ -27,7 +27,7 @@ Resources:
                 - docdb:*
                 - elasticache:*
               Resource: "*"
-  BackQueueWorkerRole:
+  BackQueueWorkerTaskRole:
     Type: AWS::IAM::Role
     Properties:
       AssumeRolePolicyDocument:
@@ -47,7 +47,7 @@ Resources:
                 - docdb:*
                 - elasticache:*
               Resource: "*"
-  BackApiRole:
+  BackApiTaskRole:
     Type: AWS::IAM::Role
     Properties:
       AssumeRolePolicyDocument:
@@ -67,7 +67,7 @@ Resources:
                 - docdb:*
                 - elasticache:*
               Resource: "*"
-  FrontNginxRole:
+  FrontNginxTaskRole:
     Type: AWS::IAM::Role
     Properties:
       AssumeRolePolicyDocument:
@@ -88,19 +88,19 @@ Resources:
                 - elasticache:*
               Resource: "*"
 Outputs:
-  BackWSRole:
-    Value: !GetAtt 'BackWSRole.Arn'
+  BackWSTaskRole:
+    Value: !GetAtt 'BackWSTaskRole.Arn'
     Export:
-      Name: !Join [ ':', [ !Ref 'EnvironmentName', 'BackWSRole' ] ]
-  BackQueueWorkerRole:
-    Value: !GetAtt 'BackQueueWorkerRole.Arn'
+      Name: !Join [ ':', [ !Ref 'EnvironmentName', 'BackWSTaskRole' ] ]
+  BackQueueWorkerTaskRole:
+    Value: !GetAtt 'BackQueueWorkerTaskRole.Arn'
     Export:
-      Name: !Join [ ':', [ !Ref 'EnvironmentName', 'BackQueueWorkerRole' ] ]
-  BackApiRole:
-    Value: !GetAtt 'BackApiRole.Arn'
+      Name: !Join [ ':', [ !Ref 'EnvironmentName', 'BackQueueWorkerTaskRole' ] ]
+  BackApiTaskRole:
+    Value: !GetAtt 'BackApiTaskRole.Arn'
     Export:
-      Name: !Join [ ':', [ !Ref 'EnvironmentName', 'BackApiRole' ] ]
-  FrontNginxRole:
-    Value: !GetAtt 'FrontNginxRole.Arn'
+      Name: !Join [ ':', [ !Ref 'EnvironmentName', 'BackApiTaskRole' ] ]
+  FrontNginxTaskRole:
+    Value: !GetAtt 'FrontNginxTaskRole.Arn'
     Export:
-      Name: !Join [ ':', [ !Ref 'EnvironmentName', 'FrontNginxRole' ] ]
+      Name: !Join [ ':', [ !Ref 'EnvironmentName', 'FrontNginxTaskRole' ] ]

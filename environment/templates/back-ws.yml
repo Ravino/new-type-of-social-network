@@ -29,7 +29,7 @@ Parameters:
     Description: How much memory in megabytes to give the container
   Path:
     Type: String
-    Default: "*"
+    Default: "*ws-api.plizi.fun*"
     Description: A path on the public load balancer that this service
                  should be connected to. Use * to send all load balancer
                  traffic to this service.
@@ -184,7 +184,7 @@ Resources:
           !Join [':', [!Ref 'EnvironmentName', 'ECSTaskExecutionRole']]
       TaskRoleArn:
         Fn::ImportValue:
-          !Join [':', [!Ref 'EnvironmentName', 'BackWSRole']]
+          !Join [':', [!Ref 'EnvironmentName', 'BackWSTaskRole']]
       ContainerDefinitions:
         - Name: !Ref 'ServiceName'
           Image: !Ref 'ImageUrl'
@@ -228,7 +228,7 @@ Resources:
             - Name: DB_USERNAME
               Value:
                 Fn::ImportValue:
-                  !Join [':', [!Ref 'EnvironmentName', 'MySQLDBUser']]
+                  !Join [':', [!Ref 'EnvironmentName', 'MySQLUser']]
             - Name: JWT_BLACKLIST_ENABLED
               Value: !Ref 'JwtBlacklistEnabled'
             - Name: JWT_TTL
@@ -304,7 +304,7 @@ Resources:
           LogConfiguration:
             LogDriver: 'awslogs'
             Options:
-              awslogs-group: !Join ['-', [!Ref 'EnvironmentName', 'service', !Ref 'ServiceName']]
+              awslogs-group: !Join ['/', [!Ref 'EnvironmentName', 'service', !Ref 'ServiceName']]
               awslogs-region: !Ref 'AWS::Region'
               awslogs-stream-prefix: !Ref 'ServiceName'
 
@@ -314,6 +314,7 @@ Resources:
   Service:
     Type: AWS::ECS::Service
     DependsOn:
+      - LogGroup
       - HTTPRule
       - HTTPSRule
     Properties:
@@ -337,11 +338,14 @@ Resources:
                 !Join [':', [!Ref 'EnvironmentName', 'PublicSubnetOne']]
             - Fn::ImportValue:
                 !Join [':', [!Ref 'EnvironmentName', 'PublicSubnetTwo']]
+            - Fn::ImportValue:
+                !Join [':', [!Ref 'EnvironmentName', 'PublicSubnetThree']]
       TaskDefinition: !Ref 'TaskDefinition'
       LoadBalancers:
         - ContainerName: !Ref 'ServiceName'
           ContainerPort: !Ref 'ContainerPort'
           TargetGroupArn: !Ref 'TargetGroup'
+
 
   # A target group. This is used for keeping track of all the tasks, and
   # what IP addresses / port numbers they have. You can query it yourself,
@@ -360,7 +364,7 @@ Resources:
       #HealthyThresholdCount: 2
       TargetType: ip
       Name: !Join ['-', [!Ref 'EnvironmentName', !Ref 'ServiceName']]
-      Port: 80
+      Port: 7070
       Protocol: HTTP
       UnhealthyThresholdCount: 2
       TargetGroupAttributes:
@@ -386,7 +390,7 @@ Resources:
           Values: [!Ref 'Path']
       ListenerArn:
         Fn::ImportValue:
-          !Join [':', [!Ref 'EnvironmentName', 'PublicListenerHTTP']]
+          !Join [':', [!Ref 'EnvironmentName', 'PublicListenerHTTP7070']]
       Priority: !Ref 'Priority'
   HTTPSRule:
     Type: AWS::ElasticLoadBalancingV2::ListenerRule
@@ -399,13 +403,14 @@ Resources:
           Values: [!Ref 'Path']
       ListenerArn:
         Fn::ImportValue:
-          !Join [':', [!Ref 'EnvironmentName', 'PublicListenerHTTPS']]
+          !Join [':', [!Ref 'EnvironmentName', 'PublicListenerHTTPS7070']]
       Priority: !Ref 'Priority'
 
   # Enable autoscaling for this service
   ScalableTarget:
     Type: AWS::ApplicationAutoScaling::ScalableTarget
-    DependsOn: Service
+    DependsOn:
+      - Service
     Properties:
       ServiceNamespace: 'ecs'
       ScalableDimension: 'ecs:service:DesiredCount'
@@ -548,3 +553,9 @@ Resources:
       ComparisonOperator: GreaterThanOrEqualToThreshold
       AlarmActions:
         - !Ref ScaleUpPolicy
+
+Outputs:
+  BackWSServiceAddress:
+    Value: 'dev-ws.plizi.fun'
+    Export:
+      Name: !Join [ ':', [ !Ref 'EnvironmentName', 'BackWSServiceAddress' ] ]
