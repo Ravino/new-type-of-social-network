@@ -1,8 +1,8 @@
 #!/bin/bash
 ARN_ADMIN="arn:aws:iam::884088487044:role/CloudFormationMasterRole"
 STACK_NAME="plizi"
-ENV="test"
-CLIENT_TOKEN="ClientRequestTokenPliziTest"
+ENV="dev"
+CLIENT_TOKEN="ClientRequestToken1"
 
 aws cloudformation update-stack \
 --stack-name ${STACK_NAME} \
