@@ -790,7 +790,7 @@ Resources:
               OutputArtifacts:
                 - Name: FrontNginxBuildOutput
               RunOrder: 2
-        - Name: Services
+        - Name: Services-build
           Actions:
             - Name: back-ws
               ActionTypeId:
