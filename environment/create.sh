@@ -1,8 +1,8 @@
 #!/bin/bash
 ARN_ADMIN="arn:aws:iam::884088487044:role/CloudFormationMasterRole"
 STACK_NAME="plizi"
-ENV="dev"
-CLIENT_TOKEN="ClientRequestToken1"
+ENV="test"
+CLIENT_TOKEN="ClientRequestToken:${STACK_NAME}:${ENV}"
 
 aws cloudformation create-stack \
 --stack-name ${STACK_NAME} \
