@@ -213,7 +213,7 @@ Resources:
             - Name: DB_USERNAME
               Value:
                 Fn::ImportValue:
-                  !Join [':', [!Ref 'EnvironmentName', 'MySQLUser']]
+                  !Join [':', [!Ref 'EnvironmentName', 'MySQLDBUser']]
             - Name: JWT_BLACKLIST_ENABLED
               Value: !Ref 'JwtBlacklistEnabled'
             - Name: JWT_TTL
