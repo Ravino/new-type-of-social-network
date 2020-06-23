@@ -615,7 +615,7 @@ Resources:
                 Version: '1'
                 Provider: CloudFormation
               Configuration:
-                ActionMode: CHANGE_SET_REPLACE
+                ActionMode: CREATE_UPDATE
                 Capabilities: CAPABILITY_IAM
                 ChangeSetName: !Sub "${AWS::Region}-${EnvironmentName}-${AWS::StackName}-cluster-changeset"
                 RoleArn: !GetAtt CloudFormationDeployRole.Arn
@@ -643,7 +643,7 @@ Resources:
                 Version: '1'
                 Provider: CloudFormation
               Configuration:
-                ActionMode: CHANGE_SET_REPLACE
+                ActionMode: CREATE_UPDATE
                 Capabilities: CAPABILITY_IAM
                 ChangeSetName: !Sub "${AWS::Region}-${EnvironmentName}-${AWS::StackName}-resources-changeset"
                 RoleArn: !GetAtt CloudFormationDeployRole.Arn
@@ -666,7 +666,7 @@ Resources:
                 Version: '1'
                 Provider: CloudFormation
               Configuration:
-                ActionMode: CHANGE_SET_REPLACE
+                ActionMode: CREATE_UPDATE
                 Capabilities: CAPABILITY_IAM
                 ChangeSetName: !Sub "${AWS::Region}-${EnvironmentName}-mongo-changeset"
                 RoleArn: !GetAtt CloudFormationDeployRole.Arn
@@ -689,7 +689,7 @@ Resources:
                 Version: '1'
                 Provider: CloudFormation
               Configuration:
-                ActionMode: CHANGE_SET_REPLACE
+                ActionMode: CREATE_UPDATE
                 Capabilities: CAPABILITY_IAM
                 ChangeSetName: !Sub "${AWS::Region}-${EnvironmentName}-mysql-changeset"
                 RoleArn: !GetAtt CloudFormationDeployRole.Arn
@@ -712,7 +712,7 @@ Resources:
                 Version: '1'
                 Provider: CloudFormation
               Configuration:
-                ActionMode: CHANGE_SET_REPLACE
+                ActionMode: CREATE_UPDATE
                 Capabilities: CAPABILITY_IAM
                 ChangeSetName: !Sub "${AWS::Region}-${EnvironmentName}-redis-changeset"
                 RoleArn: !GetAtt CloudFormationDeployRole.Arn
