@@ -155,6 +155,7 @@ Resources:
               - Effect: Allow
                 Action:
                   - cloudformation:CreateChangeSet
+                  - cloudformation:DeleteChangeSet
                   - cloudformation:CreateStack
                   - cloudformation:CreateUploadBucket
                   - cloudformation:DeleteStack
