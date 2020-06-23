@@ -728,125 +728,63 @@ Resources:
                 - Name: RedisDeployOutput
               RunOrder: 2
 
-        #And we deploy the application resources (Elasticache, RDS, DocumentDB, etc)
         - Name: Services
-          Actions:
-            #Build the chat frontend docker image
-            - Name: back-ws
-              ActionTypeId:
-                Category: Build
-                Owner: AWS
-                Version: '1'
-                Provider: CodeBuild
-              Configuration:
-                ProjectName: !Ref BackWS
-              InputArtifacts:
-                - Name: Source
-              OutputArtifacts:
-                - Name: BackWSBuildOutput
-              RunOrder: 2
+          # Actions:
+          #   - Name: back-ws
+          #     ActionTypeId:
+          #       Category: Build
+          #       Owner: AWS
+          #       Version: '1'
+          #       Provider: CodeBuild
+          #     Configuration:
+          #       ProjectName: !Ref BackWS
+          #     InputArtifacts:
+          #       - Name: Source
+          #     OutputArtifacts:
+          #       - Name: BackWSBuildOutput
+          #     RunOrder: 2
 
-            # Build the backend worker image
-            - Name: back-queue-worker
-              ActionTypeId:
-                Category: Build
-                Owner: AWS
-                Version: '1'
-                Provider: CodeBuild
-              Configuration:
-                ProjectName: !Ref BackQueueWorker
-              InputArtifacts:
-                - Name: Source
-              OutputArtifacts:
-                - Name: BackQueueWorkerBuildOutput
-              RunOrder: 2
+          #   - Name: back-queue-worker
+          #     ActionTypeId:
+          #       Category: Build
+          #       Owner: AWS
+          #       Version: '1'
+          #       Provider: CodeBuild
+          #     Configuration:
+          #       ProjectName: !Ref BackQueueWorker
+          #     InputArtifacts:
+          #       - Name: Source
+          #     OutputArtifacts:
+          #       - Name: BackQueueWorkerBuildOutput
+          #     RunOrder: 2
 
-            # Build the backend worker image
-            - Name: back-api
-              ActionTypeId:
-                Category: Build
-                Owner: AWS
-                Version: '1'
-                Provider: CodeBuild
-              Configuration:
-                ProjectName: !Ref BackApi
-              InputArtifacts:
-                - Name: Source
-              OutputArtifacts:
-                - Name: BackApiBuildOutput
-              RunOrder: 2
+          #   - Name: back-api
+          #     ActionTypeId:
+          #       Category: Build
+          #       Owner: AWS
+          #       Version: '1'
+          #       Provider: CodeBuild
+          #     Configuration:
+          #       ProjectName: !Ref BackApi
+          #     InputArtifacts:
+          #       - Name: Source
+          #     OutputArtifacts:
+          #       - Name: BackApiBuildOutput
+          #     RunOrder: 2
 
-            # Build the backend worker image
-            - Name: front-nginx
-              ActionTypeId:
-                Category: Build
-                Owner: AWS
-                Version: '1'
-                Provider: CodeBuild
-              Configuration:
-                ProjectName: !Ref FrontNginx
-              InputArtifacts:
-                - Name: Source
-              OutputArtifacts:
-                - Name: FrontNginxBuildOutput
-              RunOrder: 2
-        - Name: Services-build
-          Actions:
-            - Name: back-ws
-              ActionTypeId:
-                Category: Build
-                Owner: AWS
-                Version: '1'
-                Provider: CodeBuild
-              Configuration:
-                ProjectName: !Ref BackWS
-              InputArtifacts:
-                - Name: Source
-              OutputArtifacts:
-                - Name: BackWSBuildOutput
-              RunOrder: 2
-
-            - Name: back-queue-worker
-              ActionTypeId:
-                Category: Build
-                Owner: AWS
-                Version: '1'
-                Provider: CodeBuild
-              Configuration:
-                ProjectName: !Ref BackQueueWorker
-              InputArtifacts:
-                - Name: Source
-              OutputArtifacts:
-                - Name: BackQueueWorkerBuildOutput
-              RunOrder: 2
-
-            - Name: back-api
-              ActionTypeId:
-                Category: Build
-                Owner: AWS
-                Version: '1'
-                Provider: CodeBuild
-              Configuration:
-                ProjectName: !Ref BackApi
-              InputArtifacts:
-                - Name: Source
-              OutputArtifacts:
-                - Name: BackApiBuildOutput
-              RunOrder: 2
-
-            - Name: front-nginx
-              ActionTypeId:
-                Category: Build
-                Owner: AWS
-                Version: '1'
-                Provider: CodeBuild
-              Configuration:
-                ProjectName: !Ref FrontNginx
-              InputArtifacts:
-                - Name: Source
-              OutputArtifacts:
-                - Name: FrontNginxBuildOutput
-              RunOrder: 2
+          #   - Name: front-nginx
+          #     ActionTypeId:
+          #       Category: Build
+          #       Owner: AWS
+          #       Version: '1'
+          #       Provider: CodeBuild
+          #     Configuration:
+          #       ProjectName: !Ref FrontNginx
+          #     InputArtifacts:
+          #       - Name: Source
+          #     OutputArtifacts:
+          #       - Name: FrontNginxBuildOutput
+          #     RunOrder: 2
 
         # Finally we deploy the Fargate service to the cluster
         # - Name: Deploy
