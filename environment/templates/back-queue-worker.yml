@@ -17,11 +17,11 @@ Parameters:
                  will handle the traffic for this service
   ContainerCpu:
     Type: Number
-    Default: 256
+    Default: 1024
     Description: How much CPU to give the container. 1024 is 1 CPU
   ContainerMemory:
     Type: Number
-    Default: 512
+    Default: 2048
     Description: How much memory in megabytes to give the container
   DesiredCount:
     Type: Number
@@ -295,8 +295,6 @@ Resources:
   # copies of a type of task, and gather up their logs and metrics, as well
   # as monitor the number of running tasks and replace any that have crashed
   Service:
-    DependsOn:
-      - LogGroup
     Type: AWS::ECS::Service
     Properties:
       ServiceName: !Ref 'ServiceName'
@@ -324,8 +322,7 @@ Resources:
   # Enable autoscaling for this service
   ScalableTarget:
     Type: AWS::ApplicationAutoScaling::ScalableTarget
-    DependsOn:
-      - Service
+    DependsOn: Service
     Properties:
       ServiceNamespace: 'ecs'
       ScalableDimension: 'ecs:service:DesiredCount'

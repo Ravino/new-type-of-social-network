@@ -1,12 +1,7 @@
 AWSTemplateFormatVersion: '2010-09-09'
 Description: The baseline resources used to create a Fargate environment
              to launch containerized applications in.
-
 Parameters:
-  ProjectName:
-    Type: String
-    Default: PLIZI
-    Description: Project name this cluster belongs to.
   EnvironmentName:
     Type: String
     Default: test
@@ -17,71 +12,61 @@ Parameters:
     Description: Forwarded from pipeline.yml during network-creation
 
 Mappings:
+  # Hard values for the subnet masks. These masks define
+  # the range of internal IP addresses that can be assigned.
+  # The VPC can have all IP's from 10.0.0.0 to 10.0.255.255
+  # There are two subnets which cover the ranges:
+  #
+  # 10.0.0.0 - 10.0.0.255
+  # 10.0.1.0 - 10.0.1.255
+  #
+  # If you need more IP addresses (perhaps you have so many
+  # instances that you run out) then you can customize these
+  # ranges to add more
   SubnetConfig:
     VPC:
       CIDR: '10.0.0.0/16'
     PublicOne:
       CIDR: '10.0.0.0/24'
-      AZ: "eu-central-1a"
     PublicTwo:
       CIDR: '10.0.1.0/24'
-      AZ: "eu-central-1b"
-    PublicThree:
-      CIDR: '10.0.1.0/24'
-      AZ: "eu-central-1c"
-
 Resources:
-
+  # VPC in which containers will be networked.
+  # It has two public subnets
+  # We distribute the subnets across the first two available subnets
+  # for the region, for high availability.
   VPC:
     Type: AWS::EC2::VPC
     Properties:
       EnableDnsSupport: true
       EnableDnsHostnames: true
       CidrBlock: !FindInMap ['SubnetConfig', 'VPC', 'CIDR']
-      InstanceTenancy: "default"
-      Tags:
-        - Key: "Name"
-          Value: !Sub "ITS-${AWS::Region}-VPC"
 
+  # Two public subnets, where containers can have public IP addresses
   PublicSubnetOne:
     Type: AWS::EC2::Subnet
     Properties:
-      AvailabilityZone: !FindInMap ['SubnetConfig', 'PublicOne', 'AZ']
+      AvailabilityZone:
+         Fn::Select:
+         - 0
+         - Fn::GetAZs: {Ref: 'AWS::Region'}
+      VpcId: !Ref 'VPC'
       CidrBlock: !FindInMap ['SubnetConfig', 'PublicOne', 'CIDR']
       MapPublicIpOnLaunch: true
-      #AssignIpv6AddressOnCreation: false
-      #Ipv6CidrBlock: String
-      Tags:
-        - Key: "Name"
-          Value: !Join ["-", ["ITS", !Ref "AWS::Region", "VPC", !Ref "EnvironmentName", !FindInMap ['SubnetConfig', 'PublicOne', 'AZ']]]
-      VpcId: !Ref 'VPC'
-
   PublicSubnetTwo:
     Type: AWS::EC2::Subnet
     Properties:
-      AvailabilityZone: !FindInMap ['SubnetConfig', 'PublicTwo', 'AZ']
+      AvailabilityZone:
+         Fn::Select:
+         - 1
+         - Fn::GetAZs: {Ref: 'AWS::Region'}
+      VpcId: !Ref 'VPC'
       CidrBlock: !FindInMap ['SubnetConfig', 'PublicTwo', 'CIDR']
       MapPublicIpOnLaunch: true
-      #AssignIpv6AddressOnCreation: false
-      #Ipv6CidrBlock: String
-      Tags:
-        - Key: "Name"
-          Value: !Join ["-", ["ITS", !Ref "AWS::Region", "VPC", !Ref "EnvironmentName", !FindInMap ['SubnetConfig', 'PublicTwo', 'AZ']]]
-      VpcId: !Ref 'VPC'
 
-  PublicSubnetThree:
-    Type: AWS::EC2::Subnet
-    Properties:
-      AvailabilityZone: !FindInMap ['SubnetConfig', 'PublicThree', 'AZ']
-      CidrBlock: !FindInMap ['SubnetConfig', 'PublicThree', 'CIDR']
-      MapPublicIpOnLaunch: true
-      #AssignIpv6AddressOnCreation: false
-      #Ipv6CidrBlock: String
-      Tags:
-        - Key: "Name"
-          Value: !Join ["-", ["ITS", !Ref "AWS::Region", "VPC", !Ref "EnvironmentName", !FindInMap ['SubnetConfig', 'PublicThree', 'AZ']]]
-      VpcId: !Ref 'VPC'
-
+  # Setup networking resources for the public subnets. Containers
+  # in the public subnets have public IP addresses and the routing table
+  # sends network traffic via the internet gateway.
   InternetGateway:
     Type: AWS::EC2::InternetGateway
   GatewayAttachement:
@@ -110,11 +95,6 @@ Resources:
     Properties:
       SubnetId: !Ref PublicSubnetTwo
       RouteTableId: !Ref PublicRouteTable
-  PublicSubnetThreeRouteTableAssociation:
-    Type: AWS::EC2::SubnetRouteTableAssociation
-    Properties:
-      SubnetId: !Ref PublicSubnetThree
-      RouteTableId: !Ref PublicRouteTable
 
   # ECS Resources
   ECSCluster:
@@ -123,18 +103,23 @@ Resources:
   # A security group for the containers we will run in Fargate.
   # Two rules, allowing network traffic from a public facing load
   # balancer and from other members of the security group.
+  #
+  # Remove any of the following ingress rules that are not needed.
+  # If you want to make direct requests to a container using its
+  # public IP address you'll need to add a security group rule
+  # to allow traffic from all IP addresses.
   FargateContainerSecurityGroup:
     Type: AWS::EC2::SecurityGroup
     Properties:
       GroupDescription: Access to the Fargate containers
       VpcId: !Ref 'VPC'
-  EcsSecurityGroupIngressFromPublicNLB:
+  EcsSecurityGroupIngressFromPublicALB:
     Type: AWS::EC2::SecurityGroupIngress
     Properties:
-      Description: Ingress from the public NLB
+      Description: Ingress from the public ALB
       GroupId: !Ref 'FargateContainerSecurityGroup'
       IpProtocol: -1 # TODO Won't fix -1 for all protocols (VPC only)
-      SourceSecurityGroupId: !Ref 'NetworkLoadBalancerSG'
+      SourceSecurityGroupId: !Ref 'PublicLoadBalancerSG'
   EcsSecurityGroupIngressFromSelf:
     Type: AWS::EC2::SecurityGroupIngress
     Properties:
@@ -148,60 +133,35 @@ Resources:
   #
   # - One public load balancer, hosted in public subnets that is accessible
   #   to the public, and is intended to route traffic to one or more public
-  #   facing services
+  #   facing services.
 
-
-  PublicSubnetOneEIP:
-    Type: 'AWS::EC2::EIP'
-    Properties:
-      Domain: vpc
-      Tags:
-        - Key: "Name"
-          Value: !Sub "${ProjectName}-PublicSubnetOneNLB-${EnvironmentName}-EIP"
-  PublicSubnetTwoEIP:
-    Type: 'AWS::EC2::EIP'
-    Properties:
-      Domain: vpc
-      Tags:
-        - Key: "Name"
-          Value: !Sub "${ProjectName}-PublicSubnetTwoNLB-${EnvironmentName}-EIP"
-  PublicSubnetThreeEIP:
-    Type: 'AWS::EC2::EIP'
-    Properties:
-      Domain: vpc
-      Tags:
-        - Key: "Name"
-          Value: !Sub "${ProjectName}-PublicSubnetThreeNLB-${EnvironmentName}-EIP"
-
-
-  NetworkLoadBalancerSG:
+  # A public facing load balancer, this is used for accepting traffic from the public
+  # internet and directing it to public facing microservices
+  PublicLoadBalancerSG:
     Type: AWS::EC2::SecurityGroup
     Properties:
       GroupDescription: Access to the public facing load balancer
       VpcId: !Ref 'VPC'
       SecurityGroupIngress:
-        - CidrIp: 0.0.0.0/0
-          IpProtocol: -1 # TODO Won't fix -1 for all protocols (VPC only)
-  NetworkLoadBalancer:
+          # Allow access to ALB from anywhere on the internet
+          - CidrIp: 0.0.0.0/0
+            IpProtocol: -1 # TODO Won't fix -1 for all protocols (VPC only)
+  PublicLoadBalancer:
     Type: AWS::ElasticLoadBalancingV2::LoadBalancer
     Properties:
-      Type: network
-      IpAddressType: ipv4
       Scheme: internet-facing
       LoadBalancerAttributes:
-        - Key: load_balancing.cross_zone.enabled
-          Value: 'true'
-      SubnetMappings:
-        - SubnetId: !Ref PublicSubnetOne
-          AllocationId: !GetAtt "PublicSubnetOneEIP.AllocationId"
-        - SubnetId: !Ref PublicSubnetTwo
-          AllocationId: !GetAtt "PublicSubnetTwoEIP.AllocationId"
-        - SubnetId: !Ref PublicSubnetThree
-          AllocationId: !GetAtt "PublicSubnetThreeEIP.AllocationId"
-      Tags:
-         - Key: "Name"
-           Value: !Sub "${ProjectName}-NetworkLoadBalancer-${EnvironmentName}-ELB"
-
+        - Key: idle_timeout.timeout_seconds
+          Value: '30'
+        # TODO add netwrk load balancer
+        #-Key: load_balancing.cross_zone.enabled
+        #  Value: true
+      Subnets:
+        # The load balancer is placed into the public subnets, so that traffic
+        # from the internet can reach the load balancer directly via the internet gateway
+        - !Ref PublicSubnetOne
+        - !Ref PublicSubnetTwo
+      SecurityGroups: [!Ref 'PublicLoadBalancerSG']
   # A dummy target group is used to setup the ALB to just drop traffic
   # initially, before any real service target groups have been added.
   DummyTargetGroupPublic:
@@ -217,63 +177,23 @@ Resources:
       Protocol: HTTP
       UnhealthyThresholdCount: 2
       VpcId: !Ref 'VPC'
-  NetworkLoadBalancerListenerHTTP80:
+  PublicLoadBalancerListenerHTTP:
     Type: AWS::ElasticLoadBalancingV2::Listener
     Properties:
       DefaultActions:
         - TargetGroupArn: !Ref 'DummyTargetGroupPublic'
           Type: 'forward'
-      LoadBalancerArn: !Ref 'NetworkLoadBalancer'
+      LoadBalancerArn: !Ref 'PublicLoadBalancer'
       Port: 80
       Protocol: HTTP
-  NetworkLoadBalancerListenerHTTPS443:
+  PublicLoadBalancerListenerHTTPS:
     Type: AWS::ElasticLoadBalancingV2::Listener
     Properties:
       DefaultActions:
         - TargetGroupArn: !Ref 'DummyTargetGroupPublic'
           Type: 'forward'
-      LoadBalancerArn: !Ref 'NetworkLoadBalancer'
+      LoadBalancerArn: !Ref 'PublicLoadBalancer'
       Port: 443
-      Protocol: HTTPS
-      Certificates:
-        - CertificateArn: !Ref 'CertificateArn'
-  NetworkLoadBalancerListenerHTTP7070:
-    Type: AWS::ElasticLoadBalancingV2::Listener
-    Properties:
-      DefaultActions:
-        - TargetGroupArn: !Ref 'DummyTargetGroupPublic'
-          Type: 'forward'
-      LoadBalancerArn: !Ref 'NetworkLoadBalancer'
-      Port: 7070
-      Protocol: HTTP
-  NetworkLoadBalancerListenerHTTPS7070:
-    Type: AWS::ElasticLoadBalancingV2::Listener
-    Properties:
-      DefaultActions:
-        - TargetGroupArn: !Ref 'DummyTargetGroupPublic'
-          Type: 'forward'
-      LoadBalancerArn: !Ref 'NetworkLoadBalancer'
-      Port: 7070
-      Protocol: HTTPS
-      Certificates:
-        - CertificateArn: !Ref 'CertificateArn'
-  NetworkLoadBalancerListenerHTTP1215:
-    Type: AWS::ElasticLoadBalancingV2::Listener
-    Properties:
-      DefaultActions:
-        - TargetGroupArn: !Ref 'DummyTargetGroupPublic'
-          Type: 'forward'
-      LoadBalancerArn: !Ref 'NetworkLoadBalancer'
-      Port: 1215
-      Protocol: HTTP
-  NetworkLoadBalancerListenerHTTPS1215:
-    Type: AWS::ElasticLoadBalancingV2::Listener
-    Properties:
-      DefaultActions:
-        - TargetGroupArn: !Ref 'DummyTargetGroupPublic'
-          Type: 'forward'
-      LoadBalancerArn: !Ref 'NetworkLoadBalancer'
-      Port: 1215
       Protocol: HTTPS
       Certificates:
         - CertificateArn: !Ref 'CertificateArn'
@@ -381,7 +301,7 @@ Outputs:
       Name: !Join [ ':', [ !Ref 'EnvironmentName', 'ClusterName' ] ]
   ExternalUrl:
     Description: The url of the external load balancer
-    Value: !Join ['', ['http://', !GetAtt 'NetworkLoadBalancer.DNSName']]
+    Value: !Join ['', ['http://', !GetAtt 'PublicLoadBalancer.DNSName']]
     Export:
       Name: !Join [ ':', [ !Ref 'EnvironmentName', 'ExternalUrl' ] ]
   ECSRole:
@@ -399,36 +319,16 @@ Outputs:
     Value: !GetAtt 'ECSTaskExecutionRole.Arn'
     Export:
       Name: !Join [ ':', [ !Ref 'EnvironmentName', 'AutoscalingRole' ] ]
-  HTTPListener80:
+  HTTPListener:
     Description: The ARN of the public load bal ancer's HTTP Listener
-    Value: !Ref NetworkLoadBalancerListenerHTTP80
+    Value: !Ref PublicLoadBalancerListenerHTTP
     Export:
       Name: !Join [ ':', [ !Ref 'EnvironmentName', 'PublicListenerHTTP' ] ]
-  HTTPSListener443:
+  HTTPSListener:
     Description: The ARN of the public load balancer's HTTPS Listener
-    Value: !Ref NetworkLoadBalancerListenerHTTPS443
+    Value: !Ref PublicLoadBalancerListenerHTTPS
     Export:
       Name: !Join [ ':', [ !Ref 'EnvironmentName', 'PublicListenerHTTPS' ] ]
-  HTTPListener7070:
-    Description: The ARN of the public load bal ancer's HTTP Listener
-    Value: !Ref NetworkLoadBalancerListenerHTTP7070
-    Export:
-      Name: !Join [ ':', [ !Ref 'EnvironmentName', 'PublicListenerHTTP7070' ] ]
-  HTTPSListener7070:
-    Description: The ARN of the public load balancer's HTTPS Listener
-    Value: !Ref NetworkLoadBalancerListenerHTTPS7070
-    Export:
-      Name: !Join [ ':', [ !Ref 'EnvironmentName', 'PublicListenerHTTPS7070' ] ]
-  HTTPListener1215:
-    Description: The ARN of the public load bal ancer's HTTP Listener
-    Value: !Ref NetworkLoadBalancerListenerHTTP1215
-    Export:
-      Name: !Join [ ':', [ !Ref 'EnvironmentName', 'PublicListenerHTTP1215' ] ]
-  HTTPSListener1215:
-    Description: The ARN of the public load balancer's HTTPS Listener
-    Value: !Ref NetworkLoadBalancerListenerHTTPS1215
-    Export:
-      Name: !Join [ ':', [ !Ref 'EnvironmentName', 'PublicListenerHTTPS1215' ] ]
   VPCId:
     Description: The ID of the VPC that this stack is deployed in
     Value: !Ref 'VPC'
@@ -444,28 +344,12 @@ Outputs:
     Value: !Ref 'PublicSubnetTwo'
     Export:
       Name: !Join [ ':', [ !Ref 'EnvironmentName', 'PublicSubnetTwo' ] ]
-  PublicSubnetThree:
-    Description: Public subnet three
-    Value: !Ref 'PublicSubnetThree'
-    Export:
-      Name: !Join [ ':', [ !Ref 'EnvironmentName', 'PublicSubnetThree' ] ]
-  PublicSubnetOneAddress:
-    Description: Public subnet one
-    Value: !Ref 'PublicSubnetOneEIP'
-    Export:
-      Name: !Join [ ':', [ !Ref 'EnvironmentName', 'PublicSubnetOneAddress' ] ]
-  PublicSubnetTwoAddress:
-    Description: Public subnet two
-    Value: !Ref 'PublicSubnetTwoEIP'
-    Export:
-      Name: !Join [ ':', [ !Ref 'EnvironmentName', 'PublicSubnetTwoAddress' ] ]
-  PublicSubnetThreeAddress:
-    Description: Public subnet three
-    Value: !Ref 'PublicSubnetThreeEIP'
-    Export:
-      Name: !Join [ ':', [ !Ref 'EnvironmentName', 'PublicSubnetThreeAddress' ] ]
   FargateContainerSecurityGroup:
     Description: A security group used to allow Fargate containers to receive traffic
     Value: !Ref 'FargateContainerSecurityGroup'
     Export:
       Name: !Join [ ':', [ !Ref 'EnvironmentName', 'FargateContainerSecurityGroup' ] ]
+  BackWSServiceAddress:
+    Value: !Join ['', ['http://', !GetAtt 'PublicLoadBalancer.DNSName']]
+    Export:
+      Name: !Join [ ':', [ !Ref 'EnvironmentName', 'BackWSServiceAddress' ] ]
