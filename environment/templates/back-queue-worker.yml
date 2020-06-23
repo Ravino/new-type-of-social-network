@@ -167,7 +167,7 @@ Resources:
           !Sub '${EnvironmentName}:ECSTaskExecutionRole'
       TaskRoleArn:
         Fn::ImportValue:
-          !Sub '${EnvironmentName}:QueueWorkerRole'
+          !Sub '${EnvironmentName}:BackQueueWorkerRole'
       ContainerDefinitions:
         - Name: !Ref 'ServiceName'
           Cpu: !Ref 'ContainerCpu'

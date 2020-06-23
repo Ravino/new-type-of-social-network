@@ -220,7 +220,7 @@ Resources:
             - Name: DB_PASSWORD
               Value:
                 Fn::ImportValue:
-                  !Join [':', [!Ref 'EnvironmentName', 'MySQLPass']]
+                  !Join [':', [!Ref 'EnvironmentName', 'MySQLDBPass']]
             - Name: DB_PORT
               Value:
                 Fn::ImportValue:
