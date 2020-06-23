@@ -729,8 +729,8 @@ Resources:
             #   RunOrder: 2
 
         # And we deploy the application resources (Elasticache, RDS, DocumentDB, etc)
-        - Name: Services
-          Actions:
+        #- Name: Services
+          #Actions:
             # Build the chat frontend docker image
             # - Name: back-ws
             #   ActionTypeId:
