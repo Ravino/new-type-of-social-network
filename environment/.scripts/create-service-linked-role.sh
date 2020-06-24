@@ -11,6 +11,13 @@ if [ ! -z $2 ]; then
 fi
 echo "Custom suffix for role is: $SERVICE_ROLE_SUFFIX"
 
+aws iam put-user-policy \
+--user-name=ruslan@valis.team \
+--policy-document=config/service-linked-role/allow-create-slr-policy.json
+
+aws iam create-service-linked-role \
+    --aws-service-name lex.amazonaws.com \
+    --description "My service-linked role to support Lex"
 aws iam create-service-linked-role \
     --aws-service-name ${SERVICE_NAME}.amazonaws.com \
     --custom-suffix ${SERVICE_ROLE_SUFFIX} \

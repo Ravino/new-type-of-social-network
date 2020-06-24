@@ -31,26 +31,33 @@ function update {
     --role-arn ${ARN_ADMIN}
 }
 function delete {
-    echo "stacks before: " && aws cloudformation describe-stacks --query "Stacks[].StackName" --output text --starting-token ${STARTING_TOKEN}
-
     aws cloudformation delete-stack --stack-name ${STACK_FULL_NAME}-mysql --role-arn ${ARN_ADMIN}
     aws cloudformation delete-stack --stack-name ${STACK_FULL_NAME}-redis --role-arn ${ARN_ADMIN}
     aws cloudformation delete-stack --stack-name ${STACK_FULL_NAME}-resources --role-arn ${ARN_ADMIN}
     aws cloudformation delete-stack --stack-name ${STACK_FULL_NAME}-cluster --role-arn ${ARN_ADMIN}
     aws cloudformation delete-stack --stack-name ${STACK_NAME} --role-arn ${ARN_ADMIN}
-    exit 1
-    echo "projects before: " && aws codebuild describe-projects --query "Projects[].ProjectName" --output text
     aws codebuild delete-project --name ${STACK_FULL_NAME}-back-api
     aws codebuild delete-project --name ${STACK_FULL_NAME}-back-queue-worker
     aws codebuild delete-project --name ${STACK_FULL_NAME}-back-ws
     aws codebuild delete-project --name ${STACK_FULL_NAME}-front-nginx
-    echo "repositories before: " && aaws ecr describe-repositories --query "Repositories[].RepositoryName" --output text
     aws ecr delete-repository --repository-name ${STACK_FULL_NAME}-back-api --force
     aws ecr delete-repository --repository-name ${STACK_FULL_NAME}-back-queue-worker --force
     aws ecr delete-repository --repository-name ${STACK_FULL_NAME}-back-ws --force
     aws ecr delete-repository --repository-name ${STACK_FULL_NAME}-front-nginx --force
 }
+function upload() {
+    aws cloudformation package --template /path_to_template/template.json --s3-bucket mybucket --output yaml > packaged-template.yml
+}
+# $1 CREATE_COMPLETE
+function stack-list-all() {
+    aws cloudformation list-stacks --stack-status-filter $1
+}
 
-`$1`
+# $1 stack name
+function stack-list-running() {
+    aws cloudformation describe-stacks --stack-name $1
+}
+
+`$@`
 
 echo 0

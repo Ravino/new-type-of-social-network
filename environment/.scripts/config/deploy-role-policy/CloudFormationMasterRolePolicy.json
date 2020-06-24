@@ -21,7 +21,8 @@
                 "s3:*",
                 "codebuild:*",
                 "codedeploy:*",
-                "codepipeline:*"
+                "codepipeline:*",
+                "elasticfilesystem:*"
             ],
             "Resource": "*",
             "Effect": "Allow"
