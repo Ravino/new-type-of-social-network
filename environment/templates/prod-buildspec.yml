@@ -79,7 +79,7 @@ artifacts:
   secondary-artifacts:
     prod-buildspec:
       files:
-        - 'environment/services/prod-buildspec.yml'
+        - 'environment/prod-buildspec.yml'
       base_directory: code-build/${ProjectName}/${ServiceName}/build-$(date +%Y-%m-%d)
       discard-paths: yes
 cache:

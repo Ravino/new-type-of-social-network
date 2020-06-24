@@ -1,6 +1,9 @@
 AWSTemplateFormatVersion: '2010-09-09'
 Description: Service sample builder
 Parameters:
+  ProjectName:
+    Type: String
+    Default:
   EnvironmentName:
     Type: String
     Default: test
@@ -110,8 +113,6 @@ Resources:
                 !Join [':', [!Ref 'EnvironmentName', 'PublicSubnetOne']]
             - Fn::ImportValue:
                 !Join [':', [!Ref 'EnvironmentName', 'PublicSubnetTwo']]
-            - Fn::ImportValue:
-                !Join [':', [!Ref 'EnvironmentName', 'PublicSubnetThree']]
       TaskDefinition: !Ref 'TaskDefinition'
         LoadBalancers:
           - ContainerName: !Ref 'ServiceName'
@@ -138,7 +139,7 @@ Resources:
             Value: '30' # TODO possible reason of issues for WebSockets are not forwarding messages
         VpcId:
           Fn::ImportValue:
-            !Join [':', [!Ref 'EnvironmentName', 'VPCId']]
+            !Join [':', [!Ref 'EnvironmentName', 'VPC']]
 
     # Create rules to forward both HTTP and HTTPS traffic to the service's
     # target group. The service itself will handle redirecting HTTP traffic

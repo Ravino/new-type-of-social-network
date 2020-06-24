@@ -107,7 +107,8 @@ Parameters:
   MailPassword:
     Type: String
     Default: "fereamea78"
-    Description: Mail password.
+    Description: Mail password
+    NoEcho: true
   MailPort:
     Type: Number
     Default: 587
@@ -154,7 +155,7 @@ Resources:
   LogGroup:
     Type: AWS::Logs::LogGroup
     Properties:
-      LogGroupName: !Ref "AWS::StackName"
+      LogGroupName: !Ref "ProjectName"
 
   # The task definition. This is a simple metadata description of what
   # container to run, and what resource requirements it has.
@@ -269,8 +270,7 @@ Resources:
               Value: !Ref 'QueueConnection'
             - Name: REDIS_HOST
               Value:
-                Fn::ImportValue:
-                  !Join [':', [!Ref 'EnvironmentName', 'RedisHost']]
+                d
             - Name: REDIS_PORT
               Value:
                 Fn::ImportValue:
@@ -326,8 +326,6 @@ Resources:
                 !Join [':', [!Ref 'EnvironmentName', 'PublicSubnetOne']]
             - Fn::ImportValue:
                 !Join [':', [!Ref 'EnvironmentName', 'PublicSubnetTwo']]
-            - Fn::ImportValue:
-                !Join [':', [!Ref 'EnvironmentName', 'PublicSubnetThree']]
       TaskDefinition: !Ref 'TaskDefinition'
       LoadBalancers:
          - ContainerName: !Ref 'ServiceName'
@@ -362,7 +360,7 @@ Resources:
           Value: '30' # TODO possible reason of issues for WebSockets are not forwarding messages
       VpcId:
         Fn::ImportValue:
-          !Join [':', [!Ref 'EnvironmentName', 'VPCId']]
+          !Join [':', [!Ref 'EnvironmentName', 'VPC']]
 
   # Create rules to forward both HTTP and HTTPS traffic to the service's
   # target group. The service itself will handle redirecting HTTP traffic
