@@ -1,0 +1,25 @@
+{
+    "Parameters": {
+        "ServiceName": "front-nginx",
+        "ImageUrl": "884088487044.dkr.ecr.eu-central-1.amazonaws.com/plizi-front-nginx-prod:latest",
+        "ContainerPort": 80,
+        "ServiceProtocol": "HTTP",
+        "TaskRoleArn": "BackWSTaskRole",
+        "ContainerCpu": "256",
+        "ContainerMemory": "512",
+        "NLBInsecureListener": "",
+        "NLBSecureListener": "",
+        "Path": "dev.plizi.fun",
+        "Priority": 1,
+        "MinCapacity": 1,
+        "DesiredCount": 2,
+        "MaxCapacity": 5,
+        "LowCpuPeriodAlarm": 300,
+        "ScaleDownCooldown": 300,
+        "LowCpuThresholdAlarm": 20,
+        "HighCpuThresholdAlarm": 70,
+        "ScaleUpCooldown": 30,
+        "DeploymentMaximum": 200,
+        "DeploymentMinimum": 100
+    }
+}

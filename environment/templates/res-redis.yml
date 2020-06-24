@@ -22,7 +22,7 @@ Resources:
       GroupDescription: "Redis Security Group"
       VpcId:
         Fn::ImportValue:
-          !Join [':', [!Ref 'EnvironmentName', 'VPCId']]
+          !Join [':', [!Ref 'EnvironmentName', 'VPC']]
   RedisIngress:
     Type: AWS::EC2::SecurityGroupIngress
     Properties:

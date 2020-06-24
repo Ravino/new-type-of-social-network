@@ -31,7 +31,7 @@ Resources:
       GroupDescription: "Redis Security Group"
       VpcId:
         Fn::ImportValue:
-          !Join [':', [!Ref 'EnvironmentName', 'VPCId']]
+          !Join [':', [!Ref 'EnvironmentName', 'VPC']]
   MongoIngress:
     Type: AWS::EC2::SecurityGroupIngress
     Properties:
@@ -49,13 +49,13 @@ Resources:
   #     Description: MongoDB cluster parameters group
   #     Family: "mongodb"
   #     Name: "sampleParameterGroup"
-  #     Parameters: 
+  #     Parameters:
   #           audit_logs: "disabled"
   #           tls: "enabled"
   #           ttl_monitor: "enabled"
-  #     Tags: 
+  #     Tags:
   #         - Key: "String"
-  #           Value: "String" 
+  #           Value: "String"
   MongoDB:
     Type: "AWS::DocDB::DBCluster"
     Properties:
@@ -71,7 +71,7 @@ Resources:
       DBSubnetGroupName: !Ref 'MongoSubnetGroup'
       VpcSecurityGroupIds:
         - Fn::ImportValue:
-            !Join [':', [!Ref 'EnvironmentName', 'FargateContainerSecurityGroup']] # Possibly have to provide VPCid itself
+            !Join [':', [!Ref 'EnvironmentName', 'FargateContainerSecurityGroup']]
       DeletionProtection: false
   MongoInstance:
     Type: "AWS::DocDB::DBInstance"
@@ -79,19 +79,19 @@ Resources:
       DBInstanceClass: db.r5.large # TODO: Adjust on highload results
       DBClusterIdentifier: !Ref 'MongoDB' #required
 Outputs:
-  MongoDBName: 
+  MongoDBName:
     Value: 'admin'
     Export:
       Name: !Join [ ':', [ !Ref 'EnvironmentName', 'MongoDBName' ] ]
-  MongoDBHost: 
+  MongoDBHost:
     Value: !GetAtt 'MongoDB.Endpoint' # TODO Possibly should be changed to MongoInstance.Endpoint
     Export:
       Name: !Join [ ':', [ !Ref 'EnvironmentName', 'MongoDBHost' ] ]
-  MongoDBUser: 
+  MongoDBUser:
     Value: !Ref 'MongoDBMasterUsername'
     Export:
       Name: !Join [ ':', [ !Ref 'EnvironmentName', 'MongoDBUser' ] ]
-  MongoDBPass: 
+  MongoDBPass:
     Value: !Ref 'MongoDBMasterUserPassword'
     Export:
       Name: !Join [ ':', [ !Ref 'EnvironmentName', 'MongoDBPass' ] ]

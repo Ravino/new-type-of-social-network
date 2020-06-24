@@ -1,0 +1,87 @@
+version: 0.2
+
+env:
+  variables:
+    AppDebug: 0 # Is application in debug mode?
+    AppEnv: "Prodution" # Type of environment that service running on.
+    ApiUrl: "https://dev.plizi.fun/" # Path to external api dns.
+    AppKey: "base64:B+SfHGdTdca+dxR4pzJ2SRrqFpF1gFS/pgZTHNxDbhw" # Application authorization secrets.
+    AppName: "PLIZI: Социальная сеть" # Application displayable name.
+    AwsAccessKeyId: "AKIAIBMISJ3W5T6P3ULA" # AWS access key id.
+    AwsSecretAccessKey: "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" # AWS access secret.
+    AwsDefaultRegion: "eu-central-1" # AWS region service hosted on.
+    AwsBucket: "plizibuck" # S2 bucket for assets storing.
+    DbConnection: "mysql" # Database connection type.
+    JwtBlacklistEnabled: 1 # JWT blacklist.
+    JwtTtl: 4320 # JWT TTL.
+    LadaCacheActive: 0 # Caching dublicated queries.
+    MailEncryption: "tls" # Mail encryption.
+    MailFromAddress: "no-reply@plizi.info" # Send emails from address.
+    MailFromName: "PLIZI Социальная сеть" # Send emails from name.
+    MailHost: "mail.plizi.info" # Mailer host.
+    MailMailer: "smtp" # Mailer type.
+    MailPassword: "fereamea78" # Mail password.
+    MailPort: 587 # Mailer port.
+    MailUsername: "no-reply@plizi.info" # Mail username
+    Neo4DbBoltPort: 7687 # Neo4j Graph database bolt port.
+    Neo4DbHost: "10.10.19.212" # Neo4j Graph database host.
+    Neo4DbHttpPort: 7474 # Neo4j Graph database http port.
+    Neo4DbPassword: "zKisCPceY6WzTP1R" # Neo4j Graph database password.
+    Neo4DbUsername: "neo4j" # Neo4j Graph database username.
+    QueueConnection: "redis" # Queue connection type [sync redis rebbitmq].
+    SentryLaravelDsn: "http://89feb2eb67c741c29d06f1204b809e87@ec2-3-125-155-176.eu-central-1.compute.amazonaws.com/2" # Sentry exception logger host.
+    SwooleHttpHost: "0.0.0.0" # Swoole http host.
+
+proxy:
+  upload-artifacts: yes
+  logs: yes
+
+phases:
+  install:
+    commands:
+      - echo Starting install NFS client to be ready for EFS filesystem interaction
+      - sudo apt-get update
+      - sudo apt-get -y install nfs-common
+      - echo Starting up dockerd and linking with socket-tcp endpoints
+      - nohup /usr/local/bin/dockerd --host=unix:///var/run/docker.sock --host=tcp://127.0.0.1:2375 --storage-driver=overlay2&
+    finally:
+      - echo Waiting for docker starts up and applies configurations
+      - timeout 15 sh -c "until docker info; do echo .; sleep 1; done"
+  pre_build:
+    commands:
+      - echo Logging in to Amazon ECR...
+      - $(aws ecr get-login --no-include-email --region $AWS_DEFAULT_REGION)
+    finally:
+      - echo Calculating $IMAGE_URI value from input parameters
+      - IMAGE_URI="$AWS_ACCOUNT_ID.dkr.ecr.$AWS_DEFAULT_REGION.amazonaws.com/$IMAGE_REPO_NAME-$EnvironmentName:$IMAGE_TAG"
+      - echo Current directory `pwd`
+      - echo Changing directory to $BUILD_WORK_DIR
+      - cd $BUILD_WORK_DIR
+      - echo Current directory `pwd`
+  build:
+    commands:
+      - echo Build started on `date`
+      - echo Building the Docker image
+      - docker build -t $IMAGE_REPO_NAME:$IMAGE_TAG -f $DOCKERFILE_PATH/Dockerfile .
+      - echo Tagging image for registry upload
+      - docker tag $IMAGE_REPO_NAME:$IMAGE_TAG $IMAGE_URI
+    finally:
+      - echo Build completed on `date`
+  post_build:
+    commands:
+      - echo Pushing image to registry by path $IMAGE_URI
+      - docker push $IMAGE_URI
+artifacts:
+  files:
+    - '**/*'
+  base_directory: code-build/${ProjectName}/${ServiceName}/build-$(date +%Y-%m-%d)
+  discard-paths: yes
+  secondary-artifacts:
+    prod-buildspec:
+      files:
+        - 'environment/services/prod-buildspec.yml'
+      base_directory: code-build/${ProjectName}/${ServiceName}/build-$(date +%Y-%m-%d)
+      discard-paths: yes
+cache:
+  paths:
+    - '/root/.m2/**/*'

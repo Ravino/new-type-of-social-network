@@ -29,18 +29,14 @@ Resources:
         - Fn::ImportValue:
             !Join [':', [!Ref 'EnvironmentName', 'PublicSubnetOne']]
         - Fn::ImportValue:
-            !Join [':', [!Ref 'EnvironmentName', 'PublicSubnetTwo']]      
-    DeletionPolicy: Retain
-    UpdateReplacePolicy: Retain 
+            !Join [':', [!Ref 'EnvironmentName', 'PublicSubnetTwo']]
   MySQLSecurityGroup:
     Type: AWS::EC2::SecurityGroup
     Properties:
       GroupDescription: "MySQL Security Group"
       VpcId:
         Fn::ImportValue:
-          !Join [':', [!Ref 'EnvironmentName', 'VPCId']]
-    DeletionPolicy: Retain
-    UpdateReplacePolicy: Retain 
+          !Join [':', [!Ref 'EnvironmentName', 'VPC']]
   MySQLIngress:
     Type: AWS::EC2::SecurityGroupIngress
     Properties:
@@ -51,8 +47,6 @@ Resources:
       SourceSecurityGroupId:
         Fn::ImportValue:
           !Join [':', [!Ref 'EnvironmentName', 'FargateContainerSecurityGroup']]
-    DeletionPolicy: Retain
-    UpdateReplacePolicy: Retain 
   MySQL:
     Type: AWS::RDS::DBInstance
     Properties:
@@ -65,28 +59,26 @@ Resources:
       MasterUserPassword: !Ref 'MySQLDBMasterUserPassword'
       DBSubnetGroupName: !Ref 'MySQLSubnetGroup'
       VPCSecurityGroups:
-        - !GetAtt 'MySQLSecurityGroup.GroupId' 
+        - !GetAtt 'MySQLSecurityGroup.GroupId'
       MultiAZ: true
-    DeletionPolicy: Retain
-    UpdateReplacePolicy: Retain # TODO Check how does it works with table updates
 Outputs:
-  MySQLDBName: 
+  MySQLDBName:
     Value: !Ref 'MySQLDBName'
     Export:
       Name: !Join [ ':', [ !Ref 'EnvironmentName', 'MySQLDBName' ] ]
-  MySQLDBUserName: 
+  MySQLDBUserName:
     Value: !Ref 'MySQLDBMasterUsername'
     Export:
       Name: !Join [ ':', [ !Ref 'EnvironmentName', 'MySQLDBUser' ] ]
-  MySQLDBUserPass: 
+  MySQLDBUserPass:
     Value: !Ref 'MySQLDBMasterUserPassword'
     Export:
       Name: !Join [ ':', [ !Ref 'EnvironmentName', 'MySQLDBPass' ] ]
-  MySQLDBHost: 
+  MySQLDBHost:
     Value: !GetAtt 'MySQL.Endpoint.Address'
     Export:
       Name: !Join [ ':', [ !Ref 'EnvironmentName', 'MySQLDBHost' ] ]
-  MySQLDBPort: 
+  MySQLDBPort:
     Value: !GetAtt 'MySQL.Endpoint.Port'
     Export:
       Name: !Join [ ':', [ !Ref 'EnvironmentName', 'MySQLDBPort' ] ]

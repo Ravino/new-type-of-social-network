@@ -17,16 +17,13 @@ Parameters:
     Type: String
   # stack-related parameters
   VPC:
-    Type: AWS::EC2::VPC::Id
+    Type: String
     Description: VPC id for assuming service exists inside of VPC exactly
   PublicSubnetOne:
-    Type: AWS::VPC::Subnet::Id
+    Type: String
     Description: VPC Subnet ID that requires EFS service availability
   PublicSubnetTwo:
-    Type: AWS::VPC::Subnet::Id
-    Description: VPC Subnet ID that requires EFS service availability
-  PublicSubnetThree:
-    Type: AWS::VPC::Subnet::Id
+    Type: String
     Description: VPC Subnet ID that requires EFS service availability
   NetworkSecurityGroup:
     Type: AWS::EC2::SecurityGroup::Id
@@ -137,15 +134,6 @@ Resources:
       SecurityGroups:
         - !Ref ElasticFileSystemSG
 
-  ElasticFileSystemMountSubnetThree:
-    Type: AWS::EFS::MountTarget
-    Properties:
-      FileSystemId:
-        Ref: !Ref ElasticFileSystem
-      SubnetId: !Ref PublicSubnetThree
-      SecurityGroups:
-        - !Ref ElasticFileSystemSG
-
 Outputs:
   ElasticFileSystem:
     Value: !Ref 'ElasticFileSystem'
@@ -163,7 +151,3 @@ Outputs:
     Value: !Ref 'ElasticFileSystemMountSubnetTwo'
     Export:
       Name: !Join [ ':', [ !Ref 'EnvironmentName', 'ElasticFileSystemMountSubnetTwo' ] ]
-  ElasticFileSystemMountPointSubnetThree:
-    Value: !Ref 'ElasticFileSystemMountSubnetThree'
-    Export:
-      Name: !Join [ ':', [ !Ref 'EnvironmentName', 'ElasticFileSystemMountSubnetThree' ] ]
