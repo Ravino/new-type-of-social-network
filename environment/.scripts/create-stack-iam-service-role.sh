@@ -1,45 +1,23 @@
 #!/bin/bash
-# NB! list-policies-granting-service-access - in case of creation of trust role
-
-CONFIG_PATH="./create-replace-role.config"
-if [ -f ${CONFIG_PATH} ]; then
-    echo ":: Found config file ${CONFIG_PATH}, sourcing..."
-    source ${CONFIG_PATH}
-else
-    echo "ERROR: Can'f find config file ${CONFIG_PATH}"
-    exit 10;
+ROLE_NAME="CloudFormationMaster"
+if [ ! -z $1 ]; then
+    ROLE_NAME=$1
 fi
+echo "Creating iam role with name: $ROLE_NAME"
 
-# parser input
-# echo "[1] START Parse Input"
-# if [ -z "$1" ]; then
-#     INPUT_ROLE="CloudFormation"
-#     echo ":: ROLE_NAME argument is not specified, INPUT_ROLE = ${INPUT_ROLE}"
-# else
-#     INPUT_ROLE=$1""
-#     echo ":: ROLE_NAME argument specified $1, INPUT_ROLE = ${INPUT_ROLE}"
-# fi
-
-# if [ -z "$2" ]; then
-#     STACK_NAME="CloudFormation"
-#     echo ":: ROLE_NAME argument is not specified, STACK_NAME = ${STACK_NAME}"
-# else
-#     STACK_NAME=$12""
-#     echo ":: ROLE_NAME argument specified $2, STACK_NAME = ${STACK_NAME}"
-# fi
-# echo "[1] FINISH Parse Input"
-
-echo "[2] START Make Variables"
+echo "[2] START Configuration"
 # make variables
-ROLE_NAME="${ROLE_NAME_PREFIX}${STACK_IAM_ROLE}${ROLE_NAME_POSTFIX}"    #ROLE_NAME="{INPUT_ROLE}"DeployRole/${STACK_NAME}"
+ROLE_NAME=$ROLE_NAME"Role"
 echo "ROLE_NAME=${ROLE_NAME}"
-ROLE_POLICY_NAME=${ROLE_NAME}${ROLE_POLICY_NAME_POSTFIX}
-echo "ROLE_POLICY_NAME=${ROLE_POLICY_NAME}"
-ROLE_ASSUME_POLICY_NAME="assume-role-policy/${ROLE_NAME}"
+ROLE_ASSUME_POLICY_NAME="config/assume-role-policy/${ROLE_NAME}"
 echo "ROLE_ASSUME_POLICY_NAME=${ROLE_ASSUME_POLICY_NAME}"
-ROLE_DEPLOY_POLICY_NAME="deploy-role-policy/${ROLE_POLICY_NAME}"
+
+ROLE_POLICY_NAME=$ROLE_NAME"Policy"
+echo "ROLE_POLICY_NAME=${ROLE_POLICY_NAME}"
+ROLE_DEPLOY_POLICY_NAME="config/deploy-role-policy/${ROLE_POLICY_NAME}"
 echo "ROLE_DEPLOY_POLICY_NAME=${ROLE_DEPLOY_POLICY_NAME}"
-echo "[2] FINISH Parse Input"
+
+echo "[2] FINISH Configuration"
 
 echo "[3] START Check Roles Count ${ROLE_NAME} role"
 echo "aws iam list-roles --no-paginate --query \"Roles[?RoleName=='${ROLE_NAME}'] | length(@)\""
