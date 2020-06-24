@@ -1,0 +1,8 @@
+{
+    "Effect": "Allow",
+    "Action": [
+        "iam:DeleteServiceLinkedRole",
+        "iam:GetServiceLinkedRoleDeletionStatus"
+    ],
+    "Resource": "arn:aws:iam::*:role/aws-service-role/*.amazonaws.com/*"
+}

@@ -1,0 +1,169 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Description: Stack creates multipurpose, size-flexible, burst- an constantly-
+             (depends on config) fast. EFS guarantee, that storage data on
+             Fargate tasks would be available even after full stack-terminate.
+             EFS available on all subnets passed in container, but access is
+             restricted for access points only.
+
+Parameters:
+  # propogadated parameters
+  ProjectName:
+    Type: String
+  EnvironmentName:
+    Type: String
+  CertificateArn:
+    Type: String
+  KMSKeyArn:
+    Type: String
+  # stack-related parameters
+  VPC:
+    Type: AWS::EC2::VPC::Id
+    Description: VPC id for assuming service exists inside of VPC exactly
+  PublicSubnetOne:
+    Type: AWS::VPC::Subnet::Id
+    Description: VPC Subnet ID that requires EFS service availability
+  PublicSubnetTwo:
+    Type: AWS::VPC::Subnet::Id
+    Description: VPC Subnet ID that requires EFS service availability
+  PublicSubnetThree:
+    Type: AWS::VPC::Subnet::Id
+    Description: VPC Subnet ID that requires EFS service availability
+  NetworkSecurityGroup:
+    Type: AWS::EC2::SecurityGroup::Id
+    Description: Security group id, provided by pipeline entry point script.
+  # settings
+  PerformanceMode:
+  Type: String
+  Default: generalPurpose
+  AllowedValues:
+    - generalPurpose
+    - maxIO
+  ConstraintDescription: EFS allowing such values only
+  PIOPS:
+    Type: Number
+    Default: '1.5' # per one general usage service, 1Mb/s per 20Gb of STORED space
+    Description: IOPS limit for current EFS system
+Resources:
+
+  # Create elastic file system with requested params
+  ElasticFileSystem:
+    Type: AWS::EFS::FileSystem
+    Properties:
+      Encrypted: true
+      KmsKeyId: !Ref KMSKeyArn
+      # Moving obsolete data to slow storage over 30 days
+      LifecyclePolicies:
+        - TransitionToIA: AFTER_30_DAYS
+      PerformanceMode: !Ref PerformanceMode
+      ThroughputMode: provisioned
+      ProvisionedThroughputInMibps: !Ref PIOPS #1Mb/s 20Gb
+      FileSystemPolicy: {
+          "Version": "2012-10-17",
+          "Statement": [
+              {
+                  "Effect": "Allow",
+                  "Principal": {
+                      "AWS": "*"
+                  },
+                  "Action": [
+                      "elasticfilesystem:ClientMount",
+                      "elasticfilesystem:ClientWrite"
+                  ],
+                  "Condition": {
+                      "Bool": {
+                          "aws:SecureTransport": "true"
+                      }
+                  }
+              },
+              {
+                  "Effect": "Allow",
+                  "Principal": {
+                      "Service": "*"
+                  },
+                  "Action": [
+                      "elasticfilesystem:ClientMount",
+                      "elasticfilesystem:ClientWrite"
+                  ],
+                  "Condition": {
+                      "Bool": {
+                          "aws:SecureTransport": "true"
+                      }
+                  }
+              }
+          ]
+      }
+      FileSystemTags:
+        - Key: "Name"
+          Value: !Sub "${ProjectName}-ElasticFileSystem-${EnvironmentName}-EFS"
+
+  # Security group ingress from VPC default
+  ElasticFileSystemSG:
+    Type: AWS::EC2::SecurityGroup
+    DependsOn: ElasticFileSystemSGIngress
+    Properties:
+      GroupDescription: Security group for EFS mount target
+      VpcId: !Ref 'VPC'
+
+  ElasticFileSystemSGIngress:
+    Type: AWS::EC2::SecurityGroupIngress
+    Properties:
+      Description: Ingress from Fargate containers
+      GroupId: !Ref ElasticFileSystemSG
+      IpProtocol: tcp
+      FromPort: 2049
+      ToPort: 2049
+      SourceSecurityGroupId: !Ref NetworkSecurityGroup
+      SecurityGroupIngress:
+      - IpProtocol: tcp
+        FromPort: '2049'
+        ToPort: '2049'
+        CidrIp: 0.0.0.0/0
+
+  ElasticFileSystemMountSubnetOne:
+    Type: AWS::EFS::MountTarget
+    Properties:
+      FileSystemId:
+        Ref: !Ref ElasticFileSystem
+      SubnetId: !Ref PublicSubnetOne
+      SecurityGroups:
+        - !Ref ElasticFileSystemSG
+
+  ElasticFileSystemMountSubnetTwo:
+    Type: AWS::EFS::MountTarget
+    Properties:
+      FileSystemId:
+        Ref: !Ref ElasticFileSystem
+      SubnetId: !Ref PublicSubnetTwo
+      SecurityGroups:
+        - !Ref ElasticFileSystemSG
+
+  ElasticFileSystemMountSubnetThree:
+    Type: AWS::EFS::MountTarget
+    Properties:
+      FileSystemId:
+        Ref: !Ref ElasticFileSystem
+      SubnetId: !Ref PublicSubnetThree
+      SecurityGroups:
+        - !Ref ElasticFileSystemSG
+
+Outputs:
+  ElasticFileSystem:
+    Value: !Ref 'ElasticFileSystem'
+    Export:
+      Name: !Join [ ':', [ !Ref 'EnvironmentName', 'ElasticFileSystem' ] ]
+  ElasticFileSystemSG:
+    Value: !Ref 'ElasticFileSystemSG'
+    Export:
+      Name: !Join [ ':', [ !Ref 'EnvironmentName', 'ElasticFileSystemSG' ] ]
+  ElasticFileSystemMountPointSubnetOne:
+    Value: !Ref 'ElasticFileSystemMountSubnetOne'
+    Export:
+      Name: !Join [ ':', [ !Ref 'EnvironmentName', 'ElasticFileSystemMountSubnetOne' ] ]
+  ElasticFileSystemMountPointSubnetTwo:
+    Value: !Ref 'ElasticFileSystemMountSubnetTwo'
+    Export:
+      Name: !Join [ ':', [ !Ref 'EnvironmentName', 'ElasticFileSystemMountSubnetTwo' ] ]
+  ElasticFileSystemMountPointSubnetThree:
+    Value: !Ref 'ElasticFileSystemMountSubnetThree'
+    Export:
+      Name: !Join [ ':', [ !Ref 'EnvironmentName', 'ElasticFileSystemMountSubnetThree' ] ]
