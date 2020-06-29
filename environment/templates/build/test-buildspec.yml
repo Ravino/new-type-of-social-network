@@ -71,8 +71,8 @@ phases:
     commands:
       - echo Pushing image to registry by path $IMAGE_URI
       - docker push $IMAGE_URI
-      - echo Exposing imagedefinitions.json with CodeBuild
-      - printf '[ { "name" : "${AWS_DEFAULT_REGION}-plizi-${EnvironmentName}", "imageUri" : "${IMAGE_URI}" } ]' > imagedefinitions.json
+      #- echo Exposing imagedefinitions.json with CodeBuild
+      #- printf '[ { "name" : "${AWS_DEFAULT_REGION}-plizi-${EnvironmentName}", "imageUri" : "${IMAGE_URI}" } ]' > imagedefinitions.json
 artifacts:
   files:
     - '**/*'
@@ -84,6 +84,6 @@ artifacts:
         - 'environment/test-buildspec.yml'
       base_directory: code-build/${ProjectName}/${ServiceName}/build-$(date +%Y-%m-%d)
       discard-paths: yes
-cache:
-  paths:
-    - '/root/.m2/**/*'
+#cache:
+#  paths:
+#    - '/root/.m2/**/*'

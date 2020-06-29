@@ -331,7 +331,7 @@ Resources:
       EncryptionKey: !Ref KMSKeyArn
       Source:
         Type: CODEPIPELINE
-        BuildSpec: environment/back-ws/${EnvironmentName}-buildspec.yml
+        BuildSpec: environment/build/${EnvironmentName}-buildspec.yml
       # FileSystemLocation:
       #   Identifier: !Ref CodebuildCacheEFS
       #   Location: String
@@ -431,7 +431,7 @@ Resources:
       EncryptionKey: !Ref KMSKeyArn
       Source:
         Type: CODEPIPELINE
-        BuildSpec: environment/back-queue-worker/${EnvironmentName}-buildspec.yml
+        BuildSpec: environment/build/${EnvironmentName}-buildspec.yml
       Cache:
         Location: LOCAL
         Modes:
@@ -525,7 +525,7 @@ Resources:
         Type: CODEPIPELINE
       Source:
         Type: CODEPIPELINE
-        BuildSpec: environment/back-api/${EnvironmentName}-buildspec.yml
+        BuildSpec: environment/build/${EnvironmentName}-buildspec.yml
       Cache:
         Location: LOCAL
         Modes:
@@ -619,7 +619,7 @@ Resources:
         Type: CODEPIPELINE
       Source:
         Type: CODEPIPELINE
-        BuildSpec: environment/front-nginx/${EnvironmentName}-buildspec.yml
+        BuildSpec: environment/build/${EnvironmentName}-buildspec.yml
       Cache:
         Location: LOCAL
         Modes:
@@ -758,7 +758,7 @@ Resources:
                 ChangeSetName: !Sub "${AWS::Region}-${EnvironmentName}-${ProjectName}-cluster-changeset"
                 RoleArn: !GetAtt CloudFormationDeployRole.Arn
                 StackName: !Sub "${AWS::Region}-${EnvironmentName}-${ProjectName}-cluster"
-                TemplatePath: "Source::environment/templates/cluster.yml"
+                TemplatePath: "Source::environment/templates/infrastructure/vpc.yml"
                 ParameterOverrides: !Sub |
                   {
                     "EnvironmentName": "${EnvironmentName}",
@@ -786,7 +786,7 @@ Resources:
                 ChangeSetName: !Sub "${AWS::Region}-${EnvironmentName}-${ProjectName}-resources-changeset"
                 RoleArn: !GetAtt CloudFormationDeployRole.Arn
                 StackName: !Sub "${AWS::Region}-${EnvironmentName}-${ProjectName}-resources"
-                TemplatePath: Source::environment/templates/roles.yml
+                TemplatePath: Source::environment/templates/resources.yml
                 ParameterOverrides: !Sub |
                   {
                     "EnvironmentName": "${EnvironmentName}"
@@ -866,156 +866,158 @@ Resources:
                 - Name: RedisDeployOutput
               RunOrder: 2
 
-          #- Name: Services
-          # Actions:
-          #   - Name: back-ws
-          #     ActionTypeId:
-          #       Category: Build
-          #       Owner: AWS
-          #       Version: '1'
-          #       Provider: CodeBuild
-          #     Configuration:
-          #       ProjectName: !Ref BackWS
-          #     InputArtifacts:
-          #       - Name: Source
-          #     OutputArtifacts:
-          #       - Name: BackWSBuildOutput
-          #     RunOrder: 2
+        - Name: Services
+          Actions:
+            - Name: back-ws
+              ActionTypeId:
+                Category: Build
+                Owner: AWS
+                Version: '1'
+                Provider: CodeBuild
+              Configuration:
+                ProjectName: !Ref BackWS
+              InputArtifacts:
+                - Name: Source
+              OutputArtifacts:
+                - Name: BackWSBuildOutput
+              RunOrder: 2
 
-          #   - Name: back-queue-worker
-          #     ActionTypeId:
-          #       Category: Build
-          #       Owner: AWS
-          #       Version: '1'
-          #       Provider: CodeBuild
-          #     Configuration:
-          #       ProjectName: !Ref BackQueueWorker
-          #     InputArtifacts:
-          #       - Name: Source
-          #     OutputArtifacts:
-          #       - Name: BackQueueWorkerBuildOutput
-          #     RunOrder: 2
+            - Name: back-queue-worker
+              ActionTypeId:
+                Category: Build
+                Owner: AWS
+                Version: '1'
+                Provider: CodeBuild
+              Configuration:
+                ProjectName: !Ref BackQueueWorker
+              InputArtifacts:
+                - Name: Source
+              OutputArtifacts:
+                - Name: BackQueueWorkerBuildOutput
+              RunOrder: 2
 
-          #   - Name: back-api
-          #     ActionTypeId:
-          #       Category: Build
-          #       Owner: AWS
-          #       Version: '1'
-          #       Provider: CodeBuild
-          #     Configuration:
-          #       ProjectName: !Ref BackApi
-          #     InputArtifacts:
-          #       - Name: Source
-          #     OutputArtifacts:
-          #       - Name: BackApiBuildOutput
-          #     RunOrder: 2
+            - Name: back-api
+              ActionTypeId:
+                Category: Build
+                Owner: AWS
+                Version: '1'
+                Provider: CodeBuild
+              Configuration:
+                ProjectName: !Ref BackApi
+              InputArtifacts:
+                - Name: Source
+              OutputArtifacts:
+                - Name: BackApiBuildOutput
+              RunOrder: 2
 
-          #   - Name: front-nginx
-          #     ActionTypeId:
-          #       Category: Build
-          #       Owner: AWS
-          #       Version: '1'
-          #       Provider: CodeBuild
-          #     Configuration:
-          #       ProjectName: !Ref FrontNginx
-          #     InputArtifacts:
-          #       - Name: Source
-          #     OutputArtifacts:
-          #       - Name: FrontNginxBuildOutput
-          #     RunOrder: 2
+            - Name: front-nginx
+              ActionTypeId:
+                Category: Build
+                Owner: AWS
+                Version: '1'
+                Provider: CodeBuild
+              Configuration:
+                ProjectName: !Ref FrontNginx
+              InputArtifacts:
+                - Name: Source
+              OutputArtifacts:
+                - Name: FrontNginxBuildOutput
+              RunOrder: 2
+              
+        - Name: Deploy
+          Actions:
+            - Name: back-ws
+              ActionTypeId:
+                Category: Deploy
+                Owner: AWS
+                Version: '1'
+                Provider: CloudFormation
+              Configuration:
+                ActionMode: CREATE_UPDATE #CHANGE_SET_EXECUTE
+                RoleArn: !GetAtt CloudFormationDeployRole.Arn
+                StackName: !Sub ${AWS::Region}-${EnvironmentName}-${ProjectName}-back-ws
+                TemplateConfiguration: Source::environment/templates/back-ws/${EnvironmentName}-configuration.json
+                TemplatePath: Source::environment/templates/back-ws.yml
+                Capabilities: CAPABILITY_IAM
+                ParameterOverrides: !Sub |
+                  {
+                    "EnvironmentName": "${EnvironmentName}"
+                  }
+              InputArtifacts:
+                - Name: Source
+              OutputArtifacts:
+                - Name: BackWSDeployOutput
+              RunOrder: 1
 
-        # Finally we deploy the Fargate service to the cluster
-        # - Name: Deploy
-        #   Actions:
-        #     - Name: back-ws
-        #       ActionTypeId:
-        #         Category: Deploy
-        #         Owner: AWS
-        #         Version: '1'
-        #         Provider: CloudFormation
-        #       Configuration:
-        #         ActionMode: CREATE_UPDATE #CHANGE_SET_EXECUTE
-        #         RoleArn: !GetAtt CloudFormationDeployRole.Arn
-        #         StackName: !Sub ${AWS::Region}-${EnvironmentName}-${ProjectName}-back-ws
-        #         TemplatePath: Source::environment/templates/back-ws.yml
-        #         Capabilities: CAPABILITY_IAM
-        #         ParameterOverrides: !Sub |
-        #           {
-        #             "EnvironmentName": "${EnvironmentName}"
-        #           }
-        #       InputArtifacts:
-        #         - Name: Source
-        #       OutputArtifacts:
-        #         - Name: BackWSDeployOutput
-        #       RunOrder: 1
+            - Name: back-queue-worker
+              ActionTypeId:
+                Category: Deploy
+                Owner: AWS
+                Version: '1'
+                Provider: CloudFormation
+              Configuration:
+                ActionMode: CREATE_UPDATE # CHANGE_SET_EXECUTE
+                RoleArn: !GetAtt CloudFormationDeployRole.Arn
+                Capabilities: CAPABILITY_IAM,CAPABILITY_AUTO_EXPAND
+                StackName: !Sub ${AWS::Region}-${EnvironmentName}-${ProjectName}-back-queue-worker
+                #OutputFileName: Source::back-queue-worker/output.json
+                TemplateConfiguration: Source::environment/templates/back-queue-worker/${EnvironmentName}-configuration.json
+                TemplatePath: Source::environment/templates/back-queue-worker.yml
+                ParameterOverrides: !Sub |
+                  {
+                    "EnvironmentName": "${EnvironmentName}"
+                  }
+              InputArtifacts:
+                - Name: Source
+              OutputArtifacts:
+                - Name: BackQueueWorkerDeployOutput
+              RunOrder: 1
 
-        #     - Name: back-queue-worker
-        #       ActionTypeId:
-        #         Category: Deploy
-        #         Owner: AWS
-        #         Version: '1'
-        #         Provider: CloudFormation
-        #       Configuration:
-        #         ActionMode: CREATE_UPDATE # CHANGE_SET_EXECUTE
-        #         RoleArn: !GetAtt CloudFormationDeployRole.Arn
-        #         Capabilities: CAPABILITY_IAM,CAPABILITY_AUTO_EXPAND
-        #         StackName: !Sub ${AWS::Region}-${EnvironmentName}-${ProjectName}-back-queue-worker
-        #         #OutputFileName: Source::back-queue-worker/output.json
-        #         #TemplateConfiguration: Source::back-queue-worker/configuration.json
-        #         TemplatePath: Source::environment/templates/back-queue-worker.yml
-        #         ParameterOverrides: !Sub |
-        #           {
-        #             "EnvironmentName": "${EnvironmentName}"
-        #           }
-        #       InputArtifacts:
-        #         - Name: Source
-        #       OutputArtifacts:
-        #         - Name: BackQueueWorkerDeployOutput
-        #       RunOrder: 1
+            - Name: back-api
+              ActionTypeId:
+                Category: Deploy
+                Owner: AWS
+                Version: '1'
+                Provider: CloudFormation
+              Configuration:
+                ActionMode: CREATE_UPDATE # CHANGE_SET_EXECUTE
+                RoleArn: !GetAtt CloudFormationDeployRole.Arn
+                Capabilities: CAPABILITY_IAM,CAPABILITY_AUTO_EXPAND
+                StackName: !Sub ${AWS::Region}-${EnvironmentName}-${ProjectName}-back-api
+                TemplateConfiguration: Source::environment/templates/back-api/${EnvironmentName}-configuration.json
+                TemplatePath: Source::environment/templates/back-api.yml
+                ParameterOverrides: !Sub |
+                  {
+                    "EnvironmentName": "${EnvironmentName}"
+                  }
+              InputArtifacts:
+                - Name: Source
+              OutputArtifacts:
+                - Name: BackApiDeployOutput
+              RunOrder: 1
 
-        #     - Name: back-api
-        #       ActionTypeId:
-        #         Category: Deploy
-        #         Owner: AWS
-        #         Version: '1'
-        #         Provider: CloudFormation
-        #       Configuration:
-        #         ActionMode: CREATE_UPDATE # CHANGE_SET_EXECUTE
-        #         RoleArn: !GetAtt CloudFormationDeployRole.Arn
-        #         Capabilities: CAPABILITY_IAM,CAPABILITY_AUTO_EXPAND
-        #         StackName: !Sub ${AWS::Region}-${EnvironmentName}-${ProjectName}-back-api
-        #         TemplatePath: Source::environment/templates/back-api.yml
-        #         ParameterOverrides: !Sub |
-        #           {
-        #             "EnvironmentName": "${EnvironmentName}"
-        #           }
-        #       InputArtifacts:
-        #         - Name: Source
-        #       OutputArtifacts:
-        #         - Name: BackApiDeployOutput
-        #       RunOrder: 1
-
-        #     - Name: front-nginx
-        #       ActionTypeId:
-        #         Category: Deploy
-        #         Owner: AWS
-        #         Version: '1'
-        #         Provider: CloudFormation
-        #       Configuration:
-        #         ActionMode: CREATE_UPDATE # CHANGE_SET_EXECUTE
-        #         RoleArn: !GetAtt CloudFormationDeployRole.Arn
-        #         Capabilities: CAPABILITY_IAM,CAPABILITY_AUTO_EXPAND
-        #         StackName: !Sub ${AWS::Region}-${EnvironmentName}-${ProjectName}-front-nginx
-        #         TemplatePath: Source::environment/templates/front-nginx.yml
-        #         ParameterOverrides: !Sub |
-        #           {
-        #             "EnvironmentName": "${EnvironmentName}"
-        #           }
-        #       InputArtifacts:
-        #         - Name: Source
-        #       OutputArtifacts:
-        #         - Name: FrontNginxDeployOutput
-        #       RunOrder: 1
+            - Name: front-nginx
+              ActionTypeId:
+                Category: Deploy
+                Owner: AWS
+                Version: '1'
+                Provider: CloudFormation
+              Configuration:
+                ActionMode: CREATE_UPDATE # CHANGE_SET_EXECUTE
+                RoleArn: !GetAtt CloudFormationDeployRole.Arn
+                Capabilities: CAPABILITY_IAM,CAPABILITY_AUTO_EXPAND
+                StackName: !Sub ${AWS::Region}-${EnvironmentName}-${ProjectName}-front-nginx
+                TemplateConfiguration: Source::environment/templates/front-nginx/${EnvironmentName}-configuration.json
+                TemplatePath: Source::environment/templates/front-nginx.yml
+                ParameterOverrides: !Sub |
+                  {
+                    "EnvironmentName": "${EnvironmentName}"
+                  }
+              InputArtifacts:
+                - Name: Source
+              OutputArtifacts:
+                - Name: FrontNginxDeployOutput
+              RunOrder: 1
 
 Outputs:
   PipelineUrl:
