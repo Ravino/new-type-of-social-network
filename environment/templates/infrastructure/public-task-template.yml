@@ -155,19 +155,7 @@ Resources:
           Cpu: !Ref 'ContainerCpu'
           Memory: !Ref 'ContainerMemory'
           Image: !Ref 'ImageUrl'
-          Environment:
-            - Name: REGION
-              Value: !Ref 'AWS::Region'
-            - Name: NODE_ENV
-              Value: production
-            - Name: REDIS_ENDPOINT
-              Value:
-                Fn::ImportValue:
-                  !Join [':', [!Ref 'EnvironmentName', 'RedisEndpoint']]
-            - Name: DYNAMODB_ENDPOINT
-              Value: !Join ['.', ['https://dynamodb', !Ref 'AWS::Region', 'amazonaws.com']]
-            - Name: ENV_NAME
-              Value: !Ref 'EnvironmentName'
+          #Environment:
           PortMappings:
             - ContainerPort: !Ref 'ContainerPort'
           LogConfiguration:

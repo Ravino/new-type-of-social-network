@@ -100,6 +100,7 @@ Resources:
           Image: !Ref 'ImageUrl'
           PortMappings:
             - ContainerPort: !Ref 'ContainerPort'
+          #Environment:
 
   # The service. The service is a resource which allows you to run multiple
   # copies of a type of task, and gather up their logs and metrics, as well
