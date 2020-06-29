@@ -34,6 +34,13 @@ Mappings:
   # If you need more IP addresses (perhaps you have so many
   # instances that you run out) then you can customize these
   # ranges to add more
+  SubnetConfig:
+    VPC:
+      CIDR: '10.0.0.0/16'
+    PublicOne:
+      CIDR: '10.0.0.0/24'
+    PublicTwo:
+      CIDR: '10.0.1.0/24'
     PrivateOne:
       CIDR: '10.0.2.0/24'
     PrivateTwo:
