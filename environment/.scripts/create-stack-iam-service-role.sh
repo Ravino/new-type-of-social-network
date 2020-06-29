@@ -1,5 +1,5 @@
 #!/bin/bash
-ROLE_NAME="CloudFormationMaster"
+ROLE_NAME="plizi-test-CloudFormationDeployRole-1FOCMWTVYHBP6"
 if [ ! -z $1 ]; then
     ROLE_NAME=$1
 fi
@@ -7,7 +7,7 @@ echo "Creating iam role with name: $ROLE_NAME"
 
 echo "[2] START Configuration"
 # make variables
-ROLE_NAME=$ROLE_NAME"Role"
+ROLE_NAME=$ROLE_NAME
 echo "ROLE_NAME=${ROLE_NAME}"
 ROLE_ASSUME_POLICY_NAME="config/assume-role-policy/${ROLE_NAME}"
 echo "ROLE_ASSUME_POLICY_NAME=${ROLE_ASSUME_POLICY_NAME}"

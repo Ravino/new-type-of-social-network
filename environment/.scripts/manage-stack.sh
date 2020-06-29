@@ -1,6 +1,6 @@
 #!/bin/bash
 # configurations
-PROJECT_NAME="plizi"
+PROJECT_NAME="plizi-2"
 ENV="test"
 REGION="eu-central-1"
 STACK_NAME="${PROJECT_NAME}-${ENV}"
@@ -58,6 +58,6 @@ function stack-list-running() {
     aws cloudformation describe-stacks --stack-name $1
 }
 
-create
+`$@`
 
 echo 0
