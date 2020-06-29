@@ -267,7 +267,7 @@ Resources:
           Values: [!Ref 'Path']
       ListenerArn:
         Fn::ImportValue:
-          !Join [':', [!Ref 'EnvironmentName', 'PublicListenerS']]
+          !Join [':', [!Ref 'EnvironmentName', 'PublicListener']]
       Priority: !Ref 'Priority'
 
   # Enable autoscaling for this service

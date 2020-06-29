@@ -72,11 +72,6 @@ Resources:
               - Resource: "*"
                 Effect: Allow
                 Action:
-                    "elasticfilesystem:ClientMount",
-                    "elasticfilesystem:ClientWrite"
-              - Resource: "*"
-                Effect: Allow
-                Action:
                   - ecr:GetDownloadUrlForLayer
                   - ecr:BatchGetImage
                   - ecr:BatchCheckLayerAvailability
@@ -190,7 +185,7 @@ Resources:
                   - "codebuild:*"
                   - "codedeploy:*"
                   - "codepipeline:*"
-                  - "kms: *",
+                  - "kms: *"
                   - "elasticfilesystem:*"
                 Resource: "*"
 
@@ -331,7 +326,7 @@ Resources:
   BackWS:
     Type: AWS::CodeBuild::Project
     Properties:
-      Name: !Join ['-', !Ref 'ProjectName', !Ref 'AWS::Region', 'back-ws', !Ref 'EnvironmentName']]
+      Name: !Join ['-', [!Ref 'ProjectName', !Ref 'AWS::Region', 'back-ws', !Ref 'EnvironmentName']]
       ServiceRole: !Ref CodeBuildServiceRole
       EncryptionKey: !Ref KMSKeyArn
       Source:
@@ -417,12 +412,12 @@ Resources:
             Value:
               Fn::ImportValue:
                 !Join [':', [!Ref 'EnvironmentName', 'back-ws']]
-        Artifacts:
-          Type: S3
-          Location: !GetAtt ''
-          NamespaceType: BUILD_ID
-          OverrideArtifactName: true
-          Packaging: ZIP
+        # Artifacts:
+        #   Type: S3
+        #   Location: !GetAtt ''
+        #   NamespaceType: BUILD_ID
+        #   OverrideArtifactName: true
+        #   Packaging: ZIP
       LogsConfig:
         CloudWatchLogs:
           GroupName: !Sub /code-build/${ProjectName}/back-ws
@@ -466,7 +461,7 @@ Resources:
           - Name: EnvironmentName
             Value: !Ref 'EnvironmentName'
           - Name: ServiceName
-            Value: 'bback-queue-worker'
+            Value: 'back-queue-worker'
           - Name: DB_DATABASE
             Value:
               Fn::ImportValue:
@@ -511,14 +506,17 @@ Resources:
             Value:
               Fn::ImportValue:
                 !Join [':', [!Ref 'EnvironmentName', 'back-ws']]
-        Artifacts:
-          Type: S3
-          Location: !GetAtt ''
-          NamespaceType: BUILD_ID
-          OverrideArtifactName: true
-          Packaging: ZIP
+        # Artifacts:
+        #   Type: S3
+        #   Location: !GetAtt ''
+        #   NamespaceType: BUILD_ID
+        #   OverrideArtifactName: true
+        #   Packaging: ZIP
       LogsConfig:
         CloudWatchLogs:
+          GroupName: !Sub /code-build/${ProjectName}/back-queue-worker
+          StreamName: !Sub /code-build/${ProjectName}
+          Status: ENABLED
   # Back api pipeline
   BackApi:
     Type: AWS::CodeBuild::Project
@@ -527,55 +525,92 @@ Resources:
         Type: CODEPIPELINE
       Source:
         Type: CODEPIPELINE
-        BuildSpec: |
-          version: 0.2
-          phases:
-            install:
-              commands:
-                - echo Starting up dockerd and linking with socket-tcp endpoints
-                - nohup /usr/local/bin/dockerd --host=unix:///var/run/docker.sock --host=tcp://127.0.0.1:2375 --storage-driver=overlay2&
-                - timeout 15 sh -c "until docker info; do echo .; sleep 1; done"
-            pre_build:
-              commands:
-                - echo Logging in to Amazon ECR...
-                - $(aws ecr get-login --no-include-email --region $AWS_DEFAULT_REGION)
-                - IMAGE_URI="$AWS_ACCOUNT_ID.dkr.ecr.$AWS_DEFAULT_REGION.amazonaws.com/$IMAGE_REPO_NAME:$IMAGE_TAG"
-            build:
-              commands:
-                - echo Current directory `pwd` && echo Changing directory to './backend' && cd ./backend && echo Current directory `pwd`
-                - echo Build started on `date`
-                - echo Building the Docker image...
-                - docker build -t $IMAGE_REPO_NAME:$IMAGE_TAG -f docker/back-api/Dockerfile .
-                - docker tag $IMAGE_REPO_NAME:$IMAGE_TAG $IMAGE_URI
-            post_build:
-              commands:
-                - echo Build completed on `date`
-                - echo Pushing the Docker image...
-                - docker push $IMAGE_URI
+        BuildSpec: environment/back-api/${EnvironmentName}-buildspec.yml
+      Cache:
+        Location: LOCAL
+        Modes:
+          - LOCAL_DOCKER_LAYER_CACHE
+        Type: LOCAL
       Environment:
+        Type: LINUX_CONTAINER
         ComputeType: BUILD_GENERAL1_SMALL
+        PrivilegedMode: true
         Image: aws/codebuild/standard:4.0
         ImagePullCredentialsType: CODEBUILD
-        Type: LINUX_CONTAINER
-        PrivilegedMode: true
         EnvironmentVariables:
           - Name: AWS_DEFAULT_REGION
             Value: !Ref AWS::Region
           - Name: AWS_ACCOUNT_ID
             Value: !Ref AWS::AccountId
           - Name: IMAGE_REPO_NAME
-            Value: !Ref BackApiRepository
+            Value: !Ref BackWSRepository
           - Name: IMAGE_TAG
             Value: 'latest'
+          - Name: BUILD_WORK_DIR
+            Value: ./backend
+          - Name: DOCKERFILE_PATH
+            Value: docker/back-api
+          - Name: ProjectName
+            Value: !Ref 'ProjectName'
+          - Name: EnvironmentName
+            Value: !Ref 'EnvironmentName'
+          - Name: ServiceName
+            Value: 'back-api'
+          - Name: DB_DATABASE
+            Value:
+              Fn::ImportValue:
+                !Join [':', [!Ref 'EnvironmentName', 'MySQLDBName']]
+          - Name: DB_HOST
+            Value:
+              Fn::ImportValue:
+                !Join [':', [!Ref 'EnvironmentName', 'MySQLDBHost']]
+          - Name: DB_PASSWORD
+            Value:
+              Fn::ImportValue:
+                !Join [':', [!Ref 'EnvironmentName', 'MySQLDBPass']]
+          - Name: DB_PORT
+            Value:
+              Fn::ImportValue:
+                !Join [':', [!Ref 'EnvironmentName', 'MySQLDBPort']]
+          - Name: DB_USERNAME
+            Value:
+              Fn::ImportValue:
+                !Join [':', [!Ref 'EnvironmentName', 'MySQLUser']]
+          - Name: MONGO_DB_HOST
+            Value:
+              Fn::ImportValue:
+                !Join [':', [!Ref 'EnvironmentName', 'MongoDBHost']]
+          - Name: MONGO_DB_PASSWORD
+            Value:
+              Fn::ImportValue:
+                !Join [':', [!Ref 'EnvironmentName', 'MongoDBUser']]
+          - Name: MONGO_DB_USERNAME
+            Value:
+              Fn::ImportValue:
+                !Join [':', [!Ref 'EnvironmentName', 'MongoDBPass']]
+          - Name: REDIS_HOST
+            Value:
+              Fn::ImportValue:
+                !Join [':', [!Ref 'EnvironmentName', 'RedisHost']]
+          - Name: REDIS_PORT
+            Value:
+              Fn::ImportValue:
+                !Join [':', [!Ref 'EnvironmentName', 'RedisPort']]
+          - Name: ZMQ_SUB_HOST
+            Value:
+              Fn::ImportValue:
+                !Join [':', [!Ref 'EnvironmentName', 'back-ws']]
+        # Artifacts:
+        #   Type: S3
+        #   Location: !GetAtt ''
+        #   NamespaceType: BUILD_ID
+        #   OverrideArtifactName: true
+        #   Packaging: ZIP
       LogsConfig:
         CloudWatchLogs:
           GroupName: !Sub /code-build/${ProjectName}/back-api
-          Status: ENABLED
           StreamName: !Sub /code-build/${ProjectName}
-      Name: !Sub ${AWS::Region}-${EnvironmentName}-${ProjectName}-back-api
-      ServiceRole: !Ref CodeBuildServiceRole
-      EncryptionKey: !Ref KMSKeyArn
-
+          Status: ENABLED
   # Back api pipeline
   FrontNginx:
     Type: AWS::CodeBuild::Project
@@ -584,55 +619,92 @@ Resources:
         Type: CODEPIPELINE
       Source:
         Type: CODEPIPELINE
-        BuildSpec: |
-          version: 0.2
-          phases:
-            install:
-              commands:
-                - echo Starting up dockerd and linking with socket-tcp endpoints
-                - nohup /usr/local/bin/dockerd --host=unix:///var/run/docker.sock --host=tcp://127.0.0.1:2375 --storage-driver=overlay2&
-                - timeout 15 sh -c "until docker info; do echo .; sleep 1; done"
-            pre_build:
-              commands:
-                - echo Logging in to Amazon ECR...
-                - $(aws ecr get-login --no-include-email --region $AWS_DEFAULT_REGION)
-                - IMAGE_URI="$AWS_ACCOUNT_ID.dkr.ecr.$AWS_DEFAULT_REGION.amazonaws.com/$IMAGE_REPO_NAME:$IMAGE_TAG"
-            build:
-              commands:
-                - echo Current directory `pwd` && echo Changing directory to './frontend' && cd ./frontend && echo Current directory `pwd`
-                - echo Build started on `date`
-                - echo Building the Docker image...
-                - docker build -t $IMAGE_REPO_NAME:$IMAGE_TAG -f docker/front-nginx/Dockerfile .
-                - docker tag $IMAGE_REPO_NAME:$IMAGE_TAG $IMAGE_URI
-            post_build:
-              commands:
-                - echo Build completed on `date`
-                - echo Pushing the Docker image...
-                - docker push $IMAGE_URI
+        BuildSpec: environment/front-nginx/${EnvironmentName}-buildspec.yml
+      Cache:
+        Location: LOCAL
+        Modes:
+          - LOCAL_DOCKER_LAYER_CACHE
+        Type: LOCAL
       Environment:
+        Type: LINUX_CONTAINER
         ComputeType: BUILD_GENERAL1_SMALL
+        PrivilegedMode: true
         Image: aws/codebuild/standard:4.0
         ImagePullCredentialsType: CODEBUILD
-        Type: LINUX_CONTAINER
-        PrivilegedMode: true
         EnvironmentVariables:
           - Name: AWS_DEFAULT_REGION
             Value: !Ref AWS::Region
           - Name: AWS_ACCOUNT_ID
             Value: !Ref AWS::AccountId
           - Name: IMAGE_REPO_NAME
-            Value: !Ref FrontNginxRepository
+            Value: !Ref BackWSRepository
           - Name: IMAGE_TAG
             Value: 'latest'
+          - Name: BUILD_WORK_DIR
+            Value: ./backend
+          - Name: DOCKERFILE_PATH
+            Value: docker/front-nginx
+          - Name: ProjectName
+            Value: !Ref 'ProjectName'
+          - Name: EnvironmentName
+            Value: !Ref 'EnvironmentName'
+          - Name: ServiceName
+            Value: 'front-nginx'
+          - Name: DB_DATABASE
+            Value:
+              Fn::ImportValue:
+                !Join [':', [!Ref 'EnvironmentName', 'MySQLDBName']]
+          - Name: DB_HOST
+            Value:
+              Fn::ImportValue:
+                !Join [':', [!Ref 'EnvironmentName', 'MySQLDBHost']]
+          - Name: DB_PASSWORD
+            Value:
+              Fn::ImportValue:
+                !Join [':', [!Ref 'EnvironmentName', 'MySQLDBPass']]
+          - Name: DB_PORT
+            Value:
+              Fn::ImportValue:
+                !Join [':', [!Ref 'EnvironmentName', 'MySQLDBPort']]
+          - Name: DB_USERNAME
+            Value:
+              Fn::ImportValue:
+                !Join [':', [!Ref 'EnvironmentName', 'MySQLUser']]
+          - Name: MONGO_DB_HOST
+            Value:
+              Fn::ImportValue:
+                !Join [':', [!Ref 'EnvironmentName', 'MongoDBHost']]
+          - Name: MONGO_DB_PASSWORD
+            Value:
+              Fn::ImportValue:
+                !Join [':', [!Ref 'EnvironmentName', 'MongoDBUser']]
+          - Name: MONGO_DB_USERNAME
+            Value:
+              Fn::ImportValue:
+                !Join [':', [!Ref 'EnvironmentName', 'MongoDBPass']]
+          - Name: REDIS_HOST
+            Value:
+              Fn::ImportValue:
+                !Join [':', [!Ref 'EnvironmentName', 'RedisHost']]
+          - Name: REDIS_PORT
+            Value:
+              Fn::ImportValue:
+                !Join [':', [!Ref 'EnvironmentName', 'RedisPort']]
+          - Name: ZMQ_SUB_HOST
+            Value:
+              Fn::ImportValue:
+                !Join [':', [!Ref 'EnvironmentName', 'back-ws']]
+        # Artifacts:
+        #   Type: S3
+        #   Location: !GetAtt ''
+        #   NamespaceType: BUILD_ID
+        #   OverrideArtifactName: true
+        #   Packaging: ZIP
       LogsConfig:
         CloudWatchLogs:
           GroupName: !Sub /code-build/${ProjectName}/front-nginx
-          Status: ENABLED
           StreamName: !Sub /code-build/${ProjectName}
-      Name: !Sub ${AWS::Region}-${EnvironmentName}-${ProjectName}-front-nginx
-      ServiceRole: !Ref CodeBuildServiceRole
-      EncryptionKey: !Ref KMSKeyArn
-
+          Status: ENABLED
   # This pipeline defines the steps to build, deploy, and release the application
   Pipeline:
     Type: AWS::CodePipeline::Pipeline
