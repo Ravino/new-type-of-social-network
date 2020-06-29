@@ -335,388 +335,388 @@ Resources:
 
 
   # This is the definition of how to build the code in the repository
-  BackWS:
-    Type: AWS::CodeBuild::Project
-    Properties:
-      Name: !Join ['-', [!Ref 'ProjectName', !Ref 'AWS::Region', 'back-ws', !Ref 'EnvironmentName']]
-      ServiceRole: !Ref CodeBuildServiceRole
-      EncryptionKey: !Ref KMSKeyArn
-      Source:
-        Type: CODEPIPELINE
-        BuildSpec: environment/build/${EnvironmentName}-buildspec.yml
-      # FileSystemLocation:
-      #   Identifier: !Ref CodebuildCacheEFS
-      #   Location: String
-      #   MountOptions: String
-      #   MountPoint: String
-      #   Type: String
-      Cache:
-        Location: LOCAL
-        Modes:
-          - LOCAL_DOCKER_LAYER_CACHE
-        Type: LOCAL
-      Environment:
-        Type: LINUX_CONTAINER
-        ComputeType: BUILD_GENERAL1_SMALL
-        PrivilegedMode: true
-        Image: aws/codebuild/standard:4.0
-        ImagePullCredentialsType: CODEBUILD
-        EnvironmentVariables:
-          - Name: AWS_DEFAULT_REGION
-            Value: !Ref AWS::Region
-          - Name: AWS_ACCOUNT_ID
-            Value: !Ref AWS::AccountId
-          - Name: IMAGE_REPO_NAME
-            Value: !Ref BackWSRepository
-          - Name: IMAGE_TAG
-            Value: 'latest'
-          - Name: BUILD_WORK_DIR
-            Value: ./backend
-          - Name: DOCKERFILE_PATH
-            Value: docker/back-ws
-          - Name: ProjectName
-            Value: !Ref 'ProjectName'
-          - Name: EnvironmentName
-            Value: !Ref 'EnvironmentName'
-          - Name: ServiceName
-            Value: 'back-ws'
-          - Name: DB_DATABASE
-            Value:
-              Fn::ImportValue:
-                !Join [':', [!Ref 'EnvironmentName', 'MySQLDBName']]
-          - Name: DB_HOST
-            Value:
-              Fn::ImportValue:
-                !Join [':', [!Ref 'EnvironmentName', 'MySQLDBHost']]
-          - Name: DB_PASSWORD
-            Value:
-              Fn::ImportValue:
-                !Join [':', [!Ref 'EnvironmentName', 'MySQLDBPass']]
-          - Name: DB_PORT
-            Value:
-              Fn::ImportValue:
-                !Join [':', [!Ref 'EnvironmentName', 'MySQLDBPort']]
-          - Name: DB_USERNAME
-            Value:
-              Fn::ImportValue:
-                !Join [':', [!Ref 'EnvironmentName', 'MySQLUser']]
-          - Name: MONGO_DB_HOST
-            Value:
-              Fn::ImportValue:
-                !Join [':', [!Ref 'EnvironmentName', 'MongoDBHost']]
-          - Name: MONGO_DB_PASSWORD
-            Value:
-              Fn::ImportValue:
-                !Join [':', [!Ref 'EnvironmentName', 'MongoDBUser']]
-          - Name: MONGO_DB_USERNAME
-            Value:
-              Fn::ImportValue:
-                !Join [':', [!Ref 'EnvironmentName', 'MongoDBPass']]
-          - Name: REDIS_HOST
-            Value:
-              Fn::ImportValue:
-                !Join [':', [!Ref 'EnvironmentName', 'RedisHost']]
-          - Name: REDIS_PORT
-            Value:
-              Fn::ImportValue:
-                !Join [':', [!Ref 'EnvironmentName', 'RedisPort']]
-          - Name: ZMQ_SUB_HOST
-            Value:
-              Fn::ImportValue:
-                !Join [':', [!Ref 'EnvironmentName', 'back-ws']]
-        # Artifacts:
-        #   Type: S3
-        #   Location: !GetAtt ''
-        #   NamespaceType: BUILD_ID
-        #   OverrideArtifactName: true
-        #   Packaging: ZIP
-      LogsConfig:
-        CloudWatchLogs:
-          GroupName: !Sub /code-build/${ProjectName}/back-ws
-          StreamName: !Sub /code-build/${ProjectName}
-          Status: ENABLED
-  # This is the definition of how to build the code in the repository
-  BackQueueWorker:
-    Type: AWS::CodeBuild::Project
-    Properties:
-      ServiceRole: !Ref CodeBuildServiceRole
-      EncryptionKey: !Ref KMSKeyArn
-      Source:
-        Type: CODEPIPELINE
-        BuildSpec: environment/build/${EnvironmentName}-buildspec.yml
-      Cache:
-        Location: LOCAL
-        Modes:
-          - LOCAL_DOCKER_LAYER_CACHE
-        Type: LOCAL
-      Environment:
-        Type: LINUX_CONTAINER
-        ComputeType: BUILD_GENERAL1_SMALL
-        PrivilegedMode: true
-        Image: aws/codebuild/standard:4.0
-        ImagePullCredentialsType: CODEBUILD
-        EnvironmentVariables:
-          - Name: AWS_DEFAULT_REGION
-            Value: !Ref AWS::Region
-          - Name: AWS_ACCOUNT_ID
-            Value: !Ref AWS::AccountId
-          - Name: IMAGE_REPO_NAME
-            Value: !Ref BackWSRepository
-          - Name: IMAGE_TAG
-            Value: 'latest'
-          - Name: BUILD_WORK_DIR
-            Value: ./backend
-          - Name: DOCKERFILE_PATH
-            Value: docker/back-queue-worker
-          - Name: ProjectName
-            Value: !Ref 'ProjectName'
-          - Name: EnvironmentName
-            Value: !Ref 'EnvironmentName'
-          - Name: ServiceName
-            Value: 'back-queue-worker'
-          - Name: DB_DATABASE
-            Value:
-              Fn::ImportValue:
-                !Join [':', [!Ref 'EnvironmentName', 'MySQLDBName']]
-          - Name: DB_HOST
-            Value:
-              Fn::ImportValue:
-                !Join [':', [!Ref 'EnvironmentName', 'MySQLDBHost']]
-          - Name: DB_PASSWORD
-            Value:
-              Fn::ImportValue:
-                !Join [':', [!Ref 'EnvironmentName', 'MySQLDBPass']]
-          - Name: DB_PORT
-            Value:
-              Fn::ImportValue:
-                !Join [':', [!Ref 'EnvironmentName', 'MySQLDBPort']]
-          - Name: DB_USERNAME
-            Value:
-              Fn::ImportValue:
-                !Join [':', [!Ref 'EnvironmentName', 'MySQLUser']]
-          - Name: MONGO_DB_HOST
-            Value:
-              Fn::ImportValue:
-                !Join [':', [!Ref 'EnvironmentName', 'MongoDBHost']]
-          - Name: MONGO_DB_PASSWORD
-            Value:
-              Fn::ImportValue:
-                !Join [':', [!Ref 'EnvironmentName', 'MongoDBUser']]
-          - Name: MONGO_DB_USERNAME
-            Value:
-              Fn::ImportValue:
-                !Join [':', [!Ref 'EnvironmentName', 'MongoDBPass']]
-          - Name: REDIS_HOST
-            Value:
-              Fn::ImportValue:
-                !Join [':', [!Ref 'EnvironmentName', 'RedisHost']]
-          - Name: REDIS_PORT
-            Value:
-              Fn::ImportValue:
-                !Join [':', [!Ref 'EnvironmentName', 'RedisPort']]
-          - Name: ZMQ_SUB_HOST
-            Value:
-              Fn::ImportValue:
-                !Join [':', [!Ref 'EnvironmentName', 'back-ws']]
-        # Artifacts:
-        #   Type: S3
-        #   Location: !GetAtt ''
-        #   NamespaceType: BUILD_ID
-        #   OverrideArtifactName: true
-        #   Packaging: ZIP
-      LogsConfig:
-        CloudWatchLogs:
-          GroupName: !Sub /code-build/${ProjectName}/back-queue-worker
-          StreamName: !Sub /code-build/${ProjectName}
-          Status: ENABLED
-  # Back api pipeline
-  BackApi:
-    Type: AWS::CodeBuild::Project
-    Properties:
-      Artifacts:
-        Type: CODEPIPELINE
-      Source:
-        Type: CODEPIPELINE
-        BuildSpec: environment/build/${EnvironmentName}-buildspec.yml
-      Cache:
-        Location: LOCAL
-        Modes:
-          - LOCAL_DOCKER_LAYER_CACHE
-        Type: LOCAL
-      Environment:
-        Type: LINUX_CONTAINER
-        ComputeType: BUILD_GENERAL1_SMALL
-        PrivilegedMode: true
-        Image: aws/codebuild/standard:4.0
-        ImagePullCredentialsType: CODEBUILD
-        EnvironmentVariables:
-          - Name: AWS_DEFAULT_REGION
-            Value: !Ref AWS::Region
-          - Name: AWS_ACCOUNT_ID
-            Value: !Ref AWS::AccountId
-          - Name: IMAGE_REPO_NAME
-            Value: !Ref BackWSRepository
-          - Name: IMAGE_TAG
-            Value: 'latest'
-          - Name: BUILD_WORK_DIR
-            Value: ./backend
-          - Name: DOCKERFILE_PATH
-            Value: docker/back-api
-          - Name: ProjectName
-            Value: !Ref 'ProjectName'
-          - Name: EnvironmentName
-            Value: !Ref 'EnvironmentName'
-          - Name: ServiceName
-            Value: 'back-api'
-          - Name: DB_DATABASE
-            Value:
-              Fn::ImportValue:
-                !Join [':', [!Ref 'EnvironmentName', 'MySQLDBName']]
-          - Name: DB_HOST
-            Value:
-              Fn::ImportValue:
-                !Join [':', [!Ref 'EnvironmentName', 'MySQLDBHost']]
-          - Name: DB_PASSWORD
-            Value:
-              Fn::ImportValue:
-                !Join [':', [!Ref 'EnvironmentName', 'MySQLDBPass']]
-          - Name: DB_PORT
-            Value:
-              Fn::ImportValue:
-                !Join [':', [!Ref 'EnvironmentName', 'MySQLDBPort']]
-          - Name: DB_USERNAME
-            Value:
-              Fn::ImportValue:
-                !Join [':', [!Ref 'EnvironmentName', 'MySQLUser']]
-          - Name: MONGO_DB_HOST
-            Value:
-              Fn::ImportValue:
-                !Join [':', [!Ref 'EnvironmentName', 'MongoDBHost']]
-          - Name: MONGO_DB_PASSWORD
-            Value:
-              Fn::ImportValue:
-                !Join [':', [!Ref 'EnvironmentName', 'MongoDBUser']]
-          - Name: MONGO_DB_USERNAME
-            Value:
-              Fn::ImportValue:
-                !Join [':', [!Ref 'EnvironmentName', 'MongoDBPass']]
-          - Name: REDIS_HOST
-            Value:
-              Fn::ImportValue:
-                !Join [':', [!Ref 'EnvironmentName', 'RedisHost']]
-          - Name: REDIS_PORT
-            Value:
-              Fn::ImportValue:
-                !Join [':', [!Ref 'EnvironmentName', 'RedisPort']]
-          - Name: ZMQ_SUB_HOST
-            Value:
-              Fn::ImportValue:
-                !Join [':', [!Ref 'EnvironmentName', 'back-ws']]
-        # Artifacts:
-        #   Type: S3
-        #   Location: !GetAtt ''
-        #   NamespaceType: BUILD_ID
-        #   OverrideArtifactName: true
-        #   Packaging: ZIP
-      LogsConfig:
-        CloudWatchLogs:
-          GroupName: !Sub /code-build/${ProjectName}/back-api
-          StreamName: !Sub /code-build/${ProjectName}
-          Status: ENABLED
-  # Back api pipeline
-  FrontNginx:
-    Type: AWS::CodeBuild::Project
-    Properties:
-      Artifacts:
-        Type: CODEPIPELINE
-      Source:
-        Type: CODEPIPELINE
-        BuildSpec: environment/build/${EnvironmentName}-buildspec.yml
-      Cache:
-        Location: LOCAL
-        Modes:
-          - LOCAL_DOCKER_LAYER_CACHE
-        Type: LOCAL
-      Environment:
-        Type: LINUX_CONTAINER
-        ComputeType: BUILD_GENERAL1_SMALL
-        PrivilegedMode: true
-        Image: aws/codebuild/standard:4.0
-        ImagePullCredentialsType: CODEBUILD
-        EnvironmentVariables:
-          - Name: AWS_DEFAULT_REGION
-            Value: !Ref AWS::Region
-          - Name: AWS_ACCOUNT_ID
-            Value: !Ref AWS::AccountId
-          - Name: IMAGE_REPO_NAME
-            Value: !Ref BackWSRepository
-          - Name: IMAGE_TAG
-            Value: 'latest'
-          - Name: BUILD_WORK_DIR
-            Value: ./backend
-          - Name: DOCKERFILE_PATH
-            Value: docker/front-nginx
-          - Name: ProjectName
-            Value: !Ref 'ProjectName'
-          - Name: EnvironmentName
-            Value: !Ref 'EnvironmentName'
-          - Name: ServiceName
-            Value: 'front-nginx'
-          - Name: DB_DATABASE
-            Value:
-              Fn::ImportValue:
-                !Join [':', [!Ref 'EnvironmentName', 'MySQLDBName']]
-          - Name: DB_HOST
-            Value:
-              Fn::ImportValue:
-                !Join [':', [!Ref 'EnvironmentName', 'MySQLDBHost']]
-          - Name: DB_PASSWORD
-            Value:
-              Fn::ImportValue:
-                !Join [':', [!Ref 'EnvironmentName', 'MySQLDBPass']]
-          - Name: DB_PORT
-            Value:
-              Fn::ImportValue:
-                !Join [':', [!Ref 'EnvironmentName', 'MySQLDBPort']]
-          - Name: DB_USERNAME
-            Value:
-              Fn::ImportValue:
-                !Join [':', [!Ref 'EnvironmentName', 'MySQLUser']]
-          - Name: MONGO_DB_HOST
-            Value:
-              Fn::ImportValue:
-                !Join [':', [!Ref 'EnvironmentName', 'MongoDBHost']]
-          - Name: MONGO_DB_PASSWORD
-            Value:
-              Fn::ImportValue:
-                !Join [':', [!Ref 'EnvironmentName', 'MongoDBUser']]
-          - Name: MONGO_DB_USERNAME
-            Value:
-              Fn::ImportValue:
-                !Join [':', [!Ref 'EnvironmentName', 'MongoDBPass']]
-          - Name: REDIS_HOST
-            Value:
-              Fn::ImportValue:
-                !Join [':', [!Ref 'EnvironmentName', 'RedisHost']]
-          - Name: REDIS_PORT
-            Value:
-              Fn::ImportValue:
-                !Join [':', [!Ref 'EnvironmentName', 'RedisPort']]
-          - Name: ZMQ_SUB_HOST
-            Value:
-              Fn::ImportValue:
-                !Join [':', [!Ref 'EnvironmentName', 'back-ws']]
-        # Artifacts:
-        #   Type: S3
-        #   Location: !GetAtt ''
-        #   NamespaceType: BUILD_ID
-        #   OverrideArtifactName: true
-        #   Packaging: ZIP
-      LogsConfig:
-        CloudWatchLogs:
-          GroupName: !Sub /code-build/${ProjectName}/front-nginx
-          StreamName: !Sub /code-build/${ProjectName}
-          Status: ENABLED
+  # BackWS:
+  #   Type: AWS::CodeBuild::Project
+  #   Properties:
+  #     Name: !Join ['-', [!Ref 'ProjectName', !Ref 'AWS::Region', 'back-ws', !Ref 'EnvironmentName']]
+  #     ServiceRole: !Ref CodeBuildServiceRole
+  #     EncryptionKey: !Ref KMSKeyArn
+  #     Source:
+  #       Type: CODEPIPELINE
+  #       BuildSpec: environment/build/${EnvironmentName}-buildspec.yml
+  #     # FileSystemLocation:
+  #     #   Identifier: !Ref CodebuildCacheEFS
+  #     #   Location: String
+  #     #   MountOptions: String
+  #     #   MountPoint: String
+  #     #   Type: String
+  #     Cache:
+  #       Location: LOCAL
+  #       Modes:
+  #         - LOCAL_DOCKER_LAYER_CACHE
+  #       Type: LOCAL
+  #     Environment:
+  #       Type: LINUX_CONTAINER
+  #       ComputeType: BUILD_GENERAL1_SMALL
+  #       PrivilegedMode: true
+  #       Image: aws/codebuild/standard:4.0
+  #       ImagePullCredentialsType: CODEBUILD
+  #       EnvironmentVariables:
+  #         - Name: AWS_DEFAULT_REGION
+  #           Value: !Ref AWS::Region
+  #         - Name: AWS_ACCOUNT_ID
+  #           Value: !Ref AWS::AccountId
+  #         - Name: IMAGE_REPO_NAME
+  #           Value: !Ref BackWSRepository
+  #         - Name: IMAGE_TAG
+  #           Value: 'latest'
+  #         - Name: BUILD_WORK_DIR
+  #           Value: ./backend
+  #         - Name: DOCKERFILE_PATH
+  #           Value: docker/back-ws
+  #         - Name: ProjectName
+  #           Value: !Ref 'ProjectName'
+  #         - Name: EnvironmentName
+  #           Value: !Ref 'EnvironmentName'
+  #         - Name: ServiceName
+  #           Value: 'back-ws'
+  #         - Name: DB_DATABASE
+  #           Value:
+  #             Fn::ImportValue:
+  #               !Join [':', [!Ref 'EnvironmentName', 'MySQLDBName']]
+  #         - Name: DB_HOST
+  #           Value:
+  #             Fn::ImportValue:
+  #               !Join [':', [!Ref 'EnvironmentName', 'MySQLDBHost']]
+  #         - Name: DB_PASSWORD
+  #           Value:
+  #             Fn::ImportValue:
+  #               !Join [':', [!Ref 'EnvironmentName', 'MySQLDBPass']]
+  #         - Name: DB_PORT
+  #           Value:
+  #             Fn::ImportValue:
+  #               !Join [':', [!Ref 'EnvironmentName', 'MySQLDBPort']]
+  #         - Name: DB_USERNAME
+  #           Value:
+  #             Fn::ImportValue:
+  #               !Join [':', [!Ref 'EnvironmentName', 'MySQLUser']]
+  #         - Name: MONGO_DB_HOST
+  #           Value:
+  #             Fn::ImportValue:
+  #               !Join [':', [!Ref 'EnvironmentName', 'MongoDBHost']]
+  #         - Name: MONGO_DB_PASSWORD
+  #           Value:
+  #             Fn::ImportValue:
+  #               !Join [':', [!Ref 'EnvironmentName', 'MongoDBUser']]
+  #         - Name: MONGO_DB_USERNAME
+  #           Value:
+  #             Fn::ImportValue:
+  #               !Join [':', [!Ref 'EnvironmentName', 'MongoDBPass']]
+  #         - Name: REDIS_HOST
+  #           Value:
+  #             Fn::ImportValue:
+  #               !Join [':', [!Ref 'EnvironmentName', 'RedisHost']]
+  #         - Name: REDIS_PORT
+  #           Value:
+  #             Fn::ImportValue:
+  #               !Join [':', [!Ref 'EnvironmentName', 'RedisPort']]
+  #         - Name: ZMQ_SUB_HOST
+  #           Value:
+  #             Fn::ImportValue:
+  #               !Join [':', [!Ref 'EnvironmentName', 'back-ws']]
+  #       # Artifacts:
+  #       #   Type: S3
+  #       #   Location: !GetAtt ''
+  #       #   NamespaceType: BUILD_ID
+  #       #   OverrideArtifactName: true
+  #       #   Packaging: ZIP
+  #     LogsConfig:
+  #       CloudWatchLogs:
+  #         GroupName: !Sub /code-build/${ProjectName}/back-ws
+  #         StreamName: !Sub /code-build/${ProjectName}
+  #         Status: ENABLED
+  # # This is the definition of how to build the code in the repository
+  # BackQueueWorker:
+  #   Type: AWS::CodeBuild::Project
+  #   Properties:
+  #     ServiceRole: !Ref CodeBuildServiceRole
+  #     EncryptionKey: !Ref KMSKeyArn
+  #     Source:
+  #       Type: CODEPIPELINE
+  #       BuildSpec: environment/build/${EnvironmentName}-buildspec.yml
+  #     Cache:
+  #       Location: LOCAL
+  #       Modes:
+  #         - LOCAL_DOCKER_LAYER_CACHE
+  #       Type: LOCAL
+  #     Environment:
+  #       Type: LINUX_CONTAINER
+  #       ComputeType: BUILD_GENERAL1_SMALL
+  #       PrivilegedMode: true
+  #       Image: aws/codebuild/standard:4.0
+  #       ImagePullCredentialsType: CODEBUILD
+  #       EnvironmentVariables:
+  #         - Name: AWS_DEFAULT_REGION
+  #           Value: !Ref AWS::Region
+  #         - Name: AWS_ACCOUNT_ID
+  #           Value: !Ref AWS::AccountId
+  #         - Name: IMAGE_REPO_NAME
+  #           Value: !Ref BackWSRepository
+  #         - Name: IMAGE_TAG
+  #           Value: 'latest'
+  #         - Name: BUILD_WORK_DIR
+  #           Value: ./backend
+  #         - Name: DOCKERFILE_PATH
+  #           Value: docker/back-queue-worker
+  #         - Name: ProjectName
+  #           Value: !Ref 'ProjectName'
+  #         - Name: EnvironmentName
+  #           Value: !Ref 'EnvironmentName'
+  #         - Name: ServiceName
+  #           Value: 'back-queue-worker'
+  #         - Name: DB_DATABASE
+  #           Value:
+  #             Fn::ImportValue:
+  #               !Join [':', [!Ref 'EnvironmentName', 'MySQLDBName']]
+  #         - Name: DB_HOST
+  #           Value:
+  #             Fn::ImportValue:
+  #               !Join [':', [!Ref 'EnvironmentName', 'MySQLDBHost']]
+  #         - Name: DB_PASSWORD
+  #           Value:
+  #             Fn::ImportValue:
+  #               !Join [':', [!Ref 'EnvironmentName', 'MySQLDBPass']]
+  #         - Name: DB_PORT
+  #           Value:
+  #             Fn::ImportValue:
+  #               !Join [':', [!Ref 'EnvironmentName', 'MySQLDBPort']]
+  #         - Name: DB_USERNAME
+  #           Value:
+  #             Fn::ImportValue:
+  #               !Join [':', [!Ref 'EnvironmentName', 'MySQLUser']]
+  #         - Name: MONGO_DB_HOST
+  #           Value:
+  #             Fn::ImportValue:
+  #               !Join [':', [!Ref 'EnvironmentName', 'MongoDBHost']]
+  #         - Name: MONGO_DB_PASSWORD
+  #           Value:
+  #             Fn::ImportValue:
+  #               !Join [':', [!Ref 'EnvironmentName', 'MongoDBUser']]
+  #         - Name: MONGO_DB_USERNAME
+  #           Value:
+  #             Fn::ImportValue:
+  #               !Join [':', [!Ref 'EnvironmentName', 'MongoDBPass']]
+  #         - Name: REDIS_HOST
+  #           Value:
+  #             Fn::ImportValue:
+  #               !Join [':', [!Ref 'EnvironmentName', 'RedisHost']]
+  #         - Name: REDIS_PORT
+  #           Value:
+  #             Fn::ImportValue:
+  #               !Join [':', [!Ref 'EnvironmentName', 'RedisPort']]
+  #         - Name: ZMQ_SUB_HOST
+  #           Value:
+  #             Fn::ImportValue:
+  #               !Join [':', [!Ref 'EnvironmentName', 'back-ws']]
+  #       # Artifacts:
+  #       #   Type: S3
+  #       #   Location: !GetAtt ''
+  #       #   NamespaceType: BUILD_ID
+  #       #   OverrideArtifactName: true
+  #       #   Packaging: ZIP
+  #     LogsConfig:
+  #       CloudWatchLogs:
+  #         GroupName: !Sub /code-build/${ProjectName}/back-queue-worker
+  #         StreamName: !Sub /code-build/${ProjectName}
+  #         Status: ENABLED
+  # # Back api pipeline
+  # BackApi:
+  #   Type: AWS::CodeBuild::Project
+  #   Properties:
+  #     Artifacts:
+  #       Type: CODEPIPELINE
+  #     Source:
+  #       Type: CODEPIPELINE
+  #       BuildSpec: environment/build/${EnvironmentName}-buildspec.yml
+  #     Cache:
+  #       Location: LOCAL
+  #       Modes:
+  #         - LOCAL_DOCKER_LAYER_CACHE
+  #       Type: LOCAL
+  #     Environment:
+  #       Type: LINUX_CONTAINER
+  #       ComputeType: BUILD_GENERAL1_SMALL
+  #       PrivilegedMode: true
+  #       Image: aws/codebuild/standard:4.0
+  #       ImagePullCredentialsType: CODEBUILD
+  #       EnvironmentVariables:
+  #         - Name: AWS_DEFAULT_REGION
+  #           Value: !Ref AWS::Region
+  #         - Name: AWS_ACCOUNT_ID
+  #           Value: !Ref AWS::AccountId
+  #         - Name: IMAGE_REPO_NAME
+  #           Value: !Ref BackWSRepository
+  #         - Name: IMAGE_TAG
+  #           Value: 'latest'
+  #         - Name: BUILD_WORK_DIR
+  #           Value: ./backend
+  #         - Name: DOCKERFILE_PATH
+  #           Value: docker/back-api
+  #         - Name: ProjectName
+  #           Value: !Ref 'ProjectName'
+  #         - Name: EnvironmentName
+  #           Value: !Ref 'EnvironmentName'
+  #         - Name: ServiceName
+  #           Value: 'back-api'
+  #         - Name: DB_DATABASE
+  #           Value:
+  #             Fn::ImportValue:
+  #               !Join [':', [!Ref 'EnvironmentName', 'MySQLDBName']]
+  #         - Name: DB_HOST
+  #           Value:
+  #             Fn::ImportValue:
+  #               !Join [':', [!Ref 'EnvironmentName', 'MySQLDBHost']]
+  #         - Name: DB_PASSWORD
+  #           Value:
+  #             Fn::ImportValue:
+  #               !Join [':', [!Ref 'EnvironmentName', 'MySQLDBPass']]
+  #         - Name: DB_PORT
+  #           Value:
+  #             Fn::ImportValue:
+  #               !Join [':', [!Ref 'EnvironmentName', 'MySQLDBPort']]
+  #         - Name: DB_USERNAME
+  #           Value:
+  #             Fn::ImportValue:
+  #               !Join [':', [!Ref 'EnvironmentName', 'MySQLUser']]
+  #         - Name: MONGO_DB_HOST
+  #           Value:
+  #             Fn::ImportValue:
+  #               !Join [':', [!Ref 'EnvironmentName', 'MongoDBHost']]
+  #         - Name: MONGO_DB_PASSWORD
+  #           Value:
+  #             Fn::ImportValue:
+  #               !Join [':', [!Ref 'EnvironmentName', 'MongoDBUser']]
+  #         - Name: MONGO_DB_USERNAME
+  #           Value:
+  #             Fn::ImportValue:
+  #               !Join [':', [!Ref 'EnvironmentName', 'MongoDBPass']]
+  #         - Name: REDIS_HOST
+  #           Value:
+  #             Fn::ImportValue:
+  #               !Join [':', [!Ref 'EnvironmentName', 'RedisHost']]
+  #         - Name: REDIS_PORT
+  #           Value:
+  #             Fn::ImportValue:
+  #               !Join [':', [!Ref 'EnvironmentName', 'RedisPort']]
+  #         - Name: ZMQ_SUB_HOST
+  #           Value:
+  #             Fn::ImportValue:
+  #               !Join [':', [!Ref 'EnvironmentName', 'back-ws']]
+  #       # Artifacts:
+  #       #   Type: S3
+  #       #   Location: !GetAtt ''
+  #       #   NamespaceType: BUILD_ID
+  #       #   OverrideArtifactName: true
+  #       #   Packaging: ZIP
+  #     LogsConfig:
+  #       CloudWatchLogs:
+  #         GroupName: !Sub /code-build/${ProjectName}/back-api
+  #         StreamName: !Sub /code-build/${ProjectName}
+  #         Status: ENABLED
+  # # Back api pipeline
+  # FrontNginx:
+  #   Type: AWS::CodeBuild::Project
+  #   Properties:
+  #     Artifacts:
+  #       Type: CODEPIPELINE
+  #     Source:
+  #       Type: CODEPIPELINE
+  #       BuildSpec: environment/build/${EnvironmentName}-buildspec.yml
+  #     Cache:
+  #       Location: LOCAL
+  #       Modes:
+  #         - LOCAL_DOCKER_LAYER_CACHE
+  #       Type: LOCAL
+  #     Environment:
+  #       Type: LINUX_CONTAINER
+  #       ComputeType: BUILD_GENERAL1_SMALL
+  #       PrivilegedMode: true
+  #       Image: aws/codebuild/standard:4.0
+  #       ImagePullCredentialsType: CODEBUILD
+  #       EnvironmentVariables:
+  #         - Name: AWS_DEFAULT_REGION
+  #           Value: !Ref AWS::Region
+  #         - Name: AWS_ACCOUNT_ID
+  #           Value: !Ref AWS::AccountId
+  #         - Name: IMAGE_REPO_NAME
+  #           Value: !Ref BackWSRepository
+  #         - Name: IMAGE_TAG
+  #           Value: 'latest'
+  #         - Name: BUILD_WORK_DIR
+  #           Value: ./backend
+  #         - Name: DOCKERFILE_PATH
+  #           Value: docker/front-nginx
+  #         - Name: ProjectName
+  #           Value: !Ref 'ProjectName'
+  #         - Name: EnvironmentName
+  #           Value: !Ref 'EnvironmentName'
+  #         - Name: ServiceName
+  #           Value: 'front-nginx'
+  #         - Name: DB_DATABASE
+  #           Value:
+  #             Fn::ImportValue:
+  #               !Join [':', [!Ref 'EnvironmentName', 'MySQLDBName']]
+  #         - Name: DB_HOST
+  #           Value:
+  #             Fn::ImportValue:
+  #               !Join [':', [!Ref 'EnvironmentName', 'MySQLDBHost']]
+  #         - Name: DB_PASSWORD
+  #           Value:
+  #             Fn::ImportValue:
+  #               !Join [':', [!Ref 'EnvironmentName', 'MySQLDBPass']]
+  #         - Name: DB_PORT
+  #           Value:
+  #             Fn::ImportValue:
+  #               !Join [':', [!Ref 'EnvironmentName', 'MySQLDBPort']]
+  #         - Name: DB_USERNAME
+  #           Value:
+  #             Fn::ImportValue:
+  #               !Join [':', [!Ref 'EnvironmentName', 'MySQLUser']]
+  #         - Name: MONGO_DB_HOST
+  #           Value:
+  #             Fn::ImportValue:
+  #               !Join [':', [!Ref 'EnvironmentName', 'MongoDBHost']]
+  #         - Name: MONGO_DB_PASSWORD
+  #           Value:
+  #             Fn::ImportValue:
+  #               !Join [':', [!Ref 'EnvironmentName', 'MongoDBUser']]
+  #         - Name: MONGO_DB_USERNAME
+  #           Value:
+  #             Fn::ImportValue:
+  #               !Join [':', [!Ref 'EnvironmentName', 'MongoDBPass']]
+  #         - Name: REDIS_HOST
+  #           Value:
+  #             Fn::ImportValue:
+  #               !Join [':', [!Ref 'EnvironmentName', 'RedisHost']]
+  #         - Name: REDIS_PORT
+  #           Value:
+  #             Fn::ImportValue:
+  #               !Join [':', [!Ref 'EnvironmentName', 'RedisPort']]
+  #         - Name: ZMQ_SUB_HOST
+  #           Value:
+  #             Fn::ImportValue:
+  #               !Join [':', [!Ref 'EnvironmentName', 'back-ws']]
+  #       # Artifacts:
+  #       #   Type: S3
+  #       #   Location: !GetAtt ''
+  #       #   NamespaceType: BUILD_ID
+  #       #   OverrideArtifactName: true
+  #       #   Packaging: ZIP
+  #     LogsConfig:
+  #       CloudWatchLogs:
+  #         GroupName: !Sub /code-build/${ProjectName}/front-nginx
+  #         StreamName: !Sub /code-build/${ProjectName}
+  #         Status: ENABLED
   # This pipeline defines the steps to build, deploy, and release the application
   Pipeline:
     Type: AWS::CodePipeline::Pipeline
