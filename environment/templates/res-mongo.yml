@@ -28,8 +28,8 @@ Resources:
   MongoSecurityGroup:
     Type: AWS::EC2::SecurityGroup
     Properties:
-      GroupDescription: "Redis Security Group"
-      VPCId:
+      GroupDescription: "Mongo Security Group"
+      VpcId:
         Fn::ImportValue:
           !Join [':', [!Ref 'EnvironmentName', 'VPCId']]
   MongoIngress:

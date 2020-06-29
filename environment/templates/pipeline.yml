@@ -8,8 +8,8 @@ Parameters:
   ProjectName:
     Type: String
     Default: plizi
-  EnvironmentName:
-    Type: String
+#  EnvironmentName:
+#    Type: String
   # locally used parameters
   GitHubRepo:
     Type: String
