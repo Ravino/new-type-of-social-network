@@ -8,7 +8,7 @@ STACK_FULL_NAME="${REGION}-${STACK_NAME}"
 ARN_ROLE_NAME="CloudFormationMasterRole"
 ARN_ROLE="arn:aws:iam::884088487044:role/"${ARN_ROLE_NAME}
 CLIENT_REQUEST_TOKEN="${REGION}${PROJECT_NAME}${ENV}${ARN_ROLE_NAME}"
-TEMPLATE_PATH="file://templates/pipeline.yml"
+TEMPLATE_PATH="file://../templates/pipeline.yml"
 PARAMETERS="ParameterKey=EnvironmentName,ParameterValue=test"
 # functions
 function create {
@@ -16,19 +16,19 @@ function create {
     --stack-name ${STACK_NAME} \
     --template-body ${TEMPLATE_PATH} \
     --parameters ${PARAMETERS} \
-    --role-arn ${ARN_ADMIN} \
+    --role-arn ${ARN_ROLE} \
     --capabilities CAPABILITY_IAM CAPABILITY_NAMED_IAM \
     --disable-rollback \
     --no-enable-termination-protection \
     --timeout-in-minutes 60 \
-    --client-request-token ${CLIENT_TOKEN}
+    --client-request-token ${CLIENT_REQUEST_TOKEN}
 }
 function update {
     aws cloudformation update-stack \
     --stack-name ${STACK_NAME} \
     --template-body=${TEMPLATE_PATH} \
     --parameters ${PARAMETERS} \
-    --role-arn ${ARN_ADMIN}
+    --role-arn ${ARN_ROLE}
 }
 function delete {
     aws cloudformation delete-stack --stack-name ${STACK_FULL_NAME}-mysql --role-arn ${ARN_ADMIN}
@@ -58,6 +58,6 @@ function stack-list-running() {
     aws cloudformation describe-stacks --stack-name $1
 }
 
-`$@`
+create
 
 echo 0

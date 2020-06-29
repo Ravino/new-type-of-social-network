@@ -12,8 +12,10 @@ fi
 echo "Custom suffix for role is: $SERVICE_ROLE_SUFFIX"
 
 aws iam put-user-policy \
---user-name=ruslan@valis.team \
---policy-document=config/service-linked-role/allow-create-slr-policy.json
+--user-name ruslan@valis.team \
+--policy-document config/service-linked-role/allow-create-slr-policy.json
+--policy-name AllowCreateSLRPolicy
+exit 1;
 
 aws iam create-service-linked-role \
     --aws-service-name lex.amazonaws.com \

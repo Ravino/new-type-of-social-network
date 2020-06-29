@@ -1,0 +1,25 @@
+{
+    "Role": {
+        "Path": "/aws-service-role/lex.amazonaws.com/",
+        "RoleName": "AWSServiceRoleForLexBots",
+        "RoleId": "AROA43V6HXSCG6DDWDUK3",
+        "Arn": "arn:aws:iam::884088487044:role/aws-service-role/lex.amazonaws.com/AWSServiceRoleForLexBots",
+        "CreateDate": "2020-06-29T14:22:11+00:00",
+        "AssumeRolePolicyDocument": {
+            "Version": "2012-10-17",
+            "Statement": [
+                {
+                    "Action": [
+                        "sts:AssumeRole"
+                    ],
+                    "Effect": "Allow",
+                    "Principal": {
+                        "Service": [
+                            "lex.amazonaws.com"
+                        ]
+                    }
+                }
+            ]
+        }
+    }
+}
