@@ -345,7 +345,7 @@ Resources:
        Type: CODEPIPELINE
      Source:
        Type: CODEPIPELINE
-       BuildSpec: environment/build/${EnvironmentName}-buildspec.yml
+       BuildSpec: !Sub "environment/templates/build/${EnvironmentName}-buildspec.yml"
      # FileSystemLocation:
      #   Identifier: !Ref CodebuildCacheEFS
      #   Location: String
@@ -447,7 +447,7 @@ Resources:
        Type: CODEPIPELINE
      Source:
        Type: CODEPIPELINE
-       BuildSpec: environment/build/${EnvironmentName}-buildspec.yml
+       BuildSpec: !Sub "environment/templates/build/${EnvironmentName}-buildspec.yml"
      Cache:
        Location: LOCAL
        Modes:
@@ -536,7 +536,7 @@ Resources:
        Type: CODEPIPELINE
      Source:
        Type: CODEPIPELINE
-       BuildSpec: environment/build/${EnvironmentName}-buildspec.yml
+       BuildSpec: !Sub "environment/templates/build/${EnvironmentName}-buildspec.yml"
      Cache:
        Location: LOCAL
        Modes:
@@ -631,7 +631,7 @@ Resources:
        Type: CODEPIPELINE
      Source:
        Type: CODEPIPELINE
-       BuildSpec: environment/build/${EnvironmentName}-buildspec.yml
+       BuildSpec: !Sub "environment/templates/build/${EnvironmentName}-buildspec.yml"
      Cache:
        Location: LOCAL
        Modes:
