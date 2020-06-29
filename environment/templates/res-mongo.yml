@@ -31,7 +31,7 @@ Resources:
       GroupDescription: "Redis Security Group"
       VpcId:
         Fn::ImportValue:
-          !Join [':', [!Ref 'EnvironmentName', 'VPC']]
+          !Join [':', [!Ref 'EnvironmentName', 'VPCid']]
   MongoIngress:
     Type: AWS::EC2::SecurityGroupIngress
     Properties:

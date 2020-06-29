@@ -36,7 +36,7 @@ Resources:
       GroupDescription: "MySQL Security Group"
       VpcId:
         Fn::ImportValue:
-          !Join [':', [!Ref 'EnvironmentName', 'VPC']]
+          !Join [':', [!Ref 'EnvironmentName', 'VPCid']]
   MySQLIngress:
     Type: AWS::EC2::SecurityGroupIngress
     Properties:
