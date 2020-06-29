@@ -335,388 +335,388 @@ Resources:
 
 
   # This is the definition of how to build the code in the repository
-  # BackWS:
-  #   Type: AWS::CodeBuild::Project
-  #   Properties:
-  #     Name: !Join ['-', [!Ref 'ProjectName', !Ref 'AWS::Region', 'back-ws', !Ref 'EnvironmentName']]
-  #     ServiceRole: !Ref CodeBuildServiceRole
-  #     EncryptionKey: !Ref KMSKeyArn
-  #     Source:
-  #       Type: CODEPIPELINE
-  #       BuildSpec: environment/build/${EnvironmentName}-buildspec.yml
-  #     # FileSystemLocation:
-  #     #   Identifier: !Ref CodebuildCacheEFS
-  #     #   Location: String
-  #     #   MountOptions: String
-  #     #   MountPoint: String
-  #     #   Type: String
-  #     Cache:
-  #       Location: LOCAL
-  #       Modes:
-  #         - LOCAL_DOCKER_LAYER_CACHE
-  #       Type: LOCAL
-  #     Environment:
-  #       Type: LINUX_CONTAINER
-  #       ComputeType: BUILD_GENERAL1_SMALL
-  #       PrivilegedMode: true
-  #       Image: aws/codebuild/standard:4.0
-  #       ImagePullCredentialsType: CODEBUILD
-  #       EnvironmentVariables:
-  #         - Name: AWS_DEFAULT_REGION
-  #           Value: !Ref AWS::Region
-  #         - Name: AWS_ACCOUNT_ID
-  #           Value: !Ref AWS::AccountId
-  #         - Name: IMAGE_REPO_NAME
-  #           Value: !Ref BackWSRepository
-  #         - Name: IMAGE_TAG
-  #           Value: 'latest'
-  #         - Name: BUILD_WORK_DIR
-  #           Value: ./backend
-  #         - Name: DOCKERFILE_PATH
-  #           Value: docker/back-ws
-  #         - Name: ProjectName
-  #           Value: !Ref 'ProjectName'
-  #         - Name: EnvironmentName
-  #           Value: !Ref 'EnvironmentName'
-  #         - Name: ServiceName
-  #           Value: 'back-ws'
-  #         - Name: DB_DATABASE
-  #           Value:
-  #             Fn::ImportValue:
-  #               !Join [':', [!Ref 'EnvironmentName', 'MySQLDBName']]
-  #         - Name: DB_HOST
-  #           Value:
-  #             Fn::ImportValue:
-  #               !Join [':', [!Ref 'EnvironmentName', 'MySQLDBHost']]
-  #         - Name: DB_PASSWORD
-  #           Value:
-  #             Fn::ImportValue:
-  #               !Join [':', [!Ref 'EnvironmentName', 'MySQLDBPass']]
-  #         - Name: DB_PORT
-  #           Value:
-  #             Fn::ImportValue:
-  #               !Join [':', [!Ref 'EnvironmentName', 'MySQLDBPort']]
-  #         - Name: DB_USERNAME
-  #           Value:
-  #             Fn::ImportValue:
-  #               !Join [':', [!Ref 'EnvironmentName', 'MySQLUser']]
-  #         - Name: MONGO_DB_HOST
-  #           Value:
-  #             Fn::ImportValue:
-  #               !Join [':', [!Ref 'EnvironmentName', 'MongoDBHost']]
-  #         - Name: MONGO_DB_PASSWORD
-  #           Value:
-  #             Fn::ImportValue:
-  #               !Join [':', [!Ref 'EnvironmentName', 'MongoDBUser']]
-  #         - Name: MONGO_DB_USERNAME
-  #           Value:
-  #             Fn::ImportValue:
-  #               !Join [':', [!Ref 'EnvironmentName', 'MongoDBPass']]
-  #         - Name: REDIS_HOST
-  #           Value:
-  #             Fn::ImportValue:
-  #               !Join [':', [!Ref 'EnvironmentName', 'RedisHost']]
-  #         - Name: REDIS_PORT
-  #           Value:
-  #             Fn::ImportValue:
-  #               !Join [':', [!Ref 'EnvironmentName', 'RedisPort']]
-  #         - Name: ZMQ_SUB_HOST
-  #           Value:
-  #             Fn::ImportValue:
-  #               !Join [':', [!Ref 'EnvironmentName', 'back-ws']]
-  #       # Artifacts:
-  #       #   Type: S3
-  #       #   Location: !GetAtt ''
-  #       #   NamespaceType: BUILD_ID
-  #       #   OverrideArtifactName: true
-  #       #   Packaging: ZIP
-  #     LogsConfig:
-  #       CloudWatchLogs:
-  #         GroupName: !Sub /code-build/${ProjectName}/back-ws
-  #         StreamName: !Sub /code-build/${ProjectName}
-  #         Status: ENABLED
-  # # This is the definition of how to build the code in the repository
-  # BackQueueWorker:
-  #   Type: AWS::CodeBuild::Project
-  #   Properties:
-  #     ServiceRole: !Ref CodeBuildServiceRole
-  #     EncryptionKey: !Ref KMSKeyArn
-  #     Source:
-  #       Type: CODEPIPELINE
-  #       BuildSpec: environment/build/${EnvironmentName}-buildspec.yml
-  #     Cache:
-  #       Location: LOCAL
-  #       Modes:
-  #         - LOCAL_DOCKER_LAYER_CACHE
-  #       Type: LOCAL
-  #     Environment:
-  #       Type: LINUX_CONTAINER
-  #       ComputeType: BUILD_GENERAL1_SMALL
-  #       PrivilegedMode: true
-  #       Image: aws/codebuild/standard:4.0
-  #       ImagePullCredentialsType: CODEBUILD
-  #       EnvironmentVariables:
-  #         - Name: AWS_DEFAULT_REGION
-  #           Value: !Ref AWS::Region
-  #         - Name: AWS_ACCOUNT_ID
-  #           Value: !Ref AWS::AccountId
-  #         - Name: IMAGE_REPO_NAME
-  #           Value: !Ref BackWSRepository
-  #         - Name: IMAGE_TAG
-  #           Value: 'latest'
-  #         - Name: BUILD_WORK_DIR
-  #           Value: ./backend
-  #         - Name: DOCKERFILE_PATH
-  #           Value: docker/back-queue-worker
-  #         - Name: ProjectName
-  #           Value: !Ref 'ProjectName'
-  #         - Name: EnvironmentName
-  #           Value: !Ref 'EnvironmentName'
-  #         - Name: ServiceName
-  #           Value: 'back-queue-worker'
-  #         - Name: DB_DATABASE
-  #           Value:
-  #             Fn::ImportValue:
-  #               !Join [':', [!Ref 'EnvironmentName', 'MySQLDBName']]
-  #         - Name: DB_HOST
-  #           Value:
-  #             Fn::ImportValue:
-  #               !Join [':', [!Ref 'EnvironmentName', 'MySQLDBHost']]
-  #         - Name: DB_PASSWORD
-  #           Value:
-  #             Fn::ImportValue:
-  #               !Join [':', [!Ref 'EnvironmentName', 'MySQLDBPass']]
-  #         - Name: DB_PORT
-  #           Value:
-  #             Fn::ImportValue:
-  #               !Join [':', [!Ref 'EnvironmentName', 'MySQLDBPort']]
-  #         - Name: DB_USERNAME
-  #           Value:
-  #             Fn::ImportValue:
-  #               !Join [':', [!Ref 'EnvironmentName', 'MySQLUser']]
-  #         - Name: MONGO_DB_HOST
-  #           Value:
-  #             Fn::ImportValue:
-  #               !Join [':', [!Ref 'EnvironmentName', 'MongoDBHost']]
-  #         - Name: MONGO_DB_PASSWORD
-  #           Value:
-  #             Fn::ImportValue:
-  #               !Join [':', [!Ref 'EnvironmentName', 'MongoDBUser']]
-  #         - Name: MONGO_DB_USERNAME
-  #           Value:
-  #             Fn::ImportValue:
-  #               !Join [':', [!Ref 'EnvironmentName', 'MongoDBPass']]
-  #         - Name: REDIS_HOST
-  #           Value:
-  #             Fn::ImportValue:
-  #               !Join [':', [!Ref 'EnvironmentName', 'RedisHost']]
-  #         - Name: REDIS_PORT
-  #           Value:
-  #             Fn::ImportValue:
-  #               !Join [':', [!Ref 'EnvironmentName', 'RedisPort']]
-  #         - Name: ZMQ_SUB_HOST
-  #           Value:
-  #             Fn::ImportValue:
-  #               !Join [':', [!Ref 'EnvironmentName', 'back-ws']]
-  #       # Artifacts:
-  #       #   Type: S3
-  #       #   Location: !GetAtt ''
-  #       #   NamespaceType: BUILD_ID
-  #       #   OverrideArtifactName: true
-  #       #   Packaging: ZIP
-  #     LogsConfig:
-  #       CloudWatchLogs:
-  #         GroupName: !Sub /code-build/${ProjectName}/back-queue-worker
-  #         StreamName: !Sub /code-build/${ProjectName}
-  #         Status: ENABLED
-  # # Back api pipeline
-  # BackApi:
-  #   Type: AWS::CodeBuild::Project
-  #   Properties:
-  #     Artifacts:
-  #       Type: CODEPIPELINE
-  #     Source:
-  #       Type: CODEPIPELINE
-  #       BuildSpec: environment/build/${EnvironmentName}-buildspec.yml
-  #     Cache:
-  #       Location: LOCAL
-  #       Modes:
-  #         - LOCAL_DOCKER_LAYER_CACHE
-  #       Type: LOCAL
-  #     Environment:
-  #       Type: LINUX_CONTAINER
-  #       ComputeType: BUILD_GENERAL1_SMALL
-  #       PrivilegedMode: true
-  #       Image: aws/codebuild/standard:4.0
-  #       ImagePullCredentialsType: CODEBUILD
-  #       EnvironmentVariables:
-  #         - Name: AWS_DEFAULT_REGION
-  #           Value: !Ref AWS::Region
-  #         - Name: AWS_ACCOUNT_ID
-  #           Value: !Ref AWS::AccountId
-  #         - Name: IMAGE_REPO_NAME
-  #           Value: !Ref BackWSRepository
-  #         - Name: IMAGE_TAG
-  #           Value: 'latest'
-  #         - Name: BUILD_WORK_DIR
-  #           Value: ./backend
-  #         - Name: DOCKERFILE_PATH
-  #           Value: docker/back-api
-  #         - Name: ProjectName
-  #           Value: !Ref 'ProjectName'
-  #         - Name: EnvironmentName
-  #           Value: !Ref 'EnvironmentName'
-  #         - Name: ServiceName
-  #           Value: 'back-api'
-  #         - Name: DB_DATABASE
-  #           Value:
-  #             Fn::ImportValue:
-  #               !Join [':', [!Ref 'EnvironmentName', 'MySQLDBName']]
-  #         - Name: DB_HOST
-  #           Value:
-  #             Fn::ImportValue:
-  #               !Join [':', [!Ref 'EnvironmentName', 'MySQLDBHost']]
-  #         - Name: DB_PASSWORD
-  #           Value:
-  #             Fn::ImportValue:
-  #               !Join [':', [!Ref 'EnvironmentName', 'MySQLDBPass']]
-  #         - Name: DB_PORT
-  #           Value:
-  #             Fn::ImportValue:
-  #               !Join [':', [!Ref 'EnvironmentName', 'MySQLDBPort']]
-  #         - Name: DB_USERNAME
-  #           Value:
-  #             Fn::ImportValue:
-  #               !Join [':', [!Ref 'EnvironmentName', 'MySQLUser']]
-  #         - Name: MONGO_DB_HOST
-  #           Value:
-  #             Fn::ImportValue:
-  #               !Join [':', [!Ref 'EnvironmentName', 'MongoDBHost']]
-  #         - Name: MONGO_DB_PASSWORD
-  #           Value:
-  #             Fn::ImportValue:
-  #               !Join [':', [!Ref 'EnvironmentName', 'MongoDBUser']]
-  #         - Name: MONGO_DB_USERNAME
-  #           Value:
-  #             Fn::ImportValue:
-  #               !Join [':', [!Ref 'EnvironmentName', 'MongoDBPass']]
-  #         - Name: REDIS_HOST
-  #           Value:
-  #             Fn::ImportValue:
-  #               !Join [':', [!Ref 'EnvironmentName', 'RedisHost']]
-  #         - Name: REDIS_PORT
-  #           Value:
-  #             Fn::ImportValue:
-  #               !Join [':', [!Ref 'EnvironmentName', 'RedisPort']]
-  #         - Name: ZMQ_SUB_HOST
-  #           Value:
-  #             Fn::ImportValue:
-  #               !Join [':', [!Ref 'EnvironmentName', 'back-ws']]
-  #       # Artifacts:
-  #       #   Type: S3
-  #       #   Location: !GetAtt ''
-  #       #   NamespaceType: BUILD_ID
-  #       #   OverrideArtifactName: true
-  #       #   Packaging: ZIP
-  #     LogsConfig:
-  #       CloudWatchLogs:
-  #         GroupName: !Sub /code-build/${ProjectName}/back-api
-  #         StreamName: !Sub /code-build/${ProjectName}
-  #         Status: ENABLED
-  # # Back api pipeline
-  # FrontNginx:
-  #   Type: AWS::CodeBuild::Project
-  #   Properties:
-  #     Artifacts:
-  #       Type: CODEPIPELINE
-  #     Source:
-  #       Type: CODEPIPELINE
-  #       BuildSpec: environment/build/${EnvironmentName}-buildspec.yml
-  #     Cache:
-  #       Location: LOCAL
-  #       Modes:
-  #         - LOCAL_DOCKER_LAYER_CACHE
-  #       Type: LOCAL
-  #     Environment:
-  #       Type: LINUX_CONTAINER
-  #       ComputeType: BUILD_GENERAL1_SMALL
-  #       PrivilegedMode: true
-  #       Image: aws/codebuild/standard:4.0
-  #       ImagePullCredentialsType: CODEBUILD
-  #       EnvironmentVariables:
-  #         - Name: AWS_DEFAULT_REGION
-  #           Value: !Ref AWS::Region
-  #         - Name: AWS_ACCOUNT_ID
-  #           Value: !Ref AWS::AccountId
-  #         - Name: IMAGE_REPO_NAME
-  #           Value: !Ref BackWSRepository
-  #         - Name: IMAGE_TAG
-  #           Value: 'latest'
-  #         - Name: BUILD_WORK_DIR
-  #           Value: ./backend
-  #         - Name: DOCKERFILE_PATH
-  #           Value: docker/front-nginx
-  #         - Name: ProjectName
-  #           Value: !Ref 'ProjectName'
-  #         - Name: EnvironmentName
-  #           Value: !Ref 'EnvironmentName'
-  #         - Name: ServiceName
-  #           Value: 'front-nginx'
-  #         - Name: DB_DATABASE
-  #           Value:
-  #             Fn::ImportValue:
-  #               !Join [':', [!Ref 'EnvironmentName', 'MySQLDBName']]
-  #         - Name: DB_HOST
-  #           Value:
-  #             Fn::ImportValue:
-  #               !Join [':', [!Ref 'EnvironmentName', 'MySQLDBHost']]
-  #         - Name: DB_PASSWORD
-  #           Value:
-  #             Fn::ImportValue:
-  #               !Join [':', [!Ref 'EnvironmentName', 'MySQLDBPass']]
-  #         - Name: DB_PORT
-  #           Value:
-  #             Fn::ImportValue:
-  #               !Join [':', [!Ref 'EnvironmentName', 'MySQLDBPort']]
-  #         - Name: DB_USERNAME
-  #           Value:
-  #             Fn::ImportValue:
-  #               !Join [':', [!Ref 'EnvironmentName', 'MySQLUser']]
-  #         - Name: MONGO_DB_HOST
-  #           Value:
-  #             Fn::ImportValue:
-  #               !Join [':', [!Ref 'EnvironmentName', 'MongoDBHost']]
-  #         - Name: MONGO_DB_PASSWORD
-  #           Value:
-  #             Fn::ImportValue:
-  #               !Join [':', [!Ref 'EnvironmentName', 'MongoDBUser']]
-  #         - Name: MONGO_DB_USERNAME
-  #           Value:
-  #             Fn::ImportValue:
-  #               !Join [':', [!Ref 'EnvironmentName', 'MongoDBPass']]
-  #         - Name: REDIS_HOST
-  #           Value:
-  #             Fn::ImportValue:
-  #               !Join [':', [!Ref 'EnvironmentName', 'RedisHost']]
-  #         - Name: REDIS_PORT
-  #           Value:
-  #             Fn::ImportValue:
-  #               !Join [':', [!Ref 'EnvironmentName', 'RedisPort']]
-  #         - Name: ZMQ_SUB_HOST
-  #           Value:
-  #             Fn::ImportValue:
-  #               !Join [':', [!Ref 'EnvironmentName', 'back-ws']]
-  #       # Artifacts:
-  #       #   Type: S3
-  #       #   Location: !GetAtt ''
-  #       #   NamespaceType: BUILD_ID
-  #       #   OverrideArtifactName: true
-  #       #   Packaging: ZIP
-  #     LogsConfig:
-  #       CloudWatchLogs:
-  #         GroupName: !Sub /code-build/${ProjectName}/front-nginx
-  #         StreamName: !Sub /code-build/${ProjectName}
-  #         Status: ENABLED
+  BackWS:
+   Type: AWS::CodeBuild::Project
+   Properties:
+     Name: !Join ['-', [!Ref 'ProjectName', !Ref 'AWS::Region', 'back-ws', !Ref 'EnvironmentName']]
+     ServiceRole: !Ref CodeBuildServiceRole
+     EncryptionKey: !Ref KMSKeyArn
+     Source:
+       Type: CODEPIPELINE
+       BuildSpec: environment/build/${EnvironmentName}-buildspec.yml
+     # FileSystemLocation:
+     #   Identifier: !Ref CodebuildCacheEFS
+     #   Location: String
+     #   MountOptions: String
+     #   MountPoint: String
+     #   Type: String
+     Cache:
+       Location: LOCAL
+       Modes:
+         - LOCAL_DOCKER_LAYER_CACHE
+       Type: LOCAL
+     Environment:
+       Type: LINUX_CONTAINER
+       ComputeType: BUILD_GENERAL1_SMALL
+       PrivilegedMode: true
+       Image: aws/codebuild/standard:4.0
+       ImagePullCredentialsType: CODEBUILD
+       EnvironmentVariables:
+         - Name: AWS_DEFAULT_REGION
+           Value: !Ref AWS::Region
+         - Name: AWS_ACCOUNT_ID
+           Value: !Ref AWS::AccountId
+         - Name: IMAGE_REPO_NAME
+           Value: !Ref BackWSRepository
+         - Name: IMAGE_TAG
+           Value: 'latest'
+         - Name: BUILD_WORK_DIR
+           Value: ./backend
+         - Name: DOCKERFILE_PATH
+           Value: docker/back-ws
+         - Name: ProjectName
+           Value: !Ref 'ProjectName'
+         - Name: EnvironmentName
+           Value: !Ref 'EnvironmentName'
+         - Name: ServiceName
+           Value: 'back-ws'
+         - Name: DB_DATABASE
+           Value:
+             Fn::ImportValue:
+               !Join [':', [!Ref 'EnvironmentName', 'MySQLDBName']]
+         - Name: DB_HOST
+           Value:
+             Fn::ImportValue:
+               !Join [':', [!Ref 'EnvironmentName', 'MySQLDBHost']]
+         - Name: DB_PASSWORD
+           Value:
+             Fn::ImportValue:
+               !Join [':', [!Ref 'EnvironmentName', 'MySQLDBPass']]
+         - Name: DB_PORT
+           Value:
+             Fn::ImportValue:
+               !Join [':', [!Ref 'EnvironmentName', 'MySQLDBPort']]
+         - Name: DB_USERNAME
+           Value:
+             Fn::ImportValue:
+               !Join [':', [!Ref 'EnvironmentName', 'MySQLDBUser']]
+         - Name: MONGO_DB_HOST
+           Value:
+             Fn::ImportValue:
+               !Join [':', [!Ref 'EnvironmentName', 'MongoDBHost']]
+         - Name: MONGO_DB_PASSWORD
+           Value:
+             Fn::ImportValue:
+               !Join [':', [!Ref 'EnvironmentName', 'MongoDBUser']]
+         - Name: MONGO_DB_USERNAME
+           Value:
+             Fn::ImportValue:
+               !Join [':', [!Ref 'EnvironmentName', 'MongoDBPass']]
+         - Name: REDIS_HOST
+           Value:
+             Fn::ImportValue:
+               !Join [':', [!Ref 'EnvironmentName', 'RedisHost']]
+         - Name: REDIS_PORT
+           Value:
+             Fn::ImportValue:
+               !Join [':', [!Ref 'EnvironmentName', 'RedisPort']]
+         - Name: ZMQ_SUB_HOST
+           Value:
+             Fn::ImportValue:
+               !Join [':', [!Ref 'EnvironmentName', 'back-ws']]
+       # Artifacts:
+       #   Type: S3
+       #   Location: !GetAtt ''
+       #   NamespaceType: BUILD_ID
+       #   OverrideArtifactName: true
+       #   Packaging: ZIP
+     LogsConfig:
+       CloudWatchLogs:
+         GroupName: !Sub /code-build/${ProjectName}/back-ws
+         StreamName: !Sub /code-build/${ProjectName}
+         Status: ENABLED
+  # This is the definition of how to build the code in the repository
+  BackQueueWorker:
+   Type: AWS::CodeBuild::Project
+   Properties:
+     ServiceRole: !Ref CodeBuildServiceRole
+     EncryptionKey: !Ref KMSKeyArn
+     Source:
+       Type: CODEPIPELINE
+       BuildSpec: environment/build/${EnvironmentName}-buildspec.yml
+     Cache:
+       Location: LOCAL
+       Modes:
+         - LOCAL_DOCKER_LAYER_CACHE
+       Type: LOCAL
+     Environment:
+       Type: LINUX_CONTAINER
+       ComputeType: BUILD_GENERAL1_SMALL
+       PrivilegedMode: true
+       Image: aws/codebuild/standard:4.0
+       ImagePullCredentialsType: CODEBUILD
+       EnvironmentVariables:
+         - Name: AWS_DEFAULT_REGION
+           Value: !Ref AWS::Region
+         - Name: AWS_ACCOUNT_ID
+           Value: !Ref AWS::AccountId
+         - Name: IMAGE_REPO_NAME
+           Value: !Ref BackWSRepository
+         - Name: IMAGE_TAG
+           Value: 'latest'
+         - Name: BUILD_WORK_DIR
+           Value: ./backend
+         - Name: DOCKERFILE_PATH
+           Value: docker/back-queue-worker
+         - Name: ProjectName
+           Value: !Ref 'ProjectName'
+         - Name: EnvironmentName
+           Value: !Ref 'EnvironmentName'
+         - Name: ServiceName
+           Value: 'back-queue-worker'
+         - Name: DB_DATABASE
+           Value:
+             Fn::ImportValue:
+               !Join [':', [!Ref 'EnvironmentName', 'MySQLDBName']]
+         - Name: DB_HOST
+           Value:
+             Fn::ImportValue:
+               !Join [':', [!Ref 'EnvironmentName', 'MySQLDBHost']]
+         - Name: DB_PASSWORD
+           Value:
+             Fn::ImportValue:
+               !Join [':', [!Ref 'EnvironmentName', 'MySQLDBPass']]
+         - Name: DB_PORT
+           Value:
+             Fn::ImportValue:
+               !Join [':', [!Ref 'EnvironmentName', 'MySQLDBPort']]
+         - Name: DB_USERNAME
+           Value:
+             Fn::ImportValue:
+               !Join [':', [!Ref 'EnvironmentName', 'MySQLDBUser']]
+         - Name: MONGO_DB_HOST
+           Value:
+             Fn::ImportValue:
+               !Join [':', [!Ref 'EnvironmentName', 'MongoDBHost']]
+         - Name: MONGO_DB_PASSWORD
+           Value:
+             Fn::ImportValue:
+               !Join [':', [!Ref 'EnvironmentName', 'MongoDBUser']]
+         - Name: MONGO_DB_USERNAME
+           Value:
+             Fn::ImportValue:
+               !Join [':', [!Ref 'EnvironmentName', 'MongoDBPass']]
+         - Name: REDIS_HOST
+           Value:
+             Fn::ImportValue:
+               !Join [':', [!Ref 'EnvironmentName', 'RedisHost']]
+         - Name: REDIS_PORT
+           Value:
+             Fn::ImportValue:
+               !Join [':', [!Ref 'EnvironmentName', 'RedisPort']]
+         - Name: ZMQ_SUB_HOST
+           Value:
+             Fn::ImportValue:
+               !Join [':', [!Ref 'EnvironmentName', 'back-ws']]
+       # Artifacts:
+       #   Type: S3
+       #   Location: !GetAtt ''
+       #   NamespaceType: BUILD_ID
+       #   OverrideArtifactName: true
+       #   Packaging: ZIP
+     LogsConfig:
+       CloudWatchLogs:
+         GroupName: !Sub /code-build/${ProjectName}/back-queue-worker
+         StreamName: !Sub /code-build/${ProjectName}
+         Status: ENABLED
+  # Back api pipeline
+  BackApi:
+   Type: AWS::CodeBuild::Project
+   Properties:
+     Artifacts:
+       Type: CODEPIPELINE
+     Source:
+       Type: CODEPIPELINE
+       BuildSpec: environment/build/${EnvironmentName}-buildspec.yml
+     Cache:
+       Location: LOCAL
+       Modes:
+         - LOCAL_DOCKER_LAYER_CACHE
+       Type: LOCAL
+     Environment:
+       Type: LINUX_CONTAINER
+       ComputeType: BUILD_GENERAL1_SMALL
+       PrivilegedMode: true
+       Image: aws/codebuild/standard:4.0
+       ImagePullCredentialsType: CODEBUILD
+       EnvironmentVariables:
+         - Name: AWS_DEFAULT_REGION
+           Value: !Ref AWS::Region
+         - Name: AWS_ACCOUNT_ID
+           Value: !Ref AWS::AccountId
+         - Name: IMAGE_REPO_NAME
+           Value: !Ref BackWSRepository
+         - Name: IMAGE_TAG
+           Value: 'latest'
+         - Name: BUILD_WORK_DIR
+           Value: ./backend
+         - Name: DOCKERFILE_PATH
+           Value: docker/back-api
+         - Name: ProjectName
+           Value: !Ref 'ProjectName'
+         - Name: EnvironmentName
+           Value: !Ref 'EnvironmentName'
+         - Name: ServiceName
+           Value: 'back-api'
+         - Name: DB_DATABASE
+           Value:
+             Fn::ImportValue:
+               !Join [':', [!Ref 'EnvironmentName', 'MySQLDBName']]
+         - Name: DB_HOST
+           Value:
+             Fn::ImportValue:
+               !Join [':', [!Ref 'EnvironmentName', 'MySQLDBHost']]
+         - Name: DB_PASSWORD
+           Value:
+             Fn::ImportValue:
+               !Join [':', [!Ref 'EnvironmentName', 'MySQLDBPass']]
+         - Name: DB_PORT
+           Value:
+             Fn::ImportValue:
+               !Join [':', [!Ref 'EnvironmentName', 'MySQLDBPort']]
+         - Name: DB_USERNAME
+           Value:
+             Fn::ImportValue:
+               !Join [':', [!Ref 'EnvironmentName', 'MySQLDBUser']]
+         - Name: MONGO_DB_HOST
+           Value:
+             Fn::ImportValue:
+               !Join [':', [!Ref 'EnvironmentName', 'MongoDBHost']]
+         - Name: MONGO_DB_PASSWORD
+           Value:
+             Fn::ImportValue:
+               !Join [':', [!Ref 'EnvironmentName', 'MongoDBUser']]
+         - Name: MONGO_DB_USERNAME
+           Value:
+             Fn::ImportValue:
+               !Join [':', [!Ref 'EnvironmentName', 'MongoDBPass']]
+         - Name: REDIS_HOST
+           Value:
+             Fn::ImportValue:
+               !Join [':', [!Ref 'EnvironmentName', 'RedisHost']]
+         - Name: REDIS_PORT
+           Value:
+             Fn::ImportValue:
+               !Join [':', [!Ref 'EnvironmentName', 'RedisPort']]
+         - Name: ZMQ_SUB_HOST
+           Value:
+             Fn::ImportValue:
+               !Join [':', [!Ref 'EnvironmentName', 'back-ws']]
+       # Artifacts:
+       #   Type: S3
+       #   Location: !GetAtt ''
+       #   NamespaceType: BUILD_ID
+       #   OverrideArtifactName: true
+       #   Packaging: ZIP
+     LogsConfig:
+       CloudWatchLogs:
+         GroupName: !Sub /code-build/${ProjectName}/back-api
+         StreamName: !Sub /code-build/${ProjectName}
+         Status: ENABLED
+  # Back api pipeline
+  FrontNginx:
+   Type: AWS::CodeBuild::Project
+   Properties:
+     Artifacts:
+       Type: CODEPIPELINE
+     Source:
+       Type: CODEPIPELINE
+       BuildSpec: environment/build/${EnvironmentName}-buildspec.yml
+     Cache:
+       Location: LOCAL
+       Modes:
+         - LOCAL_DOCKER_LAYER_CACHE
+       Type: LOCAL
+     Environment:
+       Type: LINUX_CONTAINER
+       ComputeType: BUILD_GENERAL1_SMALL
+       PrivilegedMode: true
+       Image: aws/codebuild/standard:4.0
+       ImagePullCredentialsType: CODEBUILD
+       EnvironmentVariables:
+         - Name: AWS_DEFAULT_REGION
+           Value: !Ref AWS::Region
+         - Name: AWS_ACCOUNT_ID
+           Value: !Ref AWS::AccountId
+         - Name: IMAGE_REPO_NAME
+           Value: !Ref BackWSRepository
+         - Name: IMAGE_TAG
+           Value: 'latest'
+         - Name: BUILD_WORK_DIR
+           Value: ./backend
+         - Name: DOCKERFILE_PATH
+           Value: docker/front-nginx
+         - Name: ProjectName
+           Value: !Ref 'ProjectName'
+         - Name: EnvironmentName
+           Value: !Ref 'EnvironmentName'
+         - Name: ServiceName
+           Value: 'front-nginx'
+         - Name: DB_DATABASE
+           Value:
+             Fn::ImportValue:
+               !Join [':', [!Ref 'EnvironmentName', 'MySQLDBName']]
+         - Name: DB_HOST
+           Value:
+             Fn::ImportValue:
+               !Join [':', [!Ref 'EnvironmentName', 'MySQLDBHost']]
+         - Name: DB_PASSWORD
+           Value:
+             Fn::ImportValue:
+               !Join [':', [!Ref 'EnvironmentName', 'MySQLDBPass']]
+         - Name: DB_PORT
+           Value:
+             Fn::ImportValue:
+               !Join [':', [!Ref 'EnvironmentName', 'MySQLDBPort']]
+         - Name: DB_USERNAME
+           Value:
+             Fn::ImportValue:
+               !Join [':', [!Ref 'EnvironmentName', 'MySQLDBUser']]
+         - Name: MONGO_DB_HOST
+           Value:
+             Fn::ImportValue:
+               !Join [':', [!Ref 'EnvironmentName', 'MongoDBHost']]
+         - Name: MONGO_DB_PASSWORD
+           Value:
+             Fn::ImportValue:
+               !Join [':', [!Ref 'EnvironmentName', 'MongoDBUser']]
+         - Name: MONGO_DB_USERNAME
+           Value:
+             Fn::ImportValue:
+               !Join [':', [!Ref 'EnvironmentName', 'MongoDBPass']]
+         - Name: REDIS_HOST
+           Value:
+             Fn::ImportValue:
+               !Join [':', [!Ref 'EnvironmentName', 'RedisHost']]
+         - Name: REDIS_PORT
+           Value:
+             Fn::ImportValue:
+               !Join [':', [!Ref 'EnvironmentName', 'RedisPort']]
+         - Name: ZMQ_SUB_HOST
+           Value:
+             Fn::ImportValue:
+               !Join [':', [!Ref 'EnvironmentName', 'back-ws']]
+       # Artifacts:
+       #   Type: S3
+       #   Location: !GetAtt ''
+       #   NamespaceType: BUILD_ID
+       #   OverrideArtifactName: true
+       #   Packaging: ZIP
+     LogsConfig:
+       CloudWatchLogs:
+         GroupName: !Sub /code-build/${ProjectName}/front-nginx
+         StreamName: !Sub /code-build/${ProjectName}
+         Status: ENABLED
   # This pipeline defines the steps to build, deploy, and release the application
   Pipeline:
     Type: AWS::CodePipeline::Pipeline
@@ -878,158 +878,158 @@ Resources:
                 - Name: RedisDeployOutput
               RunOrder: 2
 
-        # - Name: Services
-        #   Actions:
-        #     - Name: back-ws
-        #       ActionTypeId:
-        #         Category: Build
-        #         Owner: AWS
-        #         Version: '1'
-        #         Provider: CodeBuild
-        #       Configuration:
-        #         ProjectName: !Ref BackWS
-        #       InputArtifacts:
-        #         - Name: Source
-        #       OutputArtifacts:
-        #         - Name: BackWSBuildOutput
-        #       RunOrder: 2
+        - Name: Services
+          Actions:
+            - Name: back-ws
+              ActionTypeId:
+                Category: Build
+                Owner: AWS
+                Version: '1'
+                Provider: CodeBuild
+              Configuration:
+                ProjectName: !Ref BackWS
+              InputArtifacts:
+                - Name: Source
+              OutputArtifacts:
+                - Name: BackWSBuildOutput
+              RunOrder: 2
 
-        #     - Name: back-queue-worker
-        #       ActionTypeId:
-        #         Category: Build
-        #         Owner: AWS
-        #         Version: '1'
-        #         Provider: CodeBuild
-        #       Configuration:
-        #         ProjectName: !Ref BackQueueWorker
-        #       InputArtifacts:
-        #         - Name: Source
-        #       OutputArtifacts:
-        #         - Name: BackQueueWorkerBuildOutput
-        #       RunOrder: 2
+            - Name: back-queue-worker
+              ActionTypeId:
+                Category: Build
+                Owner: AWS
+                Version: '1'
+                Provider: CodeBuild
+              Configuration:
+                ProjectName: !Ref BackQueueWorker
+              InputArtifacts:
+                - Name: Source
+              OutputArtifacts:
+                - Name: BackQueueWorkerBuildOutput
+              RunOrder: 2
 
-        #     - Name: back-api
-        #       ActionTypeId:
-        #         Category: Build
-        #         Owner: AWS
-        #         Version: '1'
-        #         Provider: CodeBuild
-        #       Configuration:
-        #         ProjectName: !Ref BackApi
-        #       InputArtifacts:
-        #         - Name: Source
-        #       OutputArtifacts:
-        #         - Name: BackApiBuildOutput
-        #       RunOrder: 2
+            - Name: back-api
+              ActionTypeId:
+                Category: Build
+                Owner: AWS
+                Version: '1'
+                Provider: CodeBuild
+              Configuration:
+                ProjectName: !Ref BackApi
+              InputArtifacts:
+                - Name: Source
+              OutputArtifacts:
+                - Name: BackApiBuildOutput
+              RunOrder: 2
 
-        #     - Name: front-nginx
-        #       ActionTypeId:
-        #         Category: Build
-        #         Owner: AWS
-        #         Version: '1'
-        #         Provider: CodeBuild
-        #       Configuration:
-        #         ProjectName: !Ref FrontNginx
-        #       InputArtifacts:
-        #         - Name: Source
-        #       OutputArtifacts:
-        #         - Name: FrontNginxBuildOutput
-        #       RunOrder: 2
+            - Name: front-nginx
+              ActionTypeId:
+                Category: Build
+                Owner: AWS
+                Version: '1'
+                Provider: CodeBuild
+              Configuration:
+                ProjectName: !Ref FrontNginx
+              InputArtifacts:
+                - Name: Source
+              OutputArtifacts:
+                - Name: FrontNginxBuildOutput
+              RunOrder: 2
 
-        # - Name: Deploy
-        #   Actions:
-        #     - Name: back-ws
-        #       ActionTypeId:
-        #         Category: Deploy
-        #         Owner: AWS
-        #         Version: '1'
-        #         Provider: CloudFormation
-        #       Configuration:
-        #         ActionMode: CREATE_UPDATE #CHANGE_SET_EXECUTE
-        #         RoleArn: !GetAtt CloudFormationDeployRole.Arn
-        #         StackName: !Sub ${AWS::Region}-${EnvironmentName}-${ProjectName}-back-ws
-        #         TemplateConfiguration: Source::environment/templates/back-ws/${EnvironmentName}-configuration.json
-        #         TemplatePath: Source::environment/templates/back-ws.yml
-        #         Capabilities: CAPABILITY_IAM
-        #         ParameterOverrides: !Sub |
-        #           {
-        #             "EnvironmentName": "${EnvironmentName}"
-        #           }
-        #       InputArtifacts:
-        #         - Name: Source
-        #       OutputArtifacts:
-        #         - Name: BackWSDeployOutput
-        #       RunOrder: 1
+        - Name: Deploy
+          Actions:
+            - Name: back-ws
+              ActionTypeId:
+                Category: Deploy
+                Owner: AWS
+                Version: '1'
+                Provider: CloudFormation
+              Configuration:
+                ActionMode: CREATE_UPDATE #CHANGE_SET_EXECUTE
+                RoleArn: !GetAtt CloudFormationDeployRole.Arn
+                StackName: !Sub ${AWS::Region}-${EnvironmentName}-${ProjectName}-back-ws
+                TemplateConfiguration: Source::environment/templates/back-ws/${EnvironmentName}-configuration.json
+                TemplatePath: Source::environment/templates/back-ws.yml
+                Capabilities: CAPABILITY_IAM
+                ParameterOverrides: !Sub |
+                  {
+                    "EnvironmentName": "${EnvironmentName}"
+                  }
+              InputArtifacts:
+                - Name: Source
+              OutputArtifacts:
+                - Name: BackWSDeployOutput
+              RunOrder: 1
 
-        #     - Name: back-queue-worker
-        #       ActionTypeId:
-        #         Category: Deploy
-        #         Owner: AWS
-        #         Version: '1'
-        #         Provider: CloudFormation
-        #       Configuration:
-        #         ActionMode: CREATE_UPDATE # CHANGE_SET_EXECUTE
-        #         RoleArn: !GetAtt CloudFormationDeployRole.Arn
-        #         Capabilities: CAPABILITY_IAM,CAPABILITY_AUTO_EXPAND
-        #         StackName: !Sub ${AWS::Region}-${EnvironmentName}-${ProjectName}-back-queue-worker
-        #         #OutputFileName: Source::back-queue-worker/output.json
-        #         TemplateConfiguration: Source::environment/templates/back-queue-worker/${EnvironmentName}-configuration.json
-        #         TemplatePath: Source::environment/templates/back-queue-worker.yml
-        #         ParameterOverrides: !Sub |
-        #           {
-        #             "EnvironmentName": "${EnvironmentName}"
-        #           }
-        #       InputArtifacts:
-        #         - Name: Source
-        #       OutputArtifacts:
-        #         - Name: BackQueueWorkerDeployOutput
-        #       RunOrder: 1
+            - Name: back-queue-worker
+              ActionTypeId:
+                Category: Deploy
+                Owner: AWS
+                Version: '1'
+                Provider: CloudFormation
+              Configuration:
+                ActionMode: CREATE_UPDATE # CHANGE_SET_EXECUTE
+                RoleArn: !GetAtt CloudFormationDeployRole.Arn
+                Capabilities: CAPABILITY_IAM,CAPABILITY_AUTO_EXPAND
+                StackName: !Sub ${AWS::Region}-${EnvironmentName}-${ProjectName}-back-queue-worker
+                #OutputFileName: Source::back-queue-worker/output.json
+                TemplateConfiguration: Source::environment/templates/back-queue-worker/${EnvironmentName}-configuration.json
+                TemplatePath: Source::environment/templates/back-queue-worker.yml
+                ParameterOverrides: !Sub |
+                  {
+                    "EnvironmentName": "${EnvironmentName}"
+                  }
+              InputArtifacts:
+                - Name: Source
+              OutputArtifacts:
+                - Name: BackQueueWorkerDeployOutput
+              RunOrder: 1
 
-        #     - Name: back-api
-        #       ActionTypeId:
-        #         Category: Deploy
-        #         Owner: AWS
-        #         Version: '1'
-        #         Provider: CloudFormation
-        #       Configuration:
-        #         ActionMode: CREATE_UPDATE # CHANGE_SET_EXECUTE
-        #         RoleArn: !GetAtt CloudFormationDeployRole.Arn
-        #         Capabilities: CAPABILITY_IAM,CAPABILITY_AUTO_EXPAND
-        #         StackName: !Sub ${AWS::Region}-${EnvironmentName}-${ProjectName}-back-api
-        #         TemplateConfiguration: Source::environment/templates/back-api/${EnvironmentName}-configuration.json
-        #         TemplatePath: Source::environment/templates/back-api.yml
-        #         ParameterOverrides: !Sub |
-        #           {
-        #             "EnvironmentName": "${EnvironmentName}"
-        #           }
-        #       InputArtifacts:
-        #         - Name: Source
-        #       OutputArtifacts:
-        #         - Name: BackApiDeployOutput
-        #       RunOrder: 1
+            - Name: back-api
+              ActionTypeId:
+                Category: Deploy
+                Owner: AWS
+                Version: '1'
+                Provider: CloudFormation
+              Configuration:
+                ActionMode: CREATE_UPDATE # CHANGE_SET_EXECUTE
+                RoleArn: !GetAtt CloudFormationDeployRole.Arn
+                Capabilities: CAPABILITY_IAM,CAPABILITY_AUTO_EXPAND
+                StackName: !Sub ${AWS::Region}-${EnvironmentName}-${ProjectName}-back-api
+                TemplateConfiguration: Source::environment/templates/back-api/${EnvironmentName}-configuration.json
+                TemplatePath: Source::environment/templates/back-api.yml
+                ParameterOverrides: !Sub |
+                  {
+                    "EnvironmentName": "${EnvironmentName}"
+                  }
+              InputArtifacts:
+                - Name: Source
+              OutputArtifacts:
+                - Name: BackApiDeployOutput
+              RunOrder: 1
 
-        #     - Name: front-nginx
-        #       ActionTypeId:
-        #         Category: Deploy
-        #         Owner: AWS
-        #         Version: '1'
-        #         Provider: CloudFormation
-        #       Configuration:
-        #         ActionMode: CREATE_UPDATE # CHANGE_SET_EXECUTE
-        #         RoleArn: !GetAtt CloudFormationDeployRole.Arn
-        #         Capabilities: CAPABILITY_IAM,CAPABILITY_AUTO_EXPAND
-        #         StackName: !Sub ${AWS::Region}-${EnvironmentName}-${ProjectName}-front-nginx
-        #         TemplateConfiguration: Source::environment/templates/front-nginx/${EnvironmentName}-configuration.json
-        #         TemplatePath: Source::environment/templates/front-nginx.yml
-        #         ParameterOverrides: !Sub |
-        #           {
-        #             "EnvironmentName": "${EnvironmentName}"
-        #           }
-        #       InputArtifacts:
-        #         - Name: Source
-        #       OutputArtifacts:
-        #         - Name: FrontNginxDeployOutput
-        #       RunOrder: 1
+            - Name: front-nginx
+              ActionTypeId:
+                Category: Deploy
+                Owner: AWS
+                Version: '1'
+                Provider: CloudFormation
+              Configuration:
+                ActionMode: CREATE_UPDATE # CHANGE_SET_EXECUTE
+                RoleArn: !GetAtt CloudFormationDeployRole.Arn
+                Capabilities: CAPABILITY_IAM,CAPABILITY_AUTO_EXPAND
+                StackName: !Sub ${AWS::Region}-${EnvironmentName}-${ProjectName}-front-nginx
+                TemplateConfiguration: Source::environment/templates/front-nginx/${EnvironmentName}-configuration.json
+                TemplatePath: Source::environment/templates/front-nginx.yml
+                ParameterOverrides: !Sub |
+                  {
+                    "EnvironmentName": "${EnvironmentName}"
+                  }
+              InputArtifacts:
+                - Name: Source
+              OutputArtifacts:
+                - Name: FrontNginxDeployOutput
+              RunOrder: 1
 
 Outputs:
   PipelineUrl:

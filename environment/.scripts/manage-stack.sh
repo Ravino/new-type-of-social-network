@@ -26,6 +26,7 @@ function create {
 function update {
     aws cloudformation update-stack \
     --stack-name ${STACK_NAME} \
+    --capabilities CAPABILITY_NAMED_IAM \
     --template-body=${TEMPLATE_PATH} \
     --parameters ${PARAMETERS} \
     --role-arn ${ARN_ROLE}
