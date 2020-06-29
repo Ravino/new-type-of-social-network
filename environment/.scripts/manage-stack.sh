@@ -31,11 +31,11 @@ function update {
     --role-arn ${ARN_ROLE}
 }
 function delete {
-    aws cloudformation delete-stack --stack-name ${STACK_FULL_NAME}-mysql --role-arn ${ARN_ADMIN}
-    aws cloudformation delete-stack --stack-name ${STACK_FULL_NAME}-redis --role-arn ${ARN_ADMIN}
-    aws cloudformation delete-stack --stack-name ${STACK_FULL_NAME}-resources --role-arn ${ARN_ADMIN}
-    aws cloudformation delete-stack --stack-name ${STACK_FULL_NAME}-cluster --role-arn ${ARN_ADMIN}
-    aws cloudformation delete-stack --stack-name ${STACK_NAME} --role-arn ${ARN_ADMIN}
+    aws cloudformation delete-stack --stack-name ${STACK_FULL_NAME}-mysql --role-arn ${ARN_ROLE}
+    aws cloudformation delete-stack --stack-name ${STACK_FULL_NAME}-redis --role-arn ${ARN_ROLE}
+    aws cloudformation delete-stack --stack-name ${STACK_FULL_NAME}-resources --role-arn ${ARN_ROLE}
+    aws cloudformation delete-stack --stack-name ${STACK_FULL_NAME}-cluster --role-arn ${ARN_ROLE}
+    aws cloudformation delete-stack --stack-name ${STACK_NAME} --role-arn ${ARN_ROLE}
     aws codebuild delete-project --name ${STACK_FULL_NAME}-back-api
     aws codebuild delete-project --name ${STACK_FULL_NAME}-back-queue-worker
     aws codebuild delete-project --name ${STACK_FULL_NAME}-back-ws
