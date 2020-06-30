@@ -271,8 +271,8 @@ Resources:
           - - service
             - Fn::ImportValue: !Join [':', [!Ref 'EnvironmentName', 'ClusterName']]
             - !Ref 'ServiceName'
-      MinCapacity: 2
-      MaxCapacity: 10
+      MinCapacity: !Ref MinCapacity
+      MaxCapacity: !Ref MaxCapacity
       RoleARN: 'plizi-2-test-CloudFormationDeployRole-DEN0HTS0ZDYZ'
 
   # Create scaling policies for the service
@@ -302,7 +302,7 @@ Resources:
           - MetricIntervalUpperBound: 0
             ScalingAdjustment: -1
         MetricAggregationType: 'Average'
-        Cooldown: 60
+        Cooldown: !Ref ScaleDownCooldown
 
   ScaleUpPolicy:
     Type: AWS::ApplicationAutoScaling::ScalingPolicy
@@ -336,7 +336,7 @@ Resources:
           - MetricIntervalLowerBound: 25
             ScalingAdjustment: 3
         MetricAggregationType: 'Average'
-        Cooldown: 60
+        Cooldown: !Ref ScaleUpCooldown
 
   # Create alarms to trigger these policies
   LowCpuUsageAlarm:
@@ -364,9 +364,9 @@ Resources:
           Value:
             Fn::ImportValue: !Join [':', [!Ref 'EnvironmentName', 'ClusterName']]
       Statistic: Average
-      Period: 60
+      Period: !Ref LowCpuPeriodAlarm
       EvaluationPeriods: 1
-      Threshold: 20
+      Threshold: !Ref LowCpuThresholdAlarm
       ComparisonOperator: LessThanOrEqualToThreshold
       AlarmActions:
         - !Ref ScaleDownPolicy
@@ -396,9 +396,9 @@ Resources:
           Value:
             Fn::ImportValue: !Join [':', [!Ref 'EnvironmentName', 'ClusterName']]
       Statistic: Average
-      Period: 60
+      Period: !Ref HighCpuPeriodAlarm
       EvaluationPeriods: 1
-      Threshold: 70
+      Threshold: !Ref HighCpuThresholdAlarm
       ComparisonOperator: GreaterThanOrEqualToThreshold
       AlarmActions:
         - !Ref ScaleUpPolicy
