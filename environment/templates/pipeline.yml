@@ -292,11 +292,11 @@ Resources:
       #QueueConfiguration:
       VersioningConfiguration:
         Status: Enabled
-      BucketEncryption:
-        ServerSideEncryptionConfiguration:
-          - ServerSideEncryptionByDefault:
-              SSEAlgorithm: aws:kms
-              KMSMasterKeyID: !Ref KMSKeyArn
+#      BucketEncryption:
+#        ServerSideEncryptionConfiguration:
+#          - ServerSideEncryptionByDefault:
+#              SSEAlgorithm: aws:kms
+#              KMSMasterKeyID: !Ref KMSKeyArn
 
   # Role for artifact backup managent
   # ArtifactBucketBackupRole:
