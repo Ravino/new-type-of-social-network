@@ -340,7 +340,7 @@ Resources:
    Properties:
      Name: !Join ['-', [!Ref 'ProjectName', !Ref 'AWS::Region', 'back-ws', !Ref 'EnvironmentName']]
      ServiceRole: !Ref CodeBuildServiceRole
-     EncryptionKey: !Ref KMSKeyArn
+#     EncryptionKey: !Ref KMSKeyArn
      Artifacts:
        Type: CODEPIPELINE
      Source:
@@ -442,7 +442,7 @@ Resources:
    Type: AWS::CodeBuild::Project
    Properties:
      ServiceRole: !Ref CodeBuildServiceRole
-     EncryptionKey: !Ref KMSKeyArn
+#     EncryptionKey: !Ref KMSKeyArn
      Artifacts:
        Type: CODEPIPELINE
      Source:
