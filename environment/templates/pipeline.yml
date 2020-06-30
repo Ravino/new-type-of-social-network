@@ -798,6 +798,7 @@ Resources:
                 ChangeSetName: !Sub "${AWS::Region}-${EnvironmentName}-${ProjectName}-resources-changeset"
                 RoleArn: !GetAtt CloudFormationDeployRole.Arn
                 StackName: !Sub "${AWS::Region}-${EnvironmentName}-${ProjectName}-resources"
+                OutputFileName: Source::service-roles/output.json
                 TemplatePath: Source::environment/templates/service-roles.yml
                 ParameterOverrides: !Sub |
                   {
@@ -806,7 +807,7 @@ Resources:
               InputArtifacts:
                 - Name: Source
               OutputArtifacts:
-                - Name: ChatResourcesDeployOutput
+                - Name: RolesDeployOutput
               RunOrder: 1
 #
 #            - Name: Mongo
@@ -979,7 +980,7 @@ Resources:
                 ParameterOverrides: !Sub |
                   {
                     "EnvironmentName": "${EnvironmentName}",
-                    "Role": { "Fn::ImportValue": { "Fn::Join": [ ":", [ "${EnvironmentName}", "BackQueueWorkerTaskRole" ] ] } }
+                    "Role": { "Fn::GetParam" : ["RolesDeployOutput", "service-roles/output.json", "BackQueueWorkerTaskRole"]}
                   }
               InputArtifacts:
                 - Name: Source
