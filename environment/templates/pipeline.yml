@@ -979,7 +979,7 @@ Resources:
                 ParameterOverrides: !Sub |
                   {
                     "EnvironmentName": "${EnvironmentName}",
-                    "Role": !Sub { "Fn::ImportValue": { "Fn::Join": [ ":", [ "${EnvironmentName}", "BackQueueWorkerTaskRole" ] ] } }
+                    "Role": { "Fn::ImportValue": { "Fn::Join": [ ":", [ "${EnvironmentName}", "BackQueueWorkerTaskRole" ] ] } }
                   }
               InputArtifacts:
                 - Name: Source
