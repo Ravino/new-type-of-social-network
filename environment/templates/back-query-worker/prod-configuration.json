@@ -2,7 +2,7 @@
     "Parameters": {
         "ServiceName": "back-query-worker",
         "ImageUrl": "884088487044.dkr.ecr.eu-central-1.amazonaws.com/plizi-back-query-worker-prod:latest",
-        "ContainerPort": 80,
+        "ContainerPort": "80",
         "ServiceProtocol": "HTTP",
         "TaskRoleArn": "BackWSTaskRole",
         "ContainerCpu": "256",
@@ -10,16 +10,16 @@
         "NLBInsecureListener": "",
         "NLBSecureListener": "",
         "Path": "/",
-        "Priority": 1,
-        "MinCapacity": 1,
-        "DesiredCount": 2,
-        "MaxCapacity": 5,
-        "LowCpuPeriodAlarm": 300,
-        "ScaleDownCooldown": 300,
-        "LowCpuThresholdAlarm": 20,
-        "HighCpuThresholdAlarm": 70,
-        "ScaleUpCooldown": 30,
-        "DeploymentMaximum": 200,
-        "DeploymentMinimum": 100
+        "Priority": "1",
+        "MinCapacity": "1",
+        "DesiredCount": "2",
+        "MaxCapacity": "5",
+        "LowCpuPeriodAlarm": "300",
+        "ScaleDownCooldown": "300",
+        "LowCpuThresholdAlarm": "20",
+        "HighCpuThresholdAlarm": "70",
+        "ScaleUpCooldown": "30",
+        "DeploymentMaximum": "200",
+        "DeploymentMinimum": "100"
     }
 }
