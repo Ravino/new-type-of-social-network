@@ -783,31 +783,31 @@ Resources:
               RunOrder: 1
 
         # And we deploy the application resources (Elasticache, RDS, DocumentDB, etc)
-#        - Name: Resources
-#          Actions:
-#
-#            - Name: Roles
-#              ActionTypeId:
-#                Category: Deploy
-#                Owner: AWS
-#                Version: '1'
-#                Provider: CloudFormation
-#              Configuration:
-#                ActionMode: CREATE_UPDATE
-#                Capabilities: CAPABILITY_IAM
-#                ChangeSetName: !Sub "${AWS::Region}-${EnvironmentName}-${ProjectName}-resources-changeset"
-#                RoleArn: !GetAtt CloudFormationDeployRole.Arn
-#                StackName: !Sub "${AWS::Region}-${EnvironmentName}-${ProjectName}-resources"
-#                TemplatePath: Source::environment/templates/service-roles.yml
-#                ParameterOverrides: !Sub |
-#                  {
-#                    "EnvironmentName": "${EnvironmentName}"
-#                  }
-#              InputArtifacts:
-#                - Name: Source
-#              OutputArtifacts:
-#                - Name: ChatResourcesDeployOutput
-#              RunOrder: 1
+        - Name: Resources
+          Actions:
+
+            - Name: Roles
+              ActionTypeId:
+                Category: Deploy
+                Owner: AWS
+                Version: '1'
+                Provider: CloudFormation
+              Configuration:
+                ActionMode: CREATE_UPDATE
+                Capabilities: CAPABILITY_IAM
+                ChangeSetName: !Sub "${AWS::Region}-${EnvironmentName}-${ProjectName}-resources-changeset"
+                RoleArn: !GetAtt CloudFormationDeployRole.Arn
+                StackName: !Sub "${AWS::Region}-${EnvironmentName}-${ProjectName}-resources"
+                TemplatePath: Source::environment/templates/service-roles.yml
+                ParameterOverrides: !Sub |
+                  {
+                    "EnvironmentName": "${EnvironmentName}"
+                  }
+              InputArtifacts:
+                - Name: Source
+              OutputArtifacts:
+                - Name: ChatResourcesDeployOutput
+              RunOrder: 1
 #
 #            - Name: Mongo
 #              ActionTypeId:
