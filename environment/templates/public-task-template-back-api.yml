@@ -99,7 +99,7 @@ Parameters:
   # auto-scaling
   HighCpuPeriodAlarm:
     Type: Number
-    Default: 30
+    Default: 60
     Description: Period length (in seconds) that limit value encounters as once noticed
   # auto-scaling
   HighCpuThresholdAlarm:
