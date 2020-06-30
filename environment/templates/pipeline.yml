@@ -292,11 +292,11 @@ Resources:
       #QueueConfiguration:
       VersioningConfiguration:
         Status: Enabled
-#      BucketEncryption:
-#        ServerSideEncryptionConfiguration:
-#          - ServerSideEncryptionByDefault:
-#              SSEAlgorithm: aws:kms
-#              KMSMasterKeyID: !Ref KMSKeyArn
+      BucketEncryption:
+        ServerSideEncryptionConfiguration:
+          - ServerSideEncryptionByDefault:
+              SSEAlgorithm: aws:kms
+              KMSMasterKeyID: !Ref KMSKeyArn
 
   # Role for artifact backup managent
   # ArtifactBucketBackupRole:
@@ -340,7 +340,7 @@ Resources:
    Properties:
      Name: !Join ['-', [!Ref 'ProjectName', !Ref 'AWS::Region', 'back-ws', !Ref 'EnvironmentName']]
      ServiceRole: !Ref CodeBuildServiceRole
-#     EncryptionKey: !Ref KMSKeyArn
+     EncryptionKey: !Ref KMSKeyArn
      Artifacts:
        Type: CODEPIPELINE
      Source:
@@ -442,7 +442,7 @@ Resources:
    Type: AWS::CodeBuild::Project
    Properties:
      ServiceRole: !Ref CodeBuildServiceRole
-#     EncryptionKey: !Ref KMSKeyArn
+     EncryptionKey: !Ref KMSKeyArn
      Artifacts:
        Type: CODEPIPELINE
      Source:
@@ -727,9 +727,9 @@ Resources:
       ArtifactStore:
         Type: S3
         Location: !Ref ArtifactBucket
-#        EncryptionKey:
-#          Id: !Ref KMSKeyArn
-#          Type: KMS
+        EncryptionKey:
+          Id: !Ref KMSKeyArn
+          Type: KMS
       DisableInboundStageTransitions:
         - StageName: Resources
           Reason: "Disabling ressources assembling before cluster would be ready."
@@ -881,8 +881,8 @@ Resources:
 #                - Name: RedisDeployOutput
 #              RunOrder: 2
 #
-        - Name: Services
-          Actions:
+#        - Name: Services
+#          Actions:
 #            - Name: back-ws
 #              ActionTypeId:
 #                Category: Build
@@ -897,19 +897,19 @@ Resources:
 #                - Name: BackWSBuildOutput
 #              RunOrder: 2
 #
-            - Name: back-queue-worker
-              ActionTypeId:
-                Category: Build
-                Owner: AWS
-                Version: '1'
-                Provider: CodeBuild
-              Configuration:
-                ProjectName: !Ref BackQueueWorker
-              InputArtifacts:
-                - Name: Source
-              OutputArtifacts:
-                - Name: BackQueueWorkerBuildOutput
-              RunOrder: 2
+#            - Name: back-queue-worker
+#              ActionTypeId:
+#                Category: Build
+#                Owner: AWS
+#                Version: '1'
+#                Provider: CodeBuild
+#              Configuration:
+#                ProjectName: !Ref BackQueueWorker
+#              InputArtifacts:
+#                - Name: Source
+#              OutputArtifacts:
+#                - Name: BackQueueWorkerBuildOutput
+#              RunOrder: 2
 #
 #            - Name: back-api
 #              ActionTypeId:
