@@ -954,7 +954,7 @@ Resources:
                 ParameterOverrides: !Sub |
                   {
                     "EnvironmentName": "${EnvironmentName}",
-                    "Role": !ImportValue: !Join [ ':', [ !Ref 'EnvironmentName', 'BackWSTaskRole' ] ]
+                    "Role": !ImportValue: !Join [ ':', [ ${EnvironmentName}, 'BackWSTaskRole' ] ]
                   }
               InputArtifacts:
                 - Name: Source
@@ -979,7 +979,7 @@ Resources:
                 ParameterOverrides: !Sub |
                   {
                     "EnvironmentName": "${EnvironmentName}",
-                    "Role": !ImportValue: !Join [ ':', [ !Ref 'EnvironmentName', 'BackQueueWorkerTaskRole' ] ]
+                    "Role": !ImportValue: !Join [ ':', [ ${EnvironmentName}, 'BackQueueWorkerTaskRole' ] ]
                   }
               InputArtifacts:
                 - Name: Source
@@ -1003,7 +1003,7 @@ Resources:
                 ParameterOverrides: !Sub |
                   {
                     "EnvironmentName": "${EnvironmentName}",
-                    "Role": !ImportValue: !Join [ ':', [ !Ref 'EnvironmentName', 'BackApiTaskRole' ] ]
+                    "Role": !ImportValue: !Join [ ':', [ ${EnvironmentName}, 'BackApiTaskRole' ] ]
                   }
               InputArtifacts:
                 - Name: Source
@@ -1027,7 +1027,7 @@ Resources:
                 ParameterOverrides: !Sub |
                   {
                     "EnvironmentName": "${EnvironmentName}",
-                    "Role": !ImportValue: !Join [ ':', [ !Ref 'EnvironmentName', 'FrontNginxTaskRole' ] ]
+                    "Role": !ImportValue: !Join [ ':', [ ${EnvironmentName}, 'FrontNginxTaskRole' ] ]
                   }
               InputArtifacts:
                 - Name: Source
