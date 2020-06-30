@@ -95,7 +95,7 @@ Resources:
           !Join [':', [!Ref 'EnvironmentName', 'ECSTaskExecutionRole']]
       TaskRoleArn:
         Fn::ImportValue:
-          !Join [':', [!Ref 'EnvironmentName', 'BackQueueWSTaskRole']]
+          !Join [':', [!Ref 'EnvironmentName', 'BackWSTaskRole']]
       ContainerDefinitions:
         - Name: !Ref 'ServiceName'
           Cpu: !Ref 'ContainerCpu'
