@@ -98,6 +98,10 @@ Parameters:
     Description: Minimum healthy percent represents a lower limit on the number of tasks in a service
       that must remain in the RUNNING state during a deployment, as a percentage of
       the desired number of tasks (rounded up to the nearest integer)
+  ScaleUpCooldown:
+    Type: Number
+    Default: 30
+    Description: Cooldown before next scaling up
   # deployment
   ServiceProtocol:
     Type: String
