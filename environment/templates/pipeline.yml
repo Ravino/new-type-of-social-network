@@ -725,9 +725,9 @@ Resources:
       ArtifactStore:
         Type: S3
         Location: !Ref ArtifactBucket
-        EncryptionKey:
-          Id: !Ref KMSKeyArn
-          Type: KMS
+#        EncryptionKey:
+#          Id: !Ref KMSKeyArn
+#          Type: KMS
       DisableInboundStageTransitions:
         - StageName: Resources
           Reason: "Disabling ressources assembling before cluster would be ready."
