@@ -89,18 +89,18 @@ Resources:
               Resource: "*"
 Outputs:
   BackWSTaskRole:
-    Value: !GetAtt 'BackWSTaskRole.Arn'
+    Value: !Ref 'BackWSTaskRole' #!GetAtt 'BackWSTaskRole.Arn'
     Export:
       Name: !Join [ ':', [ !Ref 'EnvironmentName', 'BackWSTaskRole' ] ]
   BackQueueWorkerTaskRole:
-    Value: !GetAtt 'BackQueueWorkerTaskRole.Arn'
+    Value: !Ref 'BackQueueWorkerTaskRole' #!GetAtt 'BackQueueWorkerTaskRole.Arn'
     Export:
       Name: !Join [ ':', [ !Ref 'EnvironmentName', 'BackQueueWorkerTaskRole' ] ]
   BackApiTaskRole:
-    Value: !GetAtt 'BackApiTaskRole.Arn'
+    Value: !Ref 'BackApiTaskRole' #!GetAtt 'BackApiTaskRole.Arn'
     Export:
       Name: !Join [ ':', [ !Ref 'EnvironmentName', 'BackApiTaskRole' ] ]
   FrontNginxTaskRole:
-    Value: !GetAtt 'FrontNginxTaskRole.Arn'
+    Value: !Ref 'FrontNginxTaskRole' # !GetAtt 'FrontNginxTaskRole.Arn'
     Export:
       Name: !Join [ ':', [ !Ref 'EnvironmentName', 'FrontNginxTaskRole' ] ]
