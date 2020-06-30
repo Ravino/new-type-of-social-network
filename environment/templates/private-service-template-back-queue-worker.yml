@@ -152,10 +152,10 @@ Resources:
   TargetGroup:
     Type: AWS::ElasticLoadBalancingV2::TargetGroup
     Properties:
-      HealthCheckIntervalSeconds: 6
-      HealthCheckPath: /
-      HealthCheckProtocol: HTTP
-      HealthCheckTimeoutSeconds: 5
+      #HealthCheckIntervalSeconds: 6
+      #HealthCheckPath: /
+      #HealthCheckProtocol: HTTP
+      #HealthCheckTimeoutSeconds: 5
       HealthyThresholdCount: 2
       TargetType: ip
       Name: !Ref 'ServiceName'
