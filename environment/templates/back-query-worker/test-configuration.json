@@ -7,7 +7,7 @@
         "ContainerCpu": "256",
         "ContainerMemory": "512",
         "Path": "/",
-        "Priority": "2",
+        "Priority": "1",
         "MinCapacity": "1",
         "DesiredCount": "2",
         "MaxCapacity": "5",
