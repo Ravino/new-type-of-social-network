@@ -281,7 +281,9 @@ Resources:
             - !Ref 'ServiceName'
       MinCapacity: !Ref MinCapacity
       MaxCapacity: !Ref MaxCapacity
-      RoleARN: 'plizi-2-test-CloudFormationDeployRole-DEN0HTS0ZDYZ'
+      RoleARN: 
+        Fn::ImportValue: 
+          !Join [':', [!Ref 'EnvironmentName', 'AutoScalingRole']]
 
   # Create scaling policies for the service
   ScaleDownPolicy:
