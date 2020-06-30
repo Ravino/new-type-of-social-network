@@ -525,6 +525,6 @@ Outputs:
       Name: !Join [ ':', [ !Ref 'EnvironmentName', 'FargateContainerSecurityGroup' ] ]
   AutoscalingRole:
     Description: Autoscaling role for Target Group
-    Value: !Ref 'AutoscalingRole'
+    Value: !GetAtt 'AutoscalingRole.Arn'
     Export:
       Name: !Join [ ':', [ !Ref 'EnvironmentName', 'AutoscalingRole' ] ]
