@@ -981,12 +981,10 @@ Resources:
                 TemplatePath: Source::environment/templates/private-service-template-back-queue-worker.yml
                 ParameterOverrides: !Sub |
                   {
-                    "EnvironmentName": "${EnvironmentName}",
-                    "Role": { "Fn::GetParam" : ["RolesDeployOutput", "service-roles-output.json", "BackQueueWorkerTaskRole"]}
+                    "EnvironmentName": "${EnvironmentName}"
                   }
               InputArtifacts:
                 - Name: Source
-                - Name: RolesDeployOutput
               OutputArtifacts:
                 - Name: BackQueueWorkerDeployOutput
               RunOrder: 1
