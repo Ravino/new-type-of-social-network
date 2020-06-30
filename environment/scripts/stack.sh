@@ -15,6 +15,7 @@ CLIENT_REQUEST_TOKEN="${REGION}${PROJECT_NAME}${ENV}${ARN_ROLE_NAME}"
 # parameters
 TEMPLATE_PATH="file://../templates/pipeline.yml"
 PARAMETERS="ParameterKey=EnvironmentName,ParameterValue=test"
+S3_BUCKET_NAME="${REGION}-${PROJECT_NAME}-${ENV}"
 
 # functions
 function create {
@@ -32,14 +33,17 @@ function create {
 function update {
     aws cloudformation update-stack \
     --stack-name ${STACK_NAME} \
-    --capabilities CAPABILITY_NAMED_IAM \
+    --capabilities CAPABILITY_IAM CAPABILITY_NAMED_IAM \
     --template-body=${TEMPLATE_PATH} \
     --parameters ${PARAMETERS} \
     --role-arn ${ARN_ROLE}
 }
 function delete {
     # removing application service stacks
-
+    aws cloudformation delete-stack --stack-name ${SERVICE_STACK_PREFIX}-back-ws --role-arn ${ARN_ROLE}
+    aws cloudformation delete-stack --stack-name ${SERVICE_STACK_PREFIX}-back-queue-worker --role-arn ${ARN_ROLE}
+    aws cloudformation delete-stack --stack-name ${SERVICE_STACK_PREFIX}-back-api --role-arn ${ARN_ROLE}
+    aws cloudformation delete-stack --stack-name ${SERVICE_STACK_PREFIX}-front-nginx --role-arn ${ARN_ROLE}
     # removing resources stacks
     aws cloudformation delete-stack --stack-name ${RESOURCE_NAME}-mysql --role-arn ${ARN_ROLE}
     aws cloudformation delete-stack --stack-name ${RESOURCE_NAME}-redis --role-arn ${ARN_ROLE}
@@ -49,26 +53,18 @@ function delete {
     aws cloudformation delete-stack --stack-name ${STACK_FULL_NAME}-cluster --role-arn ${ARN_ROLE}
     # remove main stack name - shouldn't remove before another res are removed
     #aws cloudformation delete-stack --stack-name ${STACK_NAME} --role-arn ${ARN_ROLE}
-    aws codebuild delete-project --name ${STACK_FULL_NAME}-back-api
-    aws codebuild delete-project --name ${STACK_FULL_NAME}-back-queue-worker
-    aws codebuild delete-project --name ${STACK_FULL_NAME}-back-ws
-    aws codebuild delete-project --name ${STACK_FULL_NAME}-front-nginx
-    aws ecr delete-repository --repository-name ${STACK_FULL_NAME}-back-api --force
-    aws ecr delete-repository --repository-name ${STACK_FULL_NAME}-back-queue-worker --force
-    aws ecr delete-repository --repository-name ${STACK_FULL_NAME}-back-ws --force
-    aws ecr delete-repository --repository-name ${STACK_FULL_NAME}-front-nginx --force
-}
-function upload() {
-    aws cloudformation package --template /path_to_template/template.json --s3-bucket mybucket --output yaml > packaged-template.yml
-}
-# $1 CREATE_COMPLETE
-function stack-list-all() {
-    aws cloudformation list-stacks --stack-status-filter $1
-}
-
-# $1 stack name
-function stack-list-running() {
-    aws cloudformation describe-stacks --stack-name $1
+    # remove codebuild projects
+    aws codebuild delete-project --name ${PROJECT_NAME}-${REGION}-back-api-${ENV}
+    aws codebuild delete-project --name ${PROJECT_NAME}-${REGION}-back-queue-worker-${ENV}
+    aws codebuild delete-project --name ${PROJECT_NAME}-${REGION}-back-ws-${ENV}
+    aws codebuild delete-project --name ${PROJECT_NAME}-${REGION}-front-nginx-${ENV}
+    # remove ecr repositories
+    aws ecr delete-repository --repository-name ${SERVICE_STACK_PREFIX}-back-api --force
+    aws ecr delete-repository --repository-name ${SERVICE_STACK_PREFIX}-back-queue-worker --force
+    aws ecr delete-repository --repository-name ${SERVICE_STACK_PREFIX}-back-ws --force
+    aws ecr delete-repository --repository-name ${SERVICE_STACK_PREFIX}-front-nginx --force
+    # remove s3
+    aws s3 rb ${S3_BUCKET_NAME} --force
 }
 
 `$@`
