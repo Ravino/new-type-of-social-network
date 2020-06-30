@@ -783,158 +783,158 @@ Resources:
               RunOrder: 1
 
         # And we deploy the application resources (Elasticache, RDS, DocumentDB, etc)
-        - Name: Resources
-          Actions:
-
-            - Name: Roles
-              ActionTypeId:
-                Category: Deploy
-                Owner: AWS
-                Version: '1'
-                Provider: CloudFormation
-              Configuration:
-                ActionMode: CREATE_UPDATE
-                Capabilities: CAPABILITY_IAM
-                ChangeSetName: !Sub "${AWS::Region}-${EnvironmentName}-${ProjectName}-resources-changeset"
-                RoleArn: !GetAtt CloudFormationDeployRole.Arn
-                StackName: !Sub "${AWS::Region}-${EnvironmentName}-${ProjectName}-resources"
-                TemplatePath: Source::environment/templates/resources.yml
-                ParameterOverrides: !Sub |
-                  {
-                    "EnvironmentName": "${EnvironmentName}"
-                  }
-              InputArtifacts:
-                - Name: Source
-              OutputArtifacts:
-                - Name: ChatResourcesDeployOutput
-              RunOrder: 1
-
-            - Name: Mongo
-              ActionTypeId:
-                Category: Deploy
-                Owner: AWS
-                Version: '1'
-                Provider: CloudFormation
-              Configuration:
-                ActionMode: CREATE_UPDATE
-                Capabilities: CAPABILITY_IAM
-                ChangeSetName: !Sub "${AWS::Region}-${EnvironmentName}-mongo-changeset"
-                RoleArn: !GetAtt CloudFormationDeployRole.Arn
-                StackName: !Sub "${AWS::Region}-${EnvironmentName}-mongo"
-                TemplatePath: Source::environment/templates/res-mongo.yml
-                ParameterOverrides: !Sub |
-                  {
-                    "EnvironmentName": "${EnvironmentName}"
-                  }
-              InputArtifacts:
-                - Name: Source
-              OutputArtifacts:
-                - Name: MongoDeployOutput
-              RunOrder: 2
-
-            - Name: MySQL
-              ActionTypeId:
-                Category: Deploy
-                Owner: AWS
-                Version: '1'
-                Provider: CloudFormation
-              Configuration:
-                ActionMode: CREATE_UPDATE
-                Capabilities: CAPABILITY_IAM
-                ChangeSetName: !Sub "${AWS::Region}-${EnvironmentName}-mysql-changeset"
-                RoleArn: !GetAtt CloudFormationDeployRole.Arn
-                StackName: !Sub "${AWS::Region}-${EnvironmentName}-mysql"
-                TemplatePath: Source::environment/templates/res-mysql.yml
-                ParameterOverrides: !Sub |
-                  {
-                    "EnvironmentName": "${EnvironmentName}"
-                  }
-              InputArtifacts:
-                - Name: Source
-              OutputArtifacts:
-                - Name: MySQLDeployOutput
-              RunOrder: 2
-
-            - Name: Redis
-              ActionTypeId:
-                Category: Deploy
-                Owner: AWS
-                Version: '1'
-                Provider: CloudFormation
-              Configuration:
-                ActionMode: CREATE_UPDATE
-                Capabilities: CAPABILITY_IAM
-                ChangeSetName: !Sub "${AWS::Region}-${EnvironmentName}-redis-changeset"
-                RoleArn: !GetAtt CloudFormationDeployRole.Arn
-                StackName: !Sub "${AWS::Region}-${EnvironmentName}-redis"
-                TemplatePath: Source::environment/templates/res-redis.yml
-                ParameterOverrides: !Sub |
-                  {
-                    "EnvironmentName": "${EnvironmentName}"
-                  }
-              InputArtifacts:
-                - Name: Source
-              OutputArtifacts:
-                - Name: RedisDeployOutput
-              RunOrder: 2
-
-#        - Name: Services
+#        - Name: Resources
 #          Actions:
-#            - Name: back-ws
+#
+#            - Name: Roles
 #              ActionTypeId:
-#                Category: Build
+#                Category: Deploy
 #                Owner: AWS
 #                Version: '1'
-#                Provider: CodeBuild
+#                Provider: CloudFormation
 #              Configuration:
-#                ProjectName: !Ref BackWS
+#                ActionMode: CREATE_UPDATE
+#                Capabilities: CAPABILITY_IAM
+#                ChangeSetName: !Sub "${AWS::Region}-${EnvironmentName}-${ProjectName}-resources-changeset"
+#                RoleArn: !GetAtt CloudFormationDeployRole.Arn
+#                StackName: !Sub "${AWS::Region}-${EnvironmentName}-${ProjectName}-resources"
+#                TemplatePath: Source::environment/templates/resources.yml
+#                ParameterOverrides: !Sub |
+#                  {
+#                    "EnvironmentName": "${EnvironmentName}"
+#                  }
 #              InputArtifacts:
 #                - Name: Source
 #              OutputArtifacts:
-#                - Name: BackWSBuildOutput
+#                - Name: ChatResourcesDeployOutput
+#              RunOrder: 1
+#
+#            - Name: Mongo
+#              ActionTypeId:
+#                Category: Deploy
+#                Owner: AWS
+#                Version: '1'
+#                Provider: CloudFormation
+#              Configuration:
+#                ActionMode: CREATE_UPDATE
+#                Capabilities: CAPABILITY_IAM
+#                ChangeSetName: !Sub "${AWS::Region}-${EnvironmentName}-mongo-changeset"
+#                RoleArn: !GetAtt CloudFormationDeployRole.Arn
+#                StackName: !Sub "${AWS::Region}-${EnvironmentName}-mongo"
+#                TemplatePath: Source::environment/templates/res-mongo.yml
+#                ParameterOverrides: !Sub |
+#                  {
+#                    "EnvironmentName": "${EnvironmentName}"
+#                  }
+#              InputArtifacts:
+#                - Name: Source
+#              OutputArtifacts:
+#                - Name: MongoDeployOutput
 #              RunOrder: 2
 #
-#            - Name: back-queue-worker
+#            - Name: MySQL
 #              ActionTypeId:
-#                Category: Build
+#                Category: Deploy
 #                Owner: AWS
 #                Version: '1'
-#                Provider: CodeBuild
+#                Provider: CloudFormation
 #              Configuration:
-#                ProjectName: !Ref BackQueueWorker
+#                ActionMode: CREATE_UPDATE
+#                Capabilities: CAPABILITY_IAM
+#                ChangeSetName: !Sub "${AWS::Region}-${EnvironmentName}-mysql-changeset"
+#                RoleArn: !GetAtt CloudFormationDeployRole.Arn
+#                StackName: !Sub "${AWS::Region}-${EnvironmentName}-mysql"
+#                TemplatePath: Source::environment/templates/res-mysql.yml
+#                ParameterOverrides: !Sub |
+#                  {
+#                    "EnvironmentName": "${EnvironmentName}"
+#                  }
 #              InputArtifacts:
 #                - Name: Source
 #              OutputArtifacts:
-#                - Name: BackQueueWorkerBuildOutput
+#                - Name: MySQLDeployOutput
 #              RunOrder: 2
 #
-#            - Name: back-api
+#            - Name: Redis
 #              ActionTypeId:
-#                Category: Build
+#                Category: Deploy
 #                Owner: AWS
 #                Version: '1'
-#                Provider: CodeBuild
+#                Provider: CloudFormation
 #              Configuration:
-#                ProjectName: !Ref BackApi
+#                ActionMode: CREATE_UPDATE
+#                Capabilities: CAPABILITY_IAM
+#                ChangeSetName: !Sub "${AWS::Region}-${EnvironmentName}-redis-changeset"
+#                RoleArn: !GetAtt CloudFormationDeployRole.Arn
+#                StackName: !Sub "${AWS::Region}-${EnvironmentName}-redis"
+#                TemplatePath: Source::environment/templates/res-redis.yml
+#                ParameterOverrides: !Sub |
+#                  {
+#                    "EnvironmentName": "${EnvironmentName}"
+#                  }
 #              InputArtifacts:
 #                - Name: Source
 #              OutputArtifacts:
-#                - Name: BackApiBuildOutput
+#                - Name: RedisDeployOutput
 #              RunOrder: 2
-#
-#            - Name: front-nginx
-#              ActionTypeId:
-#                Category: Build
-#                Owner: AWS
-#                Version: '1'
-#                Provider: CodeBuild
-#              Configuration:
-#                ProjectName: !Ref FrontNginx
-#              InputArtifacts:
-#                - Name: Source
-#              OutputArtifacts:
-#                - Name: FrontNginxBuildOutput
-#              RunOrder: 2
+
+        - Name: Services
+          Actions:
+            - Name: back-ws
+              ActionTypeId:
+                Category: Build
+                Owner: AWS
+                Version: '1'
+                Provider: CodeBuild
+              Configuration:
+                ProjectName: !Ref BackWS
+              InputArtifacts:
+                - Name: Source
+              OutputArtifacts:
+                - Name: BackWSBuildOutput
+              RunOrder: 2
+
+            - Name: back-queue-worker
+              ActionTypeId:
+                Category: Build
+                Owner: AWS
+                Version: '1'
+                Provider: CodeBuild
+              Configuration:
+                ProjectName: !Ref BackQueueWorker
+              InputArtifacts:
+                - Name: Source
+              OutputArtifacts:
+                - Name: BackQueueWorkerBuildOutput
+              RunOrder: 2
+
+            - Name: back-api
+              ActionTypeId:
+                Category: Build
+                Owner: AWS
+                Version: '1'
+                Provider: CodeBuild
+              Configuration:
+                ProjectName: !Ref BackApi
+              InputArtifacts:
+                - Name: Source
+              OutputArtifacts:
+                - Name: BackApiBuildOutput
+              RunOrder: 2
+
+            - Name: front-nginx
+              ActionTypeId:
+                Category: Build
+                Owner: AWS
+                Version: '1'
+                Provider: CodeBuild
+              Configuration:
+                ProjectName: !Ref FrontNginx
+              InputArtifacts:
+                - Name: Source
+              OutputArtifacts:
+                - Name: FrontNginxBuildOutput
+              RunOrder: 2
 
         - Name: Deploy
           Actions:
