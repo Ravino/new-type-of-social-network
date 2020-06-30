@@ -798,7 +798,7 @@ Resources:
                 ChangeSetName: !Sub "${AWS::Region}-${EnvironmentName}-${ProjectName}-resources-changeset"
                 RoleArn: !GetAtt CloudFormationDeployRole.Arn
                 StackName: !Sub "${AWS::Region}-${EnvironmentName}-${ProjectName}-resources"
-                OutputFileName: Source::service-roles/output.json
+                OutputFileName: RolesDeployOutput::service-roles/output.json
                 TemplatePath: Source::environment/templates/service-roles.yml
                 ParameterOverrides: !Sub |
                   {
