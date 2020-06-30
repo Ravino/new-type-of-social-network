@@ -984,6 +984,7 @@ Resources:
                   }
               InputArtifacts:
                 - Name: Source
+                - Name: RolesDeployOutput
               OutputArtifacts:
                 - Name: BackQueueWorkerDeployOutput
               RunOrder: 1
