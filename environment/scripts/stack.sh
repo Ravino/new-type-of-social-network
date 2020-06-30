@@ -1,15 +1,21 @@
 #!/bin/bash
+
 # configurations
 PROJECT_NAME="plizi-2"
 ENV="test"
 REGION="eu-central-1"
+# stack names
 STACK_NAME="${PROJECT_NAME}-${ENV}"
-STACK_FULL_NAME="${REGION}-${STACK_NAME}"
+RESOURCE_NAME="${REGION}-${ENV}"
+SERVICE_STACK_PREFIX="${REGION}-${ENV}-${PROJECT_NAME}"
+# roles and permissions
 ARN_ROLE_NAME="CloudFormationMasterRole"
 ARN_ROLE="arn:aws:iam::884088487044:role/"${ARN_ROLE_NAME}
 CLIENT_REQUEST_TOKEN="${REGION}${PROJECT_NAME}${ENV}${ARN_ROLE_NAME}"
+# parameters
 TEMPLATE_PATH="file://../templates/pipeline.yml"
 PARAMETERS="ParameterKey=EnvironmentName,ParameterValue=test"
+
 # functions
 function create {
     aws cloudformation create-stack \
@@ -32,11 +38,17 @@ function update {
     --role-arn ${ARN_ROLE}
 }
 function delete {
-    aws cloudformation delete-stack --stack-name ${STACK_FULL_NAME}-mysql --role-arn ${ARN_ROLE}
-    aws cloudformation delete-stack --stack-name ${STACK_FULL_NAME}-redis --role-arn ${ARN_ROLE}
-    aws cloudformation delete-stack --stack-name ${STACK_FULL_NAME}-resources --role-arn ${ARN_ROLE}
+    # removing application service stacks
+
+    # removing resources stacks
+    aws cloudformation delete-stack --stack-name ${RESOURCE_NAME}-mysql --role-arn ${ARN_ROLE}
+    aws cloudformation delete-stack --stack-name ${RESOURCE_NAME}-redis --role-arn ${ARN_ROLE}
+    aws cloudformation delete-stack --stack-name ${RESOURCE_NAME}-mongo --role-arn ${ARN_ROLE}
+    # removing application cluster stacks
+    aws cloudformation delete-stack --stack-name ${RESOURCE_NAME}-resources --role-arn ${ARN_ROLE}
     aws cloudformation delete-stack --stack-name ${STACK_FULL_NAME}-cluster --role-arn ${ARN_ROLE}
-    aws cloudformation delete-stack --stack-name ${STACK_NAME} --role-arn ${ARN_ROLE}
+    # remove main stack name - shouldn't remove before another res are removed
+    #aws cloudformation delete-stack --stack-name ${STACK_NAME} --role-arn ${ARN_ROLE}
     aws codebuild delete-project --name ${STACK_FULL_NAME}-back-api
     aws codebuild delete-project --name ${STACK_FULL_NAME}-back-queue-worker
     aws codebuild delete-project --name ${STACK_FULL_NAME}-back-ws
