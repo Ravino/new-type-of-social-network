@@ -938,29 +938,29 @@ Resources:
 
         - Name: Deploy
           Actions:
-            - Name: back-ws
-              ActionTypeId:
-                Category: Deploy
-                Owner: AWS
-                Version: '1'
-                Provider: CloudFormation
-              Configuration:
-                ActionMode: CREATE_UPDATE #CHANGE_SET_EXECUTE
-                RoleArn: !GetAtt CloudFormationDeployRole.Arn
-                StackName: !Sub ${AWS::Region}-${EnvironmentName}-${ProjectName}-back-ws
-                TemplateConfiguration: !Sub "Source::environment/configurations/back-ws/${EnvironmentName}-configuration.json"
-                TemplatePath: Source::environment/templates/infrastructure/private-service-template.yml
-                Capabilities: CAPABILITY_IAM
-                ParameterOverrides: !Sub |
-                  {
-                    "EnvironmentName": "${EnvironmentName}",
-                    "Role": { "Fn::ImportValue": { "Fn::Join": [ ":", [ "${EnvironmentName}", "BackWSTaskRole" ] ] } }
-                  }
-              InputArtifacts:
-                - Name: Source
-              OutputArtifacts:
-                - Name: BackWSDeployOutput
-              RunOrder: 1
+#            - Name: back-ws
+#              ActionTypeId:
+#                Category: Deploy
+#                Owner: AWS
+#                Version: '1'
+#                Provider: CloudFormation
+#              Configuration:
+#                ActionMode: CREATE_UPDATE #CHANGE_SET_EXECUTE
+#                RoleArn: !GetAtt CloudFormationDeployRole.Arn
+#                StackName: !Sub ${AWS::Region}-${EnvironmentName}-${ProjectName}-back-ws
+#                TemplateConfiguration: !Sub "Source::environment/configurations/back-ws/${EnvironmentName}-configuration.json"
+#                TemplatePath: Source::environment/templates/infrastructure/private-service-template.yml
+#                Capabilities: CAPABILITY_IAM
+#                ParameterOverrides: !Sub |
+#                  {
+#                    "EnvironmentName": "${EnvironmentName}",
+#                    "Role": { "Fn::ImportValue": { "Fn::Join": [ ":", [ "${EnvironmentName}", "BackWSTaskRole" ] ] } }
+#                  }
+#              InputArtifacts:
+#                - Name: Source
+#              OutputArtifacts:
+#                - Name: BackWSDeployOutput
+#              RunOrder: 1
 
             - Name: back-queue-worker
               ActionTypeId:
@@ -987,53 +987,53 @@ Resources:
                 - Name: BackQueueWorkerDeployOutput
               RunOrder: 1
 
-            - Name: back-api
-              ActionTypeId:
-                Category: Deploy
-                Owner: AWS
-                Version: '1'
-                Provider: CloudFormation
-              Configuration:
-                ActionMode: CREATE_UPDATE # CHANGE_SET_EXECUTE
-                RoleArn: !GetAtt CloudFormationDeployRole.Arn
-                Capabilities: CAPABILITY_IAM,CAPABILITY_AUTO_EXPAND
-                StackName: !Sub ${AWS::Region}-${EnvironmentName}-${ProjectName}-back-api
-                TemplateConfiguration: !Sub "Source::environment/configurations/back-api/${EnvironmentName}-configuration.json"
-                TemplatePath: Source::environment/templates/infrastructure/public-task-template.yml
-                ParameterOverrides: !Sub |
-                  {
-                    "EnvironmentName": "${EnvironmentName}",
-                    "Role": { "Fn::ImportValue": { "Fn::Join": [ ":", [ "${EnvironmentName}", "BackApiTaskRole" ] ] } }
-                  }
-              InputArtifacts:
-                - Name: Source
-              OutputArtifacts:
-                - Name: BackApiDeployOutput
-              RunOrder: 1
-
-            - Name: front-nginx
-              ActionTypeId:
-                Category: Deploy
-                Owner: AWS
-                Version: '1'
-                Provider: CloudFormation
-              Configuration:
-                ActionMode: CREATE_UPDATE # CHANGE_SET_EXECUTE
-                RoleArn: !GetAtt CloudFormationDeployRole.Arn
-                Capabilities: CAPABILITY_IAM,CAPABILITY_AUTO_EXPAND
-                StackName: !Sub ${AWS::Region}-${EnvironmentName}-${ProjectName}-front-nginx
-                TemplateConfiguration: !Sub "Source::environment/configurations/front-nginx/${EnvironmentName}-configuration.json"
-                TemplatePath: Source::environment/templates/infrastructure/public-task-template.yml
-                ParameterOverrides: !Sub |
-                  {
-                    "EnvironmentName": "${EnvironmentName}",
-                    "Role": { "Fn::ImportValue": { "Fn::Join": [ ":", [ "${EnvironmentName}", "FrontNginxTaskRole" ] ] } }
-                  }
-              InputArtifacts:
-                - Name: Source
-              OutputArtifacts:
-                - Name: FrontNginxDeployOutput
-              RunOrder: 1
+#            - Name: back-api
+#              ActionTypeId:
+#                Category: Deploy
+#                Owner: AWS
+#                Version: '1'
+#                Provider: CloudFormation
+#              Configuration:
+#                ActionMode: CREATE_UPDATE # CHANGE_SET_EXECUTE
+#                RoleArn: !GetAtt CloudFormationDeployRole.Arn
+#                Capabilities: CAPABILITY_IAM,CAPABILITY_AUTO_EXPAND
+#                StackName: !Sub ${AWS::Region}-${EnvironmentName}-${ProjectName}-back-api
+#                TemplateConfiguration: !Sub "Source::environment/configurations/back-api/${EnvironmentName}-configuration.json"
+#                TemplatePath: Source::environment/templates/infrastructure/public-task-template.yml
+#                ParameterOverrides: !Sub |
+#                  {
+#                    "EnvironmentName": "${EnvironmentName}",
+#                    "Role": { "Fn::ImportValue": { "Fn::Join": [ ":", [ "${EnvironmentName}", "BackApiTaskRole" ] ] } }
+#                  }
+#              InputArtifacts:
+#                - Name: Source
+#              OutputArtifacts:
+#                - Name: BackApiDeployOutput
+#              RunOrder: 1
+#
+#            - Name: front-nginx
+#              ActionTypeId:
+#                Category: Deploy
+#                Owner: AWS
+#                Version: '1'
+#                Provider: CloudFormation
+#              Configuration:
+#                ActionMode: CREATE_UPDATE # CHANGE_SET_EXECUTE
+#                RoleArn: !GetAtt CloudFormationDeployRole.Arn
+#                Capabilities: CAPABILITY_IAM,CAPABILITY_AUTO_EXPAND
+#                StackName: !Sub ${AWS::Region}-${EnvironmentName}-${ProjectName}-front-nginx
+#                TemplateConfiguration: !Sub "Source::environment/configurations/front-nginx/${EnvironmentName}-configuration.json"
+#                TemplatePath: Source::environment/templates/infrastructure/public-task-template.yml
+#                ParameterOverrides: !Sub |
+#                  {
+#                    "EnvironmentName": "${EnvironmentName}",
+#                    "Role": { "Fn::ImportValue": { "Fn::Join": [ ":", [ "${EnvironmentName}", "FrontNginxTaskRole" ] ] } }
+#                  }
+#              InputArtifacts:
+#                - Name: Source
+#              OutputArtifacts:
+#                - Name: FrontNginxDeployOutput
+#              RunOrder: 1
 
 Outputs:
   PipelineUrl:
