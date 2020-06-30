@@ -958,8 +958,7 @@ Resources:
                 Capabilities: CAPABILITY_IAM
                 ParameterOverrides: !Sub |
                   {
-                    "EnvironmentName": "${EnvironmentName}",
-                    "Role": { "Fn::ImportValue": { "Fn::Join": [ ":", [ "${EnvironmentName}", "BackWSTaskRole" ] ] } }
+                    "EnvironmentName": "${EnvironmentName}"
                   }
               InputArtifacts:
                 - Name: Source
@@ -1006,8 +1005,7 @@ Resources:
                 TemplatePath: Source::environment/templates/public-task-template-back-api.yml
                 ParameterOverrides: !Sub |
                   {
-                    "EnvironmentName": "${EnvironmentName}",
-                    "Role": { "Fn::ImportValue": { "Fn::Join": [ ":", [ "${EnvironmentName}", "BackApiTaskRole" ] ] } }
+                    "EnvironmentName": "${EnvironmentName}"
                   }
               InputArtifacts:
                 - Name: Source
@@ -1030,8 +1028,7 @@ Resources:
                 TemplatePath: Source::environment/templates/public-task-template-front-nginx.yml
                 ParameterOverrides: !Sub |
                   {
-                    "EnvironmentName": "${EnvironmentName}",
-                    "Role": { "Fn::ImportValue": { "Fn::Join": [ ":", [ "${EnvironmentName}", "FrontNginxTaskRole" ] ] } }
+                    "EnvironmentName": "${EnvironmentName}"
                   }
               InputArtifacts:
                 - Name: Source
