@@ -427,7 +427,7 @@ Resources:
                 - 'logs:CreateLogStream'
                 - 'logs:PutLogEvents'
               Resource: '*'
-              
+
   # A role used by AWS Autoscaling to get the stats for a Fargate
   # service, and update it to increase or decrease the number of containers
   AutoscalingRole:
@@ -523,7 +523,7 @@ Outputs:
     Value: !Ref 'FargateContainerSecurityGroup'
     Export:
       Name: !Join [ ':', [ !Ref 'EnvironmentName', 'FargateContainerSecurityGroup' ] ]
-  AutoScalingRole:
+  AutoscalingRole:
     Description: Autoscaling role for Target Group
     Value: !Ref 'AutoscalingRole'
     Export:
