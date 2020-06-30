@@ -48,18 +48,7 @@ Parameters:
     Type: Number
     Default: 512
     Description: How much memory in megabytes to give the container
-  Path:
-    Type: String
-    Default: "*"
-    Description: A path on the public load balancer that this service
-                should be connected to. Use * to send all load balancer
-                traffic to this service.
-  Priority:
-    Type: Number
-    Default: 1
-    Description: The priority for the routing rule added to the load balancer.
-                This only applies if your have multiple services which have been
-                assigned to different paths on the load balancer.
+
   DesiredCount:
     Type: Number
     Default: 2
