@@ -34,5 +34,7 @@ $ bash stack.sh <command>
 | create | Create root application stack with presetted options |  |
 | delete | Delete all application stacks and resources excepts root one |  |
 | update | Update root application stach with presetted options and actual codebase/template |  |
+| validate | Validate all templates that are listed in dir `environment/templates` |  |
+| validate-one | Validate one template from listed in dir `environment/templates` |  |
 
 bash /role.sh create-zombie

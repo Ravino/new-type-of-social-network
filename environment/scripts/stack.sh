@@ -18,6 +18,30 @@ PARAMETERS="ParameterKey=EnvironmentName,ParameterValue=test"
 S3_BUCKET_NAME="${REGION}-${PROJECT_NAME}-${ENV}"
 
 # functions
+function validate-one() {
+    TEMPLATE=$1
+    # Validate the template with CloudFormation
+    ERRORS=$(aws cloudformation validate-template --template-body file://../templates/$TEMPLATE 2>&1 >/dev/null);
+    if [ "$?" -gt "0" ]; then
+        ((ERROR_COUNT++));
+        echo "[fail] $TEMPLATE: $ERRORS";
+    else
+        echo "[pass] $TEMPLATE";
+    fi;
+}
+function validate() {
+    cd "../templates/"
+    for TEMPLATE in $(find . -name '*.yml'); do
+        # Validate the template with CloudFormation
+        ERRORS=$(aws cloudformation validate-template --template-body file://../templates/$TEMPLATE 2>&1 >/dev/null);
+        if [ "$?" -gt "0" ]; then
+            ((ERROR_COUNT++));
+            echo "[fail] $TEMPLATE: $ERRORS";
+        else
+            echo "[pass] $TEMPLATE";
+        fi;
+    done;
+}
 function create {
     aws cloudformation create-stack \
     --stack-name ${STACK_NAME} \
@@ -67,6 +91,7 @@ function delete {
     aws s3 rb ${S3_BUCKET_NAME} --force
 }
 
-`$@`
+RESULTS=`$@`
+echo $RESULTS
 
-echo 0
+exit 0
