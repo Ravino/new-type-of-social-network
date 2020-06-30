@@ -532,6 +532,7 @@ Resources:
    Type: AWS::CodeBuild::Project
    Properties:
      ServiceRole: !Ref CodeBuildServiceRole
+     EncryptionKey: !Ref KMSKeyArn
      Artifacts:
        Type: CODEPIPELINE
      Source:
@@ -627,6 +628,7 @@ Resources:
    Type: AWS::CodeBuild::Project
    Properties:
      ServiceRole: !Ref CodeBuildServiceRole
+     EncryptionKey: !Ref KMSKeyArn
      Artifacts:
        Type: CODEPIPELINE
      Source:
