@@ -7,6 +7,6 @@
         "ContainerCpu": "256",
         "ContainerMemory": "512",
         "Path": "/",
-        "Priority": "2"
+        "Priority": "20"
     }
 }
