@@ -48,60 +48,6 @@ Parameters:
     Type: Number
     Default: 512
     Description: How much memory in megabytes to give the container
-
-  # auto-scaling
-  MinCapacity:
-    Type: Number
-    Default: 1
-    Description: How many copies is min setupped to run
-  # auto-scaling
-  MaxCapacity:
-    Type: Number
-    Default: 5
-    Description: How many copies is max allowed to run
-  # auto-scaling
-  LowCpuPeriodAlarm:
-    Type: Number
-    Default: 300
-    Description: Period length (in seconds) that limit value encounters as once noticed
-  # auto-scaling
-  ScaleDownCooldown:
-    Type: Number
-    Default: 300
-    Description: Cooldown before next scaling down
-  # auto-scaling
-  LowCpuThresholdAlarm:
-    Type: Number
-    Default: 20
-    Description: Limit value that indicates, that alarm action should be applied
-  # auto-scaling
-  HighCpuPeriodAlarm:
-    Type: Number
-    Default: 30
-    Description: Period length (in seconds) that limit value encounters as once noticed
-  # auto-scaling
-  HighCpuThresholdAlarm:
-    Type: Number
-    Default: 70
-    Description: Limit value that indicates, that alarm action should be applied
-  # deployment
-  DeploymentMaximum:
-    Type: Number
-    Default: 200
-    Description: Maximum percent parameter represents an upper limit on the number of tasks in a service
-      that are allowed in the RUNNING or PENDING state during a deployment,
-      as a percentage of the desired number of tasks
-  # deployment
-  DeploymentMinimum:
-    Type: Number
-    Default: 100
-    Description: Minimum healthy percent represents a lower limit on the number of tasks in a service
-      that must remain in the RUNNING state during a deployment, as a percentage of
-      the desired number of tasks (rounded up to the nearest integer)
-  ScaleUpCooldown:
-    Type: Number
-    Default: 30
-    Description: Cooldown before next scaling up
   # deployment
   ServiceProtocol:
     Type: String
@@ -207,7 +153,7 @@ Resources:
       TargetType: ip
       Name: !Ref 'ServiceName'
       Port: !Ref 'ContainerPort'
-      Protocol: HTTP
+      Protocol: !Ref 'ServiceProtocol'
       UnhealthyThresholdCount: 2
       VpcId:
         Fn::ImportValue:

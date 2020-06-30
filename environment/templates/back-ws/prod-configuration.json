@@ -6,17 +6,7 @@
         "ServiceProtocol": "HTTP",
         "ContainerCpu": "256",
         "ContainerMemory": "512",
-        "Path": "prod-ws.plizi.fun",
-        "Priority": "1",
-        "MinCapacity": "1",
-        "DesiredCount": "2",
-        "MaxCapacity": "5",
-        "LowCpuPeriodAlarm": "300",
-        "ScaleDownCooldown": "300",
-        "LowCpuThresholdAlarm": "20",
-        "HighCpuThresholdAlarm": "70",
-        "ScaleUpCooldown": "30",
-        "DeploymentMaximum": "200",
-        "DeploymentMinimum": "100"
+        "Path": "dev-ws.plizi.fun",
+        "Priority": "1"
     }
 }
