@@ -137,7 +137,7 @@ Resources:
   LogGroup:
     Type: AWS::Logs::LogGroup
     Properties:
-      LogGroupName: !Join ['-', [!Ref 'EnvironmentName', 'service', !Ref 'ServiceName']]
+      LogGroupName: !Join ['-', [!Ref 'EnvironmentName', 'public', !Ref 'ServiceName']]
 
   # The task definition. This is a simple metadata description of what
   # container to run, and what resource requirements it has.
