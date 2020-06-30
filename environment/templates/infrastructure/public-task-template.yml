@@ -281,9 +281,9 @@ Resources:
             - !Ref 'ServiceName'
       MinCapacity: !Ref MinCapacity
       MaxCapacity: !Ref MaxCapacity
-      RoleARN: 
-        Fn::ImportValue: 
-          !Join [':', [!Ref 'EnvironmentName', 'AutoScalingRole']]
+      RoleARN:
+        Fn::ImportValue:
+          !Join [':', [!Ref 'EnvironmentName', 'AutoscalingRole']]
 
   # Create scaling policies for the service
   ScaleDownPolicy:
