@@ -1,0 +1,12 @@
+{
+    "Parameters": {
+        "ServiceName": "back-api",
+        "ImageUrl": "884088487044.dkr.ecr.eu-central-1.amazonaws.com/eu-central-1-test-plizi-back-api:latest",
+        "ContainerPort": "1215",
+        "ServiceProtocol": "HTTP",
+        "ContainerCpu": "256",
+        "ContainerMemory": "512",
+        "Path": "dev-api.plizi.fun",
+        "Priority": "1"
+    }
+}

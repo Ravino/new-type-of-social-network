@@ -345,7 +345,7 @@ Resources:
        Type: CODEPIPELINE
      Source:
        Type: CODEPIPELINE
-       BuildSpec: !Sub "environment/templates/build/${EnvironmentName}-buildspec.yml"
+       BuildSpec: !Sub "environment/build/${EnvironmentName}-buildspec.yml"
      # FileSystemLocation:
      #   Identifier: !Ref CodebuildCacheEFS
      #   Location: String
@@ -447,7 +447,7 @@ Resources:
        Type: CODEPIPELINE
      Source:
        Type: CODEPIPELINE
-       BuildSpec: !Sub "environment/templates/build/${EnvironmentName}-buildspec.yml"
+       BuildSpec: !Sub "environment/build/${EnvironmentName}-buildspec.yml"
      Cache:
        Location: LOCAL
        Modes:
@@ -536,7 +536,7 @@ Resources:
        Type: CODEPIPELINE
      Source:
        Type: CODEPIPELINE
-       BuildSpec: !Sub "environment/templates/build/${EnvironmentName}-buildspec.yml"
+       BuildSpec: !Sub "environment/build/${EnvironmentName}-buildspec.yml"
      Cache:
        Location: LOCAL
        Modes:
@@ -631,7 +631,7 @@ Resources:
        Type: CODEPIPELINE
      Source:
        Type: CODEPIPELINE
-       BuildSpec: !Sub "environment/templates/build/${EnvironmentName}-buildspec.yml"
+       BuildSpec: !Sub "environment/build/${EnvironmentName}-buildspec.yml"
      Cache:
        Location: LOCAL
        Modes:
@@ -798,7 +798,7 @@ Resources:
 #                ChangeSetName: !Sub "${AWS::Region}-${EnvironmentName}-${ProjectName}-resources-changeset"
 #                RoleArn: !GetAtt CloudFormationDeployRole.Arn
 #                StackName: !Sub "${AWS::Region}-${EnvironmentName}-${ProjectName}-resources"
-#                TemplatePath: Source::environment/templates/resources.yml
+#                TemplatePath: Source::environment/templates/service-roles.yml
 #                ParameterOverrides: !Sub |
 #                  {
 #                    "EnvironmentName": "${EnvironmentName}"
@@ -821,7 +821,7 @@ Resources:
 #                ChangeSetName: !Sub "${AWS::Region}-${EnvironmentName}-mongo-changeset"
 #                RoleArn: !GetAtt CloudFormationDeployRole.Arn
 #                StackName: !Sub "${AWS::Region}-${EnvironmentName}-mongo"
-#                TemplatePath: Source::environment/templates/res-mongo.yml
+#                TemplatePath: Source::environment/templates/external/res-mongo.yml
 #                ParameterOverrides: !Sub |
 #                  {
 #                    "EnvironmentName": "${EnvironmentName}"
@@ -844,7 +844,7 @@ Resources:
 #                ChangeSetName: !Sub "${AWS::Region}-${EnvironmentName}-mysql-changeset"
 #                RoleArn: !GetAtt CloudFormationDeployRole.Arn
 #                StackName: !Sub "${AWS::Region}-${EnvironmentName}-mysql"
-#                TemplatePath: Source::environment/templates/res-mysql.yml
+#                TemplatePath: Source::environment/templates/external/res-mysql.yml
 #                ParameterOverrides: !Sub |
 #                  {
 #                    "EnvironmentName": "${EnvironmentName}"
@@ -867,7 +867,7 @@ Resources:
 #                ChangeSetName: !Sub "${AWS::Region}-${EnvironmentName}-redis-changeset"
 #                RoleArn: !GetAtt CloudFormationDeployRole.Arn
 #                StackName: !Sub "${AWS::Region}-${EnvironmentName}-redis"
-#                TemplatePath: Source::environment/templates/res-redis.yml
+#                TemplatePath: Source::environment/templates/external/res-redis.yml
 #                ParameterOverrides: !Sub |
 #                  {
 #                    "EnvironmentName": "${EnvironmentName}"
@@ -948,12 +948,13 @@ Resources:
                 ActionMode: CREATE_UPDATE #CHANGE_SET_EXECUTE
                 RoleArn: !GetAtt CloudFormationDeployRole.Arn
                 StackName: !Sub ${AWS::Region}-${EnvironmentName}-${ProjectName}-back-ws
-                TemplateConfiguration: !Sub "Source::environment/templates/back-ws/${EnvironmentName}-configuration.json"
+                TemplateConfiguration: !Sub "Source::environment/configurations/back-ws/${EnvironmentName}-configuration.json"
                 TemplatePath: Source::environment/templates/infrastructure/private-service-template.yml
                 Capabilities: CAPABILITY_IAM
                 ParameterOverrides: !Sub |
                   {
-                    "EnvironmentName": "${EnvironmentName}"
+                    "EnvironmentName": "${EnvironmentName}",
+                    "Role": !ImportValue: !Join [ ':', [ !Ref 'EnvironmentName', 'BackWSTaskRole' ] ]
                   }
               InputArtifacts:
                 - Name: Source
@@ -973,11 +974,12 @@ Resources:
                 Capabilities: CAPABILITY_IAM,CAPABILITY_AUTO_EXPAND
                 StackName: !Sub ${AWS::Region}-${EnvironmentName}-${ProjectName}-back-queue-worker
                 #OutputFileName: Source::back-queue-worker/output.json
-                TemplateConfiguration: !Sub "Source::environment/templates/back-query-worker/${EnvironmentName}-configuration.json"
+                TemplateConfiguration: !Sub "Source::environment/configurations/back-query-worker/${EnvironmentName}-configuration.json"
                 TemplatePath: Source::environment/templates/infrastructure/private-service-template.yml
                 ParameterOverrides: !Sub |
                   {
-                    "EnvironmentName": "${EnvironmentName}"
+                    "EnvironmentName": "${EnvironmentName}",
+                    "Role": !ImportValue: !Join [ ':', [ !Ref 'EnvironmentName', 'BackQueueWorkerTaskRole' ] ]
                   }
               InputArtifacts:
                 - Name: Source
@@ -996,11 +998,12 @@ Resources:
                 RoleArn: !GetAtt CloudFormationDeployRole.Arn
                 Capabilities: CAPABILITY_IAM,CAPABILITY_AUTO_EXPAND
                 StackName: !Sub ${AWS::Region}-${EnvironmentName}-${ProjectName}-back-api
-                TemplateConfiguration: !Sub "Source::environment/templates/back-api/${EnvironmentName}-configuration.json"
+                TemplateConfiguration: !Sub "Source::environment/configurations/back-api/${EnvironmentName}-configuration.json"
                 TemplatePath: Source::environment/templates/infrastructure/public-task-template.yml
                 ParameterOverrides: !Sub |
                   {
-                    "EnvironmentName": "${EnvironmentName}"
+                    "EnvironmentName": "${EnvironmentName}",
+                    "Role": !ImportValue: !Join [ ':', [ !Ref 'EnvironmentName', 'BackApiTaskRole' ] ]
                   }
               InputArtifacts:
                 - Name: Source
@@ -1019,11 +1022,12 @@ Resources:
                 RoleArn: !GetAtt CloudFormationDeployRole.Arn
                 Capabilities: CAPABILITY_IAM,CAPABILITY_AUTO_EXPAND
                 StackName: !Sub ${AWS::Region}-${EnvironmentName}-${ProjectName}-front-nginx
-                TemplateConfiguration: !Sub "Source::environment/templates/front-nginx/${EnvironmentName}-configuration.json"
+                TemplateConfiguration: !Sub "Source::environment/configurations/front-nginx/${EnvironmentName}-configuration.json"
                 TemplatePath: Source::environment/templates/infrastructure/public-task-template.yml
                 ParameterOverrides: !Sub |
                   {
-                    "EnvironmentName": "${EnvironmentName}"
+                    "EnvironmentName": "${EnvironmentName}",
+                    "Role": !ImportValue: !Join [ ':', [ !Ref 'EnvironmentName', 'FrontNginxTaskRole' ] ]
                   }
               InputArtifacts:
                 - Name: Source

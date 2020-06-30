@@ -81,7 +81,7 @@ artifacts:
   secondary-artifacts:
     test-buildspec:
       files:
-        - 'environment/test-buildspec.yml'
+        - 'environment/build/test-buildspec.yml'
       base_directory: code-build/${ProjectName}/${ServiceName}/build-$(date +%Y-%m-%d)
       discard-paths: yes
 #cache:
