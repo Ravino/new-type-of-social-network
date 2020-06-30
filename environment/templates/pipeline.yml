@@ -292,11 +292,11 @@ Resources:
       #QueueConfiguration:
       VersioningConfiguration:
         Status: Enabled
-#      BucketEncryption:
-#        ServerSideEncryptionConfiguration:
-#          - ServerSideEncryptionByDefault:
-#              SSEAlgorithm: aws:kms
-#              KMSMasterKeyID: !Ref KMSKeyArn
+      BucketEncryption:
+        ServerSideEncryptionConfiguration:
+          - ServerSideEncryptionByDefault:
+              SSEAlgorithm: aws:kms
+              KMSMasterKeyID: !Ref KMSKeyArn
 
   # Role for artifact backup managent
   # ArtifactBucketBackupRole:
@@ -727,9 +727,9 @@ Resources:
       ArtifactStore:
         Type: S3
         Location: !Ref ArtifactBucket
-#        EncryptionKey:
-#          Id: !Ref KMSKeyArn
-#          Type: KMS
+        EncryptionKey:
+          Id: !Ref KMSKeyArn
+          Type: KMS
       DisableInboundStageTransitions:
         - StageName: Resources
           Reason: "Disabling ressources assembling before cluster would be ready."
