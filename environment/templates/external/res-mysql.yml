@@ -44,9 +44,9 @@ Resources:
       IpProtocol: tcp
       FromPort: 3306
       ToPort: 3306
-      SourceSecurityGroupId:
-        Fn::ImportValue:
-          !Join [':', [!Ref 'EnvironmentName', 'FargateContainerSecurityGroup']]
+    #SourceSecurityGroupId:
+    #    Fn::ImportValue:
+    #      !Join [':', [!Ref 'EnvironmentName', 'FargateContainerSecurityGroup']]
   MyAWSRDSDBParameterGroup:
     Type: 'AWS::RDS::DBParameterGroup'
     Properties:
@@ -55,7 +55,6 @@ Resources:
         Parameters: {
           "log_bin_trust_function_creators": "1"
         }
-
   MySQL:
     Type: AWS::RDS::DBInstance
     Properties:
