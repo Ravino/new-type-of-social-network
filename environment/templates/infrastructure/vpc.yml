@@ -315,7 +315,7 @@ Resources:
           Type: 'forward'
       LoadBalancerArn: !Ref 'PublicLoadBalancer'
       Port: 1215
-      Protocol: TCP
+      Protocol: HTTP
   PublicLoadBalancerListenerWS:
     Type: AWS::ElasticLoadBalancingV2::Listener
     Properties:
@@ -324,7 +324,7 @@ Resources:
           Type: 'forward'
       LoadBalancerArn: !Ref 'PublicLoadBalancer'
       Port: 7070
-      Protocol: TCP
+      Protocol: HTTP
 
   # An internal load balancer, this would be used for a service that is not
   # directly accessible to the public, but instead should only receive traffic
