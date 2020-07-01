@@ -159,6 +159,33 @@ services:
 #    ports:
 #    - "6061:6061"
 
+#  yii2_fpm:
+#    container_name: "plizi_yii2_fpm"
+#    build:
+#      context: ./yii2/docker/conf/fpm
+#      dockerfile: Dockerfile
+#    volumes:
+#      - ./yii2:/var/www/vhosts/edi/
+#    working_dir: /var/www/vhosts/edi
+#    command: "/usr/sbin/php-fpm7.3 -F -O"
+#    environment:
+#      - YII_ENV=dev
+#      - YII_DEBUG=true
+#    env_file:
+#      - ./backend/docker/mysql/.env
+#    user: "www-data"
+#
+#  yii2_nginx:
+#    container_name: "plizi_yii2_nginx"
+#    image: nginx
+#    ports:
+#      - "82:80"
+#    volumes:
+#      - ./yii2:/var/www/vhosts/edi
+#      - ./yii2/docker/etc/nginx:/etc/nginx
+#    depends_on:
+#      - yii2_fpm
+
 volumes:
   mysql_data_plizi:
   redis_data_plizi:
