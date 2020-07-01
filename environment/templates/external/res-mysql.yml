@@ -58,7 +58,9 @@ Resources:
   MySQL:
     Type: AWS::RDS::DBInstance
     Properties:
-      AllocatedStorage: '10' # TODO Adjust for highload. GB of storage
+      AllocatedStorage: '100' # TODO Adjust for highload. GB of storage
+      StorageType: 'io1'
+      Iops: 1000
       DBInstanceClass: db.m4.large
       Engine: MySQL
       #DBSnapshotIdentifier: !Ref 'MySQLDBName'
