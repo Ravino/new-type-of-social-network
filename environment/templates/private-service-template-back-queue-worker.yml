@@ -70,6 +70,120 @@ Parameters:
     Default: ""
     Description: (Optional) An IAM role to give the service's containers if the code within needs to
                 access other AWS resources like S3 buckets, DynamoDB tables, etc
+
+  # env vars
+  ApiUrl:
+    Type: String
+    Default: "https://dev.plizi.fun/"
+    Description: Path to external api dns.
+  AppDebug:
+    Type: Number
+    Default: 1
+    Description: Is application in debug mode?
+  AppEnv:
+    Type: String
+    Default: "production"
+    Description: Type of environment that service running on.
+  AppKey:
+    Type: String
+    Default: "base64:B+SfHGdTdca+dxR4pzJ2SRrqFpF1gFS/pgZTHNxDbhw"
+    Description: Application authorization secrets.
+  AppName:
+    Type: String
+    Default: "PLIZI: Социальная сеть"
+    Description: Application displayable name.
+  AwsAccessKeyId:
+    Type: String
+    Default: "AKIAIBMISJ3W5T6P3ULA"
+    Description: AWS access key id.
+  AwsSecretAccessKey:
+    Type: String
+    Default: "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"
+    Description: AWS access secret.
+  AwsDefaultRegion:
+    Type: String
+    Default: "eu-central-1"
+    Description: AWS region service hosted on.
+  AwsBucket:
+    Type: String
+    Default: "plizibuck"
+    Description: S2 bucket for assets storing.
+  JwtBlacklistEnabled:
+    Type: Number
+    Default: 1
+    Description: JWT blacklist.
+  JwtTtl:
+    Type: Number
+    Default: 4320
+    Description: JWT TTL.
+  LadaCacheActive:
+    Type: Number
+    Default: 0
+    Description: Caching dublicated queries.
+  MailEncryption:
+    Type: String
+    Default: "tls"
+    Description: Mail encryption.
+  MailFromAddress:
+    Type: String
+    Default: "no-reply@plizi.info"
+    Description: Send emails from address.
+  MailFromName:
+    Type: String
+    Default: "PLIZI Социальная сеть"
+    Description: Send emails from name.
+  MailHost:
+    Type: String
+    Default: "mail.plizi.info"
+    Description: Mailer host.
+  MailMailer:
+    Type: String
+    Default: "smtp"
+    Description: Mailer type.
+  MailPassword:
+    Type: String
+    Default: "fereamea78"
+    Description: Mail password.
+  MailPort:
+    Type: Number
+    Default: 587
+    Description: Mailer port.
+  MailUsername:
+    Type: String
+    Default: "no-reply@plizi.info"
+    Description: Mail username.
+  Neo4DbBoltPort:
+    Type: Number
+    Default: 7687
+    Description: Neo4j Graph database bolt port.
+  Neo4DbHost:
+    Type: String
+    Default: "10.10.19.212"
+    Description: Neo4j Graph database host.
+  Neo4DbHttpPort:
+    Type: Number
+    Default: 7474
+    Description: Neo4j Graph database http port.
+  Neo4DbPassword:
+    Type: String
+    Default: "zKisCPceY6WzTP1R"
+    Description: Neo4j Graph database password.
+  Neo4DbUsername:
+    Type: String
+    Default: "neo4j"
+    Description: Neo4j Graph database username.
+  QueueConnection:
+    Type: String
+    Default: "redis"
+    Description: Queue connection type [sync, redis, rebbitmq].
+  SentryLaravelDsn:
+    Type: String
+    Default: "http://89feb2eb67c741c29d06f1204b809e87@ec2-3-125-155-176.eu-central-1.compute.amazonaws.com/2"
+    Description: Sentry exception logger host.
+  SwooleHttpHost:
+    Type: String
+    Default: "0.0.0.0"
+    Description: Swoole http host.
 Conditions:
   HasCustomRole: !Not [ !Equals [!Ref 'Role', ''] ]
 
@@ -104,64 +218,112 @@ Resources:
           PortMappings:
             - ContainerPort: !Ref 'ContainerPort'
           Environment:
-            - Name: AppDebug
-              Value: "0" # Is application in debug mode?
-            - Name: AppEnv
-              Value: "Development" # Is application in debug mode?: # Type of environment that service running on.
-            - Name: ApiUrl
-              Value: "https://dev.plizi.fun/" # Path to external api dns.
-            - Name: AppKey
-              Value: "base64:B+SfHGdTdca+dxR4pzJ2SRrqFpF1gFS/pgZTHNxDbhw" # Application authorization secrets.
-            - Name: AppName
-              Value: "PLIZI: Социальная сеть" # Application displayable name.
-            - Name: AwsAccessKeyId
-              Value: "AKIAIBMISJ3W5T6P3ULA" # AWS access key id.
-            - Name: AwsSecretAccessKey
-              Value: "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" # AWS access secret.
-            - Name: AwsDefaultRegion
-              Value: "eu-central-1" # AWS region service hosted on.
-            - Name: AwsBucket
-              Value: "plizibuck" # S2 bucket for assets storing.
-            - Name: DbConnection
-              Value: "mysql" # Database connection type.
-            - Name: JwtBlacklistEnabled
-              Value: "1" # JWT blacklist.
-            - Name: JwtTtl
-              Value: "4320" # JWT TTL.
-            - Name: LadaCacheActive
-              Value: "0" # Caching dublicated queries.
-            - Name: MailEncryption
-              Value: "tls" # Mail encryption.
-            - Name: MailFromAddress
-              Value: "no-reply@plizi.info" # Send emails from address.
-            - Name: MailFromName
-              Value: "PLIZI Социальная сеть" # Send emails from name.
-            - Name: MailHost
-              Value: "mail.plizi.info" # Mailer host.
-            - Name: MailMailer
-              Value: "smtp" # Mailer type.
-            - Name: MailPassword
-              Value: "fereamea78" # Mail password.
-            - Name: MailPort
-              Value: "587" # Mailer port.
-            - Name: MailUsername
-              Value: "no-reply@plizi.info" # Mail username
-            - Name: "Neo4DbBoltPort"
-              Value: "7687" # Neo4j Graph database bolt port.
-            - Name: Neo4DbHost
-              Value: "10.10.19.212" # Neo4j Graph database host.
-            - Name: Neo4DbHttpPort
-              Value: "7474" # Neo4j Graph database http port.
-            - Name: Neo4DbPassword
-              Value: "zKisCPceY6WzTP1R" # Neo4j Graph database password.
-            - Name: Neo4DbUsername
-              Value: "neo4j" # Neo4j Graph database username.
-            - Name: QueueConnection
-              Value: "redis" # Queue connection type [sync redis rebbitmq].
-            - Name: SentryLaravelDsn
-              Value: "http://89feb2eb67c741c29d06f1204b809e87@ec2-3-125-155-176.eu-central-1.compute.amazonaws.com/2" # Sentry exception logger host.
-            - Name: SwooleHttpHost
-              Value: "0.0.0.0" # Swoole http host.
+            - Name: API_URL
+              Value: !Ref 'ApiUrl'
+            - Name: APP_DEBUG
+              Value: !Ref 'AppDebug'
+            - Name: APP_ENV
+              Value: !Ref 'AppEnv'
+            - Name: APP_KEY
+              Value: !Ref 'AppKey'
+            - Name: APP_NAME
+              Value: !Ref 'AppName'
+            - Name: AWS_ACCESS_KEY_ID
+              Value: !Ref 'AwsAccessKeyId'
+            - Name: AWS_SECRET_ACCESS_KEY
+              Value: !Ref 'AwsSecretAccessKey'
+            - Name: AWS_DEFAULT_REGION
+              Value: !Ref 'AwsDefaultRegion'
+            - Name: AWS_BUCKET
+              Value: !Ref 'AwsBucket'
+            - Name: JWT_BLACKLIST_ENABLED
+              Value: !Ref 'JwtBlacklistEnabled'
+            - Name: JWT_TTL
+              Value: !Ref 'JwtTtl'
+            - Name: LADA_CACHE_ACTIVE
+              Value: !Ref 'LadaCacheActive'
+            - Name: MAIL_ENCRYPTION
+              Value: !Ref 'MailEncryption'
+            - Name: MAIL_FROM_ADDRESS
+              Value: !Ref 'MailFromAddress'
+            - Name: MAIL_FROM_NAME
+              Value: !Ref 'MailFromName'
+            - Name: MAIL_HOST
+              Value: !Ref 'MailHost'
+            - Name: MAIL_MAILER
+              Value: !Ref 'MailMailer'
+            - Name: MAIL_PASSWORD
+              Value: !Ref 'MailPassword'
+            - Name: MAIL_PORT
+              Value: !Ref 'MailPort'
+            - Name: MAIL_USERNAME
+              Value: !Ref 'MailUsername'
+            - Name: NEO4_DB_BOLT_PORT
+              Value: !Ref 'Neo4DbBoltPort'
+            - Name: NEO4_DB_HOST
+              Value: !Ref 'Neo4DbHost'
+            - Name: NEO4_DB_HTTP_PORT
+              Value: !Ref 'Neo4DbHttpPort'
+            - Name: NEO4_DB_PASSWORD
+              Value: !Ref 'Neo4DbPassword'
+            - Name: NEO4_DB_USERNAME
+              Value: !Ref 'Neo4DbUsername'
+            - Name: QUEUE_CONNECTION
+              Value: !Ref 'QueueConnection'
+            - Name: SENTRY_LARAVEL_DSN
+              Value: !Ref 'SentryLaravelDsn'
+            - Name: SWOOLE_HTTP_HOST
+              Value: !Ref 'SwooleHttpHost'
+            - Name: ZMQ_SUB_HOST
+              Value: 'dev-ws.plizi.fun'
+            - Name: ENV_NAME
+              Value: !Ref 'EnvironmentName'
+            - Name: REGION
+              Value: !Ref 'AWS::Region'
+            - Name: DB_DATABASE
+              Value:
+                Fn::ImportValue:
+                  !Join [':', [!Ref 'EnvironmentName', 'MySQLDBName']]
+            - Name: DB_HOST
+              Value:
+                Fn::ImportValue:
+                  !Join [':', [!Ref 'EnvironmentName', 'MySQLDBHost']]
+            - Name: DB_PASSWORD
+              Value:
+                Fn::ImportValue:
+                  !Join [':', [!Ref 'EnvironmentName', 'MySQLDBPass']]
+            - Name: DB_PORT
+              Value:
+                Fn::ImportValue:
+                  !Join [':', [!Ref 'EnvironmentName', 'MySQLDBPort']]
+            - Name: DB_USERNAME
+              Value:
+                Fn::ImportValue:
+                  !Join [':', [!Ref 'EnvironmentName', 'MySQLDBUser']]
+            - Name: MONGO_DB_HOST
+              Value:
+                Fn::ImportValue:
+                  !Join [':', [!Ref 'EnvironmentName', 'MongoDBHost']]
+            - Name: MONGO_DB_PASSWORD
+              Value:
+                Fn::ImportValue:
+                  !Join [':', [!Ref 'EnvironmentName', 'MongoDBUser']]
+            - Name: MONGO_DB_USERNAME
+              Value:
+                Fn::ImportValue:
+                  !Join [':', [!Ref 'EnvironmentName', 'MongoDBPass']]
+            - Name: REDIS_HOST
+              Value:
+                Fn::ImportValue:
+                  !Join [':', [!Ref 'EnvironmentName', 'RedisHost']]
+            - Name: REDIS_PORT
+              Value:
+                Fn::ImportValue:
+                  !Join [':', [!Ref 'EnvironmentName', 'RedisPort']]
+            - Name: ZMQ_SUB_HOST
+              Value:
+                Fn::ImportValue:
+                  !Join [':', [!Ref 'EnvironmentName', 'InternalUrl']]
           LogConfiguration:
             LogDriver: 'awslogs'
             Options:
