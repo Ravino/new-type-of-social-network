@@ -69,7 +69,7 @@ Parameters:
   # env vars
   ApiUrl:
     Type: String
-    Default: "https://dev.plizi.fun/"
+    Default: "dev.plizi.fun"
     Description: Path to external api dns.
   AppDebug:
     Type: Number
@@ -173,7 +173,7 @@ Parameters:
     Description: Queue connection type [sync, redis, rebbitmq].
   SentryLaravelDsn:
     Type: String
-    Default: "http://89feb2eb67c741c29d06f1204b809e87@ec2-3-125-155-176.eu-central-1.compute.amazonaws.com/2"
+    Default: "ec2-54-93-211-65.eu-central-1.compute.amazonaws.com"
     Description: Sentry exception logger host.
   SwooleHttpHost:
     Type: String

@@ -4,7 +4,7 @@ env:
   variables:
     AppDebug: 1 # Is application in debug mode?
     AppEnv: "Development" # Type of environment that service running on.
-    ApiUrl: "https://dev.plizi.fun/" # Path to external api dns.
+    ApiUrl: "dev.plizi.fun" # Path to external api dns.
     AppKey: "base64:B+SfHGdTdca+dxR4pzJ2SRrqFpF1gFS/pgZTHNxDbhw" # Application authorization secrets.
     AppName: "PLIZI: Социальная сеть" # Application displayable name.
     AwsAccessKeyId: "AKIAIBMISJ3W5T6P3ULA" # AWS access key id.
@@ -29,7 +29,7 @@ env:
     Neo4DbPassword: "zKisCPceY6WzTP1R" # Neo4j Graph database password.
     Neo4DbUsername: "neo4j" # Neo4j Graph database username.
     QueueConnection: "redis" # Queue connection type [sync redis rebbitmq].
-    SentryLaravelDsn: "http://89feb2eb67c741c29d06f1204b809e87@ec2-3-125-155-176.eu-central-1.compute.amazonaws.com/2" # Sentry exception logger host.
+    SentryLaravelDsn: "ec2-54-93-211-65.eu-central-1.compute.amazonaws.com" # Sentry exception logger host.
     SwooleHttpHost: "0.0.0.0" # Swoole http host.
 
 proxy:
