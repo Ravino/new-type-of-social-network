@@ -35,7 +35,6 @@ Thumbs.db
 *.bak
 
 /public/apl.html
-/public/index.html
 /public/js/app.js
 /public/css/app.css
 
