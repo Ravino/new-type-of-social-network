@@ -6,7 +6,7 @@
         "ServiceProtocol": "HTTP",
         "ContainerCpu": "256",
         "ContainerMemory": "512",
-        "Path": "dev-ws.satest.space",
+        "Path": "dev-ws.plizi.fun",
         "Priority": "30"
     }
 }

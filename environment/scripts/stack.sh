@@ -90,6 +90,13 @@ function delete {
     # # remove s3
     # aws s3 rb ${S3_BUCKET_NAME} --force
 }
+function delete-service-stacks {
+    # removing application service stacks
+    aws cloudformation delete-stack --stack-name ${SERVICE_STACK_PREFIX}-back-ws --role-arn ${ARN_ROLE}
+    aws cloudformation delete-stack --stack-name ${SERVICE_STACK_PREFIX}-back-queue-worker --role-arn ${ARN_ROLE}
+    aws cloudformation delete-stack --stack-name ${SERVICE_STACK_PREFIX}-back-api --role-arn ${ARN_ROLE}
+    aws cloudformation delete-stack --stack-name ${SERVICE_STACK_PREFIX}-front-nginx --role-arn ${ARN_ROLE}
+}
 
 RESULTS=`$@`
 echo $RESULTS

@@ -127,7 +127,7 @@ Parameters:
   # env vars
   ApiUrl:
     Type: String
-    Default: "dev.satest.space"
+    Default: "dev.plizi.fun"
     Description: Path to external api dns.
   AppDebug:
     Type: Number
@@ -333,7 +333,7 @@ Resources:
             - Name: SWOOLE_HTTP_HOST
               Value: !Ref 'SwooleHttpHost'
             - Name: ZMQ_SUB_HOST
-              Value: 'dev-ws.satest.space'
+              Value: 'dev-ws.plizi.fun'
             - Name: ENV_NAME
               Value: !Ref 'EnvironmentName'
             - Name: REGION

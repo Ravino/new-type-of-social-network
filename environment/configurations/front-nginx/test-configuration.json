@@ -6,7 +6,7 @@
         "ServiceProtocol": "HTTP",
         "ContainerCpu": "512",
         "ContainerMemory": "1024",
-        "Path": "dev.satest.space",
+        "Path": "dev.plizi.fun",
         "Priority": "40",
         "MinCapacity": "1",
         "DesiredCount": "2",
