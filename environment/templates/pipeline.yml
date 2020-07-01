@@ -638,28 +638,28 @@ Resources:
               - Name: RolesDeployOutput
             RunOrder: 1
 
-        #   - Name: Mongo
-        #     ActionTypeId:
-        #       Category: Deploy
-        #       Owner: AWS
-        #       Version: '1'
-        #       Provider: CloudFormation
-        #     Configuration:
-        #       ActionMode: CREATE_UPDATE
-        #       Capabilities: CAPABILITY_IAM
-        #       ChangeSetName: !Sub "${AWS::Region}-${EnvironmentName}-mongo-changeset"
-        #       RoleArn: !GetAtt CloudFormationDeployRole.Arn
-        #       StackName: !Sub "${AWS::Region}-${EnvironmentName}-mongo"
-        #       TemplatePath: Source::environment/templates/external/res-mongo.yml
-        #       ParameterOverrides: !Sub |
-        #         {
-        #           "EnvironmentName": "${EnvironmentName}"
-        #         }
-        #     InputArtifacts:
-        #       - Name: Source
-        #     OutputArtifacts:
-        #       - Name: MongoDeployOutput
-        #     RunOrder: 2
+          - Name: Mongo
+            ActionTypeId:
+              Category: Deploy
+              Owner: AWS
+              Version: '1'
+              Provider: CloudFormation
+            Configuration:
+              ActionMode: CREATE_UPDATE
+              Capabilities: CAPABILITY_IAM
+              ChangeSetName: !Sub "${AWS::Region}-${EnvironmentName}-mongo-changeset"
+              RoleArn: !GetAtt CloudFormationDeployRole.Arn
+              StackName: !Sub "${AWS::Region}-${EnvironmentName}-mongo"
+              TemplatePath: Source::environment/templates/external/res-mongo.yml
+              ParameterOverrides: !Sub |
+                {
+                  "EnvironmentName": "${EnvironmentName}"
+                }
+            InputArtifacts:
+              - Name: Source
+            OutputArtifacts:
+              - Name: MongoDeployOutput
+            RunOrder: 2
 
         #   - Name: MySQL
         #     ActionTypeId:
@@ -684,7 +684,7 @@ Resources:
         #       - Name: MySQLDeployOutput
         #     RunOrder: 2
 
-        #   - Name: Redis
+        # #   - Name: Redis
         #     ActionTypeId:
         #       Category: Deploy
         #       Owner: AWS

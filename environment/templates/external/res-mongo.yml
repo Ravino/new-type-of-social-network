@@ -84,7 +84,7 @@ Outputs:
     Export:
       Name: !Join [ ':', [ !Ref 'EnvironmentName', 'MongoDBName' ] ]
   MongoDBHost:
-    Value: !GetAtt 'MongoDB.Endpoint' # TODO Possibly should be changed to MongoInstance.Endpoint
+    Value: !GetAtt 'MongoInstance.Endpoint' # TODO Possibly should be changed to MongoInstance.Endpoint
     Export:
       Name: !Join [ ':', [ !Ref 'EnvironmentName', 'MongoDBHost' ] ]
   MongoDBUser:
