@@ -557,12 +557,12 @@ Resources:
           Id: !Ref KMSKeyArn
           Type: KMS
       DisableInboundStageTransitions:
-        - StageName: Resources
-          Reason: "Disabling ressources assembling before cluster would be ready."
-        #- StageName: Services
-        #  Reason: "Disabling services assembling before resources would be ready."
-        #- StageName: Deploy
-        #  Reason: "We have to make sure images are build in a right way."
+        - StageName: Cluster
+          Reason: "Force disable pipeline updates."
+        - StageName: Services
+          Reason: "Disabling services assembling before resources would be ready."
+        - StageName: Deploy
+          Reason: "We have to make sure images are build in a right way."
       Stages:
 
         # First we have to pull the source code from the Github repository.
@@ -707,8 +707,8 @@ Resources:
 #                - Name: RedisDeployOutput
 #              RunOrder: 2
 #
-        # - Name: Services
-        #   Actions:
+        - Name: Services
+          Actions:
             # - Name: back-ws
             #   ActionTypeId:
             #     Category: Build

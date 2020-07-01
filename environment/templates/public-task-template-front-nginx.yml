@@ -217,7 +217,7 @@ Resources:
       #HealthCheckPath: /
       #HealthCheckProtocol: HTTP
       #HealthCheckTimeoutSeconds: 5
-      HealthyThresholdCount: 2
+      #HealthyThresholdCount: 2
       TargetType: ip
       Name: !Ref 'ServiceName'
       Port: !Ref 'ContainerPort'
@@ -227,7 +227,7 @@ Resources:
           Value: 'true' # TODO possible reason of issues for WebSockets are not forwarding messages
         - Key: deregistration_delay.timeout_seconds
           Value: '30' # TODO possible reason of issues for WebSockets are not forwarding messages
-      UnhealthyThresholdCount: 2
+      #UnhealthyThresholdCount: 2
       VpcId:
         Fn::ImportValue:
           !Join [':', [!Ref 'EnvironmentName', 'VPCId']]
