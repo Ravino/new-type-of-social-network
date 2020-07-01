@@ -47,6 +47,15 @@ Resources:
       SourceSecurityGroupId:
         Fn::ImportValue:
           !Join [':', [!Ref 'EnvironmentName', 'FargateContainerSecurityGroup']]
+  MyAWSRDSDBParameterGroup:
+    Type: 'AWS::RDS::DBParameterGroup'
+    Properties:
+        Description: MySQL DB Parameter Group Description
+        Family: MySQL8.0
+        Parameters: {
+          "log_bin_trust_function_creators": "1"
+        }
+
   MySQL:
     Type: AWS::RDS::DBInstance
     Properties:
