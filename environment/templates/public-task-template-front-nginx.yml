@@ -243,7 +243,7 @@ Resources:
         - TargetGroupArn: !Ref 'TargetGroup'
           Type: 'forward'
       Conditions:
-        - Field: path-pattern
+        - Field: host-header
           Values: [!Ref 'Path']
       ListenerArn:
         Fn::ImportValue:
@@ -256,7 +256,7 @@ Resources:
   #       - TargetGroupArn: !Ref 'TargetGroup'
   #         Type: 'forward'
   #     Conditions:
-  #       - Field: path-pattern
+  #       - Field: host-header
   #         Values: [!Ref 'Path']
   #     ListenerArn:
   #       Fn::ImportValue:
