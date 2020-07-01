@@ -361,7 +361,7 @@ Resources:
        Type: LOCAL
      Environment:
        Type: LINUX_CONTAINER
-       ComputeType: BUILD_GENERAL1_SMALL
+       ComputeType: BUILD_GENERAL1_MEDIUM #BUILD_GENERAL1_SMALL
        PrivilegedMode: true
        Image: aws/codebuild/standard:4.0
        ImagePullCredentialsType: CODEBUILD
@@ -457,7 +457,7 @@ Resources:
        Type: LOCAL
      Environment:
        Type: LINUX_CONTAINER
-       ComputeType: BUILD_GENERAL1_SMALL
+       ComputeType: BUILD_GENERAL1_MEDIUM #BUILD_GENERAL1_SMALL
        PrivilegedMode: true
        Image: aws/codebuild/standard:4.0
        ImagePullCredentialsType: CODEBUILD
@@ -547,7 +547,7 @@ Resources:
        Type: LOCAL
      Environment:
        Type: LINUX_CONTAINER
-       ComputeType: BUILD_GENERAL1_SMALL
+       ComputeType: BUILD_GENERAL1_MEDIUM #BUILD_GENERAL1_SMALL
        PrivilegedMode: true
        Image: aws/codebuild/standard:4.0
        ImagePullCredentialsType: CODEBUILD
@@ -643,7 +643,7 @@ Resources:
        Type: LOCAL
      Environment:
        Type: LINUX_CONTAINER
-       ComputeType: BUILD_GENERAL1_SMALL
+       ComputeType: BUILD_GENERAL1_MEDIUM #BUILD_GENERAL1_SMALL
        PrivilegedMode: true
        Image: aws/codebuild/standard:4.0
        ImagePullCredentialsType: CODEBUILD
