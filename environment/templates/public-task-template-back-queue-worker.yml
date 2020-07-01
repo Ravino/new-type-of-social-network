@@ -365,11 +365,11 @@ Resources:
             - Name: MONGO_DB_PASSWORD
               Value:
                 Fn::ImportValue:
-                  !Join [':', [!Ref 'EnvironmentName', 'MongoDBUser']]
+                  !Join [':', [!Ref 'EnvironmentName', 'MongoDBPass']]
             - Name: MONGO_DB_USERNAME
               Value:
                 Fn::ImportValue:
-                  !Join [':', [!Ref 'EnvironmentName', 'MongoDBPass']]
+                  !Join [':', [!Ref 'EnvironmentName', 'MongoDBUser']]
             - Name: REDIS_HOST
               Value:
                 Fn::ImportValue:
