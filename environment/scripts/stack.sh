@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # configurations
-PROJECT_NAME="plizi-2"
+PROJECT_NAME="plizi"
 ENV="test"
 REGION="eu-central-1"
 # stack names
@@ -96,6 +96,11 @@ function delete-service-stacks {
     aws cloudformation delete-stack --stack-name ${SERVICE_STACK_PREFIX}-back-queue-worker --role-arn ${ARN_ROLE}
     aws cloudformation delete-stack --stack-name ${SERVICE_STACK_PREFIX}-back-api --role-arn ${ARN_ROLE}
     aws cloudformation delete-stack --stack-name ${SERVICE_STACK_PREFIX}-front-nginx --role-arn ${ARN_ROLE}
+}
+function continue-rollback() {
+    aws cloudformation continue-update-rollback --stack-name ${SERVICE_STACK_PREFIX}-front-nginx --role-arn ${ARN_ROLE}
+    #aws cloudformation continue-update-rollback --stack-name ${RESOURCE_NAME}-mongo --role-arn ${ARN_ROLE}
+    #
 }
 
 RESULTS=`$@`
