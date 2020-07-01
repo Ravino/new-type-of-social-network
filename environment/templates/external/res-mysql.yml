@@ -58,6 +58,7 @@ Resources:
       MasterUsername: !Ref 'MySQLDBMasterUsername'
       MasterUserPassword: !Ref 'MySQLDBMasterUserPassword'
       DBSubnetGroupName: !Ref 'MySQLSubnetGroup'
+      PubliclyAccessible: true
       VPCSecurityGroups:
         - !GetAtt 'MySQLSecurityGroup.GroupId'
       MultiAZ: true
