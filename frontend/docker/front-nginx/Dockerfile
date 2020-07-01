@@ -1,5 +1,12 @@
+FROM node:12.18.2-alpine3.12 as builder
+ENV NODE_ENV='development'
+ENV API_URL='http://dev-api.plizi.fun:1215'
+ENV WS_URL='ws://dev-ws.plizi.fun:7070'
+RUN npm install  
+RUN npm run build
+ 
 FROM nginx:stable
-COPY dist /app
+COPY --from=builder dist /app
 COPY docker/front-nginx/default.example.conf /etc/nginx/conf.d/default.conf
 COPY docker/front-nginx/nginx.exanple.conf /etc/nginx/nginx.conf
 
