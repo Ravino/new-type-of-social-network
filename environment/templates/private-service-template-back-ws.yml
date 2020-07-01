@@ -398,5 +398,5 @@ Resources:
           Values: [!Ref 'Path']
       ListenerArn:
         Fn::ImportValue:
-          !Join [':', [!Ref 'EnvironmentName', 'PrivateListener']]
+          !Join [':', [!Ref 'EnvironmentName', 'PrivateListenerWS']]
       Priority: !Ref 'Priority'

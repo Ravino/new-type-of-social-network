@@ -298,7 +298,7 @@ Resources:
       Protocol: HTTP
       #UnhealthyThresholdCount: 2
       VpcId: !Ref 'VPC'
-  PublicLoadBalancerListener:
+  PublicLoadBalancerListenerNginx:
     Type: AWS::ElasticLoadBalancingV2::Listener
     Properties:
       DefaultActions:
@@ -307,6 +307,24 @@ Resources:
       LoadBalancerArn: !Ref 'PublicLoadBalancer'
       Port: 80
       Protocol: HTTP
+  PublicLoadBalancerListenerApi:
+    Type: AWS::ElasticLoadBalancingV2::Listener
+    Properties:
+      DefaultActions:
+        - TargetGroupArn: !Ref 'DummyTargetGroupPublic'
+          Type: 'forward'
+      LoadBalancerArn: !Ref 'PublicLoadBalancer'
+      Port: 1215
+      Protocol: TCP
+  PublicLoadBalancerListenerWS:
+    Type: AWS::ElasticLoadBalancingV2::Listener
+    Properties:
+      DefaultActions:
+        - TargetGroupArn: !Ref 'DummyTargetGroupPublic'
+          Type: 'forward'
+      LoadBalancerArn: !Ref 'PublicLoadBalancer'
+      Port: 7070
+      Protocol: TCP
 
   # An internal load balancer, this would be used for a service that is not
   # directly accessible to the public, but instead should only receive traffic
@@ -351,7 +369,7 @@ Resources:
       Protocol: HTTP
       UnhealthyThresholdCount: 2
       VpcId: !Ref 'VPC'
-  PrivateLoadBalancerListener:
+  PrivateLoadBalancerListenerNginx:
     Type: AWS::ElasticLoadBalancingV2::Listener
     Properties:
       DefaultActions:
@@ -359,6 +377,24 @@ Resources:
           Type: 'forward'
       LoadBalancerArn: !Ref 'PrivateLoadBalancer'
       Port: 80
+      Protocol: HTTP
+  PrivateLoadBalancerListenerApi:
+    Type: AWS::ElasticLoadBalancingV2::Listener
+    Properties:
+      DefaultActions:
+        - TargetGroupArn: !Ref 'DummyTargetGroupPrivate'
+          Type: 'forward'
+      LoadBalancerArn: !Ref 'PrivateLoadBalancer'
+      Port: 1215
+      Protocol: HTTP
+  PrivateLoadBalancerListenerWS:
+    Type: AWS::ElasticLoadBalancingV2::Listener
+    Properties:
+      DefaultActions:
+        - TargetGroupArn: !Ref 'DummyTargetGroupPrivate'
+          Type: 'forward'
+      LoadBalancerArn: !Ref 'PrivateLoadBalancer'
+      Port: 7070
       Protocol: HTTP
 
   # This is an IAM role which authorizes ECS to manage resources on your
@@ -483,16 +519,36 @@ Outputs:
     Value: !GetAtt 'ECSTaskExecutionRole.Arn'
     Export:
       Name: !Join [ ':', [ !Ref 'EnvironmentName', 'ECSTaskExecutionRole' ] ]
-  PublicListener:
+  PublicListenerNginx:
     Description: The ARN of the public load balancer's Listener
-    Value: !Ref PublicLoadBalancerListener
+    Value: !Ref PublicLoadBalancerListenerNginx
     Export:
-      Name: !Join [ ':', [ !Ref 'EnvironmentName', 'PublicListener' ] ]
-  PrivateListener:
+      Name: !Join [ ':', [ !Ref 'EnvironmentName', 'PublicListenerNginx' ] ]
+  PublicListenerWS:
     Description: The ARN of the public load balancer's Listener
-    Value: !Ref PrivateLoadBalancerListener
+    Value: !Ref PublicLoadBalancerListenerWS
     Export:
-      Name: !Join [ ':', [ !Ref 'EnvironmentName', 'PrivateListener' ] ]
+      Name: !Join [ ':', [ !Ref 'EnvironmentName', 'PublicListenerWS' ] ]
+  PublicListenerApi:
+    Description: The ARN of the public load balancer's Listener
+    Value: !Ref PublicLoadBalancerListenerApi
+    Export:
+      Name: !Join [ ':', [ !Ref 'EnvironmentName', 'PublicListenerApi' ] ]
+  PrivateListenerNginx:
+    Description: The ARN of the public load balancer's Listener
+    Value: !Ref PrivateLoadBalancerListenerNginx
+    Export:
+      Name: !Join [ ':', [ !Ref 'EnvironmentName', 'PrivateListenerNginx' ] ]
+  PrivateListenerWS:
+    Description: The ARN of the public load balancer's Listener
+    Value: !Ref PrivateLoadBalancerListenerWS
+    Export:
+      Name: !Join [ ':', [ !Ref 'EnvironmentName', 'PrivateListenerWS' ] ]
+  PrivateListenerApi:
+    Description: The ARN of the public load balancer's Listener
+    Value: !Ref PrivateLoadBalancerListenerApi
+    Export:
+      Name: !Join [ ':', [ !Ref 'EnvironmentName', 'PrivateListenerApi' ] ]
   VPCId:
     Description: The ID of the VPC that this stack is deployed in
     Value: !Ref 'VPC'

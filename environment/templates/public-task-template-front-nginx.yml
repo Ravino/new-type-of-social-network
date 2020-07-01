@@ -247,7 +247,7 @@ Resources:
           Values: [!Ref 'Path']
       ListenerArn:
         Fn::ImportValue:
-          !Join [':', [!Ref 'EnvironmentName', 'PublicListener']]
+          !Join [':', [!Ref 'EnvironmentName', 'PublicListenerNginx']]
       Priority: !Ref 'Priority'
   # HTTPSRule:
   #   Type: AWS::ElasticLoadBalancingV2::ListenerRule
