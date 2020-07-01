@@ -2,8 +2,8 @@ FROM node:12.18.2-alpine3.12 as builder
 ENV NODE_ENV='development'
 ENV API_URL='http://dev-api.plizi.fun:1215'
 ENV WS_URL='ws://dev-ws.plizi.fun:7070'
-COPY frontend frontend
-WORKDIR frontend/
+COPY . .
+#WORKDIR frontend/
 RUN npm install  
 RUN npm run build
  
