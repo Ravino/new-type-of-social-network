@@ -384,50 +384,6 @@ Resources:
            Value: !Ref 'EnvironmentName'
          - Name: ServiceName
            Value: 'back-ws'
-         - Name: DB_DATABASE
-           Value:
-             Fn::ImportValue:
-               !Join [':', [!Ref 'EnvironmentName', 'MySQLDBName']]
-         - Name: DB_HOST
-           Value:
-             Fn::ImportValue:
-               !Join [':', [!Ref 'EnvironmentName', 'MySQLDBHost']]
-         - Name: DB_PASSWORD
-           Value:
-             Fn::ImportValue:
-               !Join [':', [!Ref 'EnvironmentName', 'MySQLDBPass']]
-         - Name: DB_PORT
-           Value:
-             Fn::ImportValue:
-               !Join [':', [!Ref 'EnvironmentName', 'MySQLDBPort']]
-         - Name: DB_USERNAME
-           Value:
-             Fn::ImportValue:
-               !Join [':', [!Ref 'EnvironmentName', 'MySQLDBUser']]
-         - Name: MONGO_DB_HOST
-           Value:
-             Fn::ImportValue:
-               !Join [':', [!Ref 'EnvironmentName', 'MongoDBHost']]
-         - Name: MONGO_DB_PASSWORD
-           Value:
-             Fn::ImportValue:
-               !Join [':', [!Ref 'EnvironmentName', 'MongoDBUser']]
-         - Name: MONGO_DB_USERNAME
-           Value:
-             Fn::ImportValue:
-               !Join [':', [!Ref 'EnvironmentName', 'MongoDBPass']]
-         - Name: REDIS_HOST
-           Value:
-             Fn::ImportValue:
-               !Join [':', [!Ref 'EnvironmentName', 'RedisHost']]
-         - Name: REDIS_PORT
-           Value:
-             Fn::ImportValue:
-               !Join [':', [!Ref 'EnvironmentName', 'RedisPort']]
-         - Name: ZMQ_SUB_HOST
-           Value:
-             Fn::ImportValue:
-               !Join [':', [!Ref 'EnvironmentName', 'InternalUrl']]
        # Artifacts:
        #   Type: S3
        #   Location: !GetAtt ''
@@ -480,50 +436,6 @@ Resources:
            Value: !Ref 'EnvironmentName'
          - Name: ServiceName
            Value: 'back-queue-worker'
-         - Name: DB_DATABASE
-           Value:
-             Fn::ImportValue:
-               !Join [':', [!Ref 'EnvironmentName', 'MySQLDBName']]
-         - Name: DB_HOST
-           Value:
-             Fn::ImportValue:
-               !Join [':', [!Ref 'EnvironmentName', 'MySQLDBHost']]
-         - Name: DB_PASSWORD
-           Value:
-             Fn::ImportValue:
-               !Join [':', [!Ref 'EnvironmentName', 'MySQLDBPass']]
-         - Name: DB_PORT
-           Value:
-             Fn::ImportValue:
-               !Join [':', [!Ref 'EnvironmentName', 'MySQLDBPort']]
-         - Name: DB_USERNAME
-           Value:
-             Fn::ImportValue:
-               !Join [':', [!Ref 'EnvironmentName', 'MySQLDBUser']]
-         - Name: MONGO_DB_HOST
-           Value:
-             Fn::ImportValue:
-               !Join [':', [!Ref 'EnvironmentName', 'MongoDBHost']]
-         - Name: MONGO_DB_PASSWORD
-           Value:
-             Fn::ImportValue:
-               !Join [':', [!Ref 'EnvironmentName', 'MongoDBUser']]
-         - Name: MONGO_DB_USERNAME
-           Value:
-             Fn::ImportValue:
-               !Join [':', [!Ref 'EnvironmentName', 'MongoDBPass']]
-         - Name: REDIS_HOST
-           Value:
-             Fn::ImportValue:
-               !Join [':', [!Ref 'EnvironmentName', 'RedisHost']]
-         - Name: REDIS_PORT
-           Value:
-             Fn::ImportValue:
-               !Join [':', [!Ref 'EnvironmentName', 'RedisPort']]
-         - Name: ZMQ_SUB_HOST
-           Value:
-             Fn::ImportValue:
-               !Join [':', [!Ref 'EnvironmentName', 'InternalUrl']]
      LogsConfig:
        CloudWatchLogs:
          GroupName: !Sub /code-build/${ProjectName}/back-queue-worker
@@ -570,50 +482,6 @@ Resources:
            Value: !Ref 'EnvironmentName'
          - Name: ServiceName
            Value: 'back-api'
-         - Name: DB_DATABASE
-           Value:
-             Fn::ImportValue:
-               !Join [':', [!Ref 'EnvironmentName', 'MySQLDBName']]
-         - Name: DB_HOST
-           Value:
-             Fn::ImportValue:
-               !Join [':', [!Ref 'EnvironmentName', 'MySQLDBHost']]
-         - Name: DB_PASSWORD
-           Value:
-             Fn::ImportValue:
-               !Join [':', [!Ref 'EnvironmentName', 'MySQLDBPass']]
-         - Name: DB_PORT
-           Value:
-             Fn::ImportValue:
-               !Join [':', [!Ref 'EnvironmentName', 'MySQLDBPort']]
-         - Name: DB_USERNAME
-           Value:
-             Fn::ImportValue:
-               !Join [':', [!Ref 'EnvironmentName', 'MySQLDBUser']]
-         - Name: MONGO_DB_HOST
-           Value:
-             Fn::ImportValue:
-               !Join [':', [!Ref 'EnvironmentName', 'MongoDBHost']]
-         - Name: MONGO_DB_PASSWORD
-           Value:
-             Fn::ImportValue:
-               !Join [':', [!Ref 'EnvironmentName', 'MongoDBUser']]
-         - Name: MONGO_DB_USERNAME
-           Value:
-             Fn::ImportValue:
-               !Join [':', [!Ref 'EnvironmentName', 'MongoDBPass']]
-         - Name: REDIS_HOST
-           Value:
-             Fn::ImportValue:
-               !Join [':', [!Ref 'EnvironmentName', 'RedisHost']]
-         - Name: REDIS_PORT
-           Value:
-             Fn::ImportValue:
-               !Join [':', [!Ref 'EnvironmentName', 'RedisPort']]
-         - Name: ZMQ_SUB_HOST
-           Value:
-             Fn::ImportValue:
-               !Join [':', [!Ref 'EnvironmentName', 'InternalUrl']]
        # Artifacts:
        #   Type: S3
        #   Location: !GetAtt ''
@@ -666,50 +534,6 @@ Resources:
            Value: !Ref 'EnvironmentName'
          - Name: ServiceName
            Value: 'front-nginx'
-         - Name: DB_DATABASE
-           Value:
-             Fn::ImportValue:
-               !Join [':', [!Ref 'EnvironmentName', 'MySQLDBName']]
-         - Name: DB_HOST
-           Value:
-             Fn::ImportValue:
-               !Join [':', [!Ref 'EnvironmentName', 'MySQLDBHost']]
-         - Name: DB_PASSWORD
-           Value:
-             Fn::ImportValue:
-               !Join [':', [!Ref 'EnvironmentName', 'MySQLDBPass']]
-         - Name: DB_PORT
-           Value:
-             Fn::ImportValue:
-               !Join [':', [!Ref 'EnvironmentName', 'MySQLDBPort']]
-         - Name: DB_USERNAME
-           Value:
-             Fn::ImportValue:
-               !Join [':', [!Ref 'EnvironmentName', 'MySQLDBUser']]
-         - Name: MONGO_DB_HOST
-           Value:
-             Fn::ImportValue:
-               !Join [':', [!Ref 'EnvironmentName', 'MongoDBHost']]
-         - Name: MONGO_DB_PASSWORD
-           Value:
-             Fn::ImportValue:
-               !Join [':', [!Ref 'EnvironmentName', 'MongoDBUser']]
-         - Name: MONGO_DB_USERNAME
-           Value:
-             Fn::ImportValue:
-               !Join [':', [!Ref 'EnvironmentName', 'MongoDBPass']]
-         - Name: REDIS_HOST
-           Value:
-             Fn::ImportValue:
-               !Join [':', [!Ref 'EnvironmentName', 'RedisHost']]
-         - Name: REDIS_PORT
-           Value:
-             Fn::ImportValue:
-               !Join [':', [!Ref 'EnvironmentName', 'RedisPort']]
-         - Name: ZMQ_SUB_HOST
-           Value:
-             Fn::ImportValue:
-               !Join [':', [!Ref 'EnvironmentName', 'InternalUrl']]
        # Artifacts:
        #   Type: S3
        #   Location: !GetAtt ''
