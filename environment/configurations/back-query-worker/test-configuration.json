@@ -7,6 +7,16 @@
         "ContainerCpu": "256",
         "ContainerMemory": "512",
         "Path": "dev-qw.plizi.fun",
-        "Priority": "20"
+        "Priority": "20",
+        "MinCapacity": "1",
+        "DesiredCount": "2",
+        "MaxCapacity": "5",
+        "LowCpuPeriodAlarm": "300",
+        "ScaleDownCooldown": "300",
+        "LowCpuThresholdAlarm": "20",
+        "HighCpuThresholdAlarm": "70",
+        "ScaleUpCooldown": "30",
+        "DeploymentMaximum": "200",
+        "DeploymentMinimum": "100"
     }
 }

@@ -803,7 +803,7 @@ Resources:
                 StackName: !Sub ${AWS::Region}-${EnvironmentName}-${ProjectName}-back-queue-worker
                 #OutputFileName: Source::back-queue-worker/output.json
                 TemplateConfiguration: !Sub "Source::environment/configurations/back-query-worker/${EnvironmentName}-configuration.json"
-                TemplatePath: Source::environment/templates/private-service-template-back-queue-worker.yml
+                TemplatePath: Source::environment/templates/public-service-template-back-queue-worker.yml
                 ParameterOverrides: !Sub |
                   {
                     "EnvironmentName": "${EnvironmentName}"
