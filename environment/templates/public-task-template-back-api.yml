@@ -161,9 +161,67 @@ Resources:
           Cpu: !Ref 'ContainerCpu'
           Memory: !Ref 'ContainerMemory'
           Image: !Ref 'ImageUrl'
-          #Environment:
           PortMappings:
             - ContainerPort: !Ref 'ContainerPort'
+          Environment:
+            - Name: AppDebug
+              Value: "0" # Is application in debug mode?
+            - Name: AppEnv
+              Value: "Development" # Is application in debug mode?: # Type of environment that service running on.
+            - Name: ApiUrl
+              Value: "https://dev.plizi.fun/" # Path to external api dns.
+            - Name: AppKey
+              Value: "base64:B+SfHGdTdca+dxR4pzJ2SRrqFpF1gFS/pgZTHNxDbhw" # Application authorization secrets.
+            - Name: AppName
+              Value: "PLIZI: Социальная сеть" # Application displayable name.
+            - Name: AwsAccessKeyId
+              Value: "AKIAIBMISJ3W5T6P3ULA" # AWS access key id.
+            - Name: AwsSecretAccessKey
+              Value: "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" # AWS access secret.
+            - Name: AwsDefaultRegion
+              Value: "eu-central-1" # AWS region service hosted on.
+            - Name: AwsBucket
+              Value: "plizibuck" # S2 bucket for assets storing.
+            - Name: DbConnection
+              Value: "mysql" # Database connection type.
+            - Name: JwtBlacklistEnabled
+              Value: "1" # JWT blacklist.
+            - Name: JwtTtl
+              Value: "4320" # JWT TTL.
+            - Name: LadaCacheActive
+              Value: "0" # Caching dublicated queries.
+            - Name: MailEncryption
+              Value: "tls" # Mail encryption.
+            - Name: MailFromAddress
+              Value: "no-reply@plizi.info" # Send emails from address.
+            - Name: MailFromName
+              Value: "PLIZI Социальная сеть" # Send emails from name.
+            - Name: MailHost
+              Value: "mail.plizi.info" # Mailer host.
+            - Name: MailMailer
+              Value: "smtp" # Mailer type.
+            - Name: MailPassword
+              Value: "fereamea78" # Mail password.
+            - Name: MailPort
+              Value: "587" # Mailer port.
+            - Name: MailUsername
+              Value: "no-reply@plizi.info" # Mail username
+            - Name: "Neo4DbBoltPort"
+              Value: "7687" # Neo4j Graph database bolt port.
+            - Name: Neo4DbHost
+              Value: "10.10.19.212" # Neo4j Graph database host.
+            - Name: Neo4DbHttpPort
+              Value: "7474" # Neo4j Graph database http port.
+            - Name: Neo4DbPassword
+              Value: "zKisCPceY6WzTP1R" # Neo4j Graph database password.
+            - Name: Neo4DbUsername
+              Value: "neo4j" # Neo4j Graph database username.
+            - Name: QueueConnection
+              Value: "redis" # Queue connection type [sync redis rebbitmq].
+            - Name: SentryLaravelDsn
+              Value: "http://89feb2eb67c741c29d06f1204b809e87@ec2-3-125-155-176.eu-central-1.compute.amazonaws.com/2" # Sentry exception logger host.
+            - Name: SwooleHttpHost
+              Value: "0.0.0.0" # Swoole http host.
           LogConfiguration:
             LogDriver: 'awslogs'
             Options:

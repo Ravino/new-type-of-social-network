@@ -1,37 +1,5 @@
 version: 0.2
 
-env:
-  variables:
-    AppDebug: 0 # Is application in debug mode?
-    AppEnv: "Prodution" # Type of environment that service running on.
-    ApiUrl: "https://dev.plizi.fun/" # Path to external api dns.
-    AppKey: "base64:B+SfHGdTdca+dxR4pzJ2SRrqFpF1gFS/pgZTHNxDbhw" # Application authorization secrets.
-    AppName: "PLIZI: Социальная сеть" # Application displayable name.
-    AwsAccessKeyId: "AKIAIBMISJ3W5T6P3ULA" # AWS access key id.
-    AwsSecretAccessKey: "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" # AWS access secret.
-    AwsDefaultRegion: "eu-central-1" # AWS region service hosted on.
-    AwsBucket: "plizibuck" # S2 bucket for assets storing.
-    DbConnection: "mysql" # Database connection type.
-    JwtBlacklistEnabled: 1 # JWT blacklist.
-    JwtTtl: 4320 # JWT TTL.
-    LadaCacheActive: 0 # Caching dublicated queries.
-    MailEncryption: "tls" # Mail encryption.
-    MailFromAddress: "no-reply@plizi.info" # Send emails from address.
-    MailFromName: "PLIZI Социальная сеть" # Send emails from name.
-    MailHost: "mail.plizi.info" # Mailer host.
-    MailMailer: "smtp" # Mailer type.
-    MailPassword: "fereamea78" # Mail password.
-    MailPort: 587 # Mailer port.
-    MailUsername: "no-reply@plizi.info" # Mail username
-    Neo4DbBoltPort: 7687 # Neo4j Graph database bolt port.
-    Neo4DbHost: "10.10.19.212" # Neo4j Graph database host.
-    Neo4DbHttpPort: 7474 # Neo4j Graph database http port.
-    Neo4DbPassword: "zKisCPceY6WzTP1R" # Neo4j Graph database password.
-    Neo4DbUsername: "neo4j" # Neo4j Graph database username.
-    QueueConnection: "redis" # Queue connection type [sync redis rebbitmq].
-    SentryLaravelDsn: "http://89feb2eb67c741c29d06f1204b809e87@ec2-3-125-155-176.eu-central-1.compute.amazonaws.com/2" # Sentry exception logger host.
-    SwooleHttpHost: "0.0.0.0" # Swoole http host.
-
 proxy:
   upload-artifacts: yes
   logs: yes
