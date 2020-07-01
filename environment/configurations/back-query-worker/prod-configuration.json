@@ -6,7 +6,7 @@
         "ServiceProtocol": "HTTP",
         "ContainerCpu": "256",
         "ContainerMemory": "512",
-        "Path": "/",
+        "Path": "dev-qw.satest.space",
         "Priority": "20"
     }
 }

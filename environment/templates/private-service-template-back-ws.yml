@@ -25,7 +25,6 @@ Parameters:
   # load balancing
   Path:
     Type: String
-    Default: "*ws-api.plizi.fun*"
     Description: A path on the load balancer that this service
                  should be connected to. Use * to send all load balancer
                  traffic to this service.
@@ -69,7 +68,7 @@ Parameters:
   # env vars
   ApiUrl:
     Type: String
-    Default: "dev.plizi.fun"
+    Default: "dev.satest.space"
     Description: Path to external api dns.
   AppDebug:
     Type: Number
@@ -276,7 +275,7 @@ Resources:
             - Name: SWOOLE_HTTP_HOST
               Value: !Ref 'SwooleHttpHost'
             - Name: ZMQ_SUB_HOST
-              Value: 'dev-ws.plizi.fun'
+              Value: 'dev-ws.satest.space'
             - Name: ENV_NAME
               Value: !Ref 'EnvironmentName'
             - Name: REGION

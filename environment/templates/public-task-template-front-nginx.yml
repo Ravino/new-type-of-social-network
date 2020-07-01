@@ -55,7 +55,6 @@ Parameters:
   # load balancing
   Path:
     Type: String
-    Default: "*ws-api.plizi.fun*"
     Description: A path on the load balancer that this service
                  should be connected to. Use * to send all load balancer
                  traffic to this service.

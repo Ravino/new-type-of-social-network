@@ -69,26 +69,26 @@ function delete {
     aws cloudformation delete-stack --stack-name ${SERVICE_STACK_PREFIX}-back-api --role-arn ${ARN_ROLE}
     aws cloudformation delete-stack --stack-name ${SERVICE_STACK_PREFIX}-front-nginx --role-arn ${ARN_ROLE}
     # removing resources stacks
-    aws cloudformation delete-stack --stack-name ${RESOURCE_NAME}-mysql --role-arn ${ARN_ROLE}
-    aws cloudformation delete-stack --stack-name ${RESOURCE_NAME}-redis --role-arn ${ARN_ROLE}
-    aws cloudformation delete-stack --stack-name ${RESOURCE_NAME}-mongo --role-arn ${ARN_ROLE}
-    # removing application cluster stacks
-    aws cloudformation delete-stack --stack-name ${RESOURCE_NAME}-resources --role-arn ${ARN_ROLE}
-    aws cloudformation delete-stack --stack-name ${STACK_FULL_NAME}-cluster --role-arn ${ARN_ROLE}
-    # remove main stack name - shouldn't remove before another res are removed
-    #aws cloudformation delete-stack --stack-name ${STACK_NAME} --role-arn ${ARN_ROLE}
-    # remove codebuild projects
-    aws codebuild delete-project --name ${PROJECT_NAME}-${REGION}-back-api-${ENV}
-    aws codebuild delete-project --name ${PROJECT_NAME}-${REGION}-back-queue-worker-${ENV}
-    aws codebuild delete-project --name ${PROJECT_NAME}-${REGION}-back-ws-${ENV}
-    aws codebuild delete-project --name ${PROJECT_NAME}-${REGION}-front-nginx-${ENV}
-    # remove ecr repositories
-    aws ecr delete-repository --repository-name ${SERVICE_STACK_PREFIX}-back-api --force
-    aws ecr delete-repository --repository-name ${SERVICE_STACK_PREFIX}-back-queue-worker --force
-    aws ecr delete-repository --repository-name ${SERVICE_STACK_PREFIX}-back-ws --force
-    aws ecr delete-repository --repository-name ${SERVICE_STACK_PREFIX}-front-nginx --force
-    # remove s3
-    aws s3 rb ${S3_BUCKET_NAME} --force
+    # aws cloudformation delete-stack --stack-name ${RESOURCE_NAME}-mysql --role-arn ${ARN_ROLE}
+    # aws cloudformation delete-stack --stack-name ${RESOURCE_NAME}-redis --role-arn ${ARN_ROLE}
+    # aws cloudformation delete-stack --stack-name ${RESOURCE_NAME}-mongo --role-arn ${ARN_ROLE}
+    # # removing application cluster stacks
+    # aws cloudformation delete-stack --stack-name ${RESOURCE_NAME}-resources --role-arn ${ARN_ROLE}
+    # aws cloudformation delete-stack --stack-name ${STACK_FULL_NAME}-cluster --role-arn ${ARN_ROLE}
+    # # remove main stack name - shouldn't remove before another res are removed
+    # #aws cloudformation delete-stack --stack-name ${STACK_NAME} --role-arn ${ARN_ROLE}
+    # # remove codebuild projects
+    # aws codebuild delete-project --name ${PROJECT_NAME}-${REGION}-back-api-${ENV}
+    # aws codebuild delete-project --name ${PROJECT_NAME}-${REGION}-back-queue-worker-${ENV}
+    # aws codebuild delete-project --name ${PROJECT_NAME}-${REGION}-back-ws-${ENV}
+    # aws codebuild delete-project --name ${PROJECT_NAME}-${REGION}-front-nginx-${ENV}
+    # # remove ecr repositories
+    # aws ecr delete-repository --repository-name ${SERVICE_STACK_PREFIX}-back-api --force
+    # aws ecr delete-repository --repository-name ${SERVICE_STACK_PREFIX}-back-queue-worker --force
+    # aws ecr delete-repository --repository-name ${SERVICE_STACK_PREFIX}-back-ws --force
+    # aws ecr delete-repository --repository-name ${SERVICE_STACK_PREFIX}-front-nginx --force
+    # # remove s3
+    # aws s3 rb ${S3_BUCKET_NAME} --force
 }
 
 RESULTS=`$@`
