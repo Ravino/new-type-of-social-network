@@ -81,7 +81,7 @@ Parameters:
     Description: Is application in debug mode?
   AppEnv:
     Type: String
-    Default: "development"
+    Default: "testing"
     Description: Type of environment that service running on.
   AppKey:
     Type: String
