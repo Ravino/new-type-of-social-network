@@ -6,5 +6,3 @@ COPY docker/front-nginx/nginx.exanple.conf /etc/nginx/nginx.conf
 HEALTHCHECK --interval=5s --timeout=30s \
   CMD curl --include --no-buffer \
           http://localhost:80 || exit 1
-
-ENTRYPOINT ["nginx -g 'daemon off;'"]
