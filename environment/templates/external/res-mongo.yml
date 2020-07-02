@@ -69,10 +69,10 @@ Resources:
         MasterUsername: !Ref 'MongoDBMasterUsername'
         MasterUserPassword: !Ref 'MongoDBMasterUserPassword'
         DBClusterParameterGroupName: !Ref 'MongoDBClusterParameterGroup'
-        EnableCloudwatchLogsExports:
-          - error
-          - general
-          - slowquery
+        #EnableCloudwatchLogsExports:
+        #  - error
+        #  - general
+        #  - slowquery
         #StorageEncrypted: true
         #KmsKeyId: string # 
         #PreferredMaintenanceWindow: string
