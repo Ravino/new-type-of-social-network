@@ -47,7 +47,7 @@ Resources:
     Type: AWS::DocDB::DBClusterParameterGroup
     Properties:
       Description: MongoDB cluster parameters group
-      Family: "mongodb"
+      Family: "docdb3.6"
       Parameters:
         audit_logs: "enabled" # prod: disabled
         tls: "disabled" # prod: enabled
