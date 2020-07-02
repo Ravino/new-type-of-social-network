@@ -229,21 +229,21 @@ Parameters:
     Type: String
     Default: "redis"
     Description: Queue connection type [sync, redis, rebbitmq].
-  SentryLaravelDsn:
-    Type: String
-    Default: "http://89feb2eb67c741c29d06f1204b809e87@sentry.plizi.info/2"
-    Description: Sentry exception logger host.
+  #SentryLaravelDsn:
+  #  Type: String
+  #  Default: "http://89feb2eb67c741c29d06f1204b809e87@sentry.plizi.info/2"
+  #  Description: Sentry exception logger host.
   SwooleHttpHost:
     Type: String
     Default: "0.0.0.0"
     Description: Swoole http host.
-  Role:
-    Type: String
-    Default: ""
-    Description: (Optional) An IAM role to give the service's containers if the code within needs to
-                access other AWS resources like S3 buckets, DynamoDB tables, etc
-Conditions:
-  HasCustomRole: !Not [ !Equals [!Ref 'Role', ''] ]
+  #Role:
+  #  Type: String
+  #  Default: ""
+  #  Description: (Optional) An IAM role to give the service's containers if the code within needs to
+  #              access other AWS resources like S3 buckets, DynamoDB tables, etc
+#Conditions:
+#  HasCustomRole: !Not [ !Equals [!Ref 'Role', ''] ]
 Resources:
   # A log group for storing the container logs for this service
   LogGroup:
@@ -440,7 +440,7 @@ Resources:
       TargetType: ip
       Name: !Ref 'ServiceName'
       Port: !Ref 'ContainerPort'
-      Protocol: !Ref ServiceProtocol
+      Protocol: !Ref 'ServiceProtocol'
       TargetGroupAttributes:
         - Key: stickiness.enabled
           Value: 'true' # TODO possible reason of issues for WebSockets are not forwarding messages
