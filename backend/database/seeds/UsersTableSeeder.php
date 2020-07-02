@@ -22,17 +22,16 @@ class UsersTableSeeder extends Seeder
             'alex@arma3.in.ua',
             'marianka.kabanova@arma3.in.ua',
             'everon@arma3.in.ua',
-            'everon@arma3.in.ua',
             'gastovsky@arma3.in.ua',
             'targettius@gmail.com'
         ];
-        $countOfUsers = App::environment() != 'testing' ? 10 : 1;
-
-        if (App::environment() != 'testing') {
-            $email1 = $this->command->ask('Enter email of first user', 'test@gmail.com');
-            $email2 = $this->command->ask('Enter email of admin user', 'admin@mail.com');
-            $countOfUsers = $this->command->ask('How many users you want to generate', 10);
-        }
+//        $countOfUsers = App::environment() != 'testing' ? 10 : 1;
+//
+//        if (App::environment() != 'testing') {
+//            $email1 = $this->command->ask('Enter email of first user', 'test@gmail.com');
+//            $email2 = $this->command->ask('Enter email of admin user', 'admin@mail.com');
+//            $countOfUsers = $this->command->ask('How many users you want to generate', 10);
+//        }
         $faker = Faker\Factory::create();
         for ($i = 0; $i <= 7; $i++) {
             $fakeEmail = $faker->email;
