@@ -1,13 +1,13 @@
 #!/bin/bash
 
 # configurations
-PROJECT_NAME="plizi"
+PROJECT_NAME="plizi-2"
 ENV="test"
 REGION="eu-central-1"
 # stack names
 STACK_NAME="${PROJECT_NAME}-${ENV}"
 RESOURCE_NAME="${REGION}-${ENV}"
-SERVICE_STACK_PREFIX="${REGION}-${ENV}-${PROJECT_NAME}"
+SERVICE_STACK_PREFIX="${REGION}-${ENV}-plizi"
 # roles and permissions
 ARN_ROLE_NAME="CloudFormationMasterRole"
 ARN_ROLE="arn:aws:iam::884088487044:role/"${ARN_ROLE_NAME}
