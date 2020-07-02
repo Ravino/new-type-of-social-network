@@ -55,20 +55,20 @@ Resources:
   MongoDBCluster:
     Type: 'AWS::DocDB::DBCluster'
     Properties:
-        Engine: "mongodb"
-        EngineVersion: "4.2.6" #TODO
+        #Engine: "mongodb"
+        #EngineVersion: "4.2.6" #TODO
         Port: 27017
         DBSubnetGroupName: !Ref 'MongoSubnetGroup'
         DeletionProtection: false
         VpcSecurityGroupIds:
           - Fn::ImportValue:
-            !Join [':', [!Ref 'EnvironmentName', 'FargateContainerSecurityGroup']]
+              !Join [':', [!Ref 'EnvironmentName', 'FargateContainerSecurityGroup']]
         #AvailabilityZones:
         #  - eu-central-1a
         #  - eu-central-1b
         MasterUsername: !Ref 'MongoDBMasterUsername'
         MasterUserPassword: !Ref 'MongoDBMasterUserPassword'
-        DBClusterParameterGroupName: !Ref MongoDBClusterParameterGroup
+        DBClusterParameterGroupName: !Ref 'MongoDBClusterParameterGroup'
         EnableCloudwatchLogsExports:
           - error
           - general
