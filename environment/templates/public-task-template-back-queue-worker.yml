@@ -139,7 +139,7 @@ Parameters:
     Description: Type of environment that service running on.
   AppKey:
     Type: String
-    Default: "base64:B+SfHGdTdca+dxR4pzJ2SRrqFpF1gFS/pgZTHNxDbhw"
+    Default: "base64:B+SfHGdTdca+dxR4pzJ2SRrqFpF1gFS/pgZTHNxDbhw="
     Description: Application authorization secrets.
   AppName:
     Type: String
@@ -169,6 +169,10 @@ Parameters:
     Type: Number
     Default: 4320
     Description: JWT TTL.
+  JwtSecret:
+    Type: Number
+    Default: "8WM7E3BeKd7uMjpt7Wpi7y4BTp0nAFzx14Pob5DPBLSbpyz8Io1dzqsKZqBx1QTr"
+    Description: JWT Secret
   LadaCacheActive:
     Type: Number
     Default: 0
@@ -298,6 +302,8 @@ Resources:
               Value: !Ref 'JwtBlacklistEnabled'
             - Name: JWT_TTL
               Value: !Ref 'JwtTtl'
+            - Name: JWT_SECRET
+              Value: !Ref 'JwtSecret'
             - Name: LADA_CACHE_ACTIVE
               Value: !Ref 'LadaCacheActive'
             - Name: MAIL_ENCRYPTION
