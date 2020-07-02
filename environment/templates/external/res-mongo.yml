@@ -43,41 +43,52 @@ Resources:
       SourceSecurityGroupId:
         Fn::ImportValue:
           !Join [':', [!Ref 'EnvironmentName', 'FargateContainerSecurityGroup']]
-  # MongoDBClusterParameterGroup:
-  #   Type: AWS::DocDB::DBClusterParameterGroup
-  #   Properties:
-  #     Description: MongoDB cluster parameters group
-  #     Family: "mongodb"
-  #     Name: "sampleParameterGroup"
-  #     Parameters:
-  #           audit_logs: "disabled"
-  #           tls: "enabled"
-  #           ttl_monitor: "enabled"
-  #     Tags:
-  #         - Key: "String"
-  #           Value: "String"
-  MongoDB:
-    Type: "AWS::DocDB::DBCluster"
+  MongoDBClusterParameterGroup:
+    Type: AWS::DocDB::DBClusterParameterGroup
     Properties:
-      #StorageEncrypted: true
-      #AvailabilityZones:
-       # - eu-central-1a
-       # - eu-central-1b
-       #- eu-central-1c  # TODO
-      Port: 27017
-      #DBClusterIdentifier: String
-      MasterUsername: !Ref 'MongoDBMasterUsername' #required
-      MasterUserPassword: !Ref 'MongoDBMasterUserPassword' #required
-      DBSubnetGroupName: !Ref 'MongoSubnetGroup'
-      VpcSecurityGroupIds:
-        - Fn::ImportValue:
+      Description: MongoDB cluster parameters group
+      Family: "mongodb"
+      Parameters:
+        audit_logs: "enabled" # prod: disabled
+        tls: "disabled" # prod: enabled
+        ttl_monitor: "disabled"
+  MongoDBCluster:
+    Type: 'AWS::DocDB::DBCluster'
+    Properties:
+        Engine: "mongodb"
+        EngineVersion: "4.2.6" #TODO
+        Port: 27017
+        DBSubnetGroupName: !Ref 'MongoSubnetGroup'
+        DeletionProtection: false
+        VpcSecurityGroupIds:
+          - Fn::ImportValue:
             !Join [':', [!Ref 'EnvironmentName', 'FargateContainerSecurityGroup']]
-      DeletionProtection: false
+        #AvailabilityZones:
+        #  - eu-central-1a
+        #  - eu-central-1b
+        MasterUsername: !Ref 'MongoDBMasterUsername'
+        MasterUserPassword: !Ref 'MongoDBMasterUserPassword'
+        DBClusterParameterGroupName: !Ref MongoDBClusterParameterGroup
+        EnableCloudwatchLogsExports:
+          - error
+          - general
+          - slowquery
+        #StorageEncrypted: true
+        #KmsKeyId: string # 
+        #PreferredMaintenanceWindow: string
+        #PreferredBackupWindow: string
+        #SnapshotIdentifier: string
+        #BackupRetentionPeriod: 7 # prod: required
+        #Tags:
+        #    -Value: string
+        #     Key: string
+
   MongoInstance:
     Type: "AWS::DocDB::DBInstance"
     Properties:
       DBInstanceClass: db.r5.large # TODO: Adjust on highload results
-      DBClusterIdentifier: !Ref 'MongoDB' #required
+      DBClusterIdentifier: !Ref 'MongoDBCluster' #required
+  
 Outputs:
   MongoDBName:
     Value: 'admin'
