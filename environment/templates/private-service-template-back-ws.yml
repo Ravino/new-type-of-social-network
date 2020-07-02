@@ -80,7 +80,7 @@ Parameters:
     Description: Type of environment that service running on.
   AppKey:
     Type: String
-    Default: "base64:B+SfHGdTdca+dxR4pzJ2SRrqFpF1gFS/pgZTHNxDbhw"
+    Default: "base64:B+SfHGdTdca+dxR4pzJ2SRrqFpF1gFS/pgZTHNxDbhw="
     Description: Application authorization secrets.
   AppName:
     Type: String
@@ -110,6 +110,10 @@ Parameters:
     Type: Number
     Default: 4320
     Description: JWT TTL.
+  JwtSecret:
+    Type: String
+    Default: "8WM7E3BeKd7uMjpt7Wpi7y4BTp0nAFzx14Pob5DPBLSbpyz8Io1dzqsKZqBx1QTr"
+    Description: JWT Secret.
   LadaCacheActive:
     Type: Number
     Default: 0
@@ -170,22 +174,22 @@ Parameters:
     Type: String
     Default: "redis"
     Description: Queue connection type [sync, redis, rebbitmq].
-  SentryLaravelDsn:
-    Type: String
-    Default: "http://89feb2eb67c741c29d06f1204b809e87@sentry.plizi.info/2"
-    Description: Sentry exception logger host.
+  #SentryLaravelDsn:
+  #  Type: String
+  #  Default: "http://89feb2eb67c741c29d06f1204b809e87@sentry.plizi.info/2"
+  #  Description: Sentry exception logger host.
   SwooleHttpHost:
     Type: String
     Default: "0.0.0.0"
     Description: Swoole http host.
 
-  Role:
-    Type: String
-    Default: ""
-    Description: (Optional) An IAM role to give the service's containers if the code within needs to
-                access other AWS resources like S3 buckets, DynamoDB tables, etc
-Conditions:
-  HasCustomRole: !Not [ !Equals [!Ref 'Role', ''] ]
+  #Role:
+  #  Type: String
+  #  Default: ""
+  #  Description: (Optional) An IAM role to give the service's containers if the code within needs to
+  #              access other AWS resources like S3 buckets, DynamoDB tables, etc
+#Conditions:
+#  HasCustomRole: !Not [ !Equals [!Ref 'Role', ''] ]
 
 Resources:
   # A log group for storing the container logs for this service
@@ -240,6 +244,8 @@ Resources:
               Value: !Ref 'JwtBlacklistEnabled'
             - Name: JWT_TTL
               Value: !Ref 'JwtTtl'
+            - Name: JWT_SECRET
+              Value: !Ref 'JwtSecret'
             - Name: LADA_CACHE_ACTIVE
               Value: !Ref 'LadaCacheActive'
             - Name: MAIL_ENCRYPTION

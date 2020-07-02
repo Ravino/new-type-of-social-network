@@ -124,13 +124,13 @@ Parameters:
     Description: Minimum healthy percent represents a lower limit on the number of tasks in a service
                 that must remain in the RUNNING state during a deployment, as a percentage of
                 the desired number of tasks (rounded up to the nearest integer)
-  Role:
-    Type: String
-    Default: ""
-    Description: (Optional) An IAM role to give the service's containers if the code within needs to
-                access other AWS resources like S3 buckets, DynamoDB tables, etc
-Conditions:
-  HasCustomRole: !Not [ !Equals [!Ref 'Role', ''] ]
+  #Role:
+  #  Type: String
+  #  Default: ""
+  #  Description: (Optional) An IAM role to give the service's containers if the code within needs to
+  #              access other AWS resources like S3 buckets, DynamoDB tables, etc
+#Conditions:
+#  HasCustomRole: !Not [ !Equals [!Ref 'Role', ''] ]
 Resources:
   # A log group for storing the container logs for this service
   LogGroup:
