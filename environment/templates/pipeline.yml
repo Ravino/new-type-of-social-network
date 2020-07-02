@@ -638,28 +638,28 @@ Resources:
               - Name: RolesDeployOutput
             RunOrder: 1
 
-          - Name: Mongo
-            ActionTypeId:
-              Category: Deploy
-              Owner: AWS
-              Version: '1'
-              Provider: CloudFormation
-            Configuration:
-              ActionMode: CREATE_UPDATE
-              Capabilities: CAPABILITY_IAM
-              ChangeSetName: !Sub "${AWS::Region}-${EnvironmentName}-mongo-changeset"
-              RoleArn: !GetAtt CloudFormationDeployRole.Arn
-              StackName: !Sub "${AWS::Region}-${EnvironmentName}-mongo"
-              TemplatePath: Source::environment/templates/external/res-mongo.yml
-              ParameterOverrides: !Sub |
-                {
-                  "EnvironmentName": "${EnvironmentName}"
-                }
-            InputArtifacts:
-              - Name: Source
-            OutputArtifacts:
-              - Name: MongoDeployOutput
-            RunOrder: 2
+          # - Name: Mongo
+          #   ActionTypeId:
+          #     Category: Deploy
+          #     Owner: AWS
+          #     Version: '1'
+          #     Provider: CloudFormation
+          #   Configuration:
+          #     ActionMode: CREATE_UPDATE
+          #     Capabilities: CAPABILITY_IAM
+          #     ChangeSetName: !Sub "${AWS::Region}-${EnvironmentName}-mongo-changeset"
+          #     RoleArn: !GetAtt CloudFormationDeployRole.Arn
+          #     StackName: !Sub "${AWS::Region}-${EnvironmentName}-mongo"
+          #     TemplatePath: Source::environment/templates/external/res-mongo.yml
+          #     ParameterOverrides: !Sub |
+          #       {
+          #         "EnvironmentName": "${EnvironmentName}"
+          #       }
+          #   InputArtifacts:
+          #     - Name: Source
+          #   OutputArtifacts:
+          #     - Name: MongoDeployOutput
+          #   RunOrder: 2
 
         #   - Name: MySQL
         #     ActionTypeId:
@@ -707,63 +707,63 @@ Resources:
         #       - Name: RedisDeployOutput
         #     RunOrder: 2
 
-        #- Name: Services
-        #  Actions:
-            # - Name: back-ws
-            #   ActionTypeId:
-            #     Category: Build
-            #     Owner: AWS
-            #     Version: '1'
-            #     Provider: CodeBuild
-            #   Configuration:
-            #     ProjectName: !Ref BackWS
-            #   InputArtifacts:
-            #     - Name: Source
-            #   OutputArtifacts:
-            #     - Name: BackWSBuildOutput
-            #   RunOrder: 2
+        # - Name: Services
+        #   Actions:
+        #     - Name: back-ws
+        #       ActionTypeId:
+        #         Category: Build
+        #         Owner: AWS
+        #         Version: '1'
+        #         Provider: CodeBuild
+        #       Configuration:
+        #         ProjectName: !Ref BackWS
+        #       InputArtifacts:
+        #         - Name: Source
+        #       OutputArtifacts:
+        #         - Name: BackWSBuildOutput
+        #       RunOrder: 2
 
-            # - Name: back-queue-worker
-            #   ActionTypeId:
-            #     Category: Build
-            #     Owner: AWS
-            #     Version: '1'
-            #     Provider: CodeBuild
-            #   Configuration:
-            #     ProjectName: !Ref BackQueueWorker
-            #   InputArtifacts:
-            #     - Name: Source
-            #   OutputArtifacts:
-            #     - Name: BackQueueWorkerBuildOutput
-            #   RunOrder: 2
+        #     - Name: back-queue-worker
+        #       ActionTypeId:
+        #         Category: Build
+        #         Owner: AWS
+        #         Version: '1'
+        #         Provider: CodeBuild
+        #       Configuration:
+        #         ProjectName: !Ref BackQueueWorker
+        #       InputArtifacts:
+        #         - Name: Source
+        #       OutputArtifacts:
+        #         - Name: BackQueueWorkerBuildOutput
+        #       RunOrder: 2
 
-            # - Name: back-api
-            #   ActionTypeId:
-            #     Category: Build
-            #     Owner: AWS
-            #     Version: '1'
-            #     Provider: CodeBuild
-            #   Configuration:
-            #     ProjectName: !Ref BackApi
-            #   InputArtifacts:
-            #     - Name: Source
-            #   OutputArtifacts:
-            #     - Name: BackApiBuildOutput
-            #   RunOrder: 2
+        #     - Name: back-api
+        #       ActionTypeId:
+        #         Category: Build
+        #         Owner: AWS
+        #         Version: '1'
+        #         Provider: CodeBuild
+        #       Configuration:
+        #         ProjectName: !Ref BackApi
+        #       InputArtifacts:
+        #         - Name: Source
+        #       OutputArtifacts:
+        #         - Name: BackApiBuildOutput
+        #       RunOrder: 2
 
-            # - Name: front-nginx
-            #   ActionTypeId:
-            #     Category: Build
-            #     Owner: AWS
-            #     Version: '1'
-            #     Provider: CodeBuild
-            #   Configuration:
-            #     ProjectName: !Ref FrontNginx
-            #   InputArtifacts:
-            #     - Name: Source
-            #   OutputArtifacts:
-            #     - Name: FrontNginxBuildOutput
-            #   RunOrder: 2
+        #     - Name: front-nginx
+        #       ActionTypeId:
+        #         Category: Build
+        #         Owner: AWS
+        #         Version: '1'
+        #         Provider: CodeBuild
+        #       Configuration:
+        #         ProjectName: !Ref FrontNginx
+        #       InputArtifacts:
+        #         - Name: Source
+        #       OutputArtifacts:
+        #         - Name: FrontNginxBuildOutput
+        #       RunOrder: 2
 
         - Name: Deploy
           Actions:

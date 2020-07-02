@@ -111,7 +111,7 @@ Parameters:
     Default: 4320
     Description: JWT TTL.
   JwtSecret:
-    Type: Number
+    Type: String
     Default: "8WM7E3BeKd7uMjpt7Wpi7y4BTp0nAFzx14Pob5DPBLSbpyz8Io1dzqsKZqBx1QTr"
     Description: JWT Secret.
   LadaCacheActive:
