@@ -6,8 +6,6 @@
         "ServiceProtocol": "HTTP",
         "ContainerCpu": "1024",
         "ContainerMemory": "2048",
-        "Path": "dev-wq.plizi.fun",
-        "Priority": "30",
         "MinCapacity": "1",
         "DesiredCount": "3",
         "MaxCapacity": "5",
