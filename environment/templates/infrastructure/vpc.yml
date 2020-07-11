@@ -344,16 +344,13 @@ Resources:
   PrivateLoadBalancer:
     Type: AWS::ElasticLoadBalancingV2::LoadBalancer
     Properties:
-      Scheme: internal
-      LoadBalancerAttributes:
-      - Key: idle_timeout.timeout_seconds
-        Value: '30'
+      Type: network
+      Scheme: internet-facing
       Subnets:
         # This load balancer is put into the private subnet, so that there is no
         # route for the public to even be able to access the private load balancer.
         - !Ref PrivateSubnetOne
         - !Ref PrivateSubnetTwo
-      SecurityGroups: [!Ref 'PrivateLoadBalancerSG']
   # This dummy target group is used to setup the ALB to just drop traffic
   # initially, before any real service target groups have been added.
   DummyTargetGroupPrivate:
@@ -365,28 +362,10 @@ Resources:
       # HealthCheckTimeoutSeconds: 5
       # HealthyThresholdCount: 2
       Name: !Join ['-', [!Ref 'EnvironmentName', 'drop-2']]
-      Port: 80
+      Port: 7070
       Protocol: TCP
       # UnhealthyThresholdCount: 2
       VpcId: !Ref 'VPC'
-  PrivateLoadBalancerListenerNginx:
-    Type: AWS::ElasticLoadBalancingV2::Listener
-    Properties:
-      DefaultActions:
-        - TargetGroupArn: !Ref 'DummyTargetGroupPrivate'
-          Type: 'forward'
-      LoadBalancerArn: !Ref 'PrivateLoadBalancer'
-      Port: 80
-      Protocol: TCP
-  PrivateLoadBalancerListenerApi:
-    Type: AWS::ElasticLoadBalancingV2::Listener
-    Properties:
-      DefaultActions:
-        - TargetGroupArn: !Ref 'DummyTargetGroupPrivate'
-          Type: 'forward'
-      LoadBalancerArn: !Ref 'PrivateLoadBalancer'
-      Port: 1215
-      Protocol: TCP
   PrivateLoadBalancerListenerWS:
     Type: AWS::ElasticLoadBalancingV2::Listener
     Properties:
