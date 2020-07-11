@@ -1,18 +1,4 @@
-FROM 884088487044.dkr.ecr.eu-central-1.amazonaws.com/centos7-php7.4
-RUN yum -y install make
-RUN yum install php-pecl-swoole -y
-RUN yum install php-pecl-zmq -y
-RUN yum install libuv-devel php-pear php-devel -y
-RUN pecl channel-update pecl.php.net
-RUN pecl install uv-beta
-WORKDIR /app
-ADD https://getcomposer.org/installer /root/
-RUN cd /root/ \
-    && php installer \
-    && mv composer.phar /usr/local/bin/composer \
-    && chmod +x /usr/local/bin/composer
-RUN yum install php-pecl-mongodb -y
-RUN yum install php-bcmath -y
+FROM 884088487044.dkr.ecr.eu-central-1.amazonaws.com/laravel-docker:latest
 COPY . .
 RUN composer install
 
@@ -22,10 +8,6 @@ RUN ln -s /usr/local/bin/docker-entrypoint.sh /
 EXPOSE 1215
 COPY docker/back-api/docker-entrypoint.sh /usr/share/docker-laravel/bin/
 RUN chmod +x /usr/share/docker-laravel/bin/docker-entrypoint.sh
-
-HEALTHCHECK --interval=5s --timeout=10s \
-  CMD curl --include --no-buffer \
-          http://localhost:1215 || exit 1
 
 # start and setup scripts
 ENTRYPOINT ["/usr/share/docker-laravel/bin/docker-entrypoint.sh"]

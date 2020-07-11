@@ -1,15 +1,4 @@
-FROM 884088487044.dkr.ecr.eu-central-1.amazonaws.com/centos7-php7.4
-RUN yum -y install make
-RUN yum install php-pecl-swoole -y
-RUN yum install php-pecl-zmq -y
-WORKDIR /app
-ADD https://getcomposer.org/installer /root/
-RUN cd /root/ \
-    && php installer \
-    && mv composer.phar /usr/local/bin/composer \
-    && chmod +x /usr/local/bin/composer
-RUN yum install php-pecl-mongodb -y
-RUN yum install php-bcmath -y
+FROM 884088487044.dkr.ecr.eu-central-1.amazonaws.com/laravel-docker:latest
 COPY . .
 RUN composer install
 

@@ -79,6 +79,9 @@ class WampServer implements WampServerInterface
                 if($params['event'] === 'user.typing') {
                     event(new UserTypingEvent($params['userId'], $params['chatId']));
                 } else if($params['event'] === 'new.message') {
+                    if(config('app.ws_logs')) {
+                        echo "New message sent". PHP_EOL;
+                    }
                     event(new NewMessageEvent($params['body'], $user_id, $params['chatId'], $params['attachments'],
                         $params['replyOnMessageId'] ?? null,
                         $params['forwardFromChatId'] ?? null,
@@ -98,7 +101,12 @@ class WampServer implements WampServerInterface
 
     public function onUnSubscribe(ConnectionInterface $conn, $topic) {}
 
-    public function onOpen(ConnectionInterface $conn){}
+    public function onOpen(ConnectionInterface $conn) {
+        if(config('app.ws_logs')) {
+            echo "New connection detected". PHP_EOL;
+        }
+    }
+
     public function onClose(ConnectionInterface $conn) {}
     public function onError(ConnectionInterface $conn, \Exception $e) {}
     public function onMessage() {}
