@@ -16,7 +16,7 @@ Parameters:
     Default: socnet_plizi
   GitHubBranch:
     Type: String
-    Default: aws_deploy
+    Default: aws_deploy_v3
   GitHubToken:
     Type: String
     Default: 35a8ae052272bc09c13961af5ec868fa007fab1c
