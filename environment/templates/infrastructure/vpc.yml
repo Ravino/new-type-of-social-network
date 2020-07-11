@@ -361,12 +361,12 @@ Resources:
     Properties:
       HealthCheckIntervalSeconds: 6
       HealthCheckPath: /
-      HealthCheckProtocol: HTTP
+      HealthCheckProtocol: TCP
       HealthCheckTimeoutSeconds: 5
       HealthyThresholdCount: 2
       Name: !Join ['-', [!Ref 'EnvironmentName', 'drop-2']]
       Port: 80
-      Protocol: HTTP
+      Protocol: TCP
       UnhealthyThresholdCount: 2
       VpcId: !Ref 'VPC'
   PrivateLoadBalancerListenerNginx:
@@ -377,7 +377,7 @@ Resources:
           Type: 'forward'
       LoadBalancerArn: !Ref 'PrivateLoadBalancer'
       Port: 80
-      Protocol: HTTP
+      Protocol: TCP
   PrivateLoadBalancerListenerApi:
     Type: AWS::ElasticLoadBalancingV2::Listener
     Properties:
@@ -386,7 +386,7 @@ Resources:
           Type: 'forward'
       LoadBalancerArn: !Ref 'PrivateLoadBalancer'
       Port: 1215
-      Protocol: HTTP
+      Protocol: TCP
   PrivateLoadBalancerListenerWS:
     Type: AWS::ElasticLoadBalancingV2::Listener
     Properties:
@@ -395,7 +395,7 @@ Resources:
           Type: 'forward'
       LoadBalancerArn: !Ref 'PrivateLoadBalancer'
       Port: 7070
-      Protocol: HTTP
+      Protocol: TCP
 
   # This is an IAM role which authorizes ECS to manage resources on your
   # account on your behalf, such as updating your load balancer with the
