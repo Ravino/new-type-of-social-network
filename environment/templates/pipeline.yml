@@ -16,7 +16,7 @@ Parameters:
     Default: socnet_plizi
   GitHubBranch:
     Type: String
-    Default: aws_deploy
+    Default: aws_deploy_v3
   GitHubToken:
     Type: String
     Default: 35a8ae052272bc09c13961af5ec868fa007fab1c
@@ -638,74 +638,74 @@ Resources:
               - Name: RolesDeployOutput
             RunOrder: 1
 
-          - Name: Mongo
-            ActionTypeId:
-              Category: Deploy
-              Owner: AWS
-              Version: '1'
-              Provider: CloudFormation
-            Configuration:
-              ActionMode: CREATE_UPDATE
-              Capabilities: CAPABILITY_IAM
-              ChangeSetName: !Sub "${AWS::Region}-${EnvironmentName}-mongo-changeset"
-              RoleArn: !GetAtt CloudFormationDeployRole.Arn
-              StackName: !Sub "${AWS::Region}-${EnvironmentName}-mongo"
-              TemplatePath: Source::environment/templates/external/res-mongo.yml
-              ParameterOverrides: !Sub |
-                {
-                  "EnvironmentName": "${EnvironmentName}"
-                }
-            InputArtifacts:
-              - Name: Source
-            OutputArtifacts:
-              - Name: MongoDeployOutput
-            RunOrder: 2
+          # - Name: Mongo
+          #   ActionTypeId:
+          #     Category: Deploy
+          #     Owner: AWS
+          #     Version: '1'
+          #     Provider: CloudFormation
+          #   Configuration:
+          #     ActionMode: CREATE_UPDATE
+          #     Capabilities: CAPABILITY_IAM
+          #     ChangeSetName: !Sub "${AWS::Region}-${EnvironmentName}-mongo-changeset"
+          #     RoleArn: !GetAtt CloudFormationDeployRole.Arn
+          #     StackName: !Sub "${AWS::Region}-${EnvironmentName}-mongo"
+          #     TemplatePath: Source::environment/templates/external/res-mongo.yml
+          #     ParameterOverrides: !Sub |
+          #       {
+          #         "EnvironmentName": "${EnvironmentName}"
+          #       }
+          #   InputArtifacts:
+          #     - Name: Source
+          #   OutputArtifacts:
+          #     - Name: MongoDeployOutput
+          #   RunOrder: 2
 
-          - Name: MySQL
-            ActionTypeId:
-              Category: Deploy
-              Owner: AWS
-              Version: '1'
-              Provider: CloudFormation
-            Configuration:
-              ActionMode: CREATE_UPDATE
-              Capabilities: CAPABILITY_IAM
-              ChangeSetName: !Sub "${AWS::Region}-${EnvironmentName}-mysql-changeset"
-              RoleArn: !GetAtt CloudFormationDeployRole.Arn
-              StackName: !Sub "${AWS::Region}-${EnvironmentName}-mysql"
-              TemplatePath: Source::environment/templates/external/res-mysql.yml
-              ParameterOverrides: !Sub |
-                {
-                  "EnvironmentName": "${EnvironmentName}"
-                }
-            InputArtifacts:
-              - Name: Source
-            OutputArtifacts:
-              - Name: MySQLDeployOutput
-            RunOrder: 2
+          # - Name: MySQL
+          #   ActionTypeId:
+          #     Category: Deploy
+          #     Owner: AWS
+          #     Version: '1'
+          #     Provider: CloudFormation
+          #   Configuration:
+          #     ActionMode: CREATE_UPDATE
+          #     Capabilities: CAPABILITY_IAM
+          #     ChangeSetName: !Sub "${AWS::Region}-${EnvironmentName}-mysql-changeset"
+          #     RoleArn: !GetAtt CloudFormationDeployRole.Arn
+          #     StackName: !Sub "${AWS::Region}-${EnvironmentName}-mysql"
+          #     TemplatePath: Source::environment/templates/external/res-mysql.yml
+          #     ParameterOverrides: !Sub |
+          #       {
+          #         "EnvironmentName": "${EnvironmentName}"
+          #       }
+          #   InputArtifacts:
+          #     - Name: Source
+          #   OutputArtifacts:
+          #     - Name: MySQLDeployOutput
+          #   RunOrder: 2
 
-          - Name: Redis
-            ActionTypeId:
-              Category: Deploy
-              Owner: AWS
-              Version: '1'
-              Provider: CloudFormation
-            Configuration:
-              ActionMode: CREATE_UPDATE
-              Capabilities: CAPABILITY_IAM
-              ChangeSetName: !Sub "${AWS::Region}-${EnvironmentName}-redis-changeset"
-              RoleArn: !GetAtt CloudFormationDeployRole.Arn
-              StackName: !Sub "${AWS::Region}-${EnvironmentName}-redis"
-              TemplatePath: Source::environment/templates/external/res-redis.yml
-              ParameterOverrides: !Sub |
-                {
-                  "EnvironmentName": "${EnvironmentName}"
-                }
-            InputArtifacts:
-              - Name: Source
-            OutputArtifacts:
-              - Name: RedisDeployOutput
-            RunOrder: 2
+          # - Name: Redis
+          #   ActionTypeId:
+          #     Category: Deploy
+          #     Owner: AWS
+          #     Version: '1'
+          #     Provider: CloudFormation
+          #   Configuration:
+          #     ActionMode: CREATE_UPDATE
+          #     Capabilities: CAPABILITY_IAM
+          #     ChangeSetName: !Sub "${AWS::Region}-${EnvironmentName}-redis-changeset"
+          #     RoleArn: !GetAtt CloudFormationDeployRole.Arn
+          #     StackName: !Sub "${AWS::Region}-${EnvironmentName}-redis"
+          #     TemplatePath: Source::environment/templates/external/res-redis.yml
+          #     ParameterOverrides: !Sub |
+          #       {
+          #         "EnvironmentName": "${EnvironmentName}"
+          #       }
+          #   InputArtifacts:
+          #     - Name: Source
+          #   OutputArtifacts:
+          #     - Name: RedisDeployOutput
+          #   RunOrder: 2
 
         - Name: Services
           Actions:
@@ -778,7 +778,7 @@ Resources:
                 RoleArn: !GetAtt CloudFormationDeployRole.Arn
                 StackName: !Sub ${AWS::Region}-${EnvironmentName}-${ProjectName}-back-ws
                 TemplateConfiguration: !Sub "Source::environment/configurations/back-ws/${EnvironmentName}-configuration.json"
-                TemplatePath: Source::environment/templates/private-service-template-back-ws.yml
+                TemplatePath: Source::environment/templates/public-task-template-back-ws.yml
                 Capabilities: CAPABILITY_IAM
                 ParameterOverrides: !Sub |
                   {
@@ -835,7 +835,7 @@ Resources:
                 - Name: Source
               OutputArtifacts:
                 - Name: BackApiDeployOutput
-              RunOrder: 2
+              RunOrder: 1
 
             - Name: front-nginx
               ActionTypeId:
@@ -858,7 +858,7 @@ Resources:
                 - Name: Source
               OutputArtifacts:
                 - Name: FrontNginxDeployOutput
-              RunOrder: 2
+              RunOrder: 1
 
 Outputs:
   PipelineUrl:
