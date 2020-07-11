@@ -513,21 +513,11 @@ Outputs:
     Value: !Ref PublicLoadBalancerListenerApi
     Export:
       Name: !Join [ ':', [ !Ref 'EnvironmentName', 'PublicListenerApi' ] ]
-  PrivateListenerNginx:
-    Description: The ARN of the public load balancer's Listener
-    Value: !Ref PrivateLoadBalancerListenerNginx
-    Export:
-      Name: !Join [ ':', [ !Ref 'EnvironmentName', 'PrivateListenerNginx' ] ]
   PrivateListenerWS:
     Description: The ARN of the public load balancer's Listener
     Value: !Ref PrivateLoadBalancerListenerWS
     Export:
       Name: !Join [ ':', [ !Ref 'EnvironmentName', 'PrivateListenerWS' ] ]
-  PrivateListenerApi:
-    Description: The ARN of the public load balancer's Listener
-    Value: !Ref PrivateLoadBalancerListenerApi
-    Export:
-      Name: !Join [ ':', [ !Ref 'EnvironmentName', 'PrivateListenerApi' ] ]
   VPCId:
     Description: The ID of the VPC that this stack is deployed in
     Value: !Ref 'VPC'
