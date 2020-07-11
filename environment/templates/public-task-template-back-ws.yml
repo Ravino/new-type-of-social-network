@@ -472,7 +472,7 @@ Resources:
           Values: [!Ref 'Path']
       ListenerArn:
         Fn::ImportValue:
-          !Join [':', [!Ref 'EnvironmentName', 'PublicListenerApi']]
+          !Join [':', [!Ref 'EnvironmentName', 'PrivateListenerWS']]
       Priority: !Ref 'Priority'
   # HTTPSRule:
   #   Type: AWS::ElasticLoadBalancingV2::ListenerRule
