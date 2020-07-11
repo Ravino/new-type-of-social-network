@@ -3,7 +3,7 @@
         "ServiceName": "back-ws",
         "ImageUrl": "884088487044.dkr.ecr.eu-central-1.amazonaws.com/eu-central-1-test-plizi-back-ws",
         "ContainerPort": "7070",
-        "ServiceProtocol": "HTTP",
+        "ServiceProtocol": "TCP",
         "ContainerCpu": "1024",
         "ContainerMemory": "2048",
         "Path": "dev-ws.plizi.fun",
