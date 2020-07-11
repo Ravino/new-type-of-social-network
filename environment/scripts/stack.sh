@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # configurations
-PROJECT_NAME="plizi-2"
+PROJECT_NAME="plizi"
 ENV="test"
 REGION="eu-central-1"
 # stack names
@@ -11,7 +11,7 @@ SERVICE_STACK_PREFIX="${REGION}-${ENV}-plizi"
 # roles and permissions
 ARN_ROLE_NAME="CloudFormationMasterRole"
 ARN_ROLE="arn:aws:iam::884088487044:role/"${ARN_ROLE_NAME}
-CLIENT_REQUEST_TOKEN="${REGION}${PROJECT_NAME}${ENV}${ARN_ROLE_NAME}"
+CLIENT_REQUEST_TOKEN="${REGION}-${PROJECT_NAME}-${ENV}-${ARN_ROLE_NAME}"
 # parameters
 TEMPLATE_PATH="file://../templates/pipeline.yml"
 PARAMETERS="ParameterKey=EnvironmentName,ParameterValue=test"
