@@ -401,7 +401,7 @@ Resources:
   Service:
     Type: AWS::ECS::Service
     DependsOn:
-      - HTTPRule
+      - TCPRule
       # - HTTPSRule
     Properties:
       ServiceName: !Ref 'ServiceName'
@@ -446,7 +446,7 @@ Resources:
       TargetType: ip
       Name: !Ref 'ServiceName'
       Port: !Ref 'ContainerPort'
-      Protocol: !Ref 'ServiceProtocol'
+      Protocol: TCP
       TargetGroupAttributes:
         - Key: stickiness.enabled
           Value: 'true' # TODO possible reason of issues for WebSockets are not forwarding messages
@@ -461,7 +461,7 @@ Resources:
  # Create rules to forward both HTTP and HTTPS traffic to the service's
   # target group. The service itself will handle redirecting HTTP traffic
   # to HTTPS
-  HTTPRule:
+  TCPRule:
     Type: AWS::ElasticLoadBalancingV2::ListenerRule
     Properties:
       Actions:
