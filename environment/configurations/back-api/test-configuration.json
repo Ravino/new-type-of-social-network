@@ -9,7 +9,7 @@
         "Path": "dev-api.plizi.fun",
         "Priority": "10",
         "MinCapacity": "1",
-        "DesiredCount": "2",
+        "DesiredCount": "1",
         "MaxCapacity": "5",
         "LowCpuPeriodAlarm": "300",
         "ScaleDownCooldown": "300",
@@ -17,6 +17,6 @@
         "HighCpuThresholdAlarm": "70",
         "ScaleUpCooldown": "30",
         "DeploymentMaximum": "200",
-        "DeploymentMinimum": "100"
+        "DeploymentMinimum": "75"
     }
 }

@@ -778,7 +778,7 @@ Resources:
                 RoleArn: !GetAtt CloudFormationDeployRole.Arn
                 StackName: !Sub ${AWS::Region}-${EnvironmentName}-${ProjectName}-back-ws
                 TemplateConfiguration: !Sub "Source::environment/configurations/back-ws/${EnvironmentName}-configuration.json"
-                TemplatePath: Source::environment/templates/private-service-template-back-ws.yml
+                TemplatePath: Source::environment/templates/public-task-template-back-ws.yml
                 Capabilities: CAPABILITY_IAM
                 ParameterOverrides: !Sub |
                   {
