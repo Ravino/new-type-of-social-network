@@ -62,6 +62,7 @@ Resources:
       StorageType: 'io1'
       Iops: 1000
       DBInstanceClass: db.m4.large
+      DBParameterGroupName: !Ref MyAWSRDSDBParameterGroup
       Engine: MySQL
       #DBSnapshotIdentifier: !Ref 'MySQLDBName'
       DBName: !Ref 'MySQLDBName'
