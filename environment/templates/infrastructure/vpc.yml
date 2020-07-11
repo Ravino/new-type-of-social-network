@@ -359,15 +359,15 @@ Resources:
   DummyTargetGroupPrivate:
     Type: AWS::ElasticLoadBalancingV2::TargetGroup
     Properties:
-      HealthCheckIntervalSeconds: 6
-      HealthCheckPath: /
-      HealthCheckProtocol: TCP
-      HealthCheckTimeoutSeconds: 5
-      HealthyThresholdCount: 2
+      # HealthCheckIntervalSeconds: 6
+      # HealthCheckPath: /
+      # HealthCheckProtocol: TCP
+      # HealthCheckTimeoutSeconds: 5
+      # HealthyThresholdCount: 2
       Name: !Join ['-', [!Ref 'EnvironmentName', 'drop-2']]
       Port: 80
       Protocol: TCP
-      UnhealthyThresholdCount: 2
+      # UnhealthyThresholdCount: 2
       VpcId: !Ref 'VPC'
   PrivateLoadBalancerListenerNginx:
     Type: AWS::ElasticLoadBalancingV2::Listener
