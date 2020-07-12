@@ -627,7 +627,7 @@ Resources:
               RoleArn: !GetAtt CloudFormationDeployRole.Arn
               StackName: !Sub "${AWS::Region}-${EnvironmentName}-${ProjectName}-resources"
               OutputFileName: RolesDeployOutput::service-roles-output.json
-              TemplatePath: Source::environment/templates/service-roles.yml
+              TemplatePath: Source::environment/templates/infrastructure/service-roles.yml
               ParameterOverrides: !Sub |
                 {
                   "EnvironmentName": "${EnvironmentName}"
