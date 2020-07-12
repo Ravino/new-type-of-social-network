@@ -778,7 +778,7 @@ Resources:
                 RoleArn: !GetAtt CloudFormationDeployRole.Arn
                 StackName: !Sub ${AWS::Region}-${EnvironmentName}-${ProjectName}-back-ws
                 TemplateConfiguration: !Sub "Source::environment/configurations/back-ws/${EnvironmentName}-configuration.json"
-                TemplatePath: Source::environment/templates/public-task-template-back-ws.yml
+                TemplatePath: Source::environment/templates/services/back-ws.yml
                 Capabilities: CAPABILITY_IAM
                 ParameterOverrides: !Sub |
                   {
@@ -803,7 +803,7 @@ Resources:
                 StackName: !Sub ${AWS::Region}-${EnvironmentName}-${ProjectName}-back-queue-worker
                 #OutputFileName: Source::back-queue-worker/output.json
                 TemplateConfiguration: !Sub "Source::environment/configurations/back-query-worker/${EnvironmentName}-configuration.json"
-                TemplatePath: Source::environment/templates/public-task-template-back-queue-worker.yml
+                TemplatePath: Source::environment/templates/services/back-queue-worker.yml
                 ParameterOverrides: !Sub |
                   {
                     "EnvironmentName": "${EnvironmentName}"
@@ -826,7 +826,7 @@ Resources:
                 Capabilities: CAPABILITY_IAM,CAPABILITY_AUTO_EXPAND
                 StackName: !Sub ${AWS::Region}-${EnvironmentName}-${ProjectName}-back-api
                 TemplateConfiguration: !Sub "Source::environment/configurations/back-api/${EnvironmentName}-configuration.json"
-                TemplatePath: Source::environment/templates/public-task-template-back-api.yml
+                TemplatePath: Source::environment/templates/services/back-api.yml
                 ParameterOverrides: !Sub |
                   {
                     "EnvironmentName": "${EnvironmentName}"
@@ -849,7 +849,7 @@ Resources:
                 Capabilities: CAPABILITY_IAM,CAPABILITY_AUTO_EXPAND
                 StackName: !Sub ${AWS::Region}-${EnvironmentName}-${ProjectName}-front-nginx
                 TemplateConfiguration: !Sub "Source::environment/configurations/front-nginx/${EnvironmentName}-configuration.json"
-                TemplatePath: Source::environment/templates/public-task-template-front-nginx.yml
+                TemplatePath: Source::environment/templates/services/front-nginx.yml
                 ParameterOverrides: !Sub |
                   {
                     "EnvironmentName": "${EnvironmentName}"
