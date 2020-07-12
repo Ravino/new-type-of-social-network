@@ -403,7 +403,7 @@ Resources:
     Type: AWS::ECS::Service
     DependsOn:
       - InboundRule
-      - OutboundRule
+      #- OutboundRule
     Properties:
       ServiceName: !Ref 'ServiceName'
       Cluster:
@@ -496,19 +496,19 @@ Resources:
         Fn::ImportValue:
           !Join [':', [!Ref 'EnvironmentName', 'PublicListenerWS']]
       Priority: !Ref 'Priority'
-  OutboundRule:
-    Type: AWS::ElasticLoadBalancingV2::ListenerRule
-    Properties:
-      Actions:
-        - TargetGroupArn: !Ref 'TargetGroupOutbound'
-          Type: 'forward'
-      Conditions:
-        - Field: host-header
-          Values: [!Ref 'Path']
-      ListenerArn:
-        Fn::ImportValue:
-          !Join [':', [!Ref 'EnvironmentName', 'PublicListenerWSOut']]
-      Priority: !Ref 'Priority'
+  # OutboundRule:
+  #   Type: AWS::ElasticLoadBalancingV2::ListenerRule
+  #   Properties:
+  #     Actions:
+  #       - TargetGroupArn: !Ref 'TargetGroupOutbound'
+  #         Type: 'forward'
+  #     Conditions:
+  #       - Field: host-header
+  #         Values: [!Ref 'Path']
+  #     ListenerArn:
+  #       Fn::ImportValue:
+  #         !Join [':', [!Ref 'EnvironmentName', 'PublicListenerWSOut']]
+  #     Priority: !Ref 'Priority'
 
   # Enable autoscaling for this service
   ScalableTarget:
