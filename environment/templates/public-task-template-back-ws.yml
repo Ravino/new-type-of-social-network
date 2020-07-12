@@ -395,13 +395,34 @@ Resources:
               awslogs-region: !Ref 'AWS::Region'
               awslogs-stream-prefix: !Ref 'ServiceName'
 
+  # PrivateNamespace:
+  #   Type: AWS::ServiceDiscovery::PrivateDnsNamespace
+  #   Properties:
+  #       Name: test
+  #       Vpc: !Join [':', [!Ref 'EnvironmentName', 'VPC']]
+  # DiscoveryService:
+  #   Type: AWS::ServiceDiscovery::Service
+  #   Properties: 
+  #     Description: Discovery Service for the Demo Application
+  #     DnsConfig:
+  #       RoutingPolicy: MULTIVALUE
+  #       DnsRecords:
+  #         - TTL: 60
+  #           Type: A
+  #         - TTL: 60
+  #           Type: SRV
+  #     HealthCheckCustomConfig: 
+  #       FailureThreshold: 1
+  #     Name: test-back-ws
+  #     NamespaceId: !Ref PrivateNamespace
+
   # The service. The service is a resource which allows you to run multiple
   # copies of a type of task, and gather up their logs and metrics, as well
   # as monitor the number of running tasks and replace any that have crashed
   Service:
     Type: AWS::ECS::Service
-    DependsOn:
-      - TCPRule
+    # DependsOn:
+    #   - TCPRule
       # - HTTPSRule
     Properties:
       ServiceName: !Ref 'ServiceName'
@@ -416,16 +437,20 @@ Resources:
       DesiredCount: !Ref 'DesiredCount'
       NetworkConfiguration:
         AwsvpcConfiguration:
-          AssignPublicIp: ENABLED
+          #AssignPublicIp: ENABLED
           SecurityGroups:
             - Fn::ImportValue:
                 !Join [':', [!Ref 'EnvironmentName', 'FargateContainerSecurityGroup']]
           Subnets:
             - Fn::ImportValue:
-                !Join [':', [!Ref 'EnvironmentName', 'PublicSubnetOne']]
+                !Join [':', [!Ref 'EnvironmentName', 'PrivateSubnetOne']]
             - Fn::ImportValue:
-                !Join [':', [!Ref 'EnvironmentName', 'PublicSubnetTwo']]
+                !Join [':', [!Ref 'EnvironmentName', 'PrivateSubnetTwo']]
       TaskDefinition: !Ref 'TaskDefinition'
+      ServiceRegistries:
+      - RegistryArn: "srv-5dv6f5oybdvmzxic" #!GetAtt DiscoveryService.Arn
+        Port: 7070
+
       # LoadBalancers:
       #   - ContainerName: !Ref 'ServiceName'
       #     ContainerPort: !Ref 'ContainerPort'
