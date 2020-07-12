@@ -431,9 +431,9 @@ Resources:
         - ContainerName: !Ref 'ServiceName'
           ContainerPort: 7070
           TargetGroupArn: !Ref 'TargetGroupInbound'
-        - ContainerName: !Ref 'ServiceName'
-          ContainerPort: 5555
-          TargetGroupArn: !Ref 'TargetGroupOutbound'
+        # - ContainerName: !Ref 'ServiceName'
+        #   ContainerPort: 5555
+        #   TargetGroupArn: !Ref 'TargetGroupOutbound'
   # A target group. This is used for keeping track of all the tasks, and
   # what IP addresses / port numbers they have. You can query it yourself,
   # to use the addresses yourself, but most often this target group is just
@@ -460,27 +460,27 @@ Resources:
       VpcId:
         Fn::ImportValue:
           !Join [':', [!Ref 'EnvironmentName', 'VPCId']]
-  TargetGroupOutbound:
-    Type: AWS::ElasticLoadBalancingV2::TargetGroup
-    Properties:
-      #HealthCheckIntervalSeconds: 6
-      #HealthCheckPath: /
-      #HealthCheckProtocol: HTTP
-      #HealthCheckTimeoutSeconds: 5
-      #HealthyThresholdCount: 2
-      TargetType: ip
-      Name: !Ref 'ServiceName'
-      Port: 5555
-      Protocol: !Ref 'ServiceProtocol'
-      TargetGroupAttributes:
-        - Key: stickiness.enabled
-          Value: 'true' # TODO possible reason of issues for WebSockets are not forwarding messages
-        - Key: deregistration_delay.timeout_seconds
-          Value: '30' # TODO possible reason of issues for WebSockets are not forwarding messages
-      #UnhealthyThresholdCount: 2
-      VpcId:
-        Fn::ImportValue:
-          !Join [':', [!Ref 'EnvironmentName', 'VPCId']]
+  # TargetGroupOutbound:
+  #   Type: AWS::ElasticLoadBalancingV2::TargetGroup
+  #   Properties:
+  #     #HealthCheckIntervalSeconds: 6
+  #     #HealthCheckPath: /
+  #     #HealthCheckProtocol: HTTP
+  #     #HealthCheckTimeoutSeconds: 5
+  #     #HealthyThresholdCount: 2
+  #     TargetType: ip
+  #     Name: !Ref 'ServiceName'
+  #     Port: 5555
+  #     Protocol: !Ref 'ServiceProtocol'
+  #     TargetGroupAttributes:
+  #       - Key: stickiness.enabled
+  #         Value: 'true' # TODO possible reason of issues for WebSockets are not forwarding messages
+  #       - Key: deregistration_delay.timeout_seconds
+  #         Value: '30' # TODO possible reason of issues for WebSockets are not forwarding messages
+  #     #UnhealthyThresholdCount: 2
+  #     VpcId:
+  #       Fn::ImportValue:
+  #         !Join [':', [!Ref 'EnvironmentName', 'VPCId']]
 
   # Create a rule on the load balancer for routing traffic to the target group
   InboundRule:
