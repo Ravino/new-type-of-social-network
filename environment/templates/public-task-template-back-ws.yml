@@ -395,26 +395,26 @@ Resources:
               awslogs-region: !Ref 'AWS::Region'
               awslogs-stream-prefix: !Ref 'ServiceName'
 
-  # PrivateNamespace:
-  #   Type: AWS::ServiceDiscovery::PrivateDnsNamespace
-  #   Properties:
-  #       Name: test
-  #       Vpc: !Join [':', [!Ref 'EnvironmentName', 'VPC']]
-  # DiscoveryService:
-  #   Type: AWS::ServiceDiscovery::Service
-  #   Properties: 
-  #     Description: Discovery Service for the Demo Application
-  #     DnsConfig:
-  #       RoutingPolicy: MULTIVALUE
-  #       DnsRecords:
-  #         - TTL: 60
-  #           Type: A
-  #         - TTL: 60
-  #           Type: SRV
-  #     HealthCheckCustomConfig: 
-  #       FailureThreshold: 1
-  #     Name: test-back-ws
-  #     NamespaceId: !Ref PrivateNamespace
+  PrivateNamespace:
+    Type: AWS::ServiceDiscovery::PrivateDnsNamespace
+    Properties:
+        Name: !Ref 'EnvironmentName'
+        Vpc: !Join [':', [!Ref 'EnvironmentName', 'VPC']]
+  DiscoveryService:
+    Type: AWS::ServiceDiscovery::Service
+    Properties: 
+      Description: Discovery Service for the Demo Application
+      DnsConfig:
+        RoutingPolicy: MULTIVALUE
+        DnsRecords:
+          - TTL: 60
+            Type: A
+          - TTL: 60
+            Type: SRV
+      HealthCheckCustomConfig: 
+        FailureThreshold: 1
+      Name: !Sub "${EnvironmentName}-back-ws"
+      NamespaceId: !Ref PrivateNamespace
 
   # The service. The service is a resource which allows you to run multiple
   # copies of a type of task, and gather up their logs and metrics, as well
@@ -448,7 +448,7 @@ Resources:
                 !Join [':', [!Ref 'EnvironmentName', 'PrivateSubnetTwo']]
       TaskDefinition: !Ref 'TaskDefinition'
       ServiceRegistries:
-      - RegistryArn: "srv-5dv6f5oybdvmzxic" #!GetAtt DiscoveryService.Arn
+      - RegistryArn: !GetAtt DiscoveryService.Arn
         Port: 7070
 
       # LoadBalancers:
