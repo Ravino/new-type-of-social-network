@@ -154,7 +154,7 @@ Resources:
           !Join [':', [!Ref 'EnvironmentName', 'ECSTaskExecutionRole']]
       TaskRoleArn:
         Fn::ImportValue:
-          !Join [':', [!Ref 'EnvironmentName', 'FrontNginxTaskRole']]
+          !Join [':', [!Ref 'EnvironmentName', 'ECSServiceExecutionTaskRole']]
       ContainerDefinitions:
         - Name: !Ref 'ServiceName'
           Cpu: !Ref 'ContainerCpu'

@@ -452,6 +452,28 @@ Resources:
                 - 'logs:PutLogEvents'
               Resource: '*'
 
+  # ECSTask execution with Database access role 
+  ECSServiceExecutionTaskRole:
+    Type: AWS::IAM::Role
+    Properties:
+      AssumeRolePolicyDocument:
+        Statement:
+        - Effect: Allow
+          Principal:
+            Service: "ecs-tasks.amazonaws.com"
+          Action: ['sts:AssumeRole']
+      Path: /
+      Policies:
+        - PolicyName: database-full-access
+          PolicyDocument:
+            Statement:
+            - Effect: Allow
+              Action:
+                - rds:*
+                - docdb:*
+                - elasticache:*
+              Resource: "*"
+
   # A role used by AWS Autoscaling to get the stats for a Fargate
   # service, and update it to increase or decrease the number of containers
   AutoscalingRole:
@@ -507,6 +529,11 @@ Outputs:
     Value: !GetAtt 'ECSTaskExecutionRole.Arn'
     Export:
       Name: !Join [ ':', [ !Ref 'EnvironmentName', 'ECSTaskExecutionRole' ] ]
+  ECSServiceExecutionTaskRole:
+    Description: The ARN of the ECS service role
+    Value: !GetAtt 'ECSServiceExecutionTaskRole.Arn'
+    Export:
+      Name: !Join [ ':', [ !Ref 'EnvironmentName', 'ECSServiceExecutionTaskRole' ] ]
   PublicListenerNginx:
     Description: The ARN of the public load balancer's Listener
     Value: !Ref PublicLoadBalancerListenerNginx
