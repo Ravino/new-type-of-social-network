@@ -401,15 +401,15 @@ Resources:
   Service:
     Type: AWS::ECS::Service
     DependsOn:
-      - HTTPRule
-      # - HTTPSRule
+      - InboundRule
+      - OutboundRule
     Properties:
       ServiceName: !Ref 'ServiceName'
       Cluster:
         Fn::ImportValue:
           !Join [':', [!Ref 'EnvironmentName', 'ClusterName']]
-      LaunchType: FARGATE # remove this for EC2
-      PlatformVersion: "1.4.0" # remove this for EC2
+      LaunchType: FARGATE       # TODO: Remove this for EC2 instead of Fargate
+      PlatformVersion: "1.4.0"  # TODO: Remove this for EC2 instead of Fargate
       DeploymentConfiguration:
         MaximumPercent: !Ref DeploymentMaximum
         MinimumHealthyPercent: !Ref DeploymentMinimum
@@ -458,10 +458,7 @@ Resources:
           !Join [':', [!Ref 'EnvironmentName', 'VPCId']]
 
   # Create a rule on the load balancer for routing traffic to the target group
- # Create rules to forward both HTTP and HTTPS traffic to the service's
-  # target group. The service itself will handle redirecting HTTP traffic
-  # to HTTPS
-  HTTPRule:
+  InboundRule:
     Type: AWS::ElasticLoadBalancingV2::ListenerRule
     Properties:
       Actions:
@@ -474,19 +471,19 @@ Resources:
         Fn::ImportValue:
           !Join [':', [!Ref 'EnvironmentName', 'PublicListenerWS']]
       Priority: !Ref 'Priority'
-  # HTTPSRule:
-  #   Type: AWS::ElasticLoadBalancingV2::ListenerRule
-  #   Properties:
-  #     Actions:
-  #       - TargetGroupArn: !Ref 'TargetGroup'
-  #         Type: 'forward'
-  #     Conditions:
-  #       - Field: host-header
-  #         Values: [!Ref 'Path']
-  #     ListenerArn:
-  #       Fn::ImportValue:
-  #         !Join [':', [!Ref 'EnvironmentName', 'PublicListener']]
-  #     Priority: !Ref 'Priority'
+  OutboundRule:
+    Type: AWS::ElasticLoadBalancingV2::ListenerRule
+    Properties:
+      Actions:
+        - TargetGroupArn: !Ref 'TargetGroup'
+          Type: 'forward'
+      Conditions:
+        - Field: host-header
+          Values: [!Ref 'Path']
+      ListenerArn:
+        Fn::ImportValue:
+          !Join [':', [!Ref 'EnvironmentName', 'PublicListenerWSOut']]
+      Priority: !Ref 'Priority'
 
   # Enable autoscaling for this service
   ScalableTarget:

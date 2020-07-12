@@ -325,6 +325,15 @@ Resources:
       LoadBalancerArn: !Ref 'PublicLoadBalancer'
       Port: 7070
       Protocol: HTTP
+  PublicLoadBalancerListenerWSOut:
+    Type: AWS::ElasticLoadBalancingV2::Listener
+    Properties:
+      DefaultActions:
+        - TargetGroupArn: !Ref 'DummyTargetGroupPublic'
+          Type: 'forward'
+      LoadBalancerArn: !Ref 'PublicLoadBalancer'
+      Port: 5555
+      Protocol: HTTP
 
   # An internal load balancer, this would be used for a service that is not
   # directly accessible to the public, but instead should only receive traffic
@@ -508,6 +517,11 @@ Outputs:
     Value: !Ref PublicLoadBalancerListenerWS
     Export:
       Name: !Join [ ':', [ !Ref 'EnvironmentName', 'PublicListenerWS' ] ]
+  PublicListenerWSOut:
+    Description: The ARN of the public load balancer's Listener
+    Value: !Ref PublicLoadBalancerListenerWSOut
+    Export:
+      Name: !Join [ ':', [ !Ref 'EnvironmentName', 'PublicListenerWSOut' ] ]
   PublicListenerApi:
     Description: The ARN of the public load balancer's Listener
     Value: !Ref PublicLoadBalancerListenerApi
