@@ -650,7 +650,7 @@ Resources:
           #     ChangeSetName: !Sub "${AWS::Region}-${EnvironmentName}-mongo-changeset"
           #     RoleArn: !GetAtt CloudFormationDeployRole.Arn
           #     StackName: !Sub "${AWS::Region}-${EnvironmentName}-mongo"
-          #     TemplatePath: Source::environment/templates/external/res-mongo.yml
+          #     TemplatePath: Source::environment/templates/infrastructure/database-mongo.yml
           #     ParameterOverrides: !Sub |
           #       {
           #         "EnvironmentName": "${EnvironmentName}"
@@ -673,7 +673,7 @@ Resources:
           #     ChangeSetName: !Sub "${AWS::Region}-${EnvironmentName}-mysql-changeset"
           #     RoleArn: !GetAtt CloudFormationDeployRole.Arn
           #     StackName: !Sub "${AWS::Region}-${EnvironmentName}-mysql"
-          #     TemplatePath: Source::environment/templates/external/res-mysql.yml
+          #     TemplatePath: Source::environment/templates/infrastructure/database-mysql.yml
           #     ParameterOverrides: !Sub |
           #       {
           #         "EnvironmentName": "${EnvironmentName}"
@@ -696,7 +696,7 @@ Resources:
           #     ChangeSetName: !Sub "${AWS::Region}-${EnvironmentName}-redis-changeset"
           #     RoleArn: !GetAtt CloudFormationDeployRole.Arn
           #     StackName: !Sub "${AWS::Region}-${EnvironmentName}-redis"
-          #     TemplatePath: Source::environment/templates/external/res-redis.yml
+          #     TemplatePath: Source::environment/templates/infrastructure/database-redis.yml
           #     ParameterOverrides: !Sub |
           #       {
           #         "EnvironmentName": "${EnvironmentName}"
