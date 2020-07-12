@@ -57,7 +57,7 @@ function delete-master() {
 }
 function replace-master() {
     load_configuration $MASTER_FILE_NAME
-    echo tack-iam-role-create $ROLE_NAME $ROLE_POLICY_NAME $ROLE_ASSUME_POLICY_NAME $ROLE_DEPLOY_POLICY_NAME
+    echo stack-iam-role-create $ROLE_NAME $ROLE_POLICY_NAME $ROLE_ASSUME_POLICY_NAME $ROLE_DEPLOY_POLICY_NAME
     echo stack-iam-role-delete $ROLE_NAME $ROLE_POLICY_NAME $ROLE_ASSUME_POLICY_NAME $ROLE_DEPLOY_POLICY_NAME
     exit 0
 }

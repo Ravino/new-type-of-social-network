@@ -395,34 +395,13 @@ Resources:
               awslogs-region: !Ref 'AWS::Region'
               awslogs-stream-prefix: !Ref 'ServiceName'
 
-  PrivateNamespace:
-    Type: AWS::ServiceDiscovery::PrivateDnsNamespace
-    Properties:
-        Name: !Ref 'EnvironmentName'
-        Vpc: !Join [':', [!Ref 'EnvironmentName', 'VPC']]
-  DiscoveryService:
-    Type: AWS::ServiceDiscovery::Service
-    Properties: 
-      Description: Discovery Service for the Demo Application
-      DnsConfig:
-        RoutingPolicy: MULTIVALUE
-        DnsRecords:
-          - TTL: 60
-            Type: A
-          - TTL: 60
-            Type: SRV
-      HealthCheckCustomConfig: 
-        FailureThreshold: 1
-      Name: !Sub "${EnvironmentName}-back-ws"
-      NamespaceId: !Ref PrivateNamespace
-
   # The service. The service is a resource which allows you to run multiple
   # copies of a type of task, and gather up their logs and metrics, as well
   # as monitor the number of running tasks and replace any that have crashed
   Service:
     Type: AWS::ECS::Service
-    # DependsOn:
-    #   - TCPRule
+    DependsOn:
+      - HTTPRule
       # - HTTPSRule
     Properties:
       ServiceName: !Ref 'ServiceName'
@@ -437,68 +416,64 @@ Resources:
       DesiredCount: !Ref 'DesiredCount'
       NetworkConfiguration:
         AwsvpcConfiguration:
-          #AssignPublicIp: ENABLED
+          AssignPublicIp: ENABLED
           SecurityGroups:
             - Fn::ImportValue:
                 !Join [':', [!Ref 'EnvironmentName', 'FargateContainerSecurityGroup']]
           Subnets:
             - Fn::ImportValue:
-                !Join [':', [!Ref 'EnvironmentName', 'PrivateSubnetOne']]
+                !Join [':', [!Ref 'EnvironmentName', 'PublicSubnetOne']]
             - Fn::ImportValue:
-                !Join [':', [!Ref 'EnvironmentName', 'PrivateSubnetTwo']]
+                !Join [':', [!Ref 'EnvironmentName', 'PublicSubnetTwo']]
       TaskDefinition: !Ref 'TaskDefinition'
-      ServiceRegistries:
-      - RegistryArn: !GetAtt DiscoveryService.Arn
-        Port: 7070
-
-      # LoadBalancers:
-      #   - ContainerName: !Ref 'ServiceName'
-      #     ContainerPort: !Ref 'ContainerPort'
-      #     TargetGroupArn: !Ref 'TargetGroup'
+      LoadBalancers:
+        - ContainerName: !Ref 'ServiceName'
+          ContainerPort: !Ref 'ContainerPort'
+          TargetGroupArn: !Ref 'TargetGroup'
   # A target group. This is used for keeping track of all the tasks, and
   # what IP addresses / port numbers they have. You can query it yourself,
   # to use the addresses yourself, but most often this target group is just
   # connected to an application load balancer, or network load balancer, so
   # it can automatically distribute traffic across all the targets.
-#   TargetGroup:
-#     Type: AWS::ElasticLoadBalancingV2::TargetGroup
-#     Properties:
-#       #HealthCheckIntervalSeconds: 6
-#       #HealthCheckPath: /
-#       #HealthCheckProtocol: HTTP
-#       #HealthCheckTimeoutSeconds: 5
-#       #HealthyThresholdCount: 2
-#       TargetType: ip
-#       Name: !Ref 'ServiceName'
-#       Port: !Ref 'ContainerPort'
-#       Protocol: TCP
-#       TargetGroupAttributes:
-#         - Key: stickiness.enabled
-#           Value: 'true' # TODO possible reason of issues for WebSockets are not forwarding messages
-#         - Key: deregistration_delay.timeout_seconds
-#           Value: '30' # TODO possible reason of issues for WebSockets are not forwarding messages
-#       #UnhealthyThresholdCount: 2
-#       VpcId:
-#         Fn::ImportValue:
-#           !Join [':', [!Ref 'EnvironmentName', 'VPCId']]
+  TargetGroup:
+    Type: AWS::ElasticLoadBalancingV2::TargetGroup
+    Properties:
+      #HealthCheckIntervalSeconds: 6
+      #HealthCheckPath: /
+      #HealthCheckProtocol: HTTP
+      #HealthCheckTimeoutSeconds: 5
+      #HealthyThresholdCount: 2
+      TargetType: ip
+      Name: !Ref 'ServiceName'
+      Port: !Ref 'ContainerPort'
+      Protocol: !Ref 'ServiceProtocol'
+      TargetGroupAttributes:
+        - Key: stickiness.enabled
+          Value: 'true' # TODO possible reason of issues for WebSockets are not forwarding messages
+        - Key: deregistration_delay.timeout_seconds
+          Value: '30' # TODO possible reason of issues for WebSockets are not forwarding messages
+      #UnhealthyThresholdCount: 2
+      VpcId:
+        Fn::ImportValue:
+          !Join [':', [!Ref 'EnvironmentName', 'VPCId']]
 
-#   # Create a rule on the load balancer for routing traffic to the target group
-#  # Create rules to forward both HTTP and HTTPS traffic to the service's
-#   # target group. The service itself will handle redirecting HTTP traffic
-#   # to HTTPS
-#   TCPRule:
-#     Type: AWS::ElasticLoadBalancingV2::ListenerRule
-#     Properties:
-#       Actions:
-#         - TargetGroupArn: !Ref 'TargetGroup'
-#           Type: 'forward'
-#       Conditions:
-#         - Field: http-request-method
-#           Values: ["GET_OR_HEAD"]
-#       ListenerArn:
-#         Fn::ImportValue:
-#           !Join [':', [!Ref 'EnvironmentName', 'PrivateListenerWS']]
-#       Priority: !Ref 'Priority'
+  # Create a rule on the load balancer for routing traffic to the target group
+ # Create rules to forward both HTTP and HTTPS traffic to the service's
+  # target group. The service itself will handle redirecting HTTP traffic
+  # to HTTPS
+  HTTPRule:
+    Type: AWS::ElasticLoadBalancingV2::ListenerRule
+    Properties:
+      Actions:
+        - TargetGroupArn: !Ref 'TargetGroup'
+          Type: 'forward'
+      Conditions:
+        - Field: host-header
+          Values: [!Ref 'Path']
+      ListenerArn:
+        Fn::ImportValue:
+          !Join [':', [!Ref 'EnvironmentName', 'PublicListenerWS']]
+      Priority: !Ref 'Priority'
   # HTTPSRule:
   #   Type: AWS::ElasticLoadBalancingV2::ListenerRule
   #   Properties:
