@@ -78,7 +78,7 @@ function delete-resources {
     aws cloudformation delete-stack --stack-name ${RESOURCE_NAME}-resources --role-arn ${ARN_ROLE}
     aws cloudformation delete-stack --stack-name ${RESOURCE_NAME}-cluster --role-arn ${ARN_ROLE}
 }
-function delete-stack {
+function delete-stack-resources {
     # remove ecr
     aws ecr delete-repository --repository-name ${SERVICE_STACK_PREFIX}-back-api --force
     aws ecr delete-repository --repository-name ${SERVICE_STACK_PREFIX}-back-queue-worker --force
@@ -87,10 +87,14 @@ function delete-stack {
     # remove s3
     aws s3 rb ${S3_BUCKET_NAME} --force
 }
+function delete-stack {
+    aws cloudformation delete-stack --stack-name ${STACK_NAME} --role-arn ${ARN_ROLE}
+}
 function delete {
     delete-services
     delete-databases
     delete-resources
+    delete-stack-resources
     delete-stack
 }
 function continue-rollback() {
