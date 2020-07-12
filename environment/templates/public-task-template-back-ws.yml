@@ -435,45 +435,45 @@ Resources:
   # to use the addresses yourself, but most often this target group is just
   # connected to an application load balancer, or network load balancer, so
   # it can automatically distribute traffic across all the targets.
-  TargetGroup:
-    Type: AWS::ElasticLoadBalancingV2::TargetGroup
-    Properties:
-      #HealthCheckIntervalSeconds: 6
-      #HealthCheckPath: /
-      #HealthCheckProtocol: HTTP
-      #HealthCheckTimeoutSeconds: 5
-      #HealthyThresholdCount: 2
-      TargetType: ip
-      Name: !Ref 'ServiceName'
-      Port: !Ref 'ContainerPort'
-      Protocol: TCP
-      TargetGroupAttributes:
-        - Key: stickiness.enabled
-          Value: 'true' # TODO possible reason of issues for WebSockets are not forwarding messages
-        - Key: deregistration_delay.timeout_seconds
-          Value: '30' # TODO possible reason of issues for WebSockets are not forwarding messages
-      #UnhealthyThresholdCount: 2
-      VpcId:
-        Fn::ImportValue:
-          !Join [':', [!Ref 'EnvironmentName', 'VPCId']]
+#   TargetGroup:
+#     Type: AWS::ElasticLoadBalancingV2::TargetGroup
+#     Properties:
+#       #HealthCheckIntervalSeconds: 6
+#       #HealthCheckPath: /
+#       #HealthCheckProtocol: HTTP
+#       #HealthCheckTimeoutSeconds: 5
+#       #HealthyThresholdCount: 2
+#       TargetType: ip
+#       Name: !Ref 'ServiceName'
+#       Port: !Ref 'ContainerPort'
+#       Protocol: TCP
+#       TargetGroupAttributes:
+#         - Key: stickiness.enabled
+#           Value: 'true' # TODO possible reason of issues for WebSockets are not forwarding messages
+#         - Key: deregistration_delay.timeout_seconds
+#           Value: '30' # TODO possible reason of issues for WebSockets are not forwarding messages
+#       #UnhealthyThresholdCount: 2
+#       VpcId:
+#         Fn::ImportValue:
+#           !Join [':', [!Ref 'EnvironmentName', 'VPCId']]
 
-  # Create a rule on the load balancer for routing traffic to the target group
- # Create rules to forward both HTTP and HTTPS traffic to the service's
-  # target group. The service itself will handle redirecting HTTP traffic
-  # to HTTPS
-  TCPRule:
-    Type: AWS::ElasticLoadBalancingV2::ListenerRule
-    Properties:
-      Actions:
-        - TargetGroupArn: !Ref 'TargetGroup'
-          Type: 'forward'
-      Conditions:
-        - Field: http-request-method
-          Values: ["GET_OR_HEAD"]
-      ListenerArn:
-        Fn::ImportValue:
-          !Join [':', [!Ref 'EnvironmentName', 'PrivateListenerWS']]
-      Priority: !Ref 'Priority'
+#   # Create a rule on the load balancer for routing traffic to the target group
+#  # Create rules to forward both HTTP and HTTPS traffic to the service's
+#   # target group. The service itself will handle redirecting HTTP traffic
+#   # to HTTPS
+#   TCPRule:
+#     Type: AWS::ElasticLoadBalancingV2::ListenerRule
+#     Properties:
+#       Actions:
+#         - TargetGroupArn: !Ref 'TargetGroup'
+#           Type: 'forward'
+#       Conditions:
+#         - Field: http-request-method
+#           Values: ["GET_OR_HEAD"]
+#       ListenerArn:
+#         Fn::ImportValue:
+#           !Join [':', [!Ref 'EnvironmentName', 'PrivateListenerWS']]
+#       Priority: !Ref 'Priority'
   # HTTPSRule:
   #   Type: AWS::ElasticLoadBalancingV2::ListenerRule
   #   Properties:
