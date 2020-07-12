@@ -480,12 +480,12 @@ Outputs:
       Name: !Join [ ':', [ !Ref 'EnvironmentName', 'ClusterName' ] ]
   InternalUrl:
     Description: The url of the internal load balancer
-    Value: !Join ['', ['http://', !GetAtt 'PrivateLoadBalancer.DNSName']]
+    Value: !Join ['', ['', !GetAtt 'PrivateLoadBalancer.DNSName']]
     Export:
       Name: !Join [ ':', [ !Ref 'EnvironmentName', 'InternalUrl' ] ]
   ExternalUrl:
     Description: The url of the external load balancer
-    Value: !Join ['', ['http://', !GetAtt 'PublicLoadBalancer.DNSName']]
+    Value: !Join ['', ['', !GetAtt 'PublicLoadBalancer.DNSName']]
     Export:
       Name: !Join [ ':', [ !Ref 'EnvironmentName', 'ExternalUrl' ] ]
   ECSRole:

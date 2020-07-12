@@ -387,7 +387,7 @@ Resources:
             - Name: ZMQ_SUB_HOST
               Value:
                 Fn::ImportValue:
-                  !Join [':', [!Ref 'EnvironmentName', 'InternalUrl']]
+                  !Join [':', [!Ref 'EnvironmentName', 'ExternalUrl']]
           LogConfiguration:
             LogDriver: 'awslogs'
             Options:
@@ -408,8 +408,8 @@ Resources:
       Cluster:
         Fn::ImportValue:
           !Join [':', [!Ref 'EnvironmentName', 'ClusterName']]
-      LaunchType: FARGATE
-      PlatformVersion: "1.4.0"
+      LaunchType: FARGATE # remove this for EC2
+      PlatformVersion: "1.4.0" # remove this for EC2
       DeploymentConfiguration:
         MaximumPercent: !Ref DeploymentMaximum
         MinimumHealthyPercent: !Ref DeploymentMinimum
