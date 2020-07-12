@@ -147,11 +147,11 @@ Parameters:
     Description: Application displayable name.
   AwsAccessKeyId:
     Type: String
-    Default: "AKIAIBMISJ3W5T6P3ULA"
+    Default: "AKIAJBAKDWTT6A4ZFXYQ"
     Description: AWS access key id.
   AwsSecretAccessKey:
     Type: String
-    Default: "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"
+    Default: "b3CgxRuj9Xibb3OJ3Uem4LHfgKJ3BwujSThjMc+g"
     Description: AWS access secret.
   AwsDefaultRegion:
     Type: String
