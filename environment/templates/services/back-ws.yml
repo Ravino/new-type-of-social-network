@@ -273,8 +273,10 @@ Resources:
           Memory: !Ref 'ContainerMemory'
           Image: !Ref 'ImageUrl'
           PortMappings:
-            - ContainerPort: 7070
-            - ContainerPort: 5555
+            - 
+              ContainerPort: 7070
+            - 
+              ContainerPort: 5555
           Environment:
             - Name: API_URL
               Value: !Ref 'ApiUrl'
