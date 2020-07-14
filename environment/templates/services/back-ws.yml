@@ -26,11 +26,6 @@ Parameters:
     Description: The url of a docker image that contains the application process that
                  will handle the traffic for this service
   # deployment
-  ContainerPort:
-    Type: Number
-    Default: 80
-    Description: What port number the application the docker container is binding to
-  # deployment
   ServiceProtocol:
     Type: String
     Default: HTTP
@@ -403,7 +398,7 @@ Resources:
     Type: AWS::ECS::Service
     DependsOn:
       - InboundRule
-      #- OutboundRule
+      - OutboundRule
     Properties:
       ServiceName: !Ref 'ServiceName'
       Cluster:
@@ -431,14 +426,10 @@ Resources:
         - ContainerName: !Ref 'ServiceName'
           ContainerPort: 7070
           TargetGroupArn: !Ref 'TargetGroupInbound'
-        # - ContainerName: !Ref 'ServiceName'
-        #   ContainerPort: 5555
-        #   TargetGroupArn: !Ref 'TargetGroupOutbound'
-  # A target group. This is used for keeping track of all the tasks, and
-  # what IP addresses / port numbers they have. You can query it yourself,
-  # to use the addresses yourself, but most often this target group is just
-  # connected to an application load balancer, or network load balancer, so
-  # it can automatically distribute traffic across all the targets.
+        - ContainerName: !Ref 'ServiceName'
+          ContainerPort: 5555
+          TargetGroupArn: !Ref 'TargetGroupOutbound'
+  # inbound web sockets
   TargetGroupInbound:
     Type: AWS::ElasticLoadBalancingV2::TargetGroup
     Properties:
@@ -448,39 +439,39 @@ Resources:
       #HealthCheckTimeoutSeconds: 5
       #HealthyThresholdCount: 2
       TargetType: ip
-      Name: !Ref 'ServiceName'
+      Name: !Join ["-", [!Ref 'ServiceName', "inbound"]]
       Port: 7070
       Protocol: !Ref 'ServiceProtocol'
       TargetGroupAttributes:
         - Key: stickiness.enabled
-          Value: 'true' # TODO possible reason of issues for WebSockets are not forwarding messages
+          Value: 'true'
         - Key: deregistration_delay.timeout_seconds
-          Value: '30' # TODO possible reason of issues for WebSockets are not forwarding messages
+          Value: '30'
       #UnhealthyThresholdCount: 2
       VpcId:
         Fn::ImportValue:
           !Join [':', [!Ref 'EnvironmentName', 'VPCId']]
-  # TargetGroupOutbound:
-  #   Type: AWS::ElasticLoadBalancingV2::TargetGroup
-  #   Properties:
-  #     #HealthCheckIntervalSeconds: 6
-  #     #HealthCheckPath: /
-  #     #HealthCheckProtocol: HTTP
-  #     #HealthCheckTimeoutSeconds: 5
-  #     #HealthyThresholdCount: 2
-  #     TargetType: ip
-  #     Name: !Ref 'ServiceName'
-  #     Port: 5555
-  #     Protocol: !Ref 'ServiceProtocol'
-  #     TargetGroupAttributes:
-  #       - Key: stickiness.enabled
-  #         Value: 'true' # TODO possible reason of issues for WebSockets are not forwarding messages
-  #       - Key: deregistration_delay.timeout_seconds
-  #         Value: '30' # TODO possible reason of issues for WebSockets are not forwarding messages
-  #     #UnhealthyThresholdCount: 2
-  #     VpcId:
-  #       Fn::ImportValue:
-  #         !Join [':', [!Ref 'EnvironmentName', 'VPCId']]
+  TargetGroupOutbound:
+    Type: AWS::ElasticLoadBalancingV2::TargetGroup
+    Properties:
+      #HealthCheckIntervalSeconds: 6
+      #HealthCheckPath: /
+      #HealthCheckProtocol: HTTP
+      #HealthCheckTimeoutSeconds: 5
+      #HealthyThresholdCount: 2
+      TargetType: ip
+      Name: !Join ["-", [!Ref 'ServiceName', "outbound"]]
+      Port: 5555
+      Protocol: !Ref 'ServiceProtocol'
+      TargetGroupAttributes:
+        - Key: stickiness.enabled
+          Value: 'true'
+        - Key: deregistration_delay.timeout_seconds
+          Value: '30'
+      #UnhealthyThresholdCount: 2
+      VpcId:
+        Fn::ImportValue:
+          !Join [':', [!Ref 'EnvironmentName', 'VPCId']]
 
   # Create a rule on the load balancer for routing traffic to the target group
   InboundRule:
@@ -496,19 +487,19 @@ Resources:
         Fn::ImportValue:
           !Join [':', [!Ref 'EnvironmentName', 'PublicListenerWS']]
       Priority: !Ref 'Priority'
-  # OutboundRule:
-  #   Type: AWS::ElasticLoadBalancingV2::ListenerRule
-  #   Properties:
-  #     Actions:
-  #       - TargetGroupArn: !Ref 'TargetGroupOutbound'
-  #         Type: 'forward'
-  #     Conditions:
-  #       - Field: host-header
-  #         Values: [!Ref 'Path']
-  #     ListenerArn:
-  #       Fn::ImportValue:
-  #         !Join [':', [!Ref 'EnvironmentName', 'PublicListenerWSOut']]
-  #     Priority: !Ref 'Priority'
+  OutboundRule:
+    Type: AWS::ElasticLoadBalancingV2::ListenerRule
+    Properties:
+      Actions:
+        - TargetGroupArn: !Ref 'TargetGroupOutbound'
+          Type: 'forward'
+      Conditions:
+        - Field: host-header
+          Values: [!Ref 'Path']
+      ListenerArn:
+        Fn::ImportValue:
+          !Join [':', [!Ref 'EnvironmentName', 'PublicListenerWSOut']]
+      Priority: !Ref 'Priority'
 
   # Enable autoscaling for this service
   ScalableTarget:
