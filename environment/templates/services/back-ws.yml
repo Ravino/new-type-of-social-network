@@ -385,10 +385,6 @@ Resources:
               Value:
                 Fn::ImportValue:
                   !Join [':', [!Ref 'EnvironmentName', 'RedisPort']]
-            - Name: ZMQ_SUB_HOST
-              Value:
-                Fn::ImportValue:
-                  !Join [':', [!Ref 'EnvironmentName', 'ExternalUrl']]
           LogConfiguration:
             LogDriver: 'awslogs'
             Options:
