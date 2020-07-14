@@ -2,7 +2,6 @@
     "Parameters": {
         "ServiceName": "back-ws",
         "ImageUrl": "884088487044.dkr.ecr.eu-central-1.amazonaws.com/plizi-back-ws-prod:latest",
-        "ContainerPort": "7070",
         "ServiceProtocol": "HTTP",
         "ContainerCpu": "256",
         "ContainerMemory": "512",
