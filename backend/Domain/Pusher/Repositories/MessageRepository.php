@@ -6,9 +6,11 @@ namespace Domain\Pusher\Repositories;
 
 use Carbon\Carbon;
 use Clockwork\Request\Log;
+use DateTime;
 use Domain\Pusher\Http\Resources\Message\MessageCollection;
 use Domain\Pusher\Models\ChatMessage;
 use Domain\Pusher\Http\Resources\Message\Message as MessageResource;
+use MongoDB\BSON\UTCDateTime;
 
 class MessageRepository
 {
@@ -31,6 +33,7 @@ class MessageRepository
                 'user_id' => $author_id,
                 'parent_id' => $parent_id,
                 'parent_chat_id' => $parent_chat_id,
+                'created_at' => new UTCDateTime((new DateTime())->getTimestamp()*1000)
             ])->id;
     }
 
