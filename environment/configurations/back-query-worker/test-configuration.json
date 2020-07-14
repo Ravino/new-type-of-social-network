@@ -7,7 +7,7 @@
         "ContainerCpu": "1024",
         "ContainerMemory": "2048",
         "MinCapacity": "1",
-        "DesiredCount": "15",
+        "DesiredCount": "1",
         "MaxCapacity": "30",
         "LowCpuPeriodAlarm": "300",
         "ScaleDownCooldown": "300",
