@@ -26,6 +26,11 @@ Parameters:
     Description: The url of a docker image that contains the application process that
                  will handle the traffic for this service
   # deployment
+  ContainerPort:
+    Type: Number
+    Default: 7070
+    Description: What port number the application the docker container is binding to
+  # deployment
   ServiceProtocol:
     Type: String
     Default: HTTP
@@ -273,10 +278,8 @@ Resources:
           Memory: !Ref 'ContainerMemory'
           Image: !Ref 'ImageUrl'
           PortMappings:
-            - 
-              ContainerPort: 7070
-            - 
-              ContainerPort: 5555
+            - ContainerPort: 7070
+            - ContainerPort: 5555
           Environment:
             - Name: API_URL
               Value: !Ref 'ApiUrl'
