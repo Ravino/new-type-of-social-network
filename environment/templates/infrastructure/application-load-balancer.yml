@@ -1,0 +1,137 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Description: This stack deploys Application Load balancer with all required 
+             target groups and listeners related to the current priject.
+Metadata:
+  cfn-lint:
+    config:
+      ignore_checks:
+      - E3012
+Parameters:
+  # application configuration
+  EnvironmentName:
+    Type: String
+    Default: test
+    Description: A name for the environment that this cloudformation will be part of.
+                 Used to locate other resources in the same environment.
+    AllowedValues:
+      - test
+      - prod
+    ConstraintDescription: Environment name may be only 'test' or 'prod', to prevent
+                           configuration files multiplication.
+  # CertificateArn:
+  #   Type: String
+  #   Default: arn:aws:acm:eu-central-1:884088487044:certificate/4444446f-1db7-46ee-b983-cca853830df1
+  #   Description: ARN of the Amazon Certificate Manager SSL certificate to use for this app
+Resources:
+  EcsSecurityGroupIngressFromALB:
+    Type: AWS::EC2::SecurityGroupIngress
+    Properties:
+      Description: Ingress from the public ALB
+      GroupId: 
+        Fn::ImportValue:
+          !Join [':', [!Ref 'EnvironmentName', 'FargateContainerSecurityGroup']]
+      IpProtocol: -1
+      SourceSecurityGroupId: !Ref 'ApplicationLoadBalancerSG'
+  ApplicationLoadBalancerSG:
+    Type: AWS::EC2::SecurityGroup
+    Properties:
+      GroupDescription: Access to the public facing load balancer
+      VpcId: 
+        Fn::ImportValue:
+          !Join [':', [!Ref 'EnvironmentName', 'VPCId']]
+      SecurityGroupIngress:
+        - CidrIp: 0.0.0.0/0
+          IpProtocol: -1
+  ApplicationLoadBalancer:
+    Type: AWS::ElasticLoadBalancingV2::LoadBalancer
+    Properties:
+      Scheme: internet-facing
+      LoadBalancerAttributes:
+      - Key: idle_timeout.timeout_seconds
+        Value: '30'
+      Subnets:
+        - Fn::ImportValue:
+            !Join [':', [!Ref 'EnvironmentName', 'PublicSubnetOne']]
+        - Fn::ImportValue:
+            !Join [':', [!Ref 'EnvironmentName', 'PublicSubnetTwo']]
+      SecurityGroups: [!Ref 'ApplicationLoadBalancerSG']
+  DummyTargetGroupALB:
+    Type: AWS::ElasticLoadBalancingV2::TargetGroup
+    Properties:
+      Name: !Join ['-', [!Ref 'EnvironmentName', 'drop-1']]
+      Port: 80
+      Protocol: HTTP
+      VpcId: 
+        Fn::ImportValue:
+          !Join [':', [!Ref 'EnvironmentName', 'VPCId']]
+  ALBListenerNginx:
+    Type: AWS::ElasticLoadBalancingV2::Listener
+    Properties:
+      DefaultActions:
+        - TargetGroupArn: !Ref 'DummyTargetGroupALB'
+          Type: 'forward'
+      LoadBalancerArn: !Ref 'ApplicationLoadBalancer'
+      Port: 80
+      Protocol: HTTP
+  ALBListenerNginxAdmin:
+    Type: AWS::ElasticLoadBalancingV2::Listener
+    Properties:
+      DefaultActions:
+        - TargetGroupArn: !Ref 'DummyTargetGroupALB'
+          Type: 'forward'
+      LoadBalancerArn: !Ref 'ApplicationLoadBalancer'
+      Port: 81
+      Protocol: HTTP
+  ALBListenerApi:
+    Type: AWS::ElasticLoadBalancingV2::Listener
+    Properties:
+      DefaultActions:
+        - TargetGroupArn: !Ref 'DummyTargetGroupALB'
+          Type: 'forward'
+      LoadBalancerArn: !Ref 'ApplicationLoadBalancer'
+      Port: 1215
+      Protocol: HTTP
+  ALBListenerWSInbound:
+    Type: AWS::ElasticLoadBalancingV2::Listener
+    Properties:
+      DefaultActions:
+        - TargetGroupArn: !Ref 'DummyTargetGroupALB'
+          Type: 'forward'
+      LoadBalancerArn: !Ref 'ApplicationLoadBalancer'
+      Port: 7070
+      Protocol: HTTP
+  ALBListenerWSOutbound:
+    Type: AWS::ElasticLoadBalancingV2::Listener
+    Properties:
+      DefaultActions:
+        - TargetGroupArn: !Ref 'DummyTargetGroupALB'
+          Type: 'forward'
+      LoadBalancerArn: !Ref 'ApplicationLoadBalancer'
+      Port: 5555
+      Protocol: HTTP
+Outputs:
+  ALBListenerNginx:
+    Description: The ARN of the public load balancer's Listener
+    Value: !Ref ALBListenerNginx
+    Export:
+      Name: !Join [ ':', [ !Ref 'EnvironmentName', 'ALBListenerNginx' ] ]
+  ALBListenerNginxAdmin:
+    Description: The ARN of the public load balancer's Listener
+    Value: !Ref ALBListenerNginxAdmin
+    Export:
+      Name: !Join [ ':', [ !Ref 'EnvironmentName', 'ALBListenerNginxAdmin' ] ]
+  ALBListenerWSInbound:
+    Description: The ARN of the public load balancer's Listener
+    Value: !Ref ALBListenerWSInbound
+    Export:
+      Name: !Join [ ':', [ !Ref 'EnvironmentName', 'ALBListenerWSInbound' ] ]
+  ALBListenerWSOutbound:
+    Description: The ARN of the public load balancer's Listener
+    Value: !Ref ALBListenerWSOutbound
+    Export:
+      Name: !Join [ ':', [ !Ref 'EnvironmentName', 'ALBListenerWSOutbound' ] ]
+  ALBListenerApi:
+    Description: The ARN of the public load balancer's Listener
+    Value: !Ref ALBListenerApi
+    Export:
+      Name: !Join [ ':', [ !Ref 'EnvironmentName', 'ALBListenerApi' ] ]
