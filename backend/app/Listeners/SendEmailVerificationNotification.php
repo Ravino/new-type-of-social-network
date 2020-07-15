@@ -31,10 +31,10 @@ class SendEmailVerificationNotification
             'confirmLink' => route('auth.confirm', $user->token),
             'password' => $event->rawPassword,
             'restoreLink' => route('password.reset.token', $user->token),
-            'confirmEmailLink' => config('app.url') . "email-confirm/{$user->token}",
-            'loginLink' => config('app.url') . 'login',
-            'offerLink' => config('app.url') . 'offer',
-            'confidentialityLink' => config('app.url') . 'confidentiality',
+            'confirmEmailLink' => "https://" . config('app.url') . "/email-confirm/{$user->token}",
+            'loginLink' => "https://" . config('app.url') . '/login',
+            'offerLink' => "https://" . config('app.url') . '/offer',
+            'confidentialityLink' => "https://" . config('app.url') . '/confidentiality',
         ];
 
         Mail::send('emails.register', $data, static function ($message) use ($user) {
