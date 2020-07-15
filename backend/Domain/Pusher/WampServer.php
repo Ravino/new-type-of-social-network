@@ -24,7 +24,11 @@ class WampServer implements WampServerInterface
         $ip = gethostbyname(config('pusher.zmq_sub_host'));
         $context = new \ZMQContext();
         $socket = $context->getSocket(\ZMQ::SOCKET_PUSH, 'pusher');
-        $socket->connect("tcp://$ip:5555");
+        try {
+            $socket->connect("tcp://$ip:5555");
+        } catch (\ZMQSocketException $ex) {
+            echo $ex->getMessage().PHP_EOL;
+        }
         $data = json_encode($data);
         $socket->send($data);
     }
