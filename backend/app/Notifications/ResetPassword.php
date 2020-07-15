@@ -55,10 +55,10 @@ class ResetPassword extends Notification
             ->view(
                 'emails.reset_password_link',
                 [
-                    'url' => config('app.url') . 'password/update?token=' . $token . '&email=' . $email,
+                    'url' => "https://" . config('app.url') . '/password/update?token=' . $token . '&email=' . $email,
                     'minutes' => config('auth.passwords.'.config('auth.defaults.passwords').'.expire'),
-                    'offerLink' => config('app.url') . 'offer',
-                    'confidentialityLink' => config('app.url') . 'confidentiality',
+                    'offerLink' => "https://" . config('app.url') . '/offer',
+                    'confidentialityLink' => "https://" . config('app.url') . '/confidentiality',
                 ]
             )->subject('PLIZI: Восстановление пароля');
     }
