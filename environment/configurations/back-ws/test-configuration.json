@@ -35,7 +35,6 @@
 		"MailUsername": "no-reply@plizi.info",
 		"Neo4DbBoltPort": "Neo4j Graph database bolt port.",
 		"Neo4DbHost": "neo4j.plizi.info",
-		"Neo4DbHttpPort": "7474",
 		"Neo4DbPassword": "zKisCPceY6WzTP1R",
 		"Neo4DbUsername": "neo4j",
 		"QueueConnection": "redis"
