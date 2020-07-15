@@ -28,7 +28,6 @@
 		"JwtBlacklistEnabled": 1,
 		"JwtTtl": 4320,
 		"JwtSecret": "8WM7E3BeKd7uMjpt7Wpi7y4BTp0nAFzx14Pob5DPBLSbpyz8Io1dzqsKZqBx1QTr",
-		"LadaCacheActive": 0,
 		"MailEncryption": "tls",
 		"MailFromAddress": "no-reply@plizi.info",
 		"MailFromName": "PLIZI Социальная сеть",
