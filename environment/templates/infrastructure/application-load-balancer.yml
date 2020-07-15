@@ -18,10 +18,10 @@ Parameters:
       - prod
     ConstraintDescription: Environment name may be only 'test' or 'prod', to prevent
                            configuration files multiplication.
-  # CertificateArn:
-  #   Type: String
-  #   Default: arn:aws:acm:eu-central-1:884088487044:certificate/4444446f-1db7-46ee-b983-cca853830df1
-  #   Description: ARN of the Amazon Certificate Manager SSL certificate to use for this app
+  CertificateArn:
+    Type: String
+    Default: arn:aws:acm:eu-central-1:884088487044:certificate/4444446f-1db7-46ee-b983-cca853830df1
+    Description: ARN of the Amazon Certificate Manager SSL certificate to use for this app
 Resources:
   EcsSecurityGroupIngressFromALB:
     Type: AWS::EC2::SecurityGroupIngress
@@ -55,6 +55,9 @@ Resources:
         - Fn::ImportValue:
             !Join [':', [!Ref 'EnvironmentName', 'PublicSubnetTwo']]
       SecurityGroups: [!Ref 'ApplicationLoadBalancerSG']
+      Tags:
+        - Key: "Name"
+          Value: "application | public"
   DummyTargetGroupALB:
     Type: AWS::ElasticLoadBalancingV2::TargetGroup
     Properties:
@@ -72,6 +75,15 @@ Resources:
           Type: 'forward'
       LoadBalancerArn: !Ref 'ApplicationLoadBalancer'
       Port: 80
+      Protocol: HTTP
+  ALBListenerNginxSSL:
+    Type: AWS::ElasticLoadBalancingV2::Listener
+    Properties:
+      DefaultActions:
+        - TargetGroupArn: !Ref 'DummyTargetGroupALB'
+          Type: 'forward'
+      LoadBalancerArn: !Ref 'ApplicationLoadBalancer'
+      Port: 443
       Protocol: HTTP
   ALBListenerNginxAdmin:
     Type: AWS::ElasticLoadBalancingV2::Listener
@@ -91,45 +103,39 @@ Resources:
       LoadBalancerArn: !Ref 'ApplicationLoadBalancer'
       Port: 1215
       Protocol: HTTP
-  ALBListenerWSInbound:
-    Type: AWS::ElasticLoadBalancingV2::Listener
+  ApplicationLoadBalancerListenerCert:
+    Type: AWS::ElasticLoadBalancingV2::ListenerCertificate
     Properties:
-      DefaultActions:
-        - TargetGroupArn: !Ref 'DummyTargetGroupALB'
-          Type: 'forward'
-      LoadBalancerArn: !Ref 'ApplicationLoadBalancer'
-      Port: 7070
-      Protocol: HTTP
-  ALBListenerWSOutbound:
-    Type: AWS::ElasticLoadBalancingV2::Listener
-    Properties:
-      DefaultActions:
-        - TargetGroupArn: !Ref 'DummyTargetGroupALB'
-          Type: 'forward'
-      LoadBalancerArn: !Ref 'ApplicationLoadBalancer'
-      Port: 5555
-      Protocol: HTTP
+      Certificates:
+        - CertificateArn: !Ref CertificateArn
+      ListenerArn: !Ref ALBListenerNginxSSL
 Outputs:
+  ALBId:
+    Description: The ARN of the Application Load Balancer
+    Value: !Ref ApplicationLoadBalancer
+    Export:
+      Name: !Join [ ':', [ !Ref 'EnvironmentName', 'ALBId' ] ]
+  ALBAddress:
+    Description: DNS Address of Network Load Balancer
+    Value: !GetAtt ApplicationLoadBalancer.DNSName
+    Export: 
+      Name: !Join [ ':', [ !Ref 'EnvironmentName', 'ALBAddress' ] ]
+
   ALBListenerNginx:
     Description: The ARN of the public load balancer's Listener
     Value: !Ref ALBListenerNginx
     Export:
       Name: !Join [ ':', [ !Ref 'EnvironmentName', 'ALBListenerNginx' ] ]
+  ALBListenerNginxSSL:
+    Description: The ARN of the public load balancer's Listener
+    Value: !Ref ALBListenerNginxSSL
+    Export:
+      Name: !Join [ ':', [ !Ref 'EnvironmentName', 'ALBListenerNginxSSL' ] ]
   ALBListenerNginxAdmin:
     Description: The ARN of the public load balancer's Listener
     Value: !Ref ALBListenerNginxAdmin
     Export:
       Name: !Join [ ':', [ !Ref 'EnvironmentName', 'ALBListenerNginxAdmin' ] ]
-  ALBListenerWSInbound:
-    Description: The ARN of the public load balancer's Listener
-    Value: !Ref ALBListenerWSInbound
-    Export:
-      Name: !Join [ ':', [ !Ref 'EnvironmentName', 'ALBListenerWSInbound' ] ]
-  ALBListenerWSOutbound:
-    Description: The ARN of the public load balancer's Listener
-    Value: !Ref ALBListenerWSOutbound
-    Export:
-      Name: !Join [ ':', [ !Ref 'EnvironmentName', 'ALBListenerWSOutbound' ] ]
   ALBListenerApi:
     Description: The ARN of the public load balancer's Listener
     Value: !Ref ALBListenerApi
