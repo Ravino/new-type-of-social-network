@@ -1,23 +1,6 @@
 {
-    "Parameters": {
-        "ServiceName": "back-ws",
-        "ImageUrl": "884088487044.dkr.ecr.eu-central-1.amazonaws.com/eu-central-1-test-plizi-back-ws",
-        "ServiceProtocol": "HTTP",
-        "ContainerCpu": "1024",
-        "ContainerMemory": "2048",
-        "Path": "dev-ws.plizi.fun",
-        "Priority": "20",
-        "MinCapacity": "1",
-        "DesiredCount": "1",
-        "MaxCapacity": "60",
-        "LowCpuPeriodAlarm": "300",
-        "ScaleDownCooldown": "300",
-        "LowCpuThresholdAlarm": "0",
-        "HighCpuThresholdAlarm": "70",
-        "ScaleUpCooldown": "30",
-        "DeploymentMaximum": "200",
-        "DeploymentMinimum": "75",
-        "ApiUrl": "dev.plizi.fun",
+	"Parameters": {
+		"ApiUrl": "dev.plizi.fun",
 		"AppDebug": 1,
 		"AppEnv": "production",
 		"AppKey": "base64:B+SfHGdTdca+dxR4pzJ2SRrqFpF1gFS/pgZTHNxDbhw=",
@@ -44,5 +27,5 @@
 		"Neo4DbPassword": "zKisCPceY6WzTP1R",
 		"Neo4DbUsername": "neo4j",
 		"QueueConnection": "redis"
-    }
+	}
 }

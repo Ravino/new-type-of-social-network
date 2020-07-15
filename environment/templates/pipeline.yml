@@ -564,8 +564,6 @@ Resources:
         - StageName: Deploy
           Reason: "We have to make sure images are build in a right way."
       Stages:
-
-        # First we have to pull the source code from the Github repository.
         - Name: GitHub
           Actions:
             - Name: Fetch-source
@@ -582,8 +580,6 @@ Resources:
               OutputArtifacts:
                 - Name: Source
               RunOrder: 1
-
-        # Now we deploy the base resources: the cluster and VPC itself.
         - Name: Cluster
           Actions:
             - Name: Deploy
@@ -609,11 +605,8 @@ Resources:
               OutputArtifacts:
                 - Name: BaseResourcesDeployOutput
               RunOrder: 1
-
-        And we deploy the application resources (Elasticache, RDS, DocumentDB, etc)
         - Name: Resources
           Actions:
-            
           - Name: Mongo
             ActionTypeId:
               Category: Deploy
