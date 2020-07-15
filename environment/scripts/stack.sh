@@ -75,8 +75,7 @@ function delete-databases {
     aws cloudformation delete-stack --stack-name ${RESOURCE_NAME}-mongo --role-arn ${ARN_ROLE}
 }
 function delete-resources {
-    aws cloudformation delete-stack --stack-name ${RESOURCE_NAME}-resources --role-arn ${ARN_ROLE}
-    aws cloudformation delete-stack --stack-name ${RESOURCE_NAME}-cluster --role-arn ${ARN_ROLE}
+    aws cloudformation delete-stack --stack-name ${SERVICE_STACK_PREFIX}-cluster --role-arn ${ARN_ROLE}
 }
 function delete-stack-resources {
     # remove ecr
