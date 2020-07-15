@@ -312,6 +312,15 @@ Resources:
       LoadBalancerArn: !Ref 'ApplicationLoadBalancer'
       Port: 80
       Protocol: HTTP
+  ApplicationLoadBalancerListenerNginxAdmin:
+    Type: AWS::ElasticLoadBalancingV2::Listener
+    Properties:
+      DefaultActions:
+        - TargetGroupArn: !Ref 'DummyTargetGroupALB'
+          Type: 'forward'
+      LoadBalancerArn: !Ref 'ApplicationLoadBalancer'
+      Port: 81
+      Protocol: HTTP
   ApplicationLoadBalancerListenerApi:
     Type: AWS::ElasticLoadBalancingV2::Listener
     Properties:
@@ -553,6 +562,11 @@ Outputs:
     Value: !Ref ApplicationLoadBalancerListenerNginx
     Export:
       Name: !Join [ ':', [ !Ref 'EnvironmentName', 'ALBListenerNginx' ] ]
+  ALBListenerNginxAdmin:
+    Description: The ARN of the public load balancer's Listener
+    Value: !Ref ApplicationLoadBalancerListenerNginxAdmin
+    Export:
+      Name: !Join [ ':', [ !Ref 'EnvironmentName', 'ALBListenerNginxAdmin' ] ]
   ALBListenerWS:
     Description: The ARN of the public load balancer's Listener
     Value: !Ref ApplicationLoadBalancerListenerWS

@@ -162,7 +162,10 @@ Resources:
           Image: !Ref 'ImageUrl'
           #Environment:
           PortMappings:
-            - ContainerPort: !Ref 'ContainerPort'
+            - 
+              ContainerPort: 80
+            - 
+              ContainerPort: 81
           LogConfiguration:
             LogDriver: 'awslogs'
             Options:
@@ -176,8 +179,7 @@ Resources:
   Service:
     Type: AWS::ECS::Service
     DependsOn:
-      - HTTPRule
-      # - HTTPSRule
+      - ListenerRule
     Properties:
       ServiceName: !Ref 'ServiceName'
       Cluster:
@@ -203,7 +205,10 @@ Resources:
       TaskDefinition: !Ref 'TaskDefinition'
       LoadBalancers:
         - ContainerName: !Ref 'ServiceName'
-          ContainerPort: !Ref 'ContainerPort'
+          ContainerPort: 80
+          TargetGroupArn: !Ref 'TargetGroup'
+        - ContainerName: !Ref 'ServiceName'
+          ContainerPort: 81
           TargetGroupArn: !Ref 'TargetGroup'
   # A target group. This is used for keeping track of all the tasks, and
   # what IP addresses / port numbers they have. You can query it yourself,
@@ -220,8 +225,29 @@ Resources:
       #HealthyThresholdCount: 2
       TargetType: ip
       Name: !Ref 'ServiceName'
-      Port: !Ref 'ContainerPort'
-      Protocol: !Ref ServiceProtocol
+      Port: 80
+      Protocol: HTTP
+      TargetGroupAttributes:
+        - Key: stickiness.enabled
+          Value: 'true' # TODO possible reason of issues for WebSockets are not forwarding messages
+        - Key: deregistration_delay.timeout_seconds
+          Value: '30' # TODO possible reason of issues for WebSockets are not forwarding messages
+      #UnhealthyThresholdCount: 2
+      VpcId:
+        Fn::ImportValue:
+          !Join [':', [!Ref 'EnvironmentName', 'VPCId']]
+  TargetGroupAdmin:
+    Type: AWS::ElasticLoadBalancingV2::TargetGroup
+    Properties:
+      #HealthCheckIntervalSeconds: 6
+      #HealthCheckPath: /
+      #HealthCheckProtocol: HTTP
+      #HealthCheckTimeoutSeconds: 5
+      #HealthyThresholdCount: 2
+      TargetType: ip
+      Name: !Join ["-", [ !Ref 'ServiceName', "Admin" ] ]
+      Port: 81
+      Protocol: HTTP
       TargetGroupAttributes:
         - Key: stickiness.enabled
           Value: 'true' # TODO possible reason of issues for WebSockets are not forwarding messages
@@ -236,7 +262,7 @@ Resources:
  # Create rules to forward both HTTP and HTTPS traffic to the service's
   # target group. The service itself will handle redirecting HTTP traffic
   # to HTTPS
-  HTTPRule:
+  ListenerRule:
     Type: AWS::ElasticLoadBalancingV2::ListenerRule
     Properties:
       Actions:
@@ -248,6 +274,19 @@ Resources:
       ListenerArn:
         Fn::ImportValue:
           !Join [':', [!Ref 'EnvironmentName', 'ALBListenerNginx']]
+      Priority: !Ref 'Priority'
+  ListenerRuleAdmin:
+    Type: AWS::ElasticLoadBalancingV2::ListenerRule
+    Properties:
+      Actions:
+        - TargetGroupArn: !Ref 'TargetGroup'
+          Type: 'forward'
+      Conditions:
+        - Field: host-header
+          Values: [!Ref 'Path']
+      ListenerArn:
+        Fn::ImportValue:
+          !Join [':', [!Ref 'EnvironmentName', 'ALBListenerNginxAdmin']]
       Priority: !Ref 'Priority'
   # HTTPSRule:
   #   Type: AWS::ElasticLoadBalancingV2::ListenerRule
