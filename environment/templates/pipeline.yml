@@ -610,78 +610,78 @@ Resources:
                 - Name: BaseResourcesDeployOutput
               RunOrder: 1
 
-        # And we deploy the application resources (Elasticache, RDS, DocumentDB, etc)
-        # - Name: Resources
-        #   Actions:
+        And we deploy the application resources (Elasticache, RDS, DocumentDB, etc)
+        - Name: Resources
+          Actions:
             
-          # - Name: Mongo
-          #   ActionTypeId:
-          #     Category: Deploy
-          #     Owner: AWS
-          #     Version: '1'
-          #     Provider: CloudFormation
-          #   Configuration:
-          #     ActionMode: CREATE_UPDATE
-          #     Capabilities: CAPABILITY_IAM
-          #     ChangeSetName: !Sub "${AWS::Region}-${EnvironmentName}-mongo-changeset"
-          #     RoleArn: !GetAtt CloudFormationDeployRole.Arn
-          #     StackName: !Sub "${AWS::Region}-${EnvironmentName}-mongo"
-          #     TemplatePath: Source::environment/templates/infrastructure/database-mongo.yml
-          #     ParameterOverrides: !Sub |
-          #       {
-          #         "EnvironmentName": "${EnvironmentName}"
-          #       }
-          #   InputArtifacts:
-          #     - Name: Source
-          #   OutputArtifacts:
-          #     - Name: MongoDeployOutput
-          #   RunOrder: 2
+          - Name: Mongo
+            ActionTypeId:
+              Category: Deploy
+              Owner: AWS
+              Version: '1'
+              Provider: CloudFormation
+            Configuration:
+              ActionMode: CREATE_UPDATE
+              Capabilities: CAPABILITY_IAM
+              ChangeSetName: !Sub "${AWS::Region}-${EnvironmentName}-mongo-changeset"
+              RoleArn: !GetAtt CloudFormationDeployRole.Arn
+              StackName: !Sub "${AWS::Region}-${EnvironmentName}-mongo"
+              TemplatePath: Source::environment/templates/infrastructure/database-mongo.yml
+              ParameterOverrides: !Sub |
+                {
+                  "EnvironmentName": "${EnvironmentName}"
+                }
+            InputArtifacts:
+              - Name: Source
+            OutputArtifacts:
+              - Name: MongoDeployOutput
+            RunOrder: 2
 
-          # - Name: MySQL
-          #   ActionTypeId:
-          #     Category: Deploy
-          #     Owner: AWS
-          #     Version: '1'
-          #     Provider: CloudFormation
-          #   Configuration:
-          #     ActionMode: CREATE_UPDATE
-          #     Capabilities: CAPABILITY_IAM
-          #     ChangeSetName: !Sub "${AWS::Region}-${EnvironmentName}-mysql-changeset"
-          #     RoleArn: !GetAtt CloudFormationDeployRole.Arn
-          #     StackName: !Sub "${AWS::Region}-${EnvironmentName}-mysql"
-          #     TemplatePath: Source::environment/templates/infrastructure/database-mysql.yml
-          #     ParameterOverrides: !Sub |
-          #       {
-          #         "EnvironmentName": "${EnvironmentName}"
-          #       }
-          #   InputArtifacts:
-          #     - Name: Source
-          #   OutputArtifacts:
-          #     - Name: MySQLDeployOutput
-          #   RunOrder: 2
+          - Name: MySQL
+            ActionTypeId:
+              Category: Deploy
+              Owner: AWS
+              Version: '1'
+              Provider: CloudFormation
+            Configuration:
+              ActionMode: CREATE_UPDATE
+              Capabilities: CAPABILITY_IAM
+              ChangeSetName: !Sub "${AWS::Region}-${EnvironmentName}-mysql-changeset"
+              RoleArn: !GetAtt CloudFormationDeployRole.Arn
+              StackName: !Sub "${AWS::Region}-${EnvironmentName}-mysql"
+              TemplatePath: Source::environment/templates/infrastructure/database-mysql.yml
+              ParameterOverrides: !Sub |
+                {
+                  "EnvironmentName": "${EnvironmentName}"
+                }
+            InputArtifacts:
+              - Name: Source
+            OutputArtifacts:
+              - Name: MySQLDeployOutput
+            RunOrder: 2
 
-          # - Name: Redis
-          #   ActionTypeId:
-          #     Category: Deploy
-          #     Owner: AWS
-          #     Version: '1'
-          #     Provider: CloudFormation
-          #   Configuration:
-          #     ActionMode: CREATE_UPDATE
-          #     Capabilities: CAPABILITY_IAM
-          #     ChangeSetName: !Sub "${AWS::Region}-${EnvironmentName}-redis-changeset"
-          #     RoleArn: !GetAtt CloudFormationDeployRole.Arn
-          #     StackName: !Sub "${AWS::Region}-${EnvironmentName}-redis"
-          #     TemplatePath: Source::environment/templates/infrastructure/database-redis.yml
-          #     ParameterOverrides: !Sub |
-          #       {
-          #         "EnvironmentName": "${EnvironmentName}"
-          #       }
-          #   InputArtifacts:
-          #     - Name: Source
-          #   OutputArtifacts:
-          #     - Name: RedisDeployOutput
-          #   RunOrder: 2
+          - Name: Redis
+            ActionTypeId:
+              Category: Deploy
+              Owner: AWS
+              Version: '1'
+              Provider: CloudFormation
+            Configuration:
+              ActionMode: CREATE_UPDATE
+              Capabilities: CAPABILITY_IAM
+              ChangeSetName: !Sub "${AWS::Region}-${EnvironmentName}-redis-changeset"
+              RoleArn: !GetAtt CloudFormationDeployRole.Arn
+              StackName: !Sub "${AWS::Region}-${EnvironmentName}-redis"
+              TemplatePath: Source::environment/templates/infrastructure/database-redis.yml
+              ParameterOverrides: !Sub |
+                {
+                  "EnvironmentName": "${EnvironmentName}"
+                }
+            InputArtifacts:
+              - Name: Source
+            OutputArtifacts:
+              - Name: RedisDeployOutput
+            RunOrder: 2
 
         - Name: Services
           Actions:
