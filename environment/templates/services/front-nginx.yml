@@ -247,7 +247,7 @@ Resources:
           Values: [!Ref 'Path']
       ListenerArn:
         Fn::ImportValue:
-          !Join [':', [!Ref 'EnvironmentName', 'PublicListenerNginx']]
+          !Join [':', [!Ref 'EnvironmentName', 'ALBListenerNginx']]
       Priority: !Ref 'Priority'
   # HTTPSRule:
   #   Type: AWS::ElasticLoadBalancingV2::ListenerRule
@@ -260,7 +260,7 @@ Resources:
   #         Values: [!Ref 'Path']
   #     ListenerArn:
   #       Fn::ImportValue:
-  #         !Join [':', [!Ref 'EnvironmentName', 'PublicListener']]
+  #         !Join [':', [!Ref 'EnvironmentName', 'ALBListener']]
   #     Priority: !Ref 'Priority'
 
   # Enable autoscaling for this service

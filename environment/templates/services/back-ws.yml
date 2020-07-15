@@ -486,7 +486,7 @@ Resources:
           Values: [!Ref 'Path']
       ListenerArn:
         Fn::ImportValue:
-          !Join [':', [!Ref 'EnvironmentName', 'PublicListenerWS']]
+          !Join [':', [!Ref 'EnvironmentName', 'ALBListenerWS']]
       Priority: !Ref 'Priority'
   OutboundRule:
     Type: AWS::ElasticLoadBalancingV2::ListenerRule
@@ -499,7 +499,7 @@ Resources:
           Values: [!Ref 'Path']
       ListenerArn:
         Fn::ImportValue:
-          !Join [':', [!Ref 'EnvironmentName', 'PublicListenerWSOut']]
+          !Join [':', [!Ref 'EnvironmentName', 'ALBListenerWSOut']]
       Priority: !Ref 'Priority'
 
   # Enable autoscaling for this service

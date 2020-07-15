@@ -6,6 +6,11 @@ Description: This stack deploys a Fargate cluster that is in a VPC with both
              send traffic to the containers in the private subnet, and one in
              the private subnet, which can be used for private internal traffic
              between internal services.
+Metadata:
+  cfn-lint:
+    config:
+      ignore_checks:
+      - E3012
 Parameters:
   # application configuration
   EnvironmentName:
@@ -232,14 +237,14 @@ Resources:
       Description: Ingress from the public ALB
       GroupId: !Ref 'FargateContainerSecurityGroup'
       IpProtocol: -1
-      SourceSecurityGroupId: !Ref 'PublicLoadBalancerSG'
+      SourceSecurityGroupId: !Ref 'ApplicationLoadBalancerSG'
   EcsSecurityGroupIngressFromPrivateALB:
     Type: AWS::EC2::SecurityGroupIngress
     Properties:
       Description: Ingress from the private ALB
       GroupId: !Ref 'FargateContainerSecurityGroup'
       IpProtocol: -1
-      SourceSecurityGroupId: !Ref 'PrivateLoadBalancerSG'
+      SourceSecurityGroupId: !Ref 'NetworkLoadBalancerSG'
   EcsSecurityGroupIngressFromSelf:
     Type: AWS::EC2::SecurityGroupIngress
     Properties:
@@ -261,7 +266,7 @@ Resources:
 
   # A public facing load balancer, this is used for accepting traffic from the public
   # internet and directing it to public facing microservices
-  PublicLoadBalancerSG:
+  ApplicationLoadBalancerSG:
     Type: AWS::EC2::SecurityGroup
     Properties:
       GroupDescription: Access to the public facing load balancer
@@ -270,7 +275,7 @@ Resources:
           # Allow access to ALB from anywhere on the internet
           - CidrIp: 0.0.0.0/0
             IpProtocol: -1
-  PublicLoadBalancer:
+  ApplicationLoadBalancer:
     Type: AWS::ElasticLoadBalancingV2::LoadBalancer
     Properties:
       Scheme: internet-facing
@@ -282,10 +287,10 @@ Resources:
         # from the internet can reach the load balancer directly via the internet gateway
         - !Ref PublicSubnetOne
         - !Ref PublicSubnetTwo
-      SecurityGroups: [!Ref 'PublicLoadBalancerSG']
+      SecurityGroups: [!Ref 'ApplicationLoadBalancerSG']
   # A dummy target group is used to setup the ALB to just drop traffic
   # initially, before any real service target groups have been added.
-  DummyTargetGroupPublic:
+  DummyTargetGroupALB:
     Type: AWS::ElasticLoadBalancingV2::TargetGroup
     Properties:
       #HealthCheckIntervalSeconds: 6
@@ -298,59 +303,59 @@ Resources:
       Protocol: HTTP
       #UnhealthyThresholdCount: 2
       VpcId: !Ref 'VPC'
-  PublicLoadBalancerListenerNginx:
+  ApplicationLoadBalancerListenerNginx:
     Type: AWS::ElasticLoadBalancingV2::Listener
     Properties:
       DefaultActions:
-        - TargetGroupArn: !Ref 'DummyTargetGroupPublic'
+        - TargetGroupArn: !Ref 'DummyTargetGroupALB'
           Type: 'forward'
-      LoadBalancerArn: !Ref 'PublicLoadBalancer'
+      LoadBalancerArn: !Ref 'ApplicationLoadBalancer'
       Port: 80
       Protocol: HTTP
-  PublicLoadBalancerListenerApi:
+  ApplicationLoadBalancerListenerApi:
     Type: AWS::ElasticLoadBalancingV2::Listener
     Properties:
       DefaultActions:
-        - TargetGroupArn: !Ref 'DummyTargetGroupPublic'
+        - TargetGroupArn: !Ref 'DummyTargetGroupALB'
           Type: 'forward'
-      LoadBalancerArn: !Ref 'PublicLoadBalancer'
+      LoadBalancerArn: !Ref 'ApplicationLoadBalancer'
       Port: 1215
       Protocol: HTTP
-  PublicLoadBalancerListenerWS:
+  ApplicationLoadBalancerListenerWS:
     Type: AWS::ElasticLoadBalancingV2::Listener
     Properties:
       DefaultActions:
-        - TargetGroupArn: !Ref 'DummyTargetGroupPublic'
+        - TargetGroupArn: !Ref 'DummyTargetGroupALB'
           Type: 'forward'
-      LoadBalancerArn: !Ref 'PublicLoadBalancer'
+      LoadBalancerArn: !Ref 'ApplicationLoadBalancer'
       Port: 7070
       Protocol: HTTP
-  PublicLoadBalancerListenerWSOut:
+  ApplicationLoadBalancerListenerWSOut:
     Type: AWS::ElasticLoadBalancingV2::Listener
     Properties:
       DefaultActions:
-        - TargetGroupArn: !Ref 'DummyTargetGroupPublic'
+        - TargetGroupArn: !Ref 'DummyTargetGroupALB'
           Type: 'forward'
-      LoadBalancerArn: !Ref 'PublicLoadBalancer'
+      LoadBalancerArn: !Ref 'ApplicationLoadBalancer'
       Port: 5555
       Protocol: HTTP
 
   # An internal load balancer, this would be used for a service that is not
   # directly accessible to the public, but instead should only receive traffic
   # from your other services.
-  PrivateLoadBalancerSG:
+  NetworkLoadBalancerSG:
     Type: AWS::EC2::SecurityGroup
     Properties:
       GroupDescription: Access to the internal load balancer
       VpcId: !Ref 'VPC'
-  PrivateLoadBalancerIngressFromECS:
+  NetworkLoadBalancerIngressFromECS:
     Type: AWS::EC2::SecurityGroupIngress
     Properties:
       Description: Only accept traffic from a container in the fargate container security group
-      GroupId: !Ref 'PrivateLoadBalancerSG'
+      GroupId: !Ref 'NetworkLoadBalancerSG'
       IpProtocol: -1
       SourceSecurityGroupId: !Ref 'FargateContainerSecurityGroup'
-  PrivateLoadBalancer:
+  NetworkLoadBalancer:
     Type: AWS::ElasticLoadBalancingV2::LoadBalancer
     Properties:
       Type: network
@@ -362,7 +367,7 @@ Resources:
         - !Ref PrivateSubnetTwo
   # This dummy target group is used to setup the ALB to just drop traffic
   # initially, before any real service target groups have been added.
-  DummyTargetGroupPrivate:
+  DummyTargetGroupNLB:
     Type: AWS::ElasticLoadBalancingV2::TargetGroup
     Properties:
       # HealthCheckIntervalSeconds: 6
@@ -375,14 +380,23 @@ Resources:
       Protocol: TCP
       # UnhealthyThresholdCount: 2
       VpcId: !Ref 'VPC'
-  PrivateLoadBalancerListenerWS:
+  NetworkLoadBalancerListenerWSInbound:
     Type: AWS::ElasticLoadBalancingV2::Listener
     Properties:
       DefaultActions:
-        - TargetGroupArn: !Ref 'DummyTargetGroupPrivate'
+        - TargetGroupArn: !Ref 'DummyTargetGroupNLB'
           Type: 'forward'
-      LoadBalancerArn: !Ref 'PrivateLoadBalancer'
+      LoadBalancerArn: !Ref 'NetworkLoadBalancer'
       Port: 7070
+      Protocol: TCP
+  NetworkLoadBalancerListenerWSOutbound:
+    Type: AWS::ElasticLoadBalancingV2::Listener
+    Properties:
+      DefaultActions:
+        - TargetGroupArn: !Ref 'DummyTargetGroupNLB'
+          Type: 'forward'
+      LoadBalancerArn: !Ref 'NetworkLoadBalancer'
+      Port: 5555
       Protocol: TCP
 
   # This is an IAM role which authorizes ECS to manage resources on your
@@ -511,12 +525,12 @@ Outputs:
       Name: !Join [ ':', [ !Ref 'EnvironmentName', 'ClusterName' ] ]
   InternalUrl:
     Description: The url of the internal load balancer
-    Value: !Join ['', ['', !GetAtt 'PrivateLoadBalancer.DNSName']]
+    Value: !Join ['', ['', !GetAtt 'NetworkLoadBalancer.DNSName']]
     Export:
       Name: !Join [ ':', [ !Ref 'EnvironmentName', 'InternalUrl' ] ]
   ExternalUrl:
     Description: The url of the external load balancer
-    Value: !Join ['', ['', !GetAtt 'PublicLoadBalancer.DNSName']]
+    Value: !Join ['', ['', !GetAtt 'ApplicationLoadBalancer.DNSName']]
     Export:
       Name: !Join [ ':', [ !Ref 'EnvironmentName', 'ExternalUrl' ] ]
   ECSRole:
@@ -534,31 +548,36 @@ Outputs:
     Value: !GetAtt 'ECSServiceExecutionTaskRole.Arn'
     Export:
       Name: !Join [ ':', [ !Ref 'EnvironmentName', 'ECSServiceExecutionTaskRole' ] ]
-  PublicListenerNginx:
+  ALBListenerNginx:
     Description: The ARN of the public load balancer's Listener
-    Value: !Ref PublicLoadBalancerListenerNginx
+    Value: !Ref ApplicationLoadBalancerListenerNginx
     Export:
-      Name: !Join [ ':', [ !Ref 'EnvironmentName', 'PublicListenerNginx' ] ]
-  PublicListenerWS:
+      Name: !Join [ ':', [ !Ref 'EnvironmentName', 'ALBListenerNginx' ] ]
+  ALBListenerWS:
     Description: The ARN of the public load balancer's Listener
-    Value: !Ref PublicLoadBalancerListenerWS
+    Value: !Ref ApplicationLoadBalancerListenerWS
     Export:
-      Name: !Join [ ':', [ !Ref 'EnvironmentName', 'PublicListenerWS' ] ]
-  PublicListenerWSOut:
+      Name: !Join [ ':', [ !Ref 'EnvironmentName', 'ALBListenerWS' ] ]
+  ALBListenerWSOut:
     Description: The ARN of the public load balancer's Listener
-    Value: !Ref PublicLoadBalancerListenerWSOut
+    Value: !Ref ApplicationLoadBalancerListenerWSOut
     Export:
-      Name: !Join [ ':', [ !Ref 'EnvironmentName', 'PublicListenerWSOut' ] ]
-  PublicListenerApi:
+      Name: !Join [ ':', [ !Ref 'EnvironmentName', 'ALBListenerWSOut' ] ]
+  ALBListenerApi:
     Description: The ARN of the public load balancer's Listener
-    Value: !Ref PublicLoadBalancerListenerApi
+    Value: !Ref ApplicationLoadBalancerListenerApi
     Export:
-      Name: !Join [ ':', [ !Ref 'EnvironmentName', 'PublicListenerApi' ] ]
-  PrivateListenerWS:
+      Name: !Join [ ':', [ !Ref 'EnvironmentName', 'ALBListenerApi' ] ]
+  NLBListenerWSInbound:
     Description: The ARN of the public load balancer's Listener
-    Value: !Ref PrivateLoadBalancerListenerWS
+    Value: !Ref NetworkLoadBalancerListenerWSInbound
     Export:
-      Name: !Join [ ':', [ !Ref 'EnvironmentName', 'PrivateListenerWS' ] ]
+      Name: !Join [ ':', [ !Ref 'EnvironmentName', 'NLBListenerWSInbound' ] ]
+  NLBListenerWSOutbound:
+    Description: The ARN of the public load balancer's Listener
+    Value: !Ref NetworkLoadBalancerListenerWSOutbound
+    Export:
+      Name: !Join [ ':', [ !Ref 'EnvironmentName', 'NLBListenerWSOutbound' ] ]
   VPCId:
     Description: The ID of the VPC that this stack is deployed in
     Value: !Ref 'VPC'
