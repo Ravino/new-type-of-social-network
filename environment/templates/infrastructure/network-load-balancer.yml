@@ -42,6 +42,7 @@ Resources:
   NLBTargetGroupWSInbound:
     Type: AWS::ElasticLoadBalancingV2::TargetGroup
     Properties:
+      TargetType: ip
       Port: 7070
       Protocol: TCP
       VpcId: 
@@ -50,6 +51,7 @@ Resources:
   NLBTargetGroupWSOutbound:
     Type: AWS::ElasticLoadBalancingV2::TargetGroup
     Properties:
+      TargetType: ip
       Port: 5555
       Protocol: TCP
       VpcId: 
