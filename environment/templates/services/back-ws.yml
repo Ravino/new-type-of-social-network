@@ -568,9 +568,13 @@ Resources:
       Protocol: !Ref 'ServiceProtocol'
       TargetGroupAttributes:
         - Key: stickiness.enabled
-          Value: 'true' # TODO possible reason of issues for WebSockets are not forwarding messages
+          Value: 'true'
+        - Key: stickiness.lb_cookie.duration_seconds
+          Value: '86400'
+        - Key: stickiness.type
+          Value: 'lb_cookie'
         - Key: deregistration_delay.timeout_seconds
-          Value: '30' # TODO possible reason of issues for WebSockets are not forwarding messages
+          Value: '30'
       #UnhealthyThresholdCount: 2
       VpcId:
         Fn::ImportValue:
