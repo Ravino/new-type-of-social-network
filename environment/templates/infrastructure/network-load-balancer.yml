@@ -39,24 +39,24 @@ Resources:
       Tags:
         - Key: "Name"
           Value: "network-public"
-  NLBTargetGroupWSInbound:
-    Type: AWS::ElasticLoadBalancingV2::TargetGroup
-    Properties:
-      TargetType: ip
-      Port: 7070
-      Protocol: TCP
-      VpcId: 
-        Fn::ImportValue:
-          !Join [':', [!Ref 'EnvironmentName', 'VPCId']]
-  NLBTargetGroupWSOutbound:
-    Type: AWS::ElasticLoadBalancingV2::TargetGroup
-    Properties:
-      TargetType: ip
-      Port: 5555
-      Protocol: TCP
-      VpcId: 
-        Fn::ImportValue:
-          !Join [':', [!Ref 'EnvironmentName', 'VPCId']]
+  # NLBTargetGroupWSInbound:
+  #   Type: AWS::ElasticLoadBalancingV2::TargetGroup
+  #   Properties:
+  #     TargetType: ip
+  #     Port: 7070
+  #     Protocol: TCP
+  #     VpcId: 
+  #       Fn::ImportValue:
+  #         !Join [':', [!Ref 'EnvironmentName', 'VPCId']]
+  # NLBTargetGroupWSOutbound:
+  #   Type: AWS::ElasticLoadBalancingV2::TargetGroup
+  #   Properties:
+  #     TargetType: ip
+  #     Port: 5555
+  #     Protocol: TCP
+  #     VpcId: 
+  #       Fn::ImportValue:
+  #         !Join [':', [!Ref 'EnvironmentName', 'VPCId']]
   # NLBTargetGroupWSSSL:
   #   Type: AWS::ElasticLoadBalancingV2::TargetGroup
   #   Properties:
@@ -110,11 +110,11 @@ Outputs:
     Export: 
       Name: !Join [ ':', [ !Ref 'EnvironmentName', 'NLBAddress' ] ]
 
-  NLBTargetGroupWSInbound:
-    Description: The ARN of the public load balancer's Listener
-    Value: !Ref NLBTargetGroupWSInbound
-    Export:
-      Name: !Join [ ':', [ !Ref 'EnvironmentName', 'NLBTargetGroupWSInbound' ] ]
+  # NLBTargetGroupWSInbound:
+  #   Description: The ARN of the public load balancer's Listener
+  #   Value: !Ref NLBTargetGroupWSInbound
+  #   Export:
+  #     Name: !Join [ ':', [ !Ref 'EnvironmentName', 'NLBTargetGroupWSInbound' ] ]
   NLBTargetGroupWSOutbound:
     Description: The ARN of the NLBTargetGroupWSOutbound
     Value: !Ref NLBTargetGroupWSOutbound
