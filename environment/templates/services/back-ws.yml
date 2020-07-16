@@ -398,8 +398,8 @@ Resources:
   # copies of a type of task, and gather up their logs and metrics, as well
   # as monitor the number of running tasks and replace any that have crashed
   Service:
-    DependsOn:
-    - HTTPRule
+    # DependsOn:
+    # - HTTPRule
     Type: AWS::ECS::Service
     Properties:
       ServiceName: !Ref 'ServiceName'
@@ -426,9 +426,9 @@ Resources:
       TaskDefinition: !Ref 'TaskDefinition'
       HealthCheckGracePeriodSeconds: 2147483647
       LoadBalancers:
-        - ContainerName: !Ref 'ServiceName'
-          ContainerPort: 7070
-          TargetGroupArn: !Ref TargetGroup
+        # - ContainerName: !Ref 'ServiceName'
+        #   ContainerPort: 7070
+        #   TargetGroupArn: !Ref TargetGroup
         - ContainerName: !Ref 'ServiceName'
           ContainerPort: 7070
           TargetGroupArn: 
@@ -440,45 +440,45 @@ Resources:
             Fn::ImportValue: 
               !Join [':', [!Ref 'EnvironmentName', 'NLBTargetGroupWSOutbound']]
 
-  TargetGroup:
-    Type: AWS::ElasticLoadBalancingV2::TargetGroup
-    Properties:
-      #HealthCheckIntervalSeconds: 6
-      #HealthCheckPath: /
-      #HealthCheckProtocol: HTTP
-      #HealthCheckTimeoutSeconds: 5
-      #HealthyThresholdCount: 2
-      TargetType: ip
-      Name: !Ref 'ServiceName'
-      Port: 7070
-      Protocol: !Ref 'ServiceProtocol'
-      TargetGroupAttributes:
-        - Key: stickiness.enabled
-          Value: 'true' # TODO possible reason of issues for WebSockets are not forwarding messages
-        - Key: deregistration_delay.timeout_seconds
-          Value: '30' # TODO possible reason of issues for WebSockets are not forwarding messages
-      #UnhealthyThresholdCount: 2
-      VpcId:
-        Fn::ImportValue:
-          !Join [':', [!Ref 'EnvironmentName', 'VPCId']]
+  # TargetGroup:
+  #   Type: AWS::ElasticLoadBalancingV2::TargetGroup
+  #   Properties:
+  #     #HealthCheckIntervalSeconds: 6
+  #     #HealthCheckPath: /
+  #     #HealthCheckProtocol: HTTP
+  #     #HealthCheckTimeoutSeconds: 5
+  #     #HealthyThresholdCount: 2
+  #     TargetType: ip
+  #     Name: !Ref 'ServiceName'
+  #     Port: 7070
+  #     Protocol: !Ref 'ServiceProtocol'
+  #     TargetGroupAttributes:
+  #       - Key: stickiness.enabled
+  #         Value: 'true' # TODO possible reason of issues for WebSockets are not forwarding messages
+  #       - Key: deregistration_delay.timeout_seconds
+  #         Value: '30' # TODO possible reason of issues for WebSockets are not forwarding messages
+  #     #UnhealthyThresholdCount: 2
+  #     VpcId:
+  #       Fn::ImportValue:
+  #         !Join [':', [!Ref 'EnvironmentName', 'VPCId']]
 
   # Create a rule on the load balancer for routing traffic to the target group
  # Create rules to forward both HTTP and HTTPS traffic to the service's
   # target group. The service itself will handle redirecting HTTP traffic
   # to HTTPS
-  HTTPRule:
-    Type: AWS::ElasticLoadBalancingV2::ListenerRule
-    Properties:
-      Actions:
-        - TargetGroupArn: !Ref 'TargetGroup'
-          Type: 'forward'
-      Conditions:
-        - Field: host-header
-          Values: [!Ref 'Path']
-      ListenerArn:
-        Fn::ImportValue:
-          !Join [':', [!Ref 'EnvironmentName', 'ALBListenerWS']]
-      Priority: !Ref 'Priority'
+  # HTTPRule:
+  #   Type: AWS::ElasticLoadBalancingV2::ListenerRule
+  #   Properties:
+  #     Actions:
+  #       - TargetGroupArn: !Ref 'TargetGroup'
+  #         Type: 'forward'
+  #     Conditions:
+  #       - Field: host-header
+  #         Values: [!Ref 'Path']
+  #     ListenerArn:
+  #       Fn::ImportValue:
+  #         !Join [':', [!Ref 'EnvironmentName', 'ALBListenerWS']]
+  #     Priority: !Ref 'Priority'
 
   # Enable autoscaling for this service
   ScalableTarget:

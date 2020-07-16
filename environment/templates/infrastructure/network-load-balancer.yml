@@ -45,6 +45,13 @@ Resources:
       TargetType: ip
       Port: 7070
       Protocol: TCP
+      TargetGroupAttributes:
+        - Key: stickiness.enabled
+          Value: 'true'
+        - Key: stickiness.type 
+          Value: 'source_ip'
+        - Key: deregistration_delay.timeout_seconds
+          Value: '30'
       VpcId: 
         Fn::ImportValue:
           !Join [':', [!Ref 'EnvironmentName', 'VPCId']]
