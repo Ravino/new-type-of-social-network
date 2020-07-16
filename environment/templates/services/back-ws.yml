@@ -513,7 +513,8 @@ Resources:
   # as monitor the number of running tasks and replace any that have crashed
   Service:
     DependsOn:
-    - HTTPRule
+      - HTTPRule
+      - HTTPSRule
     Type: AWS::ECS::Service
     Properties:
       ServiceName: !Ref 'ServiceName'
@@ -591,6 +592,19 @@ Resources:
       ListenerArn:
         Fn::ImportValue:
           !Join [':', [!Ref 'EnvironmentName', 'ALBListenerWS']]
+      Priority: !Ref 'Priority'
+  HTTPSRule:
+    Type: AWS::ElasticLoadBalancingV2::ListenerRule
+    Properties:
+      Actions:
+        - TargetGroupArn: !Ref 'TargetGroup'
+          Type: 'forward'
+      Conditions:
+        - Field: host-header
+          Values: [!Ref 'Path']
+      ListenerArn:
+        Fn::ImportValue:
+          !Join [':', [!Ref 'EnvironmentName', 'ALBListenerWSSSL']]
       Priority: !Ref 'Priority'
   # Enable autoscaling for this service
   ScalableTarget:

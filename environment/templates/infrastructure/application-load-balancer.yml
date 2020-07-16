@@ -20,8 +20,16 @@ Parameters:
                            configuration files multiplication.
   CertificateArn:
     Type: String
-    Default: arn:aws:acm:eu-central-1:884088487044:certificate/4444446f-1db7-46ee-b983-cca853830df1
+    Default: arn:aws:acm:eu-central-1:884088487044:certificate/1ec6ec62-ad89-487e-b720-12ff4d445f12
     Description: ARN of the Amazon Certificate Manager SSL certificate to use for this app
+  # DomainZone:
+  #   Type: String
+  #   Default: plizi.fun.
+  #   Description: The name of the Route53 hosted zone for this app
+  # DomainName:
+  #   Type: String
+  #   Default: dev.plizi.fun.
+  #   Description: The specific alias name for the application
 Resources:
   EcsSecurityGroupIngressFromALB:
     Type: AWS::EC2::SecurityGroupIngress
@@ -62,6 +70,17 @@ Resources:
       Tags:
         - Key: "Name"
           Value: "application-public"
+  # DNS:
+  #   Type: AWS::Route53::RecordSetGroup
+  #   Properties:
+  #     HostedZoneName: !Ref 'DomainZone'
+  #     Comment: "Zone apex alias targeted to load balancer."
+  #     RecordSets:
+  #       - Name: !Ref 'DomainName'
+  #         Type: A
+  #         AliasTarget:
+  #           HostedZoneId: !GetAtt 'ApplicationLoadBalancer.CanonicalHostedZoneID'
+  #           DNSName: !GetAtt 'ApplicationLoadBalancer.DNSName'
   DummyTargetGroupALB:
     Type: AWS::ElasticLoadBalancingV2::TargetGroup
     Properties:
@@ -80,6 +99,17 @@ Resources:
       LoadBalancerArn: !Ref 'ApplicationLoadBalancer'
       Port: 80
       Protocol: HTTP
+  ALBListenerNginxSSL:
+    Type: AWS::ElasticLoadBalancingV2::Listener
+    Properties:
+      DefaultActions:
+        - TargetGroupArn: !Ref 'DummyTargetGroupALB'
+          Type: 'forward'
+      LoadBalancerArn: !Ref 'ApplicationLoadBalancer'
+      Port: 443
+      Protocol: HTTPS
+      Certificates:
+        - CertificateArn: !Ref 'CertificateArn'
   ALBListenerWS:
     Type: AWS::ElasticLoadBalancingV2::Listener
     Properties:
@@ -89,15 +119,17 @@ Resources:
       LoadBalancerArn: !Ref 'ApplicationLoadBalancer'
       Port: 7070
       Protocol: HTTP
-  # ALBListenerNginxSSL:
-  #   Type: AWS::ElasticLoadBalancingV2::Listener
-  #   Properties:
-  #     DefaultActions:
-  #       - TargetGroupArn: !Ref 'DummyTargetGroupALB'
-  #         Type: 'forward'
-  #     LoadBalancerArn: !Ref 'ApplicationLoadBalancer'
-  #     Port: 443
-  #     Protocol: HTTP
+  ALBListenerWSSSL:
+    Type: AWS::ElasticLoadBalancingV2::Listener
+    Properties:
+      DefaultActions:
+        - TargetGroupArn: !Ref 'DummyTargetGroupALB'
+          Type: 'forward'
+      LoadBalancerArn: !Ref 'ApplicationLoadBalancer'
+      Port: 7070
+      Protocol: HTTPS
+      Certificates:
+        - CertificateArn: !Ref 'CertificateArn'
   ALBListenerNginxAdmin:
     Type: AWS::ElasticLoadBalancingV2::Listener
     Properties:
@@ -116,12 +148,6 @@ Resources:
       LoadBalancerArn: !Ref 'ApplicationLoadBalancer'
       Port: 1215
       Protocol: HTTP
-  # ApplicationLoadBalancerListenerCert:
-  #   Type: AWS::ElasticLoadBalancingV2::ListenerCertificate
-  #   Properties:
-  #     Certificates:
-  #       - CertificateArn: !Ref CertificateArn
-  #     ListenerArn: !Ref ALBListenerNginxSSL
 Outputs:
   ALBId:
     Description: The ARN of the Application Load Balancer
@@ -139,16 +165,21 @@ Outputs:
     Value: !Ref ALBListenerNginx
     Export:
       Name: !Join [ ':', [ !Ref 'EnvironmentName', 'ALBListenerNginx' ] ]
+  ALBListenerNginxSSL:
+    Description: The ARN of the public load balancer's Listener
+    Value: !Ref ALBListenerNginxSSL
+    Export:
+      Name: !Join [ ':', [ !Ref 'EnvironmentName', 'ALBListenerNginxSSL' ] ]
   ALBListenerWS:
     Description: The ARN of the public load balancer's Listener
     Value: !Ref ALBListenerWS
     Export:
       Name: !Join [ ':', [ !Ref 'EnvironmentName', 'ALBListenerWS' ] ]
-  # ALBListenerNginxSSL:
-  #   Description: The ARN of the public load balancer's Listener
-  #   Value: !Ref ALBListenerNginxSSL
-  #   Export:
-  #     Name: !Join [ ':', [ !Ref 'EnvironmentName', 'ALBListenerNginxSSL' ] ]
+  ALBListenerWSSSL:
+    Description: The ARN of the public load balancer's Listener
+    Value: !Ref ALBListenerWSSSL
+    Export:
+      Name: !Join [ ':', [ !Ref 'EnvironmentName', 'ALBListenerWSSSL' ] ]
   ALBListenerNginxAdmin:
     Description: The ARN of the public load balancer's Listener
     Value: !Ref ALBListenerNginxAdmin
