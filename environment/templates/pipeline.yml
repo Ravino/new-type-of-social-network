@@ -536,6 +536,28 @@ Resources:
               OutputArtifacts:
                 - Name: VPCDeployOutput
               RunOrder: 1
+            - Name: ECS
+              ActionTypeId:
+                Category: Deploy
+                Owner: AWS
+                Version: '1'
+                Provider: CloudFormation
+              Configuration:
+                ActionMode: CREATE_UPDATE
+                Capabilities: CAPABILITY_IAM
+                #ChangeSetName: !Sub "${AWS::Region}-${EnvironmentName}-${ProjectName}-cluster-changeset"
+                RoleArn: !GetAtt CloudFormationDeployRole.Arn
+                StackName: !Sub "${AWS::Region}-${EnvironmentName}-${ProjectName}-ecs"
+                TemplatePath: "Source::environment/templates/infrastructure/ecs-cluster.yml"
+                ParameterOverrides: !Sub |
+                  {
+                    "EnvironmentName": "${EnvironmentName}"
+                  }
+              InputArtifacts:
+                - Name: Source
+              OutputArtifacts:
+                - Name: ClusterDeployOutput
+              RunOrder: 1
         - Name: Databases
           Actions:
           - Name: Mongo
@@ -606,28 +628,6 @@ Resources:
             RunOrder: 2
         - Name: Infrastructure
           Actions:
-            - Name: Cluster
-              ActionTypeId:
-                Category: Deploy
-                Owner: AWS
-                Version: '1'
-                Provider: CloudFormation
-              Configuration:
-                ActionMode: CREATE_UPDATE
-                Capabilities: CAPABILITY_IAM
-                #ChangeSetName: !Sub "${AWS::Region}-${EnvironmentName}-${ProjectName}-cluster-changeset"
-                RoleArn: !GetAtt CloudFormationDeployRole.Arn
-                StackName: !Sub "${AWS::Region}-${EnvironmentName}-${ProjectName}-cluster"
-                TemplatePath: "Source::environment/templates/infrastructure/ecs-cluster.yml"
-                ParameterOverrides: !Sub |
-                  {
-                    "EnvironmentName": "${EnvironmentName}"
-                  }
-              InputArtifacts:
-                - Name: Source
-              OutputArtifacts:
-                - Name: ClusterDeployOutput
-              RunOrder: 1
             - Name: NLB
               ActionTypeId:
                 Category: Deploy
