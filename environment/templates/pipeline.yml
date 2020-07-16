@@ -529,8 +529,7 @@ Resources:
                 TemplatePath: "Source::environment/templates/infrastructure/vpc.yml"
                 ParameterOverrides: !Sub |
                   {
-                    "EnvironmentName": "${EnvironmentName}",
-                    "CertificateArn": "${CertificateArn}"
+                    "EnvironmentName": "${EnvironmentName}"
                   }
               InputArtifacts:
                 - Name: Source
@@ -666,7 +665,8 @@ Resources:
                 TemplatePath: "Source::environment/templates/infrastructure/application-load-balancer.yml"
                 ParameterOverrides: !Sub |
                   {
-                    "EnvironmentName": "${EnvironmentName}"
+                    "EnvironmentName": "${EnvironmentName}",
+                    "CertificateArn": "${CertificateArn}"
                   }
               InputArtifacts:
                 - Name: Source
