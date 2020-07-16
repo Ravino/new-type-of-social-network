@@ -76,15 +76,15 @@ Resources:
       LoadBalancerArn: !Ref 'ApplicationLoadBalancer'
       Port: 80
       Protocol: HTTP
-  # ALBListenerWS:
-  #   Type: AWS::ElasticLoadBalancingV2::Listener
-  #   Properties:
-  #     DefaultActions:
-  #       - TargetGroupArn: !Ref 'DummyTargetGroupALB'
-  #         Type: 'forward'
-  #     LoadBalancerArn: !Ref 'ApplicationLoadBalancer'
-  #     Port: 7070
-  #     Protocol: HTTP
+  ALBListenerWS:
+    Type: AWS::ElasticLoadBalancingV2::Listener
+    Properties:
+      DefaultActions:
+        - TargetGroupArn: !Ref 'DummyTargetGroupALB'
+          Type: 'forward'
+      LoadBalancerArn: !Ref 'ApplicationLoadBalancer'
+      Port: 7070
+      Protocol: HTTP
   # ALBListenerNginxSSL:
   #   Type: AWS::ElasticLoadBalancingV2::Listener
   #   Properties:
@@ -135,11 +135,11 @@ Outputs:
     Value: !Ref ALBListenerNginx
     Export:
       Name: !Join [ ':', [ !Ref 'EnvironmentName', 'ALBListenerNginx' ] ]
-  # ALBListenerWS:
-  #   Description: The ARN of the public load balancer's Listener
-  #   Value: !Ref ALBListenerWS
-  #   Export:
-  #     Name: !Join [ ':', [ !Ref 'EnvironmentName', 'ALBListenerWS' ] ]
+  ALBListenerWS:
+    Description: The ARN of the public load balancer's Listener
+    Value: !Ref ALBListenerWS
+    Export:
+      Name: !Join [ ':', [ !Ref 'EnvironmentName', 'ALBListenerWS' ] ]
   # ALBListenerNginxSSL:
   #   Description: The ARN of the public load balancer's Listener
   #   Value: !Ref ALBListenerNginxSSL
