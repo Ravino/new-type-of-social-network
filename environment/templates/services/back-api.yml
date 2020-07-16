@@ -339,7 +339,7 @@ Resources:
             - Name: SWOOLE_HTTP_HOST
               Value: !Ref 'SwooleHttpHost'
             - Name: ZMQ_SUB_HOST
-              Value: 'dev-qw.plizi.fun'
+              Value: 'dev-ws.plizi.fun'
             - Name: ENV_NAME
               Value: !Ref 'EnvironmentName'
             - Name: REGION
