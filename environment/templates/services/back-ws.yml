@@ -282,6 +282,7 @@ Resources:
           Image: !Ref 'ImageUrlWebSocket'
           PortMappings:
             - ContainerPort: !Ref 'ContainerPort'
+            - ContainerPort: 5555
           Environment:
             - Name: API_URL
               Value: !Ref 'ApiUrl'
