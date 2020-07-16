@@ -57,16 +57,6 @@ Parameters:
     Type: Number
     Default: 512
     Description: How much memory in megabytes to give the container
-  # resources management
-  ServiceCpu:
-    Type: Number
-    Default: 256
-    Description: How much CPU to give the service container. 1024 is 1 CPU
-  # resources management
-  ServiceMemory:
-    Type: Number
-    Default: 512
-    Description: How much memory in megabytes to give the service container
   # load balancing
   Path:
     Type: String
@@ -276,8 +266,8 @@ Resources:
     Type: AWS::ECS::TaskDefinition
     Properties:
       Family: !Ref 'ServiceName'
-      Cpu: !Ref 'ServiceCpu'
-      Memory: !Ref 'ServiceMemory'
+      Cpu: !Ref 'ContainerCpu'
+      Memory: !Ref 'ContainerMemory'
       NetworkMode: awsvpc
       RequiresCompatibilities:
         - FARGATE
@@ -289,8 +279,6 @@ Resources:
           !Join [':', [!Ref 'EnvironmentName', 'ECSServiceExecutionTaskRole']]
       ContainerDefinitions:
         - Name: !Join [ "-", [ !Ref 'ServiceName', "web-socket" ] ]
-          Cpu: !Ref 'ContainerCpu'
-          Memory: !Ref 'ContainerMemory'
           Image: !Ref 'ImageUrlWebSocket'
           PortMappings:
             - ContainerPort: !Ref 'ContainerPort'
@@ -406,8 +394,6 @@ Resources:
               awslogs-region: !Ref 'AWS::Region'
               awslogs-stream-prefix: !Join [ "-", [ !Ref 'ServiceName', "web-socket" ] ]
         - Name: !Join [ "-", [ !Ref 'ServiceName', "queue-worker" ] ]
-          Cpu: !Ref 'ContainerCpu'
-          Memory: !Ref 'ContainerMemory'
           Image: !Ref 'ImageUrlQueueWorker'
           Environment:
             - Name: API_URL
