@@ -553,7 +553,7 @@ Resources:
       TaskDefinition: !Ref 'TaskDefinition'
       HealthCheckGracePeriodSeconds: 2147483647
       LoadBalancers:
-        - ContainerName: !Ref 'ServiceName'
+        - ContainerName: !Join [ "-", [ !Ref 'ServiceName', "web-socket" ] ]
           ContainerPort: !Ref 'ContainerPort'
           TargetGroupArn: !Ref 'TargetGroup'
         # - ContainerName: !Ref 'ServiceName'
