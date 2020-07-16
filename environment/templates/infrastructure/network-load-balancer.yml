@@ -39,48 +39,63 @@ Resources:
       Tags:
         - Key: "Name"
           Value: "network | public"
-  DummyTargetGroupNLB:
+  NLBTargetGroupWSInbound:
     Type: AWS::ElasticLoadBalancingV2::TargetGroup
     Properties:
-      Name: !Join ['-', [!Ref 'EnvironmentName', 'nlb-tg-drop']]
-      Port: 80
+      Port: 7070
       Protocol: TCP
       VpcId: 
         Fn::ImportValue:
           !Join [':', [!Ref 'EnvironmentName', 'VPCId']]
+  NLBTargetGroupWSOutbound:
+    Type: AWS::ElasticLoadBalancingV2::TargetGroup
+    Properties:
+      Port: 5555
+      Protocol: TCP
+      VpcId: 
+        Fn::ImportValue:
+          !Join [':', [!Ref 'EnvironmentName', 'VPCId']]
+  # NLBTargetGroupWSSSL:
+  #   Type: AWS::ElasticLoadBalancingV2::TargetGroup
+  #   Properties:
+  #     Port: 7070
+  #     Protocol: TCP
+  #     VpcId: 
+  #       Fn::ImportValue:
+  #         !Join [':', [!Ref 'EnvironmentName', 'VPCId']]
   NLBListenerWSInbound:
     Type: AWS::ElasticLoadBalancingV2::Listener
     Properties:
       DefaultActions:
-        - TargetGroupArn: !Ref 'DummyTargetGroupNLB'
+        - TargetGroupArn: !Ref 'NLBTargetGroupWSInbound'
           Type: 'forward'
       LoadBalancerArn: !Ref 'NetworkLoadBalancer'
       Port: 7070
       Protocol: TCP
-  NLBListenerWSInboundSSL:
-    Type: AWS::ElasticLoadBalancingV2::Listener
-    Properties:
-      DefaultActions:
-        - TargetGroupArn: !Ref 'DummyTargetGroupNLB'
-          Type: 'forward'
-      LoadBalancerArn: !Ref 'NetworkLoadBalancer'
-      Port: 7070
-      Protocol: TCP
+  # NLBListenerWSInboundSSL:
+  #   Type: AWS::ElasticLoadBalancingV2::Listener
+  #   Properties:
+  #     DefaultActions:
+  #       - TargetGroupArn: !Ref 'NLBTargetGroupWSSSL'
+  #         Type: 'forward'
+  #     LoadBalancerArn: !Ref 'NetworkLoadBalancer'
+  #     Port: 7070
+  #     Protocol: TCP
   NLBListenerWSOutbound:
     Type: AWS::ElasticLoadBalancingV2::Listener
     Properties:
       DefaultActions:
-        - TargetGroupArn: !Ref 'DummyTargetGroupNLB'
+        - TargetGroupArn: !Ref 'NLBTargetGroupWSOutbound'
           Type: 'forward'
       LoadBalancerArn: !Ref 'NetworkLoadBalancer'
       Port: 5555
       Protocol: TCP
-  NetworkLoadBalancerListenerCert:
-    Type: AWS::ElasticLoadBalancingV2::ListenerCertificate
-    Properties:
-      Certificates:
-        - CertificateArn: !Ref CertificateArn
-      ListenerArn: !Ref NLBListenerWSInboundSSL
+  # NetworkLoadBalancerListenerCert:
+  #   Type: AWS::ElasticLoadBalancingV2::ListenerCertificate
+  #   Properties:
+  #     Certificates:
+  #       - CertificateArn: !Ref CertificateArn
+  #     ListenerArn: !Ref NLBListenerWSInboundSSL
 Outputs:
   NLBId:
     Description: The ARN of the Network Load Balancer
@@ -93,13 +108,13 @@ Outputs:
     Export: 
       Name: !Join [ ':', [ !Ref 'EnvironmentName', 'NLBAddress' ] ]
 
-  NLBListenerWSInbound:
+  NLBTargetGroupWSInbound:
     Description: The ARN of the public load balancer's Listener
-    Value: !Ref NLBListenerWSInbound
+    Value: !Ref NLBTargetGroupWSInbound
     Export:
-      Name: !Join [ ':', [ !Ref 'EnvironmentName', 'NLBListenerWSInbound' ] ]
-  NLBListenerWSOutbound:
-    Description: The ARN of the public load balancer's Listener
-    Value: !Ref NLBListenerWSOutbound
+      Name: !Join [ ':', [ !Ref 'EnvironmentName', 'NLBTargetGroupWSInbound' ] ]
+  NLBTargetGroupWSOutbound:
+    Description: The ARN of the NLBTargetGroupWSOutbound
+    Value: !Ref NLBTargetGroupWSOutbound
     Export:
-      Name: !Join [ ':', [ !Ref 'EnvironmentName', 'NLBListenerWSOutbound' ] ]
+      Name: !Join [ ':', [ !Ref 'EnvironmentName', 'NLBTargetGroupWSOutbound' ] ]

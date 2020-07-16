@@ -399,9 +399,6 @@ Resources:
   # as monitor the number of running tasks and replace any that have crashed
   Service:
     Type: AWS::ECS::Service
-    DependsOn:
-      - InboundRule
-      - OutboundRule
     Properties:
       ServiceName: !Ref 'ServiceName'
       Cluster:
@@ -428,81 +425,14 @@ Resources:
       LoadBalancers:
         - ContainerName: !Ref 'ServiceName'
           ContainerPort: 7070
-          TargetGroupArn: !Ref 'TargetGroupInbound'
+          TargetGroupArn: 
+            Fn::ImportValue: 
+              !Join [':', [!Ref 'EnvironmentName', 'NLBTargetGroupWSInbound']]
         - ContainerName: !Ref 'ServiceName'
           ContainerPort: 5555
-          TargetGroupArn: !Ref 'TargetGroupOutbound'
-  # inbound web sockets
-  TargetGroupInbound:
-    Type: AWS::ElasticLoadBalancingV2::TargetGroup
-    Properties:
-      #HealthCheckIntervalSeconds: 6
-      #HealthCheckPath: /
-      #HealthCheckProtocol: HTTP
-      #HealthCheckTimeoutSeconds: 5
-      #HealthyThresholdCount: 2
-      TargetType: ip
-      Name: !Join ["-", [!Ref 'ServiceName', "inbound"]]
-      Port: 7070
-      Protocol: TCP
-      TargetGroupAttributes:
-        - Key: stickiness.enabled
-          Value: 'true'
-        - Key: deregistration_delay.timeout_seconds
-          Value: '30'
-      #UnhealthyThresholdCount: 2
-      VpcId:
-        Fn::ImportValue:
-          !Join [':', [!Ref 'EnvironmentName', 'VPCId']]
-  TargetGroupOutbound:
-    Type: AWS::ElasticLoadBalancingV2::TargetGroup
-    Properties:
-      #HealthCheckIntervalSeconds: 6
-      #HealthCheckPath: /
-      #HealthCheckProtocol: HTTP
-      #HealthCheckTimeoutSeconds: 5
-      #HealthyThresholdCount: 2
-      TargetType: ip
-      Name: !Join ["-", [!Ref 'ServiceName', "outbound"]]
-      Port: 5555
-      Protocol: TCP
-      TargetGroupAttributes:
-        - Key: stickiness.enabled
-          Value: 'true'
-        - Key: deregistration_delay.timeout_seconds
-          Value: '30'
-      #UnhealthyThresholdCount: 2
-      VpcId:
-        Fn::ImportValue:
-          !Join [':', [!Ref 'EnvironmentName', 'VPCId']]
-
-  # Create a rule on the load balancer for routing traffic to the target group
-  InboundRule:
-    Type: AWS::ElasticLoadBalancingV2::ListenerRule
-    Properties:
-      Actions:
-        - TargetGroupArn: !Ref 'TargetGroupInbound'
-          Type: 'forward'
-      Conditions:
-        - Field: host-header
-          Values: [!Ref 'Path']
-      ListenerArn:
-        Fn::ImportValue:
-          !Join [':', [!Ref 'EnvironmentName', 'NLBListenerWSInbound']]
-      Priority: !Ref 'Priority'
-  OutboundRule:
-    Type: AWS::ElasticLoadBalancingV2::ListenerRule
-    Properties:
-      Actions:
-        - TargetGroupArn: !Ref 'TargetGroupOutbound'
-          Type: 'forward'
-      Conditions:
-        - Field: host-header
-          Values: [!Ref 'Path']
-      ListenerArn:
-        Fn::ImportValue:
-          !Join [':', [!Ref 'EnvironmentName', 'NLBListenerWSOutbound']]
-      Priority: !Ref 'Priority'
+          TargetGroupArn: 
+            Fn::ImportValue: 
+              !Join [':', [!Ref 'EnvironmentName', 'NLBTargetGroupWSOutbound']]
 
   # Enable autoscaling for this service
   ScalableTarget:

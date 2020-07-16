@@ -8,8 +8,6 @@ Parameters:
   ProjectName:
     Type: String
     Default: plizi
-#  EnvironmentName:
-#    Type: String
   # locally used parameters
   GitHubRepo:
     Type: String
@@ -239,20 +237,6 @@ Resources:
           Value: !Ref 'AWS::Region'
         - Key: Environment
           Value: !Ref 'EnvironmentName'
-      # Replication bucket should be in different region then current
-      # ReplicationConfiguration:
-      #   Role: !GetAtt [ArtifactBucketBackupRole, Arn]
-      #   Rules:
-      #   - Destination:
-      #       BucketArn: !GetAtt ['ArtifactBucketMetadata', 'Arn']
-      #       StorageClass: GLACIER
-      #       Prefix: 'backup'
-      #     Status: Enabled
-      #   - Destination:
-      #       BucketArn: !GetAtt ['ArtifactBucketMetadata', 'Arn']
-      #       StorageClass: STANDARD
-      #       Prefix: 'replica'
-      #     Status: Enabled
       InventoryConfigurations:
         - Id: WeeklyInventoryConfiguration
           Destination:
@@ -285,13 +269,7 @@ Resources:
                 TransitionInDays: 182
               - StorageClass: DEEP_ARCHIVE
                 TransitionInDays: 365
-            #TagFilters:
-            #  - Key: Type
-            #    Value: Artifact
             Status: Enabled
-      #LoggingConfiguration:
-      #AnalyticsConfiguration:
-      #QueueConfiguration:
       VersioningConfiguration:
         Status: Enabled
       BucketEncryption:
@@ -299,42 +277,6 @@ Resources:
           - ServerSideEncryptionByDefault:
               SSEAlgorithm: aws:kms
               KMSMasterKeyID: !Ref KMSKeyArn
-
-  # Role for artifact backup managent
-  # ArtifactBucketBackupRole:
-  #   Type: AWS::IAM::Role
-  #   Properties:
-  #     Path: /
-  #     AssumeRolePolicyDocument:
-  #       Version: 2012-10-17
-  #       Statement:
-  #         - Effect: Allow
-  #           Principal:
-  #             Service: s3.amazonaws.com
-  #           Action: sts:AssumeRole
-
-  # Policy for artifact backup managent (separate to prevent circular dependency)
-  # BucketBackupPolicy:
-  #   Type: AWS::IAM::Policy
-  #   Properties:
-  #     Path: /
-  #     PolicyDocument:
-  #       Statement:
-  #         - Effect: Allow
-  #           Action: ['s3:GetReplicationConfiguration', 's3:ListBucket']
-  #           Resource:
-  #           - !Join ['', ['arn:aws:s3:::', !Ref 'RecordServiceS3Bucket']]
-  #         - Effect: Allow
-  #           Action: ['s3:GetObjectVersion', 's3:GetObjectVersionAcl']
-  #           Resource:
-  #           - !Join ['', ['arn:aws:s3:::', !Ref 'RecordServiceS3Bucket', /*]]
-  #         - Effect: Allow
-  #           Action: ['s3:ReplicateObject', 's3:ReplicateDelete']
-  #           Resource:
-  #           - !Join ['', ['arn:aws:s3:::', !Join ['-', [!Ref 'AWS::Region', !Ref 'ProjectName',
-  #                   replicationbucket]], /*]]
-
-
 
   # This is the definition of how to build the code in the repository
   BackWS:
@@ -348,12 +290,6 @@ Resources:
      Source:
        Type: CODEPIPELINE
        BuildSpec: !Sub "environment/build/${EnvironmentName}-buildspec.yml"
-     # FileSystemLocation:
-     #   Identifier: !Ref CodebuildCacheEFS
-     #   Location: String
-     #   MountOptions: String
-     #   MountPoint: String
-     #   Type: String
      Cache:
        Location: LOCAL
        Modes:
@@ -557,10 +493,6 @@ Resources:
           Id: !Ref KMSKeyArn
           Type: KMS
       DisableInboundStageTransitions:
-        - StageName: Cluster
-          Reason: "Force disable pipeline updates."
-        - StageName: Services
-          Reason: "Disabling services assembling before resources would be ready."
         - StageName: Deploy
           Reason: "We have to make sure images are build in a right way."
       Stages:
@@ -580,9 +512,9 @@ Resources:
               OutputArtifacts:
                 - Name: Source
               RunOrder: 1
-        - Name: Cluster
+        - Name: Network
           Actions:
-            - Name: Deploy
+            - Name: VPC
               ActionTypeId:
                 Category: Deploy
                 Owner: AWS
@@ -591,7 +523,7 @@ Resources:
               Configuration:
                 ActionMode: CREATE_UPDATE
                 Capabilities: CAPABILITY_IAM
-                ChangeSetName: !Sub "${AWS::Region}-${EnvironmentName}-${ProjectName}-cluster-changeset"
+                #ChangeSetName: !Sub "${AWS::Region}-${EnvironmentName}-${ProjectName}-cluster-changeset"
                 RoleArn: !GetAtt CloudFormationDeployRole.Arn
                 StackName: !Sub "${AWS::Region}-${EnvironmentName}-${ProjectName}-cluster"
                 TemplatePath: "Source::environment/templates/infrastructure/vpc.yml"
@@ -603,10 +535,9 @@ Resources:
               InputArtifacts:
                 - Name: Source
               OutputArtifacts:
-                - Name: BaseResourcesDeployOutput
+                - Name: VPCDeployOutput
               RunOrder: 1
-              
-        - Name: Resources
+        - Name: Databases
           Actions:
           - Name: Mongo
             ActionTypeId:
@@ -617,7 +548,7 @@ Resources:
             Configuration:
               ActionMode: CREATE_UPDATE
               Capabilities: CAPABILITY_IAM
-              ChangeSetName: !Sub "${AWS::Region}-${EnvironmentName}-mongo-changeset"
+              #ChangeSetName: !Sub "${AWS::Region}-${EnvironmentName}-mongo-changeset"
               RoleArn: !GetAtt CloudFormationDeployRole.Arn
               StackName: !Sub "${AWS::Region}-${EnvironmentName}-mongo"
               TemplatePath: Source::environment/templates/infrastructure/database-mongo.yml
@@ -630,7 +561,6 @@ Resources:
             OutputArtifacts:
               - Name: MongoDeployOutput
             RunOrder: 2
-
           - Name: MySQL
             ActionTypeId:
               Category: Deploy
@@ -640,7 +570,7 @@ Resources:
             Configuration:
               ActionMode: CREATE_UPDATE
               Capabilities: CAPABILITY_IAM
-              ChangeSetName: !Sub "${AWS::Region}-${EnvironmentName}-mysql-changeset"
+              #ChangeSetName: !Sub "${AWS::Region}-${EnvironmentName}-mysql-changeset"
               RoleArn: !GetAtt CloudFormationDeployRole.Arn
               StackName: !Sub "${AWS::Region}-${EnvironmentName}-mysql"
               TemplatePath: Source::environment/templates/infrastructure/database-mysql.yml
@@ -653,7 +583,6 @@ Resources:
             OutputArtifacts:
               - Name: MySQLDeployOutput
             RunOrder: 2
-
           - Name: Redis
             ActionTypeId:
               Category: Deploy
@@ -663,7 +592,7 @@ Resources:
             Configuration:
               ActionMode: CREATE_UPDATE
               Capabilities: CAPABILITY_IAM
-              ChangeSetName: !Sub "${AWS::Region}-${EnvironmentName}-redis-changeset"
+              #ChangeSetName: !Sub "${AWS::Region}-${EnvironmentName}-redis-changeset"
               RoleArn: !GetAtt CloudFormationDeployRole.Arn
               StackName: !Sub "${AWS::Region}-${EnvironmentName}-redis"
               TemplatePath: Source::environment/templates/infrastructure/database-redis.yml
@@ -676,7 +605,74 @@ Resources:
             OutputArtifacts:
               - Name: RedisDeployOutput
             RunOrder: 2
-
+        - Name: Infrastructure
+          Actions:
+            - Name: Cluster
+              ActionTypeId:
+                Category: Deploy
+                Owner: AWS
+                Version: '1'
+                Provider: CloudFormation
+              Configuration:
+                ActionMode: CREATE_UPDATE
+                Capabilities: CAPABILITY_IAM
+                #ChangeSetName: !Sub "${AWS::Region}-${EnvironmentName}-${ProjectName}-cluster-changeset"
+                RoleArn: !GetAtt CloudFormationDeployRole.Arn
+                StackName: !Sub "${AWS::Region}-${EnvironmentName}-${ProjectName}-cluster"
+                TemplatePath: "Source::environment/templates/infrastructure/ecs-cluster.yml"
+                ParameterOverrides: !Sub |
+                  {
+                    "EnvironmentName": "${EnvironmentName}"
+                  }
+              InputArtifacts:
+                - Name: Source
+              OutputArtifacts:
+                - Name: ClusterDeployOutput
+              RunOrder: 1
+            - Name: NLB
+              ActionTypeId:
+                Category: Deploy
+                Owner: AWS
+                Version: '1'
+                Provider: CloudFormation
+              Configuration:
+                ActionMode: CREATE_UPDATE
+                Capabilities: CAPABILITY_IAM
+                #ChangeSetName: !Sub "${AWS::Region}-${EnvironmentName}-${ProjectName}-network-load-balancer-changeset"
+                RoleArn: !GetAtt CloudFormationDeployRole.Arn
+                StackName: !Sub "${AWS::Region}-${EnvironmentName}-${ProjectName}-nlb"
+                TemplatePath: "Source::environment/templates/infrastructure/network-load-balancer.yml"
+                ParameterOverrides: !Sub |
+                  {
+                    "EnvironmentName": "${EnvironmentName}"
+                  }
+              InputArtifacts:
+                - Name: Source
+              OutputArtifacts:
+                - Name: NLBDeployOutput
+              RunOrder: 1
+            - Name: ALB
+              ActionTypeId:
+                Category: Deploy
+                Owner: AWS
+                Version: '1'
+                Provider: CloudFormation
+              Configuration:
+                ActionMode: CREATE_UPDATE
+                Capabilities: CAPABILITY_IAM
+                #ChangeSetName: !Sub "${AWS::Region}-${EnvironmentName}-${ProjectName}-network-load-balancer-changeset"
+                RoleArn: !GetAtt CloudFormationDeployRole.Arn
+                StackName: !Sub "${AWS::Region}-${EnvironmentName}-${ProjectName}-alb"
+                TemplatePath: "Source::environment/templates/infrastructure/application-load-balancer.yml"
+                ParameterOverrides: !Sub |
+                  {
+                    "EnvironmentName": "${EnvironmentName}"
+                  }
+              InputArtifacts:
+                - Name: Source
+              OutputArtifacts:
+                - Name: ALBDeployOutput
+              RunOrder: 1
         - Name: Services
           Actions:
             - Name: back-ws
@@ -692,7 +688,6 @@ Resources:
               OutputArtifacts:
                 - Name: BackWSBuildOutput
               RunOrder: 2
-
             - Name: back-queue-worker
               ActionTypeId:
                 Category: Build
@@ -706,7 +701,6 @@ Resources:
               OutputArtifacts:
                 - Name: BackQueueWorkerBuildOutput
               RunOrder: 2
-
             - Name: back-api
               ActionTypeId:
                 Category: Build
@@ -720,7 +714,6 @@ Resources:
               OutputArtifacts:
                 - Name: BackApiBuildOutput
               RunOrder: 2
-
             - Name: front-nginx
               ActionTypeId:
                 Category: Build
@@ -734,7 +727,6 @@ Resources:
               OutputArtifacts:
                 - Name: FrontNginxBuildOutput
               RunOrder: 2
-
         - Name: Deploy
           Actions:
             - Name: back-ws
@@ -759,7 +751,6 @@ Resources:
               OutputArtifacts:
                 - Name: BackWSDeployOutput
               RunOrder: 1
-
             - Name: back-queue-worker
               ActionTypeId:
                 Category: Deploy
@@ -783,7 +774,6 @@ Resources:
               OutputArtifacts:
                 - Name: BackDBParameterGroupNameQueueWorkerDeployOutput
               RunOrder: 1
-
             - Name: back-api
               ActionTypeId:
                 Category: Deploy
@@ -806,7 +796,6 @@ Resources:
               OutputArtifacts:
                 - Name: BackApiDeployOutput
               RunOrder: 1
-
             - Name: front-nginx
               ActionTypeId:
                 Category: Deploy

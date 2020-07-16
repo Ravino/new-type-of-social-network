@@ -61,7 +61,7 @@ Resources:
   DummyTargetGroupALB:
     Type: AWS::ElasticLoadBalancingV2::TargetGroup
     Properties:
-      Name: !Join ['-', [!Ref 'EnvironmentName', 'drop-1']]
+      Name: !Join ['-', [!Ref 'EnvironmentName', 'alb-tg-drop']]
       Port: 80
       Protocol: HTTP
       VpcId: 
