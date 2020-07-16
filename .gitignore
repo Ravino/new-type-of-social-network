@@ -11,7 +11,7 @@ Thumbs.db
 
 # local dicker file
 /docker-compose.local.yml
-
+/frontend/dist
 
 mysql_data_plizi
 mysql8_data_plizi
