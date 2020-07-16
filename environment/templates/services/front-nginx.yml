@@ -228,11 +228,11 @@ Resources:
       Name: !Ref 'ServiceName'
       Port: 80
       Protocol: HTTP
-      TargetGroupAttributes:
-        - Key: stickiness.enabled
-          Value: 'true' # TODO possible reason of issues for WebSockets are not forwarding messages
-        - Key: deregistration_delay.timeout_seconds
-          Value: '30' # TODO possible reason of issues for WebSockets are not forwarding messages
+      # TargetGroupAttributes:
+      #   - Key: stickiness.enabled
+      #     Value: 'true' # TODO possible reason of issues for WebSockets are not forwarding messages
+      #   - Key: deregistration_delay.timeout_seconds
+      #     Value: '30' # TODO possible reason of issues for WebSockets are not forwarding messages
       #UnhealthyThresholdCount: 2
       VpcId:
         Fn::ImportValue:
