@@ -57,7 +57,7 @@ Resources:
       SecurityGroups: [!Ref 'ApplicationLoadBalancerSG']
       Tags:
         - Key: "Name"
-          Value: "application | public"
+          Value: "application-public"
   DummyTargetGroupALB:
     Type: AWS::ElasticLoadBalancingV2::TargetGroup
     Properties:

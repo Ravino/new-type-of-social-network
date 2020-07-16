@@ -38,7 +38,7 @@ Resources:
             !Join [':', [!Ref 'EnvironmentName', 'PublicSubnetTwo']]
       Tags:
         - Key: "Name"
-          Value: "network | public"
+          Value: "network-public"
   NLBTargetGroupWSInbound:
     Type: AWS::ElasticLoadBalancingV2::TargetGroup
     Properties:
