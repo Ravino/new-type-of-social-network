@@ -28,7 +28,7 @@ class RunPusherCommand extends Command
 
         $context = new ReactContext($loop);
         $pull = $context->getSocket(\ZMQ::SOCKET_PULL);
-        $pull->bind("tcp://0.0.0.0:5555");
+        $pull->bind("tcp://127.0.0.1:5555");
         $pull->on('message', [$pusher, 'broadcast']);
 
         if(config('app.secure_wss')) {

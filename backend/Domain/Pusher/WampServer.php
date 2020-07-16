@@ -25,7 +25,7 @@ class WampServer implements WampServerInterface
         $context = new \ZMQContext();
         $socket = $context->getSocket(\ZMQ::SOCKET_PUSH, 'pusher');
         try {
-            $socket->connect("tcp://0.0.0.0:5555");
+            $socket->connect("tcp://127.0.0.1:5555");
         } catch (\ZMQSocketException $ex) {
             echo $ex->getMessage().PHP_EOL;
         }
