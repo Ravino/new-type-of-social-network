@@ -20,7 +20,12 @@ Parameters:
     Default: service
     Description: A name for the service that would be managing FARGATE tasks inside the cluster.
   # deployment
-  ImageUrl:
+  ImageUrlWebSocket:
+    Type: String
+    Default: 'busybox'
+    Description: The url of a docker image that contains the application process that
+                 will handle the traffic for this service
+  ImageUrlQueueWorker:
     Type: String
     Default: 'busybox'
     Description: The url of a docker image that contains the application process that
@@ -52,6 +57,16 @@ Parameters:
     Type: Number
     Default: 512
     Description: How much memory in megabytes to give the container
+  # resources management
+  ServiceCpu:
+    Type: Number
+    Default: 256
+    Description: How much CPU to give the service container. 1024 is 1 CPU
+  # resources management
+  ServiceMemory:
+    Type: Number
+    Default: 512
+    Description: How much memory in megabytes to give the service container
   # load balancing
   Path:
     Type: String
@@ -261,8 +276,8 @@ Resources:
     Type: AWS::ECS::TaskDefinition
     Properties:
       Family: !Ref 'ServiceName'
-      Cpu: !Ref 'ContainerCpu'
-      Memory: !Ref 'ContainerMemory'
+      Cpu: !Ref 'ServiceCpu'
+      Memory: !Ref 'ServiceMemory'
       NetworkMode: awsvpc
       RequiresCompatibilities:
         - FARGATE
@@ -273,15 +288,12 @@ Resources:
         Fn::ImportValue:
           !Join [':', [!Ref 'EnvironmentName', 'ECSServiceExecutionTaskRole']]
       ContainerDefinitions:
-        - Name: !Ref 'ServiceName'
+        - Name: !Join [ "-", [ !Ref 'ServiceName', "web-socket" ] ]
           Cpu: !Ref 'ContainerCpu'
           Memory: !Ref 'ContainerMemory'
-          Image: !Ref 'ImageUrl'
+          Image: !Ref 'ImageUrlWebSocket'
           PortMappings:
-            - 
-              ContainerPort: 7070
-            - 
-              ContainerPort: 5555
+            - ContainerPort: !Ref 'ContainerPort'
           Environment:
             - Name: API_URL
               Value: !Ref 'ApiUrl'
@@ -392,14 +404,129 @@ Resources:
             Options:
               awslogs-group: !Join ['-', [!Ref 'EnvironmentName', 'public', !Ref 'ServiceName']]
               awslogs-region: !Ref 'AWS::Region'
-              awslogs-stream-prefix: !Ref 'ServiceName'
-
+              awslogs-stream-prefix: !Join [ "-", [ !Ref 'ServiceName', "web-socket" ] ]
+        - Name: !Join [ "-", [ !Ref 'ServiceName', "queue-worker" ] ]
+          Cpu: !Ref 'ContainerCpu'
+          Memory: !Ref 'ContainerMemory'
+          Image: !Ref 'ImageUrlQueueWorker'
+          Environment:
+            - Name: API_URL
+              Value: !Ref 'ApiUrl'
+            - Name: APP_DEBUG
+              Value: !Ref 'AppDebug'
+            - Name: APP_ENV
+              Value: !Ref 'AppEnv'
+            - Name: APP_KEY
+              Value: !Ref 'AppKey'
+            - Name: APP_NAME
+              Value: !Ref 'AppName'
+            - Name: AWS_ACCESS_KEY_ID
+              Value: !Ref 'AwsAccessKeyId'
+            - Name: AWS_SECRET_ACCESS_KEY
+              Value: !Ref 'AwsSecretAccessKey'
+            - Name: AWS_DEFAULT_REGION
+              Value: !Ref 'AwsDefaultRegion'
+            - Name: AWS_BUCKET
+              Value: !Ref 'AwsBucket'
+            - Name: JWT_BLACKLIST_ENABLED
+              Value: !Ref 'JwtBlacklistEnabled'
+            - Name: JWT_TTL
+              Value: !Ref 'JwtTtl'
+            - Name: JWT_SECRET
+              Value: !Ref 'JwtSecret'
+            - Name: LADA_CACHE_ACTIVE
+              Value: !Ref 'LadaCacheActive'
+            - Name: MAIL_ENCRYPTION
+              Value: !Ref 'MailEncryption'
+            - Name: MAIL_FROM_ADDRESS
+              Value: !Ref 'MailFromAddress'
+            - Name: MAIL_FROM_NAME
+              Value: !Ref 'MailFromName'
+            - Name: MAIL_HOST
+              Value: !Ref 'MailHost'
+            - Name: MAIL_MAILER
+              Value: !Ref 'MailMailer'
+            - Name: MAIL_PASSWORD
+              Value: !Ref 'MailPassword'
+            - Name: MAIL_PORT
+              Value: !Ref 'MailPort'
+            - Name: MAIL_USERNAME
+              Value: !Ref 'MailUsername'
+            - Name: NEO4_DB_BOLT_PORT
+              Value: !Ref 'Neo4DbBoltPort'
+            - Name: NEO4_DB_HOST
+              Value: !Ref 'Neo4DbHost'
+            - Name: NEO4_DB_HTTP_PORT
+              Value: !Ref 'Neo4DbHttpPort'
+            - Name: NEO4_DB_PASSWORD
+              Value: !Ref 'Neo4DbPassword'
+            - Name: NEO4_DB_USERNAME
+              Value: !Ref 'Neo4DbUsername'
+            - Name: QUEUE_CONNECTION
+              Value: !Ref 'QueueConnection'
+            #- Name: SENTRY_LARAVEL_DSN
+            #  Value: !Ref 'SentryLaravelDsn'
+            - Name: SWOOLE_HTTP_HOST
+              Value: !Ref 'SwooleHttpHost'
+            - Name: ZMQ_SUB_HOST
+              Value: 'dev-ws.plizi.fun'
+            - Name: ENV_NAME
+              Value: !Ref 'EnvironmentName'
+            - Name: REGION
+              Value: !Ref 'AWS::Region'
+            - Name: DB_DATABASE
+              Value:
+                Fn::ImportValue:
+                  !Join [':', [!Ref 'EnvironmentName', 'MySQLDBName']]
+            - Name: DB_HOST
+              Value:
+                Fn::ImportValue:
+                  !Join [':', [!Ref 'EnvironmentName', 'MySQLDBHost']]
+            - Name: DB_PASSWORD
+              Value:
+                Fn::ImportValue:
+                  !Join [':', [!Ref 'EnvironmentName', 'MySQLDBPass']]
+            - Name: DB_PORT
+              Value:
+                Fn::ImportValue:
+                  !Join [':', [!Ref 'EnvironmentName', 'MySQLDBPort']]
+            - Name: DB_USERNAME
+              Value:
+                Fn::ImportValue:
+                  !Join [':', [!Ref 'EnvironmentName', 'MySQLDBUser']]
+            - Name: MONGO_DB_HOST
+              Value:
+                Fn::ImportValue:
+                  !Join [':', [!Ref 'EnvironmentName', 'MongoDBHost']]
+            - Name: MONGO_DB_PASSWORD
+              Value:
+                Fn::ImportValue:
+                  !Join [':', [!Ref 'EnvironmentName', 'MongoDBPass']]
+            - Name: MONGO_DB_USERNAME
+              Value:
+                Fn::ImportValue:
+                  !Join [':', [!Ref 'EnvironmentName', 'MongoDBUser']]
+            - Name: REDIS_HOST
+              Value:
+                Fn::ImportValue:
+                  !Join [':', [!Ref 'EnvironmentName', 'RedisHost']]
+            - Name: REDIS_PORT
+              Value:
+                Fn::ImportValue:
+                  !Join [':', [!Ref 'EnvironmentName', 'RedisPort']]
+          LogConfiguration:
+            LogDriver: 'awslogs'
+            Options:
+              awslogs-group: !Join ['-', [!Ref 'EnvironmentName', 'public', !Ref 'ServiceName']]
+              awslogs-region: !Ref 'AWS::Region'
+              awslogs-stream-prefix: !Join [ "-", [ !Ref 'ServiceName', "queue-worker" ] ]
+  
   # The service. The service is a resource which allows you to run multiple
   # copies of a type of task, and gather up their logs and metrics, as well
   # as monitor the number of running tasks and replace any that have crashed
   Service:
-    # DependsOn:
-    # - HTTPRule
+    DependsOn:
+    - HTTPRule
     Type: AWS::ECS::Service
     Properties:
       ServiceName: !Ref 'ServiceName'
@@ -426,60 +553,54 @@ Resources:
       TaskDefinition: !Ref 'TaskDefinition'
       HealthCheckGracePeriodSeconds: 2147483647
       LoadBalancers:
+        - ContainerName: !Ref 'ServiceName'
+          ContainerPort: !Ref 'ContainerPort'
+          TargetGroupArn: !Ref 'TargetGroup'
         # - ContainerName: !Ref 'ServiceName'
         #   ContainerPort: 7070
-        #   TargetGroupArn: !Ref TargetGroup
-        - ContainerName: !Ref 'ServiceName'
-          ContainerPort: 7070
-          TargetGroupArn: 
-            Fn::ImportValue: 
-              !Join [':', [!Ref 'EnvironmentName', 'NLBTargetGroupWSInbound']]
-        - ContainerName: !Ref 'ServiceName'
-          ContainerPort: 5555
-          TargetGroupArn: 
-            Fn::ImportValue: 
-              !Join [':', [!Ref 'EnvironmentName', 'NLBTargetGroupWSOutbound']]
+        #   TargetGroupArn: 
+        #     Fn::ImportValue: 
+        #       !Join [':', [!Ref 'EnvironmentName', 'NLBTargetGroupWSInbound']]
+        # - ContainerName: !Ref 'ServiceName'
+        #   ContainerPort: 5555
+        #   TargetGroupArn: 
+        #     Fn::ImportValue: 
+        #       !Join [':', [!Ref 'EnvironmentName', 'NLBTargetGroupWSOutbound']]
 
-  # TargetGroup:
-  #   Type: AWS::ElasticLoadBalancingV2::TargetGroup
-  #   Properties:
-  #     #HealthCheckIntervalSeconds: 6
-  #     #HealthCheckPath: /
-  #     #HealthCheckProtocol: HTTP
-  #     #HealthCheckTimeoutSeconds: 5
-  #     #HealthyThresholdCount: 2
-  #     TargetType: ip
-  #     Name: !Ref 'ServiceName'
-  #     Port: 7070
-  #     Protocol: !Ref 'ServiceProtocol'
-  #     TargetGroupAttributes:
-  #       - Key: stickiness.enabled
-  #         Value: 'true' # TODO possible reason of issues for WebSockets are not forwarding messages
-  #       - Key: deregistration_delay.timeout_seconds
-  #         Value: '30' # TODO possible reason of issues for WebSockets are not forwarding messages
-  #     #UnhealthyThresholdCount: 2
-  #     VpcId:
-  #       Fn::ImportValue:
-  #         !Join [':', [!Ref 'EnvironmentName', 'VPCId']]
-
-  # Create a rule on the load balancer for routing traffic to the target group
- # Create rules to forward both HTTP and HTTPS traffic to the service's
-  # target group. The service itself will handle redirecting HTTP traffic
-  # to HTTPS
-  # HTTPRule:
-  #   Type: AWS::ElasticLoadBalancingV2::ListenerRule
-  #   Properties:
-  #     Actions:
-  #       - TargetGroupArn: !Ref 'TargetGroup'
-  #         Type: 'forward'
-  #     Conditions:
-  #       - Field: host-header
-  #         Values: [!Ref 'Path']
-  #     ListenerArn:
-  #       Fn::ImportValue:
-  #         !Join [':', [!Ref 'EnvironmentName', 'ALBListenerWS']]
-  #     Priority: !Ref 'Priority'
-
+  TargetGroup:
+    Type: AWS::ElasticLoadBalancingV2::TargetGroup
+    Properties:
+      #HealthCheckIntervalSeconds: 6
+      #HealthCheckPath: /
+      #HealthCheckProtocol: HTTP
+      #HealthCheckTimeoutSeconds: 5
+      #HealthyThresholdCount: 2
+      TargetType: ip
+      Name: !Ref 'ServiceName'
+      Port: !Ref 'ContainerPort'
+      Protocol: !Ref 'ServiceProtocol'
+      TargetGroupAttributes:
+        - Key: stickiness.enabled
+          Value: 'true' # TODO possible reason of issues for WebSockets are not forwarding messages
+        - Key: deregistration_delay.timeout_seconds
+          Value: '30' # TODO possible reason of issues for WebSockets are not forwarding messages
+      #UnhealthyThresholdCount: 2
+      VpcId:
+        Fn::ImportValue:
+          !Join [':', [!Ref 'EnvironmentName', 'VPCId']]
+  HTTPRule:
+    Type: AWS::ElasticLoadBalancingV2::ListenerRule
+    Properties:
+      Actions:
+        - TargetGroupArn: !Ref 'TargetGroup'
+          Type: 'forward'
+      Conditions:
+        - Field: host-header
+          Values: [!Ref 'Path']
+      ListenerArn:
+        Fn::ImportValue:
+          !Join [':', [!Ref 'EnvironmentName', 'ALBListenerWS']]
+      Priority: !Ref 'Priority'
   # Enable autoscaling for this service
   ScalableTarget:
     Type: AWS::ApplicationAutoScaling::ScalableTarget

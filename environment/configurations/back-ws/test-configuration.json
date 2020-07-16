@@ -1,10 +1,13 @@
 {
     "Parameters": {
         "ServiceName": "back-ws",
-        "ImageUrl": "884088487044.dkr.ecr.eu-central-1.amazonaws.com/eu-central-1-test-plizi-back-ws",
+        "ImageUrlWebSocket": "884088487044.dkr.ecr.eu-central-1.amazonaws.com/eu-central-1-test-plizi-back-ws:latest",
+        "ImageUrlQueueWorker": "884088487044.dkr.ecr.eu-central-1.amazonaws.com/eu-central-1-test-plizi-back-queue-worker:latest",
         "ServiceProtocol": "HTTP",
         "ContainerCpu": "1024",
         "ContainerMemory": "2048",
+        "ServiceCpu": "2048",
+        "ServiceCMemory": "2048",
         "Path": "dev-ws.plizi.fun",
         "Priority": "20",
         "MinCapacity": "1",

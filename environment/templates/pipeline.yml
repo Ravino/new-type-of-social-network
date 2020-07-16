@@ -751,29 +751,29 @@ Resources:
               OutputArtifacts:
                 - Name: BackWSDeployOutput
               RunOrder: 1
-            - Name: back-queue-worker
-              ActionTypeId:
-                Category: Deploy
-                Owner: AWS
-                Version: '1'
-                Provider: CloudFormation
-              Configuration:
-                ActionMode: CREATE_UPDATE # CHANGE_SET_EXECUTE
-                RoleArn: !GetAtt CloudFormationDeployRole.Arn
-                Capabilities: CAPABILITY_IAM,CAPABILITY_AUTO_EXPAND
-                StackName: !Sub ${AWS::Region}-${EnvironmentName}-${ProjectName}-back-queue-worker
-                #OutputFileName: Source::back-queue-worker/output.json
-                TemplateConfiguration: !Sub "Source::environment/configurations/back-query-worker/${EnvironmentName}-configuration.json"
-                TemplatePath: Source::environment/templates/services/back-queue-worker.yml
-                ParameterOverrides: !Sub |
-                  {
-                    "EnvironmentName": "${EnvironmentName}"
-                  }
-              InputArtifacts:
-                - Name: Source
-              OutputArtifacts:
-                - Name: BackDBParameterGroupNameQueueWorkerDeployOutput
-              RunOrder: 1
+            # - Name: back-queue-worker
+            #   ActionTypeId:
+            #     Category: Deploy
+            #     Owner: AWS
+            #     Version: '1'
+            #     Provider: CloudFormation
+            #   Configuration:
+            #     ActionMode: CREATE_UPDATE # CHANGE_SET_EXECUTE
+            #     RoleArn: !GetAtt CloudFormationDeployRole.Arn
+            #     Capabilities: CAPABILITY_IAM,CAPABILITY_AUTO_EXPAND
+            #     StackName: !Sub ${AWS::Region}-${EnvironmentName}-${ProjectName}-back-queue-worker
+            #     #OutputFileName: Source::back-queue-worker/output.json
+            #     TemplateConfiguration: !Sub "Source::environment/configurations/back-query-worker/${EnvironmentName}-configuration.json"
+            #     TemplatePath: Source::environment/templates/services/back-queue-worker.yml
+            #     ParameterOverrides: !Sub |
+            #       {
+            #         "EnvironmentName": "${EnvironmentName}"
+            #       }
+            #   InputArtifacts:
+            #     - Name: Source
+            #   OutputArtifacts:
+            #     - Name: BackDBParameterGroupNameQueueWorkerDeployOutput
+            #   RunOrder: 1
             - Name: back-api
               ActionTypeId:
                 Category: Deploy
