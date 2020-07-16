@@ -342,7 +342,7 @@ Resources:
             - Name: SWOOLE_HTTP_HOST
               Value: !Ref 'SwooleHttpHost'
             - Name: ZMQ_SUB_HOST
-              Value: 'dev-ws.plizi.fun'
+              Value: 'dev-qw.plizi.fun'
             - Name: ENV_NAME
               Value: !Ref 'EnvironmentName'
             - Name: REGION
@@ -424,6 +424,7 @@ Resources:
             - Fn::ImportValue:
                 !Join [':', [!Ref 'EnvironmentName', 'PublicSubnetTwo']]
       TaskDefinition: !Ref 'TaskDefinition'
+      HealthCheckGracePeriodSeconds: 2147483647
       LoadBalancers:
         - ContainerName: !Ref 'ServiceName'
           ContainerPort: 7070
