@@ -103,12 +103,12 @@ Resources:
       LoadBalancerArn: !Ref 'ApplicationLoadBalancer'
       Port: 1215
       Protocol: HTTP
-  ApplicationLoadBalancerListenerCert:
-    Type: AWS::ElasticLoadBalancingV2::ListenerCertificate
-    Properties:
-      Certificates:
-        - CertificateArn: !Ref CertificateArn
-      ListenerArn: !Ref ALBListenerNginxSSL
+  # ApplicationLoadBalancerListenerCert:
+  #   Type: AWS::ElasticLoadBalancingV2::ListenerCertificate
+  #   Properties:
+  #     Certificates:
+  #       - CertificateArn: !Ref CertificateArn
+  #     ListenerArn: !Ref ALBListenerNginxSSL
 Outputs:
   ALBId:
     Description: The ARN of the Application Load Balancer
