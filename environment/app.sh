@@ -118,8 +118,8 @@ function delete-4-services {
     aws cloudformation delete-stack --stack-name ${PROJECT_STACK_NAME_PREFIX}-front-nginx --role-arn ${ARN_ROLE}
 }
 function delete-3-network {
-    aws cloudformation delete-stack --stack-name ${ACCOUNT_STACK_NAME_PREFIX}-nlb --role-arn ${ARN_ROLE}
-    aws cloudformation delete-stack --stack-name ${ACCOUNT_STACK_NAME_PREFIX}-alb --role-arn ${ARN_ROLE}
+    aws cloudformation delete-stack --stack-name ${PROJECT_STACK_NAME_PREFIX}-nlb --role-arn ${ARN_ROLE}
+    aws cloudformation delete-stack --stack-name ${PROJECT_STACK_NAME_PREFIX}-alb --role-arn ${ARN_ROLE}
 }
 function delete-2-databases {
     aws cloudformation delete-stack --stack-name ${ACCOUNT_STACK_NAME_PREFIX}-mysql --role-arn ${ARN_ROLE}
