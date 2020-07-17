@@ -643,7 +643,8 @@ Resources:
                 TemplatePath: "Source::environment/templates/infrastructure/network-load-balancer.yml"
                 ParameterOverrides: !Sub |
                   {
-                    "EnvironmentName": "${EnvironmentName}"
+                    "EnvironmentName": "${EnvironmentName}",
+                    "CertificateArn": "${CertificateArn}"
                   }
               InputArtifacts:
                 - Name: Source
