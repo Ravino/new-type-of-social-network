@@ -72,17 +72,17 @@ Resources:
       LoadBalancerArn: !Ref 'NetworkLoadBalancer'
       Port: 7070
       Protocol: TCP
-  NLBListenerWSInboundSSL:
-    Type: AWS::ElasticLoadBalancingV2::Listener
-    Properties:
-      DefaultActions:
-        - TargetGroupArn: !Ref 'NLBTargetGroupWSInbound'
-          Type: 'forward'
-      LoadBalancerArn: !Ref 'NetworkLoadBalancer'
-      Port: 7070
-      Protocol: TLS
-      Certificates:
-        - CertificateArn: !Ref 'CertificateArn'
+  # NLBListenerWSInboundSSL:
+  #   Type: AWS::ElasticLoadBalancingV2::Listener
+  #   Properties:
+  #     DefaultActions:
+  #       - TargetGroupArn: !Ref 'NLBTargetGroupWSInbound'
+  #         Type: 'forward'
+  #     LoadBalancerArn: !Ref 'NetworkLoadBalancer'
+  #     Port: 7070
+  #     Protocol: TLS
+  #     Certificates:
+  #       - CertificateArn: !Ref 'CertificateArn'
   NLBListenerWSOutbound:
     Type: AWS::ElasticLoadBalancingV2::Listener
     Properties:
