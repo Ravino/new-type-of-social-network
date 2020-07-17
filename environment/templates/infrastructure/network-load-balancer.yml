@@ -18,10 +18,9 @@ Parameters:
       - prod
     ConstraintDescription: Environment name may be only 'test' or 'prod', to prevent
                            configuration files multiplication.
-  # CertificateArn:
-  #   Type: String
-  #   Default: arn:aws:acm:eu-central-1:884088487044:certificate/4444446f-1db7-46ee-b983-cca853830df1
-  #   Description: ARN of the Amazon Certificate Manager SSL certificate to use for this app
+  CertificateArn:
+    Type: String
+    Description: ARN of the Amazon Certificate Manager SSL certificate to use for this app
 Resources:
   NetworkLoadBalancer:
     Type: AWS::ElasticLoadBalancingV2::LoadBalancer
@@ -61,24 +60,9 @@ Resources:
       TargetType: ip
       Port: 5555
       Protocol: TCP
-      # TargetGroupAttributes:
-      #   - Key: stickiness.enabled
-      #     Value: 'true'
-      #   - Key: stickiness.type 
-      #     Value: 'source_ip'
-      #   - Key: deregistration_delay.timeout_seconds
-      #     Value: '30'
       VpcId: 
         Fn::ImportValue:
           !Join [':', [!Ref 'EnvironmentName', 'VPCId']]
-  # NLBTargetGroupWSSSL:
-  #   Type: AWS::ElasticLoadBalancingV2::TargetGroup
-  #   Properties:
-  #     Port: 7070
-  #     Protocol: TCP
-  #     VpcId: 
-  #       Fn::ImportValue:
-  #         !Join [':', [!Ref 'EnvironmentName', 'VPCId']]
   NLBListenerWSInbound:
     Type: AWS::ElasticLoadBalancingV2::Listener
     Properties:
@@ -88,15 +72,17 @@ Resources:
       LoadBalancerArn: !Ref 'NetworkLoadBalancer'
       Port: 7070
       Protocol: TCP
-  # NLBListenerWSInboundSSL:
-  #   Type: AWS::ElasticLoadBalancingV2::Listener
-  #   Properties:
-  #     DefaultActions:
-  #       - TargetGroupArn: !Ref 'NLBTargetGroupWSSSL'
-  #         Type: 'forward'
-  #     LoadBalancerArn: !Ref 'NetworkLoadBalancer'
-  #     Port: 7070
-  #     Protocol: TCP
+  NLBListenerWSInboundSSL:
+    Type: AWS::ElasticLoadBalancingV2::Listener
+    Properties:
+      DefaultActions:
+        - TargetGroupArn: !Ref 'NLBTargetGroupWSInbound'
+          Type: 'forward'
+      LoadBalancerArn: !Ref 'NetworkLoadBalancer'
+      Port: 7070
+      Protocol: TLS
+      Certificates:
+        - CertificateArn: !Ref 'CertificateArn'
   NLBListenerWSOutbound:
     Type: AWS::ElasticLoadBalancingV2::Listener
     Properties:
@@ -106,12 +92,6 @@ Resources:
       LoadBalancerArn: !Ref 'NetworkLoadBalancer'
       Port: 5555
       Protocol: TCP
-  # NetworkLoadBalancerListenerCert:
-  #   Type: AWS::ElasticLoadBalancingV2::ListenerCertificate
-  #   Properties:
-  #     Certificates:
-  #       - CertificateArn: !Ref CertificateArn
-  #     ListenerArn: !Ref NLBListenerWSInboundSSL
 Outputs:
   NLBId:
     Description: The ARN of the Network Load Balancer
