@@ -20,7 +20,6 @@ Parameters:
                            configuration files multiplication.
   CertificateArn:
     Type: String
-    Default: arn:aws:acm:eu-central-1:884088487044:certificate/1ec6ec62-ad89-487e-b720-12ff4d445f12
     Description: ARN of the Amazon Certificate Manager SSL certificate to use for this app
   # DomainZone:
   #   Type: String
