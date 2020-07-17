@@ -1,0 +1,24 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Description: This stack deploys SSL Certificate and validates it 
+             using email via lambda function
+Parameters:
+  DomainName:
+    Type: String
+    Default: plizi.fun.
+    Description: The name of the Route53 hosted zone for this app
+Resources:
+  SSLCertificate:
+    Type: AWS::CertificateManager::Certificate
+    Properties:
+      DomainName: !Ref DomainName
+      SubjectAlternativeNames:
+        - !Sub "*.${DomainName}"
+      DomainValidationOptions:
+        - DomainName: !Ref DomainName
+          ValidationDomain: !GetAtt SESEmailAddress.Domain
+        - DomainName: !Sub "*.${DomainName}"
+          ValidationDomain: !GetAtt SESEmailAddress.Domain
+Outputs:
+  CertificateArn:
+    Description: SSL certificate ARN
+    Value: !Ref SSLCertificate
