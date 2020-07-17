@@ -220,11 +220,13 @@ Resources:
   TargetGroup:
     Type: AWS::ElasticLoadBalancingV2::TargetGroup
     Properties:
-      #HealthCheckIntervalSeconds: 6
-      #HealthCheckPath: /
-      #HealthCheckProtocol: HTTP
-      #HealthCheckTimeoutSeconds: 5
-      #HealthyThresholdCount: 2
+      HealthCheckIntervalSeconds: 6
+      HealthCheckPath: /
+      HealthCheckProtocol: HTTP
+      HealthCheckTimeoutSeconds: 5
+      HealthyThresholdCount: 2
+      Matcher:
+        HttpCode: "200-299"
       TargetType: ip
       Name: !Ref 'ServiceName'
       Port: 80
@@ -234,18 +236,20 @@ Resources:
       #     Value: 'true' # TODO possible reason of issues for WebSockets are not forwarding messages
       #   - Key: deregistration_delay.timeout_seconds
       #     Value: '30' # TODO possible reason of issues for WebSockets are not forwarding messages
-      #UnhealthyThresholdCount: 2
+      UnhealthyThresholdCount: 2
       VpcId:
         Fn::ImportValue:
           !Join [':', [!Ref 'EnvironmentName', 'VPCId']]
   TargetGroupAdmin:
     Type: AWS::ElasticLoadBalancingV2::TargetGroup
     Properties:
-      #HealthCheckIntervalSeconds: 6
-      #HealthCheckPath: /
-      #HealthCheckProtocol: HTTP
-      #HealthCheckTimeoutSeconds: 5
-      #HealthyThresholdCount: 2
+      HealthCheckIntervalSeconds: 6
+      HealthCheckPath: /
+      HealthCheckProtocol: HTTP
+      HealthCheckTimeoutSeconds: 5
+      HealthyThresholdCount: 2
+      Matcher:
+        HttpCode: "200-299"
       TargetType: ip
       Name: !Join ["-", [ !Ref 'ServiceName', "Admin" ] ]
       Port: 81
@@ -255,7 +259,7 @@ Resources:
           Value: 'true' # TODO possible reason of issues for WebSockets are not forwarding messages
         - Key: deregistration_delay.timeout_seconds
           Value: '30' # TODO possible reason of issues for WebSockets are not forwarding messages
-      #UnhealthyThresholdCount: 2
+      UnhealthyThresholdCount: 2
       VpcId:
         Fn::ImportValue:
           !Join [':', [!Ref 'EnvironmentName', 'VPCId']]

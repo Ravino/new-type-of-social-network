@@ -558,11 +558,13 @@ Resources:
   TargetGroup:
     Type: AWS::ElasticLoadBalancingV2::TargetGroup
     Properties:
-      #HealthCheckIntervalSeconds: 6
-      #HealthCheckPath: /
-      #HealthCheckProtocol: HTTP
-      #HealthCheckTimeoutSeconds: 5
-      #HealthyThresholdCount: 2
+      HealthCheckIntervalSeconds: 6
+      HealthCheckPath: /
+      HealthCheckProtocol: HTTP
+      HealthCheckTimeoutSeconds: 5
+      HealthyThresholdCount: 2
+      Matcher:
+        HttpCode: "426"
       TargetType: ip
       Name: !Ref 'ServiceName'
       Port: !Ref 'ContainerPort'
@@ -570,13 +572,13 @@ Resources:
       TargetGroupAttributes:
         - Key: stickiness.enabled
           Value: 'true'
-        - Key: stickiness.lb_cookie.duration_seconds
-          Value: '86400'
         - Key: stickiness.type
           Value: 'lb_cookie'
+        - Key: stickiness.lb_cookie.duration_seconds
+          Value: '86400'
         - Key: deregistration_delay.timeout_seconds
           Value: '30'
-      #UnhealthyThresholdCount: 2
+      UnhealthyThresholdCount: 2
       VpcId:
         Fn::ImportValue:
           !Join [':', [!Ref 'EnvironmentName', 'VPCId']]
