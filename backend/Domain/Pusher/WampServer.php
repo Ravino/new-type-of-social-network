@@ -83,6 +83,9 @@ class WampServer implements WampServerInterface
                 if($params['event'] === 'user.typing') {
                     event(new UserTypingEvent($params['userId'], $params['chatId']));
                 } else if($params['event'] === 'new.message') {
+                    if(config('app.ws_logs')) {
+                        echo "New message sent". PHP_EOL;
+                    }
                     if(config('app.test_chat') !== $params['chatId']) {
                         dispatch(new NewMessageEvent($params['body'], $user_id, $params['chatId'], $params['attachments'],
                             $params['replyOnMessageId'] ?? null,
@@ -112,11 +115,7 @@ class WampServer implements WampServerInterface
 
     public function onOpen(ConnectionInterface $conn) {
         if(config('app.ws_logs')) {
-            echo 'TEST_CHAT_ID: ' . json_encode(config('app.test_chat')). PHP_EOL;
-            echo 'Delayed default queue: ' . json_encode(\Queue::getRedis()->connection(null)->zrange('queues:default:delayed' ,0, -1)). PHP_EOL;
-            echo 'Delayed high queue: ' . json_encode(\Queue::getRedis()->connection(null)->zrange('queues:high:delayed' ,0, -1)). PHP_EOL;
-            echo 'Reserved default queue: ' . json_encode(\Queue::getRedis()->connection(null)->zrange('queues:default:reserved' ,0, -1)). PHP_EOL;
-            echo 'Reserved high queue: ' . json_encode(\Queue::getRedis()->connection(null)->zrange('queues:high:reserved' ,0, -1)). PHP_EOL;
+            echo "New connection detected". PHP_EOL;
         }
     }
 
