@@ -63,7 +63,7 @@ ARN_ROLE_NAME="CloudFormationMasterRole"
 ARN_ROLE="arn:aws:iam::884088487044:role/"${ARN_ROLE_NAME}
 CLIENT_REQUEST_TOKEN="${REGION}-${PROJECT_NAME}-${ENV}-${ARN_ROLE_NAME}"
 # parameters
-TEMPLATE_PATH="file://../templates/pipeline.yml"
+TEMPLATE_PATH="file://templates/pipeline.yml"
 PARAMETERS="ParameterKey=EnvironmentName,ParameterValue=test"
 S3_BUCKET_NAME="${REGION}-${PROJECT_NAME}-${ENV}"
 
