@@ -1,4 +1,4 @@
 #!/bin/bash
 
 php artisan optimize
-exec php artisan queue:work --queue=high,default
+exec php artisan queue:work redis --queue=high,default
