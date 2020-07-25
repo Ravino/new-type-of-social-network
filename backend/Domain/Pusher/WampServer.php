@@ -85,6 +85,7 @@ class WampServer implements WampServerInterface
                 } else if($params['event'] === 'new.message') {
                     if(config('app.ws_logs')) {
                         echo "New message sent". PHP_EOL;
+                        echo 'Chat id: ' . $params['chatId']. PHP_EOL;
                     }
                     if(config('app.test_chat') !== $params['chatId']) {
                         dispatch(new NewMessageEvent($params['body'], $user_id, $params['chatId'], $params['attachments'],
@@ -116,6 +117,7 @@ class WampServer implements WampServerInterface
     public function onOpen(ConnectionInterface $conn) {
         if(config('app.ws_logs')) {
             echo "New connection detected". PHP_EOL;
+            echo "Test command". PHP_EOL;
         }
     }
 
