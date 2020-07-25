@@ -81,6 +81,9 @@ return [
     'asset_url' => env('ASSET_URL', null),
 
     'ws_logs' => env('WS_LOGS', false),
+
+
+    'test_chat' => env('TEST_CHAT_ID', ''),
     /*
     |--------------------------------------------------------------------------
     | Application Timezone
