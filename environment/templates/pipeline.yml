@@ -277,7 +277,59 @@ Resources:
           - ServerSideEncryptionByDefault:
               SSEAlgorithm: aws:kms
               KMSMasterKeyID: !Ref KMSKeyArn
-
+  # This is the definition of how to build the code in the repository
+  LaravelDocker:
+   Type: AWS::CodeBuild::Project
+   Properties:
+     Name: !Join ['-', [!Ref 'ProjectName', !Ref 'AWS::Region', 'laravel-docker', !Ref 'EnvironmentName']]
+     ServiceRole: !Ref CodeBuildServiceRole
+     EncryptionKey: !Ref KMSKeyArn
+     Artifacts:
+       Type: CODEPIPELINE
+     Source:
+       Type: CODEPIPELINE
+       BuildSpec: !Sub "environment/build/${EnvironmentName}-buildspec.yml"
+     Cache:
+       Location: LOCAL
+       Modes:
+         - LOCAL_DOCKER_LAYER_CACHE
+       Type: LOCAL
+     Environment:
+       Type: LINUX_CONTAINER
+       ComputeType: BUILD_GENERAL1_MEDIUM #BUILD_GENERAL1_SMALL
+       PrivilegedMode: true
+       Image: aws/codebuild/standard:4.0
+       ImagePullCredentialsType: CODEBUILD
+       EnvironmentVariables:
+         - Name: AWS_DEFAULT_REGION
+           Value: !Ref AWS::Region
+         - Name: AWS_ACCOUNT_ID
+           Value: !Ref AWS::AccountId
+         - Name: IMAGE_REPO_NAME
+           Value: !Ref BackWSRepository
+         - Name: IMAGE_TAG
+           Value: 'latest'
+         - Name: BUILD_WORK_DIR
+           Value: ./backend
+         - Name: DOCKERFILE_PATH
+           Value: docker/
+         - Name: ProjectName
+           Value: !Ref 'ProjectName'
+         - Name: EnvironmentName
+           Value: !Ref 'EnvironmentName'
+         - Name: ServiceName
+           Value: 'laravel-docker'
+       # Artifacts:
+       #   Type: S3
+       #   Location: !GetAtt ''
+       #   NamespaceType: BUILD_ID
+       #   OverrideArtifactName: true
+       #   Packaging: ZIP
+     LogsConfig:
+       CloudWatchLogs:
+         GroupName: !Sub /code-build/${ProjectName}/back-ws
+         StreamName: !Sub /code-build/${ProjectName}
+         Status: ENABLED
   # This is the definition of how to build the code in the repository
   BackWS:
    Type: AWS::CodeBuild::Project
@@ -676,6 +728,19 @@ Resources:
               RunOrder: 1
         - Name: Services
           Actions:
+            - Name: laravel-docker
+              ActionTypeId:
+                Category: Build
+                Owner: AWS
+                Version: '1'
+                Provider: CodeBuild
+              Configuration:
+                ProjectName: !Ref LaravelDocker
+              InputArtifacts:
+                - Name: Source
+              OutputArtifacts:
+                - Name: LaravelDockerBuildOutput
+              RunOrder: 1
             - Name: back-ws
               ActionTypeId:
                 Category: Build
