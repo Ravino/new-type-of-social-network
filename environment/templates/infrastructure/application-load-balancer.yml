@@ -127,16 +127,7 @@ Resources:
       Protocol: HTTPS
       Certificates:
         - CertificateArn: !Ref 'CertificateArn'
-  ALBListenerWS:
-    Type: AWS::ElasticLoadBalancingV2::Listener
-    Properties:
-      DefaultActions:
-        - TargetGroupArn: !Ref 'DummyTargetGroupALB'
-          Type: 'forward'
-      LoadBalancerArn: !Ref 'ApplicationLoadBalancer'
-      Port: 7070
-      Protocol: HTTP
-  # ALBListenerWSSSL:
+  # ALBListenerWS:
   #   Type: AWS::ElasticLoadBalancingV2::Listener
   #   Properties:
   #     DefaultActions:
@@ -144,9 +135,18 @@ Resources:
   #         Type: 'forward'
   #     LoadBalancerArn: !Ref 'ApplicationLoadBalancer'
   #     Port: 7070
-  #     Protocol: HTTPS
-  #     Certificates:
-  #       - CertificateArn: !Ref 'CertificateArn'
+  #     Protocol: HTTP
+  ALBListenerWSSSL:
+    Type: AWS::ElasticLoadBalancingV2::Listener
+    Properties:
+      DefaultActions:
+        - TargetGroupArn: !Ref 'DummyTargetGroupALB'
+          Type: 'forward'
+      LoadBalancerArn: !Ref 'ApplicationLoadBalancer'
+      Port: 7070
+      Protocol: HTTPS
+      Certificates:
+        - CertificateArn: !Ref 'CertificateArn'
   # ALBListenerNginxAdmin:
   #   Type: AWS::ElasticLoadBalancingV2::Listener
   #   Properties:
@@ -156,7 +156,16 @@ Resources:
   #     LoadBalancerArn: !Ref 'ApplicationLoadBalancer'
   #     Port: 81
   #     Protocol: HTTP
-  ALBListenerApi:
+  # ALBListenerApi:
+  #   Type: AWS::ElasticLoadBalancingV2::Listener
+  #   Properties:
+  #     DefaultActions:
+  #       - TargetGroupArn: !Ref 'DummyTargetGroupALB'
+  #         Type: 'forward'
+  #     LoadBalancerArn: !Ref 'ApplicationLoadBalancer'
+  #     Port: 1215
+  #     Protocol: HTTP
+  ALBListenerApiSSL:
     Type: AWS::ElasticLoadBalancingV2::Listener
     Properties:
       DefaultActions:
@@ -164,7 +173,9 @@ Resources:
           Type: 'forward'
       LoadBalancerArn: !Ref 'ApplicationLoadBalancer'
       Port: 1215
-      Protocol: HTTP
+      Protocol: HTTPS
+      Certificates:
+        - CertificateArn: !Ref 'CertificateArn'
 Outputs:
   ALBId:
     Description: The ARN of the Application Load Balancer
@@ -187,23 +198,28 @@ Outputs:
     Value: !Ref ALBListenerNginxSSL
     Export:
       Name: !Join [ ':', [ !Ref 'EnvironmentName', 'ALBListenerNginxSSL' ] ]
-  ALBListenerWS:
-    Description: The ARN of the public load balancer's Listener
-    Value: !Ref ALBListenerWS
-    Export:
-      Name: !Join [ ':', [ !Ref 'EnvironmentName', 'ALBListenerWS' ] ]
-  # ALBListenerWSSSL:
+  # ALBListenerWS:
   #   Description: The ARN of the public load balancer's Listener
-  #   Value: !Ref ALBListenerWSSSL
+  #   Value: !Ref ALBListenerWS
   #   Export:
-  #     Name: !Join [ ':', [ !Ref 'EnvironmentName', 'ALBListenerWSSSL' ] ]
+  #     Name: !Join [ ':', [ !Ref 'EnvironmentName', 'ALBListenerWS' ] ]
+  ALBListenerWSSSL:
+    Description: The ARN of the public load balancer's Listener
+    Value: !Ref ALBListenerWSSSL
+    Export:
+      Name: !Join [ ':', [ !Ref 'EnvironmentName', 'ALBListenerWSSSL' ] ]
   # ALBListenerNginxAdmin:
   #   Description: The ARN of the public load balancer's Listener
   #   Value: !Ref ALBListenerNginxAdmin
   #   Export:
   #     Name: !Join [ ':', [ !Ref 'EnvironmentName', 'ALBListenerNginxAdmin' ] ]
-  ALBListenerApi:
+  # ALBListenerApi:
+  #   Description: The ARN of the public load balancer's Listener
+  #   Value: !Ref ALBListenerApi
+  #   Export:
+  #     Name: !Join [ ':', [ !Ref 'EnvironmentName', 'ALBListenerApi' ] ]
+  ALBListenerApiSSL:
     Description: The ARN of the public load balancer's Listener
-    Value: !Ref ALBListenerApi
+    Value: !Ref ALBListenerApiSSL
     Export:
-      Name: !Join [ ':', [ !Ref 'EnvironmentName', 'ALBListenerApi' ] ]
+      Name: !Join [ ':', [ !Ref 'EnvironmentName', 'ALBListenerApiSSL' ] ]

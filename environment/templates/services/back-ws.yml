@@ -521,8 +521,8 @@ Resources:
   # as monitor the number of running tasks and replace any that have crashed
   Service:
     DependsOn:
-      - HTTPRule
-      # - HTTPSRule
+      #- HTTPRule
+      - HTTPSRule
     Type: AWS::ECS::Service
     Properties:
       ServiceName: !Ref 'ServiceName'
@@ -562,7 +562,6 @@ Resources:
         #   TargetGroupArn: 
         #     Fn::ImportValue: 
         #       !Join [':', [!Ref 'EnvironmentName', 'NLBTargetGroupWSOutbound']]
-
   TargetGroup:
     Type: AWS::ElasticLoadBalancingV2::TargetGroup
     Properties:
@@ -590,20 +589,7 @@ Resources:
       VpcId:
         Fn::ImportValue:
           !Join [':', [!Ref 'EnvironmentName', 'VPCId']]
-  HTTPRule:
-    Type: AWS::ElasticLoadBalancingV2::ListenerRule
-    Properties:
-      Actions:
-        - TargetGroupArn: !Ref 'TargetGroup'
-          Type: 'forward'
-      Conditions:
-        - Field: host-header
-          Values: [!Ref 'Path']
-      ListenerArn:
-        Fn::ImportValue:
-          !Join [':', [!Ref 'EnvironmentName', 'ALBListenerWS']]
-      Priority: !Ref 'Priority'
-  # HTTPSRule:
+  # HTTPRule:
   #   Type: AWS::ElasticLoadBalancingV2::ListenerRule
   #   Properties:
   #     Actions:
@@ -614,8 +600,22 @@ Resources:
   #         Values: [!Ref 'Path']
   #     ListenerArn:
   #       Fn::ImportValue:
-  #         !Join [':', [!Ref 'EnvironmentName', 'ALBListenerWSSSL']]
+  #         !Join [':', [!Ref 'EnvironmentName', 'ALBListenerWS']]
   #     Priority: !Ref 'Priority'
+  HTTPSRule:
+    Type: AWS::ElasticLoadBalancingV2::ListenerRule
+    Properties:
+      Actions:
+        - TargetGroupArn: !Ref 'TargetGroup'
+          Type: 'forward'
+      Conditions:
+        - Field: host-header
+          Values: [!Ref 'Path']
+      ListenerArn:
+        Fn::ImportValue:
+          !Join [':', [!Ref 'EnvironmentName', 'ALBListenerWSSSL']]
+      Priority: !Ref 'Priority'
+      
   # Enable autoscaling for this service
   ScalableTarget:
     Type: AWS::ApplicationAutoScaling::ScalableTarget

@@ -397,8 +397,8 @@ Resources:
   Service:
     Type: AWS::ECS::Service
     DependsOn:
-      - HTTPRule
-      # - HTTPSRule
+      #- HTTPRule
+      - HTTPSRule
     Properties:
       ServiceName: !Ref 'ServiceName'
       Cluster:
@@ -457,23 +457,10 @@ Resources:
           !Join [':', [!Ref 'EnvironmentName', 'VPCId']]
 
   # Create a rule on the load balancer for routing traffic to the target group
- # Create rules to forward both HTTP and HTTPS traffic to the service's
+  # Create rules to forward both HTTP and HTTPS traffic to the service's
   # target group. The service itself will handle redirecting HTTP traffic
   # to HTTPS
-  HTTPRule:
-    Type: AWS::ElasticLoadBalancingV2::ListenerRule
-    Properties:
-      Actions:
-        - TargetGroupArn: !Ref 'TargetGroup'
-          Type: 'forward'
-      Conditions:
-        - Field: host-header
-          Values: [!Ref 'Path']
-      ListenerArn:
-        Fn::ImportValue:
-          !Join [':', [!Ref 'EnvironmentName', 'ALBListenerApi']]
-      Priority: !Ref 'Priority'
-  # HTTPSRule:
+  # HTTPRule:
   #   Type: AWS::ElasticLoadBalancingV2::ListenerRule
   #   Properties:
   #     Actions:
@@ -484,9 +471,22 @@ Resources:
   #         Values: [!Ref 'Path']
   #     ListenerArn:
   #       Fn::ImportValue:
-  #         !Join [':', [!Ref 'EnvironmentName', 'ALBListener']]
+  #         !Join [':', [!Ref 'EnvironmentName', 'ALBListenerApi']]
   #     Priority: !Ref 'Priority'
-
+  HTTPSRule:
+    Type: AWS::ElasticLoadBalancingV2::ListenerRule
+    Properties:
+      Actions:
+        - TargetGroupArn: !Ref 'TargetGroup'
+          Type: 'forward'
+      Conditions:
+        - Field: host-header
+          Values: [!Ref 'Path']
+      ListenerArn:
+        Fn::ImportValue:
+          !Join [':', [!Ref 'EnvironmentName', 'ALBListenerApiSSL']]
+      Priority: !Ref 'Priority'
+      
   # Enable autoscaling for this service
   ScalableTarget:
     Type: AWS::ApplicationAutoScaling::ScalableTarget
