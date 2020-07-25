@@ -86,11 +86,19 @@ class WampServer implements WampServerInterface
                     if(config('app.ws_logs')) {
                         echo "New message sent". PHP_EOL;
                     }
-                    event(new NewMessageEvent($params['body'], $user_id, $params['chatId'], $params['attachments'],
-                        $params['replyOnMessageId'] ?? null,
-                        $params['forwardFromChatId'] ?? null,
-                        $params['toUserId'] ?? null
-                    ));
+                    if(config('app.test_chat') !== $params['chatId']) {
+                        dispatch(new NewMessageEvent($params['body'], $user_id, $params['chatId'], $params['attachments'],
+                            $params['replyOnMessageId'] ?? null,
+                            $params['forwardFromChatId'] ?? null,
+                            $params['toUserId'] ?? null
+                        ))->onQueue('high');
+                    } else {
+                        dispatch(new NewMessageEvent($params['body'], $user_id, $params['chatId'], $params['attachments'],
+                            $params['replyOnMessageId'] ?? null,
+                            $params['forwardFromChatId'] ?? null,
+                            $params['toUserId'] ?? null
+                        ))->onQueue('default');
+                    }
                 }
             }
         } catch (Exception $ex) {
