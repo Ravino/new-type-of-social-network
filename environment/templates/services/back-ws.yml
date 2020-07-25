@@ -250,6 +250,10 @@ Parameters:
     Type: String
     Default: "TestChatID"
     Description: Test chat ID.
+  WsExtendedLogsEnabled:
+    Type: String
+    Default: ""
+    Description: Test chat ID.
   #Role:
   #  Type: String
   #  Default: ""
@@ -354,6 +358,8 @@ Resources:
               Value: !Ref 'AWS::Region'
             - Name: TEST_CHAT_ID
               Value: !Ref 'TestChatID'
+            - Name: WS_LOGS
+              Value: !Ref 'WsExtendedLogsEnabled'
             - Name: DB_DATABASE
               Value:
                 Fn::ImportValue:
