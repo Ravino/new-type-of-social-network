@@ -202,6 +202,11 @@ Resources:
                 Resource: "*"
 
   # Init ECR registries for usage wit CodeBuild
+  LaravelDockerRepository:
+    Type: AWS::ECR::Repository
+    Properties:
+      RepositoryName: !Sub ${AWS::Region}-${EnvironmentName}-${ProjectName}-laravel-docker
+
   BackWSRepository:
     Type: AWS::ECR::Repository
     Properties:
@@ -306,7 +311,7 @@ Resources:
          - Name: AWS_ACCOUNT_ID
            Value: !Ref AWS::AccountId
          - Name: IMAGE_REPO_NAME
-           Value: !Ref BackWSRepository
+           Value: !Ref LaravelDockerRepository
          - Name: IMAGE_TAG
            Value: 'latest'
          - Name: BUILD_WORK_DIR
