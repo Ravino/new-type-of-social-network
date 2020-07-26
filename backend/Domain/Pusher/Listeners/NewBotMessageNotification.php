@@ -3,6 +3,7 @@
 
 namespace Domain\Pusher\Listeners;
 
+use Domain\Pusher\Events\NewBotMessageEvent;
 use Domain\Pusher\Events\NewMessageEvent;
 use Domain\Pusher\Models\ChatMessageAttachment;
 use Domain\Pusher\Repositories\ChatRepository;
@@ -11,12 +12,15 @@ use Domain\Pusher\WampServer as Pusher;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
 
-class NewMessageNotification
+class NewBotMessageNotification implements ShouldQueue
 {
+
+    use Queueable;
+
     /**
-     * @param NewMessageEvent $event рассылка сообщений
+     * @param NewBotMessageEvent $event рассылка сообщений
      */
-    public function handle(NewMessageEvent $event)
+    public function handle(NewBotMessageEvent $event)
     {
         $chatRepo = new ChatRepository();
         $messageRepo = new MessageRepository();

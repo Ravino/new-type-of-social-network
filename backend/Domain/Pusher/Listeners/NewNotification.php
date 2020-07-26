@@ -10,10 +10,8 @@ use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Notifications\Events\NotificationSent;
 
-class NewNotification implements ShouldQueue
+class NewNotification
 {
-
-    use Queueable;
 
     /**
      * @param NotificationSent $event

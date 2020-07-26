@@ -4,6 +4,7 @@
 namespace Domain\Pusher;
 
 
+use Domain\Pusher\Events\NewBotMessageEvent;
 use Domain\Pusher\Events\NewMessageEvent;
 use Domain\Pusher\Events\UserTypingEvent;
 use Domain\Pusher\Listeners\UserTypingNotification;
@@ -87,23 +88,18 @@ class WampServer implements WampServerInterface
                         echo "New message sent [onCall]". PHP_EOL;
                     }
                     if(config('app.test_chat') !== $params['chatId']) {
-                        dispatch(new NewMessageEvent($params['body'], $user_id, $params['chatId'], $params['attachments'],
+                        event(new NewMessageEvent($params['body'], $user_id, $params['chatId'], $params['attachments'],
                             $params['replyOnMessageId'] ?? null,
                             $params['forwardFromChatId'] ?? null,
                             $params['toUserId'] ?? null
-                        ))->onConnection('sync');
+                        ));
                     } else {
-                        dispatch(new NewMessageEvent($params['body'], $user_id, $params['chatId'], $params['attachments'],
+                        event(new NewBotMessageEvent($params['body'], $user_id, $params['chatId'], $params['attachments'],
                             $params['replyOnMessageId'] ?? null,
                             $params['forwardFromChatId'] ?? null,
                             $params['toUserId'] ?? null
-                        ))->onConnection('redis');
+                        ));
                     }
-//                    event(new NewMessageEvent($params['body'], $user_id, $params['chatId'], $params['attachments'],
-//                        $params['replyOnMessageId'] ?? null,
-//                        $params['forwardFromChatId'] ?? null,
-//                        $params['toUserId'] ?? null
-//                    ));
                 }
             }
         } catch (Exception $ex) {

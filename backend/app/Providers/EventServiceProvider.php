@@ -21,9 +21,11 @@ use Domain\Neo4j\Listeners\CommunityUnsubscribeListener;
 use Domain\Neo4j\Listeners\UserRelationsListener;
 use Domain\Pusher\Events\ChatActionEvent;
 use Domain\Pusher\Events\DestroyMessageEvent;
+use Domain\Pusher\Events\NewBotMessageEvent;
 use Domain\Pusher\Events\NewMessageEvent;
 use Domain\Pusher\Events\UserTypingEvent;
 use Domain\Pusher\Listeners\ChatActionListener;
+use Domain\Pusher\Listeners\NewBotMessageNotification;
 use Domain\Pusher\Listeners\NewNotification;
 use Domain\Pusher\Listeners\UserUpdateListener;
 use Domain\Pusher\Listeners\DestroyMessageNotification;
@@ -47,6 +49,9 @@ class EventServiceProvider extends ServiceProvider
         ],
         NewMessageEvent::class => [
             NewMessageNotification::class
+        ],
+        NewBotMessageEvent::class => [
+            NewBotMessageNotification::class
         ],
         DestroyMessageEvent::class => [
             DestroyMessageNotification::class
