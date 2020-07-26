@@ -100,6 +100,6 @@ RUN curl -s https://getcomposer.org/installer | php -- --install-dir=/usr/local/
 RUN apk del -f .build-deps
 
 # start and setup scripts
-COPY docker/docker-entrypoint.sh /usr/share/docker-laravel/bin/
+COPY docker/docker-parent-entrypoint.sh /usr/share/docker-laravel/bin/
 RUN chmod +x /usr/share/docker-laravel/bin/docker-parent-entrypoint.sh
 ENTRYPOINT ["/usr/share/docker-laravel/bin/docker-parent-entrypoint.sh"]
