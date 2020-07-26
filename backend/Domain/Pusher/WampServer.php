@@ -86,24 +86,24 @@ class WampServer implements WampServerInterface
                     if(config('app.ws_logs')) {
                         echo "New message sent [onCall]". PHP_EOL;
                     }
-//                    if(config('app.test_chat') !== $params['chatId']) {
-//                        dispatch(new NewMessageEvent($params['body'], $user_id, $params['chatId'], $params['attachments'],
-//                            $params['replyOnMessageId'] ?? null,
-//                            $params['forwardFromChatId'] ?? null,
-//                            $params['toUserId'] ?? null
-//                        ))->onConnection('sync');
-//                    } else {
-//                        dispatch(new NewMessageEvent($params['body'], $user_id, $params['chatId'], $params['attachments'],
-//                            $params['replyOnMessageId'] ?? null,
-//                            $params['forwardFromChatId'] ?? null,
-//                            $params['toUserId'] ?? null
-//                        ))->onConnection('redis');
-//                    }
-                    event(new NewMessageEvent($params['body'], $user_id, $params['chatId'], $params['attachments'],
-                        $params['replyOnMessageId'] ?? null,
-                        $params['forwardFromChatId'] ?? null,
-                        $params['toUserId'] ?? null
-                    ));
+                    if(config('app.test_chat') !== $params['chatId']) {
+                        dispatch(new NewMessageEvent($params['body'], $user_id, $params['chatId'], $params['attachments'],
+                            $params['replyOnMessageId'] ?? null,
+                            $params['forwardFromChatId'] ?? null,
+                            $params['toUserId'] ?? null
+                        ))->onConnection('sync');
+                    } else {
+                        dispatch(new NewMessageEvent($params['body'], $user_id, $params['chatId'], $params['attachments'],
+                            $params['replyOnMessageId'] ?? null,
+                            $params['forwardFromChatId'] ?? null,
+                            $params['toUserId'] ?? null
+                        ))->onConnection('redis');
+                    }
+//                    event(new NewMessageEvent($params['body'], $user_id, $params['chatId'], $params['attachments'],
+//                        $params['replyOnMessageId'] ?? null,
+//                        $params['forwardFromChatId'] ?? null,
+//                        $params['toUserId'] ?? null
+//                    ));
                 }
             }
         } catch (Exception $ex) {
