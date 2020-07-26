@@ -97,13 +97,13 @@ class WampServer implements WampServerInterface
                             $params['replyOnMessageId'] ?? null,
                             $params['forwardFromChatId'] ?? null,
                             $params['toUserId'] ?? null
-                        ))->onQueue('high');
+                        ))->onConnection('sync');
                     } else {
                         dispatch(new NewMessageEvent($params['body'], $user_id, $params['chatId'], $params['attachments'],
                             $params['replyOnMessageId'] ?? null,
                             $params['forwardFromChatId'] ?? null,
                             $params['toUserId'] ?? null
-                        ))->onQueue('default');
+                        ))->onConnection('redis');
                     }
                 }
             }
