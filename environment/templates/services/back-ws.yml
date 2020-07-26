@@ -291,6 +291,10 @@ Resources:
           PortMappings:
             - ContainerPort: !Ref 'ContainerPort'
             - ContainerPort: 5555
+          Ulimits:
+            - Name: nofile
+              SoftLimit: 4096
+              HardLimit: 8192
           Environment:
             - Name: API_URL
               Value: !Ref 'ApiUrl'
