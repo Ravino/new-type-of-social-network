@@ -39,7 +39,7 @@
 		"Neo4DbPassword": "zKisCPceY6WzTP1R",
 		"Neo4DbUsername": "neo4j",
         "QueueConnection": "redis",
-        "TestChatID": "5f0fbe66ec6ae0466f15f094",
+        "TestChatID": "5f1d1527160ffd7b97096ac4",
         "WsExtendedLogsEnabled": "1"
     }
 }
