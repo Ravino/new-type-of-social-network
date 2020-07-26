@@ -66,6 +66,10 @@ RUN docker-php-ext-enable \
     swoole \
     zmq
 
+RUN pecl install -o -f redis \
+    &&  rm -rf /tmp/pear \
+    &&  docker-php-ext-enable redis
+
 # Configure php extensions
 RUN docker-php-ext-configure gd --with-freetype --with-jpeg
 
