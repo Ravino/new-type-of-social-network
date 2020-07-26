@@ -274,8 +274,6 @@ Resources:
     Type: AWS::ECS::TaskDefinition
     Properties:
       Family: !Ref 'ServiceName'
-      Cpu: !Ref 'ContainerCpu'
-      Memory: !Ref 'ContainerMemory'
       NetworkMode: awsvpc
       RequiresCompatibilities:
         - FARGATE
@@ -412,6 +410,10 @@ Resources:
               awslogs-stream-prefix: !Join [ "-", [ !Ref 'ServiceName', "web-socket" ] ]
         - Name: !Join [ "-", [ !Ref 'ServiceName', "queue-worker" ] ]
           Image: !Ref 'ImageUrlQueueWorker'
+          Ulimits:
+            - Name: nofile
+              SoftLimit: 4096
+              HardLimit: 8192
           Environment:
             - Name: API_URL
               Value: !Ref 'ApiUrl'
