@@ -38,7 +38,7 @@ Resources:
     Type: AWS::ElastiCache::CacheCluster
     Properties:
       Engine: redis
-      CacheNodeType: cache.m4.large # TODO increase volume
+      CacheNodeType: cache.m4.2xlarge # TODO increase volume
       NumCacheNodes: 1 # Stricted to 1 for Engine: redis
       CacheSubnetGroupName: !Ref 'RedisSubnetGroup'
       VpcSecurityGroupIds:

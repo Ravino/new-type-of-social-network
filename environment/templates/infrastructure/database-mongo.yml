@@ -86,7 +86,7 @@ Resources:
   MongoInstance:
     Type: "AWS::DocDB::DBInstance"
     Properties:
-      DBInstanceClass: db.r5.large # TODO: Adjust on highload results
+      DBInstanceClass: db.r5.2xlarge # TODO: Adjust on highload results
       DBClusterIdentifier: !Ref 'MongoDBCluster' #required
   
 Outputs:

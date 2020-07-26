@@ -61,7 +61,7 @@ Resources:
       AllocatedStorage: '100' # TODO Adjust for highload. GB of storage
       StorageType: 'io1'
       Iops: 1000
-      DBInstanceClass: db.m4.large
+      DBInstanceClass: db.m3.medium
       DBParameterGroupName: !Ref MyAWSRDSDBParameterGroup
       Engine: MySQL
       #DBSnapshotIdentifier: !Ref 'MySQLDBName'
