@@ -107,6 +107,7 @@ class WampServer implements WampServerInterface
                 }
             }
         } catch (Exception $ex) {
+            echo $ex->getMessage() . PHP_EOL;
             Log::error($ex);
         }
     }
