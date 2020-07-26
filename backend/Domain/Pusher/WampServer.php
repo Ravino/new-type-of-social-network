@@ -85,26 +85,25 @@ class WampServer implements WampServerInterface
                 } else if($params['event'] === 'new.message') {
                     if(config('app.ws_logs')) {
                         echo "New message sent [onCall]". PHP_EOL;
-                        echo 'TEST_CHAT_ID: ' . json_encode(config('app.test_chat'));
-                        echo 'Chat id: ' . json_encode($params['chatId']);
-                        echo 'Delayed default queue: ' . json_encode(\Queue::getRedis()->connection(null)->zrange('queues:default:delayed' ,0, -1));
-                        echo 'Delayed high queue: ' . json_encode(\Queue::getRedis()->connection(null)->zrange('queues:high:delayed' ,0, -1));
-                        echo 'Reserved default queue: ' . json_encode(\Queue::getRedis()->connection(null)->zrange('queues:default:reserved' ,0, -1));
-                        echo 'Reserved high queue: ' . json_encode(\Queue::getRedis()->connection(null)->zrange('queues:high:reserved' ,0, -1));
                     }
-                    if(config('app.test_chat') !== $params['chatId']) {
-                        dispatch(new NewMessageEvent($params['body'], $user_id, $params['chatId'], $params['attachments'],
-                            $params['replyOnMessageId'] ?? null,
-                            $params['forwardFromChatId'] ?? null,
-                            $params['toUserId'] ?? null
-                        ))->onConnection('sync');
-                    } else {
-                        dispatch(new NewMessageEvent($params['body'], $user_id, $params['chatId'], $params['attachments'],
-                            $params['replyOnMessageId'] ?? null,
-                            $params['forwardFromChatId'] ?? null,
-                            $params['toUserId'] ?? null
-                        ))->onConnection('redis');
-                    }
+//                    if(config('app.test_chat') !== $params['chatId']) {
+//                        dispatch(new NewMessageEvent($params['body'], $user_id, $params['chatId'], $params['attachments'],
+//                            $params['replyOnMessageId'] ?? null,
+//                            $params['forwardFromChatId'] ?? null,
+//                            $params['toUserId'] ?? null
+//                        ))->onConnection('sync');
+//                    } else {
+//                        dispatch(new NewMessageEvent($params['body'], $user_id, $params['chatId'], $params['attachments'],
+//                            $params['replyOnMessageId'] ?? null,
+//                            $params['forwardFromChatId'] ?? null,
+//                            $params['toUserId'] ?? null
+//                        ))->onConnection('redis');
+//                    }
+                    event(new NewMessageEvent($params['body'], $user_id, $params['chatId'], $params['attachments'],
+                        $params['replyOnMessageId'] ?? null,
+                        $params['forwardFromChatId'] ?? null,
+                        $params['toUserId'] ?? null
+                    ));
                 }
             }
         } catch (Exception $ex) {
@@ -122,10 +121,6 @@ class WampServer implements WampServerInterface
     public function onOpen(ConnectionInterface $conn) {
         if(config('app.ws_logs')) {
             echo "New connection detected [onOpen]". PHP_EOL;
-            echo 'Delayed default queue: ' . json_encode(\Queue::getRedis()->connection(null)->zrange('queues:default:delayed' ,0, -1));
-            echo 'Delayed high queue: ' . json_encode(\Queue::getRedis()->connection(null)->zrange('queues:high:delayed' ,0, -1));
-            echo 'Reserved default queue: ' . json_encode(\Queue::getRedis()->connection(null)->zrange('queues:default:reserved' ,0, -1));
-            echo 'Reserved high queue: ' . json_encode(\Queue::getRedis()->connection(null)->zrange('queues:high:reserved' ,0, -1));
         }
     }
 
