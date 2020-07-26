@@ -274,6 +274,8 @@ Resources:
     Type: AWS::ECS::TaskDefinition
     Properties:
       Family: !Ref 'ServiceName'
+      Cpu: !Ref 'ContainerCpu'
+      Memory: !Ref 'ContainerMemory'
       NetworkMode: awsvpc
       RequiresCompatibilities:
         - FARGATE
@@ -291,7 +293,7 @@ Resources:
             - ContainerPort: 5555
           Ulimits:
             - Name: nofile
-              SoftLimit: 4096
+              SoftLimit: 2048
               HardLimit: 8192
           Environment:
             - Name: API_URL
@@ -412,7 +414,7 @@ Resources:
           Image: !Ref 'ImageUrlQueueWorker'
           Ulimits:
             - Name: nofile
-              SoftLimit: 4096
+              SoftLimit: 2048
               HardLimit: 8192
           Environment:
             - Name: API_URL
