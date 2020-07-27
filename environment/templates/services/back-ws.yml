@@ -288,11 +288,9 @@ Resources:
       ContainerDefinitions:
         - Name: !Join [ "-", [ !Ref 'ServiceName', "web-socket" ] ]
           Image: !Ref 'ImageUrlWebSocket'
-          Cpu: !Ref 'ContainerCpu'
-          Memory: !Ref 'ContainerMemory'
           PortMappings:
             - ContainerPort: !Ref 'ContainerPort'
-            #- ContainerPort: 5555
+            - ContainerPort: 5555
           Ulimits:
             - Name: nofile
               SoftLimit: 2048
