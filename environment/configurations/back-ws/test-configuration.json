@@ -20,7 +20,7 @@
         "HighCpuThresholdAlarm": "50",
         "ScaleUpCooldown": "30",
         "DeploymentMaximum": "200",
-        "DeploymentMinimum": "100",
+        "DeploymentMinimum": "75",
         "ApiUrl": "dev.plizi.fun",
 		"AppEnv": "production",
 		"AppKey": "base64:B+SfHGdTdca+dxR4pzJ2SRrqFpF1gFS/pgZTHNxDbhw=",

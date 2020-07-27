@@ -575,7 +575,7 @@ Resources:
             - Fn::ImportValue:
                 !Join [':', [!Ref 'EnvironmentName', 'PublicSubnetTwo']]
       TaskDefinition: !Ref 'TaskDefinition'
-      #HealthCheckGracePeriodSeconds: 2147483647
+      HealthCheckGracePeriodSeconds: 2147483647
       LoadBalancers:
         - ContainerName: !Join [ "-", [ !Ref 'ServiceName', "web-socket" ] ]
           ContainerPort: !Ref 'ContainerPort'
