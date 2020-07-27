@@ -575,7 +575,7 @@ Resources:
             - Fn::ImportValue:
                 !Join [':', [!Ref 'EnvironmentName', 'PublicSubnetTwo']]
       TaskDefinition: !Ref 'TaskDefinition'
-      HealthCheckGracePeriodSeconds: 2147483647
+      HealthCheckGracePeriodSeconds: 30
       LoadBalancers:
         - ContainerName: !Join [ "-", [ !Ref 'ServiceName', "web-socket" ] ]
           ContainerPort: !Ref 'ContainerPort'
@@ -595,11 +595,11 @@ Resources:
     Properties:
       HealthCheckIntervalSeconds: 30
       HealthCheckPath: /
-      HealthCheckProtocol: HTTP
+      HealthCheckProtocol: HTTPS
       HealthCheckTimeoutSeconds: 60
       HealthyThresholdCount: 2
       Matcher:
-        HttpCode: "426"
+        HttpCode: "101"
       TargetType: ip
       Name: !Ref 'ServiceName'
       Port: !Ref 'ContainerPort'

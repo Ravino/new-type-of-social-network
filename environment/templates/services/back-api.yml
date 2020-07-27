@@ -422,7 +422,7 @@ Resources:
             - Fn::ImportValue:
                 !Join [':', [!Ref 'EnvironmentName', 'PublicSubnetTwo']]
       TaskDefinition: !Ref 'TaskDefinition'
-      HealthCheckGracePeriodSeconds: 2147483647
+      HealthCheckGracePeriodSeconds: 30
       LoadBalancers:
         - ContainerName: !Ref 'ServiceName'
           ContainerPort: !Ref 'ContainerPort'
@@ -436,12 +436,12 @@ Resources:
     Type: AWS::ElasticLoadBalancingV2::TargetGroup
     Properties:
       HealthCheckIntervalSeconds: 30
-      HealthCheckPath: /
-      HealthCheckProtocol: HTTP
+      HealthCheckPath: /api
+      HealthCheckProtocol: HTTPS
       HealthCheckTimeoutSeconds: 60
       HealthyThresholdCount: 2
       Matcher:
-        HttpCode: "200-299"
+        HttpCode: "404"
       TargetType: ip
       Name: !Ref 'ServiceName'
       Port: !Ref 'ContainerPort'
