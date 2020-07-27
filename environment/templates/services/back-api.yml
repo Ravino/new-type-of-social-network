@@ -435,10 +435,10 @@ Resources:
   TargetGroup:
     Type: AWS::ElasticLoadBalancingV2::TargetGroup
     Properties:
-      HealthCheckIntervalSeconds: 60
+      HealthCheckIntervalSeconds: 30
       HealthCheckPath: /api
       HealthCheckProtocol: HTTPS
-      HealthCheckTimeoutSeconds: 30
+      HealthCheckTimeoutSeconds: 5
       HealthyThresholdCount: 2
       Matcher:
         HttpCode: "404"
