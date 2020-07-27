@@ -98,9 +98,3 @@ RUN curl -s https://getcomposer.org/installer | php -- --install-dir=/usr/local/
 
 # Cleanup dev dependencies
 RUN apk del -f .build-deps
-RUN php artisan optimize
-
-# start and setup scripts
-#COPY docker/docker-laravel/docker-entrypoint.sh /usr/share/docker-laravel/bin/
-#RUN chmod +x /usr/share/docker-laravel/bin/docker-entrypoint.sh
-#ENTRYPOINT ["/usr/share/docker-laravel/bin/docker-entrypoint.sh"]

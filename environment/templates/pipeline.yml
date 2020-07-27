@@ -323,7 +323,7 @@ Resources:
          - Name: EnvironmentName
            Value: !Ref 'EnvironmentName'
          - Name: ServiceName
-           Value: 'laravel-docker'
+           Value: 'laravel'
        # Artifacts:
        #   Type: S3
        #   Location: !GetAtt ''

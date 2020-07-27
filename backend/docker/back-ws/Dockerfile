@@ -4,7 +4,7 @@ RUN composer install
 EXPOSE 7070
 EXPOSE 5555
 
-RUN php artisan optimize
+#RUN php artisan optimize
 
 # start and setup scripts
 COPY docker/back-ws/docker-entrypoint.sh /usr/share/back-ws/bin/
