@@ -3,8 +3,10 @@ COPY . .
 RUN composer install
 EXPOSE 7070
 EXPOSE 5555
-COPY docker/back-ws/docker-entrypoint.sh /usr/share/docker-laravel/bin/
-RUN chmod +x /usr/share/docker-laravel/bin/docker-entrypoint.sh
+
+RUN php artisan optimize
 
 # start and setup scripts
-ENTRYPOINT ["/usr/share/docker-laravel/bin/docker-entrypoint.sh"]
+COPY docker/back-ws/docker-entrypoint.sh /usr/share/back-ws/bin/
+RUN chmod +x /usr/share/back-ws/bin/docker-entrypoint.sh
+ENTRYPOINT ["/usr/share/back-ws/bin/docker-entrypoint.sh"]
