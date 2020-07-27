@@ -422,127 +422,127 @@ Resources:
               awslogs-group: !Join ['-', [!Ref 'EnvironmentName', 'public', !Ref 'ServiceName']]
               awslogs-region: !Ref 'AWS::Region'
               awslogs-stream-prefix: !Join [ "-", [ !Ref 'ServiceName', "web-socket" ] ]
-        # - Name: !Join [ "-", [ !Ref 'ServiceName', "queue-worker" ] ]
-        #   Image: !Ref 'ImageUrlQueueWorker'
-        #   Cpu: !Ref 'ContainerCpu'
-        #   Memory: !Ref 'ContainerMemory'
-        #   Ulimits:
-        #     - Name: nofile
-        #       SoftLimit: 2048
-        #       HardLimit: 8192
-        #   Environment:
-        #     - Name: API_URL
-        #       Value: !Ref 'ApiUrl'
-        #     - Name: APP_DEBUG
-        #       Value: !Ref 'AppDebug'
-        #     - Name: APP_ENV
-        #       Value: !Ref 'AppEnv'
-        #     - Name: APP_KEY
-        #       Value: !Ref 'AppKey'
-        #     - Name: APP_NAME
-        #       Value: !Ref 'AppName'
-        #     - Name: AWS_ACCESS_KEY_ID
-        #       Value: !Ref 'AwsAccessKeyId'
-        #     - Name: AWS_SECRET_ACCESS_KEY
-        #       Value: !Ref 'AwsSecretAccessKey'
-        #     - Name: AWS_DEFAULT_REGION
-        #       Value: !Ref 'AwsDefaultRegion'
-        #     - Name: AWS_BUCKET
-        #       Value: !Ref 'AwsBucket'
-        #     - Name: JWT_BLACKLIST_ENABLED
-        #       Value: !Ref 'JwtBlacklistEnabled'
-        #     - Name: JWT_TTL
-        #       Value: !Ref 'JwtTtl'
-        #     - Name: JWT_SECRET
-        #       Value: !Ref 'JwtSecret'
-        #     - Name: LADA_CACHE_ACTIVE
-        #       Value: !Ref 'LadaCacheActive'
-        #     - Name: MAIL_ENCRYPTION
-        #       Value: !Ref 'MailEncryption'
-        #     - Name: MAIL_FROM_ADDRESS
-        #       Value: !Ref 'MailFromAddress'
-        #     - Name: MAIL_FROM_NAME
-        #       Value: !Ref 'MailFromName'
-        #     - Name: MAIL_HOST
-        #       Value: !Ref 'MailHost'
-        #     - Name: MAIL_MAILER
-        #       Value: !Ref 'MailMailer'
-        #     - Name: MAIL_PASSWORD
-        #       Value: !Ref 'MailPassword'
-        #     - Name: MAIL_PORT
-        #       Value: !Ref 'MailPort'
-        #     - Name: MAIL_USERNAME
-        #       Value: !Ref 'MailUsername'
-        #     - Name: NEO4_DB_BOLT_PORT
-        #       Value: !Ref 'Neo4DbBoltPort'
-        #     - Name: NEO4_DB_HOST
-        #       Value: !Ref 'Neo4DbHost'
-        #     - Name: NEO4_DB_HTTP_PORT
-        #       Value: !Ref 'Neo4DbHttpPort'
-        #     - Name: NEO4_DB_PASSWORD
-        #       Value: !Ref 'Neo4DbPassword'
-        #     - Name: NEO4_DB_USERNAME
-        #       Value: !Ref 'Neo4DbUsername'
-        #     - Name: QUEUE_CONNECTION
-        #       Value: !Ref 'QueueConnection'
-        #     #- Name: SENTRY_LARAVEL_DSN
-        #     #  Value: !Ref 'SentryLaravelDsn'
-        #     - Name: SWOOLE_HTTP_HOST
-        #       Value: !Ref 'SwooleHttpHost'
-        #     - Name: ZMQ_SUB_HOST
-        #       Value: '127.0.0.1'
-        #     - Name: ENV_NAME
-        #       Value: !Ref 'EnvironmentName'
-        #     - Name: REGION
-        #       Value: !Ref 'AWS::Region'
-        #     - Name: TEST_CHAT_ID
-        #       Value: !Ref 'TestChatID'
-        #     - Name: DB_DATABASE
-        #       Value:
-        #         Fn::ImportValue:
-        #           !Join [':', [!Ref 'EnvironmentName', 'MySQLDBName']]
-        #     - Name: DB_HOST
-        #       Value:
-        #         Fn::ImportValue:
-        #           !Join [':', [!Ref 'EnvironmentName', 'MySQLDBHost']]
-        #     - Name: DB_PASSWORD
-        #       Value:
-        #         Fn::ImportValue:
-        #           !Join [':', [!Ref 'EnvironmentName', 'MySQLDBPass']]
-        #     - Name: DB_PORT
-        #       Value:
-        #         Fn::ImportValue:
-        #           !Join [':', [!Ref 'EnvironmentName', 'MySQLDBPort']]
-        #     - Name: DB_USERNAME
-        #       Value:
-        #         Fn::ImportValue:
-        #           !Join [':', [!Ref 'EnvironmentName', 'MySQLDBUser']]
-        #     - Name: MONGO_DB_HOST
-        #       Value:
-        #         Fn::ImportValue:
-        #           !Join [':', [!Ref 'EnvironmentName', 'MongoDBHost']]
-        #     - Name: MONGO_DB_PASSWORD
-        #       Value:
-        #         Fn::ImportValue:
-        #           !Join [':', [!Ref 'EnvironmentName', 'MongoDBPass']]
-        #     - Name: MONGO_DB_USERNAME
-        #       Value:
-        #         Fn::ImportValue:
-        #           !Join [':', [!Ref 'EnvironmentName', 'MongoDBUser']]
-        #     - Name: REDIS_HOST
-        #       Value:
-        #         Fn::ImportValue:
-        #           !Join [':', [!Ref 'EnvironmentName', 'RedisHost']]
-        #     - Name: REDIS_PORT
-        #       Value:
-        #         Fn::ImportValue:
-        #           !Join [':', [!Ref 'EnvironmentName', 'RedisPort']]
-        #   LogConfiguration:
-        #     LogDriver: 'awslogs'
-        #     Options:
-        #       awslogs-group: !Join ['-', [!Ref 'EnvironmentName', 'public', !Ref 'ServiceName']]
-        #       awslogs-region: !Ref 'AWS::Region'
-        #       awslogs-stream-prefix: !Join [ "-", [ !Ref 'ServiceName', "queue-worker" ] ]
+        - Name: !Join [ "-", [ !Ref 'ServiceName', "queue-worker" ] ]
+          Image: !Ref 'ImageUrlQueueWorker'
+          Cpu: !Ref 'ContainerCpu'
+          Memory: !Ref 'ContainerMemory'
+          Ulimits:
+            - Name: nofile
+              SoftLimit: 2048
+              HardLimit: 8192
+          Environment:
+            - Name: API_URL
+              Value: !Ref 'ApiUrl'
+            - Name: APP_DEBUG
+              Value: !Ref 'AppDebug'
+            - Name: APP_ENV
+              Value: !Ref 'AppEnv'
+            - Name: APP_KEY
+              Value: !Ref 'AppKey'
+            - Name: APP_NAME
+              Value: !Ref 'AppName'
+            - Name: AWS_ACCESS_KEY_ID
+              Value: !Ref 'AwsAccessKeyId'
+            - Name: AWS_SECRET_ACCESS_KEY
+              Value: !Ref 'AwsSecretAccessKey'
+            - Name: AWS_DEFAULT_REGION
+              Value: !Ref 'AwsDefaultRegion'
+            - Name: AWS_BUCKET
+              Value: !Ref 'AwsBucket'
+            - Name: JWT_BLACKLIST_ENABLED
+              Value: !Ref 'JwtBlacklistEnabled'
+            - Name: JWT_TTL
+              Value: !Ref 'JwtTtl'
+            - Name: JWT_SECRET
+              Value: !Ref 'JwtSecret'
+            - Name: LADA_CACHE_ACTIVE
+              Value: !Ref 'LadaCacheActive'
+            - Name: MAIL_ENCRYPTION
+              Value: !Ref 'MailEncryption'
+            - Name: MAIL_FROM_ADDRESS
+              Value: !Ref 'MailFromAddress'
+            - Name: MAIL_FROM_NAME
+              Value: !Ref 'MailFromName'
+            - Name: MAIL_HOST
+              Value: !Ref 'MailHost'
+            - Name: MAIL_MAILER
+              Value: !Ref 'MailMailer'
+            - Name: MAIL_PASSWORD
+              Value: !Ref 'MailPassword'
+            - Name: MAIL_PORT
+              Value: !Ref 'MailPort'
+            - Name: MAIL_USERNAME
+              Value: !Ref 'MailUsername'
+            - Name: NEO4_DB_BOLT_PORT
+              Value: !Ref 'Neo4DbBoltPort'
+            - Name: NEO4_DB_HOST
+              Value: !Ref 'Neo4DbHost'
+            - Name: NEO4_DB_HTTP_PORT
+              Value: !Ref 'Neo4DbHttpPort'
+            - Name: NEO4_DB_PASSWORD
+              Value: !Ref 'Neo4DbPassword'
+            - Name: NEO4_DB_USERNAME
+              Value: !Ref 'Neo4DbUsername'
+            - Name: QUEUE_CONNECTION
+              Value: !Ref 'QueueConnection'
+            #- Name: SENTRY_LARAVEL_DSN
+            #  Value: !Ref 'SentryLaravelDsn'
+            - Name: SWOOLE_HTTP_HOST
+              Value: !Ref 'SwooleHttpHost'
+            - Name: ZMQ_SUB_HOST
+              Value: '127.0.0.1'
+            - Name: ENV_NAME
+              Value: !Ref 'EnvironmentName'
+            - Name: REGION
+              Value: !Ref 'AWS::Region'
+            - Name: TEST_CHAT_ID
+              Value: !Ref 'TestChatID'
+            - Name: DB_DATABASE
+              Value:
+                Fn::ImportValue:
+                  !Join [':', [!Ref 'EnvironmentName', 'MySQLDBName']]
+            - Name: DB_HOST
+              Value:
+                Fn::ImportValue:
+                  !Join [':', [!Ref 'EnvironmentName', 'MySQLDBHost']]
+            - Name: DB_PASSWORD
+              Value:
+                Fn::ImportValue:
+                  !Join [':', [!Ref 'EnvironmentName', 'MySQLDBPass']]
+            - Name: DB_PORT
+              Value:
+                Fn::ImportValue:
+                  !Join [':', [!Ref 'EnvironmentName', 'MySQLDBPort']]
+            - Name: DB_USERNAME
+              Value:
+                Fn::ImportValue:
+                  !Join [':', [!Ref 'EnvironmentName', 'MySQLDBUser']]
+            - Name: MONGO_DB_HOST
+              Value:
+                Fn::ImportValue:
+                  !Join [':', [!Ref 'EnvironmentName', 'MongoDBHost']]
+            - Name: MONGO_DB_PASSWORD
+              Value:
+                Fn::ImportValue:
+                  !Join [':', [!Ref 'EnvironmentName', 'MongoDBPass']]
+            - Name: MONGO_DB_USERNAME
+              Value:
+                Fn::ImportValue:
+                  !Join [':', [!Ref 'EnvironmentName', 'MongoDBUser']]
+            - Name: REDIS_HOST
+              Value:
+                Fn::ImportValue:
+                  !Join [':', [!Ref 'EnvironmentName', 'RedisHost']]
+            - Name: REDIS_PORT
+              Value:
+                Fn::ImportValue:
+                  !Join [':', [!Ref 'EnvironmentName', 'RedisPort']]
+          LogConfiguration:
+            LogDriver: 'awslogs'
+            Options:
+              awslogs-group: !Join ['-', [!Ref 'EnvironmentName', 'public', !Ref 'ServiceName']]
+              awslogs-region: !Ref 'AWS::Region'
+              awslogs-stream-prefix: !Join [ "-", [ !Ref 'ServiceName', "queue-worker" ] ]
   
   # The service. The service is a resource which allows you to run multiple
   # copies of a type of task, and gather up their logs and metrics, as well
