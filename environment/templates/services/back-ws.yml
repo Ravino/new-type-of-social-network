@@ -409,9 +409,9 @@ Resources:
                 Fn::ImportValue:
                   !Join [':', [!Ref 'EnvironmentName', 'MongoDBUser']]
             - Name: REDIS_HOST
-              Value:
-                Fn::ImportValue:
-                  !Join [':', [!Ref 'EnvironmentName', 'RedisHost']]
+              Value: "eu-re-1d83dtago056g.lmiwa9.ng.0001.euc1.cache.amazonaws.com"
+                #Fn::ImportValue:
+                #  !Join [':', [!Ref 'EnvironmentName', 'RedisHost']]
             - Name: REDIS_PORT
               Value:
                 Fn::ImportValue:
@@ -530,9 +530,7 @@ Resources:
                 Fn::ImportValue:
                   !Join [':', [!Ref 'EnvironmentName', 'MongoDBUser']]
             - Name: REDIS_HOST
-              Value:
-                Fn::ImportValue:
-                  !Join [':', [!Ref 'EnvironmentName', 'RedisHost']]
+              Value: "eu-re-1d83dtago056g.lmiwa9.ng.0001.euc1.cache.amazonaws.com"
             - Name: REDIS_PORT
               Value:
                 Fn::ImportValue:
