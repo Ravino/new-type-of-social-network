@@ -40,7 +40,7 @@
 		"Neo4DbHost": "neo4j.plizi.info",
 		"Neo4DbPassword": "zKisCPceY6WzTP1R",
 		"Neo4DbUsername": "neo4j",
-        "QueueConnection": "sync",
+        "QueueConnection": "redis",
         "TestChatID": "5f1d1527160ffd7b97096ac4",
         "WsExtendedLogsEnabled": ""
     }
