@@ -80,10 +80,10 @@ function validate-one() {
     fi;
 }
 function validate() {
-    cd "../templates/"
+    cd "templates/"
     for TEMPLATE in $(find . -name '*.yml'); do
         # Validate the template with CloudFormation
-        ERRORS=$(aws cloudformation validate-template --template-body file://../templates/$TEMPLATE 2>&1 >/dev/null);
+        ERRORS=$(aws cloudformation validate-template --template-body file://$TEMPLATE 2>&1 >/dev/null);
         if [ "$?" -gt "0" ]; then
             ((ERROR_COUNT++));
             echo "FAILED $TEMPLATE: $ERRORS";
