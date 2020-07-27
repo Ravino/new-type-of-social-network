@@ -422,7 +422,7 @@ Resources:
             - Fn::ImportValue:
                 !Join [':', [!Ref 'EnvironmentName', 'PublicSubnetTwo']]
       TaskDefinition: !Ref 'TaskDefinition'
-      HealthCheckGracePeriodSeconds: 30
+      HealthCheckGracePeriodSeconds: 2147483647
       LoadBalancers:
         - ContainerName: !Ref 'ServiceName'
           ContainerPort: !Ref 'ContainerPort'
@@ -435,13 +435,13 @@ Resources:
   TargetGroup:
     Type: AWS::ElasticLoadBalancingV2::TargetGroup
     Properties:
-      HealthCheckIntervalSeconds: 30
-      HealthCheckPath: /api
-      HealthCheckProtocol: HTTPS
-      HealthCheckTimeoutSeconds: 5
-      HealthyThresholdCount: 2
-      Matcher:
-        HttpCode: "404"
+      # HealthCheckIntervalSeconds: 30
+      # HealthCheckPath: /api
+      # HealthCheckProtocol: HTTPS
+      # HealthCheckTimeoutSeconds: 5
+      # HealthyThresholdCount: 2
+      # Matcher:
+      #   HttpCode: "404"
       TargetType: ip
       Name: !Ref 'ServiceName'
       Port: !Ref 'ContainerPort'
@@ -451,7 +451,7 @@ Resources:
       #     Value: 'true' # TODO possible reason of issues for WebSockets are not forwarding messages
       #   - Key: deregistration_delay.timeout_seconds
       #     Value: '30' # TODO possible reason of issues for WebSockets are not forwarding messages
-      UnhealthyThresholdCount: 2
+      # UnhealthyThresholdCount: 2
       VpcId:
         Fn::ImportValue:
           !Join [':', [!Ref 'EnvironmentName', 'VPCId']]
