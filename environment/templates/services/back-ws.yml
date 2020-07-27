@@ -53,17 +53,7 @@ Parameters:
     Default: 256
     Description: How much CPU to give the container. 1024 is 1 CPU
   # resources management
-  TaskDefinitionCpu:
-    Type: Number
-    Default: 256
-    Description: How much CPU to give the container. 1024 is 1 CPU
-  # resources management
   ContainerMemory:
-    Type: Number
-    Default: 512
-    Description: How much memory in megabytes to give the container
-  # resources management
-  TaskDefinitionMemory:
     Type: Number
     Default: 512
     Description: How much memory in megabytes to give the container
@@ -284,8 +274,8 @@ Resources:
     Type: AWS::ECS::TaskDefinition
     Properties:
       Family: !Ref 'ServiceName'
-      Cpu: !Ref 'TaskDefinitionCpu'
-      Memory: !Ref 'TaskDefinitionMemory'
+      Cpu: !Ref 'ContainerCpu'
+      Memory: !Ref 'ContainerMemory'
       NetworkMode: awsvpc
       RequiresCompatibilities:
         - FARGATE
