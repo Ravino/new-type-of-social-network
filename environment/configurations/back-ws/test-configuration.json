@@ -7,8 +7,6 @@
         "ContainerPort": "7070",
         "ContainerCpu": "1024",
         "ContainerMemory": "2048",
-        "TaskDefinitionCpu": "2048",
-        "TaskDefinitionMemory": "4096",
         "Path": "dev-ws.plizi.fun",
         "Priority": "20",
         "MinCapacity": "1",
