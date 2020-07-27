@@ -274,8 +274,8 @@ Resources:
     Type: AWS::ECS::TaskDefinition
     Properties:
       Family: !Ref 'ServiceName'
-      Cpu: !Ref 'ContainerCpu'
-      Memory: !Ref 'ContainerMemory'
+      #Cpu: !Ref 'ContainerCpu'
+      #Memory: !Ref 'ContainerMemory'
       NetworkMode: awsvpc
       RequiresCompatibilities:
         - FARGATE
@@ -288,6 +288,8 @@ Resources:
       ContainerDefinitions:
         - Name: !Join [ "-", [ !Ref 'ServiceName', "web-socket" ] ]
           Image: !Ref 'ImageUrlWebSocket'
+          Cpu: !Ref 'ContainerCpu'
+          Memory: !Ref 'ContainerMemory'
           PortMappings:
             - ContainerPort: !Ref 'ContainerPort'
             - ContainerPort: 5555
@@ -412,6 +414,8 @@ Resources:
               awslogs-stream-prefix: !Join [ "-", [ !Ref 'ServiceName', "web-socket" ] ]
         - Name: !Join [ "-", [ !Ref 'ServiceName', "queue-worker" ] ]
           Image: !Ref 'ImageUrlQueueWorker'
+          Cpu: !Ref 'ContainerCpu'
+          Memory: !Ref 'ContainerMemory'
           Ulimits:
             - Name: nofile
               SoftLimit: 2048
