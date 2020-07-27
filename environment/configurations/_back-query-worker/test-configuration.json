@@ -35,6 +35,6 @@
 		"Neo4DbHost": "neo4j.plizi.info",
 		"Neo4DbPassword": "zKisCPceY6WzTP1R",
 		"Neo4DbUsername": "neo4j",
-		"QueueConnection": "redis"
+		"QueueConnection": "sync"
     }
 }
