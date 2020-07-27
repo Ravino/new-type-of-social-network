@@ -317,7 +317,7 @@ Resources:
          - Name: BUILD_WORK_DIR
            Value: ./backend
          - Name: DOCKERFILE_PATH
-           Value: docker/docker-laravel/
+           Value: docker/laravel
          - Name: ProjectName
            Value: !Ref 'ProjectName'
          - Name: EnvironmentName
@@ -332,7 +332,7 @@ Resources:
        #   Packaging: ZIP
      LogsConfig:
        CloudWatchLogs:
-         GroupName: !Sub /code-build/${ProjectName}/back-ws
+         GroupName: !Sub /code-build/${ProjectName}/laravel
          StreamName: !Sub /code-build/${ProjectName}
          Status: ENABLED
   # This is the definition of how to build the code in the repository
