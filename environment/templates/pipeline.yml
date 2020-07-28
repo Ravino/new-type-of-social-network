@@ -733,19 +733,19 @@ Resources:
               RunOrder: 1
         - Name: Services
           Actions:
-            - Name: laravel-docker
-              ActionTypeId:
-                Category: Build
-                Owner: AWS
-                Version: '1'
-                Provider: CodeBuild
-              Configuration:
-                ProjectName: !Ref LaravelDocker
-              InputArtifacts:
-                - Name: Source
-              OutputArtifacts:
-                - Name: LaravelDockerBuildOutput
-              RunOrder: 1
+            # - Name: laravel-docker
+            #   ActionTypeId:
+            #     Category: Build
+            #     Owner: AWS
+            #     Version: '1'
+            #     Provider: CodeBuild
+            #   Configuration:
+            #     ProjectName: !Ref LaravelDocker
+            #   InputArtifacts:
+            #     - Name: Source
+            #   OutputArtifacts:
+            #     - Name: LaravelDockerBuildOutput
+            #   RunOrder: 1
             - Name: back-ws
               ActionTypeId:
                 Category: Build

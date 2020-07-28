@@ -259,10 +259,10 @@ Parameters:
     Default: ""
   FullchainPath:
     Type: String
-    Default: "/backend/docker/ssl/fullchain.pem"
+    Default: "/docker/ssl/fullchain.pem"
   PrivateKeyPath: 
     Type: String
-    Default: "/backend/docker/ssl/privkey.pem"
+    Default: "/docker/ssl/privkey.pem"
   #Role:
   #  Type: String
   #  Default: ""
