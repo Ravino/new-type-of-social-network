@@ -254,6 +254,15 @@ Parameters:
     Type: String
     Default: ""
     Description: Test chat ID.
+  SecureWebsocket:
+    Type: String
+    Default: ""
+  FullchainPath:
+    Type: String
+    Default: "/backend/docker/ssl/fullchain.pem"
+  PrivateKeyPath: 
+    Type: String
+    Default: "/backend/docker/ssl/privkey.pem"
   #Role:
   #  Type: String
   #  Default: ""
@@ -301,6 +310,12 @@ Resources:
               SoftLimit: 2048
               HardLimit: 4096
           Environment:
+            - Name: SECURE_WEBSOCKET
+              Value: !Ref 'SecureWebsocket'
+            - Name: FULLCHAIN_PATH
+              Value: !Ref 'FullchainPath'
+            - Name: PRIVATE_KEY_PATH
+              Value: !Ref 'PrivateKeyPath'
             - Name: API_URL
               Value: !Ref 'ApiUrl'
             - Name: APP_DEBUG
@@ -420,6 +435,12 @@ Resources:
           #Cpu: !Ref 'ContainerCpu'
           #MemoryReservation: !Ref 'ContainerMemory'
           Environment:
+            - Name: SECURE_WEBSOCKET
+              Value: !Ref 'SecureWebsocket'
+            - Name: FULLCHAIN_PATH
+              Value: !Ref 'FullchainPath'
+            - Name: PRIVATE_KEY_PATH
+              Value: !Ref 'PrivateKeyPath'
             - Name: API_URL
               Value: !Ref 'ApiUrl'
             - Name: APP_DEBUG
