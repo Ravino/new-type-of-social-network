@@ -287,9 +287,9 @@ Resources:
           !Join [':', [!Ref 'EnvironmentName', 'ECSServiceExecutionTaskRole']]
       ContainerDefinitions:
         - Name: !Join [ "-", [ !Ref 'ServiceName', "web-socket" ] ]
-          #DependsOn:
-          #  - Condition: HEALTHY
-          #    ContainerName: !Join [ "-", [ !Ref 'ServiceName', "queue-worker" ] ]
+          DependsOn:
+           - Condition: HEALTHY
+             ContainerName: !Join [ "-", [ !Ref 'ServiceName', "queue-worker" ] ]
           Image: !Ref 'ImageUrlWebSocket'
           Cpu: 1024
           MemoryReservation: 2048
