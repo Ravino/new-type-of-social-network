@@ -22,6 +22,12 @@ class NewMessageNotification implements ShouldQueue
         return $this;
     }
 
+    public function onQueue($queue)
+    {
+        $this->queue = 'redis2';
+        return $this;
+    }
+
     /**
      * @param NewMessageEvent $event рассылка сообщений
      */

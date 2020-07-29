@@ -23,6 +23,12 @@ class NewBotMessageNotification implements ShouldQueue
         return $this;
     }
 
+    public function onQueue($queue)
+    {
+        $this->queue = 'redis';
+        return $this;
+    }
+
     /**
      * @param NewBotMessageEvent $event рассылка сообщений
      */
@@ -44,12 +50,11 @@ class NewBotMessageNotification implements ShouldQueue
 //            ChatMessageAttachment::whereIn('_id', $attachments)->update(["chat_message_id" => $message_id]);
 //        }
 //
-        $users_list = $chatRepo->getUsersIdListFromChat($chat_id);
+        // $users_list = $chatRepo->getUsersIdListFromChat($chat_id);
         $message = $messageRepo->getMessageById($message_id, $author_id);
-        foreach ($users_list as $user_id) {
-            $message = json_decode(json_encode($message), true);
-            $message['isMine'] = $message['userId'] === $user_id ? true : false;
-            Pusher::sentDataToServer(['data' => $message, 'topic_id' => Pusher::channelForUser($user_id), 'event_type' => 'message.new']);
-        }
+        $user_id = $author_id;
+        $message = json_decode(json_encode($message), true);
+        $message['isMine'] = $message['userId'] === $user_id ? true : false;
+        Pusher::sentDataToServer(['data' => $message, 'topic_id' => Pusher::channelForUser($user_id), 'event_type' => 'message.new']);
     }
 }
