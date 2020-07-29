@@ -17,7 +17,11 @@ class NewBotMessageNotification implements ShouldQueue
 
     use Queueable;
 
-    public $connection = 'redis';
+    public function onQueue($queue)
+    {
+        $this->queue = 'redis';
+        return $this;
+    }
 
     /**
      * @param NewBotMessageEvent $event рассылка сообщений
