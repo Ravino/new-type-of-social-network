@@ -11,8 +11,13 @@ use Domain\Pusher\WampServer as Pusher;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
 
-class NewMessageNotification
+class NewMessageNotification implements ShouldQueue
 {
+
+    use Queueable;
+
+    public $connection = 'redis2';
+
     /**
      * @param NewMessageEvent $event рассылка сообщений
      */

@@ -260,7 +260,7 @@ Parameters:
   FullchainPath:
     Type: String
     Default: "/docker/ssl/fullchain.pem"
-  PrivateKeyPath: 
+  PrivateKeyPath:
     Type: String
     Default: "/docker/ssl/privkey.pem"
   #Role:
@@ -300,8 +300,8 @@ Resources:
           #  - Condition: HEALTHY
           #    ContainerName: !Join [ "-", [ !Ref 'ServiceName', "queue-worker" ] ]
           Image: !Ref 'ImageUrlWebSocket'
-          Cpu: 1024
-          MemoryReservation: 2048
+#          Cpu: 1024
+#          MemoryReservation: 2048
           PortMappings:
             - ContainerPort: !Ref 'ContainerPort'
             - ContainerPort: 5555
@@ -310,8 +310,6 @@ Resources:
               SoftLimit: 2048
               HardLimit: 4096
           Environment:
-            - Name: SECURE_WEBSOCKET
-              Value: !Ref 'SecureWebsocket'
             - Name: FULLCHAIN_PATH
               Value: !Ref 'FullchainPath'
             - Name: PRIVATE_KEY_PATH
@@ -435,8 +433,6 @@ Resources:
           #Cpu: !Ref 'ContainerCpu'
           #MemoryReservation: !Ref 'ContainerMemory'
           Environment:
-            - Name: SECURE_WEBSOCKET
-              Value: !Ref 'SecureWebsocket'
             - Name: FULLCHAIN_PATH
               Value: !Ref 'FullchainPath'
             - Name: PRIVATE_KEY_PATH
@@ -551,7 +547,7 @@ Resources:
               awslogs-group: !Join ['-', [!Ref 'EnvironmentName', 'public', !Ref 'ServiceName']]
               awslogs-region: !Ref 'AWS::Region'
               awslogs-stream-prefix: !Join [ "-", [ !Ref 'ServiceName', "queue-worker" ] ]
-  
+
   # The service. The service is a resource which allows you to run multiple
   # copies of a type of task, and gather up their logs and metrics, as well
   # as monitor the number of running tasks and replace any that have crashed
@@ -590,13 +586,13 @@ Resources:
           TargetGroupArn: !Ref 'TargetGroup'
         # - ContainerName: !Ref 'ServiceName'
         #   ContainerPort: 7070
-        #   TargetGroupArn: 
-        #     Fn::ImportValue: 
+        #   TargetGroupArn:
+        #     Fn::ImportValue:
         #       !Join [':', [!Ref 'EnvironmentName', 'NLBTargetGroupWSInbound']]
         # - ContainerName: !Ref 'ServiceName'
         #   ContainerPort: 5555
-        #   TargetGroupArn: 
-        #     Fn::ImportValue: 
+        #   TargetGroupArn:
+        #     Fn::ImportValue:
         #       !Join [':', [!Ref 'EnvironmentName', 'NLBTargetGroupWSOutbound']]
   TargetGroup:
     Type: AWS::ElasticLoadBalancingV2::TargetGroup
@@ -651,7 +647,7 @@ Resources:
         Fn::ImportValue:
           !Join [':', [!Ref 'EnvironmentName', 'ALBListenerWSSSL']]
       Priority: !Ref 'Priority'
-      
+
   # Enable autoscaling for this service
   ScalableTarget:
     Type: AWS::ApplicationAutoScaling::ScalableTarget

@@ -17,6 +17,8 @@ class NewBotMessageNotification implements ShouldQueue
 
     use Queueable;
 
+    public $connection = 'redis';
+
     /**
      * @param NewBotMessageEvent $event рассылка сообщений
      */
@@ -34,10 +36,10 @@ class NewBotMessageNotification implements ShouldQueue
         $parent_id = $event->getParentId();
         $parent_chat_id = $event->getParentChatId();
         $message_id = $messageRepo->saveInChatById($chat_id, $body, $author_id, $parent_id, $parent_chat_id);
-        if(count($attachments)) {
-            ChatMessageAttachment::whereIn('_id', $attachments)->update(["chat_message_id" => $message_id]);
-        }
-
+//        if(count($attachments)) {
+//            ChatMessageAttachment::whereIn('_id', $attachments)->update(["chat_message_id" => $message_id]);
+//        }
+//
         $users_list = $chatRepo->getUsersIdListFromChat($chat_id);
         $message = $messageRepo->getMessageById($message_id, $author_id);
         foreach ($users_list as $user_id) {

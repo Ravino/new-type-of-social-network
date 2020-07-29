@@ -66,6 +66,13 @@ return [
             'retry_after' => 90,
             'block_for' => null,
         ],
+        'redis2' => [
+            'driver' => 'redis',
+            'connection' => 'default',
+            'queue' => env('REDIS_QUEUE_HIGH', 'high'),
+            'retry_after' => 90,
+            'block_for' => null,
+        ],
 //        'rabbitmq' => [
 //            'driver' => 'rabbitmq',
 //            'queue' => env('RABBITMQ_QUEUE', 'default'),
