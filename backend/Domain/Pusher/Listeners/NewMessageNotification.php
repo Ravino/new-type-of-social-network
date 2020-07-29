@@ -16,7 +16,7 @@ class NewMessageNotification implements ShouldQueue
 
     use Queueable;
 
-    public function onQueue($queue)
+    public function onConnection($queue)
     {
         $this->connection = 'redis2';
         return $this;
