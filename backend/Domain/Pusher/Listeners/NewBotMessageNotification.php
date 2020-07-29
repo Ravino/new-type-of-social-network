@@ -19,7 +19,7 @@ class NewBotMessageNotification implements ShouldQueue
 
     public function onQueue($queue)
     {
-        $this->queue = 'redis';
+        $this->connection = 'redis';
         return $this;
     }
 

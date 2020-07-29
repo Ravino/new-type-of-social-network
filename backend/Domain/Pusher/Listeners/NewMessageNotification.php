@@ -18,7 +18,7 @@ class NewMessageNotification implements ShouldQueue
 
     public function onQueue($queue)
     {
-        $this->queue = 'redis2';
+        $this->connection = 'redis2';
         return $this;
     }
 
