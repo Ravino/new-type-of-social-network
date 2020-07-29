@@ -1,3 +1,3 @@
 #!/bin/bash
 
-exec php artisan queue:work --quiet --queue=redis2,redis
+exec supervisorctl start laravel-worker:*
