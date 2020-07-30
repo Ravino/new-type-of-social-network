@@ -30,6 +30,8 @@ class NewBotMessageNotification implements ShouldQueue
         return $this;
     }
 
+
+
     /**
      * @param NewBotMessageEvent $event рассылка сообщений
      */
