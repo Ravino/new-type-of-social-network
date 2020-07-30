@@ -35,18 +35,18 @@ class NewBotMessageNotification implements ShouldQueue
      */
     public function handle(NewBotMessageEvent $event)
     {
-        $chatRepo = new ChatRepository();
+        // $chatRepo = new ChatRepository();
         $messageRepo = new MessageRepository();
         $author_id = $event->getAuthorId();
         $body = $event->getBody();
-        $attachments = $event->getAttachments();
+        // $attachments = $event->getAttachments();
         $chat_id = $event->getChatId();
-        if (!$chat_id && $toUserId = $event->getToUserId()) {
-            $chat_id = $chatRepo->getOrCreateChat($toUserId, $author_id);
-        }
-        $parent_id = $event->getParentId();
-        $parent_chat_id = $event->getParentChatId();
-        $message_id = $messageRepo->saveInChatById($chat_id, $body, $author_id, $parent_id, $parent_chat_id);
+//        if (!$chat_id && $toUserId = $event->getToUserId()) {
+//            $chat_id = $chatRepo->getOrCreateChat($toUserId, $author_id);
+//        }
+        // $parent_id = $event->getParentId();
+        // $parent_chat_id = $event->getParentChatId();
+        $message_id = $messageRepo->saveInChatById($chat_id, $body, $author_id);
 //        if(count($attachments)) {
 //            ChatMessageAttachment::whereIn('_id', $attachments)->update(["chat_message_id" => $message_id]);
 //        }
