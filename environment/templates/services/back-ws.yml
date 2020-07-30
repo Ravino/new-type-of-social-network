@@ -307,13 +307,13 @@ Resources:
             - ContainerPort: 5555
           Ulimits:
             - Name: nofile
-              SoftLimit: 2048
-              HardLimit: 4096
+              SoftLimit: 4096
+              HardLimit: 8192
           Environment:
-            - Name: FULLCHAIN_PATH
-              Value: !Ref 'FullchainPath'
-            - Name: PRIVATE_KEY_PATH
-              Value: !Ref 'PrivateKeyPath'
+            # - Name: FULLCHAIN_PATH
+            #   Value: !Ref 'FullchainPath'
+            # - Name: PRIVATE_KEY_PATH
+            #   Value: !Ref 'PrivateKeyPath'
             - Name: API_URL
               Value: !Ref 'ApiUrl'
             - Name: APP_DEBUG
@@ -433,10 +433,10 @@ Resources:
           #Cpu: !Ref 'ContainerCpu'
           #MemoryReservation: !Ref 'ContainerMemory'
           Environment:
-            - Name: FULLCHAIN_PATH
-              Value: !Ref 'FullchainPath'
-            - Name: PRIVATE_KEY_PATH
-              Value: !Ref 'PrivateKeyPath'
+            # - Name: FULLCHAIN_PATH
+            #   Value: !Ref 'FullchainPath'
+            # - Name: PRIVATE_KEY_PATH
+            #   Value: !Ref 'PrivateKeyPath'
             - Name: API_URL
               Value: !Ref 'ApiUrl'
             - Name: APP_DEBUG
@@ -579,7 +579,7 @@ Resources:
             - Fn::ImportValue:
                 !Join [':', [!Ref 'EnvironmentName', 'PublicSubnetTwo']]
       TaskDefinition: !Ref 'TaskDefinition'
-      HealthCheckGracePeriodSeconds: 30
+      HealthCheckGracePeriodSeconds: 2147483647
       LoadBalancers:
         - ContainerName: !Join [ "-", [ !Ref 'ServiceName', "web-socket" ] ]
           ContainerPort: !Ref 'ContainerPort'
@@ -597,13 +597,13 @@ Resources:
   TargetGroup:
     Type: AWS::ElasticLoadBalancingV2::TargetGroup
     Properties:
-      HealthCheckIntervalSeconds: 30
-      HealthCheckPath: /
-      HealthCheckProtocol: HTTP
-      HealthCheckTimeoutSeconds: 5
-      HealthyThresholdCount: 2
-      Matcher:
-        HttpCode: "426"
+      # HealthCheckIntervalSeconds: 30
+      # HealthCheckPath: /
+      # HealthCheckProtocol: HTTP
+      # HealthCheckTimeoutSeconds: 5
+      # HealthyThresholdCount: 2
+      # Matcher:
+      #   HttpCode: "426"
       TargetType: ip
       Name: !Ref 'ServiceName'
       Port: !Ref 'ContainerPort'
@@ -617,7 +617,7 @@ Resources:
           Value: '86400'
         - Key: deregistration_delay.timeout_seconds
           Value: '30'
-      UnhealthyThresholdCount: 2
+      # UnhealthyThresholdCount: 2
       VpcId:
         Fn::ImportValue:
           !Join [':', [!Ref 'EnvironmentName', 'VPCId']]
