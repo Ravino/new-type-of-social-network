@@ -300,8 +300,8 @@ Resources:
           #  - Condition: HEALTHY
           #    ContainerName: !Join [ "-", [ !Ref 'ServiceName', "queue-worker" ] ]
           Image: !Ref 'ImageUrlWebSocket'
-#          Cpu: 1024
-#          MemoryReservation: 2048
+          Cpu: 2048
+          MemoryReservation: 4096
           PortMappings:
             - ContainerPort: !Ref 'ContainerPort'
             - ContainerPort: 5555
