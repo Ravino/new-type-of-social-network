@@ -430,8 +430,8 @@ Resources:
               awslogs-stream-prefix: !Join [ "-", [ !Ref 'ServiceName', "web-socket" ] ]
         - Name: !Join [ "-", [ !Ref 'ServiceName', "queue-worker" ] ]
           Image: !Ref 'ImageUrlQueueWorker'
-          #Cpu: !Ref 'ContainerCpu'
-          #MemoryReservation: !Ref 'ContainerMemory'
+          Cpu: 2048
+          MemoryReservation: 4096
           Environment:
             # - Name: FULLCHAIN_PATH
             #   Value: !Ref 'FullchainPath'
@@ -579,7 +579,7 @@ Resources:
             - Fn::ImportValue:
                 !Join [':', [!Ref 'EnvironmentName', 'PublicSubnetTwo']]
       TaskDefinition: !Ref 'TaskDefinition'
-      HealthCheckGracePeriodSeconds: 2147483647
+      HealthCheckGracePeriodSeconds: 30
       LoadBalancers:
         - ContainerName: !Join [ "-", [ !Ref 'ServiceName', "web-socket" ] ]
           ContainerPort: !Ref 'ContainerPort'
@@ -597,13 +597,13 @@ Resources:
   TargetGroup:
     Type: AWS::ElasticLoadBalancingV2::TargetGroup
     Properties:
-      # HealthCheckIntervalSeconds: 30
-      # HealthCheckPath: /
-      # HealthCheckProtocol: HTTP
-      # HealthCheckTimeoutSeconds: 5
-      # HealthyThresholdCount: 2
-      # Matcher:
-      #   HttpCode: "426"
+      HealthCheckIntervalSeconds: 30
+      HealthCheckPath: /
+      HealthCheckProtocol: HTTP
+      HealthCheckTimeoutSeconds: 5
+      HealthyThresholdCount: 2
+      Matcher:
+        HttpCode: "426"
       TargetType: ip
       Name: !Ref 'ServiceName'
       Port: !Ref 'ContainerPort'
@@ -617,7 +617,7 @@ Resources:
           Value: '86400'
         - Key: deregistration_delay.timeout_seconds
           Value: '30'
-      # UnhealthyThresholdCount: 2
+      UnhealthyThresholdCount: 2
       VpcId:
         Fn::ImportValue:
           !Join [':', [!Ref 'EnvironmentName', 'VPCId']]
