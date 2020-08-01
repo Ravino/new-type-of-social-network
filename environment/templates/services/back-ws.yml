@@ -524,9 +524,7 @@ Resources:
                 Fn::ImportValue:
                   !Join [':', [!Ref 'EnvironmentName', 'MySQLDBUser']]
             - Name: MONGO_DB_HOST
-              Value:
-                Fn::ImportValue:
-                  !Join [':', [!Ref 'EnvironmentName', 'MongoDBHost']]
+              Value: "plizi-mongodb-instance-test-docdb.ctydevfngxce.eu-central-1.docdb.amazonaws.com"
             - Name: MONGO_DB_PASSWORD
               Value:
                 Fn::ImportValue:
@@ -576,8 +574,8 @@ Resources:
           Subnets:
             - Fn::ImportValue:
                 !Join [':', [!Ref 'EnvironmentName', 'PublicSubnetOne']]
-            - Fn::ImportValue:
-                !Join [':', [!Ref 'EnvironmentName', 'PublicSubnetTwo']]
+            # - Fn::ImportValue:
+            #     !Join [':', [!Ref 'EnvironmentName', 'PublicSubnetTwo']]
       TaskDefinition: !Ref 'TaskDefinition'
       HealthCheckGracePeriodSeconds: 30
       LoadBalancers:
