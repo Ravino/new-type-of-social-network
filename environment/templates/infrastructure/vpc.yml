@@ -268,7 +268,7 @@ Resources:
       #   CloudWatchLogsLogGroupArn: !Ref PrivateDNSHostedZoneLogGroup
       HostedZoneTags: 
         - Key: 'Name'
-          Value: 'private | plizi.fun'
+          Value: 'private plizi.fun'
         - Key: 'Project'
           Value: 'plizi'
         - Key: 'Environment'
