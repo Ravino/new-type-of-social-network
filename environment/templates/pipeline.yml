@@ -338,7 +338,7 @@ Resources:
        CloudWatchLogs:
          GroupName: !Sub /code-build/${ProjectName}/laravel
          StreamName: !Sub /code-build/${ProjectName}
-         Status: ENABLEDBuild:
+         Status: ENABLED
   # This is the definition of how to build the code in the repository
   BackWS:
    Type: AWS::CodeBuild::Project
