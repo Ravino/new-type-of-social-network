@@ -65,18 +65,16 @@ Resources:
       Tags:
         - Key: "Name"
           Value: "application-public"
-  ALBRecordSetGroup:
+
+  ALBRecordSetGroupPublic:
     Type: AWS::Route53::RecordSetGroup
     Properties:
-      HostedZoneName: !Ref 'DomainName'
-      Comment: "Zone apex alias targeted to load balancer."
+      Comment: "RecordSetGroup for ALB, facing on eu-central-1, PublicHostedZone "
+      HostedZoneId: 
+        Fn::ImportValue:
+          !Join [':', [!Ref 'EnvironmentName', 'PublicHostedZoneID']]
       RecordSets:
         - Name: !Sub 'dev.${DomainName}'
-          Type: A
-          AliasTarget:
-            HostedZoneId: !GetAtt 'ApplicationLoadBalancer.CanonicalHostedZoneID'
-            DNSName: !GetAtt 'ApplicationLoadBalancer.DNSName'
-        - Name: !Sub 'api.${DomainName}'
           Type: A
           AliasTarget:
             HostedZoneId: !GetAtt 'ApplicationLoadBalancer.CanonicalHostedZoneID'
@@ -98,6 +96,38 @@ Resources:
             DNSName: !GetAtt 'ApplicationLoadBalancer.DNSName'
     DeletionPolicy: Delete
     UpdateReplacePolicy: Delete
+
+  ALBRecordSetGroupPrivate:
+    Type: AWS::Route53::RecordSetGroup
+    Properties:
+      Comment: "RecordSetGroup for ALB, facing on eu-central-1, PrivateHostedZone "
+      HostedZoneId: 
+        Fn::ImportValue:
+          !Join [':', [!Ref 'EnvironmentName', 'PrivateHostedZoneID']]
+      RecordSets:
+        - Name: !Sub 'dev.${DomainName}'
+          Type: A
+          AliasTarget:
+            HostedZoneId: !GetAtt 'ApplicationLoadBalancer.CanonicalHostedZoneID'
+            DNSName: !GetAtt 'ApplicationLoadBalancer.DNSName'
+        - Name: !Sub 'dev-ws.${DomainName}'
+          Type: A
+          AliasTarget:
+            HostedZoneId: !GetAtt 'ApplicationLoadBalancer.CanonicalHostedZoneID'
+            DNSName: !GetAtt 'ApplicationLoadBalancer.DNSName'
+        - Name: !Sub 'dev-qw.${DomainName}'
+          Type: A
+          AliasTarget:
+            HostedZoneId: !GetAtt 'ApplicationLoadBalancer.CanonicalHostedZoneID'
+            DNSName: !GetAtt 'ApplicationLoadBalancer.DNSName'
+        - Name: !Sub 'dev-api.${DomainName}'
+          Type: A
+          AliasTarget:
+            HostedZoneId: !GetAtt 'ApplicationLoadBalancer.CanonicalHostedZoneID'
+            DNSName: !GetAtt 'ApplicationLoadBalancer.DNSName'
+    DeletionPolicy: Delete
+    UpdateReplacePolicy: Delete
+
   DummyTargetGroupALB:
     Type: AWS::ElasticLoadBalancingV2::TargetGroup
     Properties:
@@ -223,3 +253,14 @@ Outputs:
     Value: !Ref ALBListenerApiSSL
     Export:
       Name: !Join [ ':', [ !Ref 'EnvironmentName', 'ALBListenerApiSSL' ] ]
+  # Route 53
+  ALBRecordSetGroupPublic:
+    Description: The ARN of the public load balancer's Listener
+    Value: !Ref ALBRecordSetGroupPublic
+    Export:
+      Name: !Join [ ':', [ !Ref 'EnvironmentName', 'ALBRecordSetGroupPublic' ] ]
+  ALBRecordSetGroupPrivate:
+    Description: The ARN of the public load balancer's Listener
+    Value: !Ref ALBRecordSetGroupPrivate
+    Export:
+      Name: !Join [ ':', [ !Ref 'EnvironmentName', 'ALBRecordSetGroupPrivate' ] ]
