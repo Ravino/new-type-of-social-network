@@ -52,7 +52,7 @@ Resources:
   ALBLogBucket:
     Type: AWS::S3::Bucket
     Properties:
-      BucketName: "PLIZI-eu-central-1-logs-TEST-ALB"
+      BucketName: "plizi-eu-central-1-logs-test-alb"
     DeletionPolicy: Retain
     UpdateReplacePolicy: Retain
 

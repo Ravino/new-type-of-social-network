@@ -91,7 +91,7 @@ Resources:
   NLBLogBucket:
     Type: AWS::S3::Bucket
     Properties:
-      BucketName: "PLIZI-eu-central-1-logs-TEST-NLB"
+      BucketName: "plizi-eu-central-1-logs-test-nlb"
     DeletionPolicy: Retain
     UpdateReplacePolicy: Retain
 
