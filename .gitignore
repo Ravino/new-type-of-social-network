@@ -20,4 +20,6 @@ redis_data_plizi
 neo4j-persistence
 
 # vcode workspace
+*.sublime-project
+*.sublime-workspace
 *.code-workspace
