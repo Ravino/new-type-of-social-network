@@ -6,6 +6,7 @@ Parameters:
     Default: test
     Description: The environment name, used for locating outputs from the
                  prerequisite stacks
+
   MySQLDBName:
     Type: String
     Default: 'devplizi'
@@ -19,35 +20,23 @@ Parameters:
     Default: 'ecugVWHKatKQd657'
     NoEcho: true
     Description: MySQLDB admin user password.
-  AllocatedStorageGb:
-    Type: String
-    Default: '200'
-  ManagedIops: 
-    Type: String
-    Default: 35000
-  InstanceType:
-    Type: String
-    Default: 'db.r5.4xlarge'
 Resources:
-
   MySQLSubnetGroup:
     Type: "AWS::RDS::DBSubnetGroup"
     Properties:
-      DBSubnetGroupDescription: MySQL
-      SubnetIds: !Split [',', {'Fn::ImportValue': !Join [':', [!Ref 'EnvironmentName', 'PrivateSubnets']] }]
-    DeletionPolicy: Delete
-    UpdateReplacePolicy: Delete
-
+      DBSubnetGroupDescription: description #required
+      SubnetIds: #required
+        - Fn::ImportValue:
+            !Join [':', [!Ref 'EnvironmentName', 'PublicSubnetOne']]
+        - Fn::ImportValue:
+            !Join [':', [!Ref 'EnvironmentName', 'PublicSubnetTwo']]
   MySQLSecurityGroup:
     Type: AWS::EC2::SecurityGroup
     Properties:
-      GroupDescription: MySQL
+      GroupDescription: "MySQL Security Group"
       VpcId:
         Fn::ImportValue:
           !Join [':', [!Ref 'EnvironmentName', 'VPCId']]
-    DeletionPolicy: Delete
-    UpdateReplacePolicy: Delete
-
   MySQLIngress:
     Type: AWS::EC2::SecurityGroupIngress
     Properties:
@@ -55,43 +44,35 @@ Resources:
       IpProtocol: tcp
       FromPort: 3306
       ToPort: 3306
-      SourceSecurityGroupId:
-        Fn::ImportValue:
-          !Join [':', [!Ref 'EnvironmentName', 'FargateContainerSecurityGroup']]
-    DeletionPolicy: Delete
-    UpdateReplacePolicy: Delete
-      
-  MySQLParameterGroup:
-    Type: AWS::RDS::DBParameterGroup
+    #SourceSecurityGroupId:
+    #    Fn::ImportValue:
+    #      !Join [':', [!Ref 'EnvironmentName', 'FargateContainerSecurityGroup']]
+  MyAWSRDSDBParameterGroup:
+    Type: 'AWS::RDS::DBParameterGroup'
     Properties:
-      Description: MySQL DB Parameter Group Description
-      Family: mysql
-      Parameters: {
-        "log_bin_trust_function_creators": "1"
-      }
-    DeletionPolicy: Delete
-    UpdateReplacePolicy: Delete
-
+        Description: MySQL DB Parameter Group Description
+        Family: MySQL8.0
+        Parameters: {
+          "log_bin_trust_function_creators": "1"
+        }
   MySQL:
     Type: AWS::RDS::DBInstance
     Properties:
-      AllocatedStorage: !Ref AllocatedStorageGb
+      AllocatedStorage: '100' # TODO Adjust for highload. GB of storage
       StorageType: 'io1'
-      Iops: !Ref 'ManagedIops'
-      DBInstanceClass: !Ref 'InstanceType'
-      DBParameterGroupName: !Ref MySQLParameterGroup
-      Engine: mysql
+      Iops: 1000
+      DBInstanceClass: db.m3.medium
+      DBParameterGroupName: !Ref MyAWSRDSDBParameterGroup
+      Engine: MySQL
+      #DBSnapshotIdentifier: !Ref 'MySQLDBName'
       DBName: !Ref 'MySQLDBName'
       MasterUsername: !Ref 'MySQLDBMasterUsername'
       MasterUserPassword: !Ref 'MySQLDBMasterUserPassword'
       DBSubnetGroupName: !Ref 'MySQLSubnetGroup'
-      #PubliclyAccessible: true
+      PubliclyAccessible: true
       VPCSecurityGroups:
         - !GetAtt 'MySQLSecurityGroup.GroupId'
       MultiAZ: true
-    DeletionPolicy: Delete
-    UpdateReplacePolicy: Delete
-    
 Outputs:
   MySQLDBName:
     Value: !Ref 'MySQLDBName'
@@ -113,7 +94,3 @@ Outputs:
     Value: !GetAtt 'MySQL.Endpoint.Port'
     Export:
       Name: !Join [ ':', [ !Ref 'EnvironmentName', 'MySQLDBPort' ] ]
-  MySQLSecurityGroup:
-    Value: !Ref 'MySQLSecurityGroup'
-    Export:
-      Name: !Join [ ':', [ !Ref 'EnvironmentName', 'MySQLSecurityGroup' ] ]

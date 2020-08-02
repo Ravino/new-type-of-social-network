@@ -6,35 +6,27 @@ Parameters:
     Default: test
     Description: The environment name, used for locating outputs from the
                  prerequisite stacks
-  InstanceSize:
-    Type: String
-    Default: cache.m5.12xlarge
-  
-  NumCacheNodes:
-    Type: String
-    Default: 1  
 Resources:
   RedisSubnetGroup:
     Type: AWS::ElastiCache::SubnetGroup
     Properties:
-      Description: Redis
-      SubnetIds: !Split [',', {'Fn::ImportValue': !Join [':', [!Ref 'EnvironmentName', 'PrivateSubnets']] }]
-    DeletionPolicy: Delete
-    UpdateReplacePolicy: Delete
-
+      Description: Group of subnets to place Redis into
+      SubnetIds:
+        - Fn::ImportValue:
+            !Join [':', [!Ref 'EnvironmentName', 'PublicSubnetOne']]
+        - Fn::ImportValue:
+            !Join [':', [!Ref 'EnvironmentName', 'PublicSubnetTwo']]
   RedisSecurityGroup:
     Type: AWS::EC2::SecurityGroup
     Properties:
-      GroupDescription: Redis
+      GroupDescription: "Redis Security Group"
       VpcId:
         Fn::ImportValue:
           !Join [':', [!Ref 'EnvironmentName', 'VPCId']]
-    DeletionPolicy: Delete
-    UpdateReplacePolicy: Delete
-
   RedisIngress:
     Type: AWS::EC2::SecurityGroupIngress
     Properties:
+      Description: Ingress from Fargate containers
       GroupId: !Ref 'RedisSecurityGroup'
       IpProtocol: tcp
       FromPort: 6379
@@ -42,38 +34,25 @@ Resources:
       SourceSecurityGroupId:
         Fn::ImportValue:
           !Join [':', [!Ref 'EnvironmentName', 'FargateContainerSecurityGroup']]
-    DeletionPolicy: Delete
-    UpdateReplacePolicy: Delete
-  
-  RedisCluster:
+  Redis:
     Type: AWS::ElastiCache::CacheCluster
     Properties:
-      CacheSecurityGroupNames:
-      - !Ref RedisSecurityGroup
-      Port: 6379
-      NumCacheNodes: !Ref NumCacheNodes
-      #VpcSecurityGroupIds:
       Engine: redis
-      CacheSubnetGroupName: 
-      - !Ref RedisSubnetGroup
-      CacheParameterGroupName: string
-      AutoMinorVersionUpgrade: true
-      CacheNodeType: !Ref InstanceSize
+      CacheNodeType: cache.m4.2xlarge # TODO increase volume
+      NumCacheNodes: 1 # Stricted to 1 for Engine: redis
+      CacheSubnetGroupName: !Ref 'RedisSubnetGroup'
       VpcSecurityGroupIds:
-      - !Ref RedisSecurityGroup
-    DeletionPolicy: Delete
-    UpdateReplacePolicy: Delete
-
+        - !GetAtt 'RedisSecurityGroup.GroupId'    # TIDO consider about using FargateContainerSecurityGroup instead
+      #PreferredAvailabilityZones:
+       # - eu-central-1a
+       # - eu-central-1b    # TODO: make replica here to unlock second AZ
+       #- eu-central-1c  # TODO
 Outputs:
   RedisHost:
-    Value: !GetAtt 'RedisCluster.RedisEndpoint.Address'
+    Value: !GetAtt 'Redis.RedisEndpoint.Address'
     Export:
       Name: !Join [ ':', [ !Ref 'EnvironmentName', 'RedisHost' ] ]
   RedisPort:
-    Value: !GetAtt 'RedisCluster.RedisEndpoint.Port'
+    Value: !GetAtt 'Redis.RedisEndpoint.Port'
     Export:
       Name: !Join [ ':', [ !Ref 'EnvironmentName', 'RedisPort' ] ]
-  RedisSecurityGroup:
-    Value: !Ref 'RedisSecurityGroup'
-    Export:
-      Name: !Join [ ':', [ !Ref 'EnvironmentName', 'RedisSecurityGroup' ] ]
