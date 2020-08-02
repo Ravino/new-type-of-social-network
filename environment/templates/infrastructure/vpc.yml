@@ -23,6 +23,13 @@ Parameters:
       - prod
     ConstraintDescription: Environment name may be only 'test' or 'prod', to prevent
                            configuration files multiplication.
+  CertificateArn:
+    Type: String
+    Description: ARN of the Amazon Certificate Manager SSL certificate to use for this app
+
+  DomainName:
+    Type: String
+    Description: The specific alias name for the application
 Mappings:
   SubnetConfig:
     VPC:
@@ -31,10 +38,14 @@ Mappings:
       CIDR: '10.0.0.0/24'
     PublicTwo:
       CIDR: '10.0.1.0/24'
-    PrivateOne:
+    PublicThree:
       CIDR: '10.0.2.0/24'
-    PrivateTwo:
+    PrivateOne:
       CIDR: '10.0.3.0/24'
+    PrivateTwo:
+      CIDR: '10.0.4.0/24'
+    PrivateThree:
+      CIDR: '10.0.5.0/24'
 Resources:
   VPC:
     Type: AWS::EC2::VPC
@@ -73,6 +84,20 @@ Resources:
         - Key: "Name"
           Value: "public | eu-central-1b"
 
+  PublicSubnetThree:
+    Type: AWS::EC2::Subnet
+    Properties:
+      AvailabilityZone:
+         Fn::Select:
+         - 2
+         - Fn::GetAZs: {Ref: 'AWS::Region'}
+      VpcId: !Ref 'VPC'
+      CidrBlock: !FindInMap ['SubnetConfig', 'PublicThree', 'CIDR']
+      MapPublicIpOnLaunch: true
+      Tags:
+        - Key: "Name"
+          Value: "public | eu-central-1c"
+  
   PrivateSubnetOne:
     Type: AWS::EC2::Subnet
     Properties:
@@ -97,6 +122,18 @@ Resources:
       Tags:
         - Key: "Name"
           Value: "private | eu-central-1b"
+  PrivateSubnetThree:
+    Type: AWS::EC2::Subnet
+    Properties:
+      AvailabilityZone:
+         Fn::Select:
+         - 1
+         - Fn::GetAZs: {Ref: 'AWS::Region'}
+      VpcId: !Ref 'VPC'
+      CidrBlock: !FindInMap ['SubnetConfig', 'PrivateThree', 'CIDR']
+      Tags:
+        - Key: "Name"
+          Value: "private | eu-central-1c"
 
   InternetGateway:
     Type: AWS::EC2::InternetGateway
@@ -126,6 +163,11 @@ Resources:
     Properties:
       SubnetId: !Ref PublicSubnetTwo
       RouteTableId: !Ref PublicRouteTable
+  PublicSubnetThreeRouteTableAssociation:
+    Type: AWS::EC2::SubnetRouteTableAssociation
+    Properties:
+      SubnetId: !Ref PublicSubnetThree
+      RouteTableId: !Ref PublicRouteTable
 
   NatGatewayOneAttachment:
     Type: AWS::EC2::EIP
@@ -137,6 +179,12 @@ Resources:
     DependsOn: GatewayAttachement
     Properties:
         Domain: vpc
+  NatGatewayThreeAttachment:
+    Type: AWS::EC2::EIP
+    DependsOn: GatewayAttachement
+    Properties:
+        Domain: vpc
+
   NatGatewayOne:
     Type: AWS::EC2::NatGateway
     Properties:
@@ -147,6 +195,12 @@ Resources:
     Properties:
       AllocationId: !GetAtt NatGatewayTwoAttachment.AllocationId
       SubnetId: !Ref PublicSubnetTwo
+  NatGatewayThree:
+    Type: AWS::EC2::NatGateway
+    Properties:
+      AllocationId: !GetAtt NatGatewayThreeAttachment.AllocationId
+      SubnetId: !Ref PublicSubnetThree
+
   PrivateRouteTableOne:
     Type: AWS::EC2::RouteTable
     Properties:
@@ -177,6 +231,80 @@ Resources:
     Properties:
       RouteTableId: !Ref PrivateRouteTableTwo
       SubnetId: !Ref PrivateSubnetTwo
+  PrivateRouteTableThree:
+    Type: AWS::EC2::RouteTable
+    Properties:
+      VpcId: !Ref 'VPC'
+  PrivateRouteThree:
+    Type: AWS::EC2::Route
+    Properties:
+      RouteTableId: !Ref PrivateRouteTableThree
+      DestinationCidrBlock: 0.0.0.0/0
+      NatGatewayId: !Ref NatGatewayThree
+  PrivateRouteTableThreeAssociation:
+    Type: AWS::EC2::SubnetRouteTableAssociation
+    Properties:
+      RouteTableId: !Ref PrivateRouteTableThree
+      SubnetId: !Ref PrivateSubnetThree
+
+  # Route53 Logs
+  PrivateDNSHostedZoneLogGroup:
+    Type: AWS::Logs::LogGroup
+    Properties:
+      RetentionInDays: 7
+      LogGroupName: !Join ['-', ['plizi', !Ref "AWS::Region", 'private', 'hosted-zone', !Ref 'EnvironmentName']]
+
+  # Route 53
+  PrivateDNSHostedZone:
+    Type: "AWS::Route53::HostedZone"
+    Properties: 
+      HostedZoneConfig: 
+        Comment: 'Private hosted zone for plizi.fun on eu-central-1 VPC'
+      Name: !Sub 'private.${DomainName}'
+      VPCs: 
+        - VPCId: !Ref 'VPC'
+          VPCRegion: !Sub ${AWS::Region}
+      QueryLoggingConfig:
+        CloudWatchLogsLogGroupArn: !Ref PrivateDNSHostedZoneLogGroup
+      HostedZoneTags: 
+        - Key: 'Name'
+          Value: 'private | plizi.fun'
+        - Key: 'Project'
+          Value: 'plizi'
+        - Key: 'Environment'
+          Value: !Ref 'EnvironmentName'
+        - Key: 'Scope'
+          Value: 'Private'
+        - Key: 'Region'
+          Value: !Sub ${AWS::Region}
+
+  # Route53 Logs
+  PublicDNSHostedZoneLogGroup:
+    Type: AWS::Logs::LogGroup
+    Properties:
+      RetentionInDays: 7
+      LogGroupName:  !Join ['-', ['plizi', !Sub "${AWS::Region}", 'public', 'hosted-zone', !Ref 'EnvironmentName']]
+
+  # Route 53 - PublicZone
+  PublicDNSHostedZone:
+    Type: AWS::Route53::HostedZone
+    Properties:
+      HostedZoneConfig:
+        Comment: 'Public hosted zone for plizi.fun on eu-central-1 VPC'
+      Name: !Sub '${DomainName}'
+      HostedZoneTags:
+        - Key: 'Name'
+          Value: 'public | plizi.fun'
+        - Key: 'Project'
+          Value: 'plizi'
+        - Key: 'Environment'
+          Value: !Ref 'EnvironmentName'
+        - Key: 'Scope'
+          Value: 'Public'
+        - Key: 'Region'
+          Value: !Sub ${AWS::Region}
+      QueryLoggingConfig:
+          CloudWatchLogsLogGroupArn: !Ref 'PublicDNSHostedZoneLogGroup'
 
 Outputs:
   # VPC iteslf
@@ -189,7 +317,7 @@ Outputs:
   # Public
   PublicSubnets:
     Description: List of Public subnets inside of VPC
-    Value: !Join [',', [!Ref PublicSubnetOne, !Ref PublicSubnetTwo]]
+    Value: !Join [',', [!Ref PublicSubnetOne, !Ref PublicSubnetTwo, !Ref PublicSubnetThree]]
     Export:
       Name: !Join [ ':', [ !Ref 'EnvironmentName', 'PublicSubnets' ] ]
   PublicSubnetOne:
@@ -202,11 +330,16 @@ Outputs:
     Value: !Ref 'PublicSubnetTwo'
     Export:
       Name: !Join [ ':', [ !Ref 'EnvironmentName', 'PublicSubnetTwo' ] ]
+  PublicSubnetThree:
+    Description: Public subnet three
+    Value: !Ref 'PublicSubnetThree'
+    Export:
+      Name: !Join [ ':', [ !Ref 'EnvironmentName', 'PublicSubnetThree' ] ]
 
   # Private
   PrivateSubnets:
     Description: List of Private subnets inside of VPC
-    Value: !Join [',', [!Ref PrivateSubnetOne, !Ref PrivateSubnetTwo]]
+    Value: !Join [',', [!Ref PrivateSubnetOne, !Ref PrivateSubnetTwo, !Ref PrivateSubnetThree]]
     Export:
       Name: !Join [ ':', [ !Ref 'EnvironmentName', 'PrivateSubnets' ] ]
   PrivateSubnetOne:
@@ -219,4 +352,20 @@ Outputs:
     Value: !Ref 'PrivateSubnetTwo'
     Export:
       Name: !Join [ ':', [ !Ref 'EnvironmentName', 'PrivateSubnetTwo' ] ]
+  PrivateSubnetThree:
+    Description: Private subnet three
+    Value: !Ref 'PrivateSubnetThree'
+    Export:
+      Name: !Join [ ':', [ !Ref 'EnvironmentName', 'PrivateSubnetThree' ] ]
   
+  # DNS
+  PublicDNSHostedZone:
+    Description: Route53 public hosted zone for eu-central-1 and VPC
+    Value: !Ref 'PublicDNSHostedZone'
+    Export:
+      Name: !Join [ ':', [ !Ref 'EnvironmentName', 'PublicDNSHostedZone' ] ]
+  PrivateDNSHostedZone:
+    Description: Route53 private hosted zone for eu-central-1 and VPC
+    Value: !Ref 'PrivateDNSHostedZone'
+    Export:
+      Name: !Join [ ':', [ !Ref 'EnvironmentName', 'PrivateDNSHostedZone' ] ]

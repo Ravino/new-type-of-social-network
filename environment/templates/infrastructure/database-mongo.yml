@@ -15,27 +15,32 @@ Parameters:
     Default: 'Tksx2PPDba8Ny0lZ'
     NoEcho: true
     Description: MongoDB admin user password.
+  DBInstanceClass:
+    Type: String
+    Default: db.r5.4xlarge 
 Resources:
+
   MongoSubnetGroup:
     Type: "AWS::DocDB::DBSubnetGroup"
     Properties:
-      DBSubnetGroupDescription: 'Description of MongoSubnetGroup'
-      SubnetIds: #required
-        - Fn::ImportValue:
-            !Join [':', [!Ref 'EnvironmentName', 'PublicSubnetOne']]
-        - Fn::ImportValue:
-            !Join [':', [!Ref 'EnvironmentName', 'PublicSubnetTwo']]
+      DBSubnetGroupDescription: Mongo
+      SubnetIds: !Split [',', {'Fn::ImportValue': !Join [':', [!Ref 'EnvironmentName', 'PrivateSubnets']] }]
+    DeletionPolicy: Delete
+    UpdateReplacePolicy: Delete
+
   MongoSecurityGroup:
     Type: AWS::EC2::SecurityGroup
     Properties:
-      GroupDescription: "Mongo Security Group"
+      GroupDescription: Mongo
       VpcId:
         Fn::ImportValue:
           !Join [':', [!Ref 'EnvironmentName', 'VPCId']]
+    DeletionPolicy: Delete
+    UpdateReplacePolicy: Delete
+
   MongoIngress:
     Type: AWS::EC2::SecurityGroupIngress
     Properties:
-      Description: Ingress from Fargate containers
       GroupId: !Ref 'MongoSecurityGroup'
       IpProtocol: tcp
       FromPort: 27017
@@ -43,6 +48,9 @@ Resources:
       SourceSecurityGroupId:
         Fn::ImportValue:
           !Join [':', [!Ref 'EnvironmentName', 'FargateContainerSecurityGroup']]
+    DeletionPolicy: Delete
+    UpdateReplacePolicy: Delete
+
   MongoDBClusterParameterGroup:
     Type: AWS::DocDB::DBClusterParameterGroup
     Properties:
@@ -51,43 +59,53 @@ Resources:
       Parameters:
         audit_logs: "enabled" # prod: disabled
         tls: "disabled" # prod: enabled
-        ttl_monitor: "disabled"
+        ttl_monitor: "enable"
+    DeletionPolicy: Delete
+    UpdateReplacePolicy: Delete
+
   MongoDBCluster:
     Type: 'AWS::DocDB::DBCluster'
     Properties:
-        #Engine: "mongodb"
-        #EngineVersion: "4.2.6" #TODO
-        Port: 27017
+        EngineVersion: "docdb3.6"
+        DBClusterParameterGroupName: !Ref 'MongoDBClusterParameterGroup'
         DBSubnetGroupName: !Ref 'MongoSubnetGroup'
-        DeletionProtection: false
-        VpcSecurityGroupIds:
-          - Fn::ImportValue:
-              !Join [':', [!Ref 'EnvironmentName', 'FargateContainerSecurityGroup']]
-        #AvailabilityZones:
-        #  - eu-central-1a
-        #  - eu-central-1b
+        AvailabilityZones:
+          - eu-central-1a
+          - eu-central-1b
+          - eu-central-1c
         MasterUsername: !Ref 'MongoDBMasterUsername'
         MasterUserPassword: !Ref 'MongoDBMasterUserPassword'
-        DBClusterParameterGroupName: !Ref 'MongoDBClusterParameterGroup'
-        #EnableCloudwatchLogsExports:
-        #  - error
-        #  - general
-        #  - slowquery
-        #StorageEncrypted: true
-        #KmsKeyId: string # 
-        #PreferredMaintenanceWindow: string
-        #PreferredBackupWindow: string
-        #SnapshotIdentifier: string
-        #BackupRetentionPeriod: 7 # prod: required
-        #Tags:
-        #    -Value: string
-        #     Key: string
+        Port: 27017
+        VpcSecurityGroupIds: !Ref 'MongoSecurityGroup'
+    DeletionPolicy: Delete
+    UpdateReplacePolicy: Delete
 
-  MongoInstance:
+  MongoDBInstanceSubnetOne:
     Type: "AWS::DocDB::DBInstance"
     Properties:
-      DBInstanceClass: db.r5.2xlarge # TODO: Adjust on highload results
-      DBClusterIdentifier: !Ref 'MongoDBCluster' #required
+      AvailabilityZones: eu-central-1a
+      DBInstanceClass: !Ref DBInstanceClass
+      DBClusterIdentifier: !Ref 'MongoDBCluster'
+    DeletionPolicy: Delete
+    UpdateReplacePolicy: Delete
+  
+  MongoDBInstanceSubnetTwo:
+    Type: "AWS::DocDB::DBInstance"
+    Properties:
+      AvailabilityZones: eu-central-1b
+      DBInstanceClass: !Ref DBInstanceClass
+      DBClusterIdentifier: !Ref 'MongoDBCluster'
+    DeletionPolicy: Delete
+    UpdateReplacePolicy: Delete
+
+  MongoDBInstanceSubnetThree:
+    Type: "AWS::DocDB::DBInstance"
+    Properties:
+      AvailabilityZones: eu-central-1c
+      DBInstanceClass: !Ref DBInstanceClass
+      DBClusterIdentifier: !Ref 'MongoDBCluster'
+    DeletionPolicy: Delete
+    UpdateReplacePolicy: Delete
   
 Outputs:
   MongoDBName:
@@ -95,7 +113,7 @@ Outputs:
     Export:
       Name: !Join [ ':', [ !Ref 'EnvironmentName', 'MongoDBName' ] ]
   MongoDBHost:
-    Value: !GetAtt 'MongoInstance.Endpoint' # TODO Possibly should be changed to MongoInstance.Endpoint
+    Value: !GetAtt 'MongoDBCluster.Endpoint'
     Export:
       Name: !Join [ ':', [ !Ref 'EnvironmentName', 'MongoDBHost' ] ]
   MongoDBUser:
@@ -106,3 +124,7 @@ Outputs:
     Value: !Ref 'MongoDBMasterUserPassword'
     Export:
       Name: !Join [ ':', [ !Ref 'EnvironmentName', 'MongoDBPass' ] ]
+  MongoSecurityGroup:
+    Value: !Ref 'MongoSecurityGroup'
+    Export:
+      Name: !Join [ ':', [ !Ref 'EnvironmentName', 'MongoSecurityGroup' ] ]
