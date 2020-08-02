@@ -59,7 +59,7 @@ Resources:
       Parameters:
         audit_logs: "enabled" # prod: disabled
         tls: "disabled" # prod: enabled
-        ttl_monitor: "enable"
+        ttl_monitor: "enabled"
     DeletionPolicy: Delete
     UpdateReplacePolicy: Delete
 
