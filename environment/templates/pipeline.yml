@@ -338,7 +338,7 @@ Resources:
        CloudWatchLogs:
          GroupName: !Sub /code-build/${ProjectName}/laravel
          StreamName: !Sub /code-build/${ProjectName}
-         Status: ENABLED
+         Status: ENABLEDBuild:
   # This is the definition of how to build the code in the repository
   BackWS:
    Type: AWS::CodeBuild::Project
@@ -590,7 +590,9 @@ Resources:
                 TemplatePath: "Source::environment/templates/infrastructure/vpc.yml"
                 ParameterOverrides: !Sub |
                   {
-                    "EnvironmentName": "${EnvironmentName}"
+                    "EnvironmentName": "${EnvironmentName}",
+                    "DomainName": "${DomainName}",
+                    "CertificateArn": "${CertificateArn}"
                   }
               InputArtifacts:
                 - Name: Source
