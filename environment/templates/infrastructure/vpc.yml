@@ -248,11 +248,11 @@ Resources:
       SubnetId: !Ref PrivateSubnetThree
 
   # Route53 Logs
-  PrivateDNSHostedZoneLogGroup:
-    Type: AWS::Logs::LogGroup
-    Properties:
-      RetentionInDays: 7
-      LogGroupName: !Join ['-', ['plizi', !Ref "AWS::Region", 'private', 'hosted-zone', !Ref 'EnvironmentName']]
+  # PrivateDNSHostedZoneLogGroup:
+  #   Type: AWS::Logs::LogGroup
+  #   Properties:
+  #     RetentionInDays: 7
+  #     LogGroupName: !Join ['-', ['plizi', !Ref "AWS::Region", 'private', 'hosted-zone', !Ref 'EnvironmentName']]
 
   # Route 53
   PrivateDNSHostedZone:
@@ -264,8 +264,8 @@ Resources:
       VPCs: 
         - VPCId: !Ref 'VPC'
           VPCRegion: !Sub ${AWS::Region}
-      QueryLoggingConfig:
-        CloudWatchLogsLogGroupArn: !Ref PrivateDNSHostedZoneLogGroup
+      # QueryLoggingConfig:
+      #   CloudWatchLogsLogGroupArn: !Ref PrivateDNSHostedZoneLogGroup
       HostedZoneTags: 
         - Key: 'Name'
           Value: 'private | plizi.fun'
@@ -279,11 +279,11 @@ Resources:
           Value: !Sub ${AWS::Region}
 
   # Route53 Logs
-  PublicDNSHostedZoneLogGroup:
-    Type: AWS::Logs::LogGroup
-    Properties:
-      RetentionInDays: 7
-      LogGroupName:  !Join ['-', ['plizi', !Sub "${AWS::Region}", 'public', 'hosted-zone', !Ref 'EnvironmentName']]
+  # PublicDNSHostedZoneLogGroup:
+  #   Type: AWS::Logs::LogGroup
+  #   Properties:
+  #     RetentionInDays: 7
+  #     LogGroupName:  !Join ['-', ['plizi', !Sub "${AWS::Region}", 'public', 'hosted-zone', !Ref 'EnvironmentName']]
 
   # Route 53 - PublicZone
   PublicDNSHostedZone:
@@ -303,8 +303,8 @@ Resources:
           Value: 'Public'
         - Key: 'Region'
           Value: !Sub ${AWS::Region}
-      QueryLoggingConfig:
-          CloudWatchLogsLogGroupArn: !Ref 'PublicDNSHostedZoneLogGroup'
+      #QueryLoggingConfig:
+      #    CloudWatchLogsLogGroupArn: !Ref 'PublicDNSHostedZoneLogGroup'
 
 Outputs:
   # VPC iteslf
