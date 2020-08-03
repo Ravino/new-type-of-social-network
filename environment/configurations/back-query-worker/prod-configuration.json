@@ -3,7 +3,7 @@
         "ServiceName": "back-query-worker",
         "ImageUrl": "884088487044.dkr.ecr.eu-central-1.amazonaws.com/plizi-back-query-worker-prod:latest",
         "ContainerPort": "80",
-        "ServiceProtocol": "HTTP",
+        "ContainerProtocol": "HTTP",
         "ContainerCpu": "256",
         "ContainerMemory": "512",
         "MinCapacity": "1",

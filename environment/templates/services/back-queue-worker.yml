@@ -31,7 +31,7 @@ Parameters:
     Default: 80
     Description: What port number the application the docker container is binding to
   # deployment
-  ServiceProtocol:
+  ContainerProtocol:
     Type: String
     Default: HTTP
     Description: Which protocol should be used for service communication
@@ -252,9 +252,9 @@ Parameters:
   TestChatID:
     Type: String
     Description: "TestChatID"
-  #LogRetentionInDays:
-  #  Type: String
-  #  Default: "3"
+  LogRetentionInDays:
+    Type: String
+    Default: "3"
   #Role:
   #  Type: String
   #  Default: ""
@@ -460,7 +460,7 @@ Resources:
       TargetType: ip
       Name: !Ref 'ServiceName'
       Port: !Ref 'ContainerPort'
-      Protocol: !Ref ServiceProtocol
+      Protocol: !Ref ContainerProtocol
       TargetGroupAttributes:
         - Key: stickiness.enabled
           Value: 'true' # TODO possible reason of issues for WebSockets are not forwarding messages

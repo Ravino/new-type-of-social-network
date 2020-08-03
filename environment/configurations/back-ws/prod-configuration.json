@@ -2,7 +2,7 @@
     "Parameters": {
         "ServiceName": "back-ws",
         "ImageUrl": "884088487044.dkr.ecr.eu-central-1.amazonaws.com/plizi-back-ws-prod:latest",
-        "ServiceProtocol": "HTTP",
+        "ContainerProtocol": "HTTP",
         "ContainerCpu": "256",
         "ContainerMemory": "512",
         "Path": "dev-ws.plizi.fun",

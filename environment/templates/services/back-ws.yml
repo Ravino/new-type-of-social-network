@@ -260,9 +260,9 @@ Parameters:
     Type: String
     Default: "30"
 
-  #LogRetentionInDays:
-  #  Type: String
-  #  Default: "3"
+  LogRetentionInDays:
+    Type: String
+    Default: "3"
 
 Conditions:
   HasSubnetsReachPublic: !Equals [!Ref SubnetsScope, Public]
