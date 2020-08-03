@@ -49,38 +49,38 @@ Resources:
           IpProtocol: -1
 
   # S3 Bucket log
-  ALBLogBucket:
-    Type: AWS::S3::Bucket
-    Properties:
-      BucketName: "plizi-eu-central-1-logs-test-alb"
-    DeletionPolicy: Retain
-    UpdateReplacePolicy: Retain
+  # ALBLogBucket:
+  #   Type: AWS::S3::Bucket
+  #   Properties:
+  #     BucketName: "plizi-eu-central-1-logs-test-alb"
+  #   DeletionPolicy: Retain
+  #   UpdateReplacePolicy: Retain
 
-  # S3 Bucket policy
-  ALBLogBucketPolicy:
-    Type: AWS::S3::BucketPolicy
-    Properties:
-      Bucket: !Ref 'ALBLogBucket'
-      PolicyDocument:
-        Version: "2008-10-17"
-        Statement:
-          - Sid: ELBAccessLogs20130930
-            Effect: "Allow"
-            Resource: 
-              Fn::Join: 
-                - ""
-                - - "arn:aws:"
-                  - "s3:::"
-                  - !Ref ALBLogBucket
-                  - "/"
-                  - "Logs"
-                  - "/AWSLogs/"
-                  - !Sub ${AWS::AccountId}
-                  - "/*"
-            Principal: 
-              AWS: 884088487044
-            Action: 
-            - "s3:PutObject"
+  # # S3 Bucket policy
+  # ALBLogBucketPolicy:
+  #   Type: AWS::S3::BucketPolicy
+  #   Properties:
+  #     Bucket: !Ref 'ALBLogBucket'
+  #     PolicyDocument:
+  #       Version: "2008-10-17"
+  #       Statement:
+  #         - Sid: ELBAccessLogs20130930
+  #           Effect: "Allow"
+  #           Resource: 
+  #             Fn::Join: 
+  #               - ""
+  #               - - "arn:aws:"
+  #                 - "s3:::"
+  #                 - !Ref ALBLogBucket # TODO GetAtt 
+  #                 - "/"
+  #                 - "Logs"
+  #                 - "/AWSLogs/"
+  #                 - !Sub ${AWS::AccountId}
+  #                 - "/*"
+  #           Principal: 
+  #             AWS: 884088487044
+  #           Action: 
+  #           - "s3:PutObject"
 
   ApplicationLoadBalancer:
     Type: AWS::ElasticLoadBalancingV2::LoadBalancer
