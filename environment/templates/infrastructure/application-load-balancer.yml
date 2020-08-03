@@ -175,8 +175,6 @@ Resources:
       LoadBalancerArn: !Ref 'ApplicationLoadBalancer'
       Port: "80"
       Protocol: "HTTP"
-      Certificates:
-        - CertificateArn: !Ref CertificateArn
 
   ALBListenerNginxSSL:
     Type: AWS::ElasticLoadBalancingV2::Listener
