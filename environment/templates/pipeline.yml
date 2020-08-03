@@ -621,74 +621,74 @@ Resources:
               OutputArtifacts:
                 - Name: ClusterDeployOutput
               RunOrder: 2
-        # - Name: Databases
-        #   Actions:
-        #   - Name: Mongo
-        #     ActionTypeId:
-        #       Category: Deploy
-        #       Owner: AWS
-        #       Version: '1'
-        #       Provider: CloudFormation
-        #     Configuration:
-        #       ActionMode: CREATE_UPDATE
-        #       Capabilities: CAPABILITY_IAM
-        #       #ChangeSetName: !Sub "${AWS::Region}-${EnvironmentName}-mongo-changeset"
-        #       RoleArn: !GetAtt CloudFormationDeployRole.Arn
-        #       StackName: !Sub "${AWS::Region}-${EnvironmentName}-mongo"
-        #       TemplatePath: Source::environment/templates/infrastructure/database-mongo.yml
-        #       ParameterOverrides: !Sub |
-        #         {
-        #           "EnvironmentName": "${EnvironmentName}"
-        #         }
-        #     InputArtifacts:
-        #       - Name: Source
-        #     OutputArtifacts:
-        #       - Name: MongoDeployOutput
-        #     RunOrder: 2
-        #   - Name: MySQL
-        #     ActionTypeId:
-        #       Category: Deploy
-        #       Owner: AWS
-        #       Version: '1'
-        #       Provider: CloudFormation
-        #     Configuration:
-        #       ActionMode: CREATE_UPDATE
-        #       Capabilities: CAPABILITY_IAM
-        #       #ChangeSetName: !Sub "${AWS::Region}-${EnvironmentName}-mysql-changeset"
-        #       RoleArn: !GetAtt CloudFormationDeployRole.Arn
-        #       StackName: !Sub "${AWS::Region}-${EnvironmentName}-mysql"
-        #       TemplatePath: Source::environment/templates/infrastructure/database-mysql.yml
-        #       ParameterOverrides: !Sub |
-        #         {
-        #           "EnvironmentName": "${EnvironmentName}"
-        #         }
-        #     InputArtifacts:
-        #       - Name: Source
-        #     OutputArtifacts:
-        #       - Name: MySQLDeployOutput
-        #     RunOrder: 2
-        #   - Name: Redis
-        #     ActionTypeId:
-        #       Category: Deploy
-        #       Owner: AWS
-        #       Version: '1'
-        #       Provider: CloudFormation
-        #     Configuration:
-        #       ActionMode: CREATE_UPDATE
-        #       Capabilities: CAPABILITY_IAM
-        #       #ChangeSetName: !Sub "${AWS::Region}-${EnvironmentName}-redis-changeset"
-        #       RoleArn: !GetAtt CloudFormationDeployRole.Arn
-        #       StackName: !Sub "${AWS::Region}-${EnvironmentName}-redis"
-        #       TemplatePath: Source::environment/templates/infrastructure/database-redis.yml
-        #       ParameterOverrides: !Sub |
-        #         {
-        #           "EnvironmentName": "${EnvironmentName}"
-        #         }
-        #     InputArtifacts:
-        #       - Name: Source
-        #     OutputArtifacts:
-        #       - Name: RedisDeployOutput
-        #     RunOrder: 2
+        - Name: Databases
+          Actions:
+          - Name: Mongo
+            ActionTypeId:
+              Category: Deploy
+              Owner: AWS
+              Version: '1'
+              Provider: CloudFormation
+            Configuration:
+              ActionMode: CREATE_UPDATE
+              Capabilities: CAPABILITY_IAM
+              #ChangeSetName: !Sub "${AWS::Region}-${EnvironmentName}-mongo-changeset"
+              RoleArn: !GetAtt CloudFormationDeployRole.Arn
+              StackName: !Sub "${AWS::Region}-${EnvironmentName}-mongo"
+              TemplatePath: Source::environment/templates/infrastructure/database-mongo.yml
+              ParameterOverrides: !Sub |
+                {
+                  "EnvironmentName": "${EnvironmentName}"
+                }
+            InputArtifacts:
+              - Name: Source
+            OutputArtifacts:
+              - Name: MongoDeployOutput
+            RunOrder: 2
+          - Name: MySQL
+            ActionTypeId:
+              Category: Deploy
+              Owner: AWS
+              Version: '1'
+              Provider: CloudFormation
+            Configuration:
+              ActionMode: CREATE_UPDATE
+              Capabilities: CAPABILITY_IAM
+              #ChangeSetName: !Sub "${AWS::Region}-${EnvironmentName}-mysql-changeset"
+              RoleArn: !GetAtt CloudFormationDeployRole.Arn
+              StackName: !Sub "${AWS::Region}-${EnvironmentName}-mysql"
+              TemplatePath: Source::environment/templates/infrastructure/database-mysql.yml
+              ParameterOverrides: !Sub |
+                {
+                  "EnvironmentName": "${EnvironmentName}"
+                }
+            InputArtifacts:
+              - Name: Source
+            OutputArtifacts:
+              - Name: MySQLDeployOutput
+            RunOrder: 2
+          - Name: Redis
+            ActionTypeId:
+              Category: Deploy
+              Owner: AWS
+              Version: '1'
+              Provider: CloudFormation
+            Configuration:
+              ActionMode: CREATE_UPDATE
+              Capabilities: CAPABILITY_IAM
+              #ChangeSetName: !Sub "${AWS::Region}-${EnvironmentName}-redis-changeset"
+              RoleArn: !GetAtt CloudFormationDeployRole.Arn
+              StackName: !Sub "${AWS::Region}-${EnvironmentName}-redis"
+              TemplatePath: Source::environment/templates/infrastructure/database-redis.yml
+              ParameterOverrides: !Sub |
+                {
+                  "EnvironmentName": "${EnvironmentName}"
+                }
+            InputArtifacts:
+              - Name: Source
+            OutputArtifacts:
+              - Name: RedisDeployOutput
+            RunOrder: 2
         - Name: Infrastructure
           Actions:
             # - Name: NLB
@@ -739,73 +739,73 @@ Resources:
               OutputArtifacts:
                 - Name: ALBDeployOutput
               RunOrder: 1
-        # - Name: Services
-        #   Actions:
-            # - Name: laravel-docker
-            #   ActionTypeId:
-            #     Category: Build
-            #     Owner: AWS
-            #     Version: '1'
-            #     Provider: CodeBuild
-            #   Configuration:
-            #     ProjectName: !Ref LaravelDocker
-            #   InputArtifacts:
-            #     - Name: Source
-            #   OutputArtifacts:
-            #     - Name: LaravelDockerBuildOutput
-            #   RunOrder: 1
-            # - Name: back-ws
-            #   ActionTypeId:
-            #     Category: Build
-            #     Owner: AWS
-            #     Version: '1'
-            #     Provider: CodeBuild
-            #   Configuration:
-            #     ProjectName: !Ref BackWS
-            #   InputArtifacts:
-            #     - Name: Source
-            #   OutputArtifacts:
-            #     - Name: BackWSBuildOutput
-            #   RunOrder: 2
-            # - Name: back-queue-worker
-            #   ActionTypeId:
-            #     Category: Build
-            #     Owner: AWS
-            #     Version: '1'
-            #     Provider: CodeBuild
-            #   Configuration:
-            #     ProjectName: !Ref BackQueueWorker
-            #   InputArtifacts:
-            #     - Name: Source
-            #   OutputArtifacts:
-            #     - Name: BackQueueWorkerBuildOutput
-            #   RunOrder: 2
-            # - Name: back-api
-            #   ActionTypeId:
-            #     Category: Build
-            #     Owner: AWS
-            #     Version: '1'
-            #     Provider: CodeBuild
-            #   Configuration:
-            #     ProjectName: !Ref BackApi
-            #   InputArtifacts:
-            #     - Name: Source
-            #   OutputArtifacts:
-            #     - Name: BackApiBuildOutput
-            #   RunOrder: 2
-            # - Name: front-nginx
-            #   ActionTypeId:
-            #     Category: Build
-            #     Owner: AWS
-            #     Version: '1'
-            #     Provider: CodeBuild
-            #   Configuration:
-            #     ProjectName: !Ref FrontNginx
-            #   InputArtifacts:
-            #     - Name: Source
-            #   OutputArtifacts:
-            #     - Name: FrontNginxBuildOutput
-            #   RunOrder: 3
+        - Name: Services
+          Actions:
+            - Name: laravel-docker
+              ActionTypeId:
+                Category: Build
+                Owner: AWS
+                Version: '1'
+                Provider: CodeBuild
+              Configuration:
+                ProjectName: !Ref LaravelDocker
+              InputArtifacts:
+                - Name: Source
+              OutputArtifacts:
+                - Name: LaravelDockerBuildOutput
+              RunOrder: 1
+            - Name: back-ws
+              ActionTypeId:
+                Category: Build
+                Owner: AWS
+                Version: '1'
+                Provider: CodeBuild
+              Configuration:
+                ProjectName: !Ref BackWS
+              InputArtifacts:
+                - Name: Source
+              OutputArtifacts:
+                - Name: BackWSBuildOutput
+              RunOrder: 2
+            - Name: back-queue-worker
+              ActionTypeId:
+                Category: Build
+                Owner: AWS
+                Version: '1'
+                Provider: CodeBuild
+              Configuration:
+                ProjectName: !Ref BackQueueWorker
+              InputArtifacts:
+                - Name: Source
+              OutputArtifacts:
+                - Name: BackQueueWorkerBuildOutput
+              RunOrder: 2
+            - Name: back-api
+              ActionTypeId:
+                Category: Build
+                Owner: AWS
+                Version: '1'
+                Provider: CodeBuild
+              Configuration:
+                ProjectName: !Ref BackApi
+              InputArtifacts:
+                - Name: Source
+              OutputArtifacts:
+                - Name: BackApiBuildOutput
+              RunOrder: 2
+            - Name: front-nginx
+              ActionTypeId:
+                Category: Build
+                Owner: AWS
+                Version: '1'
+                Provider: CodeBuild
+              Configuration:
+                ProjectName: !Ref FrontNginx
+              InputArtifacts:
+                - Name: Source
+              OutputArtifacts:
+                - Name: FrontNginxBuildOutput
+              RunOrder: 3
         - Name: Deploy
           Actions:
             - Name: back-ws
