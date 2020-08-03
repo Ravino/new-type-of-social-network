@@ -151,13 +151,13 @@ Parameters:
     Type: String
     Default: SSL
     Description: Which protocol should be used for service communication
-    AllowedValues:
-      - HTTP
-      - SSL
-      - TCP
-      - TLS
-      - UDP
-    ConstraintDescription: Only existing internet protocol should be specified as service protocol
+    # AllowedValues:
+    #   - HTTP
+    #   - SSL
+    #   - TCP
+    #   - TLS
+    #   - UDP
+    # ConstraintDescription: Only existing internet protocol should be specified as service protocol
   # resources management
   ContainerCpu:
     Type: Number
