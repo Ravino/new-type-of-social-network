@@ -246,6 +246,9 @@ Parameters:
   ZmqSubHost:
     Type: String
     Description: "php_zmq sub host"
+  LogRetentionInDays:
+    Type: String
+    Default: 3
   #Role:
   #  Type: String
   #  Default: ""
@@ -259,7 +262,7 @@ Resources:
     Type: AWS::Logs::LogGroup
     Properties:
       LogGroupName: !Join ['-', [!Ref 'EnvironmentName', 'public', !Ref 'ServiceName']]
-
+      RetentionInDays: !Ref 'LogRetentionInDays'
   # The task definition. This is a simple metadata description of what
   # container to run, and what resource requirements it has.
   TaskDefinition:
