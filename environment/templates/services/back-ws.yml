@@ -5,7 +5,6 @@ Parameters:
   # env vars
   TestChatID:
     Type: String
-    Description: "TestChatID"
   ApiUrl:
     Type: String
     Default: "dev.plizi.fun"

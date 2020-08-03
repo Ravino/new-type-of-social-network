@@ -251,7 +251,6 @@ Parameters:
     Default: "30"
   TestChatID:
     Type: String
-    Description: "TestChatID"
   LogRetentionInDays:
     Type: String
     Default: "3"
