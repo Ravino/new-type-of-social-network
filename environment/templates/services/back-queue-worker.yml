@@ -243,6 +243,9 @@ Parameters:
     Type: String
     Default: "0.0.0.0"
     Description: Swoole http host.
+  ZmqSubHost:
+    Type: String
+    Description: "php_zmq sub host"
   #Role:
   #  Type: String
   #  Default: ""
@@ -341,7 +344,7 @@ Resources:
             - Name: SWOOLE_HTTP_HOST
               Value: !Ref 'SwooleHttpHost'
             - Name: 'ZMQ_SUB_HOST'
-              Value: 'dev-ws.plizi.fun'
+              Value: !Ref 'ZmqSubHost'
             - Name: ENV_NAME
               Value: !Ref 'EnvironmentName'
             - Name: REGION
