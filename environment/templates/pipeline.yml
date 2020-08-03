@@ -793,19 +793,19 @@ Resources:
               OutputArtifacts:
                 - Name: BackApiBuildOutput
               RunOrder: 2
-        #     - Name: front-nginx
-        #       ActionTypeId:
-        #         Category: Build
-        #         Owner: AWS
-        #         Version: '1'
-        #         Provider: CodeBuild
-        #       Configuration:
-        #         ProjectName: !Ref FrontNginx
-        #       InputArtifacts:
-        #         - Name: Source
-        #       OutputArtifacts:
-        #         - Name: FrontNginxBuildOutput
-        #       RunOrder: 2
+            # - Name: front-nginx
+            #   ActionTypeId:
+            #     Category: Build
+            #     Owner: AWS
+            #     Version: '1'
+            #     Provider: CodeBuild
+            #   Configuration:
+            #     ProjectName: !Ref FrontNginx
+            #   InputArtifacts:
+            #     - Name: Source
+            #   OutputArtifacts:
+            #     - Name: FrontNginxBuildOutput
+            #   RunOrder: 3
         - Name: Deploy
           Actions:
             - Name: back-ws

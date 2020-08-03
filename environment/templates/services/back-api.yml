@@ -2,6 +2,121 @@ AWSTemplateFormatVersion: '2010-09-09'
 Description: ECS Service managed with Fargate launch type
 
 Parameters:
+  # env vars
+  ApiUrl:
+    Type: String
+    Default: "dev.plizi.fun"
+    Description: Path to external api dns.
+  AppDebug:
+    Type: Number
+    Default: 1
+    Description: Is application in debug mode?
+  AppEnv:
+    Type: String
+    Default: "testing"
+    Description: Type of environment that service running on.
+  AppKey:
+    Type: String
+    Default: "base64:B+SfHGdTdca+dxR4pzJ2SRrqFpF1gFS/pgZTHNxDbhw="
+    Description: Application authorization secrets.
+  AppName:
+    Type: String
+    Default: "PLIZI: Социальная сеть"
+    Description: Application displayable name.
+  AwsAccessKeyId:
+    Type: String
+    Default: "AKIAJBAKDWTT6A4ZFXYQ"
+    Description: AWS access key id.
+  AwsSecretAccessKey:
+    Type: String
+    Default: "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"
+    Description: AWS access secret.
+  AwsDefaultRegion:
+    Type: String
+    Default: "eu-central-1"
+    Description: AWS region service hosted on.
+  AwsBucket:
+    Type: String
+    Default: "plizibuck"
+    Description: S2 bucket for assets storing.
+  JwtBlacklistEnabled:
+    Type: Number
+    Default: 1
+    Description: JWT blacklist.
+  JwtTtl:
+    Type: Number
+    Default: 4320
+    Description: JWT TTL.
+  JwtSecret:
+    Type: String
+    Default: "8WM7E3BeKd7uMjpt7Wpi7y4BTp0nAFzx14Pob5DPBLSbpyz8Io1dzqsKZqBx1QTr"
+    Description: JWT Secret
+  LadaCacheActive:
+    Type: Number
+    Default: 0
+    Description: Caching dublicated queries.
+  MailEncryption:
+    Type: String
+    Default: "tls"
+    Description: Mail encryption.
+  MailFromAddress:
+    Type: String
+    Default: "no-reply@plizi.info"
+    Description: Send emails from address.
+  MailFromName:
+    Type: String
+    Default: "PLIZI Социальная сеть"
+    Description: Send emails from name.
+  MailHost:
+    Type: String
+    Default: "mail.plizi.info"
+    Description: Mailer host.
+  MailMailer:
+    Type: String
+    Default: "smtp"
+    Description: Mailer type.
+  MailPassword:
+    Type: String
+    Default: "fereamea78"
+    Description: Mail password.
+  MailPort:
+    Type: Number
+    Default: 587
+    Description: Mailer port.
+  MailUsername:
+    Type: String
+    Default: "no-reply@plizi.info"
+    Description: Mail username.
+  Neo4DbBoltPort:
+    Type: Number
+    Default: 7687
+    Description: Neo4j Graph database bolt port.
+  Neo4DbHost:
+    Type: String
+    Default: "neo4j.plizi.info"
+    Description: Neo4j Graph database host.
+  Neo4DbHttpPort:
+    Type: Number
+    Default: 7474
+    Description: Neo4j Graph database http port.
+  Neo4DbPassword:
+    Type: String
+    Default: "zKisCPceY6WzTP1R"
+    Description: Neo4j Graph database password.
+  Neo4DbUsername:
+    Type: String
+    Default: "neo4j"
+    Description: Neo4j Graph database username.
+  QueueConnection:
+    Type: String
+    Default: "redis"
+    Description: Queue connection type [sync, redis, rebbitmq].
+  SupervisorCount:
+    Type: String
+  SwooleHttpHost:
+    Type: String
+    Default: "0.0.0.0"
+    Description: Swoole http host.
   # application configuration
   EnvironmentName:
     Type: String
@@ -171,7 +286,113 @@ Resources:
               awslogs-group: !Join ['-', [!Ref 'ServiceName', !Ref 'EnvironmentName']]
               awslogs-region: !Ref 'AWS::Region'
               awslogs-stream-prefix: !Ref 'ServiceName'
-          #Environment:
+          Environment:
+          - Name: API_URL
+            Value: !Ref 'ApiUrl'
+          - Name: APP_DEBUG
+            Value: !Ref 'AppDebug'
+          - Name: APP_ENV
+            Value: !Ref 'AppEnv'
+          - Name: APP_KEY
+            Value: !Ref 'AppKey'
+          - Name: APP_NAME
+            Value: !Ref 'AppName'
+          - Name: AWS_ACCESS_KEY_ID
+            Value: !Ref 'AwsAccessKeyId'
+          - Name: AWS_SECRET_ACCESS_KEY
+            Value: !Ref 'AwsSecretAccessKey'
+          - Name: AWS_DEFAULT_REGION
+            Value: !Ref 'AwsDefaultRegion'
+          - Name: AWS_BUCKET
+            Value: !Ref 'AwsBucket'
+          - Name: JWT_BLACKLIST_ENABLED
+            Value: !Ref 'JwtBlacklistEnabled'
+          - Name: JWT_TTL
+            Value: !Ref 'JwtTtl'
+          - Name: JWT_SECRET
+            Value: !Ref 'JwtSecret'
+          - Name: LADA_CACHE_ACTIVE
+            Value: !Ref 'LadaCacheActive'
+          - Name: MAIL_ENCRYPTION
+            Value: !Ref 'MailEncryption'
+          - Name: MAIL_FROM_ADDRESS
+            Value: !Ref 'MailFromAddress'
+          - Name: MAIL_FROM_NAME
+            Value: !Ref 'MailFromName'
+          - Name: MAIL_HOST
+            Value: !Ref 'MailHost'
+          - Name: MAIL_MAILER
+            Value: !Ref 'MailMailer'
+          - Name: MAIL_PASSWORD
+            Value: !Ref 'MailPassword'
+          - Name: MAIL_PORT
+            Value: !Ref 'MailPort'
+          - Name: MAIL_USERNAME
+            Value: !Ref 'MailUsername'
+          - Name: NEO4_DB_BOLT_PORT
+            Value: !Ref 'Neo4DbBoltPort'
+          - Name: NEO4_DB_HOST
+            Value: !Ref 'Neo4DbHost'
+          - Name: NEO4_DB_HTTP_PORT
+            Value: !Ref 'Neo4DbHttpPort'
+          - Name: NEO4_DB_PASSWORD
+            Value: !Ref 'Neo4DbPassword'
+          - Name: NEO4_DB_USERNAME
+            Value: !Ref 'Neo4DbUsername'
+          - Name: QUEUE_CONNECTION
+            Value: !Ref 'QueueConnection'
+          #- Name: SENTRY_LARAVEL_DSN
+          #  Value: !Ref 'SentryLaravelDsn'
+          - Name: SWOOLE_HTTP_HOST
+            Value: !Ref 'SwooleHttpHost'
+          - Name: 'ZMQ_SUB_HOST'
+            Value: 'dev-ws.plizi.fun'
+          - Name: ENV_NAME
+            Value: !Ref 'EnvironmentName'
+          - Name: REGION
+            Value: !Ref 'AWS::Region'
+          - Name: SUPERVISOR_NUMPROC
+            Value: !Ref 'SupervisorCount'
+          - Name: DB_DATABASE
+            Value:
+              Fn::ImportValue:
+                !Join [':', [!Ref 'EnvironmentName', 'MySQLDBName']]
+          - Name: DB_HOST
+            Value:
+              Fn::ImportValue:
+                !Join [':', [!Ref 'EnvironmentName', 'MySQLDBHost']]
+          - Name: DB_PASSWORD
+            Value:
+              Fn::ImportValue:
+                !Join [':', [!Ref 'EnvironmentName', 'MySQLDBPass']]
+          - Name: DB_PORT
+            Value:
+              Fn::ImportValue:
+                !Join [':', [!Ref 'EnvironmentName', 'MySQLDBPort']]
+          - Name: DB_USERNAME
+            Value:
+              Fn::ImportValue:
+                !Join [':', [!Ref 'EnvironmentName', 'MySQLDBUser']]
+          - Name: MONGO_DB_HOST
+            Value:
+              Fn::ImportValue:
+                !Join [':', [!Ref 'EnvironmentName', 'MongoDBHost']]
+          - Name: MONGO_DB_PASSWORD
+            Value:
+              Fn::ImportValue:
+                !Join [':', [!Ref 'EnvironmentName', 'MongoDBPass']]
+          - Name: MONGO_DB_USERNAME
+            Value:
+              Fn::ImportValue:
+                !Join [':', [!Ref 'EnvironmentName', 'MongoDBUser']]
+          - Name: REDIS_HOST
+            Value:
+              Fn::ImportValue:
+                !Join [':', [!Ref 'EnvironmentName', 'RedisHost']]
+          - Name: REDIS_PORT
+            Value:
+              Fn::ImportValue:
+                !Join [':', [!Ref 'EnvironmentName', 'RedisPort']]
   # ServiceSecurityGroup:
   #   Type: AWS::EC2::SecurityGroup
   #   Properties:

@@ -16,7 +16,7 @@
         "ScaleUpCooldown": "60",
         "DeploymentMaximum": "200",
         "DeploymentMinimum": "100",
-        "ApiUrl": "dev.plizi.fun",
+        "ApiUrl": "dev-api.plizi.fun",
 		"AppEnv": "production",
 		"AppKey": "base64:B+SfHGdTdca+dxR4pzJ2SRrqFpF1gFS/pgZTHNxDbhw=",
 		"AppName": "PLIZI: Социальная сеть",
@@ -35,6 +35,13 @@
 		"Neo4DbHost": "neo4j.plizi.info",
 		"Neo4DbPassword": "zKisCPceY6WzTP1R",
 		"Neo4DbUsername": "neo4j",
-		"QueueConnection": "redis"
+        "QueueConnection": "redis",
+        "TestChatID": "5f1d1527160ffd7b97096ac4",
+        "WsExtendedLogsEnabled": "",
+        "SubnetsScope": "Public",
+        "HealthCheckGracePeriodSeconds": 30,
+        "LogRetentionInDays": 3,
+        "SupervisorCount": 8,
+        "SwooleHttpHost": "0.0.0.0"
     }
 }
