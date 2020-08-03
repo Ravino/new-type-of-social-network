@@ -2,7 +2,7 @@
     "Parameters": {
         "EnvironmentName": "test", 
         "ServiceName": "back-ws",
-        "ImageUrlWebSocket": "884088487044.dkr.ecr.eu-central-1.amazonaws.com/eu-central-1-test-plizi-back-ws:latest",
+        "ImageUrl": "884088487044.dkr.ecr.eu-central-1.amazonaws.com/eu-central-1-test-plizi-back-ws:latest",
         "ServiceProtocol": "HTTPS",
         "ContainerPort": "7070",
         "ContainerCpu": "1024",
@@ -40,7 +40,6 @@
 		"Neo4DbUsername": "neo4j",
         "QueueConnection": "redis",
         "TestChatID": "5f1d1527160ffd7b97096ac4",
-        "WsExtendedLogsEnabled": "",
         "SubnetsScope": "Public",
         "HealthCheckGracePeriodSeconds": "30",
         "LogRetentionInDays": "3",

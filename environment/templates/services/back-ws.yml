@@ -3,6 +3,9 @@ Description: ECS Service managed with Fargate launch type
 
 Parameters:
   # env vars
+  TestChatID:
+    Type: String
+    Description: "TestChatID"
   ApiUrl:
     Type: String
     Default: "dev.plizi.fun"
@@ -302,6 +305,8 @@ Resources:
               awslogs-region: !Ref 'AWS::Region'
               awslogs-stream-prefix: !Ref 'ServiceName'
           Environment:
+          - Name: TEST_CHAT_ID
+            Value: !Ref 'TestChatID'
           - Name: API_URL
             Value: !Ref 'ApiUrl'
           - Name: APP_DEBUG

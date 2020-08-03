@@ -249,6 +249,9 @@ Parameters:
   HealthCheckGracePeriodSeconds:
     Type: String
     Default: "30"
+  TestChatID:
+    Type: String
+    Description: "TestChatID"
   #LogRetentionInDays:
   #  Type: String
   #  Default: "3"
@@ -291,6 +294,8 @@ Resources:
           PortMappings:
             - ContainerPort: !Ref 'ContainerPort'
           Environment:
+            - Name: TEST_CHAT_ID
+              Value: !Ref 'TestChatID'
             - Name: API_URL
               Value: !Ref 'ApiUrl'
             - Name: APP_DEBUG

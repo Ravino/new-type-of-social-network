@@ -37,7 +37,6 @@
 		"Neo4DbUsername": "neo4j",
         "QueueConnection": "redis",
         "TestChatID": "5f1d1527160ffd7b97096ac4",
-        "WsExtendedLogsEnabled": "",
         "SubnetsScope": "Public",
         "HealthCheckGracePeriodSeconds": "30",
         "LogRetentionInDays": "3",
