@@ -94,3 +94,7 @@ Outputs:
     Value: !GetAtt 'MySQL.Endpoint.Port'
     Export:
       Name: !Join [ ':', [ !Ref 'EnvironmentName', 'MySQLDBPort' ] ]
+  MySQLSecurityGroup:
+    Value: !Ref 'MySQLSecurityGroup'
+    Export:
+      Name: !Join [ ':', [ !Ref 'EnvironmentName', 'MySQLSecurityGroup' ] ]

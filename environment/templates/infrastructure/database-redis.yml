@@ -56,3 +56,7 @@ Outputs:
     Value: !GetAtt 'Redis.RedisEndpoint.Port'
     Export:
       Name: !Join [ ':', [ !Ref 'EnvironmentName', 'RedisPort' ] ]
+  RedisSecurityGroup:
+    Value: !Ref 'RedisSecurityGroup'
+    Export:
+      Name: !Join [ ':', [ !Ref 'EnvironmentName', 'RedisSecurityGroup' ] ]

@@ -106,3 +106,7 @@ Outputs:
     Value: !Ref 'MongoDBMasterUserPassword'
     Export:
       Name: !Join [ ':', [ !Ref 'EnvironmentName', 'MongoDBPass' ] ]
+  MongoSecurityGroup:
+    Value: !Ref 'MongoSecurityGroup'
+    Export:
+      Name: !Join [ ':', [ !Ref 'EnvironmentName', 'MongoSecurityGroup' ] ]
