@@ -20,8 +20,8 @@
         "DeploymentMaximum": "200",
         "DeploymentMinimum": "75",
         "SubnetsScope": "Public",
-        "HealthCheckGracePeriodSeconds": 30,
-        "LogRetentionInDays": 3,
+        "HealthCheckGracePeriodSeconds": "30",
+        "LogRetentionInDays": "3",
         "SwooleHttpHost": "0.0.0.0",
         "ZmqSubHost": "dev-ws.plizi.fun"
     }

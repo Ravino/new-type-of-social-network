@@ -42,8 +42,8 @@
         "TestChatID": "5f1d1527160ffd7b97096ac4",
         "WsExtendedLogsEnabled": "",
         "SubnetsScope": "Public",
-        "HealthCheckGracePeriodSeconds": 30,
-        "LogRetentionInDays": 3,
+        "HealthCheckGracePeriodSeconds": "30",
+        "LogRetentionInDays": "3",
         "SwooleHttpHost": "dev-qw.plizi.fun",
         "ZmqSubHost": "dev-ws.plizi.fun"
     }
