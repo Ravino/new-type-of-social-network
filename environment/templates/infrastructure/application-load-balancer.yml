@@ -268,11 +268,11 @@ Outputs:
       Name: !Join [ ':', [ !Ref 'EnvironmentName', 'ALBFullName' ] ]
 
   # Extra stuff
-  ALBLogBucket:
-    Description: The ARN of the S3 Bucket that is created for ALB logs storage
-    Value: !Ref ALBLogBucket
-    Export:
-      Name: !Join [ ':', [ !Ref 'EnvironmentName', 'ALBLogBucket' ] ]
+  # ALBLogBucket:
+  #   Description: The ARN of the S3 Bucket that is created for ALB logs storage
+  #   Value: !Ref ALBLogBucket
+  #   Export:
+  #     Name: !Join [ ':', [ !Ref 'EnvironmentName', 'ALBLogBucket' ] ]
 
   # Listeners
   ALBListenerBackApiSSL:
