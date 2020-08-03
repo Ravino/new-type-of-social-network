@@ -246,9 +246,12 @@ Parameters:
   ZmqSubHost:
     Type: String
     Description: "php_zmq sub host"
+  HealthCheckGracePeriodSeconds:
+    Type: String
+    Default: "30"
   LogRetentionInDays:
     Type: String
-    Default: 3
+    Default: "3"
   #Role:
   #  Type: String
   #  Default: ""
