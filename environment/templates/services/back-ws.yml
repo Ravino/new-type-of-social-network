@@ -269,7 +269,7 @@ Resources:
     Type: AWS::Logs::LogGroup
     Properties:
       LogGroupName: !Join ['-', [!Ref 'ServiceName', !Ref 'EnvironmentName']]
-      RetentionInDays: !Ref 'LogRetentionInDays'
+      #RetentionInDays: !Ref 'LogRetentionInDays'
   TaskDefinition:
     Type: AWS::ECS::TaskDefinition
     Properties:
