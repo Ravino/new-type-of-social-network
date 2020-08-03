@@ -1,13 +1,14 @@
 {
     "Parameters": {
+        "EnvironmentName": "test", 
         "ServiceName": "front-nginx",
         "ImageUrl": "884088487044.dkr.ecr.eu-central-1.amazonaws.com/eu-central-1-test-plizi-front-nginx:latest",
-        "ContainerPort": "80",
-        "ServiceProtocol": "HTTP",
+        "ContainerPort": "443",
+        "ServiceProtocol": "HTTPS",
         "ContainerCpu": "1024",
-        "ContainerMemory": "2048",
+        "ContainerMemory": "1024",
         "Path": "dev.plizi.fun",
-        "Priority": "40",
+        "Priority": "1",
         "MinCapacity": "1",
         "DesiredCount": "1",
         "MaxCapacity": "10",
@@ -17,6 +18,9 @@
         "HighCpuThresholdAlarm": "70",
         "ScaleUpCooldown": "30",
         "DeploymentMaximum": "200",
-        "DeploymentMinimum": "75"
+        "DeploymentMinimum": "75",
+        "SubnetsScope": "Public",
+        "HealthCheckGracePeriodSeconds": 30,
+        "LogRetentionInDays": 3
     }
 }

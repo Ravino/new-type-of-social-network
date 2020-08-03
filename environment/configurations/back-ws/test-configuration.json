@@ -1,17 +1,17 @@
 {
     "Parameters": {
+        "EnvironmentName": "test", 
         "ServiceName": "back-ws",
         "ImageUrlWebSocket": "884088487044.dkr.ecr.eu-central-1.amazonaws.com/eu-central-1-test-plizi-back-ws:latest",
-        "ImageUrlQueueWorker": "884088487044.dkr.ecr.eu-central-1.amazonaws.com/eu-central-1-test-plizi-back-queue-worker:latest",
-        "ServiceProtocol": "HTTP",
+        "ServiceProtocol": "HTTPS",
         "ContainerPort": "7070",
-        "ContainerCpu": "4096",
-        "ContainerMemory": "8192",
+        "ContainerCpu": "1024",
+        "ContainerMemory": "1024",
         "Path": "dev-ws.plizi.fun",
-        "Priority": "20",
+        "Priority": "1",
         "MinCapacity": "1",
         "DesiredCount": "1",
-        "MaxCapacity": "50",
+        "MaxCapacity": "200",
         "LowCpuPeriodAlarm": "300",
         "ScaleDownCooldown": "300",
         "LowCpuThresholdAlarm": "0",
@@ -19,7 +19,7 @@
         "ScaleUpCooldown": "30",
         "DeploymentMaximum": "200",
         "DeploymentMinimum": "75",
-        "ApiUrl": "dev.plizi.fun",
+        "ApiUrl": "dev-api.plizi.fun",
 		"AppEnv": "production",
 		"AppKey": "base64:B+SfHGdTdca+dxR4pzJ2SRrqFpF1gFS/pgZTHNxDbhw=",
 		"AppName": "PLIZI: Социальная сеть",
@@ -40,6 +40,9 @@
 		"Neo4DbUsername": "neo4j",
         "QueueConnection": "redis",
         "TestChatID": "5f1d1527160ffd7b97096ac4",
-        "WsExtendedLogsEnabled": ""
+        "WsExtendedLogsEnabled": "",
+        "SubnetsScope": "Public",
+        "HealthCheckGracePeriodSeconds": 30,
+        "LogRetentionInDays": 3
     }
 }

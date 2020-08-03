@@ -2,133 +2,6 @@ AWSTemplateFormatVersion: '2010-09-09'
 Description: ECS Service managed with Fargate launch type
 
 Parameters:
-  # application configuration
-  EnvironmentName:
-    Type: String
-    Default: test
-    Description: A name for the environment that this cloudformation will be part of.
-                 Used to locate other resources in the same environment.
-    AllowedValues:
-      - test
-      - prod
-    ConstraintDescription: Environment name may be only 'test' or 'prod', to prevent
-                           configuration files multiplication.
-  # stack-related parameters
-  # application configuration
-  ServiceName:
-    Type: String
-    Default: service
-    Description: A name for the service that would be managing FARGATE tasks inside the cluster.
-  # deployment
-  ImageUrlWebSocket:
-    Type: String
-    Default: 'busybox'
-    Description: The url of a docker image that contains the application process that
-                 will handle the traffic for this service
-  ImageUrlQueueWorker:
-    Type: String
-    Default: 'busybox'
-    Description: The url of a docker image that contains the application process that
-                 will handle the traffic for this service
-  # deployment
-  ContainerPort:
-    Type: Number
-    Default: 7070
-    Description: What port number the application the docker container is binding to
-  # deployment
-  ServiceProtocol:
-    Type: String
-    Default: HTTP
-    Description: Which protocol should be used for service communication
-    AllowedValues:
-      - HTTP
-      - HTTPS
-      - TCP
-      - TLS
-      - UDP
-    ConstraintDescription: Only existing internet protocol should be specified as service protocol
-  # resources management
-  ContainerCpu:
-    Type: Number
-    Default: 256
-    Description: How much CPU to give the container. 1024 is 1 CPU
-  # resources management
-  ContainerMemory:
-    Type: Number
-    Default: 512
-    Description: How much memory in megabytes to give the container
-  # load balancing
-  Path:
-    Type: String
-    Description: A path on the load balancer that this service
-                 should be connected to. Use * to send all load balancer
-                 traffic to this service.
-  # load balancing
-  Priority:
-    Type: Number
-    Default: 1
-    Description: The priority for the routing rule added to the load balancer.
-                 This only applies if your have multiple services which have been
-                 assigned to different paths on the load balancer.
-  # auto-scaling
-  MinCapacity:
-    Type: Number
-    Default: 1
-    Description: How many copies is min setupped to run
-  # auto-scaling
-  DesiredCount:
-    Type: Number
-    Default: 1
-    Description: How many copies of the service task to run
-  # auto-scaling
-  MaxCapacity:
-    Type: Number
-    Default: 5
-    Description: How many copies is max allowed to run
-  # auto-scaling
-  LowCpuPeriodAlarm:
-    Type: Number
-    Default: 300
-    Description: Period length (in seconds) that limit value encounters as once noticed
-  # auto-scaling
-  ScaleDownCooldown:
-    Type: Number
-    Default: 300
-    Description: Cooldown before next scaling down
-  # auto-scaling
-  LowCpuThresholdAlarm:
-    Type: Number
-    Default: 20
-    Description: Limit value that indicates, that alarm action should be applied
-  # auto-scaling
-  HighCpuPeriodAlarm:
-    Type: Number
-    Default: 60
-    Description: Period length (in seconds) that limit value encounters as once noticed
-  # auto-scaling
-  HighCpuThresholdAlarm:
-    Type: Number
-    Default: 70
-    Description: Limit value that indicates, that alarm action should be applied
-  # auto-scaling
-  ScaleUpCooldown:
-    Type: Number
-    Default: 30
-    Description: Cooldown before next scaling up
-  # deployment
-  DeploymentMaximum:
-    Type: Number
-    Default: 200
-    Description: Maximum percent parameter represents an upper limit on the number of tasks in a service
-               that are allowed in the RUNNING or PENDING state during a deployment,
-               as a percentage of the desired number of tasks
-  # deployment
-  DeploymentMinimum:
-    Type: Number
-    Default: 100
-    Description: Minimum healthy percent represents a lower limit on the number of tasks in a service
-                that must remain in the RUNNING state during a deployment, as a percentage of
-                the desired number of tasks (rounded up to the nearest integer)
   # env vars
   ApiUrl:
     Type: String
@@ -246,39 +119,154 @@ Parameters:
     Type: String
     Default: "0.0.0.0"
     Description: Swoole http host.
-  TestChatID:
+  # application configuration
+  EnvironmentName:
     Type: String
-    Default: "TestChatID"
-    Description: Test chat ID.
-  WsExtendedLogsEnabled:
+    Default: test
+    Description: A name for the environment that this cloudformation will be part of.
+                 Used to locate other resources in the same environment.
+    AllowedValues:
+      - test
+      - prod
+    ConstraintDescription: Environment name may be only 'test' or 'prod', to prevent
+                           configuration files multiplication.
+  # stack-related parameters
+  # application configuration
+  ServiceName:
     Type: String
-    Default: ""
-    Description: Test chat ID.
-  SecureWebsocket:
+    Default: service
+    Description: A name for the service that would be managing FARGATE tasks inside the cluster.
+  # deployment
+  ImageUrl:
     Type: String
-    Default: ""
-  FullchainPath:
+    Default: 'busybox'
+    Description: The url of a docker image that contains the application process that
+                 will handle the traffic for this service
+  # deployment
+  ContainerPort:
+    Type: Number
+    Default: 443
+    Description: What port number the application the docker container is binding to
+  # deployment
+  ContainerProtocol:
     Type: String
-    Default: "/docker/ssl/fullchain.pem"
-  PrivateKeyPath:
+    Default: SSL
+    Description: Which protocol should be used for service communication
+    AllowedValues:
+      - HTTP
+      - SSL
+      - TCP
+      - TLS
+      - UDP
+    ConstraintDescription: Only existing internet protocol should be specified as service protocol
+  # resources management
+  ContainerCpu:
+    Type: Number
+    Default: 256
+    Description: How much CPU to give the container. 1024 is 1 CPU
+  # resources management
+  ContainerMemory:
+    Type: Number
+    Default: 512
+    Description: How much memory in megabytes to give the container
+  # load balancing
+  Path:
     Type: String
-    Default: "/docker/ssl/privkey.pem"
-  #Role:
-  #  Type: String
-  #  Default: ""
-  #  Description: (Optional) An IAM role to give the service's containers if the code within needs to
-  #              access other AWS resources like S3 buckets, DynamoDB tables, etc
-#Conditions:
-#  HasCustomRole: !Not [ !Equals [!Ref 'Role', ''] ]
+    Description: A path on the load balancer that this service
+                 should be connected to. Use * to send all load balancer
+                 traffic to this service.
+  # load balancing
+  Priority:
+    Type: Number
+    Default: 1
+    Description: The priority for the routing rule added to the load balancer.
+                 This only applies if your have multiple services which have been
+                 assigned to different paths on the load balancer.
+  # auto-scaling
+  MinCapacity:
+    Type: Number
+    Default: 1
+    Description: How many copies is min setupped to run
+  # auto-scaling
+  DesiredCount:
+    Type: Number
+    Default: 1
+    Description: How many copies of the service task to run
+  # auto-scaling
+  MaxCapacity:
+    Type: Number
+    Default: 5
+    Description: How many copies is max allowed to run
+  # auto-scaling
+  LowCpuPeriodAlarm:
+    Type: Number
+    Default: 300
+    Description: Period length (in seconds) that limit value encounters as once noticed
+  # auto-scaling
+  ScaleDownCooldown:
+    Type: Number
+    Default: 300
+    Description: Cooldown before next scaling down
+  # auto-scaling
+  LowCpuThresholdAlarm:
+    Type: Number
+    Default: 20
+    Description: Limit value that indicates, that alarm action should be applied
+  # auto-scaling
+  HighCpuPeriodAlarm:
+    Type: Number
+    Default: 60
+    Description: Period length (in seconds) that limit value encounters as once noticed
+  # auto-scaling
+  HighCpuThresholdAlarm:
+    Type: Number
+    Default: 70
+    Description: Limit value that indicates, that alarm action should be applied
+  # auto-scaling
+  ScaleUpCooldown:
+    Type: Number
+    Default: 30
+    Description: Cooldown before next scaling up
+  # deployment
+  DeploymentMaximum:
+    Type: Number
+    Default: 200
+    Description: Maximum percent parameter represents an upper limit on the number of tasks in a service
+               that are allowed in the RUNNING or PENDING state during a deployment,
+               as a percentage of the desired number of tasks
+  # deployment
+  DeploymentMinimum:
+    Type: Number
+    Default: 100
+    Description: Minimum healthy percent represents a lower limit on the number of tasks in a service
+                that must remain in the RUNNING state during a deployment, as a percentage of
+                the desired number of tasks (rounded up to the nearest integer)
+  # deployment subnet
+  SubnetsScope:
+    Description: 'Should the service have direct access to the Internet or do you prefer private subnets with NAT?'
+    Type: String
+    Default: Public
+    AllowedValues:
+    - Public
+    - Private
+
+  HealthCheckGracePeriodSeconds:
+    Type: String
+    Default: 30
+
+  LogRetentionInDays:
+    Type: String
+    Default: 3
+
+Conditions:
+  HasSubnetsReachPublic: !Equals [!Ref SubnetsScope, Public]
+
 Resources:
-  # A log group for storing the container logs for this service
   LogGroup:
     Type: AWS::Logs::LogGroup
     Properties:
-      LogGroupName: !Join ['-', [!Ref 'EnvironmentName', 'public', !Ref 'ServiceName']]
-
-  # The task definition. This is a simple metadata description of what
-  # container to run, and what resource requirements it has.
+      LogGroupName: !Join ['-', [!Ref 'ServiceName', !Ref 'EnvironmentName']]
+      RetentionInDays: !Ref 'LogRetentionInDays'
   TaskDefinition:
     Type: AWS::ECS::TaskDefinition
     Properties:
@@ -295,357 +283,284 @@ Resources:
         Fn::ImportValue:
           !Join [':', [!Ref 'EnvironmentName', 'ECSServiceExecutionTaskRole']]
       ContainerDefinitions:
-        - Name: !Join [ "-", [ !Ref 'ServiceName', "web-socket" ] ]
-          # DependsOn:
-          #  - Condition: HEALTHY
-          #    ContainerName: !Join [ "-", [ !Ref 'ServiceName', "queue-worker" ] ]
-          Image: !Ref 'ImageUrlWebSocket'
-          Cpu: 2048
-          MemoryReservation: 4096
+        - Name: !Ref 'ServiceName'
+          Cpu: !Ref 'ContainerCpu'
+          Memory: !Ref 'ContainerMemory'
+          Image: !Ref 'ImageUrl'
+          #Command: 
+          Essential: true
           PortMappings:
             - ContainerPort: !Ref 'ContainerPort'
-            - ContainerPort: 5555
-          Ulimits:
-            - Name: nofile
-              SoftLimit: 4096
-              HardLimit: 8192
-          Environment:
-            # - Name: FULLCHAIN_PATH
-            #   Value: !Ref 'FullchainPath'
-            # - Name: PRIVATE_KEY_PATH
-            #   Value: !Ref 'PrivateKeyPath'
-            - Name: API_URL
-              Value: !Ref 'ApiUrl'
-            - Name: APP_DEBUG
-              Value: !Ref 'AppDebug'
-            - Name: APP_ENV
-              Value: !Ref 'AppEnv'
-            - Name: APP_KEY
-              Value: !Ref 'AppKey'
-            - Name: APP_NAME
-              Value: !Ref 'AppName'
-            - Name: AWS_ACCESS_KEY_ID
-              Value: !Ref 'AwsAccessKeyId'
-            - Name: AWS_SECRET_ACCESS_KEY
-              Value: !Ref 'AwsSecretAccessKey'
-            - Name: AWS_DEFAULT_REGION
-              Value: !Ref 'AwsDefaultRegion'
-            - Name: AWS_BUCKET
-              Value: !Ref 'AwsBucket'
-            - Name: JWT_BLACKLIST_ENABLED
-              Value: !Ref 'JwtBlacklistEnabled'
-            - Name: JWT_TTL
-              Value: !Ref 'JwtTtl'
-            - Name: JWT_SECRET
-              Value: !Ref 'JwtSecret'
-            - Name: LADA_CACHE_ACTIVE
-              Value: !Ref 'LadaCacheActive'
-            - Name: MAIL_ENCRYPTION
-              Value: !Ref 'MailEncryption'
-            - Name: MAIL_FROM_ADDRESS
-              Value: !Ref 'MailFromAddress'
-            - Name: MAIL_FROM_NAME
-              Value: !Ref 'MailFromName'
-            - Name: MAIL_HOST
-              Value: !Ref 'MailHost'
-            - Name: MAIL_MAILER
-              Value: !Ref 'MailMailer'
-            - Name: MAIL_PASSWORD
-              Value: !Ref 'MailPassword'
-            - Name: MAIL_PORT
-              Value: !Ref 'MailPort'
-            - Name: MAIL_USERNAME
-              Value: !Ref 'MailUsername'
-            - Name: NEO4_DB_BOLT_PORT
-              Value: !Ref 'Neo4DbBoltPort'
-            - Name: NEO4_DB_HOST
-              Value: !Ref 'Neo4DbHost'
-            - Name: NEO4_DB_HTTP_PORT
-              Value: !Ref 'Neo4DbHttpPort'
-            - Name: NEO4_DB_PASSWORD
-              Value: !Ref 'Neo4DbPassword'
-            - Name: NEO4_DB_USERNAME
-              Value: !Ref 'Neo4DbUsername'
-            - Name: QUEUE_CONNECTION
-              Value: !Ref 'QueueConnection'
-            #- Name: SENTRY_LARAVEL_DSN
-            #  Value: !Ref 'SentryLaravelDsn'
-            - Name: SWOOLE_HTTP_HOST
-              Value: !Ref 'SwooleHttpHost'
-            - Name: ZMQ_SUB_HOST
-              Value: '127.0.0.1'
-            - Name: ENV_NAME
-              Value: !Ref 'EnvironmentName'
-            - Name: REGION
-              Value: !Ref 'AWS::Region'
-            - Name: TEST_CHAT_ID
-              Value: !Ref 'TestChatID'
-            - Name: WS_LOGS
-              Value: !Ref 'WsExtendedLogsEnabled'
-            - Name: DB_DATABASE
-              Value:
-                Fn::ImportValue:
-                  !Join [':', [!Ref 'EnvironmentName', 'MySQLDBName']]
-            - Name: DB_HOST
-              Value:
-                Fn::ImportValue:
-                  !Join [':', [!Ref 'EnvironmentName', 'MySQLDBHost']]
-            - Name: DB_PASSWORD
-              Value:
-                Fn::ImportValue:
-                  !Join [':', [!Ref 'EnvironmentName', 'MySQLDBPass']]
-            - Name: DB_PORT
-              Value:
-                Fn::ImportValue:
-                  !Join [':', [!Ref 'EnvironmentName', 'MySQLDBPort']]
-            - Name: DB_USERNAME
-              Value:
-                Fn::ImportValue:
-                  !Join [':', [!Ref 'EnvironmentName', 'MySQLDBUser']]
-            - Name: MONGO_DB_HOST
-              Value:
-                Fn::ImportValue:
-                  !Join [':', [!Ref 'EnvironmentName', 'MongoDBHost']]
-            - Name: MONGO_DB_PASSWORD
-              Value:
-                Fn::ImportValue:
-                  !Join [':', [!Ref 'EnvironmentName', 'MongoDBPass']]
-            - Name: MONGO_DB_USERNAME
-              Value:
-                Fn::ImportValue:
-                  !Join [':', [!Ref 'EnvironmentName', 'MongoDBUser']]
-            - Name: REDIS_HOST
-              Value: "eu-re-1d83dtago056g.lmiwa9.ng.0001.euc1.cache.amazonaws.com"
-                #Fn::ImportValue:
-                #  !Join [':', [!Ref 'EnvironmentName', 'RedisHost']]
-            - Name: REDIS_PORT
-              Value:
-                Fn::ImportValue:
-                  !Join [':', [!Ref 'EnvironmentName', 'RedisPort']]
+              Protocol: !Ref 'ContainerProtocol'
           LogConfiguration:
             LogDriver: 'awslogs'
             Options:
-              awslogs-group: !Join ['-', [!Ref 'EnvironmentName', 'public', !Ref 'ServiceName']]
+              awslogs-group: !Join ['-', [!Ref 'ServiceName', !Ref 'EnvironmentName']]
               awslogs-region: !Ref 'AWS::Region'
-              awslogs-stream-prefix: !Join [ "-", [ !Ref 'ServiceName', "web-socket" ] ]
-        - Name: !Join [ "-", [ !Ref 'ServiceName', "queue-worker" ] ]
-          Image: !Ref 'ImageUrlQueueWorker'
-          Cpu: 2048
-          MemoryReservation: 4096
+              awslogs-stream-prefix: !Ref 'ServiceName'
           Environment:
-            # - Name: FULLCHAIN_PATH
-            #   Value: !Ref 'FullchainPath'
-            # - Name: PRIVATE_KEY_PATH
-            #   Value: !Ref 'PrivateKeyPath'
-            - Name: API_URL
-              Value: !Ref 'ApiUrl'
-            - Name: APP_DEBUG
-              Value: !Ref 'AppDebug'
-            - Name: APP_ENV
-              Value: !Ref 'AppEnv'
-            - Name: APP_KEY
-              Value: !Ref 'AppKey'
-            - Name: APP_NAME
-              Value: !Ref 'AppName'
-            - Name: AWS_ACCESS_KEY_ID
-              Value: !Ref 'AwsAccessKeyId'
-            - Name: AWS_SECRET_ACCESS_KEY
-              Value: !Ref 'AwsSecretAccessKey'
-            - Name: AWS_DEFAULT_REGION
-              Value: !Ref 'AwsDefaultRegion'
-            - Name: AWS_BUCKET
-              Value: !Ref 'AwsBucket'
-            - Name: JWT_BLACKLIST_ENABLED
-              Value: !Ref 'JwtBlacklistEnabled'
-            - Name: JWT_TTL
-              Value: !Ref 'JwtTtl'
-            - Name: JWT_SECRET
-              Value: !Ref 'JwtSecret'
-            - Name: LADA_CACHE_ACTIVE
-              Value: !Ref 'LadaCacheActive'
-            - Name: MAIL_ENCRYPTION
-              Value: !Ref 'MailEncryption'
-            - Name: MAIL_FROM_ADDRESS
-              Value: !Ref 'MailFromAddress'
-            - Name: MAIL_FROM_NAME
-              Value: !Ref 'MailFromName'
-            - Name: MAIL_HOST
-              Value: !Ref 'MailHost'
-            - Name: MAIL_MAILER
-              Value: !Ref 'MailMailer'
-            - Name: MAIL_PASSWORD
-              Value: !Ref 'MailPassword'
-            - Name: MAIL_PORT
-              Value: !Ref 'MailPort'
-            - Name: MAIL_USERNAME
-              Value: !Ref 'MailUsername'
-            - Name: NEO4_DB_BOLT_PORT
-              Value: !Ref 'Neo4DbBoltPort'
-            - Name: NEO4_DB_HOST
-              Value: !Ref 'Neo4DbHost'
-            - Name: NEO4_DB_HTTP_PORT
-              Value: !Ref 'Neo4DbHttpPort'
-            - Name: NEO4_DB_PASSWORD
-              Value: !Ref 'Neo4DbPassword'
-            - Name: NEO4_DB_USERNAME
-              Value: !Ref 'Neo4DbUsername'
-            - Name: QUEUE_CONNECTION
-              Value: !Ref 'QueueConnection'
-            #- Name: SENTRY_LARAVEL_DSN
-            #  Value: !Ref 'SentryLaravelDsn'
-            - Name: SWOOLE_HTTP_HOST
-              Value: !Ref 'SwooleHttpHost'
-            - Name: ZMQ_SUB_HOST
-              Value: '127.0.0.1'
-            - Name: ENV_NAME
-              Value: !Ref 'EnvironmentName'
-            - Name: REGION
-              Value: !Ref 'AWS::Region'
-            - Name: TEST_CHAT_ID
-              Value: !Ref 'TestChatID'
-            - Name: DB_DATABASE
-              Value:
-                Fn::ImportValue:
-                  !Join [':', [!Ref 'EnvironmentName', 'MySQLDBName']]
-            - Name: DB_HOST
-              Value:
-                Fn::ImportValue:
-                  !Join [':', [!Ref 'EnvironmentName', 'MySQLDBHost']]
-            - Name: DB_PASSWORD
-              Value:
-                Fn::ImportValue:
-                  !Join [':', [!Ref 'EnvironmentName', 'MySQLDBPass']]
-            - Name: DB_PORT
-              Value:
-                Fn::ImportValue:
-                  !Join [':', [!Ref 'EnvironmentName', 'MySQLDBPort']]
-            - Name: DB_USERNAME
-              Value:
-                Fn::ImportValue:
-                  !Join [':', [!Ref 'EnvironmentName', 'MySQLDBUser']]
-            - Name: MONGO_DB_HOST
-              Value: "plizi-mongodb-instance-test-docdb.ctydevfngxce.eu-central-1.docdb.amazonaws.com"
-            - Name: MONGO_DB_PASSWORD
-              Value:
-                Fn::ImportValue:
-                  !Join [':', [!Ref 'EnvironmentName', 'MongoDBPass']]
-            - Name: MONGO_DB_USERNAME
-              Value:
-                Fn::ImportValue:
-                  !Join [':', [!Ref 'EnvironmentName', 'MongoDBUser']]
-            - Name: REDIS_HOST
-              Value: "eu-re-1d83dtago056g.lmiwa9.ng.0001.euc1.cache.amazonaws.com"
-            - Name: REDIS_PORT
-              Value:
-                Fn::ImportValue:
-                  !Join [':', [!Ref 'EnvironmentName', 'RedisPort']]
-          LogConfiguration:
-            LogDriver: 'awslogs'
-            Options:
-              awslogs-group: !Join ['-', [!Ref 'EnvironmentName', 'public', !Ref 'ServiceName']]
-              awslogs-region: !Ref 'AWS::Region'
-              awslogs-stream-prefix: !Join [ "-", [ !Ref 'ServiceName', "queue-worker" ] ]
+          - Name: API_URL
+            Value: !Ref 'ApiUrl'
+          - Name: APP_DEBUG
+            Value: !Ref 'AppDebug'
+          - Name: APP_ENV
+            Value: !Ref 'AppEnv'
+          - Name: APP_KEY
+            Value: !Ref 'AppKey'
+          - Name: APP_NAME
+            Value: !Ref 'AppName'
+          - Name: AWS_ACCESS_KEY_ID
+            Value: !Ref 'AwsAccessKeyId'
+          - Name: AWS_SECRET_ACCESS_KEY
+            Value: !Ref 'AwsSecretAccessKey'
+          - Name: AWS_DEFAULT_REGION
+            Value: !Ref 'AwsDefaultRegion'
+          - Name: AWS_BUCKET
+            Value: !Ref 'AwsBucket'
+          - Name: JWT_BLACKLIST_ENABLED
+            Value: !Ref 'JwtBlacklistEnabled'
+          - Name: JWT_TTL
+            Value: !Ref 'JwtTtl'
+          - Name: JWT_SECRET
+            Value: !Ref 'JwtSecret'
+          - Name: LADA_CACHE_ACTIVE
+            Value: !Ref 'LadaCacheActive'
+          - Name: MAIL_ENCRYPTION
+            Value: !Ref 'MailEncryption'
+          - Name: MAIL_FROM_ADDRESS
+            Value: !Ref 'MailFromAddress'
+          - Name: MAIL_FROM_NAME
+            Value: !Ref 'MailFromName'
+          - Name: MAIL_HOST
+            Value: !Ref 'MailHost'
+          - Name: MAIL_MAILER
+            Value: !Ref 'MailMailer'
+          - Name: MAIL_PASSWORD
+            Value: !Ref 'MailPassword'
+          - Name: MAIL_PORT
+            Value: !Ref 'MailPort'
+          - Name: MAIL_USERNAME
+            Value: !Ref 'MailUsername'
+          - Name: NEO4_DB_BOLT_PORT
+            Value: !Ref 'Neo4DbBoltPort'
+          - Name: NEO4_DB_HOST
+            Value: !Ref 'Neo4DbHost'
+          - Name: NEO4_DB_HTTP_PORT
+            Value: !Ref 'Neo4DbHttpPort'
+          - Name: NEO4_DB_PASSWORD
+            Value: !Ref 'Neo4DbPassword'
+          - Name: NEO4_DB_USERNAME
+            Value: !Ref 'Neo4DbUsername'
+          - Name: QUEUE_CONNECTION
+            Value: !Ref 'QueueConnection'
+          #- Name: SENTRY_LARAVEL_DSN
+          #  Value: !Ref 'SentryLaravelDsn'
+          - Name: SWOOLE_HTTP_HOST
+            Value: !Ref 'SwooleHttpHost'
+          - Name: ZMQ_SUB_HOST
+            Value: !Ref 'ZmqSubHost'
+          - Name: ENV_NAME
+            Value: !Ref 'EnvironmentName'
+          - Name: REGION
+            Value: !Ref 'AWS::Region'
+          - Name: DB_DATABASE
+            Value:
+              Fn::ImportValue:
+                !Join [':', [!Ref 'EnvironmentName', 'MySQLDBName']]
+          - Name: DB_HOST
+            Value:
+              Fn::ImportValue:
+                !Join [':', [!Ref 'EnvironmentName', 'MySQLDBHost']]
+          - Name: DB_PASSWORD
+            Value:
+              Fn::ImportValue:
+                !Join [':', [!Ref 'EnvironmentName', 'MySQLDBPass']]
+          - Name: DB_PORT
+            Value:
+              Fn::ImportValue:
+                !Join [':', [!Ref 'EnvironmentName', 'MySQLDBPort']]
+          - Name: DB_USERNAME
+            Value:
+              Fn::ImportValue:
+                !Join [':', [!Ref 'EnvironmentName', 'MySQLDBUser']]
+          - Name: MONGO_DB_HOST
+            Value: 
+              Fn::ImportValue:
+                !Join [':', [!Ref 'EnvironmentName', 'MongoDBHost']]
+          - Name: MONGO_DB_PASSWORD
+            Value:
+              Fn::ImportValue:
+                !Join [':', [!Ref 'EnvironmentName', 'MongoDBPass']]
+          - Name: MONGO_DB_USERNAME
+            Value:
+              Fn::ImportValue:
+                !Join [':', [!Ref 'EnvironmentName', 'MongoDBUser']]
+          - Name: REDIS_HOST
+            Value: 
+              Fn::ImportValue:
+                !Join [':', [!Ref 'EnvironmentName', 'RedisHost']]
+          - Name: REDIS_PORT
+            Value:
+              Fn::ImportValue:
+                !Join [':', [!Ref 'EnvironmentName', 'RedisPort']]
 
-  # The service. The service is a resource which allows you to run multiple
-  # copies of a type of task, and gather up their logs and metrics, as well
-  # as monitor the number of running tasks and replace any that have crashed
+  # ServiceSecurityGroup:
+  #   Type: AWS::EC2::SecurityGroup
+  #   Properties:
+  #     GroupDescription: !Sub '${EnvironmentName}-${ServiceName}-service'
+  #     VpcId:
+  #       Fn::ImportValue:
+  #         !Join [':', [!Ref 'EnvironmentName', 'VPCId']]
+  #     SecurityGroupIngress:
+  #     - SourceSecurityGroupId: {'Fn::ImportValue': !Sub '${ParentClusterStack}-LoadBalancerSecurityGroup'}
+  #       FromPort: !If [HasProxyImage, !Ref ProxyPort, !Ref AppPort]
+  #       ToPort: !If [HasProxyImage, !Ref ProxyPort, !Ref AppPort]
+  #       IpProtocol: tcp
   Service:
-    DependsOn:
-      #- HTTPRule
-      - HTTPSRule
     Type: AWS::ECS::Service
+    DependsOn:
+      - ALBListenerRuleSSL
+      #- NLBListenerRuleSSL
     Properties:
       ServiceName: !Ref 'ServiceName'
       Cluster:
         Fn::ImportValue:
           !Join [':', [!Ref 'EnvironmentName', 'ClusterName']]
-      LaunchType: FARGATE       # TODO: Remove this for EC2 instead of Fargate
-      PlatformVersion: "1.4.0"  # TODO: Remove this for EC2 instead of Fargate
+      LaunchType: FARGATE
+      PlatformVersion: "1.4.0"
       DeploymentConfiguration:
         MaximumPercent: !Ref DeploymentMaximum
         MinimumHealthyPercent: !Ref DeploymentMinimum
       DesiredCount: !Ref 'DesiredCount'
       NetworkConfiguration:
         AwsvpcConfiguration:
-          AssignPublicIp: ENABLED
+          AssignPublicIp: !If [HasSubnetsReachPublic, ENABLED, DISABLED]
           SecurityGroups:
             - Fn::ImportValue:
                 !Join [':', [!Ref 'EnvironmentName', 'FargateContainerSecurityGroup']]
-          Subnets:
             - Fn::ImportValue:
-                !Join [':', [!Ref 'EnvironmentName', 'PublicSubnetOne']]
-            # - Fn::ImportValue:
-            #     !Join [':', [!Ref 'EnvironmentName', 'PublicSubnetTwo']]
+                !Join [':', [!Ref 'EnvironmentName', 'MySQLSecurityGroup']]
+            - Fn::ImportValue:
+                !Join [':', [!Ref 'EnvironmentName', 'MongoSecurityGroup']]
+            - Fn::ImportValue:
+                !Join [':', [!Ref 'EnvironmentName', 'RedisSecurityGroup']]
+          Subnets: !Split [',', {'Fn::ImportValue': !Join [':', [!Ref 'EnvironmentName', !Sub '${SubnetsScope}Subnets']] }]
       TaskDefinition: !Ref 'TaskDefinition'
-      HealthCheckGracePeriodSeconds: 30
+      HealthCheckGracePeriodSeconds: !Ref 'HealthCheckGracePeriodSeconds'
       LoadBalancers:
-        - ContainerName: !Join [ "-", [ !Ref 'ServiceName', "web-socket" ] ]
+        - ContainerName: !Ref 'ServiceName'
           ContainerPort: !Ref 'ContainerPort'
-          TargetGroupArn: !Ref 'TargetGroup'
+          TargetGroupArn: !Ref 'ALBTargetGroupSSL'
         # - ContainerName: !Ref 'ServiceName'
-        #   ContainerPort: 7070
-        #   TargetGroupArn:
-        #     Fn::ImportValue:
-        #       !Join [':', [!Ref 'EnvironmentName', 'NLBTargetGroupWSInbound']]
-        # - ContainerName: !Ref 'ServiceName'
-        #   ContainerPort: 5555
-        #   TargetGroupArn:
-        #     Fn::ImportValue:
-        #       !Join [':', [!Ref 'EnvironmentName', 'NLBTargetGroupWSOutbound']]
-  TargetGroup:
+        #   ContainerPort: !Ref 'ContainerPort'
+        #   TargetGroupArn: !Ref 'NLBTargetGroupSSL'
+
+  ALBTargetGroupSSL:
     Type: AWS::ElasticLoadBalancingV2::TargetGroup
     Properties:
+      Name: !Join ["-", [ "ALB", !Ref 'ServiceName', "SSL", "TG"]]
+      # Health checks
       HealthCheckIntervalSeconds: 30
       HealthCheckPath: /
       HealthCheckProtocol: HTTP
       HealthCheckTimeoutSeconds: 5
       HealthyThresholdCount: 2
+      UnhealthyThresholdCount: 2
       Matcher:
-        HttpCode: "426"
+        HttpCode: "200-299"
+      # Routing
       TargetType: ip
-      Name: !Ref 'ServiceName'
       Port: !Ref 'ContainerPort'
-      Protocol: !Ref 'ServiceProtocol'
+      Protocol: !Ref 'ContainerProtocol'
+      # Attributes
       TargetGroupAttributes:
         - Key: stickiness.enabled
-          Value: 'true'
+          Value: true
         - Key: stickiness.type
-          Value: 'lb_cookie'
+          Vale: "lb_cookie"
         - Key: stickiness.lb_cookie.duration_seconds
-          Value: '86400'
+          Value: 60
         - Key: deregistration_delay.timeout_seconds
-          Value: '30'
-      UnhealthyThresholdCount: 2
+          Value: 30
+        - Key: slow_start.duration_seconds 
+          Value: 30
+        - Key: load_balancing.algorithm.type
+          Value: "round_robin"
       VpcId:
         Fn::ImportValue:
           !Join [':', [!Ref 'EnvironmentName', 'VPCId']]
-  # HTTPRule:
-  #   Type: AWS::ElasticLoadBalancingV2::ListenerRule
-  #   Properties:
-  #     Actions:
-  #       - TargetGroupArn: !Ref 'TargetGroup'
-  #         Type: 'forward'
-  #     Conditions:
-  #       - Field: host-header
-  #         Values: [!Ref 'Path']
-  #     ListenerArn:
-  #       Fn::ImportValue:
-  #         !Join [':', [!Ref 'EnvironmentName', 'ALBListenerWS']]
-  #     Priority: !Ref 'Priority'
-  HTTPSRule:
+          
+  NLBTargetGroupSSL:
+    Type: AWS::ElasticLoadBalancingV2::TargetGroup
+    Properties:
+      Name: !Join ["-", [ "NLB", !Ref 'ServiceName', !Ref 'ContainerPort', !Ref 'ContainerProtocol', "TG"]]
+      # Health checks
+      HealthCheckIntervalSeconds: 30
+      HealthCheckPath: /
+      HealthCheckProtocol: TCP
+      HealthCheckTimeoutSeconds: 5
+      HealthyThresholdCount: 2
+      UnhealthyThresholdCount: 2
+      Matcher:
+        HttpCode: "426"
+      # Routing
+      TargetType: ip
+      Port: !Ref 'ContainerPort'
+      Protocol: !Ref 'ContainerProtocol'
+      # Attributes
+      TargetGroupAttributes:
+        - Key: stickiness.enabled
+          Value: true
+        - Key: stickiness.type
+          Value: 'source_ip'
+        - Key: slow_start.duration_seconds 
+          Value: 30
+        - Key: deregistration_delay.timeout_seconds
+          Value: 30
+        - Key: proxy_protocol_v2.enabled
+          Value: true
+      VpcId:
+        Fn::ImportValue:
+          !Join [':', [!Ref 'EnvironmentName', 'VPCId']]
+
+  ALBListenerRuleSSL:
     Type: AWS::ElasticLoadBalancingV2::ListenerRule
     Properties:
       Actions:
-        - TargetGroupArn: !Ref 'TargetGroup'
-          Type: 'forward'
+        - Type: forward
+          TargetGroups: 
+          - TargetGroupArn: !Ref ALBTargetGroupSSL
+            Weight: 1
+          TargetGroupStickinessConfig: 
+            DurationSeconds: 60
+            Enabled: true
       Conditions:
         - Field: host-header
           Values: [!Ref 'Path']
       ListenerArn:
         Fn::ImportValue:
-          !Join [':', [!Ref 'EnvironmentName', 'ALBListenerWSSSL']]
+          !Join [':', [!Ref 'EnvironmentName', 'ALBListenerNginxSSL']]
       Priority: !Ref 'Priority'
 
+  NLBListenerRuleSSL:
+    Type: AWS::ElasticLoadBalancingV2::ListenerRule
+    Properties:
+      Actions:
+        - Type: forward
+          TargetGroups: 
+          - TargetGroupArn: !Ref NLBTargetGroupSSL
+            Weight: 1
+          TargetGroupStickinessConfig: 
+            DurationSeconds: 60
+            Enabled: true
+      Conditions:
+        - Field: host-header
+          Values: [!Ref 'Path']
+      ListenerArn:
+        Fn::ImportValue:
+          !Join [':', [!Ref 'EnvironmentName', 'NLBListenerNginxSSL']]
+      Priority: !Ref 'Priority'
+  
   # Enable autoscaling for this service
   ScalableTarget:
     Type: AWS::ApplicationAutoScaling::ScalableTarget

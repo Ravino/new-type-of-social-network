@@ -3,11 +3,11 @@
         "ServiceName": "back-api",
         "ImageUrl": "884088487044.dkr.ecr.eu-central-1.amazonaws.com/eu-central-1-test-plizi-back-api:latest",
         "ContainerPort": "1215",
-        "ServiceProtocol": "HTTP",
+        "ServiceProtocol": "HTTPS",
         "ContainerCpu": "1024",
-        "ContainerMemory": "2048",
+        "ContainerMemory": "1024",
         "Path": "dev-api.plizi.fun",
-        "Priority": "10",
+        "Priority": "1",
         "MinCapacity": "1",
         "DesiredCount": "1",
         "MaxCapacity": "10",
@@ -37,6 +37,9 @@
 		"Neo4DbHost": "neo4j.plizi.info",
 		"Neo4DbPassword": "zKisCPceY6WzTP1R",
 		"Neo4DbUsername": "neo4j",
-		"QueueConnection": "redis"
+		"QueueConnection": "redis",
+        "SubnetsScope": "Public",
+        "HealthCheckGracePeriodSeconds": 30,
+        "LogRetentionInDays": 3
     }
 }
