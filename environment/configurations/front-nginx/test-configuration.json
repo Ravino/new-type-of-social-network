@@ -5,6 +5,8 @@
         "ImageUrl": "884088487044.dkr.ecr.eu-central-1.amazonaws.com/eu-central-1-test-plizi-front-nginx:latest",
         "ContainerPort": "80",
         "ContainerProtocol": "HTTP",
+        "ContainerPortTwo": "443",
+        "ContainerProtocolTwo": "HTTPS",
         "ContainerCpu": "1024",
         "ContainerMemory": "2048",
         "Path": "dev.plizi.fun",
