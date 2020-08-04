@@ -238,6 +238,7 @@ Resources:
       # Health checks
       HealthCheckIntervalSeconds: 30
       HealthCheckPath: /
+      HealthCheckPort: "80"
       HealthCheckProtocol: HTTP
       HealthCheckTimeoutSeconds: 5
       HealthyThresholdCount: 2
