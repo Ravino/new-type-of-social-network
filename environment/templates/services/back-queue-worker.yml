@@ -433,6 +433,12 @@ Resources:
           SecurityGroups:
             - Fn::ImportValue:
                 !Join [':', [!Ref 'EnvironmentName', 'FargateContainerSecurityGroup']]
+            # - Fn::ImportValue:
+            #     !Join [':', [!Ref 'EnvironmentName', 'MySQLSecurityGroup']]
+            # - Fn::ImportValue:
+            #     !Join [':', [!Ref 'EnvironmentName', 'MongoSecurityGroup']]
+            # - Fn::ImportValue:
+            #     !Join [':', [!Ref 'EnvironmentName', 'RedisSecurityGroup']]
           Subnets:
             - Fn::ImportValue:
                 !Join [':', [!Ref 'EnvironmentName', 'PublicSubnetOne']]

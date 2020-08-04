@@ -445,12 +445,12 @@ Resources:
           SecurityGroups:
             - Fn::ImportValue:
                 !Join [':', [!Ref 'EnvironmentName', 'FargateContainerSecurityGroup']]
-            - Fn::ImportValue:
-                !Join [':', [!Ref 'EnvironmentName', 'MySQLSecurityGroup']]
-            - Fn::ImportValue:
-                !Join [':', [!Ref 'EnvironmentName', 'MongoSecurityGroup']]
-            - Fn::ImportValue:
-                !Join [':', [!Ref 'EnvironmentName', 'RedisSecurityGroup']]
+            # - Fn::ImportValue:
+            #     !Join [':', [!Ref 'EnvironmentName', 'MySQLSecurityGroup']]
+            # - Fn::ImportValue:
+            #     !Join [':', [!Ref 'EnvironmentName', 'MongoSecurityGroup']]
+            # - Fn::ImportValue:
+            #     !Join [':', [!Ref 'EnvironmentName', 'RedisSecurityGroup']]
           Subnets: !Split [',', {'Fn::ImportValue': !Join [':', [!Ref 'EnvironmentName', !Sub '${SubnetsScope}Subnets']] }]
       TaskDefinition: !Ref 'TaskDefinition'
       HealthCheckGracePeriodSeconds: !Ref 'HealthCheckGracePeriodSeconds'
