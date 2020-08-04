@@ -231,9 +231,9 @@ Resources:
         - ContainerName: !Ref 'ServiceName'
           ContainerPort: !Ref 'ContainerPort'
           TargetGroupArn: !Ref 'ALBTargetGroup'
-        - ContainerName: !Ref 'ServiceName'
-          ContainerPort: !Ref 'ContainerPortTwo'
-          TargetGroupArn: !Ref 'ALBTargetGroupSSL'
+        # - ContainerName: !Ref 'ServiceName'
+        #   ContainerPort: !Ref 'ContainerPortTwo'
+        #   TargetGroupArn: !Ref 'ALBTargetGroupSSL'
 
   ALBTargetGroup:
     Type: AWS::ElasticLoadBalancingV2::TargetGroup
