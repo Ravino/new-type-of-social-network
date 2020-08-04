@@ -459,7 +459,7 @@ Resources:
             #     !Join [':', [!Ref 'EnvironmentName', 'RedisSecurityGroup']]
           Subnets: !Split [',', {'Fn::ImportValue': !Join [':', [!Ref 'EnvironmentName', !Sub '${SubnetsScope}Subnets']] }]
       TaskDefinition: !Ref 'TaskDefinition'
-      HealthCheckGracePeriodSeconds: !Ref 'HealthCheckGracePeriodSeconds'
+      #HealthCheckGracePeriodSeconds: !Ref 'HealthCheckGracePeriodSeconds'
       # LoadBalancers:
       #   - ContainerName: !Ref 'ServiceName'
       #     ContainerPort: !Ref 'ContainerPort'
