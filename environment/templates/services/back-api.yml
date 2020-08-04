@@ -539,7 +539,7 @@ Resources:
           Values: [!Ref 'Path']
       ListenerArn:
         Fn::ImportValue:
-          !Join [':', [!Ref 'EnvironmentName', 'ALBListenerNginxSSL']]
+          !Join [':', [!Ref 'EnvironmentName', 'ALBListenerBackApiSSL']]
       Priority: !Ref 'Priority'
 
   # NLBListenerRuleSSL:
