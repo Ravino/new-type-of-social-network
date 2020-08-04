@@ -86,6 +86,8 @@ Resources:
     Type: AWS::ElasticLoadBalancingV2::LoadBalancer
     #DependsOn: ALBLogBucketPolicy
     Properties:
+      Type: application
+      IpAddressType: dualstack
       Scheme: internet-facing
       LoadBalancerAttributes:
         # - Key: access_logs.s3.enabled 
@@ -100,17 +102,11 @@ Resources:
         #  Value: false
         #- Key: routing.http.drop_invalid_header_fields.enabled
         #  Value: false
-      Subnets:
-        - Fn::ImportValue:
-            !Join [':', [!Ref 'EnvironmentName', 'PublicSubnetOne']]
-        - Fn::ImportValue:
-            !Join [':', [!Ref 'EnvironmentName', 'PublicSubnetTwo']]
-        - Fn::ImportValue:
-            !Join [':', [!Ref 'EnvironmentName', 'PublicSubnetThree']]
+      Subnets: !Split [',', {'Fn::ImportValue': !Join [':', [!Ref 'EnvironmentName', 'PublicSubnets']] }]
       SecurityGroups: [!Ref 'ApplicationLoadBalancerSG']
       Tags:
         - Key: "Name"
-          Value: "PLIZI-eu-central-1-TEST-ALB"
+          Value: "PLIZI-eu-central-1-application-TEST-ALB"
         - Key: "Project"
           Value: "Plizi"
         - Key: "Region"
