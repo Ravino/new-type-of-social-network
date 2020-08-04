@@ -10,8 +10,8 @@
 FROM nginx:stable
 #COPY --from=builder dist /app
 COPY dist /app
-COPY docker/front-nginx/default.example.conf /etc/nginx/conf.d/default.conf
-COPY docker/front-nginx/nginx.exanple.conf /etc/nginx/nginx.conf
+COPY docker/front-nginx/etc/nginx/conf.d/default.conf /etc/nginx/conf.d/default.conf
+COPY docker/front-nginx/etc/nginx/nginx.conf /etc/nginx/nginx.conf
 
 EXPOSE 80
 EXPOSE 443
