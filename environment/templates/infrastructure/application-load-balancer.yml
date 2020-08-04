@@ -87,7 +87,7 @@ Resources:
     #DependsOn: ALBLogBucketPolicy
     Properties:
       Type: application
-      IpAddressType: dualstack
+      #IpAddressType: dualstack
       Scheme: internet-facing
       LoadBalancerAttributes:
         # - Key: access_logs.s3.enabled 
