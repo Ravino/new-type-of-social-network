@@ -263,6 +263,10 @@ Parameters:
     Type: String
     Default: "3"
 
+  SupervisorCount:
+    Type: String
+    Default: "8"
+
 Conditions:
   HasSubnetsReachPublic: !Equals [!Ref SubnetsScope, Public]
 
@@ -410,6 +414,8 @@ Resources:
             Value:
               Fn::ImportValue:
                 !Join [':', [!Ref 'EnvironmentName', 'RedisPort']]
+          - Name: SUPERVISOR_COUNT
+            Value: !Ref 'SupervisorCount'
 
   # ServiceSecurityGroup:
   #   Type: AWS::EC2::SecurityGroup
