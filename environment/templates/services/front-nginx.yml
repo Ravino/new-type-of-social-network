@@ -231,14 +231,14 @@ Resources:
         - ContainerName: !Ref 'ServiceName'
           ContainerPort: !Ref 'ContainerPort'
           TargetGroupArn: !Ref 'ALBTargetGroup'
-        # - ContainerName: !Ref 'ServiceName'
-        #   ContainerPort: !Ref 'ContainerPortTwo'
-        #   TargetGroupArn: !Ref 'ALBTargetGroupSSL'
+        - ContainerName: !Ref 'ServiceName'
+          ContainerPort: !Ref 'ContainerPortTwo'
+          TargetGroupArn: !Ref 'ALBTargetGroupSSL'
 
   ALBTargetGroup:
     Type: AWS::ElasticLoadBalancingV2::TargetGroup
     Properties:
-      Name: !Join ["-", [ "ALB", !Ref 'ServiceName', "SSL", "TG"]]
+      Name: !Join ["-", [ "ALB", !Ref 'ServiceName', "TG"]]
       # Health checks
       HealthCheckIntervalSeconds: 30
       HealthCheckPath: /
