@@ -171,8 +171,8 @@ Resources:
           PortMappings:
             - ContainerPort: !Ref 'ContainerPort'
               Protocol: !Ref 'ContainerProtocol'
-            - ContainerPort: 80
-              Protocol: HTTP
+            - ContainerPort: 443
+              Protocol: HTTPS
           LogConfiguration:
             LogDriver: 'awslogs'
             Options:
