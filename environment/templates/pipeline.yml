@@ -573,54 +573,54 @@ Resources:
               OutputArtifacts:
                 - Name: Source
               RunOrder: 1
-        - Name: Network
-          Actions:
-            - Name: VPC
-              ActionTypeId:
-                Category: Deploy
-                Owner: AWS
-                Version: '1'
-                Provider: CloudFormation
-              Configuration:
-                ActionMode: CREATE_UPDATE
-                Capabilities: CAPABILITY_IAM
-                #ChangeSetName: !Sub "${AWS::Region}-${EnvironmentName}-${ProjectName}-cluster-changeset"
-                RoleArn: !GetAtt CloudFormationDeployRole.Arn
-                StackName: !Sub "${AWS::Region}-${EnvironmentName}-${ProjectName}-cluster"
-                TemplatePath: "Source::environment/templates/infrastructure/vpc.yml"
-                ParameterOverrides: !Sub |
-                  {
-                    "EnvironmentName": "${EnvironmentName}",
-                    "DomainName": "${DomainName}",
-                    "CertificateArn": "${CertificateArn}"
-                  }
-              InputArtifacts:
-                - Name: Source
-              OutputArtifacts:
-                - Name: VPCDeployOutput
-              RunOrder: 1
-            - Name: ECS
-              ActionTypeId:
-                Category: Deploy
-                Owner: AWS
-                Version: '1'
-                Provider: CloudFormation
-              Configuration:
-                ActionMode: CREATE_UPDATE
-                Capabilities: CAPABILITY_IAM
-                #ChangeSetName: !Sub "${AWS::Region}-${EnvironmentName}-${ProjectName}-cluster-changeset"
-                RoleArn: !GetAtt CloudFormationDeployRole.Arn
-                StackName: !Sub "${AWS::Region}-${EnvironmentName}-${ProjectName}-ecs"
-                TemplatePath: "Source::environment/templates/infrastructure/ecs-cluster.yml"
-                ParameterOverrides: !Sub |
-                  {
-                    "EnvironmentName": "${EnvironmentName}"
-                  }
-              InputArtifacts:
-                - Name: Source
-              OutputArtifacts:
-                - Name: ClusterDeployOutput
-              RunOrder: 2
+        # - Name: Network
+        #   Actions:
+        #     - Name: VPC
+        #       ActionTypeId:
+        #         Category: Deploy
+        #         Owner: AWS
+        #         Version: '1'
+        #         Provider: CloudFormation
+        #       Configuration:
+        #         ActionMode: CREATE_UPDATE
+        #         Capabilities: CAPABILITY_IAM
+        #         #ChangeSetName: !Sub "${AWS::Region}-${EnvironmentName}-${ProjectName}-cluster-changeset"
+        #         RoleArn: !GetAtt CloudFormationDeployRole.Arn
+        #         StackName: !Sub "${AWS::Region}-${EnvironmentName}-${ProjectName}-cluster"
+        #         TemplatePath: "Source::environment/templates/infrastructure/vpc.yml"
+        #         ParameterOverrides: !Sub |
+        #           {
+        #             "EnvironmentName": "${EnvironmentName}",
+        #             "DomainName": "${DomainName}",
+        #             "CertificateArn": "${CertificateArn}"
+        #           }
+        #       InputArtifacts:
+        #         - Name: Source
+        #       OutputArtifacts:
+        #         - Name: VPCDeployOutput
+        #       RunOrder: 1
+        #     - Name: ECS
+        #       ActionTypeId:
+        #         Category: Deploy
+        #         Owner: AWS
+        #         Version: '1'
+        #         Provider: CloudFormation
+        #       Configuration:
+        #         ActionMode: CREATE_UPDATE
+        #         Capabilities: CAPABILITY_IAM
+        #         #ChangeSetName: !Sub "${AWS::Region}-${EnvironmentName}-${ProjectName}-cluster-changeset"
+        #         RoleArn: !GetAtt CloudFormationDeployRole.Arn
+        #         StackName: !Sub "${AWS::Region}-${EnvironmentName}-${ProjectName}-ecs"
+        #         TemplatePath: "Source::environment/templates/infrastructure/ecs-cluster.yml"
+        #         ParameterOverrides: !Sub |
+        #           {
+        #             "EnvironmentName": "${EnvironmentName}"
+        #           }
+        #       InputArtifacts:
+        #         - Name: Source
+        #       OutputArtifacts:
+        #         - Name: ClusterDeployOutput
+        #       RunOrder: 2
         # - Name: Databases
         #   Actions:
         #   - Name: Mongo
@@ -657,9 +657,30 @@ Resources:
         #       #ChangeSetName: !Sub "${AWS::Region}-${EnvironmentName}-mysql-changeset"
         #       RoleArn: !GetAtt CloudFormationDeployRole.Arn
         #       StackName: !Sub "${AWS::Region}-${EnvironmentName}-mysql"
-        #       TemplatePath: Source::environment/templates/infrastructure/database-mysql.yml
-        #       ParameterOverrides: !Sub |
-        #         {
+        #       Template Name: ALB
+            #   ActionTypeId:
+            #     Category: Deploy
+            #     Owner: AWS
+            #     Version: '1'
+            #     Provider: CloudFormation
+            #   Configuration:
+            #     ActionMode: CREATE_UPDATE
+            #     Capabilities: CAPABILITY_IAM
+            #     #ChangeSetName: !Sub "${AWS::Region}-${EnvironmentName}-${ProjectName}-network-load-balancer-changeset"
+            #     RoleArn: !GetAtt CloudFormationDeployRole.Arn
+            #     StackName: !Sub "${AWS::Region}-${EnvironmentName}-${ProjectName}-alb"
+            #     TemplatePath: "Source::environment/templates/infrastructure/application-load-balancer.yml"
+            #     ParameterOverrides: !Sub |
+            #       {
+            #         "EnvironmentName": "${EnvironmentName}",
+            #         "CertificateArn": "${CertificateArn}",
+            #         "DomainName": "${DomainName}"
+            #       }
+            #   InputArtifacts:
+            #     - Name: Source
+            #   OutputArtifacts:
+            #     - Name: ALBDeployOutput
+            #   RunOrder: 1
         #           "EnvironmentName": "${EnvironmentName}"
         #         }
         #     InputArtifacts:
@@ -689,8 +710,8 @@ Resources:
         #     OutputArtifacts:
         #       - Name: RedisDeployOutput
         #     RunOrder: 2
-        - Name: Infrastructure
-          Actions:
+        # - Name: Infrastructure
+        #   Actions:
             # - Name: NLB
             #   ActionTypeId:
             #     Category: Deploy
@@ -715,30 +736,30 @@ Resources:
             #   OutputArtifacts:
             #     - Name: NLBDeployOutput
             #   RunOrder: 1
-            - Name: ALB
-              ActionTypeId:
-                Category: Deploy
-                Owner: AWS
-                Version: '1'
-                Provider: CloudFormation
-              Configuration:
-                ActionMode: CREATE_UPDATE
-                Capabilities: CAPABILITY_IAM
-                #ChangeSetName: !Sub "${AWS::Region}-${EnvironmentName}-${ProjectName}-network-load-balancer-changeset"
-                RoleArn: !GetAtt CloudFormationDeployRole.Arn
-                StackName: !Sub "${AWS::Region}-${EnvironmentName}-${ProjectName}-alb"
-                TemplatePath: "Source::environment/templates/infrastructure/application-load-balancer.yml"
-                ParameterOverrides: !Sub |
-                  {
-                    "EnvironmentName": "${EnvironmentName}",
-                    "CertificateArn": "${CertificateArn}",
-                    "DomainName": "${DomainName}"
-                  }
-              InputArtifacts:
-                - Name: Source
-              OutputArtifacts:
-                - Name: ALBDeployOutput
-              RunOrder: 1
+            # - Name: ALB
+            #   ActionTypeId:
+            #     Category: Deploy
+            #     Owner: AWS
+            #     Version: '1'
+            #     Provider: CloudFormation
+            #   Configuration:
+            #     ActionMode: CREATE_UPDATE
+            #     Capabilities: CAPABILITY_IAM
+            #     #ChangeSetName: !Sub "${AWS::Region}-${EnvironmentName}-${ProjectName}-network-load-balancer-changeset"
+            #     RoleArn: !GetAtt CloudFormationDeployRole.Arn
+            #     StackName: !Sub "${AWS::Region}-${EnvironmentName}-${ProjectName}-alb"
+            #     TemplatePath: "Source::environment/templates/infrastructure/application-load-balancer.yml"
+            #     ParameterOverrides: !Sub |
+            #       {
+            #         "EnvironmentName": "${EnvironmentName}",
+            #         "CertificateArn": "${CertificateArn}",
+            #         "DomainName": "${DomainName}"
+            #       }
+            #   InputArtifacts:
+            #     - Name: Source
+            #   OutputArtifacts:
+            #     - Name: ALBDeployOutput
+            #   RunOrder: 1
         - Name: Services
           Actions:
             - Name: laravel-docker
