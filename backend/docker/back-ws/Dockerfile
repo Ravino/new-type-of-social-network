@@ -6,7 +6,7 @@ EXPOSE 7070
 EXPOSE 5555
 
 #RUN php artisan optimize
-HEALTHCHECK CMD busybox-extras telnet 127.0.0.1 7070 || exit 1
+#HEALTHCHECK CMD busybox-extras telnet 127.0.0.1 7070 || exit 1
 # start and setup scripts
 COPY docker/back-ws/docker-entrypoint.sh /usr/share/back-ws/bin/
 RUN chmod +x /usr/share/back-ws/bin/docker-entrypoint.sh

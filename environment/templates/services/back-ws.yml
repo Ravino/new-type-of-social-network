@@ -474,7 +474,7 @@ Resources:
       HealthyThresholdCount: 2
       UnhealthyThresholdCount: 2
       Matcher:
-        HttpCode: "200-299"
+        HttpCode: "426"
       # Routing
       TargetType: ip
       Port: !Ref 'ContainerPort'
