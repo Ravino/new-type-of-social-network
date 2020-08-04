@@ -20,16 +20,20 @@ Parameters:
     Default: 'ecugVWHKatKQd657'
     NoEcho: true
     Description: MySQLDB admin user password.
+  MySQLProvisionedIops:
+    Type: String
+    Default: '1000'
+    Description: Provisioned IOps count for MySQL (RDS) database.
+  MySQLDatabaseType:
+    Type: String
+    Default: 'db.m3.medium'
+    Description: EC2 instance type used for MySQL (RDS) database hosting.
 Resources:
   MySQLSubnetGroup:
     Type: "AWS::RDS::DBSubnetGroup"
     Properties:
       DBSubnetGroupDescription: description #required
-      SubnetIds: #required
-        - Fn::ImportValue:
-            !Join [':', [!Ref 'EnvironmentName', 'PublicSubnetOne']]
-        - Fn::ImportValue:
-            !Join [':', [!Ref 'EnvironmentName', 'PublicSubnetTwo']]
+      SubnetIds: !Split [',', {'Fn::ImportValue': !Join [':', [!Ref 'EnvironmentName', 'PublicSubnets']] }]
   MySQLSecurityGroup:
     Type: AWS::EC2::SecurityGroup
     Properties:
@@ -40,14 +44,15 @@ Resources:
   MySQLIngress:
     Type: AWS::EC2::SecurityGroupIngress
     Properties:
+      Description: "MySQL ingress from Fargate container"
       GroupId: !Ref 'MySQLSecurityGroup'
       IpProtocol: tcp
       FromPort: 3306
       ToPort: 3306
-    #SourceSecurityGroupId:
-    #    Fn::ImportValue:
-    #      !Join [':', [!Ref 'EnvironmentName', 'FargateContainerSecurityGroup']]
-  MyAWSRDSDBParameterGroup:
+      SourceSecurityGroupId:
+        Fn::ImportValue:
+          !Join [':', [!Ref 'EnvironmentName', 'FargateContainerSecurityGroup']]
+  MySQLParameterGroup:
     Type: 'AWS::RDS::DBParameterGroup'
     Properties:
         Description: MySQL DB Parameter Group Description
@@ -60,9 +65,9 @@ Resources:
     Properties:
       AllocatedStorage: '100' # TODO Adjust for highload. GB of storage
       StorageType: 'io1'
-      Iops: 1000
-      DBInstanceClass: db.m3.medium
-      DBParameterGroupName: !Ref MyAWSRDSDBParameterGroup
+      Iops: !Ref 'MySQLProvisionedIops'
+      DBInstanceClass: !Ref 'MySQLDatabaseType'
+      DBParameterGroupName: !Ref 'MySQLParameterGroup'
       Engine: MySQL
       #DBSnapshotIdentifier: !Ref 'MySQLDBName'
       DBName: !Ref 'MySQLDBName'

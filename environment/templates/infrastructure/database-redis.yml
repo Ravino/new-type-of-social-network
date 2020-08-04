@@ -11,11 +11,7 @@ Resources:
     Type: AWS::ElastiCache::SubnetGroup
     Properties:
       Description: Group of subnets to place Redis into
-      SubnetIds:
-        - Fn::ImportValue:
-            !Join [':', [!Ref 'EnvironmentName', 'PublicSubnetOne']]
-        - Fn::ImportValue:
-            !Join [':', [!Ref 'EnvironmentName', 'PublicSubnetTwo']]
+      SubnetIds: !Split [',', {'Fn::ImportValue': !Join [':', [!Ref 'EnvironmentName', 'PublicSubnets']] }]
   RedisSecurityGroup:
     Type: AWS::EC2::SecurityGroup
     Properties:

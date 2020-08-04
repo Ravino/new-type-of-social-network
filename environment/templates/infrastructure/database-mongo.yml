@@ -20,11 +20,7 @@ Resources:
     Type: "AWS::DocDB::DBSubnetGroup"
     Properties:
       DBSubnetGroupDescription: 'Description of MongoSubnetGroup'
-      SubnetIds: #required
-        - Fn::ImportValue:
-            !Join [':', [!Ref 'EnvironmentName', 'PublicSubnetOne']]
-        - Fn::ImportValue:
-            !Join [':', [!Ref 'EnvironmentName', 'PublicSubnetTwo']]
+      SubnetIds: !Split [',', {'Fn::ImportValue': !Join [':', [!Ref 'EnvironmentName', 'PublicSubnets']] }]
   MongoSecurityGroup:
     Type: AWS::EC2::SecurityGroup
     Properties:
