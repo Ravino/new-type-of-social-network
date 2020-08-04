@@ -300,7 +300,7 @@ Resources:
           Essential: true
           PortMappings:
             - ContainerPort: !Ref 'ContainerPort'
-              Protocol: !Ref 'ContainerProtocol'
+              #Protocol: !Ref 'ContainerProtocol'
           LogConfiguration:
             LogDriver: 'awslogs'
             Options:
@@ -475,7 +475,7 @@ Resources:
       # Health checks
       HealthCheckIntervalSeconds: 30
       HealthCheckPath: /
-      HealthCheckPort: "7070"
+      HealthCheckPort: "5555"
       HealthCheckProtocol: HTTP
       HealthCheckTimeoutSeconds: 5
       HealthyThresholdCount: 2
@@ -554,7 +554,7 @@ Resources:
           Values: [!Ref 'Path']
       ListenerArn:
         Fn::ImportValue:
-          !Join [':', [!Ref 'EnvironmentName', 'ALBListenerWebSocketUserSSL']]
+          !Join [':', [!Ref 'EnvironmentName', 'ALBListenerWebSocketQW']]
       Priority: !Ref 'Priority'
 
   # NLBListenerRuleSSL:

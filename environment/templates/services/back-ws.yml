@@ -296,7 +296,7 @@ Resources:
           Essential: true
           PortMappings:
             - ContainerPort: !Ref 'ContainerPort'
-              Protocol: !Ref 'ContainerProtocol'
+              #Protocol: !Ref 'ContainerProtocol'
           LogConfiguration:
             LogDriver: 'awslogs'
             Options:
