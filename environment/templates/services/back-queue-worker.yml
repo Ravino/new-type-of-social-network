@@ -475,7 +475,8 @@ Resources:
       # Health checks
       HealthCheckIntervalSeconds: 30
       HealthCheckPath: /
-      HealthCheckProtocol: HTTP
+      HealthCheckPort: "7070"
+      HealthCheckProtocol: TCP
       HealthCheckTimeoutSeconds: 5
       HealthyThresholdCount: 2
       UnhealthyThresholdCount: 2
