@@ -6,24 +6,34 @@ Parameters:
     Default: test
     Description: The environment name, used for locating outputs from the
                  prerequisite stacks
-  MongoDBMasterUsername:
+  MasterUsername:
     Type: String
     Default: 'plizi'
     Description: MongoDB admin user name.
-  MongoDBMasterUserPassword:
+  MasterUserPassword:
     Type: String
     Default: 'Tksx2PPDba8Ny0lZ'
     NoEcho: true
     Description: MongoDB admin user password.
+  AccessPort: 
+    Type: String
+    Default: "27010"
+    Description: "Default port for Mongo DB cluster access."
+  InstanceClass:
+    Type: String
+    Default: "db.r5.2xlarge"
+    Description: "Class of instance for hosting MongoDB cluster instance."
 Resources:
   MongoSubnetGroup:
-    Type: "AWS::DocDB::DBSubnetGroup"
+    Type: AWS::DocDB::DBSubnetGroup
     Properties:
-      DBSubnetGroupDescription: 'Description of MongoSubnetGroup'
+      DBSubnetGroupName: !Sub "PLIZI-${AWS::Region}-mongo-${EnvironmentName}-DocDB-SG"
+      DBSubnetGroupDescription: !Sub "Subnet group for MongoDB cluster on ${AWS::Region} region."
       SubnetIds: !Split [',', {'Fn::ImportValue': !Join [':', [!Ref 'EnvironmentName', 'PublicSubnets']] }]
   MongoSecurityGroup:
     Type: AWS::EC2::SecurityGroup
     Properties:
+      GroupName: !Sub "PLIZI-${AWS::Region}-mongo-${EnvironmentName}-SG"
       GroupDescription: "Mongo Security Group"
       VpcId:
         Fn::ImportValue:
@@ -34,8 +44,8 @@ Resources:
       Description: Ingress from Fargate containers
       GroupId: !Ref 'MongoSecurityGroup'
       IpProtocol: tcp
-      FromPort: 27017
-      ToPort: 27017
+      FromPort: !Ref 'AccessPort'
+      ToPort: !Ref 'AccessPort'
       SourceSecurityGroupId:
         Fn::ImportValue:
           !Join [':', [!Ref 'EnvironmentName', 'FargateContainerSecurityGroup']]
@@ -51,38 +61,38 @@ Resources:
   MongoDBCluster:
     Type: 'AWS::DocDB::DBCluster'
     Properties:
-        #Engine: "mongodb"
-        #EngineVersion: "4.2.6" #TODO
-        Port: 27017
-        DBSubnetGroupName: !Ref 'MongoSubnetGroup'
-        DeletionProtection: false
-        VpcSecurityGroupIds:
-          - Fn::ImportValue:
-              !Join [':', [!Ref 'EnvironmentName', 'FargateContainerSecurityGroup']]
-        #AvailabilityZones:
-        #  - eu-central-1a
-        #  - eu-central-1b
-        MasterUsername: !Ref 'MongoDBMasterUsername'
-        MasterUserPassword: !Ref 'MongoDBMasterUserPassword'
-        DBClusterParameterGroupName: !Ref 'MongoDBClusterParameterGroup'
-        #EnableCloudwatchLogsExports:
-        #  - error
-        #  - general
-        #  - slowquery
-        #StorageEncrypted: true
-        #KmsKeyId: string # 
-        #PreferredMaintenanceWindow: string
-        #PreferredBackupWindow: string
-        #SnapshotIdentifier: string
-        #BackupRetentionPeriod: 7 # prod: required
-        #Tags:
-        #    -Value: string
-        #     Key: string
+      #Engine: "mongodb"
+      #EngineVersion: "4.2.6" #TODO
+      Port: !Ref 'AccessPort'
+      DBSubnetGroupName: !Ref 'MongoSubnetGroup'
+      DeletionProtection: false
+      VpcSecurityGroupIds:
+        - Fn::ImportValue:
+            !Join [':', [!Ref 'EnvironmentName', 'FargateContainerSecurityGroup']]
+      #AvailabilityZones:
+      #  - eu-central-1a
+      #  - eu-central-1b
+      MasterUsername: !Ref 'MasterUsername'
+      MasterUserPassword: !Ref 'MasterUserPassword'
+      DBClusterParameterGroupName: !Ref 'MongoDBClusterParameterGroup'
+      #EnableCloudwatchLogsExports:
+      #  - error
+      #  - general
+      #  - slowquery
+      #StorageEncrypted: true
+      #KmsKeyId: string # 
+      #PreferredMaintenanceWindow: string
+      #PreferredBackupWindow: string
+      #SnapshotIdentifier: string
+      #BackupRetentionPeriod: 7 # prod: required
+      #Tags:
+      #    -Value: string
+      #     Key: string
 
   MongoInstance:
-    Type: "AWS::DocDB::DBInstance"
+    Type: AWS::DocDB::DBInstance
     Properties:
-      DBInstanceClass: db.r5.2xlarge # TODO: Adjust on highload results
+      DBInstanceClass: !Ref 'InstanceClass'
       DBClusterIdentifier: !Ref 'MongoDBCluster' #required
   
 Outputs:
@@ -95,11 +105,11 @@ Outputs:
     Export:
       Name: !Join [ ':', [ !Ref 'EnvironmentName', 'MongoDBHost' ] ]
   MongoDBUser:
-    Value: !Ref 'MongoDBMasterUsername'
+    Value: !Ref 'MasterUsername'
     Export:
       Name: !Join [ ':', [ !Ref 'EnvironmentName', 'MongoDBUser' ] ]
   MongoDBPass:
-    Value: !Ref 'MongoDBMasterUserPassword'
+    Value: !Ref 'MasterUserPassword'
     Export:
       Name: !Join [ ':', [ !Ref 'EnvironmentName', 'MongoDBPass' ] ]
   MongoSecurityGroup:
