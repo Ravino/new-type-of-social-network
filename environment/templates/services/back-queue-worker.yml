@@ -460,10 +460,10 @@ Resources:
           Subnets: !Split [',', {'Fn::ImportValue': !Join [':', [!Ref 'EnvironmentName', !Sub '${SubnetsScope}Subnets']] }]
       TaskDefinition: !Ref 'TaskDefinition'
       HealthCheckGracePeriodSeconds: !Ref 'HealthCheckGracePeriodSeconds'
-      LoadBalancers:
-        - ContainerName: !Ref 'ServiceName'
-          ContainerPort: !Ref 'ContainerPort'
-          TargetGroupArn: !Ref 'ALBTargetGroupSSL'
+      # LoadBalancers:
+      #   - ContainerName: !Ref 'ServiceName'
+      #     ContainerPort: !Ref 'ContainerPort'
+      #     TargetGroupArn: !Ref 'ALBTargetGroupSSL'
         # - ContainerName: !Ref 'ServiceName'
         #   ContainerPort: !Ref 'ContainerPort'
         #   TargetGroupArn: !Ref 'NLBTargetGroupSSL'
@@ -473,15 +473,15 @@ Resources:
     Properties:
       Name: !Join ["-", [ "ALB", !Ref 'ServiceName', "SSL", "TG"]]
       # Health checks
-      HealthCheckIntervalSeconds: 30
-      HealthCheckPath: /
-      HealthCheckPort: "5555"
-      HealthCheckProtocol: HTTP
-      HealthCheckTimeoutSeconds: 5
-      HealthyThresholdCount: 2
-      UnhealthyThresholdCount: 2
-      Matcher:
-        HttpCode: "502"
+      # HealthCheckIntervalSeconds: 30
+      # HealthCheckPath: /
+      # HealthCheckPort: "5555"
+      # HealthCheckProtocol: HTTP
+      # HealthCheckTimeoutSeconds: 5
+      # HealthyThresholdCount: 2
+      # UnhealthyThresholdCount: 2
+      # Matcher:
+      #   HttpCode: "502"
       # Routing
       TargetType: ip
       Port: !Ref 'ContainerPort'
