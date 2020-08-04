@@ -6,7 +6,7 @@
         "ContainerPort": "443",
         "ContainerProtocol": "HTTPS",
         "ContainerCpu": "1024",
-        "ContainerMemory": "1024",
+        "ContainerMemory": "2048",
         "Path": "dev.plizi.fun",
         "Priority": "1",
         "MinCapacity": "1",
