@@ -254,13 +254,16 @@ Parameters:
   LogRetentionInDays:
     Type: String
     Default: "3"
-  #Role:
-  #  Type: String
-  #  Default: ""
-  #  Description: (Optional) An IAM role to give the service's containers if the code within needs to
-  #              access other AWS resources like S3 buckets, DynamoDB tables, etc
-#Conditions:
-#  HasCustomRole: !Not [ !Equals [!Ref 'Role', ''] ]
+  # deployment subnet
+  SubnetsScope:
+    Description: 'Should the service have direct access to the Internet or do you prefer private subnets with NAT?'
+    Type: String
+    Default: Public
+    AllowedValues:
+    - Public
+    - Private
+Conditions:
+  HasSubnetsReachPublic: !Equals [!Ref SubnetsScope, Public]
 Resources:
   # A log group for storing the container logs for this service
   LogGroup:
@@ -439,11 +442,7 @@ Resources:
             #     !Join [':', [!Ref 'EnvironmentName', 'MongoSecurityGroup']]
             # - Fn::ImportValue:
             #     !Join [':', [!Ref 'EnvironmentName', 'RedisSecurityGroup']]
-          Subnets:
-            - Fn::ImportValue:
-                !Join [':', [!Ref 'EnvironmentName', 'PublicSubnetOne']]
-            - Fn::ImportValue:
-                !Join [':', [!Ref 'EnvironmentName', 'PublicSubnetTwo']]
+          Subnets: !Split [',', {'Fn::ImportValue': !Join [':', [!Ref 'EnvironmentName', !Sub '${SubnetsScope}Subnets']] }]
       TaskDefinition: !Ref 'TaskDefinition'
       # LoadBalancers:
       #   - ContainerName: !Ref 'ServiceName'
