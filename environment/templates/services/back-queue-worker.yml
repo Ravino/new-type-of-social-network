@@ -476,12 +476,12 @@ Resources:
       HealthCheckIntervalSeconds: 30
       HealthCheckPath: /
       HealthCheckPort: "7070"
-      HealthCheckProtocol: TCP
+      HealthCheckProtocol: HTTP
       HealthCheckTimeoutSeconds: 5
       HealthyThresholdCount: 2
       UnhealthyThresholdCount: 2
       Matcher:
-        HttpCode: "200-299"
+        HttpCode: "426"
       # Routing
       TargetType: ip
       Port: !Ref 'ContainerPort'
