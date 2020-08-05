@@ -449,15 +449,15 @@ Resources:
       LoadBalancers:
         - ContainerName: !Ref 'ServiceName'
           ContainerPort: !Ref 'ContainerPort'
-          TargetGroupArn: !Ref 'ALBTargetGroupSSL'
+          TargetGroupArn: !Ref 'LBTargetGroup'
         # - ContainerName: !Ref 'ServiceName'
         #   ContainerPort: !Ref 'ContainerPort'
         #   TargetGroupArn: !Ref 'NLBTargetGroupSSL'
 
-  ALBTargetGroupSSL:
+  LBTargetGroup:
     Type: AWS::ElasticLoadBalancingV2::TargetGroup
     Properties:
-      Name: !Join ["-", [ "ALB", !Ref 'ServiceName', "SSL", "TG"]]
+      Name: !Join ["-", [ "LB", !Ref 'ServiceName', "TG"]]
       # Health checks
       HealthCheckIntervalSeconds: 30
       HealthCheckPath: /
@@ -529,7 +529,7 @@ Resources:
         - Type: forward
           ForwardConfig:
             TargetGroups: 
-            - TargetGroupArn: !Ref ALBTargetGroupSSL
+            - TargetGroupArn: !Ref LBTargetGroup
               Weight: 1
             TargetGroupStickinessConfig: 
               DurationSeconds: 60
