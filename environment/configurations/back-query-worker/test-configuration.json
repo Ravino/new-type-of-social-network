@@ -10,7 +10,7 @@
         "Priority": "2",
         "MinCapacity": "1",
         "DesiredCount": "1",
-        "MaxCapacity": "10",
+        "MaxCapacity": "1",
         "LowCpuPeriodAlarm": "300",
         "ScaleDownCooldown": "300",
         "LowCpuThresholdAlarm": "0",
