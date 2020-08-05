@@ -42,7 +42,7 @@
         "SubnetsScope": "Public",
         "HealthCheckGracePeriodSeconds": "30",
         "LogRetentionInDays": "3",
-        "SwooleHttpHost": "dev-qw.plizi.fun",
+        "SwooleHttpHost": "0.0.0.0",
         "ZmqSubHost": "dev-ws.plizi.fun"
     }
 }

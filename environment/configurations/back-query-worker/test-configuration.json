@@ -43,7 +43,7 @@
         "HealthCheckGracePeriodSeconds": "30",
         "LogRetentionInDays": "3",
         "SupervisorCount": "8",
-        "SwooleHttpHost": "dev-qw.plizi.fun",
+        "SwooleHttpHost": "0.0.0.0",
         "ZmqSubHost": "dev-ws.plizi.fun"
     }
 }
