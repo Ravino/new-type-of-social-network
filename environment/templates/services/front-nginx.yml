@@ -174,8 +174,8 @@ Resources:
           PortMappings:
             - ContainerPort: !Ref 'ContainerPort'
               Protocol: !Ref 'ContainerProtocol'
-            - ContainerPort: !Ref 'ContainerPortTwo'
-              Protocol: !Ref 'ContainerProtocolTwo'
+            # - ContainerPort: !Ref 'ContainerPortTwo'
+            #   Protocol: !Ref 'ContainerProtocolTwo'
           LogConfiguration:
             LogDriver: 'awslogs'
             Options:
