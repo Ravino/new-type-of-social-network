@@ -296,6 +296,7 @@ Resources:
           Essential: true
           PortMappings:
             - ContainerPort: !Ref 'ContainerPort'
+            - ContainerPort: 5555
               #Protocol: !Ref 'ContainerProtocol'
           LogConfiguration:
             LogDriver: 'awslogs'
@@ -465,7 +466,7 @@ Resources:
   ALBTargetGroupSSL:
     Type: AWS::ElasticLoadBalancingV2::TargetGroup
     Properties:
-      Name: !Join ["-", [ "ALB", !Ref 'ServiceName', "SSL", "TG"]]
+      Name: !Join ["-", [ "LB", !Ref 'ServiceName', "TG"]]
       # Health checks
       HealthCheckIntervalSeconds: 30
       HealthCheckPath: /
