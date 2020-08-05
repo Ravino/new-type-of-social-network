@@ -303,7 +303,7 @@ Resources:
             Options:
               awslogs-group: !Join ['-', [!Ref 'ServiceName', !Ref 'EnvironmentName']]
               awslogs-region: !Ref 'AWS::Region'
-              awslogs-stream-prefix: !Join ['-', [!Ref 'ServiceName', 'web-socket']]
+              awslogs-stream-prefix: !Ref 'ServiceName'
           Environment:
             - Name: TEST_CHAT_ID
               Value: !Ref 'TestChatID'
@@ -425,7 +425,7 @@ Resources:
             Options:
               awslogs-group: !Join ['-', [!Ref 'ServiceName', !Ref 'EnvironmentName']]
               awslogs-region: !Ref 'AWS::Region'
-              awslogs-stream-prefix: !Join ['-', [!Ref 'ServiceName', 'queue-worker']]
+              awslogs-stream-prefix: !Ref 'ServiceName'
           Environment:
             - Name: TEST_CHAT_ID
               Value: !Ref 'TestChatID'
@@ -580,7 +580,7 @@ Resources:
       TaskDefinition: !Ref 'TaskDefinition'
       HealthCheckGracePeriodSeconds: !Ref 'HealthCheckGracePeriodSeconds'
       LoadBalancers:
-        - ContainerName: !Join ['-', [!Ref 'ServiceName', 'web-socket'] ]
+        - ContainerName: !Ref 'ServiceName'
           ContainerPort: !Ref 'ContainerPort'
           TargetGroupArn: !Ref 'ALBTargetGroupSSL'
         # - ContainerName: !Ref 'ServiceName'
