@@ -39,7 +39,7 @@
 		"Neo4DbPassword": "zKisCPceY6WzTP1R",
 		"Neo4DbUsername": "neo4j",
         "QueueConnection": "redis",
-        "TestChatID": "5f1d1527160ffd7b97096ac4",
+        "TestChatID": "5f29a50e52a70d6d37384064",
         "SubnetsScope": "Public",
         "HealthCheckGracePeriodSeconds": "30",
         "LogRetentionInDays": "3",
