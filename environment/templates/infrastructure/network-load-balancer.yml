@@ -175,8 +175,6 @@ Resources:
       LoadBalancerArn: !Ref 'NetworkLoadBalancer'
       Port: 80
       Protocol: TCP
-      Certificates:
-        - CertificateArn: !Ref CertificateArn
 
   NLBListenerTLS443:
     Type: AWS::ElasticLoadBalancingV2::Listener
@@ -209,8 +207,6 @@ Resources:
       LoadBalancerArn: !Ref 'NetworkLoadBalancer'
       Port: 1215
       Protocol: TCP
-      Certificates:
-        - CertificateArn: !Ref CertificateArn
 
   NLBListenerTLS7070:
     Type: AWS::ElasticLoadBalancingV2::Listener
