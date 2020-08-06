@@ -1,14 +1,13 @@
-FROM node:12.18.2-alpine3.12 as builder
+FROM node:12.18.3-alpine3.12 as frontend-builder
 ENV NODE_ENV='development'
 ENV API_URL='https://dev-api.plizi.fun'
 ENV WS_URL='wss://dev-ws.plizi.fun'
 COPY . .
-WORKDIR frontend/
-RUN npm install  
+RUN npm install 
 RUN npm run build
  
 FROM nginx:stable
-COPY --from=builder dist /app
+COPY --from=frontend-builder dist /app
 COPY dist /app
 COPY docker/front-nginx/etc/nginx/conf.d/default.conf /etc/nginx/conf.d/default.conf
 COPY docker/front-nginx/etc/nginx/nginx.conf /etc/nginx/nginx.conf
