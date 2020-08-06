@@ -470,15 +470,14 @@ Resources:
       LoadBalancers:
         - ContainerName: !Ref 'ServiceName'
           ContainerPort: !Ref 'ContainerPort'
-          TargetGroupArn: !Ref 'LBTargetGroup'
+          TargetGroupArn: !Ref 'ALBTargetGroup'
         # - ContainerName: !Ref 'ServiceName'
         #   ContainerPort: !Ref 'ContainerPort'
         #   TargetGroupArn: !Ref 'NLBTargetGroupSSL'
 
-  LBTargetGroup:
+  ALBTargetGroup:
     Type: AWS::ElasticLoadBalancingV2::TargetGroup
     Properties:
-      Name: !Join ["-", [ "LB", !Ref 'ServiceName', "TG"]]
       # Health checks
       HealthCheckIntervalSeconds: 30
       HealthCheckPath: /
@@ -509,6 +508,9 @@ Resources:
       VpcId:
         Fn::ImportValue:
           !Join [':', [!Ref 'EnvironmentName', 'VPCId']]
+      Tags:
+        - Key: 'Name'
+          Value: !Join ["-", [ "PLIZI" , !Ref 'AWS::Region', !Ref 'ServiceName' , !Ref 'EnvironmentName' , "ALB", "TG"]]
           
   ALBListenerRuleSSL:
     Type: AWS::ElasticLoadBalancingV2::ListenerRule
@@ -517,7 +519,7 @@ Resources:
         - Type: forward
           ForwardConfig:
             TargetGroups: 
-            - TargetGroupArn: !Ref LBTargetGroup
+            - TargetGroupArn: !Ref ALBTargetGroup
               Weight: 1
       Conditions:
         - Field: host-header
