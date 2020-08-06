@@ -691,30 +691,30 @@ Resources:
         #     RunOrder: 2
         - Name: Infrastructure
           Actions:
-            # - Name: NLB
-            #   ActionTypeId:
-            #     Category: Deploy
-            #     Owner: AWS
-            #     Version: '1'
-            #     Provider: CloudFormation
-            #   Configuration:
-            #     ActionMode: CREATE_UPDATE
-            #     Capabilities: CAPABILITY_IAM
-            #     #ChangeSetName: !Sub "${AWS::Region}-${EnvironmentName}-${ProjectName}-network-load-balancer-changeset"
-            #     RoleArn: !GetAtt CloudFormationDeployRole.Arn
-            #     StackName: !Sub "${AWS::Region}-${EnvironmentName}-${ProjectName}-nlb"
-            #     TemplatePath: "Source::environment/templates/infrastructure/network-load-balancer.yml"
-            #     ParameterOverrides: !Sub |
-            #       {
-            #         "EnvironmentName": "${EnvironmentName}",
-            #         "CertificateArn": "${CertificateArn}",
-            #         "DomainName": "${DomainName}"
-            #       }
-            #   InputArtifacts:
-            #     - Name: Source
-            #   OutputArtifacts:
-            #     - Name: NLBDeployOutput
-            #   RunOrder: 1
+            - Name: NLB
+              ActionTypeId:
+                Category: Deploy
+                Owner: AWS
+                Version: '1'
+                Provider: CloudFormation
+              Configuration:
+                ActionMode: CREATE_UPDATE
+                Capabilities: CAPABILITY_IAM
+                #ChangeSetName: !Sub "${AWS::Region}-${EnvironmentName}-${ProjectName}-network-load-balancer-changeset"
+                RoleArn: !GetAtt CloudFormationDeployRole.Arn
+                StackName: !Sub "${AWS::Region}-${EnvironmentName}-${ProjectName}-nlb"
+                TemplatePath: "Source::environment/templates/infrastructure/network-load-balancer.yml"
+                ParameterOverrides: !Sub |
+                  {
+                    "EnvironmentName": "${EnvironmentName}",
+                    "CertificateArn": "${CertificateArn}",
+                    "DomainName": "${DomainName}"
+                  }
+              InputArtifacts:
+                - Name: Source
+              OutputArtifacts:
+                - Name: NLBDeployOutput
+              RunOrder: 1
             - Name: ALB
               ActionTypeId:
                 Category: Deploy
@@ -739,8 +739,8 @@ Resources:
               OutputArtifacts:
                 - Name: ALBDeployOutput
               RunOrder: 1
-        - Name: Services
-          Actions:
+        # - Name: Services
+        #   Actions:
             # - Name: laravel-docker
             #   ActionTypeId:
             #     Category: Build
@@ -793,19 +793,19 @@ Resources:
             #   OutputArtifacts:
             #     - Name: BackApiBuildOutput
             #   RunOrder: 2
-            - Name: front-nginx
-              ActionTypeId:
-                Category: Build
-                Owner: AWS
-                Version: '1'
-                Provider: CodeBuild
-              Configuration:
-                ProjectName: !Ref FrontNginx
-              InputArtifacts:
-                - Name: Source
-              OutputArtifacts:
-                - Name: FrontNginxBuildOutput
-              RunOrder: 3
+            # - Name: front-nginx
+            #   ActionTypeId:
+            #     Category: Build
+            #     Owner: AWS
+            #     Version: '1'
+            #     Provider: CodeBuild
+            #   Configuration:
+            #     ProjectName: !Ref FrontNginx
+            #   InputArtifacts:
+            #     - Name: Source
+            #   OutputArtifacts:
+            #     - Name: FrontNginxBuildOutput
+            #   RunOrder: 3
         - Name: Deploy
           Actions:
             - Name: back-ws
