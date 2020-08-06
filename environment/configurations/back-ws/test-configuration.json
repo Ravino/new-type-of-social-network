@@ -3,7 +3,7 @@
         "EnvironmentName": "test", 
         "ServiceName": "back-ws",
         "ImageUrl": "884088487044.dkr.ecr.eu-central-1.amazonaws.com/eu-central-1-test-plizi-back-ws:latest",
-        "ContainerProtocol": "HTTP",
+        "ContainerProtocol": "HTTPS",
         "ContainerPort": "7070",
         "ContainerCpu": "1024",
         "ContainerMemory": "2048",

@@ -289,7 +289,6 @@ Resources:
           Essential: true
           PortMappings:
             - ContainerPort: !Ref 'ContainerPort'
-              Protocol: !Ref 'ContainerProtocol'
           LogConfiguration:
             LogDriver: 'awslogs'
             Options:
@@ -297,112 +296,112 @@ Resources:
               awslogs-region: !Ref 'AWS::Region'
               awslogs-stream-prefix: !Ref 'ServiceName'
           Environment:
-          - Name: TEST_CHAT_ID
-            Value: !Ref 'TestChatID'
-          - Name: API_URL
-            Value: !Ref 'ApiUrl'
-          - Name: APP_DEBUG
-            Value: !Ref 'AppDebug'
-          - Name: APP_ENV
-            Value: !Ref 'AppEnv'
-          - Name: APP_KEY
-            Value: !Ref 'AppKey'
-          - Name: APP_NAME
-            Value: !Ref 'AppName'
-          - Name: AWS_ACCESS_KEY_ID
-            Value: !Ref 'AwsAccessKeyId'
-          - Name: AWS_SECRET_ACCESS_KEY
-            Value: !Ref 'AwsSecretAccessKey'
-          - Name: AWS_DEFAULT_REGION
-            Value: !Ref 'AwsDefaultRegion'
-          - Name: AWS_BUCKET
-            Value: !Ref 'AwsBucket'
-          - Name: JWT_BLACKLIST_ENABLED
-            Value: !Ref 'JwtBlacklistEnabled'
-          - Name: JWT_TTL
-            Value: !Ref 'JwtTtl'
-          - Name: JWT_SECRET
-            Value: !Ref 'JwtSecret'
-          - Name: LADA_CACHE_ACTIVE
-            Value: !Ref 'LadaCacheActive'
-          - Name: MAIL_ENCRYPTION
-            Value: !Ref 'MailEncryption'
-          - Name: MAIL_FROM_ADDRESS
-            Value: !Ref 'MailFromAddress'
-          - Name: MAIL_FROM_NAME
-            Value: !Ref 'MailFromName'
-          - Name: MAIL_HOST
-            Value: !Ref 'MailHost'
-          - Name: MAIL_MAILER
-            Value: !Ref 'MailMailer'
-          - Name: MAIL_PASSWORD
-            Value: !Ref 'MailPassword'
-          - Name: MAIL_PORT
-            Value: !Ref 'MailPort'
-          - Name: MAIL_USERNAME
-            Value: !Ref 'MailUsername'
-          - Name: NEO4_DB_BOLT_PORT
-            Value: !Ref 'Neo4DbBoltPort'
-          - Name: NEO4_DB_HOST
-            Value: !Ref 'Neo4DbHost'
-          - Name: NEO4_DB_HTTP_PORT
-            Value: !Ref 'Neo4DbHttpPort'
-          - Name: NEO4_DB_PASSWORD
-            Value: !Ref 'Neo4DbPassword'
-          - Name: NEO4_DB_USERNAME
-            Value: !Ref 'Neo4DbUsername'
-          - Name: QUEUE_CONNECTION
-            Value: !Ref 'QueueConnection'
-          #- Name: SENTRY_LARAVEL_DSN
-          #  Value: !Ref 'SentryLaravelDsn'
-          - Name: SWOOLE_HTTP_HOST
-            Value: !Ref 'SwooleHttpHost'
-          - Name: 'ZMQ_SUB_HOST'
-            Value: !Ref 'ZmqSubHost'
-          - Name: ENV_NAME
-            Value: !Ref 'EnvironmentName'
-          - Name: REGION
-            Value: !Ref 'AWS::Region'
-          - Name: DB_DATABASE
-            Value:
-              Fn::ImportValue:
-                !Join [':', [!Ref 'EnvironmentName', 'MySQLDBName']]
-          - Name: DB_HOST
-            Value:
-              Fn::ImportValue:
-                !Join [':', [!Ref 'EnvironmentName', 'MySQLDBHost']]
-          - Name: DB_PASSWORD
-            Value:
-              Fn::ImportValue:
-                !Join [':', [!Ref 'EnvironmentName', 'MySQLDBPass']]
-          - Name: DB_PORT
-            Value:
-              Fn::ImportValue:
-                !Join [':', [!Ref 'EnvironmentName', 'MySQLDBPort']]
-          - Name: DB_USERNAME
-            Value:
-              Fn::ImportValue:
-                !Join [':', [!Ref 'EnvironmentName', 'MySQLDBUser']]
-          - Name: MONGO_DB_HOST
-            Value:
-              Fn::ImportValue:
-                !Join [':', [!Ref 'EnvironmentName', 'MongoDBHost']]
-          - Name: MONGO_DB_PASSWORD
-            Value:
-              Fn::ImportValue:
-                !Join [':', [!Ref 'EnvironmentName', 'MongoDBPass']]
-          - Name: MONGO_DB_USERNAME
-            Value:
-              Fn::ImportValue:
-                !Join [':', [!Ref 'EnvironmentName', 'MongoDBUser']]
-          - Name: REDIS_HOST
-            Value:
-              Fn::ImportValue:
-                !Join [':', [!Ref 'EnvironmentName', 'RedisHost']]
-          - Name: REDIS_PORT
-            Value:
-              Fn::ImportValue:
-                !Join [':', [!Ref 'EnvironmentName', 'RedisPort']]
+            - Name: TEST_CHAT_ID
+              Value: !Ref 'TestChatID'
+            - Name: API_URL
+              Value: !Ref 'ApiUrl'
+            - Name: APP_DEBUG
+              Value: !Ref 'AppDebug'
+            - Name: APP_ENV
+              Value: !Ref 'AppEnv'
+            - Name: APP_KEY
+              Value: !Ref 'AppKey'
+            - Name: APP_NAME
+              Value: !Ref 'AppName'
+            - Name: AWS_ACCESS_KEY_ID
+              Value: !Ref 'AwsAccessKeyId'
+            - Name: AWS_SECRET_ACCESS_KEY
+              Value: !Ref 'AwsSecretAccessKey'
+            - Name: AWS_DEFAULT_REGION
+              Value: !Ref 'AwsDefaultRegion'
+            - Name: AWS_BUCKET
+              Value: !Ref 'AwsBucket'
+            - Name: JWT_BLACKLIST_ENABLED
+              Value: !Ref 'JwtBlacklistEnabled'
+            - Name: JWT_TTL
+              Value: !Ref 'JwtTtl'
+            - Name: JWT_SECRET
+              Value: !Ref 'JwtSecret'
+            - Name: LADA_CACHE_ACTIVE
+              Value: !Ref 'LadaCacheActive'
+            - Name: MAIL_ENCRYPTION
+              Value: !Ref 'MailEncryption'
+            - Name: MAIL_FROM_ADDRESS
+              Value: !Ref 'MailFromAddress'
+            - Name: MAIL_FROM_NAME
+              Value: !Ref 'MailFromName'
+            - Name: MAIL_HOST
+              Value: !Ref 'MailHost'
+            - Name: MAIL_MAILER
+              Value: !Ref 'MailMailer'
+            - Name: MAIL_PASSWORD
+              Value: !Ref 'MailPassword'
+            - Name: MAIL_PORT
+              Value: !Ref 'MailPort'
+            - Name: MAIL_USERNAME
+              Value: !Ref 'MailUsername'
+            - Name: NEO4_DB_BOLT_PORT
+              Value: !Ref 'Neo4DbBoltPort'
+            - Name: NEO4_DB_HOST
+              Value: !Ref 'Neo4DbHost'
+            - Name: NEO4_DB_HTTP_PORT
+              Value: !Ref 'Neo4DbHttpPort'
+            - Name: NEO4_DB_PASSWORD
+              Value: !Ref 'Neo4DbPassword'
+            - Name: NEO4_DB_USERNAME
+              Value: !Ref 'Neo4DbUsername'
+            - Name: QUEUE_CONNECTION
+              Value: !Ref 'QueueConnection'
+            #- Name: SENTRY_LARAVEL_DSN
+            #  Value: !Ref 'SentryLaravelDsn'
+            - Name: SWOOLE_HTTP_HOST
+              Value: !Ref 'SwooleHttpHost'
+            - Name: 'ZMQ_SUB_HOST'
+              Value: !Ref 'ZmqSubHost'
+            - Name: ENV_NAME
+              Value: !Ref 'EnvironmentName'
+            - Name: REGION
+              Value: !Ref 'AWS::Region'
+            - Name: DB_DATABASE
+              Value:
+                Fn::ImportValue:
+                  !Join [':', [!Ref 'EnvironmentName', 'MySQLDBName']]
+            - Name: DB_HOST
+              Value:
+                Fn::ImportValue:
+                  !Join [':', [!Ref 'EnvironmentName', 'MySQLDBHost']]
+            - Name: DB_PASSWORD
+              Value:
+                Fn::ImportValue:
+                  !Join [':', [!Ref 'EnvironmentName', 'MySQLDBPass']]
+            - Name: DB_PORT
+              Value:
+                Fn::ImportValue:
+                  !Join [':', [!Ref 'EnvironmentName', 'MySQLDBPort']]
+            - Name: DB_USERNAME
+              Value:
+                Fn::ImportValue:
+                  !Join [':', [!Ref 'EnvironmentName', 'MySQLDBUser']]
+            - Name: MONGO_DB_HOST
+              Value:
+                Fn::ImportValue:
+                  !Join [':', [!Ref 'EnvironmentName', 'MongoDBHost']]
+            - Name: MONGO_DB_PASSWORD
+              Value:
+                Fn::ImportValue:
+                  !Join [':', [!Ref 'EnvironmentName', 'MongoDBPass']]
+            - Name: MONGO_DB_USERNAME
+              Value:
+                Fn::ImportValue:
+                  !Join [':', [!Ref 'EnvironmentName', 'MongoDBUser']]
+            - Name: REDIS_HOST
+              Value:
+                Fn::ImportValue:
+                  !Join [':', [!Ref 'EnvironmentName', 'RedisHost']]
+            - Name: REDIS_PORT
+              Value:
+                Fn::ImportValue:
+                  !Join [':', [!Ref 'EnvironmentName', 'RedisPort']]
   # ServiceSecurityGroup:
   #   Type: AWS::EC2::SecurityGroup
   #   Properties:
@@ -489,39 +488,6 @@ Resources:
         Fn::ImportValue:
           !Join [':', [!Ref 'EnvironmentName', 'VPCId']]
           
-  # NLBTargetGroupSSL:
-  #   Type: AWS::ElasticLoadBalancingV2::TargetGroup
-  #   Properties:
-  #     Name: !Join ["-", [ "NLB", !Ref 'ServiceName', !Ref 'ContainerPort', !Ref 'ContainerProtocol', "TG"]]
-  #     # Health checks
-  #     HealthCheckIntervalSeconds: 30
-  #     HealthCheckPath: /
-  #     HealthCheckProtocol: TCP
-  #     HealthCheckTimeoutSeconds: 5
-  #     HealthyThresholdCount: 2
-  #     UnhealthyThresholdCount: 2
-  #     Matcher:
-  #       HttpCode: "426"
-  #     # Routing
-  #     TargetType: ip
-  #     Port: !Ref 'ContainerPort'
-  #     Protocol: !Ref 'ContainerProtocol'
-  #     # Attributes
-  #     TargetGroupAttributes:
-  #     - Key: stickiness.enabled
-  #       Value: true
-  #     - Key: stickiness.type
-  #       Value: 'source_ip'
-  #     - Key: slow_start.duration_seconds 
-  #       Value: 30
-  #     - Key: deregistration_delay.timeout_seconds
-  #       Value: 30
-  #     - Key: proxy_protocol_v2.enabled
-  #       Value: true
-  #     VpcId:
-  #       Fn::ImportValue:
-  #         !Join [':', [!Ref 'EnvironmentName', 'VPCId']]
-
   ALBListenerRuleSSL:
     Type: AWS::ElasticLoadBalancingV2::ListenerRule
     Properties:
@@ -531,9 +497,6 @@ Resources:
             TargetGroups: 
             - TargetGroupArn: !Ref LBTargetGroup
               Weight: 1
-            # TargetGroupStickinessConfig: 
-            #   DurationSeconds: 60
-            #   Enabled: true
       Conditions:
         - Field: host-header
           Values: [!Ref 'Path']

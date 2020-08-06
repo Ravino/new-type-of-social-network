@@ -297,7 +297,6 @@ Resources:
           PortMappings:
             - ContainerPort: !Ref 'ContainerPort'
             - ContainerPort: 5555
-              #Protocol: !Ref 'ContainerProtocol'
           LogConfiguration:
             LogDriver: 'awslogs'
             Options:
@@ -511,7 +510,7 @@ Resources:
       VpcId:
         Fn::ImportValue:
           !Join [':', [!Ref 'EnvironmentName', 'VPCId']]
-          
+
   # NLBTargetGroupSSL:
   #   Type: AWS::ElasticLoadBalancingV2::TargetGroup
   #   Properties:
