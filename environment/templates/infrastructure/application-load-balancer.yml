@@ -166,6 +166,8 @@ Resources:
       LoadBalancerArn: !Ref 'ApplicationLoadBalancer'
       Port: 80
       Protocol: "HTTP"
+    DeletionPolicy: Delete
+    UpdateReplacePolicy: Delete
 
   ALBListenerNginxSSL:
     Type: AWS::ElasticLoadBalancingV2::Listener
@@ -178,6 +180,8 @@ Resources:
       Protocol: HTTPS
       Certificates:
         - CertificateArn: !Ref 'CertificateArn'
+    DeletionPolicy: Delete
+    UpdateReplacePolicy: Delete
 
   ALBListenerWebSocketUser:
     Type: AWS::ElasticLoadBalancingV2::Listener
@@ -194,6 +198,8 @@ Resources:
       LoadBalancerArn: !Ref 'ApplicationLoadBalancer'
       Port: 80 # TODO: Change HTTP port to 7070
       Protocol: HTTP
+    DeletionPolicy: Delete
+    UpdateReplacePolicy: Delete
 
   ALBListenerWebSocketUserSSL:
     Type: AWS::ElasticLoadBalancingV2::Listener
@@ -206,6 +212,8 @@ Resources:
       Protocol: HTTPS
       Certificates:
         - CertificateArn: !Ref 'CertificateArn'
+    DeletionPolicy: Delete
+    UpdateReplacePolicy: Delete
 
   ALBListenerBackApi:
     Type: AWS::ElasticLoadBalancingV2::Listener
@@ -222,6 +230,8 @@ Resources:
       LoadBalancerArn: !Ref 'ApplicationLoadBalancer'
       Port: 80 # TODO: Change HTTP port to 1215
       Protocol: HTTP
+    DeletionPolicy: Delete
+    UpdateReplacePolicy: Delete
 
   ALBListenerBackApiSSL:
     Type: AWS::ElasticLoadBalancingV2::Listener
@@ -234,6 +244,8 @@ Resources:
       Protocol: HTTPS
       Certificates:
         - CertificateArn: !Ref 'CertificateArn'
+    DeletionPolicy: Delete
+    UpdateReplacePolicy: Delete
 
 Outputs:
   # Balancer Overall Info
@@ -272,7 +284,7 @@ Outputs:
 
   # Listeners
   ALBListenerBackApi:
-    Description: (Compatibility) The ARN of the public load balancer's Listener
+    Description: The ARN of the public load balancer's Listener
     Value: !Ref ALBListenerBackApi
     Export:
       Name: !Join [ ':', [ !Ref 'EnvironmentName', 'ALBListenerBackApi' ] ]
