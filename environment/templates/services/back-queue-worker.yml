@@ -3,6 +3,20 @@ Description: ECS Service managed with Fargate launch type
 
 Parameters:
   # env vars
+  WsLogs:
+    Type: String
+    Default: ""
+    Description: Switch to 1 to enable extended BackWS logs.
+  WsSecure:
+    Type: String
+    Default: "1"
+    Description: Switch to 1 to enable SLL for BackWS service.
+  WsPrivateKeyPath:
+    Type: String
+    Default: "/app/ssl/privkey.pem"
+  WsFullchainPath:
+    Type: String
+    Default: "/app/ssl/fullchain.pem"
   TestChatID:
     Type: String
   ApiUrl:
@@ -308,6 +322,14 @@ Resources:
               awslogs-region: !Ref 'AWS::Region'
               awslogs-stream-prefix: !Ref 'ServiceName'
           Environment:
+          - Name: WS_LOGS
+            Value: !Ref 'WsLogs'
+          - Name: SECURE_WEBSOCKET
+            Value: !Ref 'WsSecure'
+          - Name: FULLCHAIN_PATH
+            Value: !Ref 'WsFullchainPath'
+          - Name: PRIVATE_KEY_PATH
+            Value: !Ref 'WsPrivateKeyPath'
           - Name: TEST_CHAT_ID
             Value: !Ref 'TestChatID'
           - Name: API_URL

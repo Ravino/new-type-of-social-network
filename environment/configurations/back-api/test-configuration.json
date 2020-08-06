@@ -43,6 +43,7 @@
         "HealthCheckGracePeriodSeconds": "30",
         "LogRetentionInDays": "3",
         "SwooleHttpHost": "0.0.0.0",
-        "ZmqSubHost": "dev-ws.plizi.fun"
+        "ZmqSubHost": "dev-ws.plizi.fun",
+        "WsLogs": "1"
     }
 }
