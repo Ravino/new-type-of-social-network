@@ -3,15 +3,15 @@
         "EnvironmentName": "test", 
         "ServiceName": "back-ws",
         "ImageUrl": "884088487044.dkr.ecr.eu-central-1.amazonaws.com/eu-central-1-test-plizi-back-ws:latest",
-        "ContainerProtocol": "HTTP",
+        "ContainerProtocol": "HTTPS",
         "ContainerPort": "7070",
         "ContainerCpu": "1024",
         "ContainerMemory": "2048",
         "Path": "dev-ws.plizi.fun",
-        "Priority": "1",
-        "MinCapacity": "200",
-        "DesiredCount": "200",
-        "MaxCapacity": "200",
+        "Priority": "10",
+        "MinCapacity": "1",
+        "DesiredCount": "5",
+        "MaxCapacity": "100",
         "LowCpuPeriodAlarm": "300",
         "ScaleDownCooldown": "300",
         "LowCpuThresholdAlarm": "0",
@@ -44,6 +44,7 @@
         "HealthCheckGracePeriodSeconds": "30",
         "LogRetentionInDays": "3",
         "SwooleHttpHost": "0.0.0.0",
-        "ZmqSubHost": "dev-ws.plizi.fun"
+        "ZmqSubHost": "dev-ws.plizi.fun",
+        "WsLogs": "1"
     }
 }

@@ -3,6 +3,20 @@ Description: ECS Service managed with Fargate launch type
 
 Parameters:
   # env vars
+  WsLogs:
+    Type: String
+    Default: ""
+    Description: Switch to 1 to enable extended BackWS logs.
+  WsSecure:
+    Type: String
+    Default: "1"
+    Description: Switch to 1 to enable SLL for BackWS service.
+  WsPrivateKeyPath:
+    Type: String
+    Default: "/app/ssl/privkey.pem"
+  WsFullchainPath:
+    Type: String
+    Default: "/app/ssl/fullchain.pem"
   TestChatID:
     Type: String
   ApiUrl:
@@ -308,6 +322,14 @@ Resources:
               awslogs-region: !Ref 'AWS::Region'
               awslogs-stream-prefix: !Ref 'ServiceName'
           Environment:
+          - Name: WS_LOGS
+            Value: !Ref 'WsLogs'
+          - Name: SECURE_WEBSOCKET
+            Value: !Ref 'WsSecure'
+          - Name: FULLCHAIN_PATH
+            Value: !Ref 'WsFullchainPath'
+          - Name: PRIVATE_KEY_PATH
+            Value: !Ref 'WsPrivateKeyPath'
           - Name: TEST_CHAT_ID
             Value: !Ref 'TestChatID'
           - Name: API_URL
@@ -431,8 +453,7 @@ Resources:
   #       IpProtocol: tcp
   Service:
     Type: AWS::ECS::Service
-    DependsOn:
-      - ALBListenerRuleSSL
+    #DependsOn:
       #- NLBListenerRuleSSL
     Properties:
       ServiceName: !Ref 'ServiceName'
@@ -461,49 +482,10 @@ Resources:
       TaskDefinition: !Ref 'TaskDefinition'
       #HealthCheckGracePeriodSeconds: !Ref 'HealthCheckGracePeriodSeconds'
       # LoadBalancers:
-      #   - ContainerName: !Ref 'ServiceName'
-      #     ContainerPort: !Ref 'ContainerPort'
-      #     TargetGroupArn: !Ref 'ALBTargetGroupSSL'
         # - ContainerName: !Ref 'ServiceName'
         #   ContainerPort: !Ref 'ContainerPort'
         #   TargetGroupArn: !Ref 'NLBTargetGroupSSL'
 
-  ALBTargetGroupSSL:
-    Type: AWS::ElasticLoadBalancingV2::TargetGroup
-    Properties:
-      Name: !Join ["-", [ "ALB", !Ref 'ServiceName', "SSL", "TG"]]
-      # Health checks
-      # HealthCheckIntervalSeconds: 30
-      # HealthCheckPath: /
-      # HealthCheckPort: "5555"
-      # HealthCheckProtocol: HTTP
-      # HealthCheckTimeoutSeconds: 5
-      # HealthyThresholdCount: 2
-      # UnhealthyThresholdCount: 2
-      # Matcher:
-      #   HttpCode: "502"
-      # Routing
-      TargetType: ip
-      Port: !Ref 'ContainerPort'
-      Protocol: !Ref 'ContainerProtocol'
-      # Attributes
-      TargetGroupAttributes:
-      # - Key: "stickiness.enabled"
-      #   Value: "true"
-      # - Key: "stickiness.type"
-      #   Value: "lb_cookie"
-      # - Key: "stickiness.lb_cookie.duration_seconds"
-      #   Value: "60"
-      - Key: "deregistration_delay.timeout_seconds"
-        Value: "0"
-      - Key: "slow_start.duration_seconds"
-        Value: "0"
-      - Key: "load_balancing.algorithm.type"
-        Value: "round_robin"
-      VpcId:
-        Fn::ImportValue:
-          !Join [':', [!Ref 'EnvironmentName', 'VPCId']]
-          
   # NLBTargetGroupSSL:
   #   Type: AWS::ElasticLoadBalancingV2::TargetGroup
   #   Properties:
@@ -536,26 +518,6 @@ Resources:
   #     VpcId:
   #       Fn::ImportValue:
   #         !Join [':', [!Ref 'EnvironmentName', 'VPCId']]
-
-  ALBListenerRuleSSL:
-    Type: AWS::ElasticLoadBalancingV2::ListenerRule
-    Properties:
-      Actions:
-        - Type: forward
-          ForwardConfig:
-            TargetGroups: 
-            - TargetGroupArn: !Ref ALBTargetGroupSSL
-              Weight: 1
-            TargetGroupStickinessConfig: 
-              DurationSeconds: 60
-              Enabled: true
-      Conditions:
-        - Field: host-header
-          Values: [!Ref 'Path']
-      ListenerArn:
-        Fn::ImportValue:
-          !Join [':', [!Ref 'EnvironmentName', 'ALBListenerWebSocketQW']]
-      Priority: !Ref 'Priority'
 
   # NLBListenerRuleSSL:
   #   Type: AWS::ElasticLoadBalancingV2::ListenerRule

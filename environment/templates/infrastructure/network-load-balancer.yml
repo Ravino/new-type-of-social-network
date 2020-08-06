@@ -88,65 +88,71 @@ Resources:
       AllocationId: !GetAtt PrivateSubnetThreeEIP.AllocationId
 
   # S3 Bucket log
-  NLBLogBucket:
-    Type: AWS::S3::Bucket
-    Properties:
-      BucketName: "plizi-eu-central-1-logs-test-nlb"
-    DeletionPolicy: Retain
-    UpdateReplacePolicy: Retain
+  # NLBLogBucket:
+  #   Type: AWS::S3::Bucket
+  #   Properties:
+  #     BucketName: "plizi-eu-central-1-logs-test-nlb"
+  #   DeletionPolicy: Retain
+  #   UpdateReplacePolicy: Retain
 
-  # S3 Bucket policy
-  NLBLogBucketPolicy:
-    Type: AWS::S3::BucketPolicy
-    Properties:
-      Bucket: !Ref 'NLBLogBucket'
-      PolicyDocument:
-        Version: "2008-10-17"
-        Statement:
-          - Sid: ELBAccessLogs20130930
-            Effect: "Allow"
-            Resource: 
-              Fn::Join: 
-                - ""
-                - - "arn:aws:"
-                  - "s3:::"
-                  - !Ref NLBLogBucket
-                  - "/"
-                  - "Logs"
-                  - "/AWSLogs/"
-                  - !Sub ${AWS::AccountId}
-                  - "/*"
-            Principal: 
-              AWS: 884088487044
-            Action: 
-            - "s3:PutObject"
+  # # S3 Bucket policy
+  # NLBLogBucketPolicy:
+  #   Type: AWS::S3::BucketPolicy
+  #   Properties:
+  #     Bucket: !Ref 'NLBLogBucket'
+  #     PolicyDocument:
+  #       Version: "2008-10-17"
+  #       Statement:
+  #         - Sid: ELBAccessLogs20130930
+  #           Effect: "Allow"
+  #           Resource: 
+  #             Fn::Join: 
+  #               - ""
+  #               - - "arn:aws:"
+  #                 - "s3:::"
+  #                 - !Ref NLBLogBucket
+  #                 - "/"
+  #                 - "Logs"
+  #                 - "/AWSLogs/"
+  #                 - !Sub ${AWS::AccountId}
+  #                 - "/*"
+  #           Principal: 
+  #             AWS: 884088487044
+  #           Action: 
+  #           - "s3:PutObject"
 
   # Network Load Balancer
   NetworkLoadBalancer:
-    Type: "AWS::ElasticLoadBalancingV2::LoadBalancer"
-    DependsOn: "NLBLogBucketPolicy"
+    Type: AWS::ElasticLoadBalancingV2::LoadBalancer
+    #DependsOn: "NLBLogBucketPolicy"
     Properties:
       Type: "network"
       Scheme: "internet-facing"
       LoadBalancerAttributes:
-        - Key: "access_logs.s3.enabled"
-          Value: "true"
-        - Key: "access_logs.s3.bucket"
-          Value: !Ref "NLBLogBucket"
-        - Key: "access_logs.s3.prefix"
-          Value: "NLBLog"
+        # - Key: "access_logs.s3.enabled"
+        #   Value: "true"
+        # - Key: "access_logs.s3.bucket"
+        #   Value: !Ref "NLBLogBucket"
+        #- Key: "access_logs.s3.prefix"
+        #  Value: "NLBLog"
         - Key: "load_balancing.cross_zone.enabled"
           Value: "true"
-      SubnetMapping:
+      SubnetMappings:
         - AllocationId: !GetAtt "PrivateSubnetOneEIP.AllocationId"
-          SubnetId: Fn::ImportValue: !Join [':', [!Ref 'EnvironmentName', 'PublicSubnetOne']]
+          SubnetId: 
+            Fn::ImportValue:
+              !Join [':', [!Ref 'EnvironmentName', 'PublicSubnetOne']]
         - AllocationId: !GetAtt "PrivateSubnetTwoEIP.AllocationId"
-          SubnetId: Fn::ImportValue: !Join [':', [!Ref 'EnvironmentName', 'PublicSubnetTwo']]
+          SubnetId: 
+            Fn::ImportValue:
+              !Join [':', [!Ref 'EnvironmentName', 'PublicSubnetTwo']]
         - AllocationId: !GetAtt "PrivateSubnetThreeEIP.AllocationId"
-          SubnetId: Fn::ImportValue: !Join [':', [!Ref 'EnvironmentName', 'PublicSubnetThree']]
+          SubnetId: 
+            Fn::ImportValue:
+              !Join [':', [!Ref 'EnvironmentName', 'PublicSubnetThree']]
       Tags:
         - Key: "Name"
-          Value: "PLIZI-eu-central-1-TEST-NLB"
+          Value: "PLIZI-eu-central-1-network-TEST-NLB"
         - Key: "Project"
           Value: "Plizi"
         - Key: "Region"
@@ -154,9 +160,8 @@ Resources:
         - Key: "Environment"
           Value: !Ref EnvironmentName
 
-  # Frontend Nginx - 80 Listener
-  NLBListenerNginx:
-    Type: "AWS::ElasticLoadBalancingV2::Listener"
+  NLBListenerHTTP:
+    Type: AWS::ElasticLoadBalancingV2::Listener
     Properties:
       DefaultActions:
       - Type: redirect
@@ -169,142 +174,87 @@ Resources:
           StatusCode: "HTTP_301"
       LoadBalancerArn: !Ref 'NetworkLoadBalancer'
       Port: 80
-      Protocol: "HTTP"
+      Protocol: HTTP
       Certificates:
         - CertificateArn: !Ref CertificateArn
 
-  # Frontend Nginx - 443 Listener
-  NLBListenerNginxSSL:
-    Type: "AWS::ElasticLoadBalancingV2::Listener"
+  NLBListenerHTTPS:
+    Type: AWS::ElasticLoadBalancingV2::Listener
     Properties:
       DefaultActions:
         - Type: forward
-          TargetGroups: 
-          - TargetGroupArn: !Ref 'DummyTargetGroupNLB'
-            Weight: 1
-          #- TargetGroupArn: !Ref TargetGroup2
-          #  Weight: 1
-          TargetGroupStickinessConfig: 
-            DurationSeconds: 60
-            Enabled: true
+          TargetGroupArn: !Ref DummyTargetGroupNLB
       LoadBalancerArn: !Ref 'NetworkLoadBalancer'
       Port: 443
-      Protocol: TLS
-      #AlpnPolicy:
-        #[TLS listener] The name of the Application-Layer Protocol Negotiation (ALPN) policy.
-      #SslPolicy:
-        # [HTTPS and TLS listeners] The security policy that defines which protocols and ciphers are supported. The following are the possible values: 
-        # NLB: https://docs.aws.amazon.com/elasticloadbalancing/latest/network/create-tls-listener.html#describe-ssl-policies
-        # ALB: https://docs.aws.amazon.com/elasticloadbalancing/latest/application/create-https-listener.html#describe-ssl-policies
-        # TODO: nginx advanced SSL
-      Certificates:
-       - CertificateArn: !Ref CertificateArn
-
-  # Backend Api - 1215 Listener
-  NLBListenerBackApiSSL:
-    Type: "AWS::ElasticLoadBalancingV2::Listener"
-    Properties:
-      DefaultActions:
-        - Type: forward
-          TargetGroups: 
-          - TargetGroupArn: !Ref DummyTargetGroupNLB
-            Weight: 1
-          #- TargetGroupArn: !Ref TargetGroup2
-          #  Weight: 1
-          TargetGroupStickinessConfig: 
-            DurationSeconds: 60
-            Enabled: true
-      LoadBalancerArn: !Ref 'NetworkLoadBalancer'
-      Port: 1215
-      Protocol: TLS
-      #AlpnPolicy:
-        #[TLS listener] The name of the Application-Layer Protocol Negotiation (ALPN) policy.
-      #SslPolicy:
-        # [HTTPS and TLS listeners] The security policy that defines which protocols and ciphers are supported. The following are the possible values: 
-        # NLB: https://docs.aws.amazon.com/elasticloadbalancing/latest/network/create-tls-listener.html#describe-ssl-policies
-        # ALB: https://docs.aws.amazon.com/elasticloadbalancing/latest/application/create-https-listener.html#describe-ssl-policies
-        # TODO: nginx advanced SSL
+      Protocol: HTTPS
       Certificates:
         - CertificateArn: !Ref CertificateArn
 
-  # Backend WebSocket - Listener
-  NLBListenerWebSocketUserSSL:
+  NLBListenerTCP5555:
     Type: AWS::ElasticLoadBalancingV2::Listener
     Properties:
       DefaultActions:
         - Type: forward
-          TargetGroups: 
-          - TargetGroupArn: !Ref 'DummyTargetGroupNLB'
-            Weight: 1
-          #- TargetGroupArn: !Ref TargetGroup2
-          #  Weight: 1
-          TargetGroupStickinessConfig: 
-            DurationSeconds: 60
-            Enabled: true
-      LoadBalancerArn: !Ref 'NetworkLoadBalancer'
-      Port: 7070
-      Protocol: TLS
-      #AlpnPolicy:
-        #[TLS listener] The name of the Application-Layer Protocol Negotiation (ALPN) policy.
-      #SslPolicy:
-        # [HTTPS and TLS listeners] The security policy that defines which protocols and ciphers are supported. The following are the possible values: 
-        # NLB: https://docs.aws.amazon.com/elasticloadbalancing/latest/network/create-tls-listener.html#describe-ssl-policies
-        # TODO: nginx advanced SSL
-      Certificates:
-        - CertificateArn: !Ref CertificateArn
-
-  # Backend QueueWorker - Listener
-  NLBListenerWebSocketQW:
-    Type: AWS::ElasticLoadBalancingV2::Listener
-    Properties:
-      DefaultActions:
-        - Type: forward
-          TargetGroups: 
-          - TargetGroupArn: !Ref 'DummyTargetGroupNLB'
-            Weight: 1
-          #- TargetGroupArn: !Ref TargetGroup2
-          #  Weight: 1
-          TargetGroupStickinessConfig: 
-          - DurationSeconds: 60
-            Enabled: true
+          TargetGroupArn: !Ref 'DummyTargetGroupNLB'
       LoadBalancerArn: !Ref 'NetworkLoadBalancer'
       Port: 5555
       Protocol: TCP
-      #Certificates:
-      # - CertificateArn: !Ref CertificateArn
+
+  NLBListenerTCP1215:
+    Type: AWS::ElasticLoadBalancingV2::Listener
+    Properties:
+      DefaultActions:
+        - Type: forward
+          TargetGroupArn: !Ref DummyTargetGroupNLB
+      LoadBalancerArn: !Ref 'NetworkLoadBalancer'
+      Port: 1215
+      Protocol: TCP
+      Certificates:
+        - CertificateArn: !Ref CertificateArn
+
+  NLBListenerTLS7070:
+    Type: AWS::ElasticLoadBalancingV2::Listener
+    Properties:
+      DefaultActions:
+        - Type: forward
+          TargetGroupArn: !Ref DummyTargetGroupNLB
+      LoadBalancerArn: !Ref 'NetworkLoadBalancer'
+      Port: 7070
+      Protocol: TLS
+      Certificates:
+        - CertificateArn: !Ref CertificateArn
 
   # Hosted Zone Id
-  NLBRecordSetGroupPrivate:
-    Type: AWS::Route53::RecordSetGroup
-    Properties:
-      Comment: "RecordSetGroup for NLB, facing on eu-central-1, PrivateHostedZone "
-      HostedZoneId: 
-        Fn::ImportValue:
-          !Join [':', [!Ref 'EnvironmentName', 'PrivateDNSHostedZone']]
-      RecordSets:
-        - Name: !Sub 'dev.private.${DomainName}'
-          Type: A
-          AliasTarget:
-            HostedZoneId: !GetAtt 'NetworkLoadBalancer.CanonicalHostedZoneID'
-            DNSName: !GetAtt 'NetworkLoadBalancer.DNSName'
-        - Name: !Sub 'dev-ws.private.${DomainName}'
-          Type: A
-          AliasTarget:
-            HostedZoneId: !GetAtt 'NetworkLoadBalancer.CanonicalHostedZoneID'
-            DNSName: !GetAtt 'NetworkLoadBalancer.DNSName'
-        - Name: !Sub 'dev-qw.private.${DomainName}'
-          Type: A
-          AliasTarget:
-            HostedZoneId: !GetAtt 'NetworkLoadBalancer.CanonicalHostedZoneID'
-            DNSName: !GetAtt 'NetworkLoadBalancer.DNSName'
-        - Name: !Sub 'dev-api.private.${DomainName}'
-          Type: A
-          AliasTarget:
-            HostedZoneId: !GetAtt 'NetworkLoadBalancer.CanonicalHostedZoneID'
-            DNSName: !GetAtt 'NetworkLoadBalancer.DNSName'
-    DeletionPolicy: Delete
-    UpdateReplacePolicy: Delete
-
+  # NLBRecordSetGroupPrivate:
+  #   Type: AWS::Route53::RecordSetGroup
+  #   Properties:
+  #     Comment: "RecordSetGroup for NLB, facing on eu-central-1, PrivateHostedZone "
+  #     HostedZoneId: 
+  #       Fn::ImportValue:
+  #         !Join [':', [!Ref 'EnvironmentName', 'PrivateDNSHostedZone']]
+  #     RecordSets:
+  #       - Name: !Sub 'dev.private.${DomainName}'
+  #         Type: A
+  #         AliasTarget:
+  #           HostedZoneId: !GetAtt 'NetworkLoadBalancer.CanonicalHostedZoneID'
+  #           DNSName: !GetAtt 'NetworkLoadBalancer.DNSName'
+  #       - Name: !Sub 'dev-ws.private.${DomainName}'
+  #         Type: A
+  #         AliasTarget:
+  #           HostedZoneId: !GetAtt 'NetworkLoadBalancer.CanonicalHostedZoneID'
+  #           DNSName: !GetAtt 'NetworkLoadBalancer.DNSName'
+  #       - Name: !Sub 'dev-qw.private.${DomainName}'
+  #         Type: A
+  #         AliasTarget:
+  #           HostedZoneId: !GetAtt 'NetworkLoadBalancer.CanonicalHostedZoneID'
+  #           DNSName: !GetAtt 'NetworkLoadBalancer.DNSName'
+  #       - Name: !Sub 'dev-api.private.${DomainName}'
+  #         Type: A
+  #         AliasTarget:
+  #           HostedZoneId: !GetAtt 'NetworkLoadBalancer.CanonicalHostedZoneID'
+  #           DNSName: !GetAtt 'NetworkLoadBalancer.DNSName'
+  #   DeletionPolicy: Delete
+  #   UpdateReplacePolicy: Delete
 
 Outputs:
 
@@ -351,42 +301,48 @@ Outputs:
     Value: !Ref PrivateSubnetThreeEIP
     Export:
       Name: !Join [ ':', [ !Ref 'EnvironmentName', 'PrivateSubnetThreeEIP' ] ]
-  NLBLogBucket:
-    Description: The ARN of the S3 Bucket that is created for NLB logs storage
-    Value: !Ref NLBLogBucket
-    Export:
-      Name: !Join [ ':', [ !Ref 'EnvironmentName', 'NLBLogBucket' ] ]
+  # NLBLogBucket:
+  #   Description: The ARN of the S3 Bucket that is created for NLB logs storage
+  #   Value: !Ref NLBLogBucket
+  #   Export:
+  #     Name: !Join [ ':', [ !Ref 'EnvironmentName', 'NLBLogBucket' ] ]
 
   # Listeners
-  NLBListenerBackApiSSL:
-    Description: The ARN of the NLBListenerBackApiSSL
-    Value: !Ref NLBListenerBackApiSSL
+  NLBListenerHTTP:
+    Description: The ARN of the NLBListenerHTTP
+    Value: !Ref NLBListenerHTTP
     Export:
-      Name: !Join [ ':', [ !Ref 'EnvironmentName', 'NLBListenerBackApiSSL' ] ]
+      Name: !Join [ ':', [ !Ref 'EnvironmentName', 'NLBListenerHTTP' ] ]
 
-  NLBListenerNginxSSL:
-    Description: The ARN of the NLBListenerNginxSSL
-    Value: !Ref NLBListenerNginxSSL
+  NLBListenerHTTPS:
+    Description: The ARN of the NLBListenerHTTPS
+    Value: !Ref NLBListenerHTTPS
     Export:
-      Name: !Join [ ':', [ !Ref 'EnvironmentName', 'NLBListenerNginxSSL' ] ]
+      Name: !Join [ ':', [ !Ref 'EnvironmentName', 'NLBListenerHTTPS' ] ]
 
-  NLBListenerWebSocketUserSSL:
-    Description: The ARN of the NLBListenerWebSocketUserSSL
-    Value: !Ref NLBListenerWebSocketUserSSL
+  NLBListenerTCP1215:
+    Description: The ARN of the NLBListenerTCP1215
+    Value: !Ref NLBListenerTCP1215
     Export:
-      Name: !Join [ ':', [ !Ref 'EnvironmentName', 'NLBListenerWebSocketUserSSL' ] ]
+      Name: !Join [ ':', [ !Ref 'EnvironmentName', 'NLBListenerTCP1215' ] ]
 
-  NLBListenerWebSocketQW:
-    Description: The ARN of the NLBListenerWebSocketQW
-    Value: !Ref NLBListenerWebSocketQW
+  NLBListenerTCP5555:
+    Description: The ARN of the NLBListenerTCP5555
+    Value: !Ref NLBListenerTCP5555
     Export:
-      Name: !Join [ ':', [ !Ref 'EnvironmentName', 'NLBListenerWebSocketQW' ] ]
+      Name: !Join [ ':', [ !Ref 'EnvironmentName', 'NLBListenerTCP5555' ] ]
+
+  NLBListenerTLS7070:
+    Description: The ARN of the NLBListenerTLS7070
+    Value: !Ref NLBListenerTLS7070
+    Export:
+      Name: !Join [ ':', [ !Ref 'EnvironmentName', 'NLBListenerTLS7070' ] ]
 
   # Route 53
-  NLBRecordSetGroupPrivate:
-    Description: The ARN of the public load balancer's Listener
-    Value: !Ref NLBRecordSetGroupPrivate
-    Export:
-      Name: !Join [ ':', [ !Ref 'EnvironmentName', 'NLBRecordSetGroupPrivate' ] ]
+  # NLBRecordSetGroupPrivate:
+  #   Description: The ARN of the public load balancer's Listener
+  #   Value: !Ref NLBRecordSetGroupPrivate
+  #   Export:
+  #     Name: !Join [ ':', [ !Ref 'EnvironmentName', 'NLBRecordSetGroupPrivate' ] ]
       
   

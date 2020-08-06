@@ -2,15 +2,15 @@
     "Parameters": {
         "ServiceName": "back-query-worker",
         "ImageUrl": "884088487044.dkr.ecr.eu-central-1.amazonaws.com/eu-central-1-test-plizi-back-queue-worker:latest",
-        "ContainerPort": "5555",
+        "ContainerPort": "",
         "ContainerProtocol": "HTTP",
         "ContainerCpu": "1024",
         "ContainerMemory": "2048",
         "Path": "dev-qw.plizi.fun",
-        "Priority": "2",
+        "Priority": "10",
         "MinCapacity": "1",
-        "DesiredCount": "90",
-        "MaxCapacity": "90",
+        "DesiredCount": "10",
+        "MaxCapacity": "200",
         "LowCpuPeriodAlarm": "300",
         "ScaleDownCooldown": "300",
         "LowCpuThresholdAlarm": "0",
@@ -44,6 +44,7 @@
         "LogRetentionInDays": "3",
         "SupervisorCount": "8",
         "SwooleHttpHost": "0.0.0.0",
-        "ZmqSubHost": "dev-ws.plizi.fun"
+        "ZmqSubHost": "dev-ws.plizi.fun",
+        "WsLogs": "1"
     }
 }

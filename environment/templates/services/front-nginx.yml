@@ -217,47 +217,11 @@ Resources:
       LoadBalancers:
         - ContainerName: !Ref 'ServiceName'
           ContainerPort: !Ref 'ContainerPort'
-          TargetGroupArn: !Ref 'LBTargetGroup'
-  # ALBTargetGroup:
-  #   Type: AWS::ElasticLoadBalancingV2::TargetGroup
-  #   Properties:
-  #     Name: !Join ["-", [ "ALB", !Ref 'ServiceName', "TG"]]
-  #     # Health checks
-  #     HealthCheckIntervalSeconds: 30
-  #     HealthCheckPath: /
-  #     HealthCheckPort: "80"
-  #     HealthCheckProtocol: HTTP
-  #     HealthCheckTimeoutSeconds: 5
-  #     HealthyThresholdCount: 2
-  #     UnhealthyThresholdCount: 2
-  #     Matcher:
-  #       HttpCode: "200-299"
-  #     # Routing
-  #     TargetType: ip
-  #     Port: !Ref 'ContainerPort'
-  #     Protocol: !Ref 'ContainerProtocol'
-  #     # Attributes
-  #     TargetGroupAttributes:
-  #       - Key: "stickiness.enabled"
-  #         Value: "true"
-  #       - Key: "stickiness.type"
-  #         Value: "lb_cookie"
-  #       - Key: "stickiness.lb_cookie.duration_seconds"
-  #         Value: "60"
-  #       - Key: "deregistration_delay.timeout_seconds"
-  #         Value: "30"
-  #       - Key: "slow_start.duration_seconds"
-  #         Value: "30"
-  #       - Key: "load_balancing.algorithm.type"
-  #         Value: "round_robin"
-  #     VpcId:
-  #       Fn::ImportValue:
-  #         !Join [':', [!Ref 'EnvironmentName', 'VPCId']]
-
-  LBTargetGroup:
+          TargetGroupArn: !Ref 'ALBTargetGroup'
+  
+  ALBTargetGroup:
     Type: AWS::ElasticLoadBalancingV2::TargetGroup
     Properties:
-      Name: !Join ["-", [ "LB", !Ref 'ServiceName', "TG"]]
       # Health checks
       HealthCheckIntervalSeconds: 30
       HealthCheckPath: /
@@ -274,22 +238,24 @@ Resources:
       Protocol: !Ref 'ContainerProtocol'
       # Attributes
       TargetGroupAttributes:
-        - Key: "stickiness.enabled"
-          Value: "true"
-        - Key: "stickiness.type"
-          Value: "lb_cookie"
-        - Key: "stickiness.lb_cookie.duration_seconds"
-          Value: "60"
-        - Key: "deregistration_delay.timeout_seconds"
-          Value: "0"
+        # - Key: "stickiness.enabled"
+        #   Value: "true"
+        # - Key: "stickiness.type"
+        #   Value: "lb_cookie"
+        # - Key: "stickiness.lb_cookie.duration_seconds"
+        #   Value: "60"
+        # - Key: "deregistration_delay.timeout_seconds"
+        #   Value: "0"
         - Key: "slow_start.duration_seconds"
           Value: "0"
         - Key: "load_balancing.algorithm.type"
-          Value: "round_robin"
+          Value: "least_outstanding_requests"
       VpcId:
         Fn::ImportValue:
           !Join [':', [!Ref 'EnvironmentName', 'VPCId']]
-          
+      Tags:
+        - Key: 'Name'
+          Value: !Join ["-", [ "PLIZI" , !Ref 'AWS::Region', !Ref 'ServiceName' , !Ref 'EnvironmentName' , "ALB", "TG"]]
   # NLBTargetGroupSSL:
   #   Type: AWS::ElasticLoadBalancingV2::TargetGroup
   #   Properties:
@@ -322,25 +288,6 @@ Resources:
   #     VpcId:
   #       Fn::ImportValue:
   #         !Join [':', [!Ref 'EnvironmentName', 'VPCId']]
-  ALBListenerRule:
-    Type: AWS::ElasticLoadBalancingV2::ListenerRule
-    Properties:
-      Actions:
-      - Type: forward
-        ForwardConfig:
-          TargetGroups: 
-           - TargetGroupArn: !Ref LBTargetGroup
-             Weight: 1
-          TargetGroupStickinessConfig: 
-            DurationSeconds: 60
-            Enabled: true
-      Conditions:
-        - Field: host-header
-          Values: [!Ref 'Path']
-      ListenerArn:
-        Fn::ImportValue:
-          !Join [':', [!Ref 'EnvironmentName', 'ALBListenerNginx']]
-      Priority: !Ref 'Priority'
 
   ALBListenerRuleSSL:
     Type: AWS::ElasticLoadBalancingV2::ListenerRule
@@ -349,17 +296,17 @@ Resources:
       - Type: forward
         ForwardConfig:
           TargetGroups: 
-           - TargetGroupArn: !Ref LBTargetGroup
+           - TargetGroupArn: !Ref ALBTargetGroup
              Weight: 1
-          TargetGroupStickinessConfig: 
-            DurationSeconds: 60
-            Enabled: true
+          # TargetGroupStickinessConfig: 
+          #   DurationSeconds: 60
+          #   Enabled: true
       Conditions:
         - Field: host-header
           Values: [!Ref 'Path']
       ListenerArn:
         Fn::ImportValue:
-          !Join [':', [!Ref 'EnvironmentName', 'ALBListenerNginxSSL']]
+          !Join [':', [!Ref 'EnvironmentName', 'ALBListenerHTTPS']]
       Priority: !Ref 'Priority'
 
   # NLBListenerRuleSSL:
