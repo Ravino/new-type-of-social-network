@@ -304,13 +304,13 @@ Resources:
               awslogs-group: !Join ['-', [!Ref 'ServiceName', !Ref 'EnvironmentName']]
               awslogs-region: !Ref 'AWS::Region'
               awslogs-stream-prefix: !Ref 'ServiceName'
-          HealthCheck:
-            Command: 
-              - '[[ "$(curl -o /dev/null -s -w "%{http_code}\n" http://localhost:7070/)" == "426" ]]'
-            Interval: 30
-            Timeout: 3
-            Retries: 2
-            StartPeriod: 30
+          # HealthCheck:
+          #   Command: 
+          #     - '[[ "$(curl -o /dev/null -s -w "%{http_code}\n" http://localhost:7070/)" == "426" ]]'
+          #   Interval: 30
+          #   Timeout: 3
+          #   Retries: 2
+          #   StartPeriod: 30
           Ulimits:
             - Name: nofile
               SoftLimit: 2048
