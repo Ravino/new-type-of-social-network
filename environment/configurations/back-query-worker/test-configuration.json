@@ -2,7 +2,7 @@
     "Parameters": {
         "ServiceName": "back-query-worker",
         "ImageUrl": "884088487044.dkr.ecr.eu-central-1.amazonaws.com/eu-central-1-test-plizi-back-queue-worker:latest",
-        "ContainerPort": "",
+        "ContainerPort": "80",
         "ContainerProtocol": "HTTP",
         "ContainerCpu": "1024",
         "ContainerMemory": "2048",
