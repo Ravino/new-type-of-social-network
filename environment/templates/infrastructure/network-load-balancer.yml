@@ -160,34 +160,6 @@ Resources:
         - Key: "Environment"
           Value: !Ref EnvironmentName
 
-  NLBListenerTCP80:
-    Type: AWS::ElasticLoadBalancingV2::Listener
-    Properties:
-      DefaultActions:
-      - Type: redirect
-        RedirectConfig:
-          Protocol: HTTPS
-          Port: 443
-          Host: "#{host}"
-          Path: "/#{path}"
-          Query: "#{query}"
-          StatusCode: "HTTP_301"
-      LoadBalancerArn: !Ref 'NetworkLoadBalancer'
-      Port: 80
-      Protocol: TCP
-
-  NLBListenerTLS443:
-    Type: AWS::ElasticLoadBalancingV2::Listener
-    Properties:
-      DefaultActions:
-        - Type: forward
-          TargetGroupArn: !Ref DummyTargetGroupNLB
-      LoadBalancerArn: !Ref 'NetworkLoadBalancer'
-      Port: 443
-      Protocol: TLS
-      Certificates:
-        - CertificateArn: !Ref CertificateArn
-
   NLBListenerTCP5555:
     Type: AWS::ElasticLoadBalancingV2::Listener
     Properties:
@@ -304,18 +276,6 @@ Outputs:
   #     Name: !Join [ ':', [ !Ref 'EnvironmentName', 'NLBLogBucket' ] ]
 
   # Listeners
-  NLBListenerTCP80:
-    Description: The ARN of the NLBListenerTCP80
-    Value: !Ref NLBListenerTCP80
-    Export:
-      Name: !Join [ ':', [ !Ref 'EnvironmentName', 'NLBListenerTCP80' ] ]
-
-  NLBListenerTLS443:
-    Description: The ARN of the NLBListenerTLS443
-    Value: !Ref NLBListenerTLS443
-    Export:
-      Name: !Join [ ':', [ !Ref 'EnvironmentName', 'NLBListenerTLS443' ] ]
-
   NLBListenerTCP1215:
     Description: The ARN of the NLBListenerTCP1215
     Value: !Ref NLBListenerTCP1215
