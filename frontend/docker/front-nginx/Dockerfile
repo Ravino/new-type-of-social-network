@@ -8,7 +8,7 @@ RUN npm run build
  
 FROM nginx:stable
 COPY --from=frontend-builder dist /app
-COPY dist /app
+#COPY dist /app
 COPY docker/front-nginx/etc/nginx/conf.d/default.conf /etc/nginx/conf.d/default.conf
 COPY docker/front-nginx/etc/nginx/nginx.conf /etc/nginx/nginx.conf
 
