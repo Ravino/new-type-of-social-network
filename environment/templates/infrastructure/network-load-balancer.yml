@@ -30,7 +30,7 @@ Resources:
   DummyTargetGroupNLB:
     Type: AWS::ElasticLoadBalancingV2::TargetGroup
     Properties:
-      Name: !Join ['-', [!Ref 'EnvironmentName', 'alb-tg-drop']]
+      Name: !Join ['-', [!Ref 'EnvironmentName', 'nlb-tg-drop']]
       Port: 80
       Protocol: TCP
       VpcId: 
