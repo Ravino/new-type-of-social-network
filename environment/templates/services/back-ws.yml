@@ -304,6 +304,20 @@ Resources:
               awslogs-group: !Join ['-', [!Ref 'ServiceName', !Ref 'EnvironmentName']]
               awslogs-region: !Ref 'AWS::Region'
               awslogs-stream-prefix: !Ref 'ServiceName'
+          HealthCheck:
+            Command: 
+              - '[[ "$(curl -o /dev/null -s -w "%{http_code}\n" http://localhost:7070/)" == "426" ]]'
+            Interval: 30
+            Timeout: 3
+            Retries: 2
+            StartPeriod: 30
+          Ulimits:
+            - Name: nofile
+              SoftLimit: 2048
+              HardLimit: 4096
+            - Name: nproc
+              SoftLimit: 2048
+              HardLimit: 4096
           Environment:
           - Name: TEST_CHAT_ID
             Value: !Ref 'TestChatID'
@@ -489,9 +503,9 @@ Resources:
       - Key: "stickiness.lb_cookie.duration_seconds"
         Value: "60"
       - Key: "deregistration_delay.timeout_seconds"
-        Value: "30"
+        Value: "0"
       - Key: "slow_start.duration_seconds"
-        Value: "30"
+        Value: "0"
       - Key: "load_balancing.algorithm.type"
         Value: "round_robin"
       VpcId:
