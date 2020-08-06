@@ -164,7 +164,7 @@ Resources:
             Query: "#{query}"
             StatusCode: "HTTP_301"
       LoadBalancerArn: !Ref 'ApplicationLoadBalancer'
-      Port: "80"
+      Port: 80
       Protocol: "HTTP"
 
   ALBListenerNginxSSL:
@@ -192,7 +192,7 @@ Resources:
             Query: "#{query}"
             StatusCode: "HTTP_301"
       LoadBalancerArn: !Ref 'ApplicationLoadBalancer'
-      Port: 7070 # TODO: Change HTTP port to 80
+      Port: 80 # TODO: Change HTTP port to 7070
       Protocol: HTTP
 
   ALBListenerWebSocketUserSSL:
@@ -202,7 +202,7 @@ Resources:
         - Type: forward
           TargetGroupArn: !Ref 'DummyTargetGroupALB'
       LoadBalancerArn: !Ref 'ApplicationLoadBalancer'
-      Port: 7070 # TODO: Change HTTP port to 443
+      Port: 443 # TODO: Change HTTP port to 7070
       Protocol: HTTPS
       Certificates:
         - CertificateArn: !Ref 'CertificateArn'
@@ -220,7 +220,7 @@ Resources:
             Query: "#{query}"
             StatusCode: "HTTP_301"
       LoadBalancerArn: !Ref 'ApplicationLoadBalancer'
-      Port: 1215 # TODO: Change HTTP port to 80
+      Port: 80 # TODO: Change HTTP port to 1215
       Protocol: HTTP
 
   ALBListenerBackApiSSL:
@@ -230,7 +230,7 @@ Resources:
         - TargetGroupArn: !Ref 'DummyTargetGroupALB'
           Type: 'forward'
       LoadBalancerArn: !Ref 'ApplicationLoadBalancer'
-      Port: 1215 # TODO: Change HTTP port to 443
+      Port: 443 # TODO: Change HTTP port to 1215
       Protocol: HTTPS
       Certificates:
         - CertificateArn: !Ref 'CertificateArn'

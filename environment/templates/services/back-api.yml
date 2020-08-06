@@ -468,7 +468,7 @@ Resources:
         HttpCode: "200-299"
       # Routing
       TargetType: ip
-      Port: !Ref 'ContainerPort'
+      Port: 443
       Protocol: !Ref 'ContainerProtocol'
       # Attributes
       TargetGroupAttributes:
