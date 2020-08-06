@@ -3,7 +3,7 @@ ENV NODE_ENV='development'
 ENV API_URL='https://dev-api.plizi.fun'
 ENV WS_URL='wss://dev-ws.plizi.fun'
 COPY . .
-#WORKDIR frontend/
+WORKDIR frontend/
 RUN npm install  
 RUN npm run build
  
