@@ -583,7 +583,7 @@ Resources:
           Values: [!Ref 'Path']
       ListenerArn:
         Fn::ImportValue:
-          !Join [':', [!Ref 'EnvironmentName', 'ALBListenerWebSocketUserSSL']]
+          !Join [':', [!Ref 'EnvironmentName', 'ALBListenerHTTPS']]
       Priority: !Ref 'Priority'
 
   # NLBListenerRuleSSL:

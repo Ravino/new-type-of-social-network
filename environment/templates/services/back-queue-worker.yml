@@ -454,7 +454,6 @@ Resources:
   Service:
     Type: AWS::ECS::Service
     #DependsOn:
-      #- ALBListenerRuleSSL
       #- NLBListenerRuleSSL
     Properties:
       ServiceName: !Ref 'ServiceName'
@@ -483,49 +482,10 @@ Resources:
       TaskDefinition: !Ref 'TaskDefinition'
       #HealthCheckGracePeriodSeconds: !Ref 'HealthCheckGracePeriodSeconds'
       # LoadBalancers:
-      #   - ContainerName: !Ref 'ServiceName'
-      #     ContainerPort: !Ref 'ContainerPort'
-      #     TargetGroupArn: !Ref 'ALBTargetGroupSSL'
         # - ContainerName: !Ref 'ServiceName'
         #   ContainerPort: !Ref 'ContainerPort'
         #   TargetGroupArn: !Ref 'NLBTargetGroupSSL'
 
-  ALBTargetGroupSSL:
-    Type: AWS::ElasticLoadBalancingV2::TargetGroup
-    Properties:
-      Name: !Join ["-", [ "ALB", !Ref 'ServiceName', "SSL", "TG"]]
-      # Health checks
-      # HealthCheckIntervalSeconds: 30
-      # HealthCheckPath: /
-      # HealthCheckPort: "5555"
-      # HealthCheckProtocol: HTTP
-      # HealthCheckTimeoutSeconds: 5
-      # HealthyThresholdCount: 2
-      # UnhealthyThresholdCount: 2
-      # Matcher:
-      #   HttpCode: "502"
-      # Routing
-      TargetType: ip
-      Port: !Ref 'ContainerPort'
-      Protocol: !Ref 'ContainerProtocol'
-      # Attributes
-      TargetGroupAttributes:
-      # - Key: "stickiness.enabled"
-      #   Value: "true"
-      # - Key: "stickiness.type"
-      #   Value: "lb_cookie"
-      # - Key: "stickiness.lb_cookie.duration_seconds"
-      #   Value: "60"
-      - Key: "deregistration_delay.timeout_seconds"
-        Value: "0"
-      - Key: "slow_start.duration_seconds"
-        Value: "0"
-      - Key: "load_balancing.algorithm.type"
-        Value: "round_robin"
-      VpcId:
-        Fn::ImportValue:
-          !Join [':', [!Ref 'EnvironmentName', 'VPCId']]
-          
   # NLBTargetGroupSSL:
   #   Type: AWS::ElasticLoadBalancingV2::TargetGroup
   #   Properties:
@@ -558,26 +518,6 @@ Resources:
   #     VpcId:
   #       Fn::ImportValue:
   #         !Join [':', [!Ref 'EnvironmentName', 'VPCId']]
-
-  # ALBListenerRuleSSL:
-  #   Type: AWS::ElasticLoadBalancingV2::ListenerRule
-  #   Properties:
-  #     Actions:
-  #       - Type: forward
-  #         ForwardConfig:
-  #           TargetGroups: 
-  #           - TargetGroupArn: !Ref ALBTargetGroupSSL
-  #             Weight: 1
-  #           # TargetGroupStickinessConfig: 
-  #           #   DurationSeconds: 60
-  #           #   Enabled: true
-  #     Conditions:
-  #       - Field: host-header
-  #         Values: [!Ref 'Path']
-  #     ListenerArn:
-  #       Fn::ImportValue:
-  #         !Join [':', [!Ref 'EnvironmentName', 'ALBListenerWebSocketQW']]
-  #     Priority: !Ref 'Priority'
 
   # NLBListenerRuleSSL:
   #   Type: AWS::ElasticLoadBalancingV2::ListenerRule
