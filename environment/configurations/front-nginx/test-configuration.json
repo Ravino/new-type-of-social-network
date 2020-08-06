@@ -8,7 +8,7 @@
         "ContainerCpu": "1024",
         "ContainerMemory": "2048",
         "Path": "dev.plizi.fun",
-        "Priority": "10",
+        "Priority": "30",
         "MinCapacity": "1",
         "DesiredCount": "1",
         "MaxCapacity": "10",
