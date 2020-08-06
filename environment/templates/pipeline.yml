@@ -710,8 +710,8 @@ Resources:
         #     OutputArtifacts:
         #       - Name: RedisDeployOutput
         #     RunOrder: 2
-        # - Name: Infrastructure
-        #   Actions:
+        - Name: Infrastructure
+          Actions:
             # - Name: NLB
             #   ActionTypeId:
             #     Category: Deploy
@@ -736,32 +736,32 @@ Resources:
             #   OutputArtifacts:
             #     - Name: NLBDeployOutput
             #   RunOrder: 1
-            # - Name: ALB
-            #   ActionTypeId:
-            #     Category: Deploy
-            #     Owner: AWS
-            #     Version: '1'
-            #     Provider: CloudFormation
-            #   Configuration:
-            #     ActionMode: CREATE_UPDATE
-            #     Capabilities: CAPABILITY_IAM
-            #     #ChangeSetName: !Sub "${AWS::Region}-${EnvironmentName}-${ProjectName}-network-load-balancer-changeset"
-            #     RoleArn: !GetAtt CloudFormationDeployRole.Arn
-            #     StackName: !Sub "${AWS::Region}-${EnvironmentName}-${ProjectName}-alb"
-            #     TemplatePath: "Source::environment/templates/infrastructure/application-load-balancer.yml"
-            #     ParameterOverrides: !Sub |
-            #       {
-            #         "EnvironmentName": "${EnvironmentName}",
-            #         "CertificateArn": "${CertificateArn}",
-            #         "DomainName": "${DomainName}"
-            #       }
-            #   InputArtifacts:
-            #     - Name: Source
-            #   OutputArtifacts:
-            #     - Name: ALBDeployOutput
-            #   RunOrder: 1
-        - Name: Services
-          Actions:
+            - Name: ALB
+              ActionTypeId:
+                Category: Deploy
+                Owner: AWS
+                Version: '1'
+                Provider: CloudFormation
+              Configuration:
+                ActionMode: CREATE_UPDATE
+                Capabilities: CAPABILITY_IAM
+                #ChangeSetName: !Sub "${AWS::Region}-${EnvironmentName}-${ProjectName}-network-load-balancer-changeset"
+                RoleArn: !GetAtt CloudFormationDeployRole.Arn
+                StackName: !Sub "${AWS::Region}-${EnvironmentName}-${ProjectName}-alb"
+                TemplatePath: "Source::environment/templates/infrastructure/application-load-balancer.yml"
+                ParameterOverrides: !Sub |
+                  {
+                    "EnvironmentName": "${EnvironmentName}",
+                    "CertificateArn": "${CertificateArn}",
+                    "DomainName": "${DomainName}"
+                  }
+              InputArtifacts:
+                - Name: Source
+              OutputArtifacts:
+                - Name: ALBDeployOutput
+              RunOrder: 1
+        # - Name: Services
+        #   Actions:
             # - Name: laravel-docker
             #   ActionTypeId:
             #     Category: Build
@@ -788,19 +788,19 @@ Resources:
             #   OutputArtifacts:
             #     - Name: BackWSBuildOutput
             #   RunOrder: 2
-            - Name: back-queue-worker
-              ActionTypeId:
-                Category: Build
-                Owner: AWS
-                Version: '1'
-                Provider: CodeBuild
-              Configuration:
-                ProjectName: !Ref BackQueueWorker
-              InputArtifacts:
-                - Name: Source
-              OutputArtifacts:
-                - Name: BackQueueWorkerBuildOutput
-              RunOrder: 2
+            # - Name: back-queue-worker
+            #   ActionTypeId:
+            #     Category: Build
+            #     Owner: AWS
+            #     Version: '1'
+            #     Provider: CodeBuild
+            #   Configuration:
+            #     ProjectName: !Ref BackQueueWorker
+            #   InputArtifacts:
+            #     - Name: Source
+            #   OutputArtifacts:
+            #     - Name: BackQueueWorkerBuildOutput
+            #   RunOrder: 2
             # - Name: back-api
             #   ActionTypeId:
             #     Category: Build
