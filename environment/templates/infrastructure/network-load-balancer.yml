@@ -67,7 +67,7 @@ Resources:
   # AssociatePrivateSubnetOneEIP:
   #   Type: AWS::EC2::EIPAssociation
   #   Properties:
-  #     AllocationId: !GetAtt PrivateSubnetOneEIP.AllocationId
+  #     EIP: !Ref PrivateSubnetOneEIP
 
   # PrivateSubnetTwoEIP:
   #   Type: AWS::EC2::EIP
@@ -76,7 +76,7 @@ Resources:
   # AssociatePrivateSubnetTwoEIP:
   #   Type: AWS::EC2::EIPAssociation
   #   Properties:
-  #     AllocationId: !GetAtt PrivateSubnetTwoEIP.AllocationId
+  #     EIP: !Ref PrivateSubnetTwoEIP
 
   # PrivateSubnetThreeEIP:
   #   Type: AWS::EC2::EIP
@@ -85,7 +85,7 @@ Resources:
   # AssociatePrivateSubnetThreeEIP:
   #   Type: AWS::EC2::EIPAssociation
   #   Properties:
-  #     AllocationId: !GetAtt PrivateSubnetThreeEIP.AllocationId
+  #     EIP: !Ref PrivateSubnetThreeEIP
 
   # S3 Bucket log
   # NLBLogBucket:
@@ -160,13 +160,13 @@ Resources:
         - Key: "Environment"
           Value: !Ref EnvironmentName
 
-  NLBListenerHTTP:
+  NLBListenerTCP80:
     Type: AWS::ElasticLoadBalancingV2::Listener
     Properties:
       DefaultActions:
       - Type: redirect
         RedirectConfig:
-          Protocol: HTTPS
+          Protocol: TLS
           Port: 443
           Host: "#{host}"
           Path: "/#{path}"
@@ -174,11 +174,11 @@ Resources:
           StatusCode: "HTTP_301"
       LoadBalancerArn: !Ref 'NetworkLoadBalancer'
       Port: 80
-      Protocol: HTTP
+      Protocol: TCP
       Certificates:
         - CertificateArn: !Ref CertificateArn
 
-  NLBListenerHTTPS:
+  NLBListenerTLS443:
     Type: AWS::ElasticLoadBalancingV2::Listener
     Properties:
       DefaultActions:
@@ -186,7 +186,7 @@ Resources:
           TargetGroupArn: !Ref DummyTargetGroupNLB
       LoadBalancerArn: !Ref 'NetworkLoadBalancer'
       Port: 443
-      Protocol: HTTPS
+      Protocol: TLS
       Certificates:
         - CertificateArn: !Ref CertificateArn
 
@@ -308,17 +308,17 @@ Outputs:
   #     Name: !Join [ ':', [ !Ref 'EnvironmentName', 'NLBLogBucket' ] ]
 
   # Listeners
-  NLBListenerHTTP:
-    Description: The ARN of the NLBListenerHTTP
-    Value: !Ref NLBListenerHTTP
+  NLBListenerTCP80:
+    Description: The ARN of the NLBListenerTCP80
+    Value: !Ref NLBListenerTCP80
     Export:
-      Name: !Join [ ':', [ !Ref 'EnvironmentName', 'NLBListenerHTTP' ] ]
+      Name: !Join [ ':', [ !Ref 'EnvironmentName', 'NLBListenerTCP80' ] ]
 
-  NLBListenerHTTPS:
-    Description: The ARN of the NLBListenerHTTPS
-    Value: !Ref NLBListenerHTTPS
+  NLBListenerTLS443:
+    Description: The ARN of the NLBListenerTLS443
+    Value: !Ref NLBListenerTLS443
     Export:
-      Name: !Join [ ':', [ !Ref 'EnvironmentName', 'NLBListenerHTTPS' ] ]
+      Name: !Join [ ':', [ !Ref 'EnvironmentName', 'NLBListenerTLS443' ] ]
 
   NLBListenerTCP1215:
     Description: The ARN of the NLBListenerTCP1215
