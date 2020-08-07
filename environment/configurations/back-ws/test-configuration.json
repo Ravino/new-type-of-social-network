@@ -10,7 +10,7 @@
         "Path": "dev-ws.plizi.fun",
         "Priority": "10",
         "MinCapacity": "1",
-        "DesiredCount": "5",
+        "DesiredCount": "1",
         "MaxCapacity": "100",
         "LowCpuPeriodAlarm": "300",
         "ScaleDownCooldown": "300",

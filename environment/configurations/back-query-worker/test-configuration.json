@@ -9,7 +9,7 @@
         "Path": "dev-qw.plizi.fun",
         "Priority": "10",
         "MinCapacity": "1",
-        "DesiredCount": "10",
+        "DesiredCount": "1",
         "MaxCapacity": "200",
         "LowCpuPeriodAlarm": "300",
         "ScaleDownCooldown": "300",
