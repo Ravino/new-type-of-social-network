@@ -263,20 +263,13 @@ Parameters:
     AllowedValues:
     - Public
     - Private
-
-  HealthCheckGracePeriodSeconds:
-    Type: String
-    Default: "30"
-
   LogRetentionInDays:
     Type: String
     Default: "3"
-
   StickinessDuration:
     Type: String
     Default: ""
     Description: "Duration of stickiness cookie from now, if empty - stickiness is not enabled."
-
 Conditions:
   HasSubnetsReachPublic: !Equals [!Ref SubnetsScope, Public]
   HasStickinessEnabled: !Not [ !Equals  [!Ref StickinessDuration, ""] ]
@@ -317,13 +310,12 @@ Resources:
               awslogs-group: !Join ['-', [!Ref 'ServiceName', !Ref 'EnvironmentName']]
               awslogs-region: !Ref 'AWS::Region'
               awslogs-stream-prefix: !Ref 'ServiceName'
-          # HealthCheck:
-          #   Command: 
-          #     - '[[ "$(curl -o /dev/null -s -w "%{http_code}\n" http://localhost:7070/)" == "426" ]]'
-          #   Interval: 30
-          #   Timeout: 3
-          #   Retries: 2
-          #   StartPeriod: 30
+          HealthCheck:
+            Command: 
+              - 'CMD STATUS=$(curl -s -o /dev/null -w "%{http_code}" http://localhost:7070/); [[ $STATUS -eq 426 ]] || echo "[HealthCheck] Failed: Received status code: $STATUS" ; exit 1;'
+            Interval: 30
+            Timeout: 10
+            Retries: 1
           Ulimits:
             - Name: nofile
               SoftLimit: 2048
@@ -489,7 +481,6 @@ Resources:
             #     !Join [':', [!Ref 'EnvironmentName', 'RedisSecurityGroup']]
           Subnets: !Split [',', {'Fn::ImportValue': !Join [':', [!Ref 'EnvironmentName', !Sub '${SubnetsScope}Subnets']] }]
       TaskDefinition: !Ref 'TaskDefinition'
-      HealthCheckGracePeriodSeconds: !Ref 'HealthCheckGracePeriodSeconds'
       LoadBalancers:
         - ContainerName: !Ref 'ServiceName'
           ContainerPort: 7070
@@ -776,7 +767,6 @@ Resources:
       Name: !Sub '${SubDomainNameOne}.${DomainName}'
       Type: A
       AliasTarget:
-        EvaluateTargetHealth: true
         HostedZoneId: 
           Fn::ImportValue:
             !Join [':', [!Ref 'EnvironmentName', 'ALBCanonicalHostedZoneID']]
@@ -795,7 +785,6 @@ Resources:
       Name: !Sub '${SubDomainNameTwo}.${DomainName}'
       Type: A
       AliasTarget:
-        EvaluateTargetHealth: true
         HostedZoneId: 
           Fn::ImportValue:
             !Join [':', [!Ref 'EnvironmentName', 'NLBCanonicalHostedZoneID']]

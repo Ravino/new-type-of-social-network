@@ -272,9 +272,6 @@ Parameters:
     AllowedValues:
     - Public
     - Private
-  HealthCheckGracePeriodSeconds:
-    Type: String
-    Default: "30"
   LogRetentionInDays:
     Type: String
     Default: "3"
@@ -311,6 +308,12 @@ Resources:
           Essential: true
           PortMappings:
             - ContainerPort: !Ref 'ContainerPort'
+          HealthCheck:
+            Command: 
+              - 'CMD STATUS=$(curl -s -o /dev/null -w "%{http_code}" http://localhost:1215/); [[ $STATUS -eq 426 ]] || echo "[HealthCheck] Failed: Received status code: $STATUS" ; exit 1;'
+            Interval: 30
+            Timeout: 10
+            Retries: 1
           LogConfiguration:
             LogDriver: 'awslogs'
             Options:
@@ -475,7 +478,6 @@ Resources:
                 #!Join [':', [!Ref 'EnvironmentName', 'RedisSecurityGroup']]
           Subnets: !Split [',', {'Fn::ImportValue': !Join [':', [!Ref 'EnvironmentName', !Sub '${SubnetsScope}Subnets']] }]
       TaskDefinition: !Ref 'TaskDefinition'
-      HealthCheckGracePeriodSeconds: !Ref 'HealthCheckGracePeriodSeconds'
       LoadBalancers:
         - ContainerName: !Ref 'ServiceName'
           ContainerPort: !Ref 'ContainerPort'
@@ -488,14 +490,14 @@ Resources:
     Type: AWS::ElasticLoadBalancingV2::TargetGroup
     Properties:
       # Health checks
-      HealthCheckIntervalSeconds: 30
-      HealthCheckPath: /
-      HealthCheckProtocol: HTTP
-      HealthCheckTimeoutSeconds: 5
-      HealthyThresholdCount: 2
-      UnhealthyThresholdCount: 2
-      Matcher:
-        HttpCode: "200-299"
+      # HealthCheckIntervalSeconds: 30
+      # HealthCheckPath: /
+      # HealthCheckProtocol: HTTP
+      # HealthCheckTimeoutSeconds: 5
+      # HealthyThresholdCount: 2
+      # UnhealthyThresholdCount: 2
+      # Matcher:
+      #   HttpCode: "200-299"
       # Routing
       TargetType: ip
       Port: 80
