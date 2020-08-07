@@ -115,7 +115,7 @@ Resources:
           Value: !Ref 'EnvironmentName'
 
   # Route 53
-  ALBRecordSetGroupPublic:
+  RecordSetGroupPublic:
     Type: AWS::Route53::RecordSetGroup
     Properties:
       Comment: "RecordSetGroup for ALB, facing on eu-central-1, PublicHostedZone "
@@ -124,26 +124,11 @@ Resources:
           !Join [':', [!Ref 'EnvironmentName', 'PublicDNSHostedZone']]
       RecordSets:
         - 
-          Name: !Sub 'dev.${DomainName}'
+          Name: !Sub 'alb.${DomainName}'
           Type: A
           AliasTarget:
             HostedZoneId: !GetAtt 'ApplicationLoadBalancer.CanonicalHostedZoneID'
             DNSName: !GetAtt 'ApplicationLoadBalancer.DNSName'
-          #TTL: "60"
-        - 
-          Name: !Sub 'dev-ws.${DomainName}'
-          Type: A
-          AliasTarget:
-            HostedZoneId: !GetAtt 'ApplicationLoadBalancer.CanonicalHostedZoneID'
-            DNSName: !GetAtt 'ApplicationLoadBalancer.DNSName'
-          #TTL: "60"
-        - 
-          Name: !Sub 'dev-api.${DomainName}'
-          Type: A
-          AliasTarget:
-            HostedZoneId: !GetAtt 'ApplicationLoadBalancer.CanonicalHostedZoneID'
-            DNSName: !GetAtt 'ApplicationLoadBalancer.DNSName'
-          #TTL: "60"
     DeletionPolicy: Delete
     UpdateReplacePolicy: Delete
 
@@ -228,8 +213,8 @@ Outputs:
       Name: !Join [ ':', [ !Ref 'EnvironmentName', 'ALBListenerHTTPS' ] ]
 
   # Route 53
-  ALBRecordSetGroupPublic:
+  RecordSetGroupPublic:
     Description: The ARN of the public load balancer's Listener
-    Value: !Ref ALBRecordSetGroupPublic
+    Value: !Ref RecordSetGroupPublic
     Export:
-      Name: !Join [ ':', [ !Ref 'EnvironmentName', 'ALBRecordSetGroupPublic' ] ]
+      Name: !Join [ ':', [ !Ref 'EnvironmentName', 'RecordSetGroupPublic' ] ]

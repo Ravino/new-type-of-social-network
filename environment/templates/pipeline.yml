@@ -823,7 +823,8 @@ Resources:
                 Capabilities: CAPABILITY_IAM,CAPABILITY_AUTO_EXPAND
                 ParameterOverrides: !Sub |
                   {
-                    "EnvironmentName": "${EnvironmentName}"
+                    "EnvironmentName": "${EnvironmentName}",
+                    "DomainName": "${DomainName}"
                   }
               InputArtifacts:
                 - Name: Source
@@ -846,7 +847,8 @@ Resources:
                 TemplatePath: Source::environment/templates/services/back-queue-worker.yml
                 ParameterOverrides: !Sub |
                   {
-                    "EnvironmentName": "${EnvironmentName}"
+                    "EnvironmentName": "${EnvironmentName}",
+                    "DomainName": "${DomainName}"
                   }
               InputArtifacts:
                 - Name: Source
@@ -868,7 +870,8 @@ Resources:
                 TemplatePath: Source::environment/templates/services/back-api.yml
                 ParameterOverrides: !Sub |
                   {
-                    "EnvironmentName": "${EnvironmentName}"
+                    "EnvironmentName": "${EnvironmentName}",
+                    "DomainName": "${DomainName}"
                   }
               InputArtifacts:
                 - Name: Source
@@ -890,7 +893,8 @@ Resources:
                 TemplatePath: Source::environment/templates/services/front-nginx.yml
                 ParameterOverrides: !Sub |
                   {
-                    "EnvironmentName": "${EnvironmentName}"
+                    "EnvironmentName": "${EnvironmentName}",
+                    "DomainName": "${DomainName}"
                   }
               InputArtifacts:
                 - Name: Source

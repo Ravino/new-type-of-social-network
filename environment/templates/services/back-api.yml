@@ -145,6 +145,14 @@ Parameters:
       - prod
     ConstraintDescription: Environment name may be only 'test' or 'prod', to prevent
                            configuration files multiplication.
+  # Route 53
+  DomainName:
+    Type: String
+    Description: The specific alias name for the application
+  SubDomainNameOne:
+    Type: String
+    Default: ""
+    Description: The specific alias name for the application service container One itself
   # stack-related parameters
   # application configuration
   ServiceName:
@@ -712,3 +720,30 @@ Resources:
       ComparisonOperator: GreaterThanOrEqualToThreshold
       AlarmActions:
         - !Ref ScaleUpPolicy
+  
+  # Route53
+  ALBRecordSetPublicApi:
+    Type: 'AWS::Route53::RecordSet'
+    Properties:
+      HostedZoneId: 
+        Fn::ImportValue:
+          !Join [':', [!Ref 'EnvironmentName', 'PublicDNSHostedZone']]
+      Name: !Sub '${SubDomainNameOne}.${DomainName}'
+      Type: A
+      AliasTarget:
+        HostedZoneId: 
+          Fn::ImportValue:
+            !Join [':', [!Ref 'EnvironmentName', 'NLBCanonicalHostedZoneID']]
+        DNSName:
+          Fn::ImportValue:
+            !Join [':', [!Ref 'EnvironmentName', 'NLBDNSName']]
+    DeletionPolicy: Delete
+    UpdateReplacePolicy: Delete
+
+Outputs:
+  # Route 53
+  ALBRecordSetPublicApi:
+    Description: Arn ID of ALBRecordSetPublicApi
+    Value: !Ref 'ALBRecordSetPublicApi'
+    Export:
+      Name: !Join [ ':', [ !Ref 'EnvironmentName', 'ALBRecordSetPublicApi' ] ]

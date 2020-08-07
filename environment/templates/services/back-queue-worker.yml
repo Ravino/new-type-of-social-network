@@ -155,6 +155,10 @@ Parameters:
     Type: String
     Default: service
     Description: A name for the service that would be managing FARGATE tasks inside the cluster.
+  # Route 53
+  DomainName:
+    Type: String
+    Description: The specific alias name for the application
   # deployment
   ImageUrl:
     Type: String

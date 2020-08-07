@@ -192,22 +192,6 @@ Resources:
       Certificates:
         - CertificateArn: !Ref CertificateArn
 
-  # Hosted Zone Id
-  NLBRecordSetPublicZMQ:
-    Type: 'AWS::Route53::RecordSet'
-    Properties:
-      HostedZoneId: 
-        Fn::ImportValue:
-          !Join [':', [!Ref 'EnvironmentName', 'PublicDNSHostedZone']]
-      Name: !Sub 'dev-zmq.${DomainName}'
-      Type: A
-      AliasTarget:
-        HostedZoneId: !GetAtt 'NetworkLoadBalancer.CanonicalHostedZoneID'
-        DNSName: !GetAtt 'NetworkLoadBalancer.DNSName'
-      #TTL: "60"
-    DeletionPolicy: Delete
-    UpdateReplacePolicy: Delete
-
 Outputs:
 
   # Balancer Overall Info
@@ -277,12 +261,3 @@ Outputs:
     Value: !Ref NLBListenerTLS7070
     Export:
       Name: !Join [ ':', [ !Ref 'EnvironmentName', 'NLBListenerTLS7070' ] ]
-
-  # Route 53
-  NLBRecordSetPublicZMQ:
-    Description: The ARN of the NLBRecordSetPublic for ZMQ service
-    Value: !Ref NLBRecordSetPublicZMQ
-    Export:
-      Name: !Join [ ':', [ !Ref 'EnvironmentName', 'NLBRecordSetPublicZMQ' ] ]
-      
-  
