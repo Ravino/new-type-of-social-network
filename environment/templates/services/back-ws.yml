@@ -594,8 +594,8 @@ Resources:
       # Health checks
       HealthCheckIntervalSeconds: 30
       HealthCheckPath: /
-      HealthCheckPort: !Ref 'ContainerPort' # 443 # 80
-      HealthCheckProtocol: TLS
+      HealthCheckPort: !Ref 'ContainerPort' # 5555 # 443 # 80
+      HealthCheckProtocol: TCP
       HealthCheckTimeoutSeconds: 10
       HealthyThresholdCount: 3
       UnhealthyThresholdCount: 3
