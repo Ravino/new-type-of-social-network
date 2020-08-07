@@ -160,16 +160,6 @@ Resources:
         - Key: "Environment"
           Value: !Ref EnvironmentName
 
-  NLBListenerTCP5555:
-    Type: AWS::ElasticLoadBalancingV2::Listener
-    Properties:
-      DefaultActions:
-        - Type: forward
-          TargetGroupArn: !Ref 'DummyTargetGroupNLB'
-      LoadBalancerArn: !Ref 'NetworkLoadBalancer'
-      Port: 5555
-      Protocol: TCP
-
   NLBListenerTCP1215:
     Type: AWS::ElasticLoadBalancingV2::Listener
     Properties:
@@ -249,12 +239,6 @@ Outputs:
     Value: !Ref NLBListenerTCP1215
     Export:
       Name: !Join [ ':', [ !Ref 'EnvironmentName', 'NLBListenerTCP1215' ] ]
-
-  NLBListenerTCP5555:
-    Description: The ARN of the NLBListenerTCP5555
-    Value: !Ref NLBListenerTCP5555
-    Export:
-      Name: !Join [ ':', [ !Ref 'EnvironmentName', 'NLBListenerTCP5555' ] ]
 
   NLBListenerTLS7070:
     Description: The ARN of the NLBListenerTLS7070

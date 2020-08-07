@@ -476,7 +476,6 @@ Resources:
     DependsOn:
       - ALBListenerRule
       - ALBListenerRuleSSL
-      #- NLBListenerRuleSSL
     Properties:
       ServiceName: !Ref 'ServiceName'
       Cluster:
@@ -622,28 +621,19 @@ Resources:
       Tags:
         - Key: 'Name'
           Value: !Join ["-", [ "PLIZI" , !Ref 'AWS::Region', !Ref 'ServiceName' , !Ref 'EnvironmentName' , "NLB", "TG"]]
-
-  NLBListenerRule:
-    Type: AWS::ElasticLoadBalancingV2::ListenerRule
-    Properties:
-      Actions:
-        - Type: forward
-          ForwardConfig:
-            TargetGroups: 
-            - TargetGroupArn: !Ref NLBTargetGroup
-              Weight: 1
-            # TargetGroupStickinessConfig: 
-            #   DurationSeconds: 60
-            #   Enabled: true
-            # TODO: Check if we need stickness on NLB?
-      Conditions:
-        - Field: host-header
-          Values: [!Ref 'Path']
-      ListenerArn:
-        Fn::ImportValue:
-          !Join [':', [!Ref 'EnvironmentName', 'NLBListenerTCP5555']]
-      Priority: !Ref 'Priority'
   
+  NLBListener:
+    Type: AWS::ElasticLoadBalancingV2::Listener
+    Properties:
+      DefaultActions:
+        - Type: forward
+          TargetGroupArn: !Ref 'NLBTargetGroup'
+      LoadBalancerArn: 
+        Fn::ImportValue:
+          !Join [':', [!Ref 'EnvironmentName', 'NLBId']]
+      Port: 5555
+      Protocol: TCP
+
   # Enable autoscaling for this service
   ScalableTarget:
     Type: AWS::ApplicationAutoScaling::ScalableTarget
