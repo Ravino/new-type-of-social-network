@@ -592,13 +592,13 @@ Resources:
     Type: AWS::ElasticLoadBalancingV2::TargetGroup
     Properties:
       # Health checks
-      HealthCheckIntervalSeconds: 30
+      #HealthCheckIntervalSeconds: 30
       #HealthCheckPath: /
-      HealthCheckPort: !Ref 'ContainerPort'
-      HealthCheckProtocol: TCP
-      HealthCheckTimeoutSeconds: 10
-      HealthyThresholdCount: 3
-      UnhealthyThresholdCount: 3
+      #HealthCheckPort: !Ref 'ContainerPort'
+      #HealthCheckProtocol: TCP
+      #HealthCheckTimeoutSeconds: 10
+      #HealthyThresholdCount: 3
+      #UnhealthyThresholdCount: 3
       # Matcher:
       #   HttpCode: "426"
       # Routing
