@@ -767,19 +767,19 @@ Resources:
         #       OutputArtifacts:
         #         - Name: BackWSBuildOutput
         #       RunOrder: 2
-            - Name: back-queue-worker
-              ActionTypeId:
-                Category: Build
-                Owner: AWS
-                Version: '1'
-                Provider: CodeBuild
-              Configuration:
-                ProjectName: !Ref BackQueueWorker
-              InputArtifacts:
-                - Name: Source
-              OutputArtifacts:
-                - Name: BackQueueWorkerBuildOutput
-              RunOrder: 2
+            # - Name: back-queue-worker
+            #   ActionTypeId:
+            #     Category: Build
+            #     Owner: AWS
+            #     Version: '1'
+            #     Provider: CodeBuild
+            #   Configuration:
+            #     ProjectName: !Ref BackQueueWorker
+            #   InputArtifacts:
+            #     - Name: Source
+            #   OutputArtifacts:
+            #     - Name: BackQueueWorkerBuildOutput
+            #   RunOrder: 2
         #     - Name: back-api
         #       ActionTypeId:
         #         Category: Build
