@@ -545,9 +545,9 @@ Resources:
             TargetGroups: 
             - TargetGroupArn: !Ref ALBTargetGroup
               Weight: 1
-            TargetGroupStickinessConfig: 
-              DurationSeconds: !If [ "HasStickinessEnabled", !Ref 'StickinessDuration', !Ref "AWS::NoValue" ]
-              Enabled: !If [ "HasStickinessEnabled" , true, false ]
+            # TargetGroupStickinessConfig: 
+            #   DurationSeconds: !If [ "HasStickinessEnabled", !Ref 'StickinessDuration', !Ref "AWS::NoValue" ]
+            #   Enabled: !If [ "HasStickinessEnabled" , true, false ]
       Conditions:
         - Field: host-header
           Values: [!Ref 'Path']
@@ -565,9 +565,9 @@ Resources:
             TargetGroups: 
             - TargetGroupArn: !Ref ALBTargetGroup
               Weight: 1
-            TargetGroupStickinessConfig: 
-              DurationSeconds: !If [ "HasStickinessEnabled", !Ref 'StickinessDuration', !Ref "AWS::NoValue" ]
-              Enabled: !If [ "HasStickinessEnabled" , true, false ]
+            # TargetGroupStickinessConfig: 
+            #   DurationSeconds: !If [ "HasStickinessEnabled", !Ref 'StickinessDuration', !Ref "AWS::NoValue" ]
+            #   Enabled: !If [ "HasStickinessEnabled" , true, false ]
       Conditions:
         - Field: host-header
           Values: [!Ref 'Path']
