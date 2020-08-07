@@ -48,7 +48,7 @@
         "SwooleHttpHost": "0.0.0.0",
         "ZmqSubHost": "dev-ws.plizi.fun",
         "WsLogs": "1",
-        "WsSecure": "1",
+        "WsSecure": "",
         "WsPrivateKeyPath": "/docker/ssl/privkey.pem",
         "WsFullchainPath": "/docker/ssl/fullchain.pem"
     }

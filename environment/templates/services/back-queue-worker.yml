@@ -9,14 +9,14 @@ Parameters:
     Description: Switch to 1 to enable extended BackWS logs.
   WsSecure:
     Type: String
-    Default: "1"
+    Default: ""
     Description: Switch to 1 to enable SLL for BackWS service.
   WsPrivateKeyPath:
     Type: String
-    Default: "/app/ssl/privkey.pem"
+    Default: ""
   WsFullchainPath:
     Type: String
-    Default: "/app/ssl/fullchain.pem"
+    Default: ""
   TestChatID:
     Type: String
   ApiUrl:
