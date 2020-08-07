@@ -42,7 +42,7 @@ class WampServer implements WampServerInterface
             echo "< WampServer.sentDataToServer >[ Debug ] data = $data" . PHP_EOL;
         }
         $socket->send($data);
-        echo "< WampServer.sentDataToServer >[ Info ] Sent data ( length: " . count ($uri) s. " ) to ZMQ Sub Server socket. " . PHP_EOL;
+        echo "< WampServer.sentDataToServer >[ Info ] Sent data ( length: " . count ($uri) . " ) to ZMQ Sub Server socket. " . PHP_EOL;
     }
 
     /**
@@ -61,7 +61,7 @@ class WampServer implements WampServerInterface
     public function broadcast($jsonData)
     {
         if(config('app.ws_logs')) {
-            echo "< WampServer.broadcast > [ Debug ] Broadcasting detected: " . json_encode($jsonData) . PHP_EOL;
+            echo "< WampServer.broadcast > [ Debug ] Broadcasting detected: $jsonData" . PHP_EOL;
         }
         $aDataToSend = json_decode($jsonData, true);
         $topics = $this->getSubscribedTopics();
