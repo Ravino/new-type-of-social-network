@@ -514,15 +514,15 @@ Resources:
     Type: AWS::ElasticLoadBalancingV2::TargetGroup
     Properties:
       # Health checks
-      HealthCheckIntervalSeconds: 30
-      HealthCheckPath: /
-      HealthCheckPort: !Ref 'ContainerPort'
-      HealthCheckProtocol: HTTP
-      HealthCheckTimeoutSeconds: 6
-      HealthyThresholdCount: 5
-      UnhealthyThresholdCount: 2
-      Matcher:
-        HttpCode: "426"
+      # HealthCheckIntervalSeconds: 30
+      # HealthCheckPath: /
+      #HealthCheckPort: !Ref 'ContainerPort'
+      # HealthCheckProtocol: HTTP
+      # HealthCheckTimeoutSeconds: 6
+      # HealthyThresholdCount: 5
+      # UnhealthyThresholdCount: 2
+      # Matcher:
+      #   HttpCode: "426"
       # Routing
       TargetType: ip
       Port: 80
@@ -592,13 +592,13 @@ Resources:
     Type: AWS::ElasticLoadBalancingV2::TargetGroup
     Properties:
       # Health checks
-      #HealthCheckIntervalSeconds: 30
-      #HealthCheckPath: /
-      #HealthCheckPort: !Ref 'ContainerPort'
-      #HealthCheckProtocol: TCP
-      #HealthCheckTimeoutSeconds: 10
-      #HealthyThresholdCount: 3
-      #UnhealthyThresholdCount: 3
+      HealthCheckIntervalSeconds: 30
+      HealthCheckPath: /
+      HealthCheckPort: !Ref 'ContainerPort' # 443 # 80
+      HealthCheckProtocol: TLS
+      HealthCheckTimeoutSeconds: 10
+      HealthyThresholdCount: 3
+      UnhealthyThresholdCount: 3
       # Matcher:
       #   HttpCode: "426"
       # Routing
@@ -791,6 +791,7 @@ Resources:
       Name: !Sub '${SubDomainNameOne}.${DomainName}'
       Type: A
       AliasTarget:
+        EvaluateTargetHealth: true
         HostedZoneId: 
           Fn::ImportValue:
             !Join [':', [!Ref 'EnvironmentName', 'ALBCanonicalHostedZoneID']]
@@ -809,6 +810,7 @@ Resources:
       Name: !Sub '${SubDomainNameTwo}.${DomainName}'
       Type: A
       AliasTarget:
+        EvaluateTargetHealth: true
         HostedZoneId: 
           Fn::ImportValue:
             !Join [':', [!Ref 'EnvironmentName', 'NLBCanonicalHostedZoneID']]
