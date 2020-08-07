@@ -612,8 +612,6 @@ Resources:
         #   Value: "true"
         # - Key: stickiness.type
         #   Value: 'source_ip'
-        - Key: slow_start.duration_seconds 
-          Value: "0"
         - Key: deregistration_delay.timeout_seconds
           Value: "0"
         - Key: proxy_protocol_v2.enabled
