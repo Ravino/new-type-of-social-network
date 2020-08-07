@@ -21,7 +21,7 @@
         "DeploymentMaximum": "200",
         "DeploymentMinimum": "75",
         "SubnetsScope": "Public",
-        "HealthCheckGracePeriodSeconds": "30",
+        "HealthCheckGracePeriodSeconds": "10",
         "LogRetentionInDays": "3"
     }
 }
