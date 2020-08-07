@@ -204,7 +204,7 @@ Resources:
       AliasTarget:
         HostedZoneId: !GetAtt 'NetworkLoadBalancer.CanonicalHostedZoneID'
         DNSName: !GetAtt 'NetworkLoadBalancer.DNSName'
-      TTL: "60"
+      #TTL: "60"
     DeletionPolicy: Delete
     UpdateReplacePolicy: Delete
 

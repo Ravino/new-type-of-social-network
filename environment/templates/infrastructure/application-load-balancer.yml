@@ -113,7 +113,7 @@ Resources:
           Value: !Sub ${AWS::Region}
         - Key: "Environment"
           Value: !Ref 'EnvironmentName'
-          
+
   # Route 53
   ALBRecordSetGroupPublic:
     Type: AWS::Route53::RecordSetGroup
@@ -129,21 +129,21 @@ Resources:
           AliasTarget:
             HostedZoneId: !GetAtt 'ApplicationLoadBalancer.CanonicalHostedZoneID'
             DNSName: !GetAtt 'ApplicationLoadBalancer.DNSName'
-          TTL: "60"
+          #TTL: "60"
         - 
           Name: !Sub 'dev-ws.${DomainName}'
           Type: A
           AliasTarget:
             HostedZoneId: !GetAtt 'ApplicationLoadBalancer.CanonicalHostedZoneID'
             DNSName: !GetAtt 'ApplicationLoadBalancer.DNSName'
-          TTL: "60"
+          #TTL: "60"
         - 
           Name: !Sub 'dev-api.${DomainName}'
           Type: A
           AliasTarget:
             HostedZoneId: !GetAtt 'ApplicationLoadBalancer.CanonicalHostedZoneID'
             DNSName: !GetAtt 'ApplicationLoadBalancer.DNSName'
-          TTL: "60"
+          #TTL: "60"
     DeletionPolicy: Delete
     UpdateReplacePolicy: Delete
 
