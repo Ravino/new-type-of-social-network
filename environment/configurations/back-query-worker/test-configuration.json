@@ -44,7 +44,7 @@
         "LogRetentionInDays": "3",
         "SupervisorCount": "8",
         "SwooleHttpHost": "0.0.0.0",
-        "ZmqSubHost": "dev-zmq.plizi.fun",
+        "ZmqSubHost": "dev-ws.plizi.fun",
         "WsLogs": "1"
     }
 }
