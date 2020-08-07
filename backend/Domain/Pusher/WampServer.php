@@ -25,13 +25,24 @@ class WampServer implements WampServerInterface
         $ip = gethostbyname(config('pusher.zmq_sub_host'));
         $context = new \ZMQContext();
         $socket = $context->getSocket(\ZMQ::SOCKET_PUSH, 'pusher');
-        try {
-            $socket->connect("tcp://$ip:5555");
-        } catch (\ZMQSocketException $ex) {
-            echo $ex->getMessage().PHP_EOL;
+        if (config('app.ws_logs')) {
+            echo "< WampServer.sentDataToServer > [ Debug ] zmq_sub_host: $ip, socket: " . json_encode($socket) . PHP_EOL;
         }
+
+        try {
+            $uri = "tcp://$ip:5555";
+            $socket->connect($uri);
+            echo "< WampServer.sentDataToServer > [ Info ] Connected to ZMQSubHost on: $uri". PHP_EOL;
+        } catch (\ZMQSocketException $ex) {
+            echo "< WampServer.sentDataToServer > [ Exception ] " . $ex->getMessage() . PHP_EOL;
+        }
+
         $data = json_encode($data);
+        if (config('app.ws_logs')) {
+            echo "< WampServer.sentDataToServer >[ Debug ] data = $data" . PHP_EOL;
+        }
         $socket->send($data);
+        echo "< WampServer.sentDataToServer >[ Info ] Sent data ( length: " . count ($uri) s. " ) to ZMQ Sub Server socket. " . PHP_EOL;
     }
 
     /**
@@ -49,6 +60,9 @@ class WampServer implements WampServerInterface
      */
     public function broadcast($jsonData)
     {
+        if(config('app.ws_logs')) {
+            echo "< WampServer.broadcast > [ Debug ] Broadcasting detected: " . json_encode($jsonData) . PHP_EOL;
+        }
         $aDataToSend = json_decode($jsonData, true);
         $topics = $this->getSubscribedTopics();
         if(isset($topics[$aDataToSend['topic_id']])){
@@ -72,6 +86,9 @@ class WampServer implements WampServerInterface
 
     public function onPublish(ConnectionInterface $conn, $topic, $event, array $exclude, array $eligible)
     {
+        if(config('app.ws_logs')) {
+            echo "< WampServer.onUnSubscribe > [ Debug ] Publish ( topic = $topic, event = $event ) detected: " . json_encode($conn) . PHP_EOL;
+        }
         $this->broadcast($event);
     }
 
@@ -85,7 +102,7 @@ class WampServer implements WampServerInterface
                     event(new UserTypingEvent($params['userId'], $params['chatId']));
                 } else if($params['event'] === 'new.message') {
                     if(config('app.ws_logs')) {
-                        echo "New message sent [onCall]". PHP_EOL;
+                        echo "< WampServer.onCall > [ Debug ] New message sent with data: " . json_encode($params) . PHP_EOL;
                     }
                     if(config('app.test_chat') !== $params['chatId']) {
                         event(new NewMessageEvent($params['body'], $user_id, $params['chatId'], $params['attachments'],
@@ -103,26 +120,43 @@ class WampServer implements WampServerInterface
                 }
             }
         } catch (Exception $ex) {
-            echo $ex->getMessage() . PHP_EOL;
+            echo "< WampServer.onCall > [ Exception ] " . $ex->getMessage() . PHP_EOL;
             Log::error($ex);
         }
     }
 
     public function onSubscribe(ConnectionInterface $conn, $topic)
     {
+        if(config('app.ws_logs')) {
+            echo "< WampServer.onUnSubscribe > [ Debug ] Subscribe ( topic = $topic ) detected: " . json_encode($conn) . PHP_EOL;
+        }
         $this->addSubscribedTopic($topic);
     }
 
-    public function onUnSubscribe(ConnectionInterface $conn, $topic) {}
-
-    public function onOpen(ConnectionInterface $conn) {
+    public function onUnSubscribe(ConnectionInterface $conn, $topic) {
         if(config('app.ws_logs')) {
-            echo "New connection detected [onOpen]". PHP_EOL;
+            echo "< WampServer.onUnSubscribe > [ Debug ] UnSubscribe ( topic = $topic ) detected: " . json_encode($conn) . PHP_EOL;
         }
     }
 
-    public function onClose(ConnectionInterface $conn) {}
-    public function onError(ConnectionInterface $conn, \Exception $e) {}
+    public function onOpen(ConnectionInterface $conn) {
+        if(config('app.ws_logs')) {
+            echo "< WampServer.onOpen > [ Debug ] New connection detected: " . json_encode($conn) . PHP_EOL;
+        }
+    }
+
+    public function onClose(ConnectionInterface $conn) {
+        if(config('app.ws_logs')) {
+            echo "< WampServer.onClose > [ Debug ] Close connection detected: " . json_encode($conn) . PHP_EOL;
+        }
+    }
+    public function onError(ConnectionInterface $conn, \Exception $e) {
+        if(config('app.ws_logs')) {
+            echo "< WampServer.onClose > [ Debug ] Error connection detected: " . json_encode($conn) . PHP_EOL;
+        }
+        echo "< WampServer.onCall > [ Exception ] " . $e->getMessage() . PHP_EOL;
+        Log::error($e);
+    }
     public function onMessage() {}
 
     private function getUserIdFronToken($token) {
