@@ -710,11 +710,11 @@ Resources:
                     "CertificateArn": "${CertificateArn}",
                     "DomainName": "${DomainName}"
                   }
-        #       InputArtifacts:
-        #         - Name: Source
-        #       OutputArtifacts:
-        #         - Name: NLBDeployOutput
-        #       RunOrder: 1
+              InputArtifacts:
+                - Name: Source
+              OutputArtifacts:
+                - Name: NLBDeployOutput
+              RunOrder: 1
         #     - Name: ALB
         #       ActionTypeId:
         #         Category: Deploy
