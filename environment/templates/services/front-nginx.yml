@@ -515,10 +515,10 @@ Resources:
       AliasTarget:
         HostedZoneId: 
           Fn::ImportValue:
-            !Join [':', [!Ref 'EnvironmentName', 'NLBCanonicalHostedZoneID']]
+            !Join [':', [!Ref 'EnvironmentName', 'ALBCanonicalHostedZoneID']]
         DNSName:
           Fn::ImportValue:
-            !Join [':', [!Ref 'EnvironmentName', 'NLBDNSName']]
+            !Join [':', [!Ref 'EnvironmentName', 'ALBDNSName']]
     DeletionPolicy: Delete
     UpdateReplacePolicy: Delete
 
