@@ -5,8 +5,6 @@
         "SubDomainNameOne": "dev-ws",
         "SubDomainNameTwo": "dev-zmq",
         "ImageUrl": "884088487044.dkr.ecr.eu-central-1.amazonaws.com/eu-central-1-test-plizi-back-ws:latest",
-        "ContainerProtocol": "HTTP",
-        "ContainerPort": "7070",
         "ContainerCpu": "1024",
         "ContainerMemory": "2048",
         "Path": "dev-ws.plizi.fun",

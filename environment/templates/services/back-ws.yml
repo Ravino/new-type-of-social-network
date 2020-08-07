@@ -173,23 +173,6 @@ Parameters:
     Default: 'busybox'
     Description: The url of a docker image that contains the application process that
                  will handle the traffic for this service
-  # deployment
-  ContainerPort:
-    Type: Number
-    Default: 443
-    Description: What port number the application the docker container is binding to
-  # deployment
-  ContainerProtocol:
-    Type: String
-    Default: SSL
-    Description: Which protocol should be used for service communication
-    # AllowedValues:
-    #   - HTTP
-    #   - SSL
-    #   - TCP
-    #   - TLS
-    #   - UDP
-    # ConstraintDescription: Only existing internet protocol should be specified as service protocol
   # resources management
   ContainerCpu:
     Type: Number
@@ -289,9 +272,14 @@ Parameters:
     Type: String
     Default: "3"
 
+  StickinessDuration:
+    Type: String
+    Default: ""
+    Description: "Duration of stickiness cookie from now, if empty - stickiness is not enabled."
+
 Conditions:
   HasSubnetsReachPublic: !Equals [!Ref SubnetsScope, Public]
-
+  HasStickinessEnabled: !Not [ !Equals  [!Ref StickinessDuration, ""] ]
 Resources:
   LogGroup:
     Type: AWS::Logs::LogGroup
@@ -321,7 +309,7 @@ Resources:
           #Command: 
           Essential: true
           PortMappings:
-            - ContainerPort: !Ref 'ContainerPort'
+            - ContainerPort: 7070
             - ContainerPort: 5555
           LogConfiguration:
             LogDriver: 'awslogs'
@@ -504,7 +492,7 @@ Resources:
       HealthCheckGracePeriodSeconds: !Ref 'HealthCheckGracePeriodSeconds'
       LoadBalancers:
         - ContainerName: !Ref 'ServiceName'
-          ContainerPort: !Ref 'ContainerPort'
+          ContainerPort: 7070
           TargetGroupArn: !Ref 'ALBTargetGroup'
         # - ContainerName: !Ref 'ServiceName'
         #   ContainerPort: 5555
@@ -516,7 +504,7 @@ Resources:
       #Health checks
       HealthCheckIntervalSeconds: 30
       HealthCheckPath: /
-      HealthCheckPort: !Ref 'ContainerPort'
+      HealthCheckPort: "7070"
       HealthCheckProtocol: HTTP
       HealthCheckTimeoutSeconds: 6
       HealthyThresholdCount: 5
@@ -526,15 +514,15 @@ Resources:
       # Routing
       TargetType: ip
       Port: 80
-      Protocol: !Ref 'ContainerProtocol' # TODO : Desire TLS?
+      Protocol: HTTP # TODO : Desire TLS?
       # Attributes
       TargetGroupAttributes:
       - Key: "stickiness.enabled"
-        Value: "true"
+        Value: !If [ "HasStickinessEnabled" , "true", "false" ]
       - Key: "stickiness.type"
-        Value: "lb_cookie"
+        Value: !If [ "HasStickinessEnabled", "lb_cookie", !Ref "AWS::NoValue" ]
       - Key: "stickiness.lb_cookie.duration_seconds"
-        Value: "60"
+        Value: !If [ "HasStickinessEnabled", !Ref 'StickinessDuration', !Ref "AWS::NoValue" ]
       - Key: "deregistration_delay.timeout_seconds"
         Value: "0"
       - Key: "slow_start.duration_seconds"
@@ -558,8 +546,8 @@ Resources:
             - TargetGroupArn: !Ref ALBTargetGroup
               Weight: 1
             TargetGroupStickinessConfig: 
-              DurationSeconds: 60
-              Enabled: true
+              DurationSeconds: !If [ "HasStickinessEnabled", !Ref 'StickinessDuration', !Ref "AWS::NoValue" ]
+              Enabled: !If [ "HasStickinessEnabled" , true, false ]
       Conditions:
         - Field: host-header
           Values: [!Ref 'Path']
@@ -578,8 +566,8 @@ Resources:
             - TargetGroupArn: !Ref ALBTargetGroup
               Weight: 1
             TargetGroupStickinessConfig: 
-              DurationSeconds: 60
-              Enabled: true
+              DurationSeconds: !If [ "HasStickinessEnabled", !Ref 'StickinessDuration', !Ref "AWS::NoValue" ]
+              Enabled: !If [ "HasStickinessEnabled" , true, false ]
       Conditions:
         - Field: host-header
           Values: [!Ref 'Path']
