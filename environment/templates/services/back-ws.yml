@@ -790,7 +790,7 @@ Resources:
       Name: !Sub '${SubDomainNameOne}.${DomainName}'
       Type: A
       AliasTarget:
-        EvaluateTargetHealth: true
+        EvaluateTargetHealth: false
         HostedZoneId: 
           Fn::ImportValue:
             !Join [':', [!Ref 'EnvironmentName', 'ALBCanonicalHostedZoneID']]
