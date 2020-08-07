@@ -37,6 +37,9 @@ function usage() {
     echo "$ bash app.sh delete-1-vpc-cluster"
     echo "$ bash app.sh delete-0-stack-resources"
     echo "$ bash app.sh delete-0-stack"
+    echo "[4] Use JMeter AB tool to force ELB to scaling: "
+    echo "$ bash app.sh heatup-install"
+    echo "$ bash app.sh heatup-run"
     echo "================================================="
 }
 
@@ -143,6 +146,14 @@ function delete-0-stack-resources {
 }
 function delete-0-stack {
     aws cloudformation delete-stack --stack-name ${STACK_NAME} --role-arn ${ARN_ROLE}
+}
+function heatup-install {
+    sudo yum install -y httpd24-tools
+}
+function heatup-run {
+    $samples = ${1:-500000}
+    $threads = ${2:-5000}
+    ab -n ${samples} -c ${threads} http://alb.plizi.fun/
 }
 
 $COMMAND_NAME $COMMAND_PARAM
