@@ -593,7 +593,6 @@ Resources:
     Properties:
       # Health checks
       HealthCheckIntervalSeconds: 30
-      HealthCheckPath: /
       HealthCheckPort: !Ref 'ContainerPort' # 5555 # 443 # 80
       HealthCheckProtocol: TCP
       HealthCheckTimeoutSeconds: 10
