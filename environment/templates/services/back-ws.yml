@@ -513,8 +513,8 @@ Resources:
         HttpCode: "426"
       # Routing
       TargetType: ip
-      Port: 80
-      Protocol: HTTP # TODO : Desire TLS?
+      Port: 443
+      Protocol: HTTPS # TODO : Desire TLS?
       # Attributes
       TargetGroupAttributes:
       - Key: "stickiness.enabled"
