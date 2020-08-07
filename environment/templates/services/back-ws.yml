@@ -519,8 +519,8 @@ Resources:
       HealthCheckPath: /
       HealthCheckPort: !Ref 'ContainerPort'
       HealthCheckProtocol: HTTP
-      HealthCheckTimeoutSeconds: 5
-      HealthyThresholdCount: 2
+      HealthCheckTimeoutSeconds: 6
+      HealthyThresholdCount: 5
       UnhealthyThresholdCount: 2
       Matcher:
         HttpCode: "426"
@@ -594,14 +594,14 @@ Resources:
     Properties:
       # Health checks
       HealthCheckIntervalSeconds: 30
-      HealthCheckPath: /
+      #HealthCheckPath: /
       HealthCheckPort: !Ref 'ContainerPort'
-      HealthCheckProtocol: HTTP
-      HealthCheckTimeoutSeconds: 5
-      HealthyThresholdCount: 2
-      UnhealthyThresholdCount: 2
-      Matcher:
-        HttpCode: "426"
+      HealthCheckProtocol: TCP
+      HealthCheckTimeoutSeconds: 10
+      HealthyThresholdCount: 3
+      UnhealthyThresholdCount: 3
+      # Matcher:
+      #   HttpCode: "426"
       # Routing
       TargetType: ip
       Port: 5555
@@ -811,7 +811,7 @@ Resources:
             !Join [':', [!Ref 'EnvironmentName', 'NLBDNSName']]
     DeletionPolicy: Delete
     UpdateReplacePolicy: Delete
-    
+
   NLBRecordSetPublicZMQ:
     Type: 'AWS::Route53::RecordSet'
     Properties:
