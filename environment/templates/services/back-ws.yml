@@ -520,9 +520,9 @@ Resources:
       - Key: "stickiness.enabled"
         Value: !If [ "HasStickinessEnabled" , "true", "false" ]
       - Key: "stickiness.type"
-        Value: !If [ "HasStickinessEnabled", "lb_cookie", !Ref "AWS::NoValue" ]
+        Value: "lb_cookie"
       - Key: "stickiness.lb_cookie.duration_seconds"
-        Value: !If [ "HasStickinessEnabled", !Ref 'StickinessDuration', !Ref "AWS::NoValue" ]
+        Value: !Ref 'StickinessDuration'
       - Key: "deregistration_delay.timeout_seconds"
         Value: "0"
       - Key: "slow_start.duration_seconds"
