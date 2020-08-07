@@ -513,7 +513,7 @@ Resources:
   ALBTargetGroup:
     Type: AWS::ElasticLoadBalancingV2::TargetGroup
     Properties:
-      Health checks
+      #Health checks
       HealthCheckIntervalSeconds: 30
       HealthCheckPath: /
       HealthCheckPort: !Ref 'ContainerPort'
