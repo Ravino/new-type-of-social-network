@@ -592,7 +592,7 @@ Resources:
     Type: AWS::ElasticLoadBalancingV2::TargetGroup
     Properties:
       # Health checks
-      HealthCheckIntervalSeconds: 30
+      HealthCheckIntervalSeconds: 10
       HealthCheckPort: "7070"
       HealthCheckProtocol: TCP
       HealthCheckTimeoutSeconds: 10
