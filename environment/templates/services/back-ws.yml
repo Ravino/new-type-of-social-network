@@ -495,9 +495,9 @@ Resources:
         - ContainerName: !Ref 'ServiceName'
           ContainerPort: !Ref 'ContainerPort'
           TargetGroupArn: !Ref 'ALBTargetGroup'
-        # - ContainerName: !Ref 'ServiceName'
-        #   ContainerPort: !Ref 'ContainerPort'
-        #   TargetGroupArn: !Ref 'NLBTargetGroupSSL'
+        - ContainerName: !Ref 'ServiceName'
+          ContainerPort: 5555
+          TargetGroupArn: !Ref 'NLBTargetGroup'
 
   ALBTargetGroup:
     Type: AWS::ElasticLoadBalancingV2::TargetGroup
@@ -535,39 +535,6 @@ Resources:
       Tags:
         - Key: 'Name'
           Value: !Join ["-", [ "PLIZI" , !Ref 'AWS::Region', !Ref 'ServiceName' , !Ref 'EnvironmentName' , "ALB", "TG"]]
-
-  # NLBTargetGroupSSL:
-  #   Type: AWS::ElasticLoadBalancingV2::TargetGroup
-  #   Properties:
-  #     Name: !Join ["-", [ "NLB", !Ref 'ServiceName', !Ref 'ContainerPort', !Ref 'ContainerProtocol', "TG"]]
-  #     # Health checks
-  #     HealthCheckIntervalSeconds: 30
-  #     HealthCheckPath: /
-  #     HealthCheckProtocol: TCP
-  #     HealthCheckTimeoutSeconds: 5
-  #     HealthyThresholdCount: 2
-  #     UnhealthyThresholdCount: 2
-  #     Matcher:
-  #       HttpCode: "426"
-  #     # Routing
-  #     TargetType: ip
-  #     Port: !Ref 'ContainerPort'
-  #     Protocol: !Ref 'ContainerProtocol'
-  #     # Attributes
-  #     TargetGroupAttributes:
-  #       - Key: stickiness.enabled
-  #         Value: true
-  #       - Key: stickiness.type
-  #         Value: 'source_ip'
-  #       - Key: slow_start.duration_seconds 
-  #         Value: 30
-  #       - Key: deregistration_delay.timeout_seconds
-  #         Value: 30
-  #       - Key: proxy_protocol_v2.enabled
-  #         Value: true
-  #     VpcId:
-  #       Fn::ImportValue:
-  #         !Join [':', [!Ref 'EnvironmentName', 'VPCId']]
 
   ALBListenerRule:
     Type: AWS::ElasticLoadBalancingV2::ListenerRule
@@ -609,24 +576,62 @@ Resources:
           !Join [':', [!Ref 'EnvironmentName', 'ALBListenerHTTPS']]
       Priority: !Ref 'Priority'
 
-  # NLBListenerRuleSSL:
-  #   Type: AWS::ElasticLoadBalancingV2::ListenerRule
-  #   Properties:
-  #     Actions:
-  #       - Type: forward
-  #         TargetGroups: 
-  #         - TargetGroupArn: !Ref NLBTargetGroupSSL
-  #           Weight: 1
-  #         TargetGroupStickinessConfig: 
-  #           DurationSeconds: 60
-  #           Enabled: true
-  #     Conditions:
-  #       - Field: host-header
-  #         Values: [!Ref 'Path']
-  #     ListenerArn:
-  #       Fn::ImportValue:
-  #         !Join [':', [!Ref 'EnvironmentName', 'NLBListenerNginxSSL']]
-  #     Priority: !Ref 'Priority'
+  NLBTargetGroup:
+    Type: AWS::ElasticLoadBalancingV2::TargetGroup
+    Properties:
+      # Health checks
+      HealthCheckIntervalSeconds: 30
+      HealthCheckPath: /
+      HealthCheckPort: !Ref 'ContainerPort'
+      HealthCheckProtocol: HTTP
+      HealthCheckTimeoutSeconds: 5
+      HealthyThresholdCount: 2
+      UnhealthyThresholdCount: 2
+      Matcher:
+        HttpCode: "426"
+      # Routing
+      TargetType: ip
+      Port: 5555
+      Protocol: TCP
+      # Attributes
+      TargetGroupAttributes:
+        # - Key: stickiness.enabled
+        #   Value: "true"
+        # - Key: stickiness.type
+        #   Value: 'source_ip'
+        - Key: slow_start.duration_seconds 
+          Value: "0"
+        - Key: deregistration_delay.timeout_seconds
+          Value: "0"
+        - Key: proxy_protocol_v2.enabled
+          Value: "true" # TODO: Check if we have problems regarding that?
+      VpcId:
+        Fn::ImportValue:
+          !Join [':', [!Ref 'EnvironmentName', 'VPCId']]
+      Tags:
+        - Key: 'Name'
+          Value: !Join ["-", [ "PLIZI" , !Ref 'AWS::Region', !Ref 'ServiceName' , !Ref 'EnvironmentName' , "NLB", "TG"]]
+
+  NLBListenerRule:
+    Type: AWS::ElasticLoadBalancingV2::ListenerRule
+    Properties:
+      Actions:
+        - Type: forward
+          ForwardConfig:
+            TargetGroups: 
+            - TargetGroupArn: !Ref NLBTargetGroup
+              Weight: 1
+            # TargetGroupStickinessConfig: 
+            #   DurationSeconds: 60
+            #   Enabled: true
+            # TODO: Check if we need stickness on NLB?
+      Conditions:
+        - Field: host-header
+          Values: [!Ref 'Path']
+      ListenerArn:
+        Fn::ImportValue:
+          !Join [':', [!Ref 'EnvironmentName', 'NLBListenerTCP5555']]
+      Priority: !Ref 'Priority'
   
   # Enable autoscaling for this service
   ScalableTarget:

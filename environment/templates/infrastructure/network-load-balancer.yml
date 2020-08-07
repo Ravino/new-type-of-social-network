@@ -193,36 +193,20 @@ Resources:
         - CertificateArn: !Ref CertificateArn
 
   # Hosted Zone Id
-  # NLBRecordSetGroupPrivate:
-  #   Type: AWS::Route53::RecordSetGroup
-  #   Properties:
-  #     Comment: "RecordSetGroup for NLB, facing on eu-central-1, PrivateHostedZone "
-  #     HostedZoneId: 
-  #       Fn::ImportValue:
-  #         !Join [':', [!Ref 'EnvironmentName', 'PrivateDNSHostedZone']]
-  #     RecordSets:
-  #       - Name: !Sub 'dev.private.${DomainName}'
-  #         Type: A
-  #         AliasTarget:
-  #           HostedZoneId: !GetAtt 'NetworkLoadBalancer.CanonicalHostedZoneID'
-  #           DNSName: !GetAtt 'NetworkLoadBalancer.DNSName'
-  #       - Name: !Sub 'dev-ws.private.${DomainName}'
-  #         Type: A
-  #         AliasTarget:
-  #           HostedZoneId: !GetAtt 'NetworkLoadBalancer.CanonicalHostedZoneID'
-  #           DNSName: !GetAtt 'NetworkLoadBalancer.DNSName'
-  #       - Name: !Sub 'dev-qw.private.${DomainName}'
-  #         Type: A
-  #         AliasTarget:
-  #           HostedZoneId: !GetAtt 'NetworkLoadBalancer.CanonicalHostedZoneID'
-  #           DNSName: !GetAtt 'NetworkLoadBalancer.DNSName'
-  #       - Name: !Sub 'dev-api.private.${DomainName}'
-  #         Type: A
-  #         AliasTarget:
-  #           HostedZoneId: !GetAtt 'NetworkLoadBalancer.CanonicalHostedZoneID'
-  #           DNSName: !GetAtt 'NetworkLoadBalancer.DNSName'
-  #   DeletionPolicy: Delete
-  #   UpdateReplacePolicy: Delete
+  NLBRecordSetPublicZMQ:
+    Type: 'AWS::Route53::RecordSet'
+    Properties:
+      HostedZoneId: 
+        Fn::ImportValue:
+          !Join [':', [!Ref 'EnvironmentName', 'PublicDNSHostedZone']]
+      Name: !Sub 'dev-zmq.${DomainName}'
+      Type: A
+      AliasTarget:
+        HostedZoneId: !GetAtt 'NetworkLoadBalancer.CanonicalHostedZoneID'
+        DNSName: !GetAtt 'NetworkLoadBalancer.DNSName'
+      TTL: "60"
+    DeletionPolicy: Delete
+    UpdateReplacePolicy: Delete
 
 Outputs:
 
@@ -295,10 +279,10 @@ Outputs:
       Name: !Join [ ':', [ !Ref 'EnvironmentName', 'NLBListenerTLS7070' ] ]
 
   # Route 53
-  # NLBRecordSetGroupPrivate:
-  #   Description: The ARN of the public load balancer's Listener
-  #   Value: !Ref NLBRecordSetGroupPrivate
-  #   Export:
-  #     Name: !Join [ ':', [ !Ref 'EnvironmentName', 'NLBRecordSetGroupPrivate' ] ]
+  NLBRecordSetPublicZMQ:
+    Description: The ARN of the NLBRecordSetPublic for ZMQ service
+    Value: !Ref NLBRecordSetPublicZMQ
+    Export:
+      Name: !Join [ ':', [ !Ref 'EnvironmentName', 'NLBRecordSetPublicZMQ' ] ]
       
   
