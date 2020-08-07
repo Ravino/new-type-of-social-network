@@ -43,7 +43,7 @@
         "QueueConnection": "redis",
         "TestChatID": "5f29a50e52a70d6d37384064",
         "SubnetsScope": "Public",
-        "HealthCheckGracePeriodSeconds": "2147483647",
+        "HealthCheckGracePeriodSeconds": "10",
         "LogRetentionInDays": "3",
         "SwooleHttpHost": "0.0.0.0",
         "ZmqSubHost": "dev-ws.plizi.fun",

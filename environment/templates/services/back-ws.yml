@@ -592,14 +592,12 @@ Resources:
     Type: AWS::ElasticLoadBalancingV2::TargetGroup
     Properties:
       # Health checks
-      # HealthCheckIntervalSeconds: 30
-      # HealthCheckPort: !Ref 'ContainerPort' # 5555 # 443 # 80
-      # HealthCheckProtocol: TCP
-      # HealthCheckTimeoutSeconds: 10
-      # HealthyThresholdCount: 3
-      # UnhealthyThresholdCount: 3
-      # Matcher:
-      #   HttpCode: "426"
+      HealthCheckIntervalSeconds: 30
+      HealthCheckPort: "7070"
+      HealthCheckProtocol: TCP
+      HealthCheckTimeoutSeconds: 10
+      HealthyThresholdCount: 3
+      UnhealthyThresholdCount: 3
       # Routing
       TargetType: ip
       Port: 5555
@@ -790,7 +788,7 @@ Resources:
       Name: !Sub '${SubDomainNameOne}.${DomainName}'
       Type: A
       AliasTarget:
-        EvaluateTargetHealth: false
+        EvaluateTargetHealth: true
         HostedZoneId: 
           Fn::ImportValue:
             !Join [':', [!Ref 'EnvironmentName', 'ALBCanonicalHostedZoneID']]
@@ -809,7 +807,7 @@ Resources:
       Name: !Sub '${SubDomainNameTwo}.${DomainName}'
       Type: A
       AliasTarget:
-        EvaluateTargetHealth: false
+        EvaluateTargetHealth: true
         HostedZoneId: 
           Fn::ImportValue:
             !Join [':', [!Ref 'EnvironmentName', 'NLBCanonicalHostedZoneID']]
