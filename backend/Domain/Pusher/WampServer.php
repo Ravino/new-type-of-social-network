@@ -26,11 +26,11 @@ class WampServer implements WampServerInterface
         $context = new \ZMQContext();
         $socket = $context->getSocket(\ZMQ::SOCKET_PUSH, 'pusher');
         if (config('app.ws_logs')) {
-            echo "< WampServer.sentDataToServer > [ Debug ] zmq_sub_host: $ip, socket: " . json_encode($socket) . PHP_EOL;
+            echo "< WampServer.sentDataToServer > [ Debug ] zmq_sub_host: 0.0.0.0, socket: " . json_encode($socket) . PHP_EOL;
         }
 
         try {
-            $uri = "tcp://$ip:5555";
+            $uri = "tcp://0.0.0.0:5555";
             $socket->connect($uri);
             echo "< WampServer.sentDataToServer > [ Info ] Connected to ZMQSubHost on: $uri". PHP_EOL;
         } catch (\ZMQSocketException $ex) {
