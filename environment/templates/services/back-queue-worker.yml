@@ -162,6 +162,10 @@ Parameters:
   DomainName:
     Type: String
     Description: The specific alias name for the application
+  SubDomainNameOne:
+    Type: String
+    Default: ""
+    Description: The specific alias name for the application service container One itself
   # deployment
   ImageUrl:
     Type: String
@@ -691,3 +695,30 @@ Resources:
       ComparisonOperator: GreaterThanOrEqualToThreshold
       AlarmActions:
         - !Ref ScaleUpPolicy
+
+# Route53
+  ALBRecordSetPublicQW:
+    Type: 'AWS::Route53::RecordSet'
+    Properties:
+      HostedZoneId: 
+        Fn::ImportValue:
+          !Join [':', [!Ref 'EnvironmentName', 'PublicDNSHostedZone']]
+      Name: !Sub '${SubDomainNameOne}.${DomainName}'
+      Type: A
+      AliasTarget:
+        HostedZoneId: 
+          Fn::ImportValue:
+            !Join [':', [!Ref 'EnvironmentName', 'ALBCanonicalHostedZoneID']]
+        DNSName:
+          Fn::ImportValue:
+            !Join [':', [!Ref 'EnvironmentName', 'ALBDNSName']]
+    DeletionPolicy: Delete
+    UpdateReplacePolicy: Delete
+
+Outputs:
+  # Route 53
+  ALBRecordSetPublicWS:
+    Description: Arn ID of ALBRecordSetPublicQW
+    Value: !Ref 'ALBRecordSetPublicQW'
+    Export:
+      Name: !Join [ ':', [ !Ref 'EnvironmentName', 'ALBRecordSetPublicQW' ] ]
