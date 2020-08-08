@@ -48,6 +48,6 @@
         "WsSecure": "",
         "WsPrivateKeyPath": "/docker/ssl/privkey.pem",
         "WsFullchainPath": "/docker/ssl/fullchain.pem",
-        "StickinessDuration": "0"
+        "StickinessDuration": ""
     }
 }
