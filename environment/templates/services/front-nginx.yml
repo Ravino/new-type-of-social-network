@@ -168,12 +168,12 @@ Resources:
           Essential: true
           PortMappings:
             - ContainerPort: !Ref 'ContainerPort'
-          HealthCheck:
-            Command: 
-              - 'CMD STATUS=$(curl -s -o /dev/null -w "%{http_code}" http://localhost:80/); [[ $STATUS -eq 200 ]] || echo "[HealthCheck] Failed: Received status code: $STATUS" ; exit 1;'
-            Interval: 30
-            Timeout: 10
-            Retries: 1
+          # HealthCheck:
+          #   Command: 
+          #     - 'CMD STATUS=$(curl -s -o /dev/null -w "%{http_code}" http://localhost:80/); [[ $STATUS -eq 200 ]] || echo "[HealthCheck] Failed: Received status code: $STATUS" ; exit 1;'
+          #   Interval: 30
+          #   Timeout: 10
+          #   Retries: 1
           LogConfiguration:
             LogDriver: 'awslogs'
             Options:

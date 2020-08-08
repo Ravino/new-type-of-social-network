@@ -131,10 +131,13 @@ Parameters:
   #  Type: String
   #  Default: "http://89feb2eb67c741c29d06f1204b809e87@sentry.plizi.info/2"
   #  Description: Sentry exception logger host.
-  SwooleHttpHost:
+  # SwooleHttpHost:
+  #   Type: String
+  #   Default: "0.0.0.0"
+  #   Description: Swoole http host.
+  WebSocketUri:
     Type: String
-    Default: "0.0.0.0"
-    Description: Swoole http host.
+    Description: "back_ws sub host"
   ZmqSubHost:
     Type: String
     Description: "php_zmq sub host"
@@ -310,12 +313,12 @@ Resources:
               awslogs-group: !Join ['-', [!Ref 'ServiceName', !Ref 'EnvironmentName']]
               awslogs-region: !Ref 'AWS::Region'
               awslogs-stream-prefix: !Ref 'ServiceName'
-          HealthCheck:
-            Command: 
-              - 'CMD STATUS=$(curl -s -o /dev/null -w "%{http_code}" http://localhost:7070/); [[ $STATUS -eq 426 ]] || echo "[HealthCheck] Failed: Received status code: $STATUS" ; exit 1;'
-            Interval: 30
-            Timeout: 10
-            Retries: 1
+          # HealthCheck:
+          #   Command: 
+          #     - 'CMD STATUS=$(curl -s -o /dev/null -w "%{http_code}" http://localhost:7070/); [[ $STATUS -eq 426 ]] || echo "[HealthCheck] Failed: Received status code: $STATUS" ; exit 1;'
+          #   Interval: 30
+          #   Timeout: 10
+          #   Retries: 1
           Ulimits:
             - Name: nofile
               SoftLimit: 2048
@@ -390,8 +393,8 @@ Resources:
               Value: !Ref 'QueueConnection'
             #- Name: SENTRY_LARAVEL_DSN
             #  Value: !Ref 'SentryLaravelDsn'
-            - Name: SWOOLE_HTTP_HOST
-              Value: !Ref 'SwooleHttpHost'
+            - Name: WEBSOCKET_URI
+              Value: !Ref 'WebSocketUri'
             - Name: 'ZMQ_SUB_HOST'
               Value: !Ref 'ZmqSubHost'
             - Name: ENV_NAME

@@ -42,8 +42,8 @@
         "TestChatID": "5f29a50e52a70d6d37384064",
         "SubnetsScope": "Public",
         "LogRetentionInDays": "3",
-        "SwooleHttpHost": "0.0.0.0",
-        "ZmqSubHost": "dev-ws.plizi.fun",
+        "WebSocketUri": "wss://dev-ws.plizi.fun",
+        "ZmqSubHost": "wss://dev-ws.plizi.fun",
         "WsLogs": "1"
     }
 }
