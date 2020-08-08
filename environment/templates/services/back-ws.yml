@@ -515,8 +515,8 @@ Resources:
         Value: !If [ "HasStickinessEnabled" , "true", "false" ]
       #- Key: "stickiness.type"
         #Value: "lb_cookie"
-      - Key: "stickiness.lb_cookie.duration_seconds"
-        Value: !Ref 'StickinessDuration'
+      # - Key: "stickiness.lb_cookie.duration_seconds"
+      #   Value: !Ref 'StickinessDuration'
       - Key: "deregistration_delay.timeout_seconds"
         Value: "0"
       - Key: "slow_start.duration_seconds"
