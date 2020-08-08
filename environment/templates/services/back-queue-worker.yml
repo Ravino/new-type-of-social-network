@@ -171,12 +171,12 @@ Parameters:
   # deployment
   ContainerPort:
     Type: Number
-    Default: 443
+    Default: 80
     Description: What port number the application the docker container is binding to
   # deployment
   ContainerProtocol:
     Type: String
-    Default: SSL
+    Default: HTTP
     Description: Which protocol should be used for service communication
     # AllowedValues:
     #   - HTTP

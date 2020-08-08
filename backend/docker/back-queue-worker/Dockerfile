@@ -6,6 +6,9 @@ RUN composer install
 
 #RUN php artisan optimize
 
+HEALTHCHECK --interval=5s --timeout=2s --retries=3 \
+ CMD echo "healthy" || exit 1
+
 # start and setup scripts
 #COPY docker/back-queue-worker/laravel-supervisor.conf /etc/supervisor/conf.d/supervisord.conf
 COPY docker/back-queue-worker/docker-entrypoint.sh /usr/share/back-queue-worker/bin/

@@ -20,12 +20,12 @@ COPY docker/front-nginx/etc/ssl/privkey.pem /etc/nginx/ssl/privkey.pem
 RUN cd /etc/nginx/ \
     openssl dhparam -out dhparam.pem 4096
 
-RUN chown -R www-data:www-data /app
+#RUN chown -R www-data:www-data /app
 
-#EXPOSE 80
+EXPOSE 80
 #EXPOSE 443
 
 #EXPOSE 81
-#HEALTHCHECK --interval=30s --timeout=5s --retries=2 \
-#  CMD curl --include --no-buffer \
-#          http://localhost:80 || exit 1
+HEALTHCHECK --interval=5s --timeout=2s --retries=3 \
+ CMD curl --include --no-buffer \
+         http://localhost:80 || exit 1
