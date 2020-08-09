@@ -5,7 +5,8 @@ set -e
 BUILD_ONLY=${1:-""}
 IMAGE_NAME=${2:-"eu-central-1-test-plizi-front-nginx"}
 BUILD_FILE_PATH=${4:-"docker/front-nginx"}
-BUILD_VERSION=$(git rev-parse --short HEAD)
+BUILD_VERSION=$(date +"%s")
+#$(git rev-parse --short HEAD)
 
 echo "START Update frontend docker image [ BUILD_ONLY = ${BUILD_ONLY} ] @ "`date`
 
