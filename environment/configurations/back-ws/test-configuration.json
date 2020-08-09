@@ -45,7 +45,7 @@
         "WebSocketUri": "wss://dev-ws.plizi.fun",
         "ZmqSubHost": "wss://dev-ws.plizi.fun",
         "WsLogs": "1",
-        "WsSecure": "",
+        "WsSecure": "1",
         "WsPrivateKeyPath": "/docker/ssl/privkey.pem",
         "WsFullchainPath": "/docker/ssl/fullchain.pem",
         "StickinessDuration": "600"
