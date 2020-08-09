@@ -234,8 +234,8 @@ Resources:
       # Health checks
       HealthCheckIntervalSeconds: 30
       HealthCheckPath: /
-      HealthCheckPort: "80"
-      HealthCheckProtocol: HTTP
+      HealthCheckPort: "443"
+      HealthCheckProtocol: HTTPS
       HealthCheckTimeoutSeconds: 5
       HealthyThresholdCount: 2
       UnhealthyThresholdCount: 2
@@ -298,25 +298,25 @@ Resources:
   #       Fn::ImportValue:
   #         !Join [':', [!Ref 'EnvironmentName', 'VPCId']]
 
-  ALBListenerRule:
-    Type: AWS::ElasticLoadBalancingV2::ListenerRule
-    Properties:
-      Actions:
-      - Type: forward
-        ForwardConfig:
-          TargetGroups: 
-           - TargetGroupArn: !Ref ALBTargetGroup
-             Weight: 1
-          # TargetGroupStickinessConfig: 
-          #   DurationSeconds: 60
-          #   Enabled: true
-      Conditions:
-        - Field: host-header
-          Values: [!Ref 'Path']
-      ListenerArn:
-        Fn::ImportValue:
-          !Join [':', [!Ref 'EnvironmentName', 'ALBListenerHTTP']]
-      Priority: !Ref 'Priority'
+  # ALBListenerRule:
+  #   Type: AWS::ElasticLoadBalancingV2::ListenerRule
+  #   Properties:
+  #     Actions:
+  #     - Type: forward
+  #       ForwardConfig:
+  #         TargetGroups: 
+  #          - TargetGroupArn: !Ref ALBTargetGroup
+  #            Weight: 1
+  #         # TargetGroupStickinessConfig: 
+  #         #   DurationSeconds: 60
+  #         #   Enabled: true
+  #     Conditions:
+  #       - Field: host-header
+  #         Values: [!Ref 'Path']
+  #     ListenerArn:
+  #       Fn::ImportValue:
+  #         !Join [':', [!Ref 'EnvironmentName', 'ALBListenerHTTP']]
+  #     Priority: !Ref 'Priority'
 
   ALBListenerRuleSSL:
     Type: AWS::ElasticLoadBalancingV2::ListenerRule
