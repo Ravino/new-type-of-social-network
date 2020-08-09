@@ -43,13 +43,18 @@ COPY docker/front-nginx/etc/nginx/conf.d/default.conf /etc/nginx/conf.d/default.
 COPY docker/front-nginx/etc/nginx/nginx.conf /etc/nginx/nginx.conf
 COPY docker/front-nginx/etc/nginx/ssl/fullchain.pem /etc/nginx/ssl/fullchain.pem
 COPY docker/front-nginx/etc/nginx/ssl/privkey.pem /etc/nginx/ssl/privkey.pem
-COPY docker/front-nginx/startup.sh . 
-RUN cd /etc/nginx/ \
-    openssl dhparam -out dhparam.pem 4096
+COPY docker/front-nginx/startup.sh .
+RUN chown -R nginx:nginx /app
+RUN chmod +x /startup.sh 
 
-RUN chown -R nginx:nginx /app && chmod +x startup.sh 
+# 512 for test
+RUN openssl dhparam -out /etc/nginx/dhparam.pem 512
+# 4096 for prod
+# RUN openssl dhparam -out dhparam.pem  4096
+RUN echo "[build-stage] finish time: "`date '+%Y-%m-%d %H:%M:%S'` >> /app/build.json
 
 EXPOSE 80
+EXPOSE 443
 
 STOPSIGNAL SIGTERM
 
@@ -57,5 +62,5 @@ HEALTHCHECK --interval=5s --timeout=2s --retries=3 \
   CMD curl --include --no-buffer \
           http://localhost:80 || exit 1
 
-RUN echo "[build-stage] finish time: "`date '+%Y-%m-%d %H:%M:%S'` >> /app/build.json
-CMD ["./startup.sh"]
+ENTRYPOINT [""]
+CMD ["/startup.sh"]
