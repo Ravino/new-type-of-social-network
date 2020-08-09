@@ -7,37 +7,40 @@ proxy:
 phases:
   install:
     commands:
-      - echo Starting install NFS client to be ready for EFS filesystem interaction
+      - echo "Starting install NFS client to be ready for EFS filesystem interaction"
       - apt-get update
-      - apt-get -y install nfs-common
-      - echo Starting up dockerd and linking with socket-tcp endpoints
+      - apt-get -y install nfs-common git
+      - echo "Starting up dockerd and linking with socket-tcp endpoints"
       - nohup /usr/local/bin/dockerd --host=unix:///var/run/docker.sock --host=tcp://127.0.0.1:2375 --storage-driver=overlay2&
+      - BUILD_VERSION=$(git rev-parse --short HEAD)
+      - echo "Calculated build version ${BUILD_VERSION}"
     finally:
-      - echo Waiting for docker starts up and applies configurations
+      - echo "Waiting for docker starts up and applies configurations"
       - timeout 15 sh -c "until docker info; do echo .; sleep 1; done"
   pre_build:
     commands:
-      - echo Logging in to Amazon ECR...
+      - echo "Logging in to Amazon ECR...""
       - $(aws ecr get-login --no-include-email --region $AWS_DEFAULT_REGION)
     finally:
-      - echo Calculating $IMAGE_URI value from input parameters
+      - echo -e "Calculating IMAGE_URI value from input parameters"
       - IMAGE_URI="$AWS_ACCOUNT_ID.dkr.ecr.$AWS_DEFAULT_REGION.amazonaws.com/$IMAGE_REPO_NAME:$IMAGE_TAG"
-      - echo Current directory `pwd`
-      - echo Changing directory to $BUILD_WORK_DIR
+      - echo ${IMAGE_URI}
+      - echo "Current directory "`pwd`
+      - echo "Changing directory to ${BUILD_WORK_DIR}"
       - cd $BUILD_WORK_DIR
-      - echo Current directory `pwd`
+      - echo "Current directory "`pwd`
   build:
     commands:
-      - echo Build started on `date`
-      - echo Building the Docker image
-      - docker build -t $IMAGE_REPO_NAME:$IMAGE_TAG -f $DOCKERFILE_PATH/Dockerfile .
-      - echo Tagging image for registry upload
+      - echo "Build started on "`date`
+      - echo "Building the Docker image"
+      - docker build -t $IMAGE_REPO_NAME:$IMAGE_TAG -f $DOCKERFILE_PATH/Dockerfile --build-arg VERSION=${BUILD_VERSION} .
+      - echo "Tagging image for registry upload"
       - docker tag $IMAGE_REPO_NAME:$IMAGE_TAG $IMAGE_URI
     finally:
-      - echo Build completed on `date`
+      - echo "Build completed on "`date`
   post_build:
     commands:
-      - echo Pushing image to registry by path $IMAGE_URI
+      - echo "Pushing image to registry by path ${IMAGE_URI}"
       - docker push $IMAGE_URI
       #- echo Exposing imagedefinitions.json with CodeBuild
       #- printf '[ { "name" : "${AWS_DEFAULT_REGION}-plizi-${EnvironmentName}", "imageUri" : "${IMAGE_URI}" } ]' > imagedefinitions.json
