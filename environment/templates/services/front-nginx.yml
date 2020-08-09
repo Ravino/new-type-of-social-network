@@ -196,7 +196,7 @@ Resources:
   Service:
     Type: AWS::ECS::Service
     DependsOn:
-      - ALBListenerRule
+      #- ALBListenerRule
       - ALBListenerRuleSSL
       #- NLBListenerRuleSSL
     Properties:
