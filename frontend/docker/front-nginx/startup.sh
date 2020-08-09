@@ -38,8 +38,8 @@ INDEX_FILE=/app/index.html
 echo "[7] Write configuration data: ${INDEX_FILE}"
 
 echo -e "<!-- " >> $INDEX_FILE
-echp -e " STARTUP_TIME: "`date '+%Y-%m-%d %H:%M:%S'` >> $INDEX_FILE
-echp -e " BUILD_ID: ${BUILD_ID}" >> $INDEX_FILE
+echo -e " STARTUP_TIME: "`date '+%Y-%m-%d %H:%M:%S'` >> $INDEX_FILE
+echo -e " BUILD_ID: ${BUILD_ID}" >> $INDEX_FILE
 echo -e " RUNTIME_ID: ${RUNTIME_ID}" >> $INDEX_FILE
 echo -e " PRIVATE_IP: ${PRIVATE_IP}" >> $INDEX_FILE
 echo -e " AZ: ${AZ}" >> $INDEX_FILE
