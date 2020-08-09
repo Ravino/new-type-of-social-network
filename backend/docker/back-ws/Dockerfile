@@ -4,6 +4,7 @@ RUN apk add busybox-extras
 COPY docker/back-ws/docker-entrypoint.sh /usr/share/back-ws/bin/
 RUN chmod +x /usr/share/back-ws/bin/docker-entrypoint.sh
 
+WORKDIR /app
 COPY . .
 RUN composer install
 

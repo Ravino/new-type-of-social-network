@@ -2,6 +2,8 @@ FROM 884088487044.dkr.ecr.eu-central-1.amazonaws.com/eu-central-1-test-plizi-lar
 
 COPY docker/back-api/docker-entrypoint.sh /usr/share/back-api/bin/
 RUN chmod +x /usr/share/back-api/bin/docker-entrypoint.sh
+
+WORKDIR /app
 COPY . .
 RUN composer install
 
