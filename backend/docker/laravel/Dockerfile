@@ -57,7 +57,7 @@ RUN cd uv \
     && ./configure \
     && make install \
     && EXTENSION_DIR=`php-config --extension-dir 2>/dev/null` && \
-    cp "$EXTENSION_DIR/uv.so" /uv.so
+    cp "${EXTENSION_DIR}/uv.so" /uv.so
 
 # Enable PECL and PEAR extensions
 RUN docker-php-ext-enable \
@@ -98,3 +98,8 @@ RUN curl -s https://getcomposer.org/installer | php -- --install-dir=/usr/local/
 
 # Cleanup dev dependencies
 RUN apk del -f .build-deps
+
+STOPSIGNAL SIGTERM
+
+ENTRYPOINT [""]
+CMD [""]
