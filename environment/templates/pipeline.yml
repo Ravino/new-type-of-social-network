@@ -741,19 +741,19 @@ Resources:
         #       RunOrder: 1
         - Name: Services
           Actions:
-            - Name: laravel-docker
-              ActionTypeId:
-                Category: Build
-                Owner: AWS
-                Version: '1'
-                Provider: CodeBuild
-              Configuration:
-                ProjectName: !Ref LaravelDocker
-              InputArtifacts:
-                - Name: Source
-              OutputArtifacts:
-                - Name: LaravelDockerBuildOutput
-              RunOrder: 1
+        #     - Name: laravel-docker
+        #       ActionTypeId:
+        #         Category: Build
+        #         Owner: AWS
+        #         Version: '1'
+        #         Provider: CodeBuild
+        #       Configuration:
+        #         ProjectName: !Ref LaravelDocker
+        #       InputArtifacts:
+        #         - Name: Source
+        #       OutputArtifacts:
+        #         - Name: LaravelDockerBuildOutput
+        #       RunOrder: 1
             - Name: back-ws
               ActionTypeId:
                 Category: Build
@@ -767,45 +767,45 @@ Resources:
               OutputArtifacts:
                 - Name: BackWSBuildOutput
               RunOrder: 2
-            - Name: back-queue-worker
-              ActionTypeId:
-                Category: Build
-                Owner: AWS
-                Version: '1'
-                Provider: CodeBuild
-              Configuration:
-                ProjectName: !Ref BackQueueWorker
-              InputArtifacts:
-                - Name: Source
-              OutputArtifacts:
-                - Name: BackQueueWorkerBuildOutput
-              RunOrder: 2
-            - Name: back-api
-              ActionTypeId:
-                Category: Build
-                Owner: AWS
-                Version: '1'
-                Provider: CodeBuild
-              Configuration:
-                ProjectName: !Ref BackApi
-              InputArtifacts:
-                - Name: Source
-              OutputArtifacts:
-                - Name: BackApiBuildOutput
-              RunOrder: 2
-            - Name: front-nginx
-              ActionTypeId:
-                Category: Build
-                Owner: AWS
-                Version: '1'
-                Provider: CodeBuild
-              Configuration:
-                ProjectName: !Ref FrontNginx
-              InputArtifacts:
-                - Name: Source
-              OutputArtifacts:
-                - Name: FrontNginxBuildOutput
-              RunOrder: 3
+        #     - Name: back-queue-worker
+        #       ActionTypeId:
+        #         Category: Build
+        #         Owner: AWS
+        #         Version: '1'
+        #         Provider: CodeBuild
+        #       Configuration:
+        #         ProjectName: !Ref BackQueueWorker
+        #       InputArtifacts:
+        #         - Name: Source
+        #       OutputArtifacts:
+        #         - Name: BackQueueWorkerBuildOutput
+        #       RunOrder: 2
+        #     - Name: back-api
+        #       ActionTypeId:
+        #         Category: Build
+        #         Owner: AWS
+        #         Version: '1'
+        #         Provider: CodeBuild
+        #       Configuration:
+        #         ProjectName: !Ref BackApi
+        #       InputArtifacts:
+        #         - Name: Source
+        #       OutputArtifacts:
+        #         - Name: BackApiBuildOutput
+        #       RunOrder: 2
+        #     - Name: front-nginx
+        #       ActionTypeId:
+        #         Category: Build
+        #         Owner: AWS
+        #         Version: '1'
+        #         Provider: CodeBuild
+        #       Configuration:
+        #         ProjectName: !Ref FrontNginx
+        #       InputArtifacts:
+        #         - Name: Source
+        #       OutputArtifacts:
+        #         - Name: FrontNginxBuildOutput
+        #       RunOrder: 3
         - Name: Deploy
           Actions:
             - Name: back-ws
