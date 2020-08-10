@@ -13,7 +13,7 @@ EXPOSE 5555
 
 STOPSIGNAL SIGTERM
 
-HEALTHCHECK --interval=5 --timeout=2 --retries=3 \
+HEALTHCHECK --interval=5s --timeout=2s --retries=3 \
  CMD busybox-extras telnet 127.0.0.1 7070 || exit 1
 
 ENTRYPOINT ["/usr/share/back-ws/bin/docker-entrypoint.sh"]
