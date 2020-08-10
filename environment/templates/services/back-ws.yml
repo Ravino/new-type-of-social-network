@@ -500,9 +500,9 @@ Resources:
       HealthCheckPath: /
       HealthCheckPort: "7070"
       HealthCheckProtocol: HTTP
-      HealthCheckTimeoutSeconds: 6
-      HealthyThresholdCount: 5
-      UnhealthyThresholdCount: 2
+      HealthCheckTimeoutSeconds: 10
+      HealthyThresholdCount: 3
+      UnhealthyThresholdCount: 3
       Matcher:
         HttpCode: "426"
       # Routing
