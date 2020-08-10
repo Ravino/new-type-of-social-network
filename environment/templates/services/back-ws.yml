@@ -484,6 +484,7 @@ Resources:
             #     !Join [':', [!Ref 'EnvironmentName', 'RedisSecurityGroup']]
           Subnets: !Split [',', {'Fn::ImportValue': !Join [':', [!Ref 'EnvironmentName', !Sub '${SubnetsScope}Subnets']] }]
       TaskDefinition: !Ref 'TaskDefinition'
+      HealthCheckGracePeriodSeconds: 30
       LoadBalancers:
         - ContainerName: !Ref 'ServiceName'
           ContainerPort: 7070
