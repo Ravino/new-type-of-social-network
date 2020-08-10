@@ -232,15 +232,15 @@ Resources:
     Type: AWS::ElasticLoadBalancingV2::TargetGroup
     Properties:
       # Health checks
-      HealthCheckIntervalSeconds: 30
-      HealthCheckPath: /
-      HealthCheckPort: "443"
-      HealthCheckProtocol: HTTPS
-      HealthCheckTimeoutSeconds: 5
-      HealthyThresholdCount: 2
-      UnhealthyThresholdCount: 2
-      Matcher:
-        HttpCode: "200-299"
+      # HealthCheckIntervalSeconds: 30
+      # HealthCheckPath: /
+      # HealthCheckPort: "443"
+      # HealthCheckProtocol: HTTPS
+      # HealthCheckTimeoutSeconds: 5
+      # HealthyThresholdCount: 2
+      # UnhealthyThresholdCount: 2
+      # Matcher:
+      #   HttpCode: "200-299"
       # Routing
       TargetType: ip
       Port: !Ref 'ContainerPort'

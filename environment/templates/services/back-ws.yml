@@ -496,15 +496,15 @@ Resources:
     Type: AWS::ElasticLoadBalancingV2::TargetGroup
     Properties:
       #Health checks
-      HealthCheckIntervalSeconds: 30
-      HealthCheckPath: /
-      HealthCheckPort: "7070"
-      HealthCheckProtocol: HTTP
-      HealthCheckTimeoutSeconds: 6
-      HealthyThresholdCount: 5
-      UnhealthyThresholdCount: 2
-      Matcher:
-        HttpCode: "426"
+      # HealthCheckIntervalSeconds: 30
+      # HealthCheckPath: /
+      # HealthCheckPort: "7070"
+      # HealthCheckProtocol: HTTP
+      # HealthCheckTimeoutSeconds: 6
+      # HealthyThresholdCount: 5
+      # UnhealthyThresholdCount: 2
+      # Matcher:
+      #   HttpCode: "426"
       # Routing
       TargetType: ip
       Port: 443
