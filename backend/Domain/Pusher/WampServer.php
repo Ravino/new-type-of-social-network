@@ -39,7 +39,7 @@ class WampServer implements WampServerInterface
 
         $data = json_encode($data);
         if (config('app.ws_logs')) {
-            echo "< WampServer.sentDataToServer > [ Debug ] data = $data" . PHP_EOL;
+            echo "< WampServer.sentDataToServer > [ Debug ] data = " . json_encode($data) . PHP_EOL;
         }
         $socket->send($data);
         echo "< WampServer.sentDataToServer >[ Info ] Sent data to ZMQ Sub Server socket. " . PHP_EOL;
@@ -87,7 +87,7 @@ class WampServer implements WampServerInterface
     public function onPublish(ConnectionInterface $conn, $topic, $event, array $exclude, array $eligible)
     {
         if(config('app.ws_logs')) {
-            echo "< WampServer.onUnSubscribe > [ Debug ] Publish ( topic = $topic, event = $event ) detected: " . json_encode($conn) . PHP_EOL;
+            echo "< WampServer.onUnSubscribe > [ Debug ] Publish ( topic = " . json_encode($topic) . ", event = " . json_encode($event) . " ) detected: " . json_encode($conn) . PHP_EOL;
         }
         $this->broadcast($event);
     }
@@ -155,7 +155,6 @@ class WampServer implements WampServerInterface
             echo "< WampServer.onError > [ Debug ] Error connection detected: " . json_encode($conn) . PHP_EOL;
         }
         echo "< WampServer.onError > [ Exception ] " . $e->getMessage() . PHP_EOL;
-        Log::error($e);
     }
     public function onMessage() {}
 
