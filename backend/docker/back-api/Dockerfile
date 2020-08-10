@@ -11,8 +11,9 @@ EXPOSE 1215
 
 STOPSIGNAL SIGTERM
 
-HEALTHCHECK --interval=5s --timeout=2s --retries=3 \
+HEALTHCHECK --interval=5 --timeout=2 --retries=3 \
  CMD curl --include --no-buffer \
          http://localhost:1215 || exit 1
 
 ENTRYPOINT ["/usr/share/back-api/bin/docker-entrypoint.sh"]
+CMD [""]
