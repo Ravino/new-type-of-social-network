@@ -19,7 +19,7 @@
         "HighCpuThresholdAlarm": "70",
         "ScaleUpCooldown": "30",
         "DeploymentMaximum": "200",
-        "DeploymentMinimum": "75",
+        "DeploymentMinimum": "100",
         "SubnetsScope": "Public",
         "LogRetentionInDays": "3"
     }
