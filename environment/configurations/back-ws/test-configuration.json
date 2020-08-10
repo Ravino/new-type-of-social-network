@@ -46,8 +46,8 @@
         "ZmqSubHost": "wss://dev-ws.plizi.fun",
         "WsLogs": "1",
         "WsSecure": "1",
-        "WsPrivateKeyPath": "/docker/ssl/privkey.pem",
-        "WsFullchainPath": "/docker/ssl/fullchain.pem",
+        "WsPrivateKeyPath": "/app/docker/ssl/privkey.pem",
+        "WsFullchainPath": "/app/docker/ssl/fullchain.pem",
         "StickinessDuration": "600"
     }
 }
