@@ -39,10 +39,10 @@ class WampServer implements WampServerInterface
 
         $data = json_encode($data);
         if (config('app.ws_logs')) {
-            echo "< WampServer.sentDataToServer >[ Debug ] data = $data" . PHP_EOL;
+            echo "< WampServer.sentDataToServer > [ Debug ] data = $data" . PHP_EOL;
         }
         $socket->send($data);
-        echo "< WampServer.sentDataToServer >[ Info ] Sent data ( length: " . count ($uri) . " ) to ZMQ Sub Server socket. " . PHP_EOL;
+        echo "< WampServer.sentDataToServer >[ Info ] Sent data to ZMQ Sub Server socket. " . PHP_EOL;
     }
 
     /**
@@ -128,14 +128,14 @@ class WampServer implements WampServerInterface
     public function onSubscribe(ConnectionInterface $conn, $topic)
     {
         if(config('app.ws_logs')) {
-            echo "< WampServer.onUnSubscribe > [ Debug ] Subscribe ( topic = $topic ) detected: " . json_encode($conn) . PHP_EOL;
+            echo "< WampServer.onUnSubscribe > [ Debug ] Subscribe ( topic = " . json_encode($topic) . " ) detected: " . json_encode($conn) . PHP_EOL;
         }
         $this->addSubscribedTopic($topic);
     }
 
     public function onUnSubscribe(ConnectionInterface $conn, $topic) {
         if(config('app.ws_logs')) {
-            echo "< WampServer.onUnSubscribe > [ Debug ] UnSubscribe ( topic = $topic ) detected: " . json_encode($conn) . PHP_EOL;
+            echo "< WampServer.onUnSubscribe > [ Debug ] UnSubscribe ( topic = " . json_encode($topic) . " ) detected: " . json_encode($conn) . PHP_EOL;
         }
     }
 
@@ -152,9 +152,9 @@ class WampServer implements WampServerInterface
     }
     public function onError(ConnectionInterface $conn, \Exception $e) {
         if(config('app.ws_logs')) {
-            echo "< WampServer.onClose > [ Debug ] Error connection detected: " . json_encode($conn) . PHP_EOL;
+            echo "< WampServer.onError > [ Debug ] Error connection detected: " . json_encode($conn) . PHP_EOL;
         }
-        echo "< WampServer.onCall > [ Exception ] " . $e->getMessage() . PHP_EOL;
+        echo "< WampServer.onError > [ Exception ] " . $e->getMessage() . PHP_EOL;
         Log::error($e);
     }
     public function onMessage() {}
