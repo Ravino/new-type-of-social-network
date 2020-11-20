@@ -44,16 +44,16 @@ services:
       - ./mongodb_data_plizi:/data/db
 
   app_nginx:
-    image: nginx
+    build: ./frontend/docker/front-nginx/
     container_name: "plizi_nginx_app"
     working_dir: /app
-    volumes:
-      - ./frontend/docker/nginx/default.conf:/etc/nginx/conf.d/default.conf
-      - ./frontend/docker/nginx/conf.d:/etc/nginx/conf.d/
-      - ./frontend/docker/dhparam:/etc/nginx/dhparam
-      - ./frontend/docker/certbot/conf/:/etc/nginx/ssl/
-      - ./frontend/docker/certbot/data:/usr/share/nginx/html/letsencrypt
-      - ./frontend:/app
+#    volumes:
+#      - ./frontend/docker/nginx/default.conf:/etc/nginx/conf.d/default.conf
+#      - ./frontend/docker/nginx/conf.d:/etc/nginx/conf.d/
+#      - ./frontend/docker/dhparam:/etc/nginx/dhparam
+#      - ./frontend/docker/certbot/conf/:/etc/nginx/ssl/
+#      - ./frontend/docker/certbot/data:/usr/share/nginx/html/letsencrypt
+#      - ./frontend:/app
     ports:
       - "80:80"
       - "443:443"
@@ -68,7 +68,7 @@ services:
       - ./frontend:/app
 
   api_nginx:
-    image: nginx
+    build: ./backend/docker/back-api/
     container_name: "plizi_nginx_api"
     working_dir: /app
     volumes:
@@ -80,7 +80,7 @@ services:
       - php_api
 
   php_api:
-    build: ./backend/docker/
+    build: ./backend/docker/back-api/
     container_name: "plizi_api"
     working_dir: /app
     user: "www-data"
@@ -92,7 +92,7 @@ services:
       - mongodb
 
   php_ws:
-    build: ./backend/docker/ws
+    build: ./backend/docker/back-ws/
     container_name: "plizi_php_ws"
     working_dir: /app
     volumes:
@@ -104,7 +104,7 @@ services:
       - php_api
 
   queue_worker:
-    build: ./backend/docker/
+    build: ./backend/docker/back-queue-worker/
     container_name: "plizi_queue_worker"
     working_dir: /app
     volumes:
@@ -150,41 +150,6 @@ services:
     ports:
     - "6379:6379"
 
-#  node:
-#    build: ./backend/docker/node
-#    container_name: "plizi_node_ws"
-#    tty: true
-#    volumes:
-#      - ./backend:/app
-#    ports:
-#    - "6061:6061"
-
-#  yii2_fpm:
-#    container_name: "plizi_yii2_fpm"
-#    build:
-#      context: ./yii2/docker/conf/fpm
-#      dockerfile: Dockerfile
-#    volumes:
-#      - ./yii2:/var/www/vhosts/edi/
-#    working_dir: /var/www/vhosts/edi
-#    command: "/usr/sbin/php-fpm7.3 -F -O"
-#    environment:
-#      - YII_ENV=dev
-#      - YII_DEBUG=true
-#    env_file:
-#      - ./backend/docker/mysql/.env
-#    user: "www-data"
-#
-#  yii2_nginx:
-#    container_name: "plizi_yii2_nginx"
-#    image: nginx
-#    ports:
-#      - "82:80"
-#    volumes:
-#      - ./yii2:/var/www/vhosts/edi
-#      - ./yii2/docker/etc/nginx:/etc/nginx
-#    depends_on:
-#      - yii2_fpm
 
 volumes:
   mysql_data_plizi:
