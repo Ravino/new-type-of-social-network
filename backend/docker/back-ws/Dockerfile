@@ -5,7 +5,7 @@ COPY docker-entrypoint.sh /usr/share/back-ws/bin/
 RUN chmod +x /usr/share/back-ws/bin/docker-entrypoint.sh
 
 WORKDIR /app
-COPY . .
+COPY backend/ ./
 RUN composer install
 
 EXPOSE 7070
@@ -17,4 +17,5 @@ STOPSIGNAL SIGTERM
 # CMD busybox-extras telnet 127.0.0.1 7070 || exit 1
 
 ENTRYPOINT ["/usr/share/back-ws/bin/docker-entrypoint.sh"]
+#ENTRYPOINT [""]
 CMD [""]

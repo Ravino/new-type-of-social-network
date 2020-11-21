@@ -1,7 +1,7 @@
 FROM node:12.18.3-alpine3.12 as frontend-builder
 ENV NODE_ENV='development'
-ENV API_URL='https://dev-api.plizi.fun'
-ENV WS_URL='wss://dev-ws.plizi.fun'
+ENV API_URL='http://localhost:9090'
+ENV WS_URL='ws://localhost:7070'
 COPY . .
 RUN npm install 
 RUN npm run build
@@ -9,13 +9,13 @@ RUN npm run build
 FROM nginx:stable
 COPY --from=frontend-builder dist /app
 #COPY dist /app
-COPY docker/front-nginx/etc/nginx/conf.d/dev.plizi.fun.conf /etc/nginx/conf.d/dev.plizi.fun.conf
-COPY docker/front-nginx/etc/nginx/nginx.conf /etc/nginx/nginx.conf
+COPY etc/nginx/conf.d/dev.plizi.fun.conf /etc/nginx/conf.d/dev.plizi.fun.conf
+COPY etc/nginx/nginx.conf /etc/nginx/nginx.conf
 # certificates: 
-COPY docker/front-nginx/etc/ssl/cert.pem /etc/nginx/ssl/cert.pem
-COPY docker/front-nginx/etc/ssl/chain.pem /etc/nginx/ssl/chain.pem
-COPY docker/front-nginx/etc/ssl/fullchain.pem /etc/nginx/ssl/fullchain.pem
-COPY docker/front-nginx/etc/ssl/privkey.pem /etc/nginx/ssl/privkey.pem
+COPY etc/ssl/cert.pem /etc/nginx/ssl/cert.pem
+COPY etc/ssl/chain.pem /etc/nginx/ssl/chain.pem
+COPY etc/ssl/fullchain.pem /etc/nginx/ssl/fullchain.pem
+COPY etc/ssl/privkey.pem /etc/nginx/ssl/privkey.pem
 
 RUN cd /etc/nginx/ \
     openssl dhparam -out dhparam.pem 4096

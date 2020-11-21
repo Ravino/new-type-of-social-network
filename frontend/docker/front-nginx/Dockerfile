@@ -17,8 +17,8 @@ RUN echo -e "[build-stage] start time: "`date '+%Y-%m-%d %H:%M:%S'` >> /app/buil
 COPY app/package*.json ./
 
 ENV NODE_ENV='development'
-ENV API_URL='https://dev-api.plizi.fun'
-ENV WS_URL='wss://dev-ws.plizi.fun'
+ENV API_URL='http://php_api:9090'
+ENV WS_URL='ws://php_ws:7070'
 
 RUN npm install 
 
@@ -60,7 +60,7 @@ STOPSIGNAL SIGTERM
 
 HEALTHCHECK --interval=5s --timeout=2s --retries=3 \
   CMD curl --include --no-buffer \
-          http://localhost:80 || exit 1
+          https://localhost:443 || exit 1
 
 ENTRYPOINT [""]
 CMD ["/startup.sh"]
