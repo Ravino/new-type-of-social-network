@@ -7,10 +7,10 @@
     },
     "servers": [
         {
-            "url": "https://vm1095330.hl.had.pm/api"
+            "url": "https://api_nginx:1215/api"
         },
         {
-            "url": "http://vm1095330.hl.had.pm/api"
+            "url": "http://api_nginx:1215/api"
         }
     ],
     "tags": [
