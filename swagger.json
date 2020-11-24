@@ -7,11 +7,11 @@
     },
     "servers": [
         {
-            "url": "https://api_nginx:1215/api"
-        },
-        {
-            "url": "http://api_nginx:1215/api"
+            "url": "http://localhost:1215"
         }
+#        {
+#            "url": "http://api_nginx/api"
+#        }
     ],
     "tags": [
         {

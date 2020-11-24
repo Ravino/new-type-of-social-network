@@ -2,7 +2,7 @@ FROM node:12.18.3-alpine3.12 as frontend-builder
 ENV NODE_ENV='development'
 ENV API_URL='http://localhost:9090'
 ENV WS_URL='ws://localhost:7070'
-COPY . .
+COPY app/ .
 RUN npm install 
 RUN npm run build
  
