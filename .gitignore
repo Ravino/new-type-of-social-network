@@ -13,11 +13,11 @@ Thumbs.db
 /docker-compose.local.yml
 /frontend/dist
 
-mysql_data_plizi
-mysql8_data_plizi
-mongodb_data_plizi
-redis_data_plizi
-neo4j-persistence
+#mysql_data_plizi
+#mysql8_data_plizi
+#mongodb_data_plizi
+#redis_data_plizi
+#neo4j-persistence
 
 # vcode workspace
 *.sublime-project
