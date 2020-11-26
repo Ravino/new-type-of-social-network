@@ -106,9 +106,9 @@ services:
       - ./backend/.env
     working_dir: /app
     user: "www-data"
-    volumes:
-#      - ./backend:/app
-      - ./frontend/docker/certbot/conf/:/etc/nginx/ssl/
+#    volumes:
+#      - ./backend/docker/back-api/backend:/app
+#      - ./frontend/docker/certbot/conf/:/etc/nginx/ssl/
     ports:
     - "1215:1215"
     depends_on:
@@ -125,7 +125,7 @@ services:
     working_dir: /app
 #    volumes:
 #    - ./frontend/docker/certbot/conf/:/etc/nginx/ssl/
-#    - ./backend:/app
+#    - ./backend/docker/back-api/backend:/app
     ports:
     - "7070:7070"
     depends_on:
@@ -140,8 +140,8 @@ services:
       - ./backend/.env
     working_dir: /app
 #    volumes:
-#      - ./backend:/app
-    command: php artisan queue:work
+#      - ./backend/docker/back-api/backend:/app
+#    command: php artisan queue:work
     depends_on:
       - php_api
 
