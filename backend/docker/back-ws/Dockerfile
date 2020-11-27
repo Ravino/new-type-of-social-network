@@ -1,12 +1,12 @@
 FROM 884088487044.dkr.ecr.eu-central-1.amazonaws.com/eu-central-1-test-plizi-laravel-docker:latest
 
 RUN apk add busybox-extras
-RUN ls $DOCKERFILE_PATH
-COPY ./docker-entrypoint.sh /usr/share/back-ws/bin/
+
+COPY docker/back-ws/docker-entrypoint.sh /usr/share/back-ws/bin/
 RUN chmod +x /usr/share/back-ws/bin/docker-entrypoint.sh
 
 WORKDIR /app
-COPY $DOCKERFILE_PATH/backend/ ./
+COPY docker/back-ws/backend ./
 RUN composer install
 
 EXPOSE 7070
