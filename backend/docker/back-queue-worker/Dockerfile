@@ -2,12 +2,12 @@ FROM 884088487044.dkr.ecr.eu-central-1.amazonaws.com/laravel-docker
 
 #RUN apk add --no-cache \
 #    supervisor
-COPY docker-entrypoint.sh /usr/share/back-queue-worker/bin/
+COPY docker/back-queue-worker/docker-entrypoint.sh /usr/share/back-queue-worker/bin/
 RUN chmod +x /usr/share/back-queue-worker/bin/docker-entrypoint.sh
 #COPY docker/back-queue-worker/laravel-supervisor.conf /etc/supervisor/conf.d/supervisord.conf
 
 WORKDIR /app
-COPY backend/ ./
+COPY docker/back-queue-worker/backend/ ./
 RUN composer install
 
 STOPSIGNAL SIGTERM

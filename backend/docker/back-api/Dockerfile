@@ -1,10 +1,10 @@
 FROM 884088487044.dkr.ecr.eu-central-1.amazonaws.com/laravel-docker
 
-COPY docker-entrypoint.sh /usr/share/back-api/bin/
+COPY docker/back-api/docker-entrypoint.sh /usr/share/back-api/bin/
 RUN chmod +x /usr/share/back-api/bin/docker-entrypoint.sh
 
 WORKDIR /app
-COPY backend/ ./
+COPY docker/back-api/backend/ ./
 RUN composer install
 RUN chown -R www-data:www-data ./
 
