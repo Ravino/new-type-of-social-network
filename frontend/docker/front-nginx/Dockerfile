@@ -17,12 +17,13 @@ RUN echo -e "[build-stage] start time: "`date '+%Y-%m-%d %H:%M:%S'` >> /app/buil
 COPY package*.json ./
 
 ENV NODE_ENV='development'
-ENV API_URL='http://localhost:1215'
-ENV WS_URL='ws://localhost:7070'
+
+ENV API_URL='https://dev-api.plizi.fun'
+ENV WS_URL='wss://dev-ws.plizi.fun'
 
 RUN npm install 
 
-COPY . .
+COPY /. .
 #RUN npm run build
 RUN echo "[build-stage] finish time: "`date '+%Y-%m-%d %H:%M:%S'` >> /app/build.json
 RUN npm run build -- --prod --output-path=/dist
