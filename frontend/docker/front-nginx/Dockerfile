@@ -14,7 +14,7 @@ RUN echo ${VERSION}
 WORKDIR /app
 RUN echo -e "[build-stage] version: ${BUILDER_VERSION} " > /app/build.json
 RUN echo -e "[build-stage] start time: "`date '+%Y-%m-%d %H:%M:%S'` >> /app/build.json
-COPY app/package*.json ./
+COPY package*.json ./
 
 ENV NODE_ENV='development'
 ENV API_URL='http://localhost:1215'
@@ -22,7 +22,7 @@ ENV WS_URL='ws://localhost:7070'
 
 RUN npm install 
 
-COPY app/ ./
+COPY . .
 #RUN npm run build
 RUN echo "[build-stage] finish time: "`date '+%Y-%m-%d %H:%M:%S'` >> /app/build.json
 RUN npm run build -- --prod --output-path=/dist
