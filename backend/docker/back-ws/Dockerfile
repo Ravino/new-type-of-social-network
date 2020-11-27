@@ -1,4 +1,4 @@
-FROM 884088487044.dkr.ecr.eu-central-1.amazonaws.com/laravel-docker
+FROM 884088487044.dkr.ecr.eu-central-1.amazonaws.com/eu-central-1-test-plizi-laravel-docker:latest
 
 RUN apk add busybox-extras
 RUN ls
