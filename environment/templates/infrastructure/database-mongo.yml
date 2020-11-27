@@ -15,13 +15,13 @@ Parameters:
     Default: 'Tksx2PPDba8Ny0lZ'
     NoEcho: true
     Description: MongoDB admin user password.
-  AccessPort: 
+  AccessPort:
     Type: String
     Default: "27010"
     Description: "Default port for Mongo DB cluster access."
   InstanceClass:
     Type: String
-    Default: "db.r5.2xlarge"
+    Default: "db.t3.medium"
     Description: "Class of instance for hosting MongoDB cluster instance."
 Resources:
   MongoSubnetGroup:
@@ -80,7 +80,7 @@ Resources:
       #  - general
       #  - slowquery
       #StorageEncrypted: true
-      #KmsKeyId: string # 
+      #KmsKeyId: string #
       #PreferredMaintenanceWindow: string
       #PreferredBackupWindow: string
       #SnapshotIdentifier: string
@@ -94,7 +94,7 @@ Resources:
     Properties:
       DBInstanceClass: !Ref 'InstanceClass'
       DBClusterIdentifier: !Ref 'MongoDBCluster' #required
-  
+
 Outputs:
   MongoDBName:
     Value: 'admin'
