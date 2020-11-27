@@ -39,11 +39,11 @@ COPY --from=build-stage /app/build.json /app/build.json
 RUN echo -e "[deploy-stage] version: ${VERSION} " >> /app/build.json
 RUN echo -e "[deploy-stage] start time: "`date '+%Y-%m-%d %H:%M:%S'` >> /app/build.json
 
-COPY etc/nginx/conf.d/default.conf /etc/nginx/conf.d/default.conf
-COPY etc/nginx/nginx.conf /etc/nginx/nginx.conf
-COPY etc/nginx/ssl/fullchain.pem /etc/nginx/ssl/fullchain.pem
-COPY etc/nginx/ssl/privkey.pem /etc/nginx/ssl/privkey.pem
-COPY startup.sh .
+COPY docker/front-nginx/etc/nginx/conf.d/default.conf /etc/nginx/conf.d/default.conf
+COPY docker/front-nginx/etc/nginx/nginx.conf /etc/nginx/nginx.conf
+COPY docker/front-nginx/etc/nginx/ssl/fullchain.pem /etc/nginx/ssl/fullchain.pem
+COPY docker/front-nginx/etc/nginx/ssl/privkey.pem /etc/nginx/ssl/privkey.pem
+COPY docker/front-nginx/startup.sh .
 RUN chown -R nginx:nginx /app
 RUN chmod +x /startup.sh 
 
