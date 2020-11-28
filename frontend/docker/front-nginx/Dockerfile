@@ -18,7 +18,7 @@ COPY package*.json ./
 
 ENV NODE_ENV='development'
 
-ENV API_URL='https//dev-api.plizi.fun'
+ENV API_URL='https://dev-api.plizi.fun'
 ENV WS_URL='wss://dev-ws.plizi.fun'
 
 RUN npm install 
