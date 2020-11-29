@@ -475,21 +475,21 @@ Resources:
           SecurityGroups:
             - Fn::ImportValue:
                 !Join [':', [!Ref 'EnvironmentName', 'FargateContainerSecurityGroup']]
-            #- Fn::ImportValue:
-                #!Join [':', [!Ref 'EnvironmentName', 'MySQLSecurityGroup']]
-            #- Fn::ImportValue:
-                #!Join [':', [!Ref 'EnvironmentName', 'MongoSecurityGroup']]
-            #- Fn::ImportValue:
-                #!Join [':', [!Ref 'EnvironmentName', 'RedisSecurityGroup']]
+            - Fn::ImportValue:
+                !Join [':', [!Ref 'EnvironmentName', 'MySQLSecurityGroup']]
+            - Fn::ImportValue:
+                !Join [':', [!Ref 'EnvironmentName', 'MongoSecurityGroup']]
+            - Fn::ImportValue:
+                !Join [':', [!Ref 'EnvironmentName', 'RedisSecurityGroup']]
           Subnets: !Split [',', {'Fn::ImportValue': !Join [':', [!Ref 'EnvironmentName', !Sub '${SubnetsScope}Subnets']] }]
       TaskDefinition: !Ref 'TaskDefinition'
       LoadBalancers:
         - ContainerName: !Ref 'ServiceName'
           ContainerPort: !Ref 'ContainerPort'
           TargetGroupArn: !Ref 'ALBTargetGroup'
-        # - ContainerName: !Ref 'ServiceName'
-        #   ContainerPort: !Ref 'ContainerPort'
-        #   TargetGroupArn: !Ref 'NLBTargetGroupSSL'
+        - ContainerName: !Ref 'ServiceName'
+          ContainerPort: !Ref 'ContainerPort'
+          TargetGroupArn: !Ref 'NLBTargetGroupSSL'
 
   ALBTargetGroup:
     Type: AWS::ElasticLoadBalancingV2::TargetGroup
@@ -562,24 +562,24 @@ Resources:
           !Join [':', [!Ref 'EnvironmentName', 'ALBListenerHTTPS']]
       Priority: !Ref 'Priority'
 
-  # NLBListenerRuleSSL:
-  #   Type: AWS::ElasticLoadBalancingV2::ListenerRule
-  #   Properties:
-  #     Actions:
-  #       - Type: forward
-  #         TargetGroups: 
-  #         - TargetGroupArn: !Ref NLBTargetGroupSSL
-  #           Weight: 1
-  #         TargetGroupStickinessConfig: 
-  #           DurationSeconds: 60
-  #           Enabled: true
-  #     Conditions:
-  #       - Field: host-header
-  #         Values: [!Ref 'Path']
-  #     ListenerArn:
-  #       Fn::ImportValue:
-  #         !Join [':', [!Ref 'EnvironmentName', 'NLBListenerNginxSSL']]
-  #     Priority: !Ref 'Priority'
+  NLBListenerRuleSSL:
+    Type: AWS::ElasticLoadBalancingV2::ListenerRule
+    Properties:
+      Actions:
+        - Type: forward
+          TargetGroups: 
+          - TargetGroupArn: !Ref NLBTargetGroupSSL
+            Weight: 1
+          TargetGroupStickinessConfig: 
+            DurationSeconds: 60
+            Enabled: true
+      Conditions:
+        - Field: host-header
+          Values: [!Ref 'Path']
+      ListenerArn:
+        Fn::ImportValue:
+          !Join [':', [!Ref 'EnvironmentName', 'NLBListenerNginxSSL']]
+      Priority: !Ref 'Priority'
   
   # Enable autoscaling for this service
   ScalableTarget:
