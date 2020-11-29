@@ -457,8 +457,8 @@ Resources:
   Service:
     Type: AWS::ECS::Service
     DependsOn:
-      - ALBListenerRule
-      #- ALBListenerRuleSSL
+      #- ALBListenerRule
+      - ALBListenerRuleSSL
     Properties:
       ServiceName: !Ref 'ServiceName'
       Cluster:
@@ -476,12 +476,12 @@ Resources:
           SecurityGroups:
             - Fn::ImportValue:
                 !Join [':', [!Ref 'EnvironmentName', 'FargateContainerSecurityGroup']]
-            - Fn::ImportValue:
-                !Join [':', [!Ref 'EnvironmentName', 'MySQLSecurityGroup']]
-            - Fn::ImportValue:
-                !Join [':', [!Ref 'EnvironmentName', 'MongoSecurityGroup']]
-            - Fn::ImportValue:
-                !Join [':', [!Ref 'EnvironmentName', 'RedisSecurityGroup']]
+            # - Fn::ImportValue:
+            #     !Join [':', [!Ref 'EnvironmentName', 'MySQLSecurityGroup']]
+            # - Fn::ImportValue:
+            #     !Join [':', [!Ref 'EnvironmentName', 'MongoSecurityGroup']]
+            # - Fn::ImportValue:
+            #     !Join [':', [!Ref 'EnvironmentName', 'RedisSecurityGroup']]
           Subnets: !Split [',', {'Fn::ImportValue': !Join [':', [!Ref 'EnvironmentName', !Sub '${SubnetsScope}Subnets']] }]
       TaskDefinition: !Ref 'TaskDefinition'
       HealthCheckGracePeriodSeconds: 30
@@ -489,9 +489,9 @@ Resources:
         - ContainerName: !Ref 'ServiceName'
           ContainerPort: 7070
           TargetGroupArn: !Ref 'ALBTargetGroup'
-        - ContainerName: !Ref 'ServiceName'
-          ContainerPort: 5555
-          TargetGroupArn: !Ref 'NLBTargetGroup'
+        # - ContainerName: !Ref 'ServiceName'
+        #   ContainerPort: 5555
+        #   TargetGroupArn: !Ref 'NLBTargetGroup'
 
   ALBTargetGroup:
     Type: AWS::ElasticLoadBalancingV2::TargetGroup
@@ -508,8 +508,8 @@ Resources:
         HttpCode: "426"
       # Routing
       TargetType: ip
-      Port: 80
-      Protocol: HTTP # TODO : Desire TLS?
+      Port: 443
+      Protocol: HTTPS # TODO : Desire TLS?
       # Attributes
       TargetGroupAttributes:
       - Key: "stickiness.enabled"
@@ -531,21 +531,21 @@ Resources:
         - Key: 'Name'
           Value: !Join ["-", [ "PLIZI" , !Ref 'AWS::Region', !Ref 'ServiceName' , !Ref 'EnvironmentName' , "ALB", "TG"]]
 
-  ALBListenerRule:
-    Type: AWS::ElasticLoadBalancingV2::ListenerRule
-    Properties:
-      Actions:
-        - Type: forward
-          ForwardConfig:
-            TargetGroups: 
-            - TargetGroupArn: !Ref ALBTargetGroup
-              Weight: 1
-            # TargetGroupStickinessConfig: 
-            #   DurationSeconds: !If [ "HasStickinessEnabled", !Ref 'StickinessDuration', !Ref "AWS::NoValue" ]
-            #   Enabled: !If [ "HasStickinessEnabled" , true, false ]
-      Conditions:
-        - Field: host-header
-          Values: [!Ref 'Path']
+  # ALBListenerRule:
+  #   Type: AWS::ElasticLoadBalancingV2::ListenerRule
+  #   Properties:
+  #     Actions:
+  #       - Type: forward
+  #         ForwardConfig:
+  #           TargetGroups: 
+  #           - TargetGroupArn: !Ref ALBTargetGroup
+  #             Weight: 1
+  #           # TargetGroupStickinessConfig: 
+  #           #   DurationSeconds: !If [ "HasStickinessEnabled", !Ref 'StickinessDuration', !Ref "AWS::NoValue" ]
+  #           #   Enabled: !If [ "HasStickinessEnabled" , true, false ]
+  #     Conditions:
+  #       - Field: host-header
+  #         Values: [!Ref 'Path']
   #     ListenerArn:
   #       Fn::ImportValue:
   #         !Join [':', [!Ref 'EnvironmentName', 'ALBListenerHTTP']]
@@ -571,48 +571,48 @@ Resources:
           !Join [':', [!Ref 'EnvironmentName', 'ALBListenerHTTPS']]
       Priority: !Ref 'Priority'
 
-  NLBTargetGroup:
-    Type: AWS::ElasticLoadBalancingV2::TargetGroup
-    Properties:
-      # Health checks
-      HealthCheckIntervalSeconds: 10
-      HealthCheckPort: "7070"
-      HealthCheckProtocol: TCP
-      HealthCheckTimeoutSeconds: 10
-      HealthyThresholdCount: 3
-      UnhealthyThresholdCount: 3
-      # Routing
-      TargetType: ip
-      Port: 5555
-      Protocol: TCP
-      # Attributes
-      TargetGroupAttributes:
-        # - Key: stickiness.enabled
-        #   Value: "true"
-        # - Key: stickiness.type
-        #   Value: 'source_ip'
-        - Key: deregistration_delay.timeout_seconds
-          Value: "0"
-        - Key: proxy_protocol_v2.enabled
-          Value: "true" # TODO: Check if we have problems regarding that?
-      VpcId:
-        Fn::ImportValue:
-          !Join [':', [!Ref 'EnvironmentName', 'VPCId']]
-      Tags:
-        - Key: 'Name'
-          Value: !Join ["-", [ "PLIZI" , !Ref 'AWS::Region', !Ref 'ServiceName' , !Ref 'EnvironmentName' , "NLB", "TG"]]
+  # NLBTargetGroup:
+  #   Type: AWS::ElasticLoadBalancingV2::TargetGroup
+  #   Properties:
+  #     # Health checks
+  #     HealthCheckIntervalSeconds: 10
+  #     HealthCheckPort: "7070"
+  #     HealthCheckProtocol: TCP
+  #     HealthCheckTimeoutSeconds: 10
+  #     HealthyThresholdCount: 3
+  #     UnhealthyThresholdCount: 3
+  #     # Routing
+  #     TargetType: ip
+  #     Port: 5555
+  #     Protocol: TCP
+  #     # Attributes
+  #     TargetGroupAttributes:
+  #       # - Key: stickiness.enabled
+  #       #   Value: "true"
+  #       # - Key: stickiness.type
+  #       #   Value: 'source_ip'
+  #       - Key: deregistration_delay.timeout_seconds
+  #         Value: "0"
+  #       - Key: proxy_protocol_v2.enabled
+  #         Value: "true" # TODO: Check if we have problems regarding that?
+  #     VpcId:
+  #       Fn::ImportValue:
+  #         !Join [':', [!Ref 'EnvironmentName', 'VPCId']]
+  #     Tags:
+  #       - Key: 'Name'
+  #         Value: !Join ["-", [ "PLIZI" , !Ref 'AWS::Region', !Ref 'ServiceName' , !Ref 'EnvironmentName' , "NLB", "TG"]]
   
-  NLBListener:
-    Type: AWS::ElasticLoadBalancingV2::Listener
-    Properties:
-      DefaultActions:
-        - Type: forward
-          TargetGroupArn: !Ref 'NLBTargetGroup'
-      LoadBalancerArn: 
-        Fn::ImportValue:
-          !Join [':', [!Ref 'EnvironmentName', 'NLBId']]
-      Port: 5555
-      Protocol: TCP
+  # NLBListener:
+  #   Type: AWS::ElasticLoadBalancingV2::Listener
+  #   Properties:
+  #     DefaultActions:
+  #       - Type: forward
+  #         TargetGroupArn: !Ref 'NLBTargetGroup'
+  #     LoadBalancerArn: 
+  #       Fn::ImportValue:
+  #         !Join [':', [!Ref 'EnvironmentName', 'NLBId']]
+  #     Port: 5555
+  #     Protocol: TCP
 
   # Enable autoscaling for this service
   ScalableTarget:

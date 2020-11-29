@@ -37,55 +37,55 @@ Resources:
         Fn::ImportValue:
           !Join [':', [!Ref 'EnvironmentName', 'VPCId']]
 
-  Security
-  EcsSecurityGroupIngressFromNLB:
-    Type: AWS::EC2::SecurityGroupIngress
-    Properties:
-      Description: Ingress from the public NLB
-      GroupId: 
-        Fn::ImportValue:
-          !Join [':', [!Ref 'EnvironmentName', 'FargateContainerSecurityGroup']]
-      IpProtocol: -1
-      SourceSecurityGroupId: !Ref 'NetworkLoadBalancerSG'
+  # Security
+  # EcsSecurityGroupIngressFromNLB:
+  #   Type: AWS::EC2::SecurityGroupIngress
+  #   Properties:
+  #     Description: Ingress from the public NLB
+  #     GroupId: 
+  #       Fn::ImportValue:
+  #         !Join [':', [!Ref 'EnvironmentName', 'FargateContainerSecurityGroup']]
+  #     IpProtocol: -1
+  #     SourceSecurityGroupId: !Ref 'NetworkLoadBalancerSG'
       
-  NetworkLoadBalancerSG:
-    Type: AWS::EC2::SecurityGroup
-    Properties:
-      GroupDescription: Access to the private facing network load balancer
-      VpcId: 
-        Fn::ImportValue:
-          !Join [':', [!Ref 'EnvironmentName', 'VPCId']]
-      SecurityGroupIngress:
-        - CidrIp: 0.0.0.0/0
-          IpProtocol: -1
+  # NetworkLoadBalancerSG:
+  #   Type: AWS::EC2::SecurityGroup
+  #   Properties:
+  #     GroupDescription: Access to the private facing network load balancer
+  #     VpcId: 
+  #       Fn::ImportValue:
+  #         !Join [':', [!Ref 'EnvironmentName', 'VPCId']]
+  #     SecurityGroupIngress:
+  #       - CidrIp: 0.0.0.0/0
+  #         IpProtocol: -1
 
-  Endpoints
-  PrivateSubnetOneEIP:
-    Type: AWS::EC2::EIP
-    Properties:
-      Domain: "vpc"
-  AssociatePrivateSubnetOneEIP:
-    Type: AWS::EC2::EIPAssociation
-    Properties:
-      EIP: !Ref PrivateSubnetOneEIP
+  # Endpoints
+  # PrivateSubnetOneEIP:
+  #   Type: AWS::EC2::EIP
+  #   Properties:
+  #     Domain: "vpc"
+  # AssociatePrivateSubnetOneEIP:
+  #   Type: AWS::EC2::EIPAssociation
+  #   Properties:
+  #     EIP: !Ref PrivateSubnetOneEIP
 
-  PrivateSubnetTwoEIP:
-    Type: AWS::EC2::EIP
-    Properties:
-      Domain: "vpc"
-  AssociatePrivateSubnetTwoEIP:
-    Type: AWS::EC2::EIPAssociation
-    Properties:
-      EIP: !Ref PrivateSubnetTwoEIP
+  # PrivateSubnetTwoEIP:
+  #   Type: AWS::EC2::EIP
+  #   Properties:
+  #     Domain: "vpc"
+  # AssociatePrivateSubnetTwoEIP:
+  #   Type: AWS::EC2::EIPAssociation
+  #   Properties:
+  #     EIP: !Ref PrivateSubnetTwoEIP
 
-  PrivateSubnetThreeEIP:
-    Type: AWS::EC2::EIP
-    Properties:
-      Domain: "vpc"
-  AssociatePrivateSubnetThreeEIP:
-    Type: AWS::EC2::EIPAssociation
-    Properties:
-      EIP: !Ref PrivateSubnetThreeEIP
+  # PrivateSubnetThreeEIP:
+  #   Type: AWS::EC2::EIP
+  #   Properties:
+  #     Domain: "vpc"
+  # AssociatePrivateSubnetThreeEIP:
+  #   Type: AWS::EC2::EIPAssociation
+  #   Properties:
+  #     EIP: !Ref PrivateSubnetThreeEIP
 
   # S3 Bucket log
   # NLBLogBucket:
