@@ -338,24 +338,24 @@ Resources:
           !Join [':', [!Ref 'EnvironmentName', 'ALBListenerHTTPS']]
       Priority: !Ref 'Priority'
 
-  NLBListenerRuleSSL:
-    Type: AWS::ElasticLoadBalancingV2::ListenerRule
-    Properties:
-      Actions:
-        - Type: forward
-          TargetGroups: 
-          - TargetGroupArn: !Ref NLBTargetGroupSSL
-            Weight: 1
-          TargetGroupStickinessConfig: 
-            DurationSeconds: 60
-            Enabled: true
-      Conditions:
-        - Field: host-header
-          Values: [!Ref 'Path']
-      ListenerArn:
-        Fn::ImportValue:
-          !Join [':', [!Ref 'EnvironmentName', 'NLBListenerNginxSSL']]
-      Priority: !Ref 'Priority'
+  # NLBListenerRuleSSL:
+  #   Type: AWS::ElasticLoadBalancingV2::ListenerRule
+  #   Properties:
+  #     Actions:
+  #       - Type: forward
+  #         TargetGroups: 
+  #         - TargetGroupArn: !Ref NLBTargetGroupSSL
+  #           Weight: 1
+  #         TargetGroupStickinessConfig: 
+  #           DurationSeconds: 60
+  #           Enabled: true
+  #     Conditions:
+  #       - Field: host-header
+  #         Values: [!Ref 'Path']
+  #     ListenerArn:
+  #       Fn::ImportValue:
+  #         !Join [':', [!Ref 'EnvironmentName', 'NLBListenerNginxSSL']]
+  #     Priority: !Ref 'Priority'
   
   # Enable autoscaling for this service
   ScalableTarget:

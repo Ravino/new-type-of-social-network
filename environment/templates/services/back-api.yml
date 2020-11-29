@@ -457,7 +457,7 @@ Resources:
     DependsOn:
       - ALBListenerRule
       - ALBListenerRuleSSL
-      #- NLBListenerRuleSSL
+      - NLBListenerRuleSSL
     Properties:
       ServiceName: !Ref 'ServiceName'
       Cluster:
