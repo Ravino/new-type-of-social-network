@@ -43,8 +43,8 @@
         "SubnetsScope": "Public",
         "LogRetentionInDays": "3",
         "SupervisorCount": "8",
-        "WebSocketUri": "ws://dev-ws.plizi.fun",
-        "ZmqSubHost": "ws://dev-ws.plizi.fun",
+        "WebSocketUri": "dev-ws.plizi.fun",
+        "ZmqSubHost": "dev-ws.plizi.fun",
         "WsLogs": "1"
     }
 }
