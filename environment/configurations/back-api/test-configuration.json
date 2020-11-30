@@ -19,7 +19,7 @@
         "ScaleUpCooldown": "30",
         "DeploymentMaximum": "200",
         "DeploymentMinimum": "100",
-        "ApiUrl": "dev.plizi.fun",
+        "ApiUrl": "dev-api.plizi.fun",
 		"AppEnv": "production",
 		"AppKey": "base64:B+SfHGdTdca+dxR4pzJ2SRrqFpF1gFS/pgZTHNxDbhw=",
 		"AppName": "PLIZI: Социальная сеть",
