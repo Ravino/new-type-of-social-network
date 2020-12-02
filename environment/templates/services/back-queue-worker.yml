@@ -314,13 +314,13 @@ Resources:
           Cpu: !Ref 'ContainerCpu'
           Memory: !Ref 'ContainerMemory'
           Image: !Ref 'ImageUrl'
-          #Command: 
+          #Command:
           Essential: true
           PortMappings:
             - ContainerPort: !Ref 'ContainerPort'
               #Protocol: !Ref 'ContainerProtocol'
           # HealthCheck:
-          #   Command: 
+          #   Command:
           #     - 'CMD exit 0;'
           #   Interval: 30
           #   Timeout: 10
@@ -344,6 +344,8 @@ Resources:
             Value: !Ref 'TestChatID'
           - Name: API_URL
             Value: !Ref 'ApiUrl'
+          - Name: APP_URL
+            Value: !Ref 'AppUrl'
           - Name: APP_DEBUG
             Value: !Ref 'AppDebug'
           - Name: APP_ENV
@@ -429,7 +431,7 @@ Resources:
               Fn::ImportValue:
                 !Join [':', [!Ref 'EnvironmentName', 'MySQLDBUser']]
           - Name: MONGO_DB_HOST
-            Value: 
+            Value:
               Fn::ImportValue:
                 !Join [':', [!Ref 'EnvironmentName', 'MongoDBHost']]
           - Name: MONGO_DB_PASSWORD
@@ -441,7 +443,7 @@ Resources:
               Fn::ImportValue:
                 !Join [':', [!Ref 'EnvironmentName', 'MongoDBUser']]
           - Name: REDIS_HOST
-            Value: 
+            Value:
               Fn::ImportValue:
                 !Join [':', [!Ref 'EnvironmentName', 'RedisHost']]
           - Name: REDIS_PORT
@@ -520,7 +522,7 @@ Resources:
   #         Value: true
   #       - Key: stickiness.type
   #         Value: 'source_ip'
-  #       - Key: slow_start.duration_seconds 
+  #       - Key: slow_start.duration_seconds
   #         Value: 30
   #       - Key: deregistration_delay.timeout_seconds
   #         Value: 30
@@ -535,10 +537,10 @@ Resources:
   #   Properties:
   #     Actions:
   #       - Type: forward
-  #         TargetGroups: 
+  #         TargetGroups:
   #         - TargetGroupArn: !Ref NLBTargetGroupSSL
   #           Weight: 1
-  #         TargetGroupStickinessConfig: 
+  #         TargetGroupStickinessConfig:
   #           DurationSeconds: 60
   #           Enabled: true
   #     Conditions:
@@ -548,7 +550,7 @@ Resources:
   #       Fn::ImportValue:
   #         !Join [':', [!Ref 'EnvironmentName', 'NLBListenerNginxSSL']]
   #     Priority: !Ref 'Priority'
-  
+
   # Enable autoscaling for this service
   ScalableTarget:
     Type: AWS::ApplicationAutoScaling::ScalableTarget
@@ -700,13 +702,13 @@ Resources:
   ALBRecordSetPublicQW:
     Type: 'AWS::Route53::RecordSet'
     Properties:
-      HostedZoneId: 
+      HostedZoneId:
         Fn::ImportValue:
           !Join [':', [!Ref 'EnvironmentName', 'PublicDNSHostedZone']]
       Name: !Sub '${SubDomainNameOne}.${DomainName}'
       Type: A
       AliasTarget:
-        HostedZoneId: 
+        HostedZoneId:
           Fn::ImportValue:
             !Join [':', [!Ref 'EnvironmentName', 'ALBCanonicalHostedZoneID']]
         DNSName:

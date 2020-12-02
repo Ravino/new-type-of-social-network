@@ -302,7 +302,7 @@ Resources:
           Cpu: !Ref 'ContainerCpu'
           Memory: !Ref 'ContainerMemory'
           Image: !Ref 'ImageUrl'
-          #Command: 
+          #Command:
           Essential: true
           PortMappings:
             - ContainerPort: 7070
@@ -314,7 +314,7 @@ Resources:
               awslogs-region: !Ref 'AWS::Region'
               awslogs-stream-prefix: !Ref 'ServiceName'
           # HealthCheck:
-          #   Command: 
+          #   Command:
           #     - 'CMD STATUS=$(curl -s -o /dev/null -w "%{http_code}" http://localhost:7070/); [[ $STATUS -eq 426 ]] || echo "[HealthCheck] Failed: Received status code: $STATUS" ; exit 1;'
           #   Interval: 30
           #   Timeout: 10
@@ -339,6 +339,8 @@ Resources:
               Value: !Ref 'TestChatID'
             - Name: API_URL
               Value: !Ref 'ApiUrl'
+            - Name: APP_URL
+              Value: !Ref 'AppUrl'
             - Name: APP_DEBUG
               Value: !Ref 'AppDebug'
             - Name: APP_ENV
@@ -422,7 +424,7 @@ Resources:
                 Fn::ImportValue:
                   !Join [':', [!Ref 'EnvironmentName', 'MySQLDBUser']]
             - Name: MONGO_DB_HOST
-              Value: 
+              Value:
                 Fn::ImportValue:
                   !Join [':', [!Ref 'EnvironmentName', 'MongoDBHost']]
             - Name: MONGO_DB_PASSWORD
@@ -434,7 +436,7 @@ Resources:
                 Fn::ImportValue:
                   !Join [':', [!Ref 'EnvironmentName', 'MongoDBUser']]
             - Name: REDIS_HOST
-              Value: 
+              Value:
                 Fn::ImportValue:
                   !Join [':', [!Ref 'EnvironmentName', 'RedisHost']]
             - Name: REDIS_PORT
@@ -537,10 +539,10 @@ Resources:
   #     Actions:
   #       - Type: forward
   #         ForwardConfig:
-  #           TargetGroups: 
+  #           TargetGroups:
   #           - TargetGroupArn: !Ref ALBTargetGroup
   #             Weight: 1
-  #           # TargetGroupStickinessConfig: 
+  #           # TargetGroupStickinessConfig:
   #           #   DurationSeconds: !If [ "HasStickinessEnabled", !Ref 'StickinessDuration', !Ref "AWS::NoValue" ]
   #           #   Enabled: !If [ "HasStickinessEnabled" , true, false ]
   #     Conditions:
@@ -557,10 +559,10 @@ Resources:
       Actions:
         - Type: forward
           ForwardConfig:
-            TargetGroups: 
+            TargetGroups:
             - TargetGroupArn: !Ref ALBTargetGroup
               Weight: 1
-            # TargetGroupStickinessConfig: 
+            # TargetGroupStickinessConfig:
             #   DurationSeconds: !If [ "HasStickinessEnabled", !Ref 'StickinessDuration', !Ref "AWS::NoValue" ]
             #   Enabled: !If [ "HasStickinessEnabled" , true, false ]
       Conditions:
@@ -601,14 +603,14 @@ Resources:
   #     Tags:
   #       - Key: 'Name'
   #         Value: !Join ["-", [ "PLIZI" , !Ref 'AWS::Region', !Ref 'ServiceName' , !Ref 'EnvironmentName' , "NLB", "TG"]]
-  
+
   # NLBListener:
   #   Type: AWS::ElasticLoadBalancingV2::Listener
   #   Properties:
   #     DefaultActions:
   #       - Type: forward
   #         TargetGroupArn: !Ref 'NLBTargetGroup'
-  #     LoadBalancerArn: 
+  #     LoadBalancerArn:
   #       Fn::ImportValue:
   #         !Join [':', [!Ref 'EnvironmentName', 'NLBId']]
   #     Port: 5555
@@ -765,13 +767,13 @@ Resources:
   ALBRecordSetPublicWS:
     Type: 'AWS::Route53::RecordSet'
     Properties:
-      HostedZoneId: 
+      HostedZoneId:
         Fn::ImportValue:
           !Join [':', [!Ref 'EnvironmentName', 'PublicDNSHostedZone']]
       Name: !Sub '${SubDomainNameOne}.${DomainName}'
       Type: A
       AliasTarget:
-        HostedZoneId: 
+        HostedZoneId:
           Fn::ImportValue:
             !Join [':', [!Ref 'EnvironmentName', 'ALBCanonicalHostedZoneID']]
         DNSName:
@@ -783,13 +785,13 @@ Resources:
   NLBRecordSetPublicZMQ:
     Type: 'AWS::Route53::RecordSet'
     Properties:
-      HostedZoneId: 
+      HostedZoneId:
         Fn::ImportValue:
           !Join [':', [!Ref 'EnvironmentName', 'PublicDNSHostedZone']]
       Name: !Sub '${SubDomainNameTwo}.${DomainName}'
       Type: A
       AliasTarget:
-        HostedZoneId: 
+        HostedZoneId:
           Fn::ImportValue:
             !Join [':', [!Ref 'EnvironmentName', 'NLBCanonicalHostedZoneID']]
         DNSName:
