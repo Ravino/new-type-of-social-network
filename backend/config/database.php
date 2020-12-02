@@ -148,12 +148,26 @@ return [
             'port' => env('REDIS_PORT', 6379),
             'database' => 0,
         ],
+        'clusters' => [
+            'default' => [
+                [
+                    'scheme'   => env('REDIS_SCHEME', 'tcp'),
+                    'host'     => env('REDIS_HOST', 'localhost'),
+                    'password' => env('REDIS_PASSWORD', null),
+                    'port'     => env('REDIS_PORT', 6379),
+                    'database' => env('REDIS_DATABASE', 0),
+                ],
+            ],
+            'options' => [ // Clustering specific options
+                'cluster' => 'redis', // This tells Redis Client lib to follow redirects (from cluster)
+            ]
+        ],
         'options' => [
             'cluster' => 'redis',
             'parameters' => ['password' => env('REDIS_PASSWORD', null)],
         ],
 
-        'clustered' => [
+        'cache' => [
             'host' => env('REDIS_HOST', '127.0.0.1'),
             'password' => env('REDIS_PASSWORD', null),
             'port' => env('REDIS_PORT', 6379),
