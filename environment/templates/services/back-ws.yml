@@ -23,6 +23,10 @@ Parameters:
     Type: String
     Default: "dev.plizi.fun"
     Description: Path to external api dns.
+  AppUrl:
+    Type: String
+    Default: "dev.plizi.fun"
+    Description: Path to external app dns.
   AppDebug:
     Type: Number
     Default: 1
