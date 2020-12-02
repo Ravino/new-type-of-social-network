@@ -30,7 +30,7 @@ class WampServer implements WampServerInterface
         }
 
         try {
-            $uri = "tcp://".$ip.":5555";
+            $uri = "tcp://0.0.0.0:5555";
             $socket->connect($uri);
             echo "< WampServer.sentDataToServer > [ Info ] Connected to ZMQSubHost on: $uri". PHP_EOL;
         } catch (\ZMQSocketException $ex) {
