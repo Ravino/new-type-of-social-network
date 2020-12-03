@@ -6,7 +6,7 @@ COPY docker/back-ws/docker-entrypoint.sh /usr/share/back-ws/bin/
 RUN chmod +x /usr/share/back-ws/bin/docker-entrypoint.sh
 
 WORKDIR /app
-COPY docker/back-ws/backend/ ./
+COPY . .
 RUN composer install
 
 EXPOSE 7070

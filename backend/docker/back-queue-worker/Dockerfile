@@ -7,7 +7,7 @@ RUN chmod +x /usr/share/back-queue-worker/bin/docker-entrypoint.sh
 #COPY docker/back-queue-worker/laravel-supervisor.conf /etc/supervisor/conf.d/supervisord.conf
 
 WORKDIR /app
-COPY docker/back-queue-worker/backend/ ./
+COPY . .
 RUN composer install
 
 STOPSIGNAL SIGTERM
