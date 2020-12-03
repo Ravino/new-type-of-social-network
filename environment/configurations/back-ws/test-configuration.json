@@ -43,10 +43,10 @@
         "TestChatID": "5f29a50e52a70d6d37384064",
         "SubnetsScope": "Public",
         "LogRetentionInDays": "3",
-        "WebSocketUri": "dev-ws.plizi.fun",
-        "ZmqSubHost": "dev-zmq.plizi.fun",
+        "WebSocketUri": "wss://dev-ws.plizi.fun",
+        "ZmqSubHost": "wss://dev-ws.plizi.fun",
         "WsLogs": "1",
-        "WsSecure": "0",
+        "WsSecure": "1",
         "WsPrivateKeyPath": "/app/docker/ssl/privkey.pem",
         "WsFullchainPath": "/app/docker/ssl/fullchain.pem",
         "StickinessDuration": "600"
