@@ -141,7 +141,7 @@ return [
 
     'redis' => [
         'client' => env('REDIS_CLIENT', 'predis'),
-        'cluster' => false,
+        'cluster' => true,
         'default' => [
             'host' => env('REDIS_HOST', 'localhost'),
             'password' => env('REDIS_PASSWORD', null),
