@@ -46,7 +46,7 @@
         "SupervisorCount": "8",
         "WsSecure": "1",
         "WebSocketUri": "dev-ws.plizi.fun",
-        "ZmqSubHost": "dev-ws.plizi.fun",
+        "ZmqSubHost": "dev-zmq.plizi.fun",
         "WsLogs": "1"
     }
 }
