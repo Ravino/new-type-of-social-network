@@ -30,7 +30,7 @@ class WampServer implements WampServerInterface
         }
 
         try {
-            $uri = "tcp://".$ip.":5555";
+            $uri = "tcp://0.0.0.0:5555";
             $socket->connect($uri);
             echo "< WampServer.sentDataToServer > [ Info ] Connected to ZMQSubHost on: $uri". PHP_EOL;
         } catch (\ZMQSocketException $ex) {
@@ -109,13 +109,13 @@ class WampServer implements WampServerInterface
                             $params['replyOnMessageId'] ?? null,
                             $params['forwardFromChatId'] ?? null,
                             $params['toUserId'] ?? null
-                        ));
+                        ))->onConnection('redis');
                     } else {
                         event(new NewBotMessageEvent($params['body'], $user_id, $params['chatId'], $params['attachments'],
                             $params['replyOnMessageId'] ?? null,
                             $params['forwardFromChatId'] ?? null,
                             $params['toUserId'] ?? null
-                        ));
+                        ))->onConnection('redis');
                     }
                 }
             }

@@ -44,7 +44,7 @@
         "SubnetsScope": "Public",
         "LogRetentionInDays": "3",
         "WebSocketUri": "dev-ws.plizi.fun",
-        "ZmqSubHost": "dev-zmq.plizi.fun",
+        "ZmqSubHost": "dev-ws.plizi.fun",
         "WsLogs": "1",
         "WsSecure": "1",
         "WsPrivateKeyPath": "/app/docker/ssl/privkey.pem",
