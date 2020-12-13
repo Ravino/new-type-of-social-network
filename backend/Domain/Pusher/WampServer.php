@@ -109,13 +109,13 @@ class WampServer implements WampServerInterface
                             $params['replyOnMessageId'] ?? null,
                             $params['forwardFromChatId'] ?? null,
                             $params['toUserId'] ?? null
-                        ))->onConnection('redis');
+                        ));
                     } else {
                         event(new NewBotMessageEvent($params['body'], $user_id, $params['chatId'], $params['attachments'],
                             $params['replyOnMessageId'] ?? null,
                             $params['forwardFromChatId'] ?? null,
                             $params['toUserId'] ?? null
-                        ))->onConnection('redis');
+                        ));
                     }
                 }
             }
