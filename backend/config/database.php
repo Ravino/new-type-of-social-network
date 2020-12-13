@@ -140,7 +140,7 @@ return [
     */
 
     'redis' => [
-        'client' => env('REDIS_CLIENT', 'predis'),
+        'client' => env('REDIS_CLIENT', 'phpredis'),
         'cluster' => true,
         'default' => [
             'host' => env('REDIS_HOST', 'localhost'),
