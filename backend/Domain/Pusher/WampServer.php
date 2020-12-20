@@ -105,17 +105,17 @@ class WampServer implements WampServerInterface
                         echo "< WampServer.onCall > [ Debug ] New message sent with data: " . json_encode($params) . PHP_EOL;
                     }
                     if(config('app.test_chat') !== $params['chatId']) {
-                        event(new NewMessageEvent($params['body'], $user_id, $params['chatId'], $params['attachments'],
+                        dispatch(new NewMessageEvent($params['body'], $user_id, $params['chatId'], $params['attachments'],
                             $params['replyOnMessageId'] ?? null,
                             $params['forwardFromChatId'] ?? null,
                             $params['toUserId'] ?? null
-                        ));
+                        )->onQueue('redis'));
                     } else {
-                        event(new NewBotMessageEvent($params['body'], $user_id, $params['chatId'], $params['attachments'],
+                        dispatch(new NewBotMessageEvent($params['body'], $user_id, $params['chatId'], $params['attachments'],
                             $params['replyOnMessageId'] ?? null,
                             $params['forwardFromChatId'] ?? null,
                             $params['toUserId'] ?? null
-                        ));
+                        )->onQueue('redis'));
                     }
                 }
             }
