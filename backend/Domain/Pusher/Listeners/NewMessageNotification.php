@@ -13,19 +13,19 @@ use Illuminate\Contracts\Queue\ShouldQueue;
 
 class NewMessageNotification
 {
-//    use Queueable;
+    use Queueable;
 
-//    public function onConnection($queue)
-//    {
-//        $this->connection = 'redis2';
-//        return $this;
-//    }
-//
-//    public function onQueue($queue)
-//    {
-//        $this->queue = 'redis2';
-//        return $this;
-//    }
+    public function onConnection($queue)
+    {
+        $this->connection = 'redis';
+        return $this;
+    }
+
+    public function onQueue($queue)
+    {
+        $this->queue = 'redis';
+        return $this;
+    }
 
     /**
      * @param NewMessageEvent $event рассылка сообщений
