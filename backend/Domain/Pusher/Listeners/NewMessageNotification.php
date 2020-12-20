@@ -11,7 +11,7 @@ use Domain\Pusher\WampServer as Pusher;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
 
-class NewMessageNotification implements ShouldQueue
+class NewMessageNotification 
 {
     use Queueable;
 
