@@ -23,3 +23,9 @@ Thumbs.db
 *.sublime-project
 *.sublime-workspace
 *.code-workspace
+
+
+backend-node-ws/node_modules
+backend-node-ws/*.sh
+backend-node-ws/test
+backend-node-ws/log*
