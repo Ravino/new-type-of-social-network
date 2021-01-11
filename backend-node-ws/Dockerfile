@@ -5,4 +5,6 @@ WORKDIR /www/backend-node-ws
 COPY . .
 RUN npm install
 EXPOSE 3000
-CMD ["npm", "start"]
+STOPSIGNAL SIGTERM
+ENTRYPOINT ["npm", "start"]
+CMD [""]
