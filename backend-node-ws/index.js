@@ -5,6 +5,7 @@ const envSocketPort = global.process.env.SOCKET_PORT;
 const envRedisHost = global.process.env.REDIS_HOST;
 const envRedisPort = global.process.env.REDIS_PORT;
 const envQueue = global.process.env.QUEUE;
+const envRoomChat = global.process.env.ROOM_CHAT;
 
 
 const SocketIo = require ("socket.io");
@@ -12,16 +13,11 @@ const SocketIoRedis = require ("socket.io-redis");
 const Ioredis = require ("ioredis");
 
 
-const ioredis = new Ioredis([
-  {
-    "host": envRedisHost,
-    "port": envRedisPort
-  }
-]);
+const ioredis = new Ioredis(`redis://${ envRedisHost }:${ envRedisPort }`);
 
 
 const socketIo = SocketIo(envSocketPort);
-const socketIoRedis = SocketIoRedis ({ "host": envRedisHost, "port": envRedisPort });
+const socketIoRedis = SocketIoRedis (`redis://${ envRedisHost }:${ envRedisPort }`);
 
 
 socketIo.adapter(socketIoRedis);
@@ -32,7 +28,7 @@ socketIo.adapter(socketIoRedis);
 socketIo.on ("connect", (socket) => {
 
   socket.on("chat-join", (data) => {
-    socket.join("room-" + data.idChat);
+    socket.join(envRoomChat + data.idChat);
     return undefined;
   });
 
@@ -46,7 +42,7 @@ socketIo.on ("connect", (socket) => {
 
 
     ioredis.rpush(envQueue, dataStringify);
-    socket.in("room-" + data.idChat).emit("chat-message", data);
+    socket.in(envRoomChat + data.idChat).emit("chat-message", data);
 
 
     return undefined;

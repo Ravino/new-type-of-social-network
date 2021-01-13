@@ -17,7 +17,7 @@ const msg = {
 
 
 socketIoClient.on("connect", () => {
-  console.log("Connected on port " + envSocketPort);
+  console.log("Connected on port " + envSocketAddress);
   socketIoClient.emit("chat-join", msg);
 
 
