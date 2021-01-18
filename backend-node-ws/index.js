@@ -8,6 +8,8 @@ const envQueue = global.process.env.QUEUE;
 const envRoomChat = global.process.env.ROOM_CHAT;
 
 
+const app = require("express")();
+const http = require("http");
 const SocketIo = require ("socket.io");
 const SocketIoRedis = require ("socket.io-redis");
 const Ioredis = require ("ioredis");
@@ -16,7 +18,8 @@ const Ioredis = require ("ioredis");
 const ioredis = new Ioredis(`redis://${ envRedisHost }:${ envRedisPort }`);
 
 
-const socketIo = SocketIo(envSocketPort);
+const httpServer = http.Server(app);
+const socketIo = SocketIo(httpServer);
 const socketIoRedis = SocketIoRedis (`redis://${ envRedisHost }:${ envRedisPort }`);
 
 
@@ -51,3 +54,12 @@ socketIo.on ("connect", (socket) => {
 
   return undefined;
 });
+
+
+app.use("/check", (req, res) => {
+  res.sendStatus(200);
+  return undefined;
+});
+
+
+httpServer.listen(envSocketPort);
