@@ -7,7 +7,7 @@ const envSocketAddress = global.process.env.SOCKET_ADDRESS;
 const SocketIoClient = require ("socket.io-client");
 
 
-const socketIoClient = SocketIoClient (envSocketAddress);
+const socketIoClient = SocketIoClient (envSocketAddress, { "transports": ["websocket"], upgrade: false});
 
 
 const msg = {
