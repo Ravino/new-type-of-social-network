@@ -1,6 +1,8 @@
 "use strict";
 
 
+const envTimer = global.process.env.TIMER;
+const envStepTime = global.process.env.STEP_TIME;
 const envSocketAddress = global.process.env.SOCKET_ADDRESS;
 
 
@@ -22,16 +24,20 @@ socketIoClient.on("connect", () => {
 
 
 socketIoClient.on("chat-message", (data) => {
-  console.log(data);
+//  console.log(data);
   return undefined;
 });
 
 
   setInterval(() => {
     socketIoClient.emit("chat-message", msg);
-  }, 1);
+  }, envStepTime);
+
+
+  setTimeout(() => {
+    global.process.exit();
+  }, envTimer);
 
 
   return undefined;
 });
-
