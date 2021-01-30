@@ -13,7 +13,7 @@ const socketIoClient = SocketIoClient (envSocketAddress, { "transports": ["webso
 
 
 const msg = {
-  "idChat": 12,
+  "idChat": 123,
   "data": "fuck"
 };
 
@@ -24,7 +24,7 @@ socketIoClient.on("connect", () => {
 
 
 socketIoClient.on("chat-message", (data) => {
-//  console.log(data);
+  console.log(data);
   return undefined;
 });
 
