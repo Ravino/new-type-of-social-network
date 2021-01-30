@@ -5,6 +5,7 @@ WORKDIR /www/backend-node-ws
 COPY . .
 RUN npm install
 EXPOSE 3000
+EXPOSE 4000
 STOPSIGNAL SIGTERM
 ENTRYPOINT ["npm", "start"]
 CMD [""]
