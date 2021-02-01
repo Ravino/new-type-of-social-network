@@ -4,6 +4,7 @@
 const envSocketPort = global.process.env.SOCKET_PORT;
 const envRedisHost = global.process.env.REDIS_HOST;
 const envRedisPort = global.process.env.REDIS_PORT;
+const envQueue = global.process.env.QUEUE;
 const envRoomChat = global.process.env.ROOM_CHAT;
 
 
@@ -29,6 +30,9 @@ webSocketServer.on("connection", (socket) => {
 
 
   socket.on("message", (data) => {
+
+    ioredis.rpush(envQueue, data);
+
 
     try {
       data = JSON.parse(data);
