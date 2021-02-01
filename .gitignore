@@ -1,3 +1,4 @@
+node_modules
 # Editor directories and files
 .idea
 .vs
@@ -25,6 +26,7 @@ Thumbs.db
 *.code-workspace
 
 
+backend-node-ws-jmeter/node_modules
 backend-node-ws/node_modules
 backend-node-ws/*.sh
 backend-node-ws/test
