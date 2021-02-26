@@ -1,5 +1,6 @@
 import Vue from 'vue';
 import axios from 'axios';
+import { io } from "socket.io-client";
 import PliziAPIError from './API/PliziAPIError.js';
 
 import PliziChatAPI from './API/PliziChatAPI.js';
@@ -58,6 +59,8 @@ class PliziAPIClass {
      * @private
      */
     __baseWsURL = ``;
+
+    __baseSocketIoUrl = ``;
 
     __wsChannelCarrier = null;
 
@@ -137,6 +140,7 @@ class PliziAPIClass {
         //this.__baseWsURL = (window.wsUrl) ? (window.wsUrl + ``).trim() : ``;
         this.__baseURL   = (process.env.API_URL) ? (process.env.API_URL + ``).trim() : ``;
         this.__baseWsURL = (process.env.WS_URL) ? (process.env.WS_URL + ``).trim() : ``;
+        this.__baseSocketIoUrl = (process.env.SOCKET_IO_URL) ? (process.env.SOCKET_IO_URL + ``).trim() :  ``;
 
         if ($root) {
             this.__$root = $root;
@@ -569,6 +573,46 @@ class PliziAPIClass {
         this.__wsIsConnected = true;
     }
 
+    __socket = null;
+
+    __socketIoConnect() {
+        this.__socket = io(this.__baseSocketIoUrl);
+
+        console.log(this.__socket);
+        console.log(this.__baseSocketIoUrl);
+
+        this.__socketIoSubscribe();
+    }
+
+    joinToChat(chatId) {
+        console.log(chatId);
+        console.log(this.__socket);
+
+        this.__socket.emit('chat-join', {chatId: chatId});
+    }
+
+    __socketIoSubscribe() {
+        console.log(this.__socket);
+        this.__socket.on('chat-message', (data) => {
+            console.log(data);
+
+            this.emit('newMessageInDialog', {
+                chatId :  data.data.chatId,
+                message : data.data
+            });
+
+            this.emit('NewAppNotification', {
+               type :  'message.new',
+               message : data.data
+            });
+        })
+    }
+
+    socketIoSendMessage(data) {
+        console.log(this.__socket);
+        console.log(data);
+        this.__socket.emit('chat-message', data);
+    }
 
     __channelReceiver(s) {
         s.subscribe(this.__channel, (channelID, data) => {

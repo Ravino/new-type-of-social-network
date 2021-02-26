@@ -295,6 +295,8 @@ created(){
 
     this.keysUpdatersInitiator();
 
+    console.log(this.$root);
+
     this.$root.$on('afterSuccessLogin',  this.afterSuccessLogin);
     this.$root.$on('afterSuccessLogout', this.afterSuccessLogout);
 

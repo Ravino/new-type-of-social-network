@@ -157,6 +157,27 @@ methods: {
         }
 
         this.$root.$api.sendToChannel(sendData);
+
+        console.log(sendData);
+        console.log(this.$root.$auth.user.id);
+
+        sendData.userId = this.$root.$auth.user.id;
+
+        const fullName = this.$root.$auth.user.fullName;
+        const name = fullName.split(" ");
+        console.log(name);
+        console.log(fullName);
+
+        sendData.firstName = name[0];
+        sendData.lastName = name[1];
+        sendData.sex = 'n';
+        sendData.userPic = this.$root.$auth.user.userPic;
+
+
+        console.log(sendData);
+        console.log(this.$root);
+
+        this.$root.$api.socketIoSendMessage(sendData);
     },
 },
 

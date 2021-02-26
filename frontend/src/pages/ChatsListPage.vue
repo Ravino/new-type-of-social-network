@@ -224,6 +224,9 @@ methods: {
 
         this.currentDialog = this.$root.$auth.dm.get(chatId);
 
+        console.log(chatId);
+        this.$root.$api.joinToChat(chatId);
+
         try {
             msgsResponse = await this.$root.$api.$chat.messages(chatId, 0, 10);
         }
