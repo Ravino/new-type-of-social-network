@@ -1,0 +1,488 @@
+""" Дата со временем в формате ISO-8601 с часовым поясом. """
+scalar ZonedDateTime
+scalar Date
+
+""" Базовый тип со всеми запросами """
+type Query {
+    user: UserQuery!
+    executiveAuthority: ExecutiveAuthorityQuery!
+    questionnaire: QuestionnaireQuery!
+    requestProcedure: RequestProcedureQuery!
+    report: ReportQuery!
+}
+
+""" Базовый тип со всеми мутирующими запросами """
+type Mutation {
+    user: UserMutation!
+    executiveAuthority: ExecutiveAuthorityMutation!
+    questionnaire: QuestionnaireMutation!
+    requestProcedure: RequestProcedureMutation!
+}
+
+type UserQuery {
+    get(id: ID!): User!
+    list(name: String, size: Int): UserList!
+    select(cursor: String!, offset: Int!): UserList!
+}
+
+type UserMutation {
+    create(user: UserInput!): User!
+    update(user: UserInput!): User!
+    delete(id: ID!): Boolean!
+}
+
+type User {
+    id: ID!
+    name: String!
+    email: String!
+    role: UserRole!
+    enabled: Boolean!
+}
+
+enum UserRole {
+    APPLICANT,
+    MANAGER,
+    SUPERADMIN
+}
+
+input UserInput {
+    id: ID
+    name: String!
+    email: String!
+    role: UserRole!
+    password: String
+    enabled: Boolean!
+}
+
+type UserList {
+    cursor: String!
+    total: Int!
+    items: [User!]!
+}
+
+type ExecutiveAuthorityQuery {
+    get(id: ID!): ExecutiveAuthority!
+    list(name: String, size: Int): ExecutiveAuthorityList!
+    select(cursor: String!, offset: Int!): ExecutiveAuthorityList!
+}
+
+type ExecutiveAuthorityMutation {
+    create(executiveAuthority: ExecutiveAuthorityInput!): ExecutiveAuthority!
+    update(executiveAuthority: ExecutiveAuthorityInput!): ExecutiveAuthority!
+    delete(id: ID!): Boolean!
+}
+
+type ExecutiveAuthority {
+    id: ID!
+    name: String!
+    email: String!
+}
+
+input ExecutiveAuthorityInput {
+    id: ID!
+    name: String!
+    email: String!
+}
+
+type ExecutiveAuthorityList {
+    cursor: String!
+    total: Int!
+    items: [ExecutiveAuthority!]!
+}
+
+type QuestionnaireQuery {
+    question: QuestionQuery!
+    procedure: ProcedureQuery!
+}
+
+type QuestionnaireMutation {
+    question: QuestionMutation!
+    procedure: ProcedureMutation!
+    publish: Boolean!
+}
+
+type QuestionQuery {
+    get(id: ID!): Question!
+    list(name: String, beforeId: ID, offset: Int, size: Int): QuestionList!
+    select(cursor: String!, offset: Int!): QuestionList!
+}
+
+type QuestionMutation {
+    create(question: QuestionInput!): Question!
+    update(question: QuestionInput!): Question!
+    moveUp(id: ID!): Boolean!
+    moveDown(id: ID!): Boolean!
+    delete(id: ID!): Boolean!
+}
+
+type QuestionBase {
+    id: ID!
+    question: String!
+    kind: QuestionKind!
+}
+
+type Question {
+    id: ID!
+    question: String!
+    kind: QuestionKind!
+    answers: [Answer!]
+    dependencyStrategy: QuestionDependencyStrategy!
+    dependencies: [Answer!]
+}
+
+enum QuestionKind {
+    INPUT
+    SINGLE_OPTION
+}
+
+enum QuestionDependencyStrategy {
+    SHOW
+    HIDE
+}
+
+input QuestionInput {
+    id: ID
+    question: String!
+    kind: QuestionKind!
+    dependencyStrategy: QuestionDependencyStrategy!
+    answers: [AnswerInput]
+    dependencies: [AnswerRef!]
+}
+
+type AnswerBase {
+    id: ID!
+    answer: String!
+}
+
+type Answer {
+    id: ID!
+    answer: String!
+    question: QuestionBase!
+}
+
+input AnswerRef {
+    id: ID!
+}
+
+input AnswerInput {
+    id: ID
+    answer: String!
+}
+
+type QuestionList {
+    cursor: String!
+    total: Int!
+    items: [Question!]!
+}
+
+type ProcedureQuery {
+    get(id: ID!): Procedure!
+    list(q: String, stage: Stage, offset: Int, size: Int): ProcedureList!
+    select(cursor: String!, offset: Int!): ProcedureList!
+}
+
+type ProcedureMutation {
+    create(procedure: ProcedureInput!): Procedure!
+    update(procedure: ProcedureInput!): Procedure!
+    delete(id: ID!): Boolean!
+}
+
+type ProcedureList {
+    cursor: String!
+    total: Int!
+    items: [Procedure!]!
+}
+
+type ProcedureBase {
+    id: ID!
+    code: String!
+    title: String!
+    result: String!
+    executiveAuthority: ExecutiveAuthorityName!
+    stage: Stage!
+}
+
+type Procedure {
+    id: ID!
+    title: String!
+    code: String!
+    result: String!
+    stage: Stage!
+    executiveAuthority: ExecutiveAuthorityName!
+    documents: [ProcedureDocument!]!
+    files: [ProcedureFile!]!
+    rules: [ProcedureRule!]!
+    dependsOn: [ProcedureBase!]
+}
+
+type ExecutiveAuthorityName {
+    id: ID!
+    name: String!
+}
+
+enum Stage {
+    PROJECT_PREPARATION
+    DESIGNING
+    BUILDING_PREPARATION
+    CONSTRUCTION_AND_ASSEMBLY
+    CONSTRUCTION_AND_ASSEMBLY_FINISH
+    RESOURCE_CONNECTION
+    COMMISSIONING
+    FINISH
+}
+
+type ProcedureDocument {
+    id: ID!
+    title: String!
+    link: String!
+}
+
+type ProcedureFile {
+    id: ID!
+    description: String!
+}
+
+type ProcedureRule {
+    id: ID!
+    duration: Int!
+    answers: [Answer!]!
+}
+
+input ProcedureInput {
+    id: ID
+    title: String!
+    code: String!
+    result: String!
+    stage: Stage!
+    executiveAuthority: ExecutiveAuthorityInputRef!
+    documents: [ProcedureDocumentInput!]
+    files: [ProcedureFileInput!]
+    rules: [ProcedureRuleInput!]!
+    dependsOn: [ProcedureInputRef!]
+}
+
+input ProcedureInputRef {
+    id: ID!
+}
+
+input ProcedureDocumentInput {
+    id: ID
+    title: String!
+    link: String!
+}
+
+input ProcedureFileInput {
+    id: ID
+    description: String!
+}
+
+input ProcedureRuleInput {
+    id: ID
+    duration: Int!
+    answers: [AnswerRef!]!
+}
+
+
+type RequestProcedureQuery {
+    """ Получение одного входящего сообщения из ОИВ которое не удалось сопоставить с заявлением. """
+    getInbox(id: ID!): InboxMessage!
+    """ Получение одного заявления. """
+    get(id: ID!): RequestProcedure!
+    """ Получение списка заявлений и водящих сообщений из ОИВ.
+        executiveAuthorityId - идентификатор ОИВ для фильтрации
+        inProgress - если указан то показывает либо только IN_PROGRESS либо все остальные. Необходимо для формирования сопоставления
+            входящего сообщения из ОИВ с заявлением. """
+    list(executiveAuthorityId: ID, inProgress: Boolean, size: Int, offset: Int): RequestProcedureList!
+    """ Получение следующего пакета элементов согласно условиям ищ ранее отправленного запроса list по новому смещению. """
+    select(cursor: String!, offset: Int!): RequestProcedureList!
+}
+
+type RequestProcedureMutation {
+    """ Обработка ответов из ОИВ. Обрабатываются либо водящие необработанные сообщения из ОИВ,
+    либо назначение статуса найденного заявления в статусе IN_PROGRESS """
+    incoming: RequestProcedureIncomingMutation!
+    """ Обработка заявлений модератором. Заявления только в статусе ON_MODERATION """
+    moderation: RequestProcedureModerationMutation!
+}
+
+type RequestProcedureIncomingMutation {
+    """ Связываение данного входящего сообщения из ОИВа с ранее отправленным заявлением.
+        id - Иидентификатор зявления в статусе IN_PROGRESS.
+        inboxId - Идентификатор для элемента из списка inbox у метода list.
+        status - один из возможных вариантов APPROVED, RETURNED, REJECTED
+    """
+    assignInboxAndMark(id: ID!, inboxId: ID!, status: RequestProcedureIncomingStatus!): RequestProcedure!
+    """ Пометить заявление соответствующим статусом """
+    mark(id: ID!, status: RequestProcedureIncomingStatus!): RequestProcedure!
+}
+
+enum RequestProcedureIncomingStatus {
+    RETURNED
+    REJECTED
+    APPROVED
+}
+
+type RequestProcedureModerationMutation {
+    """ Возврат на доработку """
+    return(id: ID!, notes: String): RequestProcedure!
+    """ Отправка заявления в ОИВ """
+    approve(id: ID!): RequestProcedure!
+}
+
+input ExecutiveAuthorityInputRef {
+
+    id: ID!
+}
+
+type RequestProcedure {
+    """ Внутренний идентификатор процедуры """
+    id: ID!
+    answers: [RequestProcedureAnswer!]!
+    """ Код процедуры """
+    code: String!
+    """ Наименование процедуры """
+    title: String!
+    """ Короткое описание процедуры """
+    result: String!
+    """ Орган Исполнительной Власти. Здесь перечисляются наименования ОИВов только. """
+    executiveAuthority: ExecutiveAuthorityName!
+    """ Срок рассмотрения в календарных днях """
+    duration: Int!
+    documents: [ProcedureDocument!]!
+    """ Состояние заявления на получение разрешения по процедуре """
+    status: RequestProcedureStatus
+    """ Структура с описанием заявления на получение разрешения по процедуре. Если было подано """
+    request: RequestProcedureRequest
+    """ Структура с ответов из ОИВ. Если ответ был получен. Либо если было возвращено менеджеров, указывается ответ менеджера. """
+    response: RequestProcedureResponse
+}
+
+type RequestProcedureList {
+    cursor: String!
+    total: Int!
+    """ Список входящих сообщений из ОИВ которые не удалось сопоставить с заявлением. Необходимо отображать всегда в верхних полосах списка на экране. """
+    inbox: [InboxMessage!]!
+    """ Список заявлений. Сначала отображаются в статусе ON_MODERATION, потом IN_PROGRESS и затем остальные в порядке убывания отвправки заявления в ОИВ. """
+    items: [RequestProcedure!]!
+}
+
+type InboxMessage {
+    id: ID!
+    subject: String!
+    body: String!
+    receivedAt: ZonedDateTime!
+    executiveAuthority: ExecutiveAuthorityName!
+    attachments: [InboxMessageAttachment!]!
+}
+
+type InboxMessageAttachment {
+    id: ID!
+    name: String!
+    file: String!
+}
+
+type RequestProcedureAnswer {
+    question: QuestionBase!
+    answer: AnswerBase
+    value: String
+}
+
+enum RequestProcedureStatus {
+    NOT_REQUESTED
+    ON_MODERATION
+    IN_PROGRESS
+    RETURNED
+    MODERATION_RETURNED
+    REJECTED
+    APPROVED
+    RECEIVED_ANSWER
+}
+
+type RequestProcedureRequest {
+    """ Дата и вермя подачи заявления на получения разрешениея по процедуре """
+    requestedAt: ZonedDateTime!
+    timeLeft: Int!
+    """ Поданные файлы по ЗПРП """
+    files: [RequestProcedureFile!]
+    """ Примечания к ЗПРП """
+    notes: String!
+}
+
+""" Ответ от менеджера или ОИВ по ЗПРП """
+type RequestProcedureResponse {
+    """ Дата и время получения ответа """
+    respondedAt: ZonedDateTime!
+    """ Текст ответа """
+    response: String!
+    """ Приложенные файлы с ответом """
+    files: [String!]
+}
+
+""" Файл приложенный к ЗПРП """
+type RequestProcedureFile {
+    """ Внудренний идентификатор файла """
+    id: ID!
+    """ Описание файла """
+    description: String!
+    """ Идентификатор загруженного файла в хранилище """
+    file: String
+}
+
+
+type ReportQuery {
+    requestsByStatus(from: Date, to: Date): ReportRequestsByStatus!
+    requestsByWaitTimeout(from: Date, to: Date): ReportRequestsByWaitTimeout!
+}
+
+type ReportRequestsByStatus {
+    from: Date!
+    to: Date!
+    totals: ReportRequestsByStatusCounts!
+    data: [ReportRequestsByStatusExecutiveAuthority!]!
+}
+
+type ReportRequestsByStatusCounts {
+    approved: Int!
+    returned: Int!
+    rejected: Int!
+}
+
+type ReportRequestsByStatusExecutiveAuthority {
+    totals: ReportRequestsByStatusCounts!
+    executiveAuthority: ExecutiveAuthorityName!
+    procedures: [ReportRequestsByStatusProcedure!]!
+}
+
+type ReportRequestsByStatusProcedure {
+    procedure: ReportProcedure!
+    totals: ReportRequestsByStatusCounts!
+}
+
+type ReportProcedure {
+    title: String!
+    code: String!
+}
+
+type ReportRequestsByWaitTimeout {
+    from: Date!
+    to: Date!
+    totals: ReportRequestsByWaitTimeoutCounts!
+    data: [ReportRequestsByWaitTimeoutExecutiveAuthority!]!
+}
+
+type ReportRequestsByWaitTimeoutCounts {
+    min: Int!
+    avg: Int!
+    max: Int!
+}
+
+type ReportRequestsByWaitTimeoutExecutiveAuthority {
+    totals: ReportRequestsByWaitTimeoutCounts!
+    executiveAuthority: ExecutiveAuthorityName!
+    procedures: [ReportRequestsByWaitTimeoutProcedure!]!
+}
+
+type ReportRequestsByWaitTimeoutProcedure {
+    procedure: ReportProcedure!
+    totals: ReportRequestsByWaitTimeoutCounts!
+}
