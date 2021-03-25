@@ -2,7 +2,7 @@ import { Container } from 'typescript-ioc';
 import { Router } from 'express';
 import { Request } from 'express';
 import { Response } from 'express';
-import { Local } from './local';
+import { Email } from './email';
 
 
 export class Signin {
@@ -21,7 +21,7 @@ export class Signin {
     const router: Router = Router();
 
 
-    router.use('/local',
+    router.use('/email',
       Container.get(Local).middleware,
       Container.get(Local).resolver
     );

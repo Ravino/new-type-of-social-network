@@ -2,7 +2,7 @@ import { Request } from 'express';
 import { Response } from 'express';
 
 
-export class Local {
+export class Email {
   public constructor() {}
   public middleware(req: Request, res: Response, next: any) {
     next();
