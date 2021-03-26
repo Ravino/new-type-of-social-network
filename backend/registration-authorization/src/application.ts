@@ -1,8 +1,10 @@
 import { server } from './config/server';
+import { bodyParserInitialization } from './config/bodyParser';
 import { passportInitialization } from './config/passport';
 import { routerInitialization } from './config/router';
 
 
+bodyParserInitialization(server);
 passportInitialization(server);
 routerInitialization(server);
 
