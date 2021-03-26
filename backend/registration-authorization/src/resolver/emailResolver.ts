@@ -13,8 +13,6 @@ export class EmailResolver {
 
     authenticatePassport('email', (err, user, info) => {
 
-console.log(info);
-
       if(err) {
         result = 'error';
         return undefined;
