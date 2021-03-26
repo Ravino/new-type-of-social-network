@@ -1,3 +1,5 @@
+import { Inject } from 'typescript-ioc';
+import { UserService } from './userService';
 import argon2 from 'argon2';
 import { generate as genPasswd } from 'generate-password';
 import PasswordValidator from 'password-validator';
@@ -5,6 +7,11 @@ import * as EmailValidator from 'email-validator';
 
 
 export abstract class AbstractRegistrationAuthorizationService {
+
+  public constructor(
+    @Inject private readonly userService: UserService
+  ) {}
+
 
   public validateEmail(email: string): boolean {
     const result: boolean = EmailValidator.validate(email);
