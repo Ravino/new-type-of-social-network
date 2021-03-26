@@ -20,7 +20,6 @@ export abstract class AbstractRegistrationAuthorizationService {
     .is().max(124)
     .has().uppercase()
     .has().lowercase()
-    .has().digits(1)
     .has().not().spaces();
 
 
