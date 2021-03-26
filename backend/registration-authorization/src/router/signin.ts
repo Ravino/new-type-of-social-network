@@ -22,8 +22,8 @@ export class Signin {
 
 
     router.use('/email',
-      Container.get(Local).middleware,
-      Container.get(Local).resolver
+      Container.get(Email).middleware,
+      Container.get(Email).resolver
     );
 
 
