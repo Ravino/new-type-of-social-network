@@ -1,9 +1,9 @@
 import { Application } from 'express';
 import passport from 'passport';
-import email from '../passportStrategy/email';
+import emailStrategy from '../passportStrategy/emailStrategy';
 
 
-passport.use('email', email);
+passport.use('email', emailStrategy);
 
 
 export function passportInitialization(server: Application) {

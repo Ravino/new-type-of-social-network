@@ -1,15 +1,14 @@
 import { Container } from 'typescript-ioc';
 import { Application } from 'express';
 import { Router } from 'express';
-import { Signin } from '../router/signin';
+import { SigninRouter } from '../router/signinRouter';
 
 
 const router: Router = Router();
 
 
 router.use('/signin',
-  Container.get(Signin).middleware,
-  Container.get(Signin).resolver()
+  Container.get(SigninRouter).handler()
 );
 
 
