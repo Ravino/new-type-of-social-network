@@ -1,3 +1,5 @@
+import { Inject } from 'typescript-ioc';
+import { RegistrationService } from '../service/registrationService';
 import { authenticate as authenticatePassport} from 'passport';
 import { Request } from 'express';
 import { Response } from 'express';
@@ -5,6 +7,11 @@ import { StatusView } from '../view/statusView';
 
 
 export class EmailResolver {
+
+  public constructor(
+    @Inject private readonly registrationService: RegistrationService
+  ){}
+
 
   public async authenticate(req: Request, res: Response): Promise<string> {
 
@@ -35,7 +42,15 @@ export class EmailResolver {
 
 
   public async done(req: Request, res: Response): Promise<StatusView> {
-    console.log(await this.authenticate(req, res));
+
+    if(req.body.method == 'registration') {
+    }
+
+
+    if(req.body.method == 'authentication') {
+    }
+
+
     return <StatusView>{
       status: 'success',
       description: '',
