@@ -3,7 +3,7 @@ import passport from 'passport';
 import email from '../passportStrategy/email';
 
 
-passport.use(email);
+passport.use('email', email);
 
 
 export function passportInitialization(server: Application) {
