@@ -6,32 +6,38 @@ import { StatusView } from '../view/statusView';
 
 export class EmailResolver {
 
-  public authenticate(req: Request, res: Response) {
+  public async authenticate(req: Request, res: Response): Promise<string> {
+
+    let result: string = '';
+
 
     authenticatePassport('email', (err, user, info) => {
 
+console.log(info);
+
       if(err) {
-        res.locals.info = 'error';
+        result = 'error';
         return undefined;
       }
 
 
       if(info) {
-        res.locals.info = info;
+        result = info.message;
         return undefined;
       }
 
 
-      res.locals.info = 'success';
+      result = 'success';
+      return undefined;
     })(req, res);
 
 
-    return undefined;
+    return result;
   }
 
 
-  public done(req: Request, res: Response): StatusView {
-    this.authenticate(req, res);
+  public async done(req: Request, res: Response): Promise<StatusView> {
+    console.log(await this.authenticate(req, res));
     return <StatusView>{
       status: 'success',
       description: '',

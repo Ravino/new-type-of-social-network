@@ -7,8 +7,8 @@ import { StatusView } from '../view/statusView';
 
 export class EmailRouter {
 
-  public handler(req: Request, res: Response) {
-    const result: StatusView = Container.get(EmailResolver).done(req, res);
+  public async handler(req: Request, res: Response): Promise<undefined> {
+    const result: StatusView = await Container.get(EmailResolver).done(req, res);
     res.json(result);
     return undefined;
   }
