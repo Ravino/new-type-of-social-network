@@ -3,7 +3,7 @@ import { AuthorizationService } from '../service/authorizationService';
 import { Strategy } from 'passport-local';
 
 
-export default new Strategy((email: string, password: string, done: any) => {
+export const emailStrategy = () => new Strategy((email: string, password: string, done: any) => {
 
   if(!Container.get(AuthorizationService).validateEmail(email)) {
     done(null, false);
