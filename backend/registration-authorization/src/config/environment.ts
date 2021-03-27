@@ -1,10 +1,13 @@
 const listEnvVar: Array<string> = [
+  'TARANTOOL_PORT',
+  TARANTOOL_HOST',
   'VKONTAKTE_CLIENT_ID',
   'VKONTAKTE_CLIENT_SECRET',
   'VKONTAKTE_CALLBACK_URL',
   'VKONTAKTE_SCOPE',
   'VKONTAKTE_PROFILE_FIELDS',
 ];
+
 
 export function environmentInitialization() {
 
