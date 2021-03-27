@@ -12,7 +12,9 @@ export function passportInitialization(server: Application) {
 export const configStrategyVkontakte = {
   clientID: <string>global.process.env.VKONTAKTE_CLIENT_ID,
   clientSecret: <string>global.process.env.VKONTAKTE_CLIENT_SECRET,
-  callbackURL: <string>global.process.env.VKONTAKTE_CALLBACK_URL
+  callbackURL: <string>global.process.env.VKONTAKTE_CALLBACK_URL,
+  scope: String(global.process.env.VKONTAKTE_SCOPE).split('|'),
+  profileFields: String(global.process.env.VKONTAKTE_PROFILE_FIELDS).split('|')
 }
 
 
