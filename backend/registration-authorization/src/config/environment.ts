@@ -1,13 +1,23 @@
+const listEnvVar: Array<string> = [
+  'VKONTAKTE_CLIENT_ID',
+  'VKONTAKTE_CLIENT_SECRET',
+  'VKONTAKTE_CALLBACK_URL',
+  'VKONTAKTE_SCOPE',
+  'VKONTAKTE_PROFILE_FIELDS',
+];
+
 export function environmentInitialization() {
 
-  if(!global.process.env.VKONTAKTE_CLIENT_ID) {
-    console.log('Empty env var VKONTAKTE_CLIENT_ID');
-    global.process.exit();
+  let status: string = 'success';
+  for(let i of listEnvVar) {
+    if(!global.process.env[i]) {
+      console.log(`Empty env var ${ i }`);
+      status = 'notSuccess';
+    }
   }
 
 
-  if(!global.process.env.VKONTAKTE_CLIENT_SECRET) {
-    console.log('Empty env var VKONTAKTE_CLIENT_SECRET');
+  if(status == 'notSuccess') {
     global.process.exit();
   }
 }
