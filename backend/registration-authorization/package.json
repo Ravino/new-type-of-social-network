@@ -6,7 +6,8 @@
   "scripts": {
     "build:copy": "ts-node scripts/copyFiles.ts",
     "build": "rimraf lib && yarn tsc && yarn build:copy",
-    "start": "yarn build && node ./lib/application.js"
+    "serve": "yarn build && node ./lib/application.js",
+    "start": "node ./lib/application.js"
   },
   "author": "Ravino Doul",
   "license": "ISC",
@@ -30,6 +31,7 @@
     "body-parser": "^1.19.0",
     "email-validator": "^2.0.4",
     "express": "^4.17.1",
+    "generate-password": "^1.6.0",
     "jsonwebtoken": "^8.5.1",
     "passport": "^0.4.1",
     "passport-local": "^1.0.0",
