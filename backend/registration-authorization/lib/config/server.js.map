@@ -1,1 +1,0 @@
-{"version":3,"file":"server.js","sourceRoot":"","sources":["../../src/config/server.ts"],"names":[],"mappings":";;;;;;AAAA,sDAA8B;AAGjB,QAAA,MAAM,GAAwB,iBAAO,EAAE,CAAC","sourcesContent":["import express from 'express';\n\n\nexport const server: express.Application = express();\n"]}

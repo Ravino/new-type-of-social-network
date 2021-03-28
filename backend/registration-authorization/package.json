@@ -6,13 +6,14 @@
   "scripts": {
     "build:copy": "ts-node scripts/copyFiles.ts",
     "build": "rimraf lib && yarn tsc && yarn build:copy",
-    "serve": "yarn build && node ./lib/application.js",
+    "serve": "yarn build && node -r dotenv/config ./lib/application.js",
     "start": "node ./lib/application.js"
   },
   "author": "Ravino Doul",
   "license": "ISC",
   "devDependencies": {
     "@types/node": "^14.14.35",
+    "dotenv": "^8.2.0",
     "rimraf": "^3.0.2",
     "ts-node": "^9.1.1",
     "typescript": "^4.2.3"
