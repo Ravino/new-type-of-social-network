@@ -3,6 +3,7 @@ import { Router } from 'express';
 import { Request } from 'express';
 import { Response } from 'express';
 import { EmailRouter } from './emailRouter';
+import { VkontakteRouter } from './vkontakteRouter';
 
 
 export class SigninRouter {
@@ -14,6 +15,9 @@ export class SigninRouter {
 
     router.use('/email',
       Container.get(EmailRouter).handler
+    );
+    router.use('/vkontakte',
+      Container.get(VkontakteRouter).handler
     );
 
 
