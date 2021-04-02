@@ -47,7 +47,13 @@ export abstract class AbstractRegistrationAuthorizationService {
 
 
   public async hashPassword(password: string): Promise<string> {
-    const result = await argon2.hash(password);
+    const result: string = await argon2.hash(password);
+    return result;
+  }
+
+
+  public async verifyPassword(password: string, hashPassword: string): Promise<boolean> {
+    const result: boolean = await argon2.verify(hashPassword, password);
     return result;
   }
 }
