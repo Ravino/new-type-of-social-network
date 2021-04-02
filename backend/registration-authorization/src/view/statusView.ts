@@ -10,4 +10,9 @@ export class StatusView {
   public addStatus(status: string) {
     this.status = status;
   }
+
+
+  public addData(data: any) {
+    this.data = data;
+  }
 }
