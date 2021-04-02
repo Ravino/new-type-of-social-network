@@ -4,16 +4,16 @@ import { v4 as uuidV4 } from 'uuid';
 
 export class UserService {
 
-  public async getByEmail(email: string): Promise<any> {
+  public async getByNameField(nameField: string, selector: string|number): Promise<any> {
 
     const params = [
-      email
+      selector
     ];
 
 
     let usersList: any[] = [];
     try {
-      usersList = await tarantool.sql("select * from users where email = ?", params);
+      usersList = await tarantool.sql(`select * from users where ${ nameField } = ?`, params);
     }
     catch(err) {
       console.log(err);
@@ -29,12 +29,14 @@ export class UserService {
 
     const currentAt: number = Date.now();
     const uuid: string = uuidV4();
+    const displayName = `${ firstname } ${ lastname }`;
 
 
     const params = [
       email,
       firstname,
       lastname,
+      displayName,
       currentAt,
       currentAt,
       password,
@@ -46,7 +48,7 @@ export class UserService {
 
     let result: any = null;
     try {
-      result = await tarantool.sql('insert into users (email, firstname, lastname, created_at, updated_at, password, uuid, confirmed, vkontakte_profile_id) values(?, ?, ?, ?, ?, ?, ?, ?, ?)', params);
+      result = await tarantool.sql('insert into users (email, firstname, lastname, display_name, created_at, updated_at, password, uuid, confirmed, vkontakte_profile_id) values(?, ?, ?, ?, ?, ?, ?, ?, ?, ?)', params);
     }
     catch(err) {
       console.log(err);
