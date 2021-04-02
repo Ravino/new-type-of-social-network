@@ -7,7 +7,7 @@ import { StatusView } from '../view/statusView';
 
 export class VkontakteRouter {
 
-  public handler(req: Request, res: Response, next: any) {
-Container.get(VkontakteResolver).done(req, res, next);
+  public handler(req: Request, res: Response) {
+Container.get(VkontakteResolver).done(req, res);
   }
 }
