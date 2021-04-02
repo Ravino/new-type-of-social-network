@@ -30,7 +30,7 @@ export const emailStrategy = () => new Strategy(async (email: string, password: 
 
   let existUser: any;
   try {
-    existUser = await Container.get(UserService).getByEmail(email);
+    existUser = await Container.get(UserService).getByNameField('email', email);
   }
   catch(err) {
     console.log(err);
@@ -56,6 +56,17 @@ export const emailStrategy = () => new Strategy(async (email: string, password: 
   }
 
 
-  done(null, true, {message: 'success'});
+  let pairToken: any;
+  try {
+    pairToken = await Container.get(AuthorizationService).getPairToken(existUser);
+  }
+  catch(err) {
+    console.log(err);
+    done(null, false, { message: 'notSuccess'});
+    return undefined;
+  }
+
+
+  done(null, pairToken, {message: 'success'});
   return undefined;
 })
