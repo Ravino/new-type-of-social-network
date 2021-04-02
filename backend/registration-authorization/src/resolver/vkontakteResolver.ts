@@ -6,25 +6,40 @@ import { StatusView } from '../view/statusView';
 
 export class VkontakteResolver {
 
-  public constructor(
-  ){}
+  private readonly statusView: StatusView = new StatusView();
 
 
-  public async authenticate(req: Request, res: Response, next: any): Promise<string> {
+  public async authenticate(req: Request, res: Response): Promise<any> {
 
-    authenticatePassport('vkontakte', (err, user, info) => {
-      console.log(err);
-      console.log(user);
-      console.log(info);
-      console.log('test auth vk');
-    })(req, res, next);
+    authenticatePassport('vkontakte', (err, pairToken, info) => {
+
+      if(err) {
+        console.log(err);
+        this.statusView.addStatus('notSuccess');
+        res.json(this.statusView);
+        return undefined;
+      }
 
 
-    return '';
+      if(info.message == 'success') {
+        this.statusView.addStatus(info.message);
+        this.statusView.addData(pairToken.refreshToken);
+        res.json(this.statusView);
+        return undefined;
+      }
+
+
+      this.statusView.addStatus(info.message);
+      res.json(this.statusView);
+      return undefined;
+    })(req, res);
+
+
+    return undefined;
   }
 
 
-  public async done(req: Request, res: Response, next: any) {
-        this.authenticate(req, res, next);
+  public async done(req: Request, res: Response): Promise<any> {
+        await this.authenticate(req, res);
   }
 }

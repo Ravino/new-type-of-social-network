@@ -23,10 +23,19 @@ export class EmailResolver {
 
   public async authenticate(req: Request, res: Response): Promise<any> {
 
-    authenticatePassport('email', (err, user, info) => {
+    authenticatePassport('email', (err, pairToken, info) => {
 
       if(err) {
+        console.log(err);
         this.statusView.addStatus('notSuccess');
+        res.json(this.statusView);
+        return undefined;
+      }
+
+
+      if(info.message == 'success') {
+        this.statusView.addStatus(info.message);
+        this.statusView.addData(pairToken.refreshToken);
         res.json(this.statusView);
         return undefined;
       }
@@ -36,6 +45,9 @@ export class EmailResolver {
       res.json(this.statusView);
       return undefined;
     })(req, res);
+
+
+    return undefined;
   }
 
 
@@ -57,7 +69,7 @@ export class EmailResolver {
 
     let existUser: any;
     try {
-      existUser = await this.userService.getByEmail(email);
+      existUser = await this.userService.getByNameField('email', email);
     }
     catch(err) {
       console.log(err);
