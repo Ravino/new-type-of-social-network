@@ -1,3 +1,4 @@
+import { promisify } from 'util';
 import { Inject } from 'typescript-ioc';
 import escapeHtml from 'escape-html';
 import trim from 'trim';
@@ -20,32 +21,21 @@ export class EmailResolver {
   ){}
 
 
-  public async authenticate(req: Request, res: Response): Promise<StatusView> {
-
-    let result: string = '';
-
+  public async authenticate(req: Request, res: Response): Promise<any> {
 
     authenticatePassport('email', (err, user, info) => {
 
       if(err) {
-        result = 'error';
-//        return undefined;
+        this.statusView.addStatus('notSuccess');
+        res.json(this.statusView);
+        return undefined;
       }
 
 
-      if(info) {
-        result = info.message;
-//        return undefined;
-      }
-
-
-      result = 'success';
-//      return undefined;
+      this.statusView.addStatus(info.message);
+      res.json(this.statusView);
+      return undefined;
     })(req, res);
-
-
-    this.statusView.addStatus('success');
-    return this.statusView;
   }
 
 
@@ -97,15 +87,18 @@ export class EmailResolver {
   }
 
 
-  public async done(req: Request, res: Response, next: any): Promise<StatusView> {
+  public async done(req: Request, res: Response, next: any): Promise<any> {
 
     if(req.body.method == 'registration') {
-      return await this.registrate(req, res);
+      const result = await this.registrate(req, res);
+      res.json(result);
+      return undefined;
     }
 
 
     if(req.body.method == 'authentication') {
-      return await this.authenticate(req, res);
+      await this.authenticate(req, res);
+      return undefined;
     }
 
 
