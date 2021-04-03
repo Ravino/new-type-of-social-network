@@ -2,12 +2,14 @@ import TarantoolDriver from 'tarantool-driver';
 import { tarantool } from './config/tarantool';
 import { server } from './config/server';
 import { environmentInitialization } from './config/environment';
+import { ipInfoInitialization } from './config/ipInfo';
 import { bodyParserInitialization } from './config/bodyParser';
 import { passportInitialization } from './config/passport';
 import { routerInitialization } from './config/router';
 
 
 environmentInitialization();
+ipInfoInitialization(server);
 bodyParserInitialization(server);
 passportInitialization(server);
 routerInitialization(server);
