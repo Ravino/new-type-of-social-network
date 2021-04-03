@@ -35,7 +35,7 @@ export class EmailResolver {
 
       if(info.message == 'success') {
         this.statusView.addStatus(info.message);
-        this.statusView.addData(pairToken.refreshToken);
+        this.statusView.addData(pairToken);
         res.json(this.statusView);
         return undefined;
       }
