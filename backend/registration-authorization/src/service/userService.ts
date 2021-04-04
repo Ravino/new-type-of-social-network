@@ -30,6 +30,7 @@ export class UserService {
     const currentAt: number = Date.now();
     const uuid: string = uuidV4();
     const displayName = `${ firstname } ${ lastname }`;
+    const scope: string = 'user';
 
 
     const params = [
@@ -42,13 +43,14 @@ export class UserService {
       password,
       uuid,
       confirmed,
-      vkontakteProfileId
+      vkontakteProfileId,
+      scope
     ];
 
 
     let result: any = null;
     try {
-      result = await tarantool.sql('insert into users (email, firstname, lastname, display_name, created_at, updated_at, password, uuid, confirmed, vkontakte_profile_id) values(?, ?, ?, ?, ?, ?, ?, ?, ?, ?)', params);
+      result = await tarantool.sql('insert into users (email, firstname, lastname, display_name, created_at, updated_at, password, uuid, confirmed, vkontakte_profile_id, scope) values(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)', params);
     }
     catch(err) {
       console.log(err);
