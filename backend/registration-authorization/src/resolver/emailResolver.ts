@@ -1,9 +1,9 @@
-import { promisify } from 'util';
 import { Inject } from 'typescript-ioc';
 import escapeHtml from 'escape-html';
 import trim from 'trim';
 import { UserService } from '../service/userService';
 import { RegistrationService } from '../service/registrationService';
+import { SessionService } from '../service/sessionService';
 import { authenticate as authenticatePassport} from 'passport';
 import { Request } from 'express';
 import { Response } from 'express';
@@ -17,13 +17,14 @@ export class EmailResolver {
 
   public constructor(
     @Inject private readonly userService: UserService,
-    @Inject private readonly registrationService: RegistrationService
+    @Inject private readonly registrationService: RegistrationService,
+    @Inject private readonly sessionService: SessionService
   ){}
 
 
   public async authenticate(req: Request, res: Response): Promise<any> {
 
-    authenticatePassport('email', (err, pairToken, info) => {
+    authenticatePassport('email', async (err, payload, info) => {
 
       if(err) {
         console.log(err);
@@ -33,17 +34,32 @@ export class EmailResolver {
       }
 
 
-      if(info.message == 'success') {
+      if(info.message !== 'success') {
         this.statusView.addStatus(info.message);
-        this.statusView.addData(pairToken);
         res.json(this.statusView);
         return undefined;
       }
 
 
+      let result: boolean = false;
+      try {
+        result = await this.sessionService.create(req, payload);
+      }
+      catch(err) {
+        console.log(err);
+        result = false;
+      }
+
+      if(!result) {
+        this.statusView.addStatus('notSuccess');
+        res.json(this.statusView);
+        return undefined;
+      }
+
       this.statusView.addStatus(info.message);
+      this.statusView.addData(payload.pairToken);
       res.json(this.statusView);
-      return undefined;
+        return undefined;
     })(req, res);
 
 
@@ -99,7 +115,7 @@ export class EmailResolver {
   }
 
 
-  public async done(req: Request, res: Response, next: any): Promise<any> {
+  public async done(req: Request, res: Response): Promise<any> {
 
     if(req.body.method == 'registration') {
       const result = await this.registrate(req, res);
@@ -115,6 +131,7 @@ export class EmailResolver {
 
 
     this.statusView.addStatus('notSuccess');
-    return this.statusView;
+    res.json(this.statusView);
+    return undefined;
   }
 }

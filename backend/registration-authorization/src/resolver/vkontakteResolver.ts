@@ -1,7 +1,9 @@
+import { Inject } from 'typescript-ioc';
 import { authenticate as authenticatePassport} from 'passport';
 import { Request } from 'express';
 import { Response } from 'express';
 import { StatusView } from '../view/statusView';
+import { SessionService } from '../service/sessionService';
 
 
 export class VkontakteResolver {
@@ -9,9 +11,14 @@ export class VkontakteResolver {
   private readonly statusView: StatusView = new StatusView();
 
 
+  public constructor(
+    @Inject private readonly sessionService: SessionService
+  ) {}
+
+
   public async authenticate(req: Request, res: Response): Promise<any> {
 
-    authenticatePassport('vkontakte', (err, pairToken, info) => {
+    authenticatePassport('vkontakte', async (err, payload, info) => {
 
       if(err) {
         console.log(err);
@@ -21,17 +28,32 @@ export class VkontakteResolver {
       }
 
 
-      if(info.message == 'success') {
+      if(info.message !== 'success') {
         this.statusView.addStatus(info.message);
-        this.statusView.addData(pairToken);
         res.json(this.statusView);
         return undefined;
       }
 
 
+      let result: boolean = false;
+      try {
+        result = await this.sessionService.create(req, payload);
+      }
+      catch(err) {
+        console.log(err);
+        result = false;
+      }
+
+      if(!result) {
+        this.statusView.addStatus('notSuccess');
+        res.json(this.statusView);
+        return undefined;
+      }
+
       this.statusView.addStatus(info.message);
+      this.statusView.addData(payload.pairToken);
       res.json(this.statusView);
-      return undefined;
+        return undefined;
     })(req, res);
 
 
@@ -40,7 +62,6 @@ export class VkontakteResolver {
 
 
   public async done(req: Request, res: Response): Promise<any> {
-        console.log(req.ipInfo);
         await this.authenticate(req, res);
   }
 }
