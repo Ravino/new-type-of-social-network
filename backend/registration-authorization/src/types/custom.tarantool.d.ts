@@ -1,8 +1,3 @@
-// Type definitions for tarantool-driver 3.0
-// Project: https://github.com/tarantool/node-tarantool-driver
-// Definitions by: Evgeni Zharkov <https://github.com/zharkov-eu>
-// Definitions: https://github.com/DefinitelyTyped/DefinitelyTyped
-
 import { EventEmitter } from "events";
 
 declare namespace TarantoolConnection {
@@ -22,7 +17,6 @@ declare namespace TarantoolConnection {
 declare class TarantoolConnection extends EventEmitter {
   constructor(options: TarantoolConnection.TarantoolOptions);
 
-  /* Connection */
 
   connect(): Promise<void>;
 
@@ -32,7 +26,6 @@ declare class TarantoolConnection extends EventEmitter {
 
   disconnect(reconnect?: boolean): void;
 
-  /* Commands */
 
   select(spaceId: number | string,
                 indexId: number | string,
