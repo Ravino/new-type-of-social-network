@@ -1,5 +1,8 @@
+import { Container } from 'typescript-ioc';
+import { Request } from 'express';
 import { tarantool } from '../config/tarantool';
 import { v4 as uuidV4 } from 'uuid';
+import {AuthorizationService } from './authorizationService';
 
 
 export class SessionService {
@@ -23,30 +26,30 @@ export class SessionService {
     return sessionsList[0];
   }
 
-  public async create(firstname: string, lastname: string, password: string, confirmed: boolean, email?: string|null, vkontakteProfileId?: number|null): Promise<any> {
+  public async save(userId: number, bindToken: string, ipAddress: string, country: string, region: string, city: string, userAgent: string, scope: string): Promise<any> {
 
     const currentAt: number = Date.now();
     const uuid: string = uuidV4();
-    const displayName = `${ firstname } ${ lastname }`;
 
 
     const params = [
-      email,
-      firstname,
-      lastname,
-      displayName,
+      userId,
+      bindToken,
+      ipAddress,
+      country,
+      region,
+      city,
+      userAgent,
+      scope,
       currentAt,
       currentAt,
-      password,
-      uuid,
-      confirmed,
-      vkontakteProfileId
+      uuid
     ];
 
 
     let result: any = null;
     try {
-      result = await tarantool.sql('insert into users (email, firstname, lastname, display_name, created_at, updated_at, password, uuid, confirmed, vkontakte_profile_id) values(?, ?, ?, ?, ?, ?, ?, ?, ?, ?)', params);
+      result = await tarantool.sql('insert into sessions (user_id, bind_token, ip_address, country, region, city, user_agent, scope, created_at, updated_at, uuid) values(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)', params);
     }
     catch(err) {
       console.log(err);
@@ -56,5 +59,43 @@ export class SessionService {
 
     console.log(result);
     return result;
+  }
+
+
+  public async create(req: Request, payload: any): Promise<boolean> {
+
+    const ipAddress: string = req.ip || '';
+    const userAgent: string = req.get('User-Agent') || '';
+    const country: string = req.ipInfo.country || '';
+    const region: string = req.ipInfo.region || '';
+    const city: string = req.ipInfo.city || '';
+    const userId: number = payload.user.USER_ID;
+    const scope: string = payload.user.SCOPE || '';
+    const accessToken: string = payload.pairToken.accessToken || '';
+    const refreshToken: string = payload.pairToken.refreshToken || '';
+
+
+    let bindToken: string;
+    try {
+      bindToken = await Container.get(AuthorizationService).bindToken(refreshToken, accessToken);
+    }
+    catch(err) {
+      console.log(err);
+      return false;
+    }
+
+
+    let result: any;
+    try {
+      result = await this.save(userId, bindToken, ipAddress, country, region, city, userAgent, scope);
+    }
+    catch(err) {
+      console.log(err);
+      return false;
+    }
+
+
+    console.log(result);
+    return true;
   }
 }
