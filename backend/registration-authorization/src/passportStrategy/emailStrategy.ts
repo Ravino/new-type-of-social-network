@@ -67,6 +67,12 @@ export const emailStrategy = () => new Strategy(async (email: string, password: 
   }
 
 
-  done(null, pairToken, {message: 'success'});
+  const result = {
+    user: existUser,
+    pairToken: pairToken
+  };
+
+
+  done(null, result, {message: 'success'});
   return undefined;
 })

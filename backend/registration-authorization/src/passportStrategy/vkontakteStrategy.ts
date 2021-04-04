@@ -58,6 +58,12 @@ export const vkontakteStrategy = () => new Strategy(configStrategyVkontakte, asy
   }
 
 
-  done(null, pairToken, { message: 'success'});
+  const result = {
+    user: existUser,
+    pairToken: pairToken
+  };
+
+
+  done(null, result, { message: 'success'});
   return undefined;
 });
