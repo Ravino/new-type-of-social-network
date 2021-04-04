@@ -1,4 +1,3 @@
-import TarantoolDriver from 'tarantool-driver';
 import { tarantool } from './config/tarantool';
 import { server } from './config/server';
 import { environmentInitialization } from './config/environment';
