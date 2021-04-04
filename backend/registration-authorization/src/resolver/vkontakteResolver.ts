@@ -40,6 +40,7 @@ export class VkontakteResolver {
 
 
   public async done(req: Request, res: Response): Promise<any> {
+        console.log(req.ipInfo);
         await this.authenticate(req, res);
   }
 }
