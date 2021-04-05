@@ -8,6 +8,8 @@ const listEnvVar: Array<string> = [
   'VKONTAKTE_CALLBACK_URL',
   'VKONTAKTE_SCOPE',
   'VKONTAKTE_PROFILE_FIELDS',
+  'IOREDIS_HOST',
+  'IOREDIS_PORT'
 ];
 
 
