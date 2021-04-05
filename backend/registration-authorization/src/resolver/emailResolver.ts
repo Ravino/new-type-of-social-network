@@ -4,6 +4,7 @@ import trim from 'trim';
 import { UserService } from '../service/userService';
 import { RegistrationService } from '../service/registrationService';
 import { SessionService } from '../service/sessionService';
+import { MailerService } from '../service/mailerService';
 import { authenticate as authenticatePassport} from 'passport';
 import { Request } from 'express';
 import { Response } from 'express';
@@ -18,7 +19,8 @@ export class EmailResolver {
   public constructor(
     @Inject private readonly userService: UserService,
     @Inject private readonly registrationService: RegistrationService,
-    @Inject private readonly sessionService: SessionService
+    @Inject private readonly sessionService: SessionService,
+    @Inject private readonly mailerService: MailerService
   ){}
 
 
@@ -110,6 +112,7 @@ export class EmailResolver {
     }
 
 
+    this.mailerService.sender(email, password, 'verifyToken');
     this.statusView.addStatus('success');
     return this.statusView;
   }
