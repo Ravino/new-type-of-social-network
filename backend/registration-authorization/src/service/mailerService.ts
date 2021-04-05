@@ -1,5 +1,5 @@
 import { Singleton } from 'typescript-ioc';
-import { createTestAccount, createTransport } from 'nodemailer';
+import { createTransport } from 'nodemailer';
 
 
 @Singleton
@@ -23,7 +23,6 @@ export class MailerService {
     this.account.pass = <string>global.process.env.MAILER_EMAIL_PASSWORD || '';
 
 
-console.log(this.mailer);
     this.transfer = createTransport({
       host: this.mailer.smtpAddress,
       port: this.mailer.smtpPort,
@@ -35,7 +34,6 @@ console.log(this.mailer);
     });
 
 
-    console.log('Success create user test for email service');
     return undefined;
   }
 
