@@ -79,7 +79,7 @@ console.log('bind token ' + bindToken);
     }
 
 
-    let result: boolean;
+    let result: any;
     try {
       result = await this.sessionService.update(existSession.SESSION_ID, existSession.SCOPE, existSession.BIND_TOKEN, bindToken);
     }
@@ -90,18 +90,10 @@ console.log('bind token ' + bindToken);
     }
 
 
-    if(!result) {
-      this.statusView.addStatus('notSuccess');
-      return this.statusView;
-    }
-
-
     this.statusView.addStatus('success');
     this.statusView.addData(pairToken);
     return this.statusView;
   }
-
-
 
 
 
