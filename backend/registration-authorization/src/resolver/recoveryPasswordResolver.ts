@@ -69,8 +69,7 @@ export class RecoveryPasswordResolver {
 
 
     const user = {
-      userId: existUser.USER_ID,
-      email: existUser.EMAIL,
+      email: email,
       password: hashPassword
     }
 
