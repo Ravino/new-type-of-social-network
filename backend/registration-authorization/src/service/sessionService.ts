@@ -53,11 +53,10 @@ export class SessionService {
     }
     catch(err) {
       console.log(err);
-//      throw err;
+      return undefined;
     }
 
 
-    console.log(result);
     return result;
   }
 
@@ -95,7 +94,34 @@ export class SessionService {
     }
 
 
-    console.log(result);
+    return true;
+  }
+
+
+  public async update(sessionId: number, scope: string, currentBindToken: string, bindToken: string): Promise<any> {
+
+    const currentAt: number = Date.now();
+
+
+    const bindParams: any[] = [
+      bindToken,
+      currentAt,
+      scope,
+      sessionId,
+      currentBindToken
+    ];
+
+
+    let result: any;
+    try {
+      result = await tarantool.sql('update sessions set bind_token = ?, updated_at = ?, scope = ? where session_id = ? and bind_token = ?', bindParams);
+    }
+    catch(err) {
+      console.log(err);
+        return false;
+    }
+
+
     return true;
   }
 }
