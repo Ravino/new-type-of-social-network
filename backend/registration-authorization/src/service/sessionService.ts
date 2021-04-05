@@ -26,6 +26,28 @@ export class SessionService {
     return sessionsList[0];
   }
 
+
+  public async deleteByNameField(nameField: string, selector: string|number): Promise<any> {
+
+    const params = [
+      selector
+    ];
+
+
+    let result: any;
+    try {
+      result = await tarantool.sql(`delete from sessions where ${ nameField } = ?`, params);
+    }
+    catch(err) {
+      console.log(err);
+      return undefined;
+    }
+
+
+    return true;
+  }
+
+
   public async save(userId: number, bindToken: string, ipAddress: string, country: string, region: string, city: string, userAgent: string, scope: string): Promise<any> {
 
     const currentAt: number = Date.now();
