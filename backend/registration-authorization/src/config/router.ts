@@ -4,6 +4,7 @@ import { Router } from 'express';
 import { SigninRouter } from '../router/signinRouter';
 import { SessionRouter } from '../router/sessionRouter';
 import { RecoveryRouter } from '../router/recoveryRouter';
+import { VerificationRouter } from '../router/verificationRouter';
 
 
 const router: Router = Router();
@@ -21,6 +22,11 @@ router.use('/session',
 
 router.use('/recovery',
   Container.get(RecoveryRouter).handler()
+);
+
+
+router.use('/verification',
+  Container.get(VerificationRouter).handler()
 );
 
 
