@@ -61,4 +61,26 @@ export class UserService {
     console.log(result);
     return result;
   }
+
+
+  public async updateByNameField(nameField: string, selector: string|number, key: string, value: string): Promise<any> {
+
+    const bindParams: any[] = [
+      value,
+      selector
+    ];
+
+
+    let result: any;
+    try {
+      result = await tarantool.sql(`update users set ${key} = ? where ${nameField} = ?`, bindParams);
+    }
+    catch(err) {
+      console.log(err);
+        return false;
+    }
+
+
+    return true;
+  }
 }
