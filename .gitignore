@@ -1,4 +1,5 @@
 node_modules
+certificate
 package-lock.json
 .env
 Dockerfile
