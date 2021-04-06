@@ -45,19 +45,25 @@ export const emailStrategy = () => new Strategy(async (email: string, password: 
   }
 
 
-  if(!existUser.CONFIRMED) {
-    done(null, false, { message: 'notConfirmed' });
-    return undefined;
-  }
-
-
-  let statusVerifyPassword: boolean = false;
+  let statusVerifyPassword: boolean = true;
   try {
     statusVerifyPassword = await Container.get(AuthorizationService).verifyPassword(password, existUser.PASSWORD);
   }
   catch(err) {
     console.log(err);
     done(null, false, { message: 'notSuccess'});
+    return undefined;
+  }
+
+
+  if(!statusVerifyPassword){
+    done(null, false, { message: 'invalidPassword'});
+    return undefined;
+  }
+
+
+  if(!existUser.CONFIRMED) {
+    done(null, false, { message: 'notConfirmed' });
     return undefined;
   }
 
