@@ -15,7 +15,7 @@ export class MailerService {
       subject: `Plizi: регистрация`,
     body: (password: string, verificationToken: string) => `Добро пожаловать!
       Вы зарегистрировались в социальной сети Plizi.fun
-      Для завершения регистрации Вам нужно подтвердить почту по  <a href="https://dev-registration-authorization/verification/email?token=${verificationToken}">ссылке</a> и войти с паролем: ${ password }
+      Для завершения регистрации Вам нужно подтвердить почту по  <a href="https://dev-registration-authorization.plizi.fun/verification/email?token=${verificationToken}">ссылке</a> и войти с паролем: ${ password }
       Вы можете изменить этот пароль на странице в настройках.`
     },
 
