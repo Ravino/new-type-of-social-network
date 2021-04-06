@@ -112,7 +112,7 @@ export class EmailResolver {
     }
 
 
-    this.mailerService.sender(email, password, 'verifyToken');
+    this.mailerService.sender('registration', email, password, 'verifyToken');
     this.statusView.addStatus('success');
     return this.statusView;
   }
