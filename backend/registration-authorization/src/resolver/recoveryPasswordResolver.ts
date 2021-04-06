@@ -69,6 +69,7 @@ export class RecoveryPasswordResolver {
 
 
     const user = {
+      userId: existUser.USER_ID,
       email: email,
       password: hashPassword
     }
@@ -92,7 +93,7 @@ export class RecoveryPasswordResolver {
     }
 
 
-    this.mailerService.sender(user.email, password, link);
+    this.mailerService.sender('recoveryPassword', user.email, password, link);
     this.statusView.addStatus('success');
     return this.statusView;
   }
