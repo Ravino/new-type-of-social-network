@@ -95,7 +95,23 @@ export class LinkService {
     }
 
 
-    console.log(result);
+    return result;
+  }
+
+
+  public async deleteByNamespaceKey(namespace: string, postfix: string): Promise<any> {
+
+    const key: string = `${namespace}:${postfix}`;
+    let result: any;
+    try {
+      result = await redis.del(key);
+    }
+    catch(err) {
+      console.log(err);
+      return undefined;
+    }
+
+
     return result;
   }
 }
