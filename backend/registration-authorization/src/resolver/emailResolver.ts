@@ -120,7 +120,7 @@ export class EmailResolver {
 
 
     const userStringify: string = JSON.stringify(user);
-    const link: any = await this.linkService.create('verification:password', userStringify, 1800);
+    const link: any = await this.linkService.create('verification:email', userStringify, 1800);
 
 
     this.mailerService.sender('registration', email, password, link);
