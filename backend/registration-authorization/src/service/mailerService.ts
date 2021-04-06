@@ -10,6 +10,25 @@ export class MailerService {
   private mailer?: any;
 
 
+  private templates?: any = {
+    registration: {
+      subject: `Plizi: регистрация`,
+    body: (password: string, verificationToken: string) => `Добро пожаловать!
+      Вы зарегистрировались в социальной сети Plizi.fun
+      Для завершения регистрации Вам нужно подтвердить почту по  <a href="https://dev-registration-authorization/verification/email?token=${verificationToken}">ссылке</a> и войти с паролем: ${ password }
+      Вы можете изменить этот пароль на странице в настройках.`
+    },
+
+    recoveryPassword: {
+      subject: `Plizi: сброс пароля`,
+      body: (password: string, verificationToken: string) => `Здравствуйте!
+      Вами был запрошен сброс пароля. Для подтверждения, перейдите по <a href="https://dev-registration-authorization.plizi.fun/verification/password?token=${verificationToken}">ссылке</a> и войдите с новым паролем: ${password}
+      Если это были не вы, пропустите данное письмо.
+      Действие ссылки 15 минут, после она не будет действительна.`
+    }
+  };
+
+
   public constructor(){}
 
 
@@ -38,18 +57,15 @@ export class MailerService {
   }
 
 
-  private generatorMessage(password: string, verificationToken: string): any {
+  private generatorMessage(typeTemplate: string, password: string, verificationToken: string): any {
 
-    const text: string = `Добро пожаловать!
-    Вы зарегистрировались в социальной сети Plizi.fun
-    Для завершения регистрации Вам нужно подтвердить почту по ссылке ${verificationToken} и войти с паролем: ${ password }
-    Вы можете изменить этот пароль на странице в настройках.`;
+    const template = this.templates[typeTemplate];
 
 
     const message = {
       from: this.account.user,
-      subject: `PLIZI: Регистрация`,
-      text: text
+      subject: template.subject,
+      html: template.body(password, verificationToken)
     };
 
 
@@ -72,18 +88,16 @@ export class MailerService {
   }
 
 
-  public async sender(toEmail: string, password: string, verificationToken: string): Promise<any> {
+  public async sender(typeTemplate: string, toEmail: string, password: string, verificationToken: string): Promise<any> {
 
     if(!this.account) {
       await this.initialization();
     }
 
 
-    const message: any = this.generatorMessage(password, verificationToken);
+    const message: any = this.generatorMessage(typeTemplate, password, verificationToken);
     message.to = toEmail;
 
-
-console.log(message);
 
     try {
       await this.senderMessage(message);
