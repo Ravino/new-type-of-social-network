@@ -4,6 +4,7 @@ import trim from 'trim';
 import { UserService } from '../service/userService';
 import { RegistrationService } from '../service/registrationService';
 import { SessionService } from '../service/sessionService';
+import { LinkService } from '../service/linkService';
 import { MailerService } from '../service/mailerService';
 import { authenticate as authenticatePassport} from 'passport';
 import { Request } from 'express';
@@ -20,6 +21,7 @@ export class EmailResolver {
     @Inject private readonly userService: UserService,
     @Inject private readonly registrationService: RegistrationService,
     @Inject private readonly sessionService: SessionService,
+    @Inject private readonly linkService: LinkService,
     @Inject private readonly mailerService: MailerService
   ){}
 
@@ -112,7 +114,16 @@ export class EmailResolver {
     }
 
 
-    this.mailerService.sender('registration', email, password, 'verifyToken');
+    const user = {
+      email
+    }
+
+
+    const userStringify: string = JSON.stringify(user);
+    const link: any = await this.linkService.create('verification:password', userStringify, 1800);
+
+
+    this.mailerService.sender('registration', email, password, link);
     this.statusView.addStatus('success');
     return this.statusView;
   }
