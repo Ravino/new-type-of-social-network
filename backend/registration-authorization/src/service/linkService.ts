@@ -26,6 +26,23 @@ export class LinkService {
   }
 
 
+  public async expire(key: string, ttl: number): Promise<boolean> {
+
+    let result: boolean = true;
+    try {
+      await redis.expire(key, ttl);
+    }
+    catch(err) {
+      console.log(err);
+      result = false;
+    }
+
+
+    return result;
+  }
+
+
+
   public async create(namespace: string, payload: string, ttl?: number): Promise<string|undefined> {
 
     const token: string = this.generatorLink();
@@ -53,7 +70,7 @@ export class LinkService {
 
 
     try {
-      await redis.expire(key, ttl);
+      await this.expire(key, ttl);
     }
     catch(err) {
       console.log(err);
@@ -62,5 +79,23 @@ export class LinkService {
 
 
     return token;
+  }
+
+
+  public async getByNamespaceKey(namespace: string, postfix: string): Promise<any> {
+
+    const key: string = `${namespace}:${postfix}`;
+    let result: any;
+    try {
+      result = await redis.get(key);
+    }
+    catch(err) {
+      console.log(err);
+      return undefined;
+    }
+
+
+    console.log(result);
+    return result;
   }
 }
