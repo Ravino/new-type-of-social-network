@@ -63,7 +63,7 @@ export class UserService {
   }
 
 
-  public async updateByNameField(nameField: string, selector: string|number, key: string, value: string): Promise<any> {
+  public async updateByNameField(nameField: string, selector: string|number, key: string, value: string|number|boolean): Promise<any> {
 
     const bindParams: any[] = [
       value,
