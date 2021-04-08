@@ -11,6 +11,7 @@ const router: Router = Router();
 
 
 router.use('/signin',
+  Container.get(SigninRouter).middleware,
   Container.get(SigninRouter).handler()
 );
 
