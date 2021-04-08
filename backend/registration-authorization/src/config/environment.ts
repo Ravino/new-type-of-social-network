@@ -9,7 +9,8 @@ const listEnvVar: Array<string> = [
   'VKONTAKTE_SCOPE',
   'VKONTAKTE_PROFILE_FIELDS',
   'IOREDIS_HOST',
-  'IOREDIS_PORT'
+  'IOREDIS_PORT',
+  'CONF_SET_COOKIE_NAME'
 ];
 
 
