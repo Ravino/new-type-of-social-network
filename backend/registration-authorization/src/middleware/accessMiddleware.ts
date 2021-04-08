@@ -48,4 +48,10 @@ export class AccessMiddleware {
     res.json(this.statusView);
     return undefined;
   }
+
+
+  public stub(req: Request, res: Response, next:NextFunction): any {
+    res.sendStatus(403)
+    return undefined;
+  }
 }
