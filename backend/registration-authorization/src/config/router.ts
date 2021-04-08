@@ -5,6 +5,7 @@ import { SigninRouter } from '../router/signinRouter';
 import { SessionRouter } from '../router/sessionRouter';
 import { RecoveryRouter } from '../router/recoveryRouter';
 import { VerificationRouter } from '../router/verificationRouter';
+import { OtherRouter } from '../router/otherRouter';
 
 
 const router: Router = Router();
@@ -31,6 +32,12 @@ router.use('/recovery',
 router.use('/verification',
   Container.get(VerificationRouter).middleware,
   Container.get(VerificationRouter).handler()
+);
+
+
+router.use('/*',
+  Container.get(OtherRouter).middleware,
+  Container.get(OtherRouter).handler()
 );
 
 
