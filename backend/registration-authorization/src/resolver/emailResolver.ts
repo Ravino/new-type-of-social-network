@@ -150,7 +150,7 @@ export class EmailResolver {
     }
 
 
-    this.statusView.addStatus('notSuccess');
+    this.statusView.addStatus('invalidMethod');
     res.json(this.statusView);
     return undefined;
   }
