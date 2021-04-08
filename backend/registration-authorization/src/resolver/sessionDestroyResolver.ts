@@ -1,5 +1,6 @@
 import { Inject } from 'typescript-ioc';
 import trim from 'trim';
+import { confSetCookie } from '../config/cookieParser';
 import { AuthorizationService } from '../service/authorizationService';
 import { SessionService } from '../service/sessionService';
 import { Request } from 'express';
@@ -21,7 +22,7 @@ export class SessionDestroyResolver {
   public async destroy(req: Request, res: Response): Promise<any> {
 
     let currentRefreshToken: string = req.body.refreshToken || '';
-    let currentAccessToken: string = req.body.accessToken || '';
+    let currentAccessToken: string = req.signedCookies[confSetCookie.nameCookie] || '';
 
 
     currentRefreshToken = trim(currentRefreshToken);
@@ -50,6 +51,7 @@ export class SessionDestroyResolver {
     }
 
 
+    res.clearCookie(confSetCookie.nameCookie);
     this.statusView.addStatus('success');
     return this.statusView;
   }
