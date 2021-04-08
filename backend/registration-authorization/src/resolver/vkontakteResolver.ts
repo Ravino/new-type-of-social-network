@@ -1,4 +1,5 @@
 import { Inject } from 'typescript-ioc';
+import { confSetCookie } from '../config/cookieParser';
 import { authenticate as authenticatePassport} from 'passport';
 import { Request } from 'express';
 import { Response } from 'express';
@@ -50,6 +51,11 @@ export class VkontakteResolver {
         return undefined;
       }
 
+      const accessToken = payload.pairToken.accessToken;
+      delete payload.pairToken.accessToken;
+
+
+      res.cookie(confSetCookie.nameCookie, accessToken, confSetCookie.params);
       this.statusView.addStatus(info.message);
       this.statusView.addData(payload.pairToken);
       res.json(this.statusView);
