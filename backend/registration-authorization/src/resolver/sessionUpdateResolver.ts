@@ -1,5 +1,6 @@
 import { Inject } from 'typescript-ioc';
 import trim from 'trim';
+import { confSetCookie } from '../config/cookieParser';
 import { AuthorizationService } from '../service/authorizationService';
 import { SessionService } from '../service/sessionService';
 import { Request } from 'express';
@@ -21,14 +22,13 @@ export class SessionUpdateResolver {
   public async update(req: Request, res: Response): Promise<any> {
 
     let currentRefreshToken: string = req.body.refreshToken || '';
-    let currentAccessToken: string = req.body.accessToken || '';
+    let currentAccessToken: string = req.signedCookies[confSetCookie.nameCookie] || '';
 
 
     currentRefreshToken = trim(currentRefreshToken);
     currentAccessToken = trim(currentAccessToken);
 
 
-console.log(req.body);
     let bindToken: string;
     try {
       bindToken = await this.authorizationService.bindToken(currentRefreshToken, currentAccessToken);
@@ -40,7 +40,6 @@ console.log(req.body);
     }
 
 
-console.log('bind token ' + bindToken);
     let existSession: any;
     try {
       existSession = await this.sessionService.getByNameField('bind_token', bindToken);
@@ -53,7 +52,8 @@ console.log('bind token ' + bindToken);
 
 
     if(!existSession) {
-      this.statusView.addStatus('notSuccess');
+      res.clearCookie(confSetCookie.nameCookie);
+      this.statusView.addStatus('notAuthenticate');
       return this.statusView;
     }
 
@@ -88,6 +88,10 @@ console.log('bind token ' + bindToken);
       this.statusView.addStatus('notSuccess');
       return this.statusView;
     }
+
+
+    res.cookie(confSetCookie.nameCookie, pairToken.accessToken, confSetCookie.params);
+    delete pairToken.accessToken;
 
 
     this.statusView.addStatus('success');
