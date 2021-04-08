@@ -17,16 +17,19 @@ router.use('/signin',
 
 
 router.use('/session',
+  Container.get(SessionRouter).middleware,
   Container.get(SessionRouter).handler()
 );
 
 
 router.use('/recovery',
+  Container.get(RecoveryRouter).middleware,
   Container.get(RecoveryRouter).handler()
 );
 
 
 router.use('/verification',
+  Container.get(VerificationRouter).middleware,
   Container.get(VerificationRouter).handler()
 );
 
