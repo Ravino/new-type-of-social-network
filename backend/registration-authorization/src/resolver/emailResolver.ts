@@ -1,6 +1,7 @@
 import { Inject } from 'typescript-ioc';
 import escapeHtml from 'escape-html';
 import trim from 'trim';
+import { confSetCookie } from '../config/cookieParser';
 import { UserService } from '../service/userService';
 import { RegistrationService } from '../service/registrationService';
 import { SessionService } from '../service/sessionService';
@@ -60,6 +61,11 @@ export class EmailResolver {
         return undefined;
       }
 
+      const accessToken = payload.pairToken.accessToken;
+      delete payload.pairToken.accessToken;
+
+
+      res.cookie(confSetCookie.nameCookie, accessToken, confSetCookie.params);
       this.statusView.addStatus(info.message);
       this.statusView.addData(payload.pairToken);
       res.json(this.statusView);
