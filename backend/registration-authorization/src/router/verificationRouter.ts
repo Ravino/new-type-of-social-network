@@ -1,12 +1,18 @@
 import { Container } from 'typescript-ioc';
 import { Router } from 'express';
-import { Request } from 'express';
-import { Response } from 'express';
+import { Request, Response, NextFunction } from 'express';
 import { VerificationPasswordRouter } from './verificationPasswordRouter';
 import { VerificationEmailRouter } from './verificationEmailRouter';
+import { AccessMiddleware } from '../middleware/accessMiddleware';
 
 
 export class VerificationRouter {
+
+  public middleware(req: Request, res: Response, next: NextFunction): any {
+    Container.get(AccessMiddleware).checkNotExistSession(req, res, next);
+    return 
+  }
+
 
   public handler(): Router {
 
