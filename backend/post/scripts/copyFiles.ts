@@ -7,10 +7,6 @@ const pMkdir = promisify(fs.mkdir)
 const root = path.resolve(__dirname, "../")
 const dest = path.resolve(root, "lib")
 
-const makeDirectorys = [
-  "graphql"
-];
-
 
 const filesToCopy = [
     "graphql/post.graphql",
@@ -19,12 +15,6 @@ const filesToCopy = [
 ]
 
 const start = async () => {
-
-    for(const directory of makeDirectorys) {
-        const fullDir = path.resolve(dest, directory);
-        console.log(`Make directory ${directory} in ${dest}`);
-        await pMkdir(fullDir);
-    }
 
     for (const file of filesToCopy) {
         const fullSource = path.resolve(root, "src", file)
