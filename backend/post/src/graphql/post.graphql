@@ -1,0 +1,39 @@
+""" Дата со временем в формате ISO-8601 с часовым поясом. """
+scalar ZonedDateTime
+
+""" Базовый тип со всеми запросами """
+type Query {
+  requestQuery: RequestQuery!
+}
+
+
+type RequestQuery {
+""" Получение одного поста по его идентификатору"""
+  get(postId: ID!): Request
+  """ Получение списка постов. Параметр text используется для поиска постов по вхождению подстроки поиска в строку поста. """
+  requests(size: Int, textSearch: String): RequestList!
+  """ Возвращает список постов в соответствии с курсором полученным при вызове requests."""
+  select(cursor: String!, offset: Int!): RequestList!
+}
+
+
+"""Структура поста"""
+type Request {
+  postId: ID!
+  userId: ID!
+  displayName: String!
+  body: String!
+  createdAt: ZonedDateTime!
+  updatedAt: ZonedDateTime!
+}
+
+
+""" Структура списка постов """
+type RequestList {
+  """ Курсор используемый для постраничной итерации по списку """
+  cursor: String!
+  """ Общее количество постов """
+  count: Int!
+  """ Список постов """
+  items: [Request!]!
+}
