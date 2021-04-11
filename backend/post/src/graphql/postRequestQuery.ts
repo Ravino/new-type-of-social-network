@@ -29,7 +29,7 @@ export class PostRequestQuery {
   }
 
 
-  public async select(cursor: string, offset: number): Promise<PostRequestListView> {
+  public async select(offset: number, cursor: string): Promise<PostRequestListView> {
     const cursorObj = JSON.parse(decode(cursor));
     return await this.getList(1, offset, cursorObj.size, cursorObj.textSearch);
   }
@@ -53,7 +53,11 @@ export class PostRequestQuery {
 
     const cursor: string = await this.createCursor(size, textSearch);
     const count = async () => 1;
-    const items = async () => [new PostRequestView];
+    const items = async () => [<PostRequestView>{
+      postId: 2,
+      userId: 2,
+      body: 'this is fuck'
+    }];
 
         const postRequestListView: PostRequestListView = new PostRequestListView(
             cursor,
