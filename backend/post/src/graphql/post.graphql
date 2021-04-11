@@ -13,7 +13,7 @@ type RequestQuery {
   """ Получение списка постов. Параметр text используется для поиска постов по вхождению подстроки поиска в строку поста. """
   requests(size: Int, textSearch: String): RequestList!
   """ Возвращает список постов в соответствии с курсором полученным при вызове requests."""
-  select(cursor: String!, offset: Int!): RequestList!
+  select(offset: Int!, cursor: String!): RequestList!
 }
 
 
@@ -23,6 +23,25 @@ type Request {
   userId: ID!
   displayName: String!
   body: String!
+  likes: Int!
+  browses: Int!
+  shareds: Int!
+  comments(offset: Int!, cursor: String): CommentList!
+  createdAt: ZonedDateTime!
+  updatedAt: ZonedDateTime!
+}
+
+
+"""Структура комментария"""
+type Comment {
+  commentId: ID!
+  postId: ID!
+  userId: ID!
+  displayName: String!
+  body: String!
+  likes: Int!
+  browses: Int!
+  shareds: Int!
   createdAt: ZonedDateTime!
   updatedAt: ZonedDateTime!
 }
@@ -36,4 +55,15 @@ type RequestList {
   count: Int!
   """ Список постов """
   items: [Request!]!
+}
+
+
+"""Структура списка комментариев """
+type CommentList {
+  """ Курсор используемый для постраничной итерации по списку """
+  cursor: String!
+  """ Общее количество комментариев """
+  count: Int!
+  """ Список комментариев """
+  items: [Comment!]!
 }
