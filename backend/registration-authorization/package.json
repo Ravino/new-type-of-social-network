@@ -12,7 +12,9 @@
   "author": "Ravino Doul",
   "license": "ISC",
   "devDependencies": {
+    "@types/cors": "^2.8.10",
     "@types/node": "^14.14.35",
+    "cors": "^2.8.5",
     "dotenv": "^8.2.0",
     "rimraf": "^3.0.2",
     "ts-node": "^9.1.1",
