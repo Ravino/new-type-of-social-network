@@ -7,6 +7,11 @@ type Query {
 }
 
 
+type Mutation {
+  requestMutation: RequestMutation
+}
+
+
 type RequestQuery {
 """ Получение одного поста по его идентификатору"""
   get(postId: ID!): Request
@@ -14,6 +19,13 @@ type RequestQuery {
   requests(size: Int, textSearch: String): RequestList!
   """ Возвращает список постов в соответствии с курсором полученным при вызове requests."""
   select(offset: Int!, cursor: String!): RequestList!
+}
+
+
+type RequestMutation {
+  create(body: String!): Boolean!
+  update(postId: ID!, body: String!): Boolean!
+  delete(postId: ID!): Boolean!
 }
 
 
