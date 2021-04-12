@@ -4,7 +4,9 @@ import {ApolloServer, gql} from "apollo-server-express";
 import {Container} from "typescript-ioc";
 import { Application } from 'express';
 import {PostQuery} from '../graphql/postQuery';
+import {PostMutation} from '../graphql/postMutation';
 import {PostRequestQuery} from '../graphql/postRequestQuery';
+import {PostRequestMutation} from '../graphql/postRequestMutation';
 import {ResolverComment} from '../resolver/resolverComment';
 import {PostRequestView} from '../view/postRequestView';
 
@@ -21,10 +23,22 @@ const resolvers = {
   },
 
 
+  Mutation: {
+    requestMutation: () => Container.get(PostMutation).requestMutation
+  },
+
+
   RequestQuery: {
     get: (parent: PostRequestQuery, args: {postId: string}) => parent.get(args.postId),
     requests: (parent: PostRequestQuery, args: {size: number, textSearch: string}) => parent.requests(args.size, args.textSearch),
     select: (parent: PostRequestQuery, args: {offset: number, cursor: string}) => parent.select(args.offset, args.cursor)
+  },
+
+
+  RequestMutation: {
+    create: (parent: PostRequestMutation, args: { body: string}) => parent.create(args.body),
+    update: (parent: PostRequestMutation, args: {postId: number, body: string}) => parent.update(args.postId, args.body),
+    delete: (parent: PostRequestMutation, args: {postId: number}) => parent.delete(args.postId)
   },
 
 
