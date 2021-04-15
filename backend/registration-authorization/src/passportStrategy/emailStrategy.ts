@@ -17,30 +17,20 @@ export const emailStrategy = () => new Strategy(async (email: string, password: 
 
 
   if(!Container.get(AuthorizationService).validateEmail(email)) {
-    done(null, false, { message: 'invalidEmail'});
+    done(null, false, { message: 'invalidInputData'});
     return undefined;
   }
 
 
   if(!Container.get(AuthorizationService).validatePassword(password)) {
-    done(null, false, { message: 'invalidPassword'});
+    done(null, false, { message: 'invalidInputData'});
     return undefined;
   }
 
 
-  let existUser: any;
-  try {
-    existUser = await Container.get(UserService).getByNameField('email', email);
-  }
-  catch(err) {
-    console.log(err);
-    done(null, false, { message: 'notSuccess'});
-    return undefined;
-  }
-
-
+  let existUser: any = existUser = await Container.get(UserService).getByNameField('email', email);
   if(!existUser) {
-    done(null, false, { message: 'notExistUser'});
+    done(null, false, { message: 'invalidInputData'});
     return undefined;
   }
 
@@ -51,13 +41,13 @@ export const emailStrategy = () => new Strategy(async (email: string, password: 
   }
   catch(err) {
     console.log(err);
-    done(null, false, { message: 'notSuccess'});
+    done(null, false, { message: 'invalidInputData'});
     return undefined;
   }
 
 
   if(!statusVerifyPassword){
-    done(null, false, { message: 'invalidPassword'});
+    done(null, false, { message: 'invalidInputData'});
     return undefined;
   }
 
