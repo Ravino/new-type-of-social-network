@@ -9,7 +9,7 @@ import { AccessMiddleware } from '../middleware/accessMiddleware';
 export class VerificationRouter {
 
   public middleware(req: Request, res: Response, next: NextFunction): any {
-    Container.get(AccessMiddleware).checkNotExistSession(req, res, next);
+    Container.get(AccessMiddleware).checkExistSession(req, res, next);
     return 
   }
 
