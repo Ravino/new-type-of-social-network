@@ -28,7 +28,7 @@ export const emailStrategy = () => new Strategy(async (email: string, password: 
   }
 
 
-  let existUser: any = existUser = await Container.get(UserService).getByNameField('email', email);
+  let existUser: any = await Container.get(UserService).getByNameField('email', email);
   if(!existUser) {
     done(null, false, { message: 'invalidInputData'});
     return undefined;
