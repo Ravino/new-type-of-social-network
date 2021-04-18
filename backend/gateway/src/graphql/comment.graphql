@@ -1,0 +1,12 @@
+type Comment {
+  commentId: ID!
+  postId: ID!
+  authorId: ID!
+  displayName: String!
+  avatar: String!
+  body: String!
+  likes: RequestLike!
+  shares: RequestShares!
+  createdAt: ZonedDateTime!
+  updatedAt: ZonedDateTime!
+}
