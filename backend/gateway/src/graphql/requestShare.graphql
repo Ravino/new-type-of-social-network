@@ -1,4 +1,4 @@
 type RequestShare {
-  getList: shareList!
+  getList: ShareList!
   select: ShareList!
 }
