@@ -1,0 +1,5 @@
+type CommentList {
+  cursor: String!
+  count: Int!
+  items: [Comment!]!
+}
