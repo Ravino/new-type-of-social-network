@@ -11,15 +11,18 @@ import {RequestPostResolver} from '../resolver/requestPostResolver';
 import {RequestCommentResolver} from '../resolver/requestCommentResolver';
 import {RequestLikeResolver} from '../resolver/requestLikeResolver';
 import {RequestShareResolver} from '../resolver/requestShareResolver';
+import {RequestFrendResolver} from '../resolver/requestFrendResolver';
 
 
 import {ProfileView} from '../view/profileView';
 import {PostView} from '../view/postView';
 import {CommentView} from '../view/commentView';
+import {FrendView} from '../view/frendView';
 import {PostListView} from '../view/postListView';
 import {CommentListView} from '../view/commentListView';
 import {LikeListView} from '../view/likeListView';
 import {ShareListView} from '../view/shareListView';
+import {FrendListView} from '../view/frendListView';
 
 
 const pathSchema: string = path.join(__dirname, "../graphql/main.graphql");
@@ -78,6 +81,11 @@ const resolvers = {
   },
 
 
+  RequestFrend: {
+    getList: () => Container.get(RequestFrendResolver).getList()
+  },
+
+
   PostList: {
     count: (parent: PostListView) => parent.count(),
     items: (parent: PostListView) => parent.items()
@@ -99,6 +107,12 @@ const resolvers = {
   ShareList: {
     count: (parent: ShareListView) => parent.count(),
     items: (parent: ShareListView) => parent.items()
+  },
+
+
+  FrendList: {
+    count: (parent: FrendListView) => parent.count(),
+    items: (parent: FrendListView) => parent.items()
   }
 };
 
