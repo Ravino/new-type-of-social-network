@@ -1,0 +1,4 @@
+type RequestSubscription {
+  getList: SubscriptionList!
+  select: SubscriptionList!
+}
