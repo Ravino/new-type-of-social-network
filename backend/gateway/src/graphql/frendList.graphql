@@ -1,0 +1,5 @@
+type FrendList {
+  cursor: String!
+  count: Int!
+  items: [Frend!]!
+}
