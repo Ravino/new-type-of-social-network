@@ -1,0 +1,12 @@
+type Post {
+  postId: ID!
+  authorId: ID!
+  displayName: String!
+  avatar: String!
+  body: String!
+  likes: RequestLike!
+  shares: RequestShare!
+  comments: RequestComment!
+  createdAt: ZonedDateTime!
+  updatedAt: ZonedDateTime!
+}
