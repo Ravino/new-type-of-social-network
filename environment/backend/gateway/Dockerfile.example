@@ -1,0 +1,13 @@
+FROM node:14
+
+ENV CONF_SET_COOKIE_NAME=
+
+
+RUN mkdir /www && mkdir /www/app
+WORKDIR /www/app
+COPY package.json .
+RUN npm i
+COPY . .
+RUN npm run build
+RUN rm -R src
+CMD ["npm", "start"]
