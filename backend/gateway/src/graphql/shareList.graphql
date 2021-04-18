@@ -1,4 +1,4 @@
-type shareList {
+type ShareList {
   cursor: String!
   count: Int!
   items: [Share!]!
