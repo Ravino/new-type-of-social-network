@@ -1,0 +1,13 @@
+type Profile {
+  profileId: ID!
+  firstname: String!
+  lastname: String!
+  displayName: String!
+  age: Int!
+  country: String!
+  city: String!
+  avatar: String!
+  frends: RequestFrend!
+  communities: RequestCommunity!
+  posts: RequestPost!
+}
