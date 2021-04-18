@@ -1,0 +1,5 @@
+type Subscription {
+  subscriptionId: ID!
+  avatar: String!
+  displayName: String!
+}
