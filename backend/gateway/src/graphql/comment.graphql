@@ -6,7 +6,7 @@ type Comment {
   avatar: String!
   body: String!
   likes: RequestLike!
-  shares: RequestShares!
+  shares: RequestShare!
   createdAt: ZonedDateTime!
   updatedAt: ZonedDateTime!
 }
