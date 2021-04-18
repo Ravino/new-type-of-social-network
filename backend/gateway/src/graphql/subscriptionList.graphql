@@ -1,0 +1,5 @@
+type SubscriptionList {
+  cursor: String!
+  count: Int!
+  items: [Subscription!]!
+}
