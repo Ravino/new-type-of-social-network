@@ -1,0 +1,3 @@
+type Frend {
+  frendId: ID!
+}
