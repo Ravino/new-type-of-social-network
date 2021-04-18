@@ -1,0 +1,5 @@
+type PostList {
+  cursor: String!
+  count: Int!
+  items: [Post!]!
+}
