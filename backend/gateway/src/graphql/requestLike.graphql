@@ -1,0 +1,4 @@
+type RequestLike {
+  getList: LikeList!
+  select: LikeList!
+}
