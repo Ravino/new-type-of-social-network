@@ -1,3 +1,8 @@
 type Frend {
   frendId: ID!
+  profileId: ID!
+  displayName: String!
+  avatar: String!
+  createdAt: ZonedDateTime!
+  updatedAt: ZonedDateTime!
 }
