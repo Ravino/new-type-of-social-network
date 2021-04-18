@@ -1,0 +1,8 @@
+type Share {
+  shareId: ID!
+  authorId: ID!
+  displayName: String!
+  avatar: String!
+  createdAt: ZonedDateTime!
+  updatedAt: ZonedDateTime!
+}
