@@ -1,0 +1,8 @@
+type Like {
+  likeId: ID!
+  authorId: ID!
+  displayName: String!
+  avatar: String!
+  createdAt: ZonedDateTime!
+  updatedAt: ZonedDateTime!
+}
