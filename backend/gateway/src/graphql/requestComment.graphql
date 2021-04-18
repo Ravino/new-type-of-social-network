@@ -1,4 +1,4 @@
 type RequestComment {
   getList: CommentList!
-  select: RequestList!
+  select: CommentList!
 }
