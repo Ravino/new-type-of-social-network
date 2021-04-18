@@ -2,6 +2,12 @@ import {Inject, Singleton} from 'typescript-ioc';
 import {ProfileView} from '../view/profileView';
 
 
+import {
+  ProfileGenderState,
+  ProfileMaritalState
+} from '../model/profileEntity';
+
+
 @Singleton
 export class RequestProfileResolver {
 
@@ -14,7 +20,9 @@ export class RequestProfileResolver {
       age: 65,
       country: 'RU',
       city: 'Moscow',
-      avatar: ''
+      avatar: '',
+      gender: ProfileGenderState.MALE,
+      marital: ProfileMaritalState.AVAILABLE
     };
   }
 }
