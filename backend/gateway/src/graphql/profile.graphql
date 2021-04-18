@@ -4,9 +4,13 @@ type Profile {
   lastname: String!
   displayName: String!
   age: Int!
+  gender: GenderState!
+  marital: String!
   country: String!
   city: String!
   avatar: String!
+  subscriptions: RequestSubscription!
+  subscribers: RequestSubscriber!
   frends: RequestFrend!
   communities: RequestCommunity!
   posts: RequestPost!
