@@ -20,6 +20,7 @@ export class RequestPostResolver {
         postId: 1,
         authorId: 1,
         displayName: 'Fuck of fuck',
+        avatar: '',
         body: 'My first post',
         createdAt: new Date(),
         updatedAt: new Date()
