@@ -1,0 +1,4 @@
+type RequestPost {
+  getList: PostList!
+  select: PostList!
+}
