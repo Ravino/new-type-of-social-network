@@ -1,0 +1,4 @@
+type RequestSubscriber {
+  getList: SubscriberList!
+  select: SubscriberList!
+}
