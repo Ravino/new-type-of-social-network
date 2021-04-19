@@ -1,0 +1,8 @@
+type Chat {
+  chatId: ID!
+  ownerId: Int!
+  displayName: String!
+  lastMessage: Message
+  createdAt: ZonedDateTime!
+  updatedAt: ZonedDateTime!
+}
