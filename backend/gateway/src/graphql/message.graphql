@@ -1,0 +1,9 @@
+type Message {
+  messageId: ID!
+  senderId: ID!
+  chatId: ID!
+  displayName: String!
+  body: String!
+  createdAt: ZonedDateTime!
+  updatedAt: ZonedDateTime!
+}
