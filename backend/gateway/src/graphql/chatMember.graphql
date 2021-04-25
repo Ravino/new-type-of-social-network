@@ -1,0 +1,6 @@
+type ChatMember {
+  memberId: ID!
+  displayName: String!
+  avatar: String!
+  role: String!
+}
