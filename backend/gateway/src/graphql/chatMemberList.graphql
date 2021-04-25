@@ -1,0 +1,5 @@
+type ChatMemberList {
+  cursor: String!
+  count: Int!
+  items: [ChatMember!]!
+}
