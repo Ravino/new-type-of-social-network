@@ -1,4 +1,5 @@
 type Query {
   requestProfile: RequestProfile!
+  requestChat: RequestChat!
   requestCommunity: RequestCommunity!
 }
