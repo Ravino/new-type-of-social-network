@@ -1,6 +1,7 @@
 type Chat {
   chatId: ID!
   ownerId: Int!
+  members: RequestChatMember!
   displayName: String!
   lastMessage: Message
   createdAt: ZonedDateTime!
