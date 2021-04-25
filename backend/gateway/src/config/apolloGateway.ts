@@ -2,7 +2,7 @@ import path from "path";
 import {readFileSync} from "fs";
 import {ApolloServer, gql} from "apollo-server-express";
 import {Container} from "typescript-ioc";
-import { Application } from 'express';
+import { Application, Request } from 'express';
 
 
 import {QueryResolver} from '../resolver/queryResolver';
@@ -117,11 +117,19 @@ const resolvers = {
 };
 
 
-const apolloServer: ApolloServer = new ApolloServer({ typeDefs, resolvers });
+const context = async (arg: Application) => console.log('context');
+
+
+const apolloServer: ApolloServer = new ApolloServer({
+  typeDefs,
+  resolvers,
+  context,
+  tracing: true
+});
 
 export function apolloGatewayInitialization(app: Application) {
   apolloServer.applyMiddleware({
     app,
-    path: "/gateway"
+    path: "/graphql/gateway"
   });
 }
