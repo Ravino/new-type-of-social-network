@@ -1,0 +1,4 @@
+type RequestChatMember {
+  getList: ChatMemberList!
+  select: ChatMemberList!
+}
