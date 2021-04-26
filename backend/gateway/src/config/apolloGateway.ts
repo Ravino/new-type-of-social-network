@@ -3,6 +3,7 @@ import {readFileSync} from "fs";
 import {ApolloServer, gql} from "apollo-server-express";
 import {Container} from "typescript-ioc";
 import { Application, Request } from 'express';
+import {context} from './context';
 
 
 import {QueryResolver} from '../resolver/queryResolver';
@@ -115,9 +116,6 @@ const resolvers = {
     items: (parent: FrendListView) => parent.items()
   }
 };
-
-
-const context = async (arg: Application) => console.log('context');
 
 
 const apolloServer: ApolloServer = new ApolloServer({
