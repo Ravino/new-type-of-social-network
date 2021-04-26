@@ -10,14 +10,14 @@ const router: Router = Router();
 
 router.use('/graphql',
   Container.get(GraphqlRouter).middleware
-//  Container.get(OtherRouter).handler()
+//  Container.get(GraphqlRouter).handler()
 );
 
 
-//router.use('/*',
-//  Container.get(OtherRouter).middleware,
-//  Container.get(OtherRouter).handler()
-//);
+export const stubInitialization = () => router.use('/*',
+  Container.get(OtherRouter).middleware,
+  Container.get(OtherRouter).handler()
+);
 
 
 export function routerInitialization(server: Application) {
