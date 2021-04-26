@@ -1,6 +1,7 @@
 FROM node:14
 
 ENV CONF_SET_COOKIE_NAME=
+ENV CONF_SET_COOKIE_DOMAIN=
 
 
 RUN mkdir /www && mkdir /www/app
