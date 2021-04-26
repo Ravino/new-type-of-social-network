@@ -10,7 +10,7 @@ const publicKey = readFileSync(publicKeyPath, {encoding: "utf8"});
 export const confSetCookie = {
   nameCookie: <string>global.process.env.CONF_SET_COOKIE_NAME || '',
   params: {
-    domain: '.plizi.fun',
+    domain: <string>global.process.env.CONF_SET_COOKIE_DOMAIN,
     httpOnly: true,
     path: '/',
     secure: true,
