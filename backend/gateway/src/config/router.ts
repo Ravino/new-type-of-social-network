@@ -14,10 +14,10 @@ router.use('/graphql',
 );
 
 
-router.use('/*',
-  Container.get(OtherRouter).middleware,
-  Container.get(OtherRouter).handler()
-);
+//router.use('/*',
+//  Container.get(OtherRouter).middleware,
+//  Container.get(OtherRouter).handler()
+//);
 
 
 export function routerInitialization(server: Application) {
