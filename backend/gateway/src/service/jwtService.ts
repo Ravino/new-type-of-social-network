@@ -22,7 +22,7 @@ export class JWTService {
 
     let result;
     try {
-      result = await jwtVerify(token, this.privateKey);
+      result = await jwtVerify(token, this.privateKey, { algorithms: ['RS256'] });
     }
     catch(err) {
       console.log(err);
