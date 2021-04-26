@@ -1,0 +1,60 @@
+version: "3.7"
+
+
+services:
+  plizi-gateway:
+    image: plizi-gateway
+    build: ./gateway
+    container_name: plizi-gateway
+    restart: unless-stopped
+    env_file:
+      - ./gateway/.env
+    ports:
+      - 127.0.0.1:8080:3000
+    networks:
+      - plizi
+
+
+  plizi-registration-authorization:
+    image: plizi-registration-authorization
+    build: ./registration-authorization
+    container_name: plizi-registration-authorization
+    restart: unless-stopped
+    depends_on:
+      - plizi-tarantool
+      - plizi-redis
+    env_file:
+      - ./registration-authorization/.env
+    ports:
+      - 127.0.0.1:8090:3000
+    networks:
+      - plizi
+
+
+  plizi-tarantool:
+    image: tarantool/tarantool:2
+    container_name: plizi-tarantool
+    restart: unless-stopped
+    ports:
+      - 127.0.0.1:3301:3301
+    volumes:
+      - /databases/plizi/tarantool:/var/lib/tarantool
+    networks:
+      - plizi
+
+
+  plizi-redis:
+    image: redis
+    container_name: plizi-redis
+    restart: unless-stopped
+    ports:
+      - 127.0.0.1:6379:6379
+    volumes:
+      - /databases/plizi/redis:/data
+    networks:
+      - plizi
+
+
+networks:
+  plizi:
+    driver: bridge
