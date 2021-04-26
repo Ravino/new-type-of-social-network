@@ -2,7 +2,6 @@ import { Container } from 'typescript-ioc';
 import { Application } from 'express';
 import { Router } from 'express';
 import { GraphqlRouter } from '../router/graphqlRouter';
-import { OtherRouter } from '../router/otherRouter';
 
 
 const router: Router = Router();
@@ -11,12 +10,6 @@ const router: Router = Router();
 router.use('/graphql',
   Container.get(GraphqlRouter).middleware
 //  Container.get(GraphqlRouter).handler()
-);
-
-
-export const stubInitialization = () => router.use('/*',
-  Container.get(OtherRouter).middleware,
-  Container.get(OtherRouter).handler()
 );
 
 
