@@ -1,7 +1,7 @@
 import express from 'express';
 import { cookieParserInitialization } from './cookieParser';
 import { bodyParserInitialization } from './bodyParser';
-import {routerInitialization, stubInitialization} from './router';
+import {routerInitialization} from './router';
 import {apolloGatewayInitialization} from './apolloGateway';
 
 
@@ -12,4 +12,3 @@ cookieParserInitialization(server);
 bodyParserInitialization(server);
 routerInitialization(server);
 apolloGatewayInitialization(server);
-stubInitialization();
