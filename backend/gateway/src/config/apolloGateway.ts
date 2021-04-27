@@ -13,6 +13,7 @@ import {RequestCommentResolver} from '../resolver/requestCommentResolver';
 import {RequestLikeResolver} from '../resolver/requestLikeResolver';
 import {RequestShareResolver} from '../resolver/requestShareResolver';
 import {RequestFrendResolver} from '../resolver/requestFrendResolver';
+import {RequestChatResolver} from '../resolver/requestChatResolver';
 
 
 import {ProfileView} from '../view/profileView';
@@ -38,12 +39,18 @@ const typeDefs = gql`${ schemaContent }`;
 
 const resolvers = {
   Query: {
-    requestProfile: () => Container.get(QueryResolver).requestProfileResolver
+    requestProfile: () => Container.get(QueryResolver).requestProfileResolver,
+    requestChat: () => Container.get(QueryResolver).requestChatResolver
   },
 
 
   RequestProfile: {
     get: (parent: RequestProfileResolver) => parent.get()
+  },
+
+
+  RequestChat: {
+    getList: (parent: RequestChatResolver) => parent.getList()
   },
 
 
