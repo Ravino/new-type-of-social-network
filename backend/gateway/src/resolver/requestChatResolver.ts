@@ -23,6 +23,9 @@ export class RequestChatResolver {
         displayName: 'Chat groups',
         lastMessage: <MessageView>{
           messageId: 1,
+          chatId: 1,
+          senderId: 1,
+          avatar: '',
           displayName: 'Vasya Ivanov',
           body: 'Klenin faggot',
           createdAt: new Date(),
