@@ -1,0 +1,5 @@
+type MessageList {
+  cursor: String!
+  count: Int!
+  items: [Message!]!
+}
