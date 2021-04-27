@@ -53,7 +53,7 @@ export class AuthorizationService extends AbstractRegistrationAuthorizationServi
   public async getPairToken(payload: any): Promise<any> {
 
     const refreshToken: string = await this.generatorRefreshToken();
-    const accessToken = await this.generatorAccessToken();
+    const accessToken = await this.generatorAccessToken(payload);
 
 
     const result = {
