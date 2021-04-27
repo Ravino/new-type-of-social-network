@@ -19,11 +19,16 @@ import {ProfileView} from '../view/profileView';
 import {PostView} from '../view/postView';
 import {CommentView} from '../view/commentView';
 import {FrendView} from '../view/frendView';
+import {MessageView} from '../view/messageView';
+
 import {PostListView} from '../view/postListView';
 import {CommentListView} from '../view/commentListView';
 import {LikeListView} from '../view/likeListView';
 import {ShareListView} from '../view/shareListView';
 import {FrendListView} from '../view/frendListView';
+import {ChatListView} from '../view/chatListView';
+import {ChatMemberListView} from '../view/chatMemberListView';
+import {MessageListView} from '../view/messageListView';
 
 
 const pathSchema: string = path.join(__dirname, "../graphql/main.graphql");
@@ -114,6 +119,24 @@ const resolvers = {
   FrendList: {
     count: (parent: FrendListView) => parent.count(),
     items: (parent: FrendListView) => parent.items()
+  },
+
+
+  ChatList: {
+    count: (parent: ChatListView) => parent.count(),
+    items: (parent: ChatListView) => parent.items()
+  },
+
+
+  ChatMemberList: {
+    count: (parent: ChatMemberListView) => parent.count(),
+    items: (parent: ChatMemberListView) => parent.items()
+  },
+
+
+  MessageList: {
+    count: (parent: MessageListView) => parent.count(),
+    items: (parent: MessageListView) => parent.items()
   }
 };
 
