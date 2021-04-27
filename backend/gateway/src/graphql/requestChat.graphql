@@ -1,4 +1,4 @@
 type RequestChat {
-  get: ChatList!
+  getList: ChatList!
   select: ChatList!
 }
