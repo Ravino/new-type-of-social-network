@@ -14,6 +14,7 @@ import {RequestLikeResolver} from '../resolver/requestLikeResolver';
 import {RequestShareResolver} from '../resolver/requestShareResolver';
 import {RequestFrendResolver} from '../resolver/requestFrendResolver';
 import {RequestChatResolver} from '../resolver/requestChatResolver';
+import {RequestMessageResolver} from '../resolver/requestMessageResolver';
 
 
 import {ProfileView} from '../view/profileView';
@@ -40,7 +41,8 @@ const typeDefs = gql`${ schemaContent }`;
 const resolvers = {
   Query: {
     requestProfile: () => Container.get(QueryResolver).requestProfileResolver,
-    requestChat: () => Container.get(QueryResolver).requestChatResolver
+    requestChat: () => Container.get(QueryResolver).requestChatResolver,
+    requestMessage: () => Container.get(QueryResolver).requestMessageResolver
   },
 
 
@@ -51,6 +53,11 @@ const resolvers = {
 
   RequestChat: {
     getList: (parent: RequestChatResolver) => parent.getList()
+  },
+
+
+  RequestMessage: {
+    getList: (parent: RequestMessageResolver) => parent.getList()
   },
 
 
