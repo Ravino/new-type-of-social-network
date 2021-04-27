@@ -1,0 +1,4 @@
+type RequestMessage {
+  get: MessageList!
+  select: MessageList!
+}
