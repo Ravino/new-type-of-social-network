@@ -1,4 +1,4 @@
 type RequestMessage {
-  get: MessageList!
+  getList: MessageList!
   select: MessageList!
 }
