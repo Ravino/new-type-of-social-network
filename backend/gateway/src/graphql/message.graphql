@@ -2,6 +2,7 @@ type Message {
   messageId: ID!
   senderId: ID!
   chatId: ID!
+  avatar: String!
   displayName: String!
   body: String!
   createdAt: ZonedDateTime!
