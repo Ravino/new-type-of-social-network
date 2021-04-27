@@ -4,6 +4,7 @@ type Chat {
   members: RequestChatMember!
   displayName: String!
   lastMessage: Message
+  messages: RequestMessage!
   createdAt: ZonedDateTime!
   updatedAt: ZonedDateTime!
 }
