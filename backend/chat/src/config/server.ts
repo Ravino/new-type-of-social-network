@@ -1,12 +1,14 @@
-import express from 'express';
+import {Server} from 'http';
+import express, {Application} from 'express';
 import { cookieParserInitialization } from './cookieParser';
 import { bodyParserInitialization } from './bodyParser';
 import {routerInitialization} from './router';
 
 
-export const server: express.Application = express();
+const app: Application = express();
+export const server: Server = new Server(app);
 
 
-cookieParserInitialization(server);
-bodyParserInitialization(server);
-routerInitialization(server);
+cookieParserInitialization(app);
+bodyParserInitialization(app);
+routerInitialization(app);
