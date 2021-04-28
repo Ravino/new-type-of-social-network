@@ -31,6 +31,21 @@ services:
       - plizi
 
 
+  plizi-chat:
+    image: plizi-chat
+    build: ./chat
+    container_name: plizi-chat
+    restart: unless-stopped
+    depends_on:
+      - plizi-tarantool
+    env_file:
+      - ./chat/.env
+    ports:
+      - 127.0.0.1:9000:3000
+    networks:
+      - plizi
+
+
   plizi-tarantool:
     image: tarantool/tarantool:2
     container_name: plizi-tarantool
