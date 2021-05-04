@@ -12,7 +12,6 @@
   "author": "Evgeniy Nekrasov",
   "license": "ISC",
   "dependencies": {
-    "@mickl/socket.io-nats-adapter": "^2.0.1",
     "@types/body-parser": "^1.19.0",
     "@types/cookie-parser": "^1.4.2",
     "@types/escape-html": "^1.0.1",
@@ -26,8 +25,6 @@
     "escape-html": "^1.0.3",
     "express": "^4.17.1",
     "jsonwebtoken": "^8.5.1",
-    "nats": "^2.0.2",
-    "socket.io": "^4.0.1",
     "tarantool-driver": "^3.0.6",
     "trim": "^1.0.1",
     "typescript-ioc": "^3.2.2",
