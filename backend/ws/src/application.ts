@@ -1,10 +1,10 @@
 import { tarantool } from './config/tarantool';
-import { server } from './config/server';
+import { httpServer } from './config/server';
 
 
 tarantool.on('connect', () => {
 
-  server.listen(3000, () => {
+  httpServer.listen(3000, () => {
     console.log(`Application started on port 3000...`);
     return undefined;
   });
