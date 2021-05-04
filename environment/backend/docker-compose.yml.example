@@ -46,6 +46,21 @@ services:
       - plizi
 
 
+  plizi-ws:
+    image: plizi-ws
+    build: ./ws
+    container_name: plizi-ws
+    restart: unless-stopped
+    depends_on:
+      - plizi-tarantool
+    env_file:
+      - ./ws/.env
+    ports:
+      - 127.0.0.1:9010:3000
+    networks:
+      - plizi
+
+
   plizi-tarantool:
     image: tarantool/tarantool:2
     container_name: plizi-tarantool
@@ -66,6 +81,18 @@ services:
       - 127.0.0.1:6379:6379
     volumes:
       - /databases/plizi/redis:/data
+    networks:
+      - plizi
+
+
+  plizi-nats:
+    image: nats
+    container_name: plizi-nats
+    restart: unless-stopped
+    ports:
+      - 127.0.0.1:4222:4222
+      - 127.0.0.1:8222:8222
+      - 127.0.0.1:6222:6222
     networks:
       - plizi
 
