@@ -15,14 +15,14 @@ export class MailerService {
       subject: `Plizi: регистрация`,
     body: (password: string, verificationToken: string) => `Добро пожаловать!
       Вы зарегистрировались в социальной сети Plizi.fun
-      Для завершения регистрации Вам нужно подтвердить почту по  <a href="https://dev-registration-authorization.plizi.fun/verification/email?token=${verificationToken}">ссылке</a> и войти с паролем: ${ password }
+      Для завершения регистрации Вам нужно подтвердить почту по  <a href="https://dev.plizi.fun/registration-authorization/verification/email?token=${verificationToken}">ссылке</a> и войти с паролем: ${ password }
       Вы можете изменить этот пароль на странице в настройках.`
     },
 
     recoveryPassword: {
       subject: `Plizi: сброс пароля`,
       body: (password: string, verificationToken: string) => `Здравствуйте!
-      Вами был запрошен сброс пароля. Для подтверждения, перейдите по <a href="https://dev-registration-authorization.plizi.fun/verification/password?token=${verificationToken}">ссылке</a> и войдите с новым паролем: ${password}
+      Вами был запрошен сброс пароля. Для подтверждения, перейдите по <a href="https://dev.plizi.fun/registration-authorization/verification/password?token=${verificationToken}">ссылке</a> и войдите с новым паролем: ${password}
       Если это были не вы, пропустите данное письмо.
       Действие ссылки 15 минут, после она не будет действительна.`
     }
