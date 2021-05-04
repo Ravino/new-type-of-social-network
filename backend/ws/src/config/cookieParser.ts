@@ -1,5 +1,6 @@
+import {Server, Socket} from 'socket.io';
+import {Request, Response} from 'express';
 import { readFileSync, realpathSync } from 'fs';
-import { Application } from 'express';
 import cookieParser from 'cookie-parser';
 
 
@@ -19,7 +20,14 @@ export const confSetCookie = {
 };
 
 
-export function cookieParserInitialization(server: Application) {
-  server.use(cookieParser(publicKey));
+function wrapper(socket: Socket, next: any) {
+  const middleware = cookieParser(publicKey);
+  middleware(<Request>socket.request, <Response>{}, next);
+  return undefined;
+}
+
+
+export function cookieParserInitialization(server: Server) {
+  server.use(wrapper);
   return undefined;
 }
