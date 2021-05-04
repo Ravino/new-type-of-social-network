@@ -1,12 +1,10 @@
 import {Server} from 'socket.io';
-import {NatsConnection} from 'nats';
-import {natsInitialization} from './nats';
-import {createAdapter} from '@mickl/socket.io-nats-adapter';
-import {Server as HttpServer} from 'http';
+import {server as httpServer} from './server';
 
 
-export async function socketioInitialization(app: HttpServer) {
-  const connectNats: NatsConnection = await natsInitialization();
-  const server: Server = new Server(app);
-  return undefined;
-}
+const config = {
+  path: '/websocket'
+};
+
+
+export const socketioServer: Server = new Server(httpServer, config);
