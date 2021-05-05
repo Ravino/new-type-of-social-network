@@ -1,14 +1,17 @@
+import {Container} from 'typescript-ioc';
+
 import {
   Socket as SocketioSocket,
   Server as SocketioServer
 } from 'socket.io';
 
 import {Server as HttpServer} from 'http';
-import express, {Application} from 'express';
+import express, {Application, Request} from 'express';
 import {socketioConfig} from './socketio';
 import {cookieParserInitialization} from './cookieParser';
 import {bodyParserInitialization} from './bodyParser';
-import {preWorkMessage, postWorkMessage} from '../handler/message';
+import {preWorkMessage} from '../handler/message';
+import {MessageService} from '../service/messageService';
 
 
 const app: Application = express();
@@ -18,25 +21,24 @@ const socketioServer: SocketioServer = new SocketioServer(httpServer, socketioCo
 
 cookieParserInitialization(socketioServer);
 bodyParserInitialization(socketioServer);
+socketioServer.use((socket: SocketioSocket, next: any) => {
+  const request: Request = <Request>socket.request;
+  request.user = {id: 2};
+  next();
+  return undefined;
+});
 
 
 socketioServer.on('connect', (socketioSocket: SocketioSocket) => {
 
-  socketioSocket.on('room-join', (data: any) => {
-    const chatId: string = data.chatId;
-    socketioSocket.join(`room-${chatId}`);
-    return undefined;
-  });
+  socketioSocket.on('room-message', async (data: any) => {
+
+    const request: Request = <Request>socketioSocket.request;
+    const user: any = request.user;
+    const preMessage: any = preWorkMessage(data, user);
+    Container.get(MessageService).create(preMessage.chatId, preMessage.senderId, preMessage.body);
 
 
-  socketioSocket.on('room-message', (data: any) => {
-
-    const preMessage: any = preWorkMessage(data);
-    const postMessage: any = postWorkMessage(preMessage);
-    const chatId: string = preMessage.chatId;
-
-
-    socketioSocket.in(`room-${chatId}`).emit('room-message', postMessage);
     return undefined;
   });
 
