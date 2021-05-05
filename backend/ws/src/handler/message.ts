@@ -1,13 +1,14 @@
-export function preWorkMessage(data: any): any {
+export function preWorkMessage(data: any, user?: any): any {
 
-  const currentAt: number = Date.now();
+  const chatId: number = data.chatId;
+  const senderId: number = user.id;
+  const body: string = data.body
 
 
   const message: any = {
-    chatId: data.chatId,
-    body: data.body,
-    createdAt: currentAt,
-    updatedAt: currentAt
+    chatId,
+    senderId,
+    body
   };
 
 
