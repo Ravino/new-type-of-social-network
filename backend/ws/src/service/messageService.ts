@@ -58,7 +58,7 @@ export class MessageService{
 
     let result: any;
     try {
-      result = await tarantool.sql('update messages set body = ?, updated_at = ? where message_id = ?', bindParams);
+      result = await tarantool.sql('update chat_messages set body = ?, updated_at = ? where chat_message_id = ?', bindParams);
     }
     catch(err) {
       console.log(err);
@@ -72,9 +72,6 @@ export class MessageService{
 
   public async del(messageId: number): Promise<boolean> {
 
-    const currentAt: number = Date.now();
-
-
     const bindParams: any[] = [
       messageId
     ];
@@ -82,7 +79,7 @@ export class MessageService{
 
     let result: any;
     try {
-      result = await tarantool.sql('delete from messages where message_id = ?', bindParams);
+      result = await tarantool.sql('delete from chat_messages where chat_message_id = ?', bindParams);
     }
     catch(err) {
       console.log(err);
