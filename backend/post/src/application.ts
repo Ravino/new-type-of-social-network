@@ -1,17 +1,15 @@
-import { tarantool } from './config/tarantool';
-import { server } from './config/server';
+import {tarantool} from './config/tarantool';
+import {nats} from './config/nats';
 import { environmentInitialization } from './config/environment';
 
 
 environmentInitialization();
 
 
-tarantool.on('connect', () => {
+tarantool.on('connect', async () => {
 
-  server.listen(3000, () => {
-    console.log(`Application started on port 3000...`);
-    return undefined;
-  });
+  const ns = await nats();
+  console.log(ns.getServer());
 
 
   return undefined;
