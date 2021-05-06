@@ -61,6 +61,20 @@ services:
       - plizi
 
 
+  plizi-post:
+    image: plizi-post
+    build: ./post
+    container_name: plizi-post
+    restart: unless-stopped
+    depends_on:
+      - plizi-tarantool
+      - plizi-nats
+    env_file:
+      - ./post/.env
+    networks:
+      - plizi
+
+
   plizi-tarantool:
     image: tarantool/tarantool:2
     container_name: plizi-tarantool
