@@ -1,40 +1,51 @@
 import { Singleton } from 'typescript-ioc';
+import {render as pugRender} from 'pug';
+import {tarantool} from '../config/tarantool';
 import { createTransport } from 'nodemailer';
 
 
 @Singleton
 export class MailerService {
 
+  private mailerLanguageDefault: string = '';
   private account?: any;
   private transfer?: any;
   private mailer?: any;
 
 
-  private templates?: any = {
-    registration: {
-      subject: `Plizi: регистрация`,
-    body: (password: string, verificationToken: string) => `Добро пожаловать!
-      Вы зарегистрировались в социальной сети Plizi.fun
-      Для завершения регистрации Вам нужно подтвердить почту по  <a href="https://dev.plizi.fun/registration-authorization/verification/email?token=${verificationToken}">ссылке</a> и войти с паролем: ${ password }
-      Вы можете изменить этот пароль на странице в настройках.`
-    },
-
-    recoveryPassword: {
-      subject: `Plizi: сброс пароля`,
-      body: (password: string, verificationToken: string) => `Здравствуйте!
-      Вами был запрошен сброс пароля. Для подтверждения, перейдите по <a href="https://dev.plizi.fun/registration-authorization/verification/password?token=${verificationToken}">ссылке</a> и войдите с новым паролем: ${password}
-      Если это были не вы, пропустите данное письмо.
-      Действие ссылки 15 минут, после она не будет действительна.`
-    }
-  };
-
-
   public constructor(){}
+
+
+  private async get(name: string, language: string): Promise<any> {
+
+    const languageDefault: string = this.mailerLanguageDefault;
+
+
+    const bindParams: any[] = [
+      name,
+      language,
+      languageDefault
+    ];
+
+
+    let list;
+    try {
+      list = await tarantool.sql(`select * from mail_templates where name=? and (language=? OR language=?)`, bindParams);
+    }
+    catch(err) {
+      console.log(err);
+      return undefined;
+    }
+
+
+    return list[0] || undefined;
+  }
 
 
   private async initialization(): Promise<any> {
 
     this.mailer = {};
+this.mailerLanguageDefault = <string>global.process.env.MAILER_LANGUAGE_DEFAULT || '';
     this.account = {};
     this.mailer.smtpAddress = <string>global.process.env.MAILER_SMTP_ADDRESS || '';
     this.mailer.smtpPort = <string>global.process.env.MAILER_SMTP_PORT || 465;
@@ -57,15 +68,22 @@ export class MailerService {
   }
 
 
-  private generatorMessage(typeTemplate: string, password: string, verificationToken: string): any {
+  private async generatorMessage(typeTemplate: string, password: string, verificationToken: string, language: string): Promise<any> {
 
-    const template = this.templates[typeTemplate];
+    const args: any = {
+      password,
+      verificationToken
+    };
+
+
+    const template = await this.get(typeTemplate, language);
+    const html: string = pugRender(template.BODY, args);
 
 
     const message = {
       from: this.account.user,
-      subject: template.subject,
-      html: template.body(password, verificationToken)
+      subject: template.SUBJECT,
+      html: html
     };
 
 
@@ -88,14 +106,14 @@ export class MailerService {
   }
 
 
-  public async sender(typeTemplate: string, toEmail: string, password: string, verificationToken: string): Promise<any> {
+  public async sender(typeTemplate: string, toEmail: string, password: string, verificationToken: string, language: string): Promise<any> {
 
     if(!this.account) {
       await this.initialization();
     }
 
 
-    const message: any = this.generatorMessage(typeTemplate, password, verificationToken);
+    const message: any = await this.generatorMessage(typeTemplate, password, verificationToken, language);
     message.to = toEmail;
 
 
