@@ -5,9 +5,9 @@ import { RecoveryService } from '../service/recoveryService';
 import { UserService } from '../service/userService';
 import { LinkService } from '../service/linkService';
 import { MailerService } from '../service/mailerService';
-import { Request } from 'express';
-import { Response } from 'express';
+import { Request, Response } from 'express';
 import { StatusView } from '../view/statusView';
+import accepts from 'accepts';
 
 
 export class RecoveryPasswordResolver {
@@ -93,7 +93,10 @@ export class RecoveryPasswordResolver {
     }
 
 
-    this.mailerService.sender('recoveryPassword', user.email, password, link);
+    const language: string = accepts(req).languages()[1] || '';
+
+
+    this.mailerService.sender('recoveryPassword', user.email, password, link, language);
     this.statusView.addStatus('success');
     return this.statusView;
   }
