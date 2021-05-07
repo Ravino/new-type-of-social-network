@@ -8,9 +8,9 @@ import { SessionService } from '../service/sessionService';
 import { LinkService } from '../service/linkService';
 import { MailerService } from '../service/mailerService';
 import { authenticate as authenticatePassport} from 'passport';
-import { Request } from 'express';
-import { Response } from 'express';
+import { Request, Response } from 'express';
 import { StatusView } from '../view/statusView';
+import accepts from 'accepts';
 
 
 export class EmailResolver {
@@ -127,9 +127,10 @@ export class EmailResolver {
 
     const userStringify: string = JSON.stringify(user);
     const link: any = await this.linkService.create('verification:email', userStringify, 1800);
+    const language: string = accepts(req).languages()[1] || '';
 
 
-    this.mailerService.sender('registration', email, password, link);
+    this.mailerService.sender('registration', email, password, link, language);
     this.statusView.addStatus('success');
     return this.statusView;
   }
